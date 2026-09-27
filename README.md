@@ -10,7 +10,9 @@ vaEVAS 面向 DAC 投稿，以 Verilog-A benchmark 与可信评测体系为研�
 
 目前已建立工作区与开发约定，并开始维护
 [电压域行为的独立仿真器验证集设计](evas/validation/README.md)。
-仓库尚未包含任务数据集、EVAS 源码或可运行的评测入口。
+已完成八张起步卡的 [四后端功能试点](experiments/dvs2-starter-pilot/RESULTS.md)，
+包含共同 VA 源码、运行/分析脚本和整理后的结果；正式验证资格仍待完善。
+仓库尚未迁入 VABench 任务数据集和 EVAS 仿真器源码。
 题型、规模、评分方案和 EVAS 支持范围仍需后续设计与验证。
 
 旧 vaBench 和 EVAS 是后续审查与迁移的来源。已有代码、任务和结果需要结合新方案

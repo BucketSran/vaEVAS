@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v1(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    real y;
+    analog begin
+        y = 1.5 * V(vin, vref) + 0.125;
+        if (y > 0.875) y = 0.875;
+        if (y < -0.75) y = -0.75;
+        V(vout, vref) <+ y;
+    end
+endmodule

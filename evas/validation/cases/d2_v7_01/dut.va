@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v7_linear(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    parameter real gain = 0.5;
+    analog begin
+        V(vout, vref) <+ V(vin, vref) + gain * V(vout, vref);
+    end
+endmodule

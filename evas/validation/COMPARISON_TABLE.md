@@ -1,6 +1,6 @@
 # DAC 2027 Table 3：仿真器独立验证与应用层成本
 
-2026-09-27。**结构草案；没有新仿真结果。** 按七组电压行为组织，开源状态置顶，独立验证与 VABench 应用回放分开。范围及分母以 [DVS-2 设计](INDEPENDENT_SET_DESIGN.md) 为准，起步案例见 [CASE_CARDS.md](CASE_CARDS.md)。
+2026-09-27。**正式论文表结构草案；已有[起步卡试点](../../experiments/dvs2-starter-pilot/RESULTS.md)，尚不能填入正式 p/N。** 按七组电压行为组织，开源状态置顶，独立验证与 VABench 应用回放分开。范围及分母以 [DVS-2 设计](INDEPENDENT_SET_DESIGN.md) 为准，起步案例见 [CASE_CARDS.md](CASE_CARDS.md)。
 
 DAC 正文必须包含核心构造依据、判定方法和比较条件，不把其有效性依赖于额外实验附录。
 

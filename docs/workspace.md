@@ -23,7 +23,8 @@
 各区域内部结构按实际需求建立。任务定义、评分规则与执行结果应保持可追溯关系。
 `runs/` 用于本地原始输出，已被 Git 忽略。
 
-[独立仿真器验证集](../evas/validation/README.md) 已进入设计阶段，尚无可运行用例或后端结果。
+[独立仿真器验证集](../evas/validation/README.md) 已有八张起步卡的共同源码与
+[四后端试点结果](../experiments/dvs2-starter-pilot/RESULTS.md)，正式覆盖与观察资格仍待完成。
 其需求、答案和判据不依赖 EVAS 当前实现，且与 `tasks/` 的 VABench 应用任务分开。
 与该验证集直接相关的设计在 `evas/validation/` 维护，避免在 `docs/` 重复保存一套规格。
 

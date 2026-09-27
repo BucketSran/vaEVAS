@@ -1,0 +1,51 @@
+{
+  "images": {
+    "evas": {
+      "source_ref": "vabench-agent-runtime:0.8.7",
+      "config_id": "sha256:038670652e3dee0bcb7e899714ce5f6def72e4fb494be2642a628338a8fbbacb",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:fe44bb54370160ee99bef939ae67a0ab1f51fb3b9a41d3d0c4cf29e7ea38115b",
+      "platform_manifest_id": "sha256:618dd8d27f9493d4794aa86966f8a4e0827bb9c0ea8d97ab460b0cb3e546f718"
+    },
+    "openvaf_runtime": {
+      "source_ref": "vabench-openvaf-probe:24.0.2mob-ubuntu",
+      "config_id": "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:e39637953f0f7233033e781ec3df6c6d6ecdeff4d4eca4e44c8706688f438c54",
+      "platform_manifest_id": "sha256:c46713d2b1cae8daa6e79f24c731ca4b905e47181bc5000f4d648730fcefc30f"
+    },
+    "ngspice": {
+      "source_ref": "ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+      "config_id": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+      "platform_manifest_id": "sha256:1569ba4635f3160fc23a052ba8753c645e71c9a366fb92b667ebd49ee864d9ef"
+    },
+    "gnucap": {
+      "source_ref": "vabench-gnucap:20260729-final",
+      "config_id": "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:c78bfede9d62a758f491890df05231258bb6de39d057e00a0a19c5cfe0b451e9",
+      "platform_manifest_id": "sha256:78e7b2a836f6447f1cd39c21123b1ac27742b5e65913a4985d0d463afbb5cc2f"
+    }
+  },
+  "tool_versions": {
+    "spectre": "21.1.0.509.isr12",
+    "evas_package": "0.8.7",
+    "evas_core": "0.2.4",
+    "evas_abi": "20260718",
+    "evas_build_revision": null,
+    "openvaf_release_package": "OpenVAF-R v24.0.2mob",
+    "openvaf_cli_self_report": "OpenVAF-reloaded unknown",
+    "ngspice": "46",
+    "gnucap_environment_snapshot": "2026.07.29"
+  },
+  "compiler_artifact_sha256": {
+    "backend-semantics-v1/tools/reloaded/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r": "ca1037be094cbfecb1249a1f220c9c390bc265015dd177ec27800ed365d6ef3a"
+  },
+  "note": "Images and proprietary dependencies are not redistributed. Container configuration IDs and source manifest identities are distinct."
+}

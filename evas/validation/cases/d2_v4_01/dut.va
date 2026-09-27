@@ -1,0 +1,26 @@
+// D2-V4-01 C0/C1: common, original encoding for all backends.
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dvs_v4(vin, clk, rst, vout, vref);
+    input vin, clk, rst;
+    output vout;
+    inout vref;
+    electrical vin, clk, rst, vout, vref;
+    real held;
+
+    analog begin
+        @(initial_step)
+            held = 0.1;
+
+        @(cross(V(clk, vref) - 0.5, +1, 1e-9, 2e-4)
+          or cross(V(rst, vref) - 0.5, +1, 1e-9, 2e-4)) begin
+            if (V(rst, vref) >= 0.5)
+                held = 0.1;
+            else
+                held = V(vin, vref);
+        end
+
+        V(vout, vref) <+ transition(held, 0.0, 25e-9, 25e-9);
+    end
+endmodule

@@ -1,0 +1,18 @@
+{
+  "record_count": 120,
+  "unique_conditions": 15,
+  "source_hash_binding": "all 120 records match frozen 8 DUTs",
+  "waveform_hash_binding": "all 108 exported waveforms verified",
+  "stage_counts": {
+    "simulate": 114,
+    "compile": 8,
+    "modelgen": 8,
+    "cpp_compile": 7
+  },
+  "outcome_counts": {
+    "waveform_available": 108,
+    "execution_failed": 4,
+    "compile_failed": 6,
+    "runtime_timeout": 2
+  }
+}

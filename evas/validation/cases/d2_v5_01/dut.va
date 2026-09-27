@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v5(vout, vref);
+    output vout;
+    inout vref;
+    electrical vout, vref;
+    integer q;
+    analog begin
+        @(initial_step) q = 0;
+        @(timer(375e-9, 750e-9, 100e-12)) q = 1-q;
+        V(vout, vref) <+ transition(0.1 + 0.8*q, 100e-9, 200e-9, 100e-9);
+    end
+endmodule
