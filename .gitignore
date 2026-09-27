@@ -1,0 +1,34 @@
+# Local operating-system files
+.DS_Store
+._*
+
+# Local credentials and configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+/local/
+
+# Raw runs and temporary work
+/runs/
+/scratch/
+/.work/
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+/build/
+/dist/
+/evas/build/
+/evas/dist/
+
+# Rust build output
+/evas/**/target/
