@@ -1,0 +1,966 @@
+{
+  "version": "v1",
+  "time_scale_s": 1e-06,
+  "stop_s": 4e-06,
+  "voltage_unit": "V",
+  "input_time_coordinate": "t / time_scale_s",
+  "requested_profiles": {
+    "base": {
+      "step": 1e-09,
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12
+    },
+    "fine": {
+      "step": 1e-10,
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13
+    }
+  },
+  "conditions": [
+    {
+      "id": "v1-main",
+      "card": "d2_v1_01",
+      "module": "dvs_v1",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            -1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            -1
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v2-main",
+      "card": "d2_v2_01",
+      "module": "dvs_v2",
+      "inputs": {
+        "vip": [
+          [
+            0,
+            0.4
+          ],
+          [
+            4,
+            0.6
+          ]
+        ],
+        "vin": [
+          [
+            0,
+            0.19999999999999998
+          ],
+          [
+            4,
+            0.7999999999999999
+          ]
+        ],
+        "vdd": [
+          [
+            0,
+            1.0
+          ],
+          [
+            4,
+            1.7999999999999998
+          ]
+        ],
+        "vref": [
+          [
+            0,
+            0.0
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "op",
+        "on"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vip",
+            "vin",
+            "vdd",
+            "vref",
+            "op",
+            "on"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v2-reference-zero",
+      "card": "d2_v2_01",
+      "module": "dvs_v2",
+      "inputs": {
+        "vip": [
+          [
+            0,
+            0.4
+          ],
+          [
+            4,
+            0.19999999999999998
+          ]
+        ],
+        "vin": [
+          [
+            0,
+            0.19999999999999998
+          ],
+          [
+            4,
+            0.4
+          ]
+        ],
+        "vdd": [
+          [
+            0,
+            1.0
+          ],
+          [
+            4,
+            1.4
+          ]
+        ],
+        "vref": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      },
+      "outputs": [
+        "op",
+        "on"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vip",
+            "vin",
+            "vdd",
+            "vref",
+            "op",
+            "on"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v2-supply-fixed",
+      "card": "d2_v2_01",
+      "module": "dvs_v2",
+      "inputs": {
+        "vip": [
+          [
+            0,
+            0.4
+          ],
+          [
+            4,
+            0.6
+          ]
+        ],
+        "vin": [
+          [
+            0,
+            0.19999999999999998
+          ],
+          [
+            4,
+            0.7999999999999999
+          ]
+        ],
+        "vdd": [
+          [
+            0,
+            1.0
+          ],
+          [
+            4,
+            1.4
+          ]
+        ],
+        "vref": [
+          [
+            0,
+            0.0
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "op",
+        "on"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vip",
+            "vin",
+            "vdd",
+            "vref",
+            "op",
+            "on"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v2-input-common-mode",
+      "card": "d2_v2_01",
+      "module": "dvs_v2",
+      "inputs": {
+        "vip": [
+          [
+            0,
+            0.7
+          ],
+          [
+            4,
+            0.9
+          ]
+        ],
+        "vin": [
+          [
+            0,
+            0.5
+          ],
+          [
+            4,
+            1.1
+          ]
+        ],
+        "vdd": [
+          [
+            0,
+            1.0
+          ],
+          [
+            4,
+            1.7999999999999998
+          ]
+        ],
+        "vref": [
+          [
+            0,
+            0.0
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "op",
+        "on"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vip",
+            "vin",
+            "vdd",
+            "vref",
+            "op",
+            "on"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v3-main",
+      "card": "d2_v3_01",
+      "module": "dvs_v3",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            0.1
+          ],
+          [
+            2,
+            0.9
+          ],
+          [
+            4,
+            0.1
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v4-c0",
+      "card": "d2_v4_01",
+      "module": "dvs_v4",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            0.2
+          ],
+          [
+            4,
+            0.8
+          ]
+        ],
+        "clk": [
+          [
+            0,
+            0
+          ],
+          [
+            0.4,
+            0
+          ],
+          [
+            0.6,
+            1
+          ],
+          [
+            0.8,
+            1
+          ],
+          [
+            0.9,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1.4,
+            0
+          ],
+          [
+            1.6,
+            1
+          ],
+          [
+            1.8,
+            1
+          ],
+          [
+            1.9,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2.4,
+            0
+          ],
+          [
+            2.6,
+            1
+          ],
+          [
+            2.8,
+            1
+          ],
+          [
+            2.9,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3.4,
+            0
+          ],
+          [
+            3.6,
+            1
+          ],
+          [
+            3.8,
+            1
+          ],
+          [
+            3.9,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "rst": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.2,
+            1
+          ],
+          [
+            1.3,
+            1
+          ],
+          [
+            1.4000000000000001,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "clk",
+            "rst",
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v4-c1",
+      "card": "d2_v4_01",
+      "module": "dvs_v4",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            0.2
+          ],
+          [
+            4,
+            0.8
+          ]
+        ],
+        "clk": [
+          [
+            0,
+            0
+          ],
+          [
+            0.4,
+            0
+          ],
+          [
+            0.6,
+            1
+          ],
+          [
+            0.8,
+            1
+          ],
+          [
+            0.9,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1.4,
+            0
+          ],
+          [
+            1.6,
+            1
+          ],
+          [
+            1.8,
+            1
+          ],
+          [
+            1.9,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2.4,
+            0
+          ],
+          [
+            2.6,
+            1
+          ],
+          [
+            2.8,
+            1
+          ],
+          [
+            2.9,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3.4,
+            0
+          ],
+          [
+            3.6,
+            1
+          ],
+          [
+            3.8,
+            1
+          ],
+          [
+            3.9,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "rst": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.2,
+            1
+          ],
+          [
+            1.8,
+            1
+          ],
+          [
+            1.9000000000000001,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "clk",
+            "rst",
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v5-main",
+      "card": "d2_v5_01",
+      "module": "dvs_v5",
+      "inputs": {},
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v6-main",
+      "card": "d2_v6_01",
+      "module": "dvs_v6",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0.6
+          ],
+          [
+            4,
+            0.6
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "vout",
+            "0"
+          ],
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": "v7-linear-main",
+      "card": "d2_v7_01",
+      "module": "dvs_v7_linear",
+      "inputs": {
+        "vina": [
+          [
+            0,
+            0.2
+          ],
+          [
+            4,
+            0.6
+          ]
+        ],
+        "vinb": [
+          [
+            0,
+            0.6
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "outa",
+        "outb"
+      ],
+      "instances": [
+        {
+          "name": "dut_a",
+          "ports": [
+            "vina",
+            "outa",
+            "0"
+          ],
+          "params": {
+            "gain": 0.5
+          }
+        },
+        {
+          "name": "dut_b",
+          "ports": [
+            "vinb",
+            "outb",
+            "0"
+          ],
+          "params": {
+            "gain": -0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "v7-linear-swapped",
+      "card": "d2_v7_01",
+      "module": "dvs_v7_linear",
+      "inputs": {
+        "vina": [
+          [
+            0,
+            0.2
+          ],
+          [
+            4,
+            0.6
+          ]
+        ],
+        "vinb": [
+          [
+            0,
+            0.6
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "outa",
+        "outb"
+      ],
+      "instances": [
+        {
+          "name": "dut_b",
+          "ports": [
+            "vinb",
+            "outb",
+            "0"
+          ],
+          "params": {
+            "gain": -0.5
+          }
+        },
+        {
+          "name": "dut_a",
+          "ports": [
+            "vina",
+            "outa",
+            "0"
+          ],
+          "params": {
+            "gain": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "v7-linear-a-half",
+      "card": "d2_v7_01",
+      "module": "dvs_v7_linear",
+      "inputs": {
+        "vina": [
+          [
+            0,
+            0.1
+          ],
+          [
+            4,
+            0.3
+          ]
+        ],
+        "vinb": [
+          [
+            0,
+            0.6
+          ],
+          [
+            4,
+            0.4
+          ]
+        ]
+      },
+      "outputs": [
+        "outa",
+        "outb"
+      ],
+      "instances": [
+        {
+          "name": "dut_a",
+          "ports": [
+            "vina",
+            "outa",
+            "0"
+          ],
+          "params": {
+            "gain": 0.5
+          }
+        },
+        {
+          "name": "dut_b",
+          "ports": [
+            "vinb",
+            "outb",
+            "0"
+          ],
+          "params": {
+            "gain": -0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "v7-nonlinear-0.5",
+      "card": "d2_v7_02",
+      "module": "dvs_v7_nonlinear",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            -0.5625
+          ],
+          [
+            1,
+            -0.2578125
+          ],
+          [
+            2,
+            0.0
+          ],
+          [
+            3,
+            0.2578125
+          ],
+          [
+            4,
+            0.5625
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "vout",
+            "0"
+          ],
+          "params": {
+            "cubic": 0.5
+          }
+        }
+      ],
+      "cubic": 0.5
+    },
+    {
+      "id": "v7-nonlinear-2.0",
+      "card": "d2_v7_02",
+      "module": "dvs_v7_nonlinear",
+      "inputs": {
+        "vin": [
+          [
+            0,
+            -0.75
+          ],
+          [
+            1,
+            -0.28125
+          ],
+          [
+            2,
+            0.0
+          ],
+          [
+            3,
+            0.28125
+          ],
+          [
+            4,
+            0.75
+          ]
+        ]
+      },
+      "outputs": [
+        "vout"
+      ],
+      "instances": [
+        {
+          "name": "dut",
+          "ports": [
+            "vin",
+            "vout",
+            "0"
+          ],
+          "params": {
+            "cubic": 2.0
+          }
+        }
+      ],
+      "cubic": 2.0
+    }
+  ]
+}

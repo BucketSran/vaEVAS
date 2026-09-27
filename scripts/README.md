@@ -6,4 +6,6 @@
 实验分析归 [`experiments/`](../experiments/README.md) 维护。
 Harbor 承担评测执行和 Agent 接入。
 
-当前不提供维护脚本。
+[verify_validation_version.py](verify_validation_version.py) 只读核验独立仿真器验证集版本的
+Git 文件、版本描述文件及原运行输入哈希，不调用仿真器。当前默认版本为
+[v1](../evas/validation/versions/v1/README.md)。

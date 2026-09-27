@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "dataset": "voltage-domain-independent-validation",
+  "version": "v1",
+  "design_revision": "DVS-2",
+  "status": "frozen_pilot_with_known_limitations",
+  "frozen_on": "2026-09-27",
+  "git_tag": "validation-v1",
+  "source_commit": "b28a476ac0f5ccc063c41a93a59acb7f956d7e1d",
+  "card_count": 8,
+  "condition_count": 15,
+  "baseline_configuration_count": 120,
+  "formal_dvs_qualification": "I",
+  "git_files": {
+    "evas/validation/CASE_CARDS.md": "79f20c8e41fa2d361204e74fcfb2d174d3e3144fc51874eae0d9610349cd4e9a",
+    "evas/validation/COMPARISON_TABLE.md": "8b685e25f572b93138e452ce91f6bdc67226f6790cfe0256e99d5ec5a510ca1d",
+    "evas/validation/INDEPENDENT_SET_DESIGN.md": "85e2cf5f6090ae074737d4e611271a5b6e24bd117c35a27cc737975dcfb9391c",
+    "evas/validation/README.md": "80fc7dddbacba91c70e30bf9802885e5664d00352054606790da7074a47c98b2",
+    "evas/validation/cases/README.md": "adaede70c194a7b3a2c1f96a75356b855865d6e27fd074f997893fd4c4aa4ef6",
+    "evas/validation/cases/d2_v1_01/dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "evas/validation/cases/d2_v2_01/dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "evas/validation/cases/d2_v3_01/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "evas/validation/cases/d2_v4_01/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "evas/validation/cases/d2_v5_01/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "evas/validation/cases/d2_v6_01/dut.va": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "evas/validation/cases/d2_v7_01/dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "evas/validation/cases/d2_v7_02/dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "experiments/dvs2-starter-pilot/DIAGNOSIS.md": "9d3042a672d4a5af15da0f7ba6228ce88e61b39dbd1178481ceec1b2a6b11a29",
+    "experiments/dvs2-starter-pilot/README.md": "4c77fb6a2f5e121a5e7332541be2b4cdd3bf134c03c67405218c02e91c706082",
+    "experiments/dvs2-starter-pilot/RESULTS.md": "ff5373dd65f1f4362c92da7fcfb5be8008f87b5d85cc1215326d17234226e32f",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-starter-pilot/diagnostics/ARCHIVE_RECEIPT.json": "bd9403779d59dc754d6befbc8b96b2d95af5a629c3e845a9cee84adfa8e18857",
+    "experiments/dvs2-starter-pilot/diagnostics/cross-synthetic-trace.json": "53c96ffe6f859124ffca6bef0d8354279307b3eb2ec45df83057302f7391806d",
+    "experiments/dvs2-starter-pilot/diagnostics/cross-wave-replay.json": "0740cacb7270bfd8c5808c1301e27d2e374e5a96d022cb4066783c833204e50f",
+    "experiments/dvs2-starter-pilot/diagnostics/probes.json": "40e71c8236cc2a0fbbb2fbba066a097b19cc0a014ec7912f4bf68fe1808312fc",
+    "experiments/dvs2-starter-pilot/diagnostics/source-provenance.json": "f68130cb3013b90c3d1671ad9ede4519e832e93c4e1b38d813eae0bf83b39ad7",
+    "experiments/dvs2-starter-pilot/diagnostics/v6-lrm24.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+    "experiments/dvs2-starter-pilot/report.py": "2d2d62df7ac79d6bd35a165e686b3286d40cd2f287b997b205ded1ef3bf6fc1e",
+    "experiments/dvs2-starter-pilot/results/ARCHIVE_RECEIPT.json": "bd1458b3c5f66325db10e486dd5de004fbac99d1974b46a4b74b9426d23ca1e4",
+    "experiments/dvs2-starter-pilot/results/TOOL_IDENTITIES.json": "a881e0a66540ddecdace1f7d5a181878fe25fc53e4b210e2ce49e160475a49e2",
+    "experiments/dvs2-starter-pilot/results/counts.json": "9dcf002782b9729fa737bbc71d59a4481eb05c067a930d84ced4aacfe52f3787",
+    "experiments/dvs2-starter-pilot/results/execution-audit.json": "4eff181d76f21e3691f5ac9b87f1022aea8f9d24511fdde13a9641aae28174bc",
+    "experiments/dvs2-starter-pilot/results/results.csv": "1ffe79ce94e3b0a968bee0c9d6a5aa38110228164f0ac00c512228c817b5b461",
+    "experiments/dvs2-starter-pilot/results/results.json": "e4e28c45cab73b1da21512335a59b8e4b142bcffaf4ed38b15fa46cb40d944a0",
+    "experiments/dvs2-starter-pilot/results/spectre-effective-settings.json": "215c7c699f3c179de35fa615a4ed0b4844a4019d2bc2ee261617db1604ca9fa8",
+    "experiments/dvs2-starter-pilot/results/v4-refinement.png": "b0baaca1020753f1faf0ffc9dd4e086e698fd3e3bd115b32cd8e46fad991dc4b",
+    "experiments/dvs2-starter-pilot/results/waveforms-fine.png": "3fb8ed9ed03780745bc1c2ae95aee7450df7db8fcefb3ebd26a09de161f1ade5",
+    "experiments/dvs2-starter-pilot/run_remote.py": "c0a7c69b54b1a2a788a326190cf346c91c4053076025d36c44daceffce299ddf",
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "experiments/dvs2-starter-pilot/test_analysis.py": "70d611ba71e9bda4b9419a08c7d8c7926d3045d8dc9628db2362f4859706437c"
+  },
+  "snapshot_files": {
+    "evas/validation/versions/v1/README.md": "d5d05cfacab6b529b4175c2c587c3b7e97ad660f7f6c393c871bdf8cf8a5021d",
+    "evas/validation/versions/v1/conditions.json": "f7ec2181c10dd0332afc1bec5ce05ed823a3eb05c3896175136266f606aac5f9",
+    "evas/validation/versions/v1/input-manifest.json": "5480e487fde89b84a7223b44df5d0ebdea42aedbd81c332f9935795150d3eeb7",
+    "evas/validation/versions/v1/run-protocol.original.md": "0a5ca17374e133203b3dcb304209b2cc4f5e9469006d888811f8dd2d2d365743"
+  },
+  "input_manifest": "evas/validation/versions/v1/input-manifest.json",
+  "input_overrides": {
+    "experiments/dvs2-starter-pilot/README.md": "evas/validation/versions/v1/run-protocol.original.md"
+  },
+  "private_evidence": [
+    {
+      "run_id": "dvs2-starter-20260927-01",
+      "archive_sha256": "9293250466a158c1126e47163a7ced7173cfb60b8999e9b17ef9266e2b7ad1e8",
+      "archive_bytes": 45219304
+    },
+    {
+      "run_id": "dvs2-diagnosis-20260927",
+      "archive_sha256": "ed947166897ff48e912ca3221c4b01481b5af72723480ef3b9a1c96b49856db4",
+      "archive_bytes": 3294283
+    }
+  ],
+  "limitations": [
+    "Original V6 syntax does not conform to the declared LRM 2.4 array literal spelling.",
+    "Diagnostic variants and amended settings do not replace historical baseline records.",
+    "Finite observation screening, not complete formal qualification.",
+    "Public source/results are pinned; proprietary dependencies and raw machine-specific evidence are not distributed."
+  ]
+}
