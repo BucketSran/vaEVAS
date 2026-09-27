@@ -5,6 +5,8 @@
 - 项目和新公开仓库名称为 `vaEVAS`。
 - 面向 DAC 投稿，以 benchmark 与评测体系为主贡献方向。
 - 采用 Harbor 作为 eval harness，任务沿用其原生格式。
+- VABench 任务须对应实际有用途的 Verilog-A 电路建模需求；最小语义探针归独立验证层。
+- EVAS 面向声明的电压域行为及交互，与 Spectre 对标，支持范围不限于现有 benchmark 家族；为开放复现及 agentic eval 提供后端是待验证目标。
 - 在同一仓库维护 EVAS 完整源码，支持任务、评分和仿真器同步修改。
 - 共用容器环境目录命名为 `containers/`。
 - 后续开发与设计在本仓库维护，旧仓库及规划材料作为审查与迁移来源。
@@ -25,6 +27,7 @@
 
 [独立仿真器验证集](../evas/validation/README.md) 已有八张起步卡的共同源码与
 [四后端试点结果](../experiments/dvs2-starter-pilot/RESULTS.md)，正式覆盖与观察资格仍待完成。
+首轮已保存为 [验证集 v1](../evas/validation/versions/v1/README.md)，新输入、设置或分析版本不覆盖其历史身份。
 其需求、答案和判据不依赖 EVAS 当前实现，且与 `tasks/` 的 VABench 应用任务分开。
 与该验证集直接相关的设计在 `evas/validation/` 维护，避免在 `docs/` 重复保存一套规格。
 
