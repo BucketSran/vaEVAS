@@ -1,0 +1,1967 @@
+{
+  "run_id": "dvs2-diagnosis-20260928-01",
+  "baseline_matrix_sha256": "702b29a7748c1090ce0c3d955704f6ff60fc6c8d1a53811dbd54d15a8e4cabb9",
+  "analyzer_sha256": "d0b2208c31388a03c980aca741bb89b37c1a598c6d0f7a2017fced2a37d81ade",
+  "baseline_failure_families": {
+    "evas": {
+      "base": {
+        "timer": 1,
+        "filter_or_filter_composition": 2,
+        "implicit_equation": 5,
+        "event": 1,
+        "integrator": 2,
+        "contribution_sum": 2
+      },
+      "fine": {
+        "event": 11,
+        "timer": 1,
+        "filter_or_filter_composition": 2,
+        "implicit_equation": 5,
+        "integrator": 2,
+        "contribution_sum": 2
+      }
+    },
+    "openvaf_ngspice": {
+      "base": {
+        "event": 12,
+        "timer": 1,
+        "filter_or_filter_composition": 1,
+        "integrator": 1
+      },
+      "fine": {
+        "event": 12,
+        "timer": 1,
+        "filter_or_filter_composition": 1,
+        "integrator": 1
+      }
+    },
+    "gnucap": {
+      "base": {
+        "event": 11,
+        "integrator": 1,
+        "phase": 2
+      },
+      "fine": {
+        "event": 11,
+        "filter_or_filter_composition": 1,
+        "integrator": 1,
+        "phase": 2
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "evas-s1-reorder",
+      "backend": "evas",
+      "condition": "s1-default",
+      "profile": "base",
+      "mutation": "Only move bias contribution before both input contributions",
+      "prediction": "If last-write wins, output becomes g2*v rather than bias",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "b33ec1ce399d6afe0272a9ab2ac751bc909db90a7f724b6edf29fdd5a2818317",
+        "tb.scs": "d53770acf54cca1483431277606b465a09a310d589686d1c010104eb501a2924",
+        "condition.json": "0e8fa8d168e77f10f4701ebae6f5c5efd3a605edb443fa71790672b150892f6d"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "u": 4.4853010194856324e-14,
+            "v": 3.430589146091734e-14
+          }
+        },
+        "analytic_max_error": {
+          "vout": 0.7250000000000173
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observed_violation"
+      },
+      "waveform_sha256": "24ebe00825ceb3d90cc80d801d0f4624d25ead251a43b48e28204210054f5a22",
+      "first_sample": {
+        "time": 0.0,
+        "u": 0.0,
+        "v": -0.2,
+        "vout": 0.1
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "u": -0.2,
+        "v": -0.1,
+        "vout": 0.05
+      },
+      "last_write_models_max_residual_v": {
+        "bias": 0.275,
+        "last_input_contribution": 0.0,
+        "correct_sum": 0.7250000000000001
+      }
+    },
+    {
+      "id": "evas-s1-sum",
+      "backend": "evas",
+      "condition": "s1-default",
+      "profile": "base",
+      "mutation": "Only combine three additive contributions into one sum",
+      "prediction": "Same physical equation should pass if separate writes overwrite",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "4c7551c449bec9d6564bf520e5a1b13ffd0eed0147b4fdf4c0e977848ba51af0",
+        "tb.scs": "d53770acf54cca1483431277606b465a09a310d589686d1c010104eb501a2924",
+        "condition.json": "0e8fa8d168e77f10f4701ebae6f5c5efd3a605edb443fa71790672b150892f6d"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "u": 4.4853010194856324e-14,
+            "v": 3.430589146091734e-14
+          }
+        },
+        "analytic_max_error": {
+          "vout": 6.727951529228449e-14
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "307446064a772da4e149f20ec7e7e7ef6edff46092b9a1f62da0031672c4872f",
+      "first_sample": {
+        "time": 0.0,
+        "u": 0.0,
+        "v": -0.2,
+        "vout": 0.225
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "u": -0.2,
+        "v": -0.1,
+        "vout": -0.12500000000000006
+      },
+      "last_write_models_max_residual_v": {
+        "bias": 0.6999999999999961,
+        "last_input_contribution": 0.7250000000000001,
+        "correct_sum": 1.1102230246251565e-16
+      }
+    },
+    {
+      "id": "evas-e1-aligned-fine-zero-tol",
+      "backend": "evas",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "mutation": "Only set cross expression tolerance to zero",
+      "prediction": "Missing events should recover if candidate acceptance/tolerance-band interaction is causal",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "44e1a076099ce46e50bcaf2f99517e7a13bac6f370c1c8c20162f8ee325607df",
+        "tb.scs": "b8532dde627f16cacfe01f2a3a278b8e8c23e803a779655742ae600ca816a0be",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 30013,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.0000667788622195e-12
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0",
+                "44611/500000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30013,
+              "constraint_count": 211,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0",
+                "44611/500000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30013,
+              "constraint_count": 211,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30013,
+              "constraint_count": 102,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30013,
+              "constraint_count": 102,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "eb64a8b838c45e1550b954f5349409e747238d50c848bbc94d00657ae3287482",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.4,
+        "up": 0.0,
+        "down": 0.0
+      },
+      "last_sample": {
+        "time": 3e-06,
+        "vin": 0.6,
+        "up": 0.2,
+        "down": 0.1
+      }
+    },
+    {
+      "id": "evas-e1-shifted-base-zero-tol",
+      "backend": "evas",
+      "condition": "e1-shifted",
+      "profile": "base",
+      "mutation": "Only set cross expression tolerance to zero",
+      "prediction": "Missing events should recover if candidate acceptance/tolerance-band interaction is causal",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "44e1a076099ce46e50bcaf2f99517e7a13bac6f370c1c8c20162f8ee325607df",
+        "tb.scs": "161c8a19509c1903d92177d8decdff3051b0ec90157f3d252a636273777e9e6c",
+        "condition.json": "1fe4524515822e751aef19dac08ebc93dc4ee44e4f7a498943a0fdabf97be0b8"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 3022,
+          "max_gap_s": 1.0000000000002869e-09,
+          "input_max_error_v": {
+            "vin": 2.007505273127208e-12
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0",
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3022,
+              "constraint_count": 31,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0",
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3022,
+              "constraint_count": 31,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3022,
+              "constraint_count": 16,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3022,
+              "constraint_count": 16,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "d954ca9a086852366a8e38ce53b31cf7b9075fff37d2cb451fee93cbe62080a6",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.4,
+        "up": 0.0,
+        "down": 0.0
+      },
+      "last_sample": {
+        "time": 3e-06,
+        "vin": 0.6,
+        "up": 0.2,
+        "down": 0.1
+      }
+    },
+    {
+      "id": "evas-e2-low-fine-zero-tol",
+      "backend": "evas",
+      "condition": "e2-low",
+      "profile": "fine",
+      "mutation": "Only set cross expression tolerance to zero",
+      "prediction": "Missing events should recover if candidate acceptance/tolerance-band interaction is causal",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "9c4ee8406cbfda39415306846d56d060ce9ae35227f4411b558521b37caa1e43",
+        "tb.scs": "500b943844e66d751e0b0b347db99a107b299aea3fb408ff0470332499ddcaf9",
+        "condition.json": "eaadfbd94df7194e8a4ee09e0ef3e86fa309875a767fb30a20f8c06122ff071c"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40027,
+          "max_gap_s": 1.0000000099971815e-10,
+          "input_max_error_v": {
+            "vin": 1.000310945187266e-13,
+            "clk": 5.0001114360043175e-12,
+            "rst": 9.99911264898401e-12
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40027,
+              "constraint_count": 1019,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40027,
+              "constraint_count": 1019,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "cc5025f382a41fba5a9e84fab0d6045eb505c476163b4270fc26475d7e2154d3",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.8,
+        "clk": 0.0,
+        "rst": 0.0,
+        "vout": 0.1
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vin": 0.4,
+        "clk": 0.0,
+        "rst": 0.0,
+        "vout": 0.44999999999990004
+      }
+    },
+    {
+      "id": "evas-e1-fine-step-base-tol",
+      "backend": "evas",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "mutation": "Only take numerical tolerances from base profile",
+      "prediction": "Failure follows step rather than numerical tolerances if event scheduling is causal",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "tb.scs": "69c4fedf447bff288e194e2c1532eef7b84cf3758934418e5b91b45ba3ec1057",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 30004,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.0000112677109882e-12
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30004,
+              "constraint_count": 203,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30004,
+              "constraint_count": 203,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30004,
+              "constraint_count": 102,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30004,
+              "constraint_count": 102,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observed_violation"
+      },
+      "waveform_sha256": "7cc740ef5133ca673388e474cce63ca3caadef1de627802c7972c3a1b85c410a",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.4,
+        "up": 0.0,
+        "down": 0.0
+      },
+      "last_sample": {
+        "time": 3e-06,
+        "vin": 0.6,
+        "up": 0.1,
+        "down": 0.1
+      }
+    },
+    {
+      "id": "evas-e1-base-step-fine-tol",
+      "backend": "evas",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "mutation": "Only take numerical tolerances from fine profile",
+      "prediction": "Failure follows step rather than numerical tolerances if event scheduling is causal",
+      "baseline_status": "observations_within_targets",
+      "input_hashes": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "tb.scs": "a365069a4701980bb0140b6f34e2b32b550ba36fddd12e5dfe00214da218fb67",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 3007,
+          "max_gap_s": 1.0000000000002869e-09,
+          "input_max_error_v": {
+            "vin": 1.9999002454085257e-12
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "119/2500000000000000000",
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3007,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "119/2500000000000000000",
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3007,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3007,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "0"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3007,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "d3042c03f37345d86109c45f06b877ca99ef0ac594e314a26eeca095e25e0c18",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.4,
+        "up": 0.0,
+        "down": 0.0
+      },
+      "last_sample": {
+        "time": 3e-06,
+        "vin": 0.6,
+        "up": 0.2,
+        "down": 0.1
+      }
+    },
+    {
+      "id": "evas-d1-assignment-3",
+      "backend": "evas",
+      "condition": "d1-free",
+      "profile": "base",
+      "mutation": "Move idt to real assignment",
+      "prediction": "Three-argument form should be refused; two-argument assignment should execute if lowering supports only that form",
+      "baseline_status": "execution_failed",
+      "input_hashes": {
+        "dut.va": "e4c3ebf919d2325ed530876293040f78d561308b4e922016d2cfa72a69bb4e95",
+        "tb.scs": "6c0e5b8b2c6beaa1abf77e016fff8d44370a65b2bdaa730a5374b55c20679d4c",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad"
+      },
+      "execution_exit_code": 1,
+      "error_lines": [
+        "ERROR [rust_lowering]: model:0:dvs_integrator_Model:continuous_body_not_lowered"
+      ]
+    },
+    {
+      "id": "evas-d1-assignment-2",
+      "backend": "evas",
+      "condition": "d1-free",
+      "profile": "base",
+      "mutation": "Move idt to real assignment; remove identically-zero reset argument",
+      "prediction": "Three-argument form should be refused; two-argument assignment should execute if lowering supports only that form",
+      "baseline_status": "execution_failed",
+      "input_hashes": {
+        "dut.va": "758ae9606f8e464675eca192f25137579c77d6aa75cf20cd9c6e6e513c8e3237",
+        "tb.scs": "6c0e5b8b2c6beaa1abf77e016fff8d44370a65b2bdaa730a5374b55c20679d4c",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 2.0539125955565396e-14,
+            "rst": 0.0
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "max_error_v": 3.708144902248023e-14
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "max_error_v": 3.708144902248023e-14
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "879cea779e19619c93bb26eed97a937b13bb737e0e6f6b36e874b81043b31fc3",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.2,
+        "rst": 0.0,
+        "vout": 0.25,
+        "flag": 0.0
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vin": -0.2,
+        "rst": 0.0,
+        "vout": 0.2500000000000001,
+        "flag": 0.0
+      }
+    },
+    {
+      "id": "openvaf-e1-aligned-mir",
+      "backend": "openvaf_ngspice",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "mutation": "No source change; dump compiler MIR only",
+      "prediction": "cross gates missing: counters increment on evaluation; reset_flag simplifies to zero",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "tb.scs": "af15376a326273ffa5afc8152c7668664c7e76f22a0178fc1c1818f03dfbdb56",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235"
+      },
+      "compile_exit_code": 0,
+      "evaluation_mir": "Optimized evaluation MIR of dvs_event_counts\nfunction %(v17, v19, v21, v23, v26, v32, v45, v54, v173, v174, v175, v224) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v5 = iconst 1\n    v27 = fconst 0x1.999999999999ap-4\n    v31 = fconst 0x1.5798ee2308c3ap-27\n\n                                block14:\n                                    v18 = ficast v17\n                                    v22 = ficast v21\n@0012                               v24 = iadd v18, v5\n@0020                               v25 = iadd v22, v5\n@0025                               v28 = ifcast v24\n@0026                               v29 = fmul v27, v28\n@002a                               v37 = fsub v32, v29\n@002a                               v38 = fdiv v37, v31\n@002f                               v52 = ifcast v25\n@0030                               v53 = fmul v27, v52\n@0034                               v59 = fsub v54, v53\n@0034                               v60 = fdiv v59, v31\n                                    v86 = call inst0(v28)\n                                    v94 = call inst1(v52)\n                                    v176 = optbarrier v32\n                                    v177 = fsub v176, v26\n                                    v215 = fmul v175, v173\n                                    v178 = optbarrier v215\n                                    v179 = fneg v173\n                                    v180 = optbarrier v54\n                                    v181 = fsub v180, v45\n                                    v216 = fmul v175, v174\n                                    v182 = optbarrier v216\n                                    v183 = fsub v179, v174\n                                    v184 = optbarrier v38\n                                    v186 = optbarrier v60\n                                    v203 = optbarrier v224\n                                    v204 = optbarrier v224\n                                    v218 = fmul v175, v183\n                                    v217 = optbarrier v218\n                                    v219 = optbarrier v177\n                                    v220 = optbarrier v181\n                                    v221 = optbarrier v175\n}",
+      "compile_log_sha256": "2710b5b87ce10ed5737ce10b83e5d013507cc0599834868e6401840569417783"
+    },
+    {
+      "id": "openvaf-d1-reset-mir",
+      "backend": "openvaf_ngspice",
+      "condition": "d1-reset",
+      "profile": "base",
+      "mutation": "No source change; dump compiler MIR only",
+      "prediction": "cross gates missing: counters increment on evaluation; reset_flag simplifies to zero",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "tb.scs": "72ddbfc24f9fb13eb87dd6bbc4cf80f009469cf8dd38eea370884ec0080527e9",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765"
+      },
+      "compile_exit_code": 0,
+      "evaluation_mir": "Optimized evaluation MIR of dvs_integrator\nfunction %(v17, v19, v20, v21, v22, v27, v41, v78, v79, v80, v112) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    // v1 = bconst false\n    // v2 = bconst true\n    v3 = fconst 0.0\n    v6 = fconst 0x1.0000000000000p0\n    v28 = fconst 0x1.0c6f7a0b5ed8dp-20\n    v31 = fconst 0x1.0000000000000p-2\n    v117 = fconst -0x1.e848000000000p19\n\n                                block8:\n@0025                               br v22, block4, block3\n\n                                block3:\n@0025                               jmp block4\n\n                                block4:\n@0025                               v26 = phi [v1, block3], [v2, block8]\n@0025                               br v26, block5, block6\n\n                                block5:\n@0022                               v29 = fdiv v27, v28\n@0025                               v30 = fneg v29\n@0025                               jmp block7\n\n                                block6:\n@0025                               v32 = fsub v21, v31\n@0025                               jmp block7\n\n                                block7:\n@0025                               v33 = phi [v30, block5], [v32, block6]\n@ffffffdb                           v91 = phi [v3, block5], [v6, block6]\n@ffffffdb                           v92 = phi [v117, block5], [v3, block6]\n@0025                               v34 = phi [v21, block5], [v31, block6]\n@ffffffdb                           v93 = phi [v6, block5], [v3, block6]\n                                    v55 = call inst0(v3)\n                                    v81 = optbarrier v21\n                                    v82 = fsub v81, v20\n                                    v106 = fmul v80, v78\n                                    v83 = optbarrier v106\n                                    v84 = fneg v78\n                                    v85 = optbarrier v33\n                                    v86 = optbarrier v34\n                                    v98 = optbarrier v112\n                                    v102 = optbarrier v91\n                                    v103 = optbarrier v93\n                                    v104 = fneg v92\n                                    v105 = optbarrier v92\n                                    v108 = fmul v80, v84\n                                    v107 = optbarrier v108\n                                    v109 = optbarrier v82\n                                    v110 = optbarrier v80\n                                    v114 = optbarrier v104\n}",
+      "compile_log_sha256": "2f4f2b94f25baf2da7449fd6fb3edca2f093563bd287f0ce6a9f423c5861d8e2"
+    },
+    {
+      "id": "gnucap-d1-reset-trace",
+      "backend": "gnucap",
+      "condition": "d1-reset",
+      "profile": "base",
+      "mutation": "Logging only in generated C++; no branch or value change",
+      "prediction": "Event accept trace distinguishes missing crossings; idt trace distinguishes held reset from a single pulse",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "tb.scs": "72ddbfc24f9fb13eb87dd6bbc4cf80f009469cf8dd38eea370884ec0080527e9",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000021927e-09,
+          "input_max_error_v": {
+            "vin": 1.942890293094024e-16,
+            "rst": 5.037636974236648e-15
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "F",
+            "reason": "voltage outside every legal history",
+            "time_x": 1.521
+          },
+          "candidate_budget_sensitivity": {
+            "status": "F",
+            "reason": "voltage outside every legal history",
+            "time_x": 1.5260000000000002
+          }
+        },
+        "status": "observed_violation"
+      },
+      "waveform_sha256": "026b4abbe144763d196d9115f110c02e8a8afe08949565b6c9f05e2f300c04df",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.2,
+        "rst": 0.0,
+        "vout": 0.25,
+        "flag": 0.0,
+        "bench_ref": 0.0
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vin": -0.2,
+        "rst": 0.0,
+        "vout": 0.062500000000187,
+        "flag": 0.0,
+        "bench_ref": 0.0
+      },
+      "logging_only_waveform_identical": true,
+      "trace": [
+        {
+          "line": 62,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=1.5e-06 in0=5.5511151231257827e-16 in1=-0.0049999999999998379 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 63,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=1.5e-06 in0=5.5511151231257827e-16 in1=-0.0049999999999998379 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 64,
+          "text": "[DEBUG-dvs2b] accept label=dut t=1.5e-06 input=5.5511151231257827e-16 dir=1 ret=1"
+        },
+        {
+          "line": 65,
+          "text": "[DEBUG-dvs2b] accept label=dut t=1.5e-06 input=5.5511151231257827e-16 dir=-1 ret=0"
+        },
+        {
+          "line": 66,
+          "text": "[DEBUG-dvs2b] idt-reset t=1.5e-06 reset=1"
+        },
+        {
+          "line": 67,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=1.5000019999999999e-06 in0=9.9999999996214228e-06 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 68,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=1.5000019999999999e-06 in0=9.9999999996214228e-06 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 69,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=1.5000029999999999e-06 in0=1.4999999999654179e-05 in1=9.9999999996214228e-06 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 70,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=1.5000029999999999e-06 in0=1.4999999999654179e-05 in1=9.9999999996214228e-06 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 71,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=1.5000099999999999e-06 in0=4.9999999999883471e-05 in1=1.4999999999654179e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 72,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=1.5000099999999999e-06 in0=4.9999999999883471e-05 in1=1.4999999999654179e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 73,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=2.4999999999999998e-06 in0=1.1102230246251565e-15 in1=0.0049999999999994493 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 74,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=2.4999999999999998e-06 in0=1.1102230246251565e-15 in1=0.0049999999999994493 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 75,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=2.5000019999999998e-06 in0=-9.9999999995104005e-06 in1=1.1102230246251565e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 76,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=2.5000019999999998e-06 in0=-9.9999999995104005e-06 in1=1.1102230246251565e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 77,
+          "text": "[DEBUG-dvs2b] accept label=dut t=2.5000019999999998e-06 input=-9.9999999995104005e-06 dir=1 ret=0"
+        },
+        {
+          "line": 78,
+          "text": "[DEBUG-dvs2b] accept label=dut t=2.5000019999999998e-06 input=-9.9999999995104005e-06 dir=-1 ret=1"
+        },
+        {
+          "line": 79,
+          "text": "[DEBUG-dvs2b] idt-reset t=2.5000019999999998e-06 reset=0"
+        },
+        {
+          "line": 80,
+          "text": "[DEBUG-dvs2b] review 0 label=dut t=2.5000039999999999e-06 in0=-1.9999999999686935e-05 in1=-9.9999999995104005e-06 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 81,
+          "text": "[DEBUG-dvs2b] review 1 label=dut t=2.5000039999999999e-06 in0=-1.9999999999686935e-05 in1=-9.9999999995104005e-06 state0=-1 state1=1 signchange=0"
+        }
+      ],
+      "trace_log_sha256": "0504a66dc40000607bf1810a953fc5758c64b405bb6bff9dfb634221683e7868"
+    },
+    {
+      "id": "gnucap-c1-main-trace",
+      "backend": "gnucap",
+      "condition": "c1-main",
+      "profile": "base",
+      "mutation": "Logging only in generated C++; no branch or value change",
+      "prediction": "Event accept trace distinguishes missing crossings; idt trace distinguishes held reset from a single pulse",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "tb.scs": "2d8db679811c9440e471d20215ff257be9444cd6d4d0e70ce03afc14a1a5d9c3",
+        "condition.json": "6f85192d55bee9cfda9a9fe1b78ed496239c41c80910dd7161b418d56b967869"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000021927e-09,
+          "input_max_error_v": {
+            "vina": 3.3306690738754696e-16,
+            "clka": 1.7319479184152442e-14,
+            "rsta": 1.1324274851176597e-14,
+            "vinb": 3.3306690738754696e-16,
+            "clkb": 1.3697376566312869e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 165,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 165,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observed_violation"
+      },
+      "waveform_sha256": "e2d159c64c428115dedcbdafa3fd5dcb0810df63b7523a6f5c27d8102482db4f",
+      "first_sample": {
+        "time": 0.0,
+        "vina": 0.8,
+        "clka": 0.0,
+        "rsta": 0.0,
+        "vinb": 0.2,
+        "clkb": 0.0,
+        "rstb": 0.0,
+        "outa": 0.1,
+        "outb": 0.3,
+        "bench_ref": 0.0
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vina": 0.4,
+        "clka": 0.0,
+        "rsta": 0.0,
+        "vinb": 0.6,
+        "clkb": -4e-15,
+        "rstb": 0.0,
+        "outa": 0.4500000000000101,
+        "outb": 0.5750002,
+        "bench_ref": 0.0
+      },
+      "logging_only_waveform_identical": true,
+      "trace": [
+        {
+          "line": 74,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=4.9999999999999998e-07 in0=0 in1=-0.0049999999999998934 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 75,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0000200000000003e-07 in0=1.0000000000287557e-05 in1=0 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 76,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0000399999999998e-07 in0=2.0000000000020002e-05 in1=1.0000000000287557e-05 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 77,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=7.5000000000000002e-07 in0=5.5511151231257827e-16 in1=-0.0049999999999998379 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 78,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=7.5000000000000002e-07 input=5.5511151231257827e-16 dir=1 ret=1"
+        },
+        {
+          "line": 79,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=7.5000199999999997e-07 in0=1.0000000000287557e-05 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 80,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=7.9999999999999996e-07 in0=-5.5511151231257827e-16 in1=0.0099999999999991207 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 81,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=7.9999999999999996e-07 input=-5.5511151231257827e-16 dir=1 ret=0"
+        },
+        {
+          "line": 82,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=8.0000200000000002e-07 in0=-2.0000000001130225e-05 in1=-5.5511151231257827e-16 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 83,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=9.5000000000000001e-07 in0=-5.5511151231257827e-17 in1=0.010000000000000675 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 84,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=9.5000000000000001e-07 input=-5.5511151231257827e-17 dir=1 ret=0"
+        },
+        {
+          "line": 85,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=9.5000199999999996e-07 in0=-1.9999999999520401e-05 in1=-5.5511151231257827e-17 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 86,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.5e-06 in0=5.5511151231257827e-16 in1=-0.0049999999999998934 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 87,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=1.5e-06 input=5.5511151231257827e-16 dir=1 ret=1"
+        },
+        {
+          "line": 88,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.5000019999999999e-06 in0=9.9999999997324451e-06 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 89,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.75e-06 in0=4.4408920985006262e-16 in1=-0.0050000000000000044 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 90,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=1.75e-06 input=4.4408920985006262e-16 dir=1 ret=1"
+        },
+        {
+          "line": 91,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.750002e-06 in0=1.0000000000731646e-05 in1=4.4408920985006262e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 92,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.7999999999999999e-06 in0=8.8817841970012523e-16 in1=0.0099999999999994538 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 93,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.800002e-06 in0=-1.9999999999686935e-05 in1=8.8817841970012523e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 94,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=1.800002e-06 input=-1.9999999999686935e-05 dir=1 ret=0"
+        },
+        {
+          "line": 95,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.800004e-06 in0=-4.0000000000151026e-05 in1=-1.9999999999686935e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 96,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.95e-06 in0=-1.1102230246251565e-16 in1=0.010000000000000564 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 97,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=1.95e-06 input=-1.1102230246251565e-16 dir=1 ret=0"
+        },
+        {
+          "line": 98,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.950002e-06 in0=-2.0000000000686136e-05 in1=-1.1102230246251565e-16 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 99,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.1500000000000002e-06 in0=1.9984014443252818e-15 in1=-0.0099999999999987321 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 100,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.1500000000000002e-06 input=1.9984014443252818e-15 dir=1 ret=1"
+        },
+        {
+          "line": 101,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.1500019999999998e-06 in0=1.999999999846569e-05 in1=1.9984014443252818e-15 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 102,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.4999999999999998e-06 in0=-5.5511151231257827e-16 in1=-0.0049999999999988387 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 103,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.5000019999999998e-06 in0=9.9999999997324451e-06 in1=-5.5511151231257827e-16 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 104,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.5000019999999998e-06 input=9.9999999997324451e-06 dir=1 ret=1"
+        },
+        {
+          "line": 105,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.5000039999999999e-06 in0=2.0000000000020002e-05 in1=9.9999999997324451e-06 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 106,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.7499999999999999e-06 in0=4.4408920985006262e-16 in1=-0.0049999999999999489 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 107,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=2.7499999999999999e-06 input=4.4408920985006262e-16 dir=1 ret=1"
+        },
+        {
+          "line": 108,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.750002e-06 in0=1.0000000000731646e-05 in1=4.4408920985006262e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 109,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.7999999999999999e-06 in0=7.7715611723760958e-16 in1=0.010000000000001452 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 110,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.8000019999999999e-06 in0=-1.9999999999797957e-05 in1=7.7715611723760958e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 111,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.8000019999999999e-06 input=-1.9999999999797957e-05 dir=1 ret=0"
+        },
+        {
+          "line": 112,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.800004e-06 in0=-4.000000000037307e-05 in1=-1.9999999999797957e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 113,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8499999999999998e-06 in0=2.886579864025407e-15 in1=0.010000000000003673 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 114,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8500019999999999e-06 in0=-1.9999999997688533e-05 in1=2.886579864025407e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 115,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.8500019999999999e-06 input=-1.9999999997688533e-05 dir=1 ret=0"
+        },
+        {
+          "line": 116,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8500039999999999e-06 in0=-3.9999999998152624e-05 in1=-1.9999999997688533e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 117,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500000000000001e-06 in0=7.7715611723760958e-16 in1=0.010000000000001452 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 118,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500019999999998e-06 in0=-1.999999999557911e-05 in1=7.7715611723760958e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 119,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=2.9500019999999998e-06 input=-1.999999999557911e-05 dir=1 ret=0"
+        },
+        {
+          "line": 120,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500039999999998e-06 in0=-3.9999999996043201e-05 in1=-1.999999999557911e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 121,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.4999999999999999e-06 in0=7.7715611723760958e-16 in1=-0.0049999999999996159 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 122,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=3.4999999999999999e-06 input=7.7715611723760958e-16 dir=1 ret=1"
+        },
+        {
+          "line": 123,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.500002e-06 in0=1.000000000095369e-05 in1=7.7715611723760958e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 124,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500000000000001e-06 in0=-9.4368957093138306e-16 in1=-0.0050000000000013367 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 125,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500019999999997e-06 in0=9.9999999971789322e-06 in1=-9.4368957093138306e-16 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 126,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=3.7500019999999997e-06 input=9.9999999971789322e-06 dir=1 ret=1"
+        },
+        {
+          "line": 127,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500039999999998e-06 in0=1.9999999997577511e-05 in1=9.9999999971789322e-06 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 128,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7501700000000001e-06 in0=0.00084999999999935127 in1=1.9999999997577511e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 129,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8e-06 in0=2.3314683517128287e-15 in1=0.010000000000003118 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 130,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8000020000000001e-06 in0=-1.9999999998243645e-05 in1=2.3314683517128287e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 131,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=3.8000020000000001e-06 input=-1.9999999998243645e-05 dir=1 ret=0"
+        },
+        {
+          "line": 132,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8000039999999997e-06 in0=-3.9999999994488888e-05 in1=-1.9999999998243645e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 133,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.9500000000000003e-06 in0=-8.0491169285323849e-15 in1=0.0099999999999967892 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 134,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=3.9500000000000003e-06 input=-8.0491169285323849e-15 dir=1 ret=0"
+        },
+        {
+          "line": 135,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.9500019999999999e-06 in0=-2.0000000004405383e-05 in1=-8.0491169285323849e-15 state0=-1 state1=1 signchange=0"
+        }
+      ],
+      "trace_log_sha256": "e1be9b6f944e83fdc8b3efff4929a56989198a66f273ea7c03a323f6f299df80"
+    },
+    {
+      "id": "gnucap-c1-swapped-trace",
+      "backend": "gnucap",
+      "condition": "c1-swapped",
+      "profile": "base",
+      "mutation": "Logging only in generated C++; no branch or value change",
+      "prediction": "Event accept trace distinguishes missing crossings; idt trace distinguishes held reset from a single pulse",
+      "baseline_status": "observations_within_targets",
+      "input_hashes": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "tb.scs": "184c1b164cbb451e28485ac5ad58a33c587ea449b5ee587285dcfb7c72fc34f3",
+        "condition.json": "60535c171662f0b48e9c710f2c3ceada565b60d3b386cca49ce55483c124189b"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000021927e-09,
+          "input_max_error_v": {
+            "vina": 3.3306690738754696e-16,
+            "clka": 1.7319479184152442e-14,
+            "rsta": 1.1324274851176597e-14,
+            "vinb": 3.3306690738754696e-16,
+            "clkb": 1.3697376566312869e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 165,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 165,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "waveform_sha256": "ae6fd36dd999ca2dcba499faca1c271c5838466a9dbe4d7004cdd44d0b2f7762",
+      "first_sample": {
+        "time": 0.0,
+        "vina": 0.8,
+        "clka": 0.0,
+        "rsta": 0.0,
+        "vinb": 0.2,
+        "clkb": 0.0,
+        "rstb": 0.0,
+        "outa": 0.1,
+        "outb": 0.3,
+        "bench_ref": 0.0
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vina": 0.4,
+        "clka": 0.0,
+        "rsta": 0.0,
+        "vinb": 0.6,
+        "clkb": -4e-15,
+        "rstb": 0.0,
+        "outa": 0.4500000000000091,
+        "outb": 0.5750002,
+        "bench_ref": -1e-15
+      },
+      "logging_only_waveform_identical": true,
+      "trace": [
+        {
+          "line": 74,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=4.9999999999999998e-07 in0=-5.5511151231257827e-17 in1=-0.0049999999999999489 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 75,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0000200000000003e-07 in0=1.0000000000287557e-05 in1=-5.5511151231257827e-17 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 76,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=5.0000200000000003e-07 input=1.0000000000287557e-05 dir=1 ret=1"
+        },
+        {
+          "line": 77,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0000399999999998e-07 in0=2.0000000000020002e-05 in1=1.0000000000287557e-05 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 78,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0006700000000003e-07 in0=0.00033500000000019625 in1=2.0000000000020002e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 79,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0003200000000001e-07 in0=0.00016000000000016001 in1=2.0000000000020002e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 80,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0005999999999994e-07 in0=0.00029999999999974492 in1=0.00016000000000016001 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 81,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.00043e-07 in0=0.00021500000000007624 in1=0.00016000000000016001 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 82,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=5.0005399999999999e-07 in0=0.00026999999999999247 in1=0.00021500000000007624 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 83,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=7.5000000000000002e-07 in0=5.5511151231257827e-16 in1=-0.0049999999999998379 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 84,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=7.5000000000000002e-07 input=5.5511151231257827e-16 dir=1 ret=1"
+        },
+        {
+          "line": 85,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=7.5000199999999997e-07 in0=1.0000000000287557e-05 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 86,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=7.9999999999999996e-07 in0=-6.106226635438361e-16 in1=0.0099999999999991207 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 87,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=7.9999999999999996e-07 input=-6.106226635438361e-16 dir=1 ret=0"
+        },
+        {
+          "line": 88,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=8.0000200000000002e-07 in0=-2.0000000001185736e-05 in1=-6.106226635438361e-16 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 89,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=9.5000000000000001e-07 in0=-1.1102230246251565e-16 in1=0.010000000000000675 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 90,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=9.5000000000000001e-07 input=-1.1102230246251565e-16 dir=1 ret=0"
+        },
+        {
+          "line": 91,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=9.5000199999999996e-07 in0=-1.9999999999575913e-05 in1=-1.1102230246251565e-16 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 92,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.5e-06 in0=4.4408920985006262e-16 in1=-0.0049999999999999489 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 93,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=1.5e-06 input=4.4408920985006262e-16 dir=1 ret=1"
+        },
+        {
+          "line": 94,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.5000019999999999e-06 in0=9.9999999996214228e-06 in1=4.4408920985006262e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 95,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.75e-06 in0=4.4408920985006262e-16 in1=-0.0049999999999999489 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 96,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=1.75e-06 input=4.4408920985006262e-16 dir=1 ret=1"
+        },
+        {
+          "line": 97,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.750002e-06 in0=1.0000000000731646e-05 in1=4.4408920985006262e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 98,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.7999999999999999e-06 in0=8.8817841970012523e-16 in1=0.0099999999999994538 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 99,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.800002e-06 in0=-1.9999999999686935e-05 in1=8.8817841970012523e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 100,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=1.800002e-06 input=-1.9999999999686935e-05 dir=1 ret=0"
+        },
+        {
+          "line": 101,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=1.800004e-06 in0=-4.0000000000151026e-05 in1=-1.9999999999686935e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 102,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.95e-06 in0=-1.1102230246251565e-16 in1=0.010000000000000564 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 103,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=1.95e-06 input=-1.1102230246251565e-16 dir=1 ret=0"
+        },
+        {
+          "line": 104,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=1.950002e-06 in0=-2.0000000000686136e-05 in1=-1.1102230246251565e-16 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 105,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.1500000000000002e-06 in0=1.9984014443252818e-15 in1=-0.0099999999999987876 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 106,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.1500000000000002e-06 input=1.9984014443252818e-15 dir=1 ret=1"
+        },
+        {
+          "line": 107,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.1500019999999998e-06 in0=1.9999999998354667e-05 in1=1.9984014443252818e-15 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 108,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.4999999999999998e-06 in0=-7.2164496600635175e-16 in1=-0.0049999999999990052 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 109,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.5000019999999998e-06 in0=9.9999999996214228e-06 in1=-7.2164496600635175e-16 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 110,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.5000019999999998e-06 input=9.9999999996214228e-06 dir=1 ret=1"
+        },
+        {
+          "line": 111,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.5000039999999999e-06 in0=1.9999999999908979e-05 in1=9.9999999996214228e-06 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 112,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.7499999999999999e-06 in0=2.2204460492503131e-16 in1=-0.0050000000000001155 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 113,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=2.7499999999999999e-06 input=2.2204460492503131e-16 dir=1 ret=1"
+        },
+        {
+          "line": 114,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.750002e-06 in0=1.0000000000509601e-05 in1=2.2204460492503131e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 115,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.7999999999999999e-06 in0=6.6613381477509392e-16 in1=0.010000000000001341 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 116,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.8000019999999999e-06 in0=-1.9999999999908979e-05 in1=6.6613381477509392e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 117,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.8000019999999999e-06 input=-1.9999999999908979e-05 dir=1 ret=0"
+        },
+        {
+          "line": 118,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=2.800004e-06 in0=-4.0000000000484093e-05 in1=-1.9999999999908979e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 119,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8499999999999998e-06 in0=2.7755575615628914e-15 in1=0.010000000000003562 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 120,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8500019999999999e-06 in0=-1.9999999997799556e-05 in1=2.7755575615628914e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 121,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=2.8500019999999999e-06 input=-1.9999999997799556e-05 dir=1 ret=0"
+        },
+        {
+          "line": 122,
+          "text": "[DEBUG-dvs2b] review 1 label=sampler_a t=2.8500039999999999e-06 in0=-3.9999999998263647e-05 in1=-1.9999999997799556e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 123,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500000000000001e-06 in0=6.6613381477509392e-16 in1=0.010000000000001341 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 124,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500019999999998e-06 in0=-1.9999999995690132e-05 in1=6.6613381477509392e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 125,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=2.9500019999999998e-06 input=-1.9999999995690132e-05 dir=1 ret=0"
+        },
+        {
+          "line": 126,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=2.9500039999999998e-06 in0=-3.9999999996154223e-05 in1=-1.9999999995690132e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 127,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.4999999999999999e-06 in0=6.6613381477509392e-16 in1=-0.0049999999999997269 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 128,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=3.4999999999999999e-06 input=6.6613381477509392e-16 dir=1 ret=1"
+        },
+        {
+          "line": 129,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.500002e-06 in0=1.000000000095369e-05 in1=6.6613381477509392e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 130,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500000000000001e-06 in0=-9.4368957093138306e-16 in1=-0.0050000000000013367 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 131,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500019999999997e-06 in0=9.9999999971789322e-06 in1=-9.4368957093138306e-16 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 132,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=3.7500019999999997e-06 input=9.9999999971789322e-06 dir=1 ret=1"
+        },
+        {
+          "line": 133,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7500039999999998e-06 in0=1.9999999997577511e-05 in1=9.9999999971789322e-06 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 134,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.7501700000000001e-06 in0=0.00084999999999935127 in1=1.9999999997577511e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 135,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8e-06 in0=2.6645352591003757e-15 in1=0.010000000000003451 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 136,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8000020000000001e-06 in0=-1.9999999997910578e-05 in1=2.6645352591003757e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 137,
+          "text": "[DEBUG-dvs2b] accept label=sampler_a t=3.8000020000000001e-06 input=-1.9999999997910578e-05 dir=1 ret=0"
+        },
+        {
+          "line": 138,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_a t=3.8000039999999997e-06 in0=-3.9999999994155822e-05 in1=-1.9999999997910578e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 139,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.9500000000000003e-06 in0=-7.716050021144838e-15 in1=0.0099999999999971223 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 140,
+          "text": "[DEBUG-dvs2b] accept label=sampler_b t=3.9500000000000003e-06 input=-7.716050021144838e-15 dir=1 ret=0"
+        },
+        {
+          "line": 141,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler_b t=3.9500019999999999e-06 in0=-2.0000000004072316e-05 in1=-7.716050021144838e-15 state0=-1 state1=1 signchange=0"
+        }
+      ],
+      "trace_log_sha256": "cee11b7dcac2cda354cd74738e4add89439c4449c6f5c0baf769c152ebda3a42"
+    },
+    {
+      "id": "gnucap-c2-main-trace",
+      "backend": "gnucap",
+      "condition": "c2-main",
+      "profile": "fine",
+      "mutation": "Logging only in generated C++; no branch or value change",
+      "prediction": "Event accept trace distinguishes missing crossings; idt trace distinguishes held reset from a single pulse",
+      "baseline_status": "observed_violation",
+      "input_hashes": {
+        "dut.va": "76e1d3cdef4b1bcbf4349bdb796aa4f308c0eb18f10c259dc95974a579a53aed",
+        "tb.scs": "dabf3d30b2b6cae6dccafe61ece76c8951dd9f009b79df667073fc75ac541278",
+        "condition.json": "18e2a65c996f20fc3dcc14667a2375579a8539f1c1ef40a20da425be79d34d4c"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000276037e-10,
+          "input_max_error_v": {
+            "vin": 7.771561172376096e-16,
+            "clk": 1.7430501486614958e-14,
+            "rst": 0.0
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 754,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "F",
+              "reason": "outer_domain_proved_empty",
+              "witness_offsets": null,
+              "boxes_examined": 1,
+              "boxes_excluded": 1,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 754,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "analytic_max_error": {
+          "z": 3.681486920870114e-10
+        },
+        "analytic_targets": {
+          "z": 0.0006
+        },
+        "status": "observed_violation"
+      },
+      "waveform_sha256": "e3a33827cff5b58b8f743b6301ceafe9e4c85668e642a1f69f6bfa64b09143d3",
+      "first_sample": {
+        "time": 0.0,
+        "vin": 0.0,
+        "clk": 0.0,
+        "rst": 0.0,
+        "z": 0.0,
+        "vout": 0.1,
+        "bench_ref": 0.0
+      },
+      "last_sample": {
+        "time": 4e-06,
+        "vin": 0.6,
+        "clk": 0.0,
+        "rst": 0.0,
+        "z": 0.595248934044122,
+        "vout": 0.50457267008673,
+        "bench_ref": 0.0
+      },
+      "logging_only_waveform_identical": true,
+      "trace": [
+        {
+          "line": 66,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.4998e-06 in0=-0.0009999999999995568 in1=-0.0014999999999996683 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 67,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.4999e-06 in0=-0.00049999999999955635 in1=-0.0009999999999995568 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 68,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.5e-06 in0=5.5511151231257827e-16 in1=-0.00049999999999955635 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 69,
+          "text": "[DEBUG-dvs2b] accept label=sampler t=1.5e-06 input=5.5511151231257827e-16 dir=1 ret=1"
+        },
+        {
+          "line": 70,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.5000019999999999e-06 in0=9.9999999997324451e-06 in1=5.5511151231257827e-16 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 71,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.500051e-06 in0=0.00025500000000011624 in1=9.9999999997324451e-06 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 72,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.5001e-06 in0=0.00050000000000050004 in1=0.00025500000000011624 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 73,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.5001499999999999e-06 in0=0.00075000000000002842 in1=0.00050000000000050004 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 74,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.7999999999999999e-06 in0=9.9920072216264089e-16 in1=0.0010000000000011111 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 75,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.800002e-06 in0=-1.9999999999575913e-05 in1=9.9920072216264089e-16 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 76,
+          "text": "[DEBUG-dvs2b] accept label=sampler t=1.800002e-06 input=-1.9999999999575913e-05 dir=1 ret=0"
+        },
+        {
+          "line": 77,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.800004e-06 in0=-4.0000000000040004e-05 in1=-1.9999999999575913e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 78,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=1.8000999999999999e-06 in0=-0.00099999999999900169 in1=-4.0000000000040004e-05 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 79,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.4999e-06 in0=-0.00050000000000000044 in1=-0.0010000000000010001 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 80,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.4999999999999998e-06 in0=-9.9920072216264089e-16 in1=-0.00050000000000000044 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 81,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5000019999999998e-06 in0=9.9999999992883559e-06 in1=-9.9920072216264089e-16 state0=-1 state1=-1 signchange=1"
+        },
+        {
+          "line": 82,
+          "text": "[DEBUG-dvs2b] accept label=sampler t=2.5000019999999998e-06 input=9.9999999992883559e-06 dir=1 ret=1"
+        },
+        {
+          "line": 83,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5000039999999999e-06 in0=1.999999999946489e-05 in1=9.9999999992883559e-06 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 84,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5000159999999998e-06 in0=7.9999999998969784e-05 in1=1.999999999946489e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 85,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5000229999999998e-06 in0=0.00011499999999897703 in1=7.9999999998969784e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 86,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5000280000000001e-06 in0=0.00014000000000069512 in1=0.00011499999999897703 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 87,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5001e-06 in0=0.00049999999999994493 in1=0.00014000000000069512 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 88,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.5001999999999998e-06 in0=0.00099999999999900169 in1=0.00049999999999994493 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 89,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.7999000000000001e-06 in0=0.00099999999999778044 in1=0.0020000000000002238 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 90,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.7999999999999999e-06 in0=0 in1=0.00099999999999778044 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 91,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.8000019999999999e-06 in0=-2.0000000000686136e-05 in1=0 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 92,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=2.800004e-06 in0=-4.0000000001094715e-05 in1=-2.0000000000686136e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 93,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.4998999999999997e-06 in0=-0.00050000000000105516 in1=-0.0010000000000001674 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 94,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.4999999999999999e-06 in0=0 in1=-0.00050000000000105516 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 95,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.500002e-06 in0=1.0000000000176534e-05 in1=0 state0=-1 state1=-1 signchange=0"
+        },
+        {
+          "line": 96,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.5000040000000001e-06 in0=2.0000000000353069e-05 in1=1.0000000000176534e-05 state0=1 state1=-1 signchange=0"
+        },
+        {
+          "line": 97,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.5000999999999997e-06 in0=0.00049999999999905675 in1=2.0000000000353069e-05 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 98,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.8e-06 in0=2.1094237467877974e-15 in1=0.0010000000000043308 state0=1 state1=1 signchange=0"
+        },
+        {
+          "line": 99,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.8000020000000001e-06 in0=-1.9999999998521201e-05 in1=2.1094237467877974e-15 state0=1 state1=1 signchange=1"
+        },
+        {
+          "line": 100,
+          "text": "[DEBUG-dvs2b] accept label=sampler t=3.8000020000000001e-06 input=-1.9999999998521201e-05 dir=1 ret=0"
+        },
+        {
+          "line": 101,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.8000039999999997e-06 in0=-3.9999999994655422e-05 in1=-1.9999999998521201e-05 state0=-1 state1=1 signchange=0"
+        },
+        {
+          "line": 102,
+          "text": "[DEBUG-dvs2b] review 0 label=sampler t=3.8000999999999998e-06 in0=-0.00099999999999583755 in1=-3.9999999994655422e-05 state0=-1 state1=-1 signchange=0"
+        }
+      ],
+      "trace_log_sha256": "b0edab9e18393179e9ef7988d50e281f0bcc9b169e669dd23cc331a927b34b27"
+    }
+  ],
+  "formal_dvs_qualification": "I"
+}

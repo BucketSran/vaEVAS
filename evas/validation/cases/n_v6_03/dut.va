@@ -1,0 +1,17 @@
+// N-V6-03: independent accumulated and wrapped phase operators.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_phase(fcode, accumulated, wrapped, vout, vref);
+    input fcode;
+    output accumulated, wrapped, vout;
+    inout vref;
+    electrical fcode, accumulated, wrapped, vout, vref;
+    real phase, total_phase;
+    analog begin
+        total_phase = idt(V(fcode, vref)/1e-6, 0.125);
+        phase = idtmod(V(fcode, vref)/1e-6, 0.125, 1.0, 0.0);
+        V(accumulated, vref) <+ total_phase;
+        V(wrapped, vref) <+ phase;
+        V(vout, vref) <+ 0.8*sin(2*`M_PI*phase);
+    end
+endmodule

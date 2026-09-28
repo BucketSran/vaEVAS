@@ -26,3 +26,26 @@
 每个 DUT 在 Spectre 的两档配置中均成功执行；这不等于全语言合法性认证，
 也不保证其他前端接受同一编码。原始拒绝与错误已保留，不以改写后的模型覆盖失败。
 15 个条件只覆盖起步卡，正式 DVS-2 分母仍未冻结。
+
+## 2026-09-28 Spectre 扩展验证
+
+新一批输入由 [run_suite.py](../../../experiments/dvs2-spectre-validation/run_suite.py)
+固定为 31 个当前条件、两档设置。源码与历史 v1 分开保存：
+
+| 源码 | 对应条件 | 说明 |
+| --- | --- | --- |
+| [d2_v6_01_standard](d2_v6_01_standard/dut.va) | v6-standard、C2 滤波级 | 标准数组修订；不改冻结 v1 |
+| [n_v3_02](n_v3_02/dut.va) | E1 的 3 条件 | 分别观察上穿、下穿计数 |
+| [n_v4_02](n_v4_02/dut.va) | E2 的 3 条件、C1 的 3 条件、C2 采样级 | 显式初始化、复位优先的参数化采样器；状态属于各实例 |
+| [n_v6_02](n_v6_02/dut.va) | D1 的 2 条件 | 非零初值积分、持续复位与释放 |
+| [n_v6_03](n_v6_03/dut.va) | D2 的 2 条件 | 累积相位、包裹相位及正弦输出 |
+| [n_v1_02](n_v1_02/dut.va) | S1 的 2 条件 | 两个输入与三个贡献相加 |
+
+C1 由两个采样器实例构成，C2 由低通与采样器两个模块构成；构建器按
+`source_cards` 打包源文件并保存完整网表。卡数、源文件数和条件数不是同一计数。
+执行证据和判定边界见 [本轮实验](../../../experiments/dvs2-spectre-validation/README.md)。
+
+随后已用相同 DUT 字节完成 [四后端补测](../../../experiments/dvs2-four-backend-validation/README.md)，
+形成 [31 条件完整对照表](../../../experiments/dvs2-four-backend-validation/results/MATRIX.md)。
+Gnucap 的外壳采用预先固定的具名零伏参考与 `short=1e-9`，全部 31 条件按此设置重跑；
+编译和执行失败仍计入对应条件，完整观察资格未因此取得。

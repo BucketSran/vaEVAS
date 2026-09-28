@@ -1,0 +1,22 @@
+// N-V3-02: independently observable upward/downward event counts.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_event_counts(vin, up, down, vref);
+    input vin;
+    output up, down;
+    inout vref;
+    electrical vin, up, down, vref;
+    integer n_up, n_down;
+    analog begin
+        @(initial_step) begin
+            n_up = 0;
+            n_down = 0;
+        end
+        @(cross(V(vin, vref) - 0.5, +1, 100e-12, 1e-4))
+            n_up = n_up + 1;
+        @(cross(V(vin, vref) - 0.5, -1, 100e-12, 1e-4))
+            n_down = n_down + 1;
+        V(up, vref) <+ transition(0.1*n_up, 0, 10e-9, 10e-9);
+        V(down, vref) <+ transition(0.1*n_down, 0, 10e-9, 10e-9);
+    end
+endmodule

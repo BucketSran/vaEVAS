@@ -1,0 +1,17 @@
+// N-V6-02: integrator with a nonzero IC and level-held asynchronous reset.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_integrator(vin, rst, vout, flag, vref);
+    input vin, rst;
+    output vout, flag;
+    inout vref;
+    electrical vin, rst, vout, flag, vref;
+    integer reset_flag;
+    analog begin
+        @(initial_step) reset_flag = 0;
+        @(cross(V(rst, vref) - 0.5, +1, 1e-9, 2e-4)) reset_flag = 1;
+        @(cross(V(rst, vref) - 0.5, -1, 1e-9, 2e-4)) reset_flag = 0;
+        V(vout, vref) <+ idt(V(vin, vref)/1e-6, 0.25, reset_flag);
+        V(flag, vref) <+ reset_flag;
+    end
+endmodule

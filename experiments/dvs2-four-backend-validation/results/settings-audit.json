@@ -1,0 +1,1906 @@
+[
+  {
+    "backend": "evas",
+    "condition": "v6-standard",
+    "profile": "base",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "v6-standard",
+    "profile": "fine",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-aligned",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "1a0df60764be9d8de7f849204845ee962c4d260c9f44488784d005823723cab1",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-aligned",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "e50a4893d784174b5362b6bbb1ecd37ea3c44c66fca3f61b9c73645e04dd4750",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-shifted",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "0c164b6077d84dee0c5980aad4f6ed3aebef54441b4cc916d372a4aa8912dfbd",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-shifted",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "a6a95fd57c094d2a04b5db7ee03964c9187ed85b69a5a64086a86ef456b95380",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-slow",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4f934f450f82b832aa282ce863953b1a8e0a4860414699ee607487c01a3dfc57",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e1-slow",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 3e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "78a974c375fcd6c9a8742850638bf8c5ff78a517425150ad312c79e808f20e1e",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-low",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "8fcd2a780db376859b05c4606545ca191fbba142bcb24fe623450bfa781c8c1c",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-low",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "f0ffac48608b35f1ad43f617476907595c13ddd8d56eb50884b46f19b5840ec7",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-clock-high",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "9d193cc0d86ae607fdbc42fe5b4941c54bea9744ac92b745ae59e23ec4b5e501",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-clock-high",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "d2082ac059e9539cd61f7b4ee6577062a1adb3720168d869163289f0c5227e0a",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-reset-high",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "749a18615fde28aef4ac26f74ac22eff78287735f55f0ca664a206fea423836b",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "e2-reset-high",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "02128bd006753b737b8d82157fd9bfd3f7ed51642e065ede00edc262abd7d6c7",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7fcbb54b038b22623f7fa25f5309cd888a47a80b28c3531daf43f6eaddea1cd9",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "34d032d7d1e5d73169002f6872c18982ad5ab2930d73d0ecb6c9fa70f7c4d051",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-swapped",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "9cd63511e362afcb5bb36452d05c673cf74b38ed6f3c31de8004654b7b103699",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-swapped",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "088f72db06858a60a044737414dad9b43fc3a8271456293d4d9575f2828e2631",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-no-reset-a",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ed1d6bbb62f335199b8bc65c5868b1698fdb250d59b4d1d6dfb5e1b9af6e7418",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c1-no-reset-a",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "0ac4daab688cfff3dc3036dfcc27c2677779b6d24e5a5de0a6b633607c84a2df",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "c2-main",
+    "profile": "base",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "c2-main",
+    "profile": "fine",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "d1-free",
+    "profile": "base",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "d1-free",
+    "profile": "fine",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "d1-reset",
+    "profile": "base",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "d1-reset",
+    "profile": "fine",
+    "status": "execution_failed",
+    "readback_unavailable_reason": "execution_failed"
+  },
+  {
+    "backend": "evas",
+    "condition": "d2-constant",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "478709e61601d1ac43bb223ac5ab6f9db2150e52604b59d98968551550cc7aee",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "d2-constant",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "af53cc8c6209e166fba1b36402b1647a4a9d77a06863107b8f22ee247178a1ef",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "d2-chirp",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "1b6d2088ca66ef6c8f861bdac086f276cccef16b9f6dcc992a4c595f73875a6d",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "d2-chirp",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "5a3579703a95aea5e06f24ff6def6cd990cf59b359b20d76bc611f013f5b6d55",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "s1-default",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "d62bcf6a7ce50bf2f61a41524c12ee9707717133b83e45b7e7b5ca6520a570c0",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "s1-default",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "194f5a97015b8e541b4407060c5c105716fa193274a3e604fd32d0fa3a01dc32",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "s1-override",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "step": 1e-09,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "14be775afa1e41ed2f4d5c86de8a9bbfc0f7eab6f09ff2a41e3242497aff5267",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "evas",
+    "condition": "s1-override",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "step": 1e-10,
+      "stop": 4e-06
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "80fbafee792fe8e87468844503ef43b889bc53e08e7184e05619ac196f753a68",
+    "interpretation": "EVAS request echo; not a SPICE error-control certification"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v6-standard",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7bdf3cfb49c1c49b34fb5f60952b6b10942e4795140e3d4dd2ee431c98346488",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v6-standard",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "24bdf06105e8a758f8ea49266a2de17e6d39b6d2d1ffe2b4166574640721820d",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-aligned",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "637a00a71fd28779303fb02283bb96628c4752742cedbd71c1397e7ed19ec38a",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-aligned",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "c3b64a62c004732620198212b0ce8f13278529d80a4acb14d0a8898c16fcf601",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-shifted",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "1b95c5b56916027714c46d4f5c90bf0f26d6bac98030079d2e18080a790d354c",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-shifted",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "dd6bbefa8eeef731e317296dac47053163a2a2f229e41be384eed8672046fcc9",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-slow",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "22f2863e2bd392817aa5e0bc2d07baf7fa169ecd0074dbc6d23abed927fa5c0b",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e1-slow",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "eb8f0f31f7b56e4705d0ade37c7020001bb1cc949b6bc0fe4b756b6cdf83ed1d",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-low",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-low",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-clock-high",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-clock-high",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-reset-high",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "e2-reset-high",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-main",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-main",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-swapped",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-swapped",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-no-reset-a",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c1-no-reset-a",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c2-main",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "c2-main",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d1-free",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "055727218a8d69feb92e7439e78e3dc72756bc3da7d199621aaeebabd6d41673",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d1-free",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "594ab59b6b8ec21d30afa1230f825d15ebff35c3269624ac9ad0cdc4e585b5ee",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d1-reset",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "9ba894306dd3f64e34735c168aa8cd0c7b3a437a665b8149ef01418fe52252e5",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d1-reset",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "a6aafd8924555a3651f79e0582f9d3a1a45ed12de082ce6898d0b2e88d03fb5b",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d2-constant",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "9df9495ad6509bb090bc181b41d0869dfe3c0cfef81b1c34949a789812fe4036",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d2-constant",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "eebbac1c4c119ef501f6fa8813d0621e557da8462f7bb1bfe0c9bc848927252c",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d2-chirp",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "c5c4321333561bdf10c9a8dfe879339e15b259121302dfa6ecb7e5379b9475bf",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "d2-chirp",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "d0e32afcb97775ca44b12d3d44d29201a88b596a996dd98bf2e4b2065c8f1fbd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "s1-default",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "b1458f140001b7190498e832bb9be779010ab106a609e9914a82c545476e74b1",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "s1-default",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "8ec0f8ab3f9950dc7af0406aff78e78e7bd11aaf5f3316a3c5383bfcde0348a6",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "s1-override",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-05,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "f43e183697bfe37e449a8c9f9c421c3a5edb40edd118670a653825dc95651c47",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "s1-override",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "method": "TRAPEZOIDAL",
+      "maxorder": 2
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7b8329b80fb7c505e6a8571269c5f52bb75ce9277641dfb57e0db5dc1e779417",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v1-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v1-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-reference-zero",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-reference-zero",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-supply-fixed",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-supply-fixed",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-input-common-mode",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-input-common-mode",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v3-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bf05382a41f47eadd070dcd40115e07ec87630220611cafda6b412e94d388456",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v3-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "cd8d263b7c4bc25f25df6363f5b29408acc333827645e87af54cf8eb0ce4ee41",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c0",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4eac484cb67d2c0c2d429fc8b8e2761c6951ca4f496c5d4a6d30287da9644700",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c0",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "f21ee20b7efab98a138493ea62226d00d0ab74b71b12c7a6491e686697477270",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c1",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4eac484cb67d2c0c2d429fc8b8e2761c6951ca4f496c5d4a6d30287da9644700",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c1",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "f21ee20b7efab98a138493ea62226d00d0ab74b71b12c7a6491e686697477270",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v5-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "0b19bda9abef87a6c5840a14af6463cac54aba76931bb3b2b0c0b2f876cf5ceb",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v5-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "5d0ae3c84fc9b815e50545fd96e9e9e5cc89e01bdee9725271522308f1ab25a2",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v6-standard",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7ce0e5e1cb053e821bc46eba946573cf4d10010f7bab2d3eb2f73b1783340c95",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v6-standard",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "8c65e3fdc7b1e66526dbf85de659106c8f187a55027d8cd82b2fc2959d615fbc",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-swapped",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-swapped",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-a-half",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-a-half",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-0.5",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-0.5",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-2.0",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-2.0",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-aligned",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "a27263fb38e85402c4ed7ea7f04de187e52c6a66240545ea813ab7c2abba85fc",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-aligned",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "109ed0dcc68aa55c9b608797e30fbfff33eabd4b1f64170c3265524b8e725b35",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-shifted",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "a27263fb38e85402c4ed7ea7f04de187e52c6a66240545ea813ab7c2abba85fc",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-shifted",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "109ed0dcc68aa55c9b608797e30fbfff33eabd4b1f64170c3265524b8e725b35",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-slow",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "a27263fb38e85402c4ed7ea7f04de187e52c6a66240545ea813ab7c2abba85fc",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e1-slow",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "109ed0dcc68aa55c9b608797e30fbfff33eabd4b1f64170c3265524b8e725b35",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-low",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "6c5161ea2d5ce1c44b5b6a7d73f68e411733a4c061bc8edce3e5b2ec5c8a9812",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-low",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "71a6452f3ea04fd1f05797c2db971d3b5e23b16081b3eec95c08ddddf719a570",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-clock-high",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "6c5161ea2d5ce1c44b5b6a7d73f68e411733a4c061bc8edce3e5b2ec5c8a9812",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-clock-high",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "71a6452f3ea04fd1f05797c2db971d3b5e23b16081b3eec95c08ddddf719a570",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-reset-high",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "6c5161ea2d5ce1c44b5b6a7d73f68e411733a4c061bc8edce3e5b2ec5c8a9812",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "e2-reset-high",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "71a6452f3ea04fd1f05797c2db971d3b5e23b16081b3eec95c08ddddf719a570",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "3f6a883d065f1c9ce82c910bd8ee1adef3c8216e13a7f9cb0fdecc9e88cc77ef",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4d3c93f85cf73b5db7a0ce20b0eb71f0b03d2d5e0654dfb9abbbd6bd61a953b8",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-swapped",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "3f6a883d065f1c9ce82c910bd8ee1adef3c8216e13a7f9cb0fdecc9e88cc77ef",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-swapped",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4d3c93f85cf73b5db7a0ce20b0eb71f0b03d2d5e0654dfb9abbbd6bd61a953b8",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-no-reset-a",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "3f6a883d065f1c9ce82c910bd8ee1adef3c8216e13a7f9cb0fdecc9e88cc77ef",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c1-no-reset-a",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "4d3c93f85cf73b5db7a0ce20b0eb71f0b03d2d5e0654dfb9abbbd6bd61a953b8",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c2-main",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "8c126648ff38b60f7b62c4a45d1bbb303011c876e40bf4aa68802266b49e1989",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "c2-main",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "fee0d70943de088cd47ff072d9ad9072bb195eff1d48e8d35d53fbb9bd616a60",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d1-free",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7dcb1fb78dff68bbffb76228b4d98fa79f193753c3d7fff00579b52417267e69",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d1-free",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "410fbcdf714c2ef25dd4bb9869c344c2f5eb4e6ac8e3b5c68cc75eb82d0b63d7",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d1-reset",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "7dcb1fb78dff68bbffb76228b4d98fa79f193753c3d7fff00579b52417267e69",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d1-reset",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "410fbcdf714c2ef25dd4bb9869c344c2f5eb4e6ac8e3b5c68cc75eb82d0b63d7",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d2-constant",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d2-constant",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d2-chirp",
+    "profile": "base",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "d2-chirp",
+    "profile": "fine",
+    "status": "compile_failed",
+    "readback_unavailable_reason": "compile_failed"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "s1-default",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "s1-default",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "s1-override",
+    "profile": "base",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 9.999999999999999e-06,
+      "vntol": 1e-08,
+      "abstol": 1e-12,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "ffe81e228f065ed47e52880a6cfdbc6ab323f94fc96d671f17431345996fbd19",
+    "interpretation": "logged settings after netlist setup"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "s1-override",
+    "profile": "fine",
+    "status": "waveform_available",
+    "readback": {
+      "reltol": 1e-06,
+      "vntol": 1e-09,
+      "abstol": 1e-13,
+      "short": 1e-09,
+      "numdgt": 16.0,
+      "method": "trap"
+    },
+    "requested_values_match": true,
+    "readback_log_sha256": "bcfb36fb3b0ce733d3188147f161bceab8943c6ed454363c8859125efe6676bd",
+    "interpretation": "logged settings after netlist setup"
+  }
+]

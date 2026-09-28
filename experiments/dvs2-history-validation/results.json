@@ -1,0 +1,1695 @@
+{
+  "analysis_id": "dvs2-history-reanalysis-20260928",
+  "source_run_id": "dvs2-starter-20260927-01",
+  "archive_receipt_sha256": "bd1458b3c5f66325db10e486dd5de004fbac99d1974b46a4b74b9426d23ca1e4",
+  "file_manifest_sha256": "34083b379ef2ddce80feca4e32364ed0fcdae19e878e0cfdc02b7f46e104a568",
+  "analyzer_sha256": {
+    "experiments/dvs2-history-validation/recheck.py": "1980b3f74f61939f6abd4ab63695ccb7f14625a53816ba79154aeea3ce205e3a",
+    "experiments/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/dvs2-history-validation/test_history.py": "a5c8394a5e76efd708875da94ebb74c71e2c3a129865c9a4e3a4a3ecba06d265",
+    "experiments/dvs2-history-validation/test_recheck.py": "160f0372dd78f744c074a05e70352ffc2c7d3586ad5e2b33c3f9d6c0a2e5bde2",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "evas/validation/versions/v1/conditions.json": "f7ec2181c10dd0332afc1bec5ce05ed823a3eb05c3896175136266f606aac5f9"
+  },
+  "scenario_scope": "Conditional finite-observation compatibility only. Neither B is an established physical uncertainty bound.",
+  "event_domain_scope": "Nominal roots and v1 declared event windows; input/root/export uncertainty not qualified.",
+  "new_simulator_runs": 0,
+  "formal_dvs_qualification": "I",
+  "counts": {
+    "spectre": {
+      "configuration_count": 8,
+      "waveforms_reanalyzed": 8,
+      "execution_statuses": {
+        "waveform_available": 8
+      },
+      "scenarios": {
+        "exact_export_assumption": {
+          "P": 8
+        },
+        "candidate_budget_sensitivity": {
+          "P": 8
+        }
+      }
+    },
+    "evas": {
+      "configuration_count": 8,
+      "waveforms_reanalyzed": 6,
+      "execution_statuses": {
+        "waveform_available": 6,
+        "execution_failed": 2
+      },
+      "scenarios": {
+        "exact_export_assumption": {
+          "P": 3,
+          "F": 3
+        },
+        "candidate_budget_sensitivity": {
+          "P": 3,
+          "F": 3
+        }
+      }
+    },
+    "openvaf_ngspice": {
+      "configuration_count": 8,
+      "waveforms_reanalyzed": 2,
+      "execution_statuses": {
+        "waveform_available": 2,
+        "compile_failed": 4,
+        "runtime_timeout": 2
+      },
+      "scenarios": {
+        "exact_export_assumption": {
+          "F": 2
+        },
+        "candidate_budget_sensitivity": {
+          "F": 2
+        }
+      }
+    },
+    "gnucap": {
+      "configuration_count": 8,
+      "waveforms_reanalyzed": 8,
+      "execution_statuses": {
+        "waveform_available": 8
+      },
+      "scenarios": {
+        "exact_export_assumption": {
+          "F": 6,
+          "P": 2
+        },
+        "candidate_budget_sensitivity": {
+          "F": 6,
+          "P": 2
+        }
+      }
+    }
+  },
+  "records": [
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "9999999999993/40000000000000000",
+            "39999999999987/160000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4006,
+          "constraint_count": 105,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "9999999999993/40000000000000000",
+            "39999999999987/160000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4006,
+          "constraint_count": 105,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4006,
+        "max_export_gap_s": 1.000000000001e-09,
+        "input_max_error_v": {
+          "vin": 3e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "5023333347923/160000000000000000",
+            "6524999550451/160000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40006,
+          "constraint_count": 1013,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "5023333347923/160000000000000000",
+            "6524999550451/160000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40006,
+          "constraint_count": 1013,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40006,
+        "max_export_gap_s": 1.00000000001e-10,
+        "input_max_error_v": {
+          "vin": 4e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4109,
+          "constraint_count": 136,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4109,
+          "constraint_count": 136,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4109,
+        "max_export_gap_s": 1.000000000001e-09,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 8.5e-15,
+          "rst": 5.3394060833333e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40109,
+          "constraint_count": 1261,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40109,
+          "constraint_count": 1261,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40109,
+        "max_export_gap_s": 1.00000000001e-10,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 8.7e-15,
+          "rst": 5.51e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4102,
+          "constraint_count": 109,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4102,
+          "constraint_count": 109,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4102,
+        "max_export_gap_s": 1.000000000001e-09,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 8.5e-15,
+          "rst": 5.840593916666739e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40102,
+          "constraint_count": 1009,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40102,
+          "constraint_count": 1009,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40102,
+        "max_export_gap_s": 1.00000000001e-10,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 8.7e-15,
+          "rst": 5.85005939166672e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "91/20000000000000000",
+            "817/80000000000000000",
+            "1329/20000000000000000",
+            "9829/80000000000000000",
+            "1791/10000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 811,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "91/20000000000000000",
+            "817/80000000000000000",
+            "1329/20000000000000000",
+            "9829/80000000000000000",
+            "1791/10000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 811,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4001,
+        "max_export_gap_s": 1.000000000001e-09,
+        "input_max_error_v": {},
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-249999999941/2500000000000000",
+            "-3999999996807/40000000000000000",
+            "-1/10000",
+            "-123119/80000000000000000",
+            "-61419/20000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 8016,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-249999999941/2500000000000000",
+            "-3999999996807/40000000000000000",
+            "-1/10000",
+            "-123119/80000000000000000",
+            "-61419/20000000000000000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 8016,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40001,
+        "max_export_gap_s": 1.00000000001e-10,
+        "input_max_error_v": {},
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "0",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4005,
+          "constraint_count": 107,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "0",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4005,
+          "constraint_count": 107,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4005,
+        "max_export_gap_s": 1e-09,
+        "input_max_error_v": {
+          "vin": 4e-13
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40002,
+          "constraint_count": 1012,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40002,
+          "constraint_count": 1012,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40002,
+        "max_export_gap_s": 1.00000001e-10,
+        "input_max_error_v": {
+          "vin": 2.001e-13
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4016,
+          "constraint_count": 146,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4016,
+          "constraint_count": 146,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4016,
+        "max_export_gap_s": 1e-09,
+        "input_max_error_v": {
+          "vin": 1.501e-13,
+          "clk": 5.0001e-12,
+          "rst": 9.9992e-12
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40017,
+          "constraint_count": 1262,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40017,
+          "constraint_count": 1262,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40017,
+        "max_export_gap_s": 1.00000001e-10,
+        "input_max_error_v": {
+          "vin": 1.5004e-13,
+          "clk": 5.0001e-12,
+          "rst": 9.9992e-12
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4013,
+          "constraint_count": 117,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "1/50000",
+            "1/100000",
+            "1/50000",
+            "1/50000"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4013,
+          "constraint_count": 117,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4013,
+        "max_export_gap_s": 1e-09,
+        "input_max_error_v": {
+          "vin": 1.501e-13,
+          "clk": 5.0001e-12,
+          "rst": 9.9992e-12
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40015,
+          "constraint_count": 1009,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40015,
+          "constraint_count": 1009,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40015,
+        "max_export_gap_s": 1.00000001e-10,
+        "input_max_error_v": {
+          "vin": 1.5004e-13,
+          "clk": 5.0001e-12,
+          "rst": 9.9992e-12
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "execution_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "execution_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4011,
+          "constraint_count": 104,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4011,
+          "constraint_count": 104,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4011,
+        "max_export_gap_s": 1.0000000000003e-09,
+        "input_max_error_v": {
+          "vin": 3.2e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40011,
+          "constraint_count": 1013,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40011,
+          "constraint_count": 1013,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40011,
+        "max_export_gap_s": 1.00000000001e-10,
+        "input_max_error_v": {
+          "vin": 3.5e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "runtime_timeout",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "runtime_timeout",
+      "formal_dvs_qualification": "I",
+      "reuse": "not_reexecuted",
+      "history": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 103,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 103,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4001,
+        "max_export_gap_s": 1.000000000002e-09,
+        "input_max_error_v": {
+          "vin": 6e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1011,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1011,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40001,
+        "max_export_gap_s": 1.00000000002e-10,
+        "input_max_error_v": {
+          "vin": 8e-16
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 131,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 131,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4001,
+        "max_export_gap_s": 1.000000000002e-09,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 1.11e-14,
+          "rst": 2e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1256,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1256,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40001,
+        "max_export_gap_s": 1.00000000002e-10,
+        "input_max_error_v": {
+          "vin": 4e-16,
+          "clk": 1.5e-14,
+          "rst": 9.42799999999999e-15
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 105,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 105,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4001,
+        "max_export_gap_s": 1.000000000002e-09,
+        "input_max_error_v": {
+          "vin": 3.5e-16,
+          "clk": 1.11e-14,
+          "rst": 1.044999999999999e-14
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1005,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "F",
+          "reason": "outer_domain_proved_empty",
+          "witness_offsets": null,
+          "boxes_examined": 1,
+          "boxes_excluded": 1,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 1005,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40001,
+        "max_export_gap_s": 1.00000000002e-10,
+        "input_max_error_v": {
+          "vin": 4e-16,
+          "clk": 1.5e-14,
+          "rst": 1.100699999999999e-14
+        },
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-1/40000000000000000",
+            "1/8000000000000000",
+            "1/4000000000000000",
+            "-1/2000000000000000",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 811,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-1/40000000000000000",
+            "1/8000000000000000",
+            "1/4000000000000000",
+            "-1/2000000000000000",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 4001,
+          "constraint_count": 811,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 4001,
+        "max_export_gap_s": 1.000000000002e-09,
+        "input_max_error_v": {},
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "formal_dvs_qualification": "I",
+      "reuse": "reanalyzed",
+      "history": {
+        "exact_export_assumption": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-3/40000000000000000",
+            "1/8000000000000000",
+            "1/4000000000000000",
+            "-1/2000000000000000",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 8011,
+          "epsilon": "1/1000",
+          "uncertainty": "0"
+        },
+        "candidate_budget_sensitivity": {
+          "status": "P",
+          "reason": "verified_common_inner_witness",
+          "witness_offsets": [
+            "-3/40000000000000000",
+            "1/8000000000000000",
+            "1/4000000000000000",
+            "-1/2000000000000000",
+            "0"
+          ],
+          "boxes_examined": 1,
+          "boxes_excluded": 0,
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "arithmetic": "exact rational over supplied numeric values",
+          "sample_count": 40001,
+          "constraint_count": 8011,
+          "epsilon": "1/1000",
+          "uncertainty": "1/4000"
+        }
+      },
+      "observation_screen": {
+        "sample_count": 40001,
+        "max_export_gap_s": 1.00000000002e-10,
+        "input_max_error_v": {},
+        "input_between_exports_qualified": false,
+        "time_semantics_qualified": false
+      }
+    }
+  ],
+  "verified_input_sha256": {
+    "runs/spectre/v3-main/base/result.json": "dcdebce0d1557e42d6c41e6cc5d99a1da8929c72632805f21dfb41973c8ae2a9",
+    "runs/spectre/v3-main/base/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/spectre/v3-main/base/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/spectre/v3-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/spectre/v3-main/base/tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+    "runs/spectre/v3-main/base/tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+    "runs/spectre/v3-main/base/tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+    "runs/spectre/v3-main/base/psf/tran.tran.tran": "5e1b7c747e49e9bb610471bf7554599d597571b6aab1ae5b1dc2a1685ecf63f2",
+    "runs/spectre/v3-main/fine/result.json": "80c9220631384c69b800d95855adddd76d0369c19358e4afae8827cafaab1f30",
+    "runs/spectre/v3-main/fine/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/spectre/v3-main/fine/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/spectre/v3-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/spectre/v3-main/fine/tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+    "runs/spectre/v3-main/fine/tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+    "runs/spectre/v3-main/fine/tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+    "runs/spectre/v3-main/fine/psf/tran.tran.tran": "769c70226d9ca2a1ad9b5e60a7cf98268d8245bfee15528a0d6fe613eb3d2eb4",
+    "runs/spectre/v4-c0/base/result.json": "1a27235678828896a1e9958fc361b5d15b88845754f58911693d9e99ef0c6781",
+    "runs/spectre/v4-c0/base/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/spectre/v4-c0/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/spectre/v4-c0/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/spectre/v4-c0/base/tb.scs": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee",
+    "runs/spectre/v4-c0/base/tb.cir": "a1416c230b796e33d9790abfc78e9ca04d7f0865f72e4aad16d10c2fd51eca3d",
+    "runs/spectre/v4-c0/base/tb.gc": "638024394acd493158dd272ba29fc4f4cf4a56487d94a37cd42512b02344a3fd",
+    "runs/spectre/v4-c0/base/psf/tran.tran.tran": "3a447733bab1f5e265b97180be55fb66e0888b8e42e8ef825c3fa78d2f6df517",
+    "runs/spectre/v4-c0/fine/result.json": "ae3fcd920ff2d33f2e5915a191c993d5d69b2163ba2df548ae8799b8ea09ff05",
+    "runs/spectre/v4-c0/fine/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/spectre/v4-c0/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/spectre/v4-c0/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/spectre/v4-c0/fine/tb.scs": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828",
+    "runs/spectre/v4-c0/fine/tb.cir": "e1abbc2c1adb619641d368f06a1da331aacfb2bb9381c9f49ab6f799b8e12b02",
+    "runs/spectre/v4-c0/fine/tb.gc": "13995d73877f2ada40f13fc43edfecc49ee5979512f0c4befe0438ce59fb0268",
+    "runs/spectre/v4-c0/fine/psf/tran.tran.tran": "ab7fff959842d2c8ee808712e68df2160d8529cd55c67625ce70124acbf39c55",
+    "runs/spectre/v4-c1/base/result.json": "daa272f53f1cafefb73050360e3e3f97fcc5f94076ff9703996978ce898b82b6",
+    "runs/spectre/v4-c1/base/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/spectre/v4-c1/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/spectre/v4-c1/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/spectre/v4-c1/base/tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+    "runs/spectre/v4-c1/base/tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+    "runs/spectre/v4-c1/base/tb.gc": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a",
+    "runs/spectre/v4-c1/base/psf/tran.tran.tran": "2c83c2da933db1e47e96b096e347d11acd35dae3756e7025d5abb9006d030465",
+    "runs/spectre/v4-c1/fine/result.json": "ec182bfd4f62cbbeecb5857a31525d2525fe7d71f8bd985475e1165f0d95798a",
+    "runs/spectre/v4-c1/fine/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/spectre/v4-c1/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/spectre/v4-c1/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/spectre/v4-c1/fine/tb.scs": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378",
+    "runs/spectre/v4-c1/fine/tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+    "runs/spectre/v4-c1/fine/tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+    "runs/spectre/v4-c1/fine/psf/tran.tran.tran": "ab37bc10516700773a58cdb7251ee8b52d55018a4dfe212aa8047388adec9a1a",
+    "runs/spectre/v5-main/base/result.json": "04fbbb2a9ed23e1bb9a4fe432a73a9a59ac09f27ca5b1b3ce27f8abb411e5566",
+    "runs/spectre/v5-main/base/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/spectre/v5-main/base/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/spectre/v5-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/spectre/v5-main/base/tb.scs": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927",
+    "runs/spectre/v5-main/base/tb.cir": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8",
+    "runs/spectre/v5-main/base/tb.gc": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82",
+    "runs/spectre/v5-main/base/psf/tran.tran.tran": "4375f3367c0c6191f7dddee5ee96feebd982c640c5e94e4476a5139c2ac94739",
+    "runs/spectre/v5-main/fine/result.json": "08ffc1c0ef1819e25f930a2a87e8284b5ec2d487aea40733287789e7e851c4fd",
+    "runs/spectre/v5-main/fine/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/spectre/v5-main/fine/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/spectre/v5-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/spectre/v5-main/fine/tb.scs": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e",
+    "runs/spectre/v5-main/fine/tb.cir": "5c32e4f75b3c05fc5ccdab5e02b8f9d7edcdf16381a571c9c85ec59b723f4a9a",
+    "runs/spectre/v5-main/fine/tb.gc": "4f4aeffd485b7835de878ab116ddc49a7a7b1f7c79e1c9813aa547ec68a38bdb",
+    "runs/spectre/v5-main/fine/psf/tran.tran.tran": "aba31c495beed7e59e89c88607983129c593626faa7a629a502fa7ecca2c6c29",
+    "runs/evas/v3-main/base/result.json": "c38e7ac9aebde2d1818e481abb4371f25593f6984330e206032b8f6ba607e51a",
+    "runs/evas/v3-main/base/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/evas/v3-main/base/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/evas/v3-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/evas/v3-main/base/tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+    "runs/evas/v3-main/base/tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+    "runs/evas/v3-main/base/tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+    "runs/evas/v3-main/base/output/tran.csv": "a28782e82490c2ed762ca05805b2993da2c2e9d7c816bda52a5faa7ec1dee8cc",
+    "runs/evas/v3-main/fine/result.json": "1f553269745dbc4a6e98b642d06db3f136bfacd1335b4480bc26236fdaf9748f",
+    "runs/evas/v3-main/fine/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/evas/v3-main/fine/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/evas/v3-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/evas/v3-main/fine/tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+    "runs/evas/v3-main/fine/tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+    "runs/evas/v3-main/fine/tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+    "runs/evas/v3-main/fine/output/tran.csv": "07666c7040eb594d1c944fbdb64d586fc270c45f7e9db6cf49d6a4e21ce9d840",
+    "runs/evas/v4-c0/base/result.json": "1bdf441a49d9c58116cb24ecf059686db015b4395819b7fcefb89f1ba65152d6",
+    "runs/evas/v4-c0/base/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/evas/v4-c0/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/evas/v4-c0/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/evas/v4-c0/base/tb.scs": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee",
+    "runs/evas/v4-c0/base/tb.cir": "a1416c230b796e33d9790abfc78e9ca04d7f0865f72e4aad16d10c2fd51eca3d",
+    "runs/evas/v4-c0/base/tb.gc": "638024394acd493158dd272ba29fc4f4cf4a56487d94a37cd42512b02344a3fd",
+    "runs/evas/v4-c0/base/output/tran.csv": "befad3b933d38015ed084389869c2109869e37095fe6495f170880de5665402d",
+    "runs/evas/v4-c0/fine/result.json": "ca632b3b480c5602b27a7a2934591264b87ad9cf421eb887326bcdb6f9f4001f",
+    "runs/evas/v4-c0/fine/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/evas/v4-c0/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/evas/v4-c0/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/evas/v4-c0/fine/tb.scs": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828",
+    "runs/evas/v4-c0/fine/tb.cir": "e1abbc2c1adb619641d368f06a1da331aacfb2bb9381c9f49ab6f799b8e12b02",
+    "runs/evas/v4-c0/fine/tb.gc": "13995d73877f2ada40f13fc43edfecc49ee5979512f0c4befe0438ce59fb0268",
+    "runs/evas/v4-c0/fine/output/tran.csv": "20160c36a69e907758daee4fd0ef24b63a160e567e41416633c800df64d73787",
+    "runs/evas/v4-c1/base/result.json": "9f24237e4077dd261058fce73311a79b68c4b6b3053911322dc2a8529eecd36f",
+    "runs/evas/v4-c1/base/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/evas/v4-c1/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/evas/v4-c1/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/evas/v4-c1/base/tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+    "runs/evas/v4-c1/base/tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+    "runs/evas/v4-c1/base/tb.gc": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a",
+    "runs/evas/v4-c1/base/output/tran.csv": "f78e5027ebcca5c7303010264004b38c5cde43d2d52323dc2ebf6bb4ace08d00",
+    "runs/evas/v4-c1/fine/result.json": "9fc0005d07c19b10bda796a6eb8c436cbb78acae17325b34207cfea457df00d3",
+    "runs/evas/v4-c1/fine/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/evas/v4-c1/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/evas/v4-c1/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/evas/v4-c1/fine/tb.scs": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378",
+    "runs/evas/v4-c1/fine/tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+    "runs/evas/v4-c1/fine/tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+    "runs/evas/v4-c1/fine/output/tran.csv": "92168e6570e97f1f5ce42c9a14bd9c6d59da004f744a249490005349a27d8e8d",
+    "runs/evas/v5-main/base/result.json": "b2e118a05fa4fe7e197ff18fa5e1f6cd6509d587e51513b8d9497fd0eb2a7d98",
+    "runs/evas/v5-main/base/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/evas/v5-main/base/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/evas/v5-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/evas/v5-main/base/tb.scs": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927",
+    "runs/evas/v5-main/base/tb.cir": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8",
+    "runs/evas/v5-main/base/tb.gc": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82",
+    "runs/evas/v5-main/fine/result.json": "31efa0274384c97237f9fb1a49febc173db2f82795b9e301015f61d814b270aa",
+    "runs/evas/v5-main/fine/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/evas/v5-main/fine/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/evas/v5-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/evas/v5-main/fine/tb.scs": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e",
+    "runs/evas/v5-main/fine/tb.cir": "5c32e4f75b3c05fc5ccdab5e02b8f9d7edcdf16381a571c9c85ec59b723f4a9a",
+    "runs/evas/v5-main/fine/tb.gc": "4f4aeffd485b7835de878ab116ddc49a7a7b1f7c79e1c9813aa547ec68a38bdb",
+    "runs/openvaf_ngspice/v3-main/base/result.json": "62e0194bbd33bfc0b07b0a5af7d9269aa51af48cb8082a23b5247b6773dd0e1a",
+    "runs/openvaf_ngspice/v3-main/base/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/openvaf_ngspice/v3-main/base/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/openvaf_ngspice/v3-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/openvaf_ngspice/v3-main/base/tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+    "runs/openvaf_ngspice/v3-main/base/tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+    "runs/openvaf_ngspice/v3-main/base/tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+    "runs/openvaf_ngspice/v3-main/base/waveform.txt": "2828c9ddff695277e6387bb5d78fb0e8109ca23679c6372d8d3fc0db1565c497",
+    "runs/openvaf_ngspice/v3-main/fine/result.json": "642bcf1f06dc05f4316e8b3f34390c6d04e297b49d4cf11b10e958ba70843021",
+    "runs/openvaf_ngspice/v3-main/fine/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/openvaf_ngspice/v3-main/fine/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/openvaf_ngspice/v3-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/openvaf_ngspice/v3-main/fine/tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+    "runs/openvaf_ngspice/v3-main/fine/tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+    "runs/openvaf_ngspice/v3-main/fine/tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+    "runs/openvaf_ngspice/v3-main/fine/waveform.txt": "c407f4bd53d4f72f7bc03cee4302c0c27d5934578f03d0f31b9349e0493c3f86",
+    "runs/openvaf_ngspice/v4-c0/base/result.json": "e2c732e9dde37f927a84d0ba7c055f62bdc1d6b63e6e1b99797922e618a1702a",
+    "runs/openvaf_ngspice/v4-c0/base/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/openvaf_ngspice/v4-c0/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/openvaf_ngspice/v4-c0/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/openvaf_ngspice/v4-c0/base/tb.scs": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee",
+    "runs/openvaf_ngspice/v4-c0/base/tb.cir": "a1416c230b796e33d9790abfc78e9ca04d7f0865f72e4aad16d10c2fd51eca3d",
+    "runs/openvaf_ngspice/v4-c0/base/tb.gc": "638024394acd493158dd272ba29fc4f4cf4a56487d94a37cd42512b02344a3fd",
+    "runs/openvaf_ngspice/v4-c0/fine/result.json": "197f9e0e7f7d52c370b7e0254773ce2d7e3085bac16a1382bbb3d96512519172",
+    "runs/openvaf_ngspice/v4-c0/fine/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/openvaf_ngspice/v4-c0/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/openvaf_ngspice/v4-c0/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/openvaf_ngspice/v4-c0/fine/tb.scs": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828",
+    "runs/openvaf_ngspice/v4-c0/fine/tb.cir": "e1abbc2c1adb619641d368f06a1da331aacfb2bb9381c9f49ab6f799b8e12b02",
+    "runs/openvaf_ngspice/v4-c0/fine/tb.gc": "13995d73877f2ada40f13fc43edfecc49ee5979512f0c4befe0438ce59fb0268",
+    "runs/openvaf_ngspice/v4-c1/base/result.json": "fce8378326b6aae8915e1fa8dc1044abd499bf3850358eeb50cf0d46c05d34ab",
+    "runs/openvaf_ngspice/v4-c1/base/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/openvaf_ngspice/v4-c1/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/openvaf_ngspice/v4-c1/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/openvaf_ngspice/v4-c1/base/tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+    "runs/openvaf_ngspice/v4-c1/base/tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+    "runs/openvaf_ngspice/v4-c1/base/tb.gc": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a",
+    "runs/openvaf_ngspice/v4-c1/fine/result.json": "55b47bada382782cbaeeb1b667edc11c3ca1cea0bfe71ba9b1efbf49b406cfd1",
+    "runs/openvaf_ngspice/v4-c1/fine/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/openvaf_ngspice/v4-c1/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/openvaf_ngspice/v4-c1/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/openvaf_ngspice/v4-c1/fine/tb.scs": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378",
+    "runs/openvaf_ngspice/v4-c1/fine/tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+    "runs/openvaf_ngspice/v4-c1/fine/tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+    "runs/openvaf_ngspice/v5-main/base/result.json": "1a82937a6c6c1d16481da713a6b276c541c40b796651ab8065520ad91ff4cbc1",
+    "runs/openvaf_ngspice/v5-main/base/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/openvaf_ngspice/v5-main/base/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/openvaf_ngspice/v5-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/openvaf_ngspice/v5-main/base/tb.scs": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927",
+    "runs/openvaf_ngspice/v5-main/base/tb.cir": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8",
+    "runs/openvaf_ngspice/v5-main/base/tb.gc": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82",
+    "runs/openvaf_ngspice/v5-main/fine/result.json": "2d1f14ecdd507736d5bb37bf979c1c0ca1d2558ba4d734e2ec9d38e2154783e7",
+    "runs/openvaf_ngspice/v5-main/fine/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/openvaf_ngspice/v5-main/fine/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/openvaf_ngspice/v5-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/openvaf_ngspice/v5-main/fine/tb.scs": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e",
+    "runs/openvaf_ngspice/v5-main/fine/tb.cir": "5c32e4f75b3c05fc5ccdab5e02b8f9d7edcdf16381a571c9c85ec59b723f4a9a",
+    "runs/openvaf_ngspice/v5-main/fine/tb.gc": "4f4aeffd485b7835de878ab116ddc49a7a7b1f7c79e1c9813aa547ec68a38bdb",
+    "runs/gnucap/v3-main/base/result.json": "5203a9bef9f3facc8f7b3a101c2b56d42b30d2c52bf28bc39e0cb2abd5146b37",
+    "runs/gnucap/v3-main/base/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/gnucap/v3-main/base/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/gnucap/v3-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/gnucap/v3-main/base/tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+    "runs/gnucap/v3-main/base/tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+    "runs/gnucap/v3-main/base/tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+    "runs/gnucap/v3-main/base/waveform.txt": "91ee8531ad110c0f07129700202791869a813171932e86895658bf9158a58f5b",
+    "runs/gnucap/v3-main/fine/result.json": "14bd3a2cbf1896e5d9751cbbc6abc9da88bbd46ba31c1a9239badbbb155aa9b5",
+    "runs/gnucap/v3-main/fine/condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+    "runs/gnucap/v3-main/fine/dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "runs/gnucap/v3-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/gnucap/v3-main/fine/tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+    "runs/gnucap/v3-main/fine/tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+    "runs/gnucap/v3-main/fine/tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+    "runs/gnucap/v3-main/fine/waveform.txt": "d613a200971d0cd99fc2704a791927ff0c71515a3db0df1695552bf9e99cdd3f",
+    "runs/gnucap/v4-c0/base/result.json": "a60913dd4e65f3874f649319d30431dfd5c1efd00d88696d83a908a07fc2d0c1",
+    "runs/gnucap/v4-c0/base/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/gnucap/v4-c0/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/gnucap/v4-c0/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/gnucap/v4-c0/base/tb.scs": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee",
+    "runs/gnucap/v4-c0/base/tb.cir": "a1416c230b796e33d9790abfc78e9ca04d7f0865f72e4aad16d10c2fd51eca3d",
+    "runs/gnucap/v4-c0/base/tb.gc": "638024394acd493158dd272ba29fc4f4cf4a56487d94a37cd42512b02344a3fd",
+    "runs/gnucap/v4-c0/base/waveform.txt": "a7fd6bb979658c8053ebfab37d4d16a0475ae8fb772bb9b69cde09a10f1f2fdc",
+    "runs/gnucap/v4-c0/fine/result.json": "58cfc23b43c4cd2414928f2ca7200b0ba5a35f9e1f2655b0c56130588ab14248",
+    "runs/gnucap/v4-c0/fine/condition.json": "94f6f686111dec62d5199c74446cd56be9b7d6f56c3dd00905f2523956407390",
+    "runs/gnucap/v4-c0/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/gnucap/v4-c0/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/gnucap/v4-c0/fine/tb.scs": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828",
+    "runs/gnucap/v4-c0/fine/tb.cir": "e1abbc2c1adb619641d368f06a1da331aacfb2bb9381c9f49ab6f799b8e12b02",
+    "runs/gnucap/v4-c0/fine/tb.gc": "13995d73877f2ada40f13fc43edfecc49ee5979512f0c4befe0438ce59fb0268",
+    "runs/gnucap/v4-c0/fine/waveform.txt": "fac9fde58a53501b6aa5a15b7758127bec4282df81a2cc29bd730fac68049206",
+    "runs/gnucap/v4-c1/base/result.json": "2ffbc0f1f3af64216affc1ea484773434ee358c85bee7b27fcfda213e1d17c65",
+    "runs/gnucap/v4-c1/base/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/gnucap/v4-c1/base/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/gnucap/v4-c1/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/gnucap/v4-c1/base/tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+    "runs/gnucap/v4-c1/base/tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+    "runs/gnucap/v4-c1/base/tb.gc": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a",
+    "runs/gnucap/v4-c1/base/waveform.txt": "084c01d9afd98e26c8391d99c4fdef4f55bde88b5a8058f5c3cb80b4c4b80c8c",
+    "runs/gnucap/v4-c1/fine/result.json": "de9244a78ae1a14d749eb2f43e34b32bc87dcab78fd480ad2d1a60c1a7b306ce",
+    "runs/gnucap/v4-c1/fine/condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+    "runs/gnucap/v4-c1/fine/dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "runs/gnucap/v4-c1/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/gnucap/v4-c1/fine/tb.scs": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378",
+    "runs/gnucap/v4-c1/fine/tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+    "runs/gnucap/v4-c1/fine/tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+    "runs/gnucap/v4-c1/fine/waveform.txt": "093138646d9a117645c574ddd907b0f17189774eb7311b984d314fefcec34c67",
+    "runs/gnucap/v5-main/base/result.json": "c32c3ac62daa97a75795c97699faadf9bdec53427bda182b3d95ca905c5bb3c1",
+    "runs/gnucap/v5-main/base/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/gnucap/v5-main/base/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/gnucap/v5-main/base/requested_settings.json": "ef14aafe2a67d70e3cf6c210a4c2099b1b1c4489da2b4503738e2ee5f75c1702",
+    "runs/gnucap/v5-main/base/tb.scs": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927",
+    "runs/gnucap/v5-main/base/tb.cir": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8",
+    "runs/gnucap/v5-main/base/tb.gc": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82",
+    "runs/gnucap/v5-main/base/waveform.txt": "0e22946344458a9a4e5b305b4f99110e7fa7cb1785f031d41c81ecd6c8cd7ebf",
+    "runs/gnucap/v5-main/fine/result.json": "e5e49ef73eb67ef751d63dc65079eb64f75d0cfd97f8f4f91c7e9142f29d98e0",
+    "runs/gnucap/v5-main/fine/condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+    "runs/gnucap/v5-main/fine/dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "runs/gnucap/v5-main/fine/requested_settings.json": "341fa12704cd8b4c27825bca122af6d594984b910813d33da1aa5be7a3f52d0b",
+    "runs/gnucap/v5-main/fine/tb.scs": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e",
+    "runs/gnucap/v5-main/fine/tb.cir": "5c32e4f75b3c05fc5ccdab5e02b8f9d7edcdf16381a571c9c85ec59b723f4a9a",
+    "runs/gnucap/v5-main/fine/tb.gc": "4f4aeffd485b7835de878ab116ddc49a7a7b1f7c79e1c9813aa547ec68a38bdb",
+    "runs/gnucap/v5-main/fine/waveform.txt": "c8479c0e866928b483d72ad5814a268f202cea191a0316af393f918b913b3dcb"
+  },
+  "limitations": [
+    "No internal event count or continuous-time certification.",
+    "P is a rational witness for the chosen scenario, not proof of simulator correctness.",
+    "F excludes the specified scenario, not every possible physical uncertainty model.",
+    "V5 separate 1% timing measurements and interrupted transitions remain outside this implementation.",
+    "Missing waveforms retain their original execution failure; no fabricated trace."
+  ]
+}

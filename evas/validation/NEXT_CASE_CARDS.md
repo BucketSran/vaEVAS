@@ -1,6 +1,6 @@
 # v2 候选契约：边界、动态与组合
 
-2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个拟议条件；尚未写成新 DUT 或运行后端，不是正式分母。** 本文件落实 [设计规格](INDEPENDENT_SET_DESIGN.md) 的优先议题；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
+2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个条件已编码并完成四后端两档基线；有限观测结论见[执行报告](../../experiments/dvs2-four-backend-validation/README.md)，正式资格仍未取得。** 本文件落实 [设计规格](INDEPENDENT_SET_DESIGN.md) 的优先议题；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
 
 ## 总览与选择依据
 
@@ -159,7 +159,7 @@ PWL u 的节点为 (0,0),(1,.4),(2,.4),(3,−.2),(4,−.2)；v 为 (0,−.2),(1,
 
 先完成方法协议和 V6 修订，之后 E1/E2/C1/C2，最后 D1/D2/S1。拟议 16 条件若全部通过测试合同资格审查并采用四后端两档，为 128 条配置记录上限；这是配置预算，编译失败和复用会改变实际启动数。测试合同资格与后端是否成功分开，不能删除某后端执行失败的有效条件。V6 迁移、设置校准、观察干预及后续尺度变体另列，不能藏在该数里。
 
-本轮只有设计和独立算术核对。`python3 -B evas/validation/check_design_math.py` 核对锚点、状态表、误差传播示例及区别性反例；不检查 VA 编译或后端运行，也不授予观察资格。
+先按用户要求执行 Spectre：新增 16 条件共 32 条配置，加上 14 个原条件和一个低通修订的复验，共 62 条配置，见 [Spectre 实验](../../experiments/dvs2-spectre-validation/README.md)。随后按补测请求完成 EVAS、OpenVAF 各 34 条和 Gnucap 62 条配置，见 [四后端实验](../../experiments/dvs2-four-backend-validation/README.md)。本页新增 16 条件已有完整的四后端两档 128 条结论；当前全集另含旧条件和低通修订，共 248 条配置。编译失败记录不等于电路启动。`python3 -B evas/validation/check_design_math.py` 仍只核对锚点、状态表、误差传播示例及区别性反例；算术检查自身不授予观察资格。
 
 尚未展开：V3 初始高迟滞/above/enable/last_crossing；V4 量化、位序、递推；V5 absdelay/slew/中断边沿及动态 timer；V6 导数、采样滤波与长期相位；V7 更多选择器和层级；不同时间尺度、非零参考下的新组合。它们仍在总设计义务矩阵中，不因本页完成而默认为已覆盖。
 
