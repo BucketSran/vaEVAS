@@ -1,6 +1,6 @@
 # v2 候选契约：边界、动态与组合
 
-2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个条件已编码并完成四后端两档基线；有限观测结论见[执行报告](../../experiments/dvs2-four-backend-validation/README.md)，正式资格仍未取得。** 本文件落实 [设计规格](INDEPENDENT_SET_DESIGN.md) 的优先议题；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
+2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个条件已编码并完成四后端两档基线；有限观测结论见[执行报告](../../experiments/dvs2-four-backend-validation/README.md)，正式资格仍未取得。** 本文件落实 [验证范围与契约](README.md) 的补充行为义务；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
 
 ## 总览与选择依据
 

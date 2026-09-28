@@ -18,7 +18,7 @@ EVAS 的目标是支持声明范围内的电压域 Verilog-A 行为及其交互�
 不代表整组覆盖完成或取得正式 DVS-2 通过资格；本轮没有修改仿真器。
 本轮及后续诊断已固定为 [验证集 v1](validation/versions/v1/README.md)，
 下一轮先完善判定方法，再补事件边界、动态行为和有状态组合，见
-[优化优先级](validation/INDEPENDENT_SET_DESIGN.md#10-v1-之后的优化优先级)。
+[验证范围与后续边界](validation/README.md)。
 
 此验证集的需求、答案和判据独立于 EVAS 当前实现；既有 VABench 家族仅作为应用与回归层。
 先审查契约和判定方法，固定各后端设置并取得基线，再依据证据推进 EVAS 修复。

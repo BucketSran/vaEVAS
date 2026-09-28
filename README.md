@@ -1,51 +1,45 @@
 # vaEVAS
 
-A workspace for rebuilding a Verilog-A benchmark and its EVAS simulator.
+面向 Verilog-A benchmark 与可信评测的研究工作区，在同一仓库维护任务、验收逻辑与
+EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真器验证与应用任务分开报告。
 
-vaEVAS 面向 DAC 投稿，以 Verilog-A benchmark 与可信评测体系为研究主线，
-在同一仓库维护任务、验收逻辑和 EVAS 完整源码，支持它们的联动修复。
-评测执行采用 Harbor。
+## 当前可用内容
 
-## 当前阶段
+[独立验证集](evas/validation/README.md) 包含 31 个条件，已完成 thu-sui 上四后端、
+两档设置的 [248 条配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)。
+结果仅证明所列有限观测，完整观察资格仍待完成。
+[验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
-目前已建立工作区与开发约定，并开始维护
-[电压域行为的独立仿真器验证集设计](evas/validation/README.md)。
-已完成八张起步卡的 [四后端功能试点](experiments/dvs2-starter-pilot/RESULTS.md)，
-包含共同 VA 源码、运行/分析脚本和整理后的结果；正式验证资格仍待完善。
-本轮已保存为 [验证集 v1](evas/validation/versions/v1/README.md)（`validation-v1` 标签），
-后续优化在同一开发分支继续，不覆盖冻结证据。
-仓库尚未迁入 VABench 任务数据集和 EVAS 仿真器源码。
-题型、规模、评分方案和 EVAS 支持范围仍需后续设计与验证。
-
-旧 vaBench 和 EVAS 是后续审查与迁移的来源。已有代码、任务和结果需要结合新方案
-重新检查与验证，不直接作为新版本的质量证明。
+[EVAS](evas/README.md) 迭代在独立开发分支推进。旧 vaBench 和 EVAS 是审查与迁移来源；
+本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 
 ## 工作区
 
 | 路径 | 职责 |
 | --- | --- |
-| [tasks/](tasks/README.md) | Harbor 格式的 benchmark 任务、参考解与验收材料。 |
-| [evas/](evas/README.md) | EVAS 完整源码、构建配置及仿真器自身的测试。 |
-| [containers/](containers/README.md) | 共用容器环境、镜像构建与依赖版本。 |
-| [experiments/](experiments/README.md) | 实验配置、分析脚本及整理后的结果。 |
-| [scripts/](scripts/README.md) | 仓库维护、任务检查和发布辅助工具。 |
-| [docs/](docs/workspace.md) | 设计讨论、已确定的方案与使用说明。 |
+| [tasks/](tasks/README.md) | 有实际建模用途的 Harbor 任务、参考解与验收材料 |
+| [evas/](evas/README.md) | 仿真器源码、构建与回归；`validation/` 保存独立跨后端契约 |
+| [containers/](containers/README.md) | 共用容器环境、构建与依赖版本 |
+| [experiments/](experiments/README.md) | 实验协议、分析与整理后的结果证据 |
+| [scripts/](scripts/README.md) | 仓库维护和验证工具 |
 
-完整边界见 [工作区约定](docs/workspace.md)，开发时遵循 [AGENTS.md](AGENTS.md)。
-各目录按实际需要增加内部文件；文档标明设计、实现与验证状态。
+开发约定见 [AGENTS.md](AGENTS.md)。原始运行输出与临时材料存放在 Git 忽略的 `runs/`。
+正式结果绑定任务/源码版本、EVAS 构建、镜像及 Harbor/Agent 配置；修复影响判分时重跑受影响部分。
+题型、最终评分、完整支持范围、打包发布与应用基线仍需按实际工作确定。
 
-## 开发方式
+## 分支与文档维护
 
-围绕具体问题形成可复现用例，明确问题属于任务规格、参考解、评分器还是 EVAS，
-然后联动修改并验证受影响的部分。迁移按经过审查的小批次推进。
+- [PR #1](https://github.com/BucketSran/vaEVAS/pull/1)：测试契约、用例、判定器与跨后端证据，目标为 `main`。
+- [PR #2](https://github.com/BucketSran/vaEVAS/pull/2)：EVAS 源码、接口与自身回归，当前以 PR #1 分支为基底。
+- 每个阶段用独立提交保留可 review 的检查点，继续更新对应 PR；达到可合并里程碑后再合入 `main`。
+  PR #1 先合并后，将 PR #2 基底调整为 `main` 并核对差异。PR 合并即结束该批次，后续批次再开对应方向的新 PR。
+- 仓库长期保留使用说明、当前接口/测试契约与可复核结果。阶段计划、设计讨论及 review 流水记录放在 PR 和 Git 历史，避免重复状态文档。
 
-每批正式实验记录任务版本、EVAS 版本、容器镜像及 Harbor/Agent 配置，
-以便在修复影响判分的问题后定位和重跑受影响的结果。
-原始运行输出存放在 Git 忽略的 `runs/` 下。
+迁移应先核对来源、规格与实现；失败先区分任务、参考解、判定器、仿真器或环境责任。
+不通过放宽判据掩盖失败，保留未决及失败证据。
 
-## 设计参考
+## 参考
 
-- [analog-design-bench](https://github.com/Arcadia-1/analog-design-bench)
-- [Harbor 任务格式](https://docs.harborframework.com/core-concepts/tasks/overview)
-
-参考仓库用于借鉴组织方式；当前尚未迁入其代码或任务内容。
+[analog-design-bench](https://github.com/Arcadia-1/analog-design-bench) 提供组织方式参考，
+[Harbor](https://docs.harborframework.com/core-concepts/tasks/overview) 提供任务格式。
+当前尚未迁入参考仓库的代码或任务内容。
