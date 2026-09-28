@@ -1,13 +1,40 @@
 # EVAS
 
-此工作区将维护 EVAS 的完整源码、构建配置和仿真器自身的回归测试。
-源码将在后续审查和迁移时加入，新仓库中的 EVAS 将作为后续联动开发的主线。
+此工作区维护 EVAS 的源码、构建配置和仿真器自身的回归测试。
+当前已实现重构的第一个切片：严格的限定语法前端、贡献 IR 与 Rust 静态线性求解内核。
+完整旧仿真器尚未迁入，新内核尚未替换旧 EVAS 0.8.7。
+
+代码按职责划分为 [语法解析](src/evas/syntax.py)、[语义绑定](src/evas/frontend.py)、
+[方程组装](rust_core/src/assembly.rs)、[工作点求解](rust_core/src/solver.rs)和
+[线性代数](rust_core/src/linear.rs)。增加语法、绑定规则或数值算法时，可分别审查对应模块。
 
 EVAS 的目标是支持声明范围内的电压域 Verilog-A 行为及其交互，与 Spectre 对标，
 并为无需商业许可证的 VABench 复现和 agentic eval 提供执行后端。
-支持范围不以现有 benchmark 家族为白名单；具体语义边界、内部模块及重构方法仍待确定。
+支持范围不以现有 benchmark 家族为白名单；本批实现边界与后续约束见 [设计](DESIGN.md)。
 修复应由具体问题和可复现用例驱动，并检查受影响的 benchmark 任务。
 语义正确性需要独立参考或可解释的预期结果支撑，不能只依据任务是否通过。
+
+## 当前切片的运行和检查
+
+需要 Python 3.10+ 和 Rust/Cargo。以下命令在仓库根目录运行：
+
+当前 Python 包与 Rust 内核为 0.2.0，使用 **IR v2** 的结构化支路身份。
+两端需要一起更新并重新构建；已有 v1 JSON 应从原 VA/manifest 重新编译。
+旧归档保持原样，使用旧提交复现。参数覆盖规则与协议迁移见
+[设计契约](DESIGN.md#参数绑定契约)，本阶段结果见 [检查点 2](REVIEW.md#检查点-2参数契约与结构化支路身份)。
+
+```sh
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json --kernel evas/rust_core/target/debug/evas-kernel
+PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
+PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/evas-static-replay
+```
+
+最后一个命令要求新的输出目录，读取原 31 条条件的 VA、输入和独立判据。
+当前 9 个条件可编译，另 22 个明确拒绝；两档分别是静态求解的采样网格和残差设置，
+不代表已经实现瞬态积分、事件定位或取得 DVS 正式资格。
+review 停止点及实测结果见 [REVIEW.md](REVIEW.md)。
 
 ## 独立验证集
 
