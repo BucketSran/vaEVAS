@@ -4,6 +4,12 @@ use std::collections::BTreeSet;
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
+        Expression::State { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "state requires transient execution",
+            ))
+        }
         Expression::Affine { constant, terms } => {
             let mut seen = BTreeSet::new();
             if !constant.is_finite()
@@ -38,6 +44,12 @@ pub(crate) struct Value {
 
 pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
     let result = match expr {
+        Expression::State { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "unbound state in static expression",
+            ))
+        }
         Expression::Affine { constant, terms } => {
             let mut result = Value {
                 value: *constant,

@@ -1,14 +1,26 @@
 mod assembly;
+mod events;
 mod expression;
 pub mod ir;
 mod linear;
 mod nonlinear;
+mod pwl;
 pub mod solver;
+mod transient;
 
 use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;
 
 pub fn run(request: Request) -> Result<Response, Error> {
+    if request.transient.is_some() {
+        return transient::run(request);
+    }
+    if !request.program.states.is_empty() || !request.program.events.is_empty() {
+        return Err(Error::new(
+            "unsupported_analysis",
+            "state/event program requires transient execution",
+        ));
+    }
     if request.samples.is_empty() {
         return Err(Error::new(
             "invalid_inputs",
@@ -32,5 +44,6 @@ pub fn run(request: Request) -> Result<Response, Error> {
         schema_version: SCHEMA_VERSION,
         nodes: circuit.nodes,
         solutions,
+        transient: None,
     })
 }
