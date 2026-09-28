@@ -7,6 +7,17 @@
 - Initialization defines workspace ownership only. Task types, counts, scoring, simulator coverage, packaging, and internal architecture remain open.
 - Read `README.md` and `docs/workspace.md` before making structural changes. Current user instructions take precedence over this guide.
 
+## Agent skills
+
+Repository-local skills live in `.agents/skills/`. Load the skills relevant to the current request; these are independent entry points, not a mandatory pipeline.
+
+- [evas-develop](.agents/skills/evas-develop/SKILL.md): implement or refactor EVAS language, IR, and execution behavior in a reviewable scope.
+- [evas-validate](.agents/skills/evas-validate/SKILL.md): select and run appropriate checks, or reassess simulator evidence against independent contracts.
+- [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md): review a PR or local diff for correctness, contract, and evidence problems.
+- [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md): prepare a reviewable checkpoint and PR description; publish only within the user's authorization.
+
+Skills route to the owning documentation and scripts. Current implementation scope, commands, and result counts belong in those sources rather than being duplicated in skill instructions.
+
 ## Ownership
 
 - `tasks/`: benchmark tasks, reference solutions, and task-specific verification.

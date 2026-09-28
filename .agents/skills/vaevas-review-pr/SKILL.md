@@ -1,0 +1,58 @@
+---
+name: vaevas-review-pr
+description: >-
+  Review a vaEVAS GitHub PR or local diff for actionable correctness,
+  compatibility, validation, and evidence problems. Use when asked to review
+  an EVAS checkpoint or assess whether a change is ready. Review is read-only
+  unless the user also requests fixes; it does not publish GitHub comments.
+---
+
+# Review a vaEVAS change
+
+Resolve the requested diff, its actual base and head, and any stacked-PR
+ancestry. Do not assume the base is `main`. Inspect the changed code and relevant
+callers or consumers; keep findings attributable to the reviewed change.
+Preserve the working tree. Perform fixes or publish review comments only when
+the current task authorizes those actions.
+
+## Assess the relevant contracts
+
+Use [workspace ownership](../../../README.md),
+[EVAS documentation](../../../evas/README.md), and the owning protocol for the changed
+area. Review against the user's acceptance criteria, rather than every possible
+future simulator feature.
+
+- For parser or binding changes, check full token consumption, unsupported syntax,
+  parameter dependency and override rules, finite values, and instance isolation.
+- For IR changes, trace Python/Rust serialization, version rejection, structured
+  branch identity, endpoint orientation, and validation at both entry points.
+- For assembly and solving, check contribution accumulation, independent instance
+  constraints, ground/driven-node handling, singular systems, non-finite results,
+  and residual acceptance. A small residual alone is not a forward-error bound.
+- For stateful behavior, inspect initialization, event order, candidate-state
+  isolation, and commit/rollback whenever those paths are touched.
+- For validation changes, compare case contracts, independent expected answers,
+  checker calibration, fixed denominators, and requested versus effective
+  settings. Use `evas/validation/METHOD_QUALIFICATION.md` when present and a
+  claim depends on it; missing qualification evidence remains a review gap.
+- For documentation or reports, check that claims refer to the actual revision,
+  build, and observations. Historical passes and static replay do not certify new
+  code or transient semantics. Check current component contracts and the PR
+  checkpoint rather than assuming a separate design or review-log file exists.
+
+Assess whether a test could detect the relevant bug independently of the
+implementation. Run a focused reproduction when feasible and within task scope;
+if it would alter shared state or require an unauthorized resource, explain the
+verification gap instead of claiming it passed.
+
+## Deliver the review
+
+Lead with actionable findings, ordered by severity. Each finding should identify
+the location, concrete trigger, observed or reasoned impact, and a focused repair
+direction. Separate confirmed defects from open questions and missing evidence.
+Avoid speculative architecture preferences and unrelated pre-existing issues.
+
+If no actionable defects are found, say so and describe the review scope and
+material verification limits. Complete one review unless new changes, a specific
+unresolved question, or the user's request warrants another pass. No fixed
+reviewer count, clean-round quota, or external reviewer is required.
