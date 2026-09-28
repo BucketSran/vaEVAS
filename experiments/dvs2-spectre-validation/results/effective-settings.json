@@ -1,0 +1,1056 @@
+[
+  {
+    "condition": "v1-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v1-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-reference-zero",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-reference-zero",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-supply-fixed",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-supply-fixed",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-input-common-mode",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v2-input-common-mode",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v3-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v3-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v4-c0",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v4-c0",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v4-c1",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v4-c1",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v5-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v5-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v6-standard",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v6-standard",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-swapped",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-swapped",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-a-half",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-linear-a-half",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-nonlinear-0.5",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-nonlinear-0.5",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-nonlinear-2.0",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "v7-nonlinear-2.0",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-aligned",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 3e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-aligned",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 3e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-shifted",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 3e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-shifted",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 3e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-slow",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 3e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e1-slow",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 3e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-low",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-low",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-clock-high",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-clock-high",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-reset-high",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "e2-reset-high",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-swapped",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-swapped",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-no-reset-a",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c1-no-reset-a",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c2-main",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "c2-main",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d1-free",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d1-free",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d1-reset",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d1-reset",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d2-constant",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d2-constant",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d2-chirp",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "d2-chirp",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "s1-default",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "s1-default",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "s1-override",
+    "profile": "base",
+    "effective": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  },
+  {
+    "condition": "s1-override",
+    "profile": "fine",
+    "effective": {
+      "vabstol": 1e-09,
+      "iabstol": 1e-13,
+      "reltol": 1e-06,
+      "stop": 4e-06,
+      "step": 1e-10,
+      "maxstep": 1e-10,
+      "method": "traponly"
+    },
+    "requested_match": true,
+    "warning_codes": {
+      "VACOMP-2435": 1
+    }
+  }
+]

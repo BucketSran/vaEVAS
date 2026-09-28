@@ -1,0 +1,17 @@
+{
+  "evas_binary_sha256": "e2a6a54b470578e9451e48427efede3f91b501ba8da20d368087ccad083928a4",
+  "evas_source_provenance": "Extracted from the exact deployed image; source tag comparisons do not invent a missing build_revision.",
+  "evas_image_source_sha256": {
+    "evas/compiler/parser.py": "b34a5f2478c560bb98b4a62657e26e940b33dd5ce6afb991017f97ff03fee6fd",
+    "evas/simulator/backend.py": "047ea52a100b945016b15944dbf32a077e42e244e081ad691a2c784fc8903ed4",
+    "evas/simulator/rust_program.py": "0dae15b2fe6075a1b0b2a82651d6fc41ec11f6441212b8d7c7f20b2429f06e1e",
+    "evas/rust_core/src/event.rs": "2f29c87c02541388cca6f1b81995dda6a74ea816dd9974d0353dfd66fe5be74a",
+    "evas/rust_core/src/expr.rs": "e26348ce379dc229f183fce88dd433375f86efcb2dcb5b5f17fc2424487acb23",
+    "evas/rust_core/src/program.rs": "f0338eb51a30f414a48b63770bdaebba48b251c4954cfae395253b9ad480bb78"
+  },
+  "openvaf_tag": "v24.0.2mob",
+  "openvaf_source_commit": "fdf2522b70f42793f64b1c72f0195c96dea0cc19",
+  "gnucap_modelgen_tag": "20260729-dev",
+  "gnucap_modelgen_source_commit": "0c7f045dd88a8a143631a0d2c87a0db2849762c8",
+  "external_source_binding": "Published tag sources explain implementation; deployed OpenVAF MIR and modelgen-generated C++/runtime diagnostics bind the observations to the installed tools. No claim of reproducible binary/source build attestation."
+}

@@ -1,0 +1,12 @@
+// Standard-array revision of d2_v6_01. The frozen v1 source is preserved.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v6(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    analog begin
+        V(vout, vref) <+ laplace_nd(V(vin, vref), '{1.0}, '{1.0, 0.5e-6});
+    end
+endmodule

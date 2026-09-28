@@ -1,0 +1,39 @@
+{
+  "run_id": "dvs2-spectre-20260928-01",
+  "date": "2026-09-28",
+  "host_alias": "thu-sui",
+  "backend": "spectre",
+  "tool_version": "sub-version  21.1.0.509.isr12",
+  "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "input_manifest_sha256": "ef5ea0d537045b57fe6473272adc8a33f3736de774ac232fcdb7c9999655a7a1",
+  "file_manifest_sha256": "5e2f4f53b862170a545e7e56a0fe5b12ffc5515df3d87aaef788c4369c35251e",
+  "raw_archive_sha256": "0e37031fc7330d12e2d675d44d7e3f0fa526b196f041fa1cc63504dd319143a2",
+  "raw_archive_bytes": 21126482,
+  "analysis_sha256": "4e94281a963d98b0b43de6d322e201c1e08820868b8ad7d132d6146061e10ffc",
+  "reporter_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+  "verified_archived_files": 1216,
+  "summary": {
+    "configurations": 62,
+    "conditions": 31,
+    "execution": {
+      "waveform_available": 62
+    },
+    "observation": {
+      "observations_within_targets": 62
+    }
+  },
+  "effective_settings_verified": 62,
+  "warning_codes": {
+    "VACOMP-2435": 62
+  },
+  "history_counts": {
+    "exact_export_assumption": {
+      "P": 40
+    },
+    "candidate_budget_sensitivity": {
+      "P": 40
+    }
+  },
+  "execution_elapsed_sum_s": 608.0910390075296,
+  "formal_dvs_qualification": "I"
+}

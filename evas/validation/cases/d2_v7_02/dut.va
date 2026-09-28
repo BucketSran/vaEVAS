@@ -1,0 +1,14 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v7_nonlinear(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    parameter real cubic = 0.5;
+    parameter real voltage_scale = 1.0;
+    analog begin
+        V(vout, vref) <+ V(vin, vref)
+            - cubic * pow(V(vout, vref), 3) / (voltage_scale*voltage_scale);
+    end
+endmodule

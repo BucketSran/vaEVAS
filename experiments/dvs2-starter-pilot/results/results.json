@@ -1,0 +1,5438 @@
+[
+  {
+    "backend": "evas",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "base",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 7.482903185973555e-14
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.1224354778960333e-13,
+          "time_s": 2.997e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "0057625d0bf13d988bab0b40cb321a5b6fbf44255dc55b0f26397309de72b75f",
+    "netlist_sha256": "ea4a78d0e873199c75dc8af3ab81df09d1adcafec525c199f390df294927bc9f"
+  },
+  {
+    "backend": "evas",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "fine",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40003,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 5.00155472593633e-13
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 7.502887200416808e-13,
+          "time_s": 2.674899999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "86aa8f288e6f651c9f6f9aef883d6a84d29324e9e75d85dbe1f455b97a2315e4",
+    "netlist_sha256": "a8f366d9440b4cdeeaa417981d7a44f01e849b492364f136b292b19302e393ae"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vip": 1.0325074129013956e-14,
+        "vin": 3.108624468950438e-14,
+        "vdd": 4.107825191113079e-14,
+        "vref": 2.0539125955565396e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 1.0769163338864018e-14,
+          "time_s": 3.819e-06
+        },
+        "on": {
+          "error_v": 5.1514348342607263e-14,
+          "time_s": 3.815e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.163336342344337e-14,
+      "common_mode_error_v": 3.086420008457935e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "fb066dcb0d3e53631937e32783b9f672f2195b6ff3526bc311672bf3b7a398ae",
+    "netlist_sha256": "2e17c3d3c74d66a708b65a0318b326f951d1439d4d4a85809d1d1625902c5825"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vip": 2.5091040356528538e-14,
+        "vin": 7.505107646466058e-14,
+        "vdd": 1.0014211682118912e-13,
+        "vref": 5.00155472593633e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.5424107263916085e-14,
+          "time_s": 3.685599999996e-06
+        },
+        "on": {
+          "error_v": 1.2523315717771766e-13,
+          "time_s": 3.195699999997e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.0036416142611415e-13,
+      "common_mode_error_v": 7.505107646466058e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "99f3f82f51aeb0f9b6fcdf451a2a7a18f28fac0114b96acf4264a257a962c036",
+    "netlist_sha256": "3334267f133223260bfb78e9dee41868f42b75d49dd6f5834ac763959d17c7a3"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vip": 1.021405182655144e-14,
+        "vin": 3.086420008457935e-14,
+        "vdd": 4.107825191113079e-14,
+        "vref": 2.0539125955565396e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 1.0436096431476471e-14,
+          "time_s": 3.781e-06
+        },
+        "on": {
+          "error_v": 5.1514348342607263e-14,
+          "time_s": 3.815e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.163336342344337e-14,
+      "common_mode_error_v": 3.086420008457935e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "777a7dc532f9eb71bc8031911f251494a7db9f6aebfb809aa4e01368fd5d9287",
+    "netlist_sha256": "db209b4d6c20ad1bb8b46a6510a224ac29e6fb57cd09a0dd4ef8579a6a6abead"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vip": 2.5091040356528538e-14,
+        "vin": 7.505107646466058e-14,
+        "vdd": 1.0014211682118912e-13,
+        "vref": 5.00155472593633e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.531308496145357e-14,
+          "time_s": 3.684799999997e-06
+        },
+        "on": {
+          "error_v": 1.2523315717771766e-13,
+          "time_s": 2.216399999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.0025313912365164e-13,
+      "common_mode_error_v": 7.527312106958561e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "efab16c3449b8c24587fd08ae7c706b4a42d87e35d1709c6903bb7e2013e0ba1",
+    "netlist_sha256": "0680b7a8b15ccbb50c3d1ec32b5311da7b4106dad365e6c9aad28c51c354ae5f"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vip": 1.0269562977782698e-14,
+        "vin": 1.0269562977782698e-14,
+        "vdd": 2.0650148258027912e-14,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 1.0325074129013956e-14,
+          "time_s": 3.811e-06
+        },
+        "on": {
+          "error_v": 3.086420008457935e-14,
+          "time_s": 3.81e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.107825191113079e-14,
+      "common_mode_error_v": 1.0325074129013956e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c69b6499267c5e5789badd170be4ceda682a68f7c971307366350dc3913595f4",
+    "netlist_sha256": "ea89c02a12e5da0b7ebf0c47d2095608663c84dd939a30a889e9e6cdc301ad53"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vip": 2.503552920529728e-14,
+        "vin": 2.503552920529728e-14,
+        "vdd": 5.0182080713057076e-14,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.5091040356528538e-14,
+          "time_s": 2.2155e-06
+        },
+        "on": {
+          "error_v": 7.505107646466058e-14,
+          "time_s": 2.2162e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.0014211682118912e-13,
+      "common_mode_error_v": 2.5091040356528538e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4a1a48a68a2f5365c6df1851be35985195d7abbf7982942e7c7ebd57ec664f11",
+    "netlist_sha256": "9ef655145c213bbd7a8d07542c031bae835f5e0ea67e7c763391f90b3dce9f4c"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vip": 1.021405182655144e-14,
+        "vin": 3.086420008457935e-14,
+        "vdd": 2.0650148258027912e-14,
+        "vref": 2.0539125955565396e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 1.404e-06
+        },
+        "on": {
+          "error_v": 4.1300296516055823e-14,
+          "time_s": 3.815e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.141131881851834e-14,
+      "common_mode_error_v": 2.0539125955565396e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "f0572676358b1bb11811d22a2e0c2482a1b3b25e5ea33425c507164b862587b2",
+    "netlist_sha256": "72ccb53f6edebd272446a696484d858ab2b337602a2f5c11bbfffadcc7af1f96"
+  },
+  {
+    "backend": "evas",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vip": 2.5091040356528538e-14,
+        "vin": 7.505107646466058e-14,
+        "vdd": 5.0182080713057076e-14,
+        "vref": 5.00155472593633e-14
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 1.1905e-06
+        },
+        "on": {
+          "error_v": 1.0014211682118912e-13,
+          "time_s": 2.216399999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.0025313912365164e-13,
+      "common_mode_error_v": 5.0182080713057076e-14,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "467f07b12f64a4afe55211756843a69672cc32219c274a0f4226d49656f4194d",
+    "netlist_sha256": "eb849c148ae559a3a3a63ee3a5d1e9f8fef30a0e11456616659dd22a7813d1cd"
+  },
+  {
+    "backend": "evas",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "base",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4005,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 4.000133557724439e-13
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.6002144054283463e-11,
+          "time_s": 1.375e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.4e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 4.999999999996961e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.375e-06,
+            1.375e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 4.999999999978141e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.3740000000000002e-06,
+            3.375e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "a28782e82490c2ed762ca05805b2993da2c2e9d7c816bda52a5faa7ec1dee8cc",
+    "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+  },
+  {
+    "backend": "evas",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "fine",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 2.000621890374532e-13
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.8,
+          "time_s": 1.425e-06
+        }
+      },
+      "violating_sample_count": 20489,
+      "plateau_error_v": 0.8,
+      "waveform_excess_over_nominal_event_allowance_v": 0.8,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "07666c7040eb594d1c944fbdb64d586fc270c45f7e9db6cf49d6a4e21ce9d840",
+    "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332"
+  },
+  {
+    "backend": "evas",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4016,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 1.4999113062685865e-13,
+        "clk": 5.0001114360043175e-12,
+        "rst": 9.998113448261847e-12
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.2998990772672414e-11,
+          "time_s": 1.5e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.124999999999893e-07,
+          "inferred_start_error_s": -1.0693790959085542e-20,
+          "full_edge_estimate_s": 2.4999999999974482e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999999692e-10,
+          "joint_start_interval_s": [
+            4.995e-07,
+            5e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625000000000107e-06,
+          "inferred_start_error_s": 1.079967007749233e-20,
+          "full_edge_estimate_s": 2.499999999997091e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.15e-06,
+            1.1504999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.512499999999994e-06,
+          "inferred_start_error_s": -6.1409888675936775e-21,
+          "full_edge_estimate_s": 2.4999999999947615e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.4995e-06,
+            1.4999999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.512499999999975e-06,
+          "inferred_start_error_s": -2.456395547037471e-20,
+          "full_edge_estimate_s": 2.4999999999865294e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995e-06,
+            2.5e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.512499999999975e-06,
+          "inferred_start_error_s": -2.498747194400186e-20,
+          "full_edge_estimate_s": 2.4999999999770532e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.4995e-06,
+            3.5e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "befad3b933d38015ed084389869c2109869e37095fe6495f170880de5665402d",
+    "netlist_sha256": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee"
+  },
+  {
+    "backend": "evas",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40017,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 1.4999113062685865e-13,
+        "clk": 5.0001114360043175e-12,
+        "rst": 9.998113448261847e-12
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.29999999999985005,
+          "time_s": 3.525099999997e-06
+        }
+      },
+      "violating_sample_count": 15007,
+      "plateau_error_v": 0.29999399999985005,
+      "waveform_excess_over_nominal_event_allowance_v": 0.29999399999985005,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.124999999999893e-07,
+          "inferred_start_error_s": -1.0693790959085542e-20,
+          "full_edge_estimate_s": 2.4999999999944836e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            4.999000000000001e-07,
+            5e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625000000000107e-06,
+          "inferred_start_error_s": 1.079967007749233e-20,
+          "full_edge_estimate_s": 2.4999999999883823e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.15e-06,
+            1.15e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.512499999999994e-06,
+          "inferred_start_error_s": -6.1409888675936775e-21,
+          "full_edge_estimate_s": 2.499999999986053e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.4999e-06,
+            1.4999999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "20160c36a69e907758daee4fd0ef24b63a160e567e41416633c800df64d73787",
+    "netlist_sha256": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828"
+  },
+  {
+    "backend": "evas",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4013,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 1.4999113062685865e-13,
+        "clk": 5.0001114360043175e-12,
+        "rst": 9.998113448261847e-12
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.8990475858515765e-11,
+          "time_s": 2.5e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.124999999999893e-07,
+          "inferred_start_error_s": -1.0693790959085542e-20,
+          "full_edge_estimate_s": 2.4999999999974482e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999999692e-10,
+          "joint_start_interval_s": [
+            4.995e-07,
+            5e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625000000000107e-06,
+          "inferred_start_error_s": 1.079967007749233e-20,
+          "full_edge_estimate_s": 2.499999999997091e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.15e-06,
+            1.1504999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5124999999999963e-06,
+          "inferred_start_error_s": -3.3881317890172014e-21,
+          "full_edge_estimate_s": 2.4999999999857353e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995e-06,
+            2.5e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.512499999999975e-06,
+          "inferred_start_error_s": -2.498747194400186e-20,
+          "full_edge_estimate_s": 2.4999999999770532e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.4995e-06,
+            3.5e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "f78e5027ebcca5c7303010264004b38c5cde43d2d52323dc2ebf6bb4ace08d00",
+    "netlist_sha256": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1"
+  },
+  {
+    "backend": "evas",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40015,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 1.4999113062685865e-13,
+        "clk": 5.0001114360043175e-12,
+        "rst": 9.998113448261847e-12
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.6250000000000001,
+          "time_s": 3.525099999997e-06
+        }
+      },
+      "violating_sample_count": 15009,
+      "plateau_error_v": 0.6249940000000002,
+      "waveform_excess_over_nominal_event_allowance_v": 0.6249940000000002,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.124999999999893e-07,
+          "inferred_start_error_s": -1.0693790959085542e-20,
+          "full_edge_estimate_s": 2.4999999999944836e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            4.999000000000001e-07,
+            5e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625000000000107e-06,
+          "inferred_start_error_s": 1.079967007749233e-20,
+          "full_edge_estimate_s": 2.4999999999883823e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.15e-06,
+            1.15e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "92168e6570e97f1f5ce42c9a14bd9c6d59da004f744a249490005349a27d8e8d",
+    "netlist_sha256": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378"
+  },
+  {
+    "backend": "evas",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "base",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "execution_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927"
+  },
+  {
+    "backend": "evas",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "fine",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "execution_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e"
+  },
+  {
+    "backend": "evas",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "base",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "execution_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d"
+  },
+  {
+    "backend": "evas",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "fine",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "execution_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "72a63e8db3420418de0bc0167d9894f09a46ad94d63588aade3acb34ebd4c574"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vina": 1.0325074129013956e-14,
+        "vinb": 1.0269562977782698e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.04999999999999999,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "d0d5a173bafcd9d5e41e44b20dbf20cb5516cfca9e8f0bf93336e1ec7abf3fe7",
+    "netlist_sha256": "e14219f1f6e5cdc985d3906cc56ecf47bebb90ffa2a070809ec3aa097437609a"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vina": 2.503552920529728e-14,
+        "vinb": 2.503552920529728e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.04999999999999999,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "b94be5982b5e4fcba7a82a2f9c927a740effc4271cfa50a3132939b14a811178",
+    "netlist_sha256": "4dcebdcbbc84694a7e5d6a92222725699135731f89ded9a8de8d2a1279564bd1"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vina": 2.0650148258027912e-14,
+        "vinb": 1.0269562977782698e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4324f6997ded9ede47103332a4cae68a1a0bd45314581b0eeffeb1155b3d6f24",
+    "netlist_sha256": "243c6f6d9f9c15170beec8884e2676fce2a6a35062a67e682ba2e4a2af667505"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vina": 5.007105841059456e-14,
+        "vinb": 2.503552920529728e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "e24a44740872a761ac36c73c071730245d6f46f217c3deaea95b4a9ef8c211c9",
+    "netlist_sha256": "3a02e446cd9a005f127a562d31543f4b11e69b77d83c9a3d302da4e5caa347fc"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vina": 2.0650148258027912e-14,
+        "vinb": 1.0269562977782698e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4324f6997ded9ede47103332a4cae68a1a0bd45314581b0eeffeb1155b3d6f24",
+    "netlist_sha256": "2e28325c7df4f6f4b150c8009c47a376cb56975f3aeb8f01b48dcf8bf36654a8"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vina": 5.007105841059456e-14,
+        "vinb": 2.503552920529728e-14
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        },
+        "outb": {
+          "error_v": 0.09999999999999998,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 4,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.15000000000000002,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "e24a44740872a761ac36c73c071730245d6f46f217c3deaea95b4a9ef8c211c9",
+    "netlist_sha256": "c480ee246585bb6c06b62a8546c748043d5b0377b61bb7ff6724d29debb700b2"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 1.9317880628477724e-14
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.0625,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 5,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.0889892578125,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "5daf67ee3b1ced530342906991656a640de0c1bcf2cc92a8e7a5ae8f4e0ff79f",
+    "netlist_sha256": "2092d81b802c3f6122137e009201bb46210327af2c971a1964cc43558e50a618"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40003,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 1.5232259897857148e-13
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.0625,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 5,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.0889892578125,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "71369249778629c4510bffbb50de88c9990a0ddd775f28b74df4c66660f58f3b",
+    "netlist_sha256": "49889877b228b4b01c727ac94bf5ddafb34a75bb3b8b3de7c8f47843bb2f2b87"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000004986e-09,
+      "input_max_error_v": {
+        "vin": 2.8754776337791554e-14
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.5970774150580325,
+          "time_s": 3e-09
+        }
+      },
+      "violating_sample_count": 712,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.8520061950870197,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "df6d3b207aa917a87fadc96c41bcd8ffe7bd8363735e160d208e9d2e3207d041",
+    "netlist_sha256": "4d5f43341035d4ab285db16bee97efbeb5fd7a76ced8c679a251ef1c9b02369b"
+  },
+  {
+    "backend": "evas",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40003,
+      "max_gap_s": 1.0000000099971815e-10,
+      "input_max_error_v": {
+        "vin": 2.3436808049837055e-13
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.6005666015223456,
+          "time_s": 4e-06
+        }
+      },
+      "violating_sample_count": 8312,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 0.8526007905998578,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "1a8b42e9afa9e35777827d4341a709d9cb47c10b7d5e0eac65cf25dff34be685",
+    "netlist_sha256": "2b82ec33e2750cf49cc86db1eefb314d94257f4dda87249886fd574cedb2d7e4"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "base",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 1.5543122344752192e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.887379141862766e-15,
+          "time_s": 3.166000000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2390bdaa1a23fb7c4d927ab3b338326dd9fe0daf2ab537cb2f91c6f3d7d3e8aa",
+    "netlist_sha256": "bf8c649e101c66004308d5165b342233400dd37ba4eeccc52dc0d5bd43b5aa69"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "fine",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 2.1094237467877974e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.4980018054066022e-15,
+          "time_s": 2.879900000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "61169db28ccbf507e3741971389e32da81f260b14442a4ce6e55f792496d4961",
+    "netlist_sha256": "f0b3167b6eb8f20dbe1f753314b954a616844172609c77ec8b9b53a24ac17c82"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vip": 3.3306690738754696e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 3.72e-06
+        },
+        "on": {
+          "error_v": 1.1102230246251565e-15,
+          "time_s": 3.946e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 8.881784197001252e-16,
+      "common_mode_error_v": 6.661338147750939e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "f07400ae040447692dd7e0419ad723b798b8ba421f8b770243a27f74ea99a521",
+    "netlist_sha256": "375cf3927836ad6a2b16947c7c3db138d0df9520dd166061dce07853f95dab75"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vip": 4.440892098500626e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 7.771561172376096e-16,
+          "time_s": 3.784399999999999e-06
+        },
+        "on": {
+          "error_v": 1.1102230246251565e-15,
+          "time_s": 3.9209e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 9.992007221626409e-16,
+      "common_mode_error_v": 8.881784197001252e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "b1b7dd0db38a94df999a093e866c104ba0960922c477cfae21e9287b520c0227",
+    "netlist_sha256": "22342d2341d8715db47e627aff008c72416ebc86f62ffdf2003c57a3448a9cc2"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.418e-06
+        },
+        "on": {
+          "error_v": 1.3322676295501878e-15,
+          "time_s": 3.946e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.2212453270876722e-15,
+      "common_mode_error_v": 6.661338147750939e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ea6b47d65121f4d1ca6439d4ac703a83bc5b80a7ffb47a4d158c843adc352280",
+    "netlist_sha256": "b55471dcb8a8e0f7aab6a4219274d7ab0e53b982c3fabc9d35c11efd4242bd0d"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vip": 3.3306690738754696e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 3.3648e-06
+        },
+        "on": {
+          "error_v": 1.3322676295501878e-15,
+          "time_s": 3.9209e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.2212453270876722e-15,
+      "common_mode_error_v": 6.661338147750939e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "3444224002b8cea1cafa6f71720c9412ed52b40f32352efc2949417118383109",
+    "netlist_sha256": "49e06122956f2f9377af5ff81f4364975be8614fa9f179ec8fb3c05ced67a467"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vip": 1.942890293094024e-16,
+        "vin": 1.6653345369377348e-16,
+        "vdd": 1.1102230246251565e-15,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 8e-09
+        },
+        "on": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.894000000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 5.551115123125783e-16,
+      "common_mode_error_v": 2.220446049250313e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "5d24c97a4b1908edb17269d87a2a3ae628f1b52a5d4596806ef5e4046a6b761b",
+    "netlist_sha256": "7a7e1f8d30fc91fb789d2a6f749310c8e4a8b3cdaa678808b5279bdcfc7d5134"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vip": 1.942890293094024e-16,
+        "vin": 1.6653345369377348e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 1.57e-08
+        },
+        "on": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 2.135600000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 6.661338147750939e-16,
+      "common_mode_error_v": 3.3306690738754696e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "fccfa87b8bce1b22515b2c9a9ea761c0571320545fde8005edca00e2ec6c84cb",
+    "netlist_sha256": "8735c826df5f9c89f3499e9b0f0e675ca15b38642798d138bd5fe0a118e4a03d"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.1102230246251565e-15,
+        "vref": 1.1102230246251565e-15
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 1.1e-08
+        },
+        "on": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 3.378999999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 6.661338147750939e-16,
+      "common_mode_error_v": 2.220446049250313e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "6b64d2579216be22c2a80fd12635b05e467e88ebc6f5466ac5186e73217d0e1e",
+    "netlist_sha256": "143d95b69cc71f0366cf4afe0dd6f8ff58765a4af472b86d7c69c1b55637b9db"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vip": 3.3306690738754696e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 1.3322676295501878e-15,
+        "vref": 1.2212453270876722e-15
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 9.992007221626409e-16,
+          "time_s": 3.454299999999999e-06
+        },
+        "on": {
+          "error_v": 1.4432899320127035e-15,
+          "time_s": 3.457500000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.4432899320127035e-15,
+      "common_mode_error_v": 9.992007221626409e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "268b575518182329d14e0c668df1f4603d5f2c524307f48491fb4c9d0d92d489",
+    "netlist_sha256": "2759b68d411c9023571b32ea017d56f6b3582475241b3441cf5c53ab373cf69f"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "base",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 6.661338147750939e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.8,
+          "time_s": 1.425e-06
+        }
+      },
+      "violating_sample_count": 2049,
+      "plateau_error_v": 0.8,
+      "waveform_excess_over_nominal_event_allowance_v": 0.8,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "91ee8531ad110c0f07129700202791869a813171932e86895658bf9158a58f5b",
+    "netlist_sha256": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "fine",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 9.159339953157541e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.8,
+          "time_s": 1.425e-06
+        }
+      },
+      "violating_sample_count": 20489,
+      "plateau_error_v": 0.8,
+      "waveform_excess_over_nominal_event_allowance_v": 0.8,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "d613a200971d0cd99fc2704a791927ff0c71515a3db0df1695552bf9e99cdd3f",
+    "netlist_sha256": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16,
+        "clk": 1.4432899320127035e-14,
+        "rst": 3.608224830031759e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.17500000000000002,
+          "time_s": 5.25e-07
+        }
+      },
+      "violating_sample_count": 674,
+      "plateau_error_v": 0.174994,
+      "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.5125000000000001e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.5000000000000025e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.4995e-06,
+            1.5004999999999999e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5124999999999997e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.500000000000029e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995e-06,
+            2.5004999999999996e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.4995e-06,
+            3.5004999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "a7fd6bb979658c8053ebfab37d4d16a0475ae8fb772bb9b69cde09a10f1f2fdc",
+    "netlist_sha256": "638024394acd493158dd272ba29fc4f4cf4a56487d94a37cd42512b02344a3fd"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 5.551115123125783e-16,
+        "clk": 1.9484414082171497e-14,
+        "rst": 8.881784197001252e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.17500000000000002,
+          "time_s": 5.25e-07
+        }
+      },
+      "violating_sample_count": 6747,
+      "plateau_error_v": 0.174994,
+      "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.5125e-06,
+          "inferred_start_error_s": -2.117582368135751e-22,
+          "full_edge_estimate_s": 2.5000000000000025e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.4999999999999998e-06,
+            1.5e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            2.4999e-06,
+            2.4999999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.500000000000029e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.000000000010663e-10,
+          "joint_start_interval_s": [
+            3.5e-06,
+            3.499999999999999e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "fac9fde58a53501b6aa5a15b7758127bec4282df81a2cc29bd730fac68049206",
+    "netlist_sha256": "13995d73877f2ada40f13fc43edfecc49ee5979512f0c4befe0438ce59fb0268"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16,
+        "clk": 1.4432899320127035e-14,
+        "rst": 9.992007221626409e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.17500000000000002,
+          "time_s": 5.25e-07
+        }
+      },
+      "violating_sample_count": 674,
+      "plateau_error_v": 0.174994,
+      "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 2.500000000000029e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995e-06,
+            2.5004999999999996e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.4995e-06,
+            3.5004999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "084c01d9afd98e26c8391d99c4fdef4f55bde88b5a8058f5c3cb80b4c4b80c8c",
+    "netlist_sha256": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 5.551115123125783e-16,
+        "clk": 1.9484414082171497e-14,
+        "rst": 1.1657341758564144e-14
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.17500000000000002,
+          "time_s": 5.25e-07
+        }
+      },
+      "violating_sample_count": 6747,
+      "plateau_error_v": 0.174994,
+      "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            2.5e-06,
+            2.4999999999999998e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 2.500000000000029e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.000000000010663e-10,
+          "joint_start_interval_s": [
+            3.5e-06,
+            3.499999999999999e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "093138646d9a117645c574ddd907b0f17189774eb7311b984d314fefcec34c67",
+    "netlist_sha256": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "base",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {},
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.2295719997723609e-14,
+          "time_s": 2.810999999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 1.9984014443252818e-15,
+      "waveform_excess_over_nominal_event_allowance_v": 1.9984014443252818e-15,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 4.7499999999999995e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.75e-07,
+          "inferred_start_error_s": 5.293955920339377e-23,
+          "full_edge_estimate_s": 1.9999999999999994e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            4.75e-07,
+            4.75e-07
+          ],
+          "allowed_start_interval_s": [
+            4.7489999999999994e-07,
+            4.7509999999999996e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.2250000000000001e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.275e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 9.999999999999984e-08,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.2250000000000001e-06,
+            1.2250000000000001e-06
+          ],
+          "allowed_start_interval_s": [
+            1.2249000000000001e-06,
+            1.2251000000000001e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.975e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.0750000000000005e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 2.000000000000002e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.975e-06,
+            1.9760000000000002e-06
+          ],
+          "allowed_start_interval_s": [
+            1.9749000000000004e-06,
+            1.9751e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.725e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.7749999999999997e-06,
+          "inferred_start_error_s": -4.235164736271502e-22,
+          "full_edge_estimate_s": 9.999999999999957e-08,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.724e-06,
+            2.725e-06
+          ],
+          "allowed_start_interval_s": [
+            2.7249000000000004e-06,
+            2.7251e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.4749999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.575e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 1.9999999999999861e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000009222e-09,
+          "joint_start_interval_s": [
+            3.475e-06,
+            3.475e-06
+          ],
+          "allowed_start_interval_s": [
+            3.4749e-06,
+            3.4750999999999996e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "0e22946344458a9a4e5b305b4f99110e7fa7cb1785f031d41c81ecd6c8cd7ebf",
+    "netlist_sha256": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "fine",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {},
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.587618925213974e-14,
+          "time_s": 2.746399999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 1.9984014443252818e-15,
+      "waveform_excess_over_nominal_event_allowance_v": 1.9984014443252818e-15,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 4.7499999999999995e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.75e-07,
+          "inferred_start_error_s": 5.293955920339377e-23,
+          "full_edge_estimate_s": 1.9999999999999994e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000011339e-10,
+          "joint_start_interval_s": [
+            4.75e-07,
+            4.75e-07
+          ],
+          "allowed_start_interval_s": [
+            4.7489999999999994e-07,
+            4.7509999999999996e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.2250000000000001e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.275e-06,
+          "inferred_start_error_s": 0.0,
+          "full_edge_estimate_s": 9.999999999999984e-08,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.2250000000000001e-06,
+            1.2250000000000001e-06
+          ],
+          "allowed_start_interval_s": [
+            1.2249000000000001e-06,
+            1.2251000000000001e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.975e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.0750000000000005e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 2.000000000000002e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 9.999999999979575e-11,
+          "joint_start_interval_s": [
+            1.975e-06,
+            1.975099999999999e-06
+          ],
+          "allowed_start_interval_s": [
+            1.9749000000000004e-06,
+            1.9751e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.725e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.7749999999999997e-06,
+          "inferred_start_error_s": -4.235164736271502e-22,
+          "full_edge_estimate_s": 9.999999999999957e-08,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            2.7249e-06,
+            2.725e-06
+          ],
+          "allowed_start_interval_s": [
+            2.7249000000000004e-06,
+            2.7251e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.4749999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.575e-06,
+          "inferred_start_error_s": 4.235164736271502e-22,
+          "full_edge_estimate_s": 1.9999999999999861e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.000000000010663e-10,
+          "joint_start_interval_s": [
+            3.475e-06,
+            3.475e-06
+          ],
+          "allowed_start_interval_s": [
+            3.4749e-06,
+            3.4750999999999996e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c8479c0e866928b483d72ad5814a268f202cea191a0316af393f918b913b3dcb",
+    "netlist_sha256": "4f4aeffd485b7835de878ab116ddc49a7a7b1f7c79e1c9813aa547ec68a38bdb"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "base",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "fine",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "b65e8c7fc57e4a81639870b87d70cbfa8f02e20cac912c13ece7a47fefe57a3e"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vina": 1.6653345369377348e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 2.399999999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 1.3e-08
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 7.771561172376096e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "062916317b9178d2eaa397d691adf661aae2daeee2d53a431d0d61957d5d181c",
+    "netlist_sha256": "dd6e6bcca06609e2d5c278b0c8c2e98e6768e3e6816934c2b4523b62c011662b"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 2.233499999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 5.2e-09
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 8.881784197001252e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ef38b5d7c1b392429418d0e0c132218e13b4d43c0ca446a16886fb512c5fc604",
+    "netlist_sha256": "b2259ef34e83be3231f1c6065464df7e60ebf7f345b473a063c3e345da8dfc28"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vina": 3.3306690738754696e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 2.399999999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 1.3e-08
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 7.771561172376096e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "78d7c2383a87cd54839cd7611629b8985d1b3c913b28bb1dc5bd523d50bd32cb",
+    "netlist_sha256": "7642e8c7a761879e52c224b466883c120fe8eb16ce9f9235679102a3670be367"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vina": 3.3306690738754696e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 2.189099999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 5.2e-09
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 8.881784197001252e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ba81aff8c4b63280c7bbae01df59ddb6c7959f6b28d2ce1f541ba7b08e9ddd18",
+    "netlist_sha256": "c366e4bcc650391dc989a17bdd6b56e5f425abeb76624461be84c12788103670"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vina": 3.3306690738754696e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 2.399999999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 1.3e-08
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 7.771561172376096e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "78d7c2383a87cd54839cd7611629b8985d1b3c913b28bb1dc5bd523d50bd32cb",
+    "netlist_sha256": "52dab6d07a440dd3a9c6020d251e4a17ec8d647dde3b426167e2ff30878ee1c2"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vina": 3.3306690738754696e-16,
+        "vinb": 2.7755575615628914e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 2.189099999999999e-06
+        },
+        "outb": {
+          "error_v": 4.996003610813204e-16,
+          "time_s": 5.2e-09
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 8.881784197001252e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ba81aff8c4b63280c7bbae01df59ddb6c7959f6b28d2ce1f541ba7b08e9ddd18",
+    "netlist_sha256": "ef1d103c7f9f6d92191977fea0ec327a23363984c810eeab1fce3c102e27b9fb"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 5.551115123125783e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.1094237467877974e-15,
+          "time_s": 3.439999999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 2.3869795029440866e-15,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "b5d906565bf9d0983155d8e3d237959a0f04e6f0ba015faa4f309327b7444c40",
+    "netlist_sha256": "60d8a517a3972faf44931d6d03023b2c43336fbc21caf8a25ce4adc179f436eb"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 6.661338147750939e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 7.882583474838611e-15,
+          "time_s": 3.592699999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 9.71445146547012e-15,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "91f80d7ffe6e01667cff8e96ce166bbc5812d9366a4167c199b2298d64d16eb0",
+    "netlist_sha256": "16a5f1f188f6b5f733e9e08b2649975724374f591dfd38d595234c416899c520"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000021927e-09,
+      "input_max_error_v": {
+        "vin": 7.771561172376096e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 5.551115123125783e-15,
+          "time_s": 3.911999999999999e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.3433698597964394e-14,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "48328ace7e2ea726a859097432876ef812ba1a33640ed5e11c46eb79e91c6cf6",
+    "netlist_sha256": "9dc6b4d3662b994a0965e7a7ed0b382295c8ab9578a01e730f13503d05e06d8d"
+  },
+  {
+    "backend": "gnucap",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.0000000000276037e-10,
+      "input_max_error_v": {
+        "vin": 9.992007221626409e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 7.771561172376096e-15,
+          "time_s": 3.6612e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.63202784619898e-14,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2ef18a28bee24929fa0b7357aed32734706ef4c6978d9c811db5f434a1b1f101",
+    "netlist_sha256": "b7f76c1230cb7e431fe5a6dc9c58cd76e547f7481d50a8f5daf8c1523c452c37"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "base",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4017,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 2.79450000000006e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2fd42611ae26fdfe433dd9610d42d8729d1fb8cf52afd78f404988b29ee00e60",
+    "netlist_sha256": "64948bce3cf44035cfe4871012df8427109813453d2d5f4e021c7af7514c98ae"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "fine",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40017,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 2.8045499999983573e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "133b28d7d45af289ea8e606ef1ecebaa10afe3ad098711f33554c25e9b2a600f",
+    "netlist_sha256": "13d057b0c2699693765e84eef6095277af35fc12a057c350c96f116c6935bc33"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 3.360280000000171e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.3592800000001707e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.4432899320127035e-15,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "8a83c974d43b943f8103d44b9756bcb30a32feba730af77a64b8c8274330addf",
+    "netlist_sha256": "5b093e2c45da03592cf7ed7eb0f3b542567c0d42357c0c8073e8c2dd7e20707a"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 4.440892098500626e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 7.771561172376096e-16,
+          "time_s": 3.373327999997137e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.336627999997212e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.6653345369377348e-15,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "6a602b5a635ef01fc56bbad0bfd257bce1e7c6fe0b033a589dc4c5f0181d9003",
+    "netlist_sha256": "74c499f094e0022aa427889cbf47ddfcebf5962957df62806c0ec29c11daf8e7"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 1.1102230246251565e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 3.3452800000001697e-06
+        },
+        "on": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 3.3592800000001707e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 8.881784197001252e-16,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "8473b9f90e4711329acdd246d0904d4a892979c5476371f5f3c81505dce0e298",
+    "netlist_sha256": "2f690374cb013308fc06d24ecc8de05463fbcc67292374309c6e6f4565bf62e3"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 1.1102230246251565e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 3.752827999996362e-06
+        },
+        "on": {
+          "error_v": 6.661338147750939e-16,
+          "time_s": 3.338127999997209e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 7.771561172376096e-16,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "26aa9ada82d8febcc22470e82595f30550f5899868f2b84045f35aa2e116580e",
+    "netlist_sha256": "70253ac057bc9b563e180c2da42f1b32988a6d274f4addca75a97fa88e2c3bae"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vip": 5.551115123125783e-17,
+        "vin": 5.551115123125783e-17,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 2.0000000000000002e-11
+        },
+        "on": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 3.0102800000001445e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.440892098500626e-16,
+      "common_mode_error_v": 1.1102230246251565e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "cbdecc2f26938993bdfca54aa802416f75aed3eabb43b01a21e129731ae171be",
+    "netlist_sha256": "f9b7c923d2faf368f4cebf2e68eb340a1c4205230ffa6d85edf05f161f6cb830"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vip": 5.551115123125783e-17,
+        "vin": 5.551115123125783e-17,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 8.279999999999999e-10
+        },
+        "on": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 3.0005279999978983e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 5.551115123125783e-16,
+      "common_mode_error_v": 1.1102230246251565e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "d68bcc1e64fd133ca4c923f3624d237d9724421cb19086d051b9fb910c2dfb78",
+    "netlist_sha256": "4843cc1f68cbda6972c7e7f311f6b7875605cc99dd0d93c5442b258fbbcb73e0"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 1.1102230246251565e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 1.2712800000000139e-06
+        },
+        "on": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 1.2172800000000098e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 6.661338147750939e-16,
+      "common_mode_error_v": 3.3306690738754696e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "73c9cf5f245184698402edce9f905cc0d393a7bf26ce94ffdedcf123e885b93a",
+    "netlist_sha256": "bd2b697d5acb72fce29c7e012dbd24c92ebcd26051a0803a1823451e558a7860"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vip": 2.220446049250313e-16,
+        "vin": 1.1102230246251565e-16,
+        "vdd": 0.0,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 9.031280000000558e-07
+        },
+        "on": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 2.5442279999988303e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 8.881784197001252e-16,
+      "common_mode_error_v": 3.3306690738754696e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "d29bac8d8ac2fc3df33ce710f36bddbac3785a8ca53b67335f3bd5e92ff6deda",
+    "netlist_sha256": "86487f327126351f784ff517cf250d5774409a0b69919430e176f6034e7ac458"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "base",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4011,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.8000000000000002,
+          "time_s": 1.4252800000000254e-06
+        }
+      },
+      "violating_sample_count": 2051,
+      "plateau_error_v": 0.8000000000000002,
+      "waveform_excess_over_nominal_event_allowance_v": 0.8000000000000002,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2828c9ddff695277e6387bb5d78fb0e8109ca23679c6372d8d3fc0db1565c497",
+    "netlist_sha256": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "fine",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observed_violation",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40011,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.7999999999999975,
+          "time_s": 1.425028000000095e-06
+        }
+      },
+      "violating_sample_count": 20491,
+      "plateau_error_v": 0.7999999999999975,
+      "waveform_excess_over_nominal_event_allowance_v": 0.7999999999999975,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "missing_or_multiple_crossings",
+          "fraction": 0.1,
+          "count": 0
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c407f4bd53d4f72f7bc03cee4302c0c27d5934578f03d0f31b9349e0493c3f86",
+    "netlist_sha256": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "a1416c230b796e33d9790abfc78e9ca04d7f0865f72e4aad16d10c2fd51eca3d"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "e1abbc2c1adb619641d368f06a1da331aacfb2bb9381c9f49ab6f799b8e12b02"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "compile_failed",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "base",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "runtime_timeout",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "fine",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "runtime_timeout",
+    "analysis": {},
+    "waveform_sha256": null,
+    "netlist_sha256": "5c32e4f75b3c05fc5ccdab5e02b8f9d7edcdf16381a571c9c85ec59b723f4a9a"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "base",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4028,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 3.672075153671184e-08,
+          "time_s": 1.5009114957887814e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "3439eccdffe0556e88479757cd99918c63ff1b2cecb88bacd7dbeaacb0970067",
+    "netlist_sha256": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "fine",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40028,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 3.678373994286943e-10,
+          "time_s": 1.5000059123407e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c2217eb924e7747998ea58508d743443d6cc35fbcfc0f53e0cb335765d6ff8f3",
+    "netlist_sha256": "e77b4189c30d767954198c2b7705de2415a23ab7edcda6f242ee71debbab1fc8"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vina": 1.1102230246251565e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 3.002280000000144e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 4.0000000000000004e-11
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "268264ca2d522f9773dbf7e21f894be1c1d3b37bea72aaafe6fa37735e0d06af",
+    "netlist_sha256": "896d780bcb4779e4698428818ef0d93c848c3ac7245d144ee022656712463610"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vina": 1.1102230246251565e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 3.0003279999978987e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 2.0000000000000004e-12
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "8e25c2c696cf600cfaeca93f1a79bf87c02325f67df0be7a8ad2f7bc5339905c",
+    "netlist_sha256": "2823785d93ef51c3c63c4041dbfa387cef69660cfc87d3e8e95f8886a5325984"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.002280000000144e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 4.0000000000000004e-11
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "b0353ce8aae804863a6e44e449d628f29c164e88afa18ed866be1511b1520e02",
+    "netlist_sha256": "bdefc9bf9b00b932f256009eaf0c0c6bf1f0abef972a9bc724ddf73ad953b40d"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.0003279999978987e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 2.0000000000000004e-12
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "80585b3eaed622ea8854343f872d400c010d5e5e6b03ca1515a7197438d507f4",
+    "netlist_sha256": "c27ccb87e342ff9bb818d71f926925f9f3ad6dff99690724ea2027af387a4fae"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.002280000000144e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 4.0000000000000004e-11
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "b0353ce8aae804863a6e44e449d628f29c164e88afa18ed866be1511b1520e02",
+    "netlist_sha256": "ad0c250ae0214ef949e837240bc5eec7f8dba421d025ceafefcbec59e04781b8"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.1102230246251565e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.0003279999978987e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 2.0000000000000004e-12
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.1102230246251565e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "80585b3eaed622ea8854343f872d400c010d5e5e6b03ca1515a7197438d507f4",
+    "netlist_sha256": "a6b55b926b5dd4f9d4624df98e80372cfd30f651394e9735acfee2a33e05472b"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4017,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.9432478731994394e-08,
+          "time_s": 5.682800000000018e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.692766703533579e-08,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "5569ddae73d5c582860ce15742efff795029f1a4c73308d8db8b415af36c6e15",
+    "netlist_sha256": "be05e80d4e4d6b3c46099a90c6d70fc4516c56966f1c159c9f3d79c29a871ba7"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40017,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.9426339143157065e-10,
+          "time_s": 5.676280000000306e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.6924985291619805e-10,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "414538baa57bdb948d789ba0e459e940bbc41771c5a328ded81fdcc8dbab668c",
+    "netlist_sha256": "1a3f3a9ea4e364df4ea6939c11855458b54fe48578cdb506fcad818c254ede60"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4017,
+      "max_gap_s": 1.0000000000000751e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.2661520593093556e-07,
+          "time_s": 9.982799999999933e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.7431877841200816e-07,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "900243132d295c91856fb5bd01f22a53d76b0aace99036927dd76e7265da8c51",
+    "netlist_sha256": "26a59148c96e6566d5366e5b421ac16361e33dd7dec35b874578c82dfd54f43b"
+  },
+  {
+    "backend": "openvaf_ngspice",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40017,
+      "max_gap_s": 1.0000000000021927e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.2676753535778573e-09,
+          "time_s": 9.99828000000063e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.7432766341585193e-09,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "bb8afed3746ee279bda82f73d9feb3f7a7ddf1ceb36fac608268c9200ff8066f",
+    "netlist_sha256": "91d8f5b0a04aa8d242e73a2c4e9ae6f5ba1e0d4f4a7056b52697aa69aa6cc066"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "base",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4008,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 1.1102230246251565e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.3600232051658168e-15,
+          "time_s": 2.951292958333574e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2139d2162a05187fbdb9712f5de61055413ca4beab2346aef0d83635eea394ba",
+    "netlist_sha256": "ea4a78d0e873199c75dc8af3ab81df09d1adcafec525c199f390df294927bc9f"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v1-main",
+    "card": "d2_v1_01",
+    "profile": "fine",
+    "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40008,
+      "max_gap_s": 1.0000000000148982e-10,
+      "input_max_error_v": {
+        "vin": 1.1102230246251565e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 1.3600232051658168e-15,
+          "time_s": 2.958129295833757e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ce63945684c73fe70a81bd76472ac62d53f2c60beb78aef4670f9561affd7049",
+    "netlist_sha256": "a8f366d9440b4cdeeaa417981d7a44f01e849b492364f136b292b19302e393ae"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 6.661338147750939e-16,
+        "vdd": 8.881784197001252e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.61700250000019e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 2.813002500000129e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.2212453270876722e-15,
+      "common_mode_error_v": 5.551115123125783e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "aceb92ccd8190e8c18a9ca16e7c7fee9ef2b4ee64e02896047c1d67b029e96fc",
+    "netlist_sha256": "2e17c3d3c74d66a708b65a0318b326f951d1439d4d4a85809d1d1625902c5825"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-input-common-mode",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 8.881784197001252e-16,
+        "vdd": 8.881784197001252e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 5.551115123125783e-16,
+          "time_s": 3.503100249996872e-06
+        },
+        "on": {
+          "error_v": 1.1102230246251565e-15,
+          "time_s": 3.423900249997033e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.3322676295501878e-15,
+      "common_mode_error_v": 6.661338147750939e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "37426a1c5050b805cb14faf3ba8ce201835aacacd6c93657d19fb9529fec869c",
+    "netlist_sha256": "3334267f133223260bfb78e9dee41868f42b75d49dd6f5834ac763959d17c7a3"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 2.220446049250313e-16,
+        "vdd": 8.881784197001252e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 3.040025000000008e-07
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.186002500000157e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 9.992007221626409e-16,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "d371ba34e1e7249ce2e4e19e93fdadd73932ccc323af6346fa9a9a114e3835ba",
+    "netlist_sha256": "db209b4d6c20ad1bb8b46a6510a224ac29e6fb57cd09a0dd4ef8579a6a6abead"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-main",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 2.220446049250313e-16,
+        "vdd": 8.881784197001252e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 4.440892098500626e-16,
+          "time_s": 3.813200249996238e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 2.835800249998235e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.1102230246251565e-15,
+      "common_mode_error_v": 6.661338147750939e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "13a4ff2e502b11b729d374e08781e8096061b20a268cfe4c1b4dcf215089cc83",
+    "netlist_sha256": "0680b7a8b15ccbb50c3d1ec32b5311da7b4106dad365e6c9aad28c51c354ae5f"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 1.1102230246251565e-16,
+        "vdd": 6.661338147750939e-16,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 7.816683333333286e-07
+        },
+        "on": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 3.83666833333353e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.440892098500626e-16,
+      "common_mode_error_v": 2.220446049250313e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4b6eac5e99511998f487de89ac58303feeac45574163308ddb82ad1db65e885e",
+    "netlist_sha256": "ea89c02a12e5da0b7ebf0c47d2095608663c84dd939a30a889e9e6cdc301ad53"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-reference-zero",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vip": 1.6653345369377348e-16,
+        "vin": 1.6653345369377348e-16,
+        "vdd": 6.661338147750939e-16,
+        "vref": 0.0
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 6.592668333333707e-07
+        },
+        "on": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 2.537866833332176e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 4.440892098500626e-16,
+      "common_mode_error_v": 2.220446049250313e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ab7c19e2f6d703ffdf99e222ab517625e3dc00eaa3e32ac2c0fa83cb1db9c233",
+    "netlist_sha256": "9ef655145c213bbd7a8d07542c031bae835f5e0ea67e7c763391f90b3dce9f4c"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "base",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 2.220446049250313e-16,
+        "vdd": 6.661338147750939e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 1.912002500000062e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.517002500000182e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.1102230246251565e-15,
+      "common_mode_error_v": 3.3306690738754696e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "fb0006e9c6fb1a6941cb3ab4ea239aeaf13cbe1805abbf2e63957d9a25f4f185",
+    "netlist_sha256": "72ccb53f6edebd272446a696484d858ab2b337602a2f5c11bbfffadcc7af1f96"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v2-supply-fixed",
+    "card": "d2_v2_01",
+    "profile": "fine",
+    "source_sha256": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vip": 1.1102230246251565e-16,
+        "vin": 2.220446049250313e-16,
+        "vdd": 6.661338147750939e-16,
+        "vref": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "op": {
+          "error_v": 3.3306690738754696e-16,
+          "time_s": 1.557900250000105e-06
+        },
+        "on": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.515000249996847e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": 1.1102230246251565e-15,
+      "common_mode_error_v": 4.440892098500626e-16,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c5276ffcebb0271815348959aba34741898d907f5305bc5beae8acd994eaa9ee",
+    "netlist_sha256": "eb849c148ae559a3a3a63ee3a5d1e9f8fef30a0e11456616659dd22a7813d1cd"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "base",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4006,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 4.718447854656915e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.004000000000007997,
+          "time_s": 3.383250000000001e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.40025e-06,
+          "inferred_start_error_s": 2.5000000000012466e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.374250000000003e-06,
+            1.37525e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4002499999999998e-06,
+          "inferred_start_error_s": 2.4999999999970114e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.374250000000003e-06,
+            3.37525e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "5e1b7c747e49e9bb610471bf7554599d597571b6aab1ae5b1dc2a1685ecf63f2",
+    "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v3-main",
+    "card": "d2_v3_01",
+    "profile": "fine",
+    "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40006,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 4.996003610813204e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.0006524999550539534,
+          "time_s": 3.407640781247124e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.400031395833424e-06,
+          "inferred_start_error_s": 3.139583342415752e-11,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.374931395833428e-06,
+            1.375031395833425e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4000407812471897e-06,
+          "inferred_start_error_s": 4.078124718964469e-11,
+          "full_edge_estimate_s": 4.999999999999952e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            3.37504078124718e-06,
+            3.375140781247098e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "769c70226d9ca2a1ad9b5e60a7cf98268d8245bfee15528a0d6fe613eb3d2eb4",
+    "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4109,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16,
+        "clk": 1.1046719095020308e-14,
+        "rst": 5.995204332975845e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.0002599999999989139,
+          "time_s": 1.50002e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.12519785717959e-07,
+          "inferred_start_error_s": 1.9785717959086057e-11,
+          "full_edge_estimate_s": 2.499957143591823e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999999692e-10,
+          "joint_start_interval_s": [
+            4.9952e-07,
+            5.005199999999993e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625102142820409e-06,
+          "inferred_start_error_s": 1.02142820410009e-11,
+          "full_edge_estimate_s": 2.499957143591863e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.149510000000002e-06,
+            1.15051e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.5125198846164497e-06,
+          "inferred_start_error_s": 1.9884616449534473e-11,
+          "full_edge_estimate_s": 2.499976923289995e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999998634e-10,
+          "joint_start_interval_s": [
+            1.499520000000002e-06,
+            1.50052e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125195e-06,
+          "inferred_start_error_s": 1.9500000000432393e-11,
+          "full_edge_estimate_s": 2.500000000000029e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995200000000018e-06,
+            2.50052e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125195000000003e-06,
+          "inferred_start_error_s": 1.9500000000432393e-11,
+          "full_edge_estimate_s": 2.499999999999923e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.499520000000001e-06,
+            3.50052e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "3a447733bab1f5e265b97180be55fb66e0888b8e42e8ef825c3fa78d2f6df517",
+    "netlist_sha256": "54bdf4b1051c319d9470ffab25ba00989aca1dc4bd0fa00fb334c99f966d9eee"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v4-c0",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40109,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16,
+        "clk": 1.2323475573339238e-14,
+        "rst": 5.998673779927799e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 7.720916684052226e-05,
+          "time_s": 1.50000593916668e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.12505050303817e-07,
+          "inferred_start_error_s": 5.05030381706153e-12,
+          "full_edge_estimate_s": 2.4999890607621358e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            4.99905105000008e-07,
+            5.000051050000065e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625059938628654e-06,
+          "inferred_start_error_s": 5.993862865509697e-12,
+          "full_edge_estimate_s": 2.4999890607621887e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.150005939166678e-06,
+            1.150105939166676e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.5125059049023507e-06,
+          "inferred_start_error_s": 5.904902350580598e-12,
+          "full_edge_estimate_s": 2.4999931471342058e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.499905939166682e-06,
+            1.50000593916668e-06
+          ],
+          "allowed_start_interval_s": [
+            1.5e-06,
+            1.50004e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125049669476055e-06,
+          "inferred_start_error_s": 4.966947605842447e-12,
+          "full_edge_estimate_s": 2.500002085418968e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999979575e-11,
+          "joint_start_interval_s": [
+            2.499905104999796e-06,
+            2.5000051049997548e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125049773748066e-06,
+          "inferred_start_error_s": 4.977374806733911e-12,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            3.4999051049997962e-06,
+            3.500005104999755e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ab7fff959842d2c8ee808712e68df2160d8529cd55c67625ce70124acbf39c55",
+    "netlist_sha256": "3d89270ae2ba15ad74ee080566c6bd3aff7c6c858af50919b05649bd111a9828"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "base",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4102,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16,
+        "clk": 1.1046719095020308e-14,
+        "rst": 5.551115123125783e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.0003800000000024478,
+          "time_s": 2.50002e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.12519785717959e-07,
+          "inferred_start_error_s": 1.9785717959086057e-11,
+          "full_edge_estimate_s": 2.499957143591823e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999999692e-10,
+          "joint_start_interval_s": [
+            4.9952e-07,
+            5.005199999999993e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625102142820409e-06,
+          "inferred_start_error_s": 1.02142820410009e-11,
+          "full_edge_estimate_s": 2.499957143591863e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.149510000000002e-06,
+            1.15051e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.5125199210531304e-06,
+          "inferred_start_error_s": 1.9921053130724756e-11,
+          "full_edge_estimate_s": 2.4999842106260953e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.4995200000000018e-06,
+            2.50052e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125195000000003e-06,
+          "inferred_start_error_s": 1.9500000000432393e-11,
+          "full_edge_estimate_s": 2.499999999999923e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.499520000000001e-06,
+            3.50052e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2c83c2da933db1e47e96b096e347d11acd35dae3756e7025d5abb9006d030465",
+    "netlist_sha256": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v4-c1",
+    "card": "d2_v4_01",
+    "profile": "fine",
+    "source_sha256": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40102,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 2.220446049250313e-16,
+        "clk": 1.2323475573339238e-14,
+        "rst": 5.773159728050814e-15
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 9.69949962218164e-05,
+          "time_s": 2.500005104999801e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 5e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.12505050303817e-07,
+          "inferred_start_error_s": 5.05030381706153e-12,
+          "full_edge_estimate_s": 2.4999890607621358e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            4.99905105000008e-07,
+            5.000051050000065e-07
+          ],
+          "allowed_start_interval_s": [
+            5e-07,
+            5.0004e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.1499999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.1625059938628654e-06,
+          "inferred_start_error_s": 5.993862865509697e-12,
+          "full_edge_estimate_s": 2.4999890607621887e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.150005939166678e-06,
+            1.150105939166676e-06
+          ],
+          "allowed_start_interval_s": [
+            1.1499999999999998e-06,
+            1.1500199999999997e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.4999999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.512505084848519e-06,
+          "inferred_start_error_s": 5.08484851929753e-12,
+          "full_edge_estimate_s": 2.499995969743521e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 9.999999999979575e-11,
+          "joint_start_interval_s": [
+            2.499905104999796e-06,
+            2.5000051049997548e-06
+          ],
+          "allowed_start_interval_s": [
+            2.4999999999999998e-06,
+            2.5000399999999996e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.5e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5125049773748066e-06,
+          "inferred_start_error_s": 4.977374806733911e-12,
+          "full_edge_estimate_s": 2.499999999999976e-08,
+          "nominal_full_edge_s": 2.5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            3.4999051049997962e-06,
+            3.500005104999755e-06
+          ],
+          "allowed_start_interval_s": [
+            3.5e-06,
+            3.5000399999999998e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "ab37bc10516700773a58cdb7251ee8b52d55018a4dfe212aa8047388adec9a1a",
+    "netlist_sha256": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "base",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4001,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {},
+      "max_observed_error": {
+        "vout": {
+          "error_v": 9.85211912052364e-13,
+          "time_s": 2.747000000000125e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 0.0,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 4.7499999999999995e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.750000000000046e-07,
+          "inferred_start_error_s": 4.605741650695258e-21,
+          "full_edge_estimate_s": 1.9999999999999994e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 9.999999999999692e-10,
+          "joint_start_interval_s": [
+            4.7500000000000403e-07,
+            4.7599999999999913e-07
+          ],
+          "allowed_start_interval_s": [
+            4.7489999999999994e-07,
+            4.7509999999999996e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.2250000000000001e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.2750000000000102e-06,
+          "inferred_start_error_s": 1.0164395367051604e-20,
+          "full_edge_estimate_s": 1.000000000000001e-07,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.224000000000017e-06,
+            1.2250000000000111e-06
+          ],
+          "allowed_start_interval_s": [
+            1.2249000000000001e-06,
+            1.2251000000000001e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.975e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.0750000000000665e-06,
+          "inferred_start_error_s": 6.649208635946258e-20,
+          "full_edge_estimate_s": 2.000000000000002e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.97400000000008e-06,
+            1.9750000000000683e-06
+          ],
+          "allowed_start_interval_s": [
+            1.9749000000000004e-06,
+            1.9751e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.725e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.7750000000001234e-06,
+          "inferred_start_error_s": 1.232432938255007e-19,
+          "full_edge_estimate_s": 1.000000000000001e-07,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            2.72400000000013e-06,
+            2.7250000000001243e-06
+          ],
+          "allowed_start_interval_s": [
+            2.7249000000000004e-06,
+            2.7251e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.4749999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.5750000000001792e-06,
+          "inferred_start_error_s": 1.7957098481791167e-19,
+          "full_edge_estimate_s": 2.000000000000002e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 9.999999999996516e-10,
+          "joint_start_interval_s": [
+            3.4740000000001932e-06,
+            3.475000000000181e-06
+          ],
+          "allowed_start_interval_s": [
+            3.4749e-06,
+            3.4750999999999996e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4375f3367c0c6191f7dddee5ee96feebd982c640c5e94e4476a5139c2ac94739",
+    "netlist_sha256": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v5-main",
+    "card": "d2_v5_01",
+    "profile": "fine",
+    "source_sha256": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40001,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {},
+      "max_observed_error": {
+        "vout": {
+          "error_v": 0.000799999999365697,
+          "time_s": 1.283500000000084e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": 0.0,
+      "waveform_excess_over_nominal_event_allowance_v": 2.8932693914296426e-14,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [
+        {
+          "nominal_start_s": 4.7499999999999995e-07,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 5.749000000000236e-07,
+          "inferred_start_error_s": -9.999999997634353e-11,
+          "full_edge_estimate_s": 1.9999999999999994e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            4.7480000000003715e-07,
+            4.749000000000251e-07
+          ],
+          "allowed_start_interval_s": [
+            4.7489999999999994e-07,
+            4.7509999999999996e-07
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.2250000000000001e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.2749000000000801e-06,
+          "inferred_start_error_s": -9.99999999199629e-11,
+          "full_edge_estimate_s": 1.000000000000001e-07,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.224800000000087e-06,
+            1.224900000000081e-06
+          ],
+          "allowed_start_interval_s": [
+            1.2249000000000001e-06,
+            1.2251000000000001e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 1.975e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.0748999999999935e-06,
+          "inferred_start_error_s": -1.0000000000657202e-10,
+          "full_edge_estimate_s": 2.0000000000000126e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            1.974899999999952e-06,
+            1.974999999999625e-06
+          ],
+          "allowed_start_interval_s": [
+            1.9749000000000004e-06,
+            1.9751e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 2.725e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 2.774999999998461e-06,
+          "inferred_start_error_s": -1.5390588651610637e-18,
+          "full_edge_estimate_s": 9.999999999999904e-08,
+          "nominal_full_edge_s": 1e-07,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            2.724999999998441e-06,
+            2.725099999998277e-06
+          ],
+          "allowed_start_interval_s": [
+            2.7249000000000004e-06,
+            2.7251e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.4749999999999998e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.574999999996929e-06,
+          "inferred_start_error_s": -3.0704944337968387e-18,
+          "full_edge_estimate_s": 2.0000000000000126e-07,
+          "nominal_full_edge_s": 2e-07,
+          "max_crossing_bracket_s": 9.999999999979575e-11,
+          "joint_start_interval_s": [
+            3.474999999996888e-06,
+            3.475099999996561e-06
+          ],
+          "allowed_start_interval_s": [
+            3.4749e-06,
+            3.4750999999999996e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "aba31c495beed7e59e89c88607983129c593626faa7a629a502fa7ecca2c6c29",
+    "netlist_sha256": "595addbf40975742b533133ea6a3dc6b3fe0d6d770b9826755c483b40918424e"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "base",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4009,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 3.520348794416872e-08,
+          "time_s": 1.521881224269732e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "2e6be71454f4359fafe41b0ab212cd352e88ce8a9ae95b4351db7367f155b130",
+    "netlist_sha256": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v6-main",
+    "card": "d2_v6_01",
+    "profile": "fine",
+    "source_sha256": "02f0deab4b5d90bb84ccc5efda8d4fd507b531f488fc2599c4fda64ed20f7b57",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40007,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 3.5275379839383447e-10,
+          "time_s": 1.521125208333514e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": null,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "82034fa1b52c3cba59c19815defce3ed700e23815540738d876eb62a2b78d61e",
+    "netlist_sha256": "72a63e8db3420418de0bc0167d9894f09a46ad94d63588aade3acb34ebd4c574"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vina": 1.1102230246251565e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 3.004501666666811e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 5.985016666666676e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.6653345369377348e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "c5c30606fdc229b9222cf3835b92e70a99ad4ba53db5a53173fd45cc777b4f9c",
+    "netlist_sha256": "e14219f1f6e5cdc985d3906cc56ecf47bebb90ffa2a070809ec3aa097437609a"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-a-half",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.0000000000148982e-10,
+      "input_max_error_v": {
+        "vina": 1.6653345369377348e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 2.220446049250313e-16,
+          "time_s": 3.001150166664564e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 1.967501666666694e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 1.6653345369377348e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "8a9b2de892f567b98c6c1f05e6efbc741abf0e752f092f9d98ebd41f3f4d3875",
+    "netlist_sha256": "4dcebdcbbc84694a7e5d6a92222725699135731f89ded9a8de8d2a1279564bd1"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.075500833333483e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 4.865008333333377e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.3306690738754696e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "bbae423e51e2170a694bcf1688086cababc725d7dc671d57218a3d68e1281a76",
+    "netlist_sha256": "243c6f6d9f9c15170beec8884e2676fce2a6a35062a67e682ba2e4a2af667505"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-main",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.001850083331229e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 2.276500833333384e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.3306690738754696e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "16c8e1da843c2b0b72f852987b9b184aa288d234fc169715a7bed164bf161b79",
+    "netlist_sha256": "3a02e446cd9a005f127a562d31543f4b11e69b77d83c9a3d302da4e5caa347fc"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "base",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4002,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.075500833333483e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 4.865008333333377e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.3306690738754696e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "a096128883e323762fc89259e818a951da061c89383fc0d381d18ede3f6b9988",
+    "netlist_sha256": "2e28325c7df4f6f4b150c8009c47a376cb56975f3aeb8f01b48dcf8bf36654a8"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-linear-swapped",
+    "card": "d2_v7_01",
+    "profile": "fine",
+    "source_sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40002,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vina": 2.220446049250313e-16,
+        "vinb": 1.6653345369377348e-16
+      },
+      "max_observed_error": {
+        "outa": {
+          "error_v": 8.881784197001252e-16,
+          "time_s": 3.001850083331229e-06
+        },
+        "outb": {
+          "error_v": 1.6653345369377348e-16,
+          "time_s": 2.276500833333384e-07
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.3306690738754696e-16,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "76effefa53b0b93b8f4ba9b0b538d1fc34978f649f61b1998c4ece7cc52258ed",
+    "netlist_sha256": "c480ee246585bb6c06b62a8546c748043d5b0377b61bb7ff6724d29debb700b2"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4003,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.52810563661221e-06,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.4761500438129644e-06,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "8629b183d8eb7a74ab3ae4f1e98ca7df36ffa6c2d5dd50545c9c5979810f8de4",
+    "netlist_sha256": "2092d81b802c3f6122137e009201bb46210327af2c971a1964cc43558e50a618"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-nonlinear-0.5",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40003,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 4.440892098500626e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 6.823652753951137e-12,
+          "time_s": 1.0002e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 8.747447211021608e-12,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "4831080ef385a0c2a14099838638a1e79996cae19c9f448fbed13ed894988955",
+    "netlist_sha256": "49889877b228b4b01c727ac94bf5ddafb34a75bb3b8b3de7c8f47843bb2f2b87"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "base",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 4009,
+      "max_gap_s": 1.0000000000009222e-09,
+      "input_max_error_v": {
+        "vin": 5.551115123125783e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 2.2574610514247695e-09,
+          "time_s": 3.000333777777878e-06
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 3.104779877638464e-09,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "5846f2d934891f3f3338f6735fa7a693820610e264048a840829722a0776ec24",
+    "netlist_sha256": "4d5f43341035d4ab285db16bee97efbeb5fd7a76ced8c679a251ef1c9b02369b"
+  },
+  {
+    "backend": "spectre",
+    "condition": "v7-nonlinear-2.0",
+    "card": "d2_v7_02",
+    "profile": "fine",
+    "source_sha256": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+    "status": "waveform_available",
+    "analysis": {
+      "status": "observations_within_targets",
+      "formal_dvs_qualification": "I",
+      "sample_count": 40009,
+      "max_gap_s": 1.000000000010663e-10,
+      "input_max_error_v": {
+        "vin": 5.551115123125783e-16
+      },
+      "max_observed_error": {
+        "vout": {
+          "error_v": 3.154317917974936e-10,
+          "time_s": 0.0
+        }
+      },
+      "violating_sample_count": 0,
+      "plateau_error_v": null,
+      "waveform_excess_over_nominal_event_allowance_v": null,
+      "differential_error_v": null,
+      "common_mode_error_v": null,
+      "max_relationship_residual_v": 7.885794239825827e-10,
+      "edges": [],
+      "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+    },
+    "waveform_sha256": "45eebaee0932edfe5da3f1fa37a919e4752b57a9829630fb6a4832eac16ac1a0",
+    "netlist_sha256": "2b82ec33e2750cf49cc86db1eefb314d94257f4dda87249886fd574cedb2d7e4"
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "spectre": {
+    "base": {
+      "observations_within_targets": 15
+    },
+    "fine": {
+      "observations_within_targets": 15
+    }
+  },
+  "evas": {
+    "base": {
+      "observations_within_targets": 8,
+      "execution_failed": 2,
+      "observed_violation": 5
+    },
+    "fine": {
+      "observations_within_targets": 5,
+      "observed_violation": 8,
+      "execution_failed": 2
+    }
+  },
+  "openvaf_ngspice": {
+    "base": {
+      "observations_within_targets": 11,
+      "observed_violation": 1,
+      "compile_failed": 2,
+      "runtime_timeout": 1
+    },
+    "fine": {
+      "observations_within_targets": 11,
+      "observed_violation": 1,
+      "compile_failed": 2,
+      "runtime_timeout": 1
+    }
+  },
+  "gnucap": {
+    "base": {
+      "observations_within_targets": 11,
+      "observed_violation": 3,
+      "compile_failed": 1
+    },
+    "fine": {
+      "observations_within_targets": 11,
+      "observed_violation": 3,
+      "compile_failed": 1
+    }
+  }
+}

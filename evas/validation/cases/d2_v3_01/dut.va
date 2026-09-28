@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v3(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    integer q;
+    analog begin
+        @(initial_step) q = 0;
+        @(cross(V(vin, vref) - 0.65, +1, 1e-9, 2e-4)) q = 1;
+        @(cross(V(vin, vref) - 0.35, -1, 1e-9, 2e-4)) q = 0;
+        V(vout, vref) <+ transition(0.1 + 0.8*q, 0.0, 50e-9, 50e-9);
+    end
+endmodule

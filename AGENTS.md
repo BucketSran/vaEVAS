@@ -4,8 +4,8 @@
 
 - This repository is the new shared workspace for a Verilog-A benchmark and the full EVAS simulator source.
 - The research focus is benchmark quality and trustworthy evaluation. Harbor is the selected evaluation harness.
-- Initialization defines workspace ownership only. Task types, counts, scoring, simulator coverage, packaging, and internal architecture remain open.
-- Read `README.md` and `docs/workspace.md` before making structural changes. Current user instructions take precedence over this guide.
+- The independent validation suite has 31 current development conditions and fixed four-backend evidence. EVAS implementation advances in its own PR; report only the support and checks documented for that revision.
+- Read `README.md` and the README of the affected component before making structural changes. Current user instructions take precedence over this guide.
 
 ## Agent skills
 
@@ -25,7 +25,7 @@ Skills route to the owning documentation and scripts. Current implementation sco
 - `containers/`: shared container builds and dependency versions.
 - `experiments/`: experiment configurations, analysis, and curated result summaries.
 - `scripts/`: repository maintenance and validation helpers.
-- `docs/`: design proposals, settled decisions, and usage documentation.
+- Keep current usage and contracts with their owning component. Put stage plans, design discussion, and review logs in PRs and Git history, rather than parallel status documents.
 - Add internal structure when an actual implementation requires it. Use the existing owning document instead of creating duplicate status trackers.
 
 ## Migration and fixes

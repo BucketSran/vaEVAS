@@ -1,0 +1,1143 @@
+{
+  "run_id": "dvs2-diagnosis-20260927",
+  "formal_dvs_qualification": "I",
+  "records": [
+    {
+      "probe": "evas-cross-detector-ffi",
+      "backend": "evas",
+      "last_stage": "ffi",
+      "exit_code": 0,
+      "timed_out": false,
+      "artifact_sha256": {
+        "detector.py": "bd5b5ad6af99f827f77b223be8d6488fc192b513e56343099e8c0fc187568dd4",
+        "ffi.json": "f6e1630a821a67b58e8f4c8c8cda8028d630d1486081a652860f52509a9334d2",
+        "ffi.log": "627cf69b2151aeb88af4f08e3a1ac64acf6330fb99a78c93be9a410a057f271f",
+        "probe-result.json": "d5e241a2924ac55d0635842904308863a99f0a0234a93175cc62ddbf4f45eb88"
+      }
+    },
+    {
+      "probe": "evas-cross-detector-wave-replay",
+      "backend": "evas",
+      "last_stage": "ffi",
+      "exit_code": 0,
+      "timed_out": false,
+      "artifact_sha256": {
+        "detector.py": "feb325c1383df44b62fd9bfdbd647a7dfb3ecb4ca4155d500fac71a9fb7c50d7",
+        "ffi.json": "496cfe6db392c67febadbf790c6f72371c89cd9420832bc6ef8830b87a1f765e",
+        "ffi.log": "8f471cad8af8d50a855350af02c0210c7b4c7a6acfc8a1fdb97790470af33ff4",
+        "probe-result.json": "699551331544696aedb5ec3fafe2b87caa01a427dbac5e0b42d3a0697e36cc8c"
+      }
+    },
+    {
+      "probe": "evas-v3-main-base-step-fine-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4005,
+        "max_gap_s": 1.0000000000004986e-09,
+        "input_max_error_v": {
+          "vin": 4.000133557724439e-13
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 1.6002144054283463e-11,
+            "time_s": 1.375e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": 0.0,
+        "waveform_excess_over_nominal_event_allowance_v": 0.0,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 1.375e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 1.4e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 4.999999999996961e-08,
+            "nominal_full_edge_s": 5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              1.375e-06,
+              1.375e-06
+            ],
+            "allowed_start_interval_s": [
+              1.375e-06,
+              1.3755e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.375e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.4e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 4.999999999978141e-08,
+            "nominal_full_edge_s": 5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              3.3740000000000002e-06,
+              3.375e-06
+            ],
+            "allowed_start_interval_s": [
+              3.375e-06,
+              3.3754999999999997e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "a28782e82490c2ed762ca05805b2993da2c2e9d7c816bda52a5faa7ec1dee8cc",
+        "probe-result.json": "ec90c6307db38cdccc6e7d94b626ddee792ada9d377901f81d1e5f1b85483c37",
+        "simulate.json": "92012645680f28138fdd4f08e7064de011c72be04ea37a3801ffc80dd5cd81aa",
+        "simulate.log": "d2c10b365a2fac402158dff488390f0bd6b8f976f1cb8e8ce88ec8734fcb9b31",
+        "tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+        "tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+        "tb.scs": "0859b02f74df654a7dc1c6dee0f4ba9bc41f5b1517957ac0ad40088b5eb88402"
+      }
+    },
+    {
+      "probe": "evas-v3-main-fine-step-base-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 40002,
+        "max_gap_s": 1.0000000099971815e-10,
+        "input_max_error_v": {
+          "vin": 2.000621890374532e-13
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.8,
+            "time_s": 1.425e-06
+          }
+        },
+        "violating_sample_count": 20489,
+        "plateau_error_v": 0.8,
+        "waveform_excess_over_nominal_event_allowance_v": 0.8,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 1.375e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 3.375e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "07666c7040eb594d1c944fbdb64d586fc270c45f7e9db6cf49d6a4e21ce9d840",
+        "probe-result.json": "172c3da7fa5054c5c70334469d69a12e0a024d2c909620ff1090c10767630535",
+        "simulate.json": "cf850dfd5642adc326cc48ee61f2b7c2c9eed95b3b2067c127c8b8678bc7b1ab",
+        "simulate.log": "825ce5de0a48acda19729e04ff80d632dcf5cf6aceec6a70222764c0f1884001",
+        "tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+        "tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+        "tb.scs": "e878c84fe65d449c3c3383fe8547479d5f9eea9feb6c9b96ef1449618e9473ca"
+      }
+    },
+    {
+      "probe": "evas-v3-main-fine-zero-expr-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 40011,
+        "max_gap_s": 1.0000000099971815e-10,
+        "input_max_error_v": {
+          "vin": 3.999023334699814e-13
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 1.5998757874058356e-11,
+            "time_s": 1.375e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": 0.0,
+        "waveform_excess_over_nominal_event_allowance_v": 0.0,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 1.375e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 1.4e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 4.9999999999999786e-08,
+            "nominal_full_edge_s": 5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-10,
+            "joint_start_interval_s": [
+              1.375e-06,
+              1.375e-06
+            ],
+            "allowed_start_interval_s": [
+              1.375e-06,
+              1.3755e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.375e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.4e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 5.0000000000102224e-08,
+            "nominal_full_edge_s": 5e-08,
+            "max_crossing_bracket_s": 9.999999999979575e-11,
+            "joint_start_interval_s": [
+              3.374999999997e-06,
+              3.375e-06
+            ],
+            "allowed_start_interval_s": [
+              3.375e-06,
+              3.3754999999999997e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+        "dut.va": "9171c807fe5073da7cc3570f623dcab93d17b3cdd1b96e9272b6d79d3d786f62",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "544c0f89839d4c06578515272fbe03cb061dd5494e26f2a4ba4bb86e7f8719b2",
+        "probe-result.json": "e4954c8eb687d176c6d34ec9fd30ee4f46508f603e67fe20c74e6595ce42c12a",
+        "simulate.json": "aeb6de2250803a24030ed2c9a807fcce85d08af012e3ed9a5e2e028987d8190f",
+        "simulate.log": "dffea04390d56efaf2dd45fca466059dd1c4a2c6a2ca5eaee74db5da49fe368e",
+        "tb.cir": "482ab7e113e1363278ff0de234d362227ba9294b9e1286be594fd9957eb14d31",
+        "tb.gc": "daa4fc943b4d5fafe39dbac54f208e4846297463806b737f0227bb9d6fff5aa2",
+        "tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332"
+      }
+    },
+    {
+      "probe": "evas-v4-c1-base-step-fine-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4013,
+        "max_gap_s": 1.0000000000004986e-09,
+        "input_max_error_v": {
+          "vin": 1.4999113062685865e-13,
+          "clk": 5.0001114360043175e-12,
+          "rst": 9.998113448261847e-12
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 1.8990475858515765e-11,
+            "time_s": 2.5e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": 0.0,
+        "waveform_excess_over_nominal_event_allowance_v": 0.0,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 5e-07,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 5.124999999999893e-07,
+            "inferred_start_error_s": -1.0693790959085542e-20,
+            "full_edge_estimate_s": 2.4999999999974482e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 9.999999999999692e-10,
+            "joint_start_interval_s": [
+              4.995e-07,
+              5e-07
+            ],
+            "allowed_start_interval_s": [
+              5e-07,
+              5.0004e-07
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 1.1499999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 1.1625000000000107e-06,
+            "inferred_start_error_s": 1.079967007749233e-20,
+            "full_edge_estimate_s": 2.499999999997091e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              1.15e-06,
+              1.1504999999999998e-06
+            ],
+            "allowed_start_interval_s": [
+              1.1499999999999998e-06,
+              1.1500199999999997e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 2.4999999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 2.5124999999999963e-06,
+            "inferred_start_error_s": -3.3881317890172014e-21,
+            "full_edge_estimate_s": 2.4999999999857353e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              2.4995e-06,
+              2.5e-06
+            ],
+            "allowed_start_interval_s": [
+              2.4999999999999998e-06,
+              2.5000399999999996e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.5e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.512499999999975e-06,
+            "inferred_start_error_s": -2.498747194400186e-20,
+            "full_edge_estimate_s": 2.4999999999770532e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              3.4995e-06,
+              3.5e-06
+            ],
+            "allowed_start_interval_s": [
+              3.5e-06,
+              3.5000399999999998e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "f78e5027ebcca5c7303010264004b38c5cde43d2d52323dc2ebf6bb4ace08d00",
+        "probe-result.json": "5853680907aa02f02ffafb29cfab7950a6ced8a32bbc9303b1b79c8bbb151c45",
+        "simulate.json": "0b6f74871d186d81981b86dfdb1e6eaecc3a7a6b4dabb56f0d649ba8c5613a81",
+        "simulate.log": "fbb636774b2f1059a35e61de8535d6b50bb7049ce0db61a3e1b228d7c7d27346",
+        "tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+        "tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+        "tb.scs": "cd887607b60e553e1a98fefd40f58cb73651e6bd8020419f56af387182de5ce4"
+      }
+    },
+    {
+      "probe": "evas-v4-c1-fine-step-base-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 40015,
+        "max_gap_s": 1.0000000099971815e-10,
+        "input_max_error_v": {
+          "vin": 1.4999113062685865e-13,
+          "clk": 5.0001114360043175e-12,
+          "rst": 9.998113448261847e-12
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.6250000000000001,
+            "time_s": 3.525099999997e-06
+          }
+        },
+        "violating_sample_count": 15009,
+        "plateau_error_v": 0.6249940000000002,
+        "waveform_excess_over_nominal_event_allowance_v": 0.6249940000000002,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 5e-07,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 5.124999999999893e-07,
+            "inferred_start_error_s": -1.0693790959085542e-20,
+            "full_edge_estimate_s": 2.4999999999944836e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-10,
+            "joint_start_interval_s": [
+              4.999000000000001e-07,
+              5e-07
+            ],
+            "allowed_start_interval_s": [
+              5e-07,
+              5.0004e-07
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 1.1499999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 1.1625000000000107e-06,
+            "inferred_start_error_s": 1.079967007749233e-20,
+            "full_edge_estimate_s": 2.4999999999883823e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-10,
+            "joint_start_interval_s": [
+              1.15e-06,
+              1.15e-06
+            ],
+            "allowed_start_interval_s": [
+              1.1499999999999998e-06,
+              1.1500199999999997e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 2.4999999999999998e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 3.5e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "92168e6570e97f1f5ce42c9a14bd9c6d59da004f744a249490005349a27d8e8d",
+        "probe-result.json": "192baa5d06b0faf736962656a268c31ee0e851c440a65b87458b59ff47a0931f",
+        "simulate.json": "3f5078162045144e397a25bc7474b9bbbec98a038cdd097699b3d23130d8b31b",
+        "simulate.log": "5805ccb6135e280ca49399e5bdf53e9592541e40c661450c304f8c04e584eef2",
+        "tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+        "tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+        "tb.scs": "f0c6d71bfaa93277161215deef784e9a0dab78a9df6d7cf3d3b93c5fb59de236"
+      }
+    },
+    {
+      "probe": "evas-v4-c1-fine-zero-expr-tol",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 40029,
+        "max_gap_s": 1.0000000099971815e-10,
+        "input_max_error_v": {
+          "vin": 1.4999113062685865e-13,
+          "clk": 5.0001114360043175e-12,
+          "rst": 9.998113448261847e-12
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 1.8998524975444298e-11,
+            "time_s": 2.5e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": 0.0,
+        "waveform_excess_over_nominal_event_allowance_v": 0.0,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 5e-07,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 5.124999999999893e-07,
+            "inferred_start_error_s": -1.0693790959085542e-20,
+            "full_edge_estimate_s": 2.4999999999944836e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-10,
+            "joint_start_interval_s": [
+              4.999000000000001e-07,
+              5e-07
+            ],
+            "allowed_start_interval_s": [
+              5e-07,
+              5.0004e-07
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 1.1499999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 1.1625000000000107e-06,
+            "inferred_start_error_s": 1.079967007749233e-20,
+            "full_edge_estimate_s": 2.4999999999883823e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-10,
+            "joint_start_interval_s": [
+              1.15e-06,
+              1.15e-06
+            ],
+            "allowed_start_interval_s": [
+              1.1499999999999998e-06,
+              1.1500199999999997e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 2.4999999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 2.5124999999999967e-06,
+            "inferred_start_error_s": -2.964615315390051e-21,
+            "full_edge_estimate_s": 2.50000000000437e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000021927e-10,
+            "joint_start_interval_s": [
+              2.4999999999990003e-06,
+              2.5e-06
+            ],
+            "allowed_start_interval_s": [
+              2.4999999999999998e-06,
+              2.5000399999999996e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.5e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.512499999999976e-06,
+            "inferred_start_error_s": -2.371692252312041e-20,
+            "full_edge_estimate_s": 2.5000000000051112e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000021927e-10,
+            "joint_start_interval_s": [
+              3.499999999997e-06,
+              3.5e-06
+            ],
+            "allowed_start_interval_s": [
+              3.5e-06,
+              3.5000399999999998e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+        "dut.va": "991cb1c01ee54b875d6e568604ba4ec6d5231f2174155c80275960057baf7e58",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "db203f93decf409569cffc9811856ec36ed9c72c0da875ad9cda096c4f1610aa",
+        "probe-result.json": "23eda33c5404d9a216c6862cf13af35ed3965ff0ee59cd45afe067757542f856",
+        "simulate.json": "3309632e0b43ea88ff146c6107aed731896ba73529e4e135261fd9cbdf432c17",
+        "simulate.log": "8134b34fa69fe1cead0ef60ba67867e4aba757bc57a0c311b61ea3e7871157d3",
+        "tb.cir": "981a68f261ab756b0d12f8de34ef2ea57763ceb25f3a4d250815560527f5f1ac",
+        "tb.gc": "c7cdc86c6b15a9658de24560f68e090b74bb20dae0fb9f7b7ecf1a4810d6fd5f",
+        "tb.scs": "ed1775ae6f0a8314ace99d24f01fa1b33a8ea0ce01694de553bfbda61b4ac378"
+      }
+    },
+    {
+      "probe": "evas-v6-array-apostrophe",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 1,
+      "timed_out": false,
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "probe-result.json": "1efc716e4453992119740bde8619d214c8d532bc8babee732875ab01c541c65a",
+        "simulate.json": "c4cf1200d00e003a0fb67e3163e26493324c39c3887d1ab52ac0b45bc8310d03",
+        "simulate.log": "030e4fbe8eaa1b842972fc0c0d48e907e75a8a96f6d3318db7bfaabb376b72ac",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d"
+      }
+    },
+    {
+      "probe": "evas-v6-single-node-access",
+      "backend": "evas",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000004986e-09,
+        "input_max_error_v": {
+          "vin": 4.118927421359331e-14
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.00025931294855896514,
+            "time_s": 2e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.va": "92a8cb13fc4f6ea4d2b4c24e50123e31131ac221a315a70b0c6102a286da3765",
+        "output/evas_identity.json": "df4ec66c2adc04a1fd44c5668dc85ef97b398cab4ffcd3e05fb1fe4d0f0ab57e",
+        "output/tran.csv": "adcd04dd69ad93a8ac09c0c32d77cef54523eae4e08537aa0e50ced566dc7291",
+        "probe-result.json": "39dc8818d72634f32bd5440a0b6e8930462255b087758064162078dd44358ee9",
+        "simulate.json": "346a399587ead9e5ed96c521a05638de586343e208f47e7b0b74fe314daa080e",
+        "simulate.log": "4484e415b05b942cc3b83cf05bdc729d886d61c6df16e09884a61bae233c7b03",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d"
+      }
+    },
+    {
+      "probe": "gnucap-v3-main-cross-trace",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 6.661338147750939e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.8,
+            "time_s": 1.425e-06
+          }
+        },
+        "violating_sample_count": 2049,
+        "plateau_error_v": 0.8,
+        "waveform_excess_over_nominal_event_allowance_v": 0.8,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 1.375e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 3.375e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+        "cpp_compile.json": "29b1e709356a2248b4e9bca2f2dde9e621ce8f5a572e5e35650346a625edbfa5",
+        "cpp_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dut.cc": "0dcfc1722ef887e4abfccf8df74c60f4fb7f983e298ae620017ee3d174e8b844",
+        "dut.so": "aba7037b5a6decdcc03f9eb6b5f0a83b840f81a1518a904ab7d661b88551175d",
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "probe-result.json": "318c8087c838538d0c8306212c9d72fb69a660d0ae32aa38886abb5ca2541f73",
+        "simulate.json": "2941f5868b396c32eb4feb260325a4f4826f9b5e77779ce71994590d9799d484",
+        "simulate.log": "b10942cc0e4537512ec1a5a8c281244be464dc5d4156124810e91e2352fb4376",
+        "tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+        "tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+        "tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "waveform.txt": "91ee8531ad110c0f07129700202791869a813171932e86895658bf9158a58f5b"
+      }
+    },
+    {
+      "probe": "gnucap-v4-c1-cross-trace",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 4.440892098500626e-16,
+          "clk": 1.4432899320127035e-14,
+          "rst": 9.992007221626409e-15
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.17500000000000002,
+            "time_s": 5.25e-07
+          }
+        },
+        "violating_sample_count": 674,
+        "plateau_error_v": 0.174994,
+        "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 5e-07,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 1.1499999999999998e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 2.4999999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 2.5125e-06,
+            "inferred_start_error_s": 4.235164736271502e-22,
+            "full_edge_estimate_s": 2.500000000000029e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              2.4995e-06,
+              2.5004999999999996e-06
+            ],
+            "allowed_start_interval_s": [
+              2.4999999999999998e-06,
+              2.5000399999999996e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.5e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.5125e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 2.499999999999976e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              3.4995e-06,
+              3.5004999999999998e-06
+            ],
+            "allowed_start_interval_s": [
+              3.5e-06,
+              3.5000399999999998e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+        "cpp_compile.json": "3bfa84a9c58da00b002f7772d9f74b45eb1df1c902cf6f2ffe572d3e35d96555",
+        "cpp_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dut.cc": "89b82daf6c6e59378573a9174e402295223ae811578d10168e203e328bb797ac",
+        "dut.so": "46d960252afe7200596144b662b3a3b9ea7e194176296ee0202ce71f8c816426",
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "probe-result.json": "6dbbef245b39169e7fcbb830a74f8918882998728ca006c23d796ec01c9061ee",
+        "simulate.json": "14eb16252187fb4d99dcb0645c709e104769ecb307d78ea95f02944fc55ed1d5",
+        "simulate.log": "b59eb5d54bd8c0b776487c77bfae95330191a326c6d0f7b84d68868f5aee8f9e",
+        "tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+        "tb.gc": "42f214fdfec6837897481dd8b21c95327779d7042b653f3d7acb88270b40a94a",
+        "tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+        "waveform.txt": "084c01d9afd98e26c8391d99c4fdef4f55bde88b5a8058f5c3cb80b4c4b80c8c"
+      }
+    },
+    {
+      "probe": "gnucap-v4-c1-named-ground",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 4.440892098500626e-16,
+          "clk": 1.4432899320127035e-14,
+          "rst": 9.992007221626409e-15
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.17500000000000002,
+            "time_s": 5.25e-07
+          }
+        },
+        "violating_sample_count": 674,
+        "plateau_error_v": 0.174994,
+        "waveform_excess_over_nominal_event_allowance_v": 0.174994,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [
+          {
+            "nominal_start_s": 5e-07,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 1.1499999999999998e-06,
+            "status": "missing_or_multiple_crossings",
+            "fraction": 0.1,
+            "count": 0
+          },
+          {
+            "nominal_start_s": 2.4999999999999998e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 2.5125e-06,
+            "inferred_start_error_s": 4.235164736271502e-22,
+            "full_edge_estimate_s": 2.500000000000029e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              2.4995e-06,
+              2.5004999999999996e-06
+            ],
+            "allowed_start_interval_s": [
+              2.4999999999999998e-06,
+              2.5000399999999996e-06
+            ],
+            "internal_event_observed": false
+          },
+          {
+            "nominal_start_s": 3.5e-06,
+            "status": "joint_brackets_overlap",
+            "output_50_time_s": 3.5125e-06,
+            "inferred_start_error_s": 0.0,
+            "full_edge_estimate_s": 2.499999999999976e-08,
+            "nominal_full_edge_s": 2.5e-08,
+            "max_crossing_bracket_s": 1.0000000000000751e-09,
+            "joint_start_interval_s": [
+              3.4995e-06,
+              3.5004999999999998e-06
+            ],
+            "allowed_start_interval_s": [
+              3.5e-06,
+              3.5000399999999998e-06
+            ],
+            "internal_event_observed": false
+          }
+        ],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "7a6e0261ca2264e16cd8cb26af8dd45bc554a869db66008e686e7ab12a044238",
+        "dut.so": "20bf20195f2313f338b84d641b2ffcc17287a3bc5428a76abc7b7090251e325f",
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "probe-result.json": "e7760f0aeca6a66d62b0842bec849fb11517c4f91aa861d999fc6ab05884ae4f",
+        "simulate.json": "27e7b9ee4f3bcaa5d5ef5f9112cb13147014605dfb58b869bc97d0db5a862ac5",
+        "simulate.log": "01f9f11508e7caea38489c9fc3020e6a571a321ffb5340eda9bd4306b9b0301e",
+        "tb.cir": "1e552e9a3ded2b93c31a6ea0fa0a29a1383800d8537653c8bc6b61185132dd55",
+        "tb.gc": "c85fc815edb579c678bebb894dd8c9a1c6dc578921fb683f103e5ba526ef8a9e",
+        "tb.scs": "df460297be7707db40b170d1d58387ff00ff146ce44f9e16d713d67c165148b1",
+        "waveform.txt": "084c01d9afd98e26c8391d99c4fdef4f55bde88b5a8058f5c3cb80b4c4b80c8c"
+      }
+    },
+    {
+      "probe": "gnucap-v6-apostrophe-short-1e-9",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 6.661338147750939e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 3.678822869945808e-08,
+            "time_s": 1.5e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.so": "6604906d25038897af14113d4f6bd2d926183df45b216f3a7c7a2e301072d682",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "probe-result.json": "0d29893f25332c112ddde928c3b4abb06888b19a02567bfdf17591d9a873385e",
+        "simulate.json": "c5f94bc432c41408faeaf70457ab00b987b32f449190562255ef7ea1af41a739",
+        "simulate.log": "2114fffdcec2a8bbe58efecd85a0e6f5271c2b0d35902e927ce79a38c5cf6ab4",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "14cf968ce9a9d2de6e38d16967e154a99286b8a10d6b95b8dced688ba7a6d4bd",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d",
+        "waveform.txt": "bdf7972e0b495b4d8e230f1ca7c27534682c3a1329286358156194329f321d23"
+      }
+    },
+    {
+      "probe": "gnucap-v6-array-apostrophe",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observed_violation",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 6.661338147750939e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 0.4829475101395301,
+            "time_s": 3.161e-06
+          }
+        },
+        "violating_sample_count": 2968,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "cpp_compile.json": "1966a4daa2afb79d5bd614202f716663e22e59acb44d27651d50c53e4ece2a99",
+        "cpp_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dut.cc": "b540c01b92a54f98da67dea06e4a78a1d087a1126f1abf36634c71a179360e35",
+        "dut.so": "6604906d25038897af14113d4f6bd2d926183df45b216f3a7c7a2e301072d682",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "modelgen.json": "f32638f71614dd479896d2e7bd99daed045c6e3de6ca070bd4f910778c10ab9c",
+        "modelgen.log": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+        "probe-result.json": "94af823478fd8610b57beb94136aa74cf7c293287359d4523140c7f896175297",
+        "simulate.json": "15bf5261545f8c14460aea3be3767ab1419aeea9e5aa17c93b7c65c98e19df45",
+        "simulate.log": "8623722e77768de0fbe098e46dc1e9cd7cb42695e84e3e5b37982f571a1e91e1",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d",
+        "waveform.txt": "b44be51a4a3df5f6c1a940e546b3b04cd607760b7923178bfd32205ebfca598d"
+      }
+    },
+    {
+      "probe": "gnucap-v6-main-named-ground",
+      "backend": "gnucap",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000021927e-09,
+        "input_max_error_v": {
+          "vin": 6.661338147750939e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 3.678822869945808e-08,
+            "time_s": 1.5e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.so": "6604906d25038897af14113d4f6bd2d926183df45b216f3a7c7a2e301072d682",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "probe-result.json": "b7d0a2ee074aee69577d798f434d81fb6479a1411b8c2201dc6f2e088ed6fa16",
+        "simulate.json": "5cf44878f9e3d7982817843df7672a0247bea090d1510fdbec1d3783d0b43538",
+        "simulate.log": "7ce0e5e1cb053e821bc46eba946573cf4d10010f7bab2d3eb2f73b1783340c95",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "b6e87ae452437f1b44339e5380038fd7fd9edd81a240736720a0ae79c84b2545",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d",
+        "waveform.txt": "119f81eb84d79ff801632e8d070eab5ed125e90c0053ec33f1b2f499acf6a7e9"
+      }
+    },
+    {
+      "probe": "openvaf-v3-main-mir",
+      "backend": "openvaf_ngspice",
+      "last_stage": "compile",
+      "exit_code": 0,
+      "timed_out": false,
+      "artifact_sha256": {
+        "compile.json": "1ff00da8929a5e522916eafb8cf2fb6a454160671940c5dc1914e56c831651b8",
+        "compile.log": "89ad20c9398bf9e99101a33db1b412788ceb8f7517afac3a7438b92aff191017",
+        "condition.json": "bf8dcad16e75a29abf862aa709c4fbd41cbaac4e3e51a4dad0d7c782630c5b14",
+        "dut.osdi": "5f834dd81e3886fc143354d0bcb9fd45854f9676d27e822eddb4d5756456fa0f",
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "probe-result.json": "fc66b4a5688772d003989506620031aa96cedb0ba705049a27661185a82172fe",
+        "tb.cir": "8c2740cebbb4ff9c89f5b2adac97793f32a0a4e1852b73dce52c0251aa4c542e",
+        "tb.gc": "1341f81d69492b03d825064a45294092deaa88ebd2c8761610fc25afa3f9c544",
+        "tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+      }
+    },
+    {
+      "probe": "openvaf-v5-main-mir",
+      "backend": "openvaf_ngspice",
+      "last_stage": "compile",
+      "exit_code": 0,
+      "timed_out": false,
+      "artifact_sha256": {
+        "compile.json": "e869fb5f4d5c9b12fdd8341ed849d302cdd07b11bcbe46f38c0d369dec678da4",
+        "compile.log": "3ad87974590e01a6ac4d18565ed7666441acc7cd4aa455068048a7132171ee48",
+        "condition.json": "12df67b87f02ffb64ff2e35dc283d6b5797981432c75dfa001bc6693fea2ab90",
+        "dut.osdi": "89dca4e8393dae993965cd39395c473570c4075b91bf17b1e78efcd45198eff2",
+        "dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+        "probe-result.json": "b96e1a0e00aed5606746de37431f986992813b924220ecc2432f5a72d70c2ebd",
+        "tb.cir": "86f4d345f5225f3a64e3e589fcbd61b3a7d65c9823c7543eb742a2f457d6b2a8",
+        "tb.gc": "a063aa77b2bc38adafb553c2f91c166fc3fc505cdf63aefa9df193edd12b4d82",
+        "tb.scs": "0e2824b8f533ce2309dfce8b1ad31d2b09a562c0defd42f85697dc31b147f927"
+      }
+    },
+    {
+      "probe": "openvaf_ngspice-v6-array-apostrophe",
+      "backend": "openvaf_ngspice",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4028,
+        "max_gap_s": 1.0000000000000751e-09,
+        "input_max_error_v": {
+          "vin": 2.220446049250313e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 3.672075153671184e-08,
+            "time_s": 1.5009114957887814e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "compile.json": "936870f975d823a78022acebffdfee75ab4b050c7d9bdcdcecb4abac6dc26a86",
+        "compile.log": "05c34b8385ec2910c4ce8ce5588ba971819cdb5948195f8a797b7bfa97e3545a",
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.osdi": "73f07815af37834cddf2158503bd8145b2b5da504cfe3121417fc92b6e5c3d93",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "probe-result.json": "4bacd702ff6b83c9667013ee2a2c22267f047662ecd90851192b1529af0c9345",
+        "simulate.json": "edc389fc583b889a7f1d814de39cff91798742cdfb6e4a3965e88d13463c852b",
+        "simulate.log": "f6078e1823875cd88a2f542b675ef6107c7b6e3c484b6a8c65054e7d48264c33",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d",
+        "waveform.txt": "3439eccdffe0556e88479757cd99918c63ff1b2cecb88bacd7dbeaacb0970067"
+      }
+    },
+    {
+      "probe": "spectre-v6-array-apostrophe",
+      "backend": "spectre",
+      "last_stage": "simulate",
+      "exit_code": 0,
+      "timed_out": false,
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "sample_count": 4009,
+        "max_gap_s": 1.0000000000009222e-09,
+        "input_max_error_v": {
+          "vin": 4.440892098500626e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 3.520348794416872e-08,
+            "time_s": 1.521881224269732e-06
+          }
+        },
+        "violating_sample_count": 0,
+        "plateau_error_v": null,
+        "waveform_excess_over_nominal_event_allowance_v": null,
+        "differential_error_v": null,
+        "common_mode_error_v": null,
+        "max_relationship_residual_v": null,
+        "edges": [],
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "artifact_sha256": {
+        "condition.json": "0d789df01f5781780538e8a40c2f598b5de7814a5930f6fe41f671c6c3dd46ca",
+        "dut.va": "f112e15b35adf4405c0c4f435f5c5a372cfefa59a401c683c342205cf32054b4",
+        "probe-result.json": "9b1eb78bbd924f539959b189376ecae30a299a2ce601d7ee952ac31f1d4ecfb4",
+        "psf/logFile": "2c28a52ed92820a7175909f45a449504808ce6c889d8edb6ef7ce7c2bbe7e4ad",
+        "psf/tran.tran.tran": "0f816f6426164aa7d97988597fc319a822e420f91a1dd2ef334efbba6ef1fa74",
+        "run.csh": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a",
+        "simulate.json": "a1dce622c3beaa819b11e2de5115f1e3875a0b48165e9b9e60499a6bb0295b6a",
+        "simulate.log": "4a22cb5ad417f94d851b91d63da827b45485d778f4e013b53e97fd9bced5503e",
+        "spectre.log": "1780e8be94d5921d4a0c3d8a3e75e92284436b576639e5c8ac8a44b53151f40b",
+        "tb.ahdlSimDB/.d6e69efdd589f36b6e3d33ca1c0d5100.Linux-64.dep": "c71746a16353e2a59794769dea429fe5ba22b1816e1989c94def41bdcef2203f",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/GNUmakefile": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/ahdlcmidevicelist": "75b593039bac7cbf56e3893c608cce70664e802e213da7a1e1b66a3dc8a889bb",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/ahdlcmidevicelist.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/devicelisttemp": "75b593039bac7cbf56e3893c608cce70664e802e213da7a1e1b66a3dc8a889bb",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/dvs_v6.lst": "75b593039bac7cbf56e3893c608cce70664e802e213da7a1e1b66a3dc8a889bb",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_dvs_v6.so": "47903e8882576b98134328fd55eb7639e14eb589bef1d04cbd2e669bd36769e9",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/Linux-64/sminfo": "3abe534cb9baa94d652402fc81b3105034fb91dfeed80d8701bfe66b95082e99",
+        "tb.ahdlSimDB/d6e69efdd589f36b6e3d33ca1c0d5100.dvs_v6.ahdlcmi/ahdlcmi.out": "601e1a8c1d67fb3d9c0e837bb429815232555a39c0bedefd54bc7325fb0af4d4",
+        "tb.cir": "da98f1455779f70bc51d73ec2d0cd2e11f9331c75c525030694b25b1fa6565b3",
+        "tb.gc": "173857a17a34c089fd1f9905d1855320fe446c390f0652135914eff5f4b9a09e",
+        "tb.scs": "29940f6d09764c7a2b5890d1c910c44ee9a3ae5d3b269e23bce7eadc5b55e76d"
+      }
+    }
+  ]
+}

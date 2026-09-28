@@ -1,0 +1,21 @@
+// N-V4-02, N-V7-03 and N-V7-04 share this explicit-state sampler.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_sampler(vin, clk, rst, vout, vref);
+    input vin, clk, rst;
+    output vout;
+    inout vref;
+    electrical vin, clk, rst, vout, vref;
+    parameter real initial_value = 0.1;
+    parameter real edge_time = 25e-9;
+    real held;
+    analog begin
+        @(initial_step) held = initial_value;
+        @(cross(V(clk, vref) - 0.5, +1, 1e-9, 2e-4)
+          or cross(V(rst, vref) - 0.5, +1, 1e-9, 2e-4)) begin
+            if (V(rst, vref) >= 0.5) held = initial_value;
+            else held = V(vin, vref);
+        end
+        V(vout, vref) <+ transition(held, 0, edge_time, edge_time);
+    end
+endmodule

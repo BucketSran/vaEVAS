@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_v2(vip, vin, vdd, vref, op, on);
+    input vip, vin, vdd;
+    inout vref;
+    output op, on;
+    electrical vip, vin, vdd, vref, op, on;
+    analog begin
+        V(op, vref) <+ 0.5 * V(vdd, vref) + V(vip, vin);
+        V(on, vref) <+ 0.5 * V(vdd, vref) - V(vip, vin);
+    end
+endmodule

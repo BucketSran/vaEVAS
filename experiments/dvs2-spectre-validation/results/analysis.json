@@ -1,0 +1,4521 @@
+{
+  "run_id": "dvs2-spectre-20260928-01",
+  "file_manifest_sha256": "5e2f4f53b862170a545e7e56a0fe5b12ffc5515df3d87aaef788c4369c35251e",
+  "input_manifest_sha256": "ef5ea0d537045b57fe6473272adc8a33f3736de774ac232fcdb7c9999655a7a1",
+  "source_identity": {
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/dvs2-history-validation/recheck.py": "1980b3f74f61939f6abd4ab63695ccb7f14625a53816ba79154aeea3ce205e3a",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/dvs2-spectre-validation/check_results.py": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "experiments/dvs2-spectre-validation/run_suite.py": "1656a4481977c1cf24d085cf5e9b3a157227560860c09de2ea5112e778d23da6",
+    "experiments/dvs2-spectre-validation/test_checks.py": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+    "experiments/dvs2-spectre-validation/PROTOCOL.md": "721ee61d832768daed999835efeb54469e974e12f723c25285a95c46ca6546bf",
+    "evas/validation/CASE_CARDS.md": "5aea33b55cdf685cabb1b0448825c045b4f590536195e7e687ff5ae3b0debd04",
+    "evas/validation/NEXT_CASE_CARDS.md": "c70ce8aec27e17789ecf7382529e87699722e493864786f784c1c025384b5afc",
+    "evas/validation/METHOD_QUALIFICATION.md": "13012cc6d199a967e0e2519474a068c75f70470aab9072369b514010af6eae08"
+  },
+  "summary": {
+    "configurations": 62,
+    "conditions": 31,
+    "execution": {
+      "waveform_available": 62
+    },
+    "observation": {
+      "observations_within_targets": 62
+    }
+  },
+  "records": [
+    {
+      "condition": "v1-main",
+      "card": "d2_v1_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.932627856731415,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4008,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.1102230246251565e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4008,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.1102230246251565e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 1.3600232051658168e-15,
+              "time_s": 2.951292958333574e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v1-main",
+      "card": "d2_v1_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.234556619077921,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40008,
+          "max_gap_s": 1.0000000000148982e-10,
+          "input_max_error_v": {
+            "vin": 1.1102230246251565e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40008,
+          "max_gap_s": 1.0000000000148982e-10,
+          "input_max_error_v": {
+            "vin": 1.1102230246251565e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 1.3600232051658168e-15,
+              "time_s": 2.958129295833757e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-main",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.882856387645006,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 3.3306690738754696e-16,
+              "time_s": 3.040025000000008e-07
+            },
+            "on": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.186002500000157e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 9.992007221626409e-16,
+          "common_mode_error_v": 4.440892098500626e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-main",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.538132824003696,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 4.440892098500626e-16,
+              "time_s": 3.813200249996238e-06
+            },
+            "on": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 2.835800249998235e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 1.1102230246251565e-15,
+          "common_mode_error_v": 6.661338147750939e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-reference-zero",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.237369207665324,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 1.1102230246251565e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 0.0
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 1.1102230246251565e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 0.0
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 2.220446049250313e-16,
+              "time_s": 7.816683333333286e-07
+            },
+            "on": {
+              "error_v": 3.3306690738754696e-16,
+              "time_s": 3.83666833333353e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 4.440892098500626e-16,
+          "common_mode_error_v": 2.220446049250313e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-reference-zero",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.388167817145586,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.6653345369377348e-16,
+            "vin": 1.6653345369377348e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 0.0
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.6653345369377348e-16,
+            "vin": 1.6653345369377348e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 0.0
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 2.220446049250313e-16,
+              "time_s": 6.592668333333707e-07
+            },
+            "on": {
+              "error_v": 3.3306690738754696e-16,
+              "time_s": 2.537866833332176e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 4.440892098500626e-16,
+          "common_mode_error_v": 2.220446049250313e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-supply-fixed",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.986440312117338,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 3.3306690738754696e-16,
+              "time_s": 1.912002500000062e-06
+            },
+            "on": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.517002500000182e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 1.1102230246251565e-15,
+          "common_mode_error_v": 3.3306690738754696e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-supply-fixed",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.438020640984178,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 2.220446049250313e-16,
+            "vdd": 6.661338147750939e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 3.3306690738754696e-16,
+              "time_s": 1.557900250000105e-06
+            },
+            "on": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.515000249996847e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 1.1102230246251565e-15,
+          "common_mode_error_v": 4.440892098500626e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-input-common-mode",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.98621360771358,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 6.661338147750939e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 6.661338147750939e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 4.440892098500626e-16,
+              "time_s": 3.61700250000019e-06
+            },
+            "on": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 2.813002500000129e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 1.2212453270876722e-15,
+          "common_mode_error_v": 5.551115123125783e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v2-input-common-mode",
+      "card": "d2_v2_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.488034995272756,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 8.881784197001252e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vip": 1.1102230246251565e-16,
+            "vin": 8.881784197001252e-16,
+            "vdd": 8.881784197001252e-16,
+            "vref": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "op": {
+              "error_v": 5.551115123125783e-16,
+              "time_s": 3.503100249996872e-06
+            },
+            "on": {
+              "error_v": 1.1102230246251565e-15,
+              "time_s": 3.423900249997033e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": 1.3322676295501878e-15,
+          "common_mode_error_v": 6.661338147750939e-16,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v3-main",
+      "card": "d2_v3_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.986758705228567,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4006,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.718447854656915e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4006,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.718447854656915e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.004000000000007997,
+              "time_s": 3.383250000000001e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.40025e-06,
+              "inferred_start_error_s": 2.5000000000012466e-10,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.374250000000003e-06,
+                1.37525e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4002499999999998e-06,
+              "inferred_start_error_s": 2.4999999999970114e-10,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                3.374250000000003e-06,
+                3.37525e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "9999999999993/40000000000000000",
+                "39999999999987/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4006,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "9999999999993/40000000000000000",
+                "39999999999987/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4006,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v3-main",
+      "card": "d2_v3_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.73861082829535,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40006,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.996003610813204e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40006,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.996003610813204e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.0006524999550539534,
+              "time_s": 3.407640781247124e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.400031395833424e-06,
+              "inferred_start_error_s": 3.139583342415752e-11,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.374931395833428e-06,
+                1.375031395833425e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4000407812471897e-06,
+              "inferred_start_error_s": 4.078124718964469e-11,
+              "full_edge_estimate_s": 4.999999999999952e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                3.37504078124718e-06,
+                3.375140781247098e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "5023333347923/160000000000000000",
+                "6524999550451/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40006,
+              "constraint_count": 1013,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "5023333347923/160000000000000000",
+                "6524999550451/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40006,
+              "constraint_count": 1013,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v4-c0",
+      "card": "d2_v4_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.036761950701475,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4109,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.1046719095020308e-14,
+            "rst": 5.995204332975845e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4109,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.1046719095020308e-14,
+            "rst": 5.995204332975845e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.0002599999999989139,
+              "time_s": 1.50002e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 5e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.12519785717959e-07,
+              "inferred_start_error_s": 1.9785717959086057e-11,
+              "full_edge_estimate_s": 2.499957143591823e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 9.999999999999692e-10,
+              "joint_start_interval_s": [
+                4.9952e-07,
+                5.005199999999993e-07
+              ],
+              "allowed_start_interval_s": [
+                5e-07,
+                5.0004e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.1499999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.1625102142820409e-06,
+              "inferred_start_error_s": 1.02142820410009e-11,
+              "full_edge_estimate_s": 2.499957143591863e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.149510000000002e-06,
+                1.15051e-06
+              ],
+              "allowed_start_interval_s": [
+                1.1499999999999998e-06,
+                1.1500199999999997e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.5125198846164497e-06,
+              "inferred_start_error_s": 1.9884616449534473e-11,
+              "full_edge_estimate_s": 2.499976923289995e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 9.999999999998634e-10,
+              "joint_start_interval_s": [
+                1.499520000000002e-06,
+                1.50052e-06
+              ],
+              "allowed_start_interval_s": [
+                1.5e-06,
+                1.50004e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.4999999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.5125195e-06,
+              "inferred_start_error_s": 1.9500000000432393e-11,
+              "full_edge_estimate_s": 2.500000000000029e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                2.4995200000000018e-06,
+                2.50052e-06
+              ],
+              "allowed_start_interval_s": [
+                2.4999999999999998e-06,
+                2.5000399999999996e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.5125195000000003e-06,
+              "inferred_start_error_s": 1.9500000000432393e-11,
+              "full_edge_estimate_s": 2.499999999999923e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                3.499520000000001e-06,
+                3.50052e-06
+              ],
+              "allowed_start_interval_s": [
+                3.5e-06,
+                3.5000399999999998e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4109,
+              "constraint_count": 136,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4109,
+              "constraint_count": 136,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v4-c0",
+      "card": "d2_v4_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.48794380761683,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40109,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.2323475573339238e-14,
+            "rst": 5.998673779927799e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40109,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.2323475573339238e-14,
+            "rst": 5.998673779927799e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 7.720916684052226e-05,
+              "time_s": 1.50000593916668e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 5e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.12505050303817e-07,
+              "inferred_start_error_s": 5.05030381706153e-12,
+              "full_edge_estimate_s": 2.4999890607621358e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                4.99905105000008e-07,
+                5.000051050000065e-07
+              ],
+              "allowed_start_interval_s": [
+                5e-07,
+                5.0004e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.1499999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.1625059938628654e-06,
+              "inferred_start_error_s": 5.993862865509697e-12,
+              "full_edge_estimate_s": 2.4999890607621887e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.150005939166678e-06,
+                1.150105939166676e-06
+              ],
+              "allowed_start_interval_s": [
+                1.1499999999999998e-06,
+                1.1500199999999997e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.5125059049023507e-06,
+              "inferred_start_error_s": 5.904902350580598e-12,
+              "full_edge_estimate_s": 2.4999931471342058e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.499905939166682e-06,
+                1.50000593916668e-06
+              ],
+              "allowed_start_interval_s": [
+                1.5e-06,
+                1.50004e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.4999999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.5125049669476055e-06,
+              "inferred_start_error_s": 4.966947605842447e-12,
+              "full_edge_estimate_s": 2.500002085418968e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 9.999999999979575e-11,
+              "joint_start_interval_s": [
+                2.499905104999796e-06,
+                2.5000051049997548e-06
+              ],
+              "allowed_start_interval_s": [
+                2.4999999999999998e-06,
+                2.5000399999999996e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.5125049773748066e-06,
+              "inferred_start_error_s": 4.977374806733911e-12,
+              "full_edge_estimate_s": 2.499999999999976e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                3.4999051049997962e-06,
+                3.500005104999755e-06
+              ],
+              "allowed_start_interval_s": [
+                3.5e-06,
+                3.5000399999999998e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40109,
+              "constraint_count": 1261,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40109,
+              "constraint_count": 1261,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v4-c1",
+      "card": "d2_v4_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.43750317953527,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4102,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.1046719095020308e-14,
+            "rst": 5.551115123125783e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4102,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.1046719095020308e-14,
+            "rst": 5.551115123125783e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.0003800000000024478,
+              "time_s": 2.50002e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 5e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.12519785717959e-07,
+              "inferred_start_error_s": 1.9785717959086057e-11,
+              "full_edge_estimate_s": 2.499957143591823e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 9.999999999999692e-10,
+              "joint_start_interval_s": [
+                4.9952e-07,
+                5.005199999999993e-07
+              ],
+              "allowed_start_interval_s": [
+                5e-07,
+                5.0004e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.1499999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.1625102142820409e-06,
+              "inferred_start_error_s": 1.02142820410009e-11,
+              "full_edge_estimate_s": 2.499957143591863e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.149510000000002e-06,
+                1.15051e-06
+              ],
+              "allowed_start_interval_s": [
+                1.1499999999999998e-06,
+                1.1500199999999997e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.4999999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.5125199210531304e-06,
+              "inferred_start_error_s": 1.9921053130724756e-11,
+              "full_edge_estimate_s": 2.4999842106260953e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                2.4995200000000018e-06,
+                2.50052e-06
+              ],
+              "allowed_start_interval_s": [
+                2.4999999999999998e-06,
+                2.5000399999999996e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.5125195000000003e-06,
+              "inferred_start_error_s": 1.9500000000432393e-11,
+              "full_edge_estimate_s": 2.499999999999923e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                3.499520000000001e-06,
+                3.50052e-06
+              ],
+              "allowed_start_interval_s": [
+                3.5e-06,
+                3.5000399999999998e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4102,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4102,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v4-c1",
+      "card": "d2_v4_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.437407992780209,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40102,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.2323475573339238e-14,
+            "rst": 5.773159728050814e-15
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40102,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.2323475573339238e-14,
+            "rst": 5.773159728050814e-15
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 9.69949962218164e-05,
+              "time_s": 2.500005104999801e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 5e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.12505050303817e-07,
+              "inferred_start_error_s": 5.05030381706153e-12,
+              "full_edge_estimate_s": 2.4999890607621358e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                4.99905105000008e-07,
+                5.000051050000065e-07
+              ],
+              "allowed_start_interval_s": [
+                5e-07,
+                5.0004e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.1499999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.1625059938628654e-06,
+              "inferred_start_error_s": 5.993862865509697e-12,
+              "full_edge_estimate_s": 2.4999890607621887e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.150005939166678e-06,
+                1.150105939166676e-06
+              ],
+              "allowed_start_interval_s": [
+                1.1499999999999998e-06,
+                1.1500199999999997e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.4999999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.512505084848519e-06,
+              "inferred_start_error_s": 5.08484851929753e-12,
+              "full_edge_estimate_s": 2.499995969743521e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 9.999999999979575e-11,
+              "joint_start_interval_s": [
+                2.499905104999796e-06,
+                2.5000051049997548e-06
+              ],
+              "allowed_start_interval_s": [
+                2.4999999999999998e-06,
+                2.5000399999999996e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.5e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.5125049773748066e-06,
+              "inferred_start_error_s": 4.977374806733911e-12,
+              "full_edge_estimate_s": 2.499999999999976e-08,
+              "nominal_full_edge_s": 2.5e-08,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                3.4999051049997962e-06,
+                3.500005104999755e-06
+              ],
+              "allowed_start_interval_s": [
+                3.5e-06,
+                3.5000399999999998e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40102,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40102,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v5-main",
+      "card": "d2_v5_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.935337048023939,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {}
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {},
+          "max_observed_error": {
+            "vout": {
+              "error_v": 9.85211912052364e-13,
+              "time_s": 2.747000000000125e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 4.7499999999999995e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.750000000000046e-07,
+              "inferred_start_error_s": 4.605741650695258e-21,
+              "full_edge_estimate_s": 1.9999999999999994e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 9.999999999999692e-10,
+              "joint_start_interval_s": [
+                4.7500000000000403e-07,
+                4.7599999999999913e-07
+              ],
+              "allowed_start_interval_s": [
+                4.7489999999999994e-07,
+                4.7509999999999996e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.2250000000000001e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.2750000000000102e-06,
+              "inferred_start_error_s": 1.0164395367051604e-20,
+              "full_edge_estimate_s": 1.000000000000001e-07,
+              "nominal_full_edge_s": 1e-07,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.224000000000017e-06,
+                1.2250000000000111e-06
+              ],
+              "allowed_start_interval_s": [
+                1.2249000000000001e-06,
+                1.2251000000000001e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.975e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.0750000000000665e-06,
+              "inferred_start_error_s": 6.649208635946258e-20,
+              "full_edge_estimate_s": 2.000000000000002e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.97400000000008e-06,
+                1.9750000000000683e-06
+              ],
+              "allowed_start_interval_s": [
+                1.9749000000000004e-06,
+                1.9751e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.725e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.7750000000001234e-06,
+              "inferred_start_error_s": 1.232432938255007e-19,
+              "full_edge_estimate_s": 1.000000000000001e-07,
+              "nominal_full_edge_s": 1e-07,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                2.72400000000013e-06,
+                2.7250000000001243e-06
+              ],
+              "allowed_start_interval_s": [
+                2.7249000000000004e-06,
+                2.7251e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.4749999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.5750000000001792e-06,
+              "inferred_start_error_s": 1.7957098481791167e-19,
+              "full_edge_estimate_s": 2.000000000000002e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 9.999999999996516e-10,
+              "joint_start_interval_s": [
+                3.4740000000001932e-06,
+                3.475000000000181e-06
+              ],
+              "allowed_start_interval_s": [
+                3.4749e-06,
+                3.4750999999999996e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "91/20000000000000000",
+                "817/80000000000000000",
+                "1329/20000000000000000",
+                "9829/80000000000000000",
+                "1791/10000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 811,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "91/20000000000000000",
+                "817/80000000000000000",
+                "1329/20000000000000000",
+                "9829/80000000000000000",
+                "1791/10000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 811,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v5-main",
+      "card": "d2_v5_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.28723588399589,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {}
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40001,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {},
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.000799999999365697,
+              "time_s": 1.283500000000084e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 2.8932693914296426e-14,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 4.7499999999999995e-07,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 5.749000000000236e-07,
+              "inferred_start_error_s": -9.999999997634353e-11,
+              "full_edge_estimate_s": 1.9999999999999994e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                4.7480000000003715e-07,
+                4.749000000000251e-07
+              ],
+              "allowed_start_interval_s": [
+                4.7489999999999994e-07,
+                4.7509999999999996e-07
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.2250000000000001e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.2749000000000801e-06,
+              "inferred_start_error_s": -9.99999999199629e-11,
+              "full_edge_estimate_s": 1.000000000000001e-07,
+              "nominal_full_edge_s": 1e-07,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.224800000000087e-06,
+                1.224900000000081e-06
+              ],
+              "allowed_start_interval_s": [
+                1.2249000000000001e-06,
+                1.2251000000000001e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 1.975e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.0748999999999935e-06,
+              "inferred_start_error_s": -1.0000000000657202e-10,
+              "full_edge_estimate_s": 2.0000000000000126e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                1.974899999999952e-06,
+                1.974999999999625e-06
+              ],
+              "allowed_start_interval_s": [
+                1.9749000000000004e-06,
+                1.9751e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 2.725e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 2.774999999998461e-06,
+              "inferred_start_error_s": -1.5390588651610637e-18,
+              "full_edge_estimate_s": 9.999999999999904e-08,
+              "nominal_full_edge_s": 1e-07,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                2.724999999998441e-06,
+                2.725099999998277e-06
+              ],
+              "allowed_start_interval_s": [
+                2.7249000000000004e-06,
+                2.7251e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.4749999999999998e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.574999999996929e-06,
+              "inferred_start_error_s": -3.0704944337968387e-18,
+              "full_edge_estimate_s": 2.0000000000000126e-07,
+              "nominal_full_edge_s": 2e-07,
+              "max_crossing_bracket_s": 9.999999999979575e-11,
+              "joint_start_interval_s": [
+                3.474999999996888e-06,
+                3.475099999996561e-06
+              ],
+              "allowed_start_interval_s": [
+                3.4749e-06,
+                3.4750999999999996e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "-249999999941/2500000000000000",
+                "-3999999996807/40000000000000000",
+                "-1/10000",
+                "-123119/80000000000000000",
+                "-61419/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 8016,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "-249999999941/2500000000000000",
+                "-3999999996807/40000000000000000",
+                "-1/10000",
+                "-123119/80000000000000000",
+                "-61419/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 8016,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v6-standard",
+      "card": "d2_v6_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.337063627317548,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4009,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4009,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 3.520348794416872e-08,
+              "time_s": 1.521881224269732e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v6-standard",
+      "card": "d2_v6_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.437777806073427,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40007,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40007,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 3.5275377063825886e-10,
+              "time_s": 1.521125208333514e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-main",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.7856574933975935,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.075500833333483e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 4.865008333333377e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.3306690738754696e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-main",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.287054618820548,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.001850083331229e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 2.276500833333384e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.3306690738754696e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-swapped",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.237583549693227,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.075500833333483e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 4.865008333333377e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.3306690738754696e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-swapped",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.388102231547236,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 8.881784197001252e-16,
+              "time_s": 3.001850083331229e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 2.276500833333384e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.3306690738754696e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-a-half",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.786267384886742,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 1.1102230246251565e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4002,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 1.1102230246251565e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 2.220446049250313e-16,
+              "time_s": 3.004501666666811e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 5.985016666666676e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 1.6653345369377348e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-linear-a-half",
+      "card": "d2_v7_01",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.437886949628592,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40002,
+          "max_gap_s": 1.0000000000148982e-10,
+          "input_max_error_v": {
+            "vina": 1.6653345369377348e-16,
+            "vinb": 1.6653345369377348e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40002,
+          "max_gap_s": 1.0000000000148982e-10,
+          "input_max_error_v": {
+            "vina": 1.6653345369377348e-16,
+            "vinb": 1.6653345369377348e-16
+          },
+          "max_observed_error": {
+            "outa": {
+              "error_v": 2.220446049250313e-16,
+              "time_s": 3.001150166664564e-06
+            },
+            "outb": {
+              "error_v": 1.6653345369377348e-16,
+              "time_s": 1.967501666666694e-07
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 1.6653345369377348e-16,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-nonlinear-0.5",
+      "card": "d2_v7_02",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.785960288718343,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4003,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4003,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 2.52810563661221e-06,
+              "time_s": 0.0
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.4761500438129644e-06,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-nonlinear-0.5",
+      "card": "d2_v7_02",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.186803171411157,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40003,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40003,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 6.823652753951137e-12,
+              "time_s": 1.0002e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 8.747447211021608e-12,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-nonlinear-2.0",
+      "card": "d2_v7_02",
+      "kind": "v1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.835457984358072,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4009,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 5.551115123125783e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4009,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 5.551115123125783e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 2.2574610514247695e-09,
+              "time_s": 3.000333777777878e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 3.104779877638464e-09,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "v7-nonlinear-2.0",
+      "card": "d2_v7_02",
+      "kind": "v1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.43643856421113,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40009,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 5.551115123125783e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40009,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 5.551115123125783e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 3.154317917974936e-10,
+              "time_s": 0.0
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": 7.885794239825827e-10,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-aligned",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.452144911512733,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 3034,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.609823385706477e-15
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999939/1000000000000000000",
+                "499999999989/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3034,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999939/1000000000000000000",
+                "499999999989/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3034,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "25000000000109/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3034,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "25000000000109/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3034,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-aligned",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.302969122305512,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 30031,
+          "max_gap_s": 1.0000000000085455e-10,
+          "input_max_error_v": {
+            "vin": 1.609823385706477e-15
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "390624999999/15625000000000000",
+                "1250000000009/50000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30031,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "390624999999/15625000000000000",
+                "1250000000009/50000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30031,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "4999999999937/200000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30031,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "4999999999937/200000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30031,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-shifted",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.002145467326045,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 3036,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.4432899320127035e-15
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999993/1000000000000000000",
+                "2499999999953/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3036,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999993/1000000000000000000",
+                "2499999999953/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3036,
+              "constraint_count": 27,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999683/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3036,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999683/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3036,
+              "constraint_count": 14,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-shifted",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.152196573093534,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 30032,
+          "max_gap_s": 1.0000000000085455e-10,
+          "input_max_error_v": {
+            "vin": 1.5543122344752192e-15
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "3124999999987/125000000000000000",
+                "2499999999971/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30032,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "3124999999987/125000000000000000",
+                "2499999999971/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30032,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999649/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30032,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "24999999999649/1000000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30032,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-slow",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.20237603597343,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 3019,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "50000000000001/1000000000000000000",
+                "4999999999953/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3019,
+              "constraint_count": 25,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "50000000000001/1000000000000000000",
+                "4999999999953/100000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3019,
+              "constraint_count": 25,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "6249999999941/125000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3019,
+              "constraint_count": 13,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "6249999999941/125000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 3019,
+              "constraint_count": 13,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e1-slow",
+      "card": "n_v3_02",
+      "kind": "e1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.704332308843732,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 30019,
+          "max_gap_s": 1.0000000000085455e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "history": {
+          "up": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "25125000020727/500000000000000000",
+                "1004999991777/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30019,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "25125000020727/500000000000000000",
+                "1004999991777/20000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30019,
+              "constraint_count": 205,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "down": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "3140625000971/62500000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30019,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "3140625000971/62500000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 30019,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-low",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.537292547523975,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4114,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.27675647831893e-14,
+            "rst": 8.2340547141041e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4114,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4114,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-low",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.587652867659926,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40114,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.39194211712379e-14,
+            "rst": 8.215650382226158e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40114,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40114,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-clock-high",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.538007529452443,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4126,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.27675647831893e-14,
+            "rst": 8.2340547141041e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4126,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4126,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-clock-high",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.83896622993052,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40126,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.39194211712379e-14,
+            "rst": 8.215650382226158e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40126,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40126,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-reset-high",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.9864524602890015,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4126,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.27675647831893e-14,
+            "rst": 8.2340547141041e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4126,
+              "constraint_count": 82,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4126,
+              "constraint_count": 82,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "e2-reset-high",
+      "card": "n_v4_02",
+      "kind": "e2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.487932603806257,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40126,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "clk": 1.39194211712379e-14,
+            "rst": 8.215650382226158e-15
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40126,
+              "constraint_count": 757,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40126,
+              "constraint_count": 757,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-main",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.986597931012511,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4170,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3156142841808105e-14,
+            "rsta": 8.2340547141041e-15,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.176836406102666e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-main",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.939146839082241,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40170,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3711254354120683e-14,
+            "rsta": 8.174017018802715e-15,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.2323475573339238e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-swapped",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.79119941405952,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4170,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3156142841808105e-14,
+            "rsta": 8.2340547141041e-15,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.176836406102666e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4170,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-swapped",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.838548820465803,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40170,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3711254354120683e-14,
+            "rsta": 8.174017018802715e-15,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.2323475573339238e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/100000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40170,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-no-reset-a",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.988047815859318,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4152,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3156142841808105e-14,
+            "rsta": 0.0,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.176836406102666e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4152,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4152,
+              "constraint_count": 109,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4152,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4152,
+              "constraint_count": 189,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c1-no-reset-a",
+      "card": "n_v7_03",
+      "kind": "c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.688908966258168,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40152,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vina": 2.220446049250313e-16,
+            "clka": 1.3711254354120683e-14,
+            "rsta": 0.0,
+            "vinb": 2.220446049250313e-16,
+            "clkb": 1.2323475573339238e-14,
+            "rstb": 0.0
+          }
+        },
+        "history": {
+          "outa": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40152,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40152,
+              "constraint_count": 1009,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          },
+          "outb": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40152,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40152,
+              "constraint_count": 1629,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c2-main",
+      "card": "n_v7_04",
+      "kind": "c2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 13.399994308128953,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4073,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 3.885780586188048e-16,
+            "clk": 1.27675647831893e-14,
+            "rst": 0.0
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4073,
+              "constraint_count": 82,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4073,
+              "constraint_count": 82,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "analytic_max_error": {
+          "z": 1.742563052464785e-07
+        },
+        "analytic_targets": {
+          "z": 0.0006
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "c2-main",
+      "card": "n_v7_04",
+      "kind": "c2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 13.500078912824392,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40073,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16,
+            "clk": 1.39194211712379e-14,
+            "rst": 0.0
+          }
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40073,
+              "constraint_count": 757,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "1/50000",
+                "1/50000",
+                "1/50000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40073,
+              "constraint_count": 757,
+              "epsilon": "999999/1000000000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "analytic_max_error": {
+          "z": 1.7469034413464257e-09
+        },
+        "analytic_targets": {
+          "z": 0.0006
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d1-free",
+      "card": "n_v6_02",
+      "kind": "d1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.101422253996134,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4004,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.942890293094024e-16,
+            "rst": 0.0
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "max_error_v": 3.916307556028897e-09
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "max_error_v": 3.916307556028897e-09
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d1-free",
+      "card": "n_v6_02",
+      "kind": "d1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.7032201718539,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40004,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "rst": 0.0
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "max_error_v": 3.928546377096609e-11
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "max_error_v": 3.928546377096609e-11
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d1-reset",
+      "card": "n_v6_02",
+      "kind": "d1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 13.901114877313375,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4040,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 1.3877787807814457e-16,
+            "rst": 3.885780586188048e-15
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "witness_reset_x": 1.5000013473876956,
+            "witness_release_x": 2.50001,
+            "max_error_v": 4.872571788067104e-05,
+            "reason": "numeric common witness"
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "witness_reset_x": 1.5000013473876956,
+            "witness_release_x": 2.50001,
+            "max_error_v": 4.872571788067104e-05,
+            "reason": "numeric common witness"
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d1-reset",
+      "card": "n_v6_02",
+      "kind": "d1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.604097098112106,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40036,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16,
+            "rst": 3.8441472227646045e-15
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "witness_reset_x": 1.5000003379296905,
+            "witness_release_x": 2.5000025524999003,
+            "max_error_v": 4.872425260885049e-06,
+            "reason": "numeric common witness"
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "witness_reset_x": 1.5000003379296905,
+            "witness_release_x": 2.5000025524999003,
+            "max_error_v": 4.872425260885049e-06,
+            "reason": "numeric common witness"
+          }
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d2-constant",
+      "card": "n_v6_03",
+      "kind": "d2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 13.700641920790076,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4005,
+          "max_gap_s": 1.0000000000013457e-09,
+          "input_max_error_v": {
+            "fcode": 0.0
+          }
+        },
+        "analytic_max_error": {
+          "accumulated": 1.687538997430238e-14,
+          "wrapped": 3.2751579226442118e-15,
+          "vout": 2.1710391706619703e-07
+        },
+        "analytic_targets": {
+          "accumulated": 0.0001,
+          "wrapped": 0.0001,
+          "vout": 0.001
+        },
+        "phase_checks": {
+          "observed_wrap_count": 2,
+          "expected_wrap_count": 2,
+          "range_with_roundoff_ok": true
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d2-constant",
+      "card": "n_v6_03",
+      "kind": "d2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.702964076772332,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40004,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "fcode": 0.0
+          }
+        },
+        "analytic_max_error": {
+          "accumulated": 1.617372902273928e-12,
+          "wrapped": 1.517674874662589e-13,
+          "vout": 2.1704688046852993e-09
+        },
+        "analytic_targets": {
+          "accumulated": 0.0001,
+          "wrapped": 0.0001,
+          "vout": 0.001
+        },
+        "phase_checks": {
+          "observed_wrap_count": 2,
+          "expected_wrap_count": 2,
+          "range_with_roundoff_ok": true
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d2-chirp",
+      "card": "n_v6_03",
+      "kind": "d2",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 13.848095698282123,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4005,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "fcode": 6.661338147750939e-16
+          }
+        },
+        "analytic_max_error": {
+          "accumulated": 3.44414438302465e-07,
+          "wrapped": 3.444143026332114e-07,
+          "vout": 1.7310101268035172e-06
+        },
+        "analytic_targets": {
+          "accumulated": 0.0001,
+          "wrapped": 0.0001,
+          "vout": 0.001
+        },
+        "phase_checks": {
+          "observed_wrap_count": 4,
+          "expected_wrap_count": 4,
+          "range_with_roundoff_ok": true
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "d2-chirp",
+      "card": "n_v6_03",
+      "kind": "d2",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 14.30382894910872,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40004,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "fcode": 8.881784197001252e-16
+          }
+        },
+        "analytic_max_error": {
+          "accumulated": 4.226745176083568e-09,
+          "wrapped": 4.226555772035567e-09,
+          "vout": 2.124496270117064e-08
+        },
+        "analytic_targets": {
+          "accumulated": 0.0001,
+          "wrapped": 0.0001,
+          "vout": 0.001
+        },
+        "phase_checks": {
+          "observed_wrap_count": 4,
+          "expected_wrap_count": 4,
+          "range_with_roundoff_ok": true
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "s1-default",
+      "card": "n_v1_02",
+      "kind": "s1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.437734995037317,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4016,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "u": 5.551115123125783e-16,
+            "v": 4.440892098500626e-16
+          }
+        },
+        "analytic_max_error": {
+          "vout": 8.326672684688674e-16
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "s1-default",
+      "card": "n_v1_02",
+      "kind": "s1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.237127246335149,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40016,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "u": 6.106226635438361e-16,
+            "v": 4.475586568020162e-16
+          }
+        },
+        "analytic_max_error": {
+          "vout": 9.43689570931383e-16
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "s1-override",
+      "card": "n_v1_02",
+      "kind": "s1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "elapsed_s": 7.886401059105992,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4016,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "u": 5.551115123125783e-16,
+            "v": 4.440892098500626e-16
+          }
+        },
+        "analytic_max_error": {
+          "vout": 8.326672684688674e-16
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observations_within_targets"
+      }
+    },
+    {
+      "condition": "s1-override",
+      "card": "n_v1_02",
+      "kind": "s1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "elapsed_s": 8.337365660816431,
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40016,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "u": 6.106226635438361e-16,
+            "v": 4.475586568020162e-16
+          }
+        },
+        "analytic_max_error": {
+          "vout": 9.43689570931383e-16
+        },
+        "analytic_targets": {
+          "vout": 0.001
+        },
+        "status": "observations_within_targets"
+      }
+    }
+  ]
+}
