@@ -14,7 +14,17 @@ class KernelError(RuntimeError):
 
 
 def solve(program: Program, driven: list[str], samples: list[list[float]], *,
-          kernel: str | Path, absolute: float = 1e-12, relative: float = 1e-10) -> dict:
+          kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
+          absolute: float | None = None, relative: float | None = None) -> dict:
+    """Solve with voltage tolerances; absolute/relative are legacy aliases."""
+    if vabstol is not None and absolute is not None:
+        raise ValueError("cannot specify both vabstol and absolute")
+    if reltol is not None and relative is not None:
+        raise ValueError("cannot specify both reltol and relative")
+    absolute = vabstol if vabstol is not None else absolute
+    relative = reltol if reltol is not None else relative
+    absolute = 1e-12 if absolute is None else absolute
+    relative = 1e-10 if relative is None else relative
     request = dict(program=program.to_dict(), driven=driven, samples=samples,
                    tolerances=dict(absolute=absolute, relative=relative))
     result = subprocess.run([str(kernel)], input=json.dumps(request, allow_nan=False),

@@ -1,5 +1,6 @@
 //! Validate IR and assemble one equation per instance-local voltage branch.
-use crate::ir::{check_schema_version, BranchIdentity, Error, Program, Tolerances};
+use crate::expression;
+use crate::ir::{check_schema_version, BranchIdentity, Error, Expression, Program, Tolerances};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(crate) struct Equation {
@@ -8,6 +9,7 @@ pub(crate) struct Equation {
     pub(crate) rhs_constant: f64,
     pub(crate) rhs_terms: Vec<f64>,
     pub(crate) coefficients: Vec<f64>,
+    pub(crate) nonlinear: Vec<Expression>,
     pub(crate) origins: Vec<String>,
 }
 
@@ -76,7 +78,6 @@ pub(crate) fn assemble(
     for c in program.contributions {
         if c.positive >= count
             || c.negative >= count
-            || !c.rhs.constant.is_finite()
             || c.branch.instance != c.origin.instance
             || c.branch.local_positive.is_empty()
             || c.branch.local_negative.is_empty()
@@ -120,21 +121,17 @@ pub(crate) fn assemble(
                 ),
             ));
         }
-        let mut term_nodes = BTreeSet::new();
-        for t in &c.rhs.terms {
-            if t.node >= count || !t.coefficient.is_finite() || !term_nodes.insert(t.node) {
-                return Err(Error::new(
-                    "invalid_ir",
-                    format!("invalid or duplicate term at {}", c.origin.label()),
-                ));
-            }
-        }
+        expression::validate(&c.rhs, count).map_err(|mut error| {
+            error.message.push_str(&format!(" at {}", c.origin.label()));
+            error
+        })?;
         let equation = grouped.entry(c.branch).or_insert_with(|| Equation {
             positive: c.positive,
             negative: c.negative,
             rhs_constant: 0.0,
             rhs_terms: vec![0.0; count],
             coefficients: vec![0.0; count],
+            nonlinear: Vec::new(),
             origins: Vec::new(),
         });
         if (equation.positive, equation.negative) != (c.positive, c.negative) {
@@ -143,9 +140,14 @@ pub(crate) fn assemble(
                 "one branch identity has conflicting endpoint bindings",
             ));
         }
-        equation.rhs_constant += c.rhs.constant;
-        for t in c.rhs.terms {
-            equation.rhs_terms[t.node] += t.coefficient;
+        match c.rhs {
+            Expression::Affine { constant, terms } => {
+                equation.rhs_constant += constant;
+                for t in terms {
+                    equation.rhs_terms[t.node] += t.coefficient;
+                }
+            }
+            expression => equation.nonlinear.push(expression),
         }
         equation.origins.push(c.origin.label());
     }

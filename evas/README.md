@@ -1,6 +1,6 @@
 # EVAS
 
-当前实现为 **EVAS 0.2.0 静态仿射内核，IR v2**，尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.3.2 静态多项式内核，IR v3**，尚未替换旧 EVAS 0.8.7。
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 每个输入样本独立求一个静态工作点；没有物理时间推进或历史状态。
 
@@ -15,51 +15,105 @@ agentic eval 提供后端。当前支持由语法和语义决定，运行时不�
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
 PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
 PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json --kernel evas/rust_core/target/debug/evas-kernel
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_nonlinear.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
+cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/evas-static-replay
 ```
 
 回放命令要求新的输出目录，读取原 31 条件的 VA、输入和独立判据。
-当前可编译其中 9 条（V2 四条、V7 线性三条、S1 两条），其余 22 条明确拒绝。
-两档对应 4,001／40,001 点的静态采样网格和残差设置，不是瞬态仿真或 DVS 正式资格。
+当前可编译其中 11 条（V2 四条、V7 线性三条、V7 非线性两条、S1 两条），其余 20 条明确拒绝。
+两档对应 4,001／40,001 点的静态采样网格和电压/残差容差，不是瞬态仿真或 DVS 正式资格。
 
 ## 回归证据
 
-提交 `b877e5b` 的检查包含 33 项 unittest 方法、锁定依赖的离线 Rust 构建、
-warnings-as-errors 的 all-targets 检查及格式检查，均通过。
-9 条件 × 两档 = 18 组，共 396,018 个静态点满足原独立判据；18 份波形 CSV
-与上一检查点逐字节一致，22 条拒绝诊断及引用的 20 个验证源码/判据文件身份保持一致。
-33 是程序测试方法数，31 是独立验证条件数，两者不相加。
+当前检查包含 **57 项 Python unittest 方法、6 项 Rust 测试**，以及锁定依赖的
+离线构建、warnings-as-errors 的 all-targets 检查和格式检查，均通过。
+11 条件 × 两档 = 22 组，共 **484,022 个静态点**满足原独立判据。
+本轮全部 22 份波形 CSV 与 0.3.1 精度修正后的归档逐字节一致；
+原 9 条件的 18 份仿射波形此前已核对与 0.2.0 相同。其余 20 条拒绝诊断及引用的
+20 个验证源码/判据文件身份保持一致。V7 非线性最大观测电压误差分别为
+基础档约 2.53 µV、细化档约 0.337 µV，均低于原条件的 1 mV 目标。
+精度回归覆盖方程缩放、独立高精度参考、容差细化、电压量级、耦合、
+矛盾约束、数值秩不足、停滞与容差接口，以及小残差及其导数的手算对照。
+本轮新增 4 项 Python 方法和 4 项 Rust 测试，覆盖多 RHS、换行主元与行缩放、
+冗余约束、零未知量、失败后的复用，以及批次和独立调用的一致性。
+`y=y-s*(y+y^3-1)` 在 `s=1e-13` 时曾错误返回 0；本轮返回约
+`0.6823278038283471`，与独立参考的误差约 `3.28e-13 V`。
 
-完整历史、执行身份和 review 边界保留在
-[检查点记录](https://github.com/BucketSran/vaEVAS/blob/b877e5b/evas/REVIEW.md)及
-[PR #2](https://github.com/BucketSran/vaEVAS/pull/2)。上述回归没有在 thu-sui 重跑四后端，
-没有取得动态/事件/非线性支持、性能排名或完整 DVS 资格。
+程序测试方法数与独立验证条件数分开报告。本轮新增控制属于 EVAS 开发回归，
+没有增加原 31 条件的跨后端分母，也不称为未见确认集。
+旧检查点的执行身份与 review 记录见
+[历史记录](https://github.com/BucketSran/vaEVAS/blob/b877e5b/evas/REVIEW.md)，
+初始内核审查见已合并的 [PR #2](https://github.com/BucketSran/vaEVAS/pull/2)；后续阶段的范围、验证摘要与证据哈希记录在各自提交和 PR 中。
+本轮没有在 thu-sui 重跑四后端；没有取得瞬态、事件、通用非线性收敛或跨仿真器性能优势结论。
 
 ## 模块与接口
 
 | 模块 | 当前文件 | 唯一职责 |
 | --- | --- | --- |
 | 语法解析 | `src/evas/syntax.py` | 完整消费 token，生成带源码位置的语法树 |
-| 语义绑定 | `src/evas/frontend.py` | 绑定参数/节点，将仿射表达式转换为贡献 IR |
+| 语义绑定 | `src/evas/frontend.py` | 绑定参数、实例与节点，建立贡献支路身份 |
+| 表达式转换 | `src/evas/lowering.py` | 常量折叠，生成仿射叶子与多项式表达式 |
 | IR | `src/evas/ir.py`、`rust_core/src/ir.rs` | Python/Rust 之间带版本和源码位置的数据契约 |
 | 方程组装 | `rust_core/src/assembly.rs` | 校验 IR 与驱动配置，累加支路贡献，生成方程系数及节点分区 |
 | 工作点求解 | `rust_core/src/solver.rs` | 代入每个样本的驱动值，求解未知电压，验收原方程残差 |
-| 线性代数 | `rust_core/src/linear.rs` | 行缩放、选主元与稠密消元 |
+| 表达式求值 | `rust_core/src/expression.rs` | 递归校验 IR，计算多项式值与链式法则导数 |
+| 非线性求解 | `rust_core/src/nonlinear.rs` | 对同一组支路方程执行有界阻尼 Newton 迭代 |
+| 线性代数 | `rust_core/src/linear.rs` | 行缩放、选主元、稠密分解与多 RHS 求解 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
 
 Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`。
+`solve` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
+`reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
+保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
+两端内核须一起升级到 0.3.2；模型 IR v3 不变，原 JSON 请求继续有效。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
-组装模块只依赖 IR，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份使用 IR v2，序列化迁移规则见下文。
+组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；表达式使用 IR v3，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
-这不是最终吞吐量方案；未做运行速度比较。
+本轮性能检查仅覆盖 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
+
+## 本地求解性能检查
+
+`rust_core/benches/static_solver.rs` 提供无额外依赖的 Rust 库内基准：
+
+```sh
+cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+```
+
+覆盖 1/16/64/128 个未知量的仿射链、64 维稠密仿射网络和 1/16/64 维独立三次方程。
+每个电路先核对独立递推/解析/二分答案；每轮新建电路，单独计时准备和首次求解，
+再交替使用四个输入测量重复求解。输出包含原始计时数组，不设跨机器性能通过阈值。
+
+本机 release 构建，以相同基准比较 `d4f873d`（0.3.1）和 0.3.2；交替执行三对新旧进程，
+每次五轮、每轮 1,024 点，下表为 15 轮的每点耗时中位数，单位 µs。
+
+| 合成网络（后缀为未知量数） | 0.3.1 | 0.3.2 | 耗时比 |
+| --- | ---: | ---: | ---: |
+| chain-1 | 0.171 | 0.107 | 1.60× |
+| chain-16 | 3.112 | 0.598 | 5.20× |
+| chain-64 | 106.454 | 6.604 | 16.12× |
+| chain-128 | 777.205 | 26.552 | 29.27× |
+| dense-64 | 109.844 | 6.532 | 16.82× |
+| cubic-1 | 3.485 | 2.735 | 1.27× |
+| cubic-16 | 58.797 | 38.243 | 1.54× |
+| cubic-64 | 901.317 | 803.171 | 1.12× |
+
+这只证明所列本机合成网络的重复求解加速；不包含首次分解、Python 编译或 JSON 进程传输，
+也不是 Spectre 对比。首次求解仍需分解，并保留一份稠密因子，缓存额外空间为 O(mn)
+（m 条约束、n 个未知量）；没有引入稀疏后端、SCC 分块或降低收敛精度。
+首次仿射求解在本轮测量中略慢，例如 64 维链从约 109.46 µs 变为 115.25 µs；
+主要收益来自同一电路的多次求解，不能把表中倍率用于单次调用。
+平台、编译器、原始计时、源文件/二进制哈希和阶段测量保存在该提交的本地运行归档；
+可追溯摘要见 PR。当前只优化已确认的重复分解与重复表达式/Jacobian 计算。
 
 ## 实现范围
 
@@ -68,12 +122,15 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
   本切片把它们视为内建电气前导声明，不搜索外部文件；不提供常量宏展开。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，只含无条件 `V(p)` / `V(p,n)` 贡献。
-- 表达式支持括号、单目正负、加减、常数乘除；拒绝非线性乘法与变量分母。
+- 表达式支持括号、单目正负、加减、乘法及非零常数分母。
+- `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
+  该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
+  数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
 - manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 
 当前拒绝过程变量/赋值、条件、循环、层次实例、数组、命名支路、电流贡献、
-数学函数调用、事件、动态算子、其他预处理指令、参数范围和未知语法。
+`pow` 之外的数学函数、事件、动态算子、其他预处理指令、参数范围和未知语法。
 支持集按语法和语义决定，运行时代码不读取验证集，也不识别模型/条件名称。
 两个不同的本地贡献支路因端口连接而变成同一节点对时，本批显式拒绝，
 避免把未经验证的别名语义解释成相加。后续扩展需单独建立契约。
@@ -99,10 +156,12 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 ## IR 与贡献契约
 
-IR v2 保留每条贡献，其 RHS 是常数加节点系数，不含“直接写节点”指令。
+IR v3 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+`affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
+`power` 含 `base` 和整数 `exponent`。Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
 
-`branch` 从 v1 的逗号拼接字符串变为结构化对象，例如：
+`branch` 保留结构化身份，例如：
 
 ```json
 {"instance": "dut", "local_positive": "r", "local_negative": "y", "kind": "voltage"}
@@ -128,39 +187,74 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 `(1-k)*(V(y)-V(r)) = V(u)-V(r)`。
 这两种写法使用同一组装与求解入口。
 
-### v1 → v2 迁移
+### v1/v2 → v3 迁移
 
-Python 包与 Rust 内核一起升级到 0.2.0；Program 和成功 Response 的
-`schema_version` 均为 2。Python 适配器拒绝其他响应版本。
-内核 CLI 在解码贡献字段前检查整数版本号：v1 或未知版本返回
-`unsupported_ir_version`；缺失/错误类型及 v2 格式错误返回 `invalid_request`。
+Python 包与 Rust 内核一起使用 0.3.2；Program 和成功 Response 的
+`schema_version` 均为 3。Python 适配器拒绝其他响应版本。
+内核 CLI 在解码贡献字段前检查整数版本号：v1/v2 或未知版本返回
+`unsupported_ir_version`；缺失/错误类型及 v3 格式错误返回 `invalid_request`。
 Rust 库的构造入口也检查版本。
 
-已有 v1 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
-旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v2 请求。
+已有 v1/v2 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
+旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v3 请求。不能只修改版本号；仿射 RHS 也新增了 `op: "affine"` 标签。
 
 ## 求解和错误
 
-当前采用行缩放、部分主元的稠密消元，适用于本批小规模回归。
+纯仿射电路采用行缩放、部分主元的稠密分解。每个 `Circuit` 在第一次有效输入调用时
+准备并缓存系数分解；后续样本只更新 RHS、前代/回代和验收原支路残差。
+缓存不包含输入、解或物理历史；每个新电路独立准备，奇异错误仍在求解样本上报告。
+分解与 RHS 求解保留原缩放、选主元及减法次序，冗余行继续参与检查。
+含多项式项时使用同一组装后的支路约束与同一个线性代数模块计算 Newton 更新。
 所有非驱动节点同时作为未知量；没有 SCC 优化、稀疏求解或数值条件数保证。
-冗余方程在最终残差检查中保留；欠定或数值秩不足时明确失败。
+冗余方程在残差检查中保留；欠定或数值秩不足时明确失败。
 
-解算后重新计算每条组装前物理支路关系的左右两侧，要求：
+非线性求解每个样本从未知节点全零开始，驱动电压固定，不读取上一样本作为初猜。
+解析链式法则生成 Jacobian；最多 80 次更新，每次最多 32 次试步，失败则步长减半。
+已接受试步的完整残差、Jacobian 和尺度直接用于下一轮，避免在相同电压上重复求值；
+不同电压处仍重新计算 Jacobian 并进行数值分解，没有改为固定或近似 Jacobian。
+线搜索使用当前 Jacobian 行尺度与容差归一化残差，整轮试步固定这些权重。
+试步溢出时缩步；初始求值非有限、局部 Jacobian 奇异、线搜索失败、更新舍入后停滞或
+预算耗尽均显式报错。已达到残差目标时也检查局部秩，避免接受悬空未知量。
 
-`abs(lhs-rhs) <= absolute + relative * max(abs(lhs), abs(rhs))`
+纯仿射路径保留原支路残差检查。非线性路径对同一原始支路关系
+`F = lhs-rhs` 的值和导数进行带符号补偿累加：展开加法及常数乘因子，保留乘积与幂的
+表达式结构，防止 `y-(y-s*f(y))` 中的小残差先被浮点相减抹去。
+这不是任意精度运算，不能恢复前端常量折叠、乘法或幂运算已经丢失的信息。
 
-两项容差均须有限，absolute > 0、relative >= 0。
-残差是约束满足度检查，不是任意病态问题的前向误差保证。
+非线性成功返回须同时满足三个条件：
+
+1. 每条原始关系的伏特残差：`abs(F_i) <= B_i`，其中
+   `B_i = vabstol + reltol * max(abs(lhs_i), abs(rhs_i))`。
+2. 每条关系的行尺度残差：`abs(F_i)/s_i <= B_i`，其中
+   `s_i = max_j abs(J_ij)`（遍历未知节点）；该行导数全零时取 1，沿用物理残差要求。
+   冗余约束也检查，避免小增益的矛盾方程被放行。
+3. 每个未知节点的**完整 Newton 修正量**：
+   `abs(delta_V_j) <= vabstol + reltol * abs(V_j)`，`V_j` 为当前对地节点电压。
+   检查未经阻尼缩小的修正量，不能把极小步长误当成收敛。
+
+两项容差均须有限，`vabstol > 0`、`reltol >= 0`。沿用原默认值；新增开发回归用独立
+70 位 Decimal 二分参考解检查容差细化、等价方程缩放和不同电压量级。
+这些判据是局部数值收敛要求，不是任意病态问题的前向误差上界，也不保证所有表达式
+改写的浮点结果相同。过严设置可能无法达到，返回失败，不自动放宽容差。
+当前算法不证明全局唯一性，也不保证从零初猜收敛到所有存在的根；多解分支选择、
+奇异根、延续法及通用非线性网络鲁棒性不在本阶段验收范围。
 每个成功样本返回最大伏特残差及其相对容差比例。
+非线性样本另外返回 `max_scaled_residual_ratio`、`max_voltage_correction_v` 和
+`max_voltage_correction_ratio`；前者与最后一项均不超过 1。仿射样本不包含这些字段。
 
-错误区分编译拒绝、IR/输入错误、数值奇异、非有限运算、残差超限；
+本实现借鉴电压绝对/相对容差的概念，未复制 Spectre 的求解算法或精度预设；
+相同容差名称和值不等价于相同实际误差。当前没有电流未知量，不提供 `iabstol`。
+未来的事件时间容差与动态积分误差需单独定义，静态电压容差不替代它们。
+
+错误区分编译拒绝、IR/输入错误、线性奇异、`singular_jacobian`、`nonconvergence`、
+非有限运算与残差超限；
 方程错误带源码/实例信息，运行期样本错误带从 0 开始的样本下标。
 任何样本失败都使整个请求失败，不输出部分成功波形。
 
 ## 扩展与验证边界
 
 新语义沿用同一套 IR 和执行内核。事件与动态算子需要明确已接受状态、候选状态以及
-提交/撤销规则；非线性反馈需要独立的残差与收敛契约。当前没有预建这些框架。
+提交/撤销规则；本静态内核没有预建时间/状态框架。后续非线性能力扩展仍需明确收敛边界。
 代码按语法、绑定、组装与数值求解分工；具体扩展先建立独立契约，再修改对应模块。
 
 [独立验证集](validation/README.md) 的需求、答案和判据独立于 EVAS 实现。

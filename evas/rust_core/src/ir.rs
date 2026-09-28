@@ -1,13 +1,13 @@
-//! The only executable model format for the first migration slice.
+//! The only executable model format for the static voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 2;
+pub const SCHEMA_VERSION: u32 = 3;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
         return Err(Error::new(
             "unsupported_ir_version",
-            format!("expected affine-voltage IR version {SCHEMA_VERSION}, got {version}; recompile the original VA"),
+            format!("expected static-voltage IR version {SCHEMA_VERSION}, got {version}; recompile the original VA"),
         ));
     }
     Ok(())
@@ -45,7 +45,7 @@ pub struct Contribution {
     pub branch: BranchIdentity,
     pub positive: usize,
     pub negative: usize,
-    pub rhs: Affine,
+    pub rhs: Expression,
     pub origin: Origin,
 }
 
@@ -65,10 +65,24 @@ pub enum ContributionKind {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Affine {
-    pub constant: f64,
-    pub terms: Vec<Term>,
+#[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
+pub enum Expression {
+    Affine {
+        constant: f64,
+        terms: Vec<Term>,
+    },
+    Add {
+        left: Box<Expression>,
+        right: Box<Expression>,
+    },
+    Multiply {
+        left: Box<Expression>,
+        right: Box<Expression>,
+    },
+    Power {
+        base: Box<Expression>,
+        exponent: u32,
+    },
 }
 
 #[derive(Debug, Deserialize)]
@@ -99,7 +113,9 @@ impl Origin {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields, default)]
 pub struct Tolerances {
+    #[serde(alias = "vabstol")]
     pub absolute: f64,
+    #[serde(alias = "reltol")]
     pub relative: f64,
 }
 
@@ -128,6 +144,13 @@ pub struct Solution {
     pub voltages: Vec<f64>,
     pub max_residual_v: f64,
     pub max_residual_ratio: f64,
+    /// Nonlinear-only diagnostics; absent on the unchanged affine path.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_scaled_residual_ratio: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_voltage_correction_v: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_voltage_correction_ratio: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]

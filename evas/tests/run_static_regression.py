@@ -54,7 +54,7 @@ def main():
             driven = list(case["inputs"])
             inputs = [[v1.pwl(case["inputs"][n], t) for n in driven] for t in times]
             result = solve(program, driven, inputs, kernel=args.kernel.resolve(),
-                           absolute=settings["vabstol"], relative=settings["reltol"])
+                           vabstol=settings["vabstol"], reltol=settings["reltol"])
             rows = [dict(time=t, **dict(zip(result["nodes"], s["voltages"], strict=True)))
                     for t, s in zip(times, result["solutions"], strict=True)]
             analysis = check(rows, case)
@@ -68,9 +68,14 @@ def main():
                 writer.writerows(rows)
             records.append(dict(condition=case["id"], profile=profile, sample_count=len(rows),
                 settings=dict(sample_step_s=settings["step"], residual_absolute_v=settings["vabstol"],
-                              residual_relative=settings["reltol"]), analysis=analysis,
+                              residual_relative=settings["reltol"], vabstol_v=settings["vabstol"],
+                              reltol=settings["reltol"]), analysis=analysis,
                 max_residual_v=max(s["max_residual_v"] for s in result["solutions"]),
                 max_residual_ratio=max(s["max_residual_ratio"] for s in result["solutions"])))
+            for metric in ("max_scaled_residual_ratio", "max_voltage_correction_v",
+                           "max_voltage_correction_ratio"):
+                if metric in result["solutions"][0]:
+                    records[-1][metric] = max(s[metric] for s in result["solutions"])
             print(case["id"], profile, analysis["status"], len(rows), flush=True)
     source_files = [p for base in (ROOT / "evas/src", ROOT / "evas/tests", ROOT / "evas/rust_core/src")
                     for p in base.rglob("*") if p.is_file() and "__pycache__" not in p.parts]
@@ -79,7 +84,7 @@ def main():
     source_files += [ROOT / "experiments/dvs2-starter-pilot" / n for n in ("suite.py", "analyze.py")]
     source_files += [ROOT / "experiments/dvs2-history-validation" / n for n in ("history.py", "recheck.py")]
     source_files += list((ROOT / "evas/validation/cases").rglob("*.va"))
-    report = dict(scope="stateless affine operating points on two requested grids; NOT a transient simulator qualification",
+    report = dict(scope="stateless polynomial operating points on two requested grids; NOT a transient simulator qualification",
         engine=result["engine"] if records else None, kernel_sha256=digest(args.kernel),
         rustc=subprocess.check_output(["rustc", "--version"], text=True).strip(),
         python=sys.version, source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted(source_files)},

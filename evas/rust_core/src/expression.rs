@@ -1,0 +1,204 @@
+//! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
+use crate::ir::{Error, Expression};
+use std::collections::BTreeSet;
+
+pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
+    match expr {
+        Expression::Affine { constant, terms } => {
+            let mut seen = BTreeSet::new();
+            if !constant.is_finite()
+                || terms
+                    .iter()
+                    .any(|t| t.node >= count || !t.coefficient.is_finite() || !seen.insert(t.node))
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "invalid affine constant or duplicate/out-of-range term",
+                ));
+            }
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            validate(left, count)?;
+            validate(right, count)?;
+        }
+        Expression::Power { base, exponent } => {
+            if !(1..=32).contains(exponent) {
+                return Err(Error::new("invalid_ir", "power exponent must be in [1,32]"));
+            }
+            validate(base, count)?;
+        }
+    }
+    Ok(())
+}
+
+pub(crate) struct Value {
+    pub(crate) value: f64,
+    pub(crate) gradient: Vec<f64>,
+}
+
+/// Neumaier summation retains small terms when large additive terms cancel.
+#[derive(Clone, Default)]
+struct Sum {
+    value: f64,
+    correction: f64,
+}
+
+impl Sum {
+    fn add(&mut self, term: f64) {
+        let next = self.value + term;
+        self.correction += if self.value.abs() >= term.abs() {
+            (self.value - next) + term
+        } else {
+            (term - next) + self.value
+        };
+        self.value = next;
+    }
+
+    fn total(self) -> f64 {
+        self.value + self.correction
+    }
+}
+
+/// Accumulate a signed expression sum before rounding its value/gradient.
+/// In particular, lhs - (lhs - s*f) must not round to zero before s*f is
+/// examined. Only sums and constant factors are flattened, not polynomials.
+pub(crate) struct Accumulator {
+    value: Sum,
+    gradient: Vec<Sum>,
+}
+
+impl Accumulator {
+    pub(crate) fn new(count: usize) -> Self {
+        Self {
+            value: Sum::default(),
+            gradient: vec![Sum::default(); count],
+        }
+    }
+
+    pub(crate) fn add_constant(&mut self, value: f64) {
+        self.value.add(value);
+    }
+
+    pub(crate) fn add_node(&mut self, node: usize, coefficient: f64, voltage: f64) {
+        self.value.add(coefficient * voltage);
+        self.gradient[node].add(coefficient);
+    }
+
+    pub(crate) fn add_expression(
+        &mut self,
+        expr: &Expression,
+        factor: f64,
+        nodes: &[f64],
+    ) -> Result<(), Error> {
+        match expr {
+            Expression::Affine { constant, terms } => {
+                self.add_constant(factor * constant);
+                for t in terms {
+                    self.add_node(t.node, factor * t.coefficient, nodes[t.node]);
+                }
+            }
+            Expression::Add { left, right } => {
+                self.add_expression(left, factor, nodes)?;
+                self.add_expression(right, factor, nodes)?;
+            }
+            Expression::Multiply { left, right } => {
+                for (scalar, other) in [(left, right), (right, left)] {
+                    if let Expression::Affine { constant, terms } = scalar.as_ref() {
+                        if terms.is_empty() {
+                            return self.add_expression(other, factor * constant, nodes);
+                        }
+                    }
+                }
+                let a = evaluate(left, nodes)?;
+                let b = evaluate(right, nodes)?;
+                self.value.add(factor * (a.value * b.value));
+                for ((sum, da), db) in self.gradient.iter_mut().zip(a.gradient).zip(b.gradient) {
+                    sum.add(factor * da * b.value);
+                    sum.add(factor * a.value * db);
+                }
+            }
+            Expression::Power { base, exponent } => {
+                let a = evaluate(base, nodes)?;
+                self.value.add(factor * a.value.powi(*exponent as i32));
+                let derivative = factor * f64::from(*exponent) * a.value.powi(*exponent as i32 - 1);
+                for (sum, da) in self.gradient.iter_mut().zip(a.gradient) {
+                    sum.add(derivative * da);
+                }
+            }
+        }
+        Ok(())
+    }
+
+    pub(crate) fn finish(self) -> Result<Value, Error> {
+        let result = Value {
+            value: self.value.total(),
+            gradient: self.gradient.into_iter().map(Sum::total).collect(),
+        };
+        if !result.value.is_finite() || result.gradient.iter().any(|v| !v.is_finite()) {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite polynomial value or derivative",
+            ));
+        }
+        Ok(result)
+    }
+}
+
+pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
+    let mut sum = Accumulator::new(nodes.len());
+    sum.add_expression(expr, 1.0, nodes)?;
+    sum.finish()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn signed_sum_preserves_small_residual_and_derivative() {
+        let rhs: Expression = serde_json::from_str(
+            r#"{"op":"add",
+                "left":{"op":"affine","constant":0,"terms":[{"node":0,"coefficient":1}]},
+                "right":{"op":"multiply",
+                    "left":{"op":"affine","constant":-1e-13,"terms":[]},
+                    "right":{"op":"add",
+                        "left":{"op":"affine","constant":-1,"terms":[{"node":0,"coefficient":1}]},
+                        "right":{"op":"power","exponent":3,"base":
+                            {"op":"affine","constant":0,"terms":[{"node":0,"coefficient":1}]}}}}}"#,
+        )
+        .unwrap();
+        let mut residual = Accumulator::new(1);
+        residual.add_node(0, 1.0, 0.5);
+        residual.add_expression(&rhs, -1.0, &[0.5]).unwrap();
+        let result = residual.finish().unwrap();
+        // s*(x+x^3-1) and s*(1+3x^2) at x=.5, independently by hand.
+        assert!((result.value - (-0.375e-13)).abs() < 1e-28);
+        assert!((result.gradient[0] - 1.75e-13).abs() < 1e-28);
+    }
+
+    #[test]
+    fn coupled_product_gradient_has_independent_hand_answers() {
+        // f(x,z)=(x+2z)^3*(x-z); includes both product-rule terms and
+        // derivatives through a shared, multi-node power base.
+        let expr: Expression = serde_json::from_str(
+            r#"{
+            "op":"multiply",
+            "left":{"op":"power","exponent":3,"base":{"op":"affine","constant":0,
+                "terms":[{"node":0,"coefficient":1},{"node":1,"coefficient":2}]}},
+            "right":{"op":"affine","constant":0,
+                "terms":[{"node":0,"coefficient":1},{"node":1,"coefficient":-1}]}
+        }"#,
+        )
+        .unwrap();
+        for (nodes, value, gradient) in [
+            ([2.0, -0.5], 2.5, [8.5, 14.0]),
+            ([0.0, 0.0], 0.0, [0.0, 0.0]),
+            ([-1.0, 0.5], 0.0, [0.0, 0.0]),
+            ([1.0, 1.0], 0.0, [27.0, -27.0]),
+        ] {
+            let actual = evaluate(&expr, &nodes).unwrap();
+            assert_eq!(actual.value, value);
+            assert_eq!(actual.gradient, gradient);
+        }
+    }
+}

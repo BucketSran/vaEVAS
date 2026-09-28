@@ -1,4 +1,4 @@
-"""Tokenization and syntax trees for the supported affine-voltage language.
+"""Tokenization and syntax trees for the supported static-voltage language.
 
 Consume every token and retain source locations; instance binding and lowering
 belong to frontend.py.
@@ -30,7 +30,7 @@ _TOKEN = re.compile(
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -129,6 +129,13 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
+        elif token.text == "pow":
+            self.take("(")
+            base = self.expression()
+            self.take(",")
+            exponent = self.expression()
+            self.take(")")
+            left = Expr("power", None, (base, exponent), token)
         elif token.kind == "name" and token.text not in _RESERVED:
             if self.token.text == "(":
                 self.fail(f"call {token.text!r} is not supported in this slice", token)

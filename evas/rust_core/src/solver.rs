@@ -1,7 +1,8 @@
 //! Solve stateless operating points and check the original branch residuals.
 use crate::assembly::{assemble, AssembledCircuit, Equation};
 use crate::ir::{Error, Program, Solution, Tolerances};
-use crate::linear;
+use crate::{linear, nonlinear};
+use std::sync::OnceLock;
 
 pub struct Circuit {
     pub nodes: Vec<String>,
@@ -9,6 +10,8 @@ pub struct Circuit {
     driven: Vec<usize>,
     unknown: Vec<usize>,
     tolerances: Tolerances,
+    // Only coefficients are cached; inputs, solutions and physical state are not.
+    affine_factor: Option<OnceLock<Result<linear::Factorization, Error>>>,
 }
 
 impl Circuit {
@@ -24,12 +27,17 @@ impl Circuit {
             unknown,
             tolerances,
         } = assemble(program, driven_names, tolerances)?;
+        let affine_factor = equations
+            .iter()
+            .all(|eq| eq.nonlinear.is_empty())
+            .then(OnceLock::new);
         Ok(Self {
             nodes,
             equations,
             driven,
             unknown,
             tolerances,
+            affine_factor,
         })
     }
 
@@ -46,11 +54,9 @@ impl Circuit {
         for (&node, &value) in self.driven.iter().zip(inputs) {
             values[node] = value;
         }
-        let matrix = self
-            .equations
-            .iter()
-            .map(|eq| self.unknown.iter().map(|&n| eq.coefficients[n]).collect())
-            .collect();
+        let Some(factor) = &self.affine_factor else {
+            return nonlinear::solve(&self.equations, &self.unknown, values, &self.tolerances);
+        };
         let rhs = self
             .equations
             .iter()
@@ -63,7 +69,21 @@ impl Circuit {
                         .sum::<f64>()
             })
             .collect();
-        let solved = linear::solve(matrix, rhs, self.unknown.len()).map_err(|mut error| {
+        // Lazy preparation keeps Circuit::new and sample-error timing unchanged.
+        // A new circuit (including one rebound to new event state) gets a new cache.
+        let prepared = factor.get_or_init(|| {
+            let matrix = self
+                .equations
+                .iter()
+                .map(|eq| self.unknown.iter().map(|&n| eq.coefficients[n]).collect())
+                .collect();
+            linear::Factorization::new(matrix, self.unknown.len())
+        });
+        let solved = match prepared {
+            Ok(factor) => factor.solve(rhs),
+            Err(error) => Err(Error::new(error.kind, error.message.clone())),
+        }
+        .map_err(|mut error| {
             error.message.push_str(&format!(
                 "; unknown nodes: {:?}; constraints: {}",
                 self.unknown
@@ -118,6 +138,9 @@ impl Circuit {
             voltages: values,
             max_residual_v,
             max_residual_ratio,
+            max_scaled_residual_ratio: None,
+            max_voltage_correction_v: None,
+            max_voltage_correction_ratio: None,
         })
     }
 }

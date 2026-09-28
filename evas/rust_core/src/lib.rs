@@ -1,6 +1,8 @@
 mod assembly;
+mod expression;
 pub mod ir;
 mod linear;
+mod nonlinear;
 pub mod solver;
 
 use ir::{Error, Request, Response, SCHEMA_VERSION};
@@ -26,7 +28,7 @@ pub fn run(request: Request) -> Result<Response, Error> {
         })
         .collect::<Result<_, _>>()?;
     Ok(Response {
-        engine: concat!("evas-affine-", env!("CARGO_PKG_VERSION")).into(),
+        engine: concat!("evas-static-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
         nodes: circuit.nodes,
         solutions,
