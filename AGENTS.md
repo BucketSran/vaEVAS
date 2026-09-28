@@ -4,7 +4,7 @@
 
 - This repository is the new shared workspace for a Verilog-A benchmark and the full EVAS simulator source.
 - The research focus is benchmark quality and trustworthy evaluation. Harbor is the selected evaluation harness.
-- The independent validation suite has 31 current development conditions and fixed four-backend evidence. EVAS implementation advances in its own PR; report only the support and checks documented for that revision.
+- The independent validation suite has 31 current development conditions and fixed four-backend evidence. Reviewed validation and EVAS implementation checkpoints are integrated into `main`; report only the support and checks documented for the revision being used.
 - Read `README.md` and the README of the affected component before making structural changes. Current user instructions take precedence over this guide.
 
 ## Agent skills
@@ -17,6 +17,14 @@ Repository-local skills live in `.agents/skills/`. Load the skills relevant to t
 - [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md): prepare a reviewable checkpoint and PR description; publish only within the user's authorization.
 
 Skills route to the owning documentation and scripts. Current implementation scope, commands, and result counts belong in those sources rather than being duplicated in skill instructions.
+
+## Branch lifecycle
+
+- Use `main` as the shared reviewed baseline. Start a short-lived branch for a defined task and target `main` unless an actual dependency requires a different base.
+- Record intermediate review checkpoints as small commits within the task's PR. Do not create a branch for every stage or keep completed PRs open as permanent work queues.
+- Complete the agreed scope and relevant checks, document unsupported behavior and evidence limits, and merge only within the user's authorization. A milestone does not require a complete simulator or universal backend passes.
+- After merging, delete a task branch only after confirming it has no unique commits or active work. Subsequent work needs a new PR; do not append it to a merged PR.
+- Preserve in-progress checkouts and uncommitted changes during repository cleanup. Synchronize existing branches with `main` at a suitable checkpoint rather than mixing unfinished work into the reviewed baseline.
 
 ## Ownership
 
