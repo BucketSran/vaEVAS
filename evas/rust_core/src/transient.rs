@@ -1,12 +1,14 @@
 //! Time advancement around the static solver. Trials never mutate accepted state.
+use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::ir::{Error, EventRecord, Request, Response, Solution, TransientTrace, SCHEMA_VERSION};
-use crate::pwl::Trajectory;
+use crate::pwl::{Root, Trajectory};
 use crate::solver::Circuit;
 
 struct Crossing {
     time: f64,
     event: usize,
+    root: Root,
 }
 
 struct Frame {
@@ -17,13 +19,23 @@ struct Frame {
 }
 
 fn schedule(model: &EventModel, trajectory: &Trajectory) -> Result<Vec<Crossing>, Error> {
+    if model.guards.is_empty() {
+        return Ok(Vec::new());
+    }
+    let bounds = GuardBounds::new(&model.program, &model.driven)?;
     let initial = model.initial();
     let circuit = model.circuit(&initial)?;
     let mut values = vec![Vec::new(); model.guards.len()];
     for &time in &trajectory.knots {
-        let solution = circuit.solve(&trajectory.values(time))?;
-        for (guard, row) in model.guards.iter().zip(&mut values) {
-            row.push(guard.value(&solution.voltages, &initial)?);
+        // Retain normal physical residual acceptance; bounds are an additional
+        // check, not a replacement for solving the original contributions.
+        circuit.solve(&trajectory.values(time))?;
+        for (value, row) in bounds
+            .values(&trajectory.value_bounds(time))
+            .into_iter()
+            .zip(&mut values)
+        {
+            row.push(value);
         }
     }
     let mut crossings = Vec::new();
@@ -37,40 +49,54 @@ fn schedule(model: &EventModel, trajectory: &Trajectory) -> Result<Vec<Crossing>
                     .push_str(&format!(" at {}", event.origin.label()));
                 error
             })?;
-        let mut previous = 0.0;
-        for (root, direction, right) in roots {
-            let mut time = root;
-            // The nominal affine root can round to the pre-crossing side. Move
-            // forward by representable times, bounded by both declared tolerances.
-            let mut located = false;
-            for _ in 0..128 {
-                if time > right || time - root > event.time_tolerance {
-                    break;
-                }
-                let point = circuit.solve(&trajectory.values(time))?;
-                let value = model.guards[index].value(&point.voltages, &initial)?;
-                if value * f64::from(direction) >= 0.0 {
-                    if value.abs() <= event.expression_tolerance {
-                        located = true;
-                    }
-                    break;
-                }
-                time = f64::from_bits(time.to_bits() + 1); // finite, positive time
-            }
-            if !located || time <= previous {
-                return Err(Error::new(
-                    "event_resolution",
-                    format!(
-                        "cannot locate distinct post-crossing point within tolerances at {}",
-                        event.origin.label()
-                    ),
-                ));
-            }
-            previous = time;
-            crossings.push(Crossing { time, event: index });
+        for root in roots {
+            crossings.push(Crossing {
+                time: root.bounds.hi,
+                event: index,
+                root,
+            });
         }
     }
-    crossings.sort_by(|a, b| a.time.total_cmp(&b.time).then(a.event.cmp(&b.event)));
+    crossings.sort_by(|a, b| {
+        a.root
+            .bounds
+            .lo
+            .total_cmp(&b.root.bounds.lo)
+            .then(a.event.cmp(&b.event))
+    });
+    let mut start = 0;
+    while start < crossings.len() {
+        let mut end = start + 1;
+        let mut time = crossings[start].time;
+        while end < crossings.len() && crossings[end].root.bounds.lo <= time {
+            let first = &crossings[start];
+            let next = &crossings[end];
+            let same_guard = model.program.events[first.event].guard
+                == model.program.events[next.event].guard
+                || bounds.same_zero_set(first.event, next.event);
+            if !first.root.coincides(&next.root, same_guard) {
+                return Err(unresolved(
+                    "cannot certify ordering of distinct cross roots with overlapping bounds",
+                ));
+            }
+            time = time.max(next.time);
+            end += 1;
+        }
+        for crossing in &mut crossings[start..end] {
+            let event = &model.program.events[crossing.event];
+            if !crossing
+                .root
+                .accepts(time, event.time_tolerance, event.expression_tolerance)
+            {
+                return Err(unresolved(&format!(
+                    "cross root uncertainty or representable time exceeds tolerances at {}",
+                    event.origin.label()
+                )));
+            }
+            crossing.time = time;
+        }
+        start = end;
+    }
     Ok(crossings)
 }
 

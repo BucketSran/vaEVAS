@@ -152,7 +152,7 @@ pub(crate) struct EventModel {
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<AffineState>,
     actions: Vec<Vec<(usize, AffineState)>>,
-    driven: Vec<String>,
+    pub(crate) driven: Vec<String>,
     tolerances: Tolerances,
 }
 

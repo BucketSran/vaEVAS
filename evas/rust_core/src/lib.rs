@@ -1,6 +1,8 @@
 mod assembly;
+mod event_accuracy;
 mod events;
 mod expression;
+mod interval;
 pub mod ir;
 mod linear;
 mod nonlinear;
