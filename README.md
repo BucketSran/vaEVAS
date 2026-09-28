@@ -14,7 +14,8 @@ vaEVAS 面向 DAC 投稿，以 Verilog-A benchmark 与可信评测体系为研�
 包含共同 VA 源码、运行/分析脚本和整理后的结果；正式验证资格仍待完善。
 本轮已保存为 [验证集 v1](evas/validation/versions/v1/README.md)（`validation-v1` 标签），
 后续优化在同一开发分支继续，不覆盖冻结证据。
-仓库尚未迁入 VABench 任务数据集和 EVAS 仿真器源码。
+仓库尚未迁入 VABench 任务数据集和完整旧 EVAS 仿真器源码。
+EVAS 重构已建立[第一个可审查切片](evas/DESIGN.md)：限定语法前端、贡献 IR 与 Rust 静态线性求解。
 题型、规模、评分方案和 EVAS 支持范围仍需后续设计与验证。
 
 旧 vaBench 和 EVAS 是后续审查与迁移的来源。已有代码、任务和结果需要结合新方案

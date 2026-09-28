@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evas-rebuild"
+version = "0.1.0"
+description = "EVAS rebuild: explicit voltage equations and a single Rust solver"
+requires-python = ">=3.10"
+
+[project.scripts]
+evas-rebuild = "evas.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

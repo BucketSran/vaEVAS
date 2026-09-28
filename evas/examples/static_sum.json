@@ -1,0 +1,11 @@
+{
+  "models": ["../validation/cases/n_v1_02/dut.va"],
+  "instances": [{
+    "name": "dut",
+    "module": "dvs_sum",
+    "connections": {"u": "u", "v": "v", "vout": "out", "vref": "ref"},
+    "parameters": {}
+  }],
+  "driven": ["u", "v", "ref"],
+  "samples": [[0.0, -0.2, 0.0], [1.4, 0.8, 1.0], [-0.2, 0.3, 0.0]]
+}
