@@ -32,6 +32,21 @@ def execute_event(source=COUNTER, *, instances=None, sources=None, times=None,
 
 
 class EventContracts(unittest.TestCase):
+    def test_voltage_tolerance_aliases_preserve_event_trace(self):
+        program = compile_event()
+        sources = {'u': [[0,.4],[1e-6,.6],[2e-6,.4],[3e-6,.6]]}
+        options = dict(stop=3e-6, max_step=10e-6, kernel=KERNEL)
+        canonical = transient(program, sources, [0,3e-6], **options,
+                              vabstol=1e-9, reltol=1e-6)
+        legacy = transient(program, sources, [0,3e-6], **options,
+                           absolute=1e-9, relative=1e-6)
+        self.assertEqual(canonical, legacy)
+        self.assertEqual(canonical['transient']['states'][-1], [2,1])
+        for aliases in (dict(vabstol=1e-9, absolute=1e-9),
+                        dict(reltol=1e-6, relative=1e-6)):
+            with self.assertRaisesRegex(ValueError, 'both'):
+                transient(program, sources, [0,3e-6], **options, **aliases)
+
     def test_direction_count_time_and_post_event_voltage(self):
         result = execute_event()
         events = result['transient']['events']

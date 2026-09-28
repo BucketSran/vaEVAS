@@ -120,7 +120,9 @@ impl Origin {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields, default)]
 pub struct Tolerances {
+    #[serde(alias = "vabstol")]
     pub absolute: f64,
+    #[serde(alias = "reltol")]
     pub relative: f64,
 }
 
@@ -151,6 +153,13 @@ pub struct Solution {
     pub voltages: Vec<f64>,
     pub max_residual_v: f64,
     pub max_residual_ratio: f64,
+    /// Nonlinear-only diagnostics; absent on the unchanged affine path.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_scaled_residual_ratio: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_voltage_correction_v: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_voltage_correction_ratio: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]

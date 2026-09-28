@@ -14,9 +14,11 @@ class KernelError(RuntimeError):
 
 
 def solve(program: Program, driven: list[str], samples: list[list[float]], *,
-          kernel: str | Path, absolute: float = 1e-12, relative: float = 1e-10) -> dict:
+          kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
+          absolute: float | None = None, relative: float | None = None) -> dict:
+    """Solve with voltage tolerances; absolute/relative are legacy aliases."""
     request = dict(program=program.to_dict(), driven=driven, samples=samples,
-                   tolerances=dict(absolute=absolute, relative=relative))
+                   tolerances=_tolerances(vabstol, reltol, absolute, relative))
     response = _invoke(request, kernel)
     if (response.get("schema_version") != SCHEMA_VERSION or response.get("nodes") != list(program.nodes)
             or len(response.get("solutions", [])) != len(samples)):
@@ -26,12 +28,13 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
-              kernel: str | Path, absolute: float = 1e-12, relative: float = 1e-10) -> dict:
+              kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
+              absolute: float | None = None, relative: float | None = None) -> dict:
     """Advance PWL physical inputs in Rust; observations are post-event values."""
     request = dict(program=program.to_dict(), driven=list(sources), samples=[],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
-                   tolerances=dict(absolute=absolute, relative=relative))
+                   tolerances=_tolerances(vabstol, reltol, absolute, relative))
     response = _invoke(request, kernel)
     if (response.get("schema_version") != SCHEMA_VERSION
             or response.get("nodes") != list(program.nodes)
@@ -41,6 +44,17 @@ def transient(program: Program, sources: dict[str, list[list[float]]],
             or len(response["transient"].get("states", [])) != len(output_times)):
         raise KernelError(dict(kind="invalid_response", message="transient response identity or shape mismatch"))
     return response
+
+
+def _tolerances(vabstol, reltol, absolute, relative):
+    if vabstol is not None and absolute is not None:
+        raise ValueError("cannot specify both vabstol and absolute")
+    if reltol is not None and relative is not None:
+        raise ValueError("cannot specify both reltol and relative")
+    absolute = vabstol if vabstol is not None else absolute
+    relative = reltol if reltol is not None else relative
+    return dict(absolute=1e-12 if absolute is None else absolute,
+                relative=1e-10 if relative is None else relative)
 
 
 def _invoke(request, kernel):
