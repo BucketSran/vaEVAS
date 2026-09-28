@@ -54,7 +54,7 @@ def main():
             driven = list(case["inputs"])
             inputs = [[v1.pwl(case["inputs"][n], t) for n in driven] for t in times]
             result = solve(program, driven, inputs, kernel=args.kernel.resolve(),
-                           absolute=settings["vabstol"], relative=settings["reltol"])
+                           vabstol=settings["vabstol"], reltol=settings["reltol"])
             rows = [dict(time=t, **dict(zip(result["nodes"], s["voltages"], strict=True)))
                     for t, s in zip(times, result["solutions"], strict=True)]
             analysis = check(rows, case)
@@ -68,9 +68,14 @@ def main():
                 writer.writerows(rows)
             records.append(dict(condition=case["id"], profile=profile, sample_count=len(rows),
                 settings=dict(sample_step_s=settings["step"], residual_absolute_v=settings["vabstol"],
-                              residual_relative=settings["reltol"]), analysis=analysis,
+                              residual_relative=settings["reltol"], vabstol_v=settings["vabstol"],
+                              reltol=settings["reltol"]), analysis=analysis,
                 max_residual_v=max(s["max_residual_v"] for s in result["solutions"]),
                 max_residual_ratio=max(s["max_residual_ratio"] for s in result["solutions"])))
+            for metric in ("max_scaled_residual_ratio", "max_voltage_correction_v",
+                           "max_voltage_correction_ratio"):
+                if metric in result["solutions"][0]:
+                    records[-1][metric] = max(s[metric] for s in result["solutions"])
             print(case["id"], profile, analysis["status"], len(rows), flush=True)
     source_files = [p for base in (ROOT / "evas/src", ROOT / "evas/tests", ROOT / "evas/rust_core/src")
                     for p in base.rglob("*") if p.is_file() and "__pycache__" not in p.parts]

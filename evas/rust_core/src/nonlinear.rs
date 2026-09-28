@@ -8,6 +8,7 @@ struct Evaluation {
     residuals: Vec<f64>,
     jacobian: Vec<Vec<f64>>,
     bounds: Vec<f64>,
+    row_scales: Vec<f64>,
 }
 
 fn evaluate(
@@ -20,34 +21,36 @@ fn evaluate(
         residuals: Vec::new(),
         jacobian: Vec::new(),
         bounds: Vec::new(),
+        row_scales: Vec::new(),
     };
     for eq in equations {
         let lhs = values[eq.positive] - values[eq.negative];
-        let mut rhs = eq.rhs_constant
-            + eq.rhs_terms
-                .iter()
-                .zip(values)
-                .map(|(a, v)| a * v)
-                .sum::<f64>();
-        let mut derivative = eq.rhs_terms.clone();
-        for expr in &eq.nonlinear {
-            let evaluated = expression::evaluate(expr, values).map_err(|mut error| {
-                error
-                    .message
-                    .push_str(&format!(" at {}", eq.origins.join(", ")));
-                error
-            })?;
-            rhs += evaluated.value;
-            for (a, b) in derivative.iter_mut().zip(evaluated.gradient) {
-                *a += b;
-            }
+        let mut sum = expression::Accumulator::new(values.len());
+        sum.add_node(eq.positive, 1.0, values[eq.positive]);
+        sum.add_node(eq.negative, -1.0, values[eq.negative]);
+        sum.add_constant(-eq.rhs_constant);
+        for (node, &coefficient) in eq.rhs_terms.iter().enumerate() {
+            sum.add_node(node, -coefficient, values[node]);
         }
-        let residual = lhs - rhs;
+        for expr in &eq.nonlinear {
+            sum.add_expression(expr, -1.0, values)
+                .map_err(|mut error| {
+                    error
+                        .message
+                        .push_str(&format!(" at {}", eq.origins.join(", ")));
+                    error
+                })?;
+        }
+        let evaluated = sum.finish().map_err(|mut error| {
+            error
+                .message
+                .push_str(&format!(" at {}", eq.origins.join(", ")));
+            error
+        })?;
+        let residual = evaluated.value;
+        let rhs = lhs - residual;
         let bound = tolerance.absolute + tolerance.relative * lhs.abs().max(rhs.abs());
-        let jacobian: Vec<_> = unknown
-            .iter()
-            .map(|&n| f64::from(n == eq.positive) - f64::from(n == eq.negative) - derivative[n])
-            .collect();
+        let jacobian: Vec<_> = unknown.iter().map(|&n| evaluated.gradient[n]).collect();
         if !residual.is_finite() || !bound.is_finite() || jacobian.iter().any(|v| !v.is_finite()) {
             return Err(Error::new(
                 "nonfinite_arithmetic",
@@ -57,11 +60,27 @@ fn evaluate(
                 ),
             ));
         }
+        // Like the linear solver's row scaling, this removes arbitrary local
+        // equation gains. Check every row, including redundant constraints.
+        // A row independent of unknown voltages retains its physical bound.
+        let scale = jacobian.iter().fold(0.0_f64, |s, v| s.max(v.abs()));
+        result
+            .row_scales
+            .push(if scale > 0.0 { scale } else { 1.0 });
         result.residuals.push(residual);
         result.jacobian.push(jacobian);
         result.bounds.push(bound);
     }
     Ok(result)
+}
+
+fn scaled_merit(residuals: &[f64], bounds: &[f64], scales: &[f64]) -> f64 {
+    residuals
+        .iter()
+        .zip(bounds)
+        .zip(scales)
+        .map(|((r, b), s)| (r.abs() / s) / b)
+        .fold(0.0, f64::max)
 }
 
 fn merit(residuals: &[f64], bounds: &[f64]) -> f64 {
@@ -88,7 +107,8 @@ pub(crate) fn solve(
     for iteration in 0..=80 {
         let current = evaluate(equations, unknown, &values, tolerance)?;
         let ratio = merit(&current.residuals, &current.bounds);
-        if !ratio.is_finite() {
+        let scaled_ratio = scaled_merit(&current.residuals, &current.bounds, &current.row_scales);
+        if !ratio.is_finite() || !scaled_ratio.is_finite() {
             return Err(Error::new(
                 "nonfinite_arithmetic",
                 format!("nonfinite scaled residual at {}", context()),
@@ -115,7 +135,22 @@ pub(crate) fn solve(
                 ),
             )
         })?;
-        if ratio <= 1.0 {
+        let mut correction_ratio = 0.0_f64;
+        let mut correction_v = 0.0_f64;
+        for (&node, delta) in unknown.iter().zip(&step) {
+            let bound = tolerance.absolute + tolerance.relative * values[node].abs();
+            if !bound.is_finite() {
+                return Err(Error::new(
+                    "nonfinite_arithmetic",
+                    "nonfinite voltage tolerance",
+                ));
+            }
+            correction_v = correction_v.max(delta.abs());
+            correction_ratio = correction_ratio.max(delta.abs() / bound);
+        }
+        // A damped step can be arbitrarily small far from a root. Test the
+        // full Newton correction, and retain both original and scaled rows.
+        if ratio <= 1.0 && scaled_ratio <= 1.0 && correction_ratio <= 1.0 {
             return Ok(Solution {
                 voltages: values,
                 max_residual_v: current
@@ -124,6 +159,9 @@ pub(crate) fn solve(
                     .map(|r| r.abs())
                     .fold(0.0, f64::max),
                 max_residual_ratio: ratio,
+                max_scaled_residual_ratio: Some(scaled_ratio),
+                max_voltage_correction_v: Some(correction_v),
+                max_voltage_correction_ratio: Some(correction_ratio),
             });
         }
         if unknown.is_empty() {
@@ -142,11 +180,21 @@ pub(crate) fn solve(
             for (&node, delta) in unknown.iter().zip(&step) {
                 trial[node] += alpha * delta;
             }
+            if trial == values {
+                return Err(Error::new(
+                    "nonconvergence",
+                    format!(
+                        "voltage update stagnated at iteration {iteration}; residual ratio {ratio:e}, scaled residual ratio {scaled_ratio:e}, voltage correction ratio {correction_ratio:e}; constraints: {}",
+                        context()
+                    ),
+                ));
+            }
             if trial.iter().all(|v| v.is_finite()) {
                 if let Ok(candidate) = evaluate(equations, unknown, &trial, tolerance) {
-                    // Keep the current scales fixed during line search: changing
-                    // a trial's tolerance must not manufacture an improvement.
-                    if merit(&candidate.residuals, &current.bounds) <= (1.0 - 1e-4 * alpha) * ratio
+                    // Freeze both row scales and bounds during line search;
+                    // changing a trial's weights must not manufacture descent.
+                    if scaled_merit(&candidate.residuals, &current.bounds, &current.row_scales)
+                        <= (1.0 - 1e-4 * alpha) * scaled_ratio
                     {
                         accepted = Some(trial);
                         break;

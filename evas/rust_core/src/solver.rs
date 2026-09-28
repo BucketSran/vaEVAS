@@ -121,6 +121,9 @@ impl Circuit {
             voltages: values,
             max_residual_v,
             max_residual_ratio,
+            max_scaled_residual_ratio: None,
+            max_voltage_correction_v: None,
+            max_voltage_correction_ratio: None,
         })
     }
 }
