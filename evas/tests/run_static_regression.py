@@ -18,7 +18,7 @@ from run_suite import T, PROFILES, conditions, v1
 from check_results import check
 
 from evas import CompileError, Instance, compile_sources, solve
-from evas.frontend import Parser
+from evas.syntax import Parser
 
 
 def digest(path):

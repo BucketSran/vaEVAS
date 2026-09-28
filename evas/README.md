@@ -4,6 +4,10 @@
 当前已实现重构的第一个切片：严格的限定语法前端、贡献 IR 与 Rust 静态线性求解内核。
 完整旧仿真器尚未迁入，新内核尚未替换旧 EVAS 0.8.7。
 
+代码按职责划分为 [语法解析](src/evas/syntax.py)、[语义绑定](src/evas/frontend.py)、
+[方程组装](rust_core/src/assembly.rs)、[工作点求解](rust_core/src/solver.rs)和
+[线性代数](rust_core/src/linear.rs)。增加语法、绑定规则或数值算法时，可分别审查对应模块。
+
 EVAS 的目标是支持声明范围内的电压域 Verilog-A 行为及其交互，与 Spectre 对标，
 并为无需商业许可证的 VABench 复现和 agentic eval 提供执行后端。
 支持范围不以现有 benchmark 家族为白名单；本批实现边界与后续约束见 [设计](DESIGN.md)。

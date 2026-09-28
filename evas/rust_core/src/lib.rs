@@ -1,3 +1,4 @@
+mod assembly;
 pub mod ir;
 mod linear;
 pub mod solver;

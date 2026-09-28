@@ -2,18 +2,38 @@
 
 2026-09-28。功能开发已停在“原始 VA → 贡献 IR → Rust 静态线性求解”的完整切片。
 独立代码和架构 review 已完成，综合结论为 **COMMENT**：当前切片没有发现阻断项，
-保留一项参数契约说明问题与一项后续架构扩展提醒。代码在此停止，等待本检查点的讨论。
+保留一项参数契约说明问题与一项后续架构扩展提醒。初次 review 后功能开发停在此处。
+
+随后按讨论完成语法/绑定、组装/求解的文件拆分，并通过下述小范围 smoke。
+拆分前内核保存在 `cf221b1`；本次只调整模块职责，不扩展语言或改变参数契约。
 
 ## 本批交付与 review 阅读顺序
 
 1. [设计与支持范围](DESIGN.md)：本批做什么、拒绝什么、后续哪些约束尚未实现。
 2. [Python IR](src/evas/ir.py) / [Rust IR](rust_core/src/ir.rs)：贡献身份、方向、来源、版本与结果格式。
-3. [支路组装与残差](rust_core/src/solver.rs) / [线性求解](rust_core/src/linear.rs)：贡献累加和反馈的唯一执行位置。
-4. [前端](src/evas/frontend.py)：严格语法、实例参数绑定、内部节点隔离及仿射 lowering。
+3. [方程组装](rust_core/src/assembly.rs) / [工作点与残差](rust_core/src/solver.rs) / [线性代数](rust_core/src/linear.rs)：校验、贡献累加、求解与验收的边界。
+4. [语法解析](src/evas/syntax.py) / [语义绑定](src/evas/frontend.py)：语法树与参数绑定、节点隔离、仿射 lowering 的边界。
 5. [行为回归](tests/test_affine.py)和[原测试回放器](tests/run_static_regression.py)：从接口验证，不调用旧 EVAS。
 
 这是新内核的第一个可运行切片，尚未替换旧 EVAS，也没有修改旧部署镜像或旧仓库。
-本次没有提交、推送或发布。
+初次 review 时尚未提交；现在按用户要求保存 Git 检查点并提交草案 PR。
+
+## 文件拆分后的 smoke（2026-09-28）
+
+- `frontend.py` 从 332 行变为 144 行，解析逻辑移至 197 行的 `syntax.py`。
+- `solver.rs` 从 241 行变为 123 行，校验和组装移至 148 行的 `assembly.rs`。
+- Python 原有 12 项顶层定义/赋值的 AST 对照一致；Rust `solve` 函数及其注释逐字节一致。
+- 锁定依赖的离线 Rust 构建通过；**19 项 unittest 方法通过**（0.800 秒）。
+- 31 个现有条件仅做编译对照：9 个支持条件的完整 IR、22 个拒绝条件的诊断文本均与拆分前一致。
+- `static_sum.json` 的 CLI `compile` / `solve` 输出逐字节一致，三个输出电压为
+  `0.225`、`1.825`、`-0.325` V（浮点表示允许末位舍入）。
+- `RUSTFLAGS='-D warnings' cargo check --locked --offline --all-targets` 和 `cargo fmt -- --check` 通过。
+
+拆分前后对照保存在 Git 忽略的 `runs/evas-module-split-smoke/`。
+`before.json` 与 `after.json` 的 SHA-256 相同：
+`2d2982d6f8b6e302e40d21986b1eb4f6f49af69994ed0ce8325e8d137eb42d98`。
+本轮没有重跑下面的 396,018 点回放或 thu-sui 四后端实验；下面的全量静态回放与独立 review
+均属于拆分前检查点，不能解释为拆分后的再次全量认证。
 
 ## 已取得的验证证据
 
@@ -58,7 +78,7 @@
 
 ### LOW：参数覆盖与默认表达式检查的契约需要明确
 
-位置：[frontend.py:292](src/evas/frontend.py#L292)、[frontend.py:305](src/evas/frontend.py#L305)。
+位置：[参数求值](src/evas/frontend.py#L97)、[默认表达式检查](src/evas/frontend.py#L117)。
 当前实现检查所有默认表达式中的未知名字和电压引用；求值时，实例覆盖值优先。
 因此 `parameter real a=1/0;` 在实例提供 `a=2` 时能够编译；全部被覆盖的默认循环也可被接收。
 现有注释“即使覆盖也验证默认值”没有说明这种区别，测试也未固定这一边界。
@@ -73,8 +93,8 @@
 
 ### WATCH：下一类语义扩展前，应结构化支路身份
 
-位置：[IR](src/evas/ir.py#L29)、[前端绑定](src/evas/frontend.py#L317)、
-[Rust 汇总](rust_core/src/solver.rs#L80)。
+位置：[IR](src/evas/ir.py#L29)、[前端绑定](src/evas/frontend.py#L133)、
+[Rust 汇总](rust_core/src/assembly.rs#L78)。
 v1 用本地节点对生成字符串，Rust 通过 `(实例, 支路字符串)` 归并贡献。
 当前语法限制和回归能保护这一约定，评审认为它不阻断本批静态仿射切片。
 加入命名支路、电流贡献或层次结构前，应把本地端点、贡献种类与身份改为结构化字段，

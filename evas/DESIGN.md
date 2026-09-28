@@ -17,9 +17,12 @@
 
 | 模块 | 当前文件 | 唯一职责 |
 | --- | --- | --- |
-| 前端 | `src/evas/frontend.py` | 严格解析限定语法，绑定参数/节点，生成贡献 IR |
+| 语法解析 | `src/evas/syntax.py` | 完整消费 token，生成带源码位置的语法树 |
+| 语义绑定 | `src/evas/frontend.py` | 绑定参数/节点，将仿射表达式转换为贡献 IR |
 | IR | `src/evas/ir.py`、`rust_core/src/ir.rs` | Python/Rust 之间带版本和源码位置的数据契约 |
-| 方程求解 | `rust_core/src/solver.rs`、`linear.rs` | 支路累加、矩阵组装、求解和原方程残差验收 |
+| 方程组装 | `rust_core/src/assembly.rs` | 校验 IR 与驱动配置，累加支路贡献，生成方程系数及节点分区 |
+| 工作点求解 | `rust_core/src/solver.rs` | 代入每个样本的驱动值，求解未知电压，验收原方程残差 |
+| 线性代数 | `rust_core/src/linear.rs` | 行缩放、选主元与稠密消元 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
 
@@ -27,6 +30,10 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
+
+语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
+组装模块只依赖 IR，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
+内部组装结果不成为新的公共 API。本次拆分保持 IR v1、错误格式与求解行为不变。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 这不是最终吞吐量方案；未做运行速度比较。
