@@ -10,6 +10,8 @@ pub struct Circuit {
     driven: Vec<usize>,
     unknown: Vec<usize>,
     tolerances: Tolerances,
+    unknown_columns: Vec<Option<usize>>,
+    driven_coefficients: Vec<linear::Row>,
     // Only coefficients are cached; inputs, solutions and physical state are not.
     affine_factor: Option<OnceLock<Result<linear::Factorization, Error>>>,
 }
@@ -31,6 +33,27 @@ impl Circuit {
             .iter()
             .all(|eq| eq.nonlinear.is_empty())
             .then(OnceLock::new);
+        let mut unknown_columns = vec![None; nodes.len()];
+        for (column, &node) in unknown.iter().enumerate() {
+            unknown_columns[node] = Some(column);
+        }
+        let mut input_columns = vec![None; nodes.len()];
+        for (column, &node) in driven.iter().enumerate() {
+            input_columns[node] = Some(column);
+        }
+        let driven_coefficients = equations
+            .iter()
+            .map(|eq| {
+                let mut row: linear::Row = eq
+                    .coefficients
+                    .iter()
+                    .filter_map(|&(node, value)| input_columns[node].map(|column| (column, value)))
+                    .collect();
+                // Preserve the caller's input summation order without scanning zeros.
+                row.sort_unstable_by_key(|&(column, _)| column);
+                row
+            })
+            .collect();
         Ok(Self {
             nodes,
             equations,
@@ -38,6 +61,8 @@ impl Circuit {
             unknown,
             tolerances,
             affine_factor,
+            unknown_columns,
+            driven_coefficients,
         })
     }
 
@@ -55,17 +80,23 @@ impl Circuit {
             values[node] = value;
         }
         let Some(factor) = &self.affine_factor else {
-            return nonlinear::solve(&self.equations, &self.unknown, values, &self.tolerances);
+            return nonlinear::solve(
+                &self.equations,
+                &self.unknown,
+                &self.unknown_columns,
+                values,
+                &self.tolerances,
+            );
         };
         let rhs = self
             .equations
             .iter()
-            .map(|eq| {
+            .zip(&self.driven_coefficients)
+            .map(|(eq, terms)| {
                 eq.rhs_constant
-                    - self
-                        .driven
+                    - terms
                         .iter()
-                        .map(|&n| eq.coefficients[n] * values[n])
+                        .map(|&(column, value)| value * inputs[column])
                         .sum::<f64>()
             })
             .collect();
@@ -75,7 +106,14 @@ impl Circuit {
             let matrix = self
                 .equations
                 .iter()
-                .map(|eq| self.unknown.iter().map(|&n| eq.coefficients[n]).collect())
+                .map(|eq| {
+                    eq.coefficients
+                        .iter()
+                        .filter_map(|&(node, value)| {
+                            self.unknown_columns[node].map(|column| (column, value))
+                        })
+                        .collect()
+                })
                 .collect();
             linear::Factorization::new(matrix, self.unknown.len())
         });
@@ -110,8 +148,7 @@ impl Circuit {
             let rhs = eq.rhs_constant
                 + eq.rhs_terms
                     .iter()
-                    .zip(&values)
-                    .map(|(a, v)| a * v)
+                    .map(|&(node, coefficient)| coefficient * values[node])
                     .sum::<f64>();
             let residual = (lhs - rhs).abs();
             let bound =

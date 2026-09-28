@@ -33,7 +33,7 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
 
 pub(crate) struct Value {
     pub(crate) value: f64,
-    pub(crate) gradient: Vec<f64>,
+    pub(crate) gradient: Vec<(usize, f64)>,
 }
 
 /// Neumaier summation retains small terms when large additive terms cancel.
@@ -64,15 +64,26 @@ impl Sum {
 /// examined. Only sums and constant factors are flattened, not polynomials.
 pub(crate) struct Accumulator {
     value: Sum,
-    gradient: Vec<Sum>,
+    gradient: Vec<(usize, Sum)>,
 }
 
 impl Accumulator {
-    pub(crate) fn new(count: usize) -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             value: Sum::default(),
-            gradient: vec![Sum::default(); count],
+            gradient: Vec::new(),
         }
+    }
+
+    fn add_derivative(&mut self, node: usize, value: f64) {
+        let index = match self.gradient.binary_search_by_key(&node, |&(node, _)| node) {
+            Ok(index) => index,
+            Err(index) => {
+                self.gradient.insert(index, (node, Sum::default()));
+                index
+            }
+        };
+        self.gradient[index].1.add(value);
     }
 
     pub(crate) fn add_constant(&mut self, value: f64) {
@@ -81,7 +92,7 @@ impl Accumulator {
 
     pub(crate) fn add_node(&mut self, node: usize, coefficient: f64, voltage: f64) {
         self.value.add(coefficient * voltage);
-        self.gradient[node].add(coefficient);
+        self.add_derivative(node, coefficient);
     }
 
     pub(crate) fn add_expression(
@@ -112,17 +123,19 @@ impl Accumulator {
                 let a = evaluate(left, nodes)?;
                 let b = evaluate(right, nodes)?;
                 self.value.add(factor * (a.value * b.value));
-                for ((sum, da), db) in self.gradient.iter_mut().zip(a.gradient).zip(b.gradient) {
-                    sum.add(factor * da * b.value);
-                    sum.add(factor * a.value * db);
+                for (node, da) in a.gradient {
+                    self.add_derivative(node, factor * da * b.value);
+                }
+                for (node, db) in b.gradient {
+                    self.add_derivative(node, factor * a.value * db);
                 }
             }
             Expression::Power { base, exponent } => {
                 let a = evaluate(base, nodes)?;
                 self.value.add(factor * a.value.powi(*exponent as i32));
                 let derivative = factor * f64::from(*exponent) * a.value.powi(*exponent as i32 - 1);
-                for (sum, da) in self.gradient.iter_mut().zip(a.gradient) {
-                    sum.add(derivative * da);
+                for (node, da) in a.gradient {
+                    self.add_derivative(node, derivative * da);
                 }
             }
         }
@@ -132,9 +145,13 @@ impl Accumulator {
     pub(crate) fn finish(self) -> Result<Value, Error> {
         let result = Value {
             value: self.value.total(),
-            gradient: self.gradient.into_iter().map(Sum::total).collect(),
+            gradient: self
+                .gradient
+                .into_iter()
+                .map(|(node, sum)| (node, sum.total()))
+                .collect(),
         };
-        if !result.value.is_finite() || result.gradient.iter().any(|v| !v.is_finite()) {
+        if !result.value.is_finite() || result.gradient.iter().any(|(_, v)| !v.is_finite()) {
             return Err(Error::new(
                 "nonfinite_arithmetic",
                 "nonfinite polynomial value or derivative",
@@ -145,7 +162,7 @@ impl Accumulator {
 }
 
 pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
-    let mut sum = Accumulator::new(nodes.len());
+    let mut sum = Accumulator::new();
     sum.add_expression(expr, 1.0, nodes)?;
     sum.finish()
 }
@@ -167,13 +184,13 @@ mod tests {
                             {"op":"affine","constant":0,"terms":[{"node":0,"coefficient":1}]}}}}}"#,
         )
         .unwrap();
-        let mut residual = Accumulator::new(1);
+        let mut residual = Accumulator::new();
         residual.add_node(0, 1.0, 0.5);
         residual.add_expression(&rhs, -1.0, &[0.5]).unwrap();
         let result = residual.finish().unwrap();
         // s*(x+x^3-1) and s*(1+3x^2) at x=.5, independently by hand.
         assert!((result.value - (-0.375e-13)).abs() < 1e-28);
-        assert!((result.gradient[0] - 1.75e-13).abs() < 1e-28);
+        assert!((result.gradient[0].1 - 1.75e-13).abs() < 1e-28);
     }
 
     #[test]
@@ -198,7 +215,14 @@ mod tests {
         ] {
             let actual = evaluate(&expr, &nodes).unwrap();
             assert_eq!(actual.value, value);
-            assert_eq!(actual.gradient, gradient);
+            assert_eq!(
+                actual
+                    .gradient
+                    .iter()
+                    .map(|&(_, value)| value)
+                    .collect::<Vec<_>>(),
+                gradient
+            );
         }
     }
 }

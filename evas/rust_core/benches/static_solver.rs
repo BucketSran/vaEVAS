@@ -14,6 +14,9 @@ fn circuit(kind: &str, size: usize) -> Circuit {
                 "chain" if i > 0 => {
                     terms.push(json!({"node": i + 1, "coefficient": 0.25}));
                 }
+                "ring" => {
+                    terms.push(json!({"node": (i + 1) % size + 2, "coefficient": 0.25}));
+                }
                 "dense" => {
                     terms.extend(
                         (0..size)
@@ -55,7 +58,7 @@ fn check(circuit: &Circuit, kind: &str, size: usize, input: f64) {
     for i in 0..size {
         let expected = match kind {
             "chain" => input + 0.25 * previous,
-            "dense" => input / 0.75,
+            "dense" | "ring" => input / 0.75,
             "cubic" => {
                 let (mut low, mut high) = (-1.0_f64, 1.0_f64);
                 for _ in 0..60 {
@@ -85,12 +88,17 @@ fn main() {
     for (kind, size) in [
         ("chain", 1),
         ("chain", 16),
+        ("chain", 32),
         ("chain", 64),
         ("chain", 128),
+        ("chain", 256),
+        ("chain", 1024),
+        ("ring", 256),
         ("dense", 64),
         ("cubic", 1),
         ("cubic", 16),
         ("cubic", 64),
+        ("cubic", 128),
     ] {
         let name = format!("{kind}-{size}");
         if !filter.is_empty() && filter != name {
