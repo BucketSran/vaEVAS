@@ -10,7 +10,8 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 结果仅证明所列有限观测，完整观察资格仍待完成。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
-[EVAS](evas/README.md) 迭代在独立开发分支推进。旧 vaBench 和 EVAS 是审查与迁移来源；
+[EVAS](evas/README.md) 已实现 0.2.0 静态仿射内核：限定语法前端、IR v2 与 Rust 方程求解。
+旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 
 ## 工作区
