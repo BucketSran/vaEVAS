@@ -1,4 +1,7 @@
-use evas_kernel::{ir::Error, run};
+use evas_kernel::{
+    ir::{parse_request, Error},
+    run,
+};
 use std::io::{self, Read, Write};
 
 fn main() {
@@ -6,9 +9,7 @@ fn main() {
     let result = io::stdin()
         .read_to_string(&mut input)
         .map_err(|e| Error::new("input_io", e.to_string()))
-        .and_then(|_| {
-            serde_json::from_str(&input).map_err(|e| Error::new("invalid_request", e.to_string()))
-        })
+        .and_then(|_| parse_request(&input))
         .and_then(run);
     match result {
         Ok(response) => {

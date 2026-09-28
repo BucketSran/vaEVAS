@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import Affine, Contribution, Origin, Program, Term
+from .ir import Affine, BranchIdentity, Contribution, Origin, Program, Term
 from .syntax import CompileError, Expr, Parser
 
 
@@ -105,7 +105,10 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     value = instance.parameters[name]
                     if isinstance(value, bool) or not isinstance(value, (int, float)):
                         raise CompileError(f"{instance.name}: parameter {name!r} must be numeric")
-                    value = float(value)
+                    try:
+                        value = float(value)
+                    except OverflowError as exc:
+                        raise CompileError(f"{instance.name}: nonfinite parameter {name!r}") from exc
                 else:
                     value, _ = _affine(model.parameters[name], parameter, {}, model.source)
                 if not math.isfinite(value):
@@ -114,7 +117,8 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 active.remove(name)
             return cache[name]
 
-        # Validate defaults even if an override would otherwise hide an invalid expression.
+        # Check every default's structure; evaluate only the effective graph
+        # after overrides. Replaced arithmetic and dependency edges are not used.
         def validate_default(expr):
             if expr.op == "voltage" or (expr.op == "parameter" and expr.value not in model.parameters):
                 raise CompileError(f"{model.source}:{expr.token.line}: invalid parameter default")
@@ -139,6 +143,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             constant, terms = _affine(rhs, parameter, node_ids, model.source)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
-            contributions.append(Contribution(",".join(pair), p, n, Affine(sign * constant, tuple(
+            identity = BranchIdentity(instance.name, *pair)
+            contributions.append(Contribution(identity, p, n, Affine(sign * constant, tuple(
                 Term(node, sign * coefficient) for node, coefficient in sorted(terms.items()))), origin))
     return Program(names, tuple(contributions))

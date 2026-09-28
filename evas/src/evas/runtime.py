@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 
-from .ir import Program
+from .ir import Program, SCHEMA_VERSION
 
 
 class KernelError(RuntimeError):
@@ -26,7 +26,7 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
             detail = dict(kind="kernel_process", message=result.stderr or f"exit {result.returncode}")
         raise KernelError(detail)
     response = json.loads(result.stdout)
-    if (response.get("schema_version") != 1 or response.get("nodes") != list(program.nodes)
+    if (response.get("schema_version") != SCHEMA_VERSION or response.get("nodes") != list(program.nodes)
             or len(response.get("solutions", [])) != len(samples)):
         raise KernelError(dict(kind="invalid_response", message="kernel response identity or shape mismatch"))
     return response

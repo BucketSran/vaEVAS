@@ -1,4 +1,4 @@
-"""Version 1: affine voltage contributions, before branch assembly.
+"""Version 2: affine voltage contributions with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -6,6 +6,10 @@ voltage constraints, including when connected to the same external nodes.
 """
 
 from dataclasses import asdict, dataclass
+from typing import Literal
+
+
+SCHEMA_VERSION = 2
 
 
 @dataclass(frozen=True)
@@ -29,10 +33,17 @@ class Affine:
 
 
 @dataclass(frozen=True)
+class BranchIdentity:
+    """Canonical local endpoints, independent of global net binding and origin."""
+    instance: str
+    local_positive: str
+    local_negative: str
+    kind: Literal["voltage"] = "voltage"
+
+
+@dataclass(frozen=True)
 class Contribution:
-    # Canonical local node pair, before port binding. External net aliases must
-    # never accidentally merge two distinct model branches.
-    branch: str
+    branch: BranchIdentity
     positive: int
     negative: int
     rhs: Affine
@@ -43,7 +54,7 @@ class Contribution:
 class Program:
     nodes: tuple[str, ...]
     contributions: tuple[Contribution, ...]
-    schema_version: int = 1
+    schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:
         return asdict(self)

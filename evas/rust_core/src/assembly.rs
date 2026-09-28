@@ -1,5 +1,5 @@
 //! Validate IR and assemble one equation per instance-local voltage branch.
-use crate::ir::{Error, Program, Tolerances};
+use crate::ir::{check_schema_version, BranchIdentity, Error, Program, Tolerances};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(crate) struct Equation {
@@ -24,12 +24,7 @@ pub(crate) fn assemble(
     driven_names: &[String],
     tolerances: Tolerances,
 ) -> Result<AssembledCircuit, Error> {
-    if program.schema_version != 1 {
-        return Err(Error::new(
-            "unsupported_ir_version",
-            "expected affine-voltage IR version 1",
-        ));
-    }
+    check_schema_version(u64::from(program.schema_version))?;
     let count = program.nodes.len();
     let unique: BTreeSet<_> = program.nodes.iter().collect();
     if count == 0
@@ -75,12 +70,17 @@ pub(crate) fn assemble(
     }
     // Contributions share a branch only within one instance. Independent
     // ideal voltage sources in parallel must satisfy separate constraints.
-    let mut grouped = BTreeMap::<(String, String), Equation>::new();
+    let mut grouped = BTreeMap::<BranchIdentity, Equation>::new();
+    let mut node_bindings = BTreeMap::new();
+    let mut bound_branches = BTreeMap::new();
     for c in program.contributions {
         if c.positive >= count
             || c.negative >= count
             || !c.rhs.constant.is_finite()
-            || c.branch.is_empty()
+            || c.branch.instance != c.origin.instance
+            || c.branch.local_positive.is_empty()
+            || c.branch.local_negative.is_empty()
+            || c.branch.local_positive > c.branch.local_negative
             || c.origin.instance.is_empty()
             || c.origin.source.is_empty()
             || c.origin.line == 0
@@ -89,6 +89,35 @@ pub(crate) fn assemble(
             return Err(Error::new(
                 "invalid_ir",
                 "invalid contribution target, constant or source identity",
+            ));
+        }
+        for (local, global) in [
+            (&c.branch.local_positive, c.positive),
+            (&c.branch.local_negative, c.negative),
+        ] {
+            let previous = node_bindings.insert((c.branch.instance.clone(), local.clone()), global);
+            if (local == "0" && global != 0) || previous.is_some_and(|node| node != global) {
+                return Err(Error::new(
+                    "invalid_ir",
+                    format!("inconsistent local node binding at {}", c.origin.label()),
+                ));
+            }
+        }
+        let bound_pair = (
+            c.branch.instance.clone(),
+            c.positive.min(c.negative),
+            c.positive.max(c.negative),
+        );
+        if bound_branches
+            .insert(bound_pair, c.branch.clone())
+            .is_some_and(|identity| identity != c.branch)
+        {
+            return Err(Error::new(
+                "invalid_ir",
+                format!(
+                    "distinct local contribution branches alias after connection at {}",
+                    c.origin.label()
+                ),
             ));
         }
         let mut term_nodes = BTreeSet::new();
@@ -100,16 +129,14 @@ pub(crate) fn assemble(
                 ));
             }
         }
-        let equation = grouped
-            .entry((c.origin.instance.clone(), c.branch))
-            .or_insert_with(|| Equation {
-                positive: c.positive,
-                negative: c.negative,
-                rhs_constant: 0.0,
-                rhs_terms: vec![0.0; count],
-                coefficients: vec![0.0; count],
-                origins: Vec::new(),
-            });
+        let equation = grouped.entry(c.branch).or_insert_with(|| Equation {
+            positive: c.positive,
+            negative: c.negative,
+            rhs_constant: 0.0,
+            rhs_terms: vec![0.0; count],
+            coefficients: vec![0.0; count],
+            origins: Vec::new(),
+        });
         if (equation.positive, equation.negative) != (c.positive, c.negative) {
             return Err(Error::new(
                 "invalid_ir",

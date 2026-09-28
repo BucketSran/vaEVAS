@@ -1,6 +1,36 @@
 //! The only executable model format for the first migration slice.
 use serde::{Deserialize, Serialize};
 
+pub const SCHEMA_VERSION: u32 = 2;
+
+pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
+    if version != u64::from(SCHEMA_VERSION) {
+        return Err(Error::new(
+            "unsupported_ir_version",
+            format!("expected affine-voltage IR version {SCHEMA_VERSION}, got {version}; recompile the original VA"),
+        ));
+    }
+    Ok(())
+}
+
+/// Check the version before decoding version-specific contribution fields.
+pub fn parse_request(input: &str) -> Result<Request, Error> {
+    #[derive(Deserialize)]
+    struct Header {
+        program: Version,
+    }
+    #[derive(Deserialize)]
+    struct Version {
+        schema_version: u64,
+    }
+    let header: Header =
+        serde_json::from_str(input).map_err(|e| Error::new("invalid_request", e.to_string()))?;
+    check_schema_version(header.program.schema_version)?;
+    // Decode the original bytes so duplicate fields remain errors. The header
+    // skips samples instead of storing a second copy of the full request.
+    serde_json::from_str(input).map_err(|e| Error::new("invalid_request", e.to_string()))
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Program {
@@ -12,11 +42,26 @@ pub struct Program {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Contribution {
-    pub branch: String,
+    pub branch: BranchIdentity,
     pub positive: usize,
     pub negative: usize,
     pub rhs: Affine,
     pub origin: Origin,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BranchIdentity {
+    pub instance: String,
+    pub local_positive: String,
+    pub local_negative: String,
+    pub kind: ContributionKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ContributionKind {
+    Voltage,
 }
 
 #[derive(Debug, Deserialize)]

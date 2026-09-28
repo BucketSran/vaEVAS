@@ -3,7 +3,7 @@ pub mod ir;
 mod linear;
 pub mod solver;
 
-use ir::{Error, Request, Response};
+use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;
 
 pub fn run(request: Request) -> Result<Response, Error> {
@@ -27,7 +27,7 @@ pub fn run(request: Request) -> Result<Response, Error> {
         .collect::<Result<_, _>>()?;
     Ok(Response {
         engine: concat!("evas-affine-", env!("CARGO_PKG_VERSION")).into(),
-        schema_version: 1,
+        schema_version: SCHEMA_VERSION,
         nodes: circuit.nodes,
         solutions,
     })

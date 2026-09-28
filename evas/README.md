@@ -18,6 +18,11 @@ EVAS 的目标是支持声明范围内的电压域 Verilog-A 行为及其交互�
 
 需要 Python 3.10+ 和 Rust/Cargo。以下命令在仓库根目录运行：
 
+当前 Python 包与 Rust 内核为 0.2.0，使用 **IR v2** 的结构化支路身份。
+两端需要一起更新并重新构建；已有 v1 JSON 应从原 VA/manifest 重新编译。
+旧归档保持原样，使用旧提交复现。参数覆盖规则与协议迁移见
+[设计契约](DESIGN.md#参数绑定契约)，本阶段结果见 [检查点 2](REVIEW.md#检查点-2参数契约与结构化支路身份)。
+
 ```sh
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
 PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json

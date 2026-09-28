@@ -80,7 +80,7 @@ def main():
     source_files += [ROOT / "experiments/dvs2-history-validation" / n for n in ("history.py", "recheck.py")]
     source_files += list((ROOT / "evas/validation/cases").rglob("*.va"))
     report = dict(scope="stateless affine operating points on two requested grids; NOT a transient simulator qualification",
-        engine="evas-affine-0.1.0", kernel_sha256=digest(args.kernel),
+        engine=result["engine"] if records else None, kernel_sha256=digest(args.kernel),
         rustc=subprocess.check_output(["rustc", "--version"], text=True).strip(),
         python=sys.version, source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted(source_files)},
         configurations=len(records), supported_conditions=len(records)//2, rejected_conditions=len(rejected),
