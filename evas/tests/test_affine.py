@@ -148,10 +148,8 @@ class AffineContracts(unittest.TestCase):
 class RejectionContracts(unittest.TestCase):
     def test_unsupported_and_malformed_source_is_not_silently_lowered(self):
         cases = [
-            model("V(y,r)<+V(u,r)*V(y,r);"),
             model("V(y,r)<+1/V(u,r);"),
             model("V(y,r)<+idt(V(u,r));"),
-            model("V(y,r)<+pow(V(u,r),3);"),
             model("@(cross(V(u,r),1)) V(y,r)<+1;"),
             model("if (1) V(y,r)<+1;"),
             model("I(y,r)<+1;"),

@@ -10,7 +10,7 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 结果仅证明所列有限观测，完整观察资格仍待完成。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
-[EVAS](evas/README.md) 已实现 0.2.0 静态仿射内核：限定语法前端、IR v2 与 Rust 方程求解。
+[EVAS](evas/README.md) 已实现 0.3.0 静态多项式内核：限定语法前端、IR v3 与 Rust 线性/非线性方程求解。
 旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 
@@ -30,10 +30,11 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 
 ## 分支与文档维护
 
-- [PR #1](https://github.com/BucketSran/vaEVAS/pull/1)：测试契约、用例、判定器与跨后端证据，目标为 `main`。
-- [PR #2](https://github.com/BucketSran/vaEVAS/pull/2)：EVAS 源码、接口与自身回归，当前以 PR #1 分支为基底。
-- 每个阶段用独立提交保留可 review 的检查点，继续更新对应 PR；达到可合并里程碑后再合入 `main`。
-  PR #1 先合并后，将 PR #2 基底调整为 `main` 并核对差异。PR 合并即结束该批次，后续批次再开对应方向的新 PR。
+- 测试集方向维护测试契约、用例、判定器与跨后端证据；首批 [PR #1](https://github.com/BucketSran/vaEVAS/pull/1) 已合入 `main`。
+- EVAS 方向维护源码、接口与自身回归；首批 [PR #2](https://github.com/BucketSran/vaEVAS/pull/2) 的 0.2.0 / IR v2 检查点已合入 `main`。
+- 每个阶段用独立提交保留可 review 的检查点，提交记录范围、检查结果与证据哈希，PR 提供提交链接。
+  不重写已发布的阶段提交；合入 `main` 时优先采用保留提交历史的 merge commit。
+  PR 合并即结束该批次，后续批次从最新 `main` 开对应方向的新 PR，并链接前一批检查点。
 - 仓库长期保留使用说明、当前接口/测试契约与可复核结果。阶段计划、设计讨论及 review 流水记录放在 PR 和 Git 历史，避免重复状态文档。
 
 迁移应先核对来源、规格与实现；失败先区分任务、参考解、判定器、仿真器或环境责任。

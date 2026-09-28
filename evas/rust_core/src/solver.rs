@@ -1,7 +1,7 @@
 //! Solve stateless operating points and check the original branch residuals.
 use crate::assembly::{assemble, AssembledCircuit, Equation};
 use crate::ir::{Error, Program, Solution, Tolerances};
-use crate::linear;
+use crate::{linear, nonlinear};
 
 pub struct Circuit {
     pub nodes: Vec<String>,
@@ -45,6 +45,9 @@ impl Circuit {
         let mut values = vec![0.0; self.nodes.len()];
         for (&node, &value) in self.driven.iter().zip(inputs) {
             values[node] = value;
+        }
+        if self.equations.iter().any(|eq| !eq.nonlinear.is_empty()) {
+            return nonlinear::solve(&self.equations, &self.unknown, values, &self.tolerances);
         }
         let matrix = self
             .equations

@@ -1,6 +1,6 @@
-"""Bind parsed models and lower affine voltage contributions to the shared IR.
+"""Bind parsed models and lower static voltage contributions to the shared IR.
 
-Parameter evaluation, instance/node binding, and affine lowering belong here;
+Parameter evaluation, instance/node binding, and expression lowering belong here;
 syntax.py owns tokenization and syntax trees.
 """
 
@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import Affine, BranchIdentity, Contribution, Origin, Program, Term
+from .ir import BranchIdentity, Contribution, Origin, Program
+from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
 
@@ -18,48 +19,6 @@ class Instance:
     module: str
     connections: Mapping[str, str]
     parameters: Mapping[str, float] = field(default_factory=dict)
-
-
-def _affine(expr: Expr, parameters, nodes: Mapping[str, int], source: str) -> tuple[float, dict[int, float]]:
-    def fail(message):
-        raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
-
-    if expr.op == "number":
-        return float(expr.value), {}
-    if expr.op == "parameter":
-        return parameters(str(expr.value)), {}
-    if expr.op == "voltage":
-        p, n = (str(arg.value) for arg in expr.args)
-        if p not in nodes or n not in nodes:
-            fail(f"undeclared electrical node in V({p},{n})")
-        if nodes[p] == nodes[n]:
-            return 0.0, {}
-        return 0.0, {nodes[p]: 1.0, nodes[n]: -1.0}
-    values = [_affine(arg, parameters, nodes, source) for arg in expr.args]
-    a, terms = values[0]
-    if expr.op.startswith("unary"):
-        scale = -1.0 if expr.op == "unary-" else 1.0
-        result = a * scale, {n: c * scale for n, c in terms.items()}
-    else:
-        b, other = values[1]
-        if expr.op in ("+", "-"):
-            scale = 1.0 if expr.op == "+" else -1.0
-            merged = dict(terms)
-            for n, c in other.items():
-                merged[n] = merged.get(n, 0.0) + scale * c
-            result = a + scale * b, merged
-        elif expr.op == "*":
-            if terms and other:
-                fail("nonlinear product; affine-voltage slice cannot lower this expression")
-            result = a * b, {n: c * (b if terms else a) for n, c in (terms or other).items()}
-        else:
-            if other or b == 0:
-                fail("division requires a nonzero constant denominator")
-            result = a / b, {n: c / b for n, c in terms.items()}
-    constant, terms = result
-    if not all(math.isfinite(x) for x in (constant, *terms.values())):
-        fail("nonfinite coefficient during constant folding")
-    return constant, {n: c for n, c in terms.items() if c != 0.0}
 
 
 def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
@@ -110,7 +69,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     except OverflowError as exc:
                         raise CompileError(f"{instance.name}: nonfinite parameter {name!r}") from exc
                 else:
-                    value, _ = _affine(model.parameters[name], parameter, {}, model.source)
+                    value = lower(model.parameters[name], parameter, {}, model.source).constant
                 if not math.isfinite(value):
                     raise CompileError(f"{instance.name}: nonfinite parameter {name!r}")
                 cache[name] = value
@@ -132,7 +91,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         node_ids = {n: indices[net] for n, net in nets.items()}
         bound_branches = {}
         for branch, rhs in model.contributions:
-            _affine(branch, parameter, node_ids, model.source)  # validates both target nodes
+            lower(branch, parameter, node_ids, model.source)  # validates both target nodes
             local_p, local_n = (str(arg.value) for arg in branch.args)
             pair = tuple(sorted((local_p, local_n)))
             p, n = (node_ids[name] for name in pair)
@@ -140,10 +99,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            constant, terms = _affine(rhs, parameter, node_ids, model.source)
+            expression = lower(rhs, parameter, node_ids, model.source)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)
-            contributions.append(Contribution(identity, p, n, Affine(sign * constant, tuple(
-                Term(node, sign * coefficient) for node, coefficient in sorted(terms.items()))), origin))
+            contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))
     return Program(names, tuple(contributions))

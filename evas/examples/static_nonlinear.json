@@ -1,0 +1,11 @@
+{
+  "models": ["../validation/cases/d2_v7_02/dut.va"],
+  "instances": [{
+    "name": "dut",
+    "module": "dvs_v7_nonlinear",
+    "connections": {"vin": "vin", "vout": "vout", "vref": "ref"},
+    "parameters": {"cubic": 2.0}
+  }],
+  "driven": ["vin", "ref"],
+  "samples": [[0.5, 1.25], [1.25, 1.25], [2.0, 1.25]]
+}

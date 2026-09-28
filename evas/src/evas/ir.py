@@ -1,15 +1,15 @@
-"""Version 2: affine voltage contributions with structured local branch identity.
+"""Version 3: polynomial voltage contributions with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
 voltage constraints, including when connected to the same external nodes.
 """
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 @dataclass(frozen=True)
@@ -30,6 +30,24 @@ class Term:
 class Affine:
     constant: float
     terms: tuple[Term, ...]
+    op: str = field(default="affine", init=False)
+
+
+@dataclass(frozen=True)
+class Binary:
+    op: Literal["add", "multiply"]
+    left: "Expression"
+    right: "Expression"
+
+
+@dataclass(frozen=True)
+class Power:
+    base: "Expression"
+    exponent: int
+    op: str = field(default="power", init=False)
+
+
+Expression = Affine | Binary | Power
 
 
 @dataclass(frozen=True)
@@ -46,7 +64,7 @@ class Contribution:
     branch: BranchIdentity
     positive: int
     negative: int
-    rhs: Affine
+    rhs: Expression
     origin: Origin
 
 
