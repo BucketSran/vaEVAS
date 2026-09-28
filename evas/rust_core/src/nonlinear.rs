@@ -104,8 +104,8 @@ pub(crate) fn solve(
             .collect::<Vec<_>>()
             .join(", ")
     };
+    let mut current = evaluate(equations, unknown, &values, tolerance)?;
     for iteration in 0..=80 {
-        let current = evaluate(equations, unknown, &values, tolerance)?;
         let ratio = merit(&current.residuals, &current.bounds);
         let scaled_ratio = scaled_merit(&current.residuals, &current.bounds, &current.row_scales);
         if !ratio.is_finite() || !scaled_ratio.is_finite() {
@@ -196,7 +196,9 @@ pub(crate) fn solve(
                     if scaled_merit(&candidate.residuals, &current.bounds, &current.row_scales)
                         <= (1.0 - 1e-4 * alpha) * scaled_ratio
                     {
-                        accepted = Some(trial);
+                        // This is the full evaluation at the next iterate, not
+                        // an approximation using the previous Jacobian.
+                        accepted = Some((trial, candidate));
                         break;
                     }
                 }
@@ -204,7 +206,10 @@ pub(crate) fn solve(
             alpha *= 0.5;
         }
         match accepted {
-            Some(trial) => values = trial,
+            Some((trial, candidate)) => {
+                values = trial;
+                current = candidate;
+            }
             None => {
                 return Err(Error::new(
                     "nonconvergence",
