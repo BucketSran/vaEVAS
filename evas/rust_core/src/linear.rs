@@ -1,5 +1,6 @@
 //! Select a dense or sparse rectangular LU without changing voltage acceptance.
 use crate::ir::Error;
+mod columns;
 mod dense;
 mod sparse;
 

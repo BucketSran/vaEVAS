@@ -167,3 +167,76 @@ fn large_chain_storage_is_linear_and_dispatch_keeps_dense_cases() {
         Factorization::Dense(_)
     ));
 }
+
+#[test]
+fn column_ordering_avoids_star_fill_and_restores_original_voltages() {
+    let size = 128;
+    // Change both row order and the center's original column number. Distinct
+    // roots catch a missing inverse column permutation that uniform roots hide.
+    for center in [0, 37, size - 1] {
+        let mut matrix: Vec<Row> = (0..size)
+            .map(|i| {
+                if i == center {
+                    (0..size)
+                        .map(|j| {
+                            (
+                                j,
+                                if j == i {
+                                    1.0
+                                } else {
+                                    -0.25 / (size - 1) as f64
+                                },
+                            )
+                        })
+                        .collect()
+                } else {
+                    let mut row = vec![(i, 1.0), (center, -0.25)];
+                    row.sort_unstable_by_key(|&(j, _)| j);
+                    row
+                }
+            })
+            .collect();
+        // A redundant row must still participate in pivoting and RHS checks.
+        matrix.push(matrix[(center + 1) % size].clone());
+        matrix.reverse();
+        for (i, row) in matrix.iter_mut().enumerate() {
+            for (_, value) in row {
+                *value *= [1e-13, 1e6, 1.0][i % 3];
+            }
+        }
+        let factor = sparse::Factorization::new(matrix.clone(), size).unwrap();
+        assert!(
+            factor.stored_entries() <= 3 * size,
+            "star generated dense fill"
+        );
+        for shift in [-0.75, 1.25, -0.75] {
+            let expected: Vec<_> = (0..size).map(|i| (i % 17) as f64 / 32.0 + shift).collect();
+            let rhs: Vec<_> = matrix
+                .iter()
+                .map(|row| row.iter().map(|&(j, a)| a * expected[j]).sum())
+                .collect();
+            let solved = factor.solve(rhs).unwrap();
+            for (actual, expected) in solved.iter().zip(expected) {
+                assert!((actual - expected).abs() < 1e-11);
+            }
+        }
+    }
+}
+
+#[test]
+fn ordering_handles_both_fill_creation_and_exact_cancellation() {
+    // This creates a new entry and cancels an existing one during elimination;
+    // stale column counts or row memberships can break later pivot selection.
+    let matrix = vec![
+        vec![1.0, 1.0, 0.0, 0.0],
+        vec![1.0, 1.0, 1.0, 0.0],
+        vec![0.0, 1.0, 1.0, 1.0],
+        vec![0.0, 0.0, 1.0, 2.0],
+    ];
+    let factor = sparse::Factorization::new(rows(&matrix), 4).unwrap();
+    // A*[1,-2,3,-4] by hand.
+    let solved = factor.solve(vec![-1.0, 2.0, -3.0, -5.0]).unwrap();
+    for (actual, expected) in solved.iter().zip([1.0, -2.0, 3.0, -4.0]) {
+        assert!((actual - expected).abs() < 1e-12);
+    }
+}

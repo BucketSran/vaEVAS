@@ -17,6 +17,32 @@ fn circuit(kind: &str, size: usize) -> Circuit {
                 "ring" => {
                     terms.push(json!({"node": (i + 1) % size + 2, "coefficient": 0.25}));
                 }
+                "star" if i == 0 => {
+                    terms.extend(
+                        (1..size).map(
+                            |j| json!({"node": j + 2, "coefficient": 0.25 / (size - 1) as f64}),
+                        ),
+                    );
+                }
+                "star" => {
+                    terms.push(json!({"node": 2, "coefficient": 0.25}));
+                }
+                "grid" => {
+                    let side = (size as f64).sqrt() as usize;
+                    assert_eq!(side * side, size);
+                    let neighbors: Vec<_> = (0..size)
+                        .filter(|&j| {
+                            (i / side == j / side && i.abs_diff(j) == 1) || i.abs_diff(j) == side
+                        })
+                        .collect();
+                    terms[0] =
+                        json!({"node": 1, "coefficient": 1.0 - neighbors.len() as f64 * 0.0625});
+                    terms.extend(
+                        neighbors
+                            .into_iter()
+                            .map(|j| json!({"node": j + 2, "coefficient": 0.0625})),
+                    );
+                }
                 "dense" => {
                     terms.extend(
                         (0..size)
@@ -58,7 +84,8 @@ fn check(circuit: &Circuit, kind: &str, size: usize, input: f64) {
     for i in 0..size {
         let expected = match kind {
             "chain" => input + 0.25 * previous,
-            "dense" | "ring" => input / 0.75,
+            "dense" | "ring" | "star" => input / 0.75,
+            "grid" => input,
             "cubic" => {
                 let (mut low, mut high) = (-1.0_f64, 1.0_f64);
                 for _ in 0..60 {
@@ -94,7 +121,11 @@ fn main() {
         ("chain", 256),
         ("chain", 1024),
         ("ring", 256),
+        ("star", 128),
+        ("star", 512),
+        ("grid", 256),
         ("dense", 64),
+        ("dense", 128),
         ("cubic", 1),
         ("cubic", 16),
         ("cubic", 64),
