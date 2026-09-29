@@ -6,6 +6,7 @@
 use crate::event_accuracy::unresolved;
 use crate::interval::Interval as I;
 use crate::ir::Error;
+use std::sync::Arc;
 
 #[derive(Clone, Debug)]
 enum Line {
@@ -48,8 +49,8 @@ struct Segment {
 
 #[derive(Clone, Debug)]
 pub(crate) struct Slew {
-    segments: Vec<Segment>,
-    breakpoints: Vec<f64>,
+    segments: Arc<[Segment]>,
+    breakpoints: Arc<[f64]>,
     stop: f64,
     final_value: f64,
 }
@@ -223,8 +224,8 @@ impl Slew {
             breakpoints.push(end);
         }
         Ok(Self {
-            segments,
-            breakpoints,
+            segments: segments.into(),
+            breakpoints: breakpoints.into(),
             stop: points.last().unwrap().0,
             final_value: value,
         })
