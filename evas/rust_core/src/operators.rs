@@ -5,6 +5,7 @@ use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::pwl::Trajectory;
+use crate::slew::Slew;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
 
@@ -76,6 +77,7 @@ enum Runtime {
         input_bounds: Vec<I>,
         history: Transition,
     },
+    Slew(Slew),
 }
 
 #[derive(Clone, Default)]
@@ -159,6 +161,16 @@ impl Operators {
                         history: Transition::enclosed(initial, bounds, *delay, *rise, *fall)?,
                     });
                 }
+                OperatorSpec::Slew {
+                    input,
+                    rise,
+                    fall,
+                    origin,
+                } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
+                }
             }
         }
         Ok(Self { entries })
@@ -170,6 +182,7 @@ impl Operators {
             .map(|entry| match entry {
                 Runtime::AbsDelay(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
+                Runtime::Slew(history) => history.value(time),
             })
             .collect()
     }
@@ -180,6 +193,7 @@ impl Operators {
             .filter_map(|entry| match entry {
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
+                Runtime::Slew(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
     }
@@ -188,6 +202,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::Slew(history) => Ok(history.value_bounds(time)),
                 Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
                 Runtime::Transition { history, .. } => history.value_bounds(time),
             })
@@ -205,6 +220,7 @@ impl Operators {
             .flat_map(|entry| match entry {
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
+                Runtime::Slew(_) => Vec::new(),
             })
             .collect();
         for (index, deadline) in deadlines.iter().enumerate() {
@@ -250,6 +266,7 @@ impl Operators {
                     let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
                     history.advance_enclosed(time, input.value(&[], states)?, bounds, may_change)?
                 }
+                Runtime::Slew(_) => {}
             }
         }
         Ok(())

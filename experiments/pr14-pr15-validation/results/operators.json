@@ -1,0 +1,1963 @@
+{
+  "primary_records": [
+    {
+      "case": "ad-ramp-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "f581b54585bb52caf6466328d7c575b1beb579c30b55e088d1ab4d6a11aac06f",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-ramp-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "b7d0a3559417aa56487aa75917bc46c957c5f796be1e713d1238a22562a73027",
+      "status": "observations_within_targets",
+      "points": 179,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 4.440892098500626e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.725756425410509e-09,
+          "actual_v": -0.4997497500000003,
+          "expected_v": -0.4997497499999999
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-ramp-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "a92e9f0ec54189d51787d303e74280b25225b03300360b326679b18d9ca45621",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-ramp-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "2d72e14339dc0135b7555e8038fa06791624de17afdb5cca4961aec231745d33",
+      "status": "observations_within_targets",
+      "points": 349,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 4.440892098500626e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.726084268031197e-09,
+          "actual_v": -0.4995737408332386,
+          "expected_v": -0.499573740833239
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-zero-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "37f2145ecc17c1961021a3ada3925d7d8c044349359edd483d0bbf31b373cefc",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-zero-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "715323fca59e53830f858774fce9f018e77ab041dafde923c5fb794340be664e",
+      "status": "observations_within_targets",
+      "points": 179,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 2.220446049250313e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.047737896442413e-09,
+          "actual_v": -0.4375,
+          "expected_v": -0.4375000000000002
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-zero-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "4cba6d4932f51cfc5befed6ee2d9f39696a7fb03e0b45cb8e15a32b81527cd04",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-zero-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "ccd6da1993fe2d8525e64b8e4a1856e9eaf6b2023075666a9b6d8e5aa982d08f",
+      "status": "observations_within_targets",
+      "points": 349,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 2.220446049250313e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.01863406598568e-09,
+          "actual_v": -0.453125,
+          "expected_v": -0.4531249999999998
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-after-stop-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "82007f425803f9ce7efa3c38b51ba2c39600a1fedfb092010cdb291960040eb0",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-after-stop-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "49e60c8f0c88b5a1e45bdc94101b7ef883fac70983b5ca38ec73ca2eab0dbd91",
+      "status": "observations_within_targets",
+      "points": 179,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-after-stop-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "c49f94dbac783c700ffb96f3edc50c6b5883b1fc4bc00f9e2910b79f6d4506c5",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-after-stop-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "a1072945d3021c7cf7010996c2afc47a49995c2fcea4590a655cacd2c60ccd37",
+      "status": "observations_within_targets",
+      "points": 349,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-affine-reference-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "0c9d944bd38aa46fca21c0d27ffac23153953f3b88a60a237a0733fcd0cc9a42",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-affine-reference-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "c43931beed46dbaf85c8b4c5ca048d96b1a969d86ed7c7d0383d8be8168b5fbc",
+      "status": "observations_within_targets",
+      "points": 147,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 8.881784197001252e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.047737896442413e-09,
+          "actual_v": 4.25,
+          "expected_v": 4.249999999999999
+        }
+      },
+      "input_max_error_v": {
+        "u": 4.440892098500626e-16,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-affine-reference-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "c2c68e9da8f4e9650dd9ff8a5a45d7803ef6900ef653c51f3934c6cf4b50b89f",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-affine-reference-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "cc6e6bf4c4f4cbd3cfbdf0f996fdd9e376182b88c72cae8a524fc496a0f1e3d0",
+      "status": "observations_within_targets",
+      "points": 281,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 8.881784197001252e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.01863406598568e-09,
+          "actual_v": 4.1875,
+          "expected_v": 4.187500000000001
+        }
+      },
+      "input_max_error_v": {
+        "u": 4.440892098500626e-16,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-call-isolation-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "507486a8c788af3e55a60b5a0df6b7fadbdcfbdac0990588a8c305b5752e3c0a",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0,
+        "z": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-call-isolation-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "94181fde6e19cd92b2cdff937c3384c522314b265fc7d302d3331d4b718d346d",
+      "status": "observations_within_targets",
+      "points": 179,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 4.440892098500626e-16,
+        "z": 4.441434199586869e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.725445674111446e-09,
+          "actual_v": 0.5000834166666666,
+          "expected_v": 0.500083416666667
+        },
+        "z": {
+          "time_s": 3.725756425410509e-09,
+          "actual_v": -0.0002502499999996743,
+          "expected_v": -0.00025025000000011843
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-call-isolation-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "095f559ad970cf805d4377cfc6544f7da9a06717bd549f5ad4ce1cdb6ce1dbd1",
+      "status": "observations_within_targets",
+      "points": 161,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 0.0,
+        "z": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-call-isolation-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "8c9b9df5630d2ada19ffe6ab4b8771e2a8e1368f077da56607d590c1f72b5863",
+      "status": "observations_within_targets",
+      "points": 349,
+      "common_grid_points": 161,
+      "max_error_v": {
+        "y": 4.440892098500626e-16,
+        "z": 4.440892098500626e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.726084268031197e-09,
+          "actual_v": 0.5004262591667614,
+          "expected_v": 0.500426259166761
+        },
+        "z": {
+          "time_s": 3.726084268031197e-09,
+          "actual_v": -0.0004262591667614224,
+          "expected_v": -0.0004262591667609783
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-fraction-gain-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "f40385d77fefa9901a4fd5be2e56c18d7332b5cf42e0328f00397f5edf4864a5",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.1842378929335002e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 2.3865140974521637e-09,
+          "actual_v": 16.666666666666668,
+          "expected_v": 16.666666666666668
+        }
+      },
+      "input_max_error_v": {
+        "u": 3.700743415417188e-17
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-fraction-gain-base",
+      "family": "absdelay",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "92d5a13495d59432bf135846e9a14187834c4b8feaafc4e901987db94fb390a9",
+      "status": "observations_within_targets",
+      "points": 145,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 9.473903143468002e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 2.793967723846436e-09,
+          "actual_v": 21.33333333333333,
+          "expected_v": 21.33333333333334
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.8503717077085943e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-fraction-gain-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "156c3d62bdefe985805c2981aae715d0b8027ad2756fb46273def3bd0d2e56c7",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.1842378929335002e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 2.3865140974521637e-09,
+          "actual_v": 16.666666666666668,
+          "expected_v": 16.666666666666668
+        }
+      },
+      "input_max_error_v": {
+        "u": 3.700743415417188e-17
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "ad-fraction-gain-fine",
+      "family": "absdelay",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "2b13fbaee2059d643323b3ccdcd1df10021ecd4a47cad1947ad934f1e4d5f8ce",
+      "status": "observations_within_targets",
+      "points": 283,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 9.473903143468002e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 2.793967723846436e-09,
+          "actual_v": 21.33333333333333,
+          "expected_v": 21.33333333333334
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.8503717077085943e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-catch-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "df08ffc0db7ec187fafd92ae86825bd0621e2672097e72d7c5b8460f53590f13",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-catch-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "555a5f37d9aff231fa54db0057645f8e6b5a418587f487d60f42b59accaee253",
+      "status": "observations_within_targets",
+      "points": 147,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 4.440892098500626e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.047737896442413e-09,
+          "actual_v": 1.125,
+          "expected_v": 1.1249999999999996
+        }
+      },
+      "input_max_error_v": {
+        "u": 8.881784197001252e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-catch-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "62586676d28ed9d591be000fda221341d3772a9deabd70e57b18958495bc3a52",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-catch-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "937782fe605b4b406e3d08de6e82e093e6f8bf15ec8043308975078646cc05ec",
+      "status": "observations_within_targets",
+      "points": 285,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 8.881784197001252e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.864233451196756e-09,
+          "actual_v": 2.001705426249819,
+          "expected_v": 2.0017054262498197
+        }
+      },
+      "input_max_error_v": {
+        "u": 8.881784197001252e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reverse-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "dcb02f72ab9b713eee280a6ea970fd9a79fa39b627ee2118602f0437c5377bd3",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2014213502407074e-09,
+          "actual_v": 0.32499999999999973,
+          "expected_v": 0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reverse-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "1e03599ecf942482518b8a45ef4619bff8b2bd75f24060d229dace479b922466",
+      "status": "observed_violation",
+      "points": 160,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.07500000000000177
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.783497959375381e-09,
+          "actual_v": -1.0,
+          "expected_v": -0.9249999999999983
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reverse-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "eade4fa7818024a3249bd1a168efd9df2b4a107de05a6eb985fd8db394da366b",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2014213502407074e-09,
+          "actual_v": 0.32499999999999973,
+          "expected_v": 0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reverse-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "e177d611083db23087438e0bb4b6331bd20b6552e5c721cc308b7d6709dfd4e6",
+      "status": "observed_violation",
+      "points": 301,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.012500000000001777
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.72531436364322e-09,
+          "actual_v": -0.8125516795833416,
+          "expected_v": -0.8000516795833399
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-tracking-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "5fa80b3699adf50b4954ab95d601066dd8cda4ec44b7ce6f5ac089b5904dbb54",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-tracking-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "509354fd234e4026045e4f2a9e9f4a163966777f43f5c1ad94d54a0f8201518f",
+      "status": "observations_within_targets",
+      "points": 145,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.1102230246251565e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.047737896442413e-09,
+          "actual_v": -0.71875,
+          "expected_v": -0.7187500000000001
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.1102230246251565e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-tracking-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "02614b43b061f9366e5e2dd1aa4fae683d82c89a5f622cf0851f0bc5dc245428",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-tracking-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "1d6b6ad697e59bbc6eb1715f640fda14f5600e6bcb53789ce3d23c81bc60dc39",
+      "status": "observations_within_targets",
+      "points": 283,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.1102230246251565e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.01863406598568e-09,
+          "actual_v": -0.7265625,
+          "expected_v": -0.7265624999999999
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.1102230246251565e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reflected-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "19010b535d8328b007869c2f1eb291e8ecca8c7a624a985575dc65c078d2916f",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2014213502407074e-09,
+          "actual_v": -0.32499999999999973,
+          "expected_v": -0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reflected-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "1ab59de7929140baae34c213524d99bb5a5a22a0d190670b0688272ddcc88ede",
+      "status": "observed_violation",
+      "points": 160,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.07500000000000177
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.783497959375381e-09,
+          "actual_v": 1.0,
+          "expected_v": 0.9249999999999983
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reflected-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "449c9726ef7cd4219238cc4c2b6f8199948761f3332281bb921f9d6acd0be4f5",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2014213502407074e-09,
+          "actual_v": -0.32499999999999973,
+          "expected_v": -0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-reflected-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "941ac0d6f92212ff13a82b5f8bdaef9f3839caad66523c34b90b9abb0f231598",
+      "status": "observed_violation",
+      "points": 301,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.012500000000001777
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.72531436364322e-09,
+          "actual_v": 0.8125516795833416,
+          "expected_v": 0.8000516795833399
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-affine-reference-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "64468abd0339096eae744b9c9e3d0d7292f8a7a890a99f404ebd42d4776878b6",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-affine-reference-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "69800aef5f778823a3549bb0dca3ba905514fa426b7db38280b2d3183a5c7e35",
+      "status": "observations_within_targets",
+      "points": 147,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.392982951209376e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.203198917210102e-11,
+          "actual_v": 4.012919249999999,
+          "expected_v": 4.01291925
+        }
+      },
+      "input_max_error_v": {
+        "u": 4.440892098500626e-16,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-affine-reference-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "843149d753bfb40b1c3f8b6d918e20cd19dd479d4879f162c9834ebc1fd5e3e3",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-affine-reference-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "a773d344219c1e4c0945a010e618b0040ca730838a7b89756c28043a23bd065e",
+      "status": "observations_within_targets",
+      "points": 281,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 6.496539417533143e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.970556426793337e-12,
+          "actual_v": 4.004263352500001,
+          "expected_v": 4.0042633525
+        }
+      },
+      "input_max_error_v": {
+        "u": 4.440892098500626e-16,
+        "v": 0.0,
+        "r": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-corner-catch-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "1fa4ec44c0a45bb26a34f5d1f708facefa94ee4379475e35c0812d64cf2490bf",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-corner-catch-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "1937739a9a12b78c255fde269c9f13e8e4410bce17759f4fc7c1c9b55dde0b79",
+      "status": "observations_within_targets",
+      "points": 163,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 8.881784197001252e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.729948075488212e-09,
+          "actual_v": 3.994998749999997,
+          "expected_v": 3.994998749999998
+        }
+      },
+      "input_max_error_v": {
+        "u": 8.881784197001252e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-corner-catch-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "f548c6fa0fb74a8a3b9b91b0f743f534b4ccb3696cc9f4087a278f2564e18dcd",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-corner-catch-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "4ed809f64dcd0bcaaccdf3393e4bca9c8762c9159db8de576d25662546d4987f",
+      "status": "observations_within_targets",
+      "points": 311,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.3322676295501878e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.750724866207477e-09,
+          "actual_v": 3.972689840836227,
+          "expected_v": 3.972689840836228
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.3322676295501878e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-equal-rate-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "a03505bd13352d848fea7ca6cc50ef9a67d4697238d7904e5d5d5dbe880345e5",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-equal-rate-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "2c706f39a85579d438277d83e6760790a9913bd72fa46239f9f8a7ed30d8f793",
+      "status": "observations_within_targets",
+      "points": 160,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 8.881784197001252e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.863421639427543e-09,
+          "actual_v": 1.9983325,
+          "expected_v": 1.9983324999999992
+        }
+      },
+      "input_max_error_v": {
+        "u": 8.881784197001252e-16
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-equal-rate-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "2a69f6bdd4366595d2a56919ecbdf73609238a5cf400de57d27d5b0f8d69b1c5",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.0
+      },
+      "worst": {},
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-equal-rate-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "2a5fa4e34db352772d35bd589364ea13500c56581e555f3e2448f05b8ab2e3b6",
+      "status": "observations_within_targets",
+      "points": 301,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 1.3322676295501878e-15
+      },
+      "worst": {
+        "y": {
+          "time_s": 1.863704799518858e-09,
+          "actual_v": 1.997724418334133,
+          "expected_v": 1.9977244183341343
+        }
+      },
+      "input_max_error_v": {
+        "u": 1.3322676295501878e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-time-scale-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "evas",
+      "waveform_sha256": "56a8a0e8e995ba750c33cde6f446949e2b3df1314a1b04a588122b5fbaffc16d",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2782554626464844e-06,
+          "actual_v": 0.32499999999999973,
+          "expected_v": 0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-time-scale-base",
+      "family": "slew",
+      "profile": "base",
+      "backend": "spectre",
+      "waveform_sha256": "43e38f2dfda325a03e9f4239ee9248a3f5e91ec8d19baccecd7dff5bf0df70e8",
+      "status": "observed_violation",
+      "points": 160,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.07500000000000177
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.814776758352915e-06,
+          "actual_v": -0.8751667083333334,
+          "expected_v": -0.8001667083333317
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-time-scale-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "evas",
+      "waveform_sha256": "7f75f60d6e70ab675bfa7e9f396e85540f7fdb9edd6f80a75b6f0a1e1a6d0b35",
+      "status": "observations_within_targets",
+      "points": 129,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 2.6645352591003756e-16
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.2782554626464844e-06,
+          "actual_v": 0.32499999999999973,
+          "expected_v": 0.325
+        }
+      },
+      "input_max_error_v": {
+        "u": 0.0
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    },
+    {
+      "case": "sl-time-scale-fine",
+      "family": "slew",
+      "profile": "fine",
+      "backend": "spectre",
+      "waveform_sha256": "479ef4b3edc4616318fa903f5d28aa3f48ec55389ea8177edc99846b1fac3415",
+      "status": "observed_violation",
+      "points": 301,
+      "common_grid_points": 129,
+      "max_error_v": {
+        "y": 0.012500000000001777
+      },
+      "worst": {
+        "y": {
+          "time_s": 3.815510476231705e-06,
+          "actual_v": -0.8142054262502736,
+          "expected_v": -0.8017054262502719
+        }
+      },
+      "input_max_error_v": {
+        "u": 2.220446049250313e-15
+      },
+      "target_v": 0.001,
+      "formal_qualification": false
+    }
+  ],
+  "pr14_full": {
+    "identity": {
+      "commit": "36380248d0e427fa31ff73758b7617a4d4c23e86",
+      "kernel_sha256": "4dbe6a0c20d02c4c2168de683abcb63bcdff564426668eab02fb7024b18d9ffb",
+      "source_sha256": {
+        "evas/src/evas/lowering.py": "57b8e99fa9456d36b4d6969b5fc9b3800d691fe71739096c2e9ba5edd70f28ee",
+        "evas/src/evas/frontend.py": "73c16dd42029da626afae93b0aaf7413eb54a8bf0631c323fab8009b758489b6",
+        "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/src/evas/ir.py": "30b7cd581daa4e2c1bd7f6587128f75b9784c490e9ddd7b96d6c1b7f020c87b8",
+        "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+        "evas/src/evas/syntax.py": "85d3cd43c76c7c8975f47ddc2d86ef86bd1c15860a5bcd957f9aca636fcad15a",
+        "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703"
+      },
+      "script_sha256": "a750f3e52837bb991afba9a1ba94f54018dd41d2f8b5d5d7175a161bc5f58fce",
+      "input_manifest_sha256": "83c6e7be047d4c56b8337241c9ab47f7c117881a83ac1e1574f8597347acc31d"
+    },
+    "records": [
+      {
+        "case": "ad-ramp-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "f581b54585bb52caf6466328d7c575b1beb579c30b55e088d1ab4d6a11aac06f",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-ramp-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "a92e9f0ec54189d51787d303e74280b25225b03300360b326679b18d9ca45621",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-zero-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "37f2145ecc17c1961021a3ada3925d7d8c044349359edd483d0bbf31b373cefc",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-zero-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "4cba6d4932f51cfc5befed6ee2d9f39696a7fb03e0b45cb8e15a32b81527cd04",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-after-stop-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "82007f425803f9ce7efa3c38b51ba2c39600a1fedfb092010cdb291960040eb0",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-after-stop-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "c49f94dbac783c700ffb96f3edc50c6b5883b1fc4bc00f9e2910b79f6d4506c5",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-affine-reference-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "0c9d944bd38aa46fca21c0d27ffac23153953f3b88a60a237a0733fcd0cc9a42",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0,
+          "v": 0.0,
+          "r": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-affine-reference-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "c2c68e9da8f4e9650dd9ff8a5a45d7803ef6900ef653c51f3934c6cf4b50b89f",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0,
+          "v": 0.0,
+          "r": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-call-isolation-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "507486a8c788af3e55a60b5a0df6b7fadbdcfbdac0990588a8c305b5752e3c0a",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0,
+          "z": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-call-isolation-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "095f559ad970cf805d4377cfc6544f7da9a06717bd549f5ad4ce1cdb6ce1dbd1",
+        "status": "observations_within_targets",
+        "points": 161,
+        "common_grid_points": 161,
+        "max_error_v": {
+          "y": 0.0,
+          "z": 0.0
+        },
+        "worst": {},
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-fraction-gain-base",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "f40385d77fefa9901a4fd5be2e56c18d7332b5cf42e0328f00397f5edf4864a5",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 1.1842378929335002e-15
+        },
+        "worst": {
+          "y": {
+            "time_s": 2.3865140974521637e-09,
+            "actual_v": 16.666666666666668,
+            "expected_v": 16.666666666666668
+          }
+        },
+        "input_max_error_v": {
+          "u": 3.700743415417188e-17
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "ad-fraction-gain-fine",
+        "backend": "evas-pr14-full",
+        "waveform_sha256": "156c3d62bdefe985805c2981aae715d0b8027ad2756fb46273def3bd0d2e56c7",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 1.1842378929335002e-15
+        },
+        "worst": {
+          "y": {
+            "time_s": 2.3865140974521637e-09,
+            "actual_v": 16.666666666666668,
+            "expected_v": 16.666666666666668
+          }
+        },
+        "input_max_error_v": {
+          "u": 3.700743415417188e-17
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      }
+    ]
+  },
+  "refinement": {
+    "records": [
+      {
+        "case": "sl-reverse-step-128",
+        "family": "slew",
+        "profile": "step-128",
+        "backend": "evas",
+        "waveform_sha256": "f77659b534773ceb906ff85a907843c243b884e4df6bee008a794bc5a5a45080",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": 0.32499999999999973,
+            "expected_v": 0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-128",
+        "family": "slew",
+        "profile": "step-128",
+        "backend": "spectre",
+        "waveform_sha256": "e868b49db0fdbb45dca5b31c06929f950658e8bdf7f75d86d7d5e44b8fd497b1",
+        "status": "observed_violation",
+        "points": 1063,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.004687500000001776
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": -0.8047391795833416,
+            "expected_v": -0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-512",
+        "family": "slew",
+        "profile": "step-512",
+        "backend": "evas",
+        "waveform_sha256": "4712598099cf409dc83abe5c158a23c012e08a69c8a547e46a2ae0d60f07a57a",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": 0.32499999999999973,
+            "expected_v": 0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-512",
+        "family": "slew",
+        "profile": "step-512",
+        "backend": "spectre",
+        "waveform_sha256": "b26666ccb1d18f192ad3bdfc7826e808e1ea5bfb1a459d0e6d2c680d68dd631b",
+        "status": "observations_within_targets",
+        "points": 4129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.0007812500000017764
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": -0.8008329295833416,
+            "expected_v": -0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-2048",
+        "family": "slew",
+        "profile": "step-2048",
+        "backend": "evas",
+        "waveform_sha256": "089aa6710abed9e985ad96b92ed3ce5cde5968a5df7c39b009af1e753add3d9a",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": 0.32499999999999973,
+            "expected_v": 0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-2048",
+        "family": "slew",
+        "profile": "step-2048",
+        "backend": "spectre",
+        "waveform_sha256": "4aa49891a5419fd45ef053040da00d1d59d531d122a69c2804961c852628798f",
+        "status": "observations_within_targets",
+        "points": 16411,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.00029296875000177635
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": -0.8003446483333416,
+            "expected_v": -0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-8192",
+        "family": "slew",
+        "profile": "step-8192",
+        "backend": "evas",
+        "waveform_sha256": "fd54c84802ed179595d157d825bb363af0b15e8b73bc449891b5daadb9cdd6f9",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": 0.32499999999999973,
+            "expected_v": 0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reverse-step-8192",
+        "family": "slew",
+        "profile": "step-8192",
+        "backend": "spectre",
+        "waveform_sha256": "ff98b810aafd6873ac96f49ed384c1f69c4ddccccd48f9cd89846eaa4eff8b72",
+        "status": "observations_within_targets",
+        "points": 65557,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 4.882812500177636e-05
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": -0.8001005077083416,
+            "expected_v": -0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-128",
+        "family": "slew",
+        "profile": "step-128",
+        "backend": "evas",
+        "waveform_sha256": "da0ed37dbd39e9269005c6e931abc2b170653a8240a8283afd63a535410d46fb",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": -0.32499999999999973,
+            "expected_v": -0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-128",
+        "family": "slew",
+        "profile": "step-128",
+        "backend": "spectre",
+        "waveform_sha256": "1871039c5f706ba37125e8ee65d3e69a7ee9a2d12093857a46e73691b5755b95",
+        "status": "observed_violation",
+        "points": 1063,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.004687500000001776
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": 0.8047391795833416,
+            "expected_v": 0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-512",
+        "family": "slew",
+        "profile": "step-512",
+        "backend": "evas",
+        "waveform_sha256": "86f95356fed6b1b3d70992bec264681a54716db770e1ab92593116c5f5231a7c",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": -0.32499999999999973,
+            "expected_v": -0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-512",
+        "family": "slew",
+        "profile": "step-512",
+        "backend": "spectre",
+        "waveform_sha256": "9aa78e12aebb35d3192739fa994e13ae14858c2aa6db2041617a5e3776273e57",
+        "status": "observations_within_targets",
+        "points": 4129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.0007812500000017764
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": 0.8008329295833416,
+            "expected_v": 0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-2048",
+        "family": "slew",
+        "profile": "step-2048",
+        "backend": "evas",
+        "waveform_sha256": "17b812d84156597df50493ce04efe62cfc49ecb42b782c5170b3faa506099ef4",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": -0.32499999999999973,
+            "expected_v": -0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-2048",
+        "family": "slew",
+        "profile": "step-2048",
+        "backend": "spectre",
+        "waveform_sha256": "a35ed31de90999a06ca030cf9202cbd444e41ad13561aa7702fde243721d796b",
+        "status": "observations_within_targets",
+        "points": 16411,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 0.00029296875000177635
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": 0.8003446483333416,
+            "expected_v": 0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-8192",
+        "family": "slew",
+        "profile": "step-8192",
+        "backend": "evas",
+        "waveform_sha256": "af9705ce14efed02b158d4e5a802ac9813f58bb7abfc21cad62ed703f6ce2c25",
+        "status": "observations_within_targets",
+        "points": 129,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 2.6645352591003756e-16
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.2014213502407074e-09,
+            "actual_v": -0.32499999999999973,
+            "expected_v": -0.325
+          }
+        },
+        "input_max_error_v": {
+          "u": 0.0
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      },
+      {
+        "case": "sl-reflected-step-8192",
+        "family": "slew",
+        "profile": "step-8192",
+        "backend": "spectre",
+        "waveform_sha256": "bf542c52f65671a5aaadf46da84a8fe304c3d5c63734e4357791ba000235fe05",
+        "status": "observations_within_targets",
+        "points": 65557,
+        "common_grid_points": 129,
+        "max_error_v": {
+          "y": 4.882812500177636e-05
+        },
+        "worst": {
+          "y": {
+            "time_s": 3.72531436364322e-09,
+            "actual_v": 0.8001005077083416,
+            "expected_v": 0.8000516795833399
+          }
+        },
+        "input_max_error_v": {
+          "u": 2.220446049250313e-15
+        },
+        "target_v": 0.001,
+        "formal_qualification": false
+      }
+    ],
+    "summary": {
+      "evas": {
+        "observations_within_targets": 8
+      },
+      "evas-pr14": {},
+      "spectre": {
+        "observed_violation": 2,
+        "observations_within_targets": 6
+      }
+    },
+    "formal_qualification": false
+  },
+  "earlier_mixed_frontend_kernel_probe": {
+    "label": "evas-pr14",
+    "status": "12/12 finite targets; supplemental only, superseded for standalone-PR14 claims by pr14_full"
+  },
+  "formal_qualification": false
+}

@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释 EVAS 0.6.1 / IR v6 的历史算子；transition、absdelay 随 PR13/14 交付，slew 仍为 PR15 候选。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本基线 EVAS 0.6.1 / IR v6 集成 PR13–15 的限定 transition、absdelay、slew；源码身份与支持边界分别记录。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
@@ -130,7 +130,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
 这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
 允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
-不可表示或非有限的移位拐点显式失败。[固定检查点专项](https://github.com/BucketSran/vaEVAS/blob/ec3acaa80fd799fd85f24c3d7ae8667982393d8f/experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
+不可表示或非有限的移位拐点显式失败。[固定检查点专项](../../experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## slew
@@ -143,12 +143,28 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 
 平台期间落后的输出继续追赶；输入反向后，只要仍处于同侧，输出继续原方向直到真正相交。
 实现用区间运算认证模式与交点次序，语义段/断点通过 Arc 共享；不确定或不可表示时失败。
-这些几何判定不构成整个电路的连续时间前向误差保证。
+交点仅用于调度时才转换成绝对时间；历史保存输入段起点 t0 与局部偏移 δ。
+反向后的输出使用 `y(t)=u0+a*δ+r_new*((t-t0)-δ)`，避免先计算 `t0+δ` 丢失低位，
+再用错误的输入值重置斜坡。反例：T=2^54，输入 (T,0)、(T+32,4)、(T+64,-4)，
+r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误得到2.0。
+零起点与乘2^-40的时间尺度也纳入同一个独立回归。
 
-实现：[slew.rs](https://github.com/BucketSran/vaEVAS/blob/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a/evas/rust_core/src/slew.rs)。
-验证：[test_slew.py](https://github.com/BucketSran/vaEVAS/blob/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a/evas/tests/test_slew.py)
+输入端点、局部交点、输出起点和最终保持值同时保存区间；查询落入交点区间时取相邻模式的包围。
+局部表示改善代表值，区间则包围原始 binary64 PWL 和编译后 IR 的实数解，并传入 PR13 的
+同刻电压/状态预算。网络增益、相消和后续采样不能把已有误差清零。
+不能证明模式或交点次序时仍拒绝；几何成立但电压预算不足时返回 `waveform_accuracy`。
+[test_slew_accuracy.py](../tests/test_slew_accuracy.py) 检查反向追赶误差放大、初值/输入重采样、
+同刻电压读取与跨事件误差保留。成功计算点的保守验收不构成整个电路的连续时间误差保证，
+也不包含编译前常量舍入或允许的源事件时间偏移；保守区间可能拒绝实际误差较小的输入。
+
+实现：[slew.rs](../rust_core/src/slew.rs)。
+验证：[test_slew.py](../tests/test_slew.py)
 包括独立 SL-CATCH/REVERSE/PASS、反射、SI/二进制尺度、实例与网格变化。
-尚未完成 Spectre 对照；内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
+[联合回归](../tests/test_timed_composition.py)另外检查双实例的三算子与 timer/cross 同刻采样，
+独立公式覆盖两种实例顺序、两种网格和两种步长，共8配置；该结果绑定 PR15 被测实现 `e01fb5b`。
+[专项对照及步长诊断](../../experiments/pr14-pr15-validation/RESULTS.md)中，EVAS 16/16、Spectre 10/16 达到固定有限观测目标。
+Spectre 的反向追赶偏差随步长细化下降；这是波形证据，不是私有算法或 LRM 违规的结论。
+内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
 
 ## 来源与证据限制
 

@@ -13,6 +13,7 @@ mod pwl;
 mod schedule;
 mod settlement;
 mod settlement_bounds;
+mod slew;
 pub mod solver;
 mod transient;
 mod transition;
