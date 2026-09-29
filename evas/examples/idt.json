@@ -1,0 +1,13 @@
+{
+  "models": ["idt.va"],
+  "instances": [{
+    "name": "integrator", "module": "integrated_ramp",
+    "connections": {"vin": "input", "vout": "output", "vref": "0"}
+  }],
+  "transient": {
+    "sources": {"input": [[0, 0.2], [4e-6, -0.2]]},
+    "output_times": [0, 1e-6, 2e-6, 3e-6, 4e-6],
+    "stop": 4e-6,
+    "max_step": 4e-6
+  }
+}
