@@ -171,6 +171,14 @@ class TimerContracts(unittest.TestCase):
             self.assertEqual(result.stdout, '')
             self.assertEqual(json.loads(result.stderr)['kind'], kind)
 
+        legacy = copy.deepcopy(base)
+        event = legacy['program']['events'][0]
+        event.update(event.pop('trigger'))
+        result = subprocess.run([str(KERNEL)], input=json.dumps(legacy), text=True, capture_output=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, '')
+        self.assertEqual(json.loads(result.stderr)['kind'], 'invalid_request')
+
     def test_overflow_and_post_event_failure_produce_no_partial_response(self):
         for residual in [False, True]:
             sources = {'timer.va': timer_source('0,0,0.001', initial=0 if residual else 2147483647)}
