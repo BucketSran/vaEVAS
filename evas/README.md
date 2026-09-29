@@ -1,6 +1,11 @@
 # EVAS
 
 当前实现为 **EVAS 0.5.2，IR v5**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行。尚未替换旧 EVAS 0.8.7。
+
+0.5.2 补充同刻前向误差认证、real 状态独立误差预算和可表示根的有界搜索；
+同块重复写同一整数状态现明确拒绝。129 项 Python、16 项 Rust 回归及新增 Spectre
+对照见 [0.5.2 加固证据](../experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)。
+
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 `solve` 的每个样本独立求静态工作点；`transient` 沿物理时间推进，保存实例私有状态。两种入口明确区分。
 
