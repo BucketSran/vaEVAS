@@ -10,8 +10,8 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 结果仅证明所列有限观测，完整观察资格仍待完成。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
-[EVAS](evas/README.md) 已实现 0.5.1：限定语法前端、IR v6、Rust 静态线性/非线性方程求解，
-以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `slew` 波形及原子提交。
+[EVAS](evas/README.md) 当前分支实现 0.6.1：限定语法前端、IR v6、Rust 静态线性/非线性方程求解，
+以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `slew` 波形与同刻原子提交。
 旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 
@@ -26,19 +26,20 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 | [scripts/](scripts/README.md) | 仓库维护和验证工具 |
 
 开发约定见 [AGENTS.md](AGENTS.md)。原始运行输出与临时材料存放在 Git 忽略的 `runs/`。
-正式结果绑定任务/源码版本、EVAS 构建、镜像及 Harbor/Agent 配置；修复影响判分时重跑受影响部分。
+EVAS 的数学与实现说明从[技术手册](evas/docs/README.md)进入；
+[能力与缺口总表](evas/docs/CAPABILITIES.md)统一关联 main 支持、开发 PR、实验身份和已知差异。
+正式结果绑定任务/源码版本、EVAS 构建及实际使用的镜像、Harbor/Agent 配置；修复影响判分时重跑受影响部分。
 题型、最终评分、完整支持范围、打包发布与应用基线仍需按实际工作确定。
 
 ## 分支与文档维护
 
-- `main` 是已审查成果的共同基线；新任务从更新后的 `main` 创建短期分支，PR 默认面向 `main`。
-- 一个明确任务对应一个分支和 PR。任务内部用小提交保存阶段检查点，不为每次 review 再开分支。
-  提交记录范围、检查结果与证据哈希，PR 提供阶段提交链接；不重写已发布的检查点，合入 `main` 时优先采用保留提交历史的 merge commit。
-- 完成约定范围、相关验证和审查后，在用户授权范围内合并；不等待整个仿真器完成，也不要求所有被测后端通过。
-  当前支持、失败、未决和验证限制必须如实记录。
-- 合并结束该批任务。确认分支没有独有提交或正在进行的工作后删除，后续任务另开 PR，不继续向已合并 PR 追加工作。
-- 已有工作区在合适检查点同步 `main`；同步前保护未提交改动。分支整理不包含他人的在途代码。
-- 仓库长期保留使用说明、当前接口/测试契约与可复核结果。阶段计划、设计讨论及 review 流水记录放在 PR 和 Git 历史，避免重复状态文档。
+`main` 为已审查共同基线，一批可 review 的代码、测试、数学和证据使用一个短期任务分支。
+仅实际依赖使用分层 PR；工作区与分支分别管理。完整生命周期和责任规则统一维护在
+[CONTRIBUTING.md](CONTRIBUTING.md#branch-lifecycle)，agent 的快速执行入口为 [AGENTS.md](AGENTS.md)。
+
+能力总表保存当前状态，Issue 保存具体剩余工作，PR/提交保存迭代历史；
+数学、接口和实验手册是长期项目资产。资产身份、公开可用性与执行收据见
+[实验管理](experiments/README.md#experiment-receipts)。发布/合并/清理遵循用户授权，当前开放 PR 不自动成为 main 支持。
 
 初始验证基线、静态仿射内核和仓库技能已分别通过
 [PR #1](https://github.com/BucketSran/vaEVAS/pull/1)、

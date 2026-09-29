@@ -17,7 +17,8 @@ fn direct_points(
     trajectory: &Trajectory,
     driven: &[String],
     origin: &Origin,
-) -> Result<Vec<(f64, f64)>, Error> {
+) -> Result<(Vec<(f64, f64)>, Vec<I>), Error> {
+    let expression = input;
     let input = affine(input, program, &origin.instance)?;
     let driven_nodes: Vec<_> = driven
         .iter()
@@ -41,23 +42,37 @@ fn direct_points(
             format!("waveform input must be affine in directly driven nodes and constants; internal nodes, state, nesting and feedback are unsupported at {}", origin.label()),
         ));
     }
+    let coefficients = crate::affine_bounds::affine(expression, program)?;
     let mut nodes = vec![0.0; program.nodes.len()];
-    trajectory
-        .knots
-        .iter()
-        .map(|&time| {
-            for (&node, value) in driven_nodes.iter().zip(trajectory.values(time)) {
-                nodes[node] = value;
-            }
-            Ok((time, input.value(&nodes, &[])?))
-        })
-        .collect()
+    let mut node_bounds = vec![I::ZERO; program.nodes.len()];
+    let mut points = Vec::new();
+    let mut bounds = Vec::new();
+    for &time in &trajectory.knots {
+        for ((&node, value), enclosure) in driven_nodes
+            .iter()
+            .zip(trajectory.values(time))
+            .zip(trajectory.value_bounds(time))
+        {
+            nodes[node] = value;
+            node_bounds[node] = enclosure;
+        }
+        points.push((time, input.value(&nodes, &[])?));
+        bounds.push(
+            coefficients
+                .iter()
+                .zip(&node_bounds)
+                .filter(|(coefficient, _)| !coefficient.zero())
+                .fold(*coefficients.last().unwrap(), |sum, (&a, &b)| sum + a * b),
+        );
+    }
+    Ok((points, bounds))
 }
 
 #[derive(Clone)]
 enum Runtime {
     Transition {
         input: AffineState,
+        input_bounds: Vec<I>,
         history: Transition,
     },
     Slew(Slew),
@@ -107,16 +122,30 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    let input = affine(input, program, &origin.instance)?;
-                    if !input.node_dependencies.is_empty()
-                        || !input.operator_dependencies.is_empty()
+                    // Validate raw state/operator references before interval indexing.
+                    let bound_input = affine(input, program, &origin.instance)?;
+                    if !bound_input.node_dependencies.is_empty()
+                        || !bound_input.operator_dependencies.is_empty()
                     {
                         return Err(Error::new("unsupported_operator", "transition input must be affine in instance state and constants; nesting and voltage inputs are unsupported"));
                     }
+                    let row = crate::affine_bounds::affine(input, program)?;
+                    let input_bounds: Vec<_> = row
+                        [program.nodes.len()..program.nodes.len() + program.states.len()]
+                        .iter()
+                        .copied()
+                        .chain([*row.last().unwrap()])
+                        .collect();
+                    let input = bound_input;
                     let initial = input.value(&[], states)?;
+                    let bounds = input_bounds
+                        .iter()
+                        .zip(states.iter().copied().map(I::point).chain([I::ONE]))
+                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                     entries.push(Runtime::Transition {
                         input,
-                        history: Transition::new(initial, *delay, *rise, *fall)?,
+                        input_bounds,
+                        history: Transition::enclosed(initial, bounds, *delay, *rise, *fall)?,
                     });
                 }
                 OperatorSpec::Slew {
@@ -125,11 +154,9 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    entries.push(Runtime::Slew(Slew::new(
-                        direct_points(input, program, trajectory, driven, origin)?,
-                        *rise,
-                        *fall,
-                    )?));
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
                 }
             }
         }
@@ -154,6 +181,16 @@ impl Operators {
                 Runtime::Slew(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
+        self.entries
+            .iter()
+            .map(|entry| match entry {
+                Runtime::Slew(history) => Ok(history.value_bounds(time)),
+                Runtime::Transition { history, .. } => history.value_bounds(time),
+            })
+            .collect()
     }
 
     pub(crate) fn check_deadline_order(
@@ -190,11 +227,26 @@ impl Operators {
         Ok(())
     }
 
-    pub(crate) fn advance(&mut self, time: f64, states: &[f64]) -> Result<(), Error> {
+    pub(crate) fn advance(
+        &mut self,
+        time: f64,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+    ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
-                Runtime::Transition { input, history } => {
-                    history.advance(time, input.value(&[], states)?)?
+                Runtime::Transition {
+                    input,
+                    input_bounds,
+                    history,
+                } => {
+                    let bounds = input_bounds
+                        .iter()
+                        .zip(bounds.iter().copied().chain([I::ONE]))
+                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+                    let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+                    history.advance_enclosed(time, input.value(&[], states)?, bounds, may_change)?
                 }
                 Runtime::Slew(_) => {}
             }

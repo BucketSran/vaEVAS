@@ -8,7 +8,7 @@ pub(crate) struct Deadline {
     pub(crate) bounds: I,
     // Exact symbolic sum when available; equal enclosures alone do not prove
     // coincident real deadlines. Interrupted-edge endpoints have no sum key.
-    sum: Option<(f64, f64)>,
+    sum: Option<[f64; 3]>,
 }
 impl Deadline {
     pub(crate) fn coincides(&self, other: &Self) -> bool {
@@ -23,11 +23,13 @@ impl Deadline {
 #[derive(Clone, Debug)]
 struct Edge {
     start: f64,
+    start_bounds: I,
     value: f64,
     value_bounds: I,
     origin: f64,
     origin_bounds: I,
     target: f64,
+    target_bounds: I,
     slope: f64,
     slope_bounds: I,
     end: Deadline,
@@ -39,16 +41,18 @@ pub(crate) struct Transition {
     rise: f64,
     fall: f64,
     input: f64,
+    input_bounds: I,
     settled: f64,
+    settled_bounds: I,
     edge: Option<Edge>,
-    pending: VecDeque<(Deadline, f64)>,
+    pending: VecDeque<(Deadline, f64, I)>,
 }
 
 fn invalid(message: &str) -> Error {
     Error::new("event_resolution", message)
 }
 
-fn deadline(bounds: I, scale: f64, sum: Option<(f64, f64)>) -> Result<Deadline, Error> {
+fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Error> {
     // Supported-slice time-resolution gate: representative-at-upper-bound
     // displacement must be <= 1% of the declared delay/edge time. This is not
     // a total waveform error bound and does not authorize uncertain ordering.
@@ -59,12 +63,28 @@ fn deadline(bounds: I, scale: f64, sum: Option<(f64, f64)>) -> Result<Deadline, 
             "transition time resolution exceeds 1% of declared timing",
         ));
     }
+    let sum = sum.map(|mut terms| {
+        terms.sort_by(f64::total_cmp);
+        terms
+    });
     Ok(Deadline { bounds, sum })
 }
 
 impl Transition {
+    #[cfg(test)]
     pub(crate) fn new(initial: f64, delay: f64, rise: f64, fall: f64) -> Result<Self, Error> {
+        Self::enclosed(initial, I::point(initial), delay, rise, fall)
+    }
+
+    pub(crate) fn enclosed(
+        initial: f64,
+        bounds: I,
+        delay: f64,
+        rise: f64,
+        fall: f64,
+    ) -> Result<Self, Error> {
         if ![initial, delay, rise, fall].iter().all(|v| v.is_finite())
+            || !bounds.finite()
             || delay < 0.0
             || rise <= 0.0
             || fall <= 0.0
@@ -79,29 +99,66 @@ impl Transition {
             rise,
             fall,
             input: initial,
+            input_bounds: bounds,
             settled: initial,
+            settled_bounds: bounds,
             edge: None,
             pending: VecDeque::new(),
         })
     }
 
-    fn value_bounds(&self, time: f64) -> I {
+    pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+        let held = self.bounds_at(I::point(time));
+        if let Some(&(deadline, target, bounds)) = self.pending.front() {
+            if deadline.bounds.lo < time && time < deadline.bounds.hi {
+                // A sample may fall after the exact activation but before its
+                // representative upper time. Enclose both possibilities without
+                // installing this preview in accepted history.
+                let mut activated = self.clone();
+                activated.pending.pop_front();
+                activated.target(deadline, target, bounds)?;
+                let changed = activated.bounds_at(I::point(time));
+                return Ok(I {
+                    lo: held.lo.min(changed.lo),
+                    hi: held.hi.max(changed.hi),
+                });
+            }
+        }
+        Ok(held)
+    }
+
+    fn bounds_at(&self, time: I) -> I {
         match &self.edge {
-            Some(edge) if time < edge.end.bounds.hi => {
-                let bounds =
-                    edge.value_bounds + edge.slope_bounds * (I::point(time) - I::point(edge.start));
-                let (low, high) = if edge.target > edge.value {
-                    (edge.value_bounds.lo, edge.target)
+            Some(edge) if time.lo < edge.end.bounds.hi => {
+                let bounds = edge.value_bounds + edge.slope_bounds * (time - edge.start_bounds);
+                // Interval extension of the exact monotone clipped ramp. The
+                // uncertain delayed start and uncertain target remain in it.
+                if edge.slope_bounds.lo > 0.0 {
+                    I {
+                        lo: bounds
+                            .lo
+                            .min(edge.target_bounds.lo)
+                            .max(edge.value_bounds.lo),
+                        hi: bounds
+                            .hi
+                            .min(edge.target_bounds.hi)
+                            .max(edge.value_bounds.hi),
+                    }
                 } else {
-                    (edge.target, edge.value_bounds.hi)
-                };
-                I {
-                    lo: bounds.lo.max(low).min(high),
-                    hi: bounds.hi.max(low).min(high),
+                    I {
+                        lo: bounds
+                            .lo
+                            .max(edge.target_bounds.lo)
+                            .min(edge.value_bounds.lo),
+                        hi: bounds
+                            .hi
+                            .max(edge.target_bounds.hi)
+                            .min(edge.value_bounds.hi),
+                    }
                 }
             }
-            Some(edge) => I::point(edge.target),
-            None => I::point(self.settled),
+            Some(edge) => edge.target_bounds,
+            None => self.settled_bounds,
         }
     }
 
@@ -128,7 +185,7 @@ impl Transition {
     pub(crate) fn deadlines(&self, after: f64) -> Vec<Deadline> {
         self.pending
             .front()
-            .map(|(deadline, _)| *deadline)
+            .map(|(deadline, _, _)| *deadline)
             .into_iter()
             .chain(self.edge.as_ref().map(|e| e.end))
             .filter(|deadline| deadline.bounds.hi > after)
@@ -142,15 +199,17 @@ impl Transition {
             .min_by(f64::total_cmp)
     }
 
-    fn target(&mut self, time: f64, target: f64) -> Result<(), Error> {
+    fn target(&mut self, moment: Deadline, target: f64, target_bounds: I) -> Result<(), Error> {
+        let time = moment.bounds.hi;
         let value = self.value(time)?;
-        let value_bounds = self.value_bounds(time);
-        let difference = I::point(target) - value_bounds;
+        let value_bounds = self.bounds_at(moment.bounds);
+        let difference = target_bounds - value_bounds;
         let direction = difference.sign().ok_or_else(|| {
             invalid("cannot certify transition target relative to current output")
         })?;
         if direction == 0 {
             self.settled = target;
+            self.settled_bounds = target_bounds;
             self.edge = None;
             return Ok(());
         }
@@ -164,29 +223,36 @@ impl Transition {
                 if direction == old_direction {
                     (edge.origin, edge.origin_bounds)
                 } else {
-                    (edge.target, I::point(edge.target))
+                    (edge.target, edge.target_bounds)
                 }
             }
             None => (value, value_bounds),
         };
         let duration = if direction > 0 { self.rise } else { self.fall };
         let slope = (target - origin) / duration;
-        let slope_bounds = (I::point(target) - origin_bounds) / I::point(duration);
+        let slope_bounds = (target_bounds - origin_bounds) / I::point(duration);
         if slope_bounds.sign() != Some(direction)
             || !slope_bounds.finite()
             || !slope.is_finite()
             || slope == 0.0
+            || (slope > 0.0) != (direction > 0)
         {
             return Err(invalid("cannot certify transition slope"));
         }
         let (end_bounds, sum) = if active.is_none() {
-            (I::point(time) + I::point(duration), Some((time, duration)))
+            let sum = moment.sum.and_then(|mut terms| {
+                // Source time + fixed delay occupies at most two terms.
+                let zero = terms.iter().position(|x| *x == 0.0)?;
+                terms[zero] = duration;
+                Some(terms)
+            });
+            (moment.bounds + I::point(duration), sum)
         } else {
             let remaining = difference / slope_bounds;
             if !remaining.finite() || remaining.lo <= 0.0 {
                 return Err(invalid("cannot certify transition remaining duration"));
             }
-            (I::point(time) + remaining, None)
+            (moment.bounds + remaining, None)
         };
         let end = deadline(end_bounds, duration, sum)?;
         if end.bounds.lo <= time {
@@ -194,11 +260,13 @@ impl Transition {
         }
         self.edge = Some(Edge {
             start: time,
+            start_bounds: moment.bounds,
             value,
             value_bounds,
             origin,
             origin_bounds,
             target,
+            target_bounds,
             slope,
             slope_bounds,
             end,
@@ -206,36 +274,62 @@ impl Transition {
         Ok(())
     }
 
+    #[cfg(test)]
     pub(crate) fn advance(&mut self, time: f64, input: f64) -> Result<(), Error> {
+        self.advance_enclosed(time, input, I::point(input), false)
+    }
+
+    pub(crate) fn advance_enclosed(
+        &mut self,
+        time: f64,
+        input: f64,
+        bounds: I,
+        may_change: bool,
+    ) -> Result<(), Error> {
         // Called only on a cloned candidate runtime. A failed pop/edge rebuild
         // discards the whole candidate, including all prior queue mutations.
         while self
             .pending
             .front()
-            .is_some_and(|(deadline, _)| deadline.bounds.hi <= time)
+            .is_some_and(|(deadline, _, _)| deadline.bounds.hi <= time)
         {
-            let (deadline, target) = self.pending.pop_front().unwrap();
-            self.target(deadline.bounds.hi, target)?;
+            let (deadline, target, target_bounds) = self.pending.pop_front().unwrap();
+            self.target(deadline, target, target_bounds)?;
         }
         if self
             .edge
             .as_ref()
             .is_some_and(|edge| edge.end.bounds.hi <= time)
         {
-            self.settled = self.edge.take().unwrap().target;
+            let edge = self.edge.take().unwrap();
+            self.settled = edge.target;
+            self.settled_bounds = edge.target_bounds;
         }
-        if !input.is_finite() {
+        if !input.is_finite() || !bounds.finite() {
             return Err(invalid("nonfinite transition target"));
+        }
+        if input == self.input
+            && (bounds != self.input_bounds || (may_change && bounds.lo != bounds.hi))
+        {
+            return Err(invalid("cannot certify unchanged transition input history"));
         }
         if input != self.input {
             self.input = input;
+            self.input_bounds = bounds;
             if self.delay == 0.0 {
-                self.target(time, input)?;
+                self.target(
+                    Deadline {
+                        bounds: I::point(time),
+                        sum: Some([time, 0.0, 0.0]),
+                    },
+                    input,
+                    bounds,
+                )?;
             } else {
                 let next = deadline(
                     I::point(time) + I::point(self.delay),
                     self.delay,
-                    Some((time, self.delay)),
+                    Some([time, self.delay, 0.0]),
                 )?;
                 if next.bounds.lo <= time {
                     return Err(invalid(
@@ -245,13 +339,13 @@ impl Transition {
                 if self
                     .pending
                     .back()
-                    .is_some_and(|(old, _)| old.bounds.hi >= next.bounds.lo)
+                    .is_some_and(|(old, _, _)| old.bounds.hi >= next.bounds.lo)
                 {
                     return Err(invalid(
                         "cannot certify ordering of distinct transition target deadlines",
                     ));
                 }
-                self.pending.push_back((next, input));
+                self.pending.push_back((next, input, bounds));
             }
         }
         Ok(())
@@ -261,6 +355,17 @@ impl Transition {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn equal_enclosures_do_not_prove_a_rewritten_target_unchanged() {
+        let bounds = I { lo: 0.99, hi: 1.01 };
+        let accepted = Transition::enclosed(1.0, bounds, 0.0, 1.0, 1.0).unwrap();
+        let mut held = accepted.clone();
+        held.advance_enclosed(0.5, 1.0, bounds, false).unwrap();
+        let mut written = accepted.clone();
+        assert!(written.advance_enclosed(0.5, 1.0, bounds, true).is_err());
+        assert_eq!(accepted.value_bounds(0.5).unwrap(), bounds);
+    }
     fn near(a: f64, b: f64) {
         assert!((a - b).abs() < 1e-12, "{a} != {b}");
     }

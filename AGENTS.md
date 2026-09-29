@@ -1,55 +1,68 @@
-# vaEVAS collaboration guide
+# vaEVAS agent guide
 
-## Scope and current state
+This repository contains a Verilog-A benchmark and the EVAS voltage-domain simulator.
+Current user instructions govern scope; support, versions and result counts live in component docs.
 
-- This repository is the new shared workspace for a Verilog-A benchmark and the full EVAS simulator source.
-- The research focus is benchmark quality and trustworthy evaluation. Harbor is the selected evaluation harness.
-- The independent validation suite has 31 current development conditions and fixed four-backend evidence. Reviewed validation and EVAS implementation checkpoints are integrated into `main`; report only the support and checks documented for the revision being used.
-- Read `README.md` and the README of the affected component before making structural changes. Current user instructions take precedence over this guide.
+## Quick workflow
 
-## Agent skills
+1. Read the current task, `git status -sb`, and the affected component README. Select the relevant skill below; they are independent entry points.
+2. Identify the outcome, affected [capability IDs](evas/docs/CAPABILITIES.md), and acceptance checks. For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
+3. For edits, reuse a suitable task branch/worktree. New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
+4. Make the smallest coherent change. Select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks); documentation-only changes need no simulator run.
+5. Update affected contracts, capability rows and evidence links. Report the exact commit, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
 
-Repository-local skills live in `.agents/skills/`. Load the skills relevant to the current request; these are independent entry points, not a mandatory pipeline.
+Carry authorization forward for the same task, target and action within its resource limits; it does not automatically extend to another PR. Implementation permits necessary local edits/checks; review alone stays read-only. Publishing, merging and cleanup need authorization covering that action. If absent, finish independent work and ask once about the concrete action. See [boundaries and examples](CONTRIBUTING.md#scope-and-authorization).
 
-- [evas-develop](.agents/skills/evas-develop/SKILL.md): implement or refactor EVAS language, IR, and execution behavior in a reviewable scope.
-- [evas-validate](.agents/skills/evas-validate/SKILL.md): select and run appropriate checks, or reassess simulator evidence against independent contracts.
-- [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md): review a PR or local diff for correctness, contract, and evidence problems.
-- [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md): prepare a reviewable checkpoint and PR description; publish only within the user's authorization.
+## Skills
 
-Skills route to the owning documentation and scripts. Current implementation scope, commands, and result counts belong in those sources rather than being duplicated in skill instructions.
+| Task | Repository entry |
+| --- | --- |
+| Implement/refactor | [evas-develop](.agents/skills/evas-develop/SKILL.md) |
+| Check behavior/evidence | [evas-validate](.agents/skills/evas-validate/SKILL.md) |
+| Review | [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md) |
+| Prepare/publish a checkpoint | [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md) |
 
-## Branch lifecycle
-
-- Use `main` as the shared reviewed baseline. Start a short-lived branch for a defined task and target `main` unless an actual dependency requires a different base.
-- Record intermediate review checkpoints as small commits within the task's PR. Do not create a branch for every stage or keep completed PRs open as permanent work queues.
-- Complete the agreed scope and relevant checks, document unsupported behavior and evidence limits, and merge only within the user's authorization. A milestone does not require a complete simulator or universal backend passes.
-- After merging, delete a task branch only after confirming it has no unique commits or active work. Subsequent work needs a new PR; do not append it to a merged PR.
-- Preserve in-progress checkouts and uncommitted changes during repository cleanup. Synchronize existing branches with `main` at a suitable checkpoint rather than mixing unfinished work into the reviewed baseline.
+Global vaEvas skills route here; legacy interview, KPI and multi-repository workflows do not apply.
 
 ## Ownership
 
-- `tasks/`: benchmark tasks, reference solutions, and task-specific verification.
-- `evas/`: simulator source, build configuration, and simulator regression tests.
-- `containers/`: shared container builds and dependency versions.
-- `experiments/`: experiment configurations, analysis, and curated result summaries.
-- `scripts/`: repository maintenance and validation helpers.
-- Keep current usage and contracts with their owning component. Put stage plans, design discussion, and review logs in PRs and Git history, rather than parallel status documents.
-- Add internal structure when an actual implementation requires it. Use the existing owning document instead of creating duplicate status trackers.
+- `evas/`: simulator code, build and developer tests.
+- `evas/docs/`: mathematics and capability status; `evas/validation/`: independent contracts, fixtures and checkers.
+- `tasks/`: benchmark tasks, reference solutions and task verification.
+- `experiments/`: protocols, execution receipts and curated results; ignored `runs/`: temporary/bulk output.
+- `containers/`: shared build environments; `scripts/`: repository maintenance.
 
-## Migration and fixes
+## Build and checks
 
-- Review legacy tasks, checkers, reference solutions, and EVAS code before importing them. Preserve source provenance and applicable license notices when material is migrated.
-- Treat legacy pass records as historical evidence; verify the migrated behavior in the new repository.
-- Diagnose whether a failure belongs to the specification, reference solution, checker, simulator, or execution environment.
-- A coherent change may update tasks, grading, and EVAS together. Include a small reproducible regression for a behavioral fix when feasible and check the affected tasks.
-- Validate specifications and scoring with independent evidence where appropriate. Do not weaken a checker merely to hide a simulator or candidate failure.
-- Preserve unrelated work and existing source repositories. Migration does not authorize deleting old work.
+Use Python 3.10+ and Rust/Cargo. From the repository root, build the kernel when needed:
 
-## Verification and results
+```sh
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+```
 
-- Run checks appropriate to the changed behavior. Documentation and scaffold edits need link and diff checks, not a new test framework.
-- Report what was actually checked and distinguish task failures from infrastructure failures.
-- Record the task/repository revision, EVAS build, image digest, Harbor/Agent configuration, and experiment budget with formal results.
-- If a fix changes grading, identify and rerun affected results before using them in a comparison.
-- Keep raw runs, credentials, machine-specific configuration, and scratch files out of tracked content. `.gitignore` is not an access-control boundary.
-- Public documentation must distinguish proposed behavior, implemented behavior, and verified results.
+Validation-only Python entries need no kernel:
+
+```sh
+python3 -B evas/validation/check_design_math.py
+python3 -B scripts/verify_validation_version.py
+```
+
+These check draft mathematics and frozen artifact identity, respectively; neither runs a simulator.
+Then use [compile/solve/transient smoke commands](evas/README.md#构建与运行) or the
+[change-to-check mapping](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks).
+Run the relevant regression after a behavioral fix; do not substitute static replay for event validation.
+
+## Guardrails
+
+- Do not rebase/force-push shared history, merge, or delete branches as incidental cleanup.
+- Do not overwrite another contributor's work or share file/index writes concurrently; [assign ownership first](CONTRIBUTING.md#parallel-work).
+- Do not weaken a checker or remove failures from the denominator to improve results.
+- Do not invent receipt fields, claim unrun checks, or treat branch/local evidence as merged support or public reproducibility.
+- Do not commit credentials, machine-private configuration, raw bulk runs or build products.
+- Do not retire a checkout before completing the [preservation checklist](CONTRIBUTING.md#retiring-work).
+
+## Detailed references
+
+- [CONTRIBUTING](CONTRIBUTING.md): task scope, branch dependencies, coordination, cleanup and [documentation language](CONTRIBUTING.md#documentation-language).
+- [Technical handbook](evas/docs/README.md#feature-documentation-contract): behavior, mathematics, references, implementation and limits.
+- [Experiment receipts](experiments/README.md#experiment-receipts): source/input/checker identities, reanalysis and artifact availability.

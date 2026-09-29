@@ -57,6 +57,28 @@ def values(result, node='y'):
 
 
 class SlewContracts(unittest.TestCase):
+    def test_large_time_catchup_retains_fractional_local_origin(self):
+        # The reversal catches at offset 192/5, which is not representable
+        # after adding 2**54. Rounding that absolute time must not restart
+        # the outgoing line at the wrong input value.
+        offsets = [0, 32, 36, 40, 48, 64, 80, 88, 92, 96, 128]
+        for scale in [F(1), F(1, 2**40)]:
+            for origin in [0, 2**54]:
+                points = ([[0, 0]] if origin else []) + [
+                    [float((origin+d)*scale), v]
+                    for d, v in [(0, 0), (32, 4), (64, -4), (128, -4)]]
+                program = compiled(instances=[instance(parameters={
+                    'rise': float(F(1, 16)/scale),
+                    'fall': float(F(-1, 8)/scale)})])
+                times = [float((origin+d)*scale) for d in offsets]
+                with self.subTest(scale=scale, origin=origin):
+                    result = transient(program, {'u': points}, times,
+                                       stop=points[-1][0], max_step=points[-1][0],
+                                       vabstol=1e-12, reltol=1e-10, kernel=KERNEL)
+                    for actual, d in zip(values(result), offsets):
+                        answer = F(d, 16) if F(d) <= F(192, 5) else max(F(-4), F(36, 5)-F(d, 8))
+                        self.assertAlmostEqual(actual, float(answer), delta=2e-14)
+
     def test_fraction_anchors_cover_catch_reverse_and_tracking(self):
         times = list(map(F, [0, 1, 2])) + [F(9, 4), F(12, 5), F(3), F(4), F(5), F(28, 5), F(6), F(8)]
         for case in POINTS:

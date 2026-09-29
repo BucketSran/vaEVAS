@@ -15,10 +15,15 @@ enum Line {
         end: f64,
         a: f64,
         b: f64,
+        a_bounds: I,
+        b_bounds: I,
     },
     Limited {
         start: f64,
+        offset: f64,
+        offset_bounds: I,
         value: f64,
+        value_bounds: I,
         rate: f64,
     },
 }
@@ -26,7 +31,9 @@ enum Line {
 impl Line {
     fn value(&self, time: f64) -> f64 {
         match *self {
-            Self::Input { start, end, a, b } => {
+            Self::Input {
+                start, end, a, b, ..
+            } => {
                 if time == start {
                     a
                 } else if time == end {
@@ -36,7 +43,44 @@ impl Line {
                     (1.0 - fraction) * a + fraction * b
                 }
             }
-            Self::Limited { start, value, rate } => rate.mul_add(time - start, value),
+            Self::Limited {
+                start,
+                offset,
+                value,
+                rate,
+                ..
+            } => rate.mul_add((time - start) - offset, value),
+        }
+    }
+
+    fn bounds(&self, time: f64) -> I {
+        match *self {
+            Self::Input {
+                start,
+                end,
+                a_bounds,
+                b_bounds,
+                ..
+            } => {
+                if time == start {
+                    return a_bounds;
+                }
+                if time == end {
+                    return b_bounds;
+                }
+                let fraction =
+                    (I::point(time) - I::point(start)) / (I::point(end) - I::point(start));
+                (I::ONE - fraction) * a_bounds + fraction * b_bounds
+            }
+            Self::Limited {
+                start,
+                offset_bounds,
+                value_bounds,
+                rate,
+                ..
+            } => {
+                value_bounds + I::point(rate) * ((I::point(time) - I::point(start)) - offset_bounds)
+            }
         }
     }
 }
@@ -44,6 +88,8 @@ impl Line {
 #[derive(Clone, Debug)]
 struct Segment {
     start: f64,
+    offset: f64,
+    offset_bounds: I,
     line: Line,
 }
 
@@ -53,6 +99,7 @@ pub(crate) struct Slew {
     breakpoints: Arc<[f64]>,
     stop: f64,
     final_value: f64,
+    final_bounds: I,
 }
 
 fn finite(value: f64) -> Result<f64, Error> {
@@ -89,7 +136,18 @@ fn clipped(slope: I, rise: f64, fall: f64) -> Result<Option<f64>, Error> {
 }
 
 impl Slew {
+    #[cfg(test)]
     pub(crate) fn new(points: Vec<(f64, f64)>, rise: f64, fall: f64) -> Result<Self, Error> {
+        let bounds = points.iter().map(|p| I::point(p.1)).collect();
+        Self::enclosed(points, bounds, rise, fall)
+    }
+
+    pub(crate) fn enclosed(
+        points: Vec<(f64, f64)>,
+        input_bounds: Vec<I>,
+        rise: f64,
+        fall: f64,
+    ) -> Result<Self, Error> {
         if !rise.is_finite() || rise <= 0.0 || !fall.is_finite() || fall >= 0.0 {
             return Err(Error::new(
                 "invalid_ir",
@@ -106,23 +164,34 @@ impl Slew {
                 "slew input must be a finite continuous PWL starting at zero",
             ));
         }
+        if input_bounds.len() != points.len() || input_bounds.iter().any(|v| !v.finite()) {
+            return Err(unresolved("cannot bound slew input history"));
+        }
         let mut segments = Vec::new();
         let mut breakpoints = Vec::new();
         let mut value = points[0].1;
-        let mut bounds = I::point(value);
+        let mut bounds = input_bounds[0];
         // A tracked endpoint is algebraically the input endpoint. Remembering
         // this identity avoids mistaking accumulated outward bounds for a lag.
         let mut tracking = true;
-        for pair in points.windows(2) {
+        for (pair, bound_pair) in points.windows(2).zip(input_bounds.windows(2)) {
             let (start, a) = pair[0];
             let (end, b) = pair[1];
             let duration = bounded(I::point(end) - I::point(start))?;
-            let slope = bounded((I::point(b) - I::point(a)) / duration)?;
-            let input = Line::Input { start, end, a, b };
+            let (a_bounds, b_bounds) = (bound_pair[0], bound_pair[1]);
+            let slope = bounded((b_bounds - a_bounds) / duration)?;
+            let input = Line::Input {
+                start,
+                end,
+                a,
+                b,
+                a_bounds,
+                b_bounds,
+            };
             let gap = if tracking {
                 0
             } else {
-                sign(I::point(a) - bounds)?
+                sign(a_bounds - bounds)?
             };
             let rate = match gap {
                 1 => Some(rise),
@@ -130,16 +199,30 @@ impl Slew {
                 _ => clipped(slope, rise, fall)?,
             };
             let Some(rate) = rate else {
-                segments.push(Segment { start, line: input });
+                segments.push(Segment {
+                    start,
+                    offset: 0.0,
+                    offset_bounds: I::ZERO,
+                    line: input,
+                });
                 value = b;
-                bounds = I::point(b);
+                bounds = b_bounds;
                 tracking = true;
                 breakpoints.push(end);
                 continue;
             };
-            let line = Line::Limited { start, value, rate };
+            let line = Line::Limited {
+                start,
+                offset: 0.0,
+                offset_bounds: I::ZERO,
+                value,
+                value_bounds: bounds,
+                rate,
+            };
             segments.push(Segment {
                 start,
+                offset: 0.0,
+                offset_bounds: I::ZERO,
                 line: line.clone(),
             });
             // While separated, continue pursuing the input even after an input
@@ -158,7 +241,7 @@ impl Slew {
             // imply a root far beyond stop whose quotient would overflow;
             // no quotient is needed when the endpoint still has the same lag.
             let end_bounds = bounded(bounds + I::point(rate) * duration)?;
-            let end_gap = sign(I::point(b) - end_bounds)?;
+            let end_gap = sign(b_bounds - end_bounds)?;
             if end_gap == gap {
                 value = finite(line.value(end))?;
                 bounds = end_bounds;
@@ -167,10 +250,10 @@ impl Slew {
                 // Exact coincidence belongs to the input corner. The following
                 // interval chooses its new mode from y=u, with no duplicate root.
                 value = b;
-                bounds = I::point(b);
+                bounds = b_bounds;
                 tracking = true;
             } else {
-                let offset = bounded((I::point(a) - bounds) / closing)?;
+                let offset = bounded((a_bounds - bounds) / closing)?;
                 if offset.lo <= 0.0 {
                     return Err(unresolved(
                         "slew catchup cannot be separated from its input knot",
@@ -183,38 +266,43 @@ impl Slew {
                     ));
                 }
                 let nominal_slope = finite((b - a) / (end - start))?;
-                let at = finite(start + (a - value) / (rate - nominal_slope))?;
-                if at <= start || at >= end || at < root.lo || at > root.hi {
+                let local = finite((a - value) / (rate - nominal_slope))?;
+                if local <= 0.0 || local >= end - start || local < offset.lo || local > offset.hi {
                     return Err(unresolved("slew catchup has no usable representable time"));
                 }
-                // The query boundary uses the algebraic root estimate. The
-                // solver is forced to the upper bound, after the true root.
+                // Only the scheduler uses an absolute representative. History
+                // keeps the local root so adding a large epoch cannot move the
+                // outgoing line or select the wrong mode at a rounded root.
                 breakpoints.push(root.hi);
                 match clipped(slope, rise, fall)? {
                     None => {
                         segments.push(Segment {
-                            start: at,
+                            start,
+                            offset: local,
+                            offset_bounds: offset,
                             line: input,
                         });
                         value = b;
-                        bounds = I::point(b);
+                        bounds = b_bounds;
                         tracking = true;
                     }
                     Some(next_rate) => {
-                        let at_value = finite(input.value(at))?;
+                        let at_value = finite(nominal_slope.mul_add(local, a))?;
+                        let at_bounds = bounded(a_bounds + slope * offset)?;
                         let next = Line::Limited {
-                            start: at,
+                            start,
+                            offset: local,
+                            offset_bounds: offset,
                             value: at_value,
+                            value_bounds: at_bounds,
                             rate: next_rate,
                         };
                         value = finite(next.value(end))?;
-                        bounds = bounded(
-                            I::point(a)
-                                + slope * offset
-                                + I::point(next_rate) * (duration - offset),
-                        )?;
+                        bounds = bounded(at_bounds + I::point(next_rate) * (duration - offset))?;
                         segments.push(Segment {
-                            start: at,
+                            start,
+                            offset: local,
+                            offset_bounds: offset,
                             line: next,
                         });
                         tracking = false;
@@ -228,6 +316,7 @@ impl Slew {
             breakpoints: breakpoints.into(),
             stop: points.last().unwrap().0,
             final_value: value,
+            final_bounds: bounds,
         })
     }
 
@@ -241,11 +330,36 @@ impl Slew {
         if time == self.stop {
             return Ok(self.final_value);
         }
-        let index = self
-            .segments
-            .partition_point(|segment| segment.start <= time)
-            - 1;
+        let index = self.segments.partition_point(|segment| {
+            segment.start <= time && time - segment.start >= segment.offset
+        }) - 1;
         finite(self.segments[index].line.value(time))
+    }
+
+    pub(crate) fn value_bounds(&self, time: f64) -> I {
+        if time == self.stop {
+            return self.final_bounds;
+        }
+        // Locate the last mode certain to have begun, then include each mode
+        // whose root interval contains the query. A nominal mode decision is
+        // never mistaken for an exact decision in the voltage certificate.
+        let index = self.segments.partition_point(|s| {
+            s.start <= time && (I::point(time) - I::point(s.start)).lo >= s.offset_bounds.hi
+        }) - 1;
+        let mut bounds = self.segments[index].line.bounds(time);
+        for segment in &self.segments[index + 1..] {
+            if segment.start > time
+                || (I::point(time) - I::point(segment.start)).hi < segment.offset_bounds.lo
+            {
+                break;
+            }
+            let next = segment.line.bounds(time);
+            bounds = I {
+                lo: bounds.lo.min(next.lo),
+                hi: bounds.hi.max(next.hi),
+            };
+        }
+        bounds
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
