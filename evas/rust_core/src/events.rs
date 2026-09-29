@@ -7,13 +7,12 @@ pub(crate) struct AffineState {
     constant: f64,
     nodes: Vec<f64>,
     states: Vec<f64>,
+    // Structural dependence survives coefficient cancellation and underflow.
+    // It is deliberately conservative, including exact algebraic cancellations.
+    has_variables: bool,
 }
 
 impl AffineState {
-    fn has_variables(&self) -> bool {
-        self.nodes.iter().chain(&self.states).any(|v| *v != 0.0)
-    }
-
     pub(crate) fn value(&self, nodes: &[f64], states: &[f64]) -> Result<f64, Error> {
         let value = self.constant
             + self
@@ -59,6 +58,7 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
         constant: 0.0,
         nodes: vec![0.0; program.nodes.len()],
         states: vec![0.0; program.states.len()],
+        has_variables: false,
     };
     match expr {
         Expression::Affine { constant, terms } => {
@@ -66,6 +66,7 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
             result.constant = *constant;
             for term in terms {
                 result.nodes[term.node] = term.coefficient;
+                result.has_variables |= term.coefficient != 0.0;
             }
         }
         Expression::State { state } => {
@@ -76,17 +77,19 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
                 ));
             }
             result.states[*state] = 1.0;
+            result.has_variables = true;
         }
         Expression::Add { left, right } | Expression::Multiply { left, right } => {
             let a = affine(left, program, owner)?;
             let b = affine(right, program, owner)?;
             let multiply = matches!(expr, Expression::Multiply { .. });
-            if multiply && a.has_variables() && b.has_variables() {
+            if multiply && a.has_variables && b.has_variables {
                 return Err(Error::new(
                     "unsupported_transient",
                     "transient expressions must be jointly affine in voltage and state",
                 ));
             }
+            result.has_variables = a.has_variables || b.has_variables;
             let (ka, kb) = if multiply {
                 (b.constant, a.constant)
             } else {

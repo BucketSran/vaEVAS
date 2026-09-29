@@ -9,6 +9,9 @@ frozen finite-observation targets.** Spectre version: `21.1.0.509.isr12`.
 No execution failures, timeouts, numerical violations or unresolved finite
 checks occurred. Formal observation qualification remains I.
 
+The separate [PR7 cross comparison](#pr7-cross-小规模对照) below uses eight
+development conditions. Its results do not change this 31-condition denominator.
+
 [PROTOCOL.md](PROTOCOL.md) is frozen before execution and describes inputs,
 resource limits, targets, observation requirements, conditional history checks,
 and the distinction between finite checks and formal qualification.
@@ -109,3 +112,70 @@ python3 -B experiments/dvs2-spectre-validation/check_results.py \
 本次确认当前 31 条件在该版本 Spectre、这两档设置下均可执行且观测达标。
 完整输入误差、时标语义、未采样区间和其他行为覆盖的资格工作仍未完成；不据此
 外推所有 Spectre 版本、所有 Verilog-A 模型或 EVAS 的通过情况。
+
+## PR7 cross 小规模对照
+
+2026-09-29，EVAS 0.4.4 在本机运行，Spectre `21.1.0.509.isr12` 在 thu-sui
+运行相同 DUT 和连续 PWL 激励。[cross_reference.py](cross_reference.py) 提供
+8 个开发条件：双向、仅上升、37 ps 平移、断点穿越与相切、初始高电平、内部反馈、
+收紧时间容差、收紧表达式容差。每条分别使用 100 ns / 7 ns 最大步长，共每后端 16 组。
+该 DUT 不含 `transition`，不替换原 E1，也不是新的未见确认集。
+
+事件块累加计数并采样线性时钟电压；检查器根据独立声明的 PWL 段，用精确有理数
+计算根及允许窗口 `min(ttol, tol/abs(slope))`，再检查计数和保持电压。
+两个后端均接受同一判据；不以两者相等作为正确性的定义。
+预先固定的电压观测余量为 `1e-8 V`（时钟上约 10 fs），这是条件假设，
+不是已证明的物理观测误差界。有限采样和保持值也不证明完整连续事件历史。
+
+| 固定判据结果 | EVAS | Spectre |
+| --- | ---: | ---: |
+| 普通穿越等 7 条件 × 两档 | 14/14 | 14/14 |
+| 断点穿越与相切 × 两档 | 2/2 | 0/2，事件次数不同 |
+| 合计 | 16/16 | 14/16 |
+
+最后两组预期在 0.5、2.5 µs 穿越时各触发一次，忽略 1.5 µs 的同侧相切。
+Spectre 两档都额外在 1.5 µs 触发，最终计数为 3，EVAS 为 2。
+这表示 **当前 EVAS 相切契约与 Spectre 实测行为不一致**，不能解释成 Spectre 错误
+或 EVAS 更准确，也没有通过修改判据消除差异。
+
+另外两次成功的方向诊断使用 `u: 0.6 → 0.5 → 0.6 V`，谷底在 1.5 µs，
+guard 为 `scale*(V(u)-0.5)+offset`，同一网表含七个独立实例：
+
+| guard | 双向次数 | 上升次数 | 下降次数 |
+| --- | ---: | ---: | ---: |
+| `V(u)-0.5` | 1 | 0 | 1 |
+| `-(V(u)-0.5)` | 1 | 1 | 0 |
+| `V(u)-0.5+1e-6` | 0 | 未运行 | 未运行 |
+
+两档一致，观测触发时刻均为 1.5 µs，符合“按接近零的方向触发”的现象。
+最低点仍为正、但小于表达式容差的实例没有触发；因此不能简单用容差带模拟这个行为。
+这里没有内部 guard 记录，不能确定内部零值分类或舍入机制，也未把这两次诊断
+加入基线通过分母。首次诊断两次均因 VA 的 `.5` 字面量语法被拒绝；修正为 `0.5`
+并将方向参数声明为整数后，在新目录重跑。失败记录保留，未作为波形结果使用。
+
+普通穿越中，保持电压反推出的 Spectre 最大延迟约为：默认 25 ps、内部节点斜率
+加倍时 12.5 ps、收紧 `ttol` 时 0.5 ps、收紧 `tol` 时 0.25 ps。
+这些值满足固定窗口，支持分别核验两项容差的设计；它们不证明通用的“半窗口”算法。
+EVAS 无须复制相同延迟，但仍须证明自身的根定位误差满足声明容差。
+
+[完整收据](results/cross-reference-0.4.4.json) 保存每组结果、源码/内核/检查器哈希、
+实际设置和诊断 DUT。基线 16 次 Spectre 执行均成功，无超时；16 份生效设置匹配，
+只出现既有非致命 `VACOMP-2435`。连同诊断共 20 次电路执行：18 次产出波形，
+2 次语法失败。原始归档位于忽略目录 `runs/pr7-spectre-contract-20260929/`，
+thu-sui 任务私有区另有副本；主归档 296 个文件、诊断归档两批共 54 个文件的哈希均已核对。
+执行耗时含启动与编译，不作为性能比较。
+
+复现时先运行检查器校准，再冻结新目录；将源码、检查器依赖和冻结目录复制到
+已有 Spectre 环境后执行 `spectre` 子命令，私有工具 profile 不进入仓库。
+回传完整结果后在原源码版本重新分析：
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p test_cross_reference.py -v
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py build runs/NEW-CROSS
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py evas runs/NEW-CROSS --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py spectre runs/NEW-CROSS --spectre-profile /PRIVATE/profile.json
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py check runs/NEW-CROSS --output runs/NEW-CROSS-analysis.json
+```
+
+四项校准方法包含手算锚点、合法延迟、共同错误、缺失/错序/非有限观测等控制。
+当前结论只涉及这些限定条件；相切语义仍须 review，不宣称完整 Spectre 兼容。

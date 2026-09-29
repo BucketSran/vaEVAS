@@ -8,8 +8,9 @@ pub(crate) fn unresolved(message: &str) -> Error {
     Error::new("event_resolution", message)
 }
 
-// Last entry is the constant. EventModel has already validated joint affinity.
-fn affine(expr: &Expression, program: &Program) -> Vec<I> {
+// Last entry is the constant. Recheck affinity before dropping product terms,
+// even though EventModel also checks the original expression's structure.
+fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Error> {
     let n = program.nodes.len() + program.states.len();
     let mut result = vec![I::ZERO; n + 1];
     match expr {
@@ -21,23 +22,28 @@ fn affine(expr: &Expression, program: &Program) -> Vec<I> {
         }
         Expression::State { state } => result[program.nodes.len() + state] = I::ONE,
         Expression::Add { left, right } => {
-            result = affine(left, program)
+            result = affine(left, program)?
                 .iter()
-                .zip(affine(right, program))
+                .zip(affine(right, program)?)
                 .map(|(&a, b)| a + b)
                 .collect();
         }
         Expression::Multiply { left, right } => {
-            let a = affine(left, program);
-            let b = affine(right, program);
+            let a = affine(left, program)?;
+            let b = affine(right, program)?;
+            if a[..n].iter().any(|x| !x.zero()) && b[..n].iter().any(|x| !x.zero()) {
+                return Err(unresolved("cannot certify jointly affine event expression"));
+            }
             for k in 0..n {
                 result[k] = a[k] * b[n] + b[k] * a[n];
             }
             result[n] = a[n] * b[n];
         }
-        Expression::Power { .. } => unreachable!("validated affine event model"),
+        Expression::Power { .. } => {
+            return Err(unresolved("cannot bound a polynomial event expression"));
+        }
     }
-    result
+    Ok(result)
 }
 
 pub(crate) struct GuardBounds {
@@ -57,7 +63,7 @@ impl GuardBounds {
         let width = driven.len() + program.states.len() + 1;
         let mut groups = BTreeMap::new();
         for c in &program.contributions {
-            let rhs = affine(&c.rhs, program);
+            let rhs = affine(&c.rhs, program)?;
             let row = groups.entry(&c.branch).or_insert_with(|| {
                 let mut row = vec![I::ZERO; variables + 1];
                 row[c.positive] = row[c.positive] + I::ONE;
@@ -138,8 +144,8 @@ impl GuardBounds {
             .events
             .iter()
             .map(|event| {
-                let guard = affine(&event.guard, program);
-                (0..width)
+                let guard = affine(&event.guard, program)?;
+                Ok((0..width)
                     .map(|k| {
                         let base = if k == width - 1 {
                             guard[variables]
@@ -148,9 +154,9 @@ impl GuardBounds {
                         };
                         (0..variables).fold(base, |sum, j| sum + guard[j] * nodes[j][k])
                     })
-                    .collect::<Vec<_>>()
+                    .collect::<Vec<_>>())
             })
-            .collect::<Vec<_>>();
+            .collect::<Result<Vec<_>, Error>>()?;
         if coefficients.iter().flatten().any(|x| !x.finite()) {
             return Err(unresolved("nonfinite event trajectory bounds"));
         }
@@ -189,5 +195,40 @@ impl GuardBounds {
             && a.iter()
                 .zip(b)
                 .all(|(x, y)| equal_products(x.lo, b[pivot].lo, y.lo, a[pivot].lo))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn interval_conversion_rejects_products_with_uncertain_variable_coefficients() {
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version": crate::ir::SCHEMA_VERSION,
+            "nodes": ["0", "u"], "contributions": []
+        }))
+        .unwrap();
+        let leaf = |coefficient| Expression::Affine {
+            constant: 0.0,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient,
+            }],
+        };
+        let expression = Expression::Multiply {
+            left: Box::new(Expression::Add {
+                left: Box::new(Expression::Add {
+                    left: Box::new(leaf(1.0)),
+                    right: Box::new(leaf(1e-16)),
+                }),
+                right: Box::new(leaf(-1.0)),
+            }),
+            right: Box::new(leaf(1e16)),
+        };
+        assert_eq!(
+            affine(&expression, &program).unwrap_err().kind,
+            "event_resolution"
+        );
     }
 }

@@ -4,7 +4,10 @@ All supplied binary64 values are interpreted exactly. These are development
 regressions, separate from the frozen 31-condition cross-backend suite.
 """
 from fractions import Fraction as Q
+import copy
+import json
 import math
+import subprocess
 import unittest
 
 from evas import KernelError, compile_sources, solve, transient
@@ -20,6 +23,50 @@ def counter(guard, ttol, etol=1e-6, extra=''):
 
 
 class EventAccuracy(unittest.TestCase):
+    def test_nonlinearity_hidden_by_coefficient_roundoff_is_rejected(self):
+        # Both expressions depend on state and voltage in the original IR.
+        # Rounded coefficient collection must not turn either into a constant.
+        for term in ['((n+1e-16*n)-n)*1e16*V(u,r)',
+                     '(1e-200*(1e-200*n))*(1e300*V(u,r))*1e100']:
+            source = model(f'''@(initial_step) n=1;
+              @(cross(V(u,r)-.5+{term},1,1e-12,1e-9)) n=n+1;
+              V(y,r)<+n;''', 'integer n;')
+            with self.subTest(term=term):
+                with self.assertRaises(KernelError) as caught:
+                    execute_event(source, sources={'u':[[0,0],[1,1]]},
+                                  times=[0,1], stop=1, max_step=1)
+                self.assertEqual(caught.exception.detail['kind'], 'unsupported_transient')
+
+    def test_raw_ir_cannot_hide_voltage_products_in_any_event_expression(self):
+        program = compile_event(model('''@(initial_step) held=0;
+          @(cross(V(u,r)-.5,1)) held=V(u,r); V(y,r)<+held;''',
+                                      'real held;')).to_dict()
+        u = program['nodes'].index('u')
+        def leaf(coefficient):
+            return dict(op='affine', constant=0,
+                        terms=[dict(node=u, coefficient=coefficient)])
+        hidden = dict(op='add', left=dict(op='add', left=leaf(1),
+                      right=leaf(1e-16)), right=leaf(-1))
+        product = dict(op='multiply', left=hidden, right=leaf(1e16))
+        for position in ['guard', 'contribution', 'assignment', 'without_events']:
+            p = copy.deepcopy(program)
+            if position == 'guard':
+                p['events'][0]['guard'] = dict(op='add',
+                    left=p['events'][0]['guard'], right=product)
+            elif position == 'assignment':
+                p['events'][0]['assignments'][0]['rhs'] = product
+            else:
+                p['contributions'][0]['rhs'] = product
+                if position == 'without_events':
+                    p['events'] = []
+            request = dict(program=p, driven=['u'], samples=[], transient=dict(
+                pwl=[[[0,0],[1,1]]], output_times=[0,1], stop=1, max_step=1))
+            with self.subTest(position=position):
+                result = subprocess.run([str(KERNEL)], input=json.dumps(request),
+                                        text=True, capture_output=True)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(json.loads(result.stderr)['kind'], 'unsupported_transient')
+
     def assert_root(self, result, root, ttol, expression, etol):
         events = result['transient']['events']
         self.assertEqual(len(events), 1)
