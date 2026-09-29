@@ -232,7 +232,115 @@ impl Circuit {
 
 #[cfg(test)]
 mod tests {
-    use super::DenseResidual;
+    use super::{Circuit, DenseResidual};
+    use crate::events::EventModel;
+    use crate::interval::Interval as I;
+    use crate::ir::{Program, Tolerances, SCHEMA_VERSION};
+    use crate::linear::Factorization;
+    use serde_json::json;
+
+    fn sparse_event_model() -> EventModel {
+        let mut nodes = vec!["0".to_string(), "u".to_string()];
+        nodes.extend((0..40).map(|i| format!("y{i}")));
+        let u = json!({"op":"affine", "constant":0,
+                       "terms":[{"node":1,"coefficient":1}]});
+        let q = json!({"op":"state","state":0});
+        let delta = 2.0_f64.powi(-55);
+        let contributions: Vec<_> = (0..40)
+            .map(|i| {
+                json!({
+                    "branch":{"instance":"dut","local_positive":format!("a{i}"),
+                              "local_negative":"r","kind":"voltage"},
+                    "positive":i+2,"negative":0,
+                    "rhs":{"op":"add","left":q,"right":{"op":"affine", "constant":i as f64/8.0,
+                        "terms":[{"node":1,"coefficient":1}]}},
+                    "origin":{"source":"sparse-trial.va","line":i+1,"column":1,"instance":"dut"}
+                })
+            })
+            .collect();
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":nodes,"contributions":contributions,
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0}],
+            "events":[{"trigger":{"kind":"timer","start":0.5,"period":0,
+                                     "time_tolerance":1e-9,"enabled":true},
+                "assignments":[
+                    {"state":0,"rhs":u},
+                    {"state":0,"rhs":{"op":"add","left":q,
+                        "right":{"op":"affine","constant":delta,"terms":[]}}},
+                    {"state":0,"rhs":{"op":"add","left":q,"right":{"op":"multiply",
+                        "left":{"op":"affine","constant":-1,"terms":[]},"right":u}}}
+                ],
+                "origin":{"source":"sparse-trial.va","line":41,"column":1,"instance":"dut"}}]
+        }))
+        .unwrap();
+        EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap()
+    }
+
+    fn assert_sparse(circuit: &Circuit) {
+        assert!(matches!(
+            circuit.affine_factor.as_ref().unwrap().get().unwrap(),
+            Ok(Factorization::Sparse(_))
+        ));
+    }
+
+    #[test]
+    fn sparse_settlement_certifies_after_numeric_solve_and_retries_changed_inputs() {
+        let model = sparse_event_model();
+        let before = model.initial();
+        let bounds = vec![I::ZERO];
+        let accepted = model.circuit(&before).unwrap();
+        let old = accepted.solve(&[0.0]).unwrap();
+        assert_sparse(&accepted);
+        let delta = 2.0_f64.powi(-55);
+        // Same event batch throughout. A discarded good trial and a genuinely
+        // failed forward certificate must not freeze the input or state values.
+        for input in [0.0, 1.0, 1.0, 2.0_f64.powi(-56), 0.0] {
+            let candidate = model.event_circuit(&[0], &before, &[]).unwrap();
+            let numeric = candidate.solve(&[input]).unwrap();
+            assert_sparse(&candidate);
+            assert!(numeric.max_residual_ratio <= 1.0);
+            let prepared =
+                crate::settlement::prepare(&model, &[0], &[input], &before, &[], &bounds, &[]);
+            if input == 1.0 {
+                // Sequential binary64 replay loses delta in (1+delta)-1,
+                // although the substituted voltage solve has a tiny residual.
+                assert_eq!(prepared.err().unwrap().kind, "event_accuracy");
+            } else {
+                let (states, certified, circuit, solution) = prepared.unwrap();
+                assert_eq!(states, [delta]);
+                assert!(certified[0].lo <= delta && certified[0].hi >= delta);
+                assert_sparse(&circuit);
+                assert_eq!(solution.voltages[2], input + delta);
+            }
+            assert_eq!(before, [0.0]);
+            assert_eq!(bounds, [I::ZERO]);
+            assert_eq!(accepted.solve(&[0.0]).unwrap().voltages, old.voltages);
+        }
+    }
+
+    #[test]
+    fn sparse_factor_survives_original_relation_failure_then_new_rhs() {
+        let model = sparse_event_model();
+        let mut program = model.program.clone();
+        program.states.clear();
+        program.events.clear();
+        for (i, c) in program.contributions.iter_mut().enumerate() {
+            c.rhs = serde_json::from_value(json!({"op":"affine","constant":i as f64/8.0,
+                "terms":[{"node":1,"coefficient":1}]}))
+            .unwrap();
+        }
+        let mut redundant = program.contributions[0].clone();
+        redundant.branch.instance = "clamp".into();
+        redundant.origin.instance = "clamp".into();
+        redundant.rhs =
+            serde_json::from_value(json!({"op":"affine","constant":0,"terms":[]})).unwrap();
+        program.contributions.push(redundant);
+        let circuit = Circuit::new(program, &["u".into()], Tolerances::default()).unwrap();
+        let initial = circuit.solve(&[0.0]).unwrap();
+        assert_sparse(&circuit);
+        assert_eq!(circuit.solve(&[1.0]).unwrap_err().kind, "residual_failure");
+        assert_eq!(circuit.solve(&[0.0]).unwrap().voltages, initial.voltages);
+    }
 
     #[test]
     fn dense_residual_span_keeps_holes_and_node_offset_without_distant_allocation() {

@@ -50,7 +50,14 @@ fn seeded_rectangular_systems_match_constructed_roots_and_dense() {
                     .map(|row| row.iter().zip(&root).map(|(a, x)| a * x).sum())
                     .collect();
                 let actual = sparse.solve(rhs.clone()).unwrap();
-                let reference = dense.solve(rhs).unwrap();
+                let reference = dense.solve(rhs.clone()).unwrap();
+                // Check every original row, including scaled redundant rows,
+                // independently of either factorization's elimination.
+                for (row, &b) in matrix.iter().zip(&rhs) {
+                    let residual = row.iter().zip(&actual).map(|(a, x)| a * x).sum::<f64>() - b;
+                    let scale = row.iter().map(|a| a.abs()).sum::<f64>() + b.abs();
+                    assert!(residual.abs() <= 1e-11 * scale);
+                }
                 for ((a, d), x) in actual.iter().zip(reference).zip(root) {
                     assert!((a - x).abs() < 1e-11, "n={size}: {a} != {x}");
                     assert!((a - d).abs() < 1e-11);
