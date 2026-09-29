@@ -1,0 +1,13 @@
+{
+  "models": ["absdelay.va"],
+  "instances": [{
+    "name": "delay", "module": "delayed_ramp",
+    "connections": {"vin": "input", "vout": "output", "vref": "0"}
+  }],
+  "transient": {
+    "sources": {"input": [[0, -1], [4e-9, 1], [1e-8, 1]]},
+    "output_times": [0, 3e-9, 5e-9, 7e-9, 1e-8],
+    "stop": 1e-8,
+    "max_step": 1e-8
+  }
+}

@@ -11,7 +11,7 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
 [EVAS](evas/README.md) 当前分支实现 0.6.1：限定语法前端、IR v6、Rust 静态线性/非线性方程求解，
-以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `slew` 波形与同刻原子提交。
+以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `absdelay` / `slew` 波形与同刻原子提交。
 旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 

@@ -1,6 +1,6 @@
 # EVAS
 
-当前 PR15 实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `slew`。尚未替换旧 EVAS 0.8.7。
+当前 PR15 实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`。尚未替换旧 EVAS 0.8.7。
 
 0.5.3 恢复同块 integer 顺序重复赋值，保留逐句范围检查、同刻前向误差认证与原子提交。
 当前回归与对照见 [0.5.3 证据](../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)；
@@ -158,7 +158,7 @@ PR13 原始 0.5.1 检查点（未合入 main）新增 15 项 Python transition �
 | 同刻误差认证 | `rust_core/src/settlement_bounds.rs` | 从原 IR 独立包围事件后解，检查电压与状态各自误差预算 |
 | 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`slew.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿与限速轨迹，提供语义断点与输出值 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿与限速轨迹，提供语义断点与输出值 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -351,6 +351,35 @@ IR v6 的 `Program.operators` 增加 `kind=slew,input,rise,fall,origin`，沿用
 这些检查不增加原 31 条件分母，未执行 Spectre 或跨后端资格验证。
 
 ## 扩展与验证边界
+
+### 固定 absdelay
+
+支持 `absdelay(input,tau)`，输入为直接驱动的连续 PWL 电压及其仿射组合，tau 是
+有限的实例常数。标准范围 tau>0；tau=0 是 EVAS 的恒等扩展，不能据此要求其他后端接受。
+关系为 `y(t)=input(max(t-tau,0))`，初始历史保持真实输入初值；tau 大于 stop 时仍保持初值。
+调用点与实例各自持有不可变输入段；试算帧通过共享只读历史复制，不从输出样点建立历史。
+内部节点、状态输入、嵌套、跳变输入、动态延迟、maxdelay 和含算子的反馈仍拒绝。
+贡献保持对电压、状态和算子值联合仿射；依赖检查先于数值绑定，抵消、零缩放和下溢不能隐藏内部依赖。
+
+内核把源拐点后移 tau 加入求解断点，输出进入电压方程并通过残差与历史前向误差验收。
+输入并集拐点上的源插值、仿射运算及延迟查询保留向外舍入区间；验收计入电压网络放大，
+被事件采样的状态继续保存历史误差。不能满足预算时返回 `waveform_accuracy`，不提交候选。
+断点的 binary64 舍入只决定额外求解时刻，不改变 `value(t)` 使用的输入历史：
+查询时保留 `t-tau` 的补偿低位，在源段内用局部时间差插值，避免大绝对时间吞掉小延迟。
+后移断点溢出或重合、无法保持严格时序时返回 `time_resolution`；这包括部分保守拒绝。
+此处不宣称连续时间误差资格；依赖算子输出的 cross guard（含间接电压依赖）仍明确拒绝，
+不能把这些舍入后的断点当作已认证的下游事件时刻。
+
+可运行示例：
+
+```sh
+PYTHONPATH=evas/src python3 -m evas transient evas/examples/absdelay.json --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+示例输入在 0–4 ns 从 -1 V 升至 1 V，延迟 3 ns；0、3、5、7、10 ns 的独立答案为
+-1、-1、0、1、1 V。`test_absdelay.py` 的开发检查覆盖该答案、零延迟扩展、仿射多源、
+双实例、稀疏输出/步长不变性、断点调度、原始 IR 拒绝、失败请求及大时间局部延迟。
+它们没有运行 Spectre，也没有改变原 31 条件的支持结论或跨后端资格。
 
 新语义沿用同一套 IR 和执行内核。事件提交/撤销已有上述限定契约；
 动态历史和更一般的事件/非线性能力仍需独立建立收敛及时间定位边界。

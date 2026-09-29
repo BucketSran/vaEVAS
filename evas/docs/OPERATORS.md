@@ -115,10 +115,22 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 例如 t=2^54+4、τ=3，在从 2^54 到 2^54+4 的 0→1 斜坡上，数学答案为1/4；
 先舍入 t-τ 可错误得到0。输出采样网格不能作为历史存储。
 
-实现：[absdelay.rs](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/rust_core/src/absdelay.rs)。
-验证：[test_absdelay.py](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/tests/test_absdelay.py)
+实现：[absdelay.rs](../rust_core/src/absdelay.rs)。
+验证：[test_absdelay.py](../tests/test_absdelay.py)
 覆盖非零初值、零/长延迟、大时间低位、双实例、网格/步长及结构拒绝。
-不可表示或非有限的移位拐点显式失败；尚未完成 Spectre 对照或通用历史误差界。
+修复后基于 PR13 `9850450`，延迟输出同时返回值和历史区间。源语义拐点并集上的端点 A、B
+包括原始 binary64 PWL 插值与编译后仿射系数的运算区间。若补偿查询为 q_hi+q_lo，段为 [s,e]，
+则局部比例 `F=([q_hi]-[s]+[q_lo])/([e]-[s])`，历史值包含在 `(1-F)A+FB` 中。
+查询扩展用于精确选择源段，不能先把 q_hi+q_lo 合成一个舍入后的绝对时间。
+同刻认证把此区间传过电压网络和后续状态采样，超出预算返回 `waveform_accuracy`。
+
+[test_absdelay_accuracy.py](../tests/test_absdelay_accuracy.py) 用 Fraction 独立检验正延迟、
+初始仿射运算、其他源增加拐点后的插值、网络增益、同刻采样和跨事件误差保留。
+例如 0→1、时长3的输入在延迟1之后的 t=2 为1/3；乘以2^30后的 binary64 误差大于1e-10，
+旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
+这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
+允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
+不可表示或非有限的移位拐点显式失败；尚未完成专属 Spectre 对照。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## slew

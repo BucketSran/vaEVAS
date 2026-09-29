@@ -82,6 +82,14 @@ class Slew:
 
 
 @dataclass(frozen=True)
+class AbsDelay:
+    input: Expression
+    delay: float
+    origin: Origin
+    kind: str = field(default="abs_delay", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -144,7 +152,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | Slew, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

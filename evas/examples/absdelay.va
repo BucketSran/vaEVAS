@@ -1,0 +1,10 @@
+module delayed_ramp(vin, vout, vref);
+  input vin;
+  output vout;
+  inout vref;
+  electrical vin, vout, vref;
+  parameter real delay=3n;
+  analog begin
+    V(vout,vref) <+ absdelay(V(vin,vref),delay);
+  end
+endmodule

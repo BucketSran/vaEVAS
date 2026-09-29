@@ -100,6 +100,11 @@ pub enum Expression {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum OperatorSpec {
+    AbsDelay {
+        input: Expression,
+        delay: f64,
+        origin: Origin,
+    },
     Transition {
         input: Expression,
         delay: f64,
@@ -118,7 +123,9 @@ pub enum OperatorSpec {
 impl OperatorSpec {
     pub(crate) fn origin(&self) -> &Origin {
         match self {
-            Self::Transition { origin, .. } | Self::Slew { origin, .. } => origin,
+            Self::Transition { origin, .. }
+            | Self::AbsDelay { origin, .. }
+            | Self::Slew { origin, .. } => origin,
         }
     }
 }
