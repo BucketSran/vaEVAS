@@ -47,5 +47,21 @@ class SettlementChecker(unittest.TestCase):
         del rows[-1]['h_a']
         with self.assertRaises(ValueError): s.inspect(rows,c)
 
+    def test_extended_analytic_candidates_and_wrong_sequence_result(self):
+        for c in s.specifications(extended=True)+s.specifications(sequence_controls=True)+s.specifications(counter_rewrite=True):
+            _,_,targets=s.design(c)
+            rows=[]
+            for t in c['output_times']:
+                fired=t>=8*s.U
+                r=dict(time=t,clock=t/s.U)
+                for p in targets:
+                    r.update({'n_'+p['id']:float(fired),'h_'+p['id']:8. if fired else -1.,
+                              'o_'+p['id']:p['expected'] if fired else 0.})
+                rows.append(r)
+            self.assertTrue(all(r['status']=='candidate_consistent' for r in s.inspect(rows,c)['records']))
+            for row in rows:
+                if row['time']>=8*s.U: row['o_'+targets[0]['id']]=1.
+            self.assertEqual(s.inspect(rows,c)['records'][0]['status'],'candidate_differs')
+
 
 if __name__=='__main__': unittest.main()

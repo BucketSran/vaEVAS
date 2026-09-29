@@ -1,6 +1,6 @@
 //! Continuous PWL inputs and zero arrivals, independent of event state mutation.
 use crate::event_accuracy::unresolved;
-use crate::interval::{equal_products, Interval as I};
+use crate::interval::{equal_products, sum_products_sign, Interval as I};
 use crate::ir::{Error, TransientInputs};
 
 pub(crate) struct Root {
@@ -11,30 +11,54 @@ pub(crate) struct Root {
 }
 
 impl Root {
-    /// A rounded quotient may enclose an exactly representable root. Prove it
-    /// from certified endpoint values, never from a residual tolerance. On a
-    /// linear segment g(t)=0 iff a*(t1-t) == -b*(t-t0). Both differences must
-    /// themselves be exact, and equal_products compares full binary products.
+    /// Search representable times using an exact sign predicate on the original
+    /// numerator a*t1 - a*t + b*t - b*t0. No rounded time differences enter it.
     fn refine_representable(&mut self) {
         let [a, b] = self.ends;
-        if a.lo != a.hi || b.lo != b.hi {
+        if a.lo != a.hi || b.lo != b.hi || a.lo == b.lo {
             return;
         }
+        let sign = |time| {
+            sum_products_sign(&[
+                (a.lo, self.segment[1]),
+                (-a.lo, time),
+                (b.lo, time),
+                (-b.lo, self.segment[0]),
+            ])
+        };
         let guess = self.segment[0] + (a.lo / (a.lo - b.lo)) * (self.segment[1] - self.segment[0]);
-        for time in [guess, self.bounds.lo, self.bounds.hi] {
-            if !time.is_finite() || time < self.bounds.lo || time > self.bounds.hi {
-                continue;
-            }
-            let left = I::point(time) - I::point(self.segment[0]);
-            let right = I::point(self.segment[1]) - I::point(time);
-            if left.finite()
-                && right.finite()
-                && left.lo == left.hi
-                && right.lo == right.hi
-                && equal_products(a.lo, right.lo, -b.lo, left.lo)
-            {
+        let lower = self.bounds.lo.max(self.segment[0]).max(0.0);
+        let upper = self.bounds.hi.min(self.segment[1]);
+        if !lower.is_finite() || !upper.is_finite() || lower > upper {
+            return;
+        }
+        for time in [guess, lower, upper] {
+            if time.is_finite() && time >= lower && time <= upper && sign(time) == Some(0) {
                 self.bounds = I::point(time);
-                break;
+                return;
+            }
+        }
+        // Nonnegative finite binary64 bit patterns are monotonic. At most 64
+        // bisections cover every representable time in the certified interval.
+        let (mut lo, mut hi) = (lower.to_bits(), upper.to_bits());
+        while lo <= hi {
+            let mid = lo + (hi - lo) / 2;
+            let time = f64::from_bits(mid);
+            let Some(value) = sign(time) else {
+                return;
+            };
+            if value == 0 {
+                self.bounds = I::point(time);
+                return;
+            }
+            let before_root = if b.lo > a.lo { value < 0 } else { value > 0 };
+            if before_root {
+                lo = mid + 1;
+            } else {
+                if mid == 0 {
+                    return;
+                }
+                hi = mid - 1;
             }
         }
     }
@@ -210,6 +234,18 @@ mod tests {
             segment: [0.0, 19.0],
             ends: [a, b],
         }
+    }
+
+    #[test]
+    fn bisection_certifies_root_when_quotient_and_products_overflow() {
+        let mut root = Root {
+            bounds: I { lo: 0.0, hi: 4.0 },
+            slope: I::ONE,
+            segment: [0.0, 4.0],
+            ends: [I::point(-1e308), I::point(1e308)],
+        };
+        root.refine_representable();
+        assert_eq!(root.bounds, I::point(2.0));
     }
 
     #[test]

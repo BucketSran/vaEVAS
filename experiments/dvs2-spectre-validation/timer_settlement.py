@@ -1,7 +1,7 @@
 """Bounded same-time diagnostics; affine closure is a candidate, not an LRM verdict.
 
-Six circuits: four declaration/step variants of two three-stage chains, and
-two step variants of two unique affine feedbacks. Freeze before either backend.
+Default: six chain/feedback circuits. Optional disjoint batches diagnose
+noncontractive closure and repeated assignments; freeze before either backend.
 """
 import argparse
 from collections import Counter
@@ -25,13 +25,24 @@ def module(name, blocks, declarations, contributions):
             '\n'.join(blocks)+'\n'+contributions+'\nend\nendmodule\n')
 
 
-def specifications():
+def specifications(extended=False, sequence_controls=False, counter_rewrite=False):
     result = []
     for profile, step in base.STEPS.items():
         for reverse in [False, True]:
             result.append(dict(id='chains-'+profile+('-reversed' if reverse else '-forward'),
                                family='chains', reverse=reverse, maxstep=step))
         result.append(dict(id='feedback-'+profile, family='feedback', reverse=False, maxstep=step))
+    if extended:
+        result = [dict(id=family+'-'+profile, family=family, reverse=False, maxstep=step)
+                  for profile,step in base.STEPS.items()
+                  for family in ['feedback_noncontractive','local_sequence']]
+    if sequence_controls:
+        result = [dict(id=family+"-"+profile, family=family, reverse=False, maxstep=step)
+                  for profile,step in base.STEPS.items()
+                  for family in ["counter_repeated", "real_sequence", "feedback_sequence"]]
+    if counter_rewrite:
+        result = [dict(id="counter_rewrite-"+profile, family="counter_rewrite", reverse=False, maxstep=step)
+                  for profile,step in base.STEPS.items()]
     for c in result:
         c.update(stop=19*U, ttol=U/1024, rate=1/U, inputs={'clock':[[0, 0], [19*U, 19]]},
                  output_times=sorted({0., 19*U, 8*U-U/8, 8*U+U/8,
@@ -54,11 +65,30 @@ def design(c):
         inst.append(Instance(name, mod, dict(clock='clock', u=u, out='o_'+name,
                      count='n_'+name, stamp='h_'+name, r='0'), parameters or {}))
         targets.append(dict(id=name, expected=expected))
-    if c['family']=='feedback':
+    if c['family'] in ['feedback','feedback_noncontractive']:
         # s = gain*s+1: unique candidates 2 and 2/3, derived without a simulator.
-        add('positive', 'reader', 'o_positive', 2., dict(gain=.5,bias=1))
+        gain = 2. if c['family']=='feedback_noncontractive' else .5
+        add('positive', 'reader', 'o_positive', 1/(1-gain), dict(gain=gain,bias=1))
         add('negative', 'reader', 'o_negative', 2/3, dict(gain=-.5,bias=1))
         sources = {'reader.va':read}
+    elif c['family'] in ['counter_repeated','real_sequence','feedback_sequence','counter_rewrite']:
+        actions, expected = {
+            'counter_rewrite': ('n=n+2; s=V(out,r); s=0.5*s+n;', 4.),
+            'counter_repeated': ('n=n+1; n=n+1; s=n;', 2.),
+            'real_sequence': ('s=1; s=s+2;', 3.),
+            'feedback_sequence': ('n=n+1; s=V(out,r); s=0.5*s+n;', 2.),
+        }[c['family']]
+        sequence = module('sequence', ['@(initial_step) begin n=0; k=0; s=0; h=-1; end',
+            event+' begin k=k+1; '+actions+' h=V(clock,r); end'],
+            'integer n,k; real s,h;', 'V(out,r)<+s; V(count,r)<+k; V(stamp,r)<+h;')
+        add('sequence','sequence','0',expected)
+        sources = {'sequence.va':sequence}
+    elif c['family']=='local_sequence':
+        sequence = module('sequence', ['@(initial_step) begin n=0; s=0; h=-1; end',
+            event+' begin n=n+1; n=n+1; s=V(out,r); s=0.5*s+n; h=V(clock,r); end'],
+            'integer n; real s,h;', 'V(out,r)<+s; V(count,r)<+0.5*n; V(stamp,r)<+h;')
+        add('sequence','sequence','0',4.)
+        sources = {'sequence.va':sequence}
     else:
         add('a', 'producer', '0', 1.)
         add('b', 'reader', 'o_a', 1.)
@@ -74,9 +104,9 @@ def design(c):
     return sources, inst[::-1] if c['reverse'] else inst, targets
 
 
-def build(root):
+def build(root,extended=False,sequence_controls=False, counter_rewrite=False):
     root.mkdir(parents=True,exist_ok=False)
-    cases=specifications()
+    cases=specifications(extended,sequence_controls,counter_rewrite)
     dump(root/'conditions.json',cases)
     dump(root/'contract.json',dict(max_spectre_attempts=len(cases),timeout_s=90,
          license_timeout_s=30,observation_allowance_v=ALLOWANCE,
@@ -177,9 +207,12 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('action',choices=['build','evas','spectre','check']); p.add_argument('root',type=Path)
     p.add_argument('--kernel',type=Path); p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path)
+    p.add_argument('--counter-rewrite',action='store_true')
+    p.add_argument('--sequence-controls',action='store_true')
+    p.add_argument('--extended',action='store_true',help='Freeze four noncontractive/local-sequence diagnostics')
     p.add_argument('--backends',nargs='+',choices=['evas','spectre'],default=['evas','spectre'])
     a=p.parse_args()
-    if a.action=='build': build(a.root)
+    if a.action=='build': build(a.root,a.extended,a.sequence_controls,a.counter_rewrite)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': base.run_spectre(a.root,a.spectre_profile)
     else: analyze(a.root,a.output,a.backends)

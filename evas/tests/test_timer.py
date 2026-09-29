@@ -46,6 +46,17 @@ class TimerContracts(unittest.TestCase):
                 self.assertEqual([e['time'] for e in result['transient']['events']], [start,start])
                 self.assertEqual(result['transient']['states'][-1], [1,1])
 
+    def test_representable_root_outside_three_rounded_guesses_is_found(self):
+        # 22*(15/22) rounds down; neither outward endpoint equals the exact 15.
+        self.assertNotEqual(22*(15/22),15)
+        self.assertEqual(Q(22)*Q(15)/22,15)
+        source=model('''@(initial_step) begin n=0; m=0; end
+            @(timer(15,0,0.01)) n=n+1;
+            @(cross(V(u,r)-15,1,0.01,0.01)) m=m+1;
+            V(y,r)<+n+m;''','integer n,m;')
+        result=run_timer(source,stop=22,times=[0,22])
+        self.assertEqual([e['time'] for e in result['transient']['events']],[15.,15.])
+
     def test_one_ulp_neighbors_of_certified_root_remain_distinct(self):
         for start in [math.nextafter(8.,0.), math.nextafter(8.,math.inf)]:
             source=model(f'''@(initial_step) begin n=0; m=0; end

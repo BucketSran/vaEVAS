@@ -315,4 +315,38 @@ mod tests {
             }
         }
     }
+    #[test]
+    fn forward_error_failure_and_cached_retry_leave_frame_unchanged() {
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        program.states[0].kind = crate::ir::StateKind::Real;
+        program.events[0].assignments = serde_json::from_value(serde_json::json!([
+            {"state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
+            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":2_f64.powi(-55),"terms":[]}}},
+            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":-1.0,"terms":[]}}}
+        ]))
+        .unwrap();
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let circuit = model.circuit(&model.initial()).unwrap();
+        let before = Frame {
+            time: 0.0,
+            states: model.initial(),
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        for _ in 0..2 {
+            assert_eq!(
+                prepare_event(&model, &trajectory, &before, 0.5, &[0])
+                    .err()
+                    .unwrap()
+                    .kind,
+                "event_accuracy"
+            );
+            assert_eq!(before.time, 0.0);
+            assert_eq!(before.states, [0.0]);
+            assert_eq!(before.solution.voltages[2], 0.0);
+        }
+    }
 }

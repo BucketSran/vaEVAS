@@ -1,6 +1,8 @@
 //! Bound affine event model. State is separate from electrical unknowns.
 use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
+use crate::settlement_bounds::Bounds;
 use crate::solver::Circuit;
+use std::cell::RefCell;
 use std::collections::BTreeSet;
 
 #[derive(Clone)]
@@ -181,6 +183,8 @@ pub(crate) struct EventModel {
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) driven: Vec<String>,
     pub(crate) tolerances: Tolerances,
+    // Bounded one-batch cache; stores coefficients, never accepted/trial state.
+    certificate: RefCell<Option<(Vec<usize>, Bounds)>>,
 }
 
 impl EventModel {
@@ -271,6 +275,7 @@ impl EventModel {
             };
             guards.push(guard);
             let mut body = Vec::new();
+            let mut integer_writes = BTreeSet::new();
             for assignment in &event.assignments {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
@@ -281,6 +286,12 @@ impl EventModel {
                     return Err(Error::new(
                         "unsupported_cross",
                         "a state may be written by only one event block in its instance",
+                    ));
+                }
+                if state.kind == StateKind::Integer && !integer_writes.insert(assignment.state) {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "repeated integer writes in one event block are not supported; use a single assignment",
                     ));
                 }
                 writers[assignment.state] = Some(index);
@@ -321,9 +332,29 @@ impl EventModel {
             actions,
             driven,
             tolerances,
+            certificate: RefCell::new(None),
         };
         model.check_guard_dependencies()?;
         Ok(model)
+    }
+
+    pub(crate) fn certify(
+        &self,
+        events: &[usize],
+        inputs: &[f64],
+        before: &[f64],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<(), Error> {
+        let mut cache = self.certificate.borrow_mut();
+        if !cache.as_ref().is_some_and(|(ids, _)| ids == events) {
+            *cache = Some((events.to_vec(), Bounds::new(self, events)?));
+        }
+        cache
+            .as_ref()
+            .unwrap()
+            .1
+            .check(self, inputs, before, voltages, states)
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {

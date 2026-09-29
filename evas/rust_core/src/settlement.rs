@@ -22,7 +22,7 @@ pub(crate) fn prepare(
         let bound = if spec.kind == StateKind::Integer {
             0.0
         } else {
-            model.tolerances.absolute + model.tolerances.relative * state.abs().max(checked.abs())
+            model.tolerances.relative * state.abs().max(checked.abs())
         };
         if !bound.is_finite() || (state - checked).abs() > bound {
             return Err(Error::new(
@@ -34,5 +34,6 @@ pub(crate) fn prepare(
             ));
         }
     }
+    model.certify(events, inputs, before, &solution.voltages, &states)?;
     Ok((states, circuit, solution))
 }
