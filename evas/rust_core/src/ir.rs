@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 4;
+pub const SCHEMA_VERSION: u32 = 5;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -40,7 +40,7 @@ pub struct Program {
     #[serde(default)]
     pub states: Vec<State>,
     #[serde(default)]
-    pub events: Vec<CrossEvent>,
+    pub events: Vec<Event>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -215,13 +215,27 @@ pub struct Assignment {
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct CrossEvent {
-    pub guard: Expression,
-    pub direction: i8,
-    pub time_tolerance: f64,
-    pub expression_tolerance: f64,
+pub struct Event {
+    pub trigger: EventTrigger,
     pub assignments: Vec<Assignment>,
     pub origin: Origin,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum EventTrigger {
+    Cross {
+        guard: Expression,
+        direction: i8,
+        time_tolerance: f64,
+        expression_tolerance: f64,
+    },
+    Timer {
+        start: f64,
+        period: f64,
+        time_tolerance: f64,
+        enabled: bool,
+    },
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -238,7 +252,9 @@ pub struct EventRecord {
     pub time: f64,
     pub event: usize,
     pub origin: String,
-    pub guard_value: f64,
+    pub kind: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guard_value: Option<f64>,
     pub before: Vec<f64>,
     pub after: Vec<f64>,
 }

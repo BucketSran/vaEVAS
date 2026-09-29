@@ -1,7 +1,7 @@
 # 事件、时间推进与历史
 
-适用范围：正文 cross 契约对应已合并的 0.4.6 / IR v4；timer 与同刻兼容性小节明确引用 PR12。
-能力 ID 为 CROSS、TIMER、EVENT-ORDER、COMPOSE；当前状态以[总表](CAPABILITIES.md)为准。
+适用范围：本 checkout 为 EVAS 0.5.3 / IR v5；main 基线及其他分支身份见
+[能力总表](CAPABILITIES.md)。能力 ID 为 CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 ## 仿射轨迹上的数学定位
 
@@ -10,7 +10,7 @@
 根公式本身不能决定触零/零平台、初始点或同刻状态读取，这些是下面单独定义的行为。
 区间包围针对输入 binary64 数值定义的数学问题，不意味着任意源表达式/后端都无误差。
 
-## PWL 与 cross 的执行契约
+## PWL 与事件的执行契约
 
 这是限定实现范围，不是完整 Verilog-A 事件支持。语言依据见
 [LRM 2.4](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) 和
@@ -26,9 +26,21 @@
   即使存在代数抵消也可能保守拒绝。区间转换另行检查，不能静默丢弃乘积项。
   整数状态采用精确 signed 32-bit 范围，仅接受整数常数/整数状态运算，超范围报错，不模拟溢出或隐含取整。
   real 状态可以在事件时采样仿射电压表达式。
-- 每个状态只能由一个 cross 块写入；同块语句依次看到自己的更新。
-  事件块不能直接读取其他 cross 块写入的状态。同一可表示时刻的多个事件读取同一份事件前电压和状态，
-  各自准备更新，再共同求解事件后电压。容差不被用来任意合并相邻事件。
+- 每个状态只能由一个 cross 或 timer 事件块写入；同块语句依次看到自己的更新。
+  0.5.3 支持同块对同一 integer 状态重复赋值，和 real 一样逐句更新局部状态。
+  每次 integer 赋值都检查精确整数及 signed 32-bit 范围，后续写回合法值不能掩盖中间越界。
+  与特定 Spectre 版本的重复赋值差异见下文，不将其作为整体拒绝合法程序的依据。
+  事件块不能直接读取其他事件块写入的状态。0.5.1 起，同刻事件从同一份事件前状态出发，
+  将更新 `s+=Phi(s-,v+)` 代入原电压方程，联立求解同刻电压；同块赋值顺序保留。
+  求解后重放原赋值、检查原电压方程残差与状态一致性，再整批提交。整数状态精确一致，
+  real 状态重放使用 `reltol * max(abs(state), abs(replay))`，不借用电压绝对容差。
+  0.5.2 另从原 IR 用向外舍入独立重建联立方程，包围事件后的电压和状态；
+  电压误差须小于 `vabstol + reltol*abs(v)`，real 状态误差须小于 `reltol*abs(state)`，
+  integer 状态须精确。预算取向下界、误差取向上界，不能认证时返回 `event_accuracy`。
+  real 状态没有绝对误差下限，接近零或舍入严重的合法问题可能被保守拒绝。
+  认证以此次事件前已接受状态、此次采样驱动和编译后 binary64 IR 为给定量，
+  不覆盖前端常量折叠、输入采样误差或跨事件累计误差，也不是通用物理单位误差保证。
+  无唯一数值解或不能通过一致性检查时明确拒绝，失败不消费事件。容差不用于合并相邻事件。
 - guard 不得直接依赖状态，也不能通过电压方程间接依赖状态。Rust 用方程连通性保守检查，
   排除固定驱动和地；即使某种代数抵消可能消除依赖，也可能明确拒绝，避免依赖浮点阈值漏检反馈。
 - 每个驱动用连续 PWL 点列描述，从 t=0 开始、时间严格递增且覆盖 stop；不接受重复时间造成的跳变。
@@ -43,6 +55,9 @@ guard 的状态独立性允许提前生成事件日程。0.4.3 同时进行普�
    电压、驱动和状态的传递系数一次性准备；所有状态系数必须能证明为零。
    主元区间包含零，或冗余约束不能证明为恒等式时，明确拒绝。
 3. 从断点 guard 区间包围真实仿射根，得到 `[t_lo,t_hi]`；候选时间取可表示的 `t_hi`。
+   0.5.2 在端点 guard 均为精确单点时，用四个 binary64 乘积和的精确符号，
+   在有效根包围内对可表示时间作至多 64 次二分；找到精确根才收缩为单点。
+   非可表示根和不确定端点仍保留区间；不能先建立有限、严格位于段内的根包围时仍拒绝。
    对斜率区间 `m`，用向外舍入验证 `t_event-t_lo <= ttol`，以及
    `max(abs(m))*(t_event-t_lo) <= tol`。根区间、可表示时间和求值误差都进入验收。
 4. 重合事件须有相同 guard、可证明成比例的仿射式/端点，或相同的精确根；
@@ -52,7 +67,9 @@ guard 的状态独立性允许提前生成事件日程。0.4.3 同时进行普�
 不能确认断点符号、根误差超限、根间顺序不明、时间不可表示等情况返回 `event_resolution`。
 误差界可能偏宽，数值上本来可解的电路也可能被保守拒绝；不自动放宽容差，不用表达式容差过滤小信号。
 界限针对编译后 IR 所定义的仿射实数问题，不覆盖前端常量折叠误差、任意非线性或微分轨迹。
-区间准备另有稠密消元和传递系数存储开销，尚未测量事件吞吐量，不据此声明性能提升。
+区间准备另有稠密消元和传递系数存储开销。同刻状态认证只缓存最近一批事件的
+符号传递系数；缓存不保存已接受/候选状态，批次变化时替换，不随事件次数增长。
+小规模重复事件测量见下述 0.5.2 证据，不据此声明大型网络性能或仿真器排名。
 用于定位的初始化状态冻结试算也必须可解；不能完成时直接报告错误。
 
 0.4.6 中，精确零点归到达段所有：若相邻 guard 值为 `a,0`，且 `a` 非零，
@@ -68,41 +85,87 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 先试算候选时间，若有更早的事件就丢弃该候选；随后在事件时刻准备状态、检查范围、重新解算电压并检查
 原支路残差。全部成功后才同时提交时间、状态、电路、事件游标与记录。
 失败或丢弃的候选不会消耗事件或增加计数器；请求任何一步失败均不返回部分成功结果。
-返回的 `transient` 字段含观测时间/状态、实际接受的 cross 记录（时间、事件序号、源码、guard 值及前后状态）、
+返回的 `transient` 字段含观测时间/状态、实际接受的事件记录（时间、事件序号、类型、源码、cross 的 guard 值及前后状态）、
 接受步数和因更早事件而丢弃的候选数。记录中的前后状态是同一时刻整批事件的快照。
 
-后续需要单独扩展：`transition`、timer、条件控制/复合事件、状态反馈 guard 的同刻迭代、
+### 固定 timer
+
+支持 `@(timer(start, period, time_tol[, enable]))`；省略 period 时用
+`timer(start,,time_tol)`，也可用 period=0 或负值表示单次。此空参数形式来自
+[LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的 `analog_expression_or_null`，不采用两个实参含义不明的重载。
+start 必须为非负有限实例常数，period 为有限实例常数，time_tol 必须显式给出且为正。
+enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
+动态参数、缺省/零容差、复合事件仍明确拒绝。
+
+周期事件定义为编译后 binary64 数值对应的实数 `t_k=start+k*period`。
+内核由固定起点和精确整数 k 生成每个时刻，并用向外舍入界包围乘加误差；
+实际候选取 fused multiply-add 的可表示结果，须证明 `abs(s_k-t_k)<=time_tol`。
+不会从上次实际事件时间累加周期，也不按容差合并相邻名义事件。
+同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和单写者规则与 cross 一致。
+
+t=0 时先安装 initial_step 常量并求初始电压，再原子执行 timer(0)，最后输出初始观测。
+名义事件恰为 stop 时照常提交，即使未请求 stop 输出也保留事件记录；名义时刻超出
+stop 的事件不调度。这是 EVAS 的确定性边界策略，其他后端仍应按完整允许窗口验收。
+计时误差、与 stop 的关系、相邻事件次序不能证明，或周期不能推进可表示时间时，
+返回 `event_resolution`，不自动增大容差。相同日程或精确同刻可共同提交；
+重叠但不能证明同刻的 timer/cross 区间会保守拒绝，有限误差界不意味着所有可解情况都接受。
+PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时间差都已认证为
+精确 binary64 数，使用完整二进制乘积比较证明线性插值为零，再将根区间收窄为点。
+因此 `19U*(8/19)=8U` 不再因中间除法舍入而拒绝；一个 ULP 的真实邻近事件仍分别调度。
+端点带不确定性、不可表示根或不能取得该证书时，保留原区间与拒绝边界，不放宽容差。
+当前在运行前生成有界的不可变事件日程，并按需推进已接受事件游标；不是惰性队列。
+日程空间随事件数线性增长，最多 1,000,000 条事件，超限返回 `event_budget`；时间推进仍保留独立的 1,000,000 步上限。
+
+后续需要单独扩展：`transition`、动态 timer、条件控制/复合事件、状态反馈 guard 的同刻迭代、
 动态算子和非线性轨迹上的通用根定位。当前计数器直接输出理想电压阶跃，未实现平滑边沿。
+
+## 同块顺序赋值与同刻联立求解
+
+[Verilog-AMS LRM 2.4](https://accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+§5.3、§5.7 及[过程赋值说明](https://www.verilogams.org/refman/modules/analog-procedural/assignment.html#assignment)
+给出块内顺序执行和赋值立即更新变量的依据。同一块内的第二句应看到第一句更新后的值。
+例如 `n=n+1; n=n+1;` 对应 `n1=n−+1, n2=n1+1, n+=n2`，因此净增量为 2。
+连续三次净增量为 3；临时变量和中间值观测同样遵守语句顺序。
+
+对同刻触发的各块，从同一已接受状态 s− 复制各自局部状态，按顺序构造
+`s+=Phi(s−,v+)`，再求 `F(v+,Phi(s−,v+),t)=0`。当前 Phi 与瞬态电压网络都限定为仿射，
+可代入后直接解线性方程；integer 更新只含整数状态算术，不引入待求电压或隐含取整。
+电压同刻联立规则是本实现的选择，有限定对照支持，不称为所有 Verilog-A 事件的唯一通用语义。
+
+具体有三条独立路径保持局部顺序：`EventModel::event_circuit` 构造代入方程，
+`EventModel::apply` 重放原赋值，`Bounds::new` 从原 IR 构造区间认证。每次试算均固定从
+s− 开始，因此求解、重放或缓存重试不会再累计一次事件。验收后才原子提交；失败时旧帧不变。
+0.5.3 只移除输入绑定时的 integer 重复写禁令，没有改动这三条路径或放宽原精度/范围检查。
 
 ## timer 与同刻兼容性
 
-PR12 首批实现固定 start、period、正 time_tol 和常量 enable；周期 T>0 的名义日程为
-`t_k=start+k*T`，省略/非正周期为单次。独立契约允许实际时刻满足 `|s_k-t_k|≤time_tol`，
-与 cross 的单侧定位窗口不同。直接从固定起点及整数 k 构造日程避免按实际触发时刻累计相位偏移，
-但仍需处理浮点误差、事件预算和不可推进时间。数学样例与范围见
-[候选契约](../validation/TIMED_OPERATOR_CONTRACTS.md#timer名义日程与允许历史)。
+[0.5.0 历史对照](../../experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
+曾暴露旧电压采样和同刻根认证拒绝；
+[0.5.1 修复](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
+采用联立求解并修复可表示根认证，限定的级联、反馈和同刻样例已相容。
+[0.5.2 加固](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)
+增加前向误差认证，同时曾因 Spectre 对照差异保守禁止同块 integer 重复写。
+这些旧结果保留原身份，不能当作当前版本的新执行结果。
 
-[timer 源码检查点](https://github.com/BucketSran/vaEVAS/blob/9a25a401aefa29df3472f4fea17878737ebc0b9e/evas/rust_core/src/schedule.rs)
-使用预先构造、有预算的固定日历；动态 timer 尚未支持。初始化安装 initial_step 后处理 timer(0)，
-终点事件先提交后输出，这些是该版本明确的 EVAS 顺序。共同历史比较仍须保留规范允许的事件窗口。
+随后 18 个独立诊断配置显示 Spectre **21.1.0.509.isr12** 的相邻重复自增异常同时涉及
+integer 和 real；缩小步长仍存在，插入中间值观测可使现象消失。最小模型无电压反馈，
+预期值由顺序赋值独立确定。0.5.3 据此恢复合法 integer 顺序更新，保持语言语义，
+不复制该版本的异常输出。确切内部原因、新版本范围和厂商确认仍未知，见
+[Issue #16 的可复现输入及对照](https://github.com/BucketSran/vaEVAS/issues/16)。
 
-[固定实现的 Spectre 对照](https://github.com/BucketSran/vaEVAS/blob/dde1ef1c4ad6260e417d28a891e7e5b8b5164550/experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
-显示两项未解决问题：同刻 timer/timer 电压状态采样时 EVAS 读旧值 0、Spectre 读新值 1；
-同刻 timer/cross 的部分线性时钟案例，EVAS 无法认证根与定时事件重合而拒绝，Spectre 执行。
-两种步长和正反声明顺序均复现。普通历史与明确前后关系的有限一致性不能消除这些差异。
-它们不直接裁定 LRM 违规，也不证明 main 中任意 cross/cross 组合的行为；后续语义修正必须有新证据。
-
-PR13 的算子历史继承该事件框架。因此同刻快照暂为 EVAS 约定，不能写成已经与 Spectre 一致。
-如果未来允许 guard 依赖状态或算子，必须在变化后重新定位根，不能沿用失效的全程预计算日程。
+[0.5.3 回放](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)
+区分语言语义与具体后端的一致性；未修改旧检查器、阈值或原条件分母。
+PR13–15 基于更早的事件检查点，后续同步时需要受影响回归，不能直接继承本版验证结论。
+若未来允许 guard 依赖状态或算子，须在变化后重新定位根，不能沿用失效的预计算日程。
 
 ## 实现与验证入口
 
-- [events.rs](../rust_core/src/events.rs)：身份、结构依赖、事件块更新。
-- [pwl.rs](../rust_core/src/pwl.rs)、[event_accuracy.rs](../rust_core/src/event_accuracy.rs)：轨迹、根和包围界。
-- [transient.rs](../rust_core/src/transient.rs)：候选帧、接受/丢弃与记录。
-- [test_events.py](../tests/test_events.py)、[test_event_accuracy.py](../tests/test_event_accuracy.py)：开发回归。
-- [cross 实验](../../experiments/dvs2-spectre-validation/README.md)、上面的固定 timer 对照和
-  [共同历史协议](../validation/METHOD_QUALIFICATION.md)：独立判据及观察限制。
+- [events.rs](../rust_core/src/events.rs)：身份、结构依赖、顺序代入和赋值重放。
+- [settlement.rs](../rust_core/src/settlement.rs)、[settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)：同刻联立、原关系检查及区间认证。
+- [schedule.rs](../rust_core/src/schedule.rs)、[event_accuracy.rs](../rust_core/src/event_accuracy.rs)：固定日程、根和误差界。
+- [transient.rs](../rust_core/src/transient.rs)：候选帧、原子提交、丢弃及回退测试。
+- [test_settlement.py](../tests/test_settlement.py)、[test_timer.py](../tests/test_timer.py)、[test_event_accuracy.py](../tests/test_event_accuracy.py)：独立开发回归。
+- [Spectre 实验](../../experiments/dvs2-spectre-validation/README.md)与[共同历史协议](../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
 
-语言来源为正文所引 LRM/事件参考；零平台到达规则包含限定 Spectre 观测，前态快照属于实现选择。
-参考其他仿真器的调度机制不证明本实现与其语义等价。
+这些证据不等于完整 DVS 资格、任意非线性事件支持或其他仿真器内部算法的证明。

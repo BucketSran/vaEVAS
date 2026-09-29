@@ -169,13 +169,13 @@ class EventContracts(unittest.TestCase):
             self.assertEqual(states,{'a:up':2,'a:down':1,'b:up':1,'b:down':2})
             self.assertEqual(len(r['transient']['events']),6)
 
-    def test_simultaneous_events_sample_common_pre_event_voltages(self):
+    def test_simultaneous_events_sample_common_settled_voltages(self):
         source = model('''@(initial_step) begin n=0; held=0; end
           @(cross(V(u,r)-.5,1)) n=n+1;
           @(cross(V(u,r)-.5,1)) held=V(y,r);
           V(y,r)<+n;''','integer n; real held;')
         r = execute_event(source)
-        self.assertEqual(r['transient']['states'][-1],[2,1])
+        self.assertEqual(r['transient']['states'][-1],[2,2])
 
     def test_tolerances_do_not_suppress_small_or_merge_close_crossings(self):
         points = [[0,.4],[1e-6,.6],[1e-6+2e-12,.4],[1e-6+4e-12,.6],[3e-6,.6]]
@@ -295,7 +295,7 @@ class EventRejections(unittest.TestCase):
             self.assertEqual([s[event] for s in r['transient']['states']], [0,1,1,1,2,2,2])
             self.assertEqual([s[1-event] for s in r['transient']['states']], [0]*7)
 
-    def test_terminal_batch_keeps_pre_event_snapshot_without_stop_output(self):
+    def test_terminal_batch_settles_without_stop_output(self):
         source = model('''@(initial_step) begin n=0; held=0; end
           @(cross(V(u,r)-.5,1)) n=n+1;
           @(cross(V(u,r)-.5,1)) held=V(y,r);
@@ -305,8 +305,8 @@ class EventRejections(unittest.TestCase):
             events = r['transient']['events']
             self.assertEqual([e['time'] for e in events], [3e-6,3e-6])
             self.assertEqual([e['before'] for e in events], [[0,0],[0,0]])
-            self.assertEqual([e['after'] for e in events], [[1,0],[1,0]])
-            self.assertEqual(r['transient']['states'], [[0,0],[0,0]]+([[1,0]] if len(times)==3 else []))
+            self.assertEqual([e['after'] for e in events], [[1,1],[1,1]])
+            self.assertEqual(r['transient']['states'], [[0,0],[0,0]]+([[1,1]] if len(times)==3 else []))
 
     def test_invalid_pwl_and_time_settings(self):
         program = compile_event()
@@ -331,9 +331,9 @@ class EventRejections(unittest.TestCase):
                        transient=dict(pwl=[[[0,.4],[3e-6,.6]]],output_times=[0,3e-6],
                                       stop=3e-6,max_step=1e-6))
         mutations = [lambda p:p['states'][0].update(initial=.5),
-                     lambda p:p['events'][0].update(direction=2),
+                     lambda p:p['events'][0]['trigger'].update(direction=2),
                      lambda p:p['events'][0]['assignments'][0].update(state=999),
-                     lambda p:p['events'][0].update(time_tolerance=0),
+                     lambda p:p['events'][0]['trigger'].update(time_tolerance=0),
                      lambda p:p['states'][0].update(instance='foreign'),
                      lambda p:p['events'][0].update(extra_semantics=True)]
         for mutate in mutations:

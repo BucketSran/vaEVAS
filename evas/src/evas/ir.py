@@ -1,4 +1,4 @@
-"""Version 4: voltage contributions and bounded affine events with structured local branch identity.
+"""Version 5: voltage contributions and bounded affine events with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 @dataclass(frozen=True)
@@ -71,11 +71,26 @@ class Assignment:
 
 
 @dataclass(frozen=True)
-class CrossEvent:
+class CrossTrigger:
     guard: Expression
     direction: int
     time_tolerance: float
     expression_tolerance: float
+    kind: str = field(default="cross", init=False)
+
+
+@dataclass(frozen=True)
+class TimerTrigger:
+    start: float
+    period: float
+    time_tolerance: float
+    enabled: bool
+    kind: str = field(default="timer", init=False)
+
+
+@dataclass(frozen=True)
+class Event:
+    trigger: CrossTrigger | TimerTrigger
     assignments: tuple[Assignment, ...]
     origin: Origin
 
@@ -103,7 +118,7 @@ class Program:
     nodes: tuple[str, ...]
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
-    events: tuple[CrossEvent, ...] = ()
+    events: tuple[Event, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

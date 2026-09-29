@@ -1,3 +1,4 @@
+mod affine_bounds;
 mod assembly;
 mod event_accuracy;
 mod events;
@@ -7,6 +8,9 @@ pub mod ir;
 mod linear;
 mod nonlinear;
 mod pwl;
+mod schedule;
+mod settlement;
+mod settlement_bounds;
 pub mod solver;
 mod transient;
 

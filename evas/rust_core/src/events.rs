@@ -1,8 +1,11 @@
 //! Bound affine event model. State is separate from electrical unknowns.
-use crate::ir::{Error, Expression, Program, StateKind, Term, Tolerances};
+use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
+use crate::settlement_bounds::Bounds;
 use crate::solver::Circuit;
+use std::cell::RefCell;
 use std::collections::BTreeSet;
 
+#[derive(Clone)]
 pub(crate) struct AffineState {
     constant: f64,
     nodes: Vec<f64>,
@@ -13,6 +16,29 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    /// Substitute voltage-affine trial updates for state references. Each update
+    /// is based on the accepted old state, with local statement order preserved.
+    fn substitute(&self, updates: &[Self]) -> Result<Self, Error> {
+        let mut result = self.clone();
+        result.states.clear();
+        for (&coefficient, update) in self.states.iter().zip(updates) {
+            if coefficient == 0.0 {
+                continue;
+            }
+            result.constant += coefficient * update.constant;
+            for (node, &value) in result.nodes.iter_mut().zip(&update.nodes) {
+                *node += coefficient * value;
+            }
+        }
+        if !result.constant.is_finite() || result.nodes.iter().any(|v| !v.is_finite()) {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite event substitution",
+            ));
+        }
+        Ok(result)
+    }
+
     pub(crate) fn value(&self, nodes: &[f64], states: &[f64]) -> Result<f64, Error> {
         let value = self.constant
             + self
@@ -153,10 +179,12 @@ pub(crate) fn check_state(value: f64, kind: &StateKind) -> Result<(), Error> {
 pub(crate) struct EventModel {
     pub(crate) program: Program,
     rhs: Vec<AffineState>,
-    pub(crate) guards: Vec<AffineState>,
+    pub(crate) guards: Vec<Option<AffineState>>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) driven: Vec<String>,
-    tolerances: Tolerances,
+    pub(crate) tolerances: Tolerances,
+    // Bounded one-batch cache; stores coefficients, never accepted/trial state.
+    certificate: RefCell<Option<(Vec<usize>, Bounds)>>,
 }
 
 impl EventModel {
@@ -193,12 +221,7 @@ impl EventModel {
         let mut actions = Vec::new();
         let mut writers = vec![None; program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
-            if !(-1..=1).contains(&event.direction)
-                || !event.time_tolerance.is_finite()
-                || event.time_tolerance <= 0.0
-                || !event.expression_tolerance.is_finite()
-                || event.expression_tolerance <= 0.0
-                || event.origin.instance.is_empty()
+            if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
                 || event.origin.line == 0
                 || event.origin.column == 0
@@ -207,15 +230,49 @@ impl EventModel {
                     .iter()
                     .any(|c| c.branch.instance == event.origin.instance)
             {
-                return Err(Error::new("invalid_ir", "invalid cross settings or origin"));
+                return Err(Error::new("invalid_ir", "invalid event origin"));
             }
-            let guard = affine(&event.guard, &program, &event.origin.instance)?;
-            if guard.states.iter().any(|v| *v != 0.0) {
-                return Err(Error::new(
-                    "unsupported_cross",
-                    format!("cross guard depends on state at {}", event.origin.label()),
-                ));
-            }
+            let guard = match &event.trigger {
+                EventTrigger::Cross {
+                    guard,
+                    direction,
+                    time_tolerance,
+                    expression_tolerance,
+                } => {
+                    if !(-1..=1).contains(direction)
+                        || !time_tolerance.is_finite()
+                        || *time_tolerance <= 0.0
+                        || !expression_tolerance.is_finite()
+                        || *expression_tolerance <= 0.0
+                    {
+                        return Err(Error::new("invalid_ir", "invalid cross settings"));
+                    }
+                    let guard = affine(guard, &program, &event.origin.instance)?;
+                    if guard.states.iter().any(|v| *v != 0.0) {
+                        return Err(Error::new(
+                            "unsupported_cross",
+                            format!("cross guard depends on state at {}", event.origin.label()),
+                        ));
+                    }
+                    Some(guard)
+                }
+                EventTrigger::Timer {
+                    start,
+                    period,
+                    time_tolerance,
+                    ..
+                } => {
+                    if !start.is_finite()
+                        || *start < 0.0
+                        || !period.is_finite()
+                        || !time_tolerance.is_finite()
+                        || *time_tolerance <= 0.0
+                    {
+                        return Err(Error::new("invalid_ir", "invalid timer settings"));
+                    }
+                    None
+                }
+            };
             guards.push(guard);
             let mut body = Vec::new();
             for assignment in &event.assignments {
@@ -227,7 +284,7 @@ impl EventModel {
                 {
                     return Err(Error::new(
                         "unsupported_cross",
-                        "a state may be written by only one cross block in its instance",
+                        "a state may be written by only one event block in its instance",
                     ));
                 }
                 writers[assignment.state] = Some(index);
@@ -257,7 +314,7 @@ impl EventModel {
             }) {
                 return Err(Error::new(
                     "unsupported_cross",
-                    "cross blocks cannot read state written by another cross block",
+                    "event blocks cannot read state written by another event block",
                 ));
             }
         }
@@ -268,9 +325,29 @@ impl EventModel {
             actions,
             driven,
             tolerances,
+            certificate: RefCell::new(None),
         };
         model.check_guard_dependencies()?;
         Ok(model)
+    }
+
+    pub(crate) fn certify(
+        &self,
+        events: &[usize],
+        inputs: &[f64],
+        before: &[f64],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<(), Error> {
+        let mut cache = self.certificate.borrow_mut();
+        if !cache.as_ref().is_some_and(|(ids, _)| ids == events) {
+            *cache = Some((events.to_vec(), Bounds::new(self, events)?));
+        }
+        cache
+            .as_ref()
+            .unwrap()
+            .1
+            .check(self, inputs, before, voltages, states)
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {
@@ -279,6 +356,40 @@ impl EventModel {
 
     pub(crate) fn circuit(&self, states: &[f64]) -> Result<Circuit, Error> {
         Circuit::new(self.bind(states)?, &self.driven, self.tolerances.clone())
+    }
+
+    /// Eliminate trial state updates from F(v, state, t)=0 to obtain an affine
+    /// voltage system F(v, Phi(old_state, v), t)=0. No accepted state is mutated.
+    pub(crate) fn event_circuit(&self, events: &[usize], before: &[f64]) -> Result<Circuit, Error> {
+        let initial: Vec<_> = before
+            .iter()
+            .map(|&value| AffineState {
+                constant: value,
+                nodes: vec![0.0; self.program.nodes.len()],
+                states: Vec::new(),
+                has_variables: false,
+            })
+            .collect();
+        let mut updates = initial.clone();
+        for &event in events {
+            let mut local = initial.clone();
+            for (state, rhs) in &self.actions[event] {
+                local[*state] = rhs.substitute(&local)?;
+                if self.program.states[*state].kind == StateKind::Integer {
+                    // Integer updates were checked to use integral state-only
+                    // arithmetic. Catch overflow before a floating linear solve.
+                    check_state(local[*state].constant, &StateKind::Integer)?;
+                }
+                updates[*state] = local[*state].clone();
+            }
+        }
+        let mut program = self.program.clone();
+        program.states.clear();
+        program.events.clear();
+        for (contribution, rhs) in program.contributions.iter_mut().zip(&self.rhs) {
+            contribution.rhs = rhs.substitute(&updates)?.bind(&[])?;
+        }
+        Circuit::new(program, &self.driven, self.tolerances.clone())
     }
 
     fn bind(&self, states: &[f64]) -> Result<Program, Error> {
@@ -341,6 +452,9 @@ impl EventModel {
             }
         }
         for (guard, event) in self.guards.iter().zip(&self.program.events) {
+            let Some(guard) = guard else {
+                continue;
+            };
             if guard
                 .nodes
                 .iter()
@@ -359,8 +473,8 @@ impl EventModel {
         Ok(())
     }
 
-    /// Prepare only. Every block sees the same pre-event voltages/state; statements
-    /// inside one block see its own earlier assignments. No accepted state changes.
+    /// Replay against supplied trial voltages and the fixed accepted old state.
+    /// Statements in one block see earlier assignments. No accepted state changes.
     pub(crate) fn apply(
         &self,
         events: &[usize],

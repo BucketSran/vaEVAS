@@ -86,6 +86,46 @@ pub(crate) fn equal_products(a: f64, b: f64, c: f64, d: f64) -> bool {
     [a, b, c, d].iter().all(|x| x.is_finite()) && product(a, b) == product(c, d)
 }
 
+/// Exact sign of at most four binary64 products, without rounded differences.
+/// Align at 2^-2148: four products need at most 4198 bits, including carries.
+pub(crate) fn sum_products_sign(terms: &[(f64, f64)]) -> Option<i8> {
+    if terms.len() > 4 || terms.iter().any(|(a, b)| !a.is_finite() || !b.is_finite()) {
+        return None;
+    }
+    let mut sums = [[0_u64; 68]; 2];
+    for &(a, b) in terms {
+        let (negative, bits, exponent) = product(a, b);
+        if bits == 0 {
+            continue;
+        }
+        let shift = (exponent + 2148) as usize;
+        let words = [bits as u64, (bits >> 64) as u64];
+        for (j, word) in words.into_iter().enumerate() {
+            let shifted = (word as u128) << (shift % 64);
+            for (k, mut carry) in [shifted as u64, (shifted >> 64) as u64]
+                .into_iter()
+                .enumerate()
+            {
+                let mut i = shift / 64 + j + k;
+                while carry != 0 {
+                    if i == 68 {
+                        return None;
+                    }
+                    let (value, overflow) = sums[negative as usize][i].overflowing_add(carry);
+                    sums[negative as usize][i] = value;
+                    carry = u64::from(overflow);
+                    i += 1;
+                }
+            }
+        }
+    }
+    Some(match sums[0].iter().rev().cmp(sums[1].iter().rev()) {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
+    })
+}
+
 fn add(a: f64, b: f64) -> Interval {
     let value = a + b;
     let virtual_b = value - a;

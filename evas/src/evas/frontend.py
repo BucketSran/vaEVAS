@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossEvent,
+from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
                  Origin, Program, State, StateRef)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
@@ -118,15 +118,29 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
 
         for event in model.events:
-            settings = [0.0, 1e-12, 1e-9]
-            for index, arg in enumerate(event.arguments[1:]):
+            def setting(arg):
                 value = lower(arg, parameter, {}, model.source)
                 if not isinstance(value, Affine) or value.terms:
-                    raise CompileError("cross settings must be instance constants")
-                settings[index] = value.constant
-            direction, time_tol, expr_tol = settings
-            if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
-                raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+                    raise CompileError(f"{event.kind} settings must be instance constants")
+                return value.constant
+
+            if event.kind == "cross":
+                settings = [0.0, 1e-12, 1e-9]
+                for index, arg in enumerate(event.arguments[1:]):
+                    settings[index] = setting(arg)
+                direction, time_tol, expr_tol = settings
+                if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
+                    raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source),
+                                       int(direction), time_tol, expr_tol)
+            else:
+                start = setting(event.arguments[0])
+                period = 0.0 if event.arguments[1] is None else setting(event.arguments[1])
+                time_tol = setting(event.arguments[2])
+                enabled = setting(event.arguments[3]) != 0 if len(event.arguments) == 4 else True
+                if start < 0 or time_tol <= 0:
+                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                trigger = TimerTrigger(start, period, time_tol, enabled)
             assignments = []
             for statement in event.assignments:
                 if statement.name not in state_ids:
@@ -136,8 +150,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     raise CompileError("integer assignment requires integral state arithmetic")
                 assignments.append(Assignment(state_ids[statement.name], value))
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
-            events.append(CrossEvent(lower(event.arguments[0], symbol, node_ids, model.source),
-                                     int(direction), time_tol, expr_tol, tuple(assignments), origin))
+            events.append(Event(trigger, tuple(assignments), origin))
         bound_branches = {}
         for branch, rhs in model.contributions:
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes

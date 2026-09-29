@@ -1,5 +1,345 @@
 # Spectre verification on thu-sui
 
+## PR12 integer sequence 0.5.3
+
+实现为 [`ba3c063`](https://github.com/BucketSran/vaEVAS/commit/ba3c06390cfaca6c34653fcc2f978d7c793a0958)，
+同步 main 文档基线 `55f2fe3`，IR 仍为 v5。
+[本轮收据](results/timer-0.5.3.json)记录源码/内核/检查器身份、实际命令及逐配置结果。
+
+0.5.3 移除绑定阶段“一块内同一 integer 不得写两次”的限制。原有局部顺序代入、
+原赋值重放与区间认证均未改；每次整数写入仍检查 signed 32-bit 范围，中间越界不会
+被下一句覆盖隐藏。两次 `n=n+1` 应净增 2，三次应净增 3，具体推导及兼容性原则见
+[事件手册](../../evas/docs/EVENTS.md#同块顺序赋值与同刻联立求解)。
+
+本轮 **132 项 Python 方法、17 项 Rust 测试**通过；locked offline build、
+all-targets warnings-as-errors、rustfmt 和 diff 检查通过。四项顺序赋值 Python 方法
+替换旧的一项拒绝测试，覆盖 integer/real、timer/cross、初值、两次/三次更新、中间值、
+覆盖赋值、周期电压反馈、网格/步长变化和中间溢出。新增 Rust 回归检查重复写后的
+丢弃重试、缓存复用、残差失败及越界失败，确认已接受帧不变。
+相同最终测试对旧内核产生 16 个拒绝错误和 3 个错误类型断言失败（均为子测试），
+旧结果保留。首次新增测试有五个内部节点命名错误；改为显式导出该端口后通过，
+未据此修改运行时或放宽预期值，原失败日志同样保留。
+
+只重新执行受本次支持边界影响的专项范围及其控制：既有 `--extended`、
+`--sequence-controls`、`--counter-rewrite` 三组共 **12 个 EVAS 配置**，全部完成，
+**14 条历史均满足未修改的独立候选**，包含此前被拒绝的 4 个配置。
+对应 Spectre 波形复用 0.5.2 收据中的相同模型、网表和条件；逐字节核对身份，
+本轮 **没有新增 Spectre 执行**。
+
+| 范围（各两档） | EVAS 0.5.3 | 复用的 Spectre 21.1.0.509.isr12 |
+| --- | --- | --- |
+| 连续两次 integer 自增、独立事件计数 | 输出 2，符合顺序语义 | 输出 1，`candidate_differs` |
+| 连续两次 integer 自增及 real 电压反馈 | 输出 4，归一化计数 1 | 输出 2，归一化计数 0.5；`finite_inconsistent` |
+| 非收缩反馈、real 常量/反馈顺序、单次加 2 控制，共 8 配置 | 全部符合原候选 | 全部符合原候选 |
+
+检查器没有改答案或阈值，Spectre 的 4 个差异配置仍明确保留。另一次已完成的
+18 配置最小诊断发现相同异常也涉及 real，且减小步长无效、加入观测可能改变结果；
+独立复现输入及版本限制由 [Issue #16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪。
+不将该版本的异常输出作为 EVAS 应复现的语义。
+
+原 42 配置中另外 30 个配置没有在本轮重新执行，旧收据继续描述旧版本；因此本轮不报告
+“新版 42/42 与 Spectre 一致”。未重跑静态全量、四后端矩阵或性能实验。动态 timer、
+非线性事件、状态反馈 guard 等边界保持；原 31 条件的分母和完整 DVS 资格未改变。
+
+输入及检查器可从仓库重新生成，完整原始结果和日志仅在本地 `runs/integer-sequence-053/`
+保留，尚未公开归档。使用全新目录复现三组（以下以 extended 为例，另外两组换对应标志）：
+
+```sh
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py build runs/NEW-EXTENDED --extended
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py evas runs/NEW-EXTENDED \
+  --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py check runs/NEW-EXTENDED \
+  --backends evas --output runs/NEW-EXTENDED-analysis.json
+```
+
+该命令重新运行 EVAS；重现 Spectre 结果还需可用的对应版本和独立运行环境，不能从本地
+哈希推断公开数据已经可下载。
+
+## PR12 timer hardening 0.5.2
+
+2026-09-29：本轮实现固定于 `1a7757ddda5b784226bcd30c88e2af0e14b69f07`，
+运行脚本修复固定于 `046f62f87ffa963205f2fd8c6c431168db5ca3b1`。
+[0.5.2 收据](results/timer-0.5.2.json) 保存逐配置结果、原始失败、源码/内核/检查器身份、
+Spectre 回传清单和本地原始证据包哈希；0.5.0、0.5.1 收据与原 31 条件矩阵不变。
+
+修复了三个由独立反例确认的问题：
+
+- **残差小不代表解准确**：原 IR 的顺序赋值形成精确反馈系数
+  `0.5 + 0.49999999999999983`，精确解为 `2^54/3`；旧版返回 `2^52`，
+  前向误差 25%，却通过残差与重放。新版从原 IR 独立进行区间代入和消元，
+  包围事件后解，无法满足误差预算时报告 `event_accuracy`，不提交状态。
+- **real 状态不能借用电压绝对容差**：电压保留 `vabstol + reltol*abs(v)`；
+  real 状态仅用其自身数值的相对预算，integer 必须精确。`(1+2^-55)-1`
+  的顺序赋值旧版静默得到零，新版拒绝；单位按 `2^-80 / 1 / 2^80` 缩放也覆盖。
+  这是针对给定旧状态、采样驱动和编译后 IR 的逐事件认证，不是跨事件累计误差界。
+- **三个根候选不完整**：`22*(15/22)` 的舍入候选及区间两端都不等于精确根 15。
+  新版用四项乘积和的精确符号，在已有有效根区间内对 binary64 时间作有界二分，
+  找到可表示精确根才缩为单点；一 ULP 邻近事件仍分开。端点区间非单点、
+  不能先建立有限严格段内包围或根不可表示时，原有保守限制继续适用。
+
+新增 Spectre 对照 **12 次**，全部正常执行；加上逐字节核对后复用的 30 个历史配置，
+最终比较分母为 **42 个配置**。EVAS 0.5.2 完成其中 **38 个**，另外 **4 个明确拒绝**
+重复整数赋值；不能写成 42/42 通过。原有 30 个配置全部完成并保持已有有限历史结论。
+
+| 新增范围（各两档） | 配置数 | EVAS 0.5.2 | Spectre 21.1.0.509.isr12 |
+| --- | ---: | --- | --- |
+| 非收缩正反馈和负反馈控制 | 2 | -1、2/3 | -1、2/3 |
+| real 常量顺序赋值 | 2 | 3 | 3 |
+| real 顺序赋值带电压反馈 | 2 | 2 | 2 |
+| 单次 `n=n+2`，再执行 real 反馈 | 2 | 4 | 4 |
+| 连续两次 `n=n+1`，带 real 反馈 | 2 | 明确不支持 | 归一化计数 0.5、输出 2；原顺序候选不相容 |
+| 连续两次 `n=n+1`，独立计数观察 | 2 | 明确不支持 | 整数输出 1，顺序候选为 2 |
+
+最初未限制重复整数写入时，EVAS 在后两类分别得到 4 和 2，与 Spectre 不同。
+独立观察计数将此差异与漏事件区分开；实数赋值控制相符，单次整数更新也相符。
+因此这版对同一事件块内同一 integer 状态的多次写入返回 `unsupported_transient`，
+保留实数顺序赋值。此限制比已观察反例更保守；不把 Spectre 输出硬编码成语言语义，
+也不凭这些观测裁定 LRM 或推断其内部算法。两批原始分歧记录完整保留。
+
+最终选取的 64 条普通 timer 历史、16 个明确前后交互、8 个同刻新值读取，以及原有
+20 条仿射诊断历史均维持与 Spectre 的对应关系；新增支持范围内的 8 个配置含 10 条
+共同历史，双方均与独立候选相容。同刻旧检查器的候选仍是旧值 0，双方读 1 仍记录
+`candidate_differs`，没有为提高通过数而修改旧判据。
+
+验证包括 **129 项 Python、16 项 Rust、44 项检查器测试**，Rust 测试以警告视作错误；
+另有 16,408 次区间四则包围、2,054 次四乘积精确符号和 24 个独立有理数耦合解检查，
+均包含在上述方法中，不另加到方法数。原来三个回归在 0.5.1 上分别暴露根认证拒绝、
+错误解被接受和状态误差被接受；0.5.2 的失败回滚及缓存重试检查通过。
+
+`evas/tests/benchmark_events.py` 冻结 1/8/32 节点 × 10/100 次事件，两个 release 内核
+交替各重复三次，共 36 次执行。最终内核全部计数/状态正确，六组均满足预先固定的
+5 秒、256 MiB 上限；候选最慢一次含启动约 0.747 秒，最大 RSS 6,045,696 字节。
+只缓存最近一批事件的符号认证系数，缓存不随事件数累积。两次测量的速度差方向存在
+波动，原始结果均保留，不声明加速或大型网络扩展性，也不用于仿真器排名。
+
+一次六配置回放因归档的 macOS `._*.va` 元数据文件被旧脚本误读为源码而失败。
+`046f62f` 改为只读取冻结设计中的文件名；用新 ID 重跑这六项，保留原始失败，
+无新增 Spectre 执行、无模型或阈值变更。这六次基础设施失败不混入最终 42 配置分母，
+也不在收据中隐藏。
+
+认证仍可能保守拒绝合法问题，尤其接近零的 real 状态；不覆盖前端常量折叠、输入采样
+或跨事件误差传播。动态 timer、非线性事件、状态反馈 guard、`transition`、`absdelay`
+和 `slew` 继续明确不支持。本轮为开发与兼容性证据，完整 DVS 观察资格仍为 I。
+
+复现新增组时分别给 `timer_settlement.py build` 加 `--extended`（4 配置）、
+`--sequence-controls`（6 配置）或 `--counter-rewrite`（2 配置）；每组必须使用新目录。
+之后的 `evas`、`spectre`、`check` 命令沿用下节入口。规模检查单独运行：
+
+```sh
+PYTHONPATH=evas/src python3 evas/tests/benchmark_events.py \
+  --baseline /path/to/0.5.1-release-kernel \
+  --candidate evas/rust_core/target/release/evas-kernel \
+  --output runs/NEW-EVENT-SCALING
+```
+
+## PR12 timer repair 0.5.1
+
+EVAS 0.5.1 的实现身份为 `e78d1abbda90d81f948f6a4f52540acf484b0748`。
+本轮针对 0.5.0 对照暴露的两个问题分别修复，不改历史收据或原验证阈值：
+
+1. **可表示零点的认证**（提交 `874ad5b`）：PWL 插值的中间除法虽有舍入，最终根可能
+   恰好是 binary64 可表示数。若 guard 两端值 `a,b` 及到候选时刻的两侧时间差均有
+   精确证书，就以完整二进制乘积比较证明 `a*(t1-t) = -b*(t-t0)`，将根区间收窄为点。
+   因而 `19U*(8/19)=8U` 可以与 timer 认证为同刻；相差一个 ULP 的事件仍分别调度。
+   端点不确定、根不可表示或证书不足时保留原区间，不以 epsilon 合并事件。
+2. **同刻状态与电压的联立解**（提交 `e78d1ab`）：令旧状态为 `s−`、事件块赋值映射为
+   `Phi`、电压贡献残差为 `F`，求解 `F(v+, Phi(s−,v+), t)=0`，再取得 `s+=Phi(s−,v+)`。
+   当前映射和瞬态网络均为仿射，可代入后使用已有线性求解器，不需要靠声明顺序传播。
+   每次试算固定从旧状态开始，同一块保留语句顺序，计数器不会随试算重复累加。
+   最后重算未代入的原始电压约束并检查状态重放一致性，全部成功才一次提交。
+
+`timer_settlement.py` 新增六个先冻结后执行的诊断电路：两档步长和两种声明顺序下的
+跨实例/单实例三级链，以及两档下的正负反馈 `s=0.5*s+1`、`s=-0.5*s+1`。
+候选值由方程独立得到，分别为 1、2 和 2/3；检查器同时检查计数、保持、采样时钟、
+全部导出输入点、时间覆盖和有效设置。20 条历史包含链的生产者控制，不是 20 个新条件。
+
+2026-09-29 完成最终 **30 个 EVAS 配置**：原 24 个配置全部可执行（0.5.0 为 16/24），
+新增六个诊断也全部完成。对应的 Spectre 30 个配置均有成功结果：本轮在 thu-sui
+**新执行 18 次**（12 个原组合配置、六个诊断），另 12 个隔离配置复用历史波形。
+诊断先用旧内核执行 `-02`，修复后 `-03` 复用这同一组六份 Spectre 波形，不重复计数。
+复用前逐字节核对条件、VA 与网表，核对原始文件清单及所有回传文件哈希。
+
+下表仍选原组合配置中的终点/长序列、隔离配置中的普通/交互历史，避免重复计数：
+
+| 范围 | 数量 | EVAS 0.5.1 | Spectre |
+| --- | ---: | --- | --- |
+| 普通 timer、初始化、实例隔离、终点及长序列 | 64 条历史 | 全部满足原有限判据 | 全部满足原有限判据 |
+| timer/timer、timer/cross 明确前后关系 | 16 个探针 | 全部满足原判据 | 全部满足原判据 |
+| 同刻 timer/timer 电压状态读取 | 4 个探针 | 均读新状态 1 | 均读新状态 1 |
+| 同刻 timer/cross | 4 个探针 | 均完成并读新状态 1 | 均完成并读新状态 1 |
+| 新增级联和正负仿射反馈 | 20 条历史 | 全部符合联立候选值 | 全部符合联立候选值 |
+
+新增诊断的旧 EVAS 内核在 20 条历史中有 16 条与候选值不同：链中消费者读 0、
+正负反馈都读 1；修复后分别为 1、2、2/3，符合解析方程，也符合 Spectre 观测。
+这不以某一后端的结果直接定义答案。
+
+最终两端分别检查 19,732 个 EVAS 输出点和 7,309 个 Spectre 导出点。
+新执行的 18 次 Spectre 全部成功、无超时，核验 682 份新远端文件；另核验历史隔离批次
+412 份文件。仅出现既有非致命 `VACOMP-2435`。当前 122 项 Python、14 项 Rust、
+43 项检查器方法全部通过；锁定依赖的离线 all-targets warnings-as-errors、格式及 diff
+检查通过。clippy 因本机未安装而未运行。未重跑静态全量回放或原四后端矩阵。
+
+新组合批次与历史首批的条件、有效模型和数值设置一致；八个终点/长序列网表少了
+一个未实例化的 `timer_once.va` include 和对应闲置源码，这是既有隔离版生成器的行为。
+收据逐文件记录该差异；不声称这八份网表与历史字节相同。本轮已重新执行其 Spectre。
+复用的隔离及诊断模型、条件和网表则全部逐字节一致。
+
+[0.5.1 逐配置收据](results/timer-0.5.1.json) 记录修复前后输出、执行/输入/源码身份和归档哈希。
+原 0.5.0 同刻检查器仍以旧电压 0 为候选；0.5.1 和 Spectre 均读到 1，故原报告中的
+`candidate_differs` 在两端都保留。它表示与历史候选不同，不是本次跨后端差异。
+新诊断单独检查联立方程候选，不通过改写旧答案把旧实验变成“通过”。
+
+当前结论限定于已测的固定 timer、PWL 根和仿射网络。Spectre 的观测与联立方程候选
+相容，不证明其内部采用同一算法。数值求解须通过现有数值秩和残差检查；非唯一或无解的反馈
+明确失败。实数状态重放使用现有绝对/相对数值容差，不是任意状态物理单位的误差证明。
+动态 timer、状态反馈 guard 的同刻再触发、非线性事件网络及其收敛仍未实现。
+原 31 条件及其支持数量不变，完整 DVS 资格仍为 I；本轮不作性能结论。
+
+新增检查器有 4 项独立合成校准。首个本机预检将“已触发的计数”与“更晚的采样时刻”
+错误配对，校准测试按预期的历史一致性约束报错；修正合成数据为窗口内较早采样后，
+另建 `pr12-timer-settlement-20260929-02` 才执行 Spectre。原预检源码与六份本机输出保留，
+没有放宽生产检查器阈值，没有将该预检加入对照分母。
+
+复现新批次时，先构建当前内核和运行检查器校准，再固定新的输出目录：
+
+```sh
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_*.py' -v
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py build runs/NEW-TIMER --implementation e78d1abbda90d81f948f6a4f52540acf484b0748
+# 隔离配置另建目录，增加 --isolate；各目录最多 12 次 Spectre 尝试。
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py evas runs/NEW-TIMER --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py spectre runs/NEW-TIMER --spectre-profile /PRIVATE/profile.json
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py check runs/NEW-TIMER --output runs/NEW-TIMER-analysis.json
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py build runs/NEW-SETTLEMENT
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py evas runs/NEW-SETTLEMENT --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py spectre runs/NEW-SETTLEMENT --spectre-profile /PRIVATE/profile.json
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py check runs/NEW-SETTLEMENT --output runs/NEW-SETTLEMENT-analysis.json
+```
+
+Spectre 命令在已有工具环境运行；需复制相同源码、冻结输入和检查器依赖，并核验回传
+文件清单。每次独立电路串行占一个 CPU，90 秒上限、30 秒许可证等待；不在原目录重试。
+新的同刻诊断每批最多六次 Spectre。`--implementation` 是显式声明，实际内核和全部
+Python/Rust 源码哈希另存于 `EVAS_STARTED.json`；不能仅凭声明判断执行身份。
+
+## PR12 fixed timer comparison
+
+以下是 **0.5.0 历史检查点**，原结果保留；修复后对照见上节。
+
+**2026-09-29：已完成两批新执行的 EVAS–Spectre 对照，存在两项兼容性缺口。**
+Spectre `21.1.0.509.isr12` 在 thu-sui 完成 24/24 次电路执行，无超时或执行失败；
+固定 `9a25a401` 的 EVAS 完成 16/24 个冻结请求，另 8 个因事件次序无法认证而拒绝。
+其中 4 个是首批组合电路，另 4 个是隔离后的同刻 timer/cross 电路，不能把前者
+算成内部所有探针逐一失败。原 31 条件及其达标率不变。
+
+以下选择首批的终点/长序列、第二批的普通及交互探针，避免重复计数：
+
+| 范围 | 观察数 | EVAS 0.5.0 | Spectre |
+| --- | ---: | --- | --- |
+| 普通 timer、初始化、实例隔离、终点及长序列 | 64 条历史 | 64 条与独立有限判据相容 | 64 条相容 |
+| timer/timer、timer/cross 的明确前后关系 | 16 个交互探针 | 16 个相容 | 16 个相容 |
+| 同刻 timer/timer 电压状态读取 | 4 个探针 | 均读旧状态 0 | 均读新状态 1 |
+| 同刻 timer/cross | 4 个探针 | 均拒绝，`event_resolution` | 均完成并读新状态 1 |
+
+粗细步长、正反声明顺序下上述差异均存在。初始化探针从状态 7 开始，首个可见
+计数均为 8；终点前/处/后配对的最终计数均为 0/1/1。长序列两档、两端都观测到
+2,000 次事件，并满足原先固定的 1 ps 时间窗口。此处使用输出计数、采样时钟和
+保持值做共同历史检查，不把 EVAS 内部事件日志当作独立答案。
+
+同刻读取差异不直接裁定任一后端违反 LRM，但否定了“当前 EVAS 同刻快照与 Spectre
+已一致”的说法。timer/cross 的最小隔离案例由线性时钟跨过 8 V、timer 在 `8*unit`
+触发组成；EVAS 对区间内根的舍入包围无法证明其与 timer 同刻，因而拒绝。这项
+保守限制仍存在，不能从旧测试中可精确定位的少数同刻例子外推到一般情况。
+本次只补充验证，不修改仿真器实现；这两个问题留给后续语义与数学 review。
+
+[逐配置结果与执行收据](results/timer-0.5.0.json) 记录了所有拒绝、共同模型、检查器、
+实现和构建身份，以及原始归档哈希。两批共核验 920 份远端文件、24 份有效设置，
+检查全部 7,063 个 Spectre 导出时间点和 18,672 个 EVAS 输出时间点。
+检查器目录共 **39 项方法通过，其中 14 项为 timer 校准**。
+原始运行、首次判定、修正后的重判和构建保存在忽略目录 `runs/`；收据包含完整
+本地证据包的哈希。所有 Spectre 配置保留已有的非致命 `VACOMP-2435` 环境提示。
+数值结论以固定的观察假设为条件，完整 DVS 资格仍为 I，未进行性能排名。
+
+`timer_reference.py` freezes a separate development comparison for EVAS 0.5.0
+implementation `9a25a401`. It does not change the original 31-condition matrix.
+The execution contract is written into each new run's `contract.json`; generated
+VA, Spectre netlists, inputs, observation grids and checker sources are hashed
+before either backend runs. `test_timer_reference.py` supplies independent
+synthetic accept/reject controls, including locally legal values with no common
+event history, missing/duplicate events, future stamps and endpoint windows.
+
+The frozen batch has **12 configurations per backend**: four ordinary circuits
+(two maxsteps, forward/reversed event and instance declarations), six endpoint
+circuits (stop before/at/after the same event, two maxsteps), and two circuits
+with 2,000 periodic events. There are **64 timer probe histories and 24 event
+interaction probes per backend**, not 88 new benchmark conditions. Each
+interaction probe contains two observable event histories. Ordinary probes cover
+positive periods, omitted/zero/negative periods, zero/nonzero constant enables,
+nonzero initialization with `timer(0)`, instance isolation, simultaneous timers
+and events beyond stop. Interactions cover timer/timer and timer/cross before,
+at and after the same nominal time, with voltage-state sampling.
+
+The ordinary time unit is exactly `2^-30 s`; explicit timer tolerance is
+`unit/1024`. Long probes use start `0.13 us`, period `7 ns` and tolerance `1 ps`;
+their nominal answers are exact rationals of the submitted binary64 values.
+Coarse/fine maxsteps are 5/0.5 ns (50/5 ns for long probes). Both backends use
+reltol `1e-8`, vabstol `1e-10 V`; Spectre also uses iabstol `1e-14 A` and
+`traponly`. Spectre exports every accepted point without strobe; EVAS additionally
+uses different output grids in the forward/reversed configurations.
+
+Every exported input and output point is retained. Counts, sampled clocks and
+held data must admit one ordered event history within the independent nominal
+windows. The conditional voltage allowance is `1e-8 V`; this is an assumed
+finite-observation screen, not a measured physical observation-error bound.
+Timer windows are symmetric, cross windows one-sided. Endpoint windows are
+not clipped to stop: an event may remain unobserved if its allowed window extends
+beyond stop. Same-time voltage-state reads are classified against EVAS's
+pre-event-snapshot candidate; a different valid state is reported explicitly,
+not silently accepted as compatibility or labelled an LRM violation.
+
+Budget: at most 12 Spectre circuit attempts in one fresh run, serial, one pinned
+CPU, 90 seconds per attempt including a 30-second license wait, no in-place retry.
+Any changed-input follow-up receives a new identity and preserves the old attempt.
+This comparison cannot establish full timer support, continuous-time accuracy,
+dynamic-parameter semantics, atomic rollback inside Spectre, or a performance
+advantage. The other three timed operators are outside this batch.
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_timer_reference.py' -v
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py build runs/NEW-TIMER
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py evas runs/NEW-TIMER --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py spectre runs/NEW-TIMER --spectre-profile /path/to/private-profile.json
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py check runs/NEW-TIMER --output runs/NEW-TIMER-analysis.json
+```
+
+The Spectre action runs on the configured Linux host. Transfer the frozen inputs
+and the exact checker dependencies to a fresh checkout layout there; preserve
+and verify its returned file manifest before analysis. Private profiles, raw
+waveforms and full logs remain outside Git.
+
+The first combined run revealed an EVAS event-ordering rejection. A separate
+`build ... --isolate` follow-up preserves all four ordinary configurations and
+their probe parameters, but splits each into three circuits: timers (including
+timer/timer interactions), neighboring timer/cross events, and simultaneous
+timer/cross events. It adds at most 12 Spectre attempts under the same per-run
+budget. The original rejection remains in the report. This follow-up is
+development diagnosis after observing the first result, not an unseen test set;
+no acceptance thresholds or EVAS implementation are changed. The first checker
+is reproducible at commit `6aa43ad`; each run retains its exact source hashes.
+
+Run `-01` initially classified two Spectre endpoint observations as invalid:
+PSF printed the final time one binary64 ULP above the requested stop, and the
+input evaluator rejected this outside its closed knot domain. The corrected
+adapter applies the PWL source's constant endpoint extension while preserving
+the raw timestamp, original coverage gate, voltage allowance and event windows.
+A calibration accepts this rounding case but rejects wrong input values and
+out-of-range final times. Reanalysis is explicit: `check` with
+`--frozen-source-root /path/to/extracted-original-input-archive` verifies the
+original source snapshot and records both original and current checker hashes.
+The original analysis remains archived; this is a checker correction, not a
+new Spectre execution or a changed event acceptance target.
+
+## Original 31-condition comparison
+
 This experiment implements the 16 conditions in the seven
 [new case cards](../../evas/validation/NEXT_CASE_CARDS.md), reruns 14 unchanged
 v1 conditions, and runs a separate standard-array revision of the v1 lowpass

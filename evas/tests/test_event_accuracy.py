@@ -51,8 +51,8 @@ class EventAccuracy(unittest.TestCase):
         for position in ['guard', 'contribution', 'assignment', 'without_events']:
             p = copy.deepcopy(program)
             if position == 'guard':
-                p['events'][0]['guard'] = dict(op='add',
-                    left=p['events'][0]['guard'], right=product)
+                p['events'][0]['trigger']['guard'] = dict(op='add',
+                    left=p['events'][0]['trigger']['guard'], right=product)
             elif position == 'assignment':
                 p['events'][0]['assignments'][0]['rhs'] = product
             else:
@@ -134,7 +134,7 @@ class EventAccuracy(unittest.TestCase):
             self.assert_root(result,root,1e-15,
                              lambda t:gain*(Q(a)+(Q(b)-Q(a))*t)-1,1e-6)
 
-    def test_scaled_simultaneous_guards_share_pre_event_snapshot(self):
+    def test_scaled_simultaneous_guards_share_settled_voltage(self):
         for scale in [2,3,10]:
             source=model(f'''@(initial_step) begin n=0; held=0; end
               @(cross(V(u,r)-.5,1)) n=n+1;
@@ -142,7 +142,7 @@ class EventAccuracy(unittest.TestCase):
               V(y,r)<+n;''','integer n; real held;')
             for step in [10e-6, 97e-9]:
                 result=execute_event(source,max_step=step)
-                self.assertEqual(result['transient']['states'][-1],[2,1])
+                self.assertEqual(result['transient']['states'][-1],[2,2])
                 times=[e['time'] for e in result['transient']['events']]
                 self.assertEqual(times[0],times[1])
                 self.assertEqual(times[2],times[3])

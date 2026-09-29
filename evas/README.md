@@ -1,6 +1,11 @@
 # EVAS
 
-当前实现为 **EVAS 0.4.6，IR v4**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 事件执行。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.5.3，IR v5**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行。尚未替换旧 EVAS 0.8.7。
+
+0.5.3 恢复同块 integer 顺序重复赋值，保留逐句范围检查、同刻前向误差认证与原子提交。
+当前回归与对照见 [0.5.3 证据](../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)；
+特定 Spectre 版本的异常单独由 [Issue #16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪。
+
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 `solve` 的每个样本独立求静态工作点；`transient` 沿物理时间推进，保存实例私有状态。两种入口明确区分。
 
@@ -19,6 +24,7 @@ PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
 PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_nonlinear.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m evas transient evas/examples/cross_counter.json --kernel evas/rust_core/target/debug/evas-kernel
+PYTHONPATH=evas/src python3 -m evas transient evas/examples/timer_counter.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
 cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/evas-static-replay
@@ -30,8 +36,9 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-当前检查包含 **97 项 Python unittest 方法、12 项 Rust 测试**，以及锁定依赖的
-离线构建、warnings-as-errors 的 all-targets 检查和格式检查，均通过。
+0.5.3 当前检查为 **132 项 Python unittest 方法、17 项 Rust 测试**，以及锁定依赖的
+离线构建、warnings-as-errors 的 all-targets 检查和格式检查；执行收据见上方 0.5.3 证据。
+下面各阶段的计数和静态回放属于各自历史版本，不与本轮数字相加。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
 丢弃候选后重试、事件后残差失败和整数溢出时状态不提交。它们不是跨后端资格测试。
@@ -87,6 +94,38 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 和 108 条对照历史满足冻结的到达候选规则。首批 6 次 Spectre 探针编译失败单独保留，
 不计为仿真通过。检查器目录共 25 项校准方法通过；这些仍是有限开发证据，未增加原 31 条件分母。
 
+0.5.0 新增 17 项 Python timer 方法和 1 项 Rust 批次回退测试：固定周期/单次、禁用、
+参数绑定、实例隔离、t=0/stop、与 cross 同刻及邻近、输出网格/步长变化、原始 IR 拒绝、
+整数溢出及事件后残差失败。精确 Fraction 对照包含 2,000 次普通周期和绝对时间 `2^40` 秒
+附近的 1,000 次周期，逐项验证 `start+k*period` 的时间误差；不外推任意时长的稳定性。
+初始化先安装 initial_step，再执行 timer(0)，stop 上名义事件先执行再输出，属于本版本
+明确的 EVAS 约定，不据此要求其他后端在边界容差窗口内产生相同可观测次数。
+0.5.0 重新执行原静态回归：11 条件 × 两档 = 22 组、484,022 个点均满足原判据，
+其余 20 条仍明确拒绝；此回放验证 IR 迁移后的静态兼容性，不能证明 timer 语义。
+上述本地检查点当时未执行 Spectre。后续 [PR12 专项对照](../experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
+已在 thu-sui 新执行 24 次 Spectre，并以相同共同模型请求本地 EVAS：选定的 64 条 timer 历史
+与 16 个非同刻交互探针，两端均满足独立有限观察判据。但同刻 timer/timer 读取时，
+EVAS 得到旧电压状态 0，Spectre 得到新状态 1；隔离的同刻 timer/cross 在 EVAS 上被
+事件次序认证拒绝，在 Spectre 上可执行。粗细步长与声明顺序变化下差异仍存在。
+这些是 0.5.0 检查点的兼容性缺口；0.5.1 修复与新证据见下文，历史收据保持不变。
+上述旧结果未授予 timer 完整跨后端资格；
+原 31 条件及支持数量不变。
+
+0.5.1 修复可表示 PWL 根的同刻认证，并将同刻仿射事件更新代入电压方程联立求解。
+新增 2 项 timer 根定位/邻近事件回归、6 项同刻求解回归与 1 项 Rust 零点证书测试；
+原先断言旧电压快照的四项测试改为明确的新契约。旧内核在两个根定位测试及五个
+同刻求解测试方法中失败。新版本同时检查多级级联、实例/语句顺序、正负及非收缩反馈、
+整数只更新一次、局部赋值顺序、未触发状态保持，以及非唯一或无解反馈的拒绝。
+此版本仍仅支持原有连续 PWL/仿射及状态独立 guard，未引入通用非线性事件迭代。
+
+[0.5.1 修复对照](../experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
+完成 30 个 EVAS 配置：原 24 个全部可执行，新增六个级联/反馈诊断也完成。
+对应 Spectre 本轮新执行 18 次，另 12 个配置复用经哈希及输入核验的历史波形。
+64 条 timer 历史和 16 个邻近交互仍满足原判据；八个同刻探针两端都读到新状态 1；
+新增 20 条历史两端都符合独立的联立候选值。旧版拒绝与旧状态读取结果完整保留，
+不据此宣称通用同刻语义或整个 Verilog-A 与 Spectre 一致。
+
+
 ## 模块与接口
 
 | 模块 | 当前文件 | 唯一职责 |
@@ -104,7 +143,11 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 事件误差界 | `rust_core/src/event_accuracy.rs` | 从原 IR 包围仿射网络的传递系数，复核状态独立性及冗余约束 |
 | 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
 | 连续输入与根 | `rust_core/src/pwl.rs` | 校验连续 PWL、求值、识别方向及区间内孤立根 |
-| 时间推进 | `rust_core/src/transient.rs` | 事件定位、候选试算、原子提交、输出实际接受的事件记录 |
+| 同刻求解 | `rust_core/src/settlement.rs` | 联立仿射事件更新与电压方程，重放原赋值并校验一致性 |
+| 同刻误差认证 | `rust_core/src/settlement_bounds.rs` | 从原 IR 独立包围事件后解，检查电压与状态各自误差预算 |
+| 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
+| 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
+| 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
 
@@ -201,7 +244,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 ## IR 与贡献契约
 
-IR v4 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+IR v5 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`。Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
@@ -232,29 +275,36 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 `(1-k)*(V(y)-V(r)) = V(u)-V(r)`。
 这两种写法使用同一组装与求解入口。
 
-### v1/v2/v3 → v4 迁移
+### v1/v2/v3/v4 → v5 迁移
 
-Python 包与 Rust 内核一起升级到 0.4.6；Program 和成功 Response 的
-`schema_version` 均为 4。Python 适配器拒绝其他响应版本。
-内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3 或未知版本返回
-`unsupported_ir_version`；缺失/错误类型及 v4 格式错误返回 `invalid_request`。
+Python 包与 Rust 内核一起升级到 0.5.0；Program 和成功 Response 的
+`schema_version` 均为 5。Python 适配器拒绝其他响应版本。
+内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4 或未知版本返回
+`unsupported_ir_version`；缺失/错误类型及 v5 格式错误返回 `invalid_request`。
 Rust 库的构造入口也检查版本。
 
-已有 v1/v2/v3 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
-旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v4 请求。不要只修改版本号：v3 引入表达式标签，v4 又引入实例状态和事件。
+已有 v1/v2/v3/v4 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
+旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v5 请求。不要只修改版本号：v3 引入表达式标签，v4 引入实例状态和事件，v5 将触发器放入带 kind 标签的 trigger。
 `Program.states/events` 为空时保持静态语义；省略这两个字段也只表示空列表，不推断任何事件。
-`state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件含 guard、方向、
-两项容差、有序赋值和源码位置。Rust 独立验证这些字段；静态入口拒绝含状态/事件的程序。
+`state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件统一为 `trigger/assignments/origin`。
+`trigger.kind=cross` 携带 guard、方向和两项容差；`trigger.kind=timer` 携带
+`start/period/time_tolerance/enabled`，其中 enabled 是布尔值，省略的 VA 周期归一化为 0。
+Rust 独立验证这些字段并拒绝未知或交叉混入的字段；静态入口拒绝含状态/事件的程序。
+事件记录增加 `kind=cross|timer`，只有 cross 含 `guard_value`；timer 不伪造 guard。
 
 ## 求解和错误
 
 当前数学模型、Newton 验收、失败分类及稀疏分支边界统一维护在
 [数值求解手册](docs/NUMERICS.md)。此标题保留旧入口链接。
 
-## PWL 与 cross 的执行契约
+## PWL 与事件的执行契约
 
-当前 PWL/cross 契约、初始化、根误差界及提交/回退统一维护在
-[事件手册](docs/EVENTS.md)。timer 分支及已知同刻差异在那里单列，不属于当前 checkout 的支持声明。
+PWL/cross、固定 timer、顺序赋值、同刻联立、误差认证与提交/回退统一维护在
+[事件手册](docs/EVENTS.md)。该手册区分当前实现、历史结果与已知 Spectre 版本差异。
+
+### 固定 timer
+
+固定参数、名义日程及边界顺序见[事件手册](docs/EVENTS.md#固定-timer)。
 
 ## 扩展与验证边界
 
