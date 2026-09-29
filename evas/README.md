@@ -36,8 +36,8 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-PR15 当前分支继承 PR13 0.6.1 的历史误差验收；本轮检查结果见 PR 描述。父提交 `9850450` 的检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
-离线构建、warnings-as-errors 的 all-targets 检查和格式检查。新增历史误差认证见[算子手册](docs/OPERATORS.md#历史误差与电压精度)。历史 0.6.0 执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)。
+PR15 当前分支基于修复后的 PR14 `3638024`，继承 PR13 0.6.1 的历史误差验收；本轮 **195 项 Python、33 项 Rust**、locked/offline 构建、warnings-as-errors、格式与 CLI 检查通过。父提交 `9850450` 的检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
+离线构建、warnings-as-errors 的 all-targets 检查和格式检查。新增历史误差认证见[算子手册](docs/OPERATORS.md#历史误差与电压精度)。PR13 0.6.1 与历史执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)。
 下面各阶段的计数和静态回放属于各自历史版本，不与本轮数字相加。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -348,7 +348,9 @@ IR v6 的 `Program.operators` 增加 `kind=slew,input,rise,fall,origin`，沿用
 反向后的两次相交、正常跟踪；另外检查反射、SI/二进制尺度、非零初值、直接驱动仿射组合、
 实例隔离、网格/步长不变性、精确拐点和等限速、范围外输入及原始 IR、溢出和不可判次序，
 并拒绝通过另一实例中的相消/零乘数隐藏的算子 guard 依赖。
-这些检查不增加原 31 条件分母，未执行 Spectre 或跨后端资格验证。
+新增[组合回归](tests/test_timed_composition.py)以独立 Fraction 公式核对双实例中的 transition、absdelay、slew、timer 与 cross：
+两种实例次序 × 两种输出网格 × 两种步长共 8 配置；含同刻更新、算子输出采样和实例状态隔离。
+这些检查不增加原 31 条件分母，未执行专属 Spectre 或跨后端资格验证。
 
 ## 扩展与验证边界
 

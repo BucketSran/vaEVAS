@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.1 / IR v6。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.1 / IR v6。PR14、PR15 在此基线上依次接入 absdelay、slew 与相应误差认证，均未合入 main。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
@@ -47,7 +47,7 @@ IR v6 增加 operators 与调用点引用。结构依赖在数值绑定前检查
 验证：[test_transition.py](../tests/test_transition.py)
 包含 TR-EDGE/REVERSE/EXTEND/REPEAT/QUEUE、反射、实例隔离、网格与步长、浮点分辨率及拒绝边界。
 Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化算子值上的缓存回归。
-专属 Spectre 有限对照见[执行记录](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)，不由有限样例宣称通用兼容。
+专属 Spectre 有限对照见[执行记录](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)，不由有限样例宣称通用兼容。
 连续电压输入、嵌套、动态参数、缺省/零边沿和算子反馈尚未支持。
 
 ### 历史误差与电压精度
@@ -160,7 +160,9 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 实现：[slew.rs](../rust_core/src/slew.rs)。
 验证：[test_slew.py](../tests/test_slew.py)
 包括独立 SL-CATCH/REVERSE/PASS、反射、SI/二进制尺度、实例与网格变化。
-尚未完成 Spectre 对照；内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
+[联合回归](../tests/test_timed_composition.py)另外检查双实例的三算子与 timer/cross 同刻采样，
+独立公式覆盖两种实例顺序、两种网格和两种步长，共8配置；该结果绑定当前 PR15 集成候选。
+尚未完成专属 Spectre 对照；内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
 
 ## 来源与证据限制
 
