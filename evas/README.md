@@ -1,6 +1,6 @@
 # EVAS
 
-当前实现为 **EVAS 0.5.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件、离散状态驱动的 `transition` 波形。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.5.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件、离散状态驱动的 `transition` 波形、直接 PWL 输入的固定 `slew`。尚未替换旧 EVAS 0.8.7。
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 `solve` 的每个样本独立求静态工作点；`transient` 沿物理时间推进，保存实例私有状态。两种入口明确区分。
 
@@ -29,7 +29,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-当前检查包含 **129 项 Python unittest 方法、17 项 Rust 测试**，以及锁定依赖的
+当前检查包含 **140 项 Python unittest 方法、22 项 Rust 测试**，以及锁定依赖的
 离线构建、warnings-as-errors 的 all-targets 检查和格式检查，均通过。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -125,7 +125,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
 | 连续输入与根 | `rust_core/src/pwl.rs` | 校验连续 PWL、求值、识别方向及区间内孤立根 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs` | 校验独立调用点/输入，保存延迟目标队列和边沿历史，提供语义断点与输出值 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`slew.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿与限速轨迹，提供语义断点与输出值 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -437,9 +437,12 @@ stop 的事件不调度。这是 EVAS 的确定性边界策略，其他后端仍
 交点估计和输出仍为 binary64 计算，区间几何判定不是任意输入的连续波形前向误差保证。
 支路残差验收同样不能证明算子历史正确。
 
-新增 10 项 Python 开发回归及 5 项 Rust 测试。独立 `Fraction` 答案覆盖平台追赶、
+IR v6 的 `Program.operators` 增加 `kind=slew,input,rise,fall,origin`，沿用按调用点索引的 `operator` 表达式。
+
+新增 11 项 Python 开发回归及 5 项 Rust 测试。独立 `Fraction` 答案覆盖平台追赶、
 反向后的两次相交、正常跟踪；另外检查反射、SI/二进制尺度、非零初值、直接驱动仿射组合、
-实例隔离、网格/步长不变性、精确拐点和等限速、范围外输入及原始 IR、溢出和不可判次序。
+实例隔离、网格/步长不变性、精确拐点和等限速、范围外输入及原始 IR、溢出和不可判次序，
+并拒绝通过另一实例中的相消/零乘数隐藏的算子 guard 依赖。
 这些检查不增加原 31 条件分母，未执行 Spectre 或跨后端资格验证。
 
 ## 扩展与验证边界
