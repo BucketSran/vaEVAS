@@ -286,3 +286,44 @@ python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOU
 ```sh
 python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --require-arrival --output runs/NEW-TOUCH-arrival.json
 ```
+
+## 零平台和停止点边界（0.4.6）
+
+`cross_boundaries.py` 独立冻结 21 种输入、3 个方向及 6 个配置：maxstep 为 100/7 ns，
+每档搭配 nominal（ttol=100 ps、tol=10 µV）、time_tight（1 ps、10 µV）和
+expression_tight（100 ps、0.1 µV）。同一 VA 探针保存计数、事件时钟和 guard；
+21 种输入包含终点到零及终点后延伸、同侧/异侧平台、初始/终端平台、20 ps 短平台、
+恒零输入，并以近零非零平台、普通穿越和已审阅的孤立零点作对照。
+
+运行前固定候选规则：非零到零按到达方向触发一次，停留及离开不触发；终点输出可见提交后的状态。
+边界结果标为 candidate-consistent/inconsistent，不预设哪个仿真器正确。
+检查器逐点检查次数窗口、方向、保持时间与输入重建的一致性、guard 容差及初始状态，
+观测余量为原定 `1e-8 V`；4 项合成校准覆盖缺失/重复/错误方向事件和错误历史、采样。
+这属于条件性的有限观察判据，不是对内部步进或完整 LRM 的证明。
+
+`cross-boundaries-20260929-01` 的 6 次 Spectre 均在编译期因 `.5` 字面量被拒绝
+（VACOMP-1795），未产生瞬态结果。保留其输入、原始日志和身份；探针仅改为 `0.5` 后，
+以 `cross-boundaries-20260929-02` 重新冻结相同输入和判据。该新批次 6 次全部完成，
+单 CPU、串行、每次 90 秒上限、license 等待 30 秒，批次内不重试；两批总计 12 次 Spectre 尝试。
+核对新批次原始归档的 110 份文件、有效设置及高精度停止时刻后：
+
+| 有限观察历史 | EVAS 0.4.6 新执行 | thu-sui Spectre 新执行 |
+| --- | ---: | ---: |
+| 零平台/停止点边界（15 输入 × 3 方向 × 6 配置） | 270 / 270 | 270 / 270 |
+| 近零、普通穿越、孤立触零对照（6 × 3 × 6） | 108 / 108 | 108 / 108 |
+
+两后端计数和方向一致；该结果支持本轮 EVAS 到达规则扩展，不能推广到光滑极值、动态/
+非线性轨迹或有状态反馈的 guard。EVAS 0.4.5 对首批相同数值输入的 6 个组合请求均
+显式返回 `unsupported_cross`，这是组合请求被拒绝，不能算成 378 条逐探针失败。
+原 31 条件及其支持数量不变。
+
+[整理后的收据](results/cross-boundaries-0.4.6.json) 保存冻结输入、检查器、内核、原始归档及
+逐配置结果身份，原始记录在忽略目录 `runs/cross-boundaries-20260929-01/` 和 `-02/`。
+复现实验应使用新的输出目录；运行前检查收据里的预算与使用权限：
+
+```sh
+python3 experiments/dvs2-spectre-validation/cross_boundaries.py build runs/NEW-BOUNDARIES
+python3 experiments/dvs2-spectre-validation/cross_boundaries.py evas runs/NEW-BOUNDARIES --kernel evas/rust_core/target/debug/evas-kernel
+python3 experiments/dvs2-spectre-validation/cross_boundaries.py spectre runs/NEW-BOUNDARIES --spectre-profile /path/to/private-profile.json
+python3 experiments/dvs2-spectre-validation/cross_boundaries.py check runs/NEW-BOUNDARIES --output runs/NEW-BOUNDARIES-analysis.json
+```

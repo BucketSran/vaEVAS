@@ -1,4 +1,4 @@
-//! Continuous PWL inputs and isolated roots, independent of event state mutation.
+//! Continuous PWL inputs and zero arrivals, independent of event state mutation.
 use crate::event_accuracy::unresolved;
 use crate::interval::{equal_products, Interval as I};
 use crate::ir::{Error, TransientInputs};
@@ -103,18 +103,6 @@ impl Trajectory {
                 "cannot determine cross sign at a PWL knot within arithmetic bounds",
             ));
         }
-        if values.windows(2).any(|p| p[0].zero() && p[1].zero()) {
-            return Err(Error::new(
-                "unsupported_cross",
-                "zero-valued cross plateau has no isolated root",
-            ));
-        }
-        if values.last().is_some_and(|v| v.zero()) {
-            return Err(Error::new(
-                "unsupported_cross",
-                "zero at stop is outside the supported interior isolated-zero contract",
-            ));
-        }
         for index in 0..values.len() - 1 {
             let (a, b) = (values[index], values[index + 1]);
             let segment = [self.knots[index], self.knots[index + 1]];
@@ -135,11 +123,10 @@ impl Trajectory {
                     },
                     b.sign().unwrap(),
                 ))
-            } else if b.zero() && index + 2 < values.len() && !a.zero() && !values[index + 2].zero()
-            {
-                // An isolated knot zero belongs to the arriving segment, even
-                // when the next segment returns to the same side. Departure
-                // starts at zero and matches neither branch, so cannot refire.
+            } else if b.zero() && !a.zero() {
+                // Arrival owns an exact zero, including plateau entry and stop.
+                // Staying at or departing from zero matches neither branch;
+                // only a later nonzero-to-zero arrival can fire again.
                 Some((
                     Root {
                         bounds: I::point(segment[1]),

@@ -238,11 +238,75 @@ class EventRejections(unittest.TestCase):
             with self.subTest(source=source), self.assertRaises((CompileError,KernelError)):
                 execute_event(source)
 
-    def test_zero_plateau_and_undetermined_terminal_zero_fail_explicitly(self):
-        for points in [[[0,.4],[1e-6,.5],[2e-6,.5],[3e-6,.6]],[[0,.4],[3e-6,.5]]]:
-            with self.assertRaises(KernelError) as error:
-                execute_event(sources={'u':points})
-            self.assertEqual(error.exception.detail['kind'],'unsupported_cross')
+    def test_terminal_zero_commits_arrival_before_final_output(self):
+        for before in [.375,.625]:
+            arrival = 1 if before < .5 else -1
+            for direction in [0,1,-1]:
+                source = model(f'''@(initial_step) n=0;
+                  @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                  V(y,r)<+n;''', 'integer n;')
+                expected = int(direction in [0,arrival])
+                for continued in [False,True]:
+                    points = [[0,before],[3e-6,.5]]
+                    if continued:
+                        points.append([4e-6,1-before])
+                    for step in [10e-6,7e-9]:
+                        with self.subTest(before=before, direction=direction, continued=continued, step=step):
+                            r = execute_event(source, sources={'u':points}, times=[0,1.5e-6,3e-6], max_step=step)
+                            self.assertEqual([e['time'] for e in r['transient']['events']], [3e-6]*expected)
+                            self.assertEqual(r['transient']['states'], [[0],[0],[expected]])
+                            y = r['nodes'].index('y')
+                            self.assertEqual([s['voltages'][y] for s in r['solutions']], [0,0,expected])
+
+    def test_zero_plateau_arrival_only_across_width_sign_and_direction(self):
+        for before in [.375,.625]:
+            arrival = 1 if before < .5 else -1
+            for after in [.375,.5,.625]:
+                for end in [1e-6+20e-12,2e-6]:
+                    for direction in [0,1,-1]:
+                        source = model(f'''@(initial_step) n=0;
+                          @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                          V(y,r)<+n;''', 'integer n;')
+                        expected = int(direction in [0,arrival])
+                        for step in [10e-6,7e-9]:
+                            with self.subTest(before=before, after=after, end=end, direction=direction, step=step):
+                                r = execute_event(source, sources={'u':[[0,before],[1e-6,.5],[end,.5],[3e-6,after]]},
+                                                  times=[0,1e-6,end,3e-6], max_step=step)
+                                self.assertEqual([e['time'] for e in r['transient']['events']], [1e-6]*expected)
+                                self.assertEqual(r['transient']['states'], [[0]]+[[expected]]*3)
+
+    def test_initial_constant_and_near_zero_plateaus_do_not_fire(self):
+        for after in [.375,.5,.625]:
+            r = execute_event(sources={'u':[[0,.5],[1e-6,.5],[2e-6,.5],[3e-6,after]]})
+            self.assertEqual(r['transient']['events'], [])
+            self.assertEqual(r['transient']['states'][-1], [0,0])
+        for side in [.375,.625]:
+            near = math.nextafter(.5,side)
+            r = execute_event(sources={'u':[[0,side],[1e-6,near],[2e-6,near],[3e-6,side]]})
+            self.assertEqual(r['transient']['events'], [])
+
+    def test_separate_zero_plateaus_rearm_once_each(self):
+        times = [0,.5e-6,1e-6,1.5e-6,2e-6,2.5e-6,3e-6]
+        for side,event in [(.375,0),(.625,1)]:
+            points = [[t,v] for t,v in zip(times,[side,.5,.5,side,.5,.5,.5])]
+            r = execute_event(sources={'u':points}, times=times)
+            self.assertEqual([e['event'] for e in r['transient']['events']], [event,event])
+            self.assertEqual([e['time'] for e in r['transient']['events']], [.5e-6,2e-6])
+            self.assertEqual([s[event] for s in r['transient']['states']], [0,1,1,1,2,2,2])
+            self.assertEqual([s[1-event] for s in r['transient']['states']], [0]*7)
+
+    def test_terminal_batch_keeps_pre_event_snapshot_without_stop_output(self):
+        source = model('''@(initial_step) begin n=0; held=0; end
+          @(cross(V(u,r)-.5,1)) n=n+1;
+          @(cross(V(u,r)-.5,1)) held=V(y,r);
+          V(y,r)<+n;''', 'integer n; real held;')
+        for times in [[0,1e-6],[0,1e-6,3e-6]]:
+            r = execute_event(source, sources={'u':[[0,.375],[3e-6,.5]]}, times=times)
+            events = r['transient']['events']
+            self.assertEqual([e['time'] for e in events], [3e-6,3e-6])
+            self.assertEqual([e['before'] for e in events], [[0,0],[0,0]])
+            self.assertEqual([e['after'] for e in events], [[1,0],[1,0]])
+            self.assertEqual(r['transient']['states'], [[0,0],[0,0]]+([[1,0]] if len(times)==3 else []))
 
     def test_invalid_pwl_and_time_settings(self):
         program = compile_event()

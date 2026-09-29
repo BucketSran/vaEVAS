@@ -1,0 +1,733 @@
+{
+  "experiment": "cross-boundaries-20260929-02",
+  "base_commit": "88a3f7f033250008f32bd2a9bd4c65a1e0fd8d5a",
+  "evas_version": "0.4.6",
+  "ir_version": 4,
+  "contract": {
+    "configurations": 6,
+    "shapes": 21,
+    "monitors_per_configuration": 63,
+    "max_spectre_attempts": 6,
+    "timeout_s": 90,
+    "license_timeout_s": 30,
+    "observation_allowance_v": 1e-08,
+    "candidate": "One event on nonzero-to-zero arrival, including stop and plateau entry; none on departure, initial zero, or all-zero input.",
+    "boundaries": "Candidate-consistent/inconsistent are diagnostic classifications, not a correctness ranking.",
+    "controls": "Ordinary crossing and reviewed isolated zero: one arrival. Near-zero plateau: no event.",
+    "limits": "Finite exported observations under assumed voltage allowance; no full LRM or continuous-time qualification."
+  },
+  "frozen_identity": {
+    "base_commit": "88a3f7f033250008f32bd2a9bd4c65a1e0fd8d5a",
+    "input_archive_sha256": "a3ee36b39fc3bdd479b5261a4d7f72327037d1839f942bd1c2e03c21f980b499",
+    "input_manifest_sha256": "64adafde4b1c9b2a6b4c20f69fbad8215c1a62e60e4080a7abf6bbb5019b0b89",
+    "calibration_sha256": "f65ceb592d126fea4fa25add394e5718ca24fada90c2bf71793bbd3fb43c887a",
+    "max_spectre_attempts": 6,
+    "previous_experiment": "cross-boundaries-20260929-01",
+    "change": "VA numeric spelling .5 to 0.5 only; six previous VACOMP-1795 compile failures preserved; no previous transient result"
+  },
+  "checker_sha256": {
+    "experiments/dvs2-spectre-validation/cross_boundaries.py": "cb07ee1c51901fb2a53fbc2a01b360d882bbee20904e6d1e94ecf14ac55ea7ad",
+    "experiments/dvs2-spectre-validation/test_cross_boundaries.py": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+    "experiments/dvs2-spectre-validation/cross_touch.py": "2392ddc32ba68ee5e7b7a2688457e95be2241ae4fdb80b3293cf89b4ada2225f",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "evas_build": {
+    "kernel_sha256": "8d6f9648254703c422dafcf486136199c5e9595c667305aa10375b25b9212fbc",
+    "source_sha256": {
+      "evas/src/evas/lowering.py": "019a3587bd66e8f8f9dfefed7be7431fbf947575cb81da7b200c8415d9a59f22",
+      "evas/src/evas/frontend.py": "eeb7e7f51cef77384ae097de5363fa3b2860ccef9d1c542ec28b3f72aab28e32",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/ir.py": "5e5979e1bc68d63c0bbb7edec9cea0f20950e5e4b3cba669c2603ad374a05aa0",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "d1cb490b2b24835d8263b1e3b2e6b7f9f43da3fb15b125299e9918738ccb22cc",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/rust_core/src/ir.rs": "1711c6141d5e15ed1d3592ee0514cd93b0eda52172db79148dffc7e00eac299b",
+      "evas/rust_core/src/linear.rs": "f510fc0427b0393376ae22c87e614f0b2bb10a7809c39495b06abc34d8f783fa",
+      "evas/rust_core/src/events.rs": "37600baf90121185c407496bcda4e815528237d2c7ae9f5aeaeb76b92361ecb2",
+      "evas/rust_core/src/solver.rs": "3ce7df4ed3011d91560c2d9725fa19cb42fa2428fd8708f35fbeafde5d8da94d",
+      "evas/rust_core/src/lib.rs": "326cc6703528f3acfa636e051a988815719aaa0ede732ff3b43d5491e55813b1",
+      "evas/rust_core/src/interval.rs": "67a3330dfb8ee01d621024ec53b8d4f636ae1874bf17afccd9ea2968ee941d2b",
+      "evas/rust_core/src/pwl.rs": "35baadab39bc8f2107c7135c43449e156bec7f14a52b35530c36aaa01dc75f08",
+      "evas/rust_core/src/nonlinear.rs": "3848efed2afd3d86963c21aa5d87584332c6c96e7282ceeaced018e9464d7b51",
+      "evas/rust_core/src/expression.rs": "c70e68284bd3178df0453befa9cb7cd03918a0dadba935750238d47a71126fbf",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/transient.rs": "e90eedb15b81b4c0e2f461d1d8bd33440a861ef8bcde6d74b3d3d7311e3f1f13",
+      "evas/rust_core/src/event_accuracy.rs": "e87ae23adaa5f74e3d7a6a3320affc866bf0247a25fcd83f960d3aa293163637",
+      "evas/rust_core/src/assembly.rs": "99802f75e6b14095c42c67abfe41e8901afbc70b2944e9ad35bf2b4fbca2d122"
+    }
+  },
+  "regression_source_sha256": "35e147edef0dbe47474c6932a6a148cf6b41a49a8de9c47af571b0b7f2dab8ca",
+  "spectre_version": "21.1.0.509.isr12",
+  "spectre_execution_identity": {
+    "max_attempts": 6,
+    "timeout_s": 90,
+    "license_timeout_s": 30,
+    "cpu": 0,
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "input_manifest_sha256": "64adafde4b1c9b2a6b4c20f69fbad8215c1a62e60e4080a7abf6bbb5019b0b89"
+  },
+  "original_failure": {
+    "experiment": "cross-boundaries-20260929-01",
+    "spectre_attempts": 6,
+    "transient_results": 0,
+    "reason": "VACOMP-1795: Spectre rejects leading-dot .5 literal; fixed only numeric spelling to 0.5 before separately freezing the second batch.",
+    "frozen_identity": {
+      "base_commit": "88a3f7f033250008f32bd2a9bd4c65a1e0fd8d5a",
+      "input_archive_sha256": "eb8a87077a9b1d0108d1a2b0dd0721c04f1ef5624ca14d68df5bd2cf0ddf05b7",
+      "input_manifest_sha256": "d706846f99636f057c49db7ddf164cda3e665609602c893950fc24de59cd4628",
+      "calibration_sha256": "d5da61ccb81eba3409aa7733a09757f4ab381c6785b51f0a2358275040b588b6",
+      "max_spectre_attempts": 6
+    },
+    "raw_archive_sha256": "0cba480ee0fb625a81b8ca0476caa42029fdc43456704d0ab985a975bece2ae4",
+    "execution_summary_sha256": "8c56aafaa1d07e8d1aa9856537d6bc300a4138383b8a47184e987abfa3923975",
+    "old_evas_version": "0.4.5",
+    "old_evas_combined_requests": 6,
+    "old_evas_rejections": 6,
+    "old_evas_kernel_sha256": "4880e4ce55115d2cacc092a04fb01c9f540f888d2b3e32bb84db329722536afe",
+    "old_evas_reason": "unsupported_cross at terminal-zero probe; not 378 independent per-monitor failures"
+  },
+  "executions": {
+    "spectre_new_successful_runs": 6,
+    "spectre_total_attempts_including_failed_batch": 12,
+    "evas_0_4_6_new_runs": 6,
+    "evas_0_4_5_combined_rejections": 6
+  },
+  "evidence": {
+    "spectre_raw_archive_sha256": "2a94471691a615956b488e8a5a340e472cd8371ef04cc71bab2969ccd67478ea",
+    "spectre_verified_manifest_files": 110,
+    "spectre_file_manifest_sha256": "dcd2452d89bd83ed19c680c60f82ae49c43e3e726e69186ccbb1b3283632098a",
+    "input_manifests_identical": true,
+    "evas_analysis_sha256": "d2eddf28b579410afdd1a10d33800c4c4b4bfc91fdf0b5718cb11c23a28ee8dc",
+    "spectre_analysis_sha256": "e5f28729b2e7c3faaf2eae251ec930e6db4ae212c3713551add569c253e35eea",
+    "local_evidence_manifest_sha256": "91fcb372912d1fb58314734021436329ecbca1bdee2f482ca71e3582c47b5cf8"
+  },
+  "checks": {
+    "python_unittest_methods": 97,
+    "rust_tests": 12,
+    "checker_methods": 25,
+    "old_kernel_error_subtests": 99,
+    "locked_offline_build": "passed",
+    "warnings_as_errors_all_targets_check": "passed",
+    "rustfmt": "passed",
+    "clippy": "unavailable: cargo-clippy not installed; no Clippy result claimed",
+    "logs_sha256": {
+      "build.log": "9fdc85d3263555528b9f4fde8014154b7ec03322055e46cb1f8e8db2874e0367",
+      "python-tests.log": "8f5182e9675b602d3c676ba1ab0d1ac325504debc522105c17f2c68d22ccd377",
+      "rust-tests.log": "68a8452aef7150d2ba2dadc9c47c8ecbb5d773b4202d1c627a818bf9bea6f9d1",
+      "checker-directory-tests.log": "afed2aecb75a8d62dcb8561c27f23a8beadf402dace653829140b2474eaaa4a2",
+      "all-targets-check.log": "bf7265c815b0ff519f645f81c94b4036cc437b73db260df9c793bc56216807cb",
+      "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events-before.log": "dcc19dbe1c6698f489690e0eb0306a71bebfc71b90b052b992dde6f68730964b",
+      "events-after.log": "f36a01a318b57adb57d4765b7e90e7314e385dd4e9237e3f21c7d734e7846417",
+      "clippy.log": "3e3e2d6b52fa73cb4b7d29a54bd714120caeb306f1f3dfeca78e6626641d0fd1"
+    }
+  },
+  "history_summary_by_backend": {
+    "evas": {
+      "boundary_candidate_consistent": 270,
+      "controls_passed": 108
+    },
+    "spectre": {
+      "boundary_candidate_consistent": 270,
+      "controls_passed": 108
+    }
+  },
+  "shape_counts": [
+    {
+      "shape": "terminal_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          3e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "terminal_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          3e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "continued_terminal_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          3e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "continued_terminal_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          3e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "plateau_return_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "plateau_return_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "plateau_cross_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "plateau_cross_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "initial_plateau_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [],
+      "counts_both_rising_falling": [
+        0,
+        0,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "initial_plateau_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [],
+      "counts_both_rising_falling": [
+        0,
+        0,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "terminal_plateau_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "terminal_plateau_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "short_plateau_pos",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "short_plateau_neg",
+      "kind": "boundary",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "near_plateau_pos",
+      "kind": "control",
+      "candidate_events_s_direction": [],
+      "counts_both_rising_falling": [
+        0,
+        0,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "near_plateau_neg",
+      "kind": "control",
+      "candidate_events_s_direction": [],
+      "counts_both_rising_falling": [
+        0,
+        0,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "isolated_pos",
+      "kind": "control",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "isolated_neg",
+      "kind": "control",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "ordinary_pos",
+      "kind": "control",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          -1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        0,
+        1
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "ordinary_neg",
+      "kind": "control",
+      "candidate_events_s_direction": [
+        [
+          1.5e-06,
+          1
+        ]
+      ],
+      "counts_both_rising_falling": [
+        1,
+        1,
+        0
+      ],
+      "matching_backend_configurations": 12
+    },
+    {
+      "shape": "all_zero",
+      "kind": "boundary",
+      "candidate_events_s_direction": [],
+      "counts_both_rising_falling": [
+        0,
+        0,
+        0
+      ],
+      "matching_backend_configurations": 12
+    }
+  ],
+  "configurations": [
+    {
+      "backend": "evas",
+      "configuration": "coarse-nominal",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "809f27e4d8f1ed25db7735b750465bbf05051e37dbf8377142895d7431e841ab",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "evas",
+      "configuration": "coarse-time_tight",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "809f27e4d8f1ed25db7735b750465bbf05051e37dbf8377142895d7431e841ab",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "evas",
+      "configuration": "coarse-expression_tight",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "809f27e4d8f1ed25db7735b750465bbf05051e37dbf8377142895d7431e841ab",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "evas",
+      "configuration": "fine-nominal",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "71f4cba2da11ef59f7addf12e445a8367998ead71be79985d07b7ccc1fbc50c8",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "evas",
+      "configuration": "fine-time_tight",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "71f4cba2da11ef59f7addf12e445a8367998ead71be79985d07b7ccc1fbc50c8",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "evas",
+      "configuration": "fine-expression_tight",
+      "points": 14,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "71f4cba2da11ef59f7addf12e445a8367998ead71be79985d07b7ccc1fbc50c8",
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "coarse-nominal",
+      "points": 119,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "fb321aae5178829f7c52f2e6bb470667a8d646842dd6b0b58e49652abe7d1e65",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 1.0000000000000001e-07,
+        "maxstep": 1.0000000000000001e-07,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 15.918032947927713,
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "coarse-time_tight",
+      "points": 120,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "cb4b85915da9c5e2c950e6f6e513e574e51f6f92849dfb0d1d8f26bdeb3fdfad",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 1.0000000000000001e-07,
+        "maxstep": 1.0000000000000001e-07,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 15.967437077313662,
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "coarse-expression_tight",
+      "points": 109,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "d31ccd99abd8a8e8a31daf7ff80d7ebdd191f41821831eadcc0a2f63dbca9616",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 1.0000000000000001e-07,
+        "maxstep": 1.0000000000000001e-07,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 16.106430677697062,
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "fine-nominal",
+      "points": 498,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "92dcfd84c986c2e3e9a223842f1ded2a7ed227441c0720aa0572587b46281ae7",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 7.000000000000001e-09,
+        "maxstep": 7.000000000000001e-09,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 15.909667016938329,
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "fine-time_tight",
+      "points": 499,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "bc3cb3dc1dae865939ce4da6bf52d29f835d23f03e5532d48aea1190e4749c31",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 7.000000000000001e-09,
+        "maxstep": 7.000000000000001e-09,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 16.213521160185337,
+      "max_abs_sampled_guard_v": 0.0
+    },
+    {
+      "backend": "spectre",
+      "configuration": "fine-expression_tight",
+      "points": 492,
+      "summary": {
+        "candidate_consistent": 45,
+        "control_pass": 18
+      },
+      "waveform_sha256": "43704d4cdee247a23fb23823b36f45956d01978aca9ff43635e7a7d319ccbc3a",
+      "effective_settings": {
+        "vabstol": 1e-10,
+        "iabstol": 1e-14,
+        "reltol": 1e-08,
+        "stop": 3e-06,
+        "step": 7.000000000000001e-09,
+        "maxstep": 7.000000000000001e-09,
+        "method": "traponly"
+      },
+      "stop_audit": {
+        "log_stop_s": 3e-06,
+        "requested_stop_s": 3e-06,
+        "waveform_stop_s": 3e-06,
+        "log_display_intervals_s": [
+          [
+            2.5e-06,
+            3.5e-06
+          ]
+        ],
+        "exact_log_match": true,
+        "waveform_matches_requested": true
+      },
+      "elapsed_s": 16.208988351747394,
+      "max_abs_sampled_guard_v": 0.0
+    }
+  ],
+  "limits": [
+    "Finite development observations under assumed 1e-8 V allowance, not formal qualification.",
+    "All new exact-zero arrivals are explicit PWL knots; no general smooth or nonlinear trajectory claim.",
+    "State-independent jointly affine transient subset only; transition, timer, dynamic operators, state-feedback guards remain unsupported.",
+    "Original 31-condition denominator unchanged; no full static or four-backend matrix rerun and no performance claim."
+  ]
+}
