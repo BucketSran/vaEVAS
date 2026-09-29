@@ -2,6 +2,7 @@
 //! derive history from output samples or mutate accepted state during a trial.
 use crate::absdelay::AbsDelay;
 use crate::events::{affine, AffineState};
+use crate::idt::Idt;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::pwl::Trajectory;
@@ -71,6 +72,7 @@ fn direct_points(
 
 #[derive(Clone)]
 enum Runtime {
+    Idt(Idt),
     AbsDelay(AbsDelay),
     Transition {
         input: AffineState,
@@ -117,6 +119,11 @@ impl Operators {
                 ));
             }
             match spec {
+                OperatorSpec::Idt { input, ic, origin } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::Idt(Idt::enclosed(points, bounds, *ic)?));
+                }
                 OperatorSpec::AbsDelay {
                     input,
                     delay,
@@ -180,6 +187,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::Idt(history) => history.value(time),
                 Runtime::AbsDelay(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
                 Runtime::Slew(history) => history.value(time),
@@ -191,6 +199,7 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
+                Runtime::Idt(history) => history.next_breakpoint(after),
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
                 Runtime::Slew(history) => history.next_breakpoint(after),
@@ -202,6 +211,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::Idt(history) => history.value_bounds(time),
                 Runtime::Slew(history) => Ok(history.value_bounds(time)),
                 Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
                 Runtime::Transition { history, .. } => history.value_bounds(time),
@@ -218,6 +228,7 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
+                Runtime::Idt(_) => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
                 Runtime::Slew(_) => Vec::new(),
@@ -253,6 +264,7 @@ impl Operators {
     ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
+                Runtime::Idt(_) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::Transition {
                     input,

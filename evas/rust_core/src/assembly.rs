@@ -1,6 +1,6 @@
 //! Validate IR and assemble one equation per instance-local voltage branch.
-use crate::expression;
 use crate::ir::{check_schema_version, BranchIdentity, Error, Expression, Program, Tolerances};
+use crate::{expression, linear::Row};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(crate) struct Equation {
@@ -8,8 +8,8 @@ pub(crate) struct Equation {
     pub(crate) positive: usize,
     pub(crate) negative: usize,
     pub(crate) rhs_constant: f64,
-    pub(crate) rhs_terms: Vec<f64>,
-    pub(crate) coefficients: Vec<f64>,
+    pub(crate) rhs_terms: Row,
+    pub(crate) coefficients: Row,
     pub(crate) nonlinear: Vec<Expression>,
     pub(crate) origins: Vec<String>,
 }
@@ -20,6 +20,14 @@ pub(crate) struct AssembledCircuit {
     pub(crate) driven: Vec<usize>,
     pub(crate) unknown: Vec<usize>,
     pub(crate) tolerances: Tolerances,
+}
+
+// Sorted compact terms keep residual evaluation contiguous without dense rows.
+fn add_coefficient(row: &mut Row, node: usize, value: f64) {
+    match row.binary_search_by_key(&node, |&(node, _)| node) {
+        Ok(index) => row[index].1 += value,
+        Err(index) => row.insert(index, (node, value)),
+    }
 }
 
 pub(crate) fn assemble(
@@ -138,8 +146,8 @@ pub(crate) fn assemble(
             positive: c.positive,
             negative: c.negative,
             rhs_constant: 0.0,
-            rhs_terms: vec![0.0; count],
-            coefficients: vec![0.0; count],
+            rhs_terms: Row::new(),
+            coefficients: Row::new(),
             nonlinear: Vec::new(),
             origins: Vec::new(),
         });
@@ -153,7 +161,7 @@ pub(crate) fn assemble(
             Expression::Affine { constant, terms } => {
                 equation.rhs_constant += constant;
                 for t in terms {
-                    equation.rhs_terms[t.node] += t.coefficient;
+                    add_coefficient(&mut equation.rhs_terms, t.node, t.coefficient);
                 }
             }
             expression => equation.nonlinear.push(expression),
@@ -162,10 +170,12 @@ pub(crate) fn assemble(
     }
     let mut equations: Vec<_> = grouped.into_values().collect();
     for eq in &mut equations {
-        eq.coefficients = eq.rhs_terms.iter().map(|x| -x).collect();
-        eq.coefficients[eq.positive] += 1.0;
-        eq.coefficients[eq.negative] -= 1.0;
-        if !eq.rhs_constant.is_finite() || eq.coefficients.iter().any(|x| !x.is_finite()) {
+        eq.rhs_terms.retain(|&(_, value)| value != 0.0);
+        eq.coefficients = eq.rhs_terms.iter().map(|&(n, x)| (n, -x)).collect();
+        add_coefficient(&mut eq.coefficients, eq.positive, 1.0);
+        add_coefficient(&mut eq.coefficients, eq.negative, -1.0);
+        eq.coefficients.retain(|&(_, value)| value != 0.0);
+        if !eq.rhs_constant.is_finite() || eq.coefficients.iter().any(|(_, x)| !x.is_finite()) {
             return Err(Error::new(
                 "nonfinite_arithmetic",
                 format!(

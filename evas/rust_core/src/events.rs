@@ -525,7 +525,10 @@ impl EventModel {
                 .iter()
                 .copied()
                 .filter(|n| {
-                    equation.coefficients[*n] != 0.0
+                    equation
+                        .coefficients
+                        .binary_search_by_key(n, |&(node, _)| node)
+                        .is_ok()
                         || self
                             .program
                             .contributions

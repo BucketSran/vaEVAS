@@ -1,6 +1,6 @@
 # EVAS
 
-当前实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.7.1，IR v7**：稠密/稀疏混合的静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`，以及显式常量初值的受限 `idt`。尚未替换旧 EVAS 0.8.7。
 
 0.5.3 恢复同块 integer 顺序重复赋值，保留逐句范围检查、同刻前向误差认证与原子提交。
 当前回归与对照见 [0.5.3 证据](../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)；
@@ -25,6 +25,7 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json --kernel
 PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_nonlinear.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m evas transient evas/examples/cross_counter.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m evas transient evas/examples/timer_counter.json --kernel evas/rust_core/target/debug/evas-kernel
+PYTHONPATH=evas/src python3 -m evas transient evas/examples/idt.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
 cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/evas-static-replay
@@ -35,6 +36,22 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 两档对应 4,001／40,001 点的静态采样网格和电压/残差容差，不是瞬态仿真或 DVS 正式资格。
 
 ## 回归证据
+
+0.7.1 / IR v7 在 PR19 的 main `2e3196f` 上整合 [PR8](https://github.com/BucketSran/vaEVAS/pull/8)，
+被测提交为 `f44b730`；收尾文档不改变运行时代码或测试。**230 项 Python、52 项 Rust、9 项纯数学**检查通过，
+locked/offline 构建、warnings-as-errors 的 all-targets 检查、格式与 idt CLI 检查通过。
+新执行静态回放 22 配置、484,022 点满足原判据，仍为 11 条支持、20 条明确拒绝。
+新增 40 节点 idt 稀疏耦合回归检查 1,240 个电压值，并核对实例顺序、输出网格、步长变化及过严容差拒绝。
+未重新执行原 31 条件瞬态矩阵、Spectre 或性能基准；本轮不增加语言/算子覆盖数量。
+代码、独立答案与命令在仓库内，原始执行日志仅本地保留；身份与哈希见 PR8。
+稀疏分流、认证边界和后续性能工作见[数值手册](docs/NUMERICS.md#稀疏分支与性能边界)。
+
+0.7.0 / IR v7 在 PR18 基线 `1dc0bed` 上整合受限 idt，完整检查为 **218 项 Python、42 项 Rust**，
+另有 **9 项纯数学校准**；locked/offline 构建、all-targets warnings-as-errors 与格式检查通过。
+新增的两项 Rust 检查覆盖非零已接受历史、四调用点/两实例、真实精度失败后较早候选重试，
+以及只修正未来输入的同刻重算。数学、状态生命周期和剩余证据边界见
+[积分契约](validation/DYNAMICS_CONTRACTS.md)及[实现说明](docs/OPERATORS.md#idt)。
+本次没有新增 Spectre 对照或重跑原 31 条件矩阵；下述矩阵数字仍属于原检查点，不能当作 0.7.0 新执行结果。
 
 PR15 被测实现 `e01fb5b` 包含 PR14 `3638024`，继承 PR13 0.6.1 的历史误差验收；该检查点 **195 项 Python、33 项 Rust**、locked/offline 构建、warnings-as-errors、格式与 CLI 检查通过。父提交 `9850450` 的检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
 离线构建、warnings-as-errors 的 all-targets 检查和格式检查。新增历史误差认证见[算子手册](docs/OPERATORS.md#历史误差与电压精度)。PR13 0.6.1 与历史执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)。
@@ -151,7 +168,7 @@ PR13 原始 0.5.1 检查点（未合入 main）新增 15 项 Python transition �
 | 工作点求解 | `rust_core/src/solver.rs` | 代入每个样本的驱动值，求解未知电压，验收原方程残差 |
 | 表达式求值 | `rust_core/src/expression.rs` | 递归校验 IR，计算多项式值与链式法则导数 |
 | 非线性求解 | `rust_core/src/nonlinear.rs` | 对同一组支路方程执行有界阻尼 Newton 迭代 |
-| 线性代数 | `rust_core/src/linear.rs` | 行缩放、选主元、稠密分解与多 RHS 求解 |
+| 线性代数 | `rust_core/src/linear.rs`、`linear/dense.rs`、`linear/sparse.rs`、`linear/columns.rs` | 稠密/稀疏分流、行缩放、选主元、列排序与多 RHS 求解 |
 | 事件语义 | `rust_core/src/events.rs` | 校验状态/事件身份及依赖，将状态代入方程，准备事件块的状态更新 |
 | 事件误差界 | `rust_core/src/event_accuracy.rs` | 从原 IR 包围仿射网络的传递系数，复核状态独立性及冗余约束 |
 | 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
@@ -160,7 +177,7 @@ PR13 原始 0.5.1 检查点（未合入 main）新增 15 项 Python transition �
 | 同刻误差认证 | `rust_core/src/settlement_bounds.rs` | 从原 IR 独立包围事件后解，检查电压与状态各自误差预算 |
 | 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿与限速轨迹，提供语义断点与输出值 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs`、`idt.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿、限速与积分轨迹，提供语义断点与输出值 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -171,16 +188,16 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-两端内核须一起升级到 0.4.6；模型 IR v4 不变，原 JSON 请求继续有效。
+Python 前端与 Rust 内核使用 IR v7；早于 v7 的旧 IR 应从原始 VA 重新编译。0.7.1 保持 0.7.0 的 IR 格式。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；表达式和事件使用 IR v4，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；表达式、事件与算子使用 IR v7，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
-本轮性能检查仅覆盖 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
+已有性能检查仅覆盖对应旧检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量；0.7.1 未重新计时。
 
 ## 本地求解性能检查
 
@@ -191,7 +208,8 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
 ```
 
-覆盖 1/16/64/128 个未知量的仿射链、64 维稠密仿射网络和 1/16/64 维独立三次方程。
+覆盖仿射链、环、星形、网格、稠密网络及独立三次方程；当前尺寸集合见基准源码，
+可用 `EVAS_BENCH_CASE` 选择单个配置。分流阈值与性能边界见[数值手册](docs/NUMERICS.md#稀疏分支与性能边界)。
 每个电路先核对独立递推/解析/二分答案；每轮新建电路，单独计时准备和首次求解，
 再交替使用四个输入测量重复求解。输出包含原始计时数组，不设跨机器性能通过阈值。
 
@@ -231,6 +249,10 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 - manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 
+瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
+每个调用点独立，历史误差参与电压验收。缺省初值、复位、内部节点/状态输入、嵌套、积分反馈和
+积分输出驱动 cross 仍拒绝；数学与限制见[算子手册](docs/OPERATORS.md#idt)。
+
 当前拒绝事件块之外的过程赋值、条件、循环、层次实例、数组、命名支路、电流贡献、
 `pow` 之外的数学函数、未列明的事件和动态算子、其他预处理指令、参数范围和未知语法。
 支持集按语法和语义决定，运行时代码不读取验证集，也不识别模型/条件名称。
@@ -258,7 +280,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 ## IR 与贡献契约
 
-IR v6 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+IR v7 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`。Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
@@ -289,16 +311,16 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 `(1-k)*(V(y)-V(r)) = V(u)-V(r)`。
 这两种写法使用同一组装与求解入口。
 
-### v1/v2/v3/v4/v5 → v6 迁移
+### v1/v2/v3/v4/v5/v6 → v7 迁移
 
-Python 包与 Rust 内核一起升级到 0.6.1；Program 和成功 Response 的
-`schema_version` 均为 6。Python 适配器拒绝其他响应版本。
-内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4/v5 或未知版本返回
-`unsupported_ir_version`；缺失/错误类型及 v6 格式错误返回 `invalid_request`。
+Python 包与 Rust 内核一起升级到 0.7.0；Program 和成功 Response 的
+`schema_version` 均为 7。Python 适配器拒绝其他响应版本。
+内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4/v5/v6 或未知版本返回
+`unsupported_ir_version`；缺失/错误类型及 v7 格式错误返回 `invalid_request`。
 Rust 库的构造入口也检查版本。
 
-已有 v1/v2/v3/v4/v5 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
-旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v6 请求。不要只修改版本号：v3 引入表达式标签，v4 引入实例状态和事件，v5 将触发器放入带 kind 标签的 trigger，v6 增加有实例/调用点身份的 operators 和 operator 引用。
+已有 v1/v2/v3/v4/v5/v6 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
+旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v7 请求。不要只修改版本号：v3 引入表达式标签，v4 引入实例状态和事件，v5 将触发器放入带 kind 标签的 trigger，v6 增加有实例/调用点身份的 operators 和 operator 引用，v7 增加 `kind=idt,input,ic,origin`。
 `Program.states/events/operators` 为空时保持静态语义；省略这些字段也只表示空列表，不推断任何事件。
 `state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件统一为 `trigger/assignments/origin`。
 `trigger.kind=cross` 携带 guard、方向和两项容差；`trigger.kind=timer` 携带

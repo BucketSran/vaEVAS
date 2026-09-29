@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
-                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew)
+                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
@@ -49,7 +49,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets["0"] = "0"
         bindings.append((instance, model, nets))
     def contains_operator(expr):
-        return expr.op in ("transition", "absdelay", "slew") or any(contains_operator(arg) for arg in expr.args)
+        return expr.op in ("transition", "absdelay", "slew", "idt") or any(contains_operator(arg) for arg in expr.args)
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
@@ -167,7 +167,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 raise CompileError(f"{expr.op} settings must be instance constants")
             origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
             index = len(operators)
-            if expr.op == "absdelay":
+            if expr.op == "idt":
+                operators.append(Idt(value, settings[0].constant, origin))
+            elif expr.op == "absdelay":
                 delay = settings[0].constant
                 if delay < 0:
                     raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")

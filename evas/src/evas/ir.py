@@ -1,4 +1,4 @@
-"""Version 6: voltage contributions and bounded affine events with structured local branch identity.
+"""Version 7: voltage/event IR with explicit-IC direct-PWL integration.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 
 @dataclass(frozen=True)
@@ -90,6 +90,14 @@ class AbsDelay:
 
 
 @dataclass(frozen=True)
+class Idt:
+    input: Expression
+    ic: float
+    origin: Origin
+    kind: str = field(default="idt", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -152,7 +160,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:
