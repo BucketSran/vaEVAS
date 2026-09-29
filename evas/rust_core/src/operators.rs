@@ -2,10 +2,56 @@
 //! derive history from output samples or mutate accepted state during a trial.
 use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
-use crate::ir::{Error, OperatorSpec, Program};
+use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::pwl::Trajectory;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
+
+/// Materialize the accepted continuous input definition at its semantic knots.
+/// Dependency validation precedes all numerical binding, so zero coefficients
+/// and algebraic cancellation cannot turn an internal input into a direct one.
+fn direct_points(
+    input: &Expression,
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+    origin: &Origin,
+) -> Result<Vec<(f64, f64)>, Error> {
+    let input = affine(input, program, &origin.instance)?;
+    let driven_nodes: Vec<_> = driven
+        .iter()
+        .map(|name| {
+            program
+                .nodes
+                .iter()
+                .position(|node| node == name)
+                .ok_or_else(|| Error::new("invalid_inputs", "unknown directly driven node"))
+        })
+        .collect::<Result<_, _>>()?;
+    if !input.state_dependencies.is_empty()
+        || !input.operator_dependencies.is_empty()
+        || input
+            .node_dependencies
+            .iter()
+            .any(|node| *node != 0 && !driven_nodes.contains(node))
+    {
+        return Err(Error::new(
+            "unsupported_operator",
+            format!("waveform input must be affine in directly driven nodes and constants; internal nodes, state, nesting and feedback are unsupported at {}", origin.label()),
+        ));
+    }
+    let mut nodes = vec![0.0; program.nodes.len()];
+    trajectory
+        .knots
+        .iter()
+        .map(|&time| {
+            for (&node, value) in driven_nodes.iter().zip(trajectory.values(time)) {
+                nodes[node] = value;
+            }
+            Ok((time, input.value(&nodes, &[])?))
+        })
+        .collect()
+}
 
 #[derive(Clone)]
 enum Runtime {
