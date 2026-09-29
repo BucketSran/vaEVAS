@@ -1,0 +1,1466 @@
+{
+  "schema": "vaevas.transition-comparison.v1",
+  "run_id": "pr13-transition-20260929-02",
+  "capability_ids": [
+    "TRANSITION",
+    "EVENT-ORDER",
+    "COMPOSE"
+  ],
+  "kind": "new_execution",
+  "implementation": {
+    "version": "0.6.0",
+    "ir_version": 6,
+    "commit": "e3c02be3a8cab11ea94cb98a15889aa6cd0e5f5f",
+    "base_main": "e6f04c4f5db2f7f48a4e942a7f6b75f41efc7485",
+    "execution_checkout_was_merging": true,
+    "execution_pre_merge_head": "bb01e88225efb8884cd009ae32ab4e77a6b50d0c",
+    "reconciled_to_commit": "All executed Python/Rust source hashes match the recorded final merge commit exactly.",
+    "kernel_sha256": "d1c5fe7a2b24992976c31246fc49ba0c317b72c56e0438bb6a9f2dede11f720e",
+    "source_sha256": {
+      "evas/src/evas/lowering.py": "ca8bbec3c6302d5d634e91aa5489dfd0b98f32fe948129d42716baceb0868993",
+      "evas/src/evas/frontend.py": "e3daa646a1c356839d1aac7a258c1a5236f54636ff58fbec9cd0ab8610004071",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/ir.py": "bd5be2225f4b90120deca38822af1b1529015f3898bba1211e39e2812b42939f",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "8dd927a87d9892c3fb446fc4d39be86247e73d411f07f47f62827f702fe46b02",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/rust_core/src/ir.rs": "1250de435a114c103d7fc4403420e5d97701b3fa955c57bec4351115d401f334",
+      "evas/rust_core/src/linear.rs": "f510fc0427b0393376ae22c87e614f0b2bb10a7809c39495b06abc34d8f783fa",
+      "evas/rust_core/src/events.rs": "a8cb6fcb03904c0d2634be7074374a8bc8363cf9b8f056cab4efb0b7710a3786",
+      "evas/rust_core/src/settlement.rs": "138def757cfff0fe2d8aa2b0995b10ae1da9a850bcd52cc322e5d92936bd29c0",
+      "evas/rust_core/src/transition.rs": "83cf8415f6891ee8f2f15e409251eadfbcf9a7a087eab63d8016aa2af22762df",
+      "evas/rust_core/src/affine_bounds.rs": "e2c0f6f8ebf183e9f2948e94572369293bb2ffc6e8fbf1264ee0a6212702ea49",
+      "evas/rust_core/src/solver.rs": "3ce7df4ed3011d91560c2d9725fa19cb42fa2428fd8708f35fbeafde5d8da94d",
+      "evas/rust_core/src/lib.rs": "9053355d44689456c5510be194606b6b98b6e2a8b42810dbc3300c4120695b4e",
+      "evas/rust_core/src/interval.rs": "cb4fb6d2e4fcfca191b9bc786e6afdd5d75b608777823f7885598f2171644aa7",
+      "evas/rust_core/src/pwl.rs": "fae9cd07f6cd69d22df238fcdf935d39e91d79af1050be0e288ba0ba564e1ec7",
+      "evas/rust_core/src/nonlinear.rs": "3848efed2afd3d86963c21aa5d87584332c6c96e7282ceeaced018e9464d7b51",
+      "evas/rust_core/src/expression.rs": "06ef601d7e7f6d742ecdefae4b2b5c0ff640573071709f71d81f8c41ac94fe5c",
+      "evas/rust_core/src/schedule.rs": "4f7cc7d1ba6f51baf26aa4e7989c5925c138b0b69552de7374c25bfa9cc6c54f",
+      "evas/rust_core/src/settlement_bounds.rs": "6a352a4782328e9c001a1bc667c7270f1e4a66da11b100ce6d3a9c240ae6b40b",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/operators.rs": "a924dca4f0299fbf2cafa2ad89551864d4c674945001ce8ac6d049b21876b57d",
+      "evas/rust_core/src/transient.rs": "888b24f22e81a0922da7ff18543feb13a4129318ded91f24b4d0795753c8d204",
+      "evas/rust_core/src/event_accuracy.rs": "7102f6c548388d73b2784313738bfd984293a5904bddcf86984cbcec338143a3",
+      "evas/rust_core/src/assembly.rs": "38033bd760b39bc6bf947e968ee94db618860091d6e5500b1138f70ac7190c55"
+    }
+  },
+  "environment": {
+    "local_python": "3.14.6",
+    "rustc": "1.95.0 (59807616e 2026-04-14)",
+    "cargo": "1.95.0 (f2d3ce0bd 2026-03-21)",
+    "remote_host": "thu-sui",
+    "remote_python": "3.11",
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "denominator": {
+    "scenarios": 8,
+    "settings_per_scenario": 2,
+    "configurations_per_backend": 16,
+    "new_spectre_executions": 16,
+    "new_evas_executions": 16,
+    "original_validation_conditions_unchanged": 31
+  },
+  "protocol": {
+    "max_spectre_attempts": 16,
+    "timeout_s": 90,
+    "license_timeout_s": 30,
+    "timer_tolerance_s": 9.094947017729282e-13,
+    "voltage_allowance_v": 1e-08,
+    "reference": "Explicit PWL knots derived from LRM 2.4 section 4.5.8; voltage-target uses reviewed EVAS same-time contract.",
+    "observation": "Check every exported point; held targets and stamps checked outside event windows. Compare each backend independently. Coarse/fine maxstep, no forced Spectre strobes.",
+    "limits": "Finite development observations, conditional export allowance, no continuous-time qualification or speed ranking. Nominal waveform allowance is 4*timer_tolerance*maximum_reference_slope + 1e-8 V."
+  },
+  "input_manifest": {
+    "checker_identity.json": "8c8ea85a961c4925752ff5c36d4105a14fbcc60bf8ec4649f8caf5a5009834b6",
+    "conditions.json": "10bc336e4c4eb9779f2a2097f01e80bc59b7d5bd324ca4bef5e94e544b68b512",
+    "contract.json": "a5327878ff3ef557aaa6ebcaa43685e609de260bb0c09f149849a07243b6d58e",
+    "delay-pulse-coarse/probe.va": "399b71d2cccdd9469e190621541af30eb27937dcfbf7cbdf55e91075ce40aaf3",
+    "delay-pulse-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "delay-pulse-fine/probe.va": "399b71d2cccdd9469e190621541af30eb27937dcfbf7cbdf55e91075ce40aaf3",
+    "delay-pulse-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "extend-coarse/probe.va": "8d90efc49af9a28e6c9fa9b3c2ac49c5e6724fbcfd03dfd327da9c8f66c74653",
+    "extend-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "extend-fine/probe.va": "8d90efc49af9a28e6c9fa9b3c2ac49c5e6724fbcfd03dfd327da9c8f66c74653",
+    "extend-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "extend-negative-coarse/probe.va": "74814b5e1fb9035360b732f3d8782e948dea5250a2a909596e51c492a8db9cd6",
+    "extend-negative-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "extend-negative-fine/probe.va": "74814b5e1fb9035360b732f3d8782e948dea5250a2a909596e51c492a8db9cd6",
+    "extend-negative-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "ordinary-coarse/probe.va": "7f397a9bd8bafe2fd9a9389c71c2c77face4c8576f46c7f2d91d9108d451fc1e",
+    "ordinary-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "ordinary-fine/probe.va": "7f397a9bd8bafe2fd9a9389c71c2c77face4c8576f46c7f2d91d9108d451fc1e",
+    "ordinary-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "repeat-coarse/probe.va": "1931cf112078f23468ec44c40e8b138cc19676835304a5697ef2943ac74a6559",
+    "repeat-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "repeat-fine/probe.va": "1931cf112078f23468ec44c40e8b138cc19676835304a5697ef2943ac74a6559",
+    "repeat-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "reverse-coarse/probe.va": "b7d3697e0753932f517a125181bb8339bf0309e9551ee6a8bbabb9b502cc9471",
+    "reverse-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "reverse-fine/probe.va": "b7d3697e0753932f517a125181bb8339bf0309e9551ee6a8bbabb9b502cc9471",
+    "reverse-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "reverse-negative-coarse/probe.va": "d38b324d302adb2c44f6e72a6ab0c8b2a3eacef6387cfbc807a4cf6096bad773",
+    "reverse-negative-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "reverse-negative-fine/probe.va": "d38b324d302adb2c44f6e72a6ab0c8b2a3eacef6387cfbc807a4cf6096bad773",
+    "reverse-negative-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83",
+    "voltage-target-coarse/probe.va": "985c8f14705f75520fd5dd799484a87f9b53088c413cec5962e217dc9b817d8b",
+    "voltage-target-coarse/tb.scs": "225b4578dfb123595c14497f72c0ff367ade0fbc8d0a202143aa528a976e52e1",
+    "voltage-target-fine/probe.va": "985c8f14705f75520fd5dd799484a87f9b53088c413cec5962e217dc9b817d8b",
+    "voltage-target-fine/tb.scs": "e8b6dd2143fd55bf5ed5f795b1dd147767264059e9814cd175adab615b159b83"
+  },
+  "checker_identity": {
+    "experiments/dvs2-spectre-validation/transition_reference.py": "52880ae8b1c96fbb7cec1b5a9691b287f7a0dbe527ffac6090a9b51a0a0357f2",
+    "experiments/dvs2-spectre-validation/test_transition_reference.py": "96a50eb59d6fae9ba4de6bf7ad9967b9b541e09dbc73e04ae7f271e8ce91b0b3",
+    "experiments/dvs2-spectre-validation/timer_reference.py": "7ee6a104c444729e3c96d9bd97233d08913b8dd7a853df079c7ce7121b7da43d",
+    "experiments/dvs2-spectre-validation/cross_touch.py": "2392ddc32ba68ee5e7b7a2688457e95be2241ae4fdb80b3293cf89b4ada2225f",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "analysis": {
+    "input_manifest_sha256": "371f524eaf7c4f314e465081aefb107a6b6a0d5e09c40d2616b5e9d2b9cd4b5e",
+    "records": [
+      {
+        "case": "ordinary-coarse",
+        "backend": "evas",
+        "waveform_sha256": "66806315982c8630fee302788ed2a0254a82ea507d6d089371d8242d4276ac92",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000732431875,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "ordinary-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "ac1772af67c1190e9ab2f7767c13daada3d7415ebe1e2511c7c8a7ba978be82d",
+        "points": 34,
+        "max_error_v": 8.881784197001252e-16,
+        "conditional_allowance_v": 0.000732431875,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "ordinary-fine",
+        "backend": "evas",
+        "waveform_sha256": "66806315982c8630fee302788ed2a0254a82ea507d6d089371d8242d4276ac92",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000732431875,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "ordinary-fine",
+        "backend": "spectre",
+        "waveform_sha256": "eef5738dbcfffdd2004b771f57482bcfd5cc8ab08f51d399649887e99567a852",
+        "points": 272,
+        "max_error_v": 4.440892098500626e-16,
+        "conditional_allowance_v": 0.000732431875,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-coarse",
+        "backend": "evas",
+        "waveform_sha256": "9f9b2cee18c5c45b8a561c907151fc685619541133507fb76003b10327325903",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "611e6e5617b70814100e5b0149cddfa2a330a8642d1f49cd167ac7a27d04fd2d",
+        "points": 36,
+        "max_error_v": 1.6653345369377348e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-fine",
+        "backend": "evas",
+        "waveform_sha256": "9f9b2cee18c5c45b8a561c907151fc685619541133507fb76003b10327325903",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-fine",
+        "backend": "spectre",
+        "waveform_sha256": "93002aa85c01f6081d5473c2ea28f899ef06adefa1a4922a5c0a49e6afdf8c1a",
+        "points": 272,
+        "max_error_v": 3.5735303605122226e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-coarse",
+        "backend": "evas",
+        "waveform_sha256": "af3a7407e2e2744162ad42a34ec62880fd3570adbb99b995bf723b130bd79cd9",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "89cec014737f96231e0a6c297c1b5f9a393ab055698bae099eae3b61ff8fd1ec",
+        "points": 33,
+        "max_error_v": 2.220446049250313e-16,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-fine",
+        "backend": "evas",
+        "waveform_sha256": "af3a7407e2e2744162ad42a34ec62880fd3570adbb99b995bf723b130bd79cd9",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-fine",
+        "backend": "spectre",
+        "waveform_sha256": "ea58340981b5fe7e7879027e4fed802c10171101fcd28deb29020372b83b5f6d",
+        "points": 272,
+        "max_error_v": 1.3322676295501878e-15,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-negative-coarse",
+        "backend": "evas",
+        "waveform_sha256": "dfcf6477917e30dda94a303b66415e80db0722cc83b2aedb76dfef5e735c8e5e",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-negative-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "a467f2124c62528bb1a9852b7948fe54f54ecb1e24fa5fad6365f19345af16f0",
+        "points": 36,
+        "max_error_v": 1.6653345369377348e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-negative-fine",
+        "backend": "evas",
+        "waveform_sha256": "dfcf6477917e30dda94a303b66415e80db0722cc83b2aedb76dfef5e735c8e5e",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "reverse-negative-fine",
+        "backend": "spectre",
+        "waveform_sha256": "e4e14680c3fb29ae787695dfe5757888e21500a281d62788e959d6f3c2fd329a",
+        "points": 272,
+        "max_error_v": 3.5735303605122226e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-negative-coarse",
+        "backend": "evas",
+        "waveform_sha256": "efc1f2b25be922476e569406101043152877ea1b672e82e9760150a116118b55",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-negative-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "b1d7c1d906f42b69ad620983e6dee85ee5c56fbf38ded1579662669a1ca024e3",
+        "points": 33,
+        "max_error_v": 2.220446049250313e-16,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-negative-fine",
+        "backend": "evas",
+        "waveform_sha256": "efc1f2b25be922476e569406101043152877ea1b672e82e9760150a116118b55",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "extend-negative-fine",
+        "backend": "spectre",
+        "waveform_sha256": "44c8863115ce01d8546c0eace3a63394f49c16196f8f9245a294eaaeaf313021",
+        "points": 272,
+        "max_error_v": 1.3322676295501878e-15,
+        "conditional_allowance_v": 0.0007812600000000001,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "delay-pulse-coarse",
+        "backend": "evas",
+        "waveform_sha256": "c3f6c69593729a17aec3752732e3fe9dacd081141cc64ccec15e31f95fd64374",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.001953135,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "delay-pulse-coarse",
+        "backend": "spectre",
+        "status": "finite_inconsistent_or_unavailable",
+        "reason": "unobserved edge segment"
+      },
+      {
+        "case": "delay-pulse-fine",
+        "backend": "evas",
+        "waveform_sha256": "c3f6c69593729a17aec3752732e3fe9dacd081141cc64ccec15e31f95fd64374",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.001953135,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "delay-pulse-fine",
+        "backend": "spectre",
+        "waveform_sha256": "dcd180bf2b36052a28cd4ce7e63d96eb148408a849f53884ad33086e4313df34",
+        "points": 272,
+        "max_error_v": 2.6645352591003757e-15,
+        "conditional_allowance_v": 0.001953135,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "repeat-coarse",
+        "backend": "evas",
+        "waveform_sha256": "116bbf651ad99554dc44a66005022f15adf382515953063935fb8a460ba1404e",
+        "points": 257,
+        "max_error_v": 1.1102230246251565e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "repeat-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "94d99c4d83b9253fc1f83d1ea177461ffae52177940cf2f67394ccdb7d119b51",
+        "points": 34,
+        "max_error_v": 2.220446049250313e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "repeat-fine",
+        "backend": "evas",
+        "waveform_sha256": "116bbf651ad99554dc44a66005022f15adf382515953063935fb8a460ba1404e",
+        "points": 257,
+        "max_error_v": 1.1102230246251565e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "repeat-fine",
+        "backend": "spectre",
+        "waveform_sha256": "9bd12b3f84ddeb50dbb8968397621a1b0a2e5925a1ccd308fa620cfc98640a33",
+        "points": 272,
+        "max_error_v": 4.440892098500626e-16,
+        "conditional_allowance_v": 0.000390635,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "voltage-target-coarse",
+        "backend": "evas",
+        "waveform_sha256": "d10056eddac9c3468b4d2e4c4830891a75cba1a176c74da39f1ce680dfdf6d3b",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0009765725,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "voltage-target-coarse",
+        "backend": "spectre",
+        "waveform_sha256": "9718131da50af9457b3a07b8e8836e88429b8c3d605460b4e91a9fc52a28e084",
+        "points": 32,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0009765725,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "voltage-target-fine",
+        "backend": "evas",
+        "waveform_sha256": "d10056eddac9c3468b4d2e4c4830891a75cba1a176c74da39f1ce680dfdf6d3b",
+        "points": 257,
+        "max_error_v": 0.0,
+        "conditional_allowance_v": 0.0009765725,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      },
+      {
+        "case": "voltage-target-fine",
+        "backend": "spectre",
+        "waveform_sha256": "087881377052e68912e9045616e987736c630a5d112288872f74719030db8376",
+        "points": 272,
+        "max_error_v": 2.220446049250313e-16,
+        "conditional_allowance_v": 0.0009765725,
+        "status": "finite_consistent",
+        "formal_qualification": false
+      }
+    ],
+    "summary": {
+      "evas": {
+        "finite_consistent": 16
+      },
+      "spectre": {
+        "finite_consistent": 15,
+        "finite_inconsistent_or_unavailable": 1
+      }
+    },
+    "formal_qualification": false
+  },
+  "settings_and_output_audit": {
+    "retrieved_files_verified": true,
+    "records": [
+      {
+        "case": "ordinary-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 34,
+        "max_error_v": 8.881784197001252e-16,
+        "waveform_sha256": "ac1772af67c1190e9ab2f7767c13daada3d7415ebe1e2511c7c8a7ba978be82d",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.609116148203611,
+          "log": "stdout.log",
+          "log_sha256": "fba6d91a3b4d2ab9dcfa6e1fe98c81ee6314b28769ff5961913827c5999e527f"
+        }
+      },
+      {
+        "case": "ordinary-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 4.440892098500626e-16,
+        "waveform_sha256": "eef5738dbcfffdd2004b771f57482bcfd5cc8ab08f51d399649887e99567a852",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.611092871055007,
+          "log": "stdout.log",
+          "log_sha256": "a36d47ee6456a45d712b1dc08a1d6bb6cb46d1389c01dc82b9f88d1b84ce6cca"
+        }
+      },
+      {
+        "case": "reverse-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 36,
+        "max_error_v": 1.6653345369377348e-16,
+        "waveform_sha256": "611e6e5617b70814100e5b0149cddfa2a330a8642d1f49cd167ac7a27d04fd2d",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.267298102378845,
+          "log": "stdout.log",
+          "log_sha256": "6b5c62a2c64e1180aa74d298aabb87cda4225d15fc8875990afb4ea70ab8ad03"
+        }
+      },
+      {
+        "case": "reverse-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 3.5735303605122226e-16,
+        "waveform_sha256": "93002aa85c01f6081d5473c2ea28f899ef06adefa1a4922a5c0a49e6afdf8c1a",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.659712532535195,
+          "log": "stdout.log",
+          "log_sha256": "e8402a6a47da91ee953855bed6c2915e92c093a33e311d981fd60fde1f769eb9"
+        }
+      },
+      {
+        "case": "extend-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 33,
+        "max_error_v": 2.220446049250313e-16,
+        "waveform_sha256": "89cec014737f96231e0a6c297c1b5f9a393ab055698bae099eae3b61ff8fd1ec",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.31110554561019,
+          "log": "stdout.log",
+          "log_sha256": "d9f6579b3e3291d4d0ad0f39f0b642355d4e5d704ed752a5352801498b1e14a4"
+        }
+      },
+      {
+        "case": "extend-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 1.3322676295501878e-15,
+        "waveform_sha256": "ea58340981b5fe7e7879027e4fed802c10171101fcd28deb29020372b83b5f6d",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.561458876356483,
+          "log": "stdout.log",
+          "log_sha256": "8ae89d45cf9c121a6a2d2439d636bafef2468861aa39477650ff893e8ccba74b"
+        }
+      },
+      {
+        "case": "reverse-negative-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 36,
+        "max_error_v": 1.6653345369377348e-16,
+        "waveform_sha256": "a467f2124c62528bb1a9852b7948fe54f54ecb1e24fa5fad6365f19345af16f0",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.47395895794034,
+          "log": "stdout.log",
+          "log_sha256": "9ca60494ff271a1b8fe21050b7b5340fd541a76dd47aeccd78dd24a07898510d"
+        }
+      },
+      {
+        "case": "reverse-negative-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 3.5735303605122226e-16,
+        "waveform_sha256": "e4e14680c3fb29ae787695dfe5757888e21500a281d62788e959d6f3c2fd329a",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 16.969415979459882,
+          "log": "stdout.log",
+          "log_sha256": "2cc125b9bf0cd4d098b660cea94d1f5d21d8299d18d3845f577d2a512ae9d9d9"
+        }
+      },
+      {
+        "case": "extend-negative-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 33,
+        "max_error_v": 2.220446049250313e-16,
+        "waveform_sha256": "b1d7c1d906f42b69ad620983e6dee85ee5c56fbf38ded1579662669a1ca024e3",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 16.172038607299328,
+          "log": "stdout.log",
+          "log_sha256": "f7b33848b7fbb4a669fcc053f95ebca0d7b303bd7bac843c5a36ac29aa28e003"
+        }
+      },
+      {
+        "case": "extend-negative-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 1.3322676295501878e-15,
+        "waveform_sha256": "44c8863115ce01d8546c0eace3a63394f49c16196f8f9245a294eaaeaf313021",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.660430578514934,
+          "log": "stdout.log",
+          "log_sha256": "6057498bde9330e15b2cbd6d9ae9bd3adea1151cebe1381accef9bca95176576"
+        }
+      },
+      {
+        "case": "delay-pulse-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 35,
+        "max_error_v": 0.0,
+        "waveform_sha256": "d3ac5cf5357d67af8ce0cce64f2e4bfcc612202d781ac401d7ae4b57689d88f0",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.918725172057748,
+          "log": "stdout.log",
+          "log_sha256": "ca22fe2072d0ad4e862a00f022ece54075f503773ea3219afb30be58b8fc2729"
+        },
+        "diagnosis": "Observation incomplete: no interior point on [12U,13U) or (13U,14U]; all exported points agree, fine profile passes.",
+        "pulse_samples_units": [
+          [
+            10.0,
+            0.0
+          ],
+          [
+            11.999999999999998,
+            0.0
+          ],
+          [
+            13.0,
+            0.5
+          ],
+          [
+            14.0,
+            0.0
+          ]
+        ]
+      },
+      {
+        "case": "delay-pulse-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 2.6645352591003757e-15,
+        "waveform_sha256": "dcd180bf2b36052a28cd4ce7e63d96eb148408a849f53884ad33086e4313df34",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.711469007655978,
+          "log": "stdout.log",
+          "log_sha256": "c708f90b848b2d02674fa8c755f80384075431005542c12fdf69b4559684cf4a"
+        }
+      },
+      {
+        "case": "repeat-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 34,
+        "max_error_v": 2.220446049250313e-16,
+        "waveform_sha256": "94d99c4d83b9253fc1f83d1ea177461ffae52177940cf2f67394ccdb7d119b51",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.363555889576674,
+          "log": "stdout.log",
+          "log_sha256": "6b3580a4dafa51d79785c916c61aecf9631e6d17912555c7fce62ae6db289463"
+        }
+      },
+      {
+        "case": "repeat-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 4.440892098500626e-16,
+        "waveform_sha256": "9bd12b3f84ddeb50dbb8968397621a1b0a2e5925a1ccd308fa620cfc98640a33",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.611092125996947,
+          "log": "stdout.log",
+          "log_sha256": "83f8c933c5991e2d61e79d0ff357637fdb81699091ea6b3678d90ded2f86a08e"
+        }
+      },
+      {
+        "case": "voltage-target-coarse",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 2.79397e-09,
+          "maxstep": 2.79397e-09,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          },
+          "maxstep": {
+            "reported": "2.79397 ns",
+            "rounding_interval_s": [
+              "2.793965E-9",
+              "2.793975E-9"
+            ],
+            "requested_s": 2.7939677238464355e-09
+          }
+        },
+        "points": 32,
+        "max_error_v": 0.0,
+        "waveform_sha256": "9718131da50af9457b3a07b8e8836e88429b8c3d605460b4e91a9fc52a28e084",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.360161719843745,
+          "log": "stdout.log",
+          "log_sha256": "14af1b0606ca9a489c9a4ef68546eee7446cf0a91bf169d33d02c0aef6fbfdc4"
+        }
+      },
+      {
+        "case": "voltage-target-fine",
+        "reported_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 2.98023e-08,
+          "step": 1.16415e-10,
+          "maxstep": 1.16415e-10,
+          "method": "traponly"
+        },
+        "settings_match_display_precision": true,
+        "timing_display_intervals": {
+          "stop": {
+            "reported": "29.8023 ns",
+            "rounding_interval_s": [
+              "2.980225E-8",
+              "2.980235E-8"
+            ],
+            "requested_s": 2.9802322387695312e-08
+          },
+          "step": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          },
+          "maxstep": {
+            "reported": "116.415 ps",
+            "rounding_interval_s": [
+              "1.164145E-10",
+              "1.164155E-10"
+            ],
+            "requested_s": 1.1641532182693481e-10
+          }
+        },
+        "points": 272,
+        "max_error_v": 2.220446049250313e-16,
+        "waveform_sha256": "087881377052e68912e9045616e987736c630a5d112288872f74719030db8376",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "elapsed_s": 15.459970064461231,
+          "log": "stdout.log",
+          "log_sha256": "c26575b693783f201b34de9780cfdcef253a06dfe2c76654c8b26e0dcda18b35"
+        }
+      }
+    ]
+  },
+  "audit_source": {
+    "path": "runs/pr13-after-pr12-review/audit_transition_settings.py",
+    "sha256": "240e252d3c4e6ff4ac79f2c66bc4b7fae4ae8bd600113194d7ca3a4619745e89",
+    "availability": "local_only",
+    "rule": "Verify retrieved files against remote FILE_MANIFEST; verify voltage/relative tolerances and method; convert displayed stop/step/maxstep to decimal half-last-digit intervals containing requested binary64 values; waveform stop independently within 1e-20 s."
+  },
+  "diagnosis": {
+    "delay-pulse-coarse": "Spectre executed successfully; every exported point matches the PWL oracle (max error 0 V), but neither short ramp has an interior sample. Keep the original checker result; interpret as observation_incomplete, not a numerical error. Fine profile passes.",
+    "initial_rust_integration_check": "20/21 passed before updating the old redundant-constraint rollback test: PR12 certification now rejects nonidentity redundant y=z,y=0 already when z is zero. Preserve early rejection and atomic rollback; final 21/21 pass.",
+    "setup": "Preparation directory -01 was never executed. First remote Python 3.9 import failed before any Spectre STARTED marker; Python 3.11 completed all 16 attempts in -02. No frozen output overwritten."
+  },
+  "verification": {
+    "python-integrated.log": {
+      "sha256": "28afe409da63ef4314d1a79c264a677941040cdd58b0c922e3592a8bb9a3cd2f",
+      "availability": "local_only"
+    },
+    "rust-integrated.log": {
+      "sha256": "3164f12dde11c91ada2339d232ef175fb1661c7247a6cfcdfc2f59f16ac139cf",
+      "availability": "local_only"
+    },
+    "build-integrated.log": {
+      "sha256": "4fb401f1885d7479a1fbf42ac351cb93a9f8e13e134df771a04c126ac0837659",
+      "availability": "local_only"
+    },
+    "warnings.log": {
+      "sha256": "1cc2d210ef1a7f314350c28c8f43701bab8bdfc6473132a7a6cb13f11e52ab55",
+      "availability": "local_only"
+    },
+    "checkers.log": {
+      "sha256": "fc08592c524d86e43433d0f2b26756ff9cd7c5978dbc5c6ea4017c5be2e02cdc",
+      "availability": "local_only"
+    },
+    "math.log": {
+      "sha256": "d172c2221814641251568fcb9179d9673da38d117fe70c0054f255f2dd63529a",
+      "availability": "local_only"
+    },
+    "frozen-validation.log": {
+      "sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "availability": "local_only"
+    },
+    "cli.json": {
+      "sha256": "2cea3ccab4de9a84f41b30b51481b80e89641acb1011d62934ea0d091d718517",
+      "availability": "local_only"
+    },
+    "python_methods": 149,
+    "rust_tests": 21,
+    "checker_methods": 47,
+    "math_groups": 13,
+    "commands": [
+      "cargo build --offline --locked --manifest-path evas/rust_core/Cargo.toml",
+      "PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v",
+      "cargo test --offline --locked --manifest-path evas/rust_core/Cargo.toml",
+      "RUSTFLAGS=-Dwarnings cargo check --offline --locked --all-targets --manifest-path evas/rust_core/Cargo.toml",
+      "cargo fmt --check --manifest-path evas/rust_core/Cargo.toml",
+      "python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_*.py' -v",
+      "python3 -B evas/validation/check_timed_operator_math.py",
+      "python3 -B scripts/verify_validation_version.py",
+      "PYTHONPATH=evas/src python3 -m evas transient evas/examples/transition_pulse.json --kernel evas/rust_core/target/debug/evas-kernel"
+    ]
+  },
+  "limits": [
+    "Finite development observations; no continuous-time qualification, unseen confirmation set or speed ranking.",
+    "Frozen voltage allowance is conditional. Same-time forward certification treats current binary64 operator values as parameters; no global history error bound.",
+    "Gnucap/OpenVAF comparison is primary-source inspection only; no new execution of these backends.",
+    "No new static or original 31-condition matrix run; historical combined four-operator checkpoint is not proof for this new base."
+  ],
+  "artifacts": {
+    "availability": "raw_waveforms_and_logs_local_only; generator/checker/curated_receipt_in_repository",
+    "local_run_root": "runs/pr13-transition-20260929-02-remote/runs/pr13-transition-20260929-02",
+    "remote_run_root": "pr13-transition-20260929-02/runs/pr13-transition-20260929-02",
+    "archive": {
+      "path": "runs/pr13-transition-20260929-02-result.tgz",
+      "sha256": "7f8dbd2046c3fbc5ee2a98d86ea2f84ee52b5376b9ccdc6a972e4375a6ba8766",
+      "selection": "All run files except generated *.ahdlSimDB directories and *.so; all retrieved files verified against full remote manifest. Raw material not publicly archived."
+    },
+    "remote_file_manifest_sha256": "53d2d4542e4390d735662155b49ab46e6e59c0500ffa479b8a72b9d5d5dccd81"
+  }
+}
