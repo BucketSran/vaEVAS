@@ -47,7 +47,7 @@ IR v6 增加 operators 与调用点引用。结构依赖在数值绑定前检查
 验证：[test_transition.py](../tests/test_transition.py)
 包含 TR-EDGE/REVERSE/EXTEND/REPEAT/QUEUE、反射、实例隔离、网格与步长、浮点分辨率及拒绝边界。
 Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化算子值上的缓存回归。
-专属 Spectre 有限对照见[执行记录](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)，不由有限样例宣称通用兼容。
+专属 Spectre 有限对照见[执行记录](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)，不由有限样例宣称通用兼容。
 连续电压输入、嵌套、动态参数、缺省/零边沿和算子反馈尚未支持。
 
 ### 历史误差与电压精度

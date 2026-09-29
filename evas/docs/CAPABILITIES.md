@@ -24,7 +24,7 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达 | 已合并 PR7/10 | 数学/开发回归、限定 Spectre 对照 | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
 | TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
 | EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、整批提交/回退 | PR12 合入；PR13 已同步其算子历史，待 review | PR12 0.5.3 回归；PR13 新电压目标与变化算子值缓存回归 | Spectre 21.1 重复赋值异常由 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪；更广同刻语义、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
-| TRANSITION：延迟与有限边沿 | 尚未合入 | PR13 0.6.0 待 review，已同步 main/PR12 | 16 EVAS / 16 Spectre 配置；Spectre 15 符合、1 观察不足 | 完整观察资格、更广同刻语义、动态参数/更广输入；[算子说明](OPERATORS.md#transition) |
+| TRANSITION：延迟与有限边沿 | 尚未合入 | PR13 0.6.1 待 review，已同步 main/PR12；增加条件性历史误差认证 | 6 项 Fraction 精度回归；共同观察网格下 EVAS/Spectre 各 16/16 符合；旧观察不足记录保留 | 完整观察资格、区间保守性、更广同刻语义/动态参数/输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 尚未合入 | PR14 待 review，依赖 PR13 | 独立 PWL/大时间减法样例及本地回归 | Spectre 对照、内部节点/可变延迟/跳变；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 尚未合入 | PR15 待 review，依赖 PR13 | 独立交点/反向/尺度样例及本地回归 | Spectre 对照、内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定采样状态与实例隔离 | 旧四能力联合检查点非 main；PR13 新增两项同刻组合回归 | 旧 8 组不代表新基线；本轮 transition/timer 对照见收据 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；不能由单项正确推出组合正确 |
@@ -41,7 +41,7 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | [4d20fbc](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)，较早静态基线 | 稀疏 LU 已接入该分支；当前 main 仍为稠密。整合后需受影响回归 |
 | [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
 | [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 0.5.3 修复及当前源码/构建身份见[收据](../../experiments/dvs2-spectre-validation/results/timer-0.5.3.json)；同步 main 文档基线 | 132 Python / 17 Rust；12 配置新 EVAS 回放符合独立候选，复用 Spectre 的 4 个重复写配置保留差异；[历史和本轮说明](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
-| [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | 0.6.0 / IR v6；合并 main `e6f04c4`，源码/内核身份见[收据](../../experiments/dvs2-spectre-validation/results/transition-0.6.0.json) | 149 Python / 21 Rust；16 EVAS 配置符合；16 Spectre 执行成功，15 符合、1 观察不足；[说明](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-060) |
+| [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | 0.6.1 / IR v6，实现 `9850450`；基于 main `e6f04c4`，源码/内核身份见[收据](../../experiments/dvs2-spectre-validation/results/transition-0.6.1.json) | 155 Python / 23 Rust / 48 checker；共同观察网格下两后端各 16/16；[说明及旧证据](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-061) |
 | [PR14](https://github.com/BucketSran/vaEVAS/pull/14) | [a4b4fbe](https://github.com/BucketSran/vaEVAS/commit/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0)，基于 PR13 | 144 Python / 22 Rust；新增 15 / 5；未执行专属 Spectre 对照 |
 | [PR15](https://github.com/BucketSran/vaEVAS/pull/15) | [5f0aba6](https://github.com/BucketSran/vaEVAS/commit/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a)，基于 PR13 | 140 Python / 22 Rust；新增 11 / 5；未执行专属 Spectre 对照 |
 
