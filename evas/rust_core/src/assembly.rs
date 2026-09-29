@@ -4,6 +4,7 @@ use crate::{expression, linear::Row};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(crate) struct Equation {
+    pub(crate) branch: BranchIdentity,
     pub(crate) positive: usize,
     pub(crate) negative: usize,
     pub(crate) rhs_constant: f64,
@@ -35,6 +36,12 @@ pub(crate) fn assemble(
     tolerances: Tolerances,
 ) -> Result<AssembledCircuit, Error> {
     check_schema_version(u64::from(program.schema_version))?;
+    if !program.states.is_empty() || !program.events.is_empty() || !program.operators.is_empty() {
+        return Err(Error::new(
+            "unsupported_analysis",
+            "state/event program requires transient execution",
+        ));
+    }
     let count = program.nodes.len();
     let unique: BTreeSet<_> = program.nodes.iter().collect();
     if count == 0
@@ -133,7 +140,9 @@ pub(crate) fn assemble(
             error.message.push_str(&format!(" at {}", c.origin.label()));
             error
         })?;
+        let branch = c.branch.clone();
         let equation = grouped.entry(c.branch).or_insert_with(|| Equation {
+            branch,
             positive: c.positive,
             negative: c.negative,
             rhs_constant: 0.0,

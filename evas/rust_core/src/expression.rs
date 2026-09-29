@@ -4,6 +4,12 @@ use std::collections::BTreeSet;
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
+        Expression::State { .. } | Expression::Operator { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "state requires transient execution",
+            ))
+        }
         Expression::Affine { constant, terms } => {
             let mut seen = BTreeSet::new();
             if !constant.is_finite()
@@ -102,6 +108,12 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
+            Expression::State { .. } | Expression::Operator { .. } => {
+                return Err(Error::new(
+                    "unsupported_analysis",
+                    "unbound state in static expression",
+                ))
+            }
             Expression::Affine { constant, terms } => {
                 self.add_constant(factor * constant);
                 for t in terms {

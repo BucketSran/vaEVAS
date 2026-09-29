@@ -1,0 +1,19 @@
+{
+  "status": "design_math_only_not_simulator_results",
+  "units": {"time": "ns", "voltage": "V", "slope": "V/ns"},
+  "cases": [
+    {"id": "TI-PERIOD", "start": "2", "period": "5", "stop": "19", "observations": ["1", "3", "8", "13", "18"], "expected_events": ["2", "7", "12", "17"], "expected_counts": [0, 1, 2, 3, 4]},
+    {"id": "TI-ONCE", "start": "2", "periods": [null, "0", "-5"], "stop": "19", "expected_events": ["2"]},
+    {"id": "TR-EDGE", "initial": "1/5", "high": "4/5", "low": "0", "events": ["1", "12"], "delay": "2", "rise": "4", "fall": "8", "observations": ["0", "3", "5", "7", "14", "18", "22"], "expected_values": ["1/5", "1/5", "1/2", "4/5", "4/5", "2/5", "0"], "expected_corners": ["3", "7", "14", "22"]},
+    {"id": "TR-REVERSE", "initial": "0", "old_target": "1", "new_target": "0", "start": "2", "change": "6", "rise": "10", "fall": "20", "observations": ["2", "6", "10", "14"], "expected_values": ["0", "2/5", "1/5", "0"], "expected_slope": "-1/20", "expected_finish": "14", "wrong_restart_finish": "26"},
+    {"id": "TR-EXTEND", "initial": "0", "old_target": "1", "new_target": "2", "start": "2", "change": "6", "rise": "10", "observations": ["6", "10", "14"], "expected_values": ["2/5", "6/5", "2"], "expected_slope": "1/5", "expected_finish": "14"},
+    {"id": "TR-REPEAT", "initial": "0", "target": "1", "start": "2", "repeat": "6", "rise": "10", "observations": ["6", "10", "12"], "expected_values": ["2/5", "4/5", "1"], "expected_finish": "12"},
+    {"id": "TR-QUEUE", "initial": "0", "high": "1", "low": "0", "events": ["2", "3"], "delay": "10", "rise": "2", "fall": "2", "observations": ["12", "25/2", "13", "27/2", "14"], "expected_values": ["0", "1/4", "1/2", "1/4", "0"], "expected_finish": "14"},
+    {"id": "AD-RAMP", "input": [["0", "-1"], ["4", "1"], ["10", "1"]], "delay": "3", "observations": ["0", "3", "5", "7", "10"], "expected_values": ["-1", "-1", "0", "1", "1"]},
+    {"id": "AD-ZERO", "domain": "EVAS_candidate_extension", "input": [["0", "-1"], ["4", "1"], ["10", "1"]], "delay": "0", "observations": ["0", "2", "4", "10"], "expected_values": ["-1", "0", "1", "1"]},
+    {"id": "SL-CATCH", "input": [["0", "0"], ["2", "4"], ["8", "4"]], "positive_rate": "1", "negative_rate": "-2", "observations": ["1", "2", "3", "4", "6"], "expected_values": ["1", "2", "3", "4", "4"], "expected_catch": "4"},
+    {"id": "SL-REVERSE", "input": [["0", "0"], ["2", "4"], ["4", "-4"], ["8", "-4"]], "positive_rate": "1", "negative_rate": "-2", "observations": ["2", "12/5", "3", "4", "28/5"], "expected_values": ["2", "12/5", "6/5", "-4/5", "-4"], "expected_intersection": "12/5", "expected_finish": "28/5"},
+    {"id": "SL-PASS", "input": [["0", "-1"], ["4", "0"], ["8", "0"]], "positive_rate": "1", "negative_rate": "-2", "observations": ["0", "2", "4", "8"], "expected_values": ["-1", "-1/2", "0", "0"]},
+    {"id": "CO-CROSS", "source": "TR-EDGE", "threshold": "1/2", "expected_root": "5", "expected_direction": 1}
+  ]
+}

@@ -1,4 +1,4 @@
-"""Tokenization and syntax trees for the supported static-voltage language.
+"""Tokenization and syntax trees for the supported voltage/event language.
 
 Consume every token and retain source locations; instance binding and lowering
 belong to frontend.py.
@@ -25,12 +25,12 @@ _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|[()+*/;,=\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|[()+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "cross", "transition", "absdelay", "slew"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -61,6 +61,21 @@ class Expr:
     token: Token
 
 
+@dataclass(frozen=True)
+class Assignment:
+    name: str
+    rhs: Expr
+    token: Token
+
+
+@dataclass(frozen=True)
+class Event:
+    kind: str
+    arguments: tuple[Expr | None, ...]
+    assignments: tuple[Assignment, ...]
+    token: Token
+
+
 @dataclass
 class Model:
     name: str
@@ -69,6 +84,9 @@ class Model:
     nodes: set[str]
     parameters: dict[str, Expr]
     contributions: list[tuple[Expr, Expr]]
+    variables: dict[str, str]
+    initial: list[Assignment]
+    events: list[Event]
 
 
 class Parser:
@@ -129,6 +147,17 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
+        elif token.text in ("transition", "absdelay", "slew"):
+            self.take("(")
+            arguments = [self.expression()]
+            while self.token.text == ",":
+                self.take(",")
+                arguments.append(self.expression())
+            self.take(")")
+            required = {"transition": 4, "absdelay": 2, "slew": 3}[token.text]
+            if len(arguments) != required:
+                self.fail(f"{token.text} requires {required} explicit arguments", token)
+            left = Expr(token.text, None, tuple(arguments), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -151,6 +180,30 @@ class Parser:
             left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return left
 
+    def assignments(self) -> tuple[Assignment, ...]:
+        def statement():
+            token = self.token
+            name = self.name()
+            self.take("=")
+            rhs = self.expression()
+            self.take(";")
+            return Assignment(name, rhs, token)
+
+        if self.token.text == ";":
+            self.take(";")
+            return ()
+        if self.token.text != "begin":
+            return (statement(),)
+        self.take("begin")
+        result = []
+        while self.token.text != "end":
+            if self.token.text == ";":
+                self.take(";")
+            else:
+                result.append(statement())
+        self.take("end")
+        return tuple(result)
+
     def parse(self) -> Model:
         while self.token.kind == "include":
             self.take()
@@ -160,20 +213,24 @@ class Parser:
         ports = self.names()
         self.take(")")
         self.take(";")
-        directions, nodes, parameters = {}, set(), {}
-        while self.token.text in ("input", "output", "inout", "electrical", "parameter"):
+        directions, nodes, parameters, variables = {}, set(), {}, {}
+        while self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real"):
             kind = self.take().text
             if kind == "parameter":
                 self.take("real")
                 param = self.name()
-                if param in parameters or param in ports or param in nodes:
+                if param in parameters or param in ports or param in nodes or param in variables:
                     self.fail(f"duplicate parameter/node name {param!r}")
                 self.take("=")
                 parameters[param] = self.expression()
             else:
                 names = self.names()
-                if kind == "electrical":
-                    if nodes.intersection(names) or parameters.keys() & set(names):
+                if kind in ("integer", "real"):
+                    if (set(names) & (nodes | set(ports) | parameters.keys() | variables.keys())):
+                        self.fail("duplicate variable/node/parameter name")
+                    variables.update(dict.fromkeys(names, kind))
+                elif kind == "electrical":
+                    if nodes.intersection(names) or (parameters.keys() | variables.keys()) & set(names):
                         self.fail("duplicate electrical/parameter name")
                     nodes.update(names)
                 else:
@@ -185,10 +242,37 @@ class Parser:
             self.fail("every port must have a direction and an electrical declaration")
         self.take("analog")
         self.take("begin")
-        contributions = []
+        contributions, initial, events = [], [], []
         while self.token.text != "end":
+            if self.token.text == "@":
+                token = self.take("@")
+                self.take("(")
+                if self.token.text == "initial_step":
+                    self.take("initial_step")
+                    self.take(")")
+                    initial.extend(self.assignments())
+                else:
+                    kind = self.take().text
+                    if kind not in ("cross", "timer"):
+                        self.fail("only cross and timer events are supported", token)
+                    self.take("(")
+                    arguments = [self.expression()]
+                    while self.token.text == ",":
+                        self.take(",")
+                        if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
+                            arguments.append(None)  # LRM optional period argument
+                        else:
+                            arguments.append(self.expression())
+                    self.take(")")
+                    self.take(")")
+                    if len(arguments) > 4:
+                        self.fail(f"{kind} accepts at most four supported arguments", token)
+                    if kind == "timer" and len(arguments) < 3:
+                        self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", token)
+                    events.append(Event(kind, tuple(arguments), self.assignments(), token))
+                continue
             if self.token.text != "V":
-                self.fail("only unconditional voltage contributions are supported in this slice")
+                self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")
             branch = self.expression()
             if branch.op != "voltage":
                 self.fail("contribution target must be V(p) or V(p,n)", branch.token)
@@ -201,4 +285,4 @@ class Parser:
         self.take("<eof>")
         if not contributions:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        return Model(name, self.source, tuple(ports), nodes, parameters, contributions)
+        return Model(name, self.source, tuple(ports), nodes, parameters, contributions, variables, initial, events)

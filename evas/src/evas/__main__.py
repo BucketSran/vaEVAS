@@ -1,24 +1,24 @@
-"""Compile or solve an explicit flat circuit manifest (see examples/static_sum.json)."""
+"""Compile or execute an explicit flat circuit manifest (see examples/)."""
 
 import argparse
 import json
 from pathlib import Path
 import sys
 
-from . import CompileError, Instance, KernelError, compile_sources, solve
+from . import CompileError, Instance, KernelError, compile_sources, solve, transient
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["compile", "solve"])
+    parser.add_argument("action", choices=["compile", "solve", "transient"])
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--kernel", type=Path, help="explicit path to the built evas-kernel executable")
     args = parser.parse_args()
-    if args.action == "solve" and args.kernel is None:
-        parser.error("solve requires --kernel; build evas/rust_core first")
+    if args.action in ("solve", "transient") and args.kernel is None:
+        parser.error("execution requires --kernel; build evas/rust_core first")
     try:
         manifest = json.loads(args.manifest.read_text())
-        unknown = set(manifest) - {"models", "instances", "driven", "samples", "tolerances"}
+        unknown = set(manifest) - {"models", "instances", "driven", "samples", "tolerances", "transient"}
         if unknown:
             raise ValueError(f"unknown manifest fields: {sorted(unknown)}")
         sources = {(args.manifest.parent / p).resolve(): None for p in manifest["models"]}
@@ -26,6 +26,9 @@ def main():
                                   [Instance(**i) for i in manifest["instances"]])
         if args.action == "compile":
             result = program.to_dict()
+        elif args.action == "transient":
+            result = transient(program, kernel=args.kernel.resolve(),
+                               **manifest["transient"], **manifest.get("tolerances", {}))
         else:
             result = solve(program, manifest["driven"], manifest["samples"],
                            kernel=args.kernel.resolve(), **manifest.get("tolerances", {}))

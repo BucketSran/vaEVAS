@@ -1,0 +1,13 @@
+{
+  "models": ["timer_counter.va"],
+  "instances": [{
+    "name": "counter", "module": "timer_counter",
+    "connections": {"count": "output", "vref": "0"}
+  }],
+  "transient": {
+    "sources": {},
+    "output_times": [0, 0.000000001, 0.000000003, 0.000000008, 0.000000013, 0.000000018],
+    "stop": 0.000000019,
+    "max_step": 0.000000019
+  }
+}

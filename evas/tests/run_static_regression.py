@@ -48,6 +48,12 @@ def main():
         except CompileError as exc:
             rejected.append(dict(condition=case["id"], reason=str(exc)))
             continue
+        if program.states or program.events or program.operators:
+            # Parsing a dynamic model is not permission to replay it as
+            # unrelated static points. Keep it in the original denominator.
+            rejected.append(dict(condition=case["id"],
+                                 reason="unsupported_analysis: state/event/operator program requires transient execution"))
+            continue
         for profile, settings in PROFILES.items():
             count = round(case["stop_x"] * T / settings["step"])
             times = [i * (case["stop_x"] * T / count) for i in range(count + 1)]

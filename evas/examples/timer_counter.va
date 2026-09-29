@@ -1,0 +1,11 @@
+module timer_counter(count, vref);
+  output count;
+  inout vref;
+  electrical count, vref;
+  integer n;
+  analog begin
+    @(initial_step) n=0;
+    @(timer(2n,5n,1p)) n=n+1;
+    V(count,vref) <+ n;
+  end
+endmodule

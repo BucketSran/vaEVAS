@@ -1,0 +1,10 @@
+`include "disciplines.vams"
+module transition_pulse(y,r);
+  output y; input r; electrical y,r;
+  real q;
+  analog begin
+    @(initial_step) q=0;
+    @(timer(2n,5n,1p)) q=1-q;
+    V(y,r)<+transition(q,1n,2n,2n);
+  end
+endmodule

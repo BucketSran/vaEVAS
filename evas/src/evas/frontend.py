@@ -1,4 +1,4 @@
-"""Bind parsed models and lower static voltage contributions to the shared IR.
+"""Bind parsed models and lower voltage contributions and event state to the shared IR.
 
 Parameter evaluation, instance/node binding, and expression lowering belong here;
 syntax.py owns tokenization and syntax trees.
@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import BranchIdentity, Contribution, Origin, Program
+from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
+                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
@@ -47,9 +48,16 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets = {n: instance.connections.get(n, f"{instance.name}:{n}") for n in model.nodes}
         nets["0"] = "0"
         bindings.append((instance, model, nets))
+    def contains_operator(expr):
+        return expr.op in ("transition", "absdelay", "slew") or any(contains_operator(arg) for arg in expr.args)
+
+    # A separate instance may connect an operator output to a guard. Preserve
+    # the whole program's structural voltage graph before numeric cancellation.
+    has_operators = any(contains_operator(rhs) for _, model, _ in bindings
+                        for _, rhs in model.contributions)
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
-    contributions = []
+    contributions, states, events, operators = [], [], [], []
     for instance, model, nets in bindings:
         cache, active = {}, set()
 
@@ -89,6 +97,93 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         for name in model.parameters:
             parameter(name)
         node_ids = {n: indices[net] for n, net in nets.items()}
+        state_ids = {name: len(states) + index for index, name in enumerate(model.variables)}
+        initials = {}
+        for statement in model.initial:
+            if statement.name not in state_ids or statement.name in initials:
+                raise CompileError(f"{model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
+            value = lower(statement.rhs, parameter, {}, model.source)
+            if not isinstance(value, Affine) or value.terms:
+                raise CompileError("initial_step values must be instance constants")
+            if model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
+                raise CompileError("integer initialization must be an exact signed 32-bit integer")
+            initials[statement.name] = value.constant
+        if set(initials) != set(state_ids):
+            raise CompileError(f"{model.source}: every state requires one constant initial_step assignment")
+        states.extend(State(instance.name, name, kind, initials[name]) for name, kind in model.variables.items())
+
+        def symbol(name):
+            return StateRef(state_ids[name]) if name in state_ids else parameter(name)
+
+        # Integer assignments are restricted to integral state arithmetic; do
+        # not silently substitute a different real-to-integer rounding rule.
+        def integral(expression):
+            if isinstance(expression, Affine):
+                return not expression.terms and expression.constant.is_integer()
+            if isinstance(expression, StateRef):
+                return states[expression.state].kind == "integer"
+            return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
+
+        for event in model.events:
+            def setting(arg):
+                value = lower(arg, parameter, {}, model.source)
+                if not isinstance(value, Affine) or value.terms:
+                    raise CompileError(f"{event.kind} settings must be instance constants")
+                return value.constant
+
+            if event.kind == "cross":
+                settings = [0.0, 1e-12, 1e-9]
+                for index, arg in enumerate(event.arguments[1:]):
+                    settings[index] = setting(arg)
+                direction, time_tol, expr_tol = settings
+                if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
+                    raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
+                                       int(direction), time_tol, expr_tol)
+            else:
+                start = setting(event.arguments[0])
+                period = 0.0 if event.arguments[1] is None else setting(event.arguments[1])
+                time_tol = setting(event.arguments[2])
+                enabled = setting(event.arguments[3]) != 0 if len(event.arguments) == 4 else True
+                if start < 0 or time_tol <= 0:
+                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                trigger = TimerTrigger(start, period, time_tol, enabled)
+            assignments = []
+            for statement in event.assignments:
+                if statement.name not in state_ids:
+                    raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
+                value = lower(statement.rhs, symbol, node_ids, model.source)
+                if model.variables[statement.name] == "integer" and not integral(value):
+                    raise CompileError("integer assignment requires integral state arithmetic")
+                assignments.append(Assignment(state_ids[statement.name], value))
+            origin = Origin(model.source, event.token.line, event.token.column, instance.name)
+            events.append(Event(trigger, tuple(assignments), origin))
+
+        def waveform(expr):
+            input_nodes = {} if expr.op == "transition" else node_ids
+            value = lower(expr.args[0], symbol, input_nodes, model.source, preserve_structure=True)
+            settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
+            if any(not isinstance(v, Affine) or v.terms for v in settings):
+                raise CompileError(f"{expr.op} settings must be instance constants")
+            origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
+            index = len(operators)
+            if expr.op == "absdelay":
+                delay = settings[0].constant
+                if delay < 0:
+                    raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
+                operators.append(AbsDelay(value, delay, origin))
+            elif expr.op == "transition":
+                delay, rise, fall = (v.constant for v in settings)
+                if delay < 0 or rise <= 0 or fall <= 0:
+                    raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+                operators.append(Transition(value, delay, rise, fall, origin))
+            else:
+                rise, fall = (v.constant for v in settings)
+                if rise <= 0 or fall >= 0:
+                    raise CompileError("slew requires explicit rise > 0 and fall < 0")
+                operators.append(Slew(value, rise, fall, origin))
+            return OperatorRef(index)
+
         bound_branches = {}
         for branch, rhs in model.contributions:
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes
@@ -99,9 +194,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, parameter, node_ids, model.source)
+            expression = lower(rhs, symbol, node_ids, model.source, waveform, has_operators)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)
             contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))
-    return Program(names, tuple(contributions))
+    return Program(names, tuple(contributions), tuple(states), tuple(events), tuple(operators))

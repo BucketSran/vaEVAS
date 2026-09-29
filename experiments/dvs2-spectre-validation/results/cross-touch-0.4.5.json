@@ -1,0 +1,1579 @@
+{
+  "run_id": "pr7-touch-arrival-20260929-02",
+  "date": "2026-09-29",
+  "source_base_commit": "2c6db35c2aed8943ce0382a745a0872980526eb0",
+  "evas_version": "0.4.5",
+  "spectre_version": "sub-version  21.1.0.509.isr12",
+  "contract": "isolated-pwl-zero-arrival-v1",
+  "counts_order": [
+    "both",
+    "rising",
+    "falling"
+  ],
+  "execution": {
+    "evas": "12 newly executed local macOS configurations",
+    "spectre": "12 archived thu-sui configurations reanalyzed; zero new executions"
+  },
+  "fixed_scope": {
+    "configurations_per_backend": 12,
+    "monitor_histories_per_backend": 216,
+    "original_dvs_conditions": 31
+  },
+  "provenance": {
+    "old_run_id": "pr7-touch-boundary-20260929-01",
+    "old_receipt_sha256": "4ad70526da3ad5bfcf29dc1faad9425ae853e9c67eb751365eaca932070a6b1d",
+    "old_input_manifest_sha256": "0073a64253abed0a013626a392881720f82128bc4d492048bce552b648a22a5b",
+    "old_file_manifest_sha256": "b2a213955a8910ed4d31a1caae5adf3fade7a4c4ee1a5838c5e168186f342f6e",
+    "raw_spectre_archive": {
+      "file": "spectre-output.tar.gz",
+      "sha256": "7e9b6d6fe43d457a3ea2b09d4dc078eb6e64afd612adbbf1e87bb079515fcd02",
+      "bytes": 2955131,
+      "verified_files": 812
+    },
+    "archived_files_verified": 812,
+    "byte_identical_model_netlist_and_conditions_files": 85,
+    "reused_spectre_files": {
+      "original-coarse-nominal/psf/tran.tran.tran": "e4d7c71a4b98595ead33c1f61a30cc760796eadb52c3a2519ce0f5c3d1d63e4e",
+      "original-coarse-nominal/spectre.log": "0ebdba80e2f08dff298b6c5eb5d2546daf9b9f69c8b2cce8a7eeca3d736f01a9",
+      "original-coarse-nominal/spectre-execution.json": "b701fcf419b9779a9a5cd45224f3776ac01119f50a945852966dca62892b795b",
+      "original-coarse-time_tight/psf/tran.tran.tran": "5917332cbc143f4271723eb6cab234b6309cf5f3d3c0d082d22d01162434fcfc",
+      "original-coarse-time_tight/spectre.log": "165001ea266fa39abf8b8017b360fcb27dcaec886b0f837aba9a1753d243129c",
+      "original-coarse-time_tight/spectre-execution.json": "bbca0fc2a1f235421aa1d93a4834afcdfca42151f29420a8e369c5fca2698583",
+      "original-coarse-expression_tight/psf/tran.tran.tran": "0a345edf08ab22f92e79ed2c522e4131b3d2026a30a6e67bcda13d4e25fc0820",
+      "original-coarse-expression_tight/spectre.log": "34c0da7bfe892ae66f438e638fa9bdc9ec976021d4e3edc98518e7ccfd3bad5e",
+      "original-coarse-expression_tight/spectre-execution.json": "8d621ccc339882d29cad83bcf285576c7127d96bf2441c8415823e6f8e1c8a9f",
+      "original-fine-nominal/psf/tran.tran.tran": "ae1a6dedb6491f2a18fdac0a2568086d4296617682b9902067826f2d1b26c0a3",
+      "original-fine-nominal/spectre.log": "159dc96dac6015d8ef1bda3da91b0aeca167a5a6282be2db56da2a739b6334f4",
+      "original-fine-nominal/spectre-execution.json": "d434083cae3e47e46b1c94a913a770f9365f2bd62d1f714b217ee412490f4089",
+      "original-fine-time_tight/psf/tran.tran.tran": "22cea1b5a7e94bf8afdddc51f2a7a098aaab813f20c39b93e7b236d896047781",
+      "original-fine-time_tight/spectre.log": "c734731ae002a58a3fef65ad36a5407e370e3d2c34aa1ab8c9eca500c00d7fbd",
+      "original-fine-time_tight/spectre-execution.json": "dd6d7b93f3e05e53c17956e1e232c5f429369d6fc9ab07b55eed4ed4dc765035",
+      "original-fine-expression_tight/psf/tran.tran.tran": "367ddff2a651cbe46cfa2916b326dd64c69446ff02453af6c812cb4183073022",
+      "original-fine-expression_tight/spectre.log": "a3bb5cca9683c6b80453f9729152847870aa2192f4b5a47869a328ad037a3868",
+      "original-fine-expression_tight/spectre-execution.json": "e315dc4ac7f78aa1a94f8aed1d293d710f51e4f175ec1cfae1078ba5cb9e40f7",
+      "shifted-coarse-nominal/psf/tran.tran.tran": "f126ebd40d56cd63d16ae9f1b502804909650dd12e1965baef4485f7df533526",
+      "shifted-coarse-nominal/spectre.log": "d3cc5ae311a79be12b761251ea4814297bb8a5f10193b7ed3f2cbeadf4a993d9",
+      "shifted-coarse-nominal/spectre-execution.json": "ce747c33b710dab89ab3a010536ff5ee1a25c2d9573c8c1a5f31554367eab8f0",
+      "shifted-coarse-time_tight/psf/tran.tran.tran": "a7408c00a3c76810354fd3bdb4bc1a42cde15bdb057125b41aee58ad9cf9504f",
+      "shifted-coarse-time_tight/spectre.log": "3a29f653c37deeeb6f1f598d9d1f3291b0afb70df774a366f2dccae7e5f5dae4",
+      "shifted-coarse-time_tight/spectre-execution.json": "5b4755d39a55d7eb281a849241c0265a8c5e2cbb85120e8fa41d59ab39add1b5",
+      "shifted-coarse-expression_tight/psf/tran.tran.tran": "e58d225989fad143fa809cc98cc62040052501d2cb53a1131a44f5eb6adcbb06",
+      "shifted-coarse-expression_tight/spectre.log": "4e2ec1845dfd690231bbbf8be9ca089a408365195a5d00e116c353aa7f8fb6ab",
+      "shifted-coarse-expression_tight/spectre-execution.json": "7a536324b0cb8b0dd37c423e07e144a0ee49329f132c24d7d5195b60900ac79e",
+      "shifted-fine-nominal/psf/tran.tran.tran": "c62e1004a0381f39109fcda9e85e9ec2088fc9aa73287a27eaca0d5f9adcedfb",
+      "shifted-fine-nominal/spectre.log": "031b59d11862ed468ffc9c86f7721cda34525181954d43b6cfee83b061761496",
+      "shifted-fine-nominal/spectre-execution.json": "b51fc2a69676a87d67bb77fadd0b0e48e8a1277c52763cad1e76989bf40af217",
+      "shifted-fine-time_tight/psf/tran.tran.tran": "445c6911f86f38748b3a20703230c1c397e9878f0c250f355663d09d0a3e5bf5",
+      "shifted-fine-time_tight/spectre.log": "248cfa63d575ce2738b4acda4781994e5983e9472be60759fa6c3acda101ef45",
+      "shifted-fine-time_tight/spectre-execution.json": "18975cc6ba4be07891eb3cf5b6e3fece902f14a9bc996dd1a9e7b6f3eeb20197",
+      "shifted-fine-expression_tight/psf/tran.tran.tran": "9ab6ab766a647865e93d88515aa16efa23bc5ac0ec38fef27d75d8869fbc6ad8",
+      "shifted-fine-expression_tight/spectre.log": "7e9bdea5e6968d87e5819770fe3df10ab893f0268c64623e0f0a8c2152b0c7bf",
+      "shifted-fine-expression_tight/spectre-execution.json": "d652f04a932fb43b3da8697e108774753a50284a8f5c80841d8e8a21eb093d51"
+    },
+    "new_input_manifest_sha256": "52082f289262ae4d5389f92377ef8732af55309fba45c88a0f8b9b15367dda10",
+    "frozen_replay_sha256": "02090fc2ef7000789518428aded432ed84ede40e9cb9502366f2b24a7078dce0",
+    "frozen_patch_sha256": "0ad306a169f302e12cf39cde97b33ce990274743f968409fa20cffb2c9158734",
+    "analysis_sha256": "5141cd7051792c432fb81523f283dbd90221051aa455221b11039eb0fac44e67",
+    "replay_helper_sha256": "f1e75777b950b26520bdbf8ab21384dda77bf9b4e26003254c8c496922b80ef8"
+  },
+  "checker_identity": {
+    "experiments/dvs2-spectre-validation/cross_touch.py": "2392ddc32ba68ee5e7b7a2688457e95be2241ae4fdb80b3293cf89b4ada2225f",
+    "experiments/dvs2-spectre-validation/test_cross_touch.py": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "evas_identity": {
+    "kernel_sha256": "4880e4ce55115d2cacc092a04fb01c9f540f888d2b3e32bb84db329722536afe",
+    "source_sha256": {
+      "evas/src/evas/lowering.py": "019a3587bd66e8f8f9dfefed7be7431fbf947575cb81da7b200c8415d9a59f22",
+      "evas/src/evas/frontend.py": "eeb7e7f51cef77384ae097de5363fa3b2860ccef9d1c542ec28b3f72aab28e32",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/ir.py": "5e5979e1bc68d63c0bbb7edec9cea0f20950e5e4b3cba669c2603ad374a05aa0",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "d1cb490b2b24835d8263b1e3b2e6b7f9f43da3fb15b125299e9918738ccb22cc",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/rust_core/src/ir.rs": "1711c6141d5e15ed1d3592ee0514cd93b0eda52172db79148dffc7e00eac299b",
+      "evas/rust_core/src/linear.rs": "f510fc0427b0393376ae22c87e614f0b2bb10a7809c39495b06abc34d8f783fa",
+      "evas/rust_core/src/events.rs": "37600baf90121185c407496bcda4e815528237d2c7ae9f5aeaeb76b92361ecb2",
+      "evas/rust_core/src/solver.rs": "3ce7df4ed3011d91560c2d9725fa19cb42fa2428fd8708f35fbeafde5d8da94d",
+      "evas/rust_core/src/lib.rs": "326cc6703528f3acfa636e051a988815719aaa0ede732ff3b43d5491e55813b1",
+      "evas/rust_core/src/interval.rs": "67a3330dfb8ee01d621024ec53b8d4f636ae1874bf17afccd9ea2968ee941d2b",
+      "evas/rust_core/src/pwl.rs": "ea1c89d8db367c0e9f673ab06c7bdbaf0b9b9352bbce0744dfdc0c2d5e25010a",
+      "evas/rust_core/src/nonlinear.rs": "3848efed2afd3d86963c21aa5d87584332c6c96e7282ceeaced018e9464d7b51",
+      "evas/rust_core/src/expression.rs": "c70e68284bd3178df0453befa9cb7cd03918a0dadba935750238d47a71126fbf",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/transient.rs": "e90eedb15b81b4c0e2f461d1d8bd33440a861ef8bcde6d74b3d3d7311e3f1f13",
+      "evas/rust_core/src/event_accuracy.rs": "e87ae23adaa5f74e3d7a6a3320affc866bf0247a25fcd83f960d3aa293163637",
+      "evas/rust_core/src/assembly.rs": "99802f75e6b14095c42c67abfe41e8901afbc70b2944e9ad35bf2b4fbca2d122"
+    }
+  },
+  "summary": {
+    "evas": {
+      "control_pass": 144,
+      "arrival_pass": 72
+    },
+    "spectre": {
+      "control_pass": 144,
+      "arrival_pass": 72
+    }
+  },
+  "old_evas_negative_control": {
+    "version": "0.4.4",
+    "status": {
+      "control_pass": 144,
+      "failed": 48,
+      "arrival_pass": 24
+    },
+    "reanalysis_sha256": "bb6f84832d7fbb19526c74cdc9a2d00d6f6e70af3ac33e16a4be349754a14967"
+  },
+  "records": [
+    {
+      "id": "original-coarse-nominal",
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "568dd40fb99c64ed2f712ae1eb4ccc17f643607d7606065916b3797c633f7cd3"
+      },
+      "spectre": {
+        "points": 70,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "e4d7c71a4b98595ead33c1f61a30cc760796eadb52c3a2519ce0f5c3d1d63e4e",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "original-coarse-time_tight",
+      "maxstep": 1e-07,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "568dd40fb99c64ed2f712ae1eb4ccc17f643607d7606065916b3797c633f7cd3"
+      },
+      "spectre": {
+        "points": 70,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "5917332cbc143f4271723eb6cab234b6309cf5f3d3c0d082d22d01162434fcfc",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "original-coarse-expression_tight",
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "568dd40fb99c64ed2f712ae1eb4ccc17f643607d7606065916b3797c633f7cd3"
+      },
+      "spectre": {
+        "points": 70,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "0a345edf08ab22f92e79ed2c522e4131b3d2026a30a6e67bcda13d4e25fc0820",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "original-fine-nominal",
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "426c21405dfd328c74d4f733c0da5e88cd57c66729a4da6b5a488db3cd0e1d09"
+      },
+      "spectre": {
+        "points": 461,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "ae1a6dedb6491f2a18fdac0a2568086d4296617682b9902067826f2d1b26c0a3",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "original-fine-time_tight",
+      "maxstep": 7e-09,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "426c21405dfd328c74d4f733c0da5e88cd57c66729a4da6b5a488db3cd0e1d09"
+      },
+      "spectre": {
+        "points": 461,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "22cea1b5a7e94bf8afdddc51f2a7a098aaab813f20c39b93e7b236d896047781",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "original-fine-expression_tight",
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "center": 1.5e-06,
+      "evas": {
+        "points": 15,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "426c21405dfd328c74d4f733c0da5e88cd57c66729a4da6b5a488db3cd0e1d09"
+      },
+      "spectre": {
+        "points": 461,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "367ddff2a651cbe46cfa2916b326dd64c69446ff02453af6c812cb4183073022",
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-coarse-nominal",
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "8c99768c5370e5ed76f5785062a5594f10f8d9b605282c72d19c0ddea4b1d287"
+      },
+      "spectre": {
+        "points": 76,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "f126ebd40d56cd63d16ae9f1b502804909650dd12e1965baef4485f7df533526",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-coarse-time_tight",
+      "maxstep": 1e-07,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "8c99768c5370e5ed76f5785062a5594f10f8d9b605282c72d19c0ddea4b1d287"
+      },
+      "spectre": {
+        "points": 76,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "a7408c00a3c76810354fd3bdb4bc1a42cde15bdb057125b41aee58ad9cf9504f",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-coarse-expression_tight",
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "8c99768c5370e5ed76f5785062a5594f10f8d9b605282c72d19c0ddea4b1d287"
+      },
+      "spectre": {
+        "points": 76,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "e58d225989fad143fa809cc98cc62040052501d2cb53a1131a44f5eb6adcbb06",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-fine-nominal",
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "3021dafad5159aeb709b60f0e6e1393ebe9df1db836f17266ffa289e8d460c76"
+      },
+      "spectre": {
+        "points": 466,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "c62e1004a0381f39109fcda9e85e9ec2088fc9aa73287a27eaca0d5f9adcedfb",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-fine-time_tight",
+      "maxstep": 7e-09,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "3021dafad5159aeb709b60f0e6e1393ebe9df1db836f17266ffa289e8d460c76"
+      },
+      "spectre": {
+        "points": 466,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "445c6911f86f38748b3a20703230c1c397e9878f0c250f355663d09d0a3e5bf5",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    },
+    {
+      "id": "shifted-fine-expression_tight",
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "center": 1.500037e-06,
+      "evas": {
+        "points": 17,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "3021dafad5159aeb709b60f0e6e1393ebe9df1db836f17266ffa289e8d460c76"
+      },
+      "spectre": {
+        "points": 466,
+        "statuses": {
+          "control_pass": 12,
+          "arrival_pass": 6
+        },
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "waveform_sha256": "9ab6ab766a647865e93d88515aa16efa23bc5ac0ec38fef27d75d8869fbc6ad8",
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Finite exported observations with assumed 1e-8 V allowance; not formal qualification.",
+    "All touches are isolated explicit PWL knots; no smooth-minimum, plateau or terminal-zero claim.",
+    "New opt-in contract based on reviewed Spectre observations; original diagnostic and historical receipts preserved.",
+    "No static replay, full DVS matrix, new Spectre execution or performance measurement in this checkpoint."
+  ]
+}

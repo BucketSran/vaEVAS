@@ -1,4 +1,4 @@
-"""Version 3: polynomial voltage contributions with structured local branch identity.
+"""Version 6: voltage contributions and bounded affine events with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 6
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,85 @@ class Power:
     op: str = field(default="power", init=False)
 
 
-Expression = Affine | Binary | Power
+@dataclass(frozen=True)
+class StateRef:
+    state: int
+    op: str = field(default="state", init=False)
+
+
+@dataclass(frozen=True)
+class OperatorRef:
+    operator: int
+    op: str = field(default="operator", init=False)
+
+
+Expression = Affine | Binary | Power | StateRef | OperatorRef
+
+
+@dataclass(frozen=True)
+class Transition:
+    input: Expression
+    delay: float
+    rise: float
+    fall: float
+    origin: Origin
+    kind: str = field(default="transition", init=False)
+
+
+@dataclass(frozen=True)
+class Slew:
+    input: Expression
+    rise: float
+    fall: float
+    origin: Origin
+    kind: str = field(default="slew", init=False)
+
+
+@dataclass(frozen=True)
+class AbsDelay:
+    input: Expression
+    delay: float
+    origin: Origin
+    kind: str = field(default="abs_delay", init=False)
+
+
+@dataclass(frozen=True)
+class State:
+    instance: str
+    name: str
+    kind: Literal["real", "integer"]
+    initial: float
+
+
+@dataclass(frozen=True)
+class Assignment:
+    state: int
+    rhs: Expression
+
+
+@dataclass(frozen=True)
+class CrossTrigger:
+    guard: Expression
+    direction: int
+    time_tolerance: float
+    expression_tolerance: float
+    kind: str = field(default="cross", init=False)
+
+
+@dataclass(frozen=True)
+class TimerTrigger:
+    start: float
+    period: float
+    time_tolerance: float
+    enabled: bool
+    kind: str = field(default="timer", init=False)
+
+
+@dataclass(frozen=True)
+class Event:
+    trigger: CrossTrigger | TimerTrigger
+    assignments: tuple[Assignment, ...]
+    origin: Origin
 
 
 @dataclass(frozen=True)
@@ -72,6 +150,9 @@ class Contribution:
 class Program:
     nodes: tuple[str, ...]
     contributions: tuple[Contribution, ...]
+    states: tuple[State, ...] = ()
+    events: tuple[Event, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:
