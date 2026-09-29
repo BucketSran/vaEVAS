@@ -9,6 +9,7 @@ mod nonlinear;
 mod operators;
 mod pwl;
 mod schedule;
+mod slew;
 pub mod solver;
 mod transient;
 mod transition;
