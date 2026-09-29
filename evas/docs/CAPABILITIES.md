@@ -1,6 +1,6 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-09-30。本基线 EVAS 0.7.0 / IR v7 在 PR12–15 的定时事件与历史算子之上增加受限 idt。
+核对日期：2026-09-30。本基线 EVAS 0.7.1 / IR v7 在 PR19 的受限 idt 之上集成 PR8 稠密/稀疏求解；IR 格式不变。
 历史 PR14 被测实现为 `3638024`，PR15 为 `e01fb5b`；这两项的合并收尾只同步文档与实验资产，
 运行时代码、测试和独立验证定义保持被测身份。PR14 合并提交为 `0c36d3b`，PR15 的最终合并身份见其 PR。
 实现、证据、交付分别记录；包版本号不能代替提交身份，也不代表已创建发布 tag。
@@ -18,9 +18,9 @@
 | ID / 能力 | main 范围 | 分支与交付状态 | 证据状态 | 剩余缺口与说明入口 |
 | --- | --- | --- | --- | --- |
 | LANG：语法、绑定、IR | 标量、参数、限定表达式及版本化 IR | 限定算子及显式初值 idt 使用 IR v7 | 前端与畸形 IR 回归 | 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
-| LIN：线性电压关系 | 稠密求解、参考节点、贡献累加、分解复用 | 已合并 | 构造解及原静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
+| LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
 | NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
-| SPARSE：稀疏线性代数 | 尚未合入 | PR8 保留实现，待整合/review | 旧基线上的正确性与合成性能检查 | 与当前 main 整合；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪 |
+| SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 交付，未发布 tag | 当前整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达 | 已合并 PR7/10 | 数学/开发回归、限定 Spectre 对照 | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
 | TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
 | EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、整批提交/回退 | PR12/13 已合入；PR14 延续历史误差传播 | PR12 顺序赋值与 PR13 电压目标/算子值回归 | Spectre 21.1 重复赋值异常见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16)；多事件块写同一状态、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
@@ -29,8 +29,8 @@
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
 | DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7；[PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付，未发布 tag | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)、有理数区间核对及实际 idt 回归；[数学与实现](OPERATORS.md#idt) | 复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；原 D1 仍拒绝 |
-| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件在 PR15 被测实现重跑；0.7.0 未重跑矩阵 | [248 单元新执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留 | 观察误差界、未见确认集；[协议](../validation/METHOD_QUALIFICATION.md) |
-| PERFORMANCE：效率证据 | 有库内局部基准 | PR8 有另外的合成检查点 | 不同提交的局部测量 | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
+| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件瞬态矩阵在 PR15 被测实现重跑；0.7.1 仅新跑静态回放 | [248 单元历史执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留；0.7.1 静态 11 条两档通过 | 观察误差界、未见确认集；[协议](../validation/METHOD_QUALIFICATION.md) |
+| PERFORMANCE：效率证据 | 有库内局部基准和稠密/稀疏分流 | PR8 合成检查点保留，0.7.1 未重新计时 | 不同旧提交的局部测量；18.5% 退化未稳定复现，见[边界](NUMERICS.md#稀疏分支与性能边界) | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
 电流未知量、器件级负载与完整 SPICE 分析不在当前电压域任务的默认范围内；不将它们自动列为必做待办。
 
@@ -38,7 +38,7 @@
 
 | 入口 | 固定检查点与依赖 | 已有证据及边界 |
 | --- | --- | --- |
-| [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | [4d20fbc](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)，较早静态基线 | 稀疏 LU 已接入该分支；当前 main 仍为稠密。整合后需受影响回归 |
+| [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | 0.7.1 / IR v7，被测 `f44b730`，基于 PR19 main `2e3196f`；算法来源 `4d20fbc`，最终收尾只改文档 | 230 Python / 52 Rust / 9 纯数学；静态 22 配置、484,022 点通过，20 条明确拒绝；稀疏 idt 1,240 个电压检查；未新跑 Spectre、瞬态原矩阵或计时，原始日志仅本地保留 |
 | [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
 | [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 0.5.3 修复及当前源码/构建身份见[收据](../../experiments/dvs2-spectre-validation/results/timer-0.5.3.json)；同步 main 文档基线 | 132 Python / 17 Rust；12 配置新 EVAS 回放符合独立候选，复用 Spectre 的 4 个重复写配置保留差异；[历史和本轮说明](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
 | [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | 0.6.1 / IR v6，实现 `9850450`；基于 main `e6f04c4`，源码/内核身份见[收据](../../experiments/dvs2-spectre-validation/results/transition-0.6.1.json) | 155 Python / 23 Rust / 48 checker；共同观察网格下两后端各 16/16；[说明及旧证据](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-061) |
@@ -67,8 +67,8 @@
 | 6 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
 | 7 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
 
-SPARSE 是独立性能路线：先将 PR8 的稀疏 LU 同步当前 main，验证共享矩阵与瞬态调用路径，
-再按 Issue9 优化排序、填充和分解复用。固定同一支持范围与误差目标，分开测构建/编译、首次求解、
+SPARSE 的共享矩阵与瞬态调用路径已在 PR8 整合验证；后续按 Issue9 优化排序、填充和分解复用。
+固定同一支持范围与误差目标，分开测构建/编译、首次求解、
 重复求解、瞬态与内存；没有相应测量前不报速度倍数。性能路线不改变上述功能覆盖分母。
 
 每项先固定数学契约、独立答案和接受/拒绝边界，再实现并跑专项与受影响原条件。
