@@ -27,8 +27,8 @@ PR14 被测实现为 `3638024`，PR15 为 `e01fb5b`；合并收尾只同步文�
 | TRANSITION：延迟与有限边沿 | 固定延迟、显式正边沿、状态仿射输入 | PR13 已合入；0.6.1 / IR v6 | 6 项 Fraction 精度回归；共同观察网格下 EVAS/Spectre 各 16/16 | 完整观察资格、区间保守性、更广同刻语义/动态参数/输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
-| COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成新组合回归 | PR15 8 配置独立 Fraction 检查通过；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
-| DYNAMICS：积分、导数、滤波、相位 | 新内核尚未实现相关通用算子 | 待建立实现契约 | 原 V6 是需求/旧后端证据 | 初值、复位、离散化、积分误差与长期相位；[V6 要求](../validation/README.md#七组行为要求) |
+| COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
+| DYNAMICS：积分、导数、滤波、相位 | 新内核尚未实现相关通用算子 | 已建立首版受限 idt 候选契约；实现单独审阅 | [独立契约](../validation/DYNAMICS_CONTRACTS.md)及 9 项纯数学校准，不是 idt 仿真或回退验证；原 V6 是需求/旧后端证据 | 实现及同一引擎失败恢复证据、初值、复位、积分误差与长期相位；[V6 要求](../validation/README.md#七组行为要求) |
 | QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件在 PR15 被测实现重跑；本基线代码与其一致 | [248 单元新执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留 | 观察误差界、未见确认集；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准 | PR8 有另外的合成检查点 | 不同提交的局部测量 | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
