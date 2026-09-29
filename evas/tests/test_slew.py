@@ -174,10 +174,12 @@ class SlewContracts(unittest.TestCase):
         bad = copy.deepcopy(good)
         bad['operators'][0]['input'] = {'op': 'operator', 'operator': 0}
         mutations.append(bad)
-        bad = copy.deepcopy(good)
-        bad['operators'][0]['input'] = {'op': 'affine', 'constant': 0,
-                                       'terms': [{'node': good['nodes'].index('y'), 'coefficient': 1}]}
-        mutations.append(bad)
+        for coefficient in [1, 0]:
+            bad = copy.deepcopy(good)
+            bad['operators'][0]['input'] = {'op': 'affine', 'constant': 0,
+                                           'terms': [{'node': good['nodes'].index('y'),
+                                                      'coefficient': coefficient}]}
+            mutations.append(bad)
         bad = copy.deepcopy(good)
         bad['operators'][0]['extra'] = 1
         mutations.append(bad)
