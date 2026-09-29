@@ -1,0 +1,83 @@
+{
+  "python_probes": 35,
+  "supplemental_probes": 8,
+  "rust_kernel_probes": 4,
+  "metrics": {
+    "D07_idt_constant": {
+      "samples": 9,
+      "max_abs_error": 0.0,
+      "final_actual": 1.25,
+      "final_expected": 1.25
+    },
+    "D08_idt_ramp": {
+      "samples": 9,
+      "max_abs_error": 0.0,
+      "final_actual": 0.75,
+      "final_expected": 0.75
+    },
+    "D09_idtmod_wrap": {
+      "samples": 9,
+      "max_abs_error": 0.0,
+      "final_actual": 0.625,
+      "final_expected": 0.625
+    },
+    "D10_idtmod_omitted_modulus": {
+      "samples": 9,
+      "max_abs_error": 1.0,
+      "final_actual": 0.5,
+      "final_expected": 1.5
+    },
+    "D11_two_calls_same_target": {
+      "samples": 9,
+      "max_abs_error": 1.0,
+      "final_actual": 1.0,
+      "final_expected": 2.0
+    },
+    "L01_single_nd_ramp_h4": {
+      "samples": 5,
+      "max_abs_error": 0.07572619965443383,
+      "final_actual": 0.44360564082587617,
+      "final_expected": 0.36787944117144233
+    },
+    "L02_single_nd_ramp_h8": {
+      "samples": 9,
+      "max_abs_error": 0.038684675544862324,
+      "final_actual": 0.40656411671630466,
+      "final_expected": 0.36787944117144233
+    },
+    "L04_differential_assignment": {
+      "samples": 9,
+      "max_abs_error": 0.038684675544862324,
+      "final_actual": 0.40656411671630466,
+      "final_expected": 0.36787944117144233
+    },
+    "C01_contribution_order_ab": {
+      "samples": 9,
+      "max_abs_error": 1.0,
+      "final_actual": 2.0,
+      "final_expected": 3.0
+    },
+    "C02_contribution_order_ba": {
+      "samples": 9,
+      "max_abs_error": 2.0,
+      "final_actual": 1.0,
+      "final_expected": 3.0
+    },
+    "C03_implicit": {
+      "samples": 9,
+      "max_abs_error": 0.5,
+      "final_actual": 1.9999923706054688,
+      "final_expected": 2.0
+    }
+  },
+  "source_export_modified_files": [],
+  "new_reference_snapshot_modified_files": {
+    "vaEVAS-slew": [],
+    "vaEVAS-absdelay": [],
+    "vaEVAS-transition": []
+  },
+  "tools": {
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+  }
+}

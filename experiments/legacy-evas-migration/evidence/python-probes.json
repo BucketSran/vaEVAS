@@ -1,0 +1,1758 @@
+{
+  "python": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+  "source": "source-v0.8.7",
+  "binary": "rust-target/debug/libevas_rust_core.dylib",
+  "binary_sha256": "cbaa762b260fa1fd4cbacee39d1511ce90fe107188968c805fe832e4db8e1bf7",
+  "core_version": "0.2.4",
+  "build_revision": null,
+  "records": [
+    {
+      "id": "F01_timer2",
+      "independent_expectation": "syntax accepts two arguments",
+      "observation": {
+        "parsed": true
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "F02_timer3",
+      "independent_expectation": "LRM timer tolerance is a third argument; this source path rejects it",
+      "exception": "ParseError",
+      "message": "Parse error at L1:93: Expected RPAREN, got COMMA (',')",
+      "probe_status": "exception"
+    },
+    {
+      "id": "D01_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idt(V(u),0.25)",
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 238,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 2,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.25
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D02_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idt(V(u),0.25,1)",
+        "accepted": false,
+        "ops": [],
+        "exprs": [],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idt_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D03_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idtmod(V(u),0,1,0)",
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 244,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 3,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 1.0
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D04_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idtmod(V(u),0,1,-0.5)",
+        "accepted": false,
+        "ops": [],
+        "exprs": [],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D05_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idtmod(V(u),0)",
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 244,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 3,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 1.0
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D06_encode",
+      "independent_expectation": "observe exact accepted arity/defaults; idt reset and idtmod nonzero offset require explicit semantics",
+      "observation": {
+        "call": "idtmod(V(u),0,-1)",
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 244,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 3,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": -1.0
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_x",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_idtmod_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D07_idt_constant",
+      "independent_expectation": "q=0.25+t (zero residual at all samples)",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0,
+          1.125,
+          1.25
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D08_idt_ramp",
+      "independent_expectation": "q=0.25+t^2/2 for u=t",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.25,
+          0.2578125,
+          0.28125,
+          0.3203125,
+          0.375,
+          0.4453125,
+          0.53125,
+          0.6328125,
+          0.75
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D09_idtmod_wrap",
+      "independent_expectation": "q=(0.125+1.5t) modulo 1",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.125,
+          0.3125,
+          0.5,
+          0.6875,
+          0.875,
+          0.0625,
+          0.25,
+          0.4375,
+          0.625
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D10_idtmod_omitted_modulus",
+      "independent_expectation": "LRM omitted modulus is unbounded integration; q=1.5t",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.1875,
+          0.375,
+          0.5625,
+          0.75,
+          0.9375,
+          0.125,
+          0.3125,
+          0.5
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D11_two_calls_same_target",
+      "independent_expectation": "second independent call should determine final q=2t; sharing q must not merge histories",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "D12_idt_reset_production",
+      "independent_expectation": "unsupported reset should fail closed",
+      "exception": "RuntimeError",
+      "message": "evas-rust full-model path was required but no supported whole-segment Rust runtime matched this design. Extend the evas-rust lowering coverage; production runs do not fall back to the Python simulation engine. RustSimProgram rejection: model:0:probe_Model:no_event_transition_ir",
+      "probe_status": "exception"
+    },
+    {
+      "id": "L01_single_nd_ramp_h4",
+      "independent_expectation": "y=t-1+exp(-t); at t=1 y=exp(-1)",
+      "observation": {
+        "time": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.05529980423214878,
+          0.15366713930399042,
+          0.28557550111873675,
+          0.44360564082587617
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 0
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L02_single_nd_ramp_h8",
+      "independent_expectation": "same analytic y as L01; compare effect of halved step",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.014687887176925568,
+          0.042337789292999944,
+          0.0814266294441284,
+          0.13061029698004922,
+          0.18870261841517544,
+          0.2546567993225486,
+          0.327549046862735,
+          0.40656411671630466
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 0
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L03_differential_direct",
+      "independent_expectation": "V(u,r) with grounded r is identical input to L02",
+      "exception": "RuntimeError",
+      "message": "evas-rust full-model path was required but no supported whole-segment Rust runtime matched this design. Extend the evas-rust lowering coverage; production runs do not fall back to the Python simulation engine. RustSimProgram rejection: model:0:probe_Model:no_event_transition_ir",
+      "probe_status": "exception"
+    },
+    {
+      "id": "L04_differential_assignment",
+      "independent_expectation": "assignment body uses different lowering; same physical first-order filter",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.014687887176925568,
+          0.042337789292999944,
+          0.0814266294441284,
+          0.13061029698004922,
+          0.18870261841517544,
+          0.2546567993225486,
+          0.327549046862735,
+          0.40656411671630466
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L05_higher_order_nd",
+      "independent_expectation": "requires full second-order state; should reject unsupported shape",
+      "observation": {
+        "accepted": false,
+        "ops": [],
+        "exprs": [],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_aux",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L06_np_extra_pole",
+      "independent_expectation": "two distinct poles must affect transfer response; inspect whether all coefficients survive",
+      "observation": {
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 226,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 4,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 1.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": -1.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 1.0
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_aux",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L07_zp_extra_pole",
+      "independent_expectation": "second pole must not be ignored",
+      "observation": {
+        "accepted": true,
+        "ops": [
+          {
+            "target_kind": 228,
+            "target_id": 0,
+            "expr_start": 0,
+            "expr_count": 6,
+            "target_integer": false
+          }
+        ],
+        "exprs": [
+          {
+            "op_kind": 1,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": -1.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 0.0
+          },
+          {
+            "op_kind": 0,
+            "index": 0,
+            "value": 1.0
+          }
+        ],
+        "bindings": [
+          {
+            "name": "$abstime",
+            "kind": "special",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$realtime",
+            "kind": "special",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$temperature",
+            "kind": "special",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "$vt",
+            "kind": "special",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "inf",
+            "kind": "special",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "u",
+            "kind": "port",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "r",
+            "kind": "port",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "y",
+            "kind": "port",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q",
+            "kind": "state_scalar",
+            "slot": 0,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_initialized",
+            "kind": "state_scalar",
+            "slot": 1,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_t",
+            "kind": "state_scalar",
+            "slot": 2,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_last_eval_t",
+            "kind": "state_scalar",
+            "slot": 3,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          },
+          {
+            "name": "q.__evas2_transfer_aux",
+            "kind": "state_scalar",
+            "slot": 4,
+            "integer": false,
+            "lo": null,
+            "hi": null
+          }
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L08_negative_tau",
+      "independent_expectation": "negative time constant must not be silently stabilized with abs",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          0.0,
+          0.014687887176925568,
+          0.042337789292999944,
+          0.0814266294441284,
+          0.13061029698004922,
+          0.18870261841517544,
+          0.2546567993225486,
+          0.327549046862735,
+          0.40656411671630466
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "L09_direct_with_event",
+      "independent_expectation": "inspect composition boundary between filter and event ABI",
+      "exception": "RuntimeError",
+      "message": "evas-rust full-model path was required but no supported whole-segment Rust runtime matched this design. Extend the evas-rust lowering coverage; production runs do not fall back to the Python simulation engine. RustSimProgram rejection: model:0:probe_Model:timer_static_linear_specialized_path_preferred",
+      "probe_status": "exception"
+    },
+    {
+      "id": "C01_contribution_order_ab",
+      "independent_expectation": "independent branch contribution sum=3",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "C02_contribution_order_ba",
+      "independent_expectation": "same sum=3 after order reversal",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "C03_implicit",
+      "independent_expectation": "y=1+0.5y requires y=2 at every sample",
+      "observation": {
+        "time": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "y": [
+          1.5,
+          1.875,
+          1.96875,
+          1.9921875,
+          1.998046875,
+          1.99951171875,
+          1.9998779296875,
+          1.999969482421875,
+          1.9999923706054688
+        ],
+        "runtime_stats": {
+          "rust_sim_program_enabled": 1,
+          "rust_sim_program_event_transition_enabled": 1
+        }
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "F03_macro_prefix",
+      "independent_expectation": "`A must not alter distinct identifier `AB; expected 2",
+      "observation": "1B",
+      "probe_status": "completed"
+    },
+    {
+      "id": "F04_macro_string",
+      "independent_expectation": "macro name inside a quoted string stays literal",
+      "observation": "\"1\"",
+      "probe_status": "completed"
+    },
+    {
+      "id": "F05_macro_nested",
+      "independent_expectation": "function macro must preserve nesting and commas",
+      "observation": "((f(1,2))+(3))",
+      "probe_status": "completed"
+    },
+    {
+      "id": "F06_macro_missing_arg",
+      "independent_expectation": "bad macro arity should be diagnosed, not create empty expression",
+      "observation": "((1)+())",
+      "probe_status": "completed"
+    },
+    {
+      "id": "H01_delay_helper",
+      "independent_expectation": "continuous ramp with d=.25 gives 0,.25,.75 at 0,.5,1",
+      "observation": {
+        "samples": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.5,
+            0.0
+          ],
+          [
+            1.0,
+            0.5
+          ]
+        ],
+        "expected_linear_history": [
+          0.0,
+          0.25,
+          0.75
+        ]
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "H02_delay_production",
+      "independent_expectation": "Python helper does not imply production Rust accepts absdelay",
+      "exception": "RuntimeError",
+      "message": "evas-rust full-model path was required but no supported whole-segment Rust runtime matched this design. Extend the evas-rust lowering coverage; production runs do not fall back to the Python simulation engine. RustSimProgram rejection: model:0:probe_Model:event_breakpoints_not_lowered",
+      "probe_status": "exception"
+    },
+    {
+      "id": "N01_nonfinite_error_ratio",
+      "independent_expectation": "NaN must not be certified as zero error",
+      "observation": {
+        "ratio": 0.0
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "N02_finite_error_ratio",
+      "independent_expectation": "|2-1|/(.1*2+.01)=100/21",
+      "observation": {
+        "ratio": 4.761904761904762
+      },
+      "probe_status": "completed"
+    },
+    {
+      "id": "E01_cross_candidate_history",
+      "independent_expectation": "a direction-rejected early candidate must not consume the later actual crossing",
+      "observation": [
+        {
+          "t": 0.0,
+          "x": -0.3,
+          "candidate": 0,
+          "last_cross_time": "-inf",
+          "direction_rejection_at_negative_x": false
+        },
+        {
+          "t": 0.5,
+          "x": -0.15,
+          "candidate": 1,
+          "last_cross_time": "0.5",
+          "direction_rejection_at_negative_x": true
+        },
+        {
+          "t": 1.0,
+          "x": 0.0,
+          "candidate": 0,
+          "last_cross_time": "0.5",
+          "direction_rejection_at_negative_x": false
+        },
+        {
+          "t": 1.5,
+          "x": 0.15,
+          "candidate": 0,
+          "last_cross_time": "0.5",
+          "direction_rejection_at_negative_x": false
+        },
+        {
+          "t": 2.0,
+          "x": 0.3,
+          "candidate": 0,
+          "last_cross_time": "0.5",
+          "direction_rejection_at_negative_x": false
+        }
+      ],
+      "probe_status": "completed"
+    }
+  ]
+}
