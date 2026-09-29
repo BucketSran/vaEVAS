@@ -48,6 +48,7 @@ fn prepare_batch(
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let next = prepare_event(model, trajectory, accepted, event_time, ids)?;
+    next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
     for &id in ids {
         let (kind, guard_value) = match &model.program.events[id].trigger {
@@ -134,6 +135,8 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 .map(|c| c.event)
                 .collect();
             let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            next.operators
+                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             // Commit frame, circuit, cursor and history only after all checks.
             accepted = next;
             event = end_event;
@@ -190,12 +193,17 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 .map(|c| c.event)
                 .collect();
             let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            next.operators
+                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             accepted = next;
             event = end_event;
             trace.events.extend(records);
         } else {
             if let Some(candidate) = candidate {
-                accepted = candidate?;
+                let next = candidate?;
+                next.operators
+                    .check_deadline_order(time, crossings.get(event).map(|e| e.bounds()))?;
+                accepted = next;
             } else {
                 accepted.solution = accepted.circuit.solve(&trajectory.values(time))?;
                 accepted.time = time;
@@ -406,6 +414,48 @@ mod tests {
             let deadline = prepare_event(&model, &trajectory, &first, 1.5, &[]).unwrap();
             assert_eq!(deadline.solution.voltages[2], 0.0);
             assert_eq!(deadline.operators.next_breakpoint(1.5), Some(3.5));
+        }
+    }
+    #[test]
+    fn uncertain_operator_order_rejects_the_prepared_batch_before_commit() {
+        use crate::ir::{Expression, OperatorSpec, Origin};
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        for (index, delay) in [0.1_f64, 0.1_f64.next_up()].into_iter().enumerate() {
+            program.operators.push(OperatorSpec::Transition {
+                input: Expression::State { state: 0 },
+                delay,
+                rise: 0.5,
+                fall: 0.5,
+                origin: Origin {
+                    source: "rollback.va".into(),
+                    line: 3 + index,
+                    column: 1,
+                    instance: "dut".into(),
+                },
+            });
+        }
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let before = Frame {
+            time: 0.0,
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        for _ in 0..2 {
+            let error = prepare_batch(&model, &trajectory, &before, 1.0, &[0])
+                .err()
+                .unwrap();
+            assert!(error.message.contains("ordering of operator deadlines"));
+            assert_eq!(before.states, [0.0]);
+            assert_eq!(before.operators.next_breakpoint(0.0), None);
         }
     }
 }
