@@ -153,24 +153,28 @@ impl Slew {
                 breakpoints.push(end);
                 continue;
             }
-            let offset = bounded((I::point(a) - bounds) / closing)?;
-            if offset.lo <= 0.0 {
-                return Err(unresolved(
-                    "slew catchup cannot be separated from its input knot",
-                ));
-            }
-            let remaining = bounded(offset - duration)?;
-            if remaining.lo > 0.0 {
+            // Check the endpoint before dividing. A tiny closing speed may
+            // imply a root far beyond stop whose quotient would overflow;
+            // no quotient is needed when the endpoint still has the same lag.
+            let end_bounds = bounded(bounds + I::point(rate) * duration)?;
+            let end_gap = sign(I::point(b) - end_bounds)?;
+            if end_gap == gap {
                 value = finite(line.value(end))?;
-                bounds = bounded(bounds + I::point(rate) * duration)?;
+                bounds = end_bounds;
                 tracking = false;
-            } else if remaining.zero() {
+            } else if end_gap == 0 {
                 // Exact coincidence belongs to the input corner. The following
                 // interval chooses its new mode from y=u, with no duplicate root.
                 value = b;
                 bounds = I::point(b);
                 tracking = true;
-            } else if remaining.hi < 0.0 {
+            } else {
+                let offset = bounded((I::point(a) - bounds) / closing)?;
+                if offset.lo <= 0.0 {
+                    return Err(unresolved(
+                        "slew catchup cannot be separated from its input knot",
+                    ));
+                }
                 let root = bounded(I::point(start) + offset)?;
                 if root.lo <= start || root.hi >= end {
                     return Err(unresolved(
@@ -215,10 +219,6 @@ impl Slew {
                         tracking = false;
                     }
                 }
-            } else {
-                return Err(unresolved(
-                    "cannot order slew catchup against an input corner",
-                ));
             }
             breakpoints.push(end);
         }
@@ -307,5 +307,12 @@ mod tests {
         // arithmetic bounds; do not classify it by an arbitrary epsilon.
         let uncertain = Slew::new(vec![(0., 0.), (2., 4.), (4., -4.), (5.6, -4.)], 1., -2.);
         assert_eq!(uncertain.unwrap_err().kind, "event_resolution");
+    }
+
+    #[test]
+    fn unreachable_catchup_does_not_require_an_overflowing_quotient() {
+        let slew = Slew::new(vec![(0., 0.), (1., 1e308), (2., 1e308)], 1e-308, -1e-308).unwrap();
+        assert_eq!(slew.value(2.).unwrap(), 2e-308);
+        assert_eq!(slew.next_breakpoint(1.), Some(2.));
     }
 }
