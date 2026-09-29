@@ -1,6 +1,6 @@
 # EVAS
 
-当前 PR15 实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`。尚未替换旧 EVAS 0.8.7。
 
 0.5.3 恢复同块 integer 顺序重复赋值，保留逐句范围检查、同刻前向误差认证与原子提交。
 当前回归与对照见 [0.5.3 证据](../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)；
@@ -36,8 +36,10 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-PR15 当前分支基于修复后的 PR14 `3638024`，继承 PR13 0.6.1 的历史误差验收；本轮 **195 项 Python、33 项 Rust**、locked/offline 构建、warnings-as-errors、格式与 CLI 检查通过。父提交 `9850450` 的检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
+PR15 被测实现 `e01fb5b` 包含 PR14 `3638024`，继承 PR13 0.6.1 的历史误差验收；该检查点 **195 项 Python、33 项 Rust**、locked/offline 构建、warnings-as-errors、格式与 CLI 检查通过。父提交 `9850450` 的检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
 离线构建、warnings-as-errors 的 all-targets 检查和格式检查。新增历史误差认证见[算子手册](docs/OPERATORS.md#历史误差与电压精度)。PR13 0.6.1 与历史执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)。
+合并收尾只更新文档和实验资产，运行时代码、测试与独立验证定义和被测检查点一致。
+新内核瞬态的原 31 条件两档各 13 条达标、18 条明确拒绝，详情与 absdelay/slew 专项见[本轮实验](../experiments/pr14-pr15-validation/RESULTS.md)。
 下面各阶段的计数和静态回放属于各自历史版本，不与本轮数字相加。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -350,7 +352,7 @@ IR v6 的 `Program.operators` 增加 `kind=slew,input,rise,fall,origin`，沿用
 并拒绝通过另一实例中的相消/零乘数隐藏的算子 guard 依赖。
 新增[组合回归](tests/test_timed_composition.py)以独立 Fraction 公式核对双实例中的 transition、absdelay、slew、timer 与 cross：
 两种实例次序 × 两种输出网格 × 两种步长共 8 配置；含同刻更新、算子输出采样和实例状态隔离。
-这些检查不增加原 31 条件分母，未执行专属 Spectre 或跨后端资格验证。
+这些检查不增加原 31 条件分母。另行完成的 [slew 专项](../experiments/pr14-pr15-validation/RESULTS.md)中，EVAS 16/16、Spectre 10/16 满足有限观测目标；保留反向追赶差异及只改变步长的诊断，不宣称完整跨后端资格。
 
 ## 扩展与验证边界
 
@@ -381,7 +383,7 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/absdelay.json --kern
 示例输入在 0–4 ns 从 -1 V 升至 1 V，延迟 3 ns；0、3、5、7、10 ns 的独立答案为
 -1、-1、0、1、1 V。`test_absdelay.py` 的开发检查覆盖该答案、零延迟扩展、仿射多源、
 双实例、稀疏输出/步长不变性、断点调度、原始 IR 拒绝、失败请求及大时间局部延迟。
-它们没有运行 Spectre，也没有改变原 31 条件的支持结论或跨后端资格。
+这些是本地开发回归。另行完成的 [absdelay 专项](../experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标；不构成通用语言或连续时间资格。
 
 新语义沿用同一套 IR 和执行内核。事件提交/撤销已有上述限定契约；
 动态历史和更一般的事件/非线性能力仍需独立建立收敛及时间定位边界。
@@ -409,4 +411,4 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/transition_pulse.jso
 
 数学、同刻联合求解、延迟队列、期限认证与拒绝边界统一见[算子手册](docs/OPERATORS.md#transition)。
 本次同步已合入的 PR12；新目标来自事件后的自洽电压，算子值参与电压求解，历史整批提交。
-有限对照及来源见 [PR13 验证记录](../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)。
+有限对照及来源见 [PR13 验证记录](../experiments/dvs2-spectre-validation/README.md#pr13-transition-061)。

@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.1 / IR v6。PR14、PR15 在此基线上依次接入 absdelay、slew 与相应误差认证，均未合入 main。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本基线 EVAS 0.6.1 / IR v6 集成 PR13–15 的限定 transition、absdelay、slew；源码身份与支持边界分别记录。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
@@ -130,7 +130,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
 这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
 允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
-不可表示或非有限的移位拐点显式失败；尚未完成专属 Spectre 对照。
+不可表示或非有限的移位拐点显式失败。[固定检查点专项](../../experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## slew
@@ -161,8 +161,10 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 验证：[test_slew.py](../tests/test_slew.py)
 包括独立 SL-CATCH/REVERSE/PASS、反射、SI/二进制尺度、实例与网格变化。
 [联合回归](../tests/test_timed_composition.py)另外检查双实例的三算子与 timer/cross 同刻采样，
-独立公式覆盖两种实例顺序、两种网格和两种步长，共8配置；该结果绑定当前 PR15 集成候选。
-尚未完成专属 Spectre 对照；内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
+独立公式覆盖两种实例顺序、两种网格和两种步长，共8配置；该结果绑定 PR15 被测实现 `e01fb5b`。
+[专项对照及步长诊断](../../experiments/pr14-pr15-validation/RESULTS.md)中，EVAS 16/16、Spectre 10/16 达到固定有限观测目标。
+Spectre 的反向追赶偏差随步长细化下降；这是波形证据，不是私有算法或 LRM 违规的结论。
+内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
 
 ## 来源与证据限制
 
