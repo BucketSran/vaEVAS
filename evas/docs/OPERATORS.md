@@ -1,0 +1,120 @@
+# 有历史的波形算子
+
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.0 / IR v6。
+实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
+由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
+
+## 公共执行方法
+
+PR13 引入实例与源码调用点身份，算子历史与用户状态分开保存。设 q 为离散状态、H 为已接受历史，
+先求算子值 `z(t;q,H)`，再将它代入限定仿射电压方程 `A v=b(u,q,z)`。
+当前范围避免算子值隐式依赖本次待求电压；不因此推广到任意反馈或非线性瞬态。
+
+到期目标、边沿端点及追赶交点属于语义断点，输出网格不定义历史。PR13 同步 PR12 后，
+在 te 复制历史并推进到期目标，取得当刻算子输出 z_e。显式正边沿使输出在目标变化处连续，
+所以同刻可固定 z_e，求解 `q+=Phi(q-,v+)` 与 `F(v+,q+,z_e,u(te))=0`。
+代入消去 q+ 后解仿射系统，再回放原赋值、电压残差和状态/电压前向误差认证。
+认证矩阵将 z_e 作为参数，复用系数时每次带入新值，不能缓存某次的输出样本。
+随后用 q+ 安装新目标，并核对当刻算子值未变；期限顺序通过后，状态、电压、历史、游标、记录一起提交。
+失败/弃步只丢弃候选。认证是以采样输入、旧状态和当刻 binary64 算子值为条件，
+并未证明算子整条历史相对理想实数波形的总前向误差。
+共同事件顺序及未决兼容性见[事件手册](EVENTS.md#timer-与同刻兼容性)。
+
+实现入口：[operators.rs](../rust_core/src/operators.rs)、[transient.rs](../rust_core/src/transient.rs)、
+[settlement.rs](../rust_core/src/settlement.rs) 与 [settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)。
+IR v6 增加 operators 与调用点引用。结构依赖在数值绑定前检查，零乘数、相消、下溢和跨实例连接
+不能隐藏不支持的反馈/guard。当前重绑算子值的路径没有新的矩阵分解复用性能结论。
+
+## transition
+
+首批接受本实例已提交标量状态与常数的仿射输入，固定 `d≥0`、显式 `tr>0,tf>0`。
+初值为已初始化输入，不凭空添加从零开始的边沿。未中断变化在实际接受时刻 te 发生，
+选择完整上/下沿时间 D，则
+
+`y(t)=y0+(y1-y0)*clip((t-te-d)/D,0,1)`。
+
+线性边沿的 10%–90% 时间是 `0.8D`。中断时保存历史起点 o、旧目标 p 和当前值 yc。
+同向继续保留 o，反向使用 p；令新历史起点为 on、新目标为 q，则
+`m=(q-on)/D`，从 yc 连续前进，终点为 `tc+(q-yc)/m`。下降过程采用反射规则。
+输入未变不重启；目标可证明等于当前值则结束边沿。固定延迟队列保存每次待生效目标，保留短脉冲。
+
+数值方法用向外舍入区间包围斜率、剩余时间和期限，代表时间取期限上界；位移须不超过声明时间的1%。
+这是 EVAS 的当前分辨率准入限制，不是规范规定或总波形误差保证。不能证明期限顺序或目标方向时拒绝；
+端点求值裁剪在起点与目标之间。期限检查在帧/记录提交前完成。
+
+实现：[transition.rs](../rust_core/src/transition.rs)。
+验证：[test_transition.py](../tests/test_transition.py)
+包含 TR-EDGE/REVERSE/EXTEND/REPEAT/QUEUE、反射、实例隔离、网格与步长、浮点分辨率及拒绝边界。
+Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化算子值上的缓存回归。
+专属 Spectre 有限对照见[执行记录](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)，不由有限样例宣称通用兼容。
+连续电压输入、嵌套、动态参数、缺省/零边沿和算子反馈尚未支持。
+
+### 中断边沿的手算与实现
+
+以时间单位 U 为例，2U 时目标从 0 改为 1，tr=10U；6U 时当前值为 0.4。
+若目标改为 0，旧目标 1 成为新历史起点，tf=20U：斜率为 -1/(20U)，
+再走 8U 到达 0，即终点 14U。若目标改为 2，则保留历史起点 0：斜率为 2/(10U)，
+同样在 14U 到达 2。不能把剩余边沿一律重设为完整 tr/tf，也不能从旧目标处跳变。
+
+`Transition` 分开保存延迟目标队列、当前实际起点/值、历史起点、目标、斜率及结束期限。
+`advance` 处理到期目标，`target` 决定上述中断几何，`value` 仅查询波形；采样不写历史。
+Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；多个调用点和实例各有自己的记录。
+
+### 与其他实现的比较
+
+- **规范**：[LRM 2.4 §4.5.8](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+  给出分段线性、纯延迟与中断语义；[LRM 2023 §4.5.8，图4-7至4-12](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)
+  进一步展开上升/下降及连续中断的起点和斜率公式。本实现选择固定参数、事件保持输入这个子集。
+- **Spectre**：闭源内核无法据波形推断内部算法；本轮使用相同 VA 与冻结独立折线答案，
+  对照普通边沿、反向/同向中断及下降反射、短脉冲、重复目标和同刻目标。
+  具体版本、两档设置及差异写入执行记录，不把波形吻合等同于实现一致。
+- **Gnucap**：检查固定提交 `100e7469fa2f758b4de0492ec1374266820cbfcd` 的
+  [transition 代码生成](https://github.com/gnucap/gnucap-modelgen-verilog/blob/100e7469fa2f758b4de0492ec1374266820cbfcd/mgvams/mg_filt_transition.cc)
+  与[运行设备](https://github.com/gnucap/gnucap-modelgen-verilog/blob/100e7469fa2f758b4de0492ec1374266820cbfcd/mgsim/d_va_absdelay.cc)。
+  它生成滤波器设备，`tr_accept` 在输入变化时登记波形历史并请求断点，`tr_advance` 查询历史值；
+  最小边沿受 dtmin 约束。EVAS 使用显式正边沿及区间分辨率准入，候选历史随整帧提交。
+  这里是源码结构比较，没有执行 Gnucap 对照或评定其数值优劣。
+- **ngspice + OpenVAF**：[OpenVAF 支持说明](https://openvaf.semimod.de/docs/details/verilog-a-standard/)
+  仍列出一般模拟事件控制缺口；因此本轮 timer 驱动的同一 VA 套件不能据该接口直接称为可比。
+  这不等于 ngspice 没有断点、行为源或其他实现路线；没有执行其 transition 测试，也不作性能排名。
+
+## absdelay
+
+固定正延迟 τ 的输出为 `y(t)=u(max(t-τ,0))`，其中 u 是直接驱动连续 PWL 的仿射组合。
+初始历史保持 u(0)。τ=0 的恒等行为是显式 EVAS 扩展，不能声称由 LRM 的正延迟要求证明。
+
+实现共享不可变的输入语义段，以平移后的拐点要求求解，在原输入历史上查询 `t-τ`。
+查询时间使用补偿减法保留低位，按原始拐点排序并作局部插值，避免大时间减法先舍入而错选位置。
+例如 t=2^54+4、τ=3，在从 2^54 到 2^54+4 的 0→1 斜坡上，数学答案为1/4；
+先舍入 t-τ 可错误得到0。输出采样网格不能作为历史存储。
+
+实现：[absdelay.rs](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/rust_core/src/absdelay.rs)。
+验证：[test_absdelay.py](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/tests/test_absdelay.py)
+覆盖非零初值、零/长延迟、大时间低位、双实例、网格/步长及结构拒绝。
+不可表示或非有限的移位拐点显式失败；尚未完成 Spectre 对照或通用历史误差界。
+内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
+
+## slew
+
+首批输入为直接驱动连续 PWL 的仿射组合，固定正限速 r+ 和负限速 r-，初态 y(0)=u(0)。
+在输入斜率 a 恒定的分段上：y<u 时以 r+ 追赶，y>u 时以 r- 追赶，y=u 时选择
+`clip(a,r-,r+)`；相交后重新判断跟踪或追赶模式。
+对于当前输出斜率 s，候选相交时刻为 `tc=t0+(u0-y0)/(s-a)`，只有分母、方向与段内次序可认证才采用。
+这给出分段解析轨迹，无需按输出网格做数值积分。
+
+平台期间落后的输出继续追赶；输入反向后，只要仍处于同侧，输出继续原方向直到真正相交。
+实现用区间运算认证模式与交点次序，语义段/断点通过 Arc 共享；不确定或不可表示时失败。
+这些几何判定不构成整个电路的连续时间前向误差保证。
+
+实现：[slew.rs](https://github.com/BucketSran/vaEVAS/blob/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a/evas/rust_core/src/slew.rs)。
+验证：[test_slew.py](https://github.com/BucketSran/vaEVAS/blob/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a/evas/tests/test_slew.py)
+包括独立 SL-CATCH/REVERSE/PASS、反射、SI/二进制尺度、实例与网格变化。
+尚未完成 Spectre 对照；内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
+
+## 来源与证据限制
+
+语义依据为 [Verilog-AMS LRM 2.4.0](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+§4.5.7–4.5.9；范围收窄、分辨率门限及上述数据结构属于 EVAS 的选择。公式是对限定输入的推导，
+规范、EVAS 约定、后端观察三者有分歧时必须显式保留。共同历史与观察预算见
+[验证协议](../validation/METHOD_QUALIFICATION.md)，本地方法数不是正式条件数。
+原数学样例已经用于开发；新增修复验证不得称其为未见确认集。

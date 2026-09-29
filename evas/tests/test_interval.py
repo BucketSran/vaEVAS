@@ -57,3 +57,33 @@ fn main() {
                 self.assertLessEqual(lo,exact,(a,b,lo,hi))
                 self.assertGreaterEqual(hi,exact,(a,b,lo,hi))
         self.assertEqual(list(bounds),[])
+
+    def test_four_product_sign_matches_exact_fractions_across_exponents(self):
+        module=Path(__file__).resolve().parents[1]/'rust_core/src/interval.rs'
+        harness='''#[allow(dead_code)]
+#[path=MODULE] mod interval;
+use std::io::{self,BufRead};
+fn main() { for line in io::stdin().lock().lines() {
+let x:Vec<_>=line.unwrap().split_whitespace().map(|s| f64::from_bits(s.parse().unwrap())).collect();
+let t:Vec<_>=x.chunks(2).map(|p| (p[0],p[1])).collect();
+println!("{}",interval::sum_products_sign(&t).unwrap()); }}'''.replace('MODULE',json.dumps(str(module)))
+        rng=random.Random(121206)
+        def decode(bits): return struct.unpack('>d',struct.pack('>Q',bits))[0]
+        def encode(value): return struct.unpack('>Q',struct.pack('>d',value))[0]
+        cases=[]
+        while len(cases)<2048:
+            values=[decode(rng.getrandbits(64)) for _ in range(8)]
+            if all(math.isfinite(v) for v in values): cases.append(values)
+        for a,b in [(1e308,1e308),(2**-1074,2**-1074),(1.,2**-53)]:
+            cases.extend([[a,b,-a,b,0.,0.,0.,0.],[a,b,-a,b,2**-1074,2**-1074,0.,0.]])
+        with tempfile.TemporaryDirectory() as directory:
+            source=Path(directory)/'sign.rs'; binary=Path(directory)/'sign'
+            source.write_text(harness)
+            subprocess.run(['rustc','--edition=2021',str(source),'-o',str(binary)],check=True,capture_output=True)
+            result=subprocess.run([str(binary)],check=True,capture_output=True,text=True,
+                input=''.join(' '.join(str(encode(v)) for v in row)+'\n' for row in cases))
+        signs=list(map(int,result.stdout.splitlines()))
+        self.assertEqual(len(signs),len(cases))
+        for row,sign in zip(cases,signs):
+            exact=sum(Fraction(a)*Fraction(b) for a,b in zip(row[::2],row[1::2]))
+            self.assertEqual(sign,(exact>0)-(exact<0),row)

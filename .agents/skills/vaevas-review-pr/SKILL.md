@@ -22,6 +22,15 @@ Use [workspace ownership](../../../README.md),
 area. Review against the user's acceptance criteria, rather than every possible
 future simulator feature.
 
+Resolve the affected [capability rows](../../../evas/docs/CAPABILITIES.md) and
+[handbook explanation](../../../evas/docs/README.md#feature-documentation-contract).
+Check the three separate claims: what the reviewed commit implements, what the
+identified evidence demonstrates, and whether the change is merged/released.
+For stacked PRs, flag changed shared assumptions and evidence tied to an older
+parent; do not treat a temporary integration test as proof of `main` support.
+Use the [revalidation triggers](../evas-validate/SKILL.md#revalidation-triggers)
+to identify evidence invalidated by changed code, inputs, checkers or measurement conditions.
+
 - For parser or binding changes, check full token consumption, unsupported syntax,
   parameter dependency and override rules, finite values, and instance isolation.
 - For IR changes, trace Python/Rust serialization, version rejection, structured
@@ -39,6 +48,10 @@ future simulator feature.
   build, and observations. Historical passes and static replay do not certify new
   code or transient semantics. Check current component contracts and the PR
   checkpoint rather than assuming a separate design or review-log file exists.
+- For public experiment claims, follow the artifact links and provenance. A
+  local-only archive may support a limited internal report, but cannot be called
+  a publicly reproducible dataset. Preserve known counterexamples and distinguish
+  LRM requirements, implementation choices and observations from other backends.
 
 Assess whether a test could detect the relevant bug independently of the
 implementation. Run a focused reproduction when feasible and within task scope;

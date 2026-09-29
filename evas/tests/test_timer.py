@@ -7,6 +7,7 @@ qualification. These tests do not change the original 31-condition denominator.
 import copy
 from fractions import Fraction as Q
 import json
+import math
 import subprocess
 import unittest
 
@@ -27,6 +28,45 @@ def run_timer(source=None, *, stop=19, times=None, step=100, instances=None):
 
 
 class TimerContracts(unittest.TestCase):
+    def test_representable_pwl_roots_coincide_despite_rounded_division(self):
+        for exponent in [-30, 0, 20]:
+            unit = 2.0**exponent
+            for threshold in [1, 3, 8, 11, 17]:
+                start, stop = threshold*unit, 19*unit
+                # Fraction anchors the expected equality, independently of Rust.
+                root = Q(stop)*Q(threshold)/19
+                self.assertEqual(root, Q(start))
+                source = model(f'''@(initial_step) begin n=0; m=0; end
+                  @(timer({start!r},0,{unit/1024!r})) n=n+1;
+                  @(cross(V(u,r)-{threshold},1,{unit/1024!r},0.001)) m=m+1;
+                  V(y,r)<+n+m;''', 'integer n,m;')
+                program=compile_sources({'timer.va':source},[instance()])
+                result=transient(program,{'u':[[0,0],[stop,19]]},[0,stop],
+                                 stop=stop,max_step=stop,kernel=KERNEL)
+                self.assertEqual([e['time'] for e in result['transient']['events']], [start,start])
+                self.assertEqual(result['transient']['states'][-1], [1,1])
+
+    def test_representable_root_outside_three_rounded_guesses_is_found(self):
+        # 22*(15/22) rounds down; neither outward endpoint equals the exact 15.
+        self.assertNotEqual(22*(15/22),15)
+        self.assertEqual(Q(22)*Q(15)/22,15)
+        source=model('''@(initial_step) begin n=0; m=0; end
+            @(timer(15,0,0.01)) n=n+1;
+            @(cross(V(u,r)-15,1,0.01,0.01)) m=m+1;
+            V(y,r)<+n+m;''','integer n,m;')
+        result=run_timer(source,stop=22,times=[0,22])
+        self.assertEqual([e['time'] for e in result['transient']['events']],[15.,15.])
+
+    def test_one_ulp_neighbors_of_certified_root_remain_distinct(self):
+        for start in [math.nextafter(8.,0.), math.nextafter(8.,math.inf)]:
+            source=model(f'''@(initial_step) begin n=0; m=0; end
+              @(timer({start!r},0,0.1)) n=n+1;
+              @(cross(V(u,r)-8,1,0.1,0.1)) m=m+1;
+              V(y,r)<+n+m;''','integer n,m;')
+            result=run_timer(source,stop=19,times=[0,19])
+            self.assertEqual([e['time'] for e in result['transient']['events']],sorted([8.,start]))
+            self.assertEqual(result['transient']['states'][-1], [1,1])
+
     def test_periodic_independent_count_answers_and_typed_records(self):
         result = run_timer()
         self.assertEqual(result['schema_version'], 6)
@@ -88,7 +128,7 @@ class TimerContracts(unittest.TestCase):
             self.assertEqual([e['before'] for e in events], [[k, k]]*2)
             self.assertEqual([e['after'] for e in events], [[k+1, k+1]]*2)
 
-    def test_timer_and_cross_share_pre_event_voltage_snapshot(self):
+    def test_timer_and_cross_share_settled_voltage_and_old_state(self):
         statements = ['@(timer(0.5,0,0.001)) n=n+1;',
                       '@(cross(V(u,r)-0.5,1,0.001,0.001)) held=V(y,r);']
         for order in [statements, statements[::-1]]:
@@ -96,10 +136,10 @@ class TimerContracts(unittest.TestCase):
                 ''' + ''.join(order) + 'V(y,r)<+n; V(z,r)<+held;',
                 'electrical z; integer n; real held;')
             result = run_timer(source, stop=1, times=[0, 0.5, 1])
-            self.assertEqual(result['transient']['states'], [[0, -1], [1, 0], [1, 0]])
+            self.assertEqual(result['transient']['states'], [[0, -1], [1, 1], [1, 1]])
             self.assertEqual({e['kind'] for e in result['transient']['events']}, {'cross', 'timer'})
             self.assertEqual([e['before'] for e in result['transient']['events']], [[0, -1]]*2)
-            self.assertEqual([e['after'] for e in result['transient']['events']], [[1, 0]]*2)
+            self.assertEqual([e['after'] for e in result['transient']['events']], [[1, 1]]*2)
 
     def test_distinct_nearby_events_are_not_merged_by_time_tolerance(self):
         source = model('''@(initial_step) begin n=0; held=-1; end

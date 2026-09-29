@@ -10,7 +10,7 @@ from fractions import Fraction
 import subprocess
 import unittest
 
-from evas import CompileError, KernelError, compile_sources, solve, transient
+from evas import Instance, CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance, model
 
 
@@ -30,6 +30,38 @@ class TransitionContracts(unittest.TestCase):
         for row, value in zip(result['solutions'], expected, strict=True):
             self.assertAlmostEqual(row['voltages'][index], value, delta=2e-12)
             self.assertLessEqual(row['max_residual_ratio'], 1)
+
+    def test_same_time_voltage_read_supplies_new_transition_target(self):
+        blocks = ['@(timer(.5,0,.001)) n=n+1;',
+                  '@(timer(.5,0,.001)) s=V(y,r);']
+        for reverse in [False, True]:
+            source = """module m(u,y,z,w,r); input u; output y,z,w; inout r;
+              electrical u,y,z,w,r; integer n; real s;
+              analog begin @(initial_step) begin n=0; s=0; end
+              """ + '\n'.join(blocks[::-1] if reverse else blocks) + """
+              V(y,r)<+n; V(z,r)<+s; V(w,r)<+transition(s,0,.25,.25);
+              end endmodule"""
+            program = compile_sources({'same.va': source}, [Instance('dut','m',
+                connections={p:p for p in ['u','y','z','w']} | {'r':'0'})])
+            for step in [1, .03125]:
+                result = transient(program, {'u':[[0,0],[1,1]]}, [0,.5,.625,.75,1],
+                                   stop=1, max_step=step, kernel=KERNEL)
+                for node, expected in [('y',[0,1,1,1,1]), ('z',[0,1,1,1,1]),
+                                       ('w',[0,0,.5,1,1])]:
+                    i=result['nodes'].index(node)
+                    self.assertEqual([row['voltages'][i] for row in result['solutions']],expected)
+
+    def test_same_time_feedback_uses_current_operator_value_on_cached_batches(self):
+        # At t=1 and t=2 the frozen ramp is .5 and 1. Solving a=y+1,
+        # y=.5*a+z gives a=3,4. An old-voltage read or cached z gives wrong states.
+        body = """@(initial_step) begin a=0; b=0; end
+          @(timer(0,0,.001)) b=1;
+          @(timer(1,1,.001)) a=V(y,r)+1;
+          V(y,r)<+.5*a+transition(b,0,2,2);"""
+        for step in [2.5, .125]:
+            result=run_transition(body,[0,1,1.5,2,2.5],2.5,step)
+            self.assert_waveform(result,[0,2,2.25,3,3])
+            self.assertEqual([event['after'][0] for event in result['transient']['events']], [0,3,4])
 
     def test_edge_nonzero_initial_delay_and_asymmetric_times(self):
         body = '''@(initial_step) begin a=0; b=0; end

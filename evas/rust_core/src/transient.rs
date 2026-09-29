@@ -25,12 +25,24 @@ fn prepare_event(
 ) -> Result<Frame, Error> {
     let mut operators = accepted.operators.clone();
     operators.advance(time, &accepted.states)?;
-    let before_circuit = model.circuit_with(&accepted.states, &operators.values(time)?)?;
-    let before = before_circuit.solve(&trajectory.values(time))?;
-    let states = model.apply(events, &before.voltages, &accepted.states)?;
+    // Positive edge durations make transition continuous at a target change.
+    // Freeze its current value for the same-time state/voltage solve, then
+    // install the new target only in this disposable candidate history.
+    let frozen = operators.values(time)?;
+    let (states, circuit, solution) = crate::settlement::prepare(
+        model,
+        events,
+        &trajectory.values(time),
+        &accepted.states,
+        &frozen,
+    )?;
     operators.advance(time, &states)?;
-    let circuit = model.circuit_with(&states, &operators.values(time)?)?;
-    let solution = circuit.solve(&trajectory.values(time))?;
+    if operators.values(time)? != frozen {
+        return Err(Error::new(
+            "event_consistency",
+            "operator changed during same-time settlement",
+        ));
+    }
     Ok(Frame {
         time,
         states,
@@ -394,6 +406,22 @@ mod tests {
                 solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
                 circuit,
             };
+            if inconsistent {
+                // The interval map now rejects the nonidentity y=operator,
+                // y=0 constraint before any queued edge can be committed.
+                for _ in 0..2 {
+                    assert_eq!(
+                        prepare_event(&model, &trajectory, &before, 0.5, &[0])
+                            .err()
+                            .unwrap()
+                            .kind,
+                        "event_accuracy"
+                    );
+                    assert_eq!(before.operators.next_breakpoint(0.0), None);
+                    assert_eq!(before.states, [0.0]);
+                }
+                continue;
+            }
             let first = prepare_event(&model, &trajectory, &before, 0.5, &[0]).unwrap();
             let replay = prepare_event(&model, &trajectory, &before, 0.5, &[0]).unwrap();
             assert_eq!(first.operators.next_breakpoint(0.5), Some(1.5));
@@ -402,11 +430,7 @@ mod tests {
             assert_eq!(before.states, [0.0]);
             for _ in 0..2 {
                 let trial = prepare_event(&model, &trajectory, &first, 2.0, &[]);
-                if inconsistent {
-                    assert_eq!(trial.err().unwrap().kind, "residual_failure");
-                } else {
-                    assert_eq!(trial.unwrap().solution.voltages[2], 0.25);
-                }
+                assert_eq!(trial.unwrap().solution.voltages[2], 0.25);
                 assert_eq!(first.operators.next_breakpoint(0.5), Some(1.5));
                 assert_eq!(first.solution.voltages[2], 0.0);
             }
@@ -456,6 +480,100 @@ mod tests {
             assert!(error.message.contains("ordering of operator deadlines"));
             assert_eq!(before.states, [0.0]);
             assert_eq!(before.operators.next_breakpoint(0.0), None);
+        }
+    }
+    #[test]
+    fn repeated_integer_writes_retry_and_fail_without_committing() {
+        for timer in [false, true] {
+            for failure in [None, Some("residual_failure"), Some("state_range")] {
+                let (original, trajectory, _) = fixture(failure == Some("residual_failure"));
+                let mut program = original.program;
+                if failure == Some("state_range") {
+                    program.states[0].initial = 2147483646.0;
+                }
+                if timer {
+                    program.events[0].trigger = EventTrigger::Timer {
+                        start: 0.5,
+                        period: 1.0,
+                        time_tolerance: 0.001,
+                        enabled: true,
+                    };
+                }
+                let action = program.events[0].assignments[0].clone();
+                program.events[0].assignments.push(action);
+                let model =
+                    EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+                let circuit = model.circuit(&model.initial()).unwrap();
+                let before = Frame {
+                    time: 0.0,
+                    states: model.initial(),
+                    operators: Operators::new(
+                        &model.program,
+                        &trajectory,
+                        &model.driven,
+                        &model.initial(),
+                    )
+                    .unwrap(),
+                    solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+                    circuit,
+                };
+                for _ in 0..2 {
+                    let trial = prepare_batch(&model, &trajectory, &before, 0.5, &[0]);
+                    if let Some(kind) = failure {
+                        assert_eq!(trial.err().unwrap().kind, kind);
+                    } else {
+                        let (next, records) = trial.unwrap();
+                        assert_eq!(next.states, [2.0]);
+                        assert_eq!(next.solution.voltages[2], 2.0);
+                        assert_eq!(records.len(), 1);
+                        let (second, _) =
+                            prepare_batch(&model, &trajectory, &next, 1.5, &[0]).unwrap();
+                        assert_eq!(second.states, [4.0]);
+                    }
+                    // Discarded/failed trials and certificate-cache reuse must
+                    // never change the accepted frame or consume an increment.
+                    assert_eq!(before.time, 0.0);
+                    assert_eq!(before.states, model.initial());
+                    assert_eq!(before.solution.voltages[2], before.states[0]);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn forward_error_failure_and_cached_retry_leave_frame_unchanged() {
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        program.states[0].kind = crate::ir::StateKind::Real;
+        program.events[0].assignments = serde_json::from_value(serde_json::json!([
+            {"state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
+            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":2_f64.powi(-55),"terms":[]}}},
+            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"affine","constant":-1.0,"terms":[]}}}
+        ]))
+        .unwrap();
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let circuit = model.circuit(&model.initial()).unwrap();
+        let before = Frame {
+            time: 0.0,
+            states: model.initial(),
+            operators: Operators::new(&model.program, &trajectory, &model.driven, &model.initial())
+                .unwrap(),
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        for _ in 0..2 {
+            assert_eq!(
+                prepare_event(&model, &trajectory, &before, 0.5, &[0])
+                    .err()
+                    .unwrap()
+                    .kind,
+                "event_accuracy"
+            );
+            assert_eq!(before.time, 0.0);
+            assert_eq!(before.states, [0.0]);
+            assert_eq!(before.solution.voltages[2], 0.0);
         }
     }
 }
