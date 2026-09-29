@@ -5,6 +5,7 @@ Finite observations only. No simulator is used as another simulator's oracle.
 import argparse
 from collections import Counter
 import json
+import math
 from pathlib import Path
 import subprocess
 
@@ -73,7 +74,7 @@ def expected(c,t):
     return c['knots'][-1][1]
 
 
-def check(c,rows):
+def check(c,rows,require_grid=False):
     if len(rows)<3 or abs(rows[0]['time'])>1e-20 or abs(rows[-1]['time']-c['stop'])>1e-20:
         raise ValueError('incomplete trace')
     if any(b['time']<a['time'] for a,b in zip(rows,rows[1:])):
@@ -105,17 +106,22 @@ def check(c,rows):
     for (a,y0),(b,y1) in zip(c['knots'],c['knots'][1:]):
         if y0!=y1 and not any(a<r['time']/UNIT<b for r in rows):
             raise ValueError('unobserved edge segment')
+    if require_grid and any(not any(abs(r['time']-t)<=32*math.ulp(t) for r in rows)
+                            for t in c['output_times']):
+        raise ValueError('missing common observation time')
     return dict(points=len(rows),max_error_v=worst,conditional_allowance_v=allowance,
+                common_grid_points=len(c['output_times']) if require_grid else None,
                 status='finite_consistent',formal_qualification=False)
 
 
-def build(root):
+def build(root, strobe=False):
     root.mkdir(parents=True,exist_ok=False)
     dump(root/'conditions.json',cases())
     dump(root/'contract.json',dict(max_spectre_attempts=16,timeout_s=90,license_timeout_s=30,
          timer_tolerance_s=TTOL,voltage_allowance_v=VOLTAGE_ALLOWANCE,
          reference='Explicit PWL knots derived from LRM 2.4 section 4.5.8; voltage-target uses reviewed EVAS same-time contract.',
-         observation='Check every exported point; held targets and stamps checked outside event windows. Compare each backend independently. Coarse/fine maxstep, no forced Spectre strobes.',
+         observation='Check every exported point; held targets and stamps checked outside event windows. Compare each backend independently. Coarse/fine maxstep. '+('Spectre strobes on the EVAS output grid, retaining all accepted points.' if strobe else 'No forced Spectre strobes.'),
+         strobeperiod_s=UNIT/8 if strobe else None, strobeoutput='all' if strobe else None,
          limits='Finite development observations, conditional export allowance, no continuous-time qualification or speed ranking. Nominal waveform allowance is 4*timer_tolerance*maximum_reference_slope + 1e-8 V.'))
     for c in cases():
         work=root/c['id']; work.mkdir(); (work/'probe.va').write_text(source(c))
@@ -123,7 +129,7 @@ def build(root):
             f'Vu (u 0) vsource type=pwl wave=[0 0 {c["stop"]!r} 32]',
             'Xdut (u y q h1 h2 p 0) probe',
             'simulatorOptions options reltol=1e-8 vabstol=1e-10 iabstol=1e-14',
-            f'tran tran stop={c["stop"]!r} step={c["maxstep"]!r} maxstep={c["maxstep"]!r} method=traponly',
+            f'tran tran stop={c["stop"]!r} step={c["maxstep"]!r} maxstep={c["maxstep"]!r} method=traponly'+(f' strobeperiod={UNIT/8!r} strobeoutput=all' if strobe else ''),
             'save u y q h1 h2 p'])+'\n')
     deps=[Path(__file__),Path(__file__).with_name('test_transition_reference.py'),
           *[Path(__file__).with_name(n+'.py') for n in ['timer_reference','cross_touch','remote','report']],
@@ -151,6 +157,7 @@ def run_evas(root,kernel):
 
 def analyze(root,output):
     verify(root)
+    require_grid=json.loads((root/'contract.json').read_text()).get('strobeperiod_s') is not None
     records=[]
     for c in json.loads((root/'conditions.json').read_text()):
         for backend in ['evas','spectre']:
@@ -164,7 +171,7 @@ def analyze(root,output):
                     execution=json.loads((work/'spectre-execution.json').read_text())
                     if execution['returncode'] or execution['timeout']: raise ValueError('execution failure')
                     path=work/'psf/tran.tran.tran'; rows=read_waveform(path,'spectre')
-                record.update(waveform_sha256=digest(path),**check(c,rows))
+                record.update(waveform_sha256=digest(path),**check(c,rows,require_grid))
             except (ValueError,KeyError,OSError) as error:
                 record.update(status='finite_inconsistent_or_unavailable',reason=str(error))
             records.append(record)
@@ -176,8 +183,10 @@ def analyze(root,output):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('action',choices=['build','evas','spectre','check'])
     p.add_argument('--root',type=Path,required=True); p.add_argument('--kernel',type=Path)
-    p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path); a=p.parse_args()
-    if a.action=='build': build(a.root)
+    p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path)
+    p.add_argument('--strobe',action='store_true',help='Force Spectre observations on the EVAS output grid')
+    a=p.parse_args()
+    if a.action=='build': build(a.root,a.strobe)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': run_spectre(a.root,a.spectre_profile)
     else: analyze(a.root,a.output)

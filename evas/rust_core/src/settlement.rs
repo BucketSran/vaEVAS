@@ -1,5 +1,6 @@
 //! Same-time affine state/voltage consistency. Trial evaluation is not a commit.
 use crate::events::EventModel;
+use crate::interval::Interval as I;
 use crate::ir::{Error, Solution, StateKind};
 use crate::solver::Circuit;
 
@@ -9,7 +10,9 @@ pub(crate) fn prepare(
     inputs: &[f64],
     before: &[f64],
     operators: &[f64],
-) -> Result<(Vec<f64>, Circuit, Solution), Error> {
+    before_bounds: &[I],
+    operator_bounds: &[I],
+) -> Result<(Vec<f64>, Vec<I>, Circuit, Solution), Error> {
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
     let candidate = model
@@ -37,13 +40,13 @@ pub(crate) fn prepare(
             ));
         }
     }
-    model.certify(
+    let bounds = model.certify(
         events,
         inputs,
-        before,
-        operators,
+        before_bounds,
+        operator_bounds,
         &solution.voltages,
         &states,
     )?;
-    Ok((states, circuit, solution))
+    Ok((states, bounds, circuit, solution))
 }

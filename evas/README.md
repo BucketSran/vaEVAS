@@ -1,6 +1,6 @@
 # EVAS
 
-当前 PR13 实现为 **EVAS 0.6.0，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形。尚未替换旧 EVAS 0.8.7。
+当前 PR13 实现为 **EVAS 0.6.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形。尚未替换旧 EVAS 0.8.7。
 
 0.5.3 恢复同块 integer 顺序重复赋值，保留逐句范围检查、同刻前向误差认证与原子提交。
 当前回归与对照见 [0.5.3 证据](../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)；
@@ -36,8 +36,8 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-0.6.0 当前检查为 **149 项 Python unittest 方法、21 项 Rust 测试**，以及锁定依赖的
-离线构建、warnings-as-errors 的 all-targets 检查和格式检查；执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)。
+0.6.1 当前检查为 **155 项 Python unittest 方法、23 项 Rust 测试**，以及锁定依赖的
+离线构建、warnings-as-errors 的 all-targets 检查和格式检查。新增历史误差认证见[算子手册](docs/OPERATORS.md#历史误差与电压精度)。历史 0.6.0 执行收据见 [PR13 对照](../experiments/dvs2-spectre-validation/README.md#pr13-transition-060)。
 下面各阶段的计数和静态回放属于各自历史版本，不与本轮数字相加。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -289,7 +289,7 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### v1/v2/v3/v4/v5 → v6 迁移
 
-Python 包与 Rust 内核一起升级到 0.6.0；Program 和成功 Response 的
+Python 包与 Rust 内核一起升级到 0.6.1；Program 和成功 Response 的
 `schema_version` 均为 6。Python 适配器拒绝其他响应版本。
 内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4/v5 或未知版本返回
 `unsupported_ir_version`；缺失/错误类型及 v6 格式错误返回 `invalid_request`。

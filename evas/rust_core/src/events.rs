@@ -1,4 +1,5 @@
 //! Bound affine event model. State is separate from electrical unknowns.
+use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
 use crate::settlement_bounds::Bounds;
 use crate::solver::Circuit;
@@ -408,11 +409,11 @@ impl EventModel {
         &self,
         events: &[usize],
         inputs: &[f64],
-        before: &[f64],
-        operators: &[f64],
+        before: &[I],
+        operators: &[I],
         voltages: &[f64],
         states: &[f64],
-    ) -> Result<(), Error> {
+    ) -> Result<Vec<I>, Error> {
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(ids, _)| ids == events) {
             *cache = Some((events.to_vec(), Bounds::new(self, events)?));

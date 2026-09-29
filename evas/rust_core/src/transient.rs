@@ -1,5 +1,6 @@
 //! Time advancement around the static solver. Trials never mutate accepted state.
 use crate::events::EventModel;
+use crate::interval::Interval as I;
 use crate::ir::{
     Error, EventRecord, EventTrigger, Request, Response, Solution, TransientTrace, SCHEMA_VERSION,
 };
@@ -11,6 +12,7 @@ use crate::solver::Circuit;
 struct Frame {
     time: f64,
     states: Vec<f64>,
+    state_bounds: Vec<I>,
     solution: Solution,
     circuit: Circuit,
     operators: Operators,
@@ -24,19 +26,36 @@ fn prepare_event(
     events: &[usize],
 ) -> Result<Frame, Error> {
     let mut operators = accepted.operators.clone();
-    operators.advance(time, &accepted.states)?;
+    // No-operator execution retains main's conditional event certificate.
+    // Operator histories must keep the uncertainty in sampled event states.
+    let old_bounds = if model.program.operators.is_empty() {
+        accepted.states.iter().copied().map(I::point).collect()
+    } else {
+        accepted.state_bounds.clone()
+    };
+    operators.advance(time, &accepted.states, &old_bounds, &[])?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let frozen = operators.values(time)?;
-    let (states, circuit, solution) = crate::settlement::prepare(
+    let (states, state_bounds, circuit, solution) = crate::settlement::prepare(
         model,
         events,
         &trajectory.values(time),
         &accepted.states,
         &frozen,
+        &old_bounds,
+        &operators.bounds(time)?,
     )?;
-    operators.advance(time, &states)?;
+    // Equal rounded inputs / equal interval endpoints do not prove that an
+    // uncertain state assignment left the exact operator target unchanged.
+    let changed: Vec<_> = events
+        .iter()
+        .flat_map(|&id| &model.program.events[id].assignments)
+        .map(|a| a.state)
+        .filter(|&s| old_bounds[s] != state_bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
+        .collect();
+    operators.advance(time, &states, &state_bounds, &changed)?;
     if operators.values(time)? != frozen {
         return Err(Error::new(
             "event_consistency",
@@ -46,6 +65,7 @@ fn prepare_event(
     Ok(Frame {
         time,
         states,
+        state_bounds,
         solution,
         circuit,
         operators,
@@ -111,10 +131,21 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
+        state_bounds: initial.iter().copied().map(I::point).collect(),
         states: initial,
         circuit,
         operators,
     };
+    if !model.program.operators.is_empty() {
+        accepted.state_bounds = model.certify(
+            &[],
+            &trajectory.values(0.0),
+            &accepted.state_bounds,
+            &accepted.operators.bounds(0.0)?,
+            &accepted.solution.voltages,
+            &accepted.states,
+        )?;
+    }
     let mut trace = TransientTrace {
         times: trajectory.config.output_times.clone(),
         state_names: model
@@ -240,6 +271,60 @@ mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
 
+    #[test]
+    fn history_accuracy_failure_and_retry_leave_all_bounds_uncommitted() {
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([{
+            "kind":"transition", "input":{"op":"state","state":0},
+            "delay":0,"rise":3,"fall":3,
+            "origin":{"source":"accuracy.va","line":3,"column":1,"instance":"dut"}
+        }]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply", "left":{"op":"affine","constant":-1073741824.0,"terms":[]},
+            "right":{"op":"operator","operator":0}
+        }))
+        .unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-10,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let initial = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        let accepted = prepare_event(&model, &trajectory, &initial, 0.0, &[0]).unwrap();
+        let bounds = accepted.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_event(&model, &trajectory, &accepted, 1.0, &[])
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_eq!(accepted.time, 0.0);
+            assert_eq!(accepted.states, [1.0]);
+            assert_eq!(accepted.state_bounds, [I::ONE]);
+            assert_eq!(accepted.solution.voltages[2], 0.0);
+            assert_eq!(accepted.operators.bounds(1.0).unwrap(), bounds);
+            assert_eq!(accepted.operators.next_breakpoint(0.0), Some(3.0));
+        }
+    }
+
     fn fixture(inconsistent_after_event: bool) -> (EventModel, Trajectory, Frame) {
         // Handwritten IR: y=n, initially n=0. A second independent y=0
         // constraint makes the first event fail its post-update residual.
@@ -279,6 +364,7 @@ mod tests {
         let circuit = model.circuit(&model.initial()).unwrap();
         let frame = Frame {
             time: 0.0,
+            state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),
             solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
             circuit,
@@ -344,6 +430,7 @@ mod tests {
             let circuit = model.circuit(&model.initial()).unwrap();
             let before = Frame {
                 time: 0.0,
+                state_bounds: model.initial().into_iter().map(I::point).collect(),
                 states: model.initial(),
                 solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
                 circuit,
@@ -401,6 +488,7 @@ mod tests {
                 .unwrap();
             let before = Frame {
                 time: 0.0,
+                state_bounds: states.iter().copied().map(I::point).collect(),
                 states,
                 operators,
                 solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
@@ -468,6 +556,7 @@ mod tests {
             .unwrap();
         let before = Frame {
             time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
             states,
             operators,
             solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
@@ -506,6 +595,7 @@ mod tests {
                 let circuit = model.circuit(&model.initial()).unwrap();
                 let before = Frame {
                     time: 0.0,
+                    state_bounds: model.initial().into_iter().map(I::point).collect(),
                     states: model.initial(),
                     operators: Operators::new(
                         &model.program,
@@ -557,6 +647,7 @@ mod tests {
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
             time: 0.0,
+            state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),
             operators: Operators::new(&model.program, &trajectory, &model.driven, &model.initial())
                 .unwrap(),

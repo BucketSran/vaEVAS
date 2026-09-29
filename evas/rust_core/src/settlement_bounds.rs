@@ -1,5 +1,5 @@
-//! Conditional forward-error enclosure of the original binary64 event IR.
-//! Old states, sampled inputs and frozen operator values are parameters.
+//! Forward-error enclosure of the original binary64 event IR.
+//! Sampled inputs are fixed; old states and operator history carry enclosures.
 //! A cached map never freezes a particular operator sample.
 use crate::affine_bounds::{affine, eliminate};
 use crate::events::EventModel;
@@ -129,18 +129,20 @@ impl Bounds {
         &self,
         model: &EventModel,
         inputs: &[f64],
-        before: &[f64],
-        operators: &[f64],
+        before: &[I],
+        operators: &[I],
         voltages: &[f64],
         states: &[f64],
-    ) -> Result<(), Error> {
+    ) -> Result<Vec<I>, Error> {
         let parameters: Vec<_> = inputs
             .iter()
-            .chain(before)
-            .chain(operators)
             .copied()
-            .chain([1.0])
+            .map(I::point)
+            .chain(before.iter().copied())
+            .chain(operators.iter().copied())
+            .chain([I::ONE])
             .collect();
+        let mut state_bounds = Vec::new();
         for (rows, actual, voltage) in
             [(&self.nodes, voltages, true), (&self.states, states, false)]
         {
@@ -148,7 +150,10 @@ impl Bounds {
                 let exact = row
                     .iter()
                     .zip(&parameters)
-                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * I::point(b));
+                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * b);
+                if !voltage {
+                    state_bounds.push(exact);
+                }
                 let integer = !voltage && model.program.states[k].kind == StateKind::Integer;
                 let absolute = if voltage {
                     model.tolerances.absolute
@@ -177,11 +182,16 @@ impl Bounds {
                             model.program.states[k].instance, model.program.states[k].name
                         )
                     };
-                    return Err(Error::new("event_accuracy",format!(
+                    let kind = if model.program.operators.is_empty() {
+                        "event_accuracy"
+                    } else {
+                        "waveform_accuracy"
+                    };
+                    return Err(Error::new(kind,format!(
                         "cannot certify same-time forward error at {name}: bound {:e}, budget {:e}",error.magnitude(),budget.lo)));
                 }
             }
         }
-        Ok(())
+        Ok(state_bounds)
     }
 }

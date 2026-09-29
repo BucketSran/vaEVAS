@@ -11,6 +11,7 @@ use std::collections::BTreeSet;
 enum Runtime {
     Transition {
         input: AffineState,
+        input_bounds: Vec<I>,
         history: Transition,
     },
 }
@@ -59,16 +60,30 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    let input = affine(input, program, &origin.instance)?;
-                    if !input.node_dependencies.is_empty()
-                        || !input.operator_dependencies.is_empty()
+                    // Validate raw state/operator references before interval indexing.
+                    let bound_input = affine(input, program, &origin.instance)?;
+                    if !bound_input.node_dependencies.is_empty()
+                        || !bound_input.operator_dependencies.is_empty()
                     {
                         return Err(Error::new("unsupported_operator", "transition input must be affine in instance state and constants; nesting and voltage inputs are unsupported"));
                     }
+                    let row = crate::affine_bounds::affine(input, program)?;
+                    let input_bounds: Vec<_> = row
+                        [program.nodes.len()..program.nodes.len() + program.states.len()]
+                        .iter()
+                        .copied()
+                        .chain([*row.last().unwrap()])
+                        .collect();
+                    let input = bound_input;
                     let initial = input.value(&[], states)?;
+                    let bounds = input_bounds
+                        .iter()
+                        .zip(states.iter().copied().map(I::point).chain([I::ONE]))
+                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                     entries.push(Runtime::Transition {
                         input,
-                        history: Transition::new(initial, *delay, *rise, *fall)?,
+                        input_bounds,
+                        history: Transition::enclosed(initial, bounds, *delay, *rise, *fall)?,
                     });
                 }
             }
@@ -92,6 +107,15 @@ impl Operators {
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
+        self.entries
+            .iter()
+            .map(|entry| match entry {
+                Runtime::Transition { history, .. } => history.value_bounds(time),
+            })
+            .collect()
     }
 
     pub(crate) fn check_deadline_order(
@@ -127,11 +151,26 @@ impl Operators {
         Ok(())
     }
 
-    pub(crate) fn advance(&mut self, time: f64, states: &[f64]) -> Result<(), Error> {
+    pub(crate) fn advance(
+        &mut self,
+        time: f64,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+    ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
-                Runtime::Transition { input, history } => {
-                    history.advance(time, input.value(&[], states)?)?
+                Runtime::Transition {
+                    input,
+                    input_bounds,
+                    history,
+                } => {
+                    let bounds = input_bounds
+                        .iter()
+                        .zip(bounds.iter().copied().chain([I::ONE]))
+                        .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+                    let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+                    history.advance_enclosed(time, input.value(&[], states)?, bounds, may_change)?
                 }
             }
         }

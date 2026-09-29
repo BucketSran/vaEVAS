@@ -14,6 +14,14 @@ def reference(c):
 
 
 class TransitionChecker(unittest.TestCase):
+    def test_common_grid_requires_each_requested_time(self):
+        c=cases()[0]; rows=reference(c)
+        self.assertEqual(check(c,rows,True)['common_grid_points'],257)
+        del rows[3]
+        self.assertEqual(check(c,rows)['status'],'finite_consistent')
+        with self.assertRaisesRegex(ValueError,'missing common observation time'):
+            check(c,rows,True)
+
     def test_independent_knots_and_reflection(self):
         for c in cases():
             self.assertEqual(check(c,reference(c))['status'],'finite_consistent')
