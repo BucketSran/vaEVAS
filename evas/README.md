@@ -1,6 +1,6 @@
 # EVAS
 
-当前实现为 **EVAS 0.5.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件、离散状态驱动的 `transition` 波形。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.5.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件、离散状态驱动的 `transition` 波形、直接连续 PWL 输入的固定 `absdelay`。尚未替换旧 EVAS 0.8.7。
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 `solve` 的每个样本独立求静态工作点；`transient` 沿物理时间推进，保存实例私有状态。两种入口明确区分。
 
@@ -29,7 +29,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-当前检查包含 **129 项 Python unittest 方法、17 项 Rust 测试**，以及锁定依赖的
+当前检查包含 **144 项 Python unittest 方法、22 项 Rust 测试**，以及锁定依赖的
 离线构建、warnings-as-errors 的 all-targets 检查和格式检查，均通过。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -125,7 +125,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
 | 连续输入与根 | `rust_core/src/pwl.rs` | 校验连续 PWL、求值、识别方向及区间内孤立根 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs` | 校验独立调用点/输入，保存延迟目标队列和边沿历史，提供语义断点与输出值 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿和直接 PWL 历史，提供语义断点与输出值 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -480,7 +480,8 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/transition_pulse.jso
 同刻先推进到期算子，再求用户事件前电压；各用户事件共享前态，准备状态更新后更新算子目标，
 重解电压并验收，最后连同队列/历史/事件记录一起提交。失败或弃步只丢弃候选帧。
 
-`Program.operators` 目前保存 `kind=transition,input,delay,rise,fall,origin`；
+`Program.operators` 保存 `kind=transition,input,delay,rise,fall,origin`，或
+固定延迟的 `kind=abs_delay,input,delay,origin`；
 表达式 `{"op":"operator","operator":0}` 按索引引用调用点。Rust 独立校验身份、参数、
 输入和表达式结构。含任一算子的整个程序保留节点依赖结构，包括其他实例贡献，
 相消、零乘数、除法下溢及原始 IR 的零系数都不能隐藏不支持的依赖。
