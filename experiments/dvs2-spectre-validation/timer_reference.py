@@ -277,11 +277,11 @@ def inspect(rows, c):
                 summary=dict(Counter(r['status'] for r in records)), formal_qualification=False)
 
 
-def build(root,isolate=False):
+def build(root,isolate=False,implementation=IMPLEMENTATION):
     root.mkdir(parents=True, exist_ok=False)
     cases = isolation_specifications() if isolate else specifications()
     dump(root/'conditions.json',cases)
-    dump(root/'contract.json',dict(implementation=IMPLEMENTATION, configurations=len(cases),
+    dump(root/'contract.json',dict(implementation=implementation, configurations=len(cases),
         circuit_layout='isolated-follow-up' if isolate else 'combined-original',
         max_spectre_attempts=len(cases), timeout_s=90, license_timeout_s=30,
         observation_allowance_v=ALLOWANCE, unit_s=UNIT,
@@ -317,7 +317,9 @@ def build(root,isolate=False):
 
 def run_evas(root,kernel):
     verify(root)
-    dump(root/'EVAS_STARTED.json',dict(implementation=IMPLEMENTATION,kernel_sha256=digest(kernel),
+    if (root/'EVAS_STARTED.json').exists(): raise ValueError('use a new run identity')
+    implementation=json.loads((root/'contract.json').read_text())['implementation']
+    dump(root/'EVAS_STARTED.json',dict(implementation=implementation,kernel_sha256=digest(kernel),
         source_sha256={str(p.relative_to(ROOT)):digest(p) for directory,pattern in
                       [(ROOT/'evas/src','*.py'),(ROOT/'evas/rust_core/src','*.rs')] for p in directory.rglob(pattern)}))
     for c in json.loads((root/'conditions.json').read_text()):
@@ -335,6 +337,7 @@ def run_evas(root,kernel):
 
 def run_spectre(root,profile):
     verify(root)
+    if (root/'SPECTRE_STARTED.json').exists(): raise ValueError('use a new run identity')
     c=json.loads(profile.read_text()); binary,scripts=c['spectre'],c['setup_scripts']
     if any(not re.fullmatch(r'/[A-Za-z0-9_./-]+',p) for p in [binary,*scripts]):
         raise ValueError('unsupported tool path')
@@ -405,9 +408,10 @@ if __name__=='__main__':
     p.add_argument('--kernel',type=Path); p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path)
     p.add_argument('--backends',nargs='+',choices=['evas','spectre'],default=['evas','spectre'])
     p.add_argument('--isolate',action='store_true',help='Freeze follow-up groups; does not replace original cases')
+    p.add_argument('--implementation',default=IMPLEMENTATION,help='Source revision declared when freezing a new comparison')
     p.add_argument('--frozen-source-root',type=Path,help='Explicit new-checker reanalysis; verify original sources here')
     a=p.parse_args()
-    if a.action=='build': build(a.root,a.isolate)
+    if a.action=='build': build(a.root,a.isolate,a.implementation)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': run_spectre(a.root,a.spectre_profile)
     else: analyze(a.root,a.output,a.backends,a.frozen_source_root)
