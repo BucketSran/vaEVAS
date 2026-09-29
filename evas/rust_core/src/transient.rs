@@ -271,6 +271,169 @@ mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
 
+    fn idt_fixture(
+        clamp: bool,
+        gain: f64,
+        tolerances: Tolerances,
+    ) -> (EventModel, Trajectory, Frame) {
+        let (original, _, _) = fixture(clamp);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([{
+            "kind":"idt", "input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+            "ic":0, "origin":{"source":"rollback.va","line":3,"column":1,"instance":"dut"}
+        }]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply", "left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"add", "left":{"op":"state","state":0},
+                "right":{"op":"multiply", "left":{"op":"affine","constant":gain,"terms":[]},
+                    "right":{"op":"operator","operator":0}}}
+        }))
+        .unwrap();
+        program.events[0].trigger = EventTrigger::Timer {
+            start: 1.0,
+            period: 1.0,
+            time_tolerance: 0.001,
+            enabled: true,
+        };
+        let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
+                output_times: vec![0.0, 3.0],
+                stop: 3.0,
+                max_step: 3.0,
+            },
+            1,
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let frame = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+            operators,
+        };
+        (model, trajectory, frame)
+    }
+
+    fn assert_initial_idt_frame(frame: &Frame, history_bounds: &[I]) {
+        assert_eq!(frame.time, 0.0);
+        assert_eq!(frame.states, [0.0]);
+        assert_eq!(frame.state_bounds, [I::ZERO]);
+        assert_eq!(frame.solution.voltages, [0.0, 0.0, 0.0]);
+        assert_eq!(
+            frame.circuit.solve(&[0.0]).unwrap().voltages,
+            frame.solution.voltages
+        );
+        assert_eq!(frame.operators.values(0.0).unwrap(), [0.0]);
+        assert_eq!(frame.operators.values(1.0).unwrap(), [1.0 / 6.0]);
+        assert_eq!(frame.operators.bounds(1.0).unwrap(), history_bounds);
+        assert_eq!(frame.operators.next_breakpoint(0.0), Some(3.0));
+    }
+
+    #[test]
+    fn idt_failed_certification_preserves_frame_and_same_time_retry_uses_budget() {
+        let (mut model, trajectory, before) = idt_fixture(
+            false,
+            1073741824.0,
+            Tolerances {
+                absolute: 1e-10,
+                relative: 0.0,
+            },
+        );
+        let bounds = before.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_batch(&model, &trajectory, &before, 1.0, &[0])
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_initial_idt_frame(&before, &bounds);
+        }
+        // Same model/cache, accepted state and time; a separately requested
+        // looser budget permits a fresh candidate. No stale failed sample.
+        model.tolerances.absolute = 1e-6;
+        let (discarded, pending) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(discarded.states, [1.0]);
+        assert_eq!(pending.len(), 1);
+        drop(discarded);
+        assert_initial_idt_frame(&before, &bounds);
+        let (next, pending) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(next.states, [1.0]);
+        assert_eq!(next.solution.voltages[2], 1.0 + 1073741824.0 / 6.0);
+        assert_eq!(next.operators.bounds(1.0).unwrap(), bounds);
+        assert_eq!(pending.len(), 1);
+        let (second, _) = prepare_batch(&model, &trajectory, &next, 2.0, &[0]).unwrap();
+        assert_eq!(second.states, [2.0]);
+    }
+
+    #[test]
+    fn idt_residual_failure_and_successful_discard_never_change_accepted_history() {
+        for clamp in [false, true] {
+            let (model, trajectory, before) = idt_fixture(clamp, 1.0, Tolerances::default());
+            let bounds = before.operators.bounds(1.0).unwrap();
+            for _ in 0..2 {
+                let trial = prepare_batch(&model, &trajectory, &before, 1.0, &[0]);
+                if clamp {
+                    assert_eq!(trial.err().unwrap().kind, "residual_failure");
+                } else {
+                    let (next, records) = trial.unwrap();
+                    assert_eq!(next.states, [1.0]);
+                    assert_eq!(records.len(), 1);
+                    assert_eq!(next.solution.voltages[2], 1.0 + 1.0 / 6.0);
+                }
+                assert_initial_idt_frame(&before, &bounds);
+            }
+        }
+    }
+
+    #[test]
+    fn idt_corrected_input_definition_retries_same_time_with_cached_certificate() {
+        let (model, trajectory, before) = idt_fixture(false, 1.0, Tolerances::default());
+        let bounds = before.operators.bounds(1.0).unwrap();
+        let (first, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(first.solution.voltages[2], 1.0 + 1.0 / 6.0);
+        // The complete source is immutable within a request. Correcting it
+        // rebinds the analytic history at the accepted initial frame; it does
+        // not reuse the old Operators merely because the query time matches.
+        let mut config = trajectory.config.clone();
+        config.pwl[0][1][1] = 2.0;
+        let corrected_trajectory = Trajectory::new(config, 1).unwrap();
+        let operators = Operators::new(
+            &model.program,
+            &corrected_trajectory,
+            &model.driven,
+            &before.states,
+        )
+        .unwrap();
+        let circuit = model
+            .circuit_with(&before.states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let corrected = Frame {
+            time: 0.0,
+            states: before.states.clone(),
+            state_bounds: before.state_bounds.clone(),
+            solution: circuit.solve(&corrected_trajectory.values(0.0)).unwrap(),
+            circuit,
+            operators,
+        };
+        let (second, _) =
+            prepare_batch(&model, &corrected_trajectory, &corrected, 1.0, &[0]).unwrap();
+        assert_eq!(second.solution.voltages[2], 1.0 + 1.0 / 3.0);
+        assert_eq!(second.states, [1.0]);
+        let (retry, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(retry.solution.voltages, first.solution.voltages);
+        assert_eq!(retry.state_bounds, first.state_bounds);
+        assert_initial_idt_frame(&before, &bounds);
+    }
+
     #[test]
     fn history_accuracy_failure_and_retry_leave_all_bounds_uncommitted() {
         let (original, trajectory, _) = fixture(false);
