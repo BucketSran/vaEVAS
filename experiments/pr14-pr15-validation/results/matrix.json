@@ -1,0 +1,2606 @@
+{
+  "summary": {
+    "spectre": {
+      "base": {
+        "observations_within_targets": 31
+      },
+      "fine": {
+        "observations_within_targets": 31
+      }
+    },
+    "evas": {
+      "base": {
+        "compile_rejected": 15,
+        "observations_within_targets": 13,
+        "kernel_rejected": 3
+      },
+      "fine": {
+        "compile_rejected": 15,
+        "observations_within_targets": 13,
+        "kernel_rejected": 3
+      }
+    },
+    "openvaf_ngspice": {
+      "base": {
+        "observations_within_targets": 16,
+        "observed_violation": 5,
+        "compile_failed": 9,
+        "runtime_timeout": 1
+      },
+      "fine": {
+        "observations_within_targets": 16,
+        "observed_violation": 5,
+        "compile_failed": 9,
+        "runtime_timeout": 1
+      }
+    },
+    "gnucap": {
+      "base": {
+        "observations_within_targets": 17,
+        "observed_violation": 12,
+        "compile_failed": 2
+      },
+      "fine": {
+        "observations_within_targets": 16,
+        "observed_violation": 13,
+        "compile_failed": 2
+      }
+    }
+  },
+  "records": [
+    {
+      "backend": "spectre",
+      "condition": "v1-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "spectre",
+      "condition": "v1-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "evas",
+      "condition": "v1-main",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v1_01:11:15: unsupported or invalid token '> 0.875) y = 0.875;\\n'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v1-main",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v1_01:11:15: unsupported or invalid token '> 0.875) y = 0.875;\\n'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v1-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4017
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v1-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40017
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v1-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v1-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-reference-zero",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-reference-zero",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-reference-zero",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-reference-zero",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-reference-zero",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-reference-zero",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-reference-zero",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-reference-zero",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-supply-fixed",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-supply-fixed",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-supply-fixed",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-supply-fixed",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-supply-fixed",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-supply-fixed",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-supply-fixed",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-supply-fixed",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-input-common-mode",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v2-input-common-mode",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-input-common-mode",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v2-input-common-mode",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-input-common-mode",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v2-input-common-mode",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-input-common-mode",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v2-input-common-mode",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4006
+    },
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40006
+    },
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_cross: a state may be written by only one event block in its instance",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_cross: a state may be written by only one event block in its instance",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4011
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40011
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4109
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40109
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v4_01:18:30: unsupported or invalid token '>= 0.5)\\n            '",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v4_01:18:30: unsupported or invalid token '>= 0.5)\\n            '",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4102
+    },
+    {
+      "backend": "spectre",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40102
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v4_01:18:30: unsupported or invalid token '>= 0.5)\\n            '",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v4_01:18:30: unsupported or invalid token '>= 0.5)\\n            '",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c1",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v4-c1",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "evas",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "runtime_timeout",
+      "status": "runtime_timeout",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "runtime_timeout",
+      "status": "runtime_timeout",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v5-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v5-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v6-standard",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4009
+    },
+    {
+      "backend": "spectre",
+      "condition": "v6-standard",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40007
+    },
+    {
+      "backend": "evas",
+      "condition": "v6-standard",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v6_01_standard:10:51: unsupported or invalid token \"'{1.0}, '{1.0, 0.5e-\"",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v6-standard",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v6_01_standard:10:51: unsupported or invalid token \"'{1.0}, '{1.0, 0.5e-\"",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v6-standard",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4028
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v6-standard",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40028
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v6-standard",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v6-standard",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-a-half",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4002
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-linear-a-half",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40002
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-a-half",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-linear-a-half",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-a-half",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-linear-a-half",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-a-half",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-linear-a-half",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4003
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40003
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "base",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_transient: polynomial transient equations are not supported",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "fine",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_transient: polynomial transient equations are not supported",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4017
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40017
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-nonlinear-0.5",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4009
+    },
+    {
+      "backend": "spectre",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40009
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "base",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_transient: polynomial transient equations are not supported",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "fine",
+      "execution_status": "kernel_rejected",
+      "status": "kernel_rejected",
+      "reason": "unsupported_transient: polynomial transient equations are not supported",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4017
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40017
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "v7-nonlinear-2.0",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3034
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30031
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 20997
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 104602
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-aligned",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-shifted",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3036
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-shifted",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30032
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-shifted",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-shifted",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-shifted",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 20997
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-shifted",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 104603
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-shifted",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-shifted",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-slow",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3019
+    },
+    {
+      "backend": "spectre",
+      "condition": "e1-slow",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30019
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-slow",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "evas",
+      "condition": "e1-slow",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-slow",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 20999
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e1-slow",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 104611
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-slow",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 3001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e1-slow",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 30001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-low",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4114
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-low",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40114
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-low",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-low",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-low",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-low",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-low",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-low",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-clock-high",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4126
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-clock-high",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40126
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-clock-high",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-clock-high",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-clock-high",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-clock-high",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-clock-high",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-clock-high",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-reset-high",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4126
+    },
+    {
+      "backend": "spectre",
+      "condition": "e2-reset-high",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40126
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-reset-high",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "e2-reset-high",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-reset-high",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "e2-reset-high",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-reset-high",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "e2-reset-high",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4170
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40170
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-main",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-main",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-main",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-main",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4170
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40170
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-swapped",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-swapped",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-swapped",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-swapped",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-swapped",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-swapped",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-no-reset-a",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4152
+    },
+    {
+      "backend": "spectre",
+      "condition": "c1-no-reset-a",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40152
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-no-reset-a",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "c1-no-reset-a",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v4_02:16:30: unsupported or invalid token '>= 0.5) held = initi'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-no-reset-a",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c1-no-reset-a",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-no-reset-a",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c1-no-reset-a",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "c2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "z": 1.742563052464785e-07
+      },
+      "sample_count": 4073
+    },
+    {
+      "backend": "spectre",
+      "condition": "c2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "z": 1.7469034413464257e-09
+      },
+      "sample_count": 40073
+    },
+    {
+      "backend": "evas",
+      "condition": "c2-main",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v6_01_standard:10:51: unsupported or invalid token \"'{1.0}, '{1.0, 0.5e-\"",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "c2-main",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "d2_v6_01_standard:10:51: unsupported or invalid token \"'{1.0}, '{1.0, 0.5e-\"",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c2-main",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "c2-main",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c2-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "z": 3.678822869945808e-08
+      },
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "c2-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": {
+        "z": 3.681486920870114e-10
+      },
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "d1-free",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4004
+    },
+    {
+      "backend": "spectre",
+      "condition": "d1-free",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40004
+    },
+    {
+      "backend": "evas",
+      "condition": "d1-free",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_02:14:26: call 'idt' is not supported in this slice",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "d1-free",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_02:14:26: call 'idt' is not supported in this slice",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d1-free",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d1-free",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d1-free",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d1-free",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "d1-reset",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4040
+    },
+    {
+      "backend": "spectre",
+      "condition": "d1-reset",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40036
+    },
+    {
+      "backend": "evas",
+      "condition": "d1-reset",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_02:14:26: call 'idt' is not supported in this slice",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "d1-reset",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_02:14:26: call 'idt' is not supported in this slice",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d1-reset",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4020
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d1-reset",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40020
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d1-reset",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d1-reset",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observed_violation",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "d2-constant",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 1.687538997430238e-14,
+        "wrapped": 3.2751579226442118e-15,
+        "vout": 2.1710391706619703e-07
+      },
+      "sample_count": 4005
+    },
+    {
+      "backend": "spectre",
+      "condition": "d2-constant",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 1.617372902273928e-12,
+        "wrapped": 1.517674874662589e-13,
+        "vout": 2.1704688046852993e-09
+      },
+      "sample_count": 40004
+    },
+    {
+      "backend": "evas",
+      "condition": "d2-constant",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_03:15:36: unsupported or invalid token '`M_PI*phase);\\n    en'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "d2-constant",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_03:15:36: unsupported or invalid token '`M_PI*phase);\\n    en'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d2-constant",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 2.509104035652854e-13,
+        "wrapped": 2.509104035652854e-13,
+        "vout": 3.947837766027362e-06
+      },
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d2-constant",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 1.049826892085548e-12,
+        "wrapped": 1.049826892085548e-12,
+        "vout": 3.947841731299917e-08
+      },
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d2-constant",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d2-constant",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "spectre",
+      "condition": "d2-chirp",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 3.44414438302465e-07,
+        "wrapped": 3.444143026332114e-07,
+        "vout": 1.7310101268035172e-06
+      },
+      "sample_count": 4005
+    },
+    {
+      "backend": "spectre",
+      "condition": "d2-chirp",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 4.226745176083568e-09,
+        "wrapped": 4.226555772035567e-09,
+        "vout": 2.124496270117064e-08
+      },
+      "sample_count": 40004
+    },
+    {
+      "backend": "evas",
+      "condition": "d2-chirp",
+      "profile": "base",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_03:15:36: unsupported or invalid token '`M_PI*phase);\\n    en'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "evas",
+      "condition": "d2-chirp",
+      "profile": "fine",
+      "execution_status": "compile_rejected",
+      "status": "compile_rejected",
+      "reason": "n_v6_03:15:36: unsupported or invalid token '`M_PI*phase);\\n    en'",
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d2-chirp",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 2.5000057579660506e-11,
+        "wrapped": 2.5000002068509275e-11,
+        "vout": 6.231427761238528e-06
+      },
+      "sample_count": 4008
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "d2-chirp",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "accumulated": 9.672707079744214e-12,
+        "wrapped": 9.672707079744214e-12,
+        "vout": 3.2593905485711616e-07
+      },
+      "sample_count": 40008
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d2-chirp",
+      "profile": "base",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "gnucap",
+      "condition": "d2-chirp",
+      "profile": "fine",
+      "execution_status": "compile_failed",
+      "status": "compile_failed",
+      "reason": null,
+      "analytic_max_error": null,
+      "sample_count": null
+    },
+    {
+      "backend": "spectre",
+      "condition": "s1-default",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 8.326672684688674e-16
+      },
+      "sample_count": 4016
+    },
+    {
+      "backend": "spectre",
+      "condition": "s1-default",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 9.43689570931383e-16
+      },
+      "sample_count": 40016
+    },
+    {
+      "backend": "evas",
+      "condition": "s1-default",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 5.551115123125783e-16
+      },
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "s1-default",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 5.551115123125783e-16
+      },
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "s1-default",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 3.885780586188048e-16
+      },
+      "sample_count": 4017
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "s1-default",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 4.996003610813204e-16
+      },
+      "sample_count": 40017
+    },
+    {
+      "backend": "gnucap",
+      "condition": "s1-default",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 1.1657341758564144e-15
+      },
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "s1-default",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 1.457167719820518e-15
+      },
+      "sample_count": 40001
+    },
+    {
+      "backend": "spectre",
+      "condition": "s1-override",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 8.326672684688674e-16
+      },
+      "sample_count": 4016
+    },
+    {
+      "backend": "spectre",
+      "condition": "s1-override",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 9.43689570931383e-16
+      },
+      "sample_count": 40016
+    },
+    {
+      "backend": "evas",
+      "condition": "s1-override",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 3.3306690738754696e-16
+      },
+      "sample_count": 4001
+    },
+    {
+      "backend": "evas",
+      "condition": "s1-override",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 4.440892098500626e-16
+      },
+      "sample_count": 40001
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "s1-override",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 4.718447854656915e-16
+      },
+      "sample_count": 4017
+    },
+    {
+      "backend": "openvaf_ngspice",
+      "condition": "s1-override",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 4.718447854656915e-16
+      },
+      "sample_count": 40017
+    },
+    {
+      "backend": "gnucap",
+      "condition": "s1-override",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 1.3877787807814457e-15
+      },
+      "sample_count": 4001
+    },
+    {
+      "backend": "gnucap",
+      "condition": "s1-override",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "status": "observations_within_targets",
+      "reason": null,
+      "analytic_max_error": {
+        "vout": 1.887379141862766e-15
+      },
+      "sample_count": 40001
+    }
+  ],
+  "full_analysis_sha256": "b89e66ab582d7e27607e8a5de365b9f0efe5cd86cfb2710589962c95a1d0df50",
+  "formal_dvs_qualification": "I"
+}
