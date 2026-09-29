@@ -119,9 +119,16 @@ impl Operators {
                         history: Transition::new(initial, *delay, *rise, *fall)?,
                     });
                 }
-                OperatorSpec::Slew { input, rise, fall, origin } => {
+                OperatorSpec::Slew {
+                    input,
+                    rise,
+                    fall,
+                    origin,
+                } => {
                     entries.push(Runtime::Slew(Slew::new(
-                        direct_points(input, program, trajectory, driven, origin)?, *rise, *fall,
+                        direct_points(input, program, trajectory, driven, origin)?,
+                        *rise,
+                        *fall,
                     )?));
                 }
             }

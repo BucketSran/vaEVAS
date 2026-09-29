@@ -17,7 +17,7 @@ from test_affine import KERNEL, instance, model
 
 
 SOURCE = model('V(y,r)<+slew(V(u,r),rise,fall);',
-               'parameter real rise=1,fall=-2;')
+               'parameter real rise=1; parameter real fall=-2;')
 POINTS = {
     'catch': [(0, 0), (2, 4), (8, 4)],
     'reverse': [(0, 0), (2, 4), (4, -4), (8, -4)],
@@ -158,10 +158,11 @@ class SlewContracts(unittest.TestCase):
             [[0, 0], [2, 4], [4, -4], [5.6, -4]],
         ]
         for points in cases:
-            with self.subTest(points=points), self.assertRaises(KernelError) as error:
-                transient(compiled(), {'u': points}, [0, points[-1][0]],
-                          stop=points[-1][0], max_step=20, kernel=KERNEL)
-            self.assertIn('event_resolution', str(error.exception))
+            with self.subTest(points=points):
+                with self.assertRaises(KernelError) as error:
+                    transient(compiled(), {'u': points}, [0, points[-1][0]],
+                              stop=points[-1][0], max_step=20, kernel=KERNEL)
+                self.assertIn('event_resolution', str(error.exception))
 
     def test_raw_ir_cannot_bypass_limits_input_or_reference_checks(self):
         good = compiled().to_dict()
