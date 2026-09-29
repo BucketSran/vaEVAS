@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.1 / IR v6。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文区分已合入与开发检查点；main 0.6.1 / IR v6 已支持 PR13 的限定 transition；absdelay、slew 仍在 PR14/15 开发分支。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
