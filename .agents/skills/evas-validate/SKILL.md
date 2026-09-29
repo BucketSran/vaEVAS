@@ -15,6 +15,11 @@ and [experiment ownership](../../../experiments/README.md), then read
 The implementation and validation assets may live on development branches.
 Confirm which of the entry points below exist in the current checkout; report
 missing prerequisites without inventing commands or switching branches.
+Resolve the affected [capability IDs](../../../evas/docs/CAPABILITIES.md) and the
+claim being checked. Follow [asset identity and retention](../../../AGENTS.md#asset-identity-and-retention)
+and the [receipt fields](../../../experiments/README.md#实验资产与收据). Documentation
+changes only need relevant link/consistency/diff checks; this skill does not add
+a simulator execution requirement to every task.
 
 ## Select the necessary checks
 
@@ -44,6 +49,11 @@ Use a new output directory and run identity; preserve old manifests and raw
 records. Record source/build identity, relevant binaries or images, commands,
 requested and effective settings, and input/output/checker hashes as required by
 the protocol. Mark evidence as reused, reanalyzed, or newly executed.
+Link the original execution when reanalyzing; preserve the earlier verdict and
+explain checker corrections. Label artifacts public, repository-contained, or
+local-only according to actual availability. A checksum without retrievable data
+does not establish public reproducibility. If a shared base changes, rerun only
+affected checks and state which historical evidence is still being reused.
 
 Keep unsupported cases and compile, runtime, timeout, numerical, and
 infrastructure failures visible. Do not remove them from the fixed denominator
@@ -58,3 +68,7 @@ outcomes. State what ran, what failed or was unsupported, evidence paths, and
 what the observations cannot establish. Keep curated summaries according to
 [experiment ownership](../../../experiments/README.md), without tracking raw
 runs or machine-specific configuration.
+Update affected evidence/known-gap cells in the capability register separately
+from implementation and review/release status. Backend differences such as
+same-time event reads stay visible; do not label them LRM violations without a
+supporting contract or silently rewrite the expected answer to match a backend.

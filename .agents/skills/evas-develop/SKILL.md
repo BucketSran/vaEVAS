@@ -20,6 +20,12 @@ build guidance, and the relevant PR checkpoint. Confirm that the checkout
 contains the intended implementation, then inspect affected code and callers.
 Separate current behavior from proposals and historical verification.
 
+Use the stable IDs in the [capability register](../../../evas/docs/CAPABILITIES.md)
+to identify the change and its dependencies. Follow [repository coordination
+policy](../../../AGENTS.md#coordination-and-capability-tracking). Reuse suitable
+in-progress work; when parallel work is authorized, agree file ownership and a
+single owner for shared IR, scheduling and version changes before editing them.
+
 For the requested change, identify accepted inputs, rejected inputs, observable
 results, and compatibility implications. For new semantics, establish an
 independent expected answer using the applicable language specification or
@@ -55,6 +61,11 @@ or event correctness. Preserve the original validation cases and thresholds.
 Update the owning component documentation when behavior or evidence changes;
 keep stage discussion and review history in the PR, preparing text locally when
 publication is outside the task's scope.
+For semantic/numerical work, update the relevant handbook chapter using the
+[feature documentation contract](../../../evas/docs/README.md#feature-documentation-contract):
+behavior, source/assumption distinction, mathematics, numerical method, code map,
+independent evidence and limits. Update only affected capability rows; do not
+promote branch work to merged support or an old run to verification of a new base.
 Report changed behavior, affected modules, observed verification, unsupported
 scope, and remaining risks. Stop at an explicitly requested review boundary;
 otherwise finish the requested implementation and checks without adding a new
