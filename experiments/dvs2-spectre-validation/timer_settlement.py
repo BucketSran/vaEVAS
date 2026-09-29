@@ -143,8 +143,9 @@ def run_evas(root,kernel):
     for c in json.loads((root/'conditions.json').read_text()):
         work=root/c['id']
         try:
-            _,inst,_=design(c)
-            program=compile_sources({p.name:p.read_text() for p in work.glob('*.va')},inst)
+            sources,inst,_=design(c)
+            # Compile only frozen design inputs, never generated files/OS sidecars.
+            program=compile_sources({name:(work/name).read_text() for name in sources},inst)
             result=transient(program,c['inputs'],c['output_times'],stop=c['stop'],max_step=c['maxstep'],
                              kernel=kernel,vabstol=1e-10,reltol=1e-8)
             dump(work/'evas.json',result); print(c['id'],'ok',flush=True)
