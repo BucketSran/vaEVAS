@@ -1,5 +1,66 @@
 # Spectre verification on thu-sui
 
+## PR12 fixed timer comparison
+
+`timer_reference.py` freezes a separate development comparison for EVAS 0.5.0
+implementation `9a25a401`. It does not change the original 31-condition matrix.
+The execution contract is written into each new run's `contract.json`; generated
+VA, Spectre netlists, inputs, observation grids and checker sources are hashed
+before either backend runs. `test_timer_reference.py` supplies independent
+synthetic accept/reject controls, including locally legal values with no common
+event history, missing/duplicate events, future stamps and endpoint windows.
+
+The frozen batch has **12 configurations per backend**: four ordinary circuits
+(two maxsteps, forward/reversed event and instance declarations), six endpoint
+circuits (stop before/at/after the same event, two maxsteps), and two circuits
+with 2,000 periodic events. There are **64 timer probe histories and 24 event
+interaction probes per backend**, not 88 new benchmark conditions. Each
+interaction probe contains two observable event histories. Ordinary probes cover
+positive periods, omitted/zero/negative periods, zero/nonzero constant enables,
+nonzero initialization with `timer(0)`, instance isolation, simultaneous timers
+and events beyond stop. Interactions cover timer/timer and timer/cross before,
+at and after the same nominal time, with voltage-state sampling.
+
+The ordinary time unit is exactly `2^-30 s`; explicit timer tolerance is
+`unit/1024`. Long probes use start `0.13 us`, period `7 ns` and tolerance `1 ps`;
+their nominal answers are exact rationals of the submitted binary64 values.
+Coarse/fine maxsteps are 5/0.5 ns (50/5 ns for long probes). Both backends use
+reltol `1e-8`, vabstol `1e-10 V`; Spectre also uses iabstol `1e-14 A` and
+`traponly`. Spectre exports every accepted point without strobe; EVAS additionally
+uses different output grids in the forward/reversed configurations.
+
+Every exported input and output point is retained. Counts, sampled clocks and
+held data must admit one ordered event history within the independent nominal
+windows. The conditional voltage allowance is `1e-8 V`; this is an assumed
+finite-observation screen, not a measured physical observation-error bound.
+Timer windows are symmetric, cross windows one-sided. Endpoint windows are
+not clipped to stop: an event may remain unobserved if its allowed window extends
+beyond stop. Same-time voltage-state reads are classified against EVAS's
+pre-event-snapshot candidate; a different valid state is reported explicitly,
+not silently accepted as compatibility or labelled an LRM violation.
+
+Budget: at most 12 Spectre circuit attempts in one fresh run, serial, one pinned
+CPU, 90 seconds per attempt including a 30-second license wait, no in-place retry.
+Any changed-input follow-up receives a new identity and preserves the old attempt.
+This comparison cannot establish full timer support, continuous-time accuracy,
+dynamic-parameter semantics, atomic rollback inside Spectre, or a performance
+advantage. The other three timed operators are outside this batch.
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_timer_reference.py' -v
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py build runs/NEW-TIMER
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py evas runs/NEW-TIMER --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py spectre runs/NEW-TIMER --spectre-profile /path/to/private-profile.json
+python3 -B experiments/dvs2-spectre-validation/timer_reference.py check runs/NEW-TIMER --output runs/NEW-TIMER-analysis.json
+```
+
+The Spectre action runs on the configured Linux host. Transfer the frozen inputs
+and the exact checker dependencies to a fresh checkout layout there; preserve
+and verify its returned file manifest before analysis. Private profiles, raw
+waveforms and full logs remain outside Git.
+
+## Original 31-condition comparison
+
 This experiment implements the 16 conditions in the seven
 [new case cards](../../evas/validation/NEXT_CASE_CARDS.md), reruns 14 unchanged
 v1 conditions, and runs a separate standard-array revision of the v1 lowpass
