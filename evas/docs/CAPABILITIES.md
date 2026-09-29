@@ -1,7 +1,7 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-09-29。已合并基线为 `main@50d1116c1728c9c59db3248fadb607187eb0f5c0`，
-EVAS 0.4.6 / IR v4。下列 PR 检查点均未因本表而合并；实际使用还须核对自己的 checkout。
+核对日期：2026-09-29。运行时基线为已合并提交 `50d1116c1728c9c59db3248fadb607187eb0f5c0`，
+EVAS 0.4.6 / IR v4。文档合入不扩大运行时支持范围；实际使用还须核对自己的 checkout。
 PR 可能继续推进，本表结论只对应列出的固定检查点，不能作为最新 PR head 的验证结果。
 具体契约、实现说明和结果各自维护一份。后续改变状态时同时更新日期与身份。
 
@@ -34,12 +34,12 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 
 电流未知量、器件级负载与完整 SPICE 分析不在当前电压域任务的默认范围内；不将它们自动列为必做待办。
 
-## 未合并工作与证据身份
+## 工作与证据身份
 
 | 入口 | 固定检查点与依赖 | 已有证据及边界 |
 | --- | --- | --- |
 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | [4d20fbc](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)，较早静态基线 | 稀疏 LU 已接入该分支；当前 main 仍为稠密。整合后需受影响回归 |
-| [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 文档分支；原数学契约检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
+| [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
 | [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 实现 [9a25a40](https://github.com/BucketSran/vaEVAS/commit/9a25a401aefa29df3472f4fea17878737ebc0b9e)；证据 [dde1ef1](https://github.com/BucketSran/vaEVAS/commit/dde1ef1c4ad6260e417d28a891e7e5b8b5164550) | Spectre 24/24 执行；EVAS 16/24 执行、8 请求拒绝；[收据](https://github.com/BucketSran/vaEVAS/blob/dde1ef1c4ad6260e417d28a891e7e5b8b5164550/experiments/dvs2-spectre-validation/results/timer-0.5.0.json) |
 | [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | [bb01e88](https://github.com/BucketSran/vaEVAS/commit/bb01e88225efb8884cd009ae32ab4e77a6b50d0c)，基于 timer 实现 | 129 Python / 17 Rust 是整分支方法数；新增 15 / 4；未执行专属 Spectre 对照 |
 | [PR14](https://github.com/BucketSran/vaEVAS/pull/14) | [a4b4fbe](https://github.com/BucketSran/vaEVAS/commit/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0)，基于 PR13 | 144 Python / 22 Rust；新增 15 / 5；未执行专属 Spectre 对照 |
