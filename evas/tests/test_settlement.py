@@ -43,14 +43,63 @@ class SettlementContracts(unittest.TestCase):
                 self.assertAlmostEqual(states[1],float(Q(count)/(1-Q(gain))),places=12)
             self.assertEqual(len(r['transient']['events']),2)
 
-    def test_repeated_integer_writes_are_explicitly_unsupported(self):
+    def test_repeated_writes_preserve_statement_order(self):
+        for kind in ['integer','real']:
+            for trigger in ['timer(0.5,0,0.001)','cross(V(u,r)-0.5,+1,0.001,0.001)']:
+                for initial in [0,7]:
+                    for count in [2,3]:
+                        with self.subTest(kind=kind,trigger=trigger,initial=initial,count=count):
+                            actions='n=n+1;'*count
+                            source=model(f'''@(initial_step) n={initial};
+                                @({trigger}) begin {actions} end V(y,r)<+n;''',f'{kind} n;')
+                            r=run_timer(source,stop=1,times=[0,0.5,1])
+                            self.assertEqual(r['transient']['states'],
+                                             [[initial],[initial+count],[initial+count]])
+                            self.assertEqual(len(r['transient']['events']),1)
+
+    def test_repeated_integer_writes_expose_intermediate_values(self):
+        cases=[('n=n+1; tmp=n; n=n+1;', [2,1]),
+               ('n=n+1; n=1+n;', [2,0]),
+               ('tmp=n+1; n=tmp+1;', [2,1]),
+               ('n=n+1; tmp=n+1; n=tmp;', [2,2]),
+               ('n=1; n=2;', [2,0])]
+        for actions,expected in cases:
+            with self.subTest(actions=actions):
+                source=model(f'''@(initial_step) begin n=0; tmp=0; end
+                    @(timer(0.5,0,0.001)) begin {actions} end
+                    V(y,r)<+n; V(z,r)<+tmp;''','integer n,tmp;',
+                    ports='u,y,z,r',directions='input u; output y,z; inout r;')
+                r=run_timer(source,stop=1,times=[0,1],
+                            instances=[instance(connections=dict(u='u',y='y',z='z',r='0'))])
+                self.assertEqual(r['transient']['states'][-1],expected)
+                self.assertEqual([r['solutions'][-1]['voltages'][r['nodes'].index(n)]
+                                  for n in ['y','z']],expected)
+
+    def test_repeated_integer_writes_in_periodic_voltage_feedback(self):
+        # Each event adds two once. s=0.5*s+n gives s=2*n independently.
         source=model('''@(initial_step) begin n=0; s=0; end
-            @(timer(0.5,0,0.001)) begin n=n+1; n=n+1; s=V(y,r); s=0.5*s+n; end
+            @(timer(0.25,0.25,0.001)) begin n=n+1; n=n+1; s=V(y,r); s=0.5*s+n; end
             V(y,r)<+s;''','integer n; real s;')
-        with self.assertRaises(KernelError) as caught:
-            run_timer(source,stop=1,times=[0,1])
-        self.assertEqual(caught.exception.detail['kind'],'unsupported_transient')
-        self.assertIn('repeated integer writes',caught.exception.detail['message'])
+        for step in [1,0.07]:
+            for times in [[0,1],[0,0.25,0.5,0.75,1]]:
+                with self.subTest(step=step,times=times):
+                    r=run_timer(source,stop=1,times=times,step=step)
+                    self.assertEqual(r['transient']['states'],[[int(8*t),int(16*t)] for t in times])
+                    self.assertEqual(len(r['transient']['events']),4)
+                    self.assertEqual(r['solutions'][-1]['voltages'][r['nodes'].index('y')],16)
+
+    def test_repeated_integer_writes_check_each_intermediate_range(self):
+        # A later assignment back into range must not hide an earlier overflow.
+        cases=[(2147483647,'n=n+1; n=n-1;'),
+               (-2147483648,'n=n-1; n=n+1;'),
+               (2147483646,'n=n+1; n=n+1;')]
+        for initial,actions in cases:
+            with self.subTest(initial=initial,actions=actions):
+                source=model(f'''@(initial_step) n={initial};
+                    @(timer(0.5,0,0.001)) begin {actions} end V(y,r)<+n;''','integer n;')
+                with self.assertRaises(KernelError) as caught:
+                    run_timer(source,stop=1,times=[0,1])
+                self.assertEqual(caught.exception.detail['kind'],'state_range')
 
     def test_single_integer_update_and_real_sequence_are_preserved(self):
         source=model('''@(initial_step) begin n=0; s=0; end

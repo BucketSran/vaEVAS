@@ -275,7 +275,6 @@ impl EventModel {
             };
             guards.push(guard);
             let mut body = Vec::new();
-            let mut integer_writes = BTreeSet::new();
             for assignment in &event.assignments {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
@@ -286,12 +285,6 @@ impl EventModel {
                     return Err(Error::new(
                         "unsupported_cross",
                         "a state may be written by only one event block in its instance",
-                    ));
-                }
-                if state.kind == StateKind::Integer && !integer_writes.insert(assignment.state) {
-                    return Err(Error::new(
-                        "unsupported_transient",
-                        "repeated integer writes in one event block are not supported; use a single assignment",
                     ));
                 }
                 writers[assignment.state] = Some(index);
