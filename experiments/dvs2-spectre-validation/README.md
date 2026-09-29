@@ -1,5 +1,24 @@
 # Spectre verification on thu-sui
 
+## 事件检查器的独立校准补充
+
+`test_event_review.py` 对原 E1 三项、E2 三项、C1 三项共 9 个既有条件，使用手算输出
+断点和 `Fraction` 插值构造正控。输入来自冻结条件规范；期望输出不调用 checker 的
+reference、history 或 PWL 辅助函数，也不从 EVAS/Spectre 输出生成。
+手算依据是 E1 上/下沿计数分别乘 .1，以及采样器在复位为真时取初值、否则取
+`.8-.1*t` / `.2+.1*t`，再按原 .01/.025/.04 微秒边沿形成显式输出折线。
+
+负控包含漏/重复/错方向计数、漏采样、初态高电平伪采样、复位期间错采样、
+释放时额外采样、实例串扰及额外有效更新。另检查 ±0.9/1.1 mV 容差两侧，
+以及缺列、非有限值、重复时间、错误时间单位和缺尾。
+重复事件若不改变任何输出，单凭波形不可检出；这类情况要由独立计数探针或内核事件记录验收。
+这些是 checker 校准控制，不增加 31 条件的分母，也不是新后端执行。
+原 builder、checker、DUT 和阈值保持原身份，正式资格仍为 I。
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_event_review.py' -v
+```
+
 ## PR13 transition 0.6.1
 
 实现提交 [`9850450`](https://github.com/BucketSran/vaEVAS/commit/9850450505e7c43a5d62ce6dab6d74dcf65e7cf4)
