@@ -6,14 +6,14 @@ use crate::linear;
 
 struct Evaluation {
     residuals: Vec<f64>,
-    jacobian: Vec<Vec<f64>>,
+    jacobian: Vec<linear::Row>,
     bounds: Vec<f64>,
     row_scales: Vec<f64>,
 }
 
 fn evaluate(
     equations: &[Equation],
-    unknown: &[usize],
+    unknown_columns: &[Option<usize>],
     values: &[f64],
     tolerance: &Tolerances,
 ) -> Result<Evaluation, Error> {
@@ -25,11 +25,11 @@ fn evaluate(
     };
     for eq in equations {
         let lhs = values[eq.positive] - values[eq.negative];
-        let mut sum = expression::Accumulator::new(values.len());
+        let mut sum = expression::Accumulator::new();
         sum.add_node(eq.positive, 1.0, values[eq.positive]);
         sum.add_node(eq.negative, -1.0, values[eq.negative]);
         sum.add_constant(-eq.rhs_constant);
-        for (node, &coefficient) in eq.rhs_terms.iter().enumerate() {
+        for &(node, coefficient) in &eq.rhs_terms {
             sum.add_node(node, -coefficient, values[node]);
         }
         for expr in &eq.nonlinear {
@@ -50,8 +50,19 @@ fn evaluate(
         let residual = evaluated.value;
         let rhs = lhs - residual;
         let bound = tolerance.absolute + tolerance.relative * lhs.abs().max(rhs.abs());
-        let jacobian: Vec<_> = unknown.iter().map(|&n| evaluated.gradient[n]).collect();
-        if !residual.is_finite() || !bound.is_finite() || jacobian.iter().any(|v| !v.is_finite()) {
+        let jacobian: linear::Row = evaluated
+            .gradient
+            .into_iter()
+            .filter_map(|(node, value)| {
+                unknown_columns[node]
+                    .filter(|_| value != 0.0)
+                    .map(|column| (column, value))
+            })
+            .collect();
+        if !residual.is_finite()
+            || !bound.is_finite()
+            || jacobian.iter().any(|(_, v)| !v.is_finite())
+        {
             return Err(Error::new(
                 "nonfinite_arithmetic",
                 format!(
@@ -63,7 +74,7 @@ fn evaluate(
         // Like the linear solver's row scaling, this removes arbitrary local
         // equation gains. Check every row, including redundant constraints.
         // A row independent of unknown voltages retains its physical bound.
-        let scale = jacobian.iter().fold(0.0_f64, |s, v| s.max(v.abs()));
+        let scale = jacobian.iter().fold(0.0_f64, |s, (_, v)| s.max(v.abs()));
         result
             .row_scales
             .push(if scale > 0.0 { scale } else { 1.0 });
@@ -94,6 +105,7 @@ fn merit(residuals: &[f64], bounds: &[f64]) -> f64 {
 pub(crate) fn solve(
     equations: &[Equation],
     unknown: &[usize],
+    unknown_columns: &[Option<usize>],
     mut values: Vec<f64>,
     tolerance: &Tolerances,
 ) -> Result<Solution, Error> {
@@ -104,7 +116,7 @@ pub(crate) fn solve(
             .collect::<Vec<_>>()
             .join(", ")
     };
-    let mut current = evaluate(equations, unknown, &values, tolerance)?;
+    let mut current = evaluate(equations, unknown_columns, &values, tolerance)?;
     for iteration in 0..=80 {
         let ratio = merit(&current.residuals, &current.bounds);
         let scaled_ratio = scaled_merit(&current.residuals, &current.bounds, &current.row_scales);
@@ -190,7 +202,7 @@ pub(crate) fn solve(
                 ));
             }
             if trial.iter().all(|v| v.is_finite()) {
-                if let Ok(candidate) = evaluate(equations, unknown, &trial, tolerance) {
+                if let Ok(candidate) = evaluate(equations, unknown_columns, &trial, tolerance) {
                     // Freeze both row scales and bounds during line search;
                     // changing a trial's weights must not manufacture descent.
                     if scaled_merit(&candidate.residuals, &current.bounds, &current.row_scales)
