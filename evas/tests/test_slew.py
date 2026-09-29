@@ -164,6 +164,24 @@ class SlewContracts(unittest.TestCase):
                               stop=points[-1][0], max_step=20, kernel=KERNEL)
                 self.assertIn('event_resolution', str(error.exception))
 
+    def test_cross_instance_cancellation_cannot_hide_operator_guard_dependency(self):
+        watcher = model('''@(initial_step) n=0;
+            @(cross(V(u,r),1)) n=n+1; V(y,r)<+n;''', 'integer n;')
+        watcher = watcher.replace('module m(', 'module watcher(')
+        for expression in ['V(u,r)-V(u,r)', '0*V(u,r)']:
+            relay = model(f'V(y,r)<+{expression};').replace('module m(', 'module relay(')
+            sources = {'slew.va': SOURCE, 'relay.va': relay, 'watcher.va': watcher}
+            producer = instance('producer', connections=dict(u='u', y='limited', r='0'))
+            bridge = instance('bridge', module='relay', connections=dict(u='limited', y='relay', r='0'))
+            observer = instance('observer', module='watcher', connections=dict(u='relay', y='count', r='0'))
+            for instances in [[producer, bridge, observer], [observer, bridge, producer]]:
+                with self.subTest(expression=expression, order=[i.name for i in instances]):
+                    program = compile_sources(sources, instances)
+                    with self.assertRaises(KernelError) as error:
+                        transient(program, {'u': [[0, 0], [2, 4], [8, 4]]},
+                                  [0, 8], stop=8, max_step=20, kernel=KERNEL)
+                    self.assertIn('unsupported_cross', str(error.exception))
+
     def test_raw_ir_cannot_bypass_limits_input_or_reference_checks(self):
         good = compiled().to_dict()
         mutations = []
