@@ -59,6 +59,16 @@ and the exact checker dependencies to a fresh checkout layout there; preserve
 and verify its returned file manifest before analysis. Private profiles, raw
 waveforms and full logs remain outside Git.
 
+The first combined run revealed an EVAS event-ordering rejection. A separate
+`build ... --isolate` follow-up preserves all four ordinary configurations and
+their probe parameters, but splits each into three circuits: timers (including
+timer/timer interactions), neighboring timer/cross events, and simultaneous
+timer/cross events. It adds at most 12 Spectre attempts under the same per-run
+budget. The original rejection remains in the report. This follow-up is
+development diagnosis after observing the first result, not an unseen test set;
+no acceptance thresholds or EVAS implementation are changed. The first checker
+is reproducible at commit `6aa43ad`; each run retains its exact source hashes.
+
 ## Original 31-condition comparison
 
 This experiment implements the 16 conditions in the seven

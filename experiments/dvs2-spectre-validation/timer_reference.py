@@ -95,6 +95,24 @@ def nominal(p, case):
     return [start+k*period for k in range(count)]
 
 
+def isolation_specifications():
+    """Follow-up keeps rejected combined cases; separates three circuit groups."""
+    cases = []
+    for c in specifications():
+        if c['family'] != 'ordinary':
+            continue
+        for group in ['timers', 'cross_neighbors', 'cross_same']:
+            pairs = [p for p in c['pairs'] if
+                     (p['kind']=='timer' if group=='timers' else
+                      p['kind']=='cross' and ((p['id']=='cross_same') == (group=='cross_same')))]
+            case = dict(c, id=c['id']+'-'+group, family=group,
+                        probes=c['probes'] if group=='timers' else [], pairs=pairs)
+            if group != 'timers':
+                case['inputs'] = {'clock':c['inputs']['clock']}
+            cases.append(case)
+    return cases
+
+
 def sources(c):
     result = {}
     for omitted in [False, True]:
@@ -255,11 +273,12 @@ def inspect(rows, c):
                 summary=dict(Counter(r['status'] for r in records)), formal_qualification=False)
 
 
-def build(root):
+def build(root,isolate=False):
     root.mkdir(parents=True, exist_ok=False)
-    cases = specifications()
+    cases = isolation_specifications() if isolate else specifications()
     dump(root/'conditions.json',cases)
     dump(root/'contract.json',dict(implementation=IMPLEMENTATION, configurations=len(cases),
+        circuit_layout='isolated-follow-up' if isolate else 'combined-original',
         max_spectre_attempts=len(cases), timeout_s=90, license_timeout_s=30,
         observation_allowance_v=ALLOWANCE, unit_s=UNIT,
         semantic_source='Verilog-AMS LRM 2.4 section 5.10.3.3',
@@ -270,7 +289,8 @@ def build(root):
         controls='Coarse/fine maxstep and reversed declarations; EVAS also shifts output grid. Spectre saves all accepted points without strobe.'))
     for c in cases:
         work=root/c['id']; work.mkdir()
-        src=sources(c)
+        used={inst.module+'.va' for inst in instances(c)}
+        src={name:source for name,source in sources(c).items() if name in used}
         for name,source in src.items(): (work/name).write_text(source)
         lines=['simulator lang=spectre', *[f'ahdl_include "{name}"' for name in src]]
         for name,points in c['inputs'].items():
@@ -340,6 +360,10 @@ def analyze(root,output,backends):
             r=dict(configuration=c['id'],family=c['family'],backend=backend)
             try:
                 if backend=='evas':
+                    failure=work/'evas-failure.json'
+                    if failure.exists():
+                        details=json.loads(failure.read_text())
+                        raise ValueError(details['type']+': '+details['message'])
                     path=work/'evas.json'; result=json.loads(path.read_text())
                     rows=[dict(zip(result['nodes'],s['voltages']),time=t) for t,s in zip(result['transient']['times'],result['solutions'])]
                 else:
@@ -360,8 +384,9 @@ if __name__=='__main__':
     p.add_argument('action',choices=['build','evas','spectre','check']); p.add_argument('root',type=Path)
     p.add_argument('--kernel',type=Path); p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path)
     p.add_argument('--backends',nargs='+',choices=['evas','spectre'],default=['evas','spectre'])
+    p.add_argument('--isolate',action='store_true',help='Freeze follow-up groups; does not replace original cases')
     a=p.parse_args()
-    if a.action=='build': build(a.root)
+    if a.action=='build': build(a.root,a.isolate)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': run_spectre(a.root,a.spectre_profile)
     else: analyze(a.root,a.output,a.backends)

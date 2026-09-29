@@ -105,5 +105,18 @@ class TimerReferenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             t.history(rows,c,p,'count_p','stamp_p','sample_p',cross=True)
 
+    def test_isolation_retains_every_original_probe_and_parameter(self):
+        followup=t.isolation_specifications()
+        self.assertEqual(len(followup),12)
+        for c in t.specifications():
+            if c['family']!='ordinary': continue
+            group=[x for x in followup if x['id'].startswith(c['id']+'-')]
+            self.assertEqual([p for x in group for p in x['probes']],c['probes'])
+            self.assertEqual(sorted((p for x in group for p in x['pairs']),key=lambda x:x['id']),
+                             sorted(c['pairs'],key=lambda x:x['id']))
+            for x in group:
+                for key in ['stop','ttol','maxstep','output_times','reverse']:
+                    self.assertEqual(x[key],c[key])
+
 
 if __name__=='__main__': unittest.main()
