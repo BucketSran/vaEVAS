@@ -16,6 +16,7 @@ from test_affine import KERNEL, instance, model
 
 POINTS = [[0.0, -1.0], [4e-9, 1.0], [10e-9, 1.0]]
 SOURCE = model("V(y,r)<+absdelay(V(u,r),tau);", "parameter real tau=3n;")
+DEFAULT_DELAY = 3 * 1e-9  # binary64 product for the explicit SI literal 3n
 
 
 def expected(points, time, delay):
@@ -72,7 +73,7 @@ class AbsDelayContracts(unittest.TestCase):
         points = [[0, -1], [1e-9, 2], [1.125e-9, -2], [2e-9, .5], [10e-9, .5]]
         times = [0, 3.5e-9, 4.0625e-9, 4.5e-9, 7e-9, 10e-9]
         dense = sorted(set(times + [i*.125e-9 for i in range(80)]))
-        answers = [expected(points, t, 3e-9) for t in times]
+        answers = [expected(points, t, DEFAULT_DELAY) for t in times]
         baseline = None
         for grid in [times, dense]:
             for step in [100e-9, .17e-9]:
@@ -94,10 +95,10 @@ class AbsDelayContracts(unittest.TestCase):
         inst = instance(connections=dict(u="u", v="v", y="y", r="r"))
         result = execute_delay(source, instances=[inst], sources=sources, times=times)
         for actual, t in zip(column(result), times):
-            old_r = expected(sources["r"], t, 3e-9)
+            old_r = expected(sources["r"], t, DEFAULT_DELAY)
             answer = (expected(sources["r"], t, 0)
-                      + 2*(expected(sources["u"], t, 3e-9)-old_r)
-                      - .5*(expected(sources["v"], t, 3e-9)-old_r) + .125)
+                      + 2*(expected(sources["u"], t, DEFAULT_DELAY)-old_r)
+                      - .5*(expected(sources["v"], t, DEFAULT_DELAY)-old_r) + .125)
             self.assertAlmostEqual(actual, answer, delta=3e-13)
 
     def test_two_instances_parameters_units_and_order_are_independent(self):
@@ -110,7 +111,7 @@ class AbsDelayContracts(unittest.TestCase):
         for order in [[a, b], [b, a]]:
             result = execute_delay(source, instances=order, times=times)
             rows.append((column(result, "a"), column(result, "b")))
-            for name, tau in [("a", 3e-9), ("b", 1e-9)]:
+            for name, tau in [("a", DEFAULT_DELAY), ("b", 1e-9)]:
                 for actual, t in zip(column(result, name), times):
                     self.assertAlmostEqual(actual, expected(POINTS, t, tau), delta=3e-14)
         self.assertEqual(rows[0], rows[1])
