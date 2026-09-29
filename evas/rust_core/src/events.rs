@@ -287,7 +287,9 @@ impl EventModel {
                         return Err(Error::new("invalid_ir", "invalid cross settings"));
                     }
                     let guard = affine(guard, &program, &event.origin.instance)?;
-                    if !guard.state_dependencies.is_empty() || !guard.operator_dependencies.is_empty() {
+                    if !guard.state_dependencies.is_empty()
+                        || !guard.operator_dependencies.is_empty()
+                    {
                         return Err(Error::new(
                             "unsupported_cross",
                             format!("cross guard depends on state at {}", event.origin.label()),
@@ -457,12 +459,7 @@ impl EventModel {
             let Some(guard) = guard else {
                 continue;
             };
-            if guard
-                .nodes
-                .iter()
-                .zip(&affected)
-                .any(|(c, a)| *c != 0.0 && *a)
-            {
+            if guard.node_dependencies.iter().any(|node| affected[*node]) {
                 return Err(Error::new(
                     "unsupported_cross",
                     format!(

@@ -190,8 +190,9 @@ class EventAccuracy(unittest.TestCase):
                      'integer n; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source)
-        self.assertEqual(caught.exception.detail['kind'],'event_resolution')
-        self.assertIn('independence',caught.exception.detail['message'])
+        # Structural state/operator dependencies now reject before interval bounds.
+        self.assertEqual(caught.exception.detail['kind'],'unsupported_cross')
+        self.assertIn('depend',caught.exception.detail['message'])
 
     def test_inconsistent_redundant_constraints_cannot_define_a_root(self):
         constraint=model('V(y,r)<+V(u,r)+offset;',

@@ -131,7 +131,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 direction, time_tol, expr_tol = settings
                 if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                     raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source),
+                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
                                        int(direction), time_tol, expr_tol)
             else:
                 start = setting(event.arguments[0])
@@ -153,7 +153,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             events.append(Event(trigger, tuple(assignments), origin))
 
         def waveform(expr):
-            value = lower(expr.args[0], symbol, {}, model.source)
+            value = lower(expr.args[0], symbol, {}, model.source, preserve_structure=True)
             settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError("transition settings must be instance constants")

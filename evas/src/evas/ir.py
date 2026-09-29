@@ -1,4 +1,4 @@
-"""Version 5: voltage contributions and bounded affine events with structured local branch identity.
+"""Version 6: voltage contributions and bounded affine events with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 
 @dataclass(frozen=True)

@@ -29,7 +29,7 @@ def run_timer(source=None, *, stop=19, times=None, step=100, instances=None):
 class TimerContracts(unittest.TestCase):
     def test_periodic_independent_count_answers_and_typed_records(self):
         result = run_timer()
-        self.assertEqual(result['schema_version'], 5)
+        self.assertEqual(result['schema_version'], 6)
         self.assertEqual(result['transient']['states'], [[n] for n in [0, 0, 1, 2, 3, 4, 4]])
         self.assertEqual([e['time'] for e in result['transient']['events']], [2, 7, 12, 17])
         for event in result['transient']['events']:

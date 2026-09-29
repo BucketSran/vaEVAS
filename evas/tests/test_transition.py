@@ -55,7 +55,7 @@ class TransitionContracts(unittest.TestCase):
         body = '''@(initial_step) a=0;
           @(timer(2n,4n,1p)) a=1;
           V(y,r)<+transition(a,0,10n,20n);'''
-        result = run_transition(body, [0,6e-9,10e-9,12e-9,14e-9], 14e-9, declarations='real a;')
+        result = run_transition(body, [0,6e-9,10e-9,12e-9,14e-9], 15e-9, declarations='real a;')
         self.assert_waveform(result, [0,.4,.8,1,1])
         self.assertEqual(len(result['transient']['events']), 4)
 
@@ -133,7 +133,7 @@ class TransitionRejections(unittest.TestCase):
         program=compile_transition('@(initial_step) a=0; V(y,r)<+transition(a,0,1n,1n);','real a;')
         with self.assertRaisesRegex(KernelError,'unsupported_analysis'):
             solve(program,['u'],[[0]],kernel=KERNEL)
-        valid=program.to_dict()
+        valid=json.loads(json.dumps(program.to_dict()))
         mutations=[]
         bad=copy.deepcopy(valid); bad['operators'][0]['rise']=0; mutations.append(bad)
         bad=copy.deepcopy(valid); bad['operators'][0]['origin']['instance']='other'; mutations.append(bad)
