@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文区分已合入与开发检查点；main 0.6.1 / IR v6 已支持 PR13 的限定 transition；absdelay、slew 仍在 PR14/15 开发分支。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释 EVAS 0.6.1 / IR v6 的历史算子；transition、absdelay 随 PR13/14 交付，slew 仍为 PR15 候选。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
@@ -115,10 +115,22 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 例如 t=2^54+4、τ=3，在从 2^54 到 2^54+4 的 0→1 斜坡上，数学答案为1/4；
 先舍入 t-τ 可错误得到0。输出采样网格不能作为历史存储。
 
-实现：[absdelay.rs](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/rust_core/src/absdelay.rs)。
-验证：[test_absdelay.py](https://github.com/BucketSran/vaEVAS/blob/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0/evas/tests/test_absdelay.py)
+实现：[absdelay.rs](../rust_core/src/absdelay.rs)。
+验证：[test_absdelay.py](../tests/test_absdelay.py)
 覆盖非零初值、零/长延迟、大时间低位、双实例、网格/步长及结构拒绝。
-不可表示或非有限的移位拐点显式失败；尚未完成 Spectre 对照或通用历史误差界。
+修复后基于 PR13 `9850450`，延迟输出同时返回值和历史区间。源语义拐点并集上的端点 A、B
+包括原始 binary64 PWL 插值与编译后仿射系数的运算区间。若补偿查询为 q_hi+q_lo，段为 [s,e]，
+则局部比例 `F=([q_hi]-[s]+[q_lo])/([e]-[s])`，历史值包含在 `(1-F)A+FB` 中。
+查询扩展用于精确选择源段，不能先把 q_hi+q_lo 合成一个舍入后的绝对时间。
+同刻认证把此区间传过电压网络和后续状态采样，超出预算返回 `waveform_accuracy`。
+
+[test_absdelay_accuracy.py](../tests/test_absdelay_accuracy.py) 用 Fraction 独立检验正延迟、
+初始仿射运算、其他源增加拐点后的插值、网络增益、同刻采样和跨事件误差保留。
+例如 0→1、时长3的输入在延迟1之后的 t=2 为1/3；乘以2^30后的 binary64 误差大于1e-10，
+旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
+这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
+允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
+不可表示或非有限的移位拐点显式失败。[固定检查点专项](https://github.com/BucketSran/vaEVAS/blob/ec3acaa80fd799fd85f24c3d7ae8667982393d8f/experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## slew

@@ -1,3 +1,4 @@
+mod absdelay;
 mod affine_bounds;
 mod assembly;
 mod event_accuracy;
