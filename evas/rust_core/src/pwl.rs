@@ -10,7 +10,82 @@ pub(crate) struct Root {
     ends: [I; 2],
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn candidate(a: I, b: I, time: f64) -> Root {
+        Root {
+            bounds: I {
+                lo: time.next_down(),
+                hi: time.next_up(),
+            },
+            slope: I::ONE,
+            segment: [0.0, 19.0],
+            ends: [a, b],
+        }
+    }
+
+    #[test]
+    fn exact_zero_certificate_does_not_use_rounded_products_or_tolerance() {
+        let mut root = candidate(I::point(-8.0), I::point(11.0), 8.0);
+        root.refine_representable();
+        assert_eq!(root.bounds, I::point(8.0));
+        let mut uncertain = candidate(
+            I {
+                lo: -8.0,
+                hi: (-8.0_f64).next_up(),
+            },
+            I::point(11.0),
+            8.0,
+        );
+        uncertain.refine_representable();
+        assert_ne!(uncertain.bounds.lo, uncertain.bounds.hi);
+        let mut nonrepresentable = candidate(I::point(-1.0), I::point(2.0), 19.0 / 3.0);
+        nonrepresentable.refine_representable();
+        assert_ne!(nonrepresentable.bounds.lo, nonrepresentable.bounds.hi);
+        // Underflowed products must not make a nonzero weighted sum look zero.
+        let tiny = f64::from_bits(1);
+        let mut subnormal = Root {
+            bounds: I { lo: 0.25, hi: 0.5 },
+            slope: I::ONE,
+            segment: [0.0, 1.0],
+            ends: [I::point(-tiny), I::point(2.0 * tiny)],
+        };
+        subnormal.refine_representable();
+        assert_ne!(subnormal.bounds.lo, subnormal.bounds.hi);
+    }
+}
+
 impl Root {
+    /// A rounded quotient may enclose an exactly representable root. Prove it
+    /// from certified endpoint values, never from a residual tolerance. On a
+    /// linear segment g(t)=0 iff a*(t1-t) == -b*(t-t0). Both differences must
+    /// themselves be exact, and equal_products compares full binary products.
+    fn refine_representable(&mut self) {
+        let [a, b] = self.ends;
+        if a.lo != a.hi || b.lo != b.hi {
+            return;
+        }
+        let guess = self.segment[0] + (a.lo / (a.lo - b.lo)) * (self.segment[1] - self.segment[0]);
+        for time in [guess, self.bounds.lo, self.bounds.hi] {
+            if !time.is_finite() || time < self.bounds.lo || time > self.bounds.hi {
+                continue;
+            }
+            let left = I::point(time) - I::point(self.segment[0]);
+            let right = I::point(self.segment[1]) - I::point(time);
+            if left.finite()
+                && right.finite()
+                && left.lo == left.hi
+                && right.lo == right.hi
+                && equal_products(a.lo, right.lo, -b.lo, left.lo)
+            {
+                self.bounds = I::point(time);
+                break;
+            }
+        }
+    }
+
     pub fn accepts(&self, time: f64, ttol: f64, etol: f64) -> bool {
         let delay = I::point(time) - self.bounds;
         let expression_error = self.slope * delay;
@@ -139,8 +214,9 @@ impl Trajectory {
             } else {
                 None
             };
-            if let Some((root, sign)) = crossing {
+            if let Some((mut root, sign)) = crossing {
                 if direction == 0 || direction == sign {
+                    root.refine_representable();
                     result.push(root);
                 }
             }
