@@ -1,5 +1,6 @@
 //! Instance/call-site operator histories. Clone with a candidate frame; never
 //! derive history from output samples or mutate accepted state during a trial.
+use crate::absdelay::AbsDelay;
 use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
@@ -55,6 +56,7 @@ fn direct_points(
 
 #[derive(Clone)]
 enum Runtime {
+    AbsDelay(AbsDelay),
     Transition {
         input: AffineState,
         history: Transition,
@@ -69,8 +71,8 @@ pub(crate) struct Operators {
 impl Operators {
     pub(crate) fn new(
         program: &Program,
-        _trajectory: &Trajectory,
-        _driven: &[String],
+        trajectory: &Trajectory,
+        driven: &[String],
         states: &[f64],
     ) -> Result<Self, Error> {
         let mut identities = BTreeSet::new();
@@ -98,6 +100,14 @@ impl Operators {
                 ));
             }
             match spec {
+                OperatorSpec::AbsDelay {
+                    input,
+                    delay,
+                    origin,
+                } => {
+                    let points = direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::AbsDelay(AbsDelay::new(points, *delay)?));
+                }
                 OperatorSpec::Transition {
                     input,
                     delay,
@@ -126,6 +136,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::AbsDelay(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
             })
             .collect()
@@ -135,6 +146,7 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
+                Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
@@ -149,6 +161,7 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
+                Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
             })
             .collect();
@@ -176,6 +189,7 @@ impl Operators {
     pub(crate) fn advance(&mut self, time: f64, states: &[f64]) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
+                Runtime::AbsDelay(_) => {}
                 Runtime::Transition { input, history } => {
                     history.advance(time, input.value(&[], states)?)?
                 }

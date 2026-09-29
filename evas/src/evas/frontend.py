@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
-                 Origin, Program, State, StateRef, OperatorRef, Transition)
+                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
@@ -49,7 +49,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets["0"] = "0"
         bindings.append((instance, model, nets))
     def contains_operator(expr):
-        return expr.op == "transition" or any(contains_operator(arg) for arg in expr.args)
+        return expr.op in ("transition", "absdelay") or any(contains_operator(arg) for arg in expr.args)
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
@@ -160,16 +160,23 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             events.append(Event(trigger, tuple(assignments), origin))
 
         def waveform(expr):
-            value = lower(expr.args[0], symbol, {}, model.source, preserve_structure=True)
+            value = lower(expr.args[0], symbol, node_ids if expr.op == "absdelay" else {},
+                          model.source, preserve_structure=True)
             settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
-                raise CompileError("transition settings must be instance constants")
-            delay, rise, fall = (v.constant for v in settings)
-            if delay < 0 or rise <= 0 or fall <= 0:
-                raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+                raise CompileError(f"{expr.op} settings must be instance constants")
             origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
             index = len(operators)
-            operators.append(Transition(value, delay, rise, fall, origin))
+            if expr.op == "absdelay":
+                delay = settings[0].constant
+                if delay < 0:
+                    raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
+                operators.append(AbsDelay(value, delay, origin))
+            else:
+                delay, rise, fall = (v.constant for v in settings)
+                if delay < 0 or rise <= 0 or fall <= 0:
+                    raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+                operators.append(Transition(value, delay, rise, fall, origin))
             return OperatorRef(index)
 
         bound_branches = {}

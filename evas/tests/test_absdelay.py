@@ -115,6 +115,29 @@ class AbsDelayContracts(unittest.TestCase):
                     self.assertAlmostEqual(actual, expected(POINTS, t, tau), delta=3e-14)
         self.assertEqual(rows[0], rows[1])
 
+    def test_large_time_queries_preserve_the_exact_local_delay(self):
+        offset = float(2**54)
+        points = [[0, 0], [offset, 0], [offset+4, 1], [offset+8, 1]]
+        times = [0, offset, offset+4, offset+8]
+        for delay in [1, 3]:
+            with self.subTest(delay=delay):
+                result = execute_delay(instances=[instance(parameters={"tau": delay})],
+                                       sources={"u": points}, times=times,
+                                       stop=offset+8, step=offset+8)
+                for actual, t in zip(column(result), times):
+                    self.assertEqual(actual, expected(points, t, delay))
+
+    def test_residual_failure_does_not_return_a_partial_waveform(self):
+        fixed = model("V(y,r)<+0;")
+        delayed = compile_sources({"absdelay.va": SOURCE, "fixed.va": fixed.replace("module m", "module fixed")},
+                                  [instance(), instance("fixed", module="fixed")])
+        with self.assertRaises(KernelError) as error:
+            transient(delayed, {"u": [[0, 0], [4e-9, 1], [10e-9, 1]]}, [0, 10e-9],
+                      stop=10e-9, max_step=100e-9, kernel=KERNEL)
+        self.assertEqual(error.exception.detail["kind"], "residual_failure")
+        # A separate valid retry gets the original nonzero initial history.
+        self.assertEqual(column(execute_delay(times=[0])), [-1])
+
 
 class AbsDelayRejections(unittest.TestCase):
     def test_dynamic_delay_maxdelay_and_implicit_delay_rejected(self):
@@ -128,6 +151,7 @@ class AbsDelayRejections(unittest.TestCase):
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r),1n);", "electrical z;"),
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(0*V(z,r)+V(u,r),1n);", "electrical z;"),
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)-V(z,r)+V(u,r),1n);", "electrical z;"),
+            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)/1e308/1e308+V(u,r),1n);", "electrical z;"),
             model("@(initial_step) q=1; V(y,r)<+absdelay(q,1n);", "real q;"),
             model("V(y,r)<+absdelay(absdelay(V(u,r),1n),1n);"),
             model("V(y,r)<+absdelay(V(u,r)*V(u,r),1n);"),

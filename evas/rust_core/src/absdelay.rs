@@ -3,12 +3,13 @@
 //! The history is the accepted source segment definition, never output samples.
 //! Keeping it immutable also makes a discarded transient candidate a no-op.
 use crate::ir::Error;
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub(crate) struct AbsDelay {
-    points: Vec<(f64, f64)>,
+    points: Arc<[(f64, f64)]>,
     delay: f64,
-    breakpoints: Vec<f64>,
+    breakpoints: Arc<[f64]>,
 }
 
 impl AbsDelay {
@@ -41,9 +42,9 @@ impl AbsDelay {
             ));
         }
         Ok(Self {
-            points,
+            points: points.into(),
             delay,
-            breakpoints,
+            breakpoints: breakpoints.into(),
         })
     }
 
@@ -54,17 +55,30 @@ impl AbsDelay {
                 "absdelay evaluation time must be finite and nonnegative",
             ));
         }
-        let query = (time - self.delay).max(0.0);
-        let index = self.points.partition_point(|(t, _)| *t < query);
+        // Error-free subtraction keeps the low part of the history time. At
+        // t=2^54+4 and delay=3, rounding t-delay first would erase one whole
+        // quarter of a four-unit ramp. Compare the expansion to source knots,
+        // then interpolate using a local offset rather than that rounded time.
+        let (query, remainder) = if time <= self.delay {
+            (0.0, 0.0)
+        } else {
+            let high = time - self.delay;
+            let virtual_delay = time - high;
+            let low = (time - (high + virtual_delay)) + (virtual_delay - self.delay);
+            (high, low)
+        };
+        let index = self
+            .points
+            .partition_point(|(t, _)| *t < query || (*t == query && remainder > 0.0));
         if index == self.points.len() {
             return Ok(self.points.last().unwrap().1);
         }
         let (end, b) = self.points[index];
-        if query == end {
+        if query == end && remainder == 0.0 {
             return Ok(b);
         }
         let (start, a) = self.points[index - 1];
-        let fraction = (query - start) / (end - start);
+        let fraction = ((query - start) + remainder) / (end - start);
         // A convex form avoids overflowing b-a for large opposite values.
         let value = (1.0 - fraction) * a + fraction * b;
         if !value.is_finite() {
@@ -134,6 +148,35 @@ mod tests {
         let other = ramp(1.0);
         assert_eq!(other.value(4.0).unwrap(), 0.5);
         assert_eq!(accepted.value(4.0).unwrap(), -0.5);
+    }
+
+    #[test]
+    fn large_absolute_time_preserves_local_delayed_offset() {
+        let offset = 2.0_f64.powi(54);
+        let delayed = AbsDelay::new(
+            vec![
+                (0.0, 0.0),
+                (offset, 0.0),
+                (offset + 4.0, 1.0),
+                (offset + 8.0, 1.0),
+            ],
+            3.0,
+        )
+        .unwrap();
+        assert_eq!(delayed.value(offset + 4.0).unwrap(), 0.25);
+        // The subtraction rounds up here; retaining its negative remainder
+        // keeps a query just before the knot in the preceding segment.
+        let falling = AbsDelay::new(
+            vec![
+                (0.0, 0.0),
+                (offset, 0.0),
+                (offset + 4.0, 1.0),
+                (offset + 8.0, 0.0),
+            ],
+            1.0,
+        )
+        .unwrap();
+        assert_eq!(falling.value(offset + 4.0).unwrap(), 0.75);
     }
 
     #[test]
