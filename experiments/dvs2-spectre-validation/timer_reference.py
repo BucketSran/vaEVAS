@@ -239,7 +239,11 @@ def inspect(rows, c):
         raise ValueError('invalid time order or output gap')
     for r in rows:
         for name, points in c['inputs'].items():
-            if abs(Q(r[name])-pwl(points,Q(r['time']))) > Q(ALLOWANCE):
+            # PWL sources hold their endpoint values outside the knot domain.
+            # Keep the exported timestamp for coverage/history checks; only the
+            # prescribed source value uses its defined constant extension.
+            time=max(Q(points[0][0]),min(Q(r['time']),Q(points[-1][0])))
+            if abs(Q(r[name])-pwl(points,time)) > Q(ALLOWANCE):
                 raise ValueError('input mismatch')
     records = []
     for p in c['probes']:
@@ -352,8 +356,24 @@ def run_spectre(root,profile):
     dump(root/'FILE_MANIFEST.json',{str(p.relative_to(root)):digest(p) for p in sorted(root.rglob('*')) if p.is_file()})
 
 
-def analyze(root,output,backends):
-    verify(root); records=[]
+def analyze(root,output,backends,frozen_source_root=None):
+    reanalysis=None
+    if frozen_source_root is None:
+        verify(root)
+    else:
+        # Deliberate new-checker analysis: verify both the immutable inputs and
+        # the complete original checker snapshot; report both checker identities.
+        original=json.loads((root/'checker_identity.json').read_text())
+        for directory,manifest in [(root,json.loads((root/'INPUT_MANIFEST.json').read_text())),
+                                   (frozen_source_root,original)]:
+            for rel,h in manifest.items():
+                path=(directory/rel).resolve()
+                if not path.is_relative_to(directory.resolve()) or digest(path)!=h:
+                    raise ValueError('frozen artifact drift: '+rel)
+        reanalysis=dict(original_checker=original,
+                        current_checker={rel:digest(ROOT/rel) for rel in original},
+                        reason='PWL endpoint hold handles text-export rounding; original thresholds and event windows unchanged.')
+    records=[]
     for c in json.loads((root/'conditions.json').read_text()):
         work=root/c['id']
         for backend in backends:
@@ -376,7 +396,7 @@ def analyze(root,output,backends):
             except (FileNotFoundError,ValueError,KeyError) as error:
                 r.update(status='failed_or_missing',reason=str(error))
             records.append(r)
-    dump(output,dict(records=records,summary=dict(Counter(r['status'] for r in records))))
+    dump(output,dict(records=records,summary=dict(Counter(r['status'] for r in records)),reanalysis=reanalysis))
 
 
 if __name__=='__main__':
@@ -385,8 +405,9 @@ if __name__=='__main__':
     p.add_argument('--kernel',type=Path); p.add_argument('--spectre-profile',type=Path); p.add_argument('--output',type=Path)
     p.add_argument('--backends',nargs='+',choices=['evas','spectre'],default=['evas','spectre'])
     p.add_argument('--isolate',action='store_true',help='Freeze follow-up groups; does not replace original cases')
+    p.add_argument('--frozen-source-root',type=Path,help='Explicit new-checker reanalysis; verify original sources here')
     a=p.parse_args()
     if a.action=='build': build(a.root,a.isolate)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': run_spectre(a.root,a.spectre_profile)
-    else: analyze(a.root,a.output,a.backends)
+    else: analyze(a.root,a.output,a.backends,a.frozen_source_root)

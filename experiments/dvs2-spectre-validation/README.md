@@ -69,6 +69,18 @@ development diagnosis after observing the first result, not an unseen test set;
 no acceptance thresholds or EVAS implementation are changed. The first checker
 is reproducible at commit `6aa43ad`; each run retains its exact source hashes.
 
+Run `-01` initially classified two Spectre endpoint observations as invalid:
+PSF printed the final time one binary64 ULP above the requested stop, and the
+input evaluator rejected this outside its closed knot domain. The corrected
+adapter applies the PWL source's constant endpoint extension while preserving
+the raw timestamp, original coverage gate, voltage allowance and event windows.
+A calibration accepts this rounding case but rejects wrong input values and
+out-of-range final times. Reanalysis is explicit: `check` with
+`--frozen-source-root /path/to/extracted-original-input-archive` verifies the
+original source snapshot and records both original and current checker hashes.
+The original analysis remains archived; this is a checker correction, not a
+new Spectre execution or a changed event acceptance target.
+
 ## Original 31-condition comparison
 
 This experiment implements the 16 conditions in the seven

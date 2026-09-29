@@ -118,5 +118,20 @@ class TimerReferenceTests(unittest.TestCase):
                 for key in ['stop','ttol','maxstep','output_times','reverse']:
                     self.assertEqual(x[key],c[key])
 
+    def test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates(self):
+        import math
+        c=next(c for c in t.specifications() if c['id']=='endpoint-at-coarse')
+        c['maxstep']=2*c['stop']
+        rows=[dict(time=0,clock=0,data=0.25,count_endpoint=0,stamp_endpoint=-1,sample_endpoint=-3),
+              dict(time=math.nextafter(c['stop'],math.inf),clock=16,data=32.25,
+                   count_endpoint=1,stamp_endpoint=16,sample_endpoint=32.25)]
+        exported=rows[-1]['time']
+        self.assertEqual(t.inspect(rows,c)['records'][0]['status'],'finite_consistent')
+        self.assertEqual(rows[-1]['time'],exported)
+        rows[-1]['clock']+=1e-4
+        with self.assertRaisesRegex(ValueError,'input mismatch'): t.inspect(rows,c)
+        rows[-1]['clock']=16; rows[-1]['time']=c['stop']+1e-17
+        with self.assertRaisesRegex(ValueError,'incomplete time coverage'): t.inspect(rows,c)
+
 
 if __name__=='__main__': unittest.main()
