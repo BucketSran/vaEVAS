@@ -8,6 +8,47 @@ from test_timed_composition import SOURCE, exact
 
 
 class SparseTransientContracts(unittest.TestCase):
+    def test_idt_sparse_chain_matches_exact_integrals_and_preserves_sampling(self):
+        # 40 unknowns / 79 coefficients select sparse LU. Each call has its own
+        # input gain, offset and IC; the integral input remains directly driven.
+        source = model('V(y,r)<+idt(g*V(u,r)+b,ic)+.25*V(v,r);',
+                       'parameter real g=1; parameter real b=0; parameter real ic=0;',
+                       ports='u,v,y,r', directions='input u,v; output y; inout r;')
+        cells = [instance(f'cell{i:02}', connections=dict(u='u',
+                     v=f'y{i-1}' if i else '0', y=f'y{i}', r='0'),
+                     parameters=dict(g=[1,2,-1][i%3], b=(i%3)/8, ic=(i%5)/8))
+                 for i in range(40)]
+        anchors = [0,1,2,2.1,3]
+        baseline = None
+        for order, step, times in [(cells,3,anchors),
+                                   (cells[::-1],.125,sorted(set(anchors+[i/8 for i in range(25)])))]:
+            program = compile_sources({'cell.va': source}, order)
+            result = transient(program, {'u': [[0,-1],[1,-1],[3,3]]}, times,
+                               stop=3, max_step=step, vabstol=1e-10, reltol=0, kernel=KERNEL)
+            by_time = {}
+            for time, solution in zip(times,result['solutions']):
+                volts = dict(zip(result['nodes'],solution['voltages']))
+                by_time[time] = [volts[f'y{i}'] for i in range(40)]
+                t = F(time)
+                # u=-1 until t=1, then u=-1+2(t-1). Exact original-PWL area.
+                area = -t if t <= 1 else -1-(t-1)+(t-1)**2
+                expected = F(0)
+                for i, actual in enumerate(by_time[time]):
+                    expected = F(i%5,8)+[1,2,-1][i%3]*area+F(i%3,8)*t+expected/4
+                    self.assertLessEqual(abs(F(actual)-expected), F(1e-10))
+                self.assertLessEqual(solution['max_residual_ratio'], 1)
+            chosen = [by_time[t] for t in anchors]
+            if baseline is None:
+                baseline = chosen
+            else:
+                self.assertEqual(chosen, baseline)
+        # At this tighter budget the original-relation residual gate rejects
+        # before history certification; do not mislabel it as a history test.
+        with self.assertRaises(KernelError) as caught:
+            transient(program, {'u': [[0,-1],[1,-1],[3,3]]}, [0,2.1,3], stop=3,
+                      max_step=3, vabstol=1e-20, reltol=0, kernel=KERNEL)
+        self.assertEqual(caught.exception.detail['kind'], 'residual_failure')
+
     def test_internal_cross_chain_preserves_root_and_original_relations(self):
         count = 40
         cell = model('V(y,r)<+V(u,r)+.25*V(v,r);', ports='u,v,y,r',
