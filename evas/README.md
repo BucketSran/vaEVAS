@@ -1,6 +1,6 @@
 # EVAS
 
-当前实现为 **EVAS 0.5.0，IR v5**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行。尚未替换旧 EVAS 0.8.7。
+当前实现为 **EVAS 0.5.1，IR v6**：静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件、离散状态驱动的 `transition` 波形。尚未替换旧 EVAS 0.8.7。
 从限定的 Verilog-A 源码生成贡献方程，再由 Rust 同时求解节点电压，允许自反馈与实例间反馈。
 `solve` 的每个样本独立求静态工作点；`transient` 沿物理时间推进，保存实例私有状态。两种入口明确区分。
 
@@ -29,7 +29,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-当前检查包含 **114 项 Python unittest 方法、13 项 Rust 测试**，以及锁定依赖的
+当前检查包含 **129 项 Python unittest 方法、16 项 Rust 测试**，以及锁定依赖的
 离线构建、warnings-as-errors 的 all-targets 检查和格式检查，均通过。
 其中 26 项 Python 方法覆盖事件时间/方向/次数、时移/斜率/步长变化、初始化、
 内部节点触发、实例隔离、同时事件、孤立触零、零平台/停止点、容差别名及拒绝边界；3 项 Rust 测试覆盖
@@ -96,6 +96,14 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 其余 20 条仍明确拒绝；此回放验证 IR 迁移后的静态兼容性，不能证明 timer 语义。
 本轮没有新执行 Spectre，也没有新增原 31 条件或授予 timer 跨后端资格。
 
+0.5.1 新增 15 项 Python transition 方法和 3 项 Rust 算子/事务测试，覆盖独立 TR 边沿、
+反向/延长/重复/相等目标、下降反射、待生效窄脉冲、双调用点/双实例、timer(0)、
+同刻目标、网格变化、失败后队列重试、原始 IR 和跨实例依赖拒绝。
+另检查大绝对时间的分辨率失败、相邻未决期限拒绝及临近终点严格不越过目标。
+这些是本地开发检查；未执行 Spectre，也未新增或重定原 31 条件的资格/通过数量。
+原 D2-V5-01 的 timer 尚无显式 time_tol，仍不在当前 timer 切片内。
+
+
 ## 模块与接口
 
 | 模块 | 当前文件 | 唯一职责 |
@@ -114,6 +122,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
 | 连续输入与根 | `rust_core/src/pwl.rs` | 校验连续 PWL、求值、识别方向及区间内孤立根 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs` | 校验独立调用点/输入，保存延迟目标队列和边沿历史，提供语义断点与输出值 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -185,7 +194,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 
 当前拒绝事件块之外的过程赋值、条件、循环、层次实例、数组、命名支路、电流贡献、
-`pow` 之外的数学函数、未列明的事件、动态算子、其他预处理指令、参数范围和未知语法。
+`pow` 之外的数学函数、未列明的事件和动态算子、其他预处理指令、参数范围和未知语法。
 支持集按语法和语义决定，运行时代码不读取验证集，也不识别模型/条件名称。
 两个不同的本地贡献支路因端口连接而变成同一节点对时，本批显式拒绝，
 避免把未经验证的别名语义解释成相加。后续扩展需单独建立契约。
@@ -211,7 +220,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 ## IR 与贡献契约
 
-IR v5 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+IR v6 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`。Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
@@ -242,21 +251,21 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 `(1-k)*(V(y)-V(r)) = V(u)-V(r)`。
 这两种写法使用同一组装与求解入口。
 
-### v1/v2/v3/v4 → v5 迁移
+### v1/v2/v3/v4/v5 → v6 迁移
 
-Python 包与 Rust 内核一起升级到 0.5.0；Program 和成功 Response 的
-`schema_version` 均为 5。Python 适配器拒绝其他响应版本。
-内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4 或未知版本返回
-`unsupported_ir_version`；缺失/错误类型及 v5 格式错误返回 `invalid_request`。
+Python 包与 Rust 内核一起升级到 0.5.1；Program 和成功 Response 的
+`schema_version` 均为 6。Python 适配器拒绝其他响应版本。
+内核 CLI 在解码贡献字段前检查整数版本号：v1/v2/v3/v4/v5 或未知版本返回
+`unsupported_ir_version`；缺失/错误类型及 v6 格式错误返回 `invalid_request`。
 Rust 库的构造入口也检查版本。
 
-已有 v1/v2/v3/v4 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
-旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v5 请求。不要只修改版本号：v3 引入表达式标签，v4 引入实例状态和事件，v5 将触发器放入带 kind 标签的 trigger。
-`Program.states/events` 为空时保持静态语义；省略这两个字段也只表示空列表，不推断任何事件。
+已有 v1/v2/v3/v4/v5 JSON 应从原始 VA 和 manifest 重新编译；不提供自动猜测或字符串拆分迁移。
+旧归档保持原样，复现时使用旧提交对应的前端和内核。旧内核也不能执行 v6 请求。不要只修改版本号：v3 引入表达式标签，v4 引入实例状态和事件，v5 将触发器放入带 kind 标签的 trigger，v6 增加有实例/调用点身份的 operators 和 operator 引用。
+`Program.states/events/operators` 为空时保持静态语义；省略这些字段也只表示空列表，不推断任何事件。
 `state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件统一为 `trigger/assignments/origin`。
 `trigger.kind=cross` 携带 guard、方向和两项容差；`trigger.kind=timer` 携带
 `start/period/time_tolerance/enabled`，其中 enabled 是布尔值，省略的 VA 周期归一化为 0。
-Rust 独立验证这些字段并拒绝未知或交叉混入的字段；静态入口拒绝含状态/事件的程序。
+Rust 独立验证这些字段并拒绝未知或交叉混入的字段；静态入口拒绝含状态/事件/算子的程序。
 事件记录增加 `kind=cross|timer`，只有 cross 含 `guard_value`；timer 不伪造 guard。
 
 ## 求解和错误
@@ -400,7 +409,7 @@ stop 的事件不调度。这是 EVAS 的确定性边界策略，其他后端仍
 当前在运行前生成有界的不可变事件日程，并按需推进已接受事件游标；不是惰性队列。
 日程空间随事件数线性增长，最多 1,000,000 条事件，超限返回 `event_budget`；时间推进仍保留独立的 1,000,000 步上限。
 
-后续需要单独扩展：`transition`、动态 timer、条件控制/复合事件、状态反馈 guard 的同刻迭代、
+后续需要单独扩展：动态参数/电压输入的 `transition`、动态 timer、条件控制/复合事件、状态反馈 guard 的同刻迭代、
 动态算子和非线性轨迹上的通用根定位。当前计数器直接输出理想电压阶跃，未实现平滑边沿。
 
 ## 扩展与验证边界
@@ -417,3 +426,43 @@ stop 的事件不调度。这是 EVAS 的确定性边界策略，其他后端仍
 本前端和内核为新实现。旧源码审查来源及其构建身份限制见
 [诊断记录](../experiments/dvs2-four-backend-validation/DIAGNOSIS.md)；旧仓库及部署镜像保持原样。
 阶段设计和 review 讨论留在提交及 PR 历史，本页维护当前可用接口与契约。
+
+
+## transition 波形算子
+
+支持贡献表达式中的 `transition(input, td, tr, tf)`，四个参数须显式提供；
+`td>=0`、`tr>0`、`tf>0` 为有限实例常数。input 只接受本实例已初始化状态和常数的仿射组合。
+电压输入、嵌套算子、动态参数、默认/零边沿、状态与电压/算子乘积均明确拒绝。
+
+```sh
+PYTHONPATH=evas/src python3 -m evas transient evas/examples/transition_pulse.json --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+初始输出等于 initial_step 已绑定输入。输入值变化后保存 `(生效时间, 目标)` 队列；
+固定延迟不会删除尚未生效的窄脉冲。输入数值不变时不新增边沿。
+未中断边沿按完整幅度和上/下沿时间计算斜率；同向中断保留原起点，反向中断使用旧目标为起点，
+从当前输出连续前进。下降过程使用反射规则；目标可证明等于当前值时结束边沿。
+观测值截在当前起点与目标之间，时刻包围区间内也不会过冲或回跳。
+
+每次调用保留实例、源码、行列身份，历史与用户 real/integer 状态分开。
+到期目标及边沿端点是语义断点，输出网格和 max_step 不定义历史。
+算子值作为贡献 RHS 进入同一个电压方程组；不是在 CSV 上后处理。
+同刻先推进到期算子，再求用户事件前电压；各用户事件共享前态，准备状态更新后更新算子目标，
+重解电压并验收，最后连同队列/历史/事件记录一起提交。失败或弃步只丢弃候选帧。
+
+`Program.operators` 目前保存 `kind=transition,input,delay,rise,fall,origin`；
+表达式 `{"op":"operator","operator":0}` 按索引引用调用点。Rust 独立校验身份、参数、
+输入和表达式结构。含任一算子的整个程序保留节点依赖结构，包括其他实例贡献，
+相消、零乘数、除法下溢及原始 IR 的零系数都不能隐藏不支持的依赖。
+`cross` 直接或经电压网络依赖算子输出时拒绝；这种组合需要后续分段重新定位根，尚未实现。
+
+期限采用向外包围区间；算术传播包括中断时的当前值、历史起点、斜率和剩余边沿时间。
+代表时刻选区间上界，其最大位移必须不超过声明延迟/边沿时间的 **1%**，零延迟直接在事件时刻更新。
+这是当前切片明确的时间分辨率准入条件，不是总波形精度保证，也不替代电压残差容差。
+不同算子期限区间相交时，只有精确点或可证明相同的时间表达式才允许同刻；
+与用户事件的期限相交时目前只接受相同精确点，其余返回 `event_resolution`。输出采样可以位于包围区间内，波形保持裁剪单调。
+如 `t=2^54` 时要求 3 时间单位的延迟/边沿，binary64 无法满足该准入条件，明确失败。
+分辨不出目标与当前值的方向/相等关系时也失败，不用任意 epsilon 制造跳变。
+
+当前新建候选电路重绑算子值，未优化这种路径的矩阵分解复用；没有新性能优势结论。
+尚无通用积分器、算子反馈求解、完整连续时间误差界或跨后端 transition 资格。

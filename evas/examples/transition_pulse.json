@@ -1,0 +1,5 @@
+{
+  "models": ["transition_pulse.va"],
+  "instances": [{"name": "pulse", "module": "transition_pulse", "connections": {"y": "output", "r": "0"}}],
+  "transient": {"sources": {}, "output_times": [0, 0.000000004, 0.000000009, 0.000000014, 0.000000019], "stop": 0.000000019, "max_step": 0.000000019}
+}

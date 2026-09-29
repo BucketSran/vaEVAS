@@ -118,6 +118,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let mut solutions = Vec::new();
     let (mut output, mut event, mut knot) = (0, 0, 1);
     loop {
+        accepted
+            .operators
+            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
         if event < crossings.len() && crossings[event].time == accepted.time {
@@ -136,6 +139,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             event = end_event;
             trace.events.extend(records);
         }
+        accepted
+            .operators
+            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
         if output < trace.times.len() && accepted.time == trace.times[output] {
             solutions.push(accepted.solution.clone());
             trace.states.push(accepted.states.clone());

@@ -13,6 +13,12 @@ pub(crate) struct ScheduledEvent {
     moment: Moment,
 }
 
+impl ScheduledEvent {
+    pub(crate) fn bounds(&self) -> I {
+        self.moment.bounds()
+    }
+}
+
 enum Moment {
     Cross(Root),
     Timer {

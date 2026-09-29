@@ -5,6 +5,8 @@ an EVAS-generated golden waveform. Binary64 rounding allowance is 2e-12 V.
 """
 import copy
 import json
+import math
+from fractions import Fraction
 import subprocess
 import unittest
 
@@ -41,7 +43,7 @@ class TransitionContracts(unittest.TestCase):
 
     def test_interrupted_reverse_extend_reflection_and_equality(self):
         for sign in [1, -1]:
-            for second, at10, final in [(0, .2, 0), (2, 1.2, 2), (.4, .4, .4)]:
+            for second, at10, final in [(0, .2, 0), (2, 1.2, 2)]:
                 rise, fall = (10, 20) if sign == 1 else (20, 10)
                 body = f'''@(initial_step) begin a=0; b=0; end
                   @(timer(2n,0,1p)) a={sign};
@@ -50,6 +52,25 @@ class TransitionContracts(unittest.TestCase):
                 with self.subTest(sign=sign, target=second):
                     self.assert_waveform(run_transition(body, [0,6e-9,10e-9,14e-9,20e-9], 20e-9),
                                          [0, sign*.4, sign*at10, sign*final, sign*final])
+
+    def test_exact_current_target_ends_edge(self):
+        body = """@(initial_step) begin a=0; b=0; end
+          @(timer(2,0,.001)) a=1;
+          @(timer(6,0,.001)) b=-.5;
+          V(y,r)<+transition(a+b,0,8,8);"""
+        self.assert_waveform(run_transition(body,[0,6,8,10,12],12),[0,.5,.5,.5,.5])
+
+    def test_enclosed_end_does_not_overshoot_before_upper_deadline(self):
+        start, duration = 1e12, .10005
+        sample = start+duration
+        ratio = (Fraction(sample)-Fraction(start))/Fraction(duration)
+        self.assertGreater(ratio, 1)  # represented sample is strictly after ideal finish
+        for sign in [1,-1]:
+            body=f"""@(initial_step) a=0; @(timer({start},0,1)) a={sign};
+              V(y,r)<+transition(a,0,{duration},{duration});"""
+            result=run_transition(body,[0,start,sample,start+1],start+1,declarations='real a;')
+            y=result['nodes'].index('y')
+            self.assertEqual([s['voltages'][y] for s in result['solutions']],[0,0,sign,sign])
 
     def test_same_target_does_not_restart(self):
         body = '''@(initial_step) a=0;
@@ -117,7 +138,7 @@ class TransitionRejections(unittest.TestCase):
                 compile_transition(f'@(initial_step) a=0; V(y,r)<+{expression};','real a;')
         for expression in ['transition(a,0,1n,1n)*V(u,r)',
                            'transition(a,0,1n,1n)*(V(u,r)-V(u,r))',
-                           'transition(a,0,1n,1n)*a', 'transition(a*a,0,1n,1n)']:
+                           'transition(a,0,1n,1n)*a', 'transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', 'transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
 
@@ -126,8 +147,64 @@ class TransitionRejections(unittest.TestCase):
           @(timer(0,0,1p)) a=1;
           @(cross(V(y,r)-.5,1,1p,1u)) b=b+1;
           V(y,r)<+transition(a,0,2n,2n);'''
-        with self.assertRaisesRegex(KernelError,'unsupported_cross'):
-            run_transition(body,[0,3e-9],3e-9)
+        for guard in ['V(y,r)-.5', '0*V(y,r)+V(u,r)-.5', 'V(y,r)/1e308/1e308', 'V(y,y)+V(u,r)-.5']:
+            with self.subTest(guard=guard), self.assertRaisesRegex(KernelError,'unsupported_cross'):
+                run_transition(body.replace('V(y,r)-.5',guard),[0,3e-9],3e-9)
+
+    def test_hidden_network_dependencies_across_contributions_and_instances_reject(self):
+        from evas import Instance
+        for expression in ['V(y,r)+1e16*V(y,r)-1e16*V(y,r)',
+                           'V(y,r)/1e308/1e308', '0*V(y,r)']:
+            body=f"""@(initial_step) begin a=0; n=0; end
+              @(timer(0,0,1p)) a=1;
+              @(cross(V(z,r)-.5,1,1p,1u)) n=n+1;
+              V(y,r)<+transition(a,0,1n,1n); V(z,r)<+{expression};"""
+            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError,'unsupported_cross'):
+                run_transition(body,[0,2e-9],2e-9,declarations='real a; integer n; electrical z;')
+        operator=model("""@(initial_step) a=0; @(timer(0,0,1p)) a=1;
+            V(y,r)<+transition(a,0,1n,1n);""",'real a;').replace('module m(', 'module edge(')
+        bridge=model('V(y,r)<+V(u,r)+1e16*V(u,r)-1e16*V(u,r);').replace('module m(', 'module bridge(')
+        counter=model("""@(initial_step) n=0;
+            @(cross(V(u,r)-.5,1,1p,1u)) n=n+1; V(y,r)<+n;""",'integer n;').replace('module m(', 'module counter(')
+        for order in [False,True]:
+            instances=[Instance('edge','edge',{'u':'in','y':'x','r':'0'}),
+                       Instance('bridge','bridge',{'u':'x','y':'z','r':'0'}),
+                       Instance('counter','counter',{'u':'z','y':'out','r':'0'})]
+            if order: instances.reverse()
+            program=compile_sources({'edge.va':operator,'bridge.va':bridge,'counter.va':counter},instances)
+            with self.assertRaisesRegex(KernelError,'unsupported_cross'):
+                transient(program,{'in':[[0,0],[2e-9,0]]},[0,2e-9],stop=2e-9,max_step=2e-9,kernel=KERNEL)
+
+    def test_large_time_delays_and_edges_fail_resolution_gate(self):
+        start = 2.0**54
+        for delay, edge in [(3,16),(0,3)]:
+            body = f"""@(initial_step) a=0;
+              @(timer({start},0,1)) a=1;
+              V(y,r)<+transition(a,{delay},{edge},{edge});"""
+            with self.subTest(delay=delay, edge=edge), self.assertRaisesRegex(KernelError,'time resolution'):
+                run_transition(body,[0,start+32],start+32,declarations='real a;')
+
+    def test_nearby_user_and_operator_deadlines_cannot_round_to_ties(self):
+        # Exact binary64 1 + .1 differs from binary64 1.1. Rounding both
+        # deadlines to one timestamp is not a proof that they coincide.
+        body = """@(initial_step) begin a=0; b=0; end
+          @(timer(1,0,.001)) a=1;
+          @(timer(1.1,0,.001)) b=1;
+          V(y,r)<+transition(a,.1,.5,.5)+b;"""
+        with self.assertRaisesRegex(KernelError,'deadline ordering'):
+            run_transition(body,[0,2],2)
+        close = math.nextafter(.1, math.inf)
+        body = f"""@(initial_step) a=0;
+          @(timer(1,0,.001)) a=1;
+          V(y,r)<+transition(a,.1,.5,.5)+transition(a,{close!r},.5,.5);"""
+        with self.assertRaisesRegex(KernelError,'ordering of operator deadlines'):
+            run_transition(body,[0,2],2,declarations='real a;')
+        # Equal symbolic start+delay is a proven same deadline even when the
+        # sum needs rounding; independent call-site histories remain distinct.
+        body = """@(initial_step) a=0;
+          @(timer(1,0,.001)) a=1;
+          V(y,r)<+transition(a,.1,.5,.5)+transition(a,.1,.5,.5);"""
+        TransitionContracts.assert_waveform(self,run_transition(body,[0,1.35,2],2,declarations='real a;'),[0,1,2])
 
     def test_static_and_raw_ir_validation(self):
         program=compile_transition('@(initial_step) a=0; V(y,r)<+transition(a,0,1n,1n);','real a;')

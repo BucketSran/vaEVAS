@@ -431,7 +431,17 @@ impl EventModel {
                 .unknown
                 .iter()
                 .copied()
-                .filter(|n| equation.coefficients[*n] != 0.0)
+                .filter(|n| {
+                    equation.coefficients[*n] != 0.0
+                        || self
+                            .program
+                            .contributions
+                            .iter()
+                            .zip(&self.rhs)
+                            .any(|(c, rhs)| {
+                                c.branch == equation.branch && rhs.node_dependencies.contains(n)
+                            })
+                })
                 .collect();
             if stateful.contains(&equation.branch) {
                 for &n in &group {

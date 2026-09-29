@@ -48,6 +48,13 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets = {n: instance.connections.get(n, f"{instance.name}:{n}") for n in model.nodes}
         nets["0"] = "0"
         bindings.append((instance, model, nets))
+    def contains_operator(expr):
+        return expr.op == "transition" or any(contains_operator(arg) for arg in expr.args)
+
+    # A separate instance may connect an operator output to a guard. Preserve
+    # the whole program's structural voltage graph before numeric cancellation.
+    has_operators = any(contains_operator(rhs) for _, model, _ in bindings
+                        for _, rhs in model.contributions)
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
     contributions, states, events, operators = [], [], [], []
@@ -165,9 +172,6 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             operators.append(Transition(value, delay, rise, fall, origin))
             return OperatorRef(index)
 
-        def contains_operator(expr):
-            return expr.op == "transition" or any(contains_operator(arg) for arg in expr.args)
-
         bound_branches = {}
         for branch, rhs in model.contributions:
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes
@@ -178,7 +182,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, symbol, node_ids, model.source, waveform, contains_operator(rhs))
+            expression = lower(rhs, symbol, node_ids, model.source, waveform, has_operators)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)

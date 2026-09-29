@@ -1,6 +1,7 @@
 //! Instance/call-site operator histories. Clone with a candidate frame; never
 //! derive history from output samples or mutate accepted state during a trial.
 use crate::events::{affine, AffineState};
+use crate::interval::Interval as I;
 use crate::ir::{Error, OperatorSpec, Program};
 use crate::pwl::Trajectory;
 use crate::transition::Transition;
@@ -91,6 +92,39 @@ impl Operators {
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn check_deadline_order(
+        &self,
+        after: f64,
+        next_event: Option<I>,
+    ) -> Result<(), Error> {
+        let deadlines: Vec<_> = self
+            .entries
+            .iter()
+            .flat_map(|entry| match entry {
+                Runtime::Transition { history, .. } => history.deadlines(after),
+            })
+            .collect();
+        for (index, deadline) in deadlines.iter().enumerate() {
+            if next_event.is_some_and(|event| {
+                deadline.overlaps(event) && !(event.lo == event.hi && event == deadline.bounds)
+            }) {
+                return Err(Error::new(
+                    "event_resolution",
+                    "cannot certify transition deadline ordering relative to user event",
+                ));
+            }
+            for other in &deadlines[index + 1..] {
+                if deadline.overlaps(other.bounds) && !deadline.coincides(other) {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "cannot certify ordering of operator deadlines",
+                    ));
+                }
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn advance(&mut self, time: f64, states: &[f64]) -> Result<(), Error> {

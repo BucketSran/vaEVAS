@@ -1,15 +1,36 @@
 //! Fixed-delay transition history. Observation queries never mutate an edge.
+use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::collections::VecDeque;
+
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct Deadline {
+    pub(crate) bounds: I,
+    // Exact symbolic sum when available; equal enclosures alone do not prove
+    // coincident real deadlines. Interrupted-edge endpoints have no sum key.
+    sum: Option<(f64, f64)>,
+}
+impl Deadline {
+    pub(crate) fn coincides(&self, other: &Self) -> bool {
+        (self.bounds.lo == self.bounds.hi && self.bounds == other.bounds)
+            || (self.sum.is_some() && self.sum == other.sum)
+    }
+    pub(crate) fn overlaps(&self, other: I) -> bool {
+        self.bounds.lo <= other.hi && other.lo <= self.bounds.hi
+    }
+}
 
 #[derive(Clone, Debug)]
 struct Edge {
     start: f64,
     value: f64,
+    value_bounds: I,
     origin: f64,
+    origin_bounds: I,
     target: f64,
     slope: f64,
-    end: f64,
+    slope_bounds: I,
+    end: Deadline,
 }
 
 #[derive(Clone, Debug)]
@@ -20,11 +41,25 @@ pub(crate) struct Transition {
     input: f64,
     settled: f64,
     edge: Option<Edge>,
-    pending: VecDeque<(f64, f64)>,
+    pending: VecDeque<(Deadline, f64)>,
 }
 
 fn invalid(message: &str) -> Error {
     Error::new("event_resolution", message)
+}
+
+fn deadline(bounds: I, scale: f64, sum: Option<(f64, f64)>) -> Result<Deadline, Error> {
+    // Supported-slice time-resolution gate: representative-at-upper-bound
+    // displacement must be <= 1% of the declared delay/edge time. This is not
+    // a total waveform error bound and does not authorize uncertain ordering.
+    let error = I::point(bounds.hi) - bounds;
+    let budget = I::point(scale) * I::point(0.01);
+    if !bounds.finite() || !error.finite() || error.magnitude() > budget.lo {
+        return Err(invalid(
+            "transition time resolution exceeds 1% of declared timing",
+        ));
+    }
+    Ok(Deadline { bounds, sum })
 }
 
 impl Transition {
@@ -50,15 +85,39 @@ impl Transition {
         })
     }
 
-    pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
-        let value = if let Some(edge) = &self.edge {
-            if time >= edge.end {
-                edge.target
-            } else {
-                edge.value + edge.slope * (time - edge.start)
+    fn value_bounds(&self, time: f64) -> I {
+        match &self.edge {
+            Some(edge) if time < edge.end.bounds.hi => {
+                let bounds =
+                    edge.value_bounds + edge.slope_bounds * (I::point(time) - I::point(edge.start));
+                let (low, high) = if edge.target > edge.value {
+                    (edge.value_bounds.lo, edge.target)
+                } else {
+                    (edge.target, edge.value_bounds.hi)
+                };
+                I {
+                    lo: bounds.lo.max(low).min(high),
+                    hi: bounds.hi.max(low).min(high),
+                }
             }
-        } else {
-            self.settled
+            Some(edge) => I::point(edge.target),
+            None => I::point(self.settled),
+        }
+    }
+
+    pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+        let value = match &self.edge {
+            Some(edge) if time < edge.end.bounds.hi => {
+                let raw = edge.value + edge.slope * (time - edge.start);
+                if !raw.is_finite() {
+                    return Err(invalid("nonfinite transition value"));
+                }
+                // Scheduling uses an enclosing upper time, while the waveform
+                // remains clipped and monotone at every observation in that box.
+                raw.clamp(edge.value.min(edge.target), edge.value.max(edge.target))
+            }
+            Some(edge) => edge.target,
+            None => self.settled,
         };
         if !value.is_finite() {
             return Err(invalid("nonfinite transition value"));
@@ -66,86 +125,133 @@ impl Transition {
         Ok(value)
     }
 
-    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+    pub(crate) fn deadlines(&self, after: f64) -> Vec<Deadline> {
         self.pending
             .front()
-            .map(|(time, _)| *time)
+            .map(|(deadline, _)| *deadline)
             .into_iter()
             .chain(self.edge.as_ref().map(|e| e.end))
-            .filter(|time| *time > after)
+            .filter(|deadline| deadline.bounds.hi > after)
+            .collect()
+    }
+
+    pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
+        self.deadlines(after)
+            .iter()
+            .map(|d| d.bounds.hi)
             .min_by(f64::total_cmp)
     }
 
     fn target(&mut self, time: f64, target: f64) -> Result<(), Error> {
         let value = self.value(time)?;
-        if target == value {
+        let value_bounds = self.value_bounds(time);
+        let difference = I::point(target) - value_bounds;
+        let direction = difference.sign().ok_or_else(|| {
+            invalid("cannot certify transition target relative to current output")
+        })?;
+        if direction == 0 {
             self.settled = target;
             self.edge = None;
             return Ok(());
         }
-        // A completed edge has no residual historical origin. For an active
-        // edge, reversal uses its old target; continuation retains its origin.
-        let origin = match &self.edge {
-            Some(edge) if time < edge.end => {
-                if (target - value).is_sign_positive() == edge.slope.is_sign_positive() {
-                    edge.origin
+        let active = self.edge.as_ref().filter(|edge| time < edge.end.bounds.hi);
+        let (origin, origin_bounds) = match active {
+            Some(edge) => {
+                let old_direction = edge
+                    .slope_bounds
+                    .sign()
+                    .ok_or_else(|| invalid("cannot certify transition edge direction"))?;
+                if direction == old_direction {
+                    (edge.origin, edge.origin_bounds)
                 } else {
-                    edge.target
+                    (edge.target, I::point(edge.target))
                 }
             }
-            _ => value,
+            None => (value, value_bounds),
         };
-        let duration = if target > value { self.rise } else { self.fall };
+        let duration = if direction > 0 { self.rise } else { self.fall };
         let slope = (target - origin) / duration;
-        let remaining = (target - value) / slope;
-        let end = time + remaining;
-        if ![slope, remaining, end].iter().all(|v| v.is_finite())
+        let slope_bounds = (I::point(target) - origin_bounds) / I::point(duration);
+        if slope_bounds.sign() != Some(direction)
+            || !slope_bounds.finite()
+            || !slope.is_finite()
             || slope == 0.0
-            || remaining <= 0.0
-            || end <= time
         {
+            return Err(invalid("cannot certify transition slope"));
+        }
+        let (end_bounds, sum) = if active.is_none() {
+            (I::point(time) + I::point(duration), Some((time, duration)))
+        } else {
+            let remaining = difference / slope_bounds;
+            if !remaining.finite() || remaining.lo <= 0.0 {
+                return Err(invalid("cannot certify transition remaining duration"));
+            }
+            (I::point(time) + remaining, None)
+        };
+        let end = deadline(end_bounds, duration, sum)?;
+        if end.bounds.lo <= time {
             return Err(invalid("transition edge cannot advance representable time"));
         }
         self.edge = Some(Edge {
             start: time,
             value,
+            value_bounds,
             origin,
+            origin_bounds,
             target,
             slope,
+            slope_bounds,
             end,
         });
         Ok(())
     }
 
     pub(crate) fn advance(&mut self, time: f64, input: f64) -> Result<(), Error> {
-        // Process only semantic deadlines, not the output/max_step mesh.
-        while self.pending.front().is_some_and(|(t, _)| *t <= time) {
+        // Called only on a cloned candidate runtime. A failed pop/edge rebuild
+        // discards the whole candidate, including all prior queue mutations.
+        while self
+            .pending
+            .front()
+            .is_some_and(|(deadline, _)| deadline.bounds.hi <= time)
+        {
             let (deadline, target) = self.pending.pop_front().unwrap();
-            self.target(deadline, target)?;
+            self.target(deadline.bounds.hi, target)?;
         }
-        if self.edge.as_ref().is_some_and(|edge| edge.end <= time) {
+        if self
+            .edge
+            .as_ref()
+            .is_some_and(|edge| edge.end.bounds.hi <= time)
+        {
             self.settled = self.edge.take().unwrap().target;
         }
         if !input.is_finite() {
             return Err(invalid("nonfinite transition target"));
         }
         if input != self.input {
-            let deadline = time + self.delay;
-            if !deadline.is_finite() || (self.delay > 0.0 && deadline <= time) {
-                return Err(invalid(
-                    "transition delay cannot advance representable time",
-                ));
-            }
-            if self.pending.back().is_some_and(|(t, _)| *t >= deadline) {
-                return Err(invalid(
-                    "distinct transition changes have indistinguishable deadlines",
-                ));
-            }
             self.input = input;
             if self.delay == 0.0 {
                 self.target(time, input)?;
             } else {
-                self.pending.push_back((deadline, input));
+                let next = deadline(
+                    I::point(time) + I::point(self.delay),
+                    self.delay,
+                    Some((time, self.delay)),
+                )?;
+                if next.bounds.lo <= time {
+                    return Err(invalid(
+                        "transition delay cannot advance representable time",
+                    ));
+                }
+                if self
+                    .pending
+                    .back()
+                    .is_some_and(|(old, _)| old.bounds.hi >= next.bounds.lo)
+                {
+                    return Err(invalid(
+                        "cannot certify ordering of distinct transition target deadlines",
+                    ));
+                }
+                self.pending.push_back((next, input));
             }
         }
         Ok(())
@@ -195,7 +301,9 @@ mod tests {
         edge.advance(2.0, 1.0).unwrap();
         edge.advance(6.0, 1.0).unwrap();
         near(edge.value(10.0).unwrap(), 0.8);
-        edge.advance(7.0, 0.5).unwrap();
-        near(edge.value(100.0).unwrap(), 0.5);
+        let mut exact = Transition::new(0.0, 0.0, 8.0, 8.0).unwrap();
+        exact.advance(2.0, 1.0).unwrap();
+        exact.advance(6.0, 0.5).unwrap();
+        near(exact.value(100.0).unwrap(), 0.5);
     }
 }
