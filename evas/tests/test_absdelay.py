@@ -152,6 +152,7 @@ class AbsDelayRejections(unittest.TestCase):
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r),1n);", "electrical z;"),
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(0*V(z,r)+V(u,r),1n);", "electrical z;"),
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)-V(z,r)+V(u,r),1n);", "electrical z;"),
+            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,z)+V(u,r),1n);", "electrical z;"),
             model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)/1e308/1e308+V(u,r),1n);", "electrical z;"),
             model("@(initial_step) q=1; V(y,r)<+absdelay(q,1n);", "real q;"),
             model("V(y,r)<+absdelay(absdelay(V(u,r),1n),1n);"),
@@ -170,6 +171,19 @@ class AbsDelayRejections(unittest.TestCase):
               @(cross({guard},1)) n=n+1;''', "integer n; electrical z;")
             with self.subTest(guard=guard), self.assertRaises((CompileError, KernelError)):
                 execute_delay(source)
+
+    def test_cross_instance_guard_dependency_survives_cancellation(self):
+        producer = SOURCE.replace("module m", "module delayed")
+        for link in ["V(u,r)", "0*V(u,r)+V(v,r)",
+                     "V(u,r)-V(u,r)+V(v,r)", "V(u,r)/1e308/1e308+V(v,r)"]:
+            monitor = model(f'''@(initial_step) n=0; V(z,r)<+{link};
+              @(cross(V(z,r)-.5,1)) n=n+1; V(y,r)<+n;''', "integer n; electrical z;",
+                            ports="u,v,y,r", directions="input u,v; output y; inout r;")
+            instances = [instance("producer", module="delayed", connections=dict(u="u", y="d", r="0")),
+                         instance("monitor", connections=dict(u="d", v="u", y="y", r="0"))]
+            with self.subTest(link=link), self.assertRaises((CompileError, KernelError)):
+                program = compile_sources({"producer.va": producer, "monitor.va": monitor}, instances)
+                transient(program, {"u": POINTS}, [0, 10e-9], stop=10e-9, max_step=100e-9, kernel=KERNEL)
 
     def test_discontinuous_input_and_static_analysis_are_rejected(self):
         with self.assertRaises(KernelError):
