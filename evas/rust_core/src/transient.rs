@@ -1,8 +1,10 @@
 //! Time advancement around the static solver. Trials never mutate accepted state.
 use crate::events::EventModel;
+use crate::interval::Interval as I;
 use crate::ir::{
     Error, EventRecord, EventTrigger, Request, Response, Solution, TransientTrace, SCHEMA_VERSION,
 };
+use crate::operators::Operators;
 use crate::pwl::Trajectory;
 use crate::schedule::schedule;
 use crate::solver::Circuit;
@@ -10,8 +12,10 @@ use crate::solver::Circuit;
 struct Frame {
     time: f64,
     states: Vec<f64>,
+    state_bounds: Vec<I>,
     solution: Solution,
     circuit: Circuit,
+    operators: Operators,
 }
 
 fn prepare_event(
@@ -21,13 +25,50 @@ fn prepare_event(
     time: f64,
     events: &[usize],
 ) -> Result<Frame, Error> {
-    let (states, circuit, solution) =
-        crate::settlement::prepare(model, events, &trajectory.values(time), &accepted.states)?;
+    let mut operators = accepted.operators.clone();
+    // No-operator execution retains main's conditional event certificate.
+    // Operator histories must keep the uncertainty in sampled event states.
+    let old_bounds = if model.program.operators.is_empty() {
+        accepted.states.iter().copied().map(I::point).collect()
+    } else {
+        accepted.state_bounds.clone()
+    };
+    operators.advance(time, &accepted.states, &old_bounds, &[])?;
+    // Positive edge durations make transition continuous at a target change.
+    // Freeze its current value for the same-time state/voltage solve, then
+    // install the new target only in this disposable candidate history.
+    let frozen = operators.values(time)?;
+    let (states, state_bounds, circuit, solution) = crate::settlement::prepare(
+        model,
+        events,
+        &trajectory.values(time),
+        &accepted.states,
+        &frozen,
+        &old_bounds,
+        &operators.bounds(time)?,
+    )?;
+    // Equal rounded inputs / equal interval endpoints do not prove that an
+    // uncertain state assignment left the exact operator target unchanged.
+    let changed: Vec<_> = events
+        .iter()
+        .flat_map(|&id| &model.program.events[id].assignments)
+        .map(|a| a.state)
+        .filter(|&s| old_bounds[s] != state_bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
+        .collect();
+    operators.advance(time, &states, &state_bounds, &changed)?;
+    if operators.values(time)? != frozen {
+        return Err(Error::new(
+            "event_consistency",
+            "operator changed during same-time settlement",
+        ));
+    }
     Ok(Frame {
         time,
         states,
+        state_bounds,
         solution,
         circuit,
+        operators,
     })
 }
 
@@ -39,6 +80,7 @@ fn prepare_batch(
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let next = prepare_event(model, trajectory, accepted, event_time, ids)?;
+    next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
     for &id in ids {
         let (kind, guard_value) = match &model.program.events[id].trigger {
@@ -82,15 +124,28 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     }
     let trajectory = Trajectory::new(request.transient.unwrap(), request.driven.len())?;
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
-    let crossings = schedule(&model, &trajectory)?;
     let initial = model.initial();
-    let circuit = model.circuit(&initial)?;
+    let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;
+    let crossings = schedule(&model, &trajectory)?;
+    let circuit = model.circuit_with(&initial, &operators.values(0.0)?)?;
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
+        state_bounds: initial.iter().copied().map(I::point).collect(),
         states: initial,
         circuit,
+        operators,
     };
+    if !model.program.operators.is_empty() {
+        accepted.state_bounds = model.certify(
+            &[],
+            &trajectory.values(0.0),
+            &accepted.state_bounds,
+            &accepted.operators.bounds(0.0)?,
+            &accepted.solution.voltages,
+            &accepted.states,
+        )?;
+    }
     let mut trace = TransientTrace {
         times: trajectory.config.output_times.clone(),
         state_names: model
@@ -107,6 +162,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let mut solutions = Vec::new();
     let (mut output, mut event, mut knot) = (0, 0, 1);
     loop {
+        accepted
+            .operators
+            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
         if event < crossings.len() && crossings[event].time == accepted.time {
@@ -120,11 +178,16 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 .map(|c| c.event)
                 .collect();
             let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            next.operators
+                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             // Commit frame, circuit, cursor and history only after all checks.
             accepted = next;
             event = end_event;
             trace.events.extend(records);
         }
+        accepted
+            .operators
+            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
         if output < trace.times.len() && accepted.time == trace.times[output] {
             solutions.push(accepted.solution.clone());
             trace.states.push(accepted.states.clone());
@@ -143,13 +206,22 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         if output < trace.times.len() {
             time = time.min(trace.times[output]);
         }
+        if let Some(deadline) = accepted.operators.next_breakpoint(accepted.time) {
+            time = time.min(deadline);
+        }
         if time <= accepted.time {
             return Err(Error::new(
                 "event_resolution",
                 "max_step cannot advance representable time",
             ));
         }
-        let candidate = accepted.circuit.solve(&trajectory.values(time))?;
+        // A trial beyond an earlier scheduled event is discarded before any
+        // residual check: that event may change the future waveform/constraints.
+        let candidate = if model.program.operators.is_empty() {
+            None
+        } else {
+            Some(prepare_event(&model, &trajectory, &accepted, time, &[]))
+        };
         if event < crossings.len() && crossings[event].time <= time {
             let event_time = crossings[event].time;
             if event_time < time {
@@ -164,12 +236,21 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 .map(|c| c.event)
                 .collect();
             let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            next.operators
+                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             accepted = next;
             event = end_event;
             trace.events.extend(records);
         } else {
-            accepted.time = time;
-            accepted.solution = candidate;
+            if let Some(candidate) = candidate {
+                let next = candidate?;
+                next.operators
+                    .check_deadline_order(time, crossings.get(event).map(|e| e.bounds()))?;
+                accepted = next;
+            } else {
+                accepted.solution = accepted.circuit.solve(&trajectory.values(time))?;
+                accepted.time = time;
+            }
         }
         trace.accepted_steps += 1;
         if accepted.time == trajectory.knots[knot] {
@@ -189,6 +270,60 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
 mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
+
+    #[test]
+    fn history_accuracy_failure_and_retry_leave_all_bounds_uncommitted() {
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([{
+            "kind":"transition", "input":{"op":"state","state":0},
+            "delay":0,"rise":3,"fall":3,
+            "origin":{"source":"accuracy.va","line":3,"column":1,"instance":"dut"}
+        }]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply", "left":{"op":"affine","constant":-1073741824.0,"terms":[]},
+            "right":{"op":"operator","operator":0}
+        }))
+        .unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-10,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let initial = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        let accepted = prepare_event(&model, &trajectory, &initial, 0.0, &[0]).unwrap();
+        let bounds = accepted.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_event(&model, &trajectory, &accepted, 1.0, &[])
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_eq!(accepted.time, 0.0);
+            assert_eq!(accepted.states, [1.0]);
+            assert_eq!(accepted.state_bounds, [I::ONE]);
+            assert_eq!(accepted.solution.voltages[2], 0.0);
+            assert_eq!(accepted.operators.bounds(1.0).unwrap(), bounds);
+            assert_eq!(accepted.operators.next_breakpoint(0.0), Some(3.0));
+        }
+    }
 
     fn fixture(inconsistent_after_event: bool) -> (EventModel, Trajectory, Frame) {
         // Handwritten IR: y=n, initially n=0. A second independent y=0
@@ -229,9 +364,11 @@ mod tests {
         let circuit = model.circuit(&model.initial()).unwrap();
         let frame = Frame {
             time: 0.0,
+            state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),
             solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
             circuit,
+            operators: Operators::default(),
         };
         (model, trajectory, frame)
     }
@@ -293,9 +430,11 @@ mod tests {
             let circuit = model.circuit(&model.initial()).unwrap();
             let before = Frame {
                 time: 0.0,
+                state_bounds: model.initial().into_iter().map(I::point).collect(),
                 states: model.initial(),
                 solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
                 circuit,
+                operators: Operators::default(),
             };
             for _ in 0..2 {
                 let trial = prepare_batch(&model, &trajectory, &before, 0.0, &[0]);
@@ -313,6 +452,123 @@ mod tests {
                 assert_eq!(before.time, 0.0);
                 assert_eq!(before.solution.voltages[2], 0.0);
             }
+        }
+    }
+    #[test]
+    fn operator_queue_and_edges_commit_with_the_whole_frame() {
+        use crate::ir::{Expression, OperatorSpec, Origin};
+        for inconsistent in [false, true] {
+            let (original, trajectory, _) = fixture(inconsistent);
+            let mut program = original.program;
+            program.operators.push(OperatorSpec::Transition {
+                input: Expression::State { state: 0 },
+                delay: 1.0,
+                rise: 2.0,
+                fall: 2.0,
+                origin: Origin {
+                    source: "rollback.va".into(),
+                    line: 3,
+                    column: 1,
+                    instance: "dut".into(),
+                },
+            });
+            program.contributions[0].rhs = Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: -1.0,
+                    terms: Vec::new(),
+                }),
+                right: Box::new(Expression::Operator { operator: 0 }),
+            };
+            let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+            let states = model.initial();
+            let operators =
+                Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+            let circuit = model
+                .circuit_with(&states, &operators.values(0.0).unwrap())
+                .unwrap();
+            let before = Frame {
+                time: 0.0,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+                operators,
+                solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+                circuit,
+            };
+            if inconsistent {
+                // The interval map now rejects the nonidentity y=operator,
+                // y=0 constraint before any queued edge can be committed.
+                for _ in 0..2 {
+                    assert_eq!(
+                        prepare_event(&model, &trajectory, &before, 0.5, &[0])
+                            .err()
+                            .unwrap()
+                            .kind,
+                        "event_accuracy"
+                    );
+                    assert_eq!(before.operators.next_breakpoint(0.0), None);
+                    assert_eq!(before.states, [0.0]);
+                }
+                continue;
+            }
+            let first = prepare_event(&model, &trajectory, &before, 0.5, &[0]).unwrap();
+            let replay = prepare_event(&model, &trajectory, &before, 0.5, &[0]).unwrap();
+            assert_eq!(first.operators.next_breakpoint(0.5), Some(1.5));
+            assert_eq!(replay.operators.next_breakpoint(0.5), Some(1.5));
+            assert_eq!(before.operators.next_breakpoint(0.0), None);
+            assert_eq!(before.states, [0.0]);
+            for _ in 0..2 {
+                let trial = prepare_event(&model, &trajectory, &first, 2.0, &[]);
+                assert_eq!(trial.unwrap().solution.voltages[2], 0.25);
+                assert_eq!(first.operators.next_breakpoint(0.5), Some(1.5));
+                assert_eq!(first.solution.voltages[2], 0.0);
+            }
+            // A failed future trial did not consume the earlier deadline.
+            let deadline = prepare_event(&model, &trajectory, &first, 1.5, &[]).unwrap();
+            assert_eq!(deadline.solution.voltages[2], 0.0);
+            assert_eq!(deadline.operators.next_breakpoint(1.5), Some(3.5));
+        }
+    }
+    #[test]
+    fn uncertain_operator_order_rejects_the_prepared_batch_before_commit() {
+        use crate::ir::{Expression, OperatorSpec, Origin};
+        let (original, trajectory, _) = fixture(false);
+        let mut program = original.program;
+        for (index, delay) in [0.1_f64, 0.1_f64.next_up()].into_iter().enumerate() {
+            program.operators.push(OperatorSpec::Transition {
+                input: Expression::State { state: 0 },
+                delay,
+                rise: 0.5,
+                fall: 0.5,
+                origin: Origin {
+                    source: "rollback.va".into(),
+                    line: 3 + index,
+                    column: 1,
+                    instance: "dut".into(),
+                },
+            });
+        }
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let before = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        for _ in 0..2 {
+            let error = prepare_batch(&model, &trajectory, &before, 1.0, &[0])
+                .err()
+                .unwrap();
+            assert!(error.message.contains("ordering of operator deadlines"));
+            assert_eq!(before.states, [0.0]);
+            assert_eq!(before.operators.next_breakpoint(0.0), None);
         }
     }
     #[test]
@@ -339,7 +595,15 @@ mod tests {
                 let circuit = model.circuit(&model.initial()).unwrap();
                 let before = Frame {
                     time: 0.0,
+                    state_bounds: model.initial().into_iter().map(I::point).collect(),
                     states: model.initial(),
+                    operators: Operators::new(
+                        &model.program,
+                        &trajectory,
+                        &model.driven,
+                        &model.initial(),
+                    )
+                    .unwrap(),
                     solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
                     circuit,
                 };
@@ -383,7 +647,10 @@ mod tests {
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
             time: 0.0,
+            state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),
+            operators: Operators::new(&model.program, &trajectory, &model.driven, &model.initial())
+                .unwrap(),
             solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
             circuit,
         };

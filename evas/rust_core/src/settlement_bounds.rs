@@ -1,5 +1,6 @@
-//! Conditional forward-error enclosure of the original binary64 event IR.
-//! Old states and sampled inputs are parameters, so one batch can reuse this map.
+//! Forward-error enclosure of the original binary64 event IR.
+//! Sampled inputs are fixed; old states and operator history carry enclosures.
+//! A cached map never freezes a particular operator sample.
 use crate::affine_bounds::{affine, eliminate};
 use crate::events::EventModel;
 use crate::interval::Interval as I;
@@ -9,6 +10,7 @@ use std::collections::BTreeMap;
 fn substitute(row: &[I], updates: &[Vec<I>], nodes: usize) -> Vec<I> {
     let mut result = vec![I::ZERO; row.len()];
     result[..nodes].copy_from_slice(&row[..nodes]);
+    result[nodes + updates.len()..].copy_from_slice(&row[nodes + updates.len()..]);
     *result.last_mut().unwrap() = *row.last().unwrap();
     for (&coefficient, update) in row[nodes..row.len() - 1].iter().zip(updates) {
         if !coefficient.zero() {
@@ -29,7 +31,8 @@ impl Bounds {
     pub(crate) fn new(model: &EventModel, events: &[usize]) -> Result<Self, Error> {
         let p = &model.program;
         let count = p.nodes.len();
-        let variables = count + p.states.len();
+        let parameters = p.states.len() + p.operators.len();
+        let variables = count + parameters;
         let driven: Vec<_> = model
             .driven
             .iter()
@@ -37,7 +40,7 @@ impl Bounds {
             .collect();
         let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
         let n = unknown.len();
-        let width = driven.len() + p.states.len() + 1;
+        let width = driven.len() + parameters + 1;
         let initial: Vec<_> = (0..p.states.len())
             .map(|k| {
                 let mut row = vec![I::ZERO; variables + 1];
@@ -84,7 +87,7 @@ impl Bounds {
         for (k, &node) in driven.iter().enumerate() {
             values[node][k] = I::ONE;
         }
-        for state in 0..p.states.len() {
+        for state in 0..parameters {
             values[count + state][driven.len() + state] = I::ONE;
         }
         for r in (0..n).rev() {
@@ -126,11 +129,20 @@ impl Bounds {
         &self,
         model: &EventModel,
         inputs: &[f64],
-        before: &[f64],
+        before: &[I],
+        operators: &[I],
         voltages: &[f64],
         states: &[f64],
-    ) -> Result<(), Error> {
-        let parameters: Vec<_> = inputs.iter().chain(before).copied().chain([1.0]).collect();
+    ) -> Result<Vec<I>, Error> {
+        let parameters: Vec<_> = inputs
+            .iter()
+            .copied()
+            .map(I::point)
+            .chain(before.iter().copied())
+            .chain(operators.iter().copied())
+            .chain([I::ONE])
+            .collect();
+        let mut state_bounds = Vec::new();
         for (rows, actual, voltage) in
             [(&self.nodes, voltages, true), (&self.states, states, false)]
         {
@@ -138,7 +150,10 @@ impl Bounds {
                 let exact = row
                     .iter()
                     .zip(&parameters)
-                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * I::point(b));
+                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * b);
+                if !voltage {
+                    state_bounds.push(exact);
+                }
                 let integer = !voltage && model.program.states[k].kind == StateKind::Integer;
                 let absolute = if voltage {
                     model.tolerances.absolute
@@ -167,11 +182,16 @@ impl Bounds {
                             model.program.states[k].instance, model.program.states[k].name
                         )
                     };
-                    return Err(Error::new("event_accuracy",format!(
+                    let kind = if model.program.operators.is_empty() {
+                        "event_accuracy"
+                    } else {
+                        "waveform_accuracy"
+                    };
+                    return Err(Error::new(kind,format!(
                         "cannot certify same-time forward error at {name}: bound {:e}, budget {:e}",error.magnitude(),budget.lo)));
                 }
             }
         }
-        Ok(())
+        Ok(state_bounds)
     }
 }

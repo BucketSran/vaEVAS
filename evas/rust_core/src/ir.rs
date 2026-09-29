@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 5;
+pub const SCHEMA_VERSION: u32 = 6;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -41,6 +41,8 @@ pub struct Program {
     pub states: Vec<State>,
     #[serde(default)]
     pub events: Vec<Event>,
+    #[serde(default)]
+    pub operators: Vec<OperatorSpec>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -71,6 +73,9 @@ pub enum ContributionKind {
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Expression {
+    Operator {
+        operator: usize,
+    },
     State {
         state: usize,
     },
@@ -90,6 +95,26 @@ pub enum Expression {
         base: Box<Expression>,
         exponent: u32,
     },
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum OperatorSpec {
+    Transition {
+        input: Expression,
+        delay: f64,
+        rise: f64,
+        fall: f64,
+        origin: Origin,
+    },
+}
+
+impl OperatorSpec {
+    pub(crate) fn origin(&self) -> &Origin {
+        match self {
+            Self::Transition { origin, .. } => origin,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize)]

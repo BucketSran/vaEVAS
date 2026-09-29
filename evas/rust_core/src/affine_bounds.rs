@@ -6,7 +6,7 @@ use crate::ir::{Error, Expression, Program};
 // Last entry is the constant. Recheck affinity before dropping product terms,
 // even though EventModel also checks the original expression's structure.
 pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Error> {
-    let n = program.nodes.len() + program.states.len();
+    let n = program.nodes.len() + program.states.len() + program.operators.len();
     let mut result = vec![I::ZERO; n + 1];
     match expr {
         Expression::Affine { constant, terms } => {
@@ -16,6 +16,9 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
             }
         }
         Expression::State { state } => result[program.nodes.len() + state] = I::ONE,
+        Expression::Operator { operator } => {
+            result[program.nodes.len() + program.states.len() + operator] = I::ONE;
+        }
         Expression::Add { left, right } => {
             result = affine(left, program)?
                 .iter()

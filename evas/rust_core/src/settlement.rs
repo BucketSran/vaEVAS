@@ -1,5 +1,6 @@
 //! Same-time affine state/voltage consistency. Trial evaluation is not a commit.
 use crate::events::EventModel;
+use crate::interval::Interval as I;
 use crate::ir::{Error, Solution, StateKind};
 use crate::solver::Circuit;
 
@@ -8,14 +9,19 @@ pub(crate) fn prepare(
     events: &[usize],
     inputs: &[f64],
     before: &[f64],
-) -> Result<(Vec<f64>, Circuit, Solution), Error> {
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+) -> Result<(Vec<f64>, Vec<I>, Circuit, Solution), Error> {
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
-    let candidate = model.event_circuit(events, before)?.solve(inputs)?;
+    let candidate = model
+        .event_circuit(events, before, operators)?
+        .solve(inputs)?;
     let states = model.apply(events, &candidate.voltages, before)?;
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let circuit = model.circuit(&states)?;
+    let circuit = model.circuit_with(&states, operators)?;
     let solution = circuit.solve(inputs)?;
     let replay = model.apply(events, &solution.voltages, before)?;
     for ((&state, &checked), spec) in states.iter().zip(&replay).zip(&model.program.states) {
@@ -34,6 +40,13 @@ pub(crate) fn prepare(
             ));
         }
     }
-    model.certify(events, inputs, before, &solution.voltages, &states)?;
-    Ok((states, circuit, solution))
+    let bounds = model.certify(
+        events,
+        inputs,
+        before_bounds,
+        operator_bounds,
+        &solution.voltages,
+        &states,
+    )?;
+    Ok((states, bounds, circuit, solution))
 }

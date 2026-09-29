@@ -16,14 +16,14 @@ pub(crate) struct GuardBounds {
 impl GuardBounds {
     pub(crate) fn new(program: &Program, driven: &[String]) -> Result<Self, Error> {
         let count = program.nodes.len();
-        let variables = count + program.states.len();
+        let variables = count + program.states.len() + program.operators.len();
         let driven: Vec<_> = driven
             .iter()
             .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
             .collect();
         let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
         let n = unknown.len();
-        let width = driven.len() + program.states.len() + 1;
+        let width = driven.len() + program.states.len() + program.operators.len() + 1;
         let mut groups = BTreeMap::new();
         for c in &program.contributions {
             let rhs = affine(&c.rhs, program)?;
@@ -54,7 +54,7 @@ impl GuardBounds {
         for (k, &node) in driven.iter().enumerate() {
             nodes[node][k] = I::ONE;
         }
-        for state in 0..program.states.len() {
+        for state in 0..(program.states.len() + program.operators.len()) {
             nodes[count + state][driven.len() + state] = I::ONE;
         }
         for r in (0..n).rev() {

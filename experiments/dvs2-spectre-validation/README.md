@@ -1,5 +1,102 @@
 # Spectre verification on thu-sui
 
+## PR13 transition 0.6.1
+
+实现提交 [`9850450`](https://github.com/BucketSran/vaEVAS/commit/9850450505e7c43a5d62ce6dab6d74dcf65e7cf4)
+修复历史误差未进入电压验收的问题。源事件在 `1e12 s`、延迟 `0.10005 s`、边沿 1 s 的
+独立 Fraction 反例，旧版在 `vabstol=1e-9` 时接受约 `1.70e-4 V` 的误差且残差为零；
+新版给出 `waveform_accuracy`，认证误差上界 `2.44140625e-4 V`。放宽到 `1e-3 V` 可接受，
+实际误差满足该预算。这是显式检出精度不足，没有把原算法变成高精度算法。
+
+历史起点、延迟时刻、斜率、目标和采样状态的区间一起传播，并经网络映射验收节点电压。
+若输出点落入延迟生效区间，包围已生效/未生效两种可能；不因无法精确排序就遗漏误差，
+也不无条件拒绝原有短脉冲。初始化、网络放大、跨事件采样和失败回退均有独立回归。
+参考对象和数学边界见[历史误差说明](../../evas/docs/OPERATORS.md#历史误差与电压精度)。
+
+本轮执行身份为 `pr13-transition-20260929-03`，固定 8 场景 × 两档 = **16 配置/后端**。
+在原 0.6.0 的设置/阈值基础上新增 `strobeperiod=U/8, strobeoutput=all`，
+强制 Spectre 包含 EVAS 的 257 个观察时刻，同时保留额外接受点。两后端仍各自对独立折线答案检查。
+保持 Spectre 21.1.0.509.isr12、单线程、traponly、原容差、90 s/次及 30 s license 等待上限。
+检查器先完成接受/拒绝校准，再冻结输入；不改原始波形或旧判据。
+
+| 后端 | 满足有限观测判据 | 检查的输出点 | 共同网格点/配置 | 最大采样误差 |
+| --- | --- | --- | --- | --- |
+| EVAS 0.6.1 | 16/16 | 4,112 | 257 | 1.11e-16 V |
+| Spectre | 16/16 | 4,368 | 257 | 2.67e-15 V |
+
+粗档短脉冲现在有斜坡内部观察，满足原先的覆盖要求。旧不强制 strobe 的记录仍是
+Spectre 15 符合、1 观察不足；使用新检查器重判，原 32 个后端配置的判定全部保留。
+这两次实验观察设置不同，不能把新结果覆盖到旧实验上。运行文件回收哈希、日志设置、
+网格完整性、源码/内核/检查器身份及逐配置结果见[收据](results/transition-0.6.1.json)。
+
+本地检查：**155 Python、23 Rust、48 checker 方法**通过；离线锁定构建、all-targets
+warnings-as-errors、rustfmt、CLI 示例、13 组设计数学与冻结材料身份检查通过。
+新增 6 个 Fraction 方法覆盖历史误差；Rust 包含未提交候选的误差状态回退。
+这些不是新增正式条件，原 31 条件分母不变，也没有重跑完整后端矩阵。
+
+小型容差探针固定一条 769 点斜坡，`reltol=0`，每档 5 次，Apple M5/debug build。
+`vabstol=1e-6/1e-9/1e-12 V` 都接受 768 步，Python transient 调用耗时中位数分别约
+45.3/44.9/51.9 ms；`1e-16 V` 报精度不足。计时包含 JSON、子进程启动、求解及解析，
+不含 VA 编译，不能用于估计相对 0.6.0 的认证开销或宣称性能排名。
+当前收紧容差不自动增加时间步/运算精度；保守区间也可能拒绝实际误差较小的模型。
+
+复现入口沿用下一节命令，在新的输出目录执行 `build --strobe`。
+仓库包含输入生成器、检查器、回归和整理收据；原始波形/日志与本机计时探针仅本地和服务器保留，
+尚未公开归档。全部结论限于声明参考和有限开发观察，不是连续时间全轨迹精度或正式资格证明。
+
+## PR13 transition 0.6.0
+
+PR13 同步已合入的 PR12（main `e6f04c4`），修复旧电压读取导致 transition 目标滞后的问题。
+EVAS 0.6.0 / IR v6 的数学与代码路径见[算子手册](../../evas/docs/OPERATORS.md#transition)。
+[收据](results/transition-0.6.0.json)固定本轮源码、内核、输入、检查器、逐配置结果及原始材料哈希。
+
+执行前冻结 8 个场景 × 两档 = **16 配置/后端**；EVAS 与 Spectre 分别对独立的显式折线答案检查。
+时间单位 U=2^-30 s；粗/细 max_step 为 3U、U/8，timer 容差为 U/1024。
+Spectre 21.1.0.509.isr12 在 thu-sui 新执行 16 次，单线程、traponly、reltol=1e-8、
+vabstol=1e-10、iabstol=1e-14，不强制 strobe。每次上限 90 s，license 等待上限 30 s。
+日志的 step/maxstep/stop 只有有限小数位，按显示末位舍入区间核对请求，而非误称日志给出了完整精度；
+波形终点另行核对。16 次均执行成功，所有回收文件的哈希与远端清单一致。
+
+| 场景 | EVAS 粗/细 | Spectre 粗/细 |
+| --- | --- | --- |
+| 非零初值、延迟、非对称上/下沿 | 符合 / 符合 | 符合 / 符合 |
+| 上升中反向 | 符合 / 符合 | 符合 / 符合 |
+| 上升中同向延长 | 符合 / 符合 | 符合 / 符合 |
+| 下降中反向 | 符合 / 符合 | 符合 / 符合 |
+| 下降中同向延长 | 符合 / 符合 | 符合 / 符合 |
+| 延迟队列中的短脉冲 | 符合 / 符合 | 观察不足 / 符合 |
+| 重复相同目标 | 符合 / 符合 | 符合 / 符合 |
+| 同刻新电压生成 transition 目标 | 符合 / 符合 | 符合 / 符合 |
+
+EVAS **16/16** 满足有限观测判据，最大采样误差 1.11e-16 V；Spectre **15/16** 满足，
+1 项因边沿内部无观察点而未满足覆盖要求。全部 Spectre 已输出点的最大误差为 2.67e-15 V。
+粗档短脉冲只在约 12U、13U、14U 输出 0、0.5、0，两个斜坡内部没有点；
+这些点符合答案，但不能据此宣布斜坡已验证。细档通过。原判定保留，不降低覆盖要求，也不诊断成数值错误。
+本轮没有发现已观测点上的 EVAS/Spectre 数学差异，不能推广成任意模型或连续时间完全一致。
+
+判据逐点检查波形，并在事件容差窗口外检查目标保持和事件采样时间；每条非平坦段必须有内部观察。
+条件性波形裕量为 `1e-8 V + 4*(U/1024)*最大参考斜率`，后项覆盖这组固定例子的事件定位偏移，
+不是拿 Spectre 结果估出的容差，也不是完整物理观测误差证明。原 31 条件的分母及正式资格不变。
+
+本地检查：149 Python、21 Rust、47 个 Spectre checker 测试方法（其中新增 3 个），
+locked/offline build、all-targets warnings-as-errors、rustfmt、CLI 示例均通过。
+13 组 Fraction 设计数学核对及冻结验证材料身份检查通过；它们不是额外仿真配置。
+原 PR13 和旧四能力联合检查点保留为历史，不能替代此轮 main 同步后的结果；本轮未重跑静态大矩阵。
+
+可复现入口（Python 3.10+，服务器使用 python3.11）：
+
+```sh
+python3 -B experiments/dvs2-spectre-validation/transition_reference.py build --root runs/transition-new
+python3 -B experiments/dvs2-spectre-validation/transition_reference.py evas --root runs/transition-new --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/transition_reference.py spectre --root runs/transition-new --spectre-profile /path/to/private-profile.json
+python3 -B experiments/dvs2-spectre-validation/transition_reference.py check --root runs/transition-new --output runs/transition-new-analysis.json
+```
+
+`build` 冻结共同 VA、网表、数学折线、阈值和 checker 清单；`check` 拒绝身份漂移。
+比较脚本、输入生成器、判据与整理收据在仓库内可取得；原始波形/日志仅本地和 thu-sui 保留，未公开归档。
+准备目录 `pr13-transition-20260929-01` 未执行；正式 `-02` 首次服务器 Python 3.9 导入失败，
+尚未启动 Spectre，改用已安装的 Python 3.11 后完成冻结的 16 次预算；无波形覆盖或隐式重跑。
+
 ## PR12 integer sequence 0.5.3
 
 实现为 [`ba3c063`](https://github.com/BucketSran/vaEVAS/commit/ba3c06390cfaca6c34653fcc2f978d7c793a0958)，
