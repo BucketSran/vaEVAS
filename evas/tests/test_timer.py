@@ -117,7 +117,7 @@ class TimerContracts(unittest.TestCase):
             self.assertEqual([e['before'] for e in events], [[k, k]]*2)
             self.assertEqual([e['after'] for e in events], [[k+1, k+1]]*2)
 
-    def test_timer_and_cross_share_pre_event_voltage_snapshot(self):
+    def test_timer_and_cross_share_settled_voltage_and_old_state(self):
         statements = ['@(timer(0.5,0,0.001)) n=n+1;',
                       '@(cross(V(u,r)-0.5,1,0.001,0.001)) held=V(y,r);']
         for order in [statements, statements[::-1]]:
@@ -125,10 +125,10 @@ class TimerContracts(unittest.TestCase):
                 ''' + ''.join(order) + 'V(y,r)<+n; V(z,r)<+held;',
                 'electrical z; integer n; real held;')
             result = run_timer(source, stop=1, times=[0, 0.5, 1])
-            self.assertEqual(result['transient']['states'], [[0, -1], [1, 0], [1, 0]])
+            self.assertEqual(result['transient']['states'], [[0, -1], [1, 1], [1, 1]])
             self.assertEqual({e['kind'] for e in result['transient']['events']}, {'cross', 'timer'})
             self.assertEqual([e['before'] for e in result['transient']['events']], [[0, -1]]*2)
-            self.assertEqual([e['after'] for e in result['transient']['events']], [[1, 0]]*2)
+            self.assertEqual([e['after'] for e in result['transient']['events']], [[1, 1]]*2)
 
     def test_distinct_nearby_events_are_not_merged_by_time_tolerance(self):
         source = model('''@(initial_step) begin n=0; held=-1; end

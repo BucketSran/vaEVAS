@@ -21,10 +21,8 @@ fn prepare_event(
     time: f64,
     events: &[usize],
 ) -> Result<Frame, Error> {
-    let before = accepted.circuit.solve(&trajectory.values(time))?;
-    let states = model.apply(events, &before.voltages, &accepted.states)?;
-    let circuit = model.circuit(&states)?;
-    let solution = circuit.solve(&trajectory.values(time))?;
+    let (states, circuit, solution) =
+        crate::settlement::prepare(model, events, &trajectory.values(time), &accepted.states)?;
     Ok(Frame {
         time,
         states,

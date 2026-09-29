@@ -3,6 +3,7 @@ use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Toler
 use crate::solver::Circuit;
 use std::collections::BTreeSet;
 
+#[derive(Clone)]
 pub(crate) struct AffineState {
     constant: f64,
     nodes: Vec<f64>,
@@ -13,6 +14,29 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    /// Substitute voltage-affine trial updates for state references. Each update
+    /// is based on the accepted old state, with local statement order preserved.
+    fn substitute(&self, updates: &[Self]) -> Result<Self, Error> {
+        let mut result = self.clone();
+        result.states.clear();
+        for (&coefficient, update) in self.states.iter().zip(updates) {
+            if coefficient == 0.0 {
+                continue;
+            }
+            result.constant += coefficient * update.constant;
+            for (node, &value) in result.nodes.iter_mut().zip(&update.nodes) {
+                *node += coefficient * value;
+            }
+        }
+        if !result.constant.is_finite() || result.nodes.iter().any(|v| !v.is_finite()) {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite event substitution",
+            ));
+        }
+        Ok(result)
+    }
+
     pub(crate) fn value(&self, nodes: &[f64], states: &[f64]) -> Result<f64, Error> {
         let value = self.constant
             + self
@@ -156,7 +180,7 @@ pub(crate) struct EventModel {
     pub(crate) guards: Vec<Option<AffineState>>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) driven: Vec<String>,
-    tolerances: Tolerances,
+    pub(crate) tolerances: Tolerances,
 }
 
 impl EventModel {
@@ -310,6 +334,40 @@ impl EventModel {
         Circuit::new(self.bind(states)?, &self.driven, self.tolerances.clone())
     }
 
+    /// Eliminate trial state updates from F(v, state, t)=0 to obtain an affine
+    /// voltage system F(v, Phi(old_state, v), t)=0. No accepted state is mutated.
+    pub(crate) fn event_circuit(&self, events: &[usize], before: &[f64]) -> Result<Circuit, Error> {
+        let initial: Vec<_> = before
+            .iter()
+            .map(|&value| AffineState {
+                constant: value,
+                nodes: vec![0.0; self.program.nodes.len()],
+                states: Vec::new(),
+                has_variables: false,
+            })
+            .collect();
+        let mut updates = initial.clone();
+        for &event in events {
+            let mut local = initial.clone();
+            for (state, rhs) in &self.actions[event] {
+                local[*state] = rhs.substitute(&local)?;
+                if self.program.states[*state].kind == StateKind::Integer {
+                    // Integer updates were checked to use integral state-only
+                    // arithmetic. Catch overflow before a floating linear solve.
+                    check_state(local[*state].constant, &StateKind::Integer)?;
+                }
+                updates[*state] = local[*state].clone();
+            }
+        }
+        let mut program = self.program.clone();
+        program.states.clear();
+        program.events.clear();
+        for (contribution, rhs) in program.contributions.iter_mut().zip(&self.rhs) {
+            contribution.rhs = rhs.substitute(&updates)?.bind(&[])?;
+        }
+        Circuit::new(program, &self.driven, self.tolerances.clone())
+    }
+
     fn bind(&self, states: &[f64]) -> Result<Program, Error> {
         let mut program = self.program.clone();
         program.states.clear();
@@ -391,8 +449,8 @@ impl EventModel {
         Ok(())
     }
 
-    /// Prepare only. Every block sees the same pre-event voltages/state; statements
-    /// inside one block see its own earlier assignments. No accepted state changes.
+    /// Replay against supplied trial voltages and the fixed accepted old state.
+    /// Statements in one block see earlier assignments. No accepted state changes.
     pub(crate) fn apply(
         &self,
         events: &[usize],

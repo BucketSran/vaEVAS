@@ -8,6 +8,7 @@ mod linear;
 mod nonlinear;
 mod pwl;
 mod schedule;
+mod settlement;
 pub mod solver;
 mod transient;
 
