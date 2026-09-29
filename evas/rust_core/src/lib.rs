@@ -7,6 +7,7 @@ pub mod ir;
 mod linear;
 mod nonlinear;
 mod pwl;
+mod schedule;
 pub mod solver;
 mod transient;
 

@@ -51,8 +51,8 @@ class EventAccuracy(unittest.TestCase):
         for position in ['guard', 'contribution', 'assignment', 'without_events']:
             p = copy.deepcopy(program)
             if position == 'guard':
-                p['events'][0]['guard'] = dict(op='add',
-                    left=p['events'][0]['guard'], right=product)
+                p['events'][0]['trigger']['guard'] = dict(op='add',
+                    left=p['events'][0]['trigger']['guard'], right=product)
             elif position == 'assignment':
                 p['events'][0]['assignments'][0]['rhs'] = product
             else:

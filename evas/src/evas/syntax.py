@@ -70,7 +70,8 @@ class Assignment:
 
 @dataclass(frozen=True)
 class Event:
-    arguments: tuple[Expr, ...]
+    kind: str
+    arguments: tuple[Expr | None, ...]
     assignments: tuple[Assignment, ...]
     token: Token
 
@@ -240,20 +241,27 @@ class Parser:
                     self.take(")")
                     initial.extend(self.assignments())
                 else:
-                    self.take("cross")
+                    kind = self.take().text
+                    if kind not in ("cross", "timer"):
+                        self.fail("only cross and timer events are supported", token)
                     self.take("(")
                     arguments = [self.expression()]
                     while self.token.text == ",":
                         self.take(",")
-                        arguments.append(self.expression())
+                        if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
+                            arguments.append(None)  # LRM optional period argument
+                        else:
+                            arguments.append(self.expression())
                     self.take(")")
                     self.take(")")
                     if len(arguments) > 4:
-                        self.fail("cross enable is not supported", token)
-                    events.append(Event(tuple(arguments), self.assignments(), token))
+                        self.fail(f"{kind} accepts at most four supported arguments", token)
+                    if kind == "timer" and len(arguments) < 3:
+                        self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", token)
+                    events.append(Event(kind, tuple(arguments), self.assignments(), token))
                 continue
             if self.token.text != "V":
-                self.fail("only voltage contributions, initial_step and cross assignments are supported")
+                self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")
             branch = self.expression()
             if branch.op != "voltage":
                 self.fail("contribution target must be V(p) or V(p,n)", branch.token)

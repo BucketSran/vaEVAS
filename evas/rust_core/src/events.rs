@@ -1,5 +1,5 @@
 //! Bound affine event model. State is separate from electrical unknowns.
-use crate::ir::{Error, Expression, Program, StateKind, Term, Tolerances};
+use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
 use crate::solver::Circuit;
 use std::collections::BTreeSet;
 
@@ -153,7 +153,7 @@ pub(crate) fn check_state(value: f64, kind: &StateKind) -> Result<(), Error> {
 pub(crate) struct EventModel {
     pub(crate) program: Program,
     rhs: Vec<AffineState>,
-    pub(crate) guards: Vec<AffineState>,
+    pub(crate) guards: Vec<Option<AffineState>>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) driven: Vec<String>,
     tolerances: Tolerances,
@@ -193,12 +193,7 @@ impl EventModel {
         let mut actions = Vec::new();
         let mut writers = vec![None; program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
-            if !(-1..=1).contains(&event.direction)
-                || !event.time_tolerance.is_finite()
-                || event.time_tolerance <= 0.0
-                || !event.expression_tolerance.is_finite()
-                || event.expression_tolerance <= 0.0
-                || event.origin.instance.is_empty()
+            if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
                 || event.origin.line == 0
                 || event.origin.column == 0
@@ -207,15 +202,49 @@ impl EventModel {
                     .iter()
                     .any(|c| c.branch.instance == event.origin.instance)
             {
-                return Err(Error::new("invalid_ir", "invalid cross settings or origin"));
+                return Err(Error::new("invalid_ir", "invalid event origin"));
             }
-            let guard = affine(&event.guard, &program, &event.origin.instance)?;
-            if guard.states.iter().any(|v| *v != 0.0) {
-                return Err(Error::new(
-                    "unsupported_cross",
-                    format!("cross guard depends on state at {}", event.origin.label()),
-                ));
-            }
+            let guard = match &event.trigger {
+                EventTrigger::Cross {
+                    guard,
+                    direction,
+                    time_tolerance,
+                    expression_tolerance,
+                } => {
+                    if !(-1..=1).contains(direction)
+                        || !time_tolerance.is_finite()
+                        || *time_tolerance <= 0.0
+                        || !expression_tolerance.is_finite()
+                        || *expression_tolerance <= 0.0
+                    {
+                        return Err(Error::new("invalid_ir", "invalid cross settings"));
+                    }
+                    let guard = affine(guard, &program, &event.origin.instance)?;
+                    if guard.states.iter().any(|v| *v != 0.0) {
+                        return Err(Error::new(
+                            "unsupported_cross",
+                            format!("cross guard depends on state at {}", event.origin.label()),
+                        ));
+                    }
+                    Some(guard)
+                }
+                EventTrigger::Timer {
+                    start,
+                    period,
+                    time_tolerance,
+                    ..
+                } => {
+                    if !start.is_finite()
+                        || *start < 0.0
+                        || !period.is_finite()
+                        || !time_tolerance.is_finite()
+                        || *time_tolerance <= 0.0
+                    {
+                        return Err(Error::new("invalid_ir", "invalid timer settings"));
+                    }
+                    None
+                }
+            };
             guards.push(guard);
             let mut body = Vec::new();
             for assignment in &event.assignments {
@@ -227,7 +256,7 @@ impl EventModel {
                 {
                     return Err(Error::new(
                         "unsupported_cross",
-                        "a state may be written by only one cross block in its instance",
+                        "a state may be written by only one event block in its instance",
                     ));
                 }
                 writers[assignment.state] = Some(index);
@@ -257,7 +286,7 @@ impl EventModel {
             }) {
                 return Err(Error::new(
                     "unsupported_cross",
-                    "cross blocks cannot read state written by another cross block",
+                    "event blocks cannot read state written by another event block",
                 ));
             }
         }
@@ -341,6 +370,9 @@ impl EventModel {
             }
         }
         for (guard, event) in self.guards.iter().zip(&self.program.events) {
+            let Some(guard) = guard else {
+                continue;
+            };
             if guard
                 .nodes
                 .iter()

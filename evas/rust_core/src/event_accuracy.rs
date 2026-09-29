@@ -1,7 +1,7 @@
 //! Enclose affine guards from the original binary64 IR, including assembly and
 //! linear solve roundoff. Prepared once for a state-independent event schedule.
 use crate::interval::{equal_products, Interval as I};
-use crate::ir::{Error, Expression, Program};
+use crate::ir::{Error, EventTrigger, Expression, Program};
 use std::collections::BTreeMap;
 
 pub(crate) fn unresolved(message: &str) -> Error {
@@ -144,7 +144,11 @@ impl GuardBounds {
             .events
             .iter()
             .map(|event| {
-                let guard = affine(&event.guard, program)?;
+                // Keep rows aligned with event indices; timer has no guard.
+                let EventTrigger::Cross { guard, .. } = &event.trigger else {
+                    return Ok(vec![I::ZERO; width]);
+                };
+                let guard = affine(guard, program)?;
                 Ok((0..width)
                     .map(|k| {
                         let base = if k == width - 1 {
