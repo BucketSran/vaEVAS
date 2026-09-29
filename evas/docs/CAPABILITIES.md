@@ -1,7 +1,7 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-09-29。运行时基线为已合并提交 `50d1116c1728c9c59db3248fadb607187eb0f5c0`，
-EVAS 0.4.6 / IR v4。文档合入不扩大运行时支持范围；实际使用还须核对自己的 checkout。
+核对日期：2026-09-29。本次 PR12 合入后的运行时基线为 EVAS 0.5.3 / IR v5，
+实现提交 `ba3c06390cfaca6c34653fcc2f978d7c793a0958`。实际使用还须核对自己的 checkout。
 PR 可能继续推进，本表结论只对应列出的固定检查点，不能作为最新 PR head 的验证结果。
 具体契约、实现说明和结果各自维护一份。后续改变状态时同时更新日期与身份。
 
@@ -22,8 +22,8 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 | NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | 尚未合入 | PR8 保留实现，待整合/review | 旧基线上的正确性与合成性能检查 | 与当前 main 整合；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪 |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达 | 已合并 PR7/10 | 数学/开发回归、限定 Spectre 对照 | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
-| TIMER：固定定时事件 | 尚未合入 | PR12：0.5.3 / IR v5，待合并 review | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
-| EVENT-ORDER：同刻与原子提交 | cross 前态快照、整批验收/回退 | PR12：仿射联立、前向认证、integer/real 顺序赋值；PR13 历史待同步 | 旧同刻差异在 0.5.1 修复；0.5.3 新回归与限定回放 | Spectre 21.1 重复赋值异常由 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪；更广同刻语义、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
+| TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
+| EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、整批提交/回退 | PR12 合入；PR13 算子历史待同步 | 旧同刻差异在 0.5.1 修复；0.5.3 新回归与限定回放 | Spectre 21.1 重复赋值异常由 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪；更广同刻语义、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
 | TRANSITION：延迟与有限边沿 | 尚未合入 | PR13 待 review，依赖 PR12 | 独立边沿/历史样例及本地回归 | 专属 Spectre 对照、公共同刻语义、动态参数/更广输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 尚未合入 | PR14 待 review，依赖 PR13 | 独立 PWL/大时间减法样例及本地回归 | Spectre 对照、内部节点/可变延迟/跳变；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 尚未合入 | PR15 待 review，依赖 PR13 | 独立交点/反向/尺度样例及本地回归 | Spectre 对照、内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
@@ -52,8 +52,8 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 
 ## 后续工作顺序
 
-先明确 EVENT-ORDER 的行为选择与认证缺口，再判断依赖它的算子组合。逐项 review PR13–15，
-补上各自缺失的对照；SPARSE 的当前基线整合与后续性能优化分开处理。DYNAMICS 等新能力
+PR12 的限定 EVENT-ORDER 实现已完成本轮 review；Spectre 版本异常由 Issue16 独立跟踪。
+先将 PR13 与该事件基线同步并验证，再逐项 review PR13–15，补上各自缺失的对照；SPARSE 的当前基线整合与后续性能优化分开处理。DYNAMICS 等新能力
 先从独立义务、数学答案和边界开始。具体负责人、排期和执行预算放在任务/Issue/PR，避免复制到本表。
 
 每次状态更新需链接相应提交/证据；能力 ID 不随 PR 结束而改变。合并时标记 main 支持的限定范围，

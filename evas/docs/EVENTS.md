@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：本 checkout 为 EVAS 0.5.3 / IR v5；PR12 尚待合并，main 基线及其他分支身份见
+适用范围：本 checkout 为 EVAS 0.5.3 / IR v5；main 基线及其他分支身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 ## 仿射轨迹上的数学定位

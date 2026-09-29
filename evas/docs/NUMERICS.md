@@ -1,6 +1,7 @@
 # 电压方程与数值求解
 
-适用范围：本仓库已合并的 0.4.6 / IR v4。稀疏求解仅存在于下述 PR8 检查点。
+适用范围：本 checkout 的 EVAS 0.5.3 / IR v5；本章静态求解方法沿用 0.4.6。
+同刻事件的额外前向认证见[事件手册](EVENTS.md)。稀疏求解仅存在于下述 PR8 检查点。
 实现、证据和交付状态见[能力总表](CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
 
 ## 数学对象
