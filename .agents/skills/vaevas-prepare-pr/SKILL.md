@@ -53,6 +53,21 @@ behavior, meaningful design or compatibility decisions, actual checks and their
 outcomes, and remaining limits. Link the relevant contracts and evidence. Use the
 repository template if one exists; omit abandoned approaches and stale counts.
 
+Make the description answer the reviewer's concrete questions, scaled to the change:
+
+- What input or model failed or was unsupported, and what happens after the change?
+- Which equation, state transition or ordering rule explains the implementation?
+  Use a small equation, diagram or pseudocode when useful and link the owning handbook.
+- Which independent expected result and observed check demonstrate the behavior?
+  Show actual before/after evidence for a fix when available; never invent a baseline run.
+- What compatibility, precision, performance or composition limits remain, and which
+  callers are affected? Describe material rollback constraints when they exist.
+
+Keep the reviewed revision, effective settings and evidence identity clear. Distinguish
+equation residual from output/timing error, and support speed claims with comparable
+measurements. Documentation-only changes need document checks. A short PR need not
+have a diagram, every section, or a new experiment; reuse existing valid evidence links.
+
 ## Publish only within the requested scope
 
 Use the [authorization defaults](../../../CONTRIBUTING.md#scope-and-authorization).
