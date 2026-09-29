@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释开发检查点；main 0.5.3 尚未支持这三个算子；PR13 当前候选为 0.6.1 / IR v6。
+能力 ID：TRANSITION、ABSDELAY、SLEW、COMPOSE。本文解释 EVAS 0.6.1 / IR v6 的历史算子；transition、absdelay 随 PR13/14 交付，slew 仍为 PR15 候选。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
@@ -130,7 +130,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
 这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
 允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
-不可表示或非有限的移位拐点显式失败；尚未完成专属 Spectre 对照。
+不可表示或非有限的移位拐点显式失败。[固定检查点专项](https://github.com/BucketSran/vaEVAS/blob/ec3acaa80fd799fd85f24c3d7ae8667982393d8f/experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## slew
