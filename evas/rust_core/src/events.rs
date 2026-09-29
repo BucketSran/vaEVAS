@@ -1,4 +1,5 @@
 //! Bound affine event model. State is separate from electrical unknowns.
+use crate::event_conditions::{Conditions, Selection};
 use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
 use crate::settlement_bounds::Bounds;
@@ -247,10 +248,11 @@ pub(crate) struct EventModel {
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
     actions: Vec<Vec<(usize, AffineState)>>,
+    pub(crate) conditions: Conditions,
     pub(crate) driven: Vec<String>,
     pub(crate) tolerances: Tolerances,
     // Bounded one-batch cache; stores coefficients, never accepted/trial state.
-    certificate: RefCell<Option<(Vec<usize>, Bounds)>>,
+    certificate: RefCell<Option<(Selection, Bounds)>>,
 }
 
 impl EventModel {
@@ -343,7 +345,7 @@ impl EventModel {
             };
             guards.push(guard);
             let mut body = Vec::new();
-            for assignment in &event.assignments {
+            for assignment in event.assignments() {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
                 })?;
@@ -392,7 +394,9 @@ impl EventModel {
                 ));
             }
         }
-        let model = Self {
+        let conditions = Conditions::new(&program)?;
+        let mut model = Self {
+            conditions,
             program,
             rhs,
             guards,
@@ -402,27 +406,36 @@ impl EventModel {
             certificate: RefCell::new(None),
         };
         model.check_guard_dependencies()?;
+        model.conditions.prepare(&model.program, &model.driven)?;
         Ok(model)
     }
 
     pub(crate) fn certify(
         &self,
-        events: &[usize],
-        inputs: &[f64],
+        selection: &Selection,
+        inputs: &[I],
         before: &[I],
         operators: &[I],
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
         let mut cache = self.certificate.borrow_mut();
-        if !cache.as_ref().is_some_and(|(ids, _)| ids == events) {
-            *cache = Some((events.to_vec(), Bounds::new(self, events)?));
+        if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
+            *cache = Some((selection.clone(), Bounds::new(self, selection)?));
         }
         cache
             .as_ref()
             .unwrap()
             .1
             .check(self, inputs, before, operators, voltages, states)
+    }
+
+    pub(crate) fn assigned(&self, selection: &Selection) -> Vec<usize> {
+        selection
+            .actions
+            .iter()
+            .flat_map(|(event, indices)| indices.iter().map(|&index| self.actions[*event][index].0))
+            .collect()
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {
@@ -445,7 +458,7 @@ impl EventModel {
     /// voltage system F(v, Phi(old_state, v), t)=0. No accepted state is mutated.
     pub(crate) fn event_circuit(
         &self,
-        events: &[usize],
+        selection: &Selection,
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
@@ -463,9 +476,10 @@ impl EventModel {
             })
             .collect();
         let mut updates = initial.clone();
-        for &event in events {
+        for (event, indices) in &selection.actions {
             let mut local = initial.clone();
-            for (state, rhs) in &self.actions[event] {
+            for &index in indices {
+                let (state, rhs) = &self.actions[*event][index];
                 local[*state] = rhs.substitute(&local)?;
                 if self.program.states[*state].kind == StateKind::Integer {
                     // Integer updates were checked to use integral state-only
@@ -574,21 +588,22 @@ impl EventModel {
                 ));
             }
         }
-        Ok(())
+        self.conditions.check_dependencies(&affected)
     }
 
     /// Replay against supplied trial voltages and the fixed accepted old state.
     /// Statements in one block see earlier assignments. No accepted state changes.
     pub(crate) fn apply(
         &self,
-        events: &[usize],
+        selection: &Selection,
         voltages: &[f64],
         before: &[f64],
     ) -> Result<Vec<f64>, Error> {
         let mut after = before.to_vec();
-        for &index in events {
+        for (event, indices) in &selection.actions {
             let mut local = before.to_vec();
-            for (state, expression) in &self.actions[index] {
+            for &index in indices {
+                let (state, expression) = &self.actions[*event][index];
                 local[*state] = expression.value(voltages, &local)?;
                 check_state(local[*state], &self.program.states[*state].kind)?;
                 after[*state] = local[*state];

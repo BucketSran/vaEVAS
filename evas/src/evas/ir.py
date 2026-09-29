@@ -1,4 +1,4 @@
-"""Version 7: voltage/event IR with explicit-IC direct-PWL integration.
+"""Version 8: voltage/event IR with ordered conditional event bodies.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 
 @dataclass(frozen=True)
@@ -109,6 +109,18 @@ class State:
 class Assignment:
     state: int
     rhs: Expression
+    kind: str = field(default="assign", init=False)
+
+
+@dataclass(frozen=True)
+class Conditional:
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: Expression
+    right: Expression
+    then_body: tuple["Assignment | Conditional", ...]
+    else_body: tuple["Assignment | Conditional", ...]
+    origin: Origin
+    kind: str = field(default="if", init=False)
 
 
 @dataclass(frozen=True)
@@ -132,7 +144,7 @@ class TimerTrigger:
 @dataclass(frozen=True)
 class Event:
     trigger: CrossTrigger | TimerTrigger
-    assignments: tuple[Assignment, ...]
+    body: tuple[Assignment | Conditional, ...]
     origin: Origin
 
 

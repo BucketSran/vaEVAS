@@ -22,6 +22,10 @@ struct Frame {
 #[path = "transient_idt_tests.rs"]
 mod idt_accepted_history_tests;
 
+#[cfg(test)]
+#[path = "transient_condition_tests.rs"]
+mod condition_history_tests;
+
 fn prepare_event(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -30,9 +34,9 @@ fn prepare_event(
     events: &[usize],
 ) -> Result<Frame, Error> {
     let mut operators = accepted.operators.clone();
-    // No-operator execution retains main's conditional event certificate.
-    // Operator histories must keep the uncertainty in sampled event states.
-    let old_bounds = if model.program.operators.is_empty() {
+    // Histories and conditional sampling retain accepted uncertainty.
+    // The legacy flat event path keeps its existing fixed-sample contract.
+    let old_bounds = if model.program.operators.is_empty() && !model.conditions.enabled() {
         accepted.states.iter().copied().map(I::point).collect()
     } else {
         accepted.state_bounds.clone()
@@ -42,10 +46,22 @@ fn prepare_event(
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let frozen = operators.values(time)?;
-    let (states, state_bounds, circuit, solution) = crate::settlement::prepare(
+    let inputs = trajectory.values(time);
+    let input_bounds = if model.conditions.enabled() {
+        trajectory.value_bounds(time)
+    } else {
+        inputs.iter().copied().map(I::point).collect()
+    };
+    let crate::settlement::Prepared {
+        states,
+        bounds: state_bounds,
+        circuit,
+        solution,
+        assigned,
+    } = crate::settlement::prepare(
         model,
         events,
-        &trajectory.values(time),
+        (&inputs, &input_bounds),
         &accepted.states,
         &frozen,
         &old_bounds,
@@ -53,10 +69,8 @@ fn prepare_event(
     )?;
     // Equal rounded inputs / equal interval endpoints do not prove that an
     // uncertain state assignment left the exact operator target unchanged.
-    let changed: Vec<_> = events
-        .iter()
-        .flat_map(|&id| &model.program.events[id].assignments)
-        .map(|a| a.state)
+    let changed: Vec<_> = assigned
+        .into_iter()
         .filter(|&s| old_bounds[s] != state_bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
     operators.advance(time, &states, &state_bounds, &changed)?;
@@ -140,10 +154,15 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         circuit,
         operators,
     };
-    if !model.program.operators.is_empty() {
+    if !model.program.operators.is_empty() || model.conditions.enabled() {
+        let inputs = if model.conditions.enabled() {
+            trajectory.value_bounds(0.0)
+        } else {
+            trajectory.values(0.0).into_iter().map(I::point).collect()
+        };
         accepted.state_bounds = model.certify(
-            &[],
-            &trajectory.values(0.0),
+            &model.conditions.select(&[], &inputs)?,
+            &inputs,
             &accepted.state_bounds,
             &accepted.operators.bounds(0.0)?,
             &accepted.solution.voltages,
@@ -221,7 +240,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         }
         // A trial beyond an earlier scheduled event is discarded before any
         // residual check: that event may change the future waveform/constraints.
-        let candidate = if model.program.operators.is_empty() {
+        let candidate = if model.program.operators.is_empty() && !model.conditions.enabled() {
             None
         } else {
             Some(prepare_event(&model, &trajectory, &accepted, time, &[]))
@@ -503,7 +522,7 @@ mod tests {
                 "origin":{"source":"rollback.va","line":1,"column":1,"instance":"dut"}}],
             "events":[{"trigger":{"kind":"cross","guard":{"op":"affine","constant":-0.5,"terms":[{"node":1,"coefficient":1}]},
                 "direction":0,"time_tolerance":1e-12,"expression_tolerance":1e-9},
-                "assignments":[{"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":1,"terms":[]}}}],
+                "body":[{"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":1,"terms":[]}}}],
                 "origin":{"source":"rollback.va","line":2,"column":1,"instance":"dut"}}]
         });
         if inconsistent_after_event {
@@ -755,8 +774,8 @@ mod tests {
                         enabled: true,
                     };
                 }
-                let action = program.events[0].assignments[0].clone();
-                program.events[0].assignments.push(action);
+                let action = program.events[0].body[0].clone();
+                program.events[0].body.push(action);
                 let model =
                     EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
                 let circuit = model.circuit(&model.initial()).unwrap();
@@ -802,11 +821,11 @@ mod tests {
         let (original, trajectory, _) = fixture(false);
         let mut program = original.program;
         program.states[0].kind = crate::ir::StateKind::Real;
-        program.events[0].assignments = serde_json::from_value(serde_json::json!([
-            {"state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
-            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+        program.events[0].body = serde_json::from_value(serde_json::json!([
+            {"kind":"assign", "state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
+            {"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
                 "right":{"op":"affine","constant":2_f64.powi(-55),"terms":[]}}},
-            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+            {"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
                 "right":{"op":"affine","constant":-1.0,"terms":[]}}}
         ]))
         .unwrap();

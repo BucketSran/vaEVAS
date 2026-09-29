@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 7;
+pub const SCHEMA_VERSION: u32 = 8;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -261,8 +261,55 @@ pub struct Assignment {
 #[serde(deny_unknown_fields)]
 pub struct Event {
     pub trigger: EventTrigger,
-    pub assignments: Vec<Assignment>,
+    pub body: Vec<Statement>,
     pub origin: Origin,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum Statement {
+    Assign(Assignment),
+    If {
+        relation: Relation,
+        left: Expression,
+        right: Expression,
+        then_body: Vec<Statement>,
+        else_body: Vec<Statement>,
+        origin: Origin,
+    },
+}
+
+#[derive(Debug, Clone, Copy, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Relation {
+    Lt,
+    Le,
+    Gt,
+    Ge,
+}
+
+impl Event {
+    /// Static validation visits both arms; execution uses only the selected arm.
+    pub(crate) fn assignments(&self) -> Vec<&Assignment> {
+        fn visit<'a>(body: &'a [Statement], out: &mut Vec<&'a Assignment>) {
+            for statement in body {
+                match statement {
+                    Statement::Assign(a) => out.push(a),
+                    Statement::If {
+                        then_body,
+                        else_body,
+                        ..
+                    } => {
+                        visit(then_body, out);
+                        visit(else_body, out);
+                    }
+                }
+            }
+        }
+        let mut out = Vec::new();
+        visit(&self.body, &mut out);
+        out
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]

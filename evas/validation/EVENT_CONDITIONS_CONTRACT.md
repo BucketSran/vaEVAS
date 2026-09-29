@@ -1,9 +1,10 @@
 # 事件条件赋值与采样复位：第一阶段契约
 
-状态：**设计与独立数学校准；尚未实现，也没有 EVAS 或远程矩阵通过结论。**
-基线为 `5b090571c7de7c6ec08a05c803479505c5d745ee`，专用分支
-`feat/evas-event-conditions`。本阶段只新增本文件和
-[check_event_conditions_math.py](check_event_conditions_math.py)，不修改共享接口。
+状态：**分批实现；0.8.0 / IR v8 已接入受限事件 if/else，尚未接入 OR，也无原 8 条件通过结论。**
+设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；本轮在分支 `feat/evas-event-conditions`
+同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后实现，停止于可 review 的本地检查点。
+以下完整目标继续约束后续 OR 接入；原设计阶段事实和校准结果不当作本轮仿真证据。
+当前实现、数学与精度边界以[事件手册](../docs/EVENTS.md#event-conditions)为准。
 能力归属为 LANG、CROSS、EVENT-ORDER、COMPOSE；依赖已有 TRANSITION。
 本地数学检查的组数不是模型条件数，也不改变原 31 条件的分母。
 
@@ -175,7 +176,7 @@ F(v+, q+, H_e, u(e)) = 0
 **分支真值已证明**，以及**该分支下的解/新历史误差已认证**。残差不能替代任一义务。
 
 1. 从 accepted 帧克隆候选历史；在 e 推进到期算子，冻结连续 transition 当前值及区间。
-2. 对所有激活 B 的谓词，在当前输入/无状态电压包围上认证真值，生成只读 path 证书；
+2. 对所有激活 B 沿所选路径实际到达的谓词，在当前输入/无状态电压包围上认证真值，生成只读 path 证书；
    若任一不可判定，不执行/提交任何 body。
 3. 沿选中路径构造 Phi，保持逐句赋值和中间 integer 检查；同批代入原贡献方程求 v+。
 4. 独立重放原 body 和谓词证书，检查原方程、状态一致性。区间路径从原 IR 重建，
@@ -185,26 +186,19 @@ F(v+, q+, H_e, u(e)) = 0
 6. 所有条件通过后才整批提交时间、状态/包围、电压/电路、算子队列/历史、所有叶子游标、
    去重消费状态和事件记录。错误、丢弃或重试必须保持旧帧及记录长度不变。
 
-本基线 `Bounds::check` 把采样 `inputs: &[f64]` 作为点量；算子手册明确不覆盖 PWL 求值误差。
-谓词边界认证必须更严格。建议在共享接口交接时给该证书路径增加输入区间参数：
-数值解仍用代表输入，分支及候选认证使用原 PWL 包围，避免两个证明针对不同的数学输入。
-这是必要接口问题，**没有在本分支自行改签名**。若协调者保留旧条件性认证，必须同时限定
-可接受谓词样本的插值为已证精确，或证明输入包围内真值不变并明确 RHS 误差的条件性范围；
-不能遗漏这项义务后宣称任意等号边界已支持。
+实现增量：0.8.0 的含条件模型将 `Trajectory::value_bounds(e)` 传入谓词和 `Bounds::check`，
+数值解使用代表输入，候选认证使用原 PWL 包围。该模型在普通步和跨事件中也保留旧状态包围，
+即使没有 transition。无条件旧路径维持原精度契约，不宣称已补齐所有连续时间误差链。
+电压 `vabstol+reltol*abs(v)`、real 状态仅相对项和 integer 精确等预算不变；
+源到 IR 舍入、名义事件定位允许偏移与连续时间观察资格仍分别说明。
 
-当前无算子模型仍把旧状态当点量；本次有 transition 的采样器应继续携带历史包围。
-不得为了新分支返回名义值而把区间重置成点，也不改变电压 `vabstol+reltol*abs(v)`、
-real 状态仅相对项、integer 精确等既有预算。源到 IR 常量舍入、名义事件定位允许偏移与
-连续时间观察资格仍分别说明，不能夸大证书。
+每个 EventModel 内的证书缓存键为激活块 ID、选中赋值索引及分支决定；只缓存系数。
+每次试算/重放重新认证路径；原程序身份由缓存的模型所有权固定。空分支不伪造写目标。
 
-当前证书缓存键仅为 event IDs。新增条件后相同 B 在不同时间可选择不同分支，
-键必须至少包括程序身份、激活 block IDs 和选中语句路径；缓存只存系数，不存本次状态/真值。
-每次重试重新验证 path；绝不能用前次“复位”臂的常数映射去认证后次“采样”臂。
+## 6. 完整目标的语义 IR 与接口边界
 
-## 6. 最小语义 IR 与接口移交
-
-以下是语义草图，**不是新 JSON schema 或另一个版本承诺**。idt 线程交接后以其实际头部
-和协调者确定的共用 IR 为准，Python/Rust 同步完成一次迁移。
+下列为完整目标草图。当前 IR v8 已实现 ordered body、Assign、If 及四种 Compare，
+实际 JSON 见[迁移说明](../README.md#ir-v8-migration)；AnyCross 仍是下一批目标。
 
 ```text
 EventBlock(origin, trigger, body)
@@ -216,7 +210,8 @@ relation := lt | le | gt | ge
 ```
 
 单触发器语义保留；AnyCross 首版不含 timer、initial_step、嵌套 AnyCross 或逗号别名。
-空 body 合法，空 AnyCross 非法。赋值、比较和叶子均保留来源及可诊断身份。
+空 body 合法，空 AnyCross 非法。当前赋值用事件来源及 body 索引定位，比较另有源码来源；
+AnyCross 的叶子来源和记录是后续交付内容。
 比较是控制节点，不塞进可数值求值的通用 Expression，也不新建另一套算子/历史类型。
 静态合法性应在 Python 和原始 IR 的 Rust 入口都执行，未选中的非法分支不能逃过验证。
 
@@ -226,21 +221,18 @@ certified selected paths -> settlement candidate`。选择结果带原 IR 路径
 记录一条 block 执行及其 fired leaves；根包围、代表时间、方向/容差均能追溯到叶子。
 事件体执行次数、叶子命中次数、状态变化次数是三个不同数，不混在一个计数里。
 
-| 下一阶段需要协调移交的精确文件 | 必要变化及责任边界 |
+| 层 / 文件 | 当前实现与后续边界 |
 | --- | --- |
-| `evas/src/evas/syntax.py`、`frontend.py` | 新 AST/绑定；idt 完成固定检查点后才可写 |
-| `evas/src/evas/ir.py`、`evas/rust_core/src/ir.rs` | 共用 schema、serde 和 EventRecord；版本号由协调者单独定，不并行发明版本 |
-| `evas/rust_core/src/events.rs` | 全路径校验、单写者、依赖检查、选支、重放及缓存身份 |
-| `evas/rust_core/src/event_accuracy.rs`、`schedule.rs` | leaf 级证书与 block 级批次；谓词仿射包围接入 |
-| `evas/rust_core/src/settlement.rs`、`settlement_bounds.rs` | 选中路径的三路一致性、输入区间及历史认证接口 |
-| `evas/rust_core/src/transient.rs` | 原子候选、实际赋值集合、记录/游标、同引擎回滚测试 |
-| `evas/tests/test_event_conditions.py`（新） | 8 条件入口及新增语义端到端回归，正式运行仍保留原 checker |
-| `evas/tests/test_contracts.py`、`test_events.py`、`test_event_accuracy.py`、`test_settlement.py`、`test_timer.py` | 协调修改旧拒绝断言/版本断言，补原始 IR 与共用路径回归；不删除仍有效的拒绝边界 |
+| `syntax.py`、`frontend.py` | 已有递归 body、比较及实例绑定；OR 语法仍待补 |
+| Python/Rust `ir` | 已协调为 schema v8；body 有 assign/if 类型；EventRecord 沿用单触发格式 |
+| `event_conditions.rs`、`events.rs` | 全分支合法性、保守依赖、可达选支、重放及路径缓存 |
+| `event_accuracy.rs`、`schedule.rs` | 前者复用仿射包围证明谓词；后者未改，OR 叶子去重待补 |
+| `settlement.rs`、`settlement_bounds.rs` | 选中路径与原 IR 区间重建，接收 PWL 输入区间 |
+| `transient.rs` | 仅选中赋值参与目标更新，候选帧整批提交；3 项新实际帧恢复测试 |
+| `test_event_conditions.py` | 20 项开发回归；不是原 8 条件动态回放 |
 
-`pwl.rs`、`operators.rs`、`affine_bounds.rs` 优先复用已有接口，是否必须改动需由输入区间
-接入结果决定，不能视为本阶段写授权。assembly/linear/solver 属 PR8 线程，本方案不要求
-改求解器；如新增需求必须另行移交。版本包文件及共享 README、CAPABILITIES、EVENTS 手册
-更新由协调者分配；语义线程的 DYNAMICS 文件不在此清单。本阶段所有核心文件均只读。
+本轮复用 `pwl.rs`、`operators.rs`、`affine_bounds.rs` 的既有接口；没有修改矩阵求解算法。
+`solver.rs` 和旧事件测试的变化仅为内部选择/结算签名及 IR v8 fixture 迁移。
 
 ## 7. 独立答案、覆盖与缺口
 
@@ -297,7 +289,7 @@ EC-WAVE 仅手算这个相等上/下沿的两次目标变化，不另造通用 t
 - 既有全 Python/全 Rust 的共享 IR gate 及相关事件/transition 回归随接入运行。
   pure math/checker 成功不能抵销这些未运行项；本次不运行远程矩阵。
 
-## 8. 本阶段复核及停止点
+## 8. 原设计阶段的历史复核
 
 ```sh
 python3 -B evas/validation/check_event_conditions_math.py
@@ -312,8 +304,37 @@ git diff --check
 **8 个方法通过**；`test_history test_recheck` **17 个方法通过**。它们不是 39 个仿真条件。
 两份原模型的只读 Parser 探针均复现第 2 节的词法拒绝；没有执行任何模拟器内核。
 本文件的本地链接/章节锚点已核对；最终提交前检查两文件 diff 的空白与写入范围。
-当前交付结束在这份可 review 的契约与校准；不 push、不创建 PR、不合入 main。
+该设计提交结束在契约与校准，没有 push、创建 PR 或合入 main。
 
-接口交接待协调者确定：idt 固定头部和共用 schema；body/leaf 的最终表示；分支证书与
-输入区间的接入签名；记录格式及版本文件/手册的写者。无需为上述等待伪造另一版 IR。
+<a id="current-checkpoint"></a>
+
+## 9. 当前实现检查点
+
+本地实现入口及新增独立答案在[事件手册](../docs/EVENTS.md#event-conditions)。
+已同步 IR v8、输入区间接口和实际赋值集合；受影响的旧版本/原始 IR 测试协调迁移。
+新检查覆盖精确等号、舍入伪等号、嵌套/空分支、交替采样复位、状态独立内部电压、
+同刻反馈赋值、结构反馈拒绝、transition 联动与实际已接受帧回退。
+尚未完成：OR 叶子证书/去重、原 8 条件动态回放、所有调度器故障点的系统性注入。
 范围继续排除 idt reset、连续积分反馈、通用非线性 guard、多块同状态写入及普通 analog if。
+
+本轮本地全量 **250 Python / 55 Rust** 通过（分别新增 20 / 3 项），条件数学 14 项、
+既有动态数学 9 项通过。新静态回放 **22 配置、484,022 点**通过原判据，11 条支持、20 条明确拒绝。
+构建使用 locked/offline，all-targets warnings-as-errors、格式与 diff 检查通过；
+Clippy 未安装，未把 compiler warnings 检查冒充 Clippy。没有执行 Spectre、原矩阵瞬态或性能计时。
+
+```sh
+cargo build --locked --offline --manifest-path evas/rust_core/Cargo.toml
+PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
+cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml
+RUSTFLAGS='-D warnings' cargo check --locked --offline --manifest-path evas/rust_core/Cargo.toml --all-targets
+cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check
+python3 -B evas/validation/check_event_conditions_math.py
+python3 -B evas/validation/check_dynamics_math.py
+python3 -B evas/validation/check_design_math.py
+PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/event-conditions-080/static-replay
+```
+
+最后一项需新的输出目录。此执行的原始日志与波形仅本地保存于 `runs/event-conditions-080/`；
+测试源码、独立答案及输入在仓库内。3 项新 Rust 测试检查 prepare 阶段和已接受帧：
+不可判定条件、失败采样认证、成功弃步、修正未来输入、非零 transition 历史及无算子状态误差保留。
+完整日程游标/消费状态的任意故障点注入仍未完成，不能用新进程重跑冒充这类证据。

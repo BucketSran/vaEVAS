@@ -2,7 +2,7 @@
 //! linear solve roundoff. Prepared once for a state-independent event schedule.
 use crate::affine_bounds::affine;
 use crate::interval::{equal_products, Interval as I};
-use crate::ir::{Error, EventTrigger, Program};
+use crate::ir::{Error, EventTrigger, Expression, Program};
 use std::collections::BTreeMap;
 
 pub(crate) fn unresolved(message: &str) -> Error {
@@ -15,6 +15,23 @@ pub(crate) struct GuardBounds {
 
 impl GuardBounds {
     pub(crate) fn new(program: &Program, driven: &[String]) -> Result<Self, Error> {
+        let expressions: Vec<_> = program
+            .events
+            .iter()
+            .map(|event| match &event.trigger {
+                EventTrigger::Cross { guard, .. } => Some(guard),
+                EventTrigger::Timer { .. } => None,
+            })
+            .collect();
+        Self::expressions(program, driven, &expressions)
+    }
+
+    /// Project state-independent affine expressions onto the driven inputs.
+    pub(crate) fn expressions(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+    ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
         let driven: Vec<_> = driven
@@ -64,12 +81,11 @@ impl GuardBounds {
                 nodes[unknown[r]][k] = rows[r][n + k] - rest;
             }
         }
-        let coefficients = program
-            .events
+        let coefficients = expressions
             .iter()
-            .map(|event| {
+            .map(|expression| {
                 // Keep rows aligned with event indices; timer has no guard.
-                let EventTrigger::Cross { guard, .. } = &event.trigger else {
+                let Some(guard) = expression else {
                     return Ok(vec![I::ZERO; width]);
                 };
                 let guard = affine(guard, program)?;

@@ -17,13 +17,13 @@
 
 | ID / 能力 | main 范围 | 分支与交付状态 | 证据状态 | 剩余缺口与说明入口 |
 | --- | --- | --- | --- | --- |
-| LANG：语法、绑定、IR | 标量、参数、限定表达式及版本化 IR | 限定算子及显式初值 idt 使用 IR v7 | 前端与畸形 IR 回归 | 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
+| LANG：语法、绑定、IR | 标量、参数、限定表达式及版本化 IR | main 限定算子及 idt 使用 IR v7；`feat/evas-event-conditions` 为 0.8.0 / IR v8 受限事件 if/else，待 review | 分支独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
 | LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
 | NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 交付，未发布 tag | 当前整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达 | 已合并 PR7/10 | 数学/开发回归、限定 Spectre 对照 | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
 | TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
-| EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、整批提交/回退 | PR12/13 已合入；PR14 延续历史误差传播 | PR12 顺序赋值与 PR13 电压目标/算子值回归 | Spectre 21.1 重复赋值异常见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16)；多事件块写同一状态、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
+| EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、整批提交/回退 | PR12/13 已合入；PR14 延续历史误差传播；0.8.0 条件分支补路径缓存、输入与旧状态包围，待 review | PR12/13 历史证据保留；分支新增条件失败/弃步/修正未来输入重试 | Spectre 21.1 重复赋值异常见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16)；多事件块写同一状态、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
 | TRANSITION：延迟与有限边沿 | 固定延迟、显式正边沿、状态仿射输入 | PR13 已合入；0.6.1 / IR v6 | 6 项 Fraction 精度回归；共同观察网格下 EVAS/Spectre 各 16/16 | 完整观察资格、区间保守性、更广同刻语义/动态参数/输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
@@ -38,6 +38,7 @@
 
 | 入口 | 固定检查点与依赖 | 已有证据及边界 |
 | --- | --- | --- |
+| [事件条件检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint) | `feat/evas-event-conditions`，0.8.0 / IR v8，基于 main `a0c8043`；仅本地待 review，未合并/发布 | 250 Python / 55 Rust、14 条件数学 / 9 动态数学；新静态 22 配置、484,022 点通过。OR 未接入；无新的 Spectre、原瞬态矩阵或性能证据；原始日志仅本地 |
 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | 0.7.1 / IR v7，被测 `f44b730`，基于 PR19 main `2e3196f`；算法来源 `4d20fbc`，最终收尾只改文档 | 230 Python / 52 Rust / 9 纯数学；静态 22 配置、484,022 点通过，20 条明确拒绝；稀疏 idt 1,240 个电压检查；未新跑 Spectre、瞬态原矩阵或计时，原始日志仅本地保留 |
 | [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
 | [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 0.5.3 修复及当前源码/构建身份见[收据](../../experiments/dvs2-spectre-validation/results/timer-0.5.3.json)；同步 main 文档基线 | 132 Python / 17 Rust；12 配置新 EVAS 回放符合独立候选，复用 Spectre 的 4 个重复写配置保留差异；[历史和本轮说明](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
@@ -60,7 +61,7 @@
 | 优先顺序 / 能力 | 下一项范围与数学依据 | 对应原条件 | 验收重点 |
 | --- | --- | --- | --- |
 | 1 / LANG | 普通 analog 局部顺序赋值、比较及 if/else；先限定输入驱动的分段仿射关系 | v1-main（1） | 独立限幅公式、等号边界、阈值定位、语句顺序；暂不扩展隐式分支反馈 |
-| 2 / LANG + EVENT-ORDER | 事件体条件赋值、cross 的 or 组合；同刻触发集合去重与明确的复位优先分支 | v4 两条、e2 三条、c1 三条（8） | 时钟/复位单独与同刻、初始高电平、实例隔离；共同事件时间定义和状态提交 |
+| 2 / LANG + EVENT-ORDER | 事件体条件赋值、cross 的 or 组合；同刻触发集合去重与明确的复位优先分支 | v4 两条、e2 三条、c1 三条（8） | 第一批 if/else 与输入区间认证已在分支实现待 review；OR 和原 8 条件验收留下一批，不能提前计通过数 |
 | 3 / EVENT-ORDER | 多事件块写同一状态；先支持可证明无冲突的更新，同刻冲突另立契约 | v3-main（1），亦为复位积分依赖 | 上/下阈值迟滞、保持区间、同时写冲突及失败回退；不能只删除当前拒绝检查 |
 | 4 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
 | 5 / DYNAMICS | 在现有显式初值/PWL idt 上补复位；重新定义复位前后历史及原子提交 | d1-free/reset（2） | 非零初值、复位保持/释放、区间积分误差、撤销重试；依赖多事件状态更新 |
