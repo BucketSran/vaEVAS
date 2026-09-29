@@ -11,7 +11,7 @@
 | 当前能力、分支实现、已知差异和后续工作 | [CAPABILITIES](CAPABILITIES.md) |
 | 电压方程、稠密/稀疏线性代数、Newton、精度 | [NUMERICS](NUMERICS.md) |
 | cross、timer、同刻事件与提交/回退 | [EVENTS](EVENTS.md) |
-| transition、absdelay、slew 的数学与实现 | [OPERATORS](OPERATORS.md) |
+| transition、absdelay、slew、idt 的数学与实现 | [OPERATORS](OPERATORS.md) |
 | 独立需求、模型及观察判据 | [验证集](../validation/README.md)、[观察资格协议](../validation/METHOD_QUALIFICATION.md) |
 | 执行身份、复现实验及公开资产 | [实验入口](../../experiments/README.md) |
 | 分支、责任归属、发布与清理 | [CONTRIBUTING](../../CONTRIBUTING.md)；agent 快速入口为 [AGENTS.md](../../AGENTS.md) |

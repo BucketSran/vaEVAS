@@ -1,6 +1,6 @@
 # 受限积分的独立契约与语义回归
 
-本页固定 DYNAMICS 首版 `idt` 的候选子集、解析答案和验证边界，不宣布实现完成。
+本页固定 DYNAMICS 首版 `idt` 的受限子集、解析答案和验证边界；实现说明见[算子手册](../docs/OPERATORS.md#idt)。
 起点为 `main` 的 `5b090571c7de7c6ec08a05c803479505c5d745ee`（EVAS 0.6.1 / IR v6）；
 该基线没有 `idt`。这些开发样例不增加原 31 条件分母，也不替代包含复位的 D1 条件。
 所有积分答案由下列数学关系重新推导，未使用新旧 EVAS 输出或复制旧探针源码。
@@ -8,10 +8,11 @@
 
 ## 首版边界与数学
 
-候选接受 `idt(u,z0)`：显式有限常量初值 `z0`，输入为直接驱动的连续 PWL 或其固定仿射组合；
-输入拐点取各源的并集。输出可参与无反馈的仿射电压贡献；多个调用点、实例分别积分。
-这是本轮选择的子集，尚需实现线程在前端与原始 IR 入口落实检查。
-缺省初值、复位参数、状态/内部未知节点输入、动态参数、不连续输入、嵌套、反馈、
+接受 `idt(u,z0)`：显式有限常量初值 `z0`，输入为直接驱动的连续 PWL 或其固定仿射组合；
+输入拐点取各源的并集。输出可参与现有可解的仿射电压网络；多个调用点、实例分别积分。
+禁止电压或状态反馈进入积分输入；输出侧的静态电压反馈沿用现有联立求解与误差放大验收。
+这是本轮选择的子集，前端与原始 IR 入口均有准入检查。
+缺省初值、复位参数、状态/内部未知节点输入、动态参数、不连续输入、嵌套、反馈进入积分输入、
 算子输出直接或间接驱动 `cross`，以及导数、滤波、高阶/其他动态算子均不在首版。
 不支持的合法 VA 写法应标能力缺口；不能把本轮拒绝边界写成语言标准的限制。
 
@@ -82,17 +83,16 @@ z(t_0+h)=z_0+\int_0^h(u_0+ms)\,ds=z_0+u_0h+\tfrac12mh^2.
 | 证据 | 已有覆盖/本轮资产 | 仍不能据此宣称什么 |
 | --- | --- | --- |
 | 独立答案与校准 | [check_dynamics_math.py](check_dynamics_math.py)；上述固定关系与错误控制 | 没有调用 EVAS；不是 idt 仿真通过，也不是回退测试 |
-| 适用的不变性 | [test_affine.py](../tests/test_affine.py) 已有静态贡献全排列与实例次序；[test_transition.py](../tests/test_transition.py) 已有调用点/实例隔离；[test_settlement.py](../tests/test_settlement.py) 保留依赖赋值顺序；[test_timed_composition.py](../tests/test_timed_composition.py) 已有网格/步长与组合检查 | 这些原有测试不能替代尚未实现 idt 的回归 |
+| 适用的不变性 | [test_affine.py](../tests/test_affine.py) 的静态贡献排列；[test_idt.py](../tests/test_idt.py) 的同目标调用点、实例、贡献次序和网格/步长检查；[test_settlement.py](../tests/test_settlement.py) 的依赖赋值顺序 | 独立变化的通过不能替代所有组合验证 |
 | 本轮真实缺口回归 | [test_semantic_invariants.py](../tests/test_semantic_invariants.py)：同目标两个 transition 加仿射输入的贡献全排列；节点/实例/局部标识符重命名；额外输出时刻及无负载观察支路；均另核对手算波形、整数状态及完整事件序列 | 不交换有依赖的 `n=n+1; held=n; n=n+1;`；不要求 IR 编号相同；观察支路适用理想电压、无负载反馈模型，不能推广到任意电路探针 |
-| 同一引擎失败后完整性 | [transient.rs 私有测试](../rust_core/src/transient.rs)：`discarded_candidate_can_be_retried_without_double_counting`、`failed_post_event_residual_does_not_commit_state_or_voltage`、`history_accuracy_failure_and_retry_leave_all_bounds_uncommitted`、`uncertain_operator_order_rejects_the_prepared_batch_before_commit` 等 | 只覆盖当前事件/transition 路径，不构成 idt 或全部调度器持久状态的失败恢复证明 |
+| 同一引擎失败后完整性 | [transient.rs 私有测试](../rust_core/src/transient.rs) 的事件、transition 和 idt 初始帧检查；[idt 非零历史测试](../rust_core/src/transient_idt_tests.rs) 的四调用点/两实例精度失败、丢弃与较早候选重试、仅修正未来输入 | 检查接受帧及返回的批次记录；不构成完整调度器持久游标/已提交记录的失败恢复证明 |
 
 公共 [runtime.py](../src/evas/runtime.py) 的 `_invoke` 每次运行新进程，内核 CLI 也只接收一次请求。
 因此失败请求之后再成功请求只能证明请求隔离，不能证明同一引擎的候选回退。
 `absdelay.rs` 的只读历史克隆/查询顺序测试，以及 `operator_queue_and_edges_commit_with_the_whole_frame`
 中成功但丢弃的候选，也必须与真实数值失败区分；测试里的注释不能替代实际触发的错误路径。
 
-idt 线程需在其拥有的 `evas/rust_core/src/transient.rs` 私有入口及实际 idt 历史模块补以下断言，
-本线程不为测试越界修改核心文件：
+idt 的生命周期验收断言如下，实现与覆盖分别说明：
 
 1. 从非零初值及至少一段已接受历史出发，准备未来候选后丢弃，再试算同一时间，逐调用点核对解析值和误差界；
    继续到下一段，确认没有重复积分。两个调用点位于同一目标，两个实例复用同一源码坐标。
@@ -102,8 +102,15 @@ idt 线程需在其拥有的 `evas/rust_core/src/transient.rs` 私有入口及�
 3. 保留同一模型/缓存和接受帧，替换候选输入轨迹后在相同时间重试，核对 `1/4` 与 `13/4` 的区分关系；
    输入更改限于未接受区间，不能重写已接受物理历史。重复失败不能消费事件或保留半提交历史。
 
-核心私有测试的实际暴露范围需由实现线程确认；若完整调度游标/记录不可观察，缺口须继续保留。
-以上是需要落实的断言设计，不是本轮已执行的 idt 结果。
+`transient_idt_tests.rs` 通过真实 `prepare_event` / `prepare_batch` 接受到 t=1，再准备 t=2 候选并丢弃。
+两个实例各自向同一支路贡献两个积分调用，初值均非零；共用源码坐标仍逐调用点核对。
+固定预算下 t=2.1 的历史查询成功，随后电压网络认证产生 `waveform_accuracy`；两次失败后，
+接受帧的时间、状态/界、电压/残差、历史值/界、断点及电路重解结果保持一致。
+t=2 的较早候选重试与失败前候选一致，继续到 t=3 不重复积分。返回的事件批次记录也逐项核对。
+另一检查保留已接受的 [0,1]，仅把之后输入从 `-1+2h` 改为 `-1+8h`，沿用同一模型缓存和
+接受帧，在 t=2 得到 `1/4` 与 `13/4`；再次失败与重试也不得改写接受帧。
+这些私有入口不持有 `run` 循环的调度游标和已提交 trace，未以测试自建的游标代替实际调度器。
+完整循环在真实失败后的继续执行仍是证据缺口；本轮没有扩展公开 API 的失败恢复或在线改源能力。
 
 ## 本地检查入口
 

@@ -133,9 +133,9 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 不可表示或非有限的移位拐点显式失败。[固定检查点专项](../../experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
-## idt（本地受限检查点）
+## idt
 
-能力 ID：DYNAMICS。本节固定首版契约，不改变能力总表中的已合并/发布状态。
+能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 的首版受限积分，交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
 `idt(direct_affine_input, constant_ic)`：输入为直接驱动、连续 PWL 的仿射组合，
@@ -196,13 +196,13 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 
 IR v7 新增 `kind=idt,input,ic,origin`，调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
-错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本/发布由主线程维护。
+错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.7.0；包内版本号不代表已发布 tag。
 实现入口：[idt.rs](../rust_core/src/idt.rs)、[operators.rs](../rust_core/src/operators.rs)；
 独立有理数和组合回归：[test_idt.py](../tests/test_idt.py)、
 [test_idt_accuracy.py](../tests/test_idt_accuracy.py)。Rust 另检验查询无副作用及真实候选失败后完整性。
 首版不包含 reset 或反馈积分，未执行新的远程后端对照。
 
-本地验证基于 main `5b090571c7de7c6ec08a05c803479505c5d745ee`：
+原开发检查点 `074cde5` 基于 main `5b090571c7de7c6ec08a05c803479505c5d745ee`：
 全量 Python 215 项、Rust 40 项通过，其中新增 20 项 Python、7 项 Rust；
 649 个原始 binary64 输入的 Fraction 答案均落入实际 Rust 积分区间，包含累计段、尺度变化和次正规数。
 [可执行示例](../examples/idt.json)在 0/1/2/3/4 μs 的名义答案为
@@ -210,6 +210,12 @@ Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新�
 原 `d1-free` 与 `d1-reset` 使用相同的三参数带复位源码，两档共四次编译均明确拒绝；
 即使前者复位输入恒零，也不能省略结构准入。原矩阵每档分母仍为 31，其他 29 条件未在本次重跑，
 此检查点不宣称增加原矩阵通过数。详细日志与构建/源码哈希保存在 ignored runs，仅本地可取得。
+
+0.7.0 整合 PR18 后重新执行完整 Python 218 项、Rust 42 项及独立数学 9 项，均通过。
+新增的[私有积分恢复测试](../rust_core/src/transient_idt_tests.rs)由 `transient.rs` 的 test-only 模块加载，
+在非零接受时刻核对多实例/调用点失败、弃步、较早重试和未来输入修正；运行时算法未因这次补测修改。
+返回的事件批次记录可核对，`run` 循环持有的完整调度游标/已提交 trace 不在此私有入口内，
+其失败后的继续执行仍未验证；当前公开请求也没有在线改源或恢复执行接口。
 
 ## slew
 

@@ -18,6 +18,10 @@ struct Frame {
     operators: Operators,
 }
 
+#[cfg(test)]
+#[path = "transient_idt_tests.rs"]
+mod idt_accepted_history_tests;
+
 fn prepare_event(
     model: &EventModel,
     trajectory: &Trajectory,
