@@ -94,10 +94,9 @@ pub(crate) fn affine(
             result.constant = *constant;
             for term in terms {
                 result.nodes[term.node] = term.coefficient;
-                result.has_variables |= term.coefficient != 0.0;
-                if term.coefficient != 0.0 {
-                    result.node_dependencies.insert(term.node);
-                }
+                // Explicit raw-IR references remain structural even at zero weight.
+                result.has_variables = true;
+                result.node_dependencies.insert(term.node);
             }
         }
         Expression::State { state } => {
