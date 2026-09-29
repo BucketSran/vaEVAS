@@ -1,0 +1,17 @@
+// N-V1-02: three additive contributions with default/overridden parameters.
+`include "constants.vams"
+`include "disciplines.vams"
+module dvs_sum(u, v, vout, vref);
+    input u, v;
+    output vout;
+    inout vref;
+    electrical u, v, vout, vref;
+    parameter real g1 = 1.5;
+    parameter real g2 = -0.5;
+    parameter real bias = 0.125;
+    analog begin
+        V(vout, vref) <+ bias;
+        V(vout, vref) <+ g2*V(v, vref);
+        V(vout, vref) <+ g1*V(u, vref);
+    end
+endmodule
