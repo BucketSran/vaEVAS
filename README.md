@@ -35,11 +35,11 @@ EVAS 的数学与实现说明从[技术手册](evas/docs/README.md)进入；
 
 `main` 为已审查共同基线，一批可 review 的代码、测试、数学和证据使用一个短期任务分支。
 仅实际依赖使用分层 PR；工作区与分支分别管理。完整生命周期和责任规则统一维护在
-[AGENTS.md](AGENTS.md#branch-lifecycle)，本页只提供入口。
+[CONTRIBUTING.md](CONTRIBUTING.md#branch-lifecycle)，agent 的快速执行入口为 [AGENTS.md](AGENTS.md)。
 
 能力总表保存当前状态，Issue 保存具体剩余工作，PR/提交保存迭代历史；
 数学、接口和实验手册是长期项目资产。资产身份、公开可用性与执行收据见
-[实验管理](experiments/README.md#实验资产与收据)。发布/合并/清理遵循用户授权，当前开放 PR 不自动成为 main 支持。
+[实验管理](experiments/README.md#experiment-receipts)。发布/合并/清理遵循用户授权，当前开放 PR 不自动成为 main 支持。
 
 初始验证基线、静态仿射内核和仓库技能已分别通过
 [PR #1](https://github.com/BucketSran/vaEVAS/pull/1)、

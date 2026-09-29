@@ -14,7 +14,7 @@
 | transition、absdelay、slew 的数学与实现 | [OPERATORS](OPERATORS.md) |
 | 独立需求、模型及观察判据 | [验证集](../validation/README.md)、[观察资格协议](../validation/METHOD_QUALIFICATION.md) |
 | 执行身份、复现实验及公开资产 | [实验入口](../../experiments/README.md) |
-| 分支、责任归属、发布与清理 | [AGENTS.md](../../AGENTS.md) |
+| 分支、责任归属、发布与清理 | [CONTRIBUTING](../../CONTRIBUTING.md)；agent 快速入口为 [AGENTS.md](../../AGENTS.md) |
 
 数据路径为：源码 → 语法/绑定 → 有版本的 IR → 支路方程 → 电压求解。
 瞬态入口在此基础上推进输入、事件和历史，验收后才接受候选状态；静态样本不推进物理历史。

@@ -6,9 +6,11 @@
 可跟踪内容包括配置、分析脚本和经过整理且可追溯的结果摘要。
 原始轨迹、波形及临时输出使用仓库根目录下的 `runs/` 或外部运行目录，避免提交到 Git。
 
+<a name="experiment-receipts"></a>
+
 ## 实验资产与收据
 
-[AGENTS.md](../AGENTS.md#asset-identity-and-retention)规定资产归属与保留规则；
+[CONTRIBUTING.md](../CONTRIBUTING.md#evidence-and-assets)规定协作与资产管理流程；
 [能力总表](../evas/docs/CAPABILITIES.md)通过稳定 ID 链接结果。每轮实验沿用对应目录已有的协议与
 收据格式，以下信息补入其现有 manifest/结果 JSON 即可，不要求再生成一套重复记录。
 

@@ -28,6 +28,8 @@ Check the three separate claims: what the reviewed commit implements, what the
 identified evidence demonstrates, and whether the change is merged/released.
 For stacked PRs, flag changed shared assumptions and evidence tied to an older
 parent; do not treat a temporary integration test as proof of `main` support.
+Use the [revalidation triggers](../evas-validate/SKILL.md#revalidation-triggers)
+to identify evidence invalidated by changed code, inputs, checkers or measurement conditions.
 
 - For parser or binding changes, check full token consumption, unsupported syntax,
   parameter dependency and override rules, finite values, and instance isolation.

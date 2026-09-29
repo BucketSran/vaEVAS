@@ -21,7 +21,7 @@ Inspect status, staged and unstaged changes, relevant untracked files, branch,
 remote, and intended base/head. For stacked work, identify the parent branch and
 the diff reviewers should see. Preserve unrelated or concurrent changes; do not
 stash, switch branches, rebase, force-push, or merge as incidental cleanup.
-Follow the [branch lifecycle](../../../AGENTS.md#branch-lifecycle); reuse the task's
+Follow the [branch lifecycle](../../../CONTRIBUTING.md#branch-lifecycle); reuse the task's
 existing PR for review fixes and related documentation/evidence. Record the
 affected capability IDs, current parent/base and exact checkpoint; do not create
 an extra branch solely for a review round, test report or commit.
@@ -55,6 +55,7 @@ repository template if one exists; omit abandoned approaches and stale counts.
 
 ## Publish only within the requested scope
 
+Use the [authorization defaults](../../../CONTRIBUTING.md#scope-and-authorization).
 Preparation alone ends with the ready diff and proposed PR text. When the user
 has authorized committing, pushing, or creating a PR for this task, complete
 those authorized steps without asking again. Prefer a draft PR unless the user

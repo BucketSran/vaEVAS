@@ -22,7 +22,7 @@ Separate current behavior from proposals and historical verification.
 
 Use the stable IDs in the [capability register](../../../evas/docs/CAPABILITIES.md)
 to identify the change and its dependencies. Follow [repository coordination
-policy](../../../AGENTS.md#coordination-and-capability-tracking). Reuse suitable
+policy](../../../CONTRIBUTING.md#parallel-work). Reuse suitable
 in-progress work; when parallel work is authorized, agree file ownership and a
 single owner for shared IR, scheduling and version changes before editing them.
 
@@ -55,7 +55,7 @@ rollback before implementation. Do not scaffold an unused state framework.
 
 Use independent expected values and the smallest regression that detects the
 changed behavior, including a relevant rejection or compatibility case. Select
-affected checks from the EVAS README; static replay cannot establish transient
+checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
 or event correctness. Preserve the original validation cases and thresholds.
 
 Update the owning component documentation when behavior or evidence changes;
