@@ -73,6 +73,15 @@ class Transition:
 
 
 @dataclass(frozen=True)
+class Slew:
+    input: Expression
+    rise: float
+    fall: float
+    origin: Origin
+    kind: str = field(default="slew", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -135,7 +144,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition, ...] = ()
+    operators: tuple[Transition | Slew, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

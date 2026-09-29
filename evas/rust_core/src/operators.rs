@@ -4,6 +4,7 @@ use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
 use crate::ir::{Error, OperatorSpec, Program};
 use crate::pwl::Trajectory;
+use crate::slew::Slew;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
 
@@ -13,6 +14,7 @@ enum Runtime {
         input: AffineState,
         history: Transition,
     },
+    Slew(Slew),
 }
 
 #[derive(Clone, Default)]
@@ -23,8 +25,8 @@ pub(crate) struct Operators {
 impl Operators {
     pub(crate) fn new(
         program: &Program,
-        _trajectory: &Trajectory,
-        _driven: &[String],
+        trajectory: &Trajectory,
+        driven: &[String],
         states: &[f64],
     ) -> Result<Self, Error> {
         let mut identities = BTreeSet::new();
@@ -71,6 +73,11 @@ impl Operators {
                         history: Transition::new(initial, *delay, *rise, *fall)?,
                     });
                 }
+                OperatorSpec::Slew { input, rise, fall, origin } => {
+                    entries.push(Runtime::Slew(Slew::new(
+                        direct_points(input, program, trajectory, driven, origin)?, *rise, *fall,
+                    )?));
+                }
             }
         }
         Ok(Self { entries })
@@ -81,6 +88,7 @@ impl Operators {
             .iter()
             .map(|entry| match entry {
                 Runtime::Transition { history, .. } => history.value(time),
+                Runtime::Slew(history) => history.value(time),
             })
             .collect()
     }
@@ -90,6 +98,7 @@ impl Operators {
             .iter()
             .filter_map(|entry| match entry {
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
+                Runtime::Slew(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
     }
@@ -104,6 +113,7 @@ impl Operators {
             .iter()
             .flat_map(|entry| match entry {
                 Runtime::Transition { history, .. } => history.deadlines(after),
+                Runtime::Slew(_) => Vec::new(),
             })
             .collect();
         for (index, deadline) in deadlines.iter().enumerate() {
@@ -133,6 +143,7 @@ impl Operators {
                 Runtime::Transition { input, history } => {
                     history.advance(time, input.value(&[], states)?)?
                 }
+                Runtime::Slew(_) => {}
             }
         }
         Ok(())

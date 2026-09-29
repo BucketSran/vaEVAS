@@ -107,12 +107,18 @@ pub enum OperatorSpec {
         fall: f64,
         origin: Origin,
     },
+    Slew {
+        input: Expression,
+        rise: f64,
+        fall: f64,
+        origin: Origin,
+    },
 }
 
 impl OperatorSpec {
     pub(crate) fn origin(&self) -> &Origin {
         match self {
-            Self::Transition { origin, .. } => origin,
+            Self::Transition { origin, .. } | Self::Slew { origin, .. } => origin,
         }
     }
 }

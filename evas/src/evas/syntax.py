@@ -30,7 +30,7 @@ _TOKEN = re.compile(
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "cross", "transition"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "cross", "transition", "slew"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -147,16 +147,17 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
-        elif token.text == "transition":
+        elif token.text in ("transition", "slew"):
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            if len(arguments) != 4:
-                self.fail("transition requires explicit input, delay, rise and fall", token)
-            left = Expr("transition", None, tuple(arguments), token)
+            required = 4 if token.text == "transition" else 3
+            if len(arguments) != required:
+                self.fail(f"{token.text} requires {required} explicit arguments", token)
+            left = Expr(token.text, None, tuple(arguments), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
