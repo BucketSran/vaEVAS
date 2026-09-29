@@ -28,7 +28,7 @@
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
-| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7 受限实现；本次合并交付，未发布 tag | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)、有理数区间核对及实际 idt 回归；[数学与实现](OPERATORS.md#idt) | 复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；原 D1 仍拒绝 |
+| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7；[PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付，未发布 tag | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)、有理数区间核对及实际 idt 回归；[数学与实现](OPERATORS.md#idt) | 复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；原 D1 仍拒绝 |
 | QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件在 PR15 被测实现重跑；0.7.0 未重跑矩阵 | [248 单元新执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留 | 观察误差界、未见确认集；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准 | PR8 有另外的合成检查点 | 不同提交的局部测量 | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
@@ -44,6 +44,7 @@
 | [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | 0.6.1 / IR v6，实现 `9850450`；基于 main `e6f04c4`，源码/内核身份见[收据](../../experiments/dvs2-spectre-validation/results/transition-0.6.1.json) | 155 Python / 23 Rust / 48 checker；共同观察网格下两后端各 16/16；[说明及旧证据](../../experiments/dvs2-spectre-validation/README.md#pr13-transition-061) |
 | [PR14](https://github.com/BucketSran/vaEVAS/pull/14) | 被测 `3638024`；收尾同步 main 文档，运行时代码不变 | 176 Python / 28 Rust；[专项证据](../../experiments/pr14-pr15-validation/RESULTS.md)中独立 PR14 全栈与 Spectre 各 12/12；原始材料未公开归档 |
 | [PR15](https://github.com/BucketSran/vaEVAS/pull/15) | 被测 `e01fb5b`，基于 PR14 `3638024`；共享验证发布于 `ec3acaa` | 195 Python / 33 Rust，8 组合配置；[专项和原矩阵](../../experiments/pr14-pr15-validation/RESULTS.md)记录成功、明确拒绝与 Spectre 步长差异 |
+| [PR19](https://github.com/BucketSran/vaEVAS/pull/19) | 0.7.0 / IR v7，被测 `d33b1da`，基于 PR18 `1dc0bed`；最终登记补交只改本表 | 218 Python / 42 Rust、9 纯数学；649 积分区间核对；非零历史失败/弃步/重试。未新执行 Spectre 或原矩阵，范围见[契约](../validation/DYNAMICS_CONTRACTS.md) |
 
 四能力联合检查固定在本地提交 `31193c624cfa338316143f446b0ef3c3e1dcd2f5`，
 155 Python / 27 Rust、8/8 配置通过，316 个观察时刻、96 个事件；该提交/原始收据尚未公开归档。
