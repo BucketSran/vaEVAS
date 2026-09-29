@@ -2,22 +2,40 @@
 //!
 //! The history is the accepted source segment definition, never output samples.
 //! Keeping it immutable also makes a discarded transient candidate a no-op.
+use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::sync::Arc;
 
 #[derive(Clone)]
 pub(crate) struct AbsDelay {
     points: Arc<[(f64, f64)]>,
+    bounds: Arc<[I]>,
     delay: f64,
     breakpoints: Arc<[f64]>,
 }
 
 impl AbsDelay {
+    #[cfg(test)]
     pub(crate) fn new(points: Vec<(f64, f64)>, delay: f64) -> Result<Self, Error> {
+        let bounds = points.iter().map(|p| I::point(p.1)).collect();
+        Self::enclosed(points, bounds, delay)
+    }
+
+    pub(crate) fn enclosed(
+        points: Vec<(f64, f64)>,
+        bounds: Vec<I>,
+        delay: f64,
+    ) -> Result<Self, Error> {
         if !delay.is_finite() || delay < 0.0 {
             return Err(Error::new(
                 "unsupported_operator",
                 "absdelay requires a finite, fixed nonnegative delay; zero is an EVAS extension",
+            ));
+        }
+        if bounds.len() != points.len() || bounds.iter().any(|b| !b.finite()) {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot bound absdelay input history",
             ));
         }
         if points.is_empty()
@@ -43,6 +61,7 @@ impl AbsDelay {
         }
         Ok(Self {
             points: points.into(),
+            bounds: bounds.into(),
             delay,
             breakpoints: breakpoints.into(),
         })
@@ -59,14 +78,7 @@ impl AbsDelay {
         // t=2^54+4 and delay=3, rounding t-delay first would erase one whole
         // quarter of a four-unit ramp. Compare the expansion to source knots,
         // then interpolate using a local offset rather than that rounded time.
-        let (query, remainder) = if time <= self.delay {
-            (0.0, 0.0)
-        } else {
-            let high = time - self.delay;
-            let virtual_delay = time - high;
-            let low = (time - (high + virtual_delay)) + (virtual_delay - self.delay);
-            (high, low)
-        };
+        let (query, remainder) = self.query(time);
         let index = self
             .points
             .partition_point(|(t, _)| *t < query || (*t == query && remainder > 0.0));
@@ -88,6 +100,37 @@ impl AbsDelay {
             ));
         }
         Ok(value)
+    }
+
+    fn query(&self, time: f64) -> (f64, f64) {
+        if time <= self.delay {
+            (0.0, 0.0)
+        } else {
+            let high = time - self.delay;
+            let virtual_delay = time - high;
+            let low = (time - (high + virtual_delay)) + (virtual_delay - self.delay);
+            (high, low)
+        }
+    }
+
+    pub(crate) fn value_bounds(&self, time: f64) -> I {
+        let (query, remainder) = self.query(time);
+        let index = self
+            .points
+            .partition_point(|(t, _)| *t < query || (*t == query && remainder > 0.0));
+        if index == self.points.len() {
+            return *self.bounds.last().unwrap();
+        }
+        let (end, _) = self.points[index];
+        if query == end && remainder == 0.0 {
+            return self.bounds[index];
+        }
+        let (start, _) = self.points[index - 1];
+        // Keep the subtraction expansion until after removing the local
+        // source origin. Enclosing t-delay first would lose that precision.
+        let fraction = ((I::point(query) - I::point(start)) + I::point(remainder))
+            / (I::point(end) - I::point(start));
+        (I::ONE - fraction) * self.bounds[index - 1] + fraction * self.bounds[index]
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {

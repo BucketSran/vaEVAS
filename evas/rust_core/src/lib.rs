@@ -1,4 +1,5 @@
 mod absdelay;
+mod affine_bounds;
 mod assembly;
 mod event_accuracy;
 mod events;
@@ -10,6 +11,8 @@ mod nonlinear;
 mod operators;
 mod pwl;
 mod schedule;
+mod settlement;
+mod settlement_bounds;
 pub mod solver;
 mod transient;
 mod transition;

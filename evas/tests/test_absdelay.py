@@ -128,14 +128,17 @@ class AbsDelayContracts(unittest.TestCase):
                 for actual, t in zip(column(result), times):
                     self.assertEqual(actual, expected(points, t, delay))
 
-    def test_residual_failure_does_not_return_a_partial_waveform(self):
+    def test_inconsistent_constraint_does_not_return_a_partial_waveform(self):
         fixed = model("V(y,r)<+0;")
         delayed = compile_sources({"absdelay.va": SOURCE, "fixed.va": fixed.replace("module m", "module fixed")},
                                   [instance(), instance("fixed", module="fixed")])
         with self.assertRaises(KernelError) as error:
             transient(delayed, {"u": [[0, 0], [4e-9, 1], [10e-9, 1]]}, [0, 10e-9],
                       stop=10e-9, max_step=100e-9, kernel=KERNEL)
-        self.assertEqual(error.exception.detail["kind"], "residual_failure")
+        # PR13 certifies initialization before advancing. The inconsistent
+        # redundant equation is rejected by that earlier exact-system check.
+        self.assertEqual(error.exception.detail["kind"], "event_accuracy")
+        self.assertIn("redundant", error.exception.detail["message"])
         # A separate valid retry gets the original nonzero initial history.
         self.assertEqual(column(execute_delay(times=[0])), [-1])
 
