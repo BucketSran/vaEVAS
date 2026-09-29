@@ -9,6 +9,9 @@ frozen finite-observation targets.** Spectre version: `21.1.0.509.isr12`.
 No execution failures, timeouts, numerical violations or unresolved finite
 checks occurred. Formal observation qualification remains I.
 
+The separate [PR7 cross comparison](#pr7-cross-小规模对照) below uses eight
+development conditions. Its results do not change this 31-condition denominator.
+
 [PROTOCOL.md](PROTOCOL.md) is frozen before execution and describes inputs,
 resource limits, targets, observation requirements, conditional history checks,
 and the distinction between finite checks and formal qualification.
@@ -109,3 +112,177 @@ python3 -B experiments/dvs2-spectre-validation/check_results.py \
 本次确认当前 31 条件在该版本 Spectre、这两档设置下均可执行且观测达标。
 完整输入误差、时标语义、未采样区间和其他行为覆盖的资格工作仍未完成；不据此
 外推所有 Spectre 版本、所有 Verilog-A 模型或 EVAS 的通过情况。
+
+## PR7 cross 小规模对照
+
+2026-09-29，EVAS 0.4.4 在本机运行，Spectre `21.1.0.509.isr12` 在 thu-sui
+运行相同 DUT 和连续 PWL 激励。[cross_reference.py](cross_reference.py) 提供
+8 个开发条件：双向、仅上升、37 ps 平移、断点穿越与相切、初始高电平、内部反馈、
+收紧时间容差、收紧表达式容差。每条分别使用 100 ns / 7 ns 最大步长，共每后端 16 组。
+该 DUT 不含 `transition`，不替换原 E1，也不是新的未见确认集。
+
+事件块累加计数并采样线性时钟电压；检查器根据独立声明的 PWL 段，用精确有理数
+计算根及允许窗口 `min(ttol, tol/abs(slope))`，再检查计数和保持电压。
+两个后端均接受同一判据；不以两者相等作为正确性的定义。
+预先固定的电压观测余量为 `1e-8 V`（时钟上约 10 fs），这是条件假设，
+不是已证明的物理观测误差界。有限采样和保持值也不证明完整连续事件历史。
+
+| 固定判据结果 | EVAS | Spectre |
+| --- | ---: | ---: |
+| 普通穿越等 7 条件 × 两档 | 14/14 | 14/14 |
+| 断点穿越与相切 × 两档 | 2/2 | 0/2，事件次数不同 |
+| 合计 | 16/16 | 14/16 |
+
+最后两组预期在 0.5、2.5 µs 穿越时各触发一次，忽略 1.5 µs 的同侧相切。
+Spectre 两档都额外在 1.5 µs 触发，最终计数为 3，EVAS 为 2。
+这表示 **当前 EVAS 相切契约与 Spectre 实测行为不一致**，不能解释成 Spectre 错误
+或 EVAS 更准确，也没有通过修改判据消除差异。
+
+另外两次成功的方向诊断使用 `u: 0.6 → 0.5 → 0.6 V`，谷底在 1.5 µs，
+guard 为 `scale*(V(u)-0.5)+offset`，同一网表含七个独立实例：
+
+| guard | 双向次数 | 上升次数 | 下降次数 |
+| --- | ---: | ---: | ---: |
+| `V(u)-0.5` | 1 | 0 | 1 |
+| `-(V(u)-0.5)` | 1 | 1 | 0 |
+| `V(u)-0.5+1e-6` | 0 | 未运行 | 未运行 |
+
+两档一致，观测触发时刻均为 1.5 µs，符合“按接近零的方向触发”的现象。
+最低点仍为正、但小于表达式容差的实例没有触发；因此不能简单用容差带模拟这个行为。
+这里没有内部 guard 记录，不能确定内部零值分类或舍入机制，也未把这两次诊断
+加入基线通过分母。首次诊断两次均因 VA 的 `.5` 字面量语法被拒绝；修正为 `0.5`
+并将方向参数声明为整数后，在新目录重跑。失败记录保留，未作为波形结果使用。
+
+普通穿越中，保持电压反推出的 Spectre 最大延迟约为：默认 25 ps、内部节点斜率
+加倍时 12.5 ps、收紧 `ttol` 时 0.5 ps、收紧 `tol` 时 0.25 ps。
+这些值满足固定窗口，支持分别核验两项容差的设计；它们不证明通用的“半窗口”算法。
+EVAS 无须复制相同延迟，但仍须证明自身的根定位误差满足声明容差。
+
+[完整收据](results/cross-reference-0.4.4.json) 保存每组结果、源码/内核/检查器哈希、
+实际设置和诊断 DUT。基线 16 次 Spectre 执行均成功，无超时；16 份生效设置匹配，
+只出现既有非致命 `VACOMP-2435`。连同诊断共 20 次电路执行：18 次产出波形，
+2 次语法失败。原始归档位于忽略目录 `runs/pr7-spectre-contract-20260929/`，
+thu-sui 任务私有区另有副本；主归档 296 个文件、诊断归档两批共 54 个文件的哈希均已核对。
+执行耗时含启动与编译，不作为性能比较。
+
+复现时先运行检查器校准，再冻结新目录；将源码、检查器依赖和冻结目录复制到
+已有 Spectre 环境后执行 `spectre` 子命令，私有工具 profile 不进入仓库。
+回传完整结果后在原源码版本重新分析：
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p test_cross_reference.py -v
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py build runs/NEW-CROSS
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py evas runs/NEW-CROSS --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py spectre runs/NEW-CROSS --spectre-profile /PRIVATE/profile.json
+python3 -B experiments/dvs2-spectre-validation/cross_reference.py check runs/NEW-CROSS --output runs/NEW-CROSS-analysis.json
+```
+
+四项校准方法包含手算锚点、合法延迟、共同错误、缺失/错序/非有限观测等控制。
+当前结论只涉及这些限定条件；相切语义仍须 review，不宣称完整 Spectre 兼容。
+
+## PWL 触零边界实验
+
+[cross_touch.py](cross_touch.py) 单独检查步长、时刻平移、容差与触零次数的关系，
+EVAS 保持 0.4.4。每组有三路 PWL 电压，从 0.6 V 降到 0.501 / 0.500 / 0.499 V，
+再回到 0.6 V。每路分别监测正、负 guard 和双向/上升/下降三个方向，
+共 18 个独立监测实例。事件块保存次数、线性时钟电压和当次 guard 采样值。
+
+| 因素 | 设置 |
+| --- | --- |
+| 谷底时刻 | 1.5 µs；整个波形平移 37 ps，前段补恒定值 |
+| 最大步长 | 100 ns、7 ns |
+| 默认事件容差 | `ttol=100 ps`、`tol=10 µV` |
+| 只收紧时间容差 | `ttol=1 ps`、`tol=10 µV` |
+| 只收紧表达式容差 | `ttol=100 ps`、`tol=0.1 µV` |
+
+两时刻 × 两步长 × 三容差，共 **12 个配置，每后端 216 条监测历史**。
+谷底高于阈值的实例预期没有事件；低于阈值的实例预期双向两次、每个单方向一次。
+两次真实穿越间隔约 29.7 ns，大于最大时间容差 100 倍；解析根以冻结 binary64
+PWL 输入的精确有理数独立计算。恰好触零的六个实例只分类观测为“不触发、到达方向、
+离开方向、两个方向或其他”，不先规定哪一类正确。
+
+输入、检查器和 12 次 Spectre 执行预算在运行前冻结；每次使用一个固定 CPU，
+90 秒墙钟上限、30 秒许可证等待，不自动重试。固定电压观测余量仍为 `1e-8 V`，
+检查所有导出点的有限性、输入、计数历史、保持时间见证和事件 guard 采样值范围。
+触零分类不是正式语义资格，公开的 guard 采样也不等于 Spectre 内部迭代记录。
+
+2026-09-29 的新批次 `pr7-touch-boundary-20260929-01` 已完成：本机 EVAS 和 thu-sui
+Spectre 各执行 12 个配置。两者的 144 条非零谷底控制历史全部满足冻结判据；
+各自另有 72 条恰好触零的诊断历史。全部配置的分类一致：
+
+| 谷底 | EVAS：双向 / 上升 / 下降 | Spectre：双向 / 上升 / 下降 |
+| --- | --- | --- |
+| 高于阈值，正 guard | 0 / 0 / 0 | 0 / 0 / 0 |
+| 恰好触零，正 guard | 0 / 0 / 0 | 1 / 0 / 1 |
+| 恰好触零，负 guard | 0 / 0 / 0 | 1 / 1 / 0 |
+| 低于阈值，两种极性 | 2 / 1 / 1 | 2 / 1 / 1 |
+
+高于阈值的负 guard 同样无事件。Spectre 所有触零事件的公开 guard 采样值均为 0，
+没有“到达一次、离开再一次”的双重计数。其基础档导出 70–76 点、细化档 461–466 点，
+导出网格明显不同，但触零次数和方向保持一致。普通穿越的最大观测延迟约为默认
+50 ps、收紧时间容差后 0.5 ps、收紧表达式容差后 0.743 ps，均满足各自窗口。
+
+因此，在本次 PWL 范围内，单纯减小步长没有消除差异，结果支持到达零值时的事件规则
+与 EVAS 不同。但全部触零点仍是显式 PWL 断点，尚未排除断点命中的作用，也未测试
+没有显式断点的光滑极小值；不把观察模式当作 Spectre 内部算法的证明。本次没有修改
+EVAS 运行时语义，也没有增加原 31 条件的分母。
+
+[逐配置收据](results/cross-touch-0.4.4.json) 保存计数、方向、事件采样、设置和完整身份。
+12 次 Spectre 执行均成功，无超时；只出现 12 次既有 `VACOMP-2435`。
+已核对原始归档中 812 个文件，另将本机 13 份 EVAS 工件按相同输入身份汇集分析。
+私有原始材料位于忽略目录 `runs/pr7-touch-review-20260929/`；远端另保留原始压缩包。
+
+报告处理有两项明确修复，未修改事件判据、未增加电路执行：共享测试发现与旧 pilot
+同名的 `report.py` 导入冲突，发布脚本改为按文件路径加载所属模块；平移后的日志把
+停止时间 `3.000037 µs` 显示为 `3.00004 µs`，冻结分析先报告 6 次设置不匹配。
+重分析按日志显示精度区间核对 stop，再要求波形末点与请求值在原定 `1e-18 s`
+界限内一致，其余设置仍按原阈值核对。六份波形末点均为请求值；原始误报和修复后报告
+分别保留。所有波形、根和事件检查仍使用归档中的冻结函数。
+新检查器原有 4 项校准、后补 2 项元数据校准均通过，目录内共 18 项测试通过。
+
+复现新批次：
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p test_cross_touch.py -v
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py build runs/NEW-TOUCH
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py evas runs/NEW-TOUCH --kernel evas/rust_core/target/debug/evas-kernel
+# 将冻结目录及检查器依赖复制到已有 Spectre 环境后执行：
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py spectre runs/NEW-TOUCH --spectre-profile /PRIVATE/profile.json
+# 汇集同一输入身份的两后端结果后：
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --output runs/NEW-TOUCH-analysis.json
+```
+
+## 孤立触零契约回放（0.4.5）
+
+用户审阅上述实验后，EVAS 0.4.5 将内部 PWL 孤立零点定义为到达方向触发一次，
+离开不再触发。`cross_touch.py check --require-arrival` 启用显式版本契约
+`isolated-pwl-zero-arrival-v1`：正 guard 的双向／上升／下降次数为 `1/0/1`，
+负 guard 为 `1/1/0`。逐点检查计数窗口、方向、保持时间见证和 guard 采样；
+原始 `inspect` 诊断模式、非零谷底判据和 `1e-8 V` 观测余量均保持不变。
+新增 3 项校准方法，接受到达规则，拒绝漏事件、离开方向、双触发、过早或过晚计数、
+错误保持时间及 guard 值。目录内共 21 项校准方法通过。
+
+`pr7-touch-arrival-20260929-02` 在运行前固定该契约、检查器和输入身份，
+新执行本机 EVAS 的 12 个配置，**没有新执行 Spectre**。复用前述 thu-sui 批次，
+核对原始归档哈希及 812 份文件；新旧 85 份模型、网表和条件文件逐字节一致。
+在新目录中重判 12 份归档 Spectre 波形及新 EVAS 输出：
+
+| 有限观察历史 | EVAS 0.4.5 新执行 | Spectre 归档重判 |
+| --- | ---: | ---: |
+| 高于阈值及低于阈值控制 | 144 / 144 | 144 / 144 |
+| 孤立触零、两种极性和三种方向 | 72 / 72 | 72 / 72 |
+
+全部 12 配置的计数与方向一致。作为反例，同一新检查器重判旧 EVAS 0.4.4：
+144 条普通控制仍通过，72 条触零历史中 48 条应触发而未触发；另外 24 条本就要求零次事件。
+这不是重写旧版的诊断结论，而是按获审阅的新契约单列检查结果。
+
+[0.4.5 收据](results/cross-touch-0.4.5.json) 保存新旧输入、构建、检查器及波形哈希，
+并逐配置记录计数和方向；原始运行、冻结契约及完整重判输出保存在忽略目录
+`runs/pr7-touch-arrival-20260929-02/`。只增加本次开发回归证据，不增加原 31 条件分母。
+所有触零点仍为显式 PWL 节点；不证明光滑极值、零平台、停止时刻触零、完整 DVS 资格或性能优势。
+
+对同一输入身份汇集的两后端输出启用新契约：
+
+```sh
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --require-arrival --output runs/NEW-TOUCH-arrival.json
+```

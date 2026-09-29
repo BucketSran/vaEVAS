@@ -1,4 +1,4 @@
-"""Version 3: polynomial voltage contributions with structured local branch identity.
+"""Version 4: voltage contributions and bounded affine events with structured local branch identity.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,37 @@ class Power:
     op: str = field(default="power", init=False)
 
 
-Expression = Affine | Binary | Power
+@dataclass(frozen=True)
+class StateRef:
+    state: int
+    op: str = field(default="state", init=False)
+
+
+Expression = Affine | Binary | Power | StateRef
+
+
+@dataclass(frozen=True)
+class State:
+    instance: str
+    name: str
+    kind: Literal["real", "integer"]
+    initial: float
+
+
+@dataclass(frozen=True)
+class Assignment:
+    state: int
+    rhs: Expression
+
+
+@dataclass(frozen=True)
+class CrossEvent:
+    guard: Expression
+    direction: int
+    time_tolerance: float
+    expression_tolerance: float
+    assignments: tuple[Assignment, ...]
+    origin: Origin
 
 
 @dataclass(frozen=True)
@@ -72,6 +102,8 @@ class Contribution:
 class Program:
     nodes: tuple[str, ...]
     contributions: tuple[Contribution, ...]
+    states: tuple[State, ...] = ()
+    events: tuple[CrossEvent, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

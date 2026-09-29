@@ -1,4 +1,4 @@
-"""Bind parsed models and lower static voltage contributions to the shared IR.
+"""Bind parsed models and lower voltage contributions and event state to the shared IR.
 
 Parameter evaluation, instance/node binding, and expression lowering belong here;
 syntax.py owns tokenization and syntax trees.
@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import BranchIdentity, Contribution, Origin, Program
+from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossEvent,
+                 Origin, Program, State, StateRef)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
@@ -49,7 +50,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         bindings.append((instance, model, nets))
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
-    contributions = []
+    contributions, states, events = [], [], []
     for instance, model, nets in bindings:
         cache, active = {}, set()
 
@@ -89,6 +90,54 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         for name in model.parameters:
             parameter(name)
         node_ids = {n: indices[net] for n, net in nets.items()}
+        state_ids = {name: len(states) + index for index, name in enumerate(model.variables)}
+        initials = {}
+        for statement in model.initial:
+            if statement.name not in state_ids or statement.name in initials:
+                raise CompileError(f"{model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
+            value = lower(statement.rhs, parameter, {}, model.source)
+            if not isinstance(value, Affine) or value.terms:
+                raise CompileError("initial_step values must be instance constants")
+            if model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
+                raise CompileError("integer initialization must be an exact signed 32-bit integer")
+            initials[statement.name] = value.constant
+        if set(initials) != set(state_ids):
+            raise CompileError(f"{model.source}: every state requires one constant initial_step assignment")
+        states.extend(State(instance.name, name, kind, initials[name]) for name, kind in model.variables.items())
+
+        def symbol(name):
+            return StateRef(state_ids[name]) if name in state_ids else parameter(name)
+
+        # Integer assignments are restricted to integral state arithmetic; do
+        # not silently substitute a different real-to-integer rounding rule.
+        def integral(expression):
+            if isinstance(expression, Affine):
+                return not expression.terms and expression.constant.is_integer()
+            if isinstance(expression, StateRef):
+                return states[expression.state].kind == "integer"
+            return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
+
+        for event in model.events:
+            settings = [0.0, 1e-12, 1e-9]
+            for index, arg in enumerate(event.arguments[1:]):
+                value = lower(arg, parameter, {}, model.source)
+                if not isinstance(value, Affine) or value.terms:
+                    raise CompileError("cross settings must be instance constants")
+                settings[index] = value.constant
+            direction, time_tol, expr_tol = settings
+            if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
+                raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+            assignments = []
+            for statement in event.assignments:
+                if statement.name not in state_ids:
+                    raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
+                value = lower(statement.rhs, symbol, node_ids, model.source)
+                if model.variables[statement.name] == "integer" and not integral(value):
+                    raise CompileError("integer assignment requires integral state arithmetic")
+                assignments.append(Assignment(state_ids[statement.name], value))
+            origin = Origin(model.source, event.token.line, event.token.column, instance.name)
+            events.append(CrossEvent(lower(event.arguments[0], symbol, node_ids, model.source),
+                                     int(direction), time_tol, expr_tol, tuple(assignments), origin))
         bound_branches = {}
         for branch, rhs in model.contributions:
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes
@@ -99,9 +148,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, parameter, node_ids, model.source)
+            expression = lower(rhs, symbol, node_ids, model.source)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)
             contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))
-    return Program(names, tuple(contributions))
+    return Program(names, tuple(contributions), tuple(states), tuple(events))

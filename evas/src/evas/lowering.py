@@ -1,7 +1,7 @@
 """Bind arithmetic to polynomial IR, preserving the affine constant-folding path."""
 import math
 
-from .ir import Affine, Binary, Expression, Power, Term
+from .ir import Affine, Binary, Expression, Power, StateRef, Term
 from .syntax import CompileError, Expr
 
 
@@ -22,7 +22,8 @@ def lower(expr: Expr, parameters, nodes, source: str) -> Expression:
     if expr.op == "number":
         return Affine(float(expr.value), ())
     if expr.op == "parameter":
-        return Affine(parameters(str(expr.value)), ())
+        value = parameters(str(expr.value))
+        return value if isinstance(value, StateRef) else Affine(value, ())
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:
