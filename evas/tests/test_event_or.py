@@ -81,6 +81,21 @@ class EventOrContracts(unittest.TestCase):
                     group = next(e for e in events if e['kind']=='or')
                     self.assertEqual([leaf['trigger'] for leaf in group['fired_triggers']], [0,1])
 
+    def test_simultaneous_clock_reset_obeys_source_comparison_at_exact_root(self):
+        clock = 'cross(V(u,r)-.5,1,.001,.001)'
+        reset = 'cross(V(v,r)-.5,1,.001,.001)'
+        for relation, expected in [('>=',1),('>',2)]:
+            for trigger in [clock+' or '+reset,reset+' or '+clock]:
+                text = model('@(initial_step) q=0; @('+trigger+') '
+                             f'if(V(v,r){relation}.5) q=1; else q=2; V(y,r)<+q;',
+                             'integer q;',ports='u,v,y,r',directions='input u,v; output y; inout r;')
+                program = compile_sources({'reset.va':text},[instance(connections=dict(u='u',v='v',y='y',r='0'))])
+                result = transient(program,{'u':[[0,0],[1,1]],'v':[[0,0],[1,1]]},
+                                   [0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+                self.assertEqual(states(result),[0,expected,expected])
+                self.assertEqual(len(result['transient']['events']),1)
+                self.assertEqual(len(result['transient']['events'][0]['fired_triggers']),2)
+
     def test_timer_or_is_explicitly_outside_scope(self):
         for trigger in ['timer(.5,0,.001) or cross(V(u,r)-.5)',
                         'cross(V(u,r)-.5) or timer(.5,0,.001)']:

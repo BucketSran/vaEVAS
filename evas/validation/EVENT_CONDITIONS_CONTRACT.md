@@ -354,7 +354,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 检查分离/同根/近邻根、方向、叶子证据、输出网格和 raw IR 拒绝。Rust 另验证 OR 批次
 在候选准备后验收失败，accepted Frame 与算子历史保持原样，随后重试与干净模型一致且 body 仅执行一次。
 
-本轮 **259 Python、56 Rust**、14 条条件数学及 9 条动态数学检查通过。
+本轮 **260 Python、56 Rust**、14 条条件数学及 9 条动态数学检查通过。
 原 31×2 的新本地 EVAS 执行中，两档均 **21 条观测达标、10 条明确拒绝**；
 本契约目标的 V4 两条、E2 三条、C1 三条全部满足原有限观测判据。
 原条件/阈值/checker 不改，正式资格仍为 I；没有把 8 条单测或静态回放计作矩阵提升。

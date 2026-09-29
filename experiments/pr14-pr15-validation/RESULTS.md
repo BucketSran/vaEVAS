@@ -15,7 +15,7 @@
 未公开归档；校验和不能替代公开原始材料。独立数学及实现入口见
 [事件 OR](../../evas/docs/EVENTS.md#event-or)与[条件契约](../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 
-**259 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
+**260 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
 locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。新 Spectre 专项仍待完成，
 下面历史 Spectre/OpenVAF/Gnucap 数据不当作此次源码的新执行证据。
 
@@ -34,8 +34,9 @@ Spectre **21.1.0.509.isr12** 的 16 个初始配置均返回 2，停在 AHDL rea
 `VACOMP-1795` 拒绝生成器的 `.5` 等数字，要求 `0.5`。这是实验生成错误，
 **没有获得 Spectre 瞬态波形，不能解释为 cross 或复位语义失败**。
 生成器已修正，并保存数字写法回归的真实 RED(exit 1)→GREEN(exit 0)；专项校准 5 方法、
-该 checkout 的全套实验 checker 53 方法通过。另加单 cross / OR / timer 混合日历和声明换序回归，
-生产源码与原 62 配置的被测身份不变，Python 回归总计由 258 增至 259。
+该 checkout 的全套实验 checker 53 方法通过。另加单 cross / OR / timer 混合日历和声明换序回归，并在同根 clock/reset 上检查
+`>=` 与 `>` 的精确边界不同取支；
+生产源码与原 62 配置的被测身份不变，Python 回归总计由 258 增至 260。
 
 固定 16 次 Spectre 尝试预算已用完，未扩大重跑。下一次先检查 1 个修正后 smoke，
 再派发余下配置；目前修正后输入仍未经过 Spectre 编译确认，行为对照明确待办。

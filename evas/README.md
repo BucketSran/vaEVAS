@@ -43,7 +43,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 0.9.0 / IR v9 新增 cross OR、逐叶定位证据与同块去重，并修复无关输入断点影响根包围。
 实际 TDD 先复现 OR 语法拒绝及无关断点拒绝，再完成聚焦 GREEN。
-**259 Python / 56 Rust**、14 条条件数学及 9 条动态数学检查通过；locked 构建、
+**260 Python / 56 Rust**、14 条条件数学及 9 条动态数学检查通过；locked 构建、
 all-targets warnings-as-errors、格式与 diff 检查通过。
 原 31 条件 × 两档新执行均为 **21 观测达标、10 明确拒绝**，新增的 8 条是 V4/E2/C1；
 formal qualification 仍为 I。Spectre 专项 16 次因生成探针的数字写法停在 AHDL 编译，

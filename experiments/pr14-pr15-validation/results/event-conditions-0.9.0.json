@@ -3659,14 +3659,14 @@
     }
   ],
   "checks": {
-    "python_tests": 259,
+    "python_tests": 260,
     "rust_tests": 56,
     "condition_math": 14,
     "dynamics_math": 9,
     "warnings_as_errors_all_targets": true,
     "format": true,
-    "python_log_sha256": "c16613f1c52c8e9f7bc85556078d324c9f311bdefe5aeb3dd97b112441a9d241",
-    "python_additional_scope": "Mixed single-cross / OR / timer calendars in all declaration permutations; production source unchanged from original matrix."
+    "python_log_sha256": "a216bd0e600944f6337f441d3ef235c131e7b967b5987e601a62f712e35e3cac",
+    "python_additional_scope": "Mixed single-cross / OR / timer calendars in all declaration permutations; same-root clock/reset >= and > preserve exact source predicates. Production source unchanged from original matrix."
   },
   "tdd": {
     "or_core_red_exit_code": 1,
