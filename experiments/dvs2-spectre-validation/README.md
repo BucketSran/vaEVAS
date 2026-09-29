@@ -179,3 +179,75 @@ python3 -B experiments/dvs2-spectre-validation/cross_reference.py check runs/NEW
 
 四项校准方法包含手算锚点、合法延迟、共同错误、缺失/错序/非有限观测等控制。
 当前结论只涉及这些限定条件；相切语义仍须 review，不宣称完整 Spectre 兼容。
+
+## PWL 触零边界实验
+
+[cross_touch.py](cross_touch.py) 单独检查步长、时刻平移、容差与触零次数的关系，
+EVAS 保持 0.4.4。每组有三路 PWL 电压，从 0.6 V 降到 0.501 / 0.500 / 0.499 V，
+再回到 0.6 V。每路分别监测正、负 guard 和双向/上升/下降三个方向，
+共 18 个独立监测实例。事件块保存次数、线性时钟电压和当次 guard 采样值。
+
+| 因素 | 设置 |
+| --- | --- |
+| 谷底时刻 | 1.5 µs；整个波形平移 37 ps，前段补恒定值 |
+| 最大步长 | 100 ns、7 ns |
+| 默认事件容差 | `ttol=100 ps`、`tol=10 µV` |
+| 只收紧时间容差 | `ttol=1 ps`、`tol=10 µV` |
+| 只收紧表达式容差 | `ttol=100 ps`、`tol=0.1 µV` |
+
+两时刻 × 两步长 × 三容差，共 **12 个配置，每后端 216 条监测历史**。
+谷底高于阈值的实例预期没有事件；低于阈值的实例预期双向两次、每个单方向一次。
+两次真实穿越间隔约 29.7 ns，大于最大时间容差 100 倍；解析根以冻结 binary64
+PWL 输入的精确有理数独立计算。恰好触零的六个实例只分类观测为“不触发、到达方向、
+离开方向、两个方向或其他”，不先规定哪一类正确。
+
+输入、检查器和 12 次 Spectre 执行预算在运行前冻结；每次使用一个固定 CPU，
+90 秒墙钟上限、30 秒许可证等待，不自动重试。固定电压观测余量仍为 `1e-8 V`，
+检查所有导出点的有限性、输入、计数历史、保持时间见证和事件 guard 采样值范围。
+触零分类不是正式语义资格，公开的 guard 采样也不等于 Spectre 内部迭代记录。
+
+2026-09-29 的新批次 `pr7-touch-boundary-20260929-01` 已完成：本机 EVAS 和 thu-sui
+Spectre 各执行 12 个配置。两者的 144 条非零谷底控制历史全部满足冻结判据；
+各自另有 72 条恰好触零的诊断历史。全部配置的分类一致：
+
+| 谷底 | EVAS：双向 / 上升 / 下降 | Spectre：双向 / 上升 / 下降 |
+| --- | --- | --- |
+| 高于阈值，正 guard | 0 / 0 / 0 | 0 / 0 / 0 |
+| 恰好触零，正 guard | 0 / 0 / 0 | 1 / 0 / 1 |
+| 恰好触零，负 guard | 0 / 0 / 0 | 1 / 1 / 0 |
+| 低于阈值，两种极性 | 2 / 1 / 1 | 2 / 1 / 1 |
+
+高于阈值的负 guard 同样无事件。Spectre 所有触零事件的公开 guard 采样值均为 0，
+没有“到达一次、离开再一次”的双重计数。其基础档导出 70–76 点、细化档 461–466 点，
+导出网格明显不同，但触零次数和方向保持一致。普通穿越的最大观测延迟约为默认
+50 ps、收紧时间容差后 0.5 ps、收紧表达式容差后 0.743 ps，均满足各自窗口。
+
+因此，在本次 PWL 范围内，单纯减小步长没有消除差异，结果支持到达零值时的事件规则
+与 EVAS 不同。但全部触零点仍是显式 PWL 断点，尚未排除断点命中的作用，也未测试
+没有显式断点的光滑极小值；不把观察模式当作 Spectre 内部算法的证明。本次没有修改
+EVAS 运行时语义，也没有增加原 31 条件的分母。
+
+[逐配置收据](results/cross-touch-0.4.4.json) 保存计数、方向、事件采样、设置和完整身份。
+12 次 Spectre 执行均成功，无超时；只出现 12 次既有 `VACOMP-2435`。
+已核对原始归档中 812 个文件，另将本机 13 份 EVAS 工件按相同输入身份汇集分析。
+私有原始材料位于忽略目录 `runs/pr7-touch-review-20260929/`；远端另保留原始压缩包。
+
+报告处理有两项明确修复，未修改事件判据、未增加电路执行：共享测试发现与旧 pilot
+同名的 `report.py` 导入冲突，发布脚本改为按文件路径加载所属模块；平移后的日志把
+停止时间 `3.000037 µs` 显示为 `3.00004 µs`，冻结分析先报告 6 次设置不匹配。
+重分析按日志显示精度区间核对 stop，再要求波形末点与请求值在原定 `1e-18 s`
+界限内一致，其余设置仍按原阈值核对。六份波形末点均为请求值；原始误报和修复后报告
+分别保留。所有波形、根和事件检查仍使用归档中的冻结函数。
+新检查器原有 4 项校准、后补 2 项元数据校准均通过，目录内共 18 项测试通过。
+
+复现新批次：
+
+```sh
+python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p test_cross_touch.py -v
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py build runs/NEW-TOUCH
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py evas runs/NEW-TOUCH --kernel evas/rust_core/target/debug/evas-kernel
+# 将冻结目录及检查器依赖复制到已有 Spectre 环境后执行：
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py spectre runs/NEW-TOUCH --spectre-profile /PRIVATE/profile.json
+# 汇集同一输入身份的两后端结果后：
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --output runs/NEW-TOUCH-analysis.json
+```
