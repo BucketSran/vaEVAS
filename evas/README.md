@@ -43,10 +43,11 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 0.9.0 / IR v9 新增 cross OR、逐叶定位证据与同块去重，并修复无关输入断点影响根包围。
 实际 TDD 先复现 OR 语法拒绝及无关断点拒绝，再完成聚焦 GREEN。
-**258 Python / 56 Rust**、14 条条件数学及 9 条动态数学检查通过；locked 构建、
+**259 Python / 56 Rust**、14 条条件数学及 9 条动态数学检查通过；locked 构建、
 all-targets warnings-as-errors、格式与 diff 检查通过。
 原 31 条件 × 两档新执行均为 **21 观测达标、10 明确拒绝**，新增的 8 条是 V4/E2/C1；
-formal qualification 仍为 I。新 Spectre 专项待完成；静态回放数字继续归属于旧检查点。
+formal qualification 仍为 I。Spectre 专项 16 次因生成探针的数字写法停在 AHDL 编译，
+生成器已修正但未在本次预算内重跑，行为对照待完成；静态回放数字继续归属于旧检查点。
 逐条结果、身份、原始材料可取得性和复现入口见[本轮收据与矩阵](../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)。
 
 0.8.0 / IR v8 的条件分支检查点基于 main `a0c8043`，新增 **20 项 Python、3 项 Rust** 检查；
@@ -54,7 +55,7 @@ formal qualification 仍为 I。新 Spectre 专项待完成；静态回放数字
 新静态回放 22 配置、484,022 点满足原判据，仍为 11 条支持、20 条明确拒绝。
 locked/offline 构建、all-targets warnings-as-errors 和格式检查通过；Clippy 因当前工具链未安装而未执行。
 本轮未运行 Spectre、原 31 条件瞬态矩阵或性能基准。数学脚本不是新的仿真条件，静态回放不证明事件语义；
-端到端独立答案、实际帧回退及重试由[条件检查点](validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)记录。
+端到端独立答案、实际帧回退及重试由[条件检查点](validation/EVENT_CONDITIONS_CONTRACT.md#conditions-080-checkpoint)记录。
 运行日志和临时回放留在本地忽略目录，公开可复现材料为源码、测试、原静态输入和上述命令。
 
 0.7.1 / IR v7 在 PR19 的 main `2e3196f` 上整合 [PR8](https://github.com/BucketSran/vaEVAS/pull/8)，

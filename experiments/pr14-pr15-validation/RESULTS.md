@@ -15,9 +15,32 @@
 未公开归档；校验和不能替代公开原始材料。独立数学及实现入口见
 [事件 OR](../../evas/docs/EVENTS.md#event-or)与[条件契约](../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 
-**258 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
+**259 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
 locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。新 Spectre 专项仍待完成，
 下面历史 Spectre/OpenVAF/Gnucap 数据不当作此次源码的新执行证据。
+
+### 额外 OR / 采样复位专项与未完成的 Spectre 对照
+
+[event_or_reference.py](../dvs2-spectre-validation/event_or_reference.py) 固定 8 类探针×粗细两档：
+不同根、同根比例 guard、反向声明、重复叶、近邻不同根、同刻复位、复位活动期间触发、
+无关输入断点。独立答案为显式有理数事件表，用计数、归一化时间戳和保持采样值分别检查；
+这些探针不增加 31 条件的分母。输出仅在候选事件窗口外判读；近邻根的中间平台可能被窗口覆盖，
+末态计数仍能检查误合并。另对 EVAS 内部记录独立核对这 16 个可精确表示的手算根、
+记录条数、实际激活叶及根区间包含关系，全部一致；这不是 Spectre 内部事件观察。
+它不是内核事件时间的物理观察证明。
+
+EVAS 在初始与修正输入身份上各 16/16 满足上述有限判据。
+Spectre **21.1.0.509.isr12** 的 16 个初始配置均返回 2，停在 AHDL read-in：
+`VACOMP-1795` 拒绝生成器的 `.5` 等数字，要求 `0.5`。这是实验生成错误，
+**没有获得 Spectre 瞬态波形，不能解释为 cross 或复位语义失败**。
+生成器已修正，并保存数字写法回归的真实 RED(exit 1)→GREEN(exit 0)；专项校准 5 方法、
+该 checkout 的全套实验 checker 53 方法通过。另加单 cross / OR / timer 混合日历和声明换序回归，
+生产源码与原 62 配置的被测身份不变，Python 回归总计由 258 增至 259。
+
+固定 16 次 Spectre 尝试预算已用完，未扩大重跑。下一次先检查 1 个修正后 smoke，
+再派发余下配置；目前修正后输入仍未经过 Spectre 编译确认，行为对照明确待办。
+[专项收据](results/event-or-0.9.0-special.json)保留初始失败、修正输入、EVAS 源码、
+checker 身份与 raw 清单哈希；104 个远端工件清单已核验，原始材料仅本地保留。
 
 | 条件 | 基础档：基线 → 当前 | 细化档：基线 → 当前 |
 | --- | --- | --- |

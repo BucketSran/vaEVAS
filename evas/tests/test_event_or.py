@@ -56,6 +56,31 @@ class EventOrContracts(unittest.TestCase):
         for fired in r['transient']['events'][0]['fired_triggers']:
             self.assertEqual(fired['time_bounds'], [.75,.75])
 
+    def test_leaf_ids_and_body_ids_remain_distinct_in_mixed_calendars(self):
+        import itertools
+        for simultaneous in [False, True]:
+            times = [.5, .5, .5] if simultaneous else [.25, .5, .75]
+            blocks = [
+                f"@(cross(V(u,r)-{times[0]},1,.001,.001)) a=a+1;",
+                f"@(cross(V(u,r)-{times[1]},1,.001,.001) or "
+                f"cross(2*V(u,r)-{2*times[1]},1,.001,.001)) b=b+1;",
+                f"@(timer({times[2]},0,.001)) c=c+1;",
+            ]
+            for order in itertools.permutations(blocks):
+                with self.subTest(simultaneous=simultaneous, order=order):
+                    text = model("@(initial_step) begin a=0; b=0; c=0; end "
+                                 + "".join(order) + " V(y,r)<+a+10*b+100*c;",
+                                 "integer a,b,c;")
+                    result = execute(text, times=[0,.25,.5,.75,1])
+                    y = result['nodes'].index('y')
+                    self.assertEqual([row['voltages'][y] for row in result['solutions']],
+                                     [0,0,111,111,111] if simultaneous else [0,1,11,111,111])
+                    events = result['transient']['events']
+                    self.assertEqual(len(events), 3)
+                    self.assertEqual(sorted(e['kind'] for e in events), ['cross','or','timer'])
+                    group = next(e for e in events if e['kind']=='or')
+                    self.assertEqual([leaf['trigger'] for leaf in group['fired_triggers']], [0,1])
+
     def test_timer_or_is_explicitly_outside_scope(self):
         for trigger in ['timer(.5,0,.001) or cross(V(u,r)-.5)',
                         'cross(V(u,r)-.5) or timer(.5,0,.001)']:

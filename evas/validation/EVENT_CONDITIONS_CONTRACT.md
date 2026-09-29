@@ -69,6 +69,8 @@ n_v4_02/dut.va:16:30: unsupported or invalid token '>= 0.5)…'
 比较支持不等于采样器支持。贡献继续进入联立方程；过程赋值只更新离散变量，
 不能将 `V(vout,vref) <+ transition(...)` 改成节点写入或把 cross 换成预定 timer。
 
+<a id="trigger-set"></a>
+
 ## 3. 触发集合、初始化与观察
 
 事件块身份 B=(实例身份，源码事件控制位置/编译后 block ID)。每个 cross 调用是
@@ -352,12 +354,13 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 检查分离/同根/近邻根、方向、叶子证据、输出网格和 raw IR 拒绝。Rust 另验证 OR 批次
 在候选准备后验收失败，accepted Frame 与算子历史保持原样，随后重试与干净模型一致且 body 仅执行一次。
 
-本轮 **258 Python、56 Rust**、14 条条件数学及 9 条动态数学检查通过。
+本轮 **259 Python、56 Rust**、14 条条件数学及 9 条动态数学检查通过。
 原 31×2 的新本地 EVAS 执行中，两档均 **21 条观测达标、10 条明确拒绝**；
 本契约目标的 V4 两条、E2 三条、C1 三条全部满足原有限观测判据。
 原条件/阈值/checker 不改，正式资格仍为 I；没有把 8 条单测或静态回放计作矩阵提升。
 [公开整理收据及逐条表](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)
-记录各身份与复现入口；原始运行材料尚为 local-only。新 Spectre 专项尚待完成。
+记录各身份与复现入口；原始运行材料尚为 local-only。额外专项 EVAS 16/16；Spectre 16 次因探针数字写法停在 AHDL 编译，
+生成器已修正但尚未重跑，因此没有新增 Spectre 行为对照。
 
 尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
 多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。

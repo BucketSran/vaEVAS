@@ -9,7 +9,7 @@
 
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
-时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#3-触发集合初始化与观察)。
+时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
 首版只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
 
 IR v9 保留一个 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
