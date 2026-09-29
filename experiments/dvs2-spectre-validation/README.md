@@ -1,5 +1,60 @@
 # Spectre verification on thu-sui
 
+## PR12 integer sequence 0.5.3
+
+实现为 [`ba3c063`](https://github.com/BucketSran/vaEVAS/commit/ba3c06390cfaca6c34653fcc2f978d7c793a0958)，
+同步 main 文档基线 `55f2fe3`，IR 仍为 v5。
+[本轮收据](results/timer-0.5.3.json)记录源码/内核/检查器身份、实际命令及逐配置结果。
+
+0.5.3 移除绑定阶段“一块内同一 integer 不得写两次”的限制。原有局部顺序代入、
+原赋值重放与区间认证均未改；每次整数写入仍检查 signed 32-bit 范围，中间越界不会
+被下一句覆盖隐藏。两次 `n=n+1` 应净增 2，三次应净增 3，具体推导及兼容性原则见
+[事件手册](../../evas/docs/EVENTS.md#同块顺序赋值与同刻联立求解)。
+
+本轮 **132 项 Python 方法、17 项 Rust 测试**通过；locked offline build、
+all-targets warnings-as-errors、rustfmt 和 diff 检查通过。四项顺序赋值 Python 方法
+替换旧的一项拒绝测试，覆盖 integer/real、timer/cross、初值、两次/三次更新、中间值、
+覆盖赋值、周期电压反馈、网格/步长变化和中间溢出。新增 Rust 回归检查重复写后的
+丢弃重试、缓存复用、残差失败及越界失败，确认已接受帧不变。
+相同最终测试对旧内核产生 16 个拒绝错误和 3 个错误类型断言失败（均为子测试），
+旧结果保留。首次新增测试有五个内部节点命名错误；改为显式导出该端口后通过，
+未据此修改运行时或放宽预期值，原失败日志同样保留。
+
+只重新执行受本次支持边界影响的专项范围及其控制：既有 `--extended`、
+`--sequence-controls`、`--counter-rewrite` 三组共 **12 个 EVAS 配置**，全部完成，
+**14 条历史均满足未修改的独立候选**，包含此前被拒绝的 4 个配置。
+对应 Spectre 波形复用 0.5.2 收据中的相同模型、网表和条件；逐字节核对身份，
+本轮 **没有新增 Spectre 执行**。
+
+| 范围（各两档） | EVAS 0.5.3 | 复用的 Spectre 21.1.0.509.isr12 |
+| --- | --- | --- |
+| 连续两次 integer 自增、独立事件计数 | 输出 2，符合顺序语义 | 输出 1，`candidate_differs` |
+| 连续两次 integer 自增及 real 电压反馈 | 输出 4，归一化计数 1 | 输出 2，归一化计数 0.5；`finite_inconsistent` |
+| 非收缩反馈、real 常量/反馈顺序、单次加 2 控制，共 8 配置 | 全部符合原候选 | 全部符合原候选 |
+
+检查器没有改答案或阈值，Spectre 的 4 个差异配置仍明确保留。另一次已完成的
+18 配置最小诊断发现相同异常也涉及 real，且减小步长无效、加入观测可能改变结果；
+独立复现输入及版本限制由 [Issue #16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪。
+不将该版本的异常输出作为 EVAS 应复现的语义。
+
+原 42 配置中另外 30 个配置没有在本轮重新执行，旧收据继续描述旧版本；因此本轮不报告
+“新版 42/42 与 Spectre 一致”。未重跑静态全量、四后端矩阵或性能实验。动态 timer、
+非线性事件、状态反馈 guard 等边界保持；原 31 条件的分母和完整 DVS 资格未改变。
+
+输入及检查器可从仓库重新生成，完整原始结果和日志仅在本地 `runs/integer-sequence-053/`
+保留，尚未公开归档。使用全新目录复现三组（以下以 extended 为例，另外两组换对应标志）：
+
+```sh
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py build runs/NEW-EXTENDED --extended
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py evas runs/NEW-EXTENDED \
+  --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/dvs2-spectre-validation/timer_settlement.py check runs/NEW-EXTENDED \
+  --backends evas --output runs/NEW-EXTENDED-analysis.json
+```
+
+该命令重新运行 EVAS；重现 Spectre 结果还需可用的对应版本和独立运行环境，不能从本地
+哈希推断公开数据已经可下载。
+
 ## PR12 timer hardening 0.5.2
 
 2026-09-29：本轮实现固定于 `1a7757ddda5b784226bcd30c88e2af0e14b69f07`，

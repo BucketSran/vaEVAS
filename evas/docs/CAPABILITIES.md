@@ -22,8 +22,8 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 | NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | 尚未合入 | PR8 保留实现，待整合/review | 旧基线上的正确性与合成性能检查 | 与当前 main 整合；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪 |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达 | 已合并 PR7/10 | 数学/开发回归、限定 Spectre 对照 | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
-| TIMER：固定定时事件 | 尚未合入 | PR12 待 review | 本地回归；普通历史/非同刻交互有有限 Spectre 对照 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
-| EVENT-ORDER：同刻与原子提交 | cross 前态快照、整批验收/回退 | PR12 扩展 timer；PR13 扩展历史 | 回退回归；timer 同刻对照有差异 | timer/timer 读取 0 对 1；timer/cross 顺序认证拒绝。未裁定 LRM 违规；[当前解释](EVENTS.md#timer-与同刻兼容性) |
+| TIMER：固定定时事件 | 尚未合入 | PR12：0.5.3 / IR v5，待合并 review | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
+| EVENT-ORDER：同刻与原子提交 | cross 前态快照、整批验收/回退 | PR12：仿射联立、前向认证、integer/real 顺序赋值；PR13 历史待同步 | 旧同刻差异在 0.5.1 修复；0.5.3 新回归与限定回放 | Spectre 21.1 重复赋值异常由 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16) 跟踪；更广同刻语义、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
 | TRANSITION：延迟与有限边沿 | 尚未合入 | PR13 待 review，依赖 PR12 | 独立边沿/历史样例及本地回归 | 专属 Spectre 对照、公共同刻语义、动态参数/更广输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 尚未合入 | PR14 待 review，依赖 PR13 | 独立 PWL/大时间减法样例及本地回归 | Spectre 对照、内部节点/可变延迟/跳变；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 尚未合入 | PR15 待 review，依赖 PR13 | 独立交点/反向/尺度样例及本地回归 | Spectre 对照、内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
@@ -40,7 +40,7 @@ PR 可能继续推进，本表结论只对应列出的固定检查点，不能�
 | --- | --- | --- |
 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | [4d20fbc](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)，较早静态基线 | 稀疏 LU 已接入该分支；当前 main 仍为稠密。整合后需受影响回归 |
 | [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |
-| [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 实现 [9a25a40](https://github.com/BucketSran/vaEVAS/commit/9a25a401aefa29df3472f4fea17878737ebc0b9e)；证据 [dde1ef1](https://github.com/BucketSran/vaEVAS/commit/dde1ef1c4ad6260e417d28a891e7e5b8b5164550) | Spectre 24/24 执行；EVAS 16/24 执行、8 请求拒绝；[收据](https://github.com/BucketSran/vaEVAS/blob/dde1ef1c4ad6260e417d28a891e7e5b8b5164550/experiments/dvs2-spectre-validation/results/timer-0.5.0.json) |
+| [PR12](https://github.com/BucketSran/vaEVAS/pull/12) | 0.5.3 修复及当前源码/构建身份见[收据](../../experiments/dvs2-spectre-validation/results/timer-0.5.3.json)；同步 main 文档基线 | 132 Python / 17 Rust；12 配置新 EVAS 回放符合独立候选，复用 Spectre 的 4 个重复写配置保留差异；[历史和本轮说明](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
 | [PR13](https://github.com/BucketSran/vaEVAS/pull/13) | [bb01e88](https://github.com/BucketSran/vaEVAS/commit/bb01e88225efb8884cd009ae32ab4e77a6b50d0c)，基于 timer 实现 | 129 Python / 17 Rust 是整分支方法数；新增 15 / 4；未执行专属 Spectre 对照 |
 | [PR14](https://github.com/BucketSran/vaEVAS/pull/14) | [a4b4fbe](https://github.com/BucketSran/vaEVAS/commit/a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0)，基于 PR13 | 144 Python / 22 Rust；新增 15 / 5；未执行专属 Spectre 对照 |
 | [PR15](https://github.com/BucketSran/vaEVAS/pull/15) | [5f0aba6](https://github.com/BucketSran/vaEVAS/commit/5f0aba6a4312fbcddd261cc3e9de7f63736bef9a)，基于 PR13 | 140 Python / 22 Rust；新增 11 / 5；未执行专属 Spectre 对照 |
