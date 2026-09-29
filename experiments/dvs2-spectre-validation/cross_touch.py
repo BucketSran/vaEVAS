@@ -192,6 +192,32 @@ def inspect(rows, case):
                 formal_qualification=False,observation_allowance_v=ALLOWANCE)
 
 
+def inspect_arrivals(rows, case):
+    """Opt-in compatibility contract; the original diagnostic stays unchanged."""
+    result=inspect(rows,case)
+    rate=Q(case['inputs']['clock'][-1][1])/Q(case['stop'])
+    reserve=Q(ALLOWANCE)/rate
+    points=case['inputs']['touch']
+    slopes=[abs((Q(b)-Q(a))/(Q(t1)-Q(t0))) for (t0,a),(t1,b) in zip(points,points[1:])]
+    root=Q(case['center']); width=min(Q(case['ttol']),Q(case['etol'])/max(slopes))
+    for record in result['monitors']:
+        if record['valley']!='touch' or record['status']=='failed': continue
+        expected=int(record['direction'] in [0,-record['polarity']])
+        key=record['id']
+        try:
+            for row in rows:
+                t=Q(row['time']); n=round(row['n_'+key])
+                earliest=expected*int(t>root+width+reserve)
+                latest=expected*int(t>=root-reserve)
+                if not earliest<=n<=latest: raise ValueError('count violates isolated-zero arrival contract')
+            if round(record['final_count'])!=expected: raise ValueError('missing arrival count')
+            record['status']='arrival_pass'
+        except ValueError as error:
+            record.update(status='failed',reason=str(error))
+    result['contract']='isolated-pwl-zero-arrival-v1'
+    return result
+
+
 def build(root):
     root.mkdir(parents=True,exist_ok=False)
     specs=specifications()
@@ -264,7 +290,7 @@ def run_spectre(root,profile):
     dump(root/'FILE_MANIFEST.json',{str(p.relative_to(root)):digest(p) for p in sorted(root.rglob('*')) if p.is_file()})
 
 
-def analyze(root,output):
+def analyze(root,output,require_arrival=False):
     verify(root); records=[]
     for c in json.loads((root/'conditions.json').read_text()):
         work=root/c['id']
@@ -280,7 +306,8 @@ def analyze(root,output):
                     path=work/'psf/tran.tran.tran'; rows=read_waveform(path,'spectre')
                     actual,stop_audit=audit_settings((work/'spectre.log').read_text(),c,rows)
                     r.update(effective_settings=actual,stop_audit=stop_audit,elapsed_s=execution['elapsed_s'])
-                r.update(inspect(rows,c),waveform_sha256=digest(path),status='analyzed')
+                inspector=inspect_arrivals if require_arrival else inspect
+                r.update(inspector(rows,c),waveform_sha256=digest(path),status='analyzed')
             except (FileNotFoundError,ValueError,KeyError) as error:
                 r.update(status='failed_or_missing',reason=str(error))
             records.append(r)
@@ -291,8 +318,9 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('action',choices=['build','evas','spectre','check']);p.add_argument('root',type=Path)
     p.add_argument('--kernel',type=Path);p.add_argument('--spectre-profile',type=Path);p.add_argument('--output',type=Path)
+    p.add_argument('--require-arrival',action='store_true',help='check the isolated PWL zero-arrival compatibility contract')
     a=p.parse_args()
     if a.action=='build': build(a.root)
     elif a.action=='evas': run_evas(a.root,a.kernel)
     elif a.action=='spectre': run_spectre(a.root,a.spectre_profile)
-    else: analyze(a.root,a.output)
+    else: analyze(a.root,a.output,a.require_arrival)

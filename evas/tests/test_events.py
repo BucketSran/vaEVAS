@@ -5,6 +5,7 @@ conditions in its fixed 31-condition denominator. Freeze before implementing.
 """
 import copy
 import json
+import math
 import subprocess
 import unittest
 
@@ -84,12 +85,59 @@ class EventContracts(unittest.TestCase):
             self.assertEqual([e['event'] for e in r['transient']['events']], [1,0])
             self.assertEqual(r['transient']['states'][-1],[1,1])
 
-    def test_exact_knot_crossing_once_and_touch_does_not_fire(self):
+    def test_exact_knot_crossing_and_touch_each_fire_once(self):
         r = execute_event(sources={'u':[[0,.4],[.5e-6,.5],[1e-6,.6],
                                        [1.5e-6,.5],[2e-6,.6],[3e-6,.4]]})
-        self.assertEqual([e['event'] for e in r['transient']['events']],[0,1])
+        self.assertEqual([e['event'] for e in r['transient']['events']],[0,1,1])
         self.assertEqual(r['transient']['events'][0]['time'],.5e-6)
-        self.assertAlmostEqual(r['transient']['events'][1]['time'],2.5e-6,delta=1e-18)
+        self.assertEqual(r['transient']['events'][1]['time'],1.5e-6)
+        self.assertAlmostEqual(r['transient']['events'][2]['time'],2.5e-6,delta=1e-18)
+
+    def test_isolated_zero_arrival_direction_and_post_event_state(self):
+        # Contract from the Spectre PWL experiment: arrival owns the zero;
+        # returning to the same side or continuing across it cannot fire again.
+        times = [0, 1e-6, 1.5e-6, 2e-6, 3e-6]
+        for before in [.4, .6]:
+            for after in [.4, .6]:
+                arrival = 1 if before < .5 else -1
+                for direction in [0, 1, -1]:
+                    source = model(f'''@(initial_step) n=0;
+                      @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                      V(y,r)<+n;''', 'integer n;')
+                    expected = int(direction in [0, arrival])
+                    for step in [10e-6, 7e-9]:
+                        with self.subTest(before=before, after=after, direction=direction, step=step):
+                            r = execute_event(source, sources={'u':[[0,before],[1.5e-6,.5],[3e-6,after]]},
+                                              times=times, max_step=step)
+                            events = r['transient']['events']
+                            self.assertEqual([e['time'] for e in events], [1.5e-6]*expected)
+                            self.assertEqual([e['guard_value'] for e in events], [0.]*expected)
+                            self.assertEqual(r['transient']['states'], [[0],[0]]+[[expected]]*3)
+                            y = r['nodes'].index('y')
+                            self.assertEqual([s['voltages'][y] for s in r['solutions']], [0,0]+[expected]*3)
+
+    def test_separate_touches_rearm_without_departure_events(self):
+        times = [0, .75e-6, 1.5e-6, 2.25e-6, 3e-6]
+        for side, event in [(.4,0), (.6,1)]:
+            points = [[t, .5 if i%2 else side] for i,t in enumerate(times)]
+            r = execute_event(sources={'u':points}, times=times)
+            self.assertEqual([e['event'] for e in r['transient']['events']], [event,event])
+            self.assertEqual([e['time'] for e in r['transient']['events']], [.75e-6,2.25e-6])
+            self.assertEqual([s[event] for s in r['transient']['states']], [0,1,1,2,2])
+            self.assertEqual([s[1-event] for s in r['transient']['states']], [0]*5)
+
+    def test_near_zero_is_not_a_touch_or_a_dead_band(self):
+        for side in [.4, .6]:
+            # One representable value away from threshold is still nonzero,
+            # even though its distance is far smaller than expression tolerance.
+            near = math.nextafter(.5, side)
+            r = execute_event(sources={'u':[[0,side],[1.5e-6,near],[3e-6,side]]})
+            self.assertEqual(r['transient']['events'], [])
+            beyond = .5 + (1e-6 if side < .5 else -1e-6)
+            r = execute_event(sources={'u':[[0,side],[1.5e-6,beyond],[3e-6,side]]})
+            order = [0,1] if side < .5 else [1,0]
+            self.assertEqual([e['event'] for e in r['transient']['events']], order)
+            self.assertEqual(r['transient']['states'][-1], [1,1])
 
     def test_both_directions_sequential_assignments_and_initial_parameter(self):
         source = model('''@(initial_step) begin n=start; v=1; end

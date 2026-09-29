@@ -251,3 +251,38 @@ python3 -B experiments/dvs2-spectre-validation/cross_touch.py spectre runs/NEW-T
 # 汇集同一输入身份的两后端结果后：
 python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --output runs/NEW-TOUCH-analysis.json
 ```
+
+## 孤立触零契约回放（0.4.5）
+
+用户审阅上述实验后，EVAS 0.4.5 将内部 PWL 孤立零点定义为到达方向触发一次，
+离开不再触发。`cross_touch.py check --require-arrival` 启用显式版本契约
+`isolated-pwl-zero-arrival-v1`：正 guard 的双向／上升／下降次数为 `1/0/1`，
+负 guard 为 `1/1/0`。逐点检查计数窗口、方向、保持时间见证和 guard 采样；
+原始 `inspect` 诊断模式、非零谷底判据和 `1e-8 V` 观测余量均保持不变。
+新增 3 项校准方法，接受到达规则，拒绝漏事件、离开方向、双触发、过早或过晚计数、
+错误保持时间及 guard 值。目录内共 21 项校准方法通过。
+
+`pr7-touch-arrival-20260929-02` 在运行前固定该契约、检查器和输入身份，
+新执行本机 EVAS 的 12 个配置，**没有新执行 Spectre**。复用前述 thu-sui 批次，
+核对原始归档哈希及 812 份文件；新旧 85 份模型、网表和条件文件逐字节一致。
+在新目录中重判 12 份归档 Spectre 波形及新 EVAS 输出：
+
+| 有限观察历史 | EVAS 0.4.5 新执行 | Spectre 归档重判 |
+| --- | ---: | ---: |
+| 高于阈值及低于阈值控制 | 144 / 144 | 144 / 144 |
+| 孤立触零、两种极性和三种方向 | 72 / 72 | 72 / 72 |
+
+全部 12 配置的计数与方向一致。作为反例，同一新检查器重判旧 EVAS 0.4.4：
+144 条普通控制仍通过，72 条触零历史中 48 条应触发而未触发；另外 24 条本就要求零次事件。
+这不是重写旧版的诊断结论，而是按获审阅的新契约单列检查结果。
+
+[0.4.5 收据](results/cross-touch-0.4.5.json) 保存新旧输入、构建、检查器及波形哈希，
+并逐配置记录计数和方向；原始运行、冻结契约及完整重判输出保存在忽略目录
+`runs/pr7-touch-arrival-20260929-02/`。只增加本次开发回归证据，不增加原 31 条件分母。
+所有触零点仍为显式 PWL 节点；不证明光滑极值、零平台、停止时刻触零、完整 DVS 资格或性能优势。
+
+对同一输入身份汇集的两后端输出启用新契约：
+
+```sh
+python3 -B experiments/dvs2-spectre-validation/cross_touch.py check runs/NEW-TOUCH --require-arrival --output runs/NEW-TOUCH-arrival.json
+```

@@ -112,7 +112,7 @@ impl Trajectory {
         if values.last().is_some_and(|v| v.zero()) {
             return Err(Error::new(
                 "unsupported_cross",
-                "zero at stop needs a right-hand continuation to distinguish crossing from touch",
+                "zero at stop is outside the supported interior isolated-zero contract",
             ));
         }
         for index in 0..values.len() - 1 {
@@ -135,12 +135,11 @@ impl Trajectory {
                     },
                     b.sign().unwrap(),
                 ))
-            } else if b.zero()
-                && index + 2 < values.len()
-                && !a.zero()
-                && !values[index + 2].zero()
-                && a.sign() != values[index + 2].sign()
+            } else if b.zero() && index + 2 < values.len() && !a.zero() && !values[index + 2].zero()
             {
+                // An isolated knot zero belongs to the arriving segment, even
+                // when the next segment returns to the same side. Departure
+                // starts at zero and matches neither branch, so cannot refire.
                 Some((
                     Root {
                         bounds: I::point(segment[1]),

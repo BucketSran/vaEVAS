@@ -2,7 +2,7 @@
 import copy
 from fractions import Fraction as Q
 import unittest
-from cross_touch import audit_settings, classify, inspect, monitors, pwl, roots, specifications
+from cross_touch import audit_settings, classify, inspect, inspect_arrivals, monitors, pwl, roots, specifications
 
 
 def observations(case, touch='none'):
@@ -27,6 +27,36 @@ def observations(case, touch='none'):
 
 
 class TouchCalibration(unittest.TestCase):
+    def test_arrival_contract_accepts_both_polarities(self):
+        for case in specifications():
+            result=inspect_arrivals(observations(case,'arrival'),case)
+            self.assertEqual(sum(m['status']=='control_pass' for m in result['monitors']),12)
+            self.assertEqual(sum(m['status']=='arrival_pass' for m in result['monitors']),6)
+
+    def test_arrival_contract_rejects_other_touch_hypotheses(self):
+        for style in ['none','departure','both']:
+            case=specifications()[0]
+            with self.subTest(style=style):
+                result=inspect_arrivals(observations(case,style),case)
+                self.assertTrue(any(m['status']=='failed' for m in result['monitors']))
+
+    def test_arrival_contract_checks_touch_history_and_samples(self):
+        case=specifications()[0]
+        for fault in ['premature_count','delayed_count','early_stamp','late_stamp','bad_guard','decreasing_count']:
+            rows=observations(case,'arrival');i=next(i for i,r in enumerate(rows) if r['time']==case['center'])
+            key='touch_pos_both'
+            if fault=='premature_count':
+                for prefix in ['n_','t_','g_']: rows[i-1][prefix+key]=rows[i][prefix+key]
+            if fault=='delayed_count':
+                for j in [i,i+1]:
+                    for prefix in ['n_','t_','g_']: rows[j][prefix+key]=0.
+            if fault=='early_stamp': rows[i]['t_'+key]-=.001
+            if fault=='late_stamp': rows[i]['t_'+key]+=.001
+            if fault=='bad_guard': rows[i]['g_'+key]=.01
+            if fault=='decreasing_count': rows[-1]['n_'+key]=0
+            with self.subTest(fault=fault):
+                self.assertTrue(any(m['status']=='failed' for m in inspect_arrivals(rows,case)['monitors']))
+
     def test_rounded_stop_log_requires_matching_waveform_endpoint(self):
         case=specifications()[6]
         log='vabstol = 1e-10\niabstol = 1e-14\nreltol = 1e-8\nstop = 3.00004 us\nstep = 100 ns\nmaxstep = 100 ns\nmethod = traponly\n'
