@@ -94,7 +94,13 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 明确的 EVAS 约定，不据此要求其他后端在边界容差窗口内产生相同可观测次数。
 0.5.0 重新执行原静态回归：11 条件 × 两档 = 22 组、484,022 个点均满足原判据，
 其余 20 条仍明确拒绝；此回放验证 IR 迁移后的静态兼容性，不能证明 timer 语义。
-本轮没有新执行 Spectre，也没有新增原 31 条件或授予 timer 跨后端资格。
+上述本地检查点当时未执行 Spectre。后续 [PR12 专项对照](../experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
+已在 thu-sui 新执行 24 次 Spectre，并以相同共同模型请求本地 EVAS：选定的 64 条 timer 历史
+与 16 个非同刻交互探针，两端均满足独立有限观察判据。但同刻 timer/timer 读取时，
+EVAS 得到旧电压状态 0，Spectre 得到新状态 1；隔离的同刻 timer/cross 在 EVAS 上被
+事件次序认证拒绝，在 Spectre 上可执行。粗细步长与声明顺序变化下差异仍存在。
+这些是明确保留的兼容性缺口，尚未改动实现，也未授予 timer 完整跨后端资格；
+原 31 条件及支持数量不变。
 
 ## 模块与接口
 

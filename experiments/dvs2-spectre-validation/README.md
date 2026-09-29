@@ -2,6 +2,40 @@
 
 ## PR12 fixed timer comparison
 
+**2026-09-29：已完成两批新执行的 EVAS–Spectre 对照，存在两项兼容性缺口。**
+Spectre `21.1.0.509.isr12` 在 thu-sui 完成 24/24 次电路执行，无超时或执行失败；
+固定 `9a25a401` 的 EVAS 完成 16/24 个冻结请求，另 8 个因事件次序无法认证而拒绝。
+其中 4 个是首批组合电路，另 4 个是隔离后的同刻 timer/cross 电路，不能把前者
+算成内部所有探针逐一失败。原 31 条件及其达标率不变。
+
+以下选择首批的终点/长序列、第二批的普通及交互探针，避免重复计数：
+
+| 范围 | 观察数 | EVAS 0.5.0 | Spectre |
+| --- | ---: | --- | --- |
+| 普通 timer、初始化、实例隔离、终点及长序列 | 64 条历史 | 64 条与独立有限判据相容 | 64 条相容 |
+| timer/timer、timer/cross 的明确前后关系 | 16 个交互探针 | 16 个相容 | 16 个相容 |
+| 同刻 timer/timer 电压状态读取 | 4 个探针 | 均读旧状态 0 | 均读新状态 1 |
+| 同刻 timer/cross | 4 个探针 | 均拒绝，`event_resolution` | 均完成并读新状态 1 |
+
+粗细步长、正反声明顺序下上述差异均存在。初始化探针从状态 7 开始，首个可见
+计数均为 8；终点前/处/后配对的最终计数均为 0/1/1。长序列两档、两端都观测到
+2,000 次事件，并满足原先固定的 1 ps 时间窗口。此处使用输出计数、采样时钟和
+保持值做共同历史检查，不把 EVAS 内部事件日志当作独立答案。
+
+同刻读取差异不直接裁定任一后端违反 LRM，但否定了“当前 EVAS 同刻快照与 Spectre
+已一致”的说法。timer/cross 的最小隔离案例由线性时钟跨过 8 V、timer 在 `8*unit`
+触发组成；EVAS 对区间内根的舍入包围无法证明其与 timer 同刻，因而拒绝。这项
+保守限制仍存在，不能从旧测试中可精确定位的少数同刻例子外推到一般情况。
+本次只补充验证，不修改仿真器实现；这两个问题留给后续语义与数学 review。
+
+[逐配置结果与执行收据](results/timer-0.5.0.json) 记录了所有拒绝、共同模型、检查器、
+实现和构建身份，以及原始归档哈希。两批共核验 920 份远端文件、24 份有效设置，
+检查全部 7,063 个 Spectre 导出时间点和 18,672 个 EVAS 输出时间点。
+检查器目录共 **39 项方法通过，其中 14 项为 timer 校准**。
+原始运行、首次判定、修正后的重判和构建保存在忽略目录 `runs/`；收据包含完整
+本地证据包的哈希。所有 Spectre 配置保留已有的非致命 `VACOMP-2435` 环境提示。
+数值结论以固定的观察假设为条件，完整 DVS 资格仍为 I，未进行性能排名。
+
 `timer_reference.py` freezes a separate development comparison for EVAS 0.5.0
 implementation `9a25a401`. It does not change the original 31-condition matrix.
 The execution contract is written into each new run's `contract.json`; generated
