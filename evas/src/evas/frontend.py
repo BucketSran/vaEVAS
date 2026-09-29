@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
+from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
                  Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser, Conditional as SyntaxConditional
@@ -129,29 +129,34 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
 
         for event in model.events:
-            def setting(arg):
-                value = lower(arg, parameter, {}, model.source)
-                if not isinstance(value, Affine) or value.terms:
-                    raise CompileError(f"{event.kind} settings must be instance constants")
-                return value.constant
+            def trigger(leaf):
+                def setting(arg):
+                    value = lower(arg, parameter, {}, model.source)
+                    if not isinstance(value, Affine) or value.terms:
+                        raise CompileError(f"{leaf.kind} settings must be instance constants")
+                    return value.constant
 
-            if event.kind == "cross":
-                settings = [0.0, 1e-12, 1e-9]
-                for index, arg in enumerate(event.arguments[1:]):
-                    settings[index] = setting(arg)
-                direction, time_tol, expr_tol = settings
-                if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
-                    raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
-                                       int(direction), time_tol, expr_tol)
-            else:
-                start = setting(event.arguments[0])
-                period = 0.0 if event.arguments[1] is None else setting(event.arguments[1])
-                time_tol = setting(event.arguments[2])
-                enabled = setting(event.arguments[3]) != 0 if len(event.arguments) == 4 else True
-                if start < 0 or time_tol <= 0:
-                    raise CompileError("timer requires nonnegative start and positive time_tol")
-                trigger = TimerTrigger(start, period, time_tol, enabled)
+                if leaf.kind == "cross":
+                    settings = [0.0, 1e-12, 1e-9]
+                    for index, arg in enumerate(leaf.arguments[1:]):
+                        settings[index] = setting(arg)
+                    direction, time_tol, expr_tol = settings
+                    if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
+                        raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+                    result = CrossTrigger(lower(leaf.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
+                                           int(direction), time_tol, expr_tol)
+                else:
+                    start = setting(leaf.arguments[0])
+                    period = 0.0 if leaf.arguments[1] is None else setting(leaf.arguments[1])
+                    time_tol = setting(leaf.arguments[2])
+                    enabled = setting(leaf.arguments[3]) != 0 if len(leaf.arguments) == 4 else True
+                    if start < 0 or time_tol <= 0:
+                        raise CompileError("timer requires nonnegative start and positive time_tol")
+                    result = TimerTrigger(start, period, time_tol, enabled)
+                return result
+
+            triggers = tuple(trigger(leaf) for leaf in event.triggers)
+            event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
             def body(statements):
                 result = []
                 for statement in statements:
@@ -174,7 +179,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 return tuple(result)
 
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
-            events.append(Event(trigger, body(event.body), origin))
+            events.append(Event(event_trigger, body(event.body), origin))
 
         def waveform(expr):
             input_nodes = {} if expr.op == "transition" else node_ids

@@ -243,10 +243,17 @@ pub(crate) fn check_state(value: f64, kind: &StateKind) -> Result<(), Error> {
     Ok(())
 }
 
+pub(crate) struct TriggerLeaf {
+    pub(crate) event: usize,
+    pub(crate) index: usize,
+    pub(crate) trigger: EventTrigger,
+}
+
 pub(crate) struct EventModel {
     pub(crate) program: Program,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
+    pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) conditions: Conditions,
     pub(crate) driven: Vec<String>,
@@ -286,6 +293,7 @@ impl EventModel {
             .map(|c| affine(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
         let mut guards = Vec::new();
+        let mut triggers = Vec::new();
         let mut actions = Vec::new();
         let mut writers = vec![None; program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
@@ -300,50 +308,58 @@ impl EventModel {
             {
                 return Err(Error::new("invalid_ir", "invalid event origin"));
             }
-            let guard = match &event.trigger {
-                EventTrigger::Cross {
-                    guard,
-                    direction,
-                    time_tolerance,
-                    expression_tolerance,
-                } => {
-                    if !(-1..=1).contains(direction)
-                        || !time_tolerance.is_finite()
-                        || *time_tolerance <= 0.0
-                        || !expression_tolerance.is_finite()
-                        || *expression_tolerance <= 0.0
-                    {
-                        return Err(Error::new("invalid_ir", "invalid cross settings"));
+            for (leaf, trigger) in event.trigger.leaves()?.into_iter().enumerate() {
+                let guard = match trigger {
+                    EventTrigger::Cross {
+                        guard,
+                        direction,
+                        time_tolerance,
+                        expression_tolerance,
+                    } => {
+                        if !(-1..=1).contains(direction)
+                            || !time_tolerance.is_finite()
+                            || *time_tolerance <= 0.0
+                            || !expression_tolerance.is_finite()
+                            || *expression_tolerance <= 0.0
+                        {
+                            return Err(Error::new("invalid_ir", "invalid cross settings"));
+                        }
+                        let guard = affine(guard, &program, &event.origin.instance)?;
+                        if !guard.state_dependencies.is_empty()
+                            || !guard.operator_dependencies.is_empty()
+                        {
+                            return Err(Error::new(
+                                "unsupported_cross",
+                                format!("cross guard depends on state at {}", event.origin.label()),
+                            ));
+                        }
+                        Some(guard)
                     }
-                    let guard = affine(guard, &program, &event.origin.instance)?;
-                    if !guard.state_dependencies.is_empty()
-                        || !guard.operator_dependencies.is_empty()
-                    {
-                        return Err(Error::new(
-                            "unsupported_cross",
-                            format!("cross guard depends on state at {}", event.origin.label()),
-                        ));
+                    EventTrigger::Timer {
+                        start,
+                        period,
+                        time_tolerance,
+                        ..
+                    } => {
+                        if !start.is_finite()
+                            || *start < 0.0
+                            || !period.is_finite()
+                            || !time_tolerance.is_finite()
+                            || *time_tolerance <= 0.0
+                        {
+                            return Err(Error::new("invalid_ir", "invalid timer settings"));
+                        }
+                        None
                     }
-                    Some(guard)
-                }
-                EventTrigger::Timer {
-                    start,
-                    period,
-                    time_tolerance,
-                    ..
-                } => {
-                    if !start.is_finite()
-                        || *start < 0.0
-                        || !period.is_finite()
-                        || !time_tolerance.is_finite()
-                        || *time_tolerance <= 0.0
-                    {
-                        return Err(Error::new("invalid_ir", "invalid timer settings"));
-                    }
-                    None
-                }
-            };
-            guards.push(guard);
+                    EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
+                };
+                guards.push(guard);
+                triggers.push(TriggerLeaf {
+                    event: index,
+                    index: leaf,
+                    trigger: trigger.clone(),
+                });
+            }
             let mut body = Vec::new();
             for assignment in event.assignments() {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
@@ -400,6 +416,7 @@ impl EventModel {
             program,
             rhs,
             guards,
+            triggers,
             actions,
             driven,
             tolerances,
@@ -574,7 +591,8 @@ impl EventModel {
                 break;
             }
         }
-        for (guard, event) in self.guards.iter().zip(&self.program.events) {
+        for (guard, leaf) in self.guards.iter().zip(&self.triggers) {
+            let event = &self.program.events[leaf.event];
             let Some(guard) = guard else {
                 continue;
             };

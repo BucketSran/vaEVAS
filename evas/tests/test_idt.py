@@ -176,7 +176,7 @@ class IdtContracts(unittest.TestCase):
 
     def test_raw_ir_rejects_bad_version_fields_and_dependencies(self):
         good = compiled().to_dict()
-        self.assertEqual(good['schema_version'], 8)
+        self.assertEqual(good['schema_version'], 9)
         mutations = []
         for key, value in [('ic', None), ('ic', '0'), ('reset', 0), ('ic', float('inf'))]:
             bad = copy.deepcopy(good)

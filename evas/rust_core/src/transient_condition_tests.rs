@@ -172,3 +172,53 @@ fn failed_sample_certificate_and_changed_arm_retry_preserve_frame() {
     assert_eq!(retry.states, [3.0]);
     assert_eq!(records.len(), 1);
 }
+
+#[test]
+fn rejected_or_batch_preserves_history_and_retry_executes_body_once() {
+    let (single, trajectory, accepted) = fixture(increment(1.0), true, &[[0.0, 0.0], [1.0, 1.0]]);
+    let mut program = single.program.clone();
+    let leaf = EventTrigger::Cross {
+        guard: crate::ir::Expression::Affine {
+            constant: -0.5,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: 1.0,
+            }],
+        },
+        direction: 1,
+        time_tolerance: 0.001,
+        expression_tolerance: 0.001,
+    };
+    program.events[0].trigger = EventTrigger::Or {
+        triggers: vec![leaf.clone(), leaf],
+    };
+    let model = EventModel::new(program.clone(), vec!["u".into()], Tolerances::default()).unwrap();
+    let original_history = accepted.operators.bounds(0.75).unwrap();
+    // Failure is after candidate settlement/history preparation, at leaf acceptance.
+    for _ in 0..2 {
+        let error = prepare_batch(&model, &trajectory, &accepted, 0.75, &[0, 1])
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "event_resolution");
+        assert_eq!(accepted.time, 0.0);
+        assert_eq!(accepted.states, [2.0]);
+        assert_eq!(accepted.operators.bounds(0.75).unwrap(), original_history);
+    }
+    let (retry, records) = prepare_batch(&model, &trajectory, &accepted, 0.5, &[0, 1]).unwrap();
+    let fresh = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+    let (control, clean_records) =
+        prepare_batch(&fresh, &trajectory, &accepted, 0.5, &[0, 1]).unwrap();
+    assert_eq!(retry.states, [3.0]);
+    assert_eq!(retry.states, control.states);
+    assert_eq!(retry.state_bounds, control.state_bounds);
+    assert_eq!(
+        retry.operators.bounds(1.0).unwrap(),
+        control.operators.bounds(1.0).unwrap()
+    );
+    assert_eq!(records.len(), 1);
+    assert_eq!(records[0].fired_triggers.len(), 2);
+    assert_eq!(
+        serde_json::to_value(records).unwrap(),
+        serde_json::to_value(clean_records).unwrap()
+    );
+}

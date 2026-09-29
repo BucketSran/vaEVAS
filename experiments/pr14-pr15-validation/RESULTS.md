@@ -1,5 +1,64 @@
 # PR14 / PR15 合并前验证结果
 
+<a id="event-conditions-090"></a>
+
+## 事件条件与 cross OR：0.9.0 / IR v9 分支
+
+在 main `a0c8043` 及事件体条件检查点 `a1b0163` 上新增 cross 的 OR，并修复无关输入
+断点造成的根定位拒绝。原 31 条件、共同 DUT、刺激、两档设置、阈值及 checker 保持原身份。
+本轮重新执行 62 个本地 EVAS 瞬态配置：两档均由基线 **13/31** 有限观测达标提升为
+**21/31**，新增为 V4 两项、E2 三项、C1 三项；其余 10 条明确拒绝（7 编译、3 内核）。
+正式资格仍为 I。这不是静态回放，也不是新四后端矩阵。
+
+[整理收据](results/event-conditions-0.9.0.json)包含源码/内核/输入/checker 身份、逐配置结果、
+基线/最终原始清单哈希及实际 TDD RED/GREEN 日志哈希。原始波形和日志目前仅本地保留，
+未公开归档；校验和不能替代公开原始材料。独立数学及实现入口见
+[事件 OR](../../evas/docs/EVENTS.md#event-or)与[条件契约](../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
+
+**258 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
+locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。新 Spectre 专项仍待完成，
+下面历史 Spectre/OpenVAF/Gnucap 数据不当作此次源码的新执行证据。
+
+| 条件 | 基础档：基线 → 当前 | 细化档：基线 → 当前 |
+| --- | --- | --- |
+| v1-main | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| v2-main | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v2-reference-zero | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v2-supply-fixed | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v2-input-common-mode | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v3-main | 内核拒绝 → 内核拒绝 | 内核拒绝 → 内核拒绝 |
+| v4-c0 | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| v4-c1 | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| v5-main | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v6-standard | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| v7-linear-main | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v7-linear-swapped | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v7-linear-a-half | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| v7-nonlinear-0.5 | 内核拒绝 → 内核拒绝 | 内核拒绝 → 内核拒绝 |
+| v7-nonlinear-2.0 | 内核拒绝 → 内核拒绝 | 内核拒绝 → 内核拒绝 |
+| e1-aligned | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| e1-shifted | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| e1-slow | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| e2-low | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| e2-clock-high | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| e2-reset-high | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| c1-main | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| c1-swapped | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| c1-no-reset-a | 编译拒绝 → 观测达标 | 编译拒绝 → 观测达标 |
+| c2-main | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| d1-free | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| d1-reset | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| d2-constant | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| d2-chirp | 编译拒绝 → 编译拒绝 | 编译拒绝 → 编译拒绝 |
+| s1-default | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+| s1-override | 观测达标 → 观测达标 | 观测达标 → 观测达标 |
+
+复现：在当前源码新目录运行 `experiments/dvs2-spectre-validation/run_suite.py` 冻结输入，
+然后用 `experiments/pr14-pr15-validation/matrix.py evas --source ... --root ... --kernel ...`
+执行原 31×2；分析读取每个 EVAS CSV，以同目录 `check_results.check(rows, condition)`
+原判据逐格判断，并在读取前验证 FILE_MANIFEST。不得把 waveform_available 当成达标。
+
+
 本轮已完成专项对照和原 31 条件矩阵重跑，**验证执行阶段未合并任何 PR，未修改 EVAS 求解器**。
 结论适用于 PR14 `3638024` 与 PR15 `e01fb5b`；截至执行结束，两者仍为 OPEN。
 后续文档整理与合并状态见[能力总表](../../evas/docs/CAPABILITIES.md)，不改变本报告的被测身份。

@@ -2,11 +2,12 @@
 use crate::events::EventModel;
 use crate::interval::Interval as I;
 use crate::ir::{
-    Error, EventRecord, EventTrigger, Request, Response, Solution, TransientTrace, SCHEMA_VERSION,
+    Error, EventRecord, EventTrigger, FiredTrigger, Request, Response, Solution, TransientTrace,
+    SCHEMA_VERSION,
 };
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
-use crate::schedule::schedule;
+use crate::schedule::{schedule, ScheduledEvent};
 use crate::solver::Circuit;
 
 struct Frame {
@@ -97,16 +98,30 @@ fn prepare_batch(
     event_time: f64,
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
-    let next = prepare_event(model, trajectory, accepted, event_time, ids)?;
+    // Calendar IDs identify leaves; settlement IDs identify event bodies.
+    // Same-root certification occurred before this deduplication.
+    let blocks: Vec<_> = ids
+        .iter()
+        .map(|&id| model.triggers[id].event)
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let next = prepare_event(model, trajectory, accepted, event_time, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
-    for &id in ids {
-        let (kind, guard_value) = match &model.program.events[id].trigger {
-            EventTrigger::Cross {
+    for id in blocks {
+        let mut fired = Vec::new();
+        for &leaf_id in ids {
+            let leaf = &model.triggers[leaf_id];
+            if leaf.event != id {
+                continue;
+            }
+            if let EventTrigger::Cross {
                 expression_tolerance,
                 ..
-            } => {
-                let value = model.guards[id]
+            } = &leaf.trigger
+            {
+                let value = model.guards[leaf_id]
                     .as_ref()
                     .unwrap()
                     .value(&next.solution.voltages, &next.states)?;
@@ -116,19 +131,57 @@ fn prepare_batch(
                         "accepted event violates cross expression tolerance",
                     ));
                 }
-                ("cross", Some(value))
+                fired.push(FiredTrigger {
+                    trigger: leaf.index,
+                    guard_value: value,
+                    time_bounds: None,
+                });
             }
+        }
+        let (kind, guard_value) = match &model.program.events[id].trigger {
+            EventTrigger::Cross { .. } => ("cross", Some(fired[0].guard_value)),
             EventTrigger::Timer { .. } => ("timer", None),
+            EventTrigger::Or { .. } => ("or", None),
         };
+        if kind != "or" {
+            fired.clear();
+        }
         records.push(EventRecord {
             time: event_time,
             event: id,
             origin: model.program.events[id].origin.label(),
             kind,
             guard_value,
+            fired_triggers: fired,
             before: accepted.states.clone(),
             after: next.states.clone(),
         });
+    }
+    Ok((next, records))
+}
+
+fn prepare_calendar_batch(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    time: f64,
+    scheduled: &[ScheduledEvent],
+) -> Result<(Frame, Vec<EventRecord>), Error> {
+    let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
+    let (next, mut records) = prepare_batch(model, trajectory, accepted, time, &ids)?;
+    for record in &mut records {
+        for fired in &mut record.fired_triggers {
+            let event = scheduled
+                .iter()
+                .find(|e| {
+                    let leaf = &model.triggers[e.event];
+                    leaf.event == record.event && leaf.index == fired.trigger
+                })
+                .unwrap();
+            let bounds = event.bounds();
+            fired.time_bounds = Some([bounds.lo, bounds.hi]);
+        }
+        record.fired_triggers.sort_by_key(|f| f.trigger);
     }
     Ok((next, records))
 }
@@ -196,11 +249,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             while end_event < crossings.len() && crossings[end_event].time == event_time {
                 end_event += 1;
             }
-            let ids: Vec<_> = crossings[event..end_event]
-                .iter()
-                .map(|c| c.event)
-                .collect();
-            let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            let (next, records) = prepare_calendar_batch(
+                &model,
+                &trajectory,
+                &accepted,
+                event_time,
+                &crossings[event..end_event],
+            )?;
             next.operators
                 .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             // Commit frame, circuit, cursor and history only after all checks.
@@ -254,11 +309,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             while end_event < crossings.len() && crossings[end_event].time == event_time {
                 end_event += 1;
             }
-            let ids: Vec<_> = crossings[event..end_event]
-                .iter()
-                .map(|c| c.event)
-                .collect();
-            let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            let (next, records) = prepare_calendar_batch(
+                &model,
+                &trajectory,
+                &accepted,
+                event_time,
+                &crossings[event..end_event],
+            )?;
             next.operators
                 .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             accepted = next;

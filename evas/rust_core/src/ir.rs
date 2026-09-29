@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 8;
+pub const SCHEMA_VERSION: u32 = 9;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -315,6 +315,9 @@ impl Event {
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum EventTrigger {
+    Or {
+        triggers: Vec<EventTrigger>,
+    },
     Cross {
         guard: Expression,
         direction: i8,
@@ -327,6 +330,24 @@ pub enum EventTrigger {
         time_tolerance: f64,
         enabled: bool,
     },
+}
+
+impl EventTrigger {
+    /// OR groups share a body but retain independent cross call identities.
+    pub(crate) fn leaves(&self) -> Result<Vec<&Self>, Error> {
+        match self {
+            Self::Or { triggers } => {
+                if triggers.len() < 2 || triggers.iter().any(|t| !matches!(t, Self::Cross { .. })) {
+                    return Err(Error::new(
+                        "invalid_ir",
+                        "event OR requires at least two cross leaves",
+                    ));
+                }
+                Ok(triggers.iter().collect())
+            }
+            _ => Ok(vec![self]),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -346,8 +367,18 @@ pub struct EventRecord {
     pub kind: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub guard_value: Option<f64>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub fired_triggers: Vec<FiredTrigger>,
     pub before: Vec<f64>,
     pub after: Vec<f64>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct FiredTrigger {
+    pub trigger: usize,
+    pub guard_value: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub time_bounds: Option<[f64; 2]>,
 }
 
 #[derive(Debug, Serialize)]

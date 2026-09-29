@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 
 @dataclass(frozen=True)
@@ -142,8 +142,14 @@ class TimerTrigger:
 
 
 @dataclass(frozen=True)
+class OrTrigger:
+    triggers: tuple[CrossTrigger, ...]
+    kind: str = field(default="or", init=False)
+
+
+@dataclass(frozen=True)
 class Event:
-    trigger: CrossTrigger | TimerTrigger
+    trigger: CrossTrigger | TimerTrigger | OrTrigger
     body: tuple[Assignment | Conditional, ...]
     origin: Origin
 

@@ -1,6 +1,6 @@
 # 事件条件赋值与采样复位：第一阶段契约
 
-状态：**分批实现；0.8.0 / IR v8 已接入受限事件 if/else，尚未接入 OR，也无原 8 条件通过结论。**
+状态：**分支限定实现；0.9.0 / IR v9 已接入受限事件 if/else 与 cross OR，原 8 条件两档新执行满足有限观测判据；待 review，正式资格仍为 I。**
 设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；本轮在分支 `feat/evas-event-conditions`
 同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后实现，停止于可 review 的本地检查点。
 以下完整目标继续约束后续 OR 接入；原设计阶段事实和校准结果不当作本轮仿真证据。
@@ -306,9 +306,9 @@ git diff --check
 本文件的本地链接/章节锚点已核对；最终提交前检查两文件 diff 的空白与写入范围。
 该设计提交结束在契约与校准，没有 push、创建 PR 或合入 main。
 
-<a id="current-checkpoint"></a>
+<a id="conditions-080-checkpoint"></a>
 
-## 9. 当前实现检查点
+## 9. 0.8.0 条件实现历史检查点
 
 本地实现入口及新增独立答案在[事件手册](../docs/EVENTS.md#event-conditions)。
 已同步 IR v8、输入区间接口和实际赋值集合；受影响的旧版本/原始 IR 测试协调迁移。
@@ -338,3 +338,26 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 测试源码、独立答案及输入在仓库内。3 项新 Rust 测试检查 prepare 阶段和已接受帧：
 不可判定条件、失败采样认证、成功弃步、修正未来输入、非零 transition 历史及无算子状态误差保留。
 完整日程游标/消费状态的任意故障点注入仍未完成，不能用新进程重跑冒充这类证据。
+
+<a id="current-checkpoint"></a>
+
+## 10. 当前 0.9.0 / IR v9 检查点
+
+在 §9 实现上增加一个 block 多个 cross 叶子的 OR。所有根先保留独立身份、定位区间与
+容差，再在认证的同根批次按 block 去重；同块执行一次并记录全部 fired_triggers。
+以认证的非零输入系数选择 guard 的 PWL 断点，修复 C1 第二实例被无关断点切分后
+无法包围根的问题。证明、状态提交边界及代码映射见[OR 说明](../docs/EVENTS.md#event-or)。
+
+独立 TDD 实际 RED 为 OR 语法拒绝，以及额外无关输入断点使事件被拒绝；聚焦 GREEN
+检查分离/同根/近邻根、方向、叶子证据、输出网格和 raw IR 拒绝。Rust 另验证 OR 批次
+在候选准备后验收失败，accepted Frame 与算子历史保持原样，随后重试与干净模型一致且 body 仅执行一次。
+
+本轮 **258 Python、56 Rust**、14 条条件数学及 9 条动态数学检查通过。
+原 31×2 的新本地 EVAS 执行中，两档均 **21 条观测达标、10 条明确拒绝**；
+本契约目标的 V4 两条、E2 三条、C1 三条全部满足原有限观测判据。
+原条件/阈值/checker 不改，正式资格仍为 I；没有把 8 条单测或静态回放计作矩阵提升。
+[公开整理收据及逐条表](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)
+记录各身份与复现入口；原始运行材料尚为 local-only。新 Spectre 专项尚待完成。
+
+尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
+多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。

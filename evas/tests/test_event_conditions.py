@@ -154,7 +154,7 @@ class ConditionalEvents(unittest.TestCase):
                      'if (1>0) q=2; else q=idt(V(u,r),0);']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 execute(source(body))
-        for trigger in ['cross(V(u,r)-.5) or cross(V(u,r)-.75)', 'initial_step']:
+        for trigger in ['cross(V(u,r)-.5) or timer(.5,0,.001)', 'initial_step']:
             with self.subTest(trigger=trigger), self.assertRaises(CompileError):
                 execute(source('if (V(u,r)>.5) q=1;', trigger=trigger))
         with self.assertRaisesRegex(KernelError,'unsupported_transient'):

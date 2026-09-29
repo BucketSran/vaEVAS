@@ -30,7 +30,7 @@ _TOKEN = re.compile(
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "timer", "cross", "transition", "absdelay", "slew", "idt"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -79,9 +79,15 @@ class Conditional:
 
 
 @dataclass(frozen=True)
-class Event:
+class Trigger:
     kind: str
     arguments: tuple[Expr | None, ...]
+    token: Token
+
+
+@dataclass(frozen=True)
+class Event:
+    triggers: tuple[Trigger, ...]
     body: tuple[Assignment | Conditional, ...]
     token: Token
 
@@ -271,24 +277,33 @@ class Parser:
                     self.take(")")
                     initial.extend(self.statements())
                 else:
-                    kind = self.take().text
-                    if kind not in ("cross", "timer"):
-                        self.fail("only cross and timer events are supported", token)
-                    self.take("(")
-                    arguments = [self.expression()]
-                    while self.token.text == ",":
-                        self.take(",")
-                        if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
-                            arguments.append(None)  # LRM optional period argument
-                        else:
-                            arguments.append(self.expression())
+                    triggers = []
+                    while True:
+                        leaf = self.take()
+                        kind = leaf.text
+                        if kind not in ("cross", "timer"):
+                            self.fail("only cross and timer events are supported", leaf)
+                        self.take("(")
+                        arguments = [self.expression()]
+                        while self.token.text == ",":
+                            self.take(",")
+                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
+                                arguments.append(None)  # LRM optional period argument
+                            else:
+                                arguments.append(self.expression())
+                        self.take(")")
+                        if len(arguments) > 4:
+                            self.fail(f"{kind} accepts at most four supported arguments", leaf)
+                        if kind == "timer" and len(arguments) < 3:
+                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
+                        triggers.append(Trigger(kind, tuple(arguments), leaf))
+                        if self.token.text != "or":
+                            break
+                        self.take("or")
                     self.take(")")
-                    self.take(")")
-                    if len(arguments) > 4:
-                        self.fail(f"{kind} accepts at most four supported arguments", token)
-                    if kind == "timer" and len(arguments) < 3:
-                        self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", token)
-                    events.append(Event(kind, tuple(arguments), self.statements(True), token))
+                    if len(triggers) > 1 and any(t.kind != "cross" for t in triggers):
+                        self.fail("event OR supports only cross leaves", token)
+                    events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
             if self.token.text != "V":
                 self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")

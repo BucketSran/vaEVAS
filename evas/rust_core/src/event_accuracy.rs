@@ -11,18 +11,21 @@ pub(crate) fn unresolved(message: &str) -> Error {
 
 pub(crate) struct GuardBounds {
     coefficients: Vec<Vec<I>>,
+    driven_count: usize,
 }
 
 impl GuardBounds {
     pub(crate) fn new(program: &Program, driven: &[String]) -> Result<Self, Error> {
-        let expressions: Vec<_> = program
-            .events
-            .iter()
-            .map(|event| match &event.trigger {
-                EventTrigger::Cross { guard, .. } => Some(guard),
-                EventTrigger::Timer { .. } => None,
-            })
-            .collect();
+        let mut expressions = Vec::new();
+        for event in &program.events {
+            for trigger in event.trigger.leaves()? {
+                expressions.push(match trigger {
+                    EventTrigger::Cross { guard, .. } => Some(guard),
+                    EventTrigger::Timer { .. } => None,
+                    EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
+                });
+            }
+        }
         Self::expressions(program, driven, &expressions)
     }
 
@@ -112,7 +115,19 @@ impl GuardBounds {
                 "cannot certify cross guard independence from event state",
             ));
         }
-        Ok(Self { coefficients })
+        Ok(Self {
+            coefficients,
+            driven_count: driven.len(),
+        })
+    }
+
+    /// Only a proven zero coefficient permits ignoring an input breakpoint.
+    pub(crate) fn active_inputs(&self, expression: usize) -> Vec<usize> {
+        self.coefficients[expression][..self.driven_count]
+            .iter()
+            .enumerate()
+            .filter_map(|(i, coefficient)| (!coefficient.zero()).then_some(i))
+            .collect()
     }
 
     pub(crate) fn values(&self, inputs: &[I]) -> Vec<I> {
