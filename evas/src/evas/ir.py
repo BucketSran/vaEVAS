@@ -53,7 +53,23 @@ class StateRef:
     op: str = field(default="state", init=False)
 
 
-Expression = Affine | Binary | Power | StateRef
+@dataclass(frozen=True)
+class OperatorRef:
+    operator: int
+    op: str = field(default="operator", init=False)
+
+
+Expression = Affine | Binary | Power | StateRef | OperatorRef
+
+
+@dataclass(frozen=True)
+class Transition:
+    input: Expression
+    delay: float
+    rise: float
+    fall: float
+    origin: Origin
+    kind: str = field(default="transition", init=False)
 
 
 @dataclass(frozen=True)
@@ -119,6 +135,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
+    operators: tuple[Transition, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

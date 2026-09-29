@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::State { .. } => {
+        Expression::State { .. } | Expression::Operator { .. } => {
             return Err(Error::new(
                 "unsupported_analysis",
                 "state requires transient execution",
@@ -97,7 +97,7 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::State { .. } => {
+            Expression::State { .. } | Expression::Operator { .. } => {
                 return Err(Error::new(
                     "unsupported_analysis",
                     "unbound state in static expression",

@@ -3,10 +3,15 @@ use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Toler
 use crate::solver::Circuit;
 use std::collections::BTreeSet;
 
+#[derive(Clone)]
 pub(crate) struct AffineState {
     constant: f64,
     nodes: Vec<f64>,
     states: Vec<f64>,
+    operators: Vec<f64>,
+    pub(crate) node_dependencies: BTreeSet<usize>,
+    pub(crate) state_dependencies: BTreeSet<usize>,
+    pub(crate) operator_dependencies: BTreeSet<usize>,
     // Structural dependence survives coefficient cancellation and underflow.
     // It is deliberately conservative, including exact algebraic cancellations.
     has_variables: bool,
@@ -14,6 +19,15 @@ pub(crate) struct AffineState {
 
 impl AffineState {
     pub(crate) fn value(&self, nodes: &[f64], states: &[f64]) -> Result<f64, Error> {
+        self.value_with(nodes, states, &[])
+    }
+
+    pub(crate) fn value_with(
+        &self,
+        nodes: &[f64],
+        states: &[f64],
+        operators: &[f64],
+    ) -> Result<f64, Error> {
         let value = self.constant
             + self
                 .nodes
@@ -26,6 +40,12 @@ impl AffineState {
                 .iter()
                 .zip(states)
                 .map(|(a, v)| a * v)
+                .sum::<f64>()
+            + self
+                .operators
+                .iter()
+                .zip(operators)
+                .map(|(a, v)| a * v)
                 .sum::<f64>();
         if !value.is_finite() {
             return Err(Error::new(
@@ -36,9 +56,9 @@ impl AffineState {
         Ok(value)
     }
 
-    fn bind(&self, states: &[f64]) -> Result<Expression, Error> {
+    fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Expression, Error> {
         Ok(Expression::Affine {
-            constant: self.value(&[], states)?,
+            constant: self.value_with(&[], states, operators)?,
             terms: self
                 .nodes
                 .iter()
@@ -53,11 +73,19 @@ impl AffineState {
     }
 }
 
-fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineState, Error> {
+pub(crate) fn affine(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<AffineState, Error> {
     let mut result = AffineState {
         constant: 0.0,
         nodes: vec![0.0; program.nodes.len()],
         states: vec![0.0; program.states.len()],
+        operators: vec![0.0; program.operators.len()],
+        node_dependencies: BTreeSet::new(),
+        state_dependencies: BTreeSet::new(),
+        operator_dependencies: BTreeSet::new(),
         has_variables: false,
     };
     match expr {
@@ -67,6 +95,9 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
             for term in terms {
                 result.nodes[term.node] = term.coefficient;
                 result.has_variables |= term.coefficient != 0.0;
+                if term.coefficient != 0.0 {
+                    result.node_dependencies.insert(term.node);
+                }
             }
         }
         Expression::State { state } => {
@@ -77,6 +108,20 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
                 ));
             }
             result.states[*state] = 1.0;
+            result.state_dependencies.insert(*state);
+            result.has_variables = true;
+        }
+        Expression::Operator { operator } => {
+            if *operator >= program.operators.len()
+                || program.operators[*operator].origin().instance != owner
+            {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "operator reference must belong to its instance",
+                ));
+            }
+            result.operators[*operator] = 1.0;
+            result.operator_dependencies.insert(*operator);
             result.has_variables = true;
         }
         Expression::Add { left, right } | Expression::Multiply { left, right } => {
@@ -90,6 +135,21 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
                 ));
             }
             result.has_variables = a.has_variables || b.has_variables;
+            result.node_dependencies = a
+                .node_dependencies
+                .union(&b.node_dependencies)
+                .copied()
+                .collect();
+            result.state_dependencies = a
+                .state_dependencies
+                .union(&b.state_dependencies)
+                .copied()
+                .collect();
+            result.operator_dependencies = a
+                .operator_dependencies
+                .union(&b.operator_dependencies)
+                .copied()
+                .collect();
             let (ka, kb) = if multiply {
                 (b.constant, a.constant)
             } else {
@@ -104,6 +164,12 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
                 .nodes
                 .iter()
                 .zip(&b.nodes)
+                .map(|(x, y)| ka * x + kb * y)
+                .collect();
+            result.operators = a
+                .operators
+                .iter()
+                .zip(&b.operators)
                 .map(|(x, y)| ka * x + kb * y)
                 .collect();
             result.states = a
@@ -125,6 +191,7 @@ fn affine(expr: &Expression, program: &Program, owner: &str) -> Result<AffineSta
             .nodes
             .iter()
             .chain(&result.states)
+            .chain(&result.operators)
             .any(|v| !v.is_finite())
     {
         return Err(Error::new(
@@ -220,7 +287,7 @@ impl EventModel {
                         return Err(Error::new("invalid_ir", "invalid cross settings"));
                     }
                     let guard = affine(guard, &program, &event.origin.instance)?;
-                    if guard.states.iter().any(|v| *v != 0.0) {
+                    if !guard.state_dependencies.is_empty() || !guard.operator_dependencies.is_empty() {
                         return Err(Error::new(
                             "unsupported_cross",
                             format!("cross guard depends on state at {}", event.origin.label()),
@@ -261,6 +328,12 @@ impl EventModel {
                 }
                 writers[assignment.state] = Some(index);
                 let value = affine(&assignment.rhs, &program, &event.origin.instance)?;
+                if !value.operator_dependencies.is_empty() {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "operator calls are only allowed in contributions",
+                    ));
+                }
                 if state.kind == StateKind::Integer
                     && (value.constant.fract() != 0.0
                         || value.nodes.iter().any(|v| *v != 0.0)
@@ -307,15 +380,24 @@ impl EventModel {
     }
 
     pub(crate) fn circuit(&self, states: &[f64]) -> Result<Circuit, Error> {
-        Circuit::new(self.bind(states)?, &self.driven, self.tolerances.clone())
+        self.circuit_with(states, &vec![0.0; self.program.operators.len()])
     }
 
-    fn bind(&self, states: &[f64]) -> Result<Program, Error> {
+    pub(crate) fn circuit_with(&self, states: &[f64], operators: &[f64]) -> Result<Circuit, Error> {
+        Circuit::new(
+            self.bind(states, operators)?,
+            &self.driven,
+            self.tolerances.clone(),
+        )
+    }
+
+    fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Program, Error> {
         let mut program = self.program.clone();
         program.states.clear();
         program.events.clear();
+        program.operators.clear();
         for (contribution, rhs) in program.contributions.iter_mut().zip(&self.rhs) {
-            contribution.rhs = rhs.bind(states)?;
+            contribution.rhs = rhs.bind(states, operators)?;
         }
         Ok(program)
     }
@@ -324,7 +406,7 @@ impl EventModel {
         // Conservative undirected equation connectivity, excluding fixed inputs
         // and ground. No floating-point sensitivity threshold can hide feedback.
         let assembled = crate::assembly::assemble(
-            self.bind(&self.initial())?,
+            self.bind(&self.initial(), &vec![0.0; self.program.operators.len()])?,
             &self.driven,
             self.tolerances.clone(),
         )?;
@@ -336,7 +418,9 @@ impl EventModel {
             .contributions
             .iter()
             .zip(&self.rhs)
-            .filter(|(_, rhs)| rhs.states.iter().any(|v| *v != 0.0))
+            .filter(|(_, rhs)| {
+                !rhs.state_dependencies.is_empty() || !rhs.operator_dependencies.is_empty()
+            })
             .map(|(c, _)| &c.branch)
             .collect();
         let mut groups = Vec::new();

@@ -11,7 +11,7 @@ pub(crate) fn unresolved(message: &str) -> Error {
 // Last entry is the constant. Recheck affinity before dropping product terms,
 // even though EventModel also checks the original expression's structure.
 fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Error> {
-    let n = program.nodes.len() + program.states.len();
+    let n = program.nodes.len() + program.states.len() + program.operators.len();
     let mut result = vec![I::ZERO; n + 1];
     match expr {
         Expression::Affine { constant, terms } => {
@@ -21,6 +21,9 @@ fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Error> {
             }
         }
         Expression::State { state } => result[program.nodes.len() + state] = I::ONE,
+        Expression::Operator { operator } => {
+            result[program.nodes.len() + program.states.len() + operator] = I::ONE
+        }
         Expression::Add { left, right } => {
             result = affine(left, program)?
                 .iter()
@@ -53,14 +56,14 @@ pub(crate) struct GuardBounds {
 impl GuardBounds {
     pub(crate) fn new(program: &Program, driven: &[String]) -> Result<Self, Error> {
         let count = program.nodes.len();
-        let variables = count + program.states.len();
+        let variables = count + program.states.len() + program.operators.len();
         let driven: Vec<_> = driven
             .iter()
             .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
             .collect();
         let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
         let n = unknown.len();
-        let width = driven.len() + program.states.len() + 1;
+        let width = driven.len() + program.states.len() + program.operators.len() + 1;
         let mut groups = BTreeMap::new();
         for c in &program.contributions {
             let rhs = affine(&c.rhs, program)?;
@@ -130,7 +133,7 @@ impl GuardBounds {
         for (k, &node) in driven.iter().enumerate() {
             nodes[node][k] = I::ONE;
         }
-        for state in 0..program.states.len() {
+        for state in 0..(program.states.len() + program.operators.len()) {
             nodes[count + state][driven.len() + state] = I::ONE;
         }
         for r in (0..n).rev() {

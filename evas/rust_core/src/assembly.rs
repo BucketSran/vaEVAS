@@ -28,7 +28,7 @@ pub(crate) fn assemble(
     tolerances: Tolerances,
 ) -> Result<AssembledCircuit, Error> {
     check_schema_version(u64::from(program.schema_version))?;
-    if !program.states.is_empty() || !program.events.is_empty() {
+    if !program.states.is_empty() || !program.events.is_empty() || !program.operators.is_empty() {
         return Err(Error::new(
             "unsupported_analysis",
             "state/event program requires transient execution",

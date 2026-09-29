@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
-                 Origin, Program, State, StateRef)
+                 Origin, Program, State, StateRef, OperatorRef, Transition)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser
 
@@ -50,7 +50,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         bindings.append((instance, model, nets))
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
-    contributions, states, events = [], [], []
+    contributions, states, events, operators = [], [], [], []
     for instance, model, nets in bindings:
         cache, active = {}, set()
 
@@ -151,6 +151,23 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 assignments.append(Assignment(state_ids[statement.name], value))
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
             events.append(Event(trigger, tuple(assignments), origin))
+
+        def waveform(expr):
+            value = lower(expr.args[0], symbol, {}, model.source)
+            settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
+            if any(not isinstance(v, Affine) or v.terms for v in settings):
+                raise CompileError("transition settings must be instance constants")
+            delay, rise, fall = (v.constant for v in settings)
+            if delay < 0 or rise <= 0 or fall <= 0:
+                raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+            origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
+            index = len(operators)
+            operators.append(Transition(value, delay, rise, fall, origin))
+            return OperatorRef(index)
+
+        def contains_operator(expr):
+            return expr.op == "transition" or any(contains_operator(arg) for arg in expr.args)
+
         bound_branches = {}
         for branch, rhs in model.contributions:
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes
@@ -161,9 +178,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, symbol, node_ids, model.source)
+            expression = lower(rhs, symbol, node_ids, model.source, waveform, contains_operator(rhs))
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)
             contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))
-    return Program(names, tuple(contributions), tuple(states), tuple(events))
+    return Program(names, tuple(contributions), tuple(states), tuple(events), tuple(operators))

@@ -6,10 +6,12 @@ mod interval;
 pub mod ir;
 mod linear;
 mod nonlinear;
+mod operators;
 mod pwl;
 mod schedule;
 pub mod solver;
 mod transient;
+mod transition;
 
 use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;
@@ -18,7 +20,10 @@ pub fn run(request: Request) -> Result<Response, Error> {
     if request.transient.is_some() {
         return transient::run(request);
     }
-    if !request.program.states.is_empty() || !request.program.events.is_empty() {
+    if !request.program.states.is_empty()
+        || !request.program.events.is_empty()
+        || !request.program.operators.is_empty()
+    {
         return Err(Error::new(
             "unsupported_analysis",
             "state/event program requires transient execution",

@@ -15,10 +15,14 @@ def scale(expression: Expression, factor: float) -> Expression:
     return Binary("multiply", Affine(factor, ()), expression)
 
 
-def lower(expr: Expr, parameters, nodes, source: str) -> Expression:
+def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_structure=False) -> Expression:
     def fail(message):
         raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
 
+    if expr.op == "transition":
+        if operators is None:
+            fail("waveform operators are only allowed in contributions; nesting is unsupported")
+        return operators(expr)
     if expr.op == "number":
         return Affine(float(expr.value), ())
     if expr.op == "parameter":
@@ -29,13 +33,15 @@ def lower(expr: Expr, parameters, nodes, source: str) -> Expression:
         if p not in nodes or n not in nodes:
             fail(f"undeclared electrical node in V({p},{n})")
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
-    values = [lower(arg, parameters, nodes, source) for arg in expr.args]
+    values = [lower(arg, parameters, nodes, source, operators, preserve_structure) for arg in expr.args]
     a = values[0]
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)
     else:
         b = values[1]
         both_affine = isinstance(a, Affine) and isinstance(b, Affine)
+        if both_affine and preserve_structure and (a.terms or b.terms):
+            both_affine = False
         if expr.op in ("+", "-"):
             sign = 1.0 if expr.op == "+" else -1.0
             if both_affine:
