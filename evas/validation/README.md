@@ -24,6 +24,7 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 | --- | --- |
 | [起步契约](CASE_CARDS.md) | 8 张卡、15 个原条件的刺激、独立答案与错误对照 |
 | [补充契约](NEXT_CASE_CARDS.md) | 7 张卡、16 个新增条件；不把低通语法修订算作新增条件 |
+| [定时与波形算子候选契约](TIMED_OPERATOR_CONTRACTS.md) | transition、timer、absdelay、slew 的数学样例与验收边界；设计候选，未执行仿真，不增加原 31 条件 |
 | [判定与设置协议](METHOD_QUALIFICATION.md) | 共同事件历史、观察资格、校准与证据复用 |
 | [共同源码](cases/README.md) | 原 DUT、补充模型和标准数组修订 |
 | [当前四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md) | 31×4×2 条配置的逐条件结论 |
