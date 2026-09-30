@@ -30,28 +30,50 @@ budget used by the nominal residual check:
 [-B_i, B_i], where B_i = vabstol + reltol * max(abs(lhs_i), abs(rhs_i)).
 ```
 
-That residual check is not enough when a small input/residual perturbation is
-amplified by feedback. The second certification step builds the local Jacobian
-`J = ∂F/∂v` at the accepted point, factors it, and propagates residual intervals
-into node-voltage error bounds:
+For point input intervals this residual replay is the whole waveform check. For
+off-knot samples, residual replay alone is not enough: a tiny residual/input
+uncertainty can be amplified by feedback or by nonlinear sensitivity. The second
+step is therefore a restricted Krawczyk box certificate.
+
+The implementation builds an inner representable voltage box around the accepted
+nominal solution:
 
 ```text
-|δv_j| <= Σ_i |(J^{-1})_{j i}| · max(abs(R_i.lo), abs(R_i.hi))
+X_j ⊂ [x_j - B_j, x_j + B_j]
+B_j = lower(vabstol + reltol * abs(x_j))
 ```
 
-Each unknown node error bound must fit `vabstol + reltol * abs(V_j)`. If the
-residual interval, Jacobian factorization or forward propagation cannot be made
-finite, or if the propagated voltage bound exceeds the requested budget, the
-kernel returns `waveform_accuracy`. This is a conservative refusal, not a relaxed
-comparison threshold.
+The inner endpoints ensure the certified box itself does not exceed the requested
+voltage budget because of outward-rounded endpoint arithmetic. It then evaluates
+`F(x,U)` and the interval Jacobian `J(X,U)` over the original branch relation
+available to the solver. The local floating-point inverse-like matrix `C` is used
+only as a preconditioner; it is not treated as an exact inverse. The Krawczyk image
+is constructed with outward interval operations:
 
-For affine networks this is a fixed-coefficient linear forward-error bound over
-the existing exact-PWL input interval. For polynomial networks it remains a local
-fixed-Jacobian certificate; it is useful for refusing high-gain and ill-conditioned
-accepted points, but it is not a Krawczyk or interval-Newton proof. It does not
-prove global root uniqueness, all possible rounded arithmetic paths, or a complete
-forward-error bound for arbitrary nonlinear polynomials. Cases outside that proof
-must stay rejected or receive a future interval solve certificate.
+```text
+K(X) = x - C F(x,U) + (I - C J(X,U)) (X - x)
+```
+
+The sample is accepted only when `K(X)` is strictly inside `X` and the interval
+operator row-sum bound satisfies:
+
+```text
+||I - C J(X,U)||∞ < 1
+```
+
+If the system is not square, a branch equation has already merged multiple
+contribution origins, the residual or Jacobian intervals are nonfinite, the local
+preconditioner cannot be built, the contraction bound is not below one, or the
+Krawczyk image is not strictly inside the budget box, the kernel returns
+`waveform_accuracy`. This is a conservative refusal, not a relaxed comparison
+threshold.
+
+For affine square systems this certifies the root of the fixed linear system over
+the submitted exact-PWL input interval. For polynomial systems it certifies a root
+inside the requested voltage box under the same restricted Krawczyk conditions. It
+is still not a general-purpose interval solver for arbitrary coupled dynamics;
+nonlinear events, state/history/operator coupling and unsupported non-square or
+merged-branch cases remain outside this branch.
 
 ## High-gain diagnostic
 
@@ -120,8 +142,8 @@ certification.
 ## Remaining scope
 
 The current branch still rejects nonlinear events, state/history/operator
-coupling, and non-affine transient dynamics. It also does not implement a general
-interval Newton or Krawczyk certificate for moving the unknown voltages over an
-interval. If a future feature needs to certify nonlinear root movement itself, it
-must add an explicit interval solve or Krawczyk-style proof rather than relying on
-nominal residuals or the local fixed-Jacobian forward check alone.
+coupling, and non-affine transient dynamics. The Krawczyk certificate is limited
+to square, single-origin branch systems at off-knot stateless samples. It does not
+recover source-level contributions after assembly has merged multiple origins, and
+it does not replace a future general interval solve for broader nonlinear dynamic
+features.

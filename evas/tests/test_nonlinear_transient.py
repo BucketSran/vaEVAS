@@ -263,6 +263,85 @@ class NonlinearTransientContracts(unittest.TestCase):
         row = dict(zip(result["nodes"], result["solutions"][0]["voltages"]))
         self.assertEqual(row["y"], 3333333333333334.0)
 
+    def test_off_knot_rectangular_system_is_not_krawczyk_certified(self):
+        source = model(
+            "V(y,r)<+V(u,r);",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"redundant.va": source},
+            [
+                instance(name="a", connections=dict(u="u", y="y", r="0")),
+                instance(name="b", connections=dict(u="u", y="y", r="0")),
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1.0], [3.0, 2.0]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1.0,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertIn("square system", error.exception.detail["message"])
+
+    def test_coupled_square_system_can_be_krawczyk_certified(self):
+        source = model(
+            "V(y,r)<+V(u,r)+0.25*V(z,r); V(z,r)<+1-0.25*V(y,r);",
+            ports="u,y,z,r",
+            directions="input u; output y,z; inout r;",
+        )
+        program = compile_sources(
+            {"coupled.va": source},
+            [instance(connections=dict(u="u", y="y", z="z", r="0"))],
+        )
+        result = transient(
+            program,
+            {"u": [[0.0, 1.0], [3.0, 2.0]]},
+            [1.0],
+            stop=3.0,
+            max_step=3.0,
+            kernel=KERNEL,
+            vabstol=1e-9,
+            reltol=1e-9,
+        )
+        row = dict(zip(result["nodes"], result["solutions"][0]["voltages"]))
+        u = (1.0 - 1.0 / 3.0) * 1.0 + (1.0 / 3.0) * 2.0
+        expected_y = (u + 0.25) / 1.0625
+        expected_z = 1.0 - 0.25 * expected_y
+        self.assertAlmostEqual(row["y"], expected_y, delta=1e-9)
+        self.assertAlmostEqual(row["z"], expected_z, delta=1e-9)
+
+    def test_near_fold_derivative_box_is_rejected(self):
+        source = model(
+            "V(y,r)<+V(u,r)+pow(V(y,r),2);",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"near_fold.va": source},
+            [instance(connections=dict(u="u", y="y", r="0"))],
+        )
+        u0 = 0.249999999999
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, u0], [3.0, math.nextafter(u0, math.inf)]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-5,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertRegex(error.exception.detail["message"], "Krawczyk|contraction|strictly inside")
+
     def test_nonlinear_path_rejects_amplified_off_knot_input_uncertainty(self):
         source = model(
             "V(y,r)<+g*(V(u,r)-1)+eps*pow(V(y,r),3);",
