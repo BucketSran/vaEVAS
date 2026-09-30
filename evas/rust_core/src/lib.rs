@@ -24,6 +24,9 @@ pub mod solver;
 mod transient;
 mod transition;
 
+#[cfg(test)]
+mod performance_probes;
+
 use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;
 
