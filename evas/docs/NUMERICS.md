@@ -24,7 +24,10 @@ PR19 的 main `2e3196f` 上集成稀疏求解。同刻事件的额外前向认�
 所有非驱动节点同时作为未知量；没有 SCC 优化或数值条件数保证。
 冗余方程在残差检查中保留；欠定或数值秩不足时明确失败。
 
-非线性求解每个样本从未知节点全零开始，驱动电压固定，不读取上一样本作为初猜。
+静态非线性求解每个样本从未知节点全零开始，驱动电压固定，不读取上一样本作为初猜。
+无状态、无事件、无历史算子的受限瞬态非线性入口在每个输出时刻先对直接 PWL 输入求值，
+再解同一组 `F(v;u(t))=0`；第一个输出点沿用零初猜，后续输出点只把前一已成功输出点电压作为
+Newton 初猜。该初猜不是物理历史，失败不会提交部分波形或改变下一次请求。
 解析链式法则生成 Jacobian；最多 80 次更新，每次最多 32 次试步，失败则步长减半。
 已接受试步的完整残差、Jacobian 和尺度直接用于下一轮，避免在相同电压上重复求值；
 不同电压处仍重新计算 Jacobian 并进行数值分解，没有改为固定或近似 Jacobian。
@@ -60,7 +63,9 @@ PR19 的 main `2e3196f` 上集成稀疏求解。同刻事件的额外前向认�
 
 本实现借鉴电压绝对/相对容差的概念，未复制 Spectre 的求解算法或精度预设；
 相同容差名称和值不等价于相同实际误差。当前没有电流未知量，不提供 `iabstol`。
-`transient` 当前只支持仿射网络，电压容差用于其原支路残差验收；
+`transient` 的动态状态、事件和历史算子路径仍只支持仿射电压网络；电压容差用于其原支路残差验收。
+受限的无状态多项式 transient 只在请求输出时刻求工作点，不定位非线性 `cross`、不推进状态、
+不支持算子输入、事件块或历史反馈。
 事件的 `ttol` / `tol` 仍独立控制定位；idt 等历史算子的运算误差还需独立传播和验收，见[算子手册](OPERATORS.md#历史误差与电压精度)。
 静态电压容差不替代事件时间容差或积分精度。
 
@@ -128,6 +133,9 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 - 组装：[assembly.rs](../rust_core/src/assembly.rs)；静态求解：[solver.rs](../rust_core/src/solver.rs)。
 - 多项式值/导数：[expression.rs](../rust_core/src/expression.rs)；阻尼迭代：[nonlinear.rs](../rust_core/src/nonlinear.rs)。
+- 无状态非线性瞬态入口：[transient.rs](../rust_core/src/transient.rs)；回归：
+  [test_nonlinear_transient.py](../tests/test_nonlinear_transient.py) 用单调三次方程独立二分根、
+  参数/尺度/容差变化、输出网格、失败 sample 标号和事件组合拒绝校验本分支边界。
 - 当前线性代数：[linear.rs](../rust_core/src/linear.rs)；精度回归：[test_accuracy.py](../tests/test_accuracy.py)。
 - 稀疏算法：[linear/sparse.rs](../rust_core/src/linear/sparse.rs)、[columns.rs](../rust_core/src/linear/columns.rs)；
   [稀疏测试](../rust_core/src/linear/sparse_tests.rs)包含 60 个固定种子矩形系统、180 个构造答案及稠密对照。

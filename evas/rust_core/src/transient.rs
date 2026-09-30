@@ -193,7 +193,19 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             "transient execution cannot also contain static samples",
         ));
     }
-    let trajectory = Trajectory::new(request.transient.unwrap(), request.driven.len())?;
+    let transient = request.transient.unwrap();
+    if request.program.states.is_empty()
+        && request.program.events.is_empty()
+        && request.program.operators.is_empty()
+    {
+        return run_stateless_transient(
+            request.program,
+            request.driven,
+            transient,
+            request.tolerances,
+        );
+    }
+    let trajectory = Trajectory::new(transient, request.driven.len())?;
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;
@@ -343,6 +355,47 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         nodes: model.program.nodes,
         solutions,
         transient: Some(trace),
+    })
+}
+
+fn run_stateless_transient(
+    program: crate::ir::Program,
+    driven: Vec<String>,
+    transient: crate::ir::TransientInputs,
+    tolerances: crate::ir::Tolerances,
+) -> Result<Response, Error> {
+    let trajectory = Trajectory::new(transient, driven.len())?;
+    let times = trajectory.config.output_times.clone();
+    let circuit = Circuit::new(program, &driven, tolerances)?;
+    let mut solutions = Vec::new();
+    let mut previous: Option<Solution> = None;
+    for (sample, &time) in times.iter().enumerate() {
+        let solution = circuit
+            .solve_with_initial(
+                &trajectory.values(time),
+                previous.as_ref().map(|s| s.voltages.as_slice()),
+            )
+            .map_err(|mut error| {
+                error.sample = Some(sample);
+                error
+            })?;
+        previous = Some(solution.clone());
+        solutions.push(solution);
+    }
+    let sample_count = solutions.len();
+    Ok(Response {
+        engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
+        schema_version: SCHEMA_VERSION,
+        nodes: circuit.nodes,
+        solutions,
+        transient: Some(TransientTrace {
+            times,
+            state_names: Vec::new(),
+            states: vec![Vec::new(); sample_count],
+            events: Vec::new(),
+            accepted_steps: sample_count.saturating_sub(1),
+            discarded_trials: 0,
+        }),
     })
 }
 
