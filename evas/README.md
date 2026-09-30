@@ -274,9 +274,11 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 - manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 
-瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
-每个调用点独立，历史误差参与电压验收。缺省初值、复位、内部节点/状态输入、嵌套、积分反馈和
-积分输出驱动 cross 仍拒绝；数学与限制见[算子手册](docs/OPERATORS.md#idt)。
+已合并 main 的瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
+本地 reset 候选另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
+须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
+缺省初值、内部节点/状态积分输入、嵌套、积分反馈和积分输出驱动 cross 仍拒绝；
+数学与限制见[算子手册](docs/OPERATORS.md#idt)，本轮合并前对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 
 事件体条件的精度和支持边界见[事件手册](docs/EVENTS.md#event-conditions)。
 当前拒绝事件块之外的过程赋值、条件、循环、层次实例、数组、命名支路、电流贡献、

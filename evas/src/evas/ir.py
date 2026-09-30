@@ -1,4 +1,4 @@
-"""Version 8: voltage/event IR with ordered conditional event bodies.
+"""Voltage/event IR with ordered conditional event bodies and operator histories.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate

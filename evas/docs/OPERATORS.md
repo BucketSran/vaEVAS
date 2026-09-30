@@ -238,7 +238,7 @@ reset 分支早期 targeted smoke 曾报告 D1 两档满足原 checker；旧记�
 不能作为新父提交或本轮修复的验证。基于已合并 PR25 的修复检查点 `dfe4bd8`，
 全量 Python 277 项、Rust 63 项及编译器零警告检查通过；新增复位反馈拒绝、
 原始 IR 绕过检查、正常 post-reset 采样、等值但不同历史及释放区间弃候选/精确重试回归。
-Clippy 组件在当前工具链不可用，未执行该检查。
+该检查点当时未安装 Clippy 组件，未执行该检查；后续补齐见下文。
 
 [本轮 D1 收据](../../experiments/pr14-pr15-validation/results/idt-reset-review.json)
 记录 4 次新本地执行：原 `d1-free` / `d1-reset` 冻结源码，base/fine 各 4,001/40,001 个观测点，
@@ -254,6 +254,12 @@ reset x≈1.50002、release x≈2.50002，对该 witness 的最大电压/flag �
 在非零接受时刻核对多实例/调用点失败、弃步、较早重试和未来输入修正；运行时算法未因这次补测修改。
 返回的事件批次记录可核对，`run` 循环持有的完整调度游标/已提交 trace 不在此私有入口内，
 其失败后的继续执行仍未验证；当前公开请求也没有在线改源或恢复执行接口。
+
+本地 reset 候选 `edb004d` 后续完成[合并前完整审查及原 31×2 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)：
+279 项 Python 方法、63 项 Rust 测试、Clippy 零告警及格式检查通过。
+候选两档各 24/31，已合并 main `6df7f48` 各 22/31；新增 D1 free/reset，
+原达标的 44 份 CSV 逐字节一致。该执行补齐上述早期 targeted smoke 的矩阵缺口，
+没有新增远程后端对照或连续时间资格。
 
 ## slew
 
