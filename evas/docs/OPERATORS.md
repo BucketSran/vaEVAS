@@ -290,12 +290,17 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 
 `sin` 在本分支是函数型 operator，不引入通用非线性瞬态方程。接受两类输入：
 直接驱动 PWL 仿射表达式，或 `constant + coefficient * earlier_operator`。后一类覆盖
-``sin(2*`M_PI*phase)``。`phase` 若来自 `idtmod`，误差界使用 wrapped phase 的保守区间；
-不会把 binary64 系数 `2*`M_PI` 当成精确实数周期来抵消整圈误差。其他状态输入、内部节点输入、
-operator 前向引用、多个 operator 混合、算子驱动 cross 和 operator 乘 voltage/state 仍拒绝。
+``sin(2*`M_PI*phase)``。运行值可使用已绑定的代表系数，但精度证书重新从原始输入表达式做
+outward affine arithmetic，保留常量和系数折叠、相消及 binary64 运算造成的区间误差；若代表值可能
+偏离该区间内的实数参考且无法满足电压预算，则返回 `waveform_accuracy`。`phase` 若来自 `idtmod`，
+误差界使用 wrapped phase 的保守区间；不会把 binary64 系数 `2*`M_PI` 当成精确实数周期来抵消整圈误差。
+其他状态输入、内部节点输入、operator 前向引用、多个 operator 混合、算子驱动 cross 和
+operator 乘 voltage/state 仍拒绝。
 
 wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给出整个 `[offset,offset+modulus]`
 保守范围；只有通过 outward interval arithmetic 证明 raw phase 落在同一个 turn 内，才返回窄 wrapped 界。
+当 `sin` 消费同一个 `idtmod` 输出时，可以保留 wrap 两侧的两个相位区间，分别做正弦区间证明再取并集；
+这只用于该函数证书，不改变 wrapped 电压输出的整周期保守界，也不把 binary64 的 `2π` 当作精确周期。
 大不确定度、真实跨越和不可精确表示的巨大 turn 会返回整周期或在 bounds 层触发
 `waveform_accuracy`。这会在严格电压预算下拒绝不确定 wrap 边界；这是 soundness 约束，
 不是连续时间 wrap 轨迹资格。
@@ -307,11 +312,11 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给
 
 验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
 Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
-`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
-`observations_within_targets`；overstrict wrap 边界端到端回归会返回 `waveform_accuracy`。
-accumulated/wrapped 最大解析误差不超过 `1.8e-15`，
-vout 最大解析误差不超过 `9e-15`。该证据是本地分支证据，formal qualification 仍为 I，
-未执行 Spectre 或完整 31 条件矩阵。
+`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核。当前 soundness 修复后，
+`d2-chirp` 两档为 `observations_within_targets`；`d2-constant` 两档在 wrapped 电压输出的 binary64 wrap
+邻域返回 `waveform_accuracy`，因为单区间证书不能证明不连续 wrapped 输出落在 0 侧还是 1 侧。
+`sin(idtmod)` 对同一边界使用两侧区间证书仍可通过；overstrict wrap 边界端到端回归会返回
+`waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，未执行 Spectre 或完整 31 条件矩阵。
 
 ## slew
 

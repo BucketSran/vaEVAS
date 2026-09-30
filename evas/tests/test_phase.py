@@ -14,7 +14,7 @@ from test_affine import KERNEL, instance
 
 def decimal_sin(value):
     getcontext().prec = 80
-    x = Decimal.from_float(value)
+    x = value if isinstance(value, Decimal) else Decimal.from_float(value)
     pi = Decimal("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899")
     two_pi = 2 * pi
     while x > pi:
@@ -125,12 +125,90 @@ class PhaseContracts(unittest.TestCase):
             expected = decimal_sin(source_value)
             self.assertLessEqual(abs(Decimal.from_float(observed) - expected), Decimal("1e-12"))
 
+    def test_repeated_phase_alias_affine_coefficients_match_decimal_reference(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+sin(2*phase_v + phase_v);
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        result = run_phase([(0, 0), (1, 0)], [0, 1], body,
+                           declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        expected = decimal_sin(Decimal(3) / Decimal(8))
+        for observed in voltages(result, "out"):
+            self.assertLessEqual(abs(Decimal.from_float(observed) - expected), Decimal("1e-12"))
+
+    def test_repeated_phase_alias_cancellation_keeps_coefficient_roundoff_budget(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+sin(1e16*phase_v + phase_v - (1e16-2)*phase_v);
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        exact = decimal_sin(Decimal(3) / Decimal(8))
+        rounded_coeff = decimal_sin(Decimal(1) / Decimal(4))
+        self.assertGreater(abs(exact - rounded_coeff), Decimal("0.1"))
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 0), (1, 0)], [0, 1], body,
+                      declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+
+    def test_sin_rejects_second_operator_hidden_by_exact_cancellation(self):
+        body = """
+phase_p = idtmod(V(f,r), .125, 1, 0);
+phase_q = idtmod(V(f,r), .25, 1, 0);
+V(out,r)<+sin(phase_p + phase_q - phase_q);
+V(total,r)<+0;
+V(phase,r)<+phase_p;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 0), (1, 0)], [0], body,
+                      declarations="real phase_p, phase_q;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "unsupported_operator")
+
+    def test_sin_rejects_second_operator_hidden_by_zero_multiplier(self):
+        body = """
+phase_p = idtmod(V(f,r), .125, 1, 0);
+phase_q = idtmod(V(f,r), .25, 1, 0);
+V(out,r)<+sin(phase_p + 0*phase_q);
+V(total,r)<+0;
+V(phase,r)<+phase_p;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 0), (1, 0)], [0], body,
+                      declarations="real phase_p, phase_q;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "unsupported_operator")
+
     def test_direct_sin_is_transient_operator_not_static_nonlinear_solve(self):
         program = compile_phase("V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;", declarations="")
         with self.assertRaises(KernelError) as error:
             solve(program, ["f"], [[0]], kernel=KERNEL)
         self.assertEqual(error.exception.detail["kind"], "unsupported_analysis")
         self.assertIn("transient", error.exception.detail["message"])
+
+    def test_sine_of_wrapped_phase_uses_two_side_certificate_at_wrap(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+.8*sin(2*`M_PI*phase_v);
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        result = run_phase([(0, .5), (4, .5)], [1.75], body,
+                           declarations="real phase_v;", vabstol=1e-9, reltol=0)
+        self.assertLessEqual(abs(voltages(result, "out")[0]), 1e-12)
+
+    def test_wrapped_phase_voltage_rejects_discontinuous_wrap_certificate(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, .5), (4, .5)], [1.7499999999999998], body,
+                      declarations="real phase_v;", vabstol=1e-5, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertIn("phase", error.exception.detail["message"])
 
     def test_uncertain_wrapped_output_rejects_overstrict_voltage_budget(self):
         body = """
