@@ -1,5 +1,86 @@
 # 六路候选的复审记录
 
+<a id="accuracy-optimization"></a>
+
+## 2026-10-01：同刻查询复用与标量根盒认证优化
+
+当前本地运行时为 `ddfd3795ee7edd7cb5d3e6ccf2160d5872f334d4`，仍为 0.9.0 / IR v15，
+未发布或合入 main。优化建立在下方已完成原 31 条件补齐的联合候选上。
+
+### 改动和 review 重点
+
+1. [operators.rs](../../evas/rust_core/src/operators.rs) 的 `Evaluation` 借用同一历史基线并固定时间。
+   同刻候选仍克隆和推进该基线；只复用不会被本次推进改变的算子查询值及区间。
+   复位 idt、transition 及其 sin 依赖链重新计算。Runtime 分类为穷尽匹配，新增类型必须明确分类。
+   [transient.rs](../../evas/rust_core/src/transient.rs) 保留同刻重解、权限检查、值/区间重放及复位历史一致性检查。
+   重点检查复用的生命周期是否严格止于本次时间和历史基线，以及失败候选是否仍能完整丢弃。
+2. [solver.rs](../../evas/rust_core/src/solver.rs) 的 `scalar_root_box` 在单未知量、非点输入时先做中值定理证明。
+   令 `R=sup|F(x,U)|`、`m=inf|∂F/∂v|>0`，向外舍入的 `R/m` 必须严格小于到预算盒两端的
+   向内舍入距离。此时对每个固定输入，连续性和单调性证明盒内存在唯一根。
+   证明失败回到原 Krawczyk；原 RHS、区间导数、残差门及电压预算均保留。
+   重点检查舍入方向、导数跨零/很小、端点等号和反馈误差放大，不能只看名义残差。
+   完整推导见[精度契约](../../evas/validation/NONLINEAR_TRANSIENT_CONTRACT.md#scalar-monotonicity-certificate)。
+
+没有更换 Newton、时间步策略或容差。点输入仍是原区间残差及名义 Newton 验收，
+没有额外根盒证明；多未知量仍走原 Krawczyk。本轮未实现稀疏区间消元或长相位重表示。
+
+### 性能实验
+
+基线 `4a40f09` 只在 `39a4545` 的实现上增加 cfg(test) 计时探针，生产行为相同。
+它从已提交源码归档重新编译，得到与最初探针二进制相同的 SHA256；初期试跑仍单独保留。
+候选和基线均使用 locked release 构建，在同一 Apple M5 / macOS 主机交替执行四轮
+AB、BA、AB、BA；每个进程先完整预热，每个模型各计时五次，共每版本每模型 20 次。
+请求克隆、输入解析、JSON 序列化和进程启动在计时外；完整内核计时包含本次模型准备、
+求解、认证与响应构造。专项查询计时只描述查询成本，不作为完整仿真耗时。
+
+所有模型固定 `vabstol=reltol=1e-8`。三次方程有 1,026 个输出点，PWL 从
+`(0,.125)` 到 `(3,.875)`，末点 t=3，其余为 `i/1024`；系数分别为 .5 和 2。
+两条组合模型有 1,025 个 `i/1024` 输出点，PWL 从 `(0,.25)` 到 `(1,.5)`；
+一阶滤波与相位函数并行输出，复位模型另在 .25/.5 时切换 reset，并输出 reset-idt 的正弦。
+完整模型、请求哈希、方法、每个阶段的中位数和最小/最大值见[性能收据](results/accuracy-optimization-profile.json)。
+
+| 完整内核模型 | 基线中位数 ms | 优化后 ms | 中位耗时下降 |
+| --- | ---: | ---: | ---: |
+| 三次方程，系数 .5 | 5.461 | 4.997 | 8.5% |
+| 三次方程，系数 2 | 5.454 | 4.942 | 9.4% |
+| 滤波与相位 | 29.627 | 16.139 | 45.5% |
+| 复位积分、滤波与相位 | 42.788 | 27.068 | 36.7% |
+
+三次方程的认证阶段中位耗时约从 2.91 ms 降至 2.39 ms；名义 Newton 路径未改变。
+组合模型减少的是同刻重复查询，单次不可变历史区间查询方法保持原实现。
+全部 160 份完整响应与各模型的基线响应一致。共享主机没有锁核/锁频；复位组合有一次
+候选耗时 49.36 ms，完整波动范围保留。上述仅为固定局部工作负载的描述性结果，
+不承诺每次都加速，也不是 Python/JSON 端到端或对 Spectre 的速度比较。
+
+显式计时入口是 [performance_probes.rs](../../evas/rust_core/src/performance_probes.rs) 中
+ignored 的 `profile_accuracy_components`；[profile.py](profile.py) 校验冻结输入和二进制身份、
+交替运行并检查完整响应一致性。取得收据绑定的本地请求及二进制后，用新输出目录运行：
+
+```sh
+python3 -B experiments/parallel-gap-integration/profile.py \
+  --baseline "$baseline_probe" --candidate "$candidate_probe" \
+  --inputs "$frozen_profile_inputs" --root "$new_profile_run" --rounds 4
+```
+
+### 正确性、身份和限制
+
+[原矩阵新执行收据](results/accuracy-optimization-matrix.json)：原 31 条件两档均 **31/31 有限观测达标**，
+全部 **62 份 CSV 与 `39a4545` 逐字节一致**，判定和生效设置也一致。
+原 DUT、刺激、阈值、checker 和分母均未改。本轮没有新 Spectre 执行或重分析；
+下方 Spectre 对照保留历史归属。
+
+[开发检查收据](results/accuracy-optimization-checks.json)：**364 Python、82 Rust** 测试通过，
+另有一项计时探针在常规 Rust 测试中明确 ignored，已在专项计时中显式执行。
+locked build、all-targets Clippy `-D warnings` 和格式检查通过。
+新增独立验证包括高精度三次根的正/负导数方向、反馈放大拒绝、严格盒端点与溢出拒绝，
+以及不可变查询、复位/transition 正弦重算和丢弃候选后的重试。
+首轮新增 Rust 夹具误用了 IR 枚举名 `idtmod`，修正为 `idt_mod` 后全套通过；原失败日志保留。
+
+原始请求、release 探针、debug 内核、全部计时、失败与矩阵日志、源码归档和原始清单位于
+ignored 的 `runs/accuracy-optimization-20260930T175927Z-b2a5e8/`，可用性为 **仅本地保留**。
+整理收据与源码在本地 Git；未将该目录发布为公开复现包。
+正式资格仍为 **I**，没有新增连续时间精度资格或未见确认集结论。
+
 <a id="gap-completion"></a>
 
 ## 2026-10-01：剩余六条件补齐与联合验收

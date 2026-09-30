@@ -1,0 +1,96 @@
+{
+  "runtime_commit": "ddfd3795ee7edd7cb5d3e6ccf2160d5872f334d4",
+  "kernel_sha256": "8ecace3b7fa021c12da6c3a4b0b944966e89d00a1a398ca6c95775e185bea948",
+  "schema_version": 15,
+  "checks": [
+    {
+      "check": "python",
+      "command": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -v",
+      "exit_code": 0,
+      "tests": 364,
+      "ignored": 0,
+      "log": "python-final.log",
+      "log_sha256": "943255bbb8427d4b22ccbb8fa99ed1dd7564ca2a3d8bbf764063f9e73576d826",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "rust",
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": 82,
+      "ignored": 1,
+      "log": "rust-final.log",
+      "log_sha256": "ddb1d838037837932e0d0ef9221656f15126d1fa8f3cd94660eb5c3d495ef221",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "build",
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "build-debug-final.log",
+      "log_sha256": "858ff3ab884729b743da63580dce23ac517b557a36bef8b1d2478ed64ea5043e",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "clippy",
+      "command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "clippy-final.log",
+      "log_sha256": "1d42e5f8d334da9e64ae2af9176dfc3b854b2f6b0c8f8649f2fab287daf3d615",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "fmt",
+      "command": "cargo fmt --check --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_execution",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix.log",
+      "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_analysis",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix-analysis.log",
+      "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
+      "log_availability": "local-only"
+    }
+  ],
+  "preserved_initial_failure": {
+    "log": "rust-focused.log",
+    "log_sha256": "b2b2ff1da6189b1dede06c2d3226cf41b85205f797ab853c55d8b52e71901256",
+    "reason": "New raw-IR fixture used idtmod instead of the serde variant idt_mod. Fixture corrected; no production failure. Final full suite passed."
+  },
+  "raw_archive": {
+    "root": "/Users/bucketsran/Documents/TsingProject/vaEVAS-gap-integration/runs/accuracy-optimization-20260930T175927Z-b2a5e8",
+    "manifest": "RAW_MANIFEST.json",
+    "manifest_sha256": "62b52704e9e57d39ea7517448aa0c67935072011be79c074dde68650c03f8fa9",
+    "files": 652,
+    "bytes": 265393146,
+    "availability": "local-only"
+  },
+  "matrix_receipt": "experiments/parallel-gap-integration/results/accuracy-optimization-matrix.json",
+  "matrix_receipt_sha256": "c4695666fd5a5b7fdb5f86c054cbef48041305db04b1b1ec3044720f940860b3",
+  "performance_receipt": "experiments/parallel-gap-integration/results/accuracy-optimization-profile.json",
+  "performance_receipt_sha256": "e818c1ba4c04cb6f1b5b0777f8c1fb58c6a1c97bcfc74640105be8ba45d4e519",
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false
+}

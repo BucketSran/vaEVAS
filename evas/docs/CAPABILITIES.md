@@ -62,6 +62,9 @@
 原达标 50 份 CSV 逐字节一致。362 Python、79 Rust、Clippy 与格式检查通过。
 Spectre 原 62 次结果重新核验，两档各 31/31；本轮未新启动远端仿真。
 本轮范围、数学入口、联合检查与原矩阵证据见[当前复审记录](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)。
+后续本地运行时 `ddfd379` 优化同刻不可变查询与单未知量根盒认证；
+[优化记录](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)绑定新矩阵、
+独立回归、局部性能与原始身份，62 份 CSV 与上述功能检查点一致。仍未交付 main。
 此前 IR14、单项分支及旧 main 的收据保持历史身份，不能代替本轮联合验证，也不改写上表的 main 交付范围。
 
 ## 待审阅的 main 缺口
@@ -86,7 +89,8 @@ Spectre 原 62 次结果重新核验，两档各 31/31；本轮未新启动远�
 
 SPARSE 的共享矩阵与瞬态调用路径已在 PR8 整合验证；后续按 Issue9 优化排序、填充和分解复用。
 瞬态试算、固定矩阵复用、分段求值及按需事件日程另登记为
-[Issue24](https://github.com/BucketSran/vaEVAS/issues/24)，当前延后；优先完成上述声明范围的功能、精度链与独立验证。
+[Issue24](https://github.com/BucketSran/vaEVAS/issues/24)。本地 `ddfd379` 已优化同刻不可变查询；
+更广的矩阵复用、分段求值与事件日程仍延后；优先完成上述声明范围的功能、精度链与独立验证。
 固定同一支持范围与误差目标，分开测构建/编译、首次求解、
 重复求解、瞬态与内存；没有相应测量前不报速度倍数。性能路线不改变上述功能覆盖分母。
 

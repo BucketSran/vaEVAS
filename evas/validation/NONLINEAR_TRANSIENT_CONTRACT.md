@@ -35,7 +35,8 @@ current branch. It does not claim an additional root-existence, uniqueness or
 forward-error box certificate beyond the nominal Newton gates. For off-knot
 samples, residual replay alone is not enough: a tiny residual/input uncertainty
 can be amplified by feedback or by nonlinear sensitivity. The second step is
-therefore a restricted Krawczyk box certificate.
+therefore a restricted root-box certificate: a scalar monotonicity proof where
+possible, otherwise the Krawczyk proof below.
 
 The residual and interval-Jacobian calculations use the original RHS expression
 trees saved by assembly for each branch equation, not the collapsed affine row
@@ -50,7 +51,9 @@ B_j = lower(vabstol + reltol * abs(x_j))
 The inner endpoints ensure the certified box itself does not exceed the requested
 voltage budget because of outward-rounded endpoint arithmetic. It then evaluates
 `F(x,U)` and the interval Jacobian `J(X,U)` over the original branch relation
-available to the solver. The local floating-point inverse-like matrix `C` is used
+available to the solver. Both paths require a square, single-origin system.
+If the scalar proof below succeeds, no preconditioner is constructed. Otherwise
+the local floating-point inverse-like matrix `C` is used
 only as a preconditioner; it is not treated as an exact inverse. The Krawczyk image
 is constructed with outward interval operations:
 
@@ -66,20 +69,48 @@ operator row-sum bound, accumulated with outward interval arithmetic, satisfies:
 ```
 
 If the system is not square, a branch equation has already merged multiple
-contribution origins, the residual or Jacobian intervals are nonfinite, the local
-preconditioner cannot be built, the contraction bound is not below one, or the
-Krawczyk image is not strictly inside the budget box, the kernel returns
+contribution origins, the residual or Jacobian intervals are nonfinite, or neither
+root-box proof succeeds, the kernel returns
 `waveform_accuracy`. This is a conservative refusal, not a relaxed comparison
 threshold.
 
 In the integrated entry, affine systems retain the existing original-IR affine
 forward-error map, including consistent redundant constraints and summed
 contributions. They do not use the polynomial Krawczyk shape restrictions.
-Input-selected branches remain restricted to affine leaves. For polynomial systems the Krawczyk check certifies a root
-inside the requested voltage box under the same restricted Krawczyk conditions. It
+Input-selected branches remain restricted to affine leaves. For polynomial systems the root-box check certifies a root
+inside the requested voltage box under the stated restricted conditions. It
 is still not a general-purpose interval solver for arbitrary coupled dynamics;
 nonlinear events, state/history/operator coupling and unsupported non-square or
 merged-branch cases remain outside this branch.
+
+## Scalar monotonicity certificate
+
+The local optimization checkpoint `ddfd379` adds a sufficient scalar proof before
+Krawczyk. For a single unknown, suppose the derivative interval on `X × U`
+excludes zero. Its sign is constant, with a conservative lower bound
+`m = inf(abs(dF/dx)) > 0`. At the accepted representative `x`, define
+
+```text
+R = sup(abs(F(x,U)))
+E = upper(R / m)
+d_left  = lower(x - X.lo)
+d_right = lower(X.hi - x)
+```
+
+Accept this proof only when `E < d_left` and `E < d_right`. For each fixed input
+in `U`, the mean value theorem implies opposite signs at the two endpoints;
+continuity gives a root, and the nonzero derivative gives uniqueness within `X`.
+The proof uses the original expression tree and outward interval derivatives,
+with inward distances and an outward error radius. A small derivative therefore
+enlarges `E` instead of allowing a small residual to hide a large voltage error.
+
+If the derivative contains zero, or the strict distance test fails, execution
+uses the original Krawczyk path with the already evaluated interval Jacobian.
+Multi-unknown systems and the point-input residual-only boundary are unchanged.
+This is an EVAS derivation from the mean value theorem, not a claim about another
+simulator's internal algorithm. Independent high-precision positive/negative
+slope roots, the feedback-amplification rejection and strict-boundary tests are
+in `test_nonlinear_transient.py` and `solver.rs`.
 
 ## High-gain diagnostic
 
@@ -149,7 +180,7 @@ certification.
 ## Remaining scope
 
 The joint candidate still rejects nonlinear events, state/history/operator
-coupling, and non-affine transient dynamics. The Krawczyk certificate is limited
+coupling, and non-affine transient dynamics. The root-box certificate is limited
 to square, single-origin branch systems at off-knot stateless samples. It uses the
 saved original RHS tree within that branch, including legal nested expression
 cancellation, but does not recover separate source-level contributions after

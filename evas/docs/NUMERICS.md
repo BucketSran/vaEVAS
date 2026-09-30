@@ -33,12 +33,16 @@ Newton 初猜。该初猜不是物理历史，失败不会提交部分波形或�
 三项验收。随后 transient 入口用包含原始 binary64 PWL 精确实数插值的输入区间重放每条原始支路关系，
 先要求整个区间残差落入同一电压预算 `vabstol + reltol·scale`；该重放使用 assembly 保存的原始 RHS expression
 树，避免合法 expression tree 内系数折叠或相消被误当作精确证明。若所有输入区间都是点值，当前只做这项原关系残差检查，
-不声称额外的根存在/唯一性或前向误差盒证书。若输入区间不是点值，还必须通过受限 Krawczyk 盒证书：系统必须
-是方阵且每条方程保留为单一支路来源；以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,U)` 构造
+不声称额外的根存在/唯一性或前向误差盒证书。若输入区间不是点值，还必须通过受限根盒证书：系统必须
+是方阵且每条方程保留为单一支路来源。本地优化 `ddfd379` 对单未知量先用中值定理：
+若 `J(X,U)` 不含零，令 `m=inf|∂F/∂v|`，以向外舍入的 `sup|F(x,U)|/m`
+严格小于到 `X` 两端的向内舍入距离，证明每个固定输入在预算盒内恰有一根。
+不能证明时复用该区间导数并回到原 Krawczyk 路径；多未知量路径不变。
+Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,U)` 构造
 `K=x-CF(x,U)+(I-CJ(X,U))(X-x)`，其中浮点 `C` 只作为预条件器。`X-x`、`K` 与收缩范数均用向外区间运算；
-只有 `K` 严格内含 `X` 且 `||I-CJ(X,U)||_∞<1` 时才接受。若 off-knot 输入舍入经前向增益、反馈或局部非线性
+该路径只有 `K` 严格内含 `X` 且 `||I-CJ(X,U)||_∞<1` 时才接受。若 off-knot 输入舍入经前向增益、反馈或局部非线性
 导数变化放大后无法证明根仍在电压预算盒内，则返回 `waveform_accuracy`，不静默接受名义残差为零的点解。
-这不是通用 interval Newton 求解器：多项式路径的非方阵、多支路来源、非有限区间、near-fold 或不收缩盒均明确拒绝。
+这不是通用 interval Newton 求解器：多项式路径的非方阵、多支路来源、非有限区间或两种证明都失败时明确拒绝。
 纯仿射模型（含结构保留的加法/标量乘法）继续使用下文的原 IR 仿射前向误差映射，
 不套用这两条 Krawczyk 结构限制；一致的冗余约束与同支路贡献仍可认证。
 入口由 `analog.rs` 统一分流，条件消解后只缓存方程与映射，不保存输入、解或物理历史。
@@ -165,6 +169,8 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 ## 实现与证据
 
+- 本地 `ddfd379` 的标量根盒与同刻不可变查询优化见[专项 review 与测量](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)。
+  固定四个工作负载、同一误差预算的 release 内核计时，不包含 Python/JSON 开销；尚未合入 main。
 - 组装：[assembly.rs](../rust_core/src/assembly.rs)；静态求解：[solver.rs](../rust_core/src/solver.rs)。
 - 多项式值/导数：[expression.rs](../rust_core/src/expression.rs)；阻尼迭代：[nonlinear.rs](../rust_core/src/nonlinear.rs)。
 - 无状态非线性瞬态入口：[transient.rs](../rust_core/src/transient.rs)；回归：
