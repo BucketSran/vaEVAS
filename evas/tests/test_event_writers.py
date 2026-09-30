@@ -128,6 +128,31 @@ class EventWriterContracts(unittest.TestCase):
                 kernel=KERNEL,
             )
 
+    def test_cross_block_state_reads_use_structural_dependencies(self):
+        cases = [
+            ('same_cancel', 'real q;', '@(initial_step) q=3;', 'q', 'q-q'),
+            ('same_zero', 'real q;', '@(initial_step) q=3;', 'q', '0*q'),
+            ('same_underflow', 'real q;', '@(initial_step) q=3;', 'q', '(1e-200*1e-200)*q'),
+            ('other_cancel', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', 'p-p'),
+            ('other_zero', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', '0*p'),
+            ('other_underflow', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', '(1e-200*1e-200)*p'),
+        ]
+        for label, declarations, initial, written, rhs in cases:
+            source = model(f'''{initial}
+              @(timer(0.5,0,1e-12)) {written}=7;
+              @(timer(1.0,0,1e-12)) q={rhs};
+              V(y,r)<+q;''', declarations)
+            program = compile_sources({label + '.va': source}, [instance()])
+            with self.subTest(label=label), self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+                transient(
+                    program,
+                    {'u': [[0,0],[1,0]]},
+                    [0,0.5,1.0],
+                    stop=1.0,
+                    max_step=2,
+                    kernel=KERNEL,
+                )
+
 
 if __name__ == '__main__':
     unittest.main()

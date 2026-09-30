@@ -374,7 +374,8 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 但不再因不同事件块可能写同一 state 而整体拒绝。`settlement::prepare` 在条件路径选择完成后，
 调用 `check_selection_writers(selection)` 检查实际选中赋值集合：同一候选批次里每个 state 最多一个
 event block 写入；若两个已选 event block 都写同一 state，即使写入相同数值，也返回
-`event_conflict`，且候选帧不提交。跨块读取另一个潜在写者 state 的静态拒绝保持不变。
+`event_conflict`，且候选帧不提交。跨块读取另一个潜在写者 state 的静态拒绝保持不变；
+该拒绝基于结构依赖而非化简后的非零系数，因此 `q-q`、`0*q` 和下溢为零的系数仍按读取处理。
 
 新增 `test_event_writers.py` 用手算迟滞、无触发保持、实例顺序不变性、同刻冲突、
 条件路径只计入实际选中赋值，以及精确等号下两个条件块同值写入仍冲突来固定该语义。
