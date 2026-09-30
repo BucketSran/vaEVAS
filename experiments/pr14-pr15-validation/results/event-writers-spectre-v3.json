@@ -1,0 +1,635 @@
+{
+  "run_id": "event-writers-spectre-20260930-01",
+  "scope": "original V3 only; two configurations per backend",
+  "execution_use": "4 new executions; no reused backend waveform",
+  "evas_commit": "bfaf8d3b2696a362f6209259ba520356485552fb",
+  "evas_git_status": [],
+  "kernel_sha256": "b3cf1d076325dea136ac806823f9f78d434f174b9199fd9d6a1ed8710cedcd83",
+  "source_sha256": {
+    "evas/src/evas/lowering.py": "7522dff90aa522a1f8066675dc5c56aba554bfb9aa141fdc65447b07a1d324ef",
+    "evas/src/evas/frontend.py": "c53706a93bc113ce4e6bda8a1d7f109491df2f4901f1f98c1e0ba8e4d5c8948d",
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/ir.py": "d4f7e5841d5e1eb706560b296150cb2dd1b50ba09d54baf2e7c03c1358fdd6a5",
+    "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+    "evas/src/evas/syntax.py": "bad93da3a3941e032d68a4731fd1664500d66a5cdd8e95b2569552d0bd3f4020",
+    "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+    "evas/rust_core/src/ir.rs": "ce27637abadd9a872adda46a8dcb07b21a90ce281c33cee96f4eeba448694fee",
+    "evas/rust_core/src/linear.rs": "cd7207261a78b6f41183d4f237eb08505b05edd155d9a2c9b3ffe4ad81e797ee",
+    "evas/rust_core/src/events.rs": "642259890b77c33c5c9c7c6080063f4e2339ee5893e35dc165353cce65ce1ec2",
+    "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+    "evas/rust_core/src/settlement.rs": "032828b1ae49ba5db0d77c29810a991878b659ff047efdb84deaaad6b1c153dc",
+    "evas/rust_core/src/transition.rs": "447e344a1f55ec9df6eafea803e21095e7c6b510141cb63c75941d0c295fda40",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/affine_bounds.rs": "e2c0f6f8ebf183e9f2948e94572369293bb2ffc6e8fbf1264ee0a6212702ea49",
+    "evas/rust_core/src/solver.rs": "68c74d96f62d183895026d8ef2a452e9a2aa8f7891706bddf4038699993952ae",
+    "evas/rust_core/src/lib.rs": "23625342c2b034a6dd1cd77de9ffb82084604ad5a2c75b13fd93302994e45a78",
+    "evas/rust_core/src/idt.rs": "a36a66dbe87c98cf2c4343bee1ac7a480eb5f3a18d897a82a128a20932783f66",
+    "evas/rust_core/src/interval.rs": "cb4fb6d2e4fcfca191b9bc786e6afdd5d75b608777823f7885598f2171644aa7",
+    "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+    "evas/rust_core/src/pwl.rs": "02d08aa0061a16b6fdc4410baa655bfebca374add78a8d2347ba1a5a167550f8",
+    "evas/rust_core/src/nonlinear.rs": "34c7334688651b28bcd880ce5fe509cc90c85091c81e40f3a81a053570e9f9d8",
+    "evas/rust_core/src/expression.rs": "79cbe29b5f518b054e2cf4a62fedc73bd21ba61f66c6f3b7bae19abcb69fcd9c",
+    "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+    "evas/rust_core/src/schedule.rs": "6a1732e8463c9dd1dd0500df9a0396ba29f8dc80d32d338f9c72caf399ec65d5",
+    "evas/rust_core/src/settlement_bounds.rs": "1468e0c2ae6b80f84cb7dab4d3d98e437ba237de63e4fe843d0f1596f4801f73",
+    "evas/rust_core/src/event_conditions.rs": "e92aadc9806f15e7cce268d09e94ad8952eaecdf3fbabd175bddc8d574c7938f",
+    "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+    "evas/rust_core/src/operators.rs": "939ed63f30a86680d26ecf589b07ffc877af69cf19c232f0e272ebdcbaed4608",
+    "evas/rust_core/src/transient.rs": "201cd513af9e7b85e23cb284023906b0e02290d4985e00c29ff16197852dc9af",
+    "evas/rust_core/src/event_accuracy.rs": "50c741f05ae788a58e73803ce08e8a195968739ddf40f41677a3dd5bd7c5a335",
+    "evas/rust_core/src/assembly.rs": "24cd0dd714d5002bb7578a9bae3dbd84fc84a937dc6da215c1cda7f71bb3850c",
+    "evas/rust_core/src/linear/dense.rs": "4f818995fabeb983037176bc60be3822a94e631252ed267636133dfe543c566d",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/linear/sparse.rs": "a3e3fd40af9200de79569052d8ef64fc67ce5766456f84392cd71a69d7455680",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6"
+  },
+  "evas_source_archive_sha256": "2ef7c7019fe10613881c2eeb79eb8d0b0905e6759ee34b6ee43f9149e67bf43a",
+  "source_input_manifest_sha256": "837787b02fbc503e33108baecb38794d03772fc9e3257e9601c2815b18265421",
+  "input_manifest_sha256": "e9c948c042bdbbee89baf784b069eef0c39031fb5e90b8c0b10ab056f0c37498",
+  "spectre_file_manifest_sha256": "503a0a95923bd9cd3a0981ce3764d3b38498ee671fc76aa08acb28e5a721b2a6",
+  "spectre_archive_sha256": "536255d4d391da6cfdd0a24c2c9781ae8472dcde21812a0c8c0234b5f432f881",
+  "spectre_version": "21.1.0.509.isr12",
+  "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "setup_sha256": [
+    "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+    "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+  ],
+  "original_runner_sha256": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+  "subset_runner_sha256": "3d84700ebf14794238ee72ee2b98321b1a18e39f448223d419ebead1a106009b",
+  "runner_changes": [
+    "case count assertion 31 to 1",
+    "output count assertion 62 to 2",
+    "max_runs metadata 62 to 2"
+  ],
+  "adapter_sha256": {
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+    "experiments/dvs2-spectre-validation/check_results.py": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "experiments/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+  },
+  "analysis_script_sha256": "19279ebfd85bfc1d7b93c819cb9321409fabc6ae3132288571ce0e21029b7bbd",
+  "spectre_budget": {
+    "max_runs": 2,
+    "cpu": 0,
+    "timeout_s": 90,
+    "license_timeout_s": 30
+  },
+  "records": [
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "base",
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 2.042810365310288e-14,
+              "time_s": 3.3899999999999993e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.4000000000000008e-06,
+              "inferred_start_error_s": 8.470329472543003e-22,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.3749999999999998e-06,
+                1.3759999999999998e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4000000000000013e-06,
+              "inferred_start_error_s": 1.2705494208814505e-21,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                3.3749999999999995e-06,
+                3.3759999999999995e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "647/800000000000000000",
+                "923/800000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "647/800000000000000000",
+                "923/800000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4001,
+              "constraint_count": 103,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+      "requested_settings_sha256": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+      "waveform_sha256": "14e5e84f93b1dc69c76658f186ea63b3358177b331e4b3f016ead7383a96e5fb",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.0774303749203682,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "base",
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4006,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.718447854656915e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4006,
+          "max_gap_s": 1.0000000000009222e-09,
+          "input_max_error_v": {
+            "vin": 4.718447854656915e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.004000000000007997,
+              "time_s": 3.383250000000001e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.40025e-06,
+              "inferred_start_error_s": 2.5000000000012466e-10,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                1.374250000000003e-06,
+                1.37525e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4002499999999998e-06,
+              "inferred_start_error_s": 2.4999999999970114e-10,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-09,
+              "joint_start_interval_s": [
+                3.374250000000003e-06,
+                3.37525e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "9999999999993/40000000000000000",
+                "39999999999987/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4006,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "9999999999993/40000000000000000",
+                "39999999999987/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 4006,
+              "constraint_count": 105,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+      "requested_settings_sha256": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+      "waveform_sha256": "9af05b1886272dc0a10b4e8221ba279fee213201d1ab6b0ef5ae2c863e6b4592",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.297845600172877,
+        "log_sha256": "be3543fb9330708fab05bb621262eae59171cb76f41f0545ced83a8e67108a11"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "reltol": 1e-05,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "requested_match": true,
+      "warning_codes": {
+        "VACOMP-2435": 1
+      }
+    },
+    {
+      "backend": "evas",
+      "condition": "v3-main",
+      "profile": "fine",
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.220446049250313e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 2.117750419472486e-14,
+              "time_s": 3.425e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.4000000000000008e-06,
+              "inferred_start_error_s": 8.470329472543003e-22,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.375e-06,
+                1.3751e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4000000000000013e-06,
+              "inferred_start_error_s": 1.2705494208814505e-21,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                3.375e-06,
+                3.3750999999999997e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "67/80000000000000000",
+                "93/80000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 1012,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "67/80000000000000000",
+                "93/80000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40001,
+              "constraint_count": 1012,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+      "requested_settings_sha256": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac",
+      "waveform_sha256": "7022ee4b1b8cbf9f4438a37519a365b63c5e0a81d01697c9ea55be20263265d0",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.023352124961093,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "backend": "spectre",
+      "condition": "v3-main",
+      "profile": "fine",
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40006,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.996003610813204e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40006,
+          "max_gap_s": 1.000000000010663e-10,
+          "input_max_error_v": {
+            "vin": 4.996003610813204e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 0.0006524999550539534,
+              "time_s": 3.407640781247124e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": 0.0,
+          "waveform_excess_over_nominal_event_allowance_v": 0.0,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [
+            {
+              "nominal_start_s": 1.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 1.400031395833424e-06,
+              "inferred_start_error_s": 3.139583342415752e-11,
+              "full_edge_estimate_s": 5.000000000000005e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000000751e-10,
+              "joint_start_interval_s": [
+                1.374931395833428e-06,
+                1.375031395833425e-06
+              ],
+              "allowed_start_interval_s": [
+                1.375e-06,
+                1.3755e-06
+              ],
+              "internal_event_observed": false
+            },
+            {
+              "nominal_start_s": 3.375e-06,
+              "status": "joint_brackets_overlap",
+              "output_50_time_s": 3.4000407812471897e-06,
+              "inferred_start_error_s": 4.078124718964469e-11,
+              "full_edge_estimate_s": 4.999999999999952e-08,
+              "nominal_full_edge_s": 5e-08,
+              "max_crossing_bracket_s": 1.0000000000021927e-10,
+              "joint_start_interval_s": [
+                3.37504078124718e-06,
+                3.375140781247098e-06
+              ],
+              "allowed_start_interval_s": [
+                3.375e-06,
+                3.3754999999999997e-06
+              ],
+              "internal_event_observed": false
+            }
+          ],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "history": {
+          "vout": {
+            "exact_export_assumption": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "5023333347923/160000000000000000",
+                "6524999550451/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40006,
+              "constraint_count": 1013,
+              "epsilon": "1/1000",
+              "uncertainty": "0"
+            },
+            "candidate_budget_sensitivity": {
+              "status": "P",
+              "reason": "verified_common_inner_witness",
+              "witness_offsets": [
+                "5023333347923/160000000000000000",
+                "6524999550451/160000000000000000"
+              ],
+              "boxes_examined": 1,
+              "boxes_excluded": 0,
+              "formal_dvs_qualification": "I",
+              "continuous_time_qualified": false,
+              "arithmetic": "exact rational over supplied numeric values",
+              "sample_count": 40006,
+              "constraint_count": 1013,
+              "epsilon": "1/1000",
+              "uncertainty": "1/4000"
+            }
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+      "requested_settings_sha256": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac",
+      "waveform_sha256": "1db955f6c64aaab459ba0e5aab791255e91bac216db0127b3ad502675bbe275f",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.997039875015616,
+        "log_sha256": "280f0257b9b4fe47f75517a080e3660120df40844454252d5102f2aa8b2b9bd0"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "iabstol": 1e-13,
+        "reltol": 1e-06,
+        "stop": 4e-06,
+        "step": 1e-10,
+        "maxstep": 1e-10,
+        "method": "traponly"
+      },
+      "requested_match": true,
+      "warning_codes": {
+        "VACOMP-2435": 1
+      }
+    }
+  ],
+  "pairwise_diagnostics": [
+    {
+      "profile": "base",
+      "max_interpolated_difference_v": 0.004000000000036752,
+      "time_s": 1.4249999999999997e-06,
+      "grid_points": 4001,
+      "method": "Spectre linear interpolation on EVAS export grid",
+      "interpretation": "diagnostic only; V3 output is continuous; no certification between exports"
+    },
+    {
+      "profile": "fine",
+      "max_interpolated_difference_v": 0.0006524999550335808,
+      "time_s": 3.3753999999999995e-06,
+      "grid_points": 40001,
+      "method": "Spectre linear interpolation on EVAS export grid",
+      "interpretation": "diagnostic only; V3 output is continuous; no certification between exports"
+    }
+  ],
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "raw_availability": "local-only ignored run and thu-sui archive; not publicly downloadable",
+  "limits": "No simultaneous writer diagnosis, full matrix rerun or performance measurement."
+}

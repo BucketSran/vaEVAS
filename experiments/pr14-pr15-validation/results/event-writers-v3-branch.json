@@ -1,7 +1,9 @@
 {
   "run_id": "event-writers-v3-20260930-150531",
   "scope": "v3-main only, base and fine profiles, frozen original matrix inputs copied from matrix-spectre; compact receipt only",
-  "source_matrix": "/Users/bucketsran/Documents/TsingProject/vaEVAS-slew/runs/pr14-pr15-validation-20260929-01/matrix-spectre",
+  "source_matrix_id": "pr14-pr15-validation-20260929-01/matrix-spectre",
+  "source_matrix_availability": "local-only frozen source under ignored runs; original inputs identified by INPUT_MANIFEST hash",
+  "source_matrix_manifest": "INPUT_MANIFEST.json",
   "source_input_manifest_sha256": "837787b02fbc503e33108baecb38794d03772fc9e3257e9601c2815b18265421",
   "git_head_at_execution": "44b148cc327219af155bf76995bd3fc810983c4d",
   "git_status_at_execution": [
@@ -11,7 +13,9 @@
     " M evas/rust_core/src/transient_condition_tests.rs",
     " M evas/tests/test_event_writers.py"
   ],
-  "kernel": "/Users/bucketsran/Documents/TsingProject/vaEVAS-gap-event-writers/evas/rust_core/target/debug/evas-kernel",
+  "post_execution_note": "Run executed before committing this branch fix: git_head_at_execution remains 44b148cc327219af155bf76995bd3fc810983c4d and git_status_at_execution records the dirty runtime/doc/test changes used to build the recorded kernel. Those changes were later committed as 144d8b0d90f4812fa4924597bcb0c1fa1337f20e; root independently checked the recorded binary/hash and V3 outputs. This receipt does not claim the execution checkout was clean.",
+  "kernel": "evas/rust_core/target/debug/evas-kernel",
+  "kernel_path_kind": "repository-relative local debug binary; binary content identified by kernel_sha256",
   "kernel_sha256": "b3cf1d076325dea136ac806823f9f78d434f174b9199fd9d6a1ed8710cedcd83",
   "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
   "matrix_worker_sha256": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
