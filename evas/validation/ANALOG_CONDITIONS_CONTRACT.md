@@ -110,8 +110,13 @@ vout - vref = min(0.875, max(-0.75, y0))
 - 原始 PWL 与舍入阈值的反例、大增益误差放大、源结点等号、未执行的嵌套条件；
 - 空条件/无关局部赋值保持表达式，增加输出采样点保持原时刻的解。
 
-这些测试是开发证据，不是新的正式验证条件，也不自动增加原矩阵通过数。原 `v1-main`
-两档专项回放应复用冻结输入和现有 checker，在新的执行身份下单独记录。
+这些测试是开发证据，不是新的正式验证条件，也不自动增加原矩阵通过数。
+在候选 `3fd58da` 上，302 Python / 64 Rust 回归与 Clippy、格式检查通过；原 `v1-main`
+两档专项新执行复用冻结输入及现有 checker，4,001 / 40,001 点均符合有限观测判据，
+最大输出误差约 `6.66×10⁻¹⁶ V`。来源、配置、工件可用性及限制见
+[本轮结果](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)和
+[收据](../../experiments/pr14-pr15-validation/results/analog-conditions-review.json)。尚未合入 main，
+未新跑完整矩阵或 Spectre，正式资格仍 I。
 
 ## 剩余边界
 

@@ -1,0 +1,225 @@
+{
+  "scope": "two fresh local v1-main configurations after PWL and select fixes; no full matrix or new Spectre run",
+  "head": "3fd58da9051ad7fef2dff492640e97422faa2910",
+  "base": "78e914ff97d4902365b76d5c3c87be57c39c83e9",
+  "kernel_sha256": "9a951ac655be2e5091c04a654b00349181c908faef22e2806fa1009c454dcaf7",
+  "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+  "records": [
+    {
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "result": {
+        "condition": "v1-main",
+        "backend": "evas",
+        "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "d335c26e16030c306f3259b648217ac4319a1e8ce62621d00e3a34c95839d84d"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 6.661338147750939e-16,
+              "time_s": 2.8189999999999996e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      },
+      "condition": "v1-main",
+      "raw_work_rel": "runs/review-analog-fixed-v1-019q32vi/base",
+      "artifact_sha256": {
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "effective.json": "7640b0e2c1930baee428fb575a29eca68e726677ba58a4a9cbbfaf370adad803",
+        "program.json": "9fbad866ad44f6483ce53e89c658cfead8cbe5adaf90162b32ce326f4469252d",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+        "result.json": "ec5650dbe6570828de0dbe5148a2bd56721cde48e2244e047f8e622cfe4f5188",
+        "waveform.csv": "d335c26e16030c306f3259b648217ac4319a1e8ce62621d00e3a34c95839d84d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "effective": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient_summary": {
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        },
+        "max_step_interpretation": "accepted API setting; no internal time stepping in the stateless analog slice"
+      }
+    },
+    {
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "result": {
+        "condition": "v1-main",
+        "backend": "evas",
+        "source_sha256": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "6ee1c3aef0e4f605aa54dc758728d31b6299df987780bf6c868755510553a214"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          }
+        },
+        "v1_screen": {
+          "status": "observations_within_targets",
+          "formal_dvs_qualification": "I",
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 4.440892098500626e-16
+          },
+          "max_observed_error": {
+            "vout": {
+              "error_v": 6.661338147750939e-16,
+              "time_s": 2.7979e-06
+            }
+          },
+          "violating_sample_count": 0,
+          "plateau_error_v": null,
+          "waveform_excess_over_nominal_event_allowance_v": null,
+          "differential_error_v": null,
+          "common_mode_error_v": null,
+          "max_relationship_residual_v": null,
+          "edges": [],
+          "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+        },
+        "status": "observations_within_targets"
+      },
+      "condition": "v1-main",
+      "raw_work_rel": "runs/review-analog-fixed-v1-019q32vi/fine",
+      "artifact_sha256": {
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "effective.json": "fe27b24e0f4576859a2199cf2d3d020dccecd125d2dc73b462bc0bef40eea41f",
+        "program.json": "9fbad866ad44f6483ce53e89c658cfead8cbe5adaf90162b32ce326f4469252d",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac",
+        "result.json": "1a12918f4d7451e952f2f33419f5a341d77907879e261d64b8c61489fa89a5d2",
+        "waveform.csv": "6ee1c3aef0e4f605aa54dc758728d31b6299df987780bf6c868755510553a214",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "effective": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient_summary": {
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        },
+        "max_step_interpretation": "accepted API setting; no internal time stepping in the stateless analog slice"
+      }
+    }
+  ],
+  "qualification": "I",
+  "run_id": "review-analog-fixed-v1-019q32vi",
+  "execution_kind": "new local EVAS execution",
+  "schema_version": 12,
+  "package_version": "0.9.0",
+  "git_status_at_execution": [],
+  "kernel": "evas/rust_core/target/debug/evas-kernel",
+  "matrix_worker_sha256": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+  "replay_helper_sha256": "8e1eb47971417533d098edbb814afdb266c25c6b3a4a94cb27e27584ba04a68e",
+  "source_input_reference": "experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json",
+  "source_input_verification": "all three frozen input hashes matched candidate/v1-main records for each profile",
+  "environment": {
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)"
+  },
+  "source_trees": {
+    "evas/rust_core/src": "e2e38cb69d38644f008b9b01adb7118d2dfcf8bd",
+    "evas/src/evas": "5c2a07cbb2c4f32b3a6566517427d4a34c8ef508",
+    "evas/tests": "f2005b5aa53821b4ceaa270166f5186d87aa55db"
+  },
+  "commands": {
+    "build": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "python_tests": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests",
+    "rust_tests": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+    "clippy": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+    "format": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
+    "worker": "python3 -B experiments/pr14-pr15-validation/matrix.py worker --root <profile directory> --kernel evas/rust_core/target/debug/evas-kernel",
+    "analysis": "matrix.check(matrix.read_waveform(work/'waveform.csv','evas'), frozen_condition)"
+  },
+  "checks": {
+    "python_methods_passed": 302,
+    "rust_tests_passed": 64,
+    "clippy": "passed",
+    "format": "passed",
+    "diff_check": "passed"
+  },
+  "tdd": {
+    "baseline_runtime_commit": "134280e24dca1299b24c6a62aa90adf54af0915f",
+    "note": "Three newly added tests failed against the rebuilt baseline, then passed after the fix. Baseline tests were uncommitted additions at that point; no separate RED log file was archived.",
+    "red_exit_code": 1,
+    "green_exit_code": 0,
+    "regressions": [
+      "test_pwl_threshold_cannot_be_certified_from_rounded_input",
+      "test_selected_branch_propagates_pwl_error_through_voltage_gain",
+      "test_unrelated_and_empty_if_statements_do_not_duplicate_local_expression"
+    ]
+  },
+  "artifact_availability": "raw waveforms, effective settings, compiled IR, helper and kernel only retained locally; compact receipt versioned; no public raw archive",
+  "raw_archive_rel": "runs/review-analog-fixed-v1-019q32vi",
+  "limits": [
+    "v1-main only, not a new complete 31-condition matrix",
+    "no new Spectre execution",
+    "formal qualification remains I",
+    "ambiguous PWL predicates conservatively reject; no exact rational PWL fallback",
+    "candidate not merged into main"
+  ],
+  "raw_manifest_sha256": "1b2ffb1698a2e46c3ee5e1ae20ab93868796b2b015f652c9316c70394305dbea",
+  "archived_kernel_rel": "runs/review-analog-fixed-v1-019q32vi/evas-kernel"
+}

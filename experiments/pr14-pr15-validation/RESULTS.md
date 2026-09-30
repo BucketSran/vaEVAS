@@ -5,11 +5,31 @@
 
 | 检查点 | 执行范围与观测结果 |
 | --- | --- |
+| [普通 analog 条件候选](#analog-conditions-review) | 仅 v1-main 两档的新本地执行，4,001 / 40,001 个观察点均符合判据；未合并，不更新 main 矩阵成绩。 |
 | [PR26：已合并 idt 复位](#idt-reset-merge-validation) | 两个检查点共 124 次新本地 EVAS 执行；PR25 基线两档各 22/31，PR26 运行时各 24/31，7 条拒绝。 |
 | [PR23：事件条件与 cross OR](#event-conditions-090) | 62 次新本地 EVAS 执行，两档各 21/31，10 条拒绝；额外专项与 Spectre 追加对照另列。 |
 | [原 PR14/15 矩阵](#原-31-条件矩阵) | 31 条件 × 四后端 × 两档，248 单元；新 EVAS 两档各 13/31，18 条拒绝。absdelay/slew 专项另列。 |
 
 各轮正式资格仍为 I；后续本地 EVAS 运行不能替代旧四后端矩阵或构成最新跨后端排名。
+
+<a id="analog-conditions-review"></a>
+
+## 普通 analog 条件候选：PWL 认证与表达式修复
+
+候选分支 `feat/evas-analog-conditions` 的被测提交为 `3fd58da9051ad7fef2dff492640e97422faa2910`，
+已合入 main `78e914f` 的历史，包版本 0.9.0 / IR v12；这里是本地候选，尚未合并 main。
+修复原始 PWL 与舍入输入的分支误判，传播选中仿射网络的输入/运算误差，并避免空条件或
+无关变量赋值重复包装 `select`。三个新反例先在 `134280e` 的已重建内核上失败，再在修复后通过。
+
+**302 Python、64 Rust** 开发回归，以及 locked 构建、Clippy all-targets warnings-as-errors、
+格式与 diff 检查通过。数学与拒绝边界见[条件契约](../../evas/validation/ANALOG_CONDITIONS_CONTRACT.md)。
+本轮只新执行原 `v1-main` 的基础/细化两档，三个冻结输入文件的哈希逐档与 PR26 收据相同，
+沿用原 checker 和阈值。两档各 4,001 / 40,001 个点均为 `observations_within_targets`，
+最大输出误差均约 `6.66×10⁻¹⁶ V`，没有违反目标的观察点。
+
+[整理收据](results/analog-conditions-review.json)记录源码、IR、内核、输入、工具链、实际设置及工件哈希。
+原始波形、编译 IR、日志和内核只在本地保留，未公开归档。本轮未新跑完整 31 条件矩阵或 Spectre，
+不能将这个专项成绩改写成 main 的 25/31；正式资格仍 I，也不证明连续时间观察误差。
 
 <a id="event-conditions-090"></a>
 

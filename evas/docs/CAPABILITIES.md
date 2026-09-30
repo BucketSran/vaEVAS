@@ -6,6 +6,8 @@
 
 候选 `feat/evas-analog-conditions` 已同步该 main，序列化格式为 IR v12，待本轮 review。
 它的局部条件与 PWL 误差认证见[开发契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)；分支检查不改变下表 main 范围或原矩阵成绩。
+候选 `3fd58da` 的 302 Python / 64 Rust 与 v1-main 两档结果见[专项记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)，
+未新跑完整矩阵或 Spectre，原始材料仅本地保留。
 
 ## 状态约定
 
