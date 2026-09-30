@@ -599,6 +599,32 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
     entries: Vec<Runtime>,
+    changes_on_advance: Vec<bool>,
+}
+
+// Borrows one immutable history base at one time. Every advanced trial clones
+// this same base; cached values cannot escape into a different time or history.
+pub(crate) struct Evaluation<'a> {
+    base: &'a Operators,
+    time: f64,
+    pub(crate) values: Vec<f64>,
+    pub(crate) bounds: Vec<I>,
+}
+
+impl Evaluation<'_> {
+    pub(crate) fn advanced(
+        &self,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+    ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
+        let mut candidate = self.base.clone();
+        candidate.advance(self.time, time_bounds, states, bounds, changed)?;
+        let values = candidate.values_reusing(self.time, Some(&self.values))?;
+        let bounds = candidate.bounds_reusing(self.time, Some(&self.bounds))?;
+        Ok((candidate, values, bounds))
+    }
 }
 
 impl Operators {
@@ -785,13 +811,49 @@ impl Operators {
                 }
             }
         }
-        Ok(Self { entries })
+        let mut changes_on_advance = Vec::with_capacity(entries.len());
+        for entry in &entries {
+            let changes = match entry {
+                Runtime::Idt { reset: Some(_), .. } | Runtime::Transition { .. } => true,
+                Runtime::Sin(SinInput::Operator { operator, .. }) => changes_on_advance[*operator],
+                Runtime::Idt { reset: None, .. }
+                | Runtime::IdtMod(_)
+                | Runtime::Sin(SinInput::Direct(_))
+                | Runtime::AbsDelay(_)
+                | Runtime::LaplaceNd(_)
+                | Runtime::Slew(_) => false,
+            };
+            changes_on_advance.push(changes);
+        }
+        Ok(Self {
+            entries,
+            changes_on_advance,
+        })
     }
 
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
-        self.entries.iter().try_fold(
+        self.values_reusing(time, None)
+    }
+
+    pub(crate) fn evaluation(&self, time: f64) -> Result<Evaluation<'_>, Error> {
+        Ok(Evaluation {
+            base: self,
+            time,
+            values: self.values(time)?,
+            bounds: self.bounds(time)?,
+        })
+    }
+
+    fn values_reusing(&self, time: f64, previous: Option<&[f64]>) -> Result<Vec<f64>, Error> {
+        self.entries.iter().enumerate().try_fold(
             Vec::<f64>::with_capacity(self.entries.len()),
-            |mut values, entry| {
+            |mut values, (index, entry)| {
+                if let Some(previous) = previous {
+                    if !self.changes_on_advance[index] {
+                        values.push(previous[index]);
+                        return Ok(values);
+                    }
+                }
                 let value = match entry {
                     Runtime::Idt { history, .. } => history.value(time)?,
                     Runtime::LaplaceNd(history) => history.value(time)?,
@@ -835,9 +897,19 @@ impl Operators {
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
-        self.entries.iter().try_fold(
+        self.bounds_reusing(time, None)
+    }
+
+    fn bounds_reusing(&self, time: f64, previous: Option<&[I]>) -> Result<Vec<I>, Error> {
+        self.entries.iter().enumerate().try_fold(
             Vec::<I>::with_capacity(self.entries.len()),
-            |mut bounds, entry| {
+            |mut bounds, (index, entry)| {
+                if let Some(previous) = previous {
+                    if !self.changes_on_advance[index] {
+                        bounds.push(previous[index]);
+                        return Ok(bounds);
+                    }
+                }
                 let bound = match entry {
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
                     Runtime::LaplaceNd(history) => history.value_bounds(time)?,
@@ -975,16 +1047,12 @@ impl Operators {
                 })
     }
 
-    pub(crate) fn permits_same_time_change(
-        &self,
-        time: f64,
-        previous: &[f64],
-    ) -> Result<bool, Error> {
-        if previous.len() != self.entries.len() {
-            return Ok(false);
+    pub(crate) fn permits_same_time_change(&self, previous: &[f64], current: &[f64]) -> bool {
+        if previous.len() != self.entries.len() || current.len() != self.entries.len() {
+            return false;
         }
         let mut permitted_changes = Vec::with_capacity(self.entries.len());
-        for ((entry, &before), after) in self.entries.iter().zip(previous).zip(self.values(time)?) {
+        for ((entry, &before), &after) in self.entries.iter().zip(previous).zip(current) {
             let permitted = match entry {
                 Runtime::Idt {
                     history,
@@ -997,11 +1065,11 @@ impl Operators {
                 _ => false,
             };
             if after != before && !permitted {
-                return Ok(false);
+                return false;
             }
             permitted_changes.push(after != before && permitted);
         }
-        Ok(true)
+        true
     }
 }
 
@@ -1019,6 +1087,74 @@ fn reset_active(value: I) -> Result<bool, Error> {
 #[cfg(test)]
 mod phase_operator_tests {
     use super::*;
+
+    #[test]
+    fn evaluation_trials_reuse_only_immutable_histories_and_recompute_function_dependents() {
+        use crate::ir::{TransientInputs, SCHEMA_VERSION};
+        use serde_json::json;
+        let origin =
+            |line| json!({"instance":"dut", "source":"snapshot.va", "line":line, "column":1});
+        let input = json!({"op":"affine", "constant":0, "terms":[{"node":1,"coefficient":1}]});
+        let state = json!({"op":"state","state":0});
+        let specs = vec![
+            json!({"kind":"idt","input":input,"ic":1,"origin":origin(1)}),
+            json!({"kind":"idt","input":input,"ic":0.125,"reset":state,"origin":origin(2)}),
+            json!({"kind":"sin","input":{"op":"operator","operator":1},"origin":origin(3)}),
+            json!({"kind":"idt_mod","input":input,"ic":0.125,"modulus":1,"offset":0,"origin":origin(4)}),
+            json!({"kind":"sin","input":{"op":"operator","operator":3},"origin":origin(5)}),
+            json!({"kind":"laplace_nd","input":input,"numerator":[1],"denominator":[1,0.5],"origin":origin(6)}),
+            json!({"kind":"transition","input":state,"delay":0,"rise":0.25,"fall":0.25,"origin":origin(7)}),
+            json!({"kind":"sin","input":{"op":"operator","operator":6},"origin":origin(8)}),
+        ];
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"q","kind":"integer","initial":0}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(10)}],
+            "operators":specs,
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 0.25], [4.0, 0.25]]],
+                output_times: vec![0.0, 1.0, 4.0],
+                stop: 4.0,
+                max_step: 4.0,
+            },
+            1,
+        )
+        .unwrap();
+        let base = Operators::new(&program, &trajectory, &["u".into()], &[0.0]).unwrap();
+        let frozen = base.evaluation(1.0).unwrap();
+        assert_eq!(frozen.values[0], 1.25);
+        assert_eq!(frozen.values[1], 0.375);
+        let (reset_trial, reset_values, reset_bounds) = frozen
+            .advanced(I::point(1.0), &[1.0], &[I::ONE], &[0])
+            .unwrap();
+        assert_eq!(reset_values[1], 0.125);
+        assert_eq!(reset_values[2], 0.125_f64.sin());
+        for index in [0, 3, 4, 5] {
+            assert_eq!(reset_values[index], frozen.values[index]);
+            assert_eq!(reset_bounds[index], frozen.bounds[index]);
+        }
+        assert_eq!(reset_values, reset_trial.values(1.0).unwrap());
+        assert_eq!(reset_bounds, reset_trial.bounds(1.0).unwrap());
+        // Discard the reset trial and retry from the borrowed base.
+        let (_, retry_values, retry_bounds) = frozen
+            .advanced(I::point(1.0), &[0.0], &[I::ZERO], &[])
+            .unwrap();
+        assert_eq!(retry_values, frozen.values);
+        assert_eq!(retry_bounds, frozen.bounds);
+        assert_eq!(base.values(1.0).unwrap(), frozen.values);
+        // A later query creates a new evaluation; transition and its sine
+        // dependent must observe the new edge, not the old-time snapshot.
+        let later = reset_trial.evaluation(1.125).unwrap();
+        let (_, values, bounds) = later
+            .advanced(I::point(1.125), &[1.0], &[I::ONE], &[])
+            .unwrap();
+        assert_eq!(values[6], 0.5);
+        assert_eq!(values[7], 0.5_f64.sin());
+        assert!(bounds[7].lo <= values[7] && bounds[7].hi >= values[7]);
+    }
 
     #[test]
     fn sine_bounds_cover_critical_points_without_libm_endpoint_trust() {

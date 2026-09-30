@@ -66,6 +66,42 @@ def cubic_root(u, cubic, scale):
 
 
 class NonlinearTransientContracts(unittest.TestCase):
+    def test_scalar_positive_and_negative_slopes_match_exact_pwl_cubic_roots(self):
+        times = [0.125, 1.0, 1.75, 3.0]
+        # Both equations express y + .5*y^3 = u, with opposite F' signs.
+        for body in ("V(y,r)<+V(u,r)-.5*pow(V(y,r),3);",
+                     "V(y,r)<+2*V(y,r)+.5*pow(V(y,r),3)-V(u,r);"):
+            with self.subTest(body=body):
+                program = compile_sources({"scalar.va": model(body)},
+                                          [instance(connections=dict(u="u", y="y", r="0"))])
+                result = transient(program, {"u": [[0,.25],[3,.75]]}, times,
+                                   stop=3, max_step=3, kernel=KERNEL, vabstol=1e-10, reltol=0)
+                for time, solution in zip(times, result["solutions"]):
+                    u = Fraction(1,4) + Fraction.from_float(time)/6
+                    target = Decimal(u.numerator)/Decimal(u.denominator)
+                    lo, hi = Decimal(0), Decimal(1)
+                    for _ in range(260):
+                        mid = (lo+hi)/2
+                        if mid + Decimal('.5')*mid**3 < target:
+                            lo = mid
+                        else:
+                            hi = mid
+                    value = exact_float(solution["voltages"][program.nodes.index("y")])
+                    self.assertLessEqual(abs(value-(lo+hi)/2), exact_float(1e-10))
+
+    def test_scalar_certificate_keeps_feedback_amplification_in_the_budget(self):
+        source = model("V(y,r)<+.99999999999999*V(y,r)+(V(u,r)-1)-1e-40*pow(V(y,r),3);")
+        program = compile_sources({"scalar-gain.va": source},
+                                  [instance(connections=dict(u="u", y="y", r="0"))])
+        sources = {"u": [[0,1],[3,math.nextafter(1,math.inf)]]}
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            transient(program, sources, [1,3], stop=3, max_step=3,
+                      kernel=KERNEL, vabstol=1e-12, reltol=0)
+        result = transient(program, sources, [1,3], stop=3, max_step=3,
+                           kernel=KERNEL, vabstol=.1, reltol=0)
+        value = result["solutions"][0]["voltages"][program.nodes.index("y")]
+        self.assertLess(abs(value-1/135), .1)
+
     def compile_cubic(self, cubic=0.5, scale=1.0):
         source = model(
             "V(y,r)<+V(u,r)-c*pow(V(y,r),3)/(s*s);",

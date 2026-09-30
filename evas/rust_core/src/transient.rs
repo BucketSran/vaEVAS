@@ -47,7 +47,8 @@ fn prepare_event_with_bounds(
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
-    let frozen = operators.values(time)?;
+    let base = operators;
+    let frozen = base.evaluation(time)?;
     let inputs = trajectory.values(time);
     let input_bounds = if model.conditions.enabled() {
         trajectory.value_bounds(time)
@@ -59,14 +60,13 @@ fn prepare_event_with_bounds(
         events,
         (&inputs, &input_bounds),
         &accepted.states,
-        &frozen,
+        &frozen.values,
         &old_bounds,
-        &operators.bounds(time)?,
+        &frozen.bounds,
     )?;
     // Every provisional update starts from the same accepted-history base.
     // A first reset trial must never become the history of the second solve.
-    let base = operators;
-    let advance_candidate = |prepared: &crate::settlement::Prepared| -> Result<Operators, Error> {
+    let advance_candidate = |prepared: &crate::settlement::Prepared| {
         let changed: Vec<_> = prepared
             .assigned
             .iter()
@@ -75,22 +75,12 @@ fn prepare_event_with_bounds(
                 old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi
             })
             .collect();
-        let mut candidate = base.clone();
-        candidate.advance(
-            time,
-            time_bounds,
-            &prepared.states,
-            &prepared.bounds,
-            &changed,
-        )?;
-        Ok(candidate)
+        frozen.advanced(time_bounds, &prepared.states, &prepared.bounds, &changed)
     };
-    let mut operators = advance_candidate(&prepared)?;
-    let settled = operators.values(time)?;
-    let settled_bounds = operators.bounds(time)?;
+    let (mut operators, settled, settled_bounds) = advance_candidate(&prepared)?;
     // Equal representative values do not certify a changed history enclosure.
-    if settled != frozen || settled_bounds != base.bounds(time)? {
-        if !operators.permits_same_time_change(time, &frozen)? {
+    if settled != frozen.values || settled_bounds != frozen.bounds {
+        if !operators.permits_same_time_change(&frozen.values, &settled) {
             return Err(Error::new(
                 "event_consistency",
                 "operator changed during same-time settlement",
@@ -105,10 +95,10 @@ fn prepare_event_with_bounds(
             &old_bounds,
             &settled_bounds,
         )?;
-        let replay = advance_candidate(&prepared)?;
+        let (replay, replay_values, replay_bounds) = advance_candidate(&prepared)?;
         if !replay.same_reset_history(&operators)
-            || replay.values(time)? != settled
-            || replay.bounds(time)? != settled_bounds
+            || replay_values != settled
+            || replay_bounds != settled_bounds
         {
             return Err(Error::new(
                 "event_consistency",

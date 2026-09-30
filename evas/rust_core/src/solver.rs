@@ -66,6 +66,27 @@ fn add_dense_coefficient(row: &mut [f64], column: Option<usize>, value: f64) {
     }
 }
 
+// For every fixed input in U, a nonzero derivative of constant sign makes F
+// monotone on X. If |F(center,U)|/min|F'| fits strictly on both sides of the
+// center, the mean value theorem gives opposite endpoint signs, hence one root
+// in X. Distances are rounded inward; the error radius is rounded outward.
+fn scalar_root_box(residual: I, derivative: I, center: f64, enclosure: I) -> bool {
+    let minimum = if derivative.lo > 0.0 {
+        derivative.lo
+    } else if derivative.hi < 0.0 {
+        -derivative.hi
+    } else {
+        return false;
+    };
+    if !residual.finite() || !derivative.finite() || !enclosure.finite() {
+        return false;
+    }
+    let error = (I::point(residual.magnitude()) / I::point(minimum)).hi;
+    let left = (I::point(center) - I::point(enclosure.lo)).lo;
+    let right = (I::point(enclosure.hi) - I::point(center)).lo;
+    error.is_finite() && error < left && error < right
+}
+
 struct IntervalValue {
     value: I,
     gradient: Vec<I>,
@@ -417,6 +438,24 @@ impl Circuit {
             box_values[node] = I { lo, hi };
             deltas.push(I { lo, hi } - I::point(center));
         }
+        // A scalar monotonicity proof avoids constructing an inverse-like
+        // matrix. A missed proof falls back to the unchanged Krawczyk path.
+        // Point inputs still retain their existing acceptance contract above.
+        let scalar_jacobian = if n == 1 {
+            let jacobian = self.interval_jacobian(&box_values)?;
+            let node = self.unknown[0];
+            if scalar_root_box(
+                residuals[0],
+                jacobian[0][0],
+                solution.voltages[node],
+                box_values[node],
+            ) {
+                return Ok(());
+            }
+            Some(jacobian)
+        } else {
+            None
+        };
         let jacobian = self.waveform_jacobian_rows(solution)?;
         let factor = linear::Factorization::new(jacobian, n).map_err(|error| {
             Error::new(
@@ -450,7 +489,10 @@ impl Circuit {
                 preconditioner[column_index][row_index] = value;
             }
         }
-        let interval_jacobian = self.interval_jacobian(&box_values)?;
+        let interval_jacobian = match scalar_jacobian {
+            Some(jacobian) => jacobian,
+            None => self.interval_jacobian(&box_values)?,
+        };
         let mut max_norm = 0.0_f64;
         let mut krawczyk = vec![I::ZERO; n];
         for j in 0..n {
@@ -660,12 +702,61 @@ impl Circuit {
 
 #[cfg(test)]
 mod tests {
-    use super::{Circuit, DenseResidual};
+    use super::{scalar_root_box, Circuit, DenseResidual};
     use crate::events::EventModel;
     use crate::interval::Interval as I;
     use crate::ir::{Program, Tolerances, SCHEMA_VERSION};
     use crate::linear::Factorization;
     use serde_json::json;
+
+    #[test]
+    fn scalar_root_box_uses_both_slope_orientations_and_strict_inward_distances() {
+        let residual = I { lo: -0.1, hi: 0.1 };
+        let enclosure = I { lo: 1.9, hi: 2.1 };
+        for derivative in [I { lo: 3.0, hi: 4.0 }, I { lo: -4.0, hi: -3.0 }] {
+            assert!(scalar_root_box(residual, derivative, 2.0, enclosure));
+        }
+        // An endpoint root is not a strict interior certificate.
+        assert!(!scalar_root_box(
+            I::ONE,
+            I::ONE,
+            0.0,
+            I { lo: -1.0, hi: 1.0 }
+        ));
+        assert!(scalar_root_box(
+            I::ZERO,
+            I::ONE,
+            1.0,
+            I {
+                lo: 1.0_f64.next_down(),
+                hi: 1.0_f64.next_up(),
+            }
+        ));
+    }
+
+    #[test]
+    fn scalar_root_box_does_not_accept_small_residual_with_large_root_error() {
+        assert!(!scalar_root_box(
+            I {
+                lo: -1e-13,
+                hi: 1e-13
+            },
+            I::point(1e-12),
+            0.0,
+            I {
+                lo: -1e-10,
+                hi: 1e-10
+            },
+        ));
+        for derivative in [I::ZERO, I { lo: -1.0, hi: 1.0 }, I::point(1e-308)] {
+            assert!(!scalar_root_box(
+                I::point(1e308),
+                derivative,
+                0.0,
+                I { lo: -1.0, hi: 1.0 }
+            ));
+        }
+    }
 
     fn sparse_event_model() -> EventModel {
         let mut nodes = vec!["0".to_string(), "u".to_string()];
