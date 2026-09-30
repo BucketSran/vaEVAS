@@ -424,7 +424,7 @@ class NonlinearTransientContracts(unittest.TestCase):
         detail = json.loads(run.stderr)
         self.assertEqual(detail["kind"], "invalid_ir")
 
-    def test_off_knot_rectangular_system_is_not_krawczyk_certified(self):
+    def test_point_and_off_knot_rectangular_systems_are_not_krawczyk_certified(self):
         source = model(
             "V(y,r)<+V(u,r)-0.25*pow(V(y,r),3);",
             ports="u,y,r",
@@ -437,19 +437,20 @@ class NonlinearTransientContracts(unittest.TestCase):
                 instance(name="b", connections=dict(u="u", y="y", r="0")),
             ],
         )
-        with self.assertRaises(KernelError) as error:
-            transient(
-                program,
-                {"u": [[0.0, 1.0], [3.0, 2.0]]},
-                [1.0],
-                stop=3.0,
-                max_step=3.0,
-                kernel=KERNEL,
-                vabstol=1.0,
-                reltol=0.0,
-            )
-        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
-        self.assertIn("square system", error.exception.detail["message"])
+        for times in [[0.0], [1.0]]:
+            with self.subTest(times=times), self.assertRaises(KernelError) as error:
+                transient(
+                    program,
+                    {"u": [[0.0, 1.0], [3.0, 2.0]]},
+                    times,
+                    stop=3.0,
+                    max_step=3.0,
+                    kernel=KERNEL,
+                    vabstol=1.0,
+                    reltol=0.0,
+                )
+            self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+            self.assertIn("square system", error.exception.detail["message"])
 
     def test_coupled_square_system_can_be_krawczyk_certified(self):
         source = model(
@@ -630,16 +631,14 @@ class NonlinearTransientContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail["sample"], 0)
 
     def test_nonconvergence_after_success_reports_later_output_index(self):
-        source = model(
-            "V(y,r)<+bias+gain*V(u,r)-c*pow(V(y,r),3);",
-            "parameter real bias=0; parameter real gain=0; parameter real c=0;",
-        )
+        # F=y^3-2*y+2*u has a regular certified root y=0 when u=0.
+        # At u=1 the same bounded Newton solve fails from that prior seed.
+        # Unlike the former parallel-source probe, this is a square system;
+        # rectangular polynomial systems now refuse certification at sample 0.
+        source = model("V(y,r)<+V(y,r)-(pow(V(y,r),3)-2*V(y,r)+2*V(u,r));")
         program = compile_sources(
             {"late_bad_transient.va": source},
-            [
-                instance("clamp", parameters=dict(bias=0.0, gain=0.0, c=0.0)),
-                instance("cubic", parameters=dict(bias=0.0, gain=1.0, c=1.0)),
-            ],
+            [instance()],
         )
         with self.assertRaises(KernelError) as error:
             transient(

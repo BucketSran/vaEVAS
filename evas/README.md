@@ -13,6 +13,8 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 无状态仿射/分段仿射瞬态统一按原始 PWL 区间认证输出误差，有条件时先认证分支。
 谓词限输入驱动的仿射与限定分段仿射表达式，两端均拒绝非线性谓词。同时整合一阶 `laplace_nd`、`idtmod`/受限 `sin` 与无状态多项式瞬态，保留当前 main 的复位保护。
 尚未合入 main；本轮联合验证见[整合复审记录](../experiments/parallel-gap-integration/REVIEW.md#gap-completion)。
+后续[精度链修复](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)对点输入多项式瞬态也要求根盒证明，
+并统一保留无条件事件的 PWL 与跨事件状态误差；不能证明预算时明确拒绝。
 下文历史矩阵成绩仍指已合并的 PR26。
 
 ## 构建与运行

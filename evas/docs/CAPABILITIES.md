@@ -65,6 +65,10 @@ Spectre 原 62 次结果重新核验，两档各 31/31；本轮未新启动远�
 后续本地运行时 `ddfd379` 优化同刻不可变查询与单未知量根盒认证；
 [优化记录](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)绑定新矩阵、
 独立回归、局部性能与原始身份，62 份 CSV 与上述功能检查点一致。仍未交付 main。
+后续精度链修复统一点输入多项式根盒证明，以及无条件事件的 PWL/跨事件状态包围；
+[review 与兼容边界](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)单独记录新执行。
+对应 NONLINEAR、LIN、EVENT-ORDER；多项式非方阵在点输入处也拒绝，仿射状态域冗余约束
+可能在初始化提前拒绝。静态 `solve`、一般连续时间误差与非线性历史联合求解的缺口仍保留。
 此前 IR14、单项分支及旧 main 的收据保持历史身份，不能代替本轮联合验证，也不改写上表的 main 交付范围。
 
 ## 待审阅的 main 缺口

@@ -30,13 +30,11 @@ budget used by the nominal residual check:
 [-B_i, B_i], where B_i = vabstol + reltol * max(abs(lhs_i), abs(rhs_i)).
 ```
 
-For point input intervals this residual replay is the whole waveform check in the
-current branch. It does not claim an additional root-existence, uniqueness or
-forward-error box certificate beyond the nominal Newton gates. For off-knot
-samples, residual replay alone is not enough: a tiny residual/input uncertainty
-can be amplified by feedback or by nonlinear sensitivity. The second step is
-therefore a restricted root-box certificate: a scalar monotonicity proof where
-possible, otherwise the Krawczyk proof below.
+Residual replay alone is insufficient for both point and off-knot inputs: a tiny
+residual or arithmetic/input uncertainty can be amplified by feedback or nonlinear
+sensitivity. Both now require a restricted root-box certificate: a scalar
+monotonicity proof where possible, otherwise the Krawczyk proof below. An exact
+input does not imply an exact root.
 
 The residual and interval-Jacobian calculations use the original RHS expression
 trees saved by assembly for each branch equation, not the collapsed affine row
@@ -51,7 +49,11 @@ B_j = lower(vabstol + reltol * abs(x_j))
 The inner endpoints ensure the certified box itself does not exceed the requested
 voltage budget because of outward-rounded endpoint arithmetic. It then evaluates
 `F(x,U)` and the interval Jacobian `J(X,U)` over the original branch relation
-available to the solver. Both paths require a square, single-origin system.
+available to the solver. Both paths require a square system. Assembly retains
+every summed contribution in `original_rhs`; residuals and interval derivatives
+sum all of these trees. Splitting or reordering independent contributions does
+not itself disable certification. The nominal Jacobian still only supplies an
+arbitrary preconditioner, so its collapsed coefficients are not proof objects.
 If the scalar proof below succeeds, no preconditioner is constructed. Otherwise
 the local floating-point inverse-like matrix `C` is used
 only as a preconditioner; it is not treated as an exact inverse. The Krawczyk image
@@ -68,8 +70,7 @@ operator row-sum bound, accumulated with outward interval arithmetic, satisfies:
 ||I - C J(X,U)||∞ < 1
 ```
 
-If the system is not square, a branch equation has already merged multiple
-contribution origins, the residual or Jacobian intervals are nonfinite, or neither
+If the system is not square, the residual or Jacobian intervals are nonfinite, or neither
 root-box proof succeeds, the kernel returns
 `waveform_accuracy`. This is a conservative refusal, not a relaxed comparison
 threshold.
@@ -80,8 +81,10 @@ contributions. They do not use the polynomial Krawczyk shape restrictions.
 Input-selected branches remain restricted to affine leaves. For polynomial systems the root-box check certifies a root
 inside the requested voltage box under the stated restricted conditions. It
 is still not a general-purpose interval solver for arbitrary coupled dynamics;
-nonlinear events, state/history/operator coupling and unsupported non-square or
-merged-branch cases remain outside this branch.
+nonlinear events, state/history/operator coupling and unsupported non-square
+cases remain outside this branch. Non-square polynomial systems are refused at
+point inputs too; the public static `solve` keeps its existing local Newton
+contract and does not acquire this transient forward-error proof.
 
 ## Scalar monotonicity certificate
 
@@ -106,11 +109,17 @@ enlarges `E` instead of allowing a small residual to hide a large voltage error.
 
 If the derivative contains zero, or the strict distance test fails, execution
 uses the original Krawczyk path with the already evaluated interval Jacobian.
-Multi-unknown systems and the point-input residual-only boundary are unchanged.
+Multi-unknown systems use Krawczyk. The later precision-chain repair also applies
+these proofs at point inputs, closing the earlier residual-only boundary.
 This is an EVAS derivation from the mean value theorem, not a claim about another
 simulator's internal algorithm. Independent high-precision positive/negative
 slope roots, the feedback-amplification rejection and strict-boundary tests are
-in `test_nonlinear_transient.py` and `solver.rs`.
+in `test_nonlinear_transient.py` and `solver.rs`. `test_precision_chain.py` adds
+100-digit quadratic roots near the fold `y=u+y²`, exact-input and off-knot
+contribution-splitting controls, and acceptance under a provable looser budget.
+At `u=.25`, a nominal error around `3.725e-9 V` can coexist with zero rounded
+residual and correction. A `1e-12 V` request must not accept that result; the
+multiple root cannot pass either nonsingularity-based certificate.
 
 ## High-gain diagnostic
 
@@ -181,9 +190,8 @@ certification.
 
 The joint candidate still rejects nonlinear events, state/history/operator
 coupling, and non-affine transient dynamics. The root-box certificate is limited
-to square, single-origin branch systems at off-knot stateless samples. It uses the
-saved original RHS tree within that branch, including legal nested expression
-cancellation, but does not recover separate source-level contributions after
-assembly has merged multiple origins. Duplicate-node terms inside one affine
+to square branch systems at point and off-knot stateless samples. It uses all
+saved original RHS trees within each branch, including summed contributions and
+legal nested expression cancellation. Duplicate-node terms inside one affine
 expression remain invalid IR. It does not replace a future general interval solve for broader
 nonlinear dynamic features.

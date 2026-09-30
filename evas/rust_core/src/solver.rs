@@ -338,8 +338,9 @@ impl Circuit {
 
     /// Certify that the accepted point solution also satisfies each original
     /// branch relation for the exact binary64-PWL input interval represented at
-    /// this observation time. This is a waveform/input uncertainty check, not a
-    /// replacement for Newton convergence at the nominal f64 input point.
+    /// this observation time, with a root inside the requested voltage box.
+    /// Point inputs still require this forward-error proof: small floating-point
+    /// residuals do not bound root error near a singular Jacobian.
     pub(crate) fn check_waveform_accuracy(
         &self,
         solution: &Solution,
@@ -357,7 +358,6 @@ impl Circuit {
                 "cannot certify waveform accuracy with nonfinite input bounds",
             ));
         }
-        let point_inputs = input_bounds.iter().all(|b| b.lo == b.hi);
         let mut point_values = solution
             .voltages
             .iter()
@@ -400,14 +400,8 @@ impl Circuit {
                 ));
             }
         }
-        if self.unknown.is_empty() || point_inputs {
+        if self.unknown.is_empty() {
             return Ok(());
-        }
-        if self.equations.iter().any(|eq| eq.origins.len() != 1) {
-            return Err(Error::new(
-                "waveform_accuracy",
-                "Krawczyk waveform certificate requires unfolded single-origin branch equations",
-            ));
         }
         let n = self.unknown.len();
         if self.equations.len() != n {
@@ -440,7 +434,9 @@ impl Circuit {
         }
         // A scalar monotonicity proof avoids constructing an inverse-like
         // matrix. A missed proof falls back to the unchanged Krawczyk path.
-        // Point inputs still retain their existing acceptance contract above.
+        // All contributions to a branch are replayed through original_rhs;
+        // splitting a relation into several contributions does not bypass or
+        // disable its proof. The nominal Jacobian is only a preconditioner.
         let scalar_jacobian = if n == 1 {
             let jacobian = self.interval_jacobian(&box_values)?;
             let node = self.unknown[0];

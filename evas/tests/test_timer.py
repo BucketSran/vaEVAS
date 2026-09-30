@@ -220,7 +220,7 @@ class TimerContracts(unittest.TestCase):
         self.assertEqual(result.stdout, '')
         self.assertEqual(json.loads(result.stderr)['kind'], 'invalid_request')
 
-    def test_overflow_and_post_event_failure_produce_no_partial_response(self):
+    def test_overflow_and_uncertifiable_constraints_produce_no_partial_response(self):
         for residual in [False, True]:
             sources = {'timer.va': timer_source('0,0,0.001', initial=0 if residual else 2147483647)}
             instances = [instance()]
@@ -233,4 +233,14 @@ class TimerContracts(unittest.TestCase):
             result = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True, capture_output=True)
             self.assertEqual(result.returncode, 2)
             self.assertEqual(result.stdout, '')
-            self.assertEqual(json.loads(result.stderr)['kind'], 'residual_failure' if residual else 'state_range')
+            error = json.loads(result.stderr)
+            if residual:
+                # y=n and y=0 agree only at the initial n=0. They are not
+                # identities over the state domain of the affine error map;
+                # uniform initialization certification now refuses them before
+                # the timer fires. Candidate residual failure/rollback remains
+                # covered by the Rust idt_residual_failure regression.
+                self.assertEqual(error['kind'], 'event_accuracy')
+                self.assertIn('redundant event constraints as identities', error['message'])
+            else:
+                self.assertEqual(error['kind'], 'state_range')
