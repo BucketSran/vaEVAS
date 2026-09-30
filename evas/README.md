@@ -57,7 +57,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 方程组装 | `rust_core/src/assembly.rs` | 校验 IR 与驱动配置，累加支路贡献，生成方程系数及节点分区 |
 | 工作点求解 | `rust_core/src/solver.rs` | 代入每个样本的驱动值，求解未知电压，验收原方程残差 |
 | 表达式求值 | `rust_core/src/expression.rs` | 递归校验 IR，计算多项式值与链式法则导数 |
-| 普通 analog 条件 | `rust_core/src/analog.rs` | 从 PWL 区间选择分段仿射关系，复用方程求解与原 IR 前向误差认证 |
+| 无状态瞬态与普通条件 | `rust_core/src/analog.rs` | 从 PWL 区间认证选支；仿射模型复用原 IR 前向映射，多项式模型使用 Newton，并在规定边界内作根盒认证 |
 | 非线性求解 | `rust_core/src/nonlinear.rs` | 对同一组支路方程执行有界阻尼 Newton 迭代 |
 | 线性代数 | `rust_core/src/linear.rs`、`linear/dense.rs`、`linear/sparse.rs`、`linear/columns.rs` | 稠密/稀疏分流、行缩放、选主元、列排序与多 RHS 求解 |
 | 事件语义 | `rust_core/src/events.rs` | 校验状态/事件身份及依赖，将状态代入方程，准备事件块的状态更新 |
@@ -69,7 +69,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 同刻误差认证 | `rust_core/src/settlement_bounds.rs` | 从原 IR 独立包围事件后解，检查电压与状态各自误差预算 |
 | 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs`、`idt.rs` | 校验独立调用点/输入，保存延迟目标队列、边沿、限速与积分轨迹，提供语义断点与输出值 |
+| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs`、`idt.rs`、`laplace.rs`、`idtmod.rs` | 校验独立调用点/输入，保存延迟、边沿、限速、积分/滤波/相位历史；`operators.rs` 计算受限 sin 的值与包络 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
@@ -108,7 +108,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 - 一个源文件一个 module，标量端口及内部 `electrical` 节点，显式方向声明。
 - 文件前部可使用标准 `constants.vams` / `disciplines.vams` include 拼写。
-  本切片把它们视为内建电气前导声明，不搜索外部文件；不提供常量宏展开。
+  本切片把它们视为内建前导声明，不搜索外部文件；联合候选只识别有限常量 `` `M_PI``，不提供通用宏处理。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及下述限定事件块。
 - 表达式支持括号、单目正负、加减、乘法及非零常数分母。
@@ -121,13 +121,18 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
 另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
 须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
-缺省初值、内部节点/状态积分输入、嵌套、积分反馈和积分输出驱动 cross 仍拒绝；
+缺省初值、内部节点/状态积分输入、积分输入嵌套、积分反馈和积分输出驱动 cross 仍拒绝；
 数学与限制见[算子手册](docs/OPERATORS.md#idt)，本轮合并前对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 
 事件体条件的精度和支持边界见[事件手册](docs/EVENTS.md#event-conditions)。
 本分支另支持无事件/初始化的顺序局部 `real` 赋值和输入驱动 `if/else`；瞬态限分段仿射叶子，
-详见[普通 analog 条件契约](validation/ANALOG_CONDITIONS_CONTRACT.md)。仍拒绝超出该范围的过程赋值、条件、循环、层次实例、数组、命名支路、电流贡献、
-`pow` 之外的数学函数、未列明的事件和动态算子、其他预处理指令、参数范围和未知语法。
+详见[普通 analog 条件契约](validation/ANALOG_CONDITIONS_CONTRACT.md)。无条件局部算子别名捕获调用处表达式，每个调用保留独立身份。
+联合候选另支持直接连续 PWL 的一阶 `laplace_nd(u, '{b0}, '{d0,d1})`、显式正 modulus 的
+`idtmod`，以及直接仿射输入或单个早期算子仿射值的受限 `sin`；数学、误差和组合限制见
+[算子手册](docs/OPERATORS.md#laplace_nd)。无状态、无事件、无历史算子时可逐点解多项式瞬态，见
+[精度契约](validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
+仍拒绝超出所列范围的过程赋值、条件、循环、层次实例、通用数组、命名支路、电流贡献、
+其他数学函数、未列明的事件/动态算子、其他预处理指令、参数范围和未知语法。
 支持集按语法和语义决定，运行时代码不读取验证集，也不识别模型/条件名称。
 两个不同的本地贡献支路因端口连接而变成同一节点对时，本批显式拒绝，
 避免把未经验证的别名语义解释成相加。后续扩展需单独建立契约。

@@ -1,0 +1,1462 @@
+{
+  "runtime_commit": "39a4545c34fb22b1bd69731ca6b8bd8852b0e9dd",
+  "kernel_sha256": "d59822b07aad389df40559297a328639b484ba2e3512ada0009a7576078ca167",
+  "schema_version": 15,
+  "scope": "IR v15 integrated candidate development checks, not full language or continuous-time qualification",
+  "checks": [
+    {
+      "check": "python",
+      "command": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -v",
+      "exit_code": 0,
+      "tests": 362,
+      "log": "python-final.log",
+      "log_sha256": "781cce314fbffe5faf213eb72e2ac078e283dfbe3bcd1e7f016000c68016b18c",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "rust",
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": 79,
+      "log": "rust-final.log",
+      "log_sha256": "e6eb05aa929a6ff44770dbfc9b17fb27fa9dab2f61ba9c35b436114aeb99e926",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "build",
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "log": "build-final.log",
+      "log_sha256": "07638648ff972054616f83d0dea6f97de5a6e1b427044a92a126cd6a901436ae",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "clippy",
+      "command": "cargo clippy --locked --all-targets --manifest-path evas/rust_core/Cargo.toml -- -D warnings",
+      "exit_code": 0,
+      "tests": null,
+      "log": "clippy-final-checkpoint.log",
+      "log_sha256": "799162e409719b7722d49ca7f7c61b33abb8e01d648826ea7725ce9271ae6cc6",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "fmt",
+      "command": "cargo fmt --check --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "log": "fmt-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "design_math",
+      "command": "python3 -B evas/validation/check_design_math.py",
+      "exit_code": 0,
+      "tests": null,
+      "log": "design-math.log",
+      "log_sha256": "5b6d4fe8c6d6733c2974bcc65d8ddc599aebdfa0d74fdd35ba0ec0d0fa9533f9",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "dynamics_math",
+      "command": "python3 -B evas/validation/check_dynamics_math.py",
+      "exit_code": 0,
+      "tests": 9,
+      "log": "dynamics-math.log",
+      "log_sha256": "84e56035e35a77865e8391a5feda47bb23c2e91d481f5721cdd732c8300be64b",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "frozen_identity",
+      "command": "python3 -B scripts/verify_validation_version.py",
+      "exit_code": 0,
+      "tests": null,
+      "log": "frozen-identity.log",
+      "log_sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "log_availability": "local-only"
+    }
+  ],
+  "static_replay": {
+    "command": "PYTHONPATH=evas/src python3 -B evas/tests/run_static_regression.py --kernel ARCHIVED_KERNEL --output FRESH_OUTPUT",
+    "exit_code": 0,
+    "report_sha256": "47c2d3ee1a1c669efa8df7320e7acca4bb5b112d5b9681c3dd50141f6506d39a",
+    "manifest_sha256": "3586492605196983e0e96c5839a4fad8276c2d8989f2822add20f468e8675bd6",
+    "configurations": 24,
+    "supported_conditions": 12,
+    "rejected_conditions": 19,
+    "total_points": 528024,
+    "records": [
+      {
+        "condition": "v1-main",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0,
+        "max_scaled_residual_ratio": 0.0,
+        "max_voltage_correction_v": 0.0,
+        "max_voltage_correction_ratio": 0.0
+      },
+      {
+        "condition": "v1-main",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0,
+        "max_scaled_residual_ratio": 0.0,
+        "max_voltage_correction_v": 0.0,
+        "max_voltage_correction_ratio": 0.0
+      },
+      {
+        "condition": "v2-main",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 3.5299999999999994e-07
+              },
+              "on": {
+                "error_v": 4.440892098500626e-16,
+                "time_s": 3.5109999999999995e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 3.3306690738754696e-16,
+            "common_mode_error_v": 2.220446049250313e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 3.3306690738754696e-16,
+        "max_residual_ratio": 6.622925181697096e-11
+      },
+      {
+        "condition": "v2-main",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 3.408e-07
+              },
+              "on": {
+                "error_v": 4.440892098500626e-16,
+                "time_s": 3.5009e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 3.3306690738754696e-16,
+            "common_mode_error_v": 2.220446049250313e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 3.3306690738754696e-16,
+        "max_residual_ratio": 6.647113325234936e-10
+      },
+      {
+        "condition": "v2-reference-zero",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "on": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 0.0,
+            "common_mode_error_v": 0.0,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 2.220446049250313e-16,
+        "max_residual_ratio": 2.950758869435632e-11
+      },
+      {
+        "condition": "v2-reference-zero",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "on": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 0.0,
+            "common_mode_error_v": 0.0,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 2.220446049250313e-16,
+        "max_residual_ratio": 2.956534425056672e-10
+      },
+      {
+        "condition": "v2-supply-fixed",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 1.1102230246251565e-16,
+                "time_s": 9.999999999999999e-10
+              },
+              "on": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 1.3619999999999998e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 2.220446049250313e-16,
+            "common_mode_error_v": 1.1102230246251565e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 2.220446049250313e-16,
+        "max_residual_ratio": 3.828355257328126e-11
+      },
+      {
+        "condition": "v2-supply-fixed",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 1.1102230246251565e-16,
+                "time_s": 3e-10
+              },
+              "on": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 1.3341999999999999e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 2.220446049250313e-16,
+            "common_mode_error_v": 1.1102230246251565e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 2.220446049250313e-16,
+        "max_residual_ratio": 3.8337312943155567e-10
+      },
+      {
+        "condition": "v2-input-common-mode",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 1.1102230246251565e-16,
+                "time_s": 1.1099999999999999e-07
+              },
+              "on": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 2.8079999999999996e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 2.220446049250313e-16,
+            "common_mode_error_v": 2.220446049250313e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 3.3306690738754696e-16,
+        "max_residual_ratio": 5.524413789808373e-11
+      },
+      {
+        "condition": "v2-input-common-mode",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vip": 0.0,
+              "vin": 0.0,
+              "vdd": 0.0,
+              "vref": 0.0
+            },
+            "max_observed_error": {
+              "op": {
+                "error_v": 1.1102230246251565e-16,
+                "time_s": 2.2199999999999997e-08
+              },
+              "on": {
+                "error_v": 2.220446049250313e-16,
+                "time_s": 2.8002e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": 2.220446049250313e-16,
+            "common_mode_error_v": 2.220446049250313e-16,
+            "max_relationship_residual_v": null,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 3.3306690738754696e-16,
+        "max_residual_ratio": 5.531019087109282e-10
+      },
+      {
+        "condition": "v7-linear-main",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235797e-11
+      },
+      {
+        "condition": "v7-linear-main",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235795e-10
+      },
+      {
+        "condition": "v7-linear-swapped",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235797e-11
+      },
+      {
+        "condition": "v7-linear-swapped",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235795e-10
+      },
+      {
+        "condition": "v7-linear-a-half",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235797e-11
+      },
+      {
+        "condition": "v7-linear-a-half",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vina": 0.0,
+              "vinb": 0.0
+            },
+            "max_observed_error": {
+              "outa": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              },
+              "outb": {
+                "error_v": 0.0,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 5.551115123125783e-17,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 5.551115123125783e-17,
+        "max_residual_ratio": 2.0738910796235795e-10
+      },
+      {
+        "condition": "v7-nonlinear-0.5",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 2.52810563661221e-06,
+                "time_s": 0.0
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 3.4761500438129644e-06,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 3.47615004384072e-06,
+        "max_residual_ratio": 0.9989622807932014,
+        "max_scaled_residual_ratio": 0.996299942015972,
+        "max_voltage_correction_v": 2.52810215043821e-06,
+        "max_voltage_correction_ratio": 0.996299942015972
+      },
+      {
+        "condition": "v7-nonlinear-0.5",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 3.374772811204352e-07,
+                "time_s": 3.6969999999999995e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 4.312219634150516e-07,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 4.312219634081127e-07,
+        "max_residual_ratio": 0.9997404154952133,
+        "max_scaled_residual_ratio": 0.9789684838062336,
+        "max_voltage_correction_v": 3.3747722359310985e-07,
+        "max_voltage_correction_ratio": 0.9789684838062336
+      },
+      {
+        "condition": "v7-nonlinear-2.0",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 2.0224351138797836e-06,
+                "time_s": 3.7429999999999996e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 4.466298119121248e-06,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 4.466298119149004e-06,
+        "max_residual_ratio": 0.9994799268952237,
+        "max_scaled_residual_ratio": 0.9565772078647355,
+        "max_voltage_correction_v": 2.022430126674215e-06,
+        "max_voltage_correction_ratio": 0.9565772078647355
+      },
+      {
+        "condition": "v7-nonlinear-2.0",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            }
+          },
+          "v1_screen": {
+            "status": "observations_within_targets",
+            "formal_dvs_qualification": "I",
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "vin": 0.0
+            },
+            "max_observed_error": {
+              "vout": {
+                "error_v": 2.0450682142181265e-07,
+                "time_s": 3.5357999999999997e-06
+              }
+            },
+            "violating_sample_count": 0,
+            "plateau_error_v": null,
+            "waveform_excess_over_nominal_event_allowance_v": null,
+            "differential_error_v": null,
+            "common_mode_error_v": null,
+            "max_relationship_residual_v": 4.0304038084748584e-07,
+            "edges": [],
+            "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 4.03040380902997e-07,
+        "max_residual_ratio": 0.9994996943853868,
+        "max_scaled_residual_ratio": 0.9782933476489089,
+        "max_voltage_correction_v": 2.045067701305255e-07,
+        "max_voltage_correction_ratio": 0.9782933476489089
+      },
+      {
+        "condition": "s1-default",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "u": 0.0,
+              "v": 0.0
+            }
+          },
+          "analytic_max_error": {
+            "vout": 0
+          },
+          "analytic_targets": {
+            "vout": 0.001
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0
+      },
+      {
+        "condition": "s1-default",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "u": 0.0,
+              "v": 0.0
+            }
+          },
+          "analytic_max_error": {
+            "vout": 0
+          },
+          "analytic_targets": {
+            "vout": 0.001
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0
+      },
+      {
+        "condition": "s1-override",
+        "profile": "base",
+        "sample_count": 4001,
+        "settings": {
+          "sample_step_s": 1e-09,
+          "residual_absolute_v": 1e-08,
+          "residual_relative": 1e-05,
+          "vabstol_v": 1e-08,
+          "reltol": 1e-05
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 4001,
+            "max_gap_s": 1.0000000000004986e-09,
+            "input_max_error_v": {
+              "u": 0.0,
+              "v": 0.0
+            }
+          },
+          "analytic_max_error": {
+            "vout": 0
+          },
+          "analytic_targets": {
+            "vout": 0.001
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0
+      },
+      {
+        "condition": "s1-override",
+        "profile": "fine",
+        "sample_count": 40001,
+        "settings": {
+          "sample_step_s": 1e-10,
+          "residual_absolute_v": 1e-09,
+          "residual_relative": 1e-06,
+          "vabstol_v": 1e-09,
+          "reltol": 1e-06
+        },
+        "analysis": {
+          "formal_dvs_qualification": "I",
+          "continuous_time_qualified": false,
+          "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+          "observation": {
+            "sample_count": 40001,
+            "max_gap_s": 1.0000000000021927e-10,
+            "input_max_error_v": {
+              "u": 0.0,
+              "v": 0.0
+            }
+          },
+          "analytic_max_error": {
+            "vout": 0
+          },
+          "analytic_targets": {
+            "vout": 0.001
+          },
+          "status": "observations_within_targets"
+        },
+        "max_residual_v": 0.0,
+        "max_residual_ratio": 0.0
+      }
+    ],
+    "rejected": [
+      {
+        "condition": "v3-main",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "v4-c0",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "v4-c1",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "v5-main",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "v6-standard",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e1-aligned",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e1-shifted",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e1-slow",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e2-low",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e2-clock-high",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "e2-reset-high",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "c1-main",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "c1-swapped",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "c1-no-reset-a",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "c2-main",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "d1-free",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "d1-reset",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "d2-constant",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      },
+      {
+        "condition": "d2-chirp",
+        "reason": "unsupported_analysis: state/event/operator program requires transient execution"
+      }
+    ]
+  },
+  "preserved_trials": {
+    "first_matrix_runtime_commit": "493c2929c4c97f79a4d00018b5cc1d9c8e6007b0",
+    "first_matrix_analysis_sha256": "c9c9d1c2d28457e1ee50f56298bd1a9584630de5369189ef015473128d956384",
+    "first_clippy_exit_code": 101,
+    "first_clippy_log_sha256": "91edc5395e62058fa089b5798aeffd9c0fe0ee08266aee679e537943aca4ccb1",
+    "reason": "Original integration matches omitted new operator variants; reset-to-sine settlement was then repaired. The first full matrix passed 31/31 at both profiles. Final checkpoint adds reset/sine rollback regression, Clippy-equivalent guards and preserves stateless accepted_steps=0."
+  },
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "raw_availability": "local-only ignored runs",
+  "raw_root": "/Users/bucketsran/Documents/TsingProject/vaEVAS-gap-integration/runs/gap-completion-20260930T165211Z-3154da",
+  "raw_archive": {
+    "manifest": "RAW_MANIFEST.json",
+    "manifest_sha256": "1a6c45853b1415a658542e51a0d2e3e78b899004a1ea6794b438b99fff0a2e21",
+    "files": 1224,
+    "bytes": 369710468,
+    "runtime_source_archive": "runtime-source-final.tar.gz",
+    "runtime_source_archive_sha256": "1347a4ec71cbeb054f80553cb635f2ccf0590d7b453c06167480eb45c88d7692",
+    "final_analysis": "matrix-analysis-final.json",
+    "final_analysis_sha256": "bbc7fda95d24209e446e3edcbad9adff5accb3e97a3cd1cb79219fd507e85d90",
+    "availability": "local-only; directory not published"
+  }
+}

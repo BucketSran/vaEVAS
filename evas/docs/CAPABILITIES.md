@@ -10,7 +10,8 @@
 两档各 25/31，原达标 48 份 CSV 哈希一致；未合并，原始材料仅本地保留。
 后续[新 Spectre 对照与缺口专项](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
 复用该 EVAS 执行、对 Spectre 新跑原 31×2，两档各 31/31；三个旧候选各新跑受影响两条件两档，
-各 4/4。候选基线/IR 尚未统一，不能相加为整合版本 31/31；六个有理数边界探针另列。
+各 4/4。该轮单项候选当时未统一基线/IR，不能相加为整合成绩；六个有理数边界探针另列。
+本轮统一后的新执行见下方[本地整合](#本地整合与交付边界)。
 此前 `3fd58da` 的 v1-main 专项作为[历史检查点](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)保留。
 
 ## 状态约定
@@ -57,13 +58,16 @@
 当前联合候选 `test/evas-gap-integration` 已同步 main `78e914f` 和 analog 验收修复，
 整合一阶滤波、相位与无状态非线性瞬态，格式统一为 **IR v15**。保留主分支的复位反馈
 拒绝和候选历史重放，并补充 `sin` 消费复位积分器时的同刻重算。尚未创建新 PR 或合入 main。
+联合运行时 `39a4545` 两档各 **31/31**，相对 analog 基线各 25/31 新增六条条件；
+原达标 50 份 CSV 逐字节一致。362 Python、79 Rust、Clippy 与格式检查通过。
+Spectre 原 62 次结果重新核验，两档各 31/31；本轮未新启动远端仿真。
 本轮范围、数学入口、联合检查与原矩阵证据见[当前复审记录](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)。
 此前 IR14、单项分支及旧 main 的收据保持历史身份，不能代替本轮联合验证，也不改写上表的 main 交付范围。
 
-## 后续工作顺序
+## 待审阅的 main 缺口
 
 后续工作从当前 0.9.0 / IR v11 main 开始；每项使用一个可独立 review 的 PR，实际依赖才堆叠。
-受限事件体条件与 cross OR 已完成原 8 条件两档有限观测验证；多事件写者及受限 idt 复位也已完成审阅与矩阵检查；下表仅保留剩余范围。
+受限事件体条件与 cross OR 已完成原 8 条件两档有限观测验证；多事件写者及受限 idt 复位也已完成审阅与矩阵检查；下表记录尚待 review 后交付 main 的范围，本地联合候选已限定实现并验证。
 条件数是受影响范围，不是新增达标承诺；
 完整拒绝诊断见[原矩阵](../../experiments/pr14-pr15-validation/RESULTS.md)。
 
@@ -74,10 +78,11 @@
 | 3 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
 | 4 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
 
-已有待整合实现及新专项证据见[缺口对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)：
+单项候选历史专项证据见[缺口对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)：
 非线性候选 `227c77c`、滤波 `4389640`、相位 `11f49d2` 均在受影响原条件两档各 4/4。
-它们基于旧 main `508f5b9`，使用 IR v9/v12/v13；应先同步当前 main、统一共享 IR/瞬态入口并
-保留事件/复位修复，再对联合检查点验收。这条证据不更新上表 main 交付范围。
+单项执行基于旧 main `508f5b9`，使用 IR v9/v12/v13；本轮已经同步 main、统一 IR v15/瞬态入口
+并保留事件/复位修复，重新执行联合检查。接下来分批 review 数学、拒绝边界与组合修复；
+当前候选证据不更新上表 main 交付范围。
 
 SPARSE 的共享矩阵与瞬态调用路径已在 PR8 整合验证；后续按 Issue9 优化排序、填充和分解复用。
 瞬态试算、固定矩阵复用、分段求值及按需事件日程另登记为

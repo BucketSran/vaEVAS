@@ -36,6 +36,21 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 这里的“达标”指满足所列有限观测判据。**正式 DVS 资格仍为 I（未决）**，
 不代表全时域精度或完整语言合规；这 31 条件已用于诊断，属于开发回归材料，不是未见确认集。
 
+<a id="candidate-gap-completion"></a>
+
+### 本地联合候选：剩余能力补齐（2026-10-01，待 review）
+
+运行时 `39a4545` / IR v15 已同步 main `78e914f`，联合普通 analog 条件、一阶滤波、
+相位和无历史非线性瞬态。原 31 条件两档均 **31/31 有限观测达标**；本轮 EVAS 新执行 62 个配置。
+相对 analog 候选 `9c5d6c5` 的各 25/31 新增六条，原达标 50 份 CSV 逐字节一致。
+同一输入/设置下，上一轮 Spectre 62 次执行重新核验后也各 31/31；本轮没有新启动 Spectre。
+
+[分批复审与数学原理](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)、
+[逐条矩阵](../../experiments/parallel-gap-integration/results/gap-completion-matrix.md)及
+[完整收据](../../experiments/parallel-gap-integration/results/gap-completion-current.json)绑定实际源码、内核与检查器。
+候选尚未合入 main，不能用它覆盖上面的 PR26 历史成绩；下面七条仍是待交付 main 的范围。
+正式资格仍 I，原 31 条件为开发材料，不是未见确认集或全时域精度证明。
+
 <a id="remaining-original-31"></a>
 
 ### 原 31 条件的剩余缺口

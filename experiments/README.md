@@ -47,6 +47,12 @@ PR25 基线 `6df7f48` 两档各 22/31，原达标的 44 份 CSV 逐字节一致�
 此轮未新增 Spectre 或其他后端对照，正式资格仍为 **I**。
 当前能力范围及后续缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
 
+本地联合候选（未合并）：[剩余六条件补齐及分批复审](parallel-gap-integration/REVIEW.md#gap-completion)，
+运行时 `39a4545` / IR v15，同步 main `78e914f`。本轮 62 次新 EVAS 执行两档均 31/31，
+相对 analog 基线各 25/31 新增六条，原达标 50 份 CSV 不变；上一轮 Spectre 62 次结果
+重新核验后也各 31/31，没有新远端执行。[矩阵](parallel-gap-integration/results/gap-completion-matrix.md)
+及[检查收据](parallel-gap-integration/results/gap-completion-checks.json)保留来源和限制；正式资格 I。
+
 以下入口保留各自冻结身份，旧结果不替代当前源码的新执行，也不构成最新版本的配对性能比较。
 
 | 入口 | 固定范围与证据边界 |

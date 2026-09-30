@@ -1,5 +1,99 @@
 # 六路候选的复审记录
 
+<a id="gap-completion"></a>
+
+## 2026-10-01：剩余六条件补齐与联合验收
+
+当前候选为本地 `test/evas-gap-integration`，运行时固定于
+`39a4545c34fb22b1bd69731ca6b8bd8852b0e9dd`，包版本仍为 0.9.0，格式统一为 **IR v15**。
+已同步当前 main `78e914ff97d4902365b76d5c3c87be57c39c83e9`、analog 验收修复以及
+滤波 `4389640`、相位 `11f49d2`、非线性 `227c77c` 候选。未发布、未合入 main。
+旧 IR 必须从原始 VA 重新编译；不得修改归档 JSON 的版本号冒充迁移。
+
+原 31 条件的基础档与细化档均 **31/31 有限观测达标**。相对 analog 基线 `9c5d6c5`
+的各 25/31，新增的是以下六条；原达标 50 份 CSV 逐字节一致，无退化。
+相对已合并 PR26 检查点的各 24/31，还包括已经在 analog 候选补齐的 `v1-main`。
+
+### 分批 review 的数学与实现入口
+
+| 顺序 | 本轮补齐 | 数学原理与精度处理 | 重点入口 |
+| --- | --- | --- | --- |
+| 1 | `v6-standard`、`c2-main`：常量数组、一阶 `laplace_nd`、滤波采样级联 | 对 `b0/(d0+d1*s)`，令 `τ=d1/d0`、`g=b0/d0`，解 `τy′+y=gu`。直接 PWL 每段使用解析响应，DC 初值为 `gu(0)`；原始系数、时间差和指数余项的区间进入历史及电压验收 | [数学契约](../../evas/validation/LAPLACE_CONTRACTS.md)、[laplace.rs](../../evas/rust_core/src/laplace.rs)、[独立 Decimal 回归](../../evas/tests/test_laplace.py) |
+| 2 | `d2-constant`、`d2-chirp`：内建 constants 宏、`idtmod` 与受限 `sin` | 先累计 `z=ic+∫u dt`，查询 `offset+(z-offset) mod modulus`。原始累计相位独立保存；wrap 边界用精确 product-sum 符号或保守区间。正弦分别包围 wrap 两侧，再取并集，不把浮点 `2*M_PI` 当作数学精确周期 | [算子数学](../../evas/docs/OPERATORS.md#idtmod-与-sin)、[idtmod.rs](../../evas/rust_core/src/idtmod.rs)、[operators.rs](../../evas/rust_core/src/operators.rs)、[Fraction/Decimal 回归](../../evas/tests/test_phase.py) |
+| 3 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0`：无历史非线性瞬态 | 每个请求时刻独立解 `F(v,u(t))=0`；前一个成功解只作 Newton 初猜。非点输入包围使用原 RHS 的区间 Jacobian 与 Krawczyk `K=x−CF(x,U)+(I−CJ(X,U))(X−x)`，证明 `K⊂int(X)` 且收缩范数 `<1` 后接受 | [精度契约](../../evas/validation/NONLINEAR_TRANSIENT_CONTRACT.md)、[solver.rs](../../evas/rust_core/src/solver.rs)、[高精度根与反例](../../evas/tests/test_nonlinear_transient.py) |
+| 4 | 共同入口与组合修复 | 仿射关系保留原 forward-error map；普通条件先认证原 PWL 谓词。全部历史仍从已接受 Frame 重放，试算失败不提交。reset 后允许依赖它的纯 `sin` 同刻重算，不能跳过重新求解及验收 | [analog.rs](../../evas/rust_core/src/analog.rs)、[reset_dependencies.rs](../../evas/rust_core/src/reset_dependencies.rs)、[组合回归](../../evas/tests/test_gap_integration.py)、[实际 Frame 弃候选/重试](../../evas/rust_core/src/transient_idt_tests.rs) |
+
+整合没有另造一套算子执行器。统一 IR 的同时，扩展原有结构依赖图，让新算子中的
+复位反馈仍明确拒绝；不能通过 `sin`、局部别名或相消隐藏反馈环。
+同刻重算权限只沿实际改变且已获许可的 reset 算子依赖传播；每次仍从相同已接受历史
+重算全部候选值、区间、复位状态与电压方程。新增失败后弃候选/重试回归验证这一点。
+
+无状态入口现由 `Analog` 统一分流：仿射系统用已有电压误差映射，纯多项式用 Newton
+及其认证；添加无作用的普通条件不能绕过或额外禁用精度检查。缓存只保存同一分支的
+表达式/模型/电路结构，不缓存输入、解或物理历史；输出查询不增加 `accepted_steps`。
+
+### 新执行、复用与验收结果
+
+[完整 31 行矩阵](results/gap-completion-matrix.md)、[逐配置收据](results/gap-completion-current.json)
+和[开发检查收据](results/gap-completion-checks.json)分别记录行为条件、设置与检查方法。
+原 DUT、刺激、两档目标、检查器与分母未改。
+
+| 证据 | 基础档 | 细化档 | 使用方式 |
+| --- | ---: | ---: | --- |
+| analog 候选 `9c5d6c5` | 25/31 | 25/31 | 复用原收据作兼容基线 |
+| 联合候选 `39a4545` | **31/31** | **31/31** | 本轮 62 次新 EVAS 执行 |
+| Spectre 21.1.0.509.isr12 | 31/31 | 31/31 | 复用上一轮 62 次执行，核对输入/工具/设置/清单并重新判定全部导出波形 |
+
+首次联合矩阵在 `493c292` 已两档各 31/31；之后补入实际 reset→sin 回退测试、
+Clippy 等价改写与无状态步数语义修复，并在最终 `39a4545` **重新执行完整矩阵**。
+首次 Clippy 失败日志及开发期失败记录保留，不能把早期通过当成最终源码通过。
+
+最终检查：**362 Python、79 Rust** 回归通过；locked build、all-targets Clippy `-D warnings`
+与格式检查通过。独立设计数学、9 项动态数学及冻结资产身份检查也通过。
+另有静态回放 12 条件×两档、24 配置共 **528,024 静态点**通过；其余 19 条动态条件
+由该独立静态入口明确跳过，不是额外的瞬态矩阵失败或新增条件。
+
+执行内核 SHA256 为
+`d59822b07aad389df40559297a328639b484ba2e3512ada0009a7576078ca167`。
+原 checker SHA256 为
+`189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b`。
+收据绑定原输入清单、实际运行源码、内核、波形、请求与生效设置，
+[analyze.py](analyze.py)验证这些身份后调用原独立 checker；没有放宽阈值。
+
+### 支持边界与复现
+
+这次补齐的是原矩阵剩余条件所需的受限能力。高阶/动态系数滤波、积分输入反馈、
+动态算子驱动 cross、非线性与事件/历史的联合求解、任意函数/宏/数组仍未交付。
+普通 analog 条件的非线性分支叶仍拒绝；本轮非线性瞬态不含普通条件或动态状态。
+非点输入的多项式包围限定方形单来源分支系统；点输入目前使用原区间残差及名义
+Newton 验收，没有额外 root-box 前向误差证明。病态或一般多解系统不能由本轮成绩保证。
+
+正式 DVS 资格仍 **I**；有限观测、代码内认证和开发反例不等于全时域误差资格。
+原 31 条件已用于开发，后续应另冻未见确认集。本轮未测速度，也未新启动 Spectre。
+
+源码、数学契约、分析程序和整理结果在本地 Git 检查点；大波形、二进制、测试日志、
+失败记录及实际运行源码归档保存在 ignored 的
+`runs/gap-completion-20260930T165211Z-3154da/`，可用性为 **仅本地保留**。
+完整原始文件清单及哈希由开发检查收据链接；未上传，不称为公开复现数据包。
+
+取得收据绑定的原始目录后，可运行以下重分析（变量指向原始归档，输出使用新路径）：
+
+```sh
+python3 -B experiments/parallel-gap-integration/analyze.py \
+  --source "$spectre_inputs" --run "$matrix_run" --identity "$runtime_identity" \
+  --output "$new_analysis" --spectre "$spectre_exports" \
+  --baseline experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json \
+  --spectre-receipt experiments/pr14-pr15-validation/results/analog-gap-spectre-comparison.json
+```
+
+新执行时用 `experiments/pr14-pr15-validation/matrix.py evas --source INPUTS --root NEW_RUN --kernel KERNEL`；
+前端/运行时需切到收据固定源码并重新从 VA 编译 IR，使用新的目录与运行身份。
+分批审阅完成前，main 的已合并范围及历史成绩保持不变。
+
+## 以下为保留的历史复审
+
+以下段落保留各轮当时的基线、候选、失败与结论；当前联合状态以本节为准。
+
 主分支比较基线：`508f5b924360a48c66b569a1719157a883d1db9f`。
 本页记录 2026-09-30 的实际复审；候选仍在本地，未发布新 PR、合并 main 或发布 tag。
 原联合检查点及其 30/31 结果保留在 [README](README.md)，不将新专项结果改写为新联合成绩。
