@@ -27,11 +27,12 @@ mod idt_accepted_history_tests;
 #[path = "transient_condition_tests.rs"]
 mod condition_history_tests;
 
-fn prepare_event(
+fn prepare_event_with_bounds(
     model: &EventModel,
     trajectory: &Trajectory,
     accepted: &Frame,
     time: f64,
+    time_bounds: I,
     events: &[usize],
 ) -> Result<Frame, Error> {
     let mut operators = accepted.operators.clone();
@@ -42,7 +43,7 @@ fn prepare_event(
     } else {
         accepted.state_bounds.clone()
     };
-    operators.advance(time, &accepted.states, &old_bounds, &[])?;
+    operators.advance(time, time_bounds, &accepted.states, &old_bounds, &[])?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
@@ -53,13 +54,7 @@ fn prepare_event(
     } else {
         inputs.iter().copied().map(I::point).collect()
     };
-    let crate::settlement::Prepared {
-        states,
-        bounds: state_bounds,
-        circuit,
-        solution,
-        assigned,
-    } = crate::settlement::prepare(
+    let mut prepared = crate::settlement::prepare(
         model,
         events,
         (&inputs, &input_bounds),
@@ -68,34 +63,104 @@ fn prepare_event(
         &old_bounds,
         &operators.bounds(time)?,
     )?;
-    // Equal rounded inputs / equal interval endpoints do not prove that an
-    // uncertain state assignment left the exact operator target unchanged.
-    let changed: Vec<_> = assigned
-        .into_iter()
-        .filter(|&s| old_bounds[s] != state_bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
-        .collect();
-    operators.advance(time, &states, &state_bounds, &changed)?;
-    if operators.values(time)? != frozen {
-        return Err(Error::new(
-            "event_consistency",
-            "operator changed during same-time settlement",
-        ));
+    // Every provisional update starts from the same accepted-history base.
+    // A first reset trial must never become the history of the second solve.
+    let base = operators;
+    let advance_candidate = |prepared: &crate::settlement::Prepared| -> Result<Operators, Error> {
+        let changed: Vec<_> = prepared
+            .assigned
+            .iter()
+            .copied()
+            .filter(|&s| {
+                old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi
+            })
+            .collect();
+        let mut candidate = base.clone();
+        candidate.advance(
+            time,
+            time_bounds,
+            &prepared.states,
+            &prepared.bounds,
+            &changed,
+        )?;
+        Ok(candidate)
+    };
+    let mut operators = advance_candidate(&prepared)?;
+    let settled = operators.values(time)?;
+    let settled_bounds = operators.bounds(time)?;
+    // Equal representative values do not certify a changed history enclosure.
+    if settled != frozen || settled_bounds != base.bounds(time)? {
+        if !operators.permits_same_time_change(time, &frozen)? {
+            return Err(Error::new(
+                "event_consistency",
+                "operator changed during same-time settlement",
+            ));
+        }
+        prepared = crate::settlement::prepare(
+            model,
+            events,
+            (&inputs, &input_bounds),
+            &accepted.states,
+            &settled,
+            &old_bounds,
+            &settled_bounds,
+        )?;
+        let replay = advance_candidate(&prepared)?;
+        if !replay.same_reset_history(&operators)
+            || replay.values(time)? != settled
+            || replay.bounds(time)? != settled_bounds
+        {
+            return Err(Error::new(
+                "event_consistency",
+                "operator history changed during same-time settlement replay",
+            ));
+        }
+        operators = replay;
     }
     Ok(Frame {
         time,
-        states,
-        state_bounds,
-        solution,
-        circuit,
+        states: prepared.states,
+        state_bounds: prepared.bounds,
+        solution: prepared.solution,
+        circuit: prepared.circuit,
         operators,
     })
 }
 
+fn prepare_event(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    time: f64,
+    events: &[usize],
+) -> Result<Frame, Error> {
+    prepare_event_with_bounds(model, trajectory, accepted, time, I::point(time), events)
+}
+
+#[cfg(test)]
 fn prepare_batch(
     model: &EventModel,
     trajectory: &Trajectory,
     accepted: &Frame,
     event_time: f64,
+    ids: &[usize],
+) -> Result<(Frame, Vec<EventRecord>), Error> {
+    prepare_batch_with_bounds(
+        model,
+        trajectory,
+        accepted,
+        event_time,
+        I::point(event_time),
+        ids,
+    )
+}
+
+fn prepare_batch_with_bounds(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    event_time: f64,
+    event_bounds: I,
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     // Calendar IDs identify leaves; settlement IDs identify event bodies.
@@ -106,7 +171,14 @@ fn prepare_batch(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
-    let next = prepare_event(model, trajectory, accepted, event_time, &blocks)?;
+    let next = prepare_event_with_bounds(
+        model,
+        trajectory,
+        accepted,
+        event_time,
+        event_bounds,
+        &blocks,
+    )?;
     next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
     for id in blocks {
@@ -168,7 +240,16 @@ fn prepare_calendar_batch(
     scheduled: &[ScheduledEvent],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
-    let (next, mut records) = prepare_batch(model, trajectory, accepted, time, &ids)?;
+    let bounds =
+        scheduled
+            .iter()
+            .map(|event| event.bounds())
+            .fold(I::point(time), |sum, bounds| I {
+                lo: sum.lo.min(bounds.lo),
+                hi: sum.hi.max(bounds.hi),
+            });
+    let (next, mut records) =
+        prepare_batch_with_bounds(model, trajectory, accepted, time, bounds, &ids)?;
     for record in &mut records {
         for fired in &mut record.fired_triggers {
             let event = scheduled
@@ -355,14 +436,19 @@ mod tests {
         clamp: bool,
         gain: f64,
         tolerances: Tolerances,
+        reset: bool,
     ) -> (EventModel, Trajectory, Frame) {
         let (original, _, _) = fixture(clamp);
         let mut program = original.program;
-        program.operators = serde_json::from_value(serde_json::json!([{
+        let mut operator = serde_json::json!({
             "kind":"idt", "input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
             "ic":0, "origin":{"source":"rollback.va","line":3,"column":1,"instance":"dut"}
-        }]))
-        .unwrap();
+        });
+        if reset {
+            operator["ic"] = serde_json::json!(0.25);
+            operator["reset"] = serde_json::json!({"op":"state","state":0});
+        }
+        program.operators = serde_json::from_value(serde_json::json!([operator])).unwrap();
         program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
             "op":"multiply", "left":{"op":"affine","constant":-1,"terms":[]},
             "right":{"op":"add", "left":{"op":"state","state":0},
@@ -428,6 +514,7 @@ mod tests {
                 absolute: 1e-10,
                 relative: 0.0,
             },
+            false,
         );
         let bounds = before.operators.bounds(1.0).unwrap();
         for _ in 0..2 {
@@ -457,7 +544,7 @@ mod tests {
     #[test]
     fn idt_residual_failure_and_successful_discard_never_change_accepted_history() {
         for clamp in [false, true] {
-            let (model, trajectory, before) = idt_fixture(clamp, 1.0, Tolerances::default());
+            let (model, trajectory, before) = idt_fixture(clamp, 1.0, Tolerances::default(), false);
             let bounds = before.operators.bounds(1.0).unwrap();
             for _ in 0..2 {
                 let trial = prepare_batch(&model, &trajectory, &before, 1.0, &[0]);
@@ -475,8 +562,101 @@ mod tests {
     }
 
     #[test]
+    fn reset_release_bounds_are_checked_even_when_value_is_unchanged() {
+        let (original, trajectory, _) = idt_fixture(false, 1.0, Tolerances::default(), true);
+        let mut program = original.program;
+        program.states[0].initial = 1.0;
+        program.events[0].body = serde_json::from_value(serde_json::json!([
+            {"kind":"assign","state":0,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]))
+        .unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let initial = Frame {
+            time: 0.0,
+            state_bounds: vec![I::ONE],
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        let accepted = prepare_event(&model, &trajectory, &initial, 0.5, &[]).unwrap();
+        let bounds = accepted.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_batch_with_bounds(
+                &model,
+                &trajectory,
+                &accepted,
+                1.0,
+                I {
+                    lo: 1.0f64.next_down(),
+                    hi: 1.0f64.next_up(),
+                },
+                &[0],
+            )
+            .err()
+            .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_eq!(accepted.time, 0.5);
+            assert_eq!(accepted.states, [1.0]);
+            assert_eq!(accepted.state_bounds, [I::ONE]);
+            assert_eq!(accepted.operators.bounds(1.0).unwrap(), bounds);
+            assert_eq!(accepted.operators.values(2.0).unwrap(), [0.25]);
+        }
+        // Exact release has zero-length integral. The failed uncertain trials
+        // must not prevent the same accepted frame from succeeding on retry.
+        let (retry, records) = prepare_batch(&model, &trajectory, &accepted, 1.0, &[0]).unwrap();
+        assert_eq!(records.len(), 1);
+        assert_eq!(retry.states, [0.0]);
+        assert_eq!(retry.solution.voltages[2], 0.25);
+        assert_eq!(retry.operators.bounds(1.0).unwrap(), [I::point(0.25)]);
+        // u(t)=t/3: integral from 1 to 3/2 is 5/24, plus IC=1/4.
+        assert!((retry.operators.values(1.5).unwrap()[0] - 11.0 / 24.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn idt_reset_same_time_resolve_and_discard_do_not_commit_candidate() {
+        let (model, trajectory, before) = idt_fixture(false, 1.0, Tolerances::default(), true);
+        assert_eq!(before.states, [0.0]);
+        assert_eq!(before.operators.values(1.0).unwrap(), [0.25 + 1.0 / 6.0]);
+        let before_bounds = before.operators.bounds(1.0).unwrap();
+        let (discarded, records) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(records.len(), 1);
+        assert_eq!(discarded.states, [1.0]);
+        assert_eq!(discarded.operators.values(1.0).unwrap(), [0.25]);
+        drop(discarded);
+        assert_eq!(before.time, 0.0);
+        assert_eq!(before.states, [0.0]);
+        assert_eq!(before.state_bounds, [I::ZERO]);
+        assert_eq!(before.operators.values(1.0).unwrap(), [0.25 + 1.0 / 6.0]);
+        assert_eq!(before.operators.bounds(1.0).unwrap(), before_bounds);
+
+        let (next, records) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(records.len(), 1);
+        assert_eq!(next.states, [1.0]);
+        assert_eq!(next.operators.values(1.0).unwrap(), [0.25]);
+        assert_eq!(next.solution.voltages[2], 1.25);
+        let (held, _) = prepare_batch(&model, &trajectory, &next, 2.0, &[0]).unwrap();
+        assert_eq!(held.states, [2.0]);
+        assert_eq!(held.operators.values(2.0).unwrap(), [0.25]);
+    }
+
+    #[test]
     fn idt_corrected_input_definition_retries_same_time_with_cached_certificate() {
-        let (model, trajectory, before) = idt_fixture(false, 1.0, Tolerances::default());
+        let (model, trajectory, before) = idt_fixture(false, 1.0, Tolerances::default(), false);
         let bounds = before.operators.bounds(1.0).unwrap();
         let (first, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
         assert_eq!(first.solution.voltages[2], 1.0 + 1.0 / 6.0);

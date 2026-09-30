@@ -71,8 +71,8 @@ class ParameterContracts(unittest.TestCase):
 
 
 def wire_request():
-    """Independent v8 request: V(r)-V(y)=-2, with r bound to ground."""
-    return dict(program=dict(schema_version=9, nodes=["0", "y"], contributions=[dict(
+    """Independent v11 request: V(r)-V(y)=-2, with r bound to ground."""
+    return dict(program=dict(schema_version=11, nodes=["0", "y"], contributions=[dict(
         branch=dict(instance="dut", local_positive="r", local_negative="y", kind="voltage"),
         positive=0, negative=1, rhs=dict(op="affine", constant=-2, terms=[]),
         origin=dict(source="wire.va", line=1, column=1, instance="dut"))]), driven=[], samples=[[]])
@@ -90,13 +90,13 @@ class BranchContracts(unittest.TestCase):
             return detail
         self.assertEqual(result.returncode, 0, result.stderr)
         response = json.loads(result.stdout)
-        self.assertEqual(response["schema_version"], 9)
+        self.assertEqual(response["schema_version"], 11)
         return response
 
     def test_compiler_preserves_local_identity_and_reversed_contributions(self):
         source = model("V(y,r)<+1; V(r,y)<+-2;")
         program = compile_sources({"branch.va": source}, [instance()]).to_dict()
-        self.assertEqual(program["schema_version"], 9)
+        self.assertEqual(program["schema_version"], 11)
         for contribution in program["contributions"]:
             self.assertEqual(contribution["branch"], dict(
                 instance="dut", local_positive="r", local_negative="y", kind="voltage"))

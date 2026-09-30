@@ -1,8 +1,11 @@
 # EVAS
 
-当前 main 为 **EVAS 0.9.0，IR v9**：稠密/稀疏混合的静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`，以及显式常量初值的受限 `idt`。尚未替换旧 EVAS 0.8.7。
+当前 main 为 **EVAS 0.9.0，IR v11**：稠密/稀疏混合的静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`，以及显式常量初值的受限 `idt`。尚未替换旧 EVAS 0.8.7。
 
-0.9.0 支持 `cross` / 固定 `timer` 事件体的受限 `if/else` 及仅 cross 的事件 OR，以及选支、采样与状态历史的区间认证。旧 IR v1–v8 必须从原始 VA 重新编译；尚未发布版本 tag。
+本检查点在 PR25 之上补 `idt(u,ic,reset)`：复位保持/释放、结构复位反馈环拒绝及候选历史认证。
+Python/Rust 使用 **IR v11**，旧 IR 须从原始 VA 重新编译。
+
+0.9.0 支持 `cross` / 固定 `timer` 事件体的受限 `if/else` 及仅 cross 的事件 OR，以及选支、采样与状态历史的区间认证。旧 IR v1–v10 必须从原始 VA 重新编译；尚未发布版本 tag。
 数学、实现和限制见[事件条件说明](docs/EVENTS.md#event-conditions)；复合 `cross` 的叶子定位与同块去重见[OR 说明](docs/EVENTS.md#event-or)。
 main 与历史证据的身份见[能力表](docs/CAPABILITIES.md)。
 
@@ -210,13 +213,13 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-Python 前端与 Rust 内核使用 IR v9；旧 IR 应从原始 VA 重新编译。v9 在有类型的事件 body 之上增加一块多个 cross 叶子的 OR trigger。
+当前 Python 前端与 Rust 内核使用 IR v11；旧 IR 应从原始 VA 重新编译。历史 v9 在有类型的事件 body 之上增加一块多个 cross 叶子的 OR trigger。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；表达式、事件与算子使用 IR v9，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前表达式、事件与算子使用 IR v11，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 已有性能检查仅覆盖对应旧检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量；0.7.1 未重新计时。
@@ -272,8 +275,10 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 
 瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
-每个调用点独立，历史误差参与电压验收。缺省初值、复位、内部节点/状态输入、嵌套、积分反馈和
-积分输出驱动 cross 仍拒绝；数学与限制见[算子手册](docs/OPERATORS.md#idt)。
+另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
+须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
+缺省初值、内部节点/状态积分输入、嵌套、积分反馈和积分输出驱动 cross 仍拒绝；
+数学与限制见[算子手册](docs/OPERATORS.md#idt)，本轮合并前对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 
 事件体条件的精度和支持边界见[事件手册](docs/EVENTS.md#event-conditions)。
 当前拒绝事件块之外的过程赋值、条件、循环、层次实例、数组、命名支路、电流贡献、
@@ -303,7 +308,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 ## IR 与贡献契约
 
-IR v9 保留每条贡献，其 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前使用 IR v11，延续 v9 的逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`。Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
@@ -336,9 +341,11 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 <a id="ir-v8-migration"></a>
 
-### v1–v8 → v9 迁移
+### 历史迁移：v1–v8 → v9
 
-Python 包与 Rust 内核一起升级到 0.9.0；Program 和成功 Response 的
+以下描述已合并的 v9 检查点。当前 Program 和 Response 使用 v11，旧 JSON 必须从原始 VA 与 manifest 重新编译，不能只改版本号。
+
+在 v9 检查点，Python 包与 Rust 内核一起升级到 0.9.0；Program 和成功 Response 的
 `schema_version` 均为 9。Python 适配器拒绝其他响应版本。
 内核 CLI 在解码贡献字段前检查整数版本号：v1–v8 或未知版本返回
 `unsupported_ir_version`；缺失/错误类型及 v9 格式错误返回 `invalid_request`。

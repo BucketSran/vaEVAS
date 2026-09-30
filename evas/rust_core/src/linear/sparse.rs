@@ -57,7 +57,7 @@ impl Factorization {
         let mut upper: Vec<Row> = Vec::with_capacity(columns);
         let mut diagonal = Vec::with_capacity(columns);
         let threshold = 64.0 * f64::EPSILON * columns.max(1) as f64;
-        for step in 0..columns {
+        for (step, lower_column) in lower.iter_mut().enumerate() {
             let (column, mut candidates) = active.take_next();
             let pivot = candidates
                 .iter()
@@ -98,7 +98,7 @@ impl Factorization {
             for id in candidates {
                 let multiplier = rows[id].remove(&column).unwrap() / pivot_value;
                 if multiplier != 0.0 {
-                    lower[step].push((id, multiplier));
+                    lower_column.push((id, multiplier));
                 }
                 for &(k, value) in &pivot_row {
                     let updated = rows[id].get(&k).copied().unwrap_or(0.0) - multiplier * value;
