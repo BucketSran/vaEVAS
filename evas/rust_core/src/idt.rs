@@ -19,6 +19,15 @@ struct Knot {
 #[derive(Clone)]
 pub(crate) struct Idt {
     knots: Arc<[Knot]>,
+    ic: f64,
+    reset: Option<ResetState>,
+}
+
+#[derive(Clone)]
+struct ResetState {
+    active: bool,
+    release_time: f64,
+    release_bounds: I,
 }
 
 impl Idt {
@@ -77,7 +86,52 @@ impl Idt {
         }
         Ok(Self {
             knots: knots.into(),
+            ic,
+            reset: None,
         })
+    }
+
+    pub(crate) fn with_reset(mut self, active: bool) -> Self {
+        self.reset = Some(ResetState {
+            active,
+            release_time: 0.0,
+            release_bounds: I::ZERO,
+        });
+        self
+    }
+
+    pub(crate) fn advance_reset(
+        &mut self,
+        time: f64,
+        time_bounds: I,
+        active: bool,
+    ) -> Result<(), Error> {
+        self.index(time)?;
+        if !time_bounds.finite() || time_bounds.lo > time_bounds.hi {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid idt reset time bounds",
+            ));
+        }
+        self.index(time_bounds.lo)?;
+        self.index(time_bounds.hi)?;
+        let Some(reset) = &mut self.reset else {
+            return Ok(());
+        };
+        if reset.active && !active {
+            reset.release_time = time;
+            reset.release_bounds = time_bounds;
+        }
+        reset.active = active;
+        Ok(())
+    }
+
+    pub(crate) fn reset_active(&self) -> bool {
+        self.reset.as_ref().is_some_and(|reset| reset.active)
+    }
+
+    pub(crate) fn ic(&self) -> f64 {
+        self.ic
     }
 
     fn index(&self, time: f64) -> Result<usize, Error> {
@@ -90,7 +144,7 @@ impl Idt {
         Ok(self.knots.partition_point(|k| k.time < time))
     }
 
-    pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+    fn prefix_value(&self, time: f64) -> Result<f64, Error> {
         let index = self.index(time)?;
         let end = &self.knots[index];
         if time == end.time {
@@ -109,7 +163,7 @@ impl Idt {
         Ok(value)
     }
 
-    pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+    fn prefix_bounds(&self, time: f64) -> Result<I, Error> {
         let index = self.index(time)?;
         let end = &self.knots[index];
         if time == end.time {
@@ -128,6 +182,76 @@ impl Idt {
             ));
         }
         Ok(bound)
+    }
+
+    fn prefix_range(&self, times: I) -> Result<I, Error> {
+        self.index(times.lo)?;
+        self.index(times.hi)?;
+        let left_bound = self.prefix_bounds(times.lo)?;
+        let right_bound = self.prefix_bounds(times.hi)?;
+        let mut lo = left_bound.lo.min(right_bound.lo);
+        let mut hi = left_bound.hi.max(right_bound.hi);
+        for pair in self.knots.windows(2) {
+            let (start, end) = (&pair[0], &pair[1]);
+            let left = times.lo.max(start.time);
+            let right = times.hi.min(end.time);
+            if left > right {
+                continue;
+            }
+            if start.input == 0.0 && (left..=right).contains(&start.time) {
+                let value = start.integral_bounds;
+                lo = lo.min(value.lo);
+                hi = hi.max(value.hi);
+            }
+            if start.input != end.input {
+                let zero =
+                    start.time - start.input * (end.time - start.time) / (end.input - start.input);
+                if (left..=right).contains(&zero) {
+                    let value = self.prefix_bounds(zero)?;
+                    lo = lo.min(value.lo);
+                    hi = hi.max(value.hi);
+                }
+            }
+        }
+        Ok(I {
+            lo: lo.next_down(),
+            hi: hi.next_up(),
+        })
+    }
+
+    pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+        if let Some(reset) = &self.reset {
+            if reset.active {
+                self.index(time)?;
+                return Ok(self.ic);
+            }
+            let value =
+                self.ic + self.prefix_value(time)? - self.prefix_value(reset.release_time)?;
+            if !value.is_finite() {
+                return Err(Error::new("numerical_failure", "nonfinite idt query"));
+            }
+            return Ok(value);
+        }
+        self.prefix_value(time)
+    }
+
+    pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+        if let Some(reset) = &self.reset {
+            if reset.active {
+                self.index(time)?;
+                return Ok(I::point(self.ic));
+            }
+            let bound = I::point(self.ic) + self.prefix_bounds(time)?
+                - self.prefix_range(reset.release_bounds)?;
+            if !bound.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite idt query enclosure",
+                ));
+            }
+            return Ok(bound);
+        }
+        self.prefix_bounds(time)
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {

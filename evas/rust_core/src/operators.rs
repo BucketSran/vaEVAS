@@ -72,7 +72,10 @@ fn direct_points(
 
 #[derive(Clone)]
 enum Runtime {
-    Idt(Idt),
+    Idt {
+        history: Idt,
+        reset: Option<AffineState>,
+    },
     AbsDelay(AbsDelay),
     Transition {
         input: AffineState,
@@ -119,10 +122,38 @@ impl Operators {
                 ));
             }
             match spec {
-                OperatorSpec::Idt { input, ic, origin } => {
+                OperatorSpec::Idt {
+                    input,
+                    ic,
+                    reset,
+                    origin,
+                } => {
                     let (points, bounds) =
                         direct_points(input, program, trajectory, driven, origin)?;
-                    entries.push(Runtime::Idt(Idt::enclosed(points, bounds, *ic)?));
+                    let reset = reset
+                        .as_ref()
+                        .map(|expr| {
+                            let reset = affine(expr, program, &origin.instance)?;
+                            if !reset.node_dependencies.is_empty()
+                                || !reset.operator_dependencies.is_empty()
+                            {
+                                return Err(Error::new(
+                                    "unsupported_operator",
+                                    format!(
+                                        "idt reset must be affine in instance state and constants at {}",
+                                        origin.label()
+                                    ),
+                                ));
+                            }
+                            Ok(reset)
+                        })
+                        .transpose()?;
+                    let mut history = Idt::enclosed(points, bounds, *ic)?;
+                    if let Some(reset) = &reset {
+                        let value = reset.value(&[], states)?;
+                        history = history.with_reset(reset_active(I::point(value))?);
+                    }
+                    entries.push(Runtime::Idt { history, reset });
                 }
                 OperatorSpec::AbsDelay {
                     input,
@@ -187,7 +218,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
-                Runtime::Idt(history) => history.value(time),
+                Runtime::Idt { history, .. } => history.value(time),
                 Runtime::AbsDelay(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
                 Runtime::Slew(history) => history.value(time),
@@ -199,7 +230,7 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
-                Runtime::Idt(history) => history.next_breakpoint(after),
+                Runtime::Idt { history, .. } => history.next_breakpoint(after),
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
                 Runtime::Slew(history) => history.next_breakpoint(after),
@@ -211,7 +242,7 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
-                Runtime::Idt(history) => history.value_bounds(time),
+                Runtime::Idt { history, .. } => history.value_bounds(time),
                 Runtime::Slew(history) => Ok(history.value_bounds(time)),
                 Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
                 Runtime::Transition { history, .. } => history.value_bounds(time),
@@ -228,7 +259,7 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
-                Runtime::Idt(_) => Vec::new(),
+                Runtime::Idt { .. } => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
                 Runtime::Slew(_) => Vec::new(),
@@ -258,13 +289,19 @@ impl Operators {
     pub(crate) fn advance(
         &mut self,
         time: f64,
+        time_bounds: I,
         states: &[f64],
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
-                Runtime::Idt(_) => {}
+                Runtime::Idt { history, reset } => {
+                    if let Some(reset) = reset {
+                        let bounds = reset.bounds_with(&[], bounds, &[])?;
+                        history.advance_reset(time, time_bounds, reset_active(bounds)?)?;
+                    }
+                }
                 Runtime::AbsDelay(_) => {}
                 Runtime::Transition {
                     input,
@@ -282,5 +319,45 @@ impl Operators {
             }
         }
         Ok(())
+    }
+
+    pub(crate) fn permits_same_time_change(
+        &self,
+        time: f64,
+        previous: &[f64],
+    ) -> Result<bool, Error> {
+        if previous.len() != self.entries.len() {
+            return Ok(false);
+        }
+        for (entry, &before) in self.entries.iter().zip(previous) {
+            let after = match entry {
+                Runtime::Idt { history, .. } => history.value(time)?,
+                Runtime::AbsDelay(history) => history.value(time)?,
+                Runtime::Transition { history, .. } => history.value(time)?,
+                Runtime::Slew(history) => history.value(time)?,
+            };
+            if after == before {
+                continue;
+            }
+            match entry {
+                Runtime::Idt {
+                    history,
+                    reset: Some(_),
+                } if history.reset_active() && after == history.ic() => {}
+                _ => return Ok(false),
+            }
+        }
+        Ok(true)
+    }
+}
+
+fn reset_active(value: I) -> Result<bool, Error> {
+    match value.sign() {
+        Some(0) => Ok(false),
+        Some(_) => Ok(true),
+        None => Err(Error::new(
+            "unsupported_operator",
+            "cannot certify idt reset as zero or nonzero",
+        )),
     }
 }

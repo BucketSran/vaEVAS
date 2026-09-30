@@ -83,6 +83,38 @@ impl AffineState {
         Ok(value)
     }
 
+    pub(crate) fn bounds_with(
+        &self,
+        nodes: &[I],
+        states: &[I],
+        operators: &[I],
+    ) -> Result<I, Error> {
+        let value = self
+            .nodes
+            .iter()
+            .zip(nodes)
+            .fold(I::point(self.constant), |sum, (&a, &v)| {
+                sum + I::point(a) * v
+            });
+        let value = self
+            .states
+            .iter()
+            .zip(states)
+            .fold(value, |sum, (&a, &v)| sum + I::point(a) * v);
+        let value = self
+            .operators
+            .iter()
+            .zip(operators)
+            .fold(value, |sum, (&a, &v)| sum + I::point(a) * v);
+        if !value.finite() {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite event expression bounds",
+            ));
+        }
+        Ok(value)
+    }
+
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Expression, Error> {
         Ok(Expression::Affine {
             constant: self.value_with(&[], states, operators)?,

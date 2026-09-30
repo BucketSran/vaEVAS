@@ -77,6 +77,38 @@ class IdtContracts(unittest.TestCase):
         result = execute(compiled('V(y,r)<+idt(2,0);'))
         self.assertEqual(values(result), [2*t for t in result['transient']['times']])
 
+    def test_level_reset_holds_ic_and_releases_from_reset_time(self):
+        body = """
+          @(initial_step) reset=1;
+          @(timer(1,1,1e-15)) reset=1-reset;
+          V(y,r)<+idt(V(u,r),0.25,reset);
+        """
+        program = compiled(body, 'real reset;')
+        times = [0, 1, 1.5, 2, 3, 3.5, 4, 5]
+        expected = [0.25, 0.25, 1.25, 0.25, 0.25, 1.25, 0.25, 0.25]
+        for step in [10, 0.125]:
+            result = execute(program, [[0, 2], [5, 2]], times, step)
+            self.assertEqual(values(result), expected)
+            self.assertEqual(
+                [(event['time'], event['after']) for event in result['transient']['events']],
+                [(1.0, [0.0]), (2.0, [1.0]), (3.0, [0.0]), (4.0, [1.0]), (5.0, [0.0])],
+            )
+
+    def test_reset_idt_and_transition_share_event_state(self):
+        body = """
+          @(initial_step) flag=0;
+          @(timer(1,1,1e-15)) flag=1-flag;
+          V(y,r)<+idt(V(u,r),0.25,flag);
+          V(q,r)<+transition(flag,0,0.25,0.25);
+        """
+        source = model(body, 'real flag;', ports='u,y,q,r', directions='input u; output y,q; inout r;')
+        program = compile_sources({'idt.va': source}, [instance(connections=dict(u='u', y='y', q='q', r='r'))])
+        times = [0, 1, 1.125, 1.25, 2, 2.125, 2.25]
+        result = transient(program, {'u': [[0, 1], [3, 1]], 'r': [[0, 0], [3, 0]]},
+                           times, stop=3, max_step=10, kernel=KERNEL)
+        self.assertEqual(values(result, 'y'), [0.25, 0.25, 0.25, 0.25, 0.25, 0.375, 0.5])
+        self.assertEqual(values(result, 'q'), [0, 0, 0.5, 1, 1, 0.5, 0])
+
     def test_output_grid_and_max_step_do_not_accumulate_history(self):
         sparse = [0, 1, 2, 3, 4, 5, 6, 8]
         dense = [i/16 for i in range(129)]
@@ -112,9 +144,10 @@ class IdtContracts(unittest.TestCase):
             self.assertEqual(values(execute(program, points, [0, 1, 2])), expected)
 
     def test_explicit_finite_constant_ic_and_arity(self):
-        for call in ['idt(V(u,r))', 'idt(V(u,r),0,0)', 'idt(V(u,r),0,0,1e-9)',
+        for call in ['idt(V(u,r))', 'idt(V(u,r),0,0,1e-9)',
                      'idt(V(u,r),V(u,r))', 'idt(V(u,r),q)', 'idt(V(u,r),1e999)',
-                     'idt(V(u,r),1e308*10)']:
+                     'idt(V(u,r),1e308*10)', 'idt(V(u,r),0,V(u,r))',
+                     'idt(V(u,r),0,idt(V(u,r),0))']:
             with self.subTest(call=call), self.assertRaises(CompileError):
                 compiled('@(initial_step) q=0; V(y,r)<+'+call+';', 'real q;')
 
@@ -176,7 +209,7 @@ class IdtContracts(unittest.TestCase):
 
     def test_raw_ir_rejects_bad_version_fields_and_dependencies(self):
         good = compiled().to_dict()
-        self.assertEqual(good['schema_version'], 9)
+        self.assertEqual(good['schema_version'], 11)
         mutations = []
         for key, value in [('ic', None), ('ic', '0'), ('reset', 0), ('ic', float('inf'))]:
             bad = copy.deepcopy(good)

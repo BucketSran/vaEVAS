@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 11
 
 
 @dataclass(frozen=True)
@@ -94,6 +94,7 @@ class Idt:
     input: Expression
     ic: float
     origin: Origin
+    reset: Expression | None = None
     kind: str = field(default="idt", init=False)
 
 

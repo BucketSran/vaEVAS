@@ -236,7 +236,8 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
 0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
-状态反馈谓词、通用非线性谓词、多块写同一状态、普通 analog if 和 idt reset 仍不支持。区间传播会增加运算和存储，
+状态反馈谓词、通用非线性谓词、多块写同一状态、普通 analog if 和 main 上的 idt reset 仍不支持；
+`feat/evas-idt-reset` 分支正在以状态 reset 的限定形式补齐。区间传播会增加运算和存储，
 丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
