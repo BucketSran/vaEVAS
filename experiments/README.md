@@ -52,6 +52,9 @@ PR25 基线 `6df7f48` 两档各 22/31，原达标的 44 份 CSV 逐字节一致�
 相对 analog 基线各 25/31 新增六条，原达标 50 份 CSV 不变；上一轮 Spectre 62 次结果
 重新核验后也各 31/31，没有新远端执行。[矩阵](parallel-gap-integration/results/gap-completion-matrix.md)
 及[检查收据](parallel-gap-integration/results/gap-completion-checks.json)保留来源和限制；正式资格 I。
+最新本地[精度链修复](parallel-gap-integration/REVIEW.md#precision-chain)固定运行时 `d451605`，
+统一点输入根盒与无条件采样误差传播；新原矩阵两档各 31/31、62 份 CSV 与 `ddfd379` 不变，
+[新收据](parallel-gap-integration/results/precision-chain-matrix.json)单独绑定执行身份。未新增 Spectre 执行或合入 main。
 
 以下入口保留各自冻结身份，旧结果不替代当前源码的新执行，也不构成最新版本的配对性能比较。
 
