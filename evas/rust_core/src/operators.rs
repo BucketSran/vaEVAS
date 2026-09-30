@@ -555,6 +555,20 @@ impl Operators {
         Ok(())
     }
 
+    pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        self.entries.len() == other.entries.len()
+            && self
+                .entries
+                .iter()
+                .zip(&other.entries)
+                .all(|(a, b)| match (a, b) {
+                    (Runtime::Idt { history: a, .. }, Runtime::Idt { history: b, .. }) => {
+                        a.same_reset_history(b)
+                    }
+                    _ => true,
+                })
+    }
+
     pub(crate) fn permits_same_time_change(
         &self,
         time: f64,

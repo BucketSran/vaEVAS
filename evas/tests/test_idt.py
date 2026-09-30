@@ -109,6 +109,50 @@ class IdtContracts(unittest.TestCase):
         self.assertEqual(values(result, 'y'), [0.25, 0.25, 0.25, 0.25, 0.25, 0.375, 0.5])
         self.assertEqual(values(result, 'q'), [0, 0, 0.5, 1, 1, 0.5, 0])
 
+    def test_reset_feedback_is_rejected_instead_of_selecting_a_trial_history(self):
+        # At t=1, the unreset integral is 1 and IC is 0. q=y has no fixed
+        # point; q=1-y has two. Numerical stability cannot select a history.
+        cases = [
+            ('no_solution', 'q=V(y,r);', ''),
+            ('two_solutions', 'q=1-V(y,r);', ''),
+            ('relay', 'q=V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('cancelled_relay', 'q=V(z,r)-V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('zero_relay', 'q=0*V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('local_state_relay', 'a=V(y,r); q=a;', ''),
+        ]
+        for name, assignments, relay in cases:
+            body = ('@(initial_step) begin q=0; a=0; end '
+                    f'@(timer(1,0,1e-12)) begin {assignments} end '
+                    'V(y,r)<+idt(1,0,q);' + relay)
+            with self.subTest(case=name), self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+                execute(compiled(body, 'real q,a;' + (' electrical z;' if relay else '')),
+                        [[0,0],[2,0]], [0,.5,1,1.5,2], 2)
+
+    def test_raw_ir_reset_feedback_is_rejected(self):
+        good = compiled('''@(initial_step) q=0;
+            @(timer(1,0,1e-12)) q=0;
+            V(y,r)<+idt(1,0,q);''', 'real q;').to_dict()
+        good['events'][0]['body'][0]['rhs'] = {
+            'op': 'affine', 'constant': 0,
+            'terms': [{'node': good['nodes'].index('y'), 'coefficient': 1}],
+        }
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0,0],[2,0]]], output_times=[0,1,2],
+                                      stop=2, max_step=2))
+        result = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                capture_output=True, check=False)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('unsupported_operator', result.stderr)
+
+    def test_post_reset_sampling_without_feedback_remains_supported(self):
+        body = '''@(initial_step) begin flag=0; held=0; end
+            @(timer(1,0,1e-12)) begin flag=1; held=V(z,r); end
+            V(z,r)<+idt(1,0,flag); V(y,r)<+held;'''
+        result = execute(compiled(body, 'integer flag; real held; electrical z;'),
+                         [[0,0],[2,0]], [0,.5,1,1.5,2], 2)
+        self.assertEqual(values(result), [0,0,0,0,0])
+        self.assertEqual(values(result, 'dut:z'), [0,.5,0,0,0])
+
     def test_reset_expression_is_certified_from_original_structure(self):
         body = """
           @(initial_step) q=1;

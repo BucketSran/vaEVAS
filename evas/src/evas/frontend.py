@@ -172,7 +172,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     else:
                         if statement.name not in state_ids:
                             raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
-                        value = lower(statement.rhs, symbol, node_ids, model.source)
+                        # Reset feedback checks need voltage dependencies even
+                        # when a coefficient cancels or underflows to zero.
+                        value = lower(statement.rhs, symbol, node_ids, model.source, preserve_structure=True)
                         if model.variables[statement.name] == "integer" and not integral(value):
                             raise CompileError("integer assignment requires integral state arithmetic")
                         result.append(Assignment(state_ids[statement.name], value))

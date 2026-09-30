@@ -23,7 +23,7 @@ pub(crate) struct Idt {
     reset: Option<ResetState>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 struct ResetState {
     active: bool,
     release_time: f64,
@@ -130,6 +130,10 @@ impl Idt {
         self.reset.as_ref().is_some_and(|reset| reset.active)
     }
 
+    pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        self.reset == other.reset
+    }
+
     pub(crate) fn ic(&self) -> f64 {
         self.ic
     }
@@ -226,7 +230,7 @@ impl Idt {
 
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
         if let Some(reset) = &self.reset {
-            if reset.active {
+            if reset.active || time == reset.release_time {
                 self.index(time)?;
                 return Ok(self.ic);
             }
@@ -242,7 +246,11 @@ impl Idt {
 
     pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
         if let Some(reset) = &self.reset {
-            if reset.active {
+            // At an exact release instant the integral has zero length, even
+            // when the input or its prefix integral is uncertain.
+            if reset.active
+                || (time == reset.release_time && reset.release_bounds == I::point(time))
+            {
                 self.index(time)?;
                 return Ok(I::point(self.ic));
             }
@@ -314,6 +322,20 @@ mod tests {
         let fractional = history(vec![(0.0, 0.0), (3.0, 1.0)], 0.0);
         let bound = fractional.value_bounds(1.0).unwrap();
         assert!(bound.lo < 1.0 / 6.0 && bound.hi > 1.0 / 6.0);
+    }
+
+    #[test]
+    fn equal_release_values_do_not_prove_same_reset_history() {
+        let accepted = Idt::enclosed(vec![(0.0, 1.0), (2.0, 1.0)], vec![I::ONE, I::ONE], 0.25)
+            .unwrap()
+            .with_reset(true);
+        let mut released = accepted.clone();
+        released.advance_reset(1.0, I::ONE, false).unwrap();
+        assert_eq!(accepted.value(1.0).unwrap(), released.value(1.0).unwrap());
+        assert!(!accepted.same_reset_history(&released));
+        assert_eq!(released.value_bounds(1.0).unwrap(), I::point(0.25));
+        assert_eq!(accepted.value(2.0).unwrap(), 0.25);
+        assert_eq!(released.value(2.0).unwrap(), 1.25);
     }
 
     #[test]

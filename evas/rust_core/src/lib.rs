@@ -12,6 +12,7 @@ mod linear;
 mod nonlinear;
 mod operators;
 mod pwl;
+mod reset_dependencies;
 mod schedule;
 mod settlement;
 mod settlement_bounds;
