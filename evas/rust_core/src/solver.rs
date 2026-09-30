@@ -247,12 +247,8 @@ impl Circuit {
         self.equations
             .iter()
             .map(|eq| {
-                let mut residual =
-                    values[eq.positive] - values[eq.negative] - I::point(eq.rhs_constant);
-                for &(node, coefficient) in &eq.rhs_terms {
-                    residual = residual - I::point(coefficient) * values[node];
-                }
-                for expr in &eq.nonlinear {
+                let mut residual = values[eq.positive] - values[eq.negative];
+                for expr in &eq.original_rhs {
                     residual = residual
                         - interval_expression(expr, values).map_err(|mut error| {
                             error
@@ -277,12 +273,7 @@ impl Circuit {
                 if let Some(column) = self.unknown_columns[eq.negative] {
                     row[column] = row[column] - I::ONE;
                 }
-                for &(node, coefficient) in &eq.rhs_terms {
-                    if let Some(column) = self.unknown_columns[node] {
-                        row[column] = row[column] - I::point(coefficient);
-                    }
-                }
-                for expr in &eq.nonlinear {
+                for expr in &eq.original_rhs {
                     for (node, derivative) in interval_evaluate(expr, values)
                         .map_err(|mut error| {
                             error
@@ -424,10 +415,7 @@ impl Circuit {
                 ));
             }
             box_values[node] = I { lo, hi };
-            deltas.push(I {
-                lo: lo - center,
-                hi: hi - center,
-            });
+            deltas.push(I { lo, hi } - I::point(center));
         }
         let jacobian = self.waveform_jacobian_rows(solution)?;
         let factor = linear::Factorization::new(jacobian, n).map_err(|error| {
@@ -471,22 +459,22 @@ impl Circuit {
                 correction = correction + I::point(preconditioner[j][i]) * residuals[i];
             }
             let mut image = I::point(solution.voltages[self.unknown[j]]) - correction;
-            let mut row_norm = 0.0_f64;
+            let mut row_norm = I::ZERO;
             for k in 0..n {
                 let mut entry = if j == k { I::ONE } else { I::ZERO };
                 for i in 0..n {
                     entry = entry - I::point(preconditioner[j][i]) * interval_jacobian[i][k];
                 }
-                row_norm += entry.magnitude();
+                row_norm = row_norm + I::point(entry.magnitude());
                 image = image + entry * deltas[k];
             }
-            if !row_norm.is_finite() || !image.finite() {
+            if !row_norm.finite() || !image.finite() {
                 return Err(Error::new(
                     "waveform_accuracy",
                     "nonfinite Krawczyk waveform image",
                 ));
             }
-            max_norm = max_norm.max(row_norm);
+            max_norm = max_norm.max(row_norm.hi);
             krawczyk[j] = image;
         }
         if !(max_norm < 1.0) {

@@ -1,7 +1,5 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
 use crate::ir::{Error, Expression};
-use std::collections::BTreeSet;
-
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
         Expression::State { .. } | Expression::Operator { .. } => {
@@ -11,15 +9,14 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
             ))
         }
         Expression::Affine { constant, terms } => {
-            let mut seen = BTreeSet::new();
             if !constant.is_finite()
                 || terms
                     .iter()
-                    .any(|t| t.node >= count || !t.coefficient.is_finite() || !seen.insert(t.node))
+                    .any(|t| t.node >= count || !t.coefficient.is_finite())
             {
                 return Err(Error::new(
                     "invalid_ir",
-                    "invalid affine constant or duplicate/out-of-range term",
+                    "invalid affine constant or out-of-range term",
                 ));
             }
         }

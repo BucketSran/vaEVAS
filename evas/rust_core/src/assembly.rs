@@ -11,6 +11,7 @@ pub(crate) struct Equation {
     pub(crate) rhs_terms: Row,
     pub(crate) coefficients: Row,
     pub(crate) nonlinear: Vec<Expression>,
+    pub(crate) original_rhs: Vec<Expression>,
     pub(crate) origins: Vec<String>,
 }
 
@@ -149,6 +150,7 @@ pub(crate) fn assemble(
             rhs_terms: Row::new(),
             coefficients: Row::new(),
             nonlinear: Vec::new(),
+            original_rhs: Vec::new(),
             origins: Vec::new(),
         });
         if (equation.positive, equation.negative) != (c.positive, c.negative) {
@@ -157,6 +159,7 @@ pub(crate) fn assemble(
                 "one branch identity has conflicting endpoint bindings",
             ));
         }
+        equation.original_rhs.push(c.rhs.clone());
         match c.rhs {
             Expression::Affine { constant, terms } => {
                 equation.rhs_constant += constant;

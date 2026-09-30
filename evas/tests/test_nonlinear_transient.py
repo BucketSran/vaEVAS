@@ -2,10 +2,13 @@
 
 from decimal import Decimal, getcontext
 from fractions import Fraction
+import json
 import math
+import subprocess
 import unittest
 
 from evas import KernelError, compile_sources, transient
+from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
 
 
@@ -262,6 +265,62 @@ class NonlinearTransientContracts(unittest.TestCase):
         )
         row = dict(zip(result["nodes"], result["solutions"][0]["voltages"]))
         self.assertEqual(row["y"], 3333333333333334.0)
+
+    def test_raw_ir_duplicate_affine_terms_cannot_hide_input_sensitivity(self):
+        program = {
+            "schema_version": SCHEMA_VERSION,
+            "nodes": ["0", "u", "y"],
+            "contributions": [
+                {
+                    "branch": {
+                        "instance": "dut",
+                        "local_positive": "a",
+                        "local_negative": "r",
+                        "kind": "voltage",
+                    },
+                    "positive": 2,
+                    "negative": 0,
+                    "rhs": {
+                        "op": "affine",
+                        "constant": 0.0,
+                        "terms": [
+                            {"node": 1, "coefficient": 1e16},
+                            {"node": 1, "coefficient": 1.0},
+                            {"node": 1, "coefficient": -1e16},
+                        ],
+                    },
+                    "origin": {
+                        "source": "raw_duplicate.va",
+                        "line": 1,
+                        "column": 1,
+                        "instance": "dut",
+                    },
+                }
+            ],
+        }
+        payload = {
+            "program": program,
+            "driven": ["u"],
+            "samples": [],
+            "transient": {
+                "pwl": [[[0.0, 1.0], [3.0, 2.0]]],
+                "output_times": [1.0],
+                "stop": 3.0,
+                "max_step": 3.0,
+            },
+            "tolerances": {"absolute": 1e-12, "relative": 0.0},
+        }
+        run = subprocess.run(
+            [str(KERNEL)],
+            input=json.dumps(payload, allow_nan=False),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertNotEqual(run.returncode, 0)
+        detail = json.loads(run.stderr)
+        self.assertEqual(detail["kind"], "waveform_accuracy")
+        self.assertEqual(detail["sample"], 0)
 
     def test_off_knot_rectangular_system_is_not_krawczyk_certified(self):
         source = model(

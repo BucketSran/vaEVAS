@@ -30,13 +30,18 @@ budget used by the nominal residual check:
 [-B_i, B_i], where B_i = vabstol + reltol * max(abs(lhs_i), abs(rhs_i)).
 ```
 
-For point input intervals this residual replay is the whole waveform check. For
-off-knot samples, residual replay alone is not enough: a tiny residual/input
-uncertainty can be amplified by feedback or by nonlinear sensitivity. The second
-step is therefore a restricted Krawczyk box certificate.
+For point input intervals this residual replay is the whole waveform check in the
+current branch. It does not claim an additional root-existence, uniqueness or
+forward-error box certificate beyond the nominal Newton gates. For off-knot
+samples, residual replay alone is not enough: a tiny residual/input uncertainty
+can be amplified by feedback or by nonlinear sensitivity. The second step is
+therefore a restricted Krawczyk box certificate.
 
-The implementation builds an inner representable voltage box around the accepted
-nominal solution:
+The residual and interval-Jacobian calculations use the original RHS expression
+trees saved by assembly for each branch equation, not the collapsed affine row
+used by the fast nominal solve. This preserves repeated terms and cancellation
+inside a raw IR expression tree for the certificate. The implementation builds an
+inner representable voltage box around the accepted nominal solution:
 
 ```text
 X_j ⊂ [x_j - B_j, x_j + B_j]
@@ -55,7 +60,7 @@ K(X) = x - C F(x,U) + (I - C J(X,U)) (X - x)
 ```
 
 The sample is accepted only when `K(X)` is strictly inside `X` and the interval
-operator row-sum bound satisfies:
+operator row-sum bound, accumulated with outward interval arithmetic, satisfies:
 
 ```text
 ||I - C J(X,U)||∞ < 1
@@ -143,7 +148,8 @@ certification.
 
 The current branch still rejects nonlinear events, state/history/operator
 coupling, and non-affine transient dynamics. The Krawczyk certificate is limited
-to square, single-origin branch systems at off-knot stateless samples. It does not
-recover source-level contributions after assembly has merged multiple origins, and
-it does not replace a future general interval solve for broader nonlinear dynamic
-features.
+to square, single-origin branch systems at off-knot stateless samples. It uses the
+saved original RHS tree within that branch, including repeated raw affine terms,
+but does not recover separate source-level contributions after assembly has merged
+multiple origins. It does not replace a future general interval solve for broader
+nonlinear dynamic features.
