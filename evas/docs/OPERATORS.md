@@ -137,11 +137,14 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 
 ## idt
 
-能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 的首版受限积分，交付状态见能力总表。
+能力 ID：DYNAMICS。main 的 EVAS 0.7.0 / IR v7 支持首版受限二参数积分；
+`feat/evas-idt-reset` 分支在 IR v11 上扩展三参数 reset，交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
-`idt(direct_affine_input, constant_ic)`：输入为直接驱动、连续 PWL 的仿射组合，
-初值为显式有限实例常量，仿真起点为 0。若输入单位为 U，积分和初值单位为 U·s；
+`idt(direct_affine_input, constant_ic)` 与分支限定的
+`idt(direct_affine_input, constant_ic, state_reset)`：输入为直接驱动、连续 PWL 的仿射组合，
+初值为显式有限实例常量，仿真起点为 0。reset 必须是同实例状态和常数的仿射表达式，
+且每次事件后能用状态区间证明为零或非零。若输入单位为 U，积分和初值单位为 U·s；
 电压贡献中的比例系数由模型提供。参数绑定后每个展开实例的调用点有独立 operator 索引，
 多个调用点即使贡献同一支路也不共享初值或历史。
 
@@ -159,6 +162,10 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 这消除了 PWL 输入的积分截断误差，**没有**消除浮点运算误差。
 
 验收参考为编译后 binary64 IR 系数与原始 binary64 PWL 点在实数算术下的上述积分。
+三参数形式按 LRM 2.4/2023 §4.5.4 的 reset 语义：reset 非零时输出保持 IC；
+reset 归零后，从最后一次 reset 断言时刻重新以 IC 为初值积分。
+代表值使用调度器接受的事件代表时间；历史区间另保存事件时间包围区间，并在 release 后把
+`∫_release^t u(s)ds` 的 release-time 不确定性传入电压预算。
 每个端点输入区间包含原始源插值及仿射运算误差；累计端点积分区间保留所有先前段的
 不确定性。局部时间差、比例、积分和累加均用向外舍入区间计算。
 输出区间作为现有同刻方程的参数，经电压网络及事件采样的增益传递后验收
@@ -191,27 +198,31 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 当前公开 API 接受完整源轨迹，没有运行中局部修改 PWL 的接口。事件可采样积分节点，
 同刻多个事件仍按现有联立契约执行，后续状态保留积分误差区间。
 
-拒绝缺省 IC、reset/assert、额外参数、内部节点或状态输入、积分反馈、嵌套、输入非线性、
+拒绝缺省 IC、额外参数、输入侧内部节点或状态、reset 中的电压/算子依赖、无法认证为零/非零的 reset、
+积分反馈、嵌套、输入非线性、
 算子与变量的乘积、静态 solve 入口和算子驱动的 cross（含跨实例传递、零乘数、相消）。
 结构依赖检查先于数值简化。积分输出为分段二次，不能交给现有只接受仿射 PWL 的根定位器。
 独立的源驱动 cross 和固定 timer 可与积分贡献共存；它们不修改积分输入或 IC。
 
-IR v7 新增 `kind=idt,input,ic,origin`，调用引用仍为 `op=operator,operator=index`。
+IR v7 新增 `kind=idt,input,ic,origin`；reset 分支的 IR v11 在 idt 记录中加入可空 `reset` 表达式。
+调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
 错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.7.0；包内版本号不代表已发布 tag。
 实现入口：[idt.rs](../rust_core/src/idt.rs)、[operators.rs](../rust_core/src/operators.rs)；
 独立有理数和组合回归：[test_idt.py](../tests/test_idt.py)、
 [test_idt_accuracy.py](../tests/test_idt_accuracy.py)。Rust 另检验查询无副作用及真实候选失败后完整性。
-首版不包含 reset 或反馈积分，未执行新的远程后端对照。
+reset 分支新增同刻 post-reset 重解、transition 组合、事件时间区间和弃候选回归；未执行新的远程后端对照。
 
 原开发检查点 `074cde5` 基于 main `5b090571c7de7c6ec08a05c803479505c5d745ee`：
 全量 Python 215 项、Rust 40 项通过，其中新增 20 项 Python、7 项 Rust；
 649 个原始 binary64 输入的 Fraction 答案均落入实际 Rust 积分区间，包含累计段、尺度变化和次正规数。
 [可执行示例](../examples/idt.json)在 0/1/2/3/4 μs 的名义答案为
 0.25/0.40/0.45/0.40/0.25 V，属于两参数直接积分开发例。
-原 `d1-free` 与 `d1-reset` 使用相同的三参数带复位源码，两档共四次编译均明确拒绝；
-即使前者复位输入恒零，也不能省略结构准入。原矩阵每档分母仍为 31，其他 29 条件未在本次重跑，
-此检查点不宣称增加原矩阵通过数。详细日志与构建/源码哈希保存在 ignored runs，仅本地可取得。
+reset 分支合入多事件写状态依赖后，对原 `d1-free` 与 `d1-reset` 源码执行 targeted EVAS smoke：
+base/fine 两档各 4,001/40,001 个观测点均满足原 checker 的 finite-observation 判据，
+`d1-reset` 的共同 witness 为 reset x≈1.50002、release x=2.5，最大电压/flag 误差约
+1.2e-16。此检查只覆盖 D1 两个条件的本地 EVAS 执行；原矩阵每档分母仍为 31，
+其他 29 条件、远程 Spectre 和完整后端矩阵未在本分支重跑；本次证据为本地命令输出，尚未整理成矩阵收据。
 
 0.7.0 整合 PR18 后重新执行完整 Python 218 项、Rust 42 项及独立数学 9 项，均通过。
 新增的[私有积分恢复测试](../rust_core/src/transient_idt_tests.rs)由 `transient.rs` 的 test-only 模块加载，

@@ -256,36 +256,3 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset 仍不支持。区间传播会增加运算和存储，
-丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
-
-## timer 与同刻兼容性
-
-[0.5.0 历史对照](../../experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
-曾暴露旧电压采样和同刻根认证拒绝；
-[0.5.1 修复](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
-采用联立求解并修复可表示根认证，限定的级联、反馈和同刻样例已相容。
-[0.5.2 加固](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)
-增加前向误差认证，同时曾因 Spectre 对照差异保守禁止同块 integer 重复写。
-这些旧结果保留原身份，不能当作当前版本的新执行结果。
-
-随后 18 个独立诊断配置显示 Spectre **21.1.0.509.isr12** 的相邻重复自增异常同时涉及
-integer 和 real；缩小步长仍存在，插入中间值观测可使现象消失。最小模型无电压反馈，
-预期值由顺序赋值独立确定。0.5.3 据此恢复合法 integer 顺序更新，保持语言语义，
-不复制该版本的异常输出。确切内部原因、新版本范围和厂商确认仍未知，见
-[Issue #16 的可复现输入及对照](https://github.com/BucketSran/vaEVAS/issues/16)。
-
-[0.5.3 回放](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)
-区分语言语义与具体后端的一致性；未修改旧检查器、阈值或原条件分母。
-PR13–15 的后续整合和受影响回归见[能力登记表](CAPABILITIES.md)，旧结果不冒充当前分支执行。
-若未来允许 guard 依赖状态或算子，须在变化后重新定位根，不能沿用失效的预计算日程。
-
-## 实现与验证入口
-
-- [events.rs](../rust_core/src/events.rs)：身份、结构依赖、顺序代入和赋值重放。
-- [settlement.rs](../rust_core/src/settlement.rs)、[settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)：同刻联立、原关系检查及区间认证。
-- [schedule.rs](../rust_core/src/schedule.rs)、[event_accuracy.rs](../rust_core/src/event_accuracy.rs)：固定日程、根和误差界。
-- [transient.rs](../rust_core/src/transient.rs)：候选帧、原子提交、丢弃及回退测试。
-- [test_settlement.py](../tests/test_settlement.py)、[test_timer.py](../tests/test_timer.py)、[test_event_accuracy.py](../tests/test_event_accuracy.py)：独立开发回归。
-- [Spectre 实验](../../experiments/dvs2-spectre-validation/README.md)与[共同历史协议](../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
-
-这些证据不等于完整 DVS 资格、任意非线性事件支持或其他仿真器内部算法的证明。
