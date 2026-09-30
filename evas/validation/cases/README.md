@@ -49,3 +49,10 @@ C1 由两个采样器实例构成，C2 由低通与采样器两个模块构成�
 形成 [31 条件完整对照表](../../../experiments/dvs2-four-backend-validation/results/MATRIX.md)。
 Gnucap 的外壳采用预先固定的具名零伏参考与 `short=1e-9`，全部 31 条件按此设置重跑；
 编译和执行失败仍计入对应条件，完整观察资格未因此取得。
+
+## S1 审阅补充
+
+[n_v1_02_reordered/dut.va](n_v1_02_reordered/dut.va)仅反转 S1 三条贡献的顺序。
+它对应单独登记的 `s1-default-reordered`；其他输入与默认条件一致。
+[审阅卡](../NEXT_CASE_CARDS.md#s1-review)给出独立答案、错误对照与运行入口。
+本地检查器校准不等于后端通过；此条件尚未仿真，不进入原 31 条矩阵。
