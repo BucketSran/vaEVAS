@@ -18,19 +18,19 @@
 
 | ID / 能力 | main 范围 | 分支与交付状态 | 证据状态 | 剩余缺口与说明入口 |
 | --- | --- | --- | --- | --- |
-| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 审阅交付：0.9.0 / IR v9；旧 IR 须重编译 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
+| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | 六路本地整合限定实现：顺序 real、输入驱动 Select、常量数组与 M_PI；IR14，待用户 review | 普通贡献仍累加，局部赋值快照与条件符号认证见[整合审查](../../experiments/parallel-gap-integration/README.md) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
 | LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
-| NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收；main 仅静态入口 | 无状态非线性 transient 为分支限定实现，待 review；静态已合并 PR6 | 静态独立高精度参考、缩放/容差及失败回归；分支新增单调三次瞬态根、前一点初猜、容差及拒绝回归 | 非线性事件、状态/历史/算子耦合、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
+| NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 本地无状态非线性 transient，复用 Newton 与前一成功样本初猜；待 review | Decimal 单调三次独立答案、同源不同输出网格、失败样本定位；见[整合审查](../../experiments/parallel-gap-integration/README.md) | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 交付，未发布 tag | 当前整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达及 cross OR | 已合并 PR7/10；PR23 审阅交付 OR、逐叶证书与同块去重 | 数学/开发回归、历史限定 Spectre 对照；0.9.0 原 31 矩阵见[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090) | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
 | TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
-| EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、认证条件路径、整批提交/回退 | PR12/13 已合入；PR14 延续历史误差传播；PR23 审阅交付路径缓存、输入与旧状态包围及 OR 同块去重 | PR12/13 历史证据保留；新增条件失败/弃步/修正未来输入重试 | Spectre 21.1 重复赋值异常见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16)；多事件块写同一状态、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
+| EVENT-ORDER：同刻与原子提交 | 仿射状态/电压联立、前向认证、integer/real 顺序赋值、认证条件路径、整批提交/回退 | 本地增加不同时刻多块写同一状态；实际选中路径同批冲突拒绝；待 review | 选中写集合、相同值冲突、帧回退及 reset/transition 组合见[整合审查](../../experiments/parallel-gap-integration/README.md) | Spectre 21.1 重复赋值异常见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16)；多事件块写同一状态、反馈 guard 仍缺；[说明](EVENTS.md#timer-与同刻兼容性) |
 | TRANSITION：延迟与有限边沿 | 固定延迟、显式正边沿、状态仿射输入 | PR13 已合入；0.6.1 / IR v6 | 6 项 Fraction 精度回归；共同观察网格下 EVAS/Spectre 各 16/16 | 完整观察资格、区间保守性、更广同刻语义/动态参数/输入；[算子说明](OPERATORS.md#transition) |
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
-| COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
-| DYNAMICS：积分、导数、滤波、相位 | main 支持显式常量初值、直接连续 PWL 仿射输入的二参数 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7；[PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付，未发布 tag；`feat/evas-idt-reset` 分支扩展三参数 reset，IR v11，待 review | main 证据见[独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)；reset 分支新增 hold/release、transition 组合、同引擎弃候选与事件时间区间回归；合入多事件写状态依赖后，原 D1 free/reset 两档 targeted EVAS smoke 满足原 checker；[数学与实现](OPERATORS.md#idt) | main 仍缺复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；reset 分支仍限定状态 reset、直接 PWL 输入，未重跑完整 31 条矩阵或后端对照 |
-| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 0.9.0 原 31 条件瞬态矩阵两档执行；PR20 交付独立 checker 校准 | [0.9.0 收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)：EVAS 两档各 21/31，其余 10 明确拒绝；历史与其他后端失败保留；[S1 审阅补充](../validation/NEXT_CASE_CARDS.md#s1-review)及 E1/E2/C1 校准 | 观察误差界、未见确认集；S1 新顺序条件未执行后端，不增加原矩阵成绩；正式资格仍 I；[协议](../validation/METHOD_QUALIFICATION.md) |
+| COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 六路本地联合检查点；待 review，未合 main | 统一 ordered lowering、7 类组合与明确拒绝探针；[整合审查](../../experiments/parallel-gap-integration/README.md) | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
+| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的 idt；导数/滤波/相位未实现 | 本地增加状态 reset idt、一阶 laplace_nd、显式 idtmod/sin；待 review，main 范围保留 | Fraction/Decimal 独立答案，区间历史、系数/时间、包裹/指数/正弦余项及组合边界见[整合审查](../../experiments/parallel-gap-integration/README.md) | 复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；原 D1 仍拒绝 |
+| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | main 0.9.0 两档各21/31；本地联合矩阵另行记录，资格仍 I | 旧收据不覆盖新实现；新执行与独立判据见[整合审查](../../experiments/parallel-gap-integration/README.md) | 观察误差界、未见确认集；S1 新顺序条件未执行后端，不增加原矩阵成绩；正式资格仍 I；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准和稠密/稀疏分流 | PR8 合成检查点保留，0.7.1 未重新计时 | 不同旧提交的局部测量；18.5% 退化未稳定复现，见[边界](NUMERICS.md#稀疏分支与性能边界) | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
 电流未知量、器件级负载与完整 SPICE 分析不在当前电压域任务的默认范围内；不将它们自动列为必做待办。
@@ -56,6 +56,14 @@
 联合收据 SHA256 为 `4661c0a64d6a73552855ac0b06f616ce4932fa63ed639e53d29af77ee8ba366f`。
 这些数字不能与各分支方法数相加，也不改变原 31 条件分母。仅本地哈希不构成公开数据可用性。
 
+## 本地整合与交付边界
+
+PR21 的协作规则已合入 main `508f5b9`。本轮六路实现与组合修复只在本地
+`test/evas-gap-integration`，统一 IR14，尚未创建新 PR 或合入 main。
+分支、数学契约、依赖、审查反例、验证收据及推荐合并顺序统一由
+[整合审查记录](../../experiments/parallel-gap-integration/README.md)维护。下面的 main 缺口顺序
+继续表示主分支范围；本地候选不能自动改写它。
+
 ## 后续工作顺序
 
 后续工作从当前 0.9.0 / IR v9 main 开始；每项使用一个可独立 review 的 PR，实际依赖才堆叠。
@@ -67,7 +75,7 @@
 | --- | --- | --- | --- |
 | 1 / LANG | 普通 analog 局部顺序赋值、比较及 if/else；先限定输入驱动的分段仿射关系 | v1-main（1） | 独立限幅公式、等号边界、阈值定位、语句顺序；暂不扩展隐式分支反馈 |
 | 2 / EVENT-ORDER | 多事件块写同一状态；先支持可证明无冲突的更新，同刻冲突另立契约 | v3-main（1），亦为复位积分依赖 | 上/下阈值迟滞、保持区间、同时写冲突及失败回退；不能只删除当前拒绝检查 |
-| 3 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 分支已有独立单调三次方程根、前一点初猜、容差/失败与事件组合拒绝回归；仍需 review 与原条件专项执行，不声称已支持非线性 cross |
+| 3 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
 | 4 / DYNAMICS | 在现有显式初值/PWL idt 上补复位；重新定义复位前后历史及原子提交 | d1-free/reset（2） | 非零初值、复位保持/释放、区间积分误差、撤销重试；依赖多事件状态更新 |
 | 5 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
 | 6 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |

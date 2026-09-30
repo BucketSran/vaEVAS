@@ -5,7 +5,7 @@ These are development combinations, not new conditions or an untouched holdout.
 import math
 import unittest
 
-from evas import Instance, KernelError, compile_sources, transient
+from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL, model
 
 
@@ -123,3 +123,13 @@ class GapIntegration(unittest.TestCase):
         program=compile_sources({"select-idt.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
         with self.assertRaisesRegex(KernelError,"unsupported_transient"):
             rows(program,{"u":[[0,0],[1,1]]},[0,1],max_step=1)
+
+
+    def test_local_alias_cancellation_preserves_predicate_dependency(self):
+        bodies=[
+            "if(V(y,r)-V(y,r)+V(u,r)>0) b=1; else b=0; V(y,r)<+b;",
+            "a=V(y,r)-V(y,r)+V(u,r); if(a>0) b=1; else b=0; V(y,r)<+b;",
+        ]
+        for body in bodies:
+            with self.subTest(body=body), self.assertRaisesRegex(CompileError,"predicates must depend only"):
+                compile_sources({"predicate-deps.va":model(body,"real a,b;")},[Instance("dut","m",dict(u="u",y="y",r="0"))])

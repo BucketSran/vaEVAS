@@ -274,7 +274,7 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 ## idtmod 与 sin
 
 分支限定实现新增相位子集：`idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
-电压域相位模型。依据 Verilog-AMS LRM 2.4/2023 的 `idtmod(expr, ic, modulus, offset)`
+电压域相位模型。依据 Verilog-AMS LRM 2.4 的 `idtmod(expr, ic, modulus, offset)`
 形式，当前只接受显式有限常量初值、显式正有限 modulus 和有限 offset；省略 modulus 的
 无界积分形式不映射到本算子，仍应使用普通 `idt` 或明确拒绝。
 
