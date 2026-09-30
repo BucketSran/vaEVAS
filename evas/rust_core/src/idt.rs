@@ -3,7 +3,7 @@
 //! Prefix integrals belong to source knots, never accepted solver/output steps.
 //! A Frame clone shares this analytic definition; a trial only queries it. A
 //! corrected source definition requires a new history, not a time-only cache.
-use crate::interval::Interval as I;
+use crate::interval::{sum_products_sign, Interval as I};
 use crate::ir::Error;
 use std::sync::Arc;
 
@@ -128,6 +128,50 @@ impl Idt {
             ));
         }
         Ok(bound)
+    }
+
+    pub(crate) fn value_minus_linear_boundary_sign(
+        &self,
+        time: f64,
+        offset: f64,
+        turn: f64,
+        modulus: f64,
+    ) -> Result<Option<i8>, Error> {
+        if !offset.is_finite() || !turn.is_finite() || !modulus.is_finite() {
+            return Ok(None);
+        }
+        let index = self.index(time)?;
+        let end = &self.knots[index];
+        let mut terms = Vec::new();
+        let push = |terms: &mut Vec<(f64, f64)>, a: f64, b: f64| {
+            if a != 0.0 && b != 0.0 {
+                terms.push((a, b));
+            }
+        };
+        if time == end.time {
+            if end.integral_bounds != I::point(end.integral) {
+                return Ok(None);
+            }
+            push(&mut terms, end.integral, 1.0);
+        } else {
+            let start = &self.knots[index - 1];
+            if start.integral_bounds != I::point(start.integral)
+                || start.input_bounds != I::point(start.input)
+                || end.input_bounds != I::point(end.input)
+                || start.input != end.input
+            {
+                return Ok(None);
+            }
+            push(&mut terms, start.integral, 1.0);
+            push(&mut terms, time, start.input);
+            push(&mut terms, -start.time, start.input);
+        }
+        push(&mut terms, -offset, 1.0);
+        push(&mut terms, -turn, modulus);
+        if terms.len() > 4 {
+            return Ok(None);
+        }
+        Ok(sum_products_sign(&terms))
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {

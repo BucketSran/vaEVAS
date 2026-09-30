@@ -245,8 +245,12 @@ outward affine arithmetic，保留常量和系数折叠、相消及 binary64 运
 其他状态输入、内部节点输入、operator 前向引用、多个 operator 混合、算子驱动 cross 和
 operator 乘 voltage/state 仍拒绝。
 
-wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给出整个 `[offset,offset+modulus]`
+wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认只能给出整个 `[offset,offset+modulus]`
 保守范围；只有通过 outward interval arithmetic 证明 raw phase 落在同一个 turn 内，才返回窄 wrapped 界。
+对常量输入段、精确点输入/前缀积分和可用 exact binary64 product/sum 判定的请求，若 raw phase 区间
+只跨相邻 turn，内核会比较精确实数 `raw-(offset+k·modulus)` 的符号：小于零取左侧，
+大于零取右侧，等于零取 half-open wrap 的 offset 点。因此 D2 这类 binary64 采样点在 wrap 邻域
+可证明时能通过；非精确系数、非点输入误差、过多乘积项或巨大 turn 仍保守保留两侧并可能拒绝。
 当 `sin` 消费同一个 `idtmod` 输出时，可以保留 wrap 两侧的两个相位区间，分别做正弦区间证明再取并集；
 这只用于该函数证书，不改变 wrapped 电压输出的整周期保守界，也不把 binary64 的 `2π` 当作精确周期。
 大不确定度、真实跨越和不可精确表示的巨大 turn 会返回整周期或在 bounds 层触发
@@ -260,11 +264,11 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给
 
 验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
 Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
-`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核。当前 soundness 修复后，
-`d2-chirp` 两档为 `observations_within_targets`；`d2-constant` 两档在 wrapped 电压输出的 binary64 wrap
-邻域返回 `waveform_accuracy`，因为单区间证书不能证明不连续 wrapped 输出落在 0 侧还是 1 侧。
-`sin(idtmod)` 对同一边界使用两侧区间证书仍可通过；overstrict wrap 边界端到端回归会返回
-`waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，未执行 Spectre 或完整 31 条件矩阵。
+`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
+`observations_within_targets`。针对回归还覆盖同一 phase 的重复仿射引用、隐藏第二 operator 结构依赖拒绝、
+大系数抵消误差拒绝、`sin(idtmod)` 两侧包络、wrapped 电压在近 wrap / exact wrap 的可证通过，以及
+非精确系数边界无法证明时的 `waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，
+未执行 Spectre 或完整 31 条件矩阵。
 
 ## slew
 

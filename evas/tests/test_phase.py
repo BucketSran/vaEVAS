@@ -196,15 +196,58 @@ V(phase,r)<+phase_v;
                            declarations="real phase_v;", vabstol=1e-9, reltol=0)
         self.assertLessEqual(abs(voltages(result, "out")[0]), 1e-12)
 
-    def test_wrapped_phase_voltage_rejects_discontinuous_wrap_certificate(self):
+    def test_wrapped_phase_voltage_certifies_binary64_side_and_exact_boundary(self):
         body = """
 phase_v = idtmod(V(f,r), .125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
+        times = [1.7499999999999998, 1.75, 1.7500000000000002]
+        sparse = run_phase([(0, .5), (4, .5)], times, body,
+                           declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        dense = run_phase([(0, .5), (4, .5)], [0, *times, 4], body,
+                          declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        expected = [wrapped(.125 + .5 * t) for t in times]
+        for observed, exact in zip(voltages(sparse, "phase"), expected):
+            self.assertEqual(F(observed), F(exact))
+        self.assertEqual([voltages(dense, "phase")[i] for i in [1, 2, 3]],
+                         voltages(sparse, "phase"))
+
+    def test_wrapped_phase_voltage_certifies_negative_frequency_and_offset_boundary(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        result = run_phase([(0, -.5), (1, -.5)], [.24999999999999997, .25, .25000000000000006],
+                           body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        for observed, t in zip(voltages(result, "phase"), [.24999999999999997, .25, .25000000000000006]):
+            self.assertEqual(F(observed), F(wrapped(.125 - .5 * t)))
+
+        offset_body = """
+phase_v = idtmod(V(f,r), .125, 1, .25);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        offset = run_phase([(0, .5), (1, .5)], [.2499999999999999, .25, .2500000000000001],
+                           offset_body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        for observed, t in zip(voltages(offset, "phase"), [.2499999999999999, .25, .2500000000000001]):
+            raw = .125 + .5 * t
+            exact = (raw - .25) % 1 + .25
+            self.assertEqual(F(observed), F(exact))
+
+    def test_wrapped_phase_voltage_rejects_unproved_nonexact_coefficient_boundary(self):
+        body = """
+phase_v = idtmod(V(f,r)/3, .125, 1, 0);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
         with self.assertRaises(KernelError) as error:
-            run_phase([(0, .5), (4, .5)], [1.7499999999999998], body,
+            run_phase([(0, 1.5), (4, 1.5)], [1.7499999999999998], body,
                       declarations="real phase_v;", vabstol=1e-5, reltol=0)
         self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
         self.assertIn("phase", error.exception.detail["message"])

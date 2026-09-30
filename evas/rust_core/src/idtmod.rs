@@ -110,7 +110,17 @@ impl IdtMod {
         if hi_turn - lo_turn != 1.0 {
             return Ok(vec![declared]);
         }
-        Ok(vec![wrap_for_turn(lo_turn)?, wrap_for_turn(hi_turn)?])
+        match self.integral.value_minus_linear_boundary_sign(
+            time,
+            self.offset,
+            hi_turn,
+            self.modulus,
+        )? {
+            Some(-1) => Ok(vec![wrap_for_turn(lo_turn)?]),
+            Some(0) => Ok(vec![I::point(self.offset)]),
+            Some(1) => Ok(vec![wrap_for_turn(hi_turn)?]),
+            _ => Ok(vec![wrap_for_turn(lo_turn)?, wrap_for_turn(hi_turn)?]),
+        }
     }
 
     pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
