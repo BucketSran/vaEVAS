@@ -133,3 +133,75 @@ class GapIntegration(unittest.TestCase):
         for body in bodies:
             with self.subTest(body=body), self.assertRaisesRegex(CompileError,"predicates must depend only"):
                 compile_sources({"predicate-deps.va":model(body,"real a,b;")},[Instance("dut","m",dict(u="u",y="y",r="0"))])
+
+    def test_polynomial_certificate_survives_unused_and_empty_conditions(self):
+        from fractions import Fraction
+        from test_nonlinear_transient import cubic_root
+        for extra in ("", "if(V(u,r)>-2) begin end",
+                      "unused=0; if(V(u,r)>-2) unused=1;"):
+            with self.subTest(extra=extra):
+                source = model("tmp=V(u,r)-.25*pow(V(y,r),3); " + extra +
+                               " V(y,r)<+tmp;", "real tmp,unused;")
+                program = compile_sources({"poly-noop.va":source},
+                                          [Instance("dut","m",dict(u="u",y="y",r="0"))])
+                _, actual = rows(program, {"u":[[0,1],[3,2]]}, [1,3], max_step=3)
+                for row, u in zip(actual, (Fraction(4,3), Fraction(2))):
+                    self.assertAlmostEqual(row["y"], cubic_root(float(u), .25, 1), delta=1e-10)
+                # Adding irrelevant source statements must not bypass the
+                # original PWL error certificate on the polynomial path.
+                high_gain = model("tmp=1e16*(V(u,r)-1)+1e-60*pow(V(y,r),3); " +
+                                  extra + " V(y,r)<+tmp;", "real tmp,unused;")
+                candidate = compile_sources({"poly-gain.va": high_gain},
+                                            [Instance("dut","m",dict(u="u",y="y",r="0"))])
+                with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+                    transient(candidate, {"u":[[0,1],[3,2]]}, [1,3], stop=3, max_step=3,
+                              kernel=KERNEL, vabstol=1e-12, reltol=0)
+
+    def test_affine_redundant_constraints_keep_forward_certificate(self):
+        from fractions import Fraction
+        source = model("V(y,r)<+V(u,r);")
+        program = compile_sources({"redundant.va":source},
+                                  [Instance(name,"m",dict(u="u",y="y",r="0"))
+                                   for name in ("a","b")])
+        _, actual = rows(program, {"u":[[0,1],[3,2]]}, [1,3], max_step=3)
+        self.assertLessEqual(abs(Fraction(actual[0]["y"])-Fraction(4,3)), Fraction(1,10**10))
+
+    def test_reset_feedback_through_sin_operator_is_rejected(self):
+        source = model("""
+            @(initial_step) reset=0;
+            @(timer(1,0,1e-8)) reset=V(y,r);
+            V(y,r)<+sin(idt(V(u,r),.25,reset));
+        """, "real reset;")
+        program = compile_sources({"reset-sin-feedback.va":source},
+                                  [Instance("dut","m",dict(u="u",y="y",r="0"))])
+        with self.assertRaisesRegex(KernelError, "unsupported_operator.*reset feedback"):
+            rows(program, {"u":[[0,.25],[3,.25]]}, [0,1,3], max_step=3)
+
+    def test_reset_filter_and_phase_retain_independent_histories(self):
+        source = model("""
+            @(initial_step) reset=0;
+            @(timer(1,0,1e-8)) reset=1;
+            @(timer(2,0,1e-8)) reset=0;
+            V(y,r)<+idt(V(u,r),.125,reset);
+            V(filtered,r)<+laplace_nd(V(u,r), '{1}, '{1,.5});
+            V(phase,r)<+idtmod(V(u,r),.125,1,0);
+            V(sine,r)<+sin(idt(V(u,r),.125,reset));
+        """, "real reset;", ports="u,y,filtered,phase,sine,r",
+                       directions="input u; output y,filtered,phase,sine; inout r;")
+        program = compile_sources({"reset-filter-phase.va":source}, [Instance("dut","m",
+                  dict(u="u", y="y", filtered="filtered", phase="phase", sine="sine", r="0"))])
+        for times, step in (([0,.5,1,1.5,2,3],3), ([k/8 for k in range(25)],.125)):
+            _, actual = rows(program, {"u":[[0,.25],[3,.25]]}, times, max_step=step)
+            for time, row in zip(times, actual):
+                reset_value = .125 + .25*time if time < 1 else .125 if time <= 2 else .125+.25*(time-2)
+                self.assertAlmostEqual(row["y"], reset_value, delta=1e-10)
+                self.assertAlmostEqual(row["sine"], math.sin(reset_value), delta=1e-10)
+                self.assertAlmostEqual(row["filtered"], .25, delta=1e-10)
+                self.assertAlmostEqual(row["phase"], .125+.25*time, delta=1e-10)
+
+    def test_selected_polynomial_leaves_remain_outside_condition_contract(self):
+        source = model("tmp=V(u,r); if(V(u,r)>0) tmp=V(u,r)-pow(V(y,r),3); V(y,r)<+tmp;", "real tmp;")
+        program = compile_sources({"select-poly.va":source},
+                                  [Instance("dut","m",dict(u="u",y="y",r="0"))])
+        with self.assertRaisesRegex(KernelError, "unsupported_transient"):
+            rows(program, {"u":[[0,1],[3,2]]}, [1,3], max_step=3)

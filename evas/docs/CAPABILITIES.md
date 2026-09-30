@@ -1,6 +1,6 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-09-30。当前 main 使用 EVAS 0.9.0 / IR v11，未发布版本 tag。
+核对日期：2026-10-01。当前 main 使用 EVAS 0.9.0 / IR v11，未发布版本 tag。
 旧 IR v1–v10 须从原始 VA 重新编译。实现、证据与交付分别记录；
 包版本号不能代替被测提交身份。数学与实现见[手册](README.md)，运行记录见[证据索引](../../experiments/README.md#checkpoint-evidence)。
 
@@ -54,11 +54,11 @@
 
 ## 本地整合与交付边界
 
-PR21 的协作规则已合入 main `508f5b9`。本轮六路实现与组合修复只在本地
-`test/evas-gap-integration`，统一 IR14，尚未创建新 PR 或合入 main。
-分支、数学契约、依赖、审查反例、验证收据及推荐合并顺序统一由
-[整合审查记录](../../experiments/parallel-gap-integration/README.md)维护。下面的 main 缺口顺序
-继续表示主分支范围；本地候选不能自动改写它。
+当前联合候选 `test/evas-gap-integration` 已同步 main `78e914f` 和 analog 验收修复，
+整合一阶滤波、相位与无状态非线性瞬态，格式统一为 **IR v15**。保留主分支的复位反馈
+拒绝和候选历史重放，并补充 `sin` 消费复位积分器时的同刻重算。尚未创建新 PR 或合入 main。
+本轮范围、数学入口、联合检查与原矩阵证据见[当前复审记录](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)。
+此前 IR14、单项分支及旧 main 的收据保持历史身份，不能代替本轮联合验证，也不改写上表的 main 交付范围。
 
 ## 后续工作顺序
 

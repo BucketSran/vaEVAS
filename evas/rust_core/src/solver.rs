@@ -1,7 +1,8 @@
 //! Solve stateless operating points and check the original branch residuals.
 use crate::assembly::{assemble, AssembledCircuit, Equation};
-use crate::ir::{Error, Program, Solution, Tolerances};
-use crate::{linear, nonlinear};
+use crate::interval::Interval as I;
+use crate::ir::{Error, Expression, Program, Solution, Tolerances};
+use crate::{expression, linear, nonlinear};
 use std::sync::OnceLock;
 
 pub struct Circuit {
@@ -48,6 +49,100 @@ impl DenseResidual {
             .zip(&values[self.start..self.start + self.coefficients.len()])
             .map(|(a, v)| a * v)
             .sum()
+    }
+}
+
+fn interval_power(base: I, exponent: u32) -> I {
+    let mut result = I::ONE;
+    for _ in 0..exponent {
+        result = result * base;
+    }
+    result
+}
+
+fn add_dense_coefficient(row: &mut [f64], column: Option<usize>, value: f64) {
+    if let Some(column) = column {
+        row[column] += value;
+    }
+}
+
+struct IntervalValue {
+    value: I,
+    gradient: Vec<I>,
+}
+
+fn finite_interval(value: I, what: &str) -> Result<I, Error> {
+    if value.finite() {
+        Ok(value)
+    } else {
+        Err(Error::new(
+            "waveform_accuracy",
+            format!("cannot bound {what} with finite interval arithmetic"),
+        ))
+    }
+}
+
+fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, Error> {
+    finite_interval(
+        interval_evaluate(expr, values)?.value,
+        "waveform expression",
+    )
+}
+
+fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, Error> {
+    let count = values.len();
+    let mut gradient = vec![I::ZERO; count];
+    let value = match expr {
+        Expression::State { .. } | Expression::Operator { .. } | Expression::Select { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "waveform certificate requires bound states/operators and resolved conditions",
+            ))
+        }
+        Expression::Affine { constant, terms } => {
+            let mut value = I::point(*constant);
+            for t in terms {
+                value = value + I::point(t.coefficient) * values[t.node];
+                gradient[t.node] = gradient[t.node] + I::point(t.coefficient);
+            }
+            value
+        }
+        Expression::Add { left, right } => {
+            let left = interval_evaluate(left, values)?;
+            let right = interval_evaluate(right, values)?;
+            for (g, term) in gradient.iter_mut().zip(left.gradient) {
+                *g = *g + term;
+            }
+            for (g, term) in gradient.iter_mut().zip(right.gradient) {
+                *g = *g + term;
+            }
+            left.value + right.value
+        }
+        Expression::Multiply { left, right } => {
+            let left = interval_evaluate(left, values)?;
+            let right = interval_evaluate(right, values)?;
+            for ((g, dl), dr) in gradient.iter_mut().zip(left.gradient).zip(right.gradient) {
+                *g = dl * right.value + left.value * dr;
+            }
+            left.value * right.value
+        }
+        Expression::Power { base, exponent } => {
+            let base = interval_evaluate(base, values)?;
+            let derivative =
+                I::point(f64::from(*exponent)) * interval_power(base.value, exponent - 1);
+            for (g, db) in gradient.iter_mut().zip(base.gradient) {
+                *g = derivative * db;
+            }
+            interval_power(base.value, *exponent)
+        }
+    };
+    if value.finite() && gradient.iter().all(|g| g.finite()) {
+        Ok(IntervalValue { value, gradient })
+    } else {
+        Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound waveform value or derivative with finite interval arithmetic",
+        ))
     }
 }
 
@@ -108,6 +203,315 @@ impl Circuit {
             driven_coefficients,
             dense_residuals,
         })
+    }
+
+    fn waveform_jacobian_rows(&self, solution: &Solution) -> Result<Vec<linear::Row>, Error> {
+        self.equations
+            .iter()
+            .map(|eq| {
+                let mut row = vec![0.0; self.unknown.len()];
+                add_dense_coefficient(&mut row, self.unknown_columns[eq.positive], 1.0);
+                add_dense_coefficient(&mut row, self.unknown_columns[eq.negative], -1.0);
+                for &(node, coefficient) in &eq.rhs_terms {
+                    add_dense_coefficient(&mut row, self.unknown_columns[node], -coefficient);
+                }
+                for expr in &eq.nonlinear {
+                    for (node, derivative) in expression::evaluate(expr, &solution.voltages)
+                        .map_err(|mut error| {
+                            error
+                                .message
+                                .push_str(&format!(" at {}", eq.origins.join(", ")));
+                            error
+                        })?
+                        .gradient
+                    {
+                        add_dense_coefficient(&mut row, self.unknown_columns[node], -derivative);
+                    }
+                }
+                if row.iter().any(|value| !value.is_finite()) {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        format!("nonfinite waveform Jacobian at {}", eq.origins.join(", ")),
+                    ));
+                }
+                Ok(row
+                    .into_iter()
+                    .enumerate()
+                    .filter_map(|(column, value)| (value != 0.0).then_some((column, value)))
+                    .collect())
+            })
+            .collect()
+    }
+
+    fn interval_residuals(&self, values: &[I]) -> Result<Vec<I>, Error> {
+        self.equations
+            .iter()
+            .map(|eq| {
+                let mut residual = values[eq.positive] - values[eq.negative];
+                for expr in &eq.original_rhs {
+                    residual = residual
+                        - interval_expression(expr, values).map_err(|mut error| {
+                            error
+                                .message
+                                .push_str(&format!(" at {}", eq.origins.join(", ")));
+                            error
+                        })?;
+                }
+                finite_interval(residual, "waveform residual")
+            })
+            .collect()
+    }
+
+    fn interval_jacobian(&self, values: &[I]) -> Result<Vec<Vec<I>>, Error> {
+        self.equations
+            .iter()
+            .map(|eq| {
+                let mut row = vec![I::ZERO; self.unknown.len()];
+                if let Some(column) = self.unknown_columns[eq.positive] {
+                    row[column] = row[column] + I::ONE;
+                }
+                if let Some(column) = self.unknown_columns[eq.negative] {
+                    row[column] = row[column] - I::ONE;
+                }
+                for expr in &eq.original_rhs {
+                    for (node, derivative) in interval_evaluate(expr, values)
+                        .map_err(|mut error| {
+                            error
+                                .message
+                                .push_str(&format!(" at {}", eq.origins.join(", ")));
+                            error
+                        })?
+                        .gradient
+                        .into_iter()
+                        .enumerate()
+                    {
+                        if let Some(column) = self.unknown_columns[node] {
+                            row[column] = row[column] - derivative;
+                        }
+                    }
+                }
+                if row.iter().all(|entry| entry.finite()) {
+                    Ok(row)
+                } else {
+                    Err(Error::new(
+                        "waveform_accuracy",
+                        format!("nonfinite interval Jacobian at {}", eq.origins.join(", ")),
+                    ))
+                }
+            })
+            .collect()
+    }
+
+    fn voltage_budget_lower(&self, voltage: f64) -> Result<f64, Error> {
+        let budget = I::point(self.tolerances.absolute)
+            + I::point(self.tolerances.relative) * I::point(voltage.abs());
+        if budget.finite() && budget.lo > 0.0 {
+            Ok(budget.lo)
+        } else {
+            Err(Error::new(
+                "waveform_accuracy",
+                "nonfinite waveform voltage budget",
+            ))
+        }
+    }
+
+    /// Certify that the accepted point solution also satisfies each original
+    /// branch relation for the exact binary64-PWL input interval represented at
+    /// this observation time. This is a waveform/input uncertainty check, not a
+    /// replacement for Newton convergence at the nominal f64 input point.
+    pub(crate) fn check_waveform_accuracy(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+    ) -> Result<(), Error> {
+        if input_bounds.len() != self.driven.len() {
+            return Err(Error::new(
+                "invalid_inputs",
+                "input bounds must contain one interval per driven node",
+            ));
+        }
+        if input_bounds.iter().any(|b| !b.finite()) {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify waveform accuracy with nonfinite input bounds",
+            ));
+        }
+        let point_inputs = input_bounds.iter().all(|b| b.lo == b.hi);
+        let mut point_values = solution
+            .voltages
+            .iter()
+            .copied()
+            .map(I::point)
+            .collect::<Vec<_>>();
+        for (&node, &bounds) in self.driven.iter().zip(input_bounds) {
+            point_values[node] = bounds;
+        }
+        let residuals = self.interval_residuals(&point_values)?;
+        for (eq, residual) in self.equations.iter().zip(&residuals) {
+            let lhs = solution.voltages[eq.positive] - solution.voltages[eq.negative];
+            let mut rhs = eq.rhs_constant
+                + eq.rhs_terms
+                    .iter()
+                    .map(|&(node, coefficient)| coefficient * solution.voltages[node])
+                    .sum::<f64>();
+            for expr in &eq.nonlinear {
+                rhs += expression::evaluate(expr, &solution.voltages)
+                    .map_err(|mut error| {
+                        error
+                            .message
+                            .push_str(&format!(" at {}", eq.origins.join(", ")));
+                        error
+                    })?
+                    .value;
+            }
+            let bound =
+                self.tolerances.absolute + self.tolerances.relative * lhs.abs().max(rhs.abs());
+            if !bound.is_finite() || residual.lo < -bound || residual.hi > bound {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "waveform residual interval [{:e}, {:e}] V exceeds ±{:e} V at {}",
+                        residual.lo,
+                        residual.hi,
+                        bound,
+                        eq.origins.join(", ")
+                    ),
+                ));
+            }
+        }
+        if self.unknown.is_empty() || point_inputs {
+            return Ok(());
+        }
+        if self.equations.iter().any(|eq| eq.origins.len() != 1) {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "Krawczyk waveform certificate requires unfolded single-origin branch equations",
+            ));
+        }
+        let n = self.unknown.len();
+        if self.equations.len() != n {
+            return Err(Error::new(
+                "waveform_accuracy",
+                format!(
+                    "Krawczyk waveform certificate requires a square system; got {} equations for {n} unknowns",
+                    self.equations.len()
+                ),
+            ));
+        }
+        let mut box_values = point_values.clone();
+        let mut deltas = Vec::with_capacity(n);
+        for &node in &self.unknown {
+            let center = solution.voltages[node];
+            let budget = self.voltage_budget_lower(center)?;
+            let lo = (center - budget).next_up();
+            let hi = (center + budget).next_down();
+            if !(lo < center && center < hi) || !lo.is_finite() || !hi.is_finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot build an inner waveform budget box at node {}",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+            box_values[node] = I { lo, hi };
+            deltas.push(I { lo, hi } - I::point(center));
+        }
+        let jacobian = self.waveform_jacobian_rows(solution)?;
+        let factor = linear::Factorization::new(jacobian, n).map_err(|error| {
+            Error::new(
+                "waveform_accuracy",
+                format!(
+                    "cannot build Krawczyk waveform preconditioner from local Jacobian: {}",
+                    error.message
+                ),
+            )
+        })?;
+        let mut preconditioner = vec![vec![0.0; n]; n];
+        for row_index in 0..n {
+            let mut rhs = vec![0.0; n];
+            rhs[row_index] = 1.0;
+            let column = factor.solve(rhs).map_err(|error| {
+                Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot solve Krawczyk waveform preconditioner column: {}",
+                        error.message
+                    ),
+                )
+            })?;
+            for (column_index, value) in column.into_iter().enumerate() {
+                if !value.is_finite() {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        "nonfinite Krawczyk waveform preconditioner",
+                    ));
+                }
+                preconditioner[column_index][row_index] = value;
+            }
+        }
+        let interval_jacobian = self.interval_jacobian(&box_values)?;
+        let mut max_norm = 0.0_f64;
+        let mut krawczyk = vec![I::ZERO; n];
+        for j in 0..n {
+            let mut correction = I::ZERO;
+            for i in 0..n {
+                correction = correction + I::point(preconditioner[j][i]) * residuals[i];
+            }
+            let mut image = I::point(solution.voltages[self.unknown[j]]) - correction;
+            let mut row_norm = I::ZERO;
+            for k in 0..n {
+                let mut entry = if j == k { I::ONE } else { I::ZERO };
+                for i in 0..n {
+                    entry = entry - I::point(preconditioner[j][i]) * interval_jacobian[i][k];
+                }
+                row_norm = row_norm + I::point(entry.magnitude());
+                image = image + entry * deltas[k];
+            }
+            if !row_norm.finite() || !image.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite Krawczyk waveform image",
+                ));
+            }
+            max_norm = max_norm.max(row_norm.hi);
+            krawczyk[j] = image;
+        }
+        if !(max_norm < 1.0) {
+            return Err(Error::new(
+                "waveform_accuracy",
+                format!("Krawczyk waveform contraction bound {max_norm:e} is not below 1"),
+            ));
+        }
+        for (j, &node) in self.unknown.iter().enumerate() {
+            let image = krawczyk[j];
+            let budget_box = box_values[node];
+            if !(image.lo > budget_box.lo && image.hi < budget_box.hi) {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "Krawczyk waveform image [{:e}, {:e}] V is not strictly inside [{:e}, {:e}] V at node {}",
+                        image.lo,
+                        image.hi,
+                        budget_box.lo,
+                        budget_box.hi,
+                        self.nodes[node]
+                    ),
+                ));
+            }
+            let budget = self.voltage_budget_lower(solution.voltages[node])?;
+            let distance = (image - I::point(solution.voltages[node])).magnitude();
+            if !distance.is_finite() || distance > budget {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "Krawczyk waveform distance {distance:e} V exceeds budget {budget:e} V at node {}",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// A stateless operating point. No previous solution or physical history is

@@ -448,13 +448,15 @@ fn run_stateless_transient(
 ) -> Result<Response, Error> {
     let trajectory = Trajectory::new(transient, driven.len())?;
     let times = trajectory.config.output_times.clone();
-    let circuit = Circuit::new(program, &driven, tolerances)?;
+    let nodes = program.nodes.clone();
+    let mut circuit = crate::analog::Analog::new(program, driven, tolerances)?;
     let mut solutions = Vec::new();
     let mut previous: Option<Solution> = None;
     for (sample, &time) in times.iter().enumerate() {
         let solution = circuit
-            .solve_with_initial(
+            .solve(
                 &trajectory.values(time),
+                &trajectory.value_bounds(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
             )
             .map_err(|mut error| {
@@ -468,7 +470,7 @@ fn run_stateless_transient(
     Ok(Response {
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
-        nodes: circuit.nodes,
+        nodes,
         solutions,
         transient: Some(TransientTrace {
             times,

@@ -1,4 +1,4 @@
-//! Stateless affine and input-selected piecewise-affine voltage relations.
+//! Stateless voltage relations with explicit affine/polynomial certification.
 //! Resolve any conditions from original PWL enclosures, then certify the output.
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
@@ -9,7 +9,7 @@ use crate::solver::Circuit;
 
 struct Prepared {
     expressions: Vec<Expression>,
-    model: EventModel,
+    model: Option<EventModel>,
     circuit: Circuit,
 }
 
@@ -21,6 +21,18 @@ pub(crate) struct Analog {
     // Only the last branch's equations and error map are cached. Input values,
     // solutions and physical history are never cached or committed here.
     prepared: Option<Prepared>,
+    has_select: bool,
+}
+
+fn has_select(expr: &Expression) -> bool {
+    match expr {
+        Expression::Select { .. } => true,
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            has_select(left) || has_select(right)
+        }
+        Expression::Power { base, .. } => has_select(base),
+        _ => false,
+    }
 }
 
 impl Analog {
@@ -36,16 +48,23 @@ impl Analog {
             .iter()
             .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
             .collect();
+        let has_select = program.contributions.iter().any(|c| has_select(&c.rhs));
         Ok(Self {
             program,
             driven,
             input_nodes,
             tolerances,
             prepared: None,
+            has_select,
         })
     }
 
-    pub(crate) fn solve(&mut self, inputs: &[f64], input_bounds: &[I]) -> Result<Solution, Error> {
+    pub(crate) fn solve(
+        &mut self,
+        inputs: &[f64],
+        input_bounds: &[I],
+        initial: Option<&[f64]>,
+    ) -> Result<Solution, Error> {
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (&node, &bounds) in self.input_nodes.iter().zip(input_bounds) {
             nodes[node] = bounds;
@@ -65,10 +84,24 @@ impl Analog {
             for (c, rhs) in frozen.contributions.iter_mut().zip(&expressions) {
                 c.rhs = rhs.clone();
             }
-            // This slice requires affine leaves. EventModel's existing affine
-            // binding and original-IR error certificate provide that contract.
-            let model = EventModel::new(frozen, self.driven.clone(), self.tolerances.clone())?;
-            let circuit = model.circuit(&[])?;
+            // Affine systems retain the existing original-IR forward-error
+            // map, including merged contributions and redundant constraints.
+            // The stateless polynomial extension uses Newton and a Krawczyk
+            // certificate. Input-selected polynomial leaves remain outside
+            // the ordinary-condition contract; no unsupported IR is dropped.
+            let (model, circuit) =
+                match EventModel::new(frozen.clone(), self.driven.clone(), self.tolerances.clone())
+                {
+                    Ok(model) => {
+                        let circuit = model.circuit(&[])?;
+                        (Some(model), circuit)
+                    }
+                    Err(error) if error.kind == "unsupported_transient" && !self.has_select => (
+                        None,
+                        Circuit::new(frozen, &self.driven, self.tolerances.clone())?,
+                    ),
+                    Err(error) => return Err(error),
+                };
             self.prepared = Some(Prepared {
                 expressions,
                 model,
@@ -76,23 +109,28 @@ impl Analog {
             });
         }
         let prepared = self.prepared.as_ref().unwrap();
-        let solution = prepared.circuit.solve(inputs)?;
-        prepared
-            .model
-            .certify(
-                &Selection::default(),
-                input_bounds,
-                &[],
-                &[],
-                &solution.voltages,
-                &[],
-            )
-            .map_err(|mut error| {
-                if error.kind == "event_accuracy" {
-                    error.kind = "waveform_accuracy";
-                }
-                error
-            })?;
+        let solution = prepared.circuit.solve_with_initial(inputs, initial)?;
+        if let Some(model) = &prepared.model {
+            model
+                .certify(
+                    &Selection::default(),
+                    input_bounds,
+                    &[],
+                    &[],
+                    &solution.voltages,
+                    &[],
+                )
+                .map_err(|mut error| {
+                    if error.kind == "event_accuracy" {
+                        error.kind = "waveform_accuracy";
+                    }
+                    error
+                })?;
+        } else {
+            prepared
+                .circuit
+                .check_waveform_accuracy(&solution, input_bounds)?;
+        }
         Ok(solution)
     }
 }

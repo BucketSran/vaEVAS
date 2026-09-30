@@ -11,7 +11,9 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 
 本联合候选分支使用 **IR v15**，增加[普通 analog 局部赋值与输入条件](validation/ANALOG_CONDITIONS_CONTRACT.md)：
 无状态仿射/分段仿射瞬态统一按原始 PWL 区间认证输出误差，有条件时先认证分支。
-谓词限输入驱动的仿射与限定分段仿射表达式，两端均拒绝非线性谓词。尚未合入 main；下文原矩阵成绩仍指已合并的 PR26。
+谓词限输入驱动的仿射与限定分段仿射表达式，两端均拒绝非线性谓词。同时整合一阶 `laplace_nd`、`idtmod`/受限 `sin` 与无状态多项式瞬态，保留当前 main 的复位保护。
+尚未合入 main；本轮联合验证见[整合复审记录](../experiments/parallel-gap-integration/REVIEW.md#gap-completion)。
+下文历史矩阵成绩仍指已合并的 PR26。
 
 ## 构建与运行
 
@@ -78,13 +80,13 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-本分支 Python 前端与 Rust 内核使用 IR v12；版本迁移规则见[下文](#ir-v8-migration)。
+本分支 Python 前端与 Rust 内核使用 IR v15；版本迁移规则见[下文](#ir-v8-migration)。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；本分支表达式、事件与算子使用 IR v12，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；本分支表达式、事件与算子使用 IR v15，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
@@ -151,7 +153,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 
 ## IR 与贡献契约
 
-本分支使用 IR v12，延续 v11 的 idt 复位与逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+本分支使用 IR v15，延续 v11 的 idt 复位与逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；`select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。

@@ -983,17 +983,23 @@ impl Operators {
         if previous.len() != self.entries.len() {
             return Ok(false);
         }
+        let mut permitted_changes = Vec::with_capacity(self.entries.len());
         for ((entry, &before), after) in self.entries.iter().zip(previous).zip(self.values(time)?) {
-            if after == before {
-                continue;
-            }
-            match entry {
+            let permitted = match entry {
                 Runtime::Idt {
                     history,
                     reset: Some(_),
-                } if history.reset_active() && after == history.ic() => {}
-                _ => return Ok(false),
+                } => history.reset_active() && after == history.ic(),
+                // A pure function of an earlier, permitted reset change may
+                // change at the same instant. The caller still re-solves and
+                // replays every history from the same accepted base.
+                Runtime::Sin(SinInput::Operator { operator, .. }) => permitted_changes[*operator],
+                _ => false,
+            };
+            if after != before && !permitted {
+                return Ok(false);
             }
+            permitted_changes.push(after != before && permitted);
         }
         Ok(true)
     }

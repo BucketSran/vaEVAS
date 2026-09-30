@@ -1,24 +1,85 @@
-# Stateless nonlinear transient point-solve contract
+# Stateless nonlinear transient waveform-accuracy contract
 
-This note records a confirmed boundary of the branch-only stateless nonlinear
-transient entry. It is a diagnostic contract, not a regression that freezes a
+This note records the precision boundary and the branch-local repair for the
+stateless nonlinear transient entry in the IR v15 integration candidate. It is a diagnostic contract, not a frozen
 preferred rounded output.
 
-## Contract boundary
+## Proof object
 
-For programs with no states, events or history operators, transient execution
-solves each requested output time as a point operating point:
+For polynomial programs with no states, events or history operators, transient execution
+first solves each requested output time as a nominal point operating point:
 
 ```text
 F(v; fl(PWL(t))) = 0
 ```
 
 `fl(PWL(t))` is the kernel's binary64 representative produced by ordinary f64
-PWL interpolation. The accepted tolerances apply to the resulting point problem:
-original branch residual, row-scaled residual and full Newton correction. They do
-not certify the exact-real interpolation of the submitted binary64 PWL knots, the
-full arithmetic roundoff chain, or the amplification of input interpolation error
-through linear gain or nonlinear sensitivity.
+PWL interpolation. The existing Newton acceptance still applies to this point
+problem: original branch residual, row-scaled residual and full Newton
+correction.
+
+The transient path then performs a separate waveform-accuracy certification. It
+builds an interval for each driven input using the existing PWL interval
+operation, which encloses the exact real interpolation of the submitted binary64
+knots at that output time. Holding the accepted unknown voltages fixed as point
+intervals, it first replays each original branch relation with interval
+arithmetic over that input box. Every residual interval must fit the same voltage
+budget used by the nominal residual check:
+
+```text
+[-B_i, B_i], where B_i = vabstol + reltol * max(abs(lhs_i), abs(rhs_i)).
+```
+
+For point input intervals this residual replay is the whole waveform check in the
+current branch. It does not claim an additional root-existence, uniqueness or
+forward-error box certificate beyond the nominal Newton gates. For off-knot
+samples, residual replay alone is not enough: a tiny residual/input uncertainty
+can be amplified by feedback or by nonlinear sensitivity. The second step is
+therefore a restricted Krawczyk box certificate.
+
+The residual and interval-Jacobian calculations use the original RHS expression
+trees saved by assembly for each branch equation, not the collapsed affine row
+used by the fast nominal solve. This preserves cancellation across a legal raw IR expression tree for the certificate; duplicate-node terms inside one affine expression remain invalid IR. The implementation builds an
+inner representable voltage box around the accepted nominal solution:
+
+```text
+X_j ⊂ [x_j - B_j, x_j + B_j]
+B_j = lower(vabstol + reltol * abs(x_j))
+```
+
+The inner endpoints ensure the certified box itself does not exceed the requested
+voltage budget because of outward-rounded endpoint arithmetic. It then evaluates
+`F(x,U)` and the interval Jacobian `J(X,U)` over the original branch relation
+available to the solver. The local floating-point inverse-like matrix `C` is used
+only as a preconditioner; it is not treated as an exact inverse. The Krawczyk image
+is constructed with outward interval operations:
+
+```text
+K(X) = x - C F(x,U) + (I - C J(X,U)) (X - x)
+```
+
+The sample is accepted only when `K(X)` is strictly inside `X` and the interval
+operator row-sum bound, accumulated with outward interval arithmetic, satisfies:
+
+```text
+||I - C J(X,U)||∞ < 1
+```
+
+If the system is not square, a branch equation has already merged multiple
+contribution origins, the residual or Jacobian intervals are nonfinite, the local
+preconditioner cannot be built, the contraction bound is not below one, or the
+Krawczyk image is not strictly inside the budget box, the kernel returns
+`waveform_accuracy`. This is a conservative refusal, not a relaxed comparison
+threshold.
+
+In the integrated entry, affine systems retain the existing original-IR affine
+forward-error map, including consistent redundant constraints and summed
+contributions. They do not use the polynomial Krawczyk shape restrictions.
+Input-selected branches remain restricted to affine leaves. For polynomial systems the Krawczyk check certifies a root
+inside the requested voltage box under the same restricted Krawczyk conditions. It
+is still not a general-purpose interval solver for arbitrary coupled dynamics;
+nonlinear events, state/history/operator coupling and unsupported non-square or
+merged-branch cases remain outside this branch.
 
 ## High-gain diagnostic
 
@@ -45,20 +106,53 @@ Minimal request shape:
 ```
 
 At `t = 1.0`, exact rational arithmetic over the submitted binary64 knots gives
-`u(1) = 4/3` and therefore `y = 10000000000000000/3`. The current kernel first
-forms the rounded representative
+`u(1) = 4/3` and therefore `y = 10000000000000000/3`. The nominal f64 point uses
 
 ```text
 fl((1 - 1/3) * 1 + (1/3) * 2) = 1.3333333333333335
 ```
 
-and accepts `y = 3333333333333334.0` with zero residual for that rounded point
-problem. The absolute difference from the exact-PWL reference is `2/3 V`, far
-larger than `vabstol = 1e-12` when `reltol = 0`.
+and solves `y = 3333333333333334.0` with zero nominal residual. Relative to the
+exact-PWL reference this is `2/3 V` away, far larger than `vabstol = 1e-12` when
+`reltol = 0`.
 
-This demonstrates a confirmed gap relative to the exact-PWL voltage budget.
-Passing the current point residual contract does not close that gap or establish
-the stronger total-accuracy claim. Providing that claim would require carrying input interpolation
-uncertainty and a linear/nonlinear sensitivity budget through the solve, or a
-conservative refusal policy for off-knot observations whose propagated input
-uncertainty exceeds the requested voltage budget.
+The repaired contract rejects this request with `waveform_accuracy`. The same
+model can pass only when the requested voltage budget covers the propagated input
+uncertainty; the regression retains `vabstol = 8 V` as its positive control. The integrated
+affine map and the polynomial interval-residual check both propagate the original
+input uncertainty; their conservative bounds need not be numerically identical.
+
+## Feedback diagnostic
+
+Verilog-A body:
+
+```verilog
+V(y,r) <+ a * V(y,r) + (V(u,r) - 1);
+```
+
+with `a = 0.99999999999999`, source knots
+`[[0, 1], [3, nextafter(1, +inf)]]`, `t = 1`, `vabstol = 1e-12`, and
+`reltol = 0` has a nominal f64 solution `y = -0.0` and a zero nominal residual.
+Exact rational arithmetic over the submitted binary64 values gives
+
+```text
+u(1) = (2 * 1 + nextafter(1, +inf)) / 3
+exact_y = (u(1) - 1) / (1 - a) = 1 / 135 V
+```
+
+within the exact binary64 value of `a`. The residual interval is only around one
+ulp, but the feedback gain `1 / (1 - a)` amplifies it to millivolts, so the
+request must fail `waveform_accuracy` under a `1e-12 V` absolute budget. This is
+the counterexample that distinguishes residual replay from forward-error
+certification.
+
+## Remaining scope
+
+The joint candidate still rejects nonlinear events, state/history/operator
+coupling, and non-affine transient dynamics. The Krawczyk certificate is limited
+to square, single-origin branch systems at off-knot stateless samples. It uses the
+saved original RHS tree within that branch, including legal nested expression
+cancellation, but does not recover separate source-level contributions after
+assembly has merged multiple origins. Duplicate-node terms inside one affine
+expression remain invalid IR. It does not replace a future general interval solve for broader
+nonlinear dynamic features.
