@@ -67,7 +67,7 @@ impl IdtMod {
         self.integral.value_bounds(time)
     }
 
-    pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+    pub(crate) fn value_bounds_segments(&self, time: f64) -> Result<Vec<I>, Error> {
         let raw = self.raw_value_bounds(time)?;
         if !raw.finite() {
             return Err(Error::new(
@@ -77,7 +77,7 @@ impl IdtMod {
         }
         let declared = full_range(self.modulus, self.offset)?;
         if raw.hi - raw.lo >= self.modulus {
-            return Ok(declared);
+            return Ok(vec![declared]);
         }
         let normalized = (raw - I::point(self.offset)) / I::point(self.modulus);
         if !normalized.finite() {
@@ -88,23 +88,38 @@ impl IdtMod {
         }
         let lo_turn = normalized.lo.floor();
         let hi_turn = normalized.hi.floor();
-        if lo_turn != hi_turn {
-            return Ok(declared);
-        }
-        if lo_turn.abs() > 4_503_599_627_370_496.0 {
+        if lo_turn.abs().max(hi_turn.abs()) > 4_503_599_627_370_496.0 {
             return Err(Error::new(
                 "waveform_accuracy",
                 "cannot certify idtmod wrap after a non-representable turn count",
             ));
         }
-        let wrapped = raw - I::point(lo_turn) * I::point(self.modulus);
-        if !wrapped.finite() {
-            return Err(Error::new(
-                "waveform_accuracy",
-                "nonfinite idtmod wrapped enclosure",
-            ));
+        let wrap_for_turn = |turn: f64| -> Result<I, Error> {
+            let wrapped = intersect(raw - I::point(turn) * I::point(self.modulus), declared);
+            if !wrapped.finite() || wrapped.lo > wrapped.hi {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite idtmod wrapped enclosure",
+                ));
+            }
+            Ok(wrapped)
+        };
+        if lo_turn == hi_turn {
+            return Ok(vec![wrap_for_turn(lo_turn)?]);
         }
-        Ok(intersect(wrapped, declared))
+        if hi_turn - lo_turn != 1.0 {
+            return Ok(vec![declared]);
+        }
+        Ok(vec![wrap_for_turn(lo_turn)?, wrap_for_turn(hi_turn)?])
+    }
+
+    pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
+        let segments = self.value_bounds_segments(time)?;
+        if segments.len() == 1 {
+            Ok(segments[0])
+        } else {
+            full_range(self.modulus, self.offset)
+        }
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {

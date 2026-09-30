@@ -142,6 +142,8 @@ enum SinInput {
         operator: usize,
         coefficient: f64,
         constant: f64,
+        coefficient_bounds: I,
+        constant_bounds: I,
     },
 }
 
@@ -163,6 +165,37 @@ const SIN_MAX_WIDTH: f64 = 1.0e-6;
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
 const PI_BITS: u64 = 0x4009_21fb_5444_2d18;
 const FRAC_PI_2_BITS: u64 = 0x3ff9_21fb_5444_2d18;
+
+fn sin_operator_bounds(
+    input: &Expression,
+    program: &Program,
+    operator: usize,
+) -> Result<(I, I), Error> {
+    let row = crate::affine_bounds::affine(input, program)?;
+    let operator_base = program.nodes.len() + program.states.len();
+    let operator_limit = operator_base + program.operators.len();
+    let coefficient_index = operator_base + operator;
+    if row[..operator_base].iter().any(|x| !x.zero())
+        || row[operator_base..operator_limit]
+            .iter()
+            .enumerate()
+            .any(|(index, x)| index != operator && !x.zero())
+    {
+        return Err(Error::new(
+            "unsupported_operator",
+            "sin operator input must have one bounded operator dependency and constants only",
+        ));
+    }
+    let coefficient = row[coefficient_index];
+    let constant = *row.last().unwrap();
+    if coefficient.zero() || !coefficient.finite() || !constant.finite() {
+        return Err(Error::new(
+            "unsupported_operator",
+            "sin operator input must have finite bounded affine coefficients",
+        ));
+    }
+    Ok((coefficient, constant))
+}
 
 fn constant_interval(bits: u64) -> I {
     I {
@@ -391,10 +424,14 @@ impl Operators {
                                 "sin operator input must reference one earlier operator with finite affine coefficients",
                             ));
                         }
+                        let (coefficient_bounds, constant_bounds) =
+                            sin_operator_bounds(input, program, operator)?;
                         SinInput::Operator {
                             operator,
                             coefficient,
                             constant,
+                            coefficient_bounds,
+                            constant_bounds,
                         }
                     } else {
                         let (points, bounds) =
@@ -475,6 +512,7 @@ impl Operators {
                             operator,
                             coefficient,
                             constant,
+                            ..
                         } => (*constant + *coefficient * values[*operator]).sin(),
                     },
                     Runtime::AbsDelay(history) => history.value(time)?,
@@ -516,12 +554,33 @@ impl Operators {
                         SinInput::Direct(source) => sin_bounds(source.value_bounds(time)?)?,
                         SinInput::Operator {
                             operator,
-                            coefficient,
-                            constant,
+                            coefficient_bounds,
+                            constant_bounds,
+                            ..
                         } => {
-                            let input =
-                                I::point(*constant) + I::point(*coefficient) * bounds[*operator];
-                            sin_bounds(input)?
+                            if let Runtime::IdtMod(history) = &self.entries[*operator] {
+                                history
+                                    .value_bounds_segments(time)?
+                                    .into_iter()
+                                    .try_fold(None, |acc, phase| {
+                                        let input = *constant_bounds + *coefficient_bounds * phase;
+                                        let bound = sin_bounds(input)?;
+                                        Ok::<_, Error>(Some(match acc {
+                                            Some(previous) => union(previous, bound),
+                                            None => bound,
+                                        }))
+                                    })?
+                                    .ok_or_else(|| {
+                                        Error::new(
+                                            "waveform_accuracy",
+                                            "cannot certify sine of empty wrapped phase enclosure",
+                                        )
+                                    })?
+                            } else {
+                                let input =
+                                    *constant_bounds + *coefficient_bounds * bounds[*operator];
+                                sin_bounds(input)?
+                            }
                         }
                     },
                     Runtime::Slew(history) => history.value_bounds(time),
