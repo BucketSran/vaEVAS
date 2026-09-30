@@ -256,6 +256,8 @@ EVAS 列使用新内核瞬态 API，不能与旧 EVAS 0.8.7 混称。服务器�
 
 ## 复位候选：合并前完整审查与兼容回归
 
+交付入口：[PR26](https://github.com/BucketSran/vaEVAS/pull/26)。合并收尾仅同步能力状态、说明和链接，保留下面被测运行时身份。
+
 审查范围是 main `6df7f48` 到候选 `edb004d` 的完整分支增量，包含三参数 idt、
 Python/Rust IR v11、复位依赖图及公共事件候选生命周期。由协调 agent 直接审查代码、
 调用者及契约，未另行委托独立 reviewer。候选在本节实验执行时尚未合并 main。

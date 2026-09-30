@@ -2,7 +2,7 @@
 
 核对日期：2026-09-30。本基线 EVAS 0.9.0 / IR v11 在 0.7.1 的受限 idt 与稠密/稀疏求解之上，
 通过 PR23 交付受限事件体 if/else、cross OR 与输入/状态误差认证，PR25 补多事件写者，
-本检查点补三参数 idt 复位及历史认证。旧 IR v1–v10 须从原始 VA 重新编译，未发布版本 tag。
+[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 补三参数 idt 复位及历史认证。旧 IR v1–v10 须从原始 VA 重新编译，未发布版本 tag。
 历史 PR14 被测实现为 `3638024`，PR15 为 `e01fb5b`；这两项的合并收尾只同步文档与实验资产，
 运行时代码、测试和独立验证定义保持被测身份。PR14 合并提交为 `0c36d3b`，PR15 的最终合并身份见其 PR。
 实现、证据、交付分别记录；包版本号不能代替提交身份，也不代表已创建发布 tag。
@@ -30,7 +30,7 @@
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
-| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的二参数 idt，及受限状态 reset 的三参数 idt；导数/滤波/相位未交付 main | [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付二参数；本检查点扩展 reset，IR v11；被测运行时 `edb004d` | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)；hold/release、transition 组合、同引擎弃候选与事件时间区间回归；两档各 24/31，相比 PR25 main `6df7f48` 各 22/31，原达标 44 份 CSV 逐字节一致，见[完整审查对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；[数学与实现](OPERATORS.md#idt) | 仍限定无结构复位反馈环的状态 reset、直接 PWL 输入；积分输入反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复待补；已重跑原 31×2 本地矩阵，未新增后端对照 |
+| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的二参数 idt，及受限状态 reset 的三参数 idt；导数/滤波/相位未交付 main | [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付二参数；[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 交付 reset，IR v11；被测运行时 `edb004d` | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)；hold/release、transition 组合、同引擎弃候选与事件时间区间回归；两档各 24/31，相比 PR25 main `6df7f48` 各 22/31，原达标 44 份 CSV 逐字节一致，见[完整审查对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；[数学与实现](OPERATORS.md#idt) | 仍限定无结构复位反馈环的状态 reset、直接 PWL 输入；积分输入反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复待补；已重跑原 31×2 本地矩阵，未新增后端对照 |
 | QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 0.9.0 原 31 条件瞬态矩阵两档执行；PR20 交付独立 checker 校准 | [0.9.0 收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)：该历史检查点两档各 21/31，其余 10 明确拒绝；[新本地对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) main `6df7f48` 各 22/31、reset 候选各 24/31；历史与其他后端失败保留；[S1 审阅补充](../validation/NEXT_CASE_CARDS.md#s1-review)及 E1/E2/C1 校准 | 观察误差界、未见确认集；S1 新顺序条件未执行后端，不增加原矩阵成绩；正式资格仍 I；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准和稠密/稀疏分流 | PR8 合成检查点保留，0.7.1 未重新计时 | 不同旧提交的局部测量；18.5% 退化未稳定复现，见[边界](NUMERICS.md#稀疏分支与性能边界) | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
@@ -40,6 +40,7 @@
 
 | 入口 | 固定检查点与依赖 | 已有证据及边界 |
 | --- | --- | --- |
+| [PR26](https://github.com/BucketSran/vaEVAS/pull/26) | 受限状态 reset 的三参数 idt，IR v11，基于 PR25 main `6df7f48`；被测运行时 `edb004d`，后续只同步文档/收据 | 279 Python / 63 Rust、Clippy 零告警和格式检查通过；124 次新本地矩阵执行，基线两档各 22/31，reset 各 24/31，44 份原达标 CSV 逐字节一致；未新跑 Spectre，正式资格 I；[审查记录](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) |
 | [PR23](https://github.com/BucketSran/vaEVAS/pull/23) | 0.9.0 / IR v9，生产源码 `14d0b24`；审阅通过，交付 main；合并前同步 PR20 main `ee50b5d`，收尾只改测试/文档，生产源码身份不变 | 260 Python / 56 Rust 本轮审阅重跑通过；原 31 条件两档各 21 有限观测达标、10 明确拒绝，正式资格 I；修正 OR 专项 EVAS 16/16、Spectre 15/16；近邻根粗档差异保留，两个单参数诊断双方均 2/2；[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)，矩阵与 Spectre 证据复用，raw local-only |
 | [PR20](https://github.com/BucketSran/vaEVAS/pull/20) | 独立 S1 与 E1/E2/C1 checker 校准；已合并 `ee50b5d`，未修改 EVAS 实现或原 31 条件身份 | 66 项 checker 校准本轮审阅重跑通过；新增贡献顺序条件尚未执行后端，不能增加矩阵通过数；[S1 审阅卡](../validation/NEXT_CASE_CARDS.md#s1-review) |
 | [PR17](https://github.com/BucketSran/vaEVAS/pull/17) | 2026-09-29 旧 EVAS `v0.8.7` / `6cb6fa7` 审查档案；原报告提交 `0b7576a`，审阅通过并交付历史资产，运行时不变 | 47 条诊断观测（含错误输出与拒绝），不是通过数；本轮核对 11 个资产哈希、16 次完整模型请求身份与 11 组解析误差；[报告与证据边界](../../experiments/legacy-evas-migration/README.md)。受限 idt 已另由 PR19 交付，其他候选以当前能力表为准；完整日志和二进制 local-only |
