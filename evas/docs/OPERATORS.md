@@ -218,9 +218,11 @@ reset 分支新增同刻 post-reset 重解、transition 组合、事件时间区
 649 个原始 binary64 输入的 Fraction 答案均落入实际 Rust 积分区间，包含累计段、尺度变化和次正规数。
 [可执行示例](../examples/idt.json)在 0/1/2/3/4 μs 的名义答案为
 0.25/0.40/0.45/0.40/0.25 V，属于两参数直接积分开发例。
-原 `d1-free` 与 `d1-reset` 使用相同的三参数带复位源码，两档共四次编译均明确拒绝；
-即使前者复位输入恒零，也不能省略结构准入。原矩阵每档分母仍为 31，其他 29 条件未在本次重跑，
-此检查点不宣称增加原矩阵通过数。详细日志与构建/源码哈希保存在 ignored runs，仅本地可取得。
+reset 分支合入多事件写状态依赖后，对原 `d1-free` 与 `d1-reset` 源码执行 targeted EVAS smoke：
+base/fine 两档各 4,001/40,001 个观测点均满足原 checker 的 finite-observation 判据，
+`d1-reset` 的共同 witness 为 reset x≈1.50002、release x=2.5，最大电压/flag 误差约
+1.2e-16。此检查只覆盖 D1 两个条件的本地 EVAS 执行；原矩阵每档分母仍为 31，
+其他 29 条件、远程 Spectre 和完整后端矩阵未在本分支重跑；本次证据为本地命令输出，尚未整理成矩阵收据。
 
 0.7.0 整合 PR18 后重新执行完整 Python 218 项、Rust 42 项及独立数学 9 项，均通过。
 新增的[私有积分恢复测试](../rust_core/src/transient_idt_tests.rs)由 `transient.rs` 的 test-only 模块加载，
