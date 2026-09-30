@@ -3676,10 +3676,11 @@
     "unrelated_knots_red_log_sha256": "3021917af218eb05fc0542b0f57779f69d9fa2fbaa6a79c14906a61e9d34164d",
     "guard_green_log_sha256": "fe688812674aead4fa5594c6ff19a30b2aa02c572c065c2b86cbad360ace0524"
   },
-  "spectre_comparison": "Incomplete: 16 extra configurations failed AHDL read-in because of generated leading-dot literals; see event-or-0.9.0-special.json. No new Spectre transient result claimed.",
+  "spectre_comparison": "Corrected-input new executions: EVAS16/16, Spectre15/16; nearby-coarse count1 vs2 preserved, two single-parameter diagnoses pass both2/2. See event-or-0.9.0-spectre-followup.json. Original full31 matrix not rerun.",
   "limitations": [
     "finite sampled observations, not continuous-time qualification",
     "remaining ten conditions explicitly rejected",
     "timer OR, nonlinear/feedback guards, multi-block state writes and idt reset remain unsupported"
-  ]
+  ],
+  "spectre_first_attempt": "Incomplete: 16 extra configurations failed AHDL read-in because of generated leading-dot literals; see event-or-0.9.0-special.json. No new Spectre transient result claimed."
 }

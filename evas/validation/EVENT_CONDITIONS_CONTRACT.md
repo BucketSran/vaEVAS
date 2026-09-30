@@ -359,8 +359,9 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 本契约目标的 V4 两条、E2 三条、C1 三条全部满足原有限观测判据。
 原条件/阈值/checker 不改，正式资格仍为 I；没有把 8 条单测或静态回放计作矩阵提升。
 [公开整理收据及逐条表](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)
-记录各身份与复现入口；原始运行材料尚为 local-only。额外专项 EVAS 16/16；Spectre 16 次因探针数字写法停在 AHDL 编译，
-生成器已修正但尚未重跑，因此没有新增 Spectre 行为对照。
+记录各身份与复现入口；原始运行材料尚为 local-only。修正输入专项新执行 EVAS 16/16、Spectre 15/16；近邻根粗档差异保留，
+仅细化步长或各自收紧时间/表达式容差均恢复两次计数。另两个诊断双方均 2/2。
+这些只满足候选窗口下的有限观察要求，首次编译失败检查点仍保留。
 
 尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
 多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。

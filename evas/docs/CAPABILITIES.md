@@ -38,7 +38,7 @@
 
 | 入口 | 固定检查点与依赖 | 已有证据及边界 |
 | --- | --- | --- |
-| [PR23](https://github.com/BucketSran/vaEVAS/pull/23) | 0.9.0 / IR v9，生产源码 `14d0b24`，基于 main `a0c8043`；草稿待 review，未合并 | 260 Python / 56 Rust；原 31 条件两档各 21 有限观测达标、10 明确拒绝，正式资格 I；额外 OR 探针 EVAS 16/16，Spectre 16 次因探针数字写法停在编译，尚无行为对照；[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)，raw local-only |
+| [PR23](https://github.com/BucketSran/vaEVAS/pull/23) | 0.9.0 / IR v9，生产源码 `14d0b24`，基于 main `a0c8043`；草稿待 review，未合并 | 260 Python / 56 Rust；原 31 条件两档各 21 有限观测达标、10 明确拒绝，正式资格 I；修正 OR 专项新执行 EVAS 16/16、Spectre 15/16；近邻根粗档差异保留，两个单参数诊断双方均 2/2；[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)，raw local-only |
 | [0.8.0 历史检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#conditions-080-checkpoint) | 事件条件提交 `a1b0163` / IR v8，基于 main `a0c8043`；现作为 PR23 的前一实现切片保留 | 250 Python / 55 Rust、14 条件数学 / 9 动态数学；当时静态 22 配置、484,022 点通过。此切片当时 OR 未接入，也未新跑 Spectre、原瞬态矩阵或计时；不能替代 0.9.0 证据 |
 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) | 0.7.1 / IR v7，被测 `f44b730`，基于 PR19 main `2e3196f`；算法来源 `4d20fbc`，最终收尾只改文档 | 230 Python / 52 Rust / 9 纯数学；静态 22 配置、484,022 点通过，20 条明确拒绝；稀疏 idt 1,240 个电压检查；未新跑 Spectre、瞬态原矩阵或计时，原始日志仅本地保留 |
 | [PR11](https://github.com/BucketSran/vaEVAS/pull/11) | 协作规则、手册与数学契约来源；原数学检查点 [520ca96](https://github.com/BucketSran/vaEVAS/commit/520ca960229dace283fd7c5cc283b7e0f86f0e06) | 13 组 Fraction 数学核对覆盖四算子；不是 13 个正式条件或后端执行 |

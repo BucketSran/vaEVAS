@@ -16,10 +16,10 @@
 [事件 OR](../../evas/docs/EVENTS.md#event-or)与[条件契约](../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 
 **260 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
-locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。新 Spectre 专项仍待完成，
-下面历史 Spectre/OpenVAF/Gnucap 数据不当作此次源码的新执行证据。
+locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。修正后的 Spectre OR 专项已完成：原专项 EVAS 16/16、Spectre 15/16；
+两个单参数诊断均为双方 2/2，详情见下文。下面历史 Spectre/OpenVAF/Gnucap 数据不当作此次源码的新执行证据。
 
-### 额外 OR / 采样复位专项与未完成的 Spectre 对照
+### 额外 OR / 采样复位专项：首次编译失败检查点
 
 [event_or_reference.py](../dvs2-spectre-validation/event_or_reference.py) 固定 8 类探针×粗细两档：
 不同根、同根比例 guard、反向声明、重复叶、近邻不同根、同刻复位、复位活动期间触发、
@@ -38,10 +38,45 @@ Spectre **21.1.0.509.isr12** 的 16 个初始配置均返回 2，停在 AHDL rea
 `>=` 与 `>` 的精确边界不同取支；
 生产源码与原 62 配置的被测身份不变，Python 回归总计由 258 增至 260。
 
-固定 16 次 Spectre 尝试预算已用完，未扩大重跑。下一次先检查 1 个修正后 smoke，
-再派发余下配置；目前修正后输入仍未经过 Spectre 编译确认，行为对照明确待办。
+首次固定 16 次 Spectre 尝试预算用完后，当时未重跑。本段和旧收据保留该失败身份；
+用户明确要求继续后，修正输入另行执行的结果如下，不覆盖初次失败。
 [专项收据](results/event-or-0.9.0-special.json)保留初始失败、修正输入、EVAS 源码、
 checker 身份与 raw 清单哈希；104 个远端工件清单已核验，原始材料仅本地保留。
+
+<a id="event-or-spectre-followup"></a>
+
+### 修正输入的 Spectre 对照与近邻根诊断
+
+用户继续授权后，先执行 `distinct-fine` 一配置；编译、运行、输入忠实度、有效设置和独立
+计数/时间戳/采样判据全部通过，才执行剩余 15 个配置。两个阶段使用独立冻结输入身份，
+共同组成原专项 16 个配置，不增加原 31 条件分母。随后对实际差异追加两个单参数诊断。
+本次是 **18 个新 Spectre 执行与 18 个新本地 EVAS 执行**；没有新跑原 31 全矩阵。
+
+原专项 EVAS **16/16**、Spectre **15/16** 满足候选窗口下的有限观察判据。
+唯一不符是 `nearby-coarse`：两个可精确表示的手算根相距约 **0.931 ns**，
+Spectre 最终计数 1、EVAS 2。仅细化步长后 Spectre 也为 2。保持粗步长时，
+分别只收紧表达式容差或只收紧时间容差，双方也均计数 2。失败仍留在原专项分母内。
+
+| 配置变化 | maxstep | cross expr_tol | cross time_tol | Spectre / EVAS 末态计数 |
+| --- | --- | --- | --- | --- |
+| 原粗档 | 100 ns | 0.01 V | 59.605 ns | 1 / 2 |
+| 仅细化步长 | 1 ns | 0.01 V | 59.605 ns | 2 / 2 |
+| 仅收紧表达式容差 | 100 ns | 1e-8 V | 59.605 ns | 2 / 2 |
+| 仅收紧时间容差 | 100 ns | 0.01 V | 0.233 ns | 2 / 2 |
+
+本探针 `u(t)=t/U`，`U=2^-20 s`，根为 `U/2` 和 `513U/1024`。
+定位窗口半宽为 `min(time_tol, expr_tol*U)`：原宽约 9.537 ns，远大于根间隔；
+收紧 expr_tol 后约 9.537 fs，收紧 time_tol 后约 0.233 ns。
+粗档唯一一次计数更新对应归一化采样时间戳 0.505，位于两个根之后，并仍处于两个原定位窗口内；
+细档可观察到 0→1→2 两次更新。这与宽窗口下两个过零在同一接受点附近被处理的解释一致，
+**不是对 Spectre 私有事件队列实现或 LRM 违规的断言**。也不能只靠减小 maxstep 保证所有时移都一致。
+
+EVAS 保持契约：可证明不同且有序的根分别执行，同根有证书才对单个 OR 事件体去重。
+没有为匹配 Spectre 的粗档计数放宽语义或阈值，也没有修改任何运行时代码。
+[新收据](results/event-or-0.9.0-spectre-followup.json)记录每个配置的判定、有效设置、输入/输出/
+checker/源码身份及诊断；330 个远端 raw 工件清单已逐项校验，raw 仍 local-only。
+原矩阵每档 21/31 与 260 Python / 56 Rust 是生产源码身份核验后复用的先前检查，并非此次新执行。
+正式资格仍 I；候选窗口、有限导出及输出时间戳不能替代物理观察误差界或连续时间证明。
 
 | 条件 | 基础档：基线 → 当前 | 细化档：基线 → 当前 |
 | --- | --- | --- |

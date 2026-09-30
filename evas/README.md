@@ -46,8 +46,8 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 **260 Python / 56 Rust**、14 条条件数学及 9 条动态数学检查通过；locked 构建、
 all-targets warnings-as-errors、格式与 diff 检查通过。
 原 31 条件 × 两档新执行均为 **21 观测达标、10 明确拒绝**，新增的 8 条是 V4/E2/C1；
-formal qualification 仍为 I。Spectre 专项 16 次因生成探针的数字写法停在 AHDL 编译，
-生成器已修正但未在本次预算内重跑，行为对照待完成；静态回放数字继续归属于旧检查点。
+formal qualification 仍为 I。修正后的 OR 专项 EVAS 16/16、Spectre 15/16 满足候选窗口有限判据；
+近邻根粗档计数差异保留，仅收紧步长/表达式容差/时间容差分别恢复两次计数。首次编译失败身份保留；静态回放数字继续归属于旧检查点。
 逐条结果、身份、原始材料可取得性和复现入口见[本轮收据与矩阵](../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)。
 
 0.8.0 / IR v8 的条件分支检查点基于 main `a0c8043`，新增 **20 项 Python、3 项 Rust** 检查；
