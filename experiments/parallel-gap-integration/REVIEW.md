@@ -46,10 +46,43 @@ accept the writer check iff |W(q,B)| <= 1 for every q
 分别 4,001 / 40,001 个观测点，最大观测电压误差约 `2.04e-14 / 2.12e-14 V`。
 收据位于候选分支 `experiments/pr14-pr15-validation/results/event-writers-v3-branch.json`。
 运行真实发生在旧 head 加未提交修复上，运行后修复提交为 `144d8b0`；收据保留当时的 dirty 身份，
-不冒充 clean commit 执行。raw 与冻结输入仍 local-only，正式资格 I；本轮没有新 Spectre 执行或性能测量。
+不冒充 clean commit 执行。这份分支专项当时未新执行 Spectre；后续新对照见下节。
+raw 与冻结输入仍 local-only，正式资格 I；未作性能测量。
 
 结论：该受限写者策略、调用位置与失败完整性没有新的阻塞发现，可先交用户 review。
 最终交付仍需用户审阅和实际目标 main 的依赖同步；本结论不授权合并。
+
+### 后续补充：V3 与 Spectre 的新执行对照
+
+`event-writers-spectre-20260930-01` 固定同一候选 `bfaf8d3`，干净工作树，内核 SHA256
+`b3cf1d076325dea136ac806823f9f78d434f174b9199fd9d6a1ed8710cedcd83`。
+原 V3 DUT、condition、两档 settings、Spectre 网表逐字节复制自原冻结输入；原 checker 未改。
+本轮 EVAS 与 thu-sui 的 Spectre **21.1.0.509.isr12** 各新执行两次，共四次，未复用旧波形。
+沿用原 Spectre runner，只将案例数、输出数断言与预算元数据缩减为 1 条件 / 2 次；
+单线程、单 CPU，90 s/次、30 s license 等待上限。实际 stop、step、maxstep、method 与
+reltol/vabstol/iabstol 均已从 Spectre 日志核对，全部匹配原请求。
+
+| 档位 | EVAS / Spectre 点数 | 独立验收 | 平台误差 | 两波形最大插值差值 |
+| --- | ---: | --- | ---: | ---: |
+| 基础 | 4,001 / 4,006 | 两者均 observations_within_targets | 两者 0 V | 4.0000 mV |
+| 细化 | 40,001 / 40,006 | 两者均 observations_within_targets | 两者 0 V | 0.65250 mV |
+
+原独立答案中，两次迟滞更新的名义时刻为 1.375 / 3.375 μs；输出从 0.1 V 到 0.9 V，
+边沿时长 50 ns。基础档从 Spectre 的输出 50% crossing 推算起点约晚 0.25 ns；
+细化档约晚 0.03140 / 0.04078 ns。这些是输出边沿估计，不是直接读取内部事件时刻。
+边沿斜率为 `0.8 V / 50 ns`，故 0.25 ns 位移对应约 4 mV 名义波形差值。
+原合同允许事件起点晚至 0.5 ns，原 checker 用所有导出点检验是否存在共同允许事件历史；
+不能把原电压目标理解为每个点都必须贴合名义零时间偏差波形。两者的共同历史检查均为 P，
+正式观察资格仍为 I，未证明未观测时刻的误差。
+
+结论限定为正常 V3 迟滞：平台与事件历史相容，边沿存在可解释且细化后减小的数值差异；
+不能声称逐点一致、Spectre 出错、EVAS 普遍更准确或同刻多写语义已对齐。
+本轮未新增同刻跨块实际写冲突的 Spectre 诊断、完整 31 矩阵或速度测量。
+
+新收据见 [V3 对照](../pr14-pr15-validation/results/event-writers-spectre-v3.json)，
+重分析入口为 [event_writer_compare.py](../pr14-pr15-validation/event_writer_compare.py)。
+8 项原 checker 校准检查另通过。原始波形、远端清单、运行器快照及候选源码归档仅本地/thu-sui 保留，
+不称为可公开下载的复现包。
 
 ## 继续处理的精度问题
 
