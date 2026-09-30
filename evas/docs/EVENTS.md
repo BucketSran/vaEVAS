@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：EVAS 0.9.0 / IR v9，支持受限事件体条件与 cross 的 OR；当前与历史检查点身份见
+适用范围：当前 main 的 EVAS 0.9.0 / IR v11，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 <a id="event-or"></a>
@@ -12,7 +12,7 @@
 时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
 首版只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
 
-IR v9 保留一个 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
+OR 结构由 IR v9 引入，当前 v11 继续使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
 `EventModel` 为叶子保存 `(block, leaf)` 身份，写者与赋值路径仍按 block 管理。
 日程按叶子定位和认证；只有证明同根且共同代表时间满足每个叶子的容差后，
 候选批次才将 block 去重，并调用既有顺序赋值和电压联立求解。
@@ -216,7 +216,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 <a id="multiple-event-writers"></a>
 
-### 多事件块写同一状态（本次交付）
+### 多事件块写同一状态（PR25 已交付）
 
 本检查点在 0.9.0 / IR v9 之后增加候选批次 writer 检查，不改变 IR。
 构建期允许不同事件块潜在写同一 state，但仍拒绝事件块读取另一个事件块也可能写入的 state。
