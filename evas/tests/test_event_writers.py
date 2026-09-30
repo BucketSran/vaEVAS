@@ -1,0 +1,86 @@
+"""Independent checks for distinct event blocks writing one state.
+
+These tests cover the bounded EVENT-ORDER extension: different event blocks may
+write the same state when a candidate batch selects at most one writer.
+Simultaneous selected writers remain an atomic runtime conflict.
+"""
+import unittest
+
+from evas import KernelError, compile_sources, transient
+from test_affine import KERNEL, instance, model
+
+
+V3_SOURCE = model('''
+  @(initial_step) q=0;
+  @(cross(V(u,r)-.65,+1,100p,100u)) q=1;
+  @(cross(V(u,r)-.35,-1,100p,100u)) q=0;
+  V(y,r)<+transition(.1+.8*q,0,50n,50n);
+''', 'integer q;')
+
+
+def compile_v3(instances=None):
+    return compile_sources({'event_writers.va': V3_SOURCE}, instances or [instance()])
+
+
+def execute_v3(*, sources=None, times=None, instances=None):
+    return transient(
+        compile_v3(instances),
+        sources or {'u': [[0,.4],[1e-6,.8],[2e-6,.2],[3e-6,.8]]},
+        times or [0,.7e-6,1.8e-6,2.9e-6,3e-6],
+        stop=3e-6,
+        max_step=10e-6,
+        kernel=KERNEL,
+    )
+
+
+class EventWriterContracts(unittest.TestCase):
+    def test_hysteresis_events_write_one_state_in_different_batches(self):
+        result = execute_v3()
+        self.assertEqual([event['event'] for event in result['transient']['events']], [0,1,0])
+        for event, expected in zip(result['transient']['events'], [.625e-6,1.75e-6,2.75e-6]):
+            self.assertAlmostEqual(event['time'], expected, delta=1e-18)
+        self.assertEqual(result['transient']['states'], [[0],[1],[0],[1],[1]])
+        y = result['nodes'].index('y')
+        for row, expected in zip(result['solutions'], [.1,.9,.1,.9,.9]):
+            self.assertAlmostEqual(row['voltages'][y], expected, places=12)
+
+    def test_no_trigger_holds_initial_state(self):
+        result = execute_v3(sources={'u': [[0,.5],[3e-6,.5]]})
+        self.assertEqual(result['transient']['events'], [])
+        self.assertEqual(result['transient']['states'], [[0],[0],[0],[0],[0]])
+        y = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in result['solutions']], [.1]*5)
+
+    def test_instance_order_does_not_merge_state_writers(self):
+        a = instance('a', connections=dict(u='u', y='a', r='0'))
+        b = instance('b', connections=dict(u='v', y='b', r='0'))
+        sources = {
+            'u': [[0,.4],[1e-6,.8],[2e-6,.2],[3e-6,.8]],
+            'v': [[0,.8],[.8e-6,.2],[1.8e-6,.8],[2.8e-6,.2],[3e-6,.2]],
+        }
+        results = [execute_v3(sources=sources, instances=order) for order in ([a,b], [b,a])]
+        self.assertEqual(results[0]['solutions'], results[1]['solutions'])
+        for result in results:
+            final = dict(zip(result['transient']['state_names'], result['transient']['states'][-1]))
+            self.assertEqual(final, {'a:q': 1, 'b:q': 0})
+            self.assertEqual(len(result['transient']['events']), 6)
+
+    def test_simultaneous_writers_are_atomic_conflicts(self):
+        source = model('''@(initial_step) q=0;
+          @(cross(V(u,r)-.5,+1,100p,100u)) q=1;
+          @(cross(V(u,r)-.5,+1,100p,100u)) q=2;
+          V(y,r)<+q;''', 'integer q;')
+        program = compile_sources({'event_writers.va': source}, [instance()])
+        with self.assertRaisesRegex(KernelError, 'event_conflict'):
+            transient(
+                program,
+                {'u': [[0,.4],[1e-6,.6],[2e-6,.4],[3e-6,.6]]},
+                [0,3e-6],
+                stop=3e-6,
+                max_step=10e-6,
+                kernel=KERNEL,
+            )
+
+
+if __name__ == '__main__':
+    unittest.main()

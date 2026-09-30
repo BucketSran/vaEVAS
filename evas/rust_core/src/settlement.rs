@@ -23,6 +23,7 @@ pub(crate) fn prepare(
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select(events, input_bounds)?;
+    model.check_selection_writers(&selection)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
     let candidate = model
