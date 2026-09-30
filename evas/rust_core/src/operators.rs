@@ -505,7 +505,7 @@ fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
                 right_terms.scale(left_terms.constant_value()?)?
             };
         }
-        Expression::Power { .. } => {
+        Expression::Power { .. } | Expression::Select { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "idt reset must be affine in instance state and constants",
@@ -577,7 +577,7 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
             let right_value = reset_interval(right, states)?;
             left_value * right_value
         }
-        Expression::Power { .. } => {
+        Expression::Power { .. } | Expression::Select { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "idt reset must be affine in instance state and constants",
