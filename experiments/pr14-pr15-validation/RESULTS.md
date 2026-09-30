@@ -243,7 +243,7 @@ EVAS 列使用新内核瞬态 API，不能与旧 EVAS 0.8.7 混称。服务器�
 ## 本地复位候选的审阅修复
 
 `feat/evas-idt-reset` 的 `dfe4bd8` 基于已合并 PR25，拒绝结构复位反馈，
-从固定已接受历史重建同刻候选，并认证释放历史与区间。该候选尚未合入 main。
+从固定已接受历史重建同刻候选，并认证释放历史与区间。该历史检查点执行时尚未合入 main。
 [收据](results/idt-reset-review.json)固定本轮 4 次新本地 EVAS 执行：
 原 D1 free/reset 两条件 × base/fine 两档，全部满足未修改原 checker 的有限观测判据。
 使用原冻结 DUT、条件与请求设置；源码、内核、输入及 checker 哈希均在收据中。
@@ -258,7 +258,7 @@ EVAS 列使用新内核瞬态 API，不能与旧 EVAS 0.8.7 混称。服务器�
 
 审查范围是 main `6df7f48` 到候选 `edb004d` 的完整分支增量，包含三参数 idt、
 Python/Rust IR v11、复位依赖图及公共事件候选生命周期。由协调 agent 直接审查代码、
-调用者及契约，未另行委托独立 reviewer。候选尚未合并 main。
+调用者及契约，未另行委托独立 reviewer。候选在本节实验执行时尚未合并 main。
 
 审查发现：有限 IC 为 ±1e308、零输入且释放复位时，`IC+prefix(t)-prefix(release)`
 先把两份 IC 相加导致无必要的溢出。新增公共 API 测试先复现两例 `numerical_failure`，

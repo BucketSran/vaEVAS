@@ -1,7 +1,8 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-09-30。本基线 EVAS 0.9.0 / IR v9 在 0.7.1 的受限 idt 与稠密/稀疏求解之上，
-通过 PR23 交付受限事件体 if/else、cross OR 与输入/状态误差认证。旧 IR v1–v8 须从原始 VA 重新编译，未发布版本 tag。
+核对日期：2026-09-30。本基线 EVAS 0.9.0 / IR v11 在 0.7.1 的受限 idt 与稠密/稀疏求解之上，
+通过 PR23 交付受限事件体 if/else、cross OR 与输入/状态误差认证，PR25 补多事件写者，
+本检查点补三参数 idt 复位及历史认证。旧 IR v1–v10 须从原始 VA 重新编译，未发布版本 tag。
 历史 PR14 被测实现为 `3638024`，PR15 为 `e01fb5b`；这两项的合并收尾只同步文档与实验资产，
 运行时代码、测试和独立验证定义保持被测身份。PR14 合并提交为 `0c36d3b`，PR15 的最终合并身份见其 PR。
 实现、证据、交付分别记录；包版本号不能代替提交身份，也不代表已创建发布 tag。
@@ -18,7 +19,7 @@
 
 | ID / 能力 | main 范围 | 分支与交付状态 | 证据状态 | 剩余缺口与说明入口 |
 | --- | --- | --- | --- | --- |
-| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 审阅交付：0.9.0 / IR v9；旧 IR 须重编译 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
+| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 交付事件条件/OR；本检查点使用 IR v11；旧 IR 须重编译 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
 | LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
 | NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 交付，未发布 tag | 当前整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
@@ -29,7 +30,7 @@
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 的仿射输入，历史误差传播 | PR14 已合入；被测 `3638024`，收尾不改运行时代码 | 独立 PWL/大时间减法、同刻/跨事件回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS/Spectre 各 12/12 | 内部节点/状态输入、可变延迟、跳变、嵌套及反馈；[算子说明](OPERATORS.md#absdelay) |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
-| DYNAMICS：积分、导数、滤波、相位 | main 支持显式常量初值、直接连续 PWL 仿射输入的二参数 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7；[PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付，未发布 tag；`feat/evas-idt-reset` 分支扩展三参数 reset，IR v11；`edb004d` 已完成本轮审查与检查，尚未合并 | main 证据见[独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)；reset 分支新增 hold/release、transition 组合、同引擎弃候选与事件时间区间回归；基于 PR25，候选 `edb004d` 两档各 24/31，main `6df7f48` 各 22/31，原达标 44 份 CSV 逐字节一致，见[完整审查对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；[数学与实现](OPERATORS.md#idt) | main 仍缺复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；reset 分支仍限定无结构复位反馈环的状态 reset、直接 PWL 输入；已重跑原 31×2 本地矩阵，未新增后端对照 |
+| DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的二参数 idt，及受限状态 reset 的三参数 idt；导数/滤波/相位未交付 main | [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付二参数；本检查点扩展 reset，IR v11；被测运行时 `edb004d` | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)；hold/release、transition 组合、同引擎弃候选与事件时间区间回归；两档各 24/31，相比 PR25 main `6df7f48` 各 22/31，原达标 44 份 CSV 逐字节一致，见[完整审查对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；[数学与实现](OPERATORS.md#idt) | 仍限定无结构复位反馈环的状态 reset、直接 PWL 输入；积分输入反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复待补；已重跑原 31×2 本地矩阵，未新增后端对照 |
 | QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 0.9.0 原 31 条件瞬态矩阵两档执行；PR20 交付独立 checker 校准 | [0.9.0 收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)：该历史检查点两档各 21/31，其余 10 明确拒绝；[新本地对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) main `6df7f48` 各 22/31、reset 候选各 24/31；历史与其他后端失败保留；[S1 审阅补充](../validation/NEXT_CASE_CARDS.md#s1-review)及 E1/E2/C1 校准 | 观察误差界、未见确认集；S1 新顺序条件未执行后端，不增加原矩阵成绩；正式资格仍 I；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准和稠密/稀疏分流 | PR8 合成检查点保留，0.7.1 未重新计时 | 不同旧提交的局部测量；18.5% 退化未稳定复现，见[边界](NUMERICS.md#稀疏分支与性能边界) | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
@@ -58,19 +59,17 @@
 
 ## 后续工作顺序
 
-后续工作从当前 0.9.0 / IR v9 main 开始；每项使用一个可独立 review 的 PR，实际依赖才堆叠。
-受限事件体条件与 cross OR 已完成原 8 条件两档有限观测验证；下表仅保留剩余范围。
+后续工作从当前 0.9.0 / IR v11 main 开始；每项使用一个可独立 review 的 PR，实际依赖才堆叠。
+受限事件体条件与 cross OR 已完成原 8 条件两档有限观测验证；多事件写者及受限 idt 复位也已完成审阅与矩阵检查；下表仅保留剩余范围。
 条件数是受影响范围，不是新增达标承诺；
 完整拒绝诊断见[原矩阵](../../experiments/pr14-pr15-validation/RESULTS.md)。
 
 | 优先顺序 / 能力 | 下一项范围与数学依据 | 对应原条件 | 验收重点 |
 | --- | --- | --- | --- |
 | 1 / LANG | 普通 analog 局部顺序赋值、比较及 if/else；先限定输入驱动的分段仿射关系 | v1-main（1） | 独立限幅公式、等号边界、阈值定位、语句顺序；暂不扩展隐式分支反馈 |
-| 2 / EVENT-ORDER | 多事件块写同一状态；先支持可证明无冲突的更新，同刻冲突另立契约 | v3-main（1），亦为复位积分依赖 | 上/下阈值迟滞、保持区间、同时写冲突及失败回退；不能只删除当前拒绝检查 |
-| 3 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
-| 4 / DYNAMICS | 在现有显式初值/PWL idt 上补复位；重新定义复位前后历史及原子提交 | d1-free/reset（2） | 非零初值、复位保持/释放、区间积分误差、撤销重试；依赖多事件状态更新 |
-| 5 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
-| 6 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
+| 2 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
+| 3 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
+| 4 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
 
 SPARSE 的共享矩阵与瞬态调用路径已在 PR8 整合验证；后续按 Issue9 优化排序、填充和分解复用。
 固定同一支持范围与误差目标，分开测构建/编译、首次求解、

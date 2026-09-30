@@ -137,11 +137,11 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 
 ## idt
 
-能力 ID：DYNAMICS。main 的 EVAS 0.7.0 / IR v7 支持首版受限二参数积分；
-`feat/evas-idt-reset` 分支在 IR v11 上扩展三参数 reset，交付状态见能力总表。
+能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 交付首版受限二参数积分；
+当前 IR v11 扩展三参数 reset，检查点与交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
-`idt(direct_affine_input, constant_ic)` 与分支限定的
+`idt(direct_affine_input, constant_ic)` 与受限的
 `idt(direct_affine_input, constant_ic, state_reset)`：输入为直接驱动、连续 PWL 的仿射组合，
 初值为显式有限实例常量，仿真起点为 0。reset 必须是同实例状态和常数的仿射表达式，
 且每次事件后能用状态区间证明为零或非零。若输入单位为 U，积分和初值单位为 U·s；
@@ -205,7 +205,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 结构依赖检查先于数值简化。积分输出为分段二次，不能交给现有只接受仿射 PWL 的根定位器。
 独立的源驱动 cross 和固定 timer 可与积分贡献共存；它们不修改积分输入或 IC。
 
-reset 分支明确拒绝“积分器 → 电压网络 → 事件状态赋值 → 该积分器复位”的结构反馈环。
+当前实现明确拒绝“积分器 → 电压网络 → 事件状态赋值 → 该积分器复位”的结构反馈环。
 例如事件后 `q=y`、IC=0、未复位积分值为 1 时无自洽解；`q=1-y` 则有两组自洽解。
 数值试算稳定不能证明解存在或唯一。`reset_dependencies.rs` 复用组装后的未知节点连通组，
 构建节点、状态和算子之间的结构依赖；覆盖局部状态、内部节点、实例连接及其他算子的中转。
@@ -220,14 +220,14 @@ reset 分支明确拒绝“积分器 → 电压网络 → 事件状态赋值 →
 失败、丢弃或重试不修改已接受状态及历史。
 
 
-IR v7 新增 `kind=idt,input,ic,origin`；reset 分支的 IR v11 在 idt 记录中加入可空 `reset` 表达式。
+IR v7 新增 `kind=idt,input,ic,origin`；当前 IR v11 在 idt 记录中加入可空 `reset` 表达式。
 调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
 错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.9.0；包内版本号不代表已发布 tag。
 实现入口：[idt.rs](../rust_core/src/idt.rs)、[operators.rs](../rust_core/src/operators.rs)；
 独立有理数和组合回归：[test_idt.py](../tests/test_idt.py)、
 [test_idt_accuracy.py](../tests/test_idt_accuracy.py)。Rust 另检验查询无副作用及真实候选失败后完整性。
-reset 分支新增同刻 post-reset 重解、transition 组合、事件时间区间和弃候选回归；未执行新的远程后端对照。
+本检查点新增同刻 post-reset 重解、transition 组合、事件时间区间和弃候选回归；未执行新的远程后端对照。
 
 原开发检查点 `074cde5` 基于 main `5b090571c7de7c6ec08a05c803479505c5d745ee`：
 全量 Python 215 项、Rust 40 项通过，其中新增 20 项 Python、7 项 Rust；
