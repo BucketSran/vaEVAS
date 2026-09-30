@@ -1,4 +1,5 @@
 //! Bound affine event model. State is separate from electrical unknowns.
+use crate::event_conditions::{Conditions, Selection};
 use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger, Expression, Program, StateKind, Term, Tolerances};
 use crate::settlement_bounds::Bounds;
@@ -242,15 +243,23 @@ pub(crate) fn check_state(value: f64, kind: &StateKind) -> Result<(), Error> {
     Ok(())
 }
 
+pub(crate) struct TriggerLeaf {
+    pub(crate) event: usize,
+    pub(crate) index: usize,
+    pub(crate) trigger: EventTrigger,
+}
+
 pub(crate) struct EventModel {
     pub(crate) program: Program,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
+    pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
+    pub(crate) conditions: Conditions,
     pub(crate) driven: Vec<String>,
     pub(crate) tolerances: Tolerances,
     // Bounded one-batch cache; stores coefficients, never accepted/trial state.
-    certificate: RefCell<Option<(Vec<usize>, Bounds)>>,
+    certificate: RefCell<Option<(Selection, Bounds)>>,
 }
 
 impl EventModel {
@@ -284,6 +293,7 @@ impl EventModel {
             .map(|c| affine(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
         let mut guards = Vec::new();
+        let mut triggers = Vec::new();
         let mut actions = Vec::new();
         let mut writers = vec![None; program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
@@ -298,52 +308,60 @@ impl EventModel {
             {
                 return Err(Error::new("invalid_ir", "invalid event origin"));
             }
-            let guard = match &event.trigger {
-                EventTrigger::Cross {
-                    guard,
-                    direction,
-                    time_tolerance,
-                    expression_tolerance,
-                } => {
-                    if !(-1..=1).contains(direction)
-                        || !time_tolerance.is_finite()
-                        || *time_tolerance <= 0.0
-                        || !expression_tolerance.is_finite()
-                        || *expression_tolerance <= 0.0
-                    {
-                        return Err(Error::new("invalid_ir", "invalid cross settings"));
+            for (leaf, trigger) in event.trigger.leaves()?.into_iter().enumerate() {
+                let guard = match trigger {
+                    EventTrigger::Cross {
+                        guard,
+                        direction,
+                        time_tolerance,
+                        expression_tolerance,
+                    } => {
+                        if !(-1..=1).contains(direction)
+                            || !time_tolerance.is_finite()
+                            || *time_tolerance <= 0.0
+                            || !expression_tolerance.is_finite()
+                            || *expression_tolerance <= 0.0
+                        {
+                            return Err(Error::new("invalid_ir", "invalid cross settings"));
+                        }
+                        let guard = affine(guard, &program, &event.origin.instance)?;
+                        if !guard.state_dependencies.is_empty()
+                            || !guard.operator_dependencies.is_empty()
+                        {
+                            return Err(Error::new(
+                                "unsupported_cross",
+                                format!("cross guard depends on state at {}", event.origin.label()),
+                            ));
+                        }
+                        Some(guard)
                     }
-                    let guard = affine(guard, &program, &event.origin.instance)?;
-                    if !guard.state_dependencies.is_empty()
-                        || !guard.operator_dependencies.is_empty()
-                    {
-                        return Err(Error::new(
-                            "unsupported_cross",
-                            format!("cross guard depends on state at {}", event.origin.label()),
-                        ));
+                    EventTrigger::Timer {
+                        start,
+                        period,
+                        time_tolerance,
+                        ..
+                    } => {
+                        if !start.is_finite()
+                            || *start < 0.0
+                            || !period.is_finite()
+                            || !time_tolerance.is_finite()
+                            || *time_tolerance <= 0.0
+                        {
+                            return Err(Error::new("invalid_ir", "invalid timer settings"));
+                        }
+                        None
                     }
-                    Some(guard)
-                }
-                EventTrigger::Timer {
-                    start,
-                    period,
-                    time_tolerance,
-                    ..
-                } => {
-                    if !start.is_finite()
-                        || *start < 0.0
-                        || !period.is_finite()
-                        || !time_tolerance.is_finite()
-                        || *time_tolerance <= 0.0
-                    {
-                        return Err(Error::new("invalid_ir", "invalid timer settings"));
-                    }
-                    None
-                }
-            };
-            guards.push(guard);
+                    EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
+                };
+                guards.push(guard);
+                triggers.push(TriggerLeaf {
+                    event: index,
+                    index: leaf,
+                    trigger: trigger.clone(),
+                });
+            }
             let mut body = Vec::new();
-            for assignment in &event.assignments {
+            for assignment in event.assignments() {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
                 })?;
@@ -392,37 +410,49 @@ impl EventModel {
                 ));
             }
         }
-        let model = Self {
+        let conditions = Conditions::new(&program)?;
+        let mut model = Self {
+            conditions,
             program,
             rhs,
             guards,
+            triggers,
             actions,
             driven,
             tolerances,
             certificate: RefCell::new(None),
         };
         model.check_guard_dependencies()?;
+        model.conditions.prepare(&model.program, &model.driven)?;
         Ok(model)
     }
 
     pub(crate) fn certify(
         &self,
-        events: &[usize],
-        inputs: &[f64],
+        selection: &Selection,
+        inputs: &[I],
         before: &[I],
         operators: &[I],
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
         let mut cache = self.certificate.borrow_mut();
-        if !cache.as_ref().is_some_and(|(ids, _)| ids == events) {
-            *cache = Some((events.to_vec(), Bounds::new(self, events)?));
+        if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
+            *cache = Some((selection.clone(), Bounds::new(self, selection)?));
         }
         cache
             .as_ref()
             .unwrap()
             .1
             .check(self, inputs, before, operators, voltages, states)
+    }
+
+    pub(crate) fn assigned(&self, selection: &Selection) -> Vec<usize> {
+        selection
+            .actions
+            .iter()
+            .flat_map(|(event, indices)| indices.iter().map(|&index| self.actions[*event][index].0))
+            .collect()
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {
@@ -445,7 +475,7 @@ impl EventModel {
     /// voltage system F(v, Phi(old_state, v), t)=0. No accepted state is mutated.
     pub(crate) fn event_circuit(
         &self,
-        events: &[usize],
+        selection: &Selection,
         before: &[f64],
         operators: &[f64],
     ) -> Result<Circuit, Error> {
@@ -463,9 +493,10 @@ impl EventModel {
             })
             .collect();
         let mut updates = initial.clone();
-        for &event in events {
+        for (event, indices) in &selection.actions {
             let mut local = initial.clone();
-            for (state, rhs) in &self.actions[event] {
+            for &index in indices {
+                let (state, rhs) = &self.actions[*event][index];
                 local[*state] = rhs.substitute(&local)?;
                 if self.program.states[*state].kind == StateKind::Integer {
                     // Integer updates were checked to use integral state-only
@@ -560,7 +591,8 @@ impl EventModel {
                 break;
             }
         }
-        for (guard, event) in self.guards.iter().zip(&self.program.events) {
+        for (guard, leaf) in self.guards.iter().zip(&self.triggers) {
+            let event = &self.program.events[leaf.event];
             let Some(guard) = guard else {
                 continue;
             };
@@ -574,21 +606,22 @@ impl EventModel {
                 ));
             }
         }
-        Ok(())
+        self.conditions.check_dependencies(&affected)
     }
 
     /// Replay against supplied trial voltages and the fixed accepted old state.
     /// Statements in one block see earlier assignments. No accepted state changes.
     pub(crate) fn apply(
         &self,
-        events: &[usize],
+        selection: &Selection,
         voltages: &[f64],
         before: &[f64],
     ) -> Result<Vec<f64>, Error> {
         let mut after = before.to_vec();
-        for &index in events {
+        for (event, indices) in &selection.actions {
             let mut local = before.to_vec();
-            for (state, expression) in &self.actions[index] {
+            for &index in indices {
+                let (state, expression) = &self.actions[*event][index];
                 local[*state] = expression.value(voltages, &local)?;
                 check_state(local[*state], &self.program.states[*state].kind)?;
                 after[*state] = local[*state];
