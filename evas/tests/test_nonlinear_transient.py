@@ -131,25 +131,26 @@ class NonlinearTransientContracts(unittest.TestCase):
         u_values = [q + cubic * q**3 / (scale * scale) for q in roots]
         dense_times = [0.0, 0.2, 0.7, 1.3, 2.0]
         sparse_times = [0.0, 0.7, 2.0]
+        sources = {
+            "u": list(map(list, zip(dense_times, u_values))),
+            "r": [[0.0, 0.0], [dense_times[-1], 0.0]],
+        }
 
-        def run(times, values):
+        def run(times):
             result = transient(
                 program,
-                {
-                    "u": list(map(list, zip(times, values))),
-                    "r": [[0.0, 0.0], [times[-1], 0.0]],
-                },
+                sources,
                 times,
-                stop=times[-1],
-                max_step=times[-1],
+                stop=dense_times[-1],
+                max_step=dense_times[-1],
                 kernel=KERNEL,
                 vabstol=abstol,
                 reltol=reltol,
             )
             return [dict(zip(result["nodes"], s["voltages"])) for s in result["solutions"]]
 
-        dense = run(dense_times, u_values)
-        sparse = run(sparse_times, [u_values[0], u_values[2], u_values[-1]])
+        dense = run(dense_times)
+        sparse = run(sparse_times)
         for row, u in zip(dense, u_values):
             expected = decimal_cubic_root(u, cubic, scale)
             observed = exact_float(row["y"])
@@ -158,10 +159,10 @@ class NonlinearTransientContracts(unittest.TestCase):
             lhs = observed
             physical_rhs = rhs - coefficient * observed * observed * observed
             budget = exact_float(abstol) + exact_float(reltol) * max(abs(lhs), abs(physical_rhs))
-            self.assertLessEqual(abs(observed - expected), Decimal(8) * budget)
+            self.assertLessEqual(abs(observed - expected), budget)
         for dense_index, sparse_row in zip([0, 2, 4], sparse):
             budget = abstol + reltol * max(abs(sparse_row["y"]), abs(dense[dense_index]["y"]))
-            self.assertLessEqual(abs(sparse_row["y"] - dense[dense_index]["y"]), 8 * budget)
+            self.assertLessEqual(abs(sparse_row["y"] - dense[dense_index]["y"]), budget)
 
     def test_polynomial_transient_with_events_remains_explicitly_unsupported(self):
         source = model(
