@@ -14,11 +14,16 @@ fn wrap(value: f64, modulus: f64, offset: f64) -> f64 {
     (value - offset).rem_euclid(modulus) + offset
 }
 
-fn full_range(modulus: f64, offset: f64) -> I {
-    I {
-        lo: offset,
-        hi: offset + modulus,
+fn full_range(modulus: f64, offset: f64) -> Result<I, Error> {
+    let hi = (I::point(offset) + I::point(modulus)).hi;
+    let result = I { lo: offset, hi };
+    if !result.finite() || result.lo > result.hi {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "idtmod declared range is not a finite representable interval",
+        ));
     }
+    Ok(result)
 }
 
 fn intersect(a: I, b: I) -> I {
@@ -70,7 +75,7 @@ impl IdtMod {
                 "nonfinite idtmod query enclosure",
             ));
         }
-        let declared = full_range(self.modulus, self.offset);
+        let declared = full_range(self.modulus, self.offset)?;
         if raw.hi - raw.lo >= self.modulus {
             return Ok(declared);
         }
@@ -163,6 +168,22 @@ mod tests {
         )
         .unwrap();
         assert_eq!(h.value_bounds(1.0).unwrap(), I { lo: 0.0, hi: 1.0 });
+    }
+
+    #[test]
+    fn huge_offset_nonbinary_modulus_keeps_an_outward_declared_range() {
+        let declared = full_range(0.1, 1.0e16).unwrap();
+        assert_eq!(declared.lo, 1.0e16);
+        assert!(declared.hi > 1.0e16);
+        let h = IdtMod::enclosed(
+            vec![(0.0, 0.0), (1.0, 0.0)],
+            vec![I { lo: -0.2, hi: 0.2 }; 2],
+            1.0e16,
+            0.1,
+            1.0e16,
+        )
+        .unwrap();
+        assert_eq!(h.value_bounds(1.0).unwrap(), declared);
     }
 
     #[test]

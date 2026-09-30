@@ -256,7 +256,8 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给
 验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
 Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
 `d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
-`observations_within_targets`，accumulated/wrapped 最大解析误差不超过 `1.8e-15`，
+`observations_within_targets`；overstrict wrap 边界端到端回归会返回 `waveform_accuracy`。
+accumulated/wrapped 最大解析误差不超过 `1.8e-15`，
 vout 最大解析误差不超过 `9e-15`。该证据是本地分支证据，formal qualification 仍为 I，
 未执行 Spectre 或完整 31 条件矩阵。
 

@@ -185,8 +185,17 @@ fn widen(a: I, epsilon: f64) -> I {
     }
 }
 
-fn taylor_remainder(radius: f64, start_power: i32, factorial: f64) -> f64 {
-    (radius.next_up().powi(start_power) / factorial).next_up()
+fn interval_power(base: I, exponent: usize) -> I {
+    (0..exponent).fold(I::ONE, |product, _| product * base)
+}
+
+fn factorial_interval(n: usize) -> I {
+    (1..=n).fold(I::ONE, |product, k| product * I::point(k as f64))
+}
+
+fn taylor_remainder(radius: f64, start_power: usize) -> f64 {
+    let bound = interval_power(I::point(radius), start_power) / factorial_interval(start_power);
+    bound.hi.next_up()
 }
 
 fn sin_reduced(r: I) -> Result<I, Error> {
@@ -213,10 +222,7 @@ fn sin_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(
-        sum,
-        taylor_remainder(limit, 19, 121_645_100_408_832_000.0),
-    ))
+    Ok(widen(sum, taylor_remainder(limit, 19)))
 }
 
 fn cos_reduced(r: I) -> Result<I, Error> {
@@ -244,10 +250,7 @@ fn cos_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(
-        sum,
-        taylor_remainder(limit, 20, 2_432_902_008_176_640_000.0),
-    ))
+    Ok(widen(sum, taylor_remainder(limit, 20)))
 }
 
 fn sin_point_bounds(x: f64) -> Result<I, Error> {
