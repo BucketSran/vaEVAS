@@ -32,8 +32,8 @@ accept the writer check iff |W(q,B)| <= 1 for every q
 - [test_event_writers.py](../../evas/tests/test_event_writers.py)：迟滞、保持、实例排列、选中路径、相同值冲突与结构读取反例。
 - [transient_condition_tests.rs](../../evas/rust_core/src/transient_condition_tests.rs)：实际 Frame 失败回退及 raw IR 拒绝。
 
-上述相对链接指联合检查点文件，阅读最新生产实现时须切到 `feat/evas-multiple-event-writers`
-的固定 head；联合检查点尚未同步这一轮修复。最终差异涉及 9 个文件；生产逻辑仅
+阅读单项差异时切到 `feat/evas-multiple-event-writers` 的固定 head；下方临时联合版本
+已同步这一轮修复，但包含其他未批准能力，不能作为这项 PR 的完整差异。单项最终差异涉及 9 个文件；生产逻辑仅
 `events.rs` 与 `settlement.rs`，合计新增 27 行、删除 9 行，其余为测试、契约和紧凑收据。
 
 ### 验证与结论
@@ -94,6 +94,27 @@ vabstol=1e-12, reltol=0
 非线性根移动的严格上界，普通浮点逆与误差累加也不自动成为可靠包络。
 子线程继续设计有明确适用域的验证区间方法；名义 Newton 收敛、原关系区间残差和一阶灵敏度不能单独代替该证明。
 这项暂不建议合并并宣称总电压精度已补齐。
+
+后续 `0373e94` 改用 square Krawczyk 预算盒：浮点逆只作预条件器，要求区间映射严格内含盒且收缩。
+复审仍发现 `X-x` 的减法、范数累加需外扩，以及单 origin 的 affine 重复 terms 仍可能被
+assembly 相消；子线程继续修复这三项。点输入的旧残差验收与 off-knot 根包络须分开描述。
+
+## 更新后的临时组合检查
+
+联合运行时固定于 `fc106879e40e993fa5fe41fd07151f8f96a8d358` / IR14，
+内核 SHA256 `77e740300eb43992d5978f5e7c6dbab5217efa3d9282c18de9c77a981f941581`。
+合入 event writer `87491e8`、reset `466d63c`、phase `11f49d2`，未合入上述非线性精度修复。
+解决共享接口时保留相位 helper，给 reset 判定的 `Select` 明确拒绝；raw phase 边界证书
+遇到带 reset 的 idt 必须退出，不能无视其释放历史。
+
+58 项相关 Python（含 8 项跨能力组合）、75 项 Rust、构建及 all-targets warnings-as-errors
+检查通过。详细范围及 Clippy 工具链组件缺失记录于 [checks](results/review-checks.json)；
+本轮没有把它写成 Clippy 通过，也没有重复完整 Python suite。
+
+原 V3、D1 free/reset、D2 constant/chirp 五条件、两档共 10 次新本地请求均
+`observations_within_targets`，仍复用原 INPUT_MANIFEST 与独立 checker。
+新 [专项收据](results/review-affected.json) 独立保存实际执行 commit、干净状态、内核和源码哈希、
+输入/设置/波形身份；raw local-only。这不是全矩阵 31/31 或连续时间精度的证明。
 
 ## 其他候选与顺序
 
