@@ -9,9 +9,9 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
-                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
+                 Origin, Program, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
 from .lowering import lower, scale
-from .syntax import CompileError, Expr, Parser, Conditional as SyntaxConditional
+from .syntax import CompileError, Expr, Parser, Assignment as SyntaxAssignment, Conditional as SyntaxConditional, ContributionStatement
 
 
 @dataclass(frozen=True)
@@ -53,8 +53,20 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
-    has_operators = any(contains_operator(rhs) for _, model, _ in bindings
-                        for _, rhs in model.contributions)
+    def body_expressions(statements):
+        for statement in statements:
+            if isinstance(statement, ContributionStatement):
+                yield statement.rhs
+            elif isinstance(statement, SyntaxAssignment):
+                yield statement.rhs
+            else:
+                yield statement.left
+                yield statement.right
+                yield from body_expressions(statement.then_body)
+                yield from body_expressions(statement.else_body)
+
+    has_operators = any(contains_operator(expr) for _, model, _ in bindings
+                        for expr in body_expressions(model.analog))
     def has_condition(body):
         return any(isinstance(statement, SyntaxConditional) for statement in body)
 
@@ -101,7 +113,11 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         for name in model.parameters:
             parameter(name)
         node_ids = {n: indices[net] for n, net in nets.items()}
-        state_ids = {name: len(states) + index for index, name in enumerate(model.variables)}
+        local_variables = set(model.variables) if not model.initial and not model.events else set()
+        if local_variables and any(model.variables[name] != "real" for name in local_variables):
+            raise CompileError(f"{model.source}: ordinary analog local assignments only support real variables")
+        state_names = tuple(name for name in model.variables if name not in local_variables)
+        state_ids = {name: len(states) + index for index, name in enumerate(state_names)}
         initials = {}
         for statement in model.initial:
             if statement.name not in state_ids or statement.name in initials:
@@ -114,9 +130,11 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             initials[statement.name] = value.constant
         if set(initials) != set(state_ids):
             raise CompileError(f"{model.source}: every state requires one constant initial_step assignment")
-        states.extend(State(instance.name, name, kind, initials[name]) for name, kind in model.variables.items())
+        states.extend(State(instance.name, name, model.variables[name], initials[name]) for name in state_names)
 
         def symbol(name):
+            if name in local_variables:
+                raise CompileError(f"{model.source}: local real {name!r} is not assigned before use")
             return StateRef(state_ids[name]) if name in state_ids else parameter(name)
 
         # Integer assignments are restricted to integral state arithmetic; do
@@ -208,8 +226,75 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 operators.append(Slew(value, rise, fall, origin))
             return OperatorRef(index)
 
+        local_env = {}
+        allowed_condition_nodes = {0}
+        for port, direction in model.directions.items():
+            if direction in ("input", "inout"):
+                allowed_condition_nodes.add(node_ids[port])
+
+        def expression_nodes(expression):
+            if isinstance(expression, Affine):
+                return {term.node for term in expression.terms}
+            if isinstance(expression, Binary):
+                return expression_nodes(expression.left) | expression_nodes(expression.right)
+            if hasattr(expression, "base"):
+                return expression_nodes(expression.base)
+            if isinstance(expression, Select):
+                return (expression_nodes(expression.left) | expression_nodes(expression.right)
+                        | expression_nodes(expression.then_value) | expression_nodes(expression.else_value))
+            return set()
+
+        def local_symbol(env):
+            def resolve(name):
+                if name in env:
+                    return env[name]
+                if name in local_variables:
+                    raise CompileError(f"{model.source}: local real {name!r} is not assigned before use")
+                return symbol(name)
+            return resolve
+
+        def lower_local(expr, env, *, preserve_structure=False):
+            return lower(expr, local_symbol(env), node_ids, model.source, waveform, preserve_structure)
+
+        relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}
+
+        def execute_analog(statements, env):
+            result = dict(env)
+            emitted = []
+            for statement in statements:
+                if isinstance(statement, ContributionStatement):
+                    emitted.append((statement, lower_local(statement.rhs, result, preserve_structure=has_operators or has_conditions)))
+                elif isinstance(statement, SyntaxConditional):
+                    if contains_operator(statement.left) or contains_operator(statement.right):
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
+                    origin = Origin(model.source, statement.token.line, statement.token.column, instance.name)
+                    left = lower_local(statement.left, result, preserve_structure=True)
+                    right = lower_local(statement.right, result, preserve_structure=True)
+                    if not expression_nodes(left).issubset(allowed_condition_nodes) or not expression_nodes(right).issubset(allowed_condition_nodes):
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
+                    then_env, then_emitted = execute_analog(statement.then_body, result)
+                    else_env, else_emitted = execute_analog(statement.else_body, result)
+                    if then_emitted or else_emitted:
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if contributions are unsupported in this slice")
+                    for name in sorted(set(then_env) | set(else_env) | set(result)):
+                        if name not in local_variables:
+                            continue
+                        if name not in then_env or name not in else_env:
+                            raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if leaves local real {name!r} unassigned")
+                        result[name] = Select(relation[statement.relation], left, right, then_env[name], else_env[name], origin)
+                else:
+                    if statement.name not in local_variables:
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog assignment target must be a local real")
+                    if contains_operator(statement.rhs):
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog local assignments do not support waveform operators")
+                    result[statement.name] = lower_local(statement.rhs, result)
+            return result, emitted
+
+        local_env, analog_contributions = execute_analog(model.analog, local_env)
+
         bound_branches = {}
-        for branch, rhs in model.contributions:
+        for branch_statement, expression in analog_contributions:
+            branch = branch_statement.branch
             lower(branch, parameter, node_ids, model.source)  # validates both target nodes
             local_p, local_n = (str(arg.value) for arg in branch.args)
             pair = tuple(sorted((local_p, local_n)))
@@ -218,7 +303,6 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, symbol, node_ids, model.source, waveform, has_operators or has_conditions)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)

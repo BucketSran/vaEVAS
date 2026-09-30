@@ -194,6 +194,39 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         ));
     }
     let trajectory = Trajectory::new(request.transient.unwrap(), request.driven.len())?;
+    if request.program.states.is_empty()
+        && request.program.events.is_empty()
+        && request.program.operators.is_empty()
+    {
+        let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
+        let output_times = trajectory.config.output_times.clone();
+        let solutions = output_times
+            .iter()
+            .enumerate()
+            .map(|(index, &time)| {
+                circuit
+                    .solve(&trajectory.values(time))
+                    .map_err(|mut error| {
+                        error.sample = Some(index);
+                        error
+                    })
+            })
+            .collect::<Result<_, _>>()?;
+        return Ok(Response {
+            engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
+            schema_version: SCHEMA_VERSION,
+            nodes: circuit.nodes,
+            solutions,
+            transient: Some(TransientTrace {
+                times: trajectory.config.output_times,
+                state_names: Vec::new(),
+                states: vec![Vec::new(); output_times.len()],
+                events: Vec::new(),
+                accepted_steps: 0,
+                discarded_trials: 0,
+            }),
+        });
+    }
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;

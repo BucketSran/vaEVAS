@@ -1,7 +1,7 @@
 //! Validate IR and assemble one equation per instance-local voltage branch.
 use crate::ir::{check_schema_version, BranchIdentity, Error, Expression, Program, Tolerances};
 use crate::{expression, linear::Row};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 
 pub(crate) struct Equation {
     pub(crate) branch: BranchIdentity,
@@ -79,6 +79,8 @@ pub(crate) fn assemble(
         }
         driven.push(index);
     }
+    let mut predicate_nodes: HashSet<usize> = driven.iter().copied().collect();
+    predicate_nodes.insert(0);
     if program.contributions.is_empty() {
         return Err(Error::new(
             "invalid_ir",
@@ -137,6 +139,10 @@ pub(crate) fn assemble(
             ));
         }
         expression::validate(&c.rhs, count).map_err(|mut error| {
+            error.message.push_str(&format!(" at {}", c.origin.label()));
+            error
+        })?;
+        expression::validate_select_predicates(&c.rhs, &predicate_nodes).map_err(|mut error| {
             error.message.push_str(&format!(" at {}", c.origin.label()));
             error
         })?;

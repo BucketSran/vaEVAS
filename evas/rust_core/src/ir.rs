@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 9;
+pub const SCHEMA_VERSION: u32 = 10;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -95,6 +95,14 @@ pub enum Expression {
         base: Box<Expression>,
         exponent: u32,
     },
+    Select {
+        relation: Relation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        then_value: Box<Expression>,
+        else_value: Box<Expression>,
+        origin: Origin,
+    },
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -143,7 +151,7 @@ pub struct Term {
     pub coefficient: f64,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Origin {
     pub source: String,
@@ -279,7 +287,7 @@ pub enum Statement {
     },
 }
 
-#[derive(Debug, Clone, Copy, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Relation {
     Lt,
