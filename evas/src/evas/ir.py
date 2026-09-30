@@ -1,4 +1,4 @@
-"""Version 6: voltage contributions and bounded affine events with structured local branch identity.
+"""Version 8: voltage/event IR with ordered conditional event bodies.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 9
 
 
 @dataclass(frozen=True)
@@ -73,6 +73,31 @@ class Transition:
 
 
 @dataclass(frozen=True)
+class Slew:
+    input: Expression
+    rise: float
+    fall: float
+    origin: Origin
+    kind: str = field(default="slew", init=False)
+
+
+@dataclass(frozen=True)
+class AbsDelay:
+    input: Expression
+    delay: float
+    origin: Origin
+    kind: str = field(default="abs_delay", init=False)
+
+
+@dataclass(frozen=True)
+class Idt:
+    input: Expression
+    ic: float
+    origin: Origin
+    kind: str = field(default="idt", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -84,6 +109,18 @@ class State:
 class Assignment:
     state: int
     rhs: Expression
+    kind: str = field(default="assign", init=False)
+
+
+@dataclass(frozen=True)
+class Conditional:
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: Expression
+    right: Expression
+    then_body: tuple["Assignment | Conditional", ...]
+    else_body: tuple["Assignment | Conditional", ...]
+    origin: Origin
+    kind: str = field(default="if", init=False)
 
 
 @dataclass(frozen=True)
@@ -105,9 +142,15 @@ class TimerTrigger:
 
 
 @dataclass(frozen=True)
+class OrTrigger:
+    triggers: tuple[CrossTrigger, ...]
+    kind: str = field(default="or", init=False)
+
+
+@dataclass(frozen=True)
 class Event:
-    trigger: CrossTrigger | TimerTrigger
-    assignments: tuple[Assignment, ...]
+    trigger: CrossTrigger | TimerTrigger | OrTrigger
+    body: tuple[Assignment | Conditional, ...]
     origin: Origin
 
 
@@ -135,7 +178,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

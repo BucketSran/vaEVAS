@@ -2,11 +2,12 @@
 use crate::events::EventModel;
 use crate::interval::Interval as I;
 use crate::ir::{
-    Error, EventRecord, EventTrigger, Request, Response, Solution, TransientTrace, SCHEMA_VERSION,
+    Error, EventRecord, EventTrigger, FiredTrigger, Request, Response, Solution, TransientTrace,
+    SCHEMA_VERSION,
 };
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
-use crate::schedule::schedule;
+use crate::schedule::{schedule, ScheduledEvent};
 use crate::solver::Circuit;
 
 struct Frame {
@@ -18,6 +19,14 @@ struct Frame {
     operators: Operators,
 }
 
+#[cfg(test)]
+#[path = "transient_idt_tests.rs"]
+mod idt_accepted_history_tests;
+
+#[cfg(test)]
+#[path = "transient_condition_tests.rs"]
+mod condition_history_tests;
+
 fn prepare_event(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -26,9 +35,9 @@ fn prepare_event(
     events: &[usize],
 ) -> Result<Frame, Error> {
     let mut operators = accepted.operators.clone();
-    // No-operator execution retains main's conditional event certificate.
-    // Operator histories must keep the uncertainty in sampled event states.
-    let old_bounds = if model.program.operators.is_empty() {
+    // Histories and conditional sampling retain accepted uncertainty.
+    // The legacy flat event path keeps its existing fixed-sample contract.
+    let old_bounds = if model.program.operators.is_empty() && !model.conditions.enabled() {
         accepted.states.iter().copied().map(I::point).collect()
     } else {
         accepted.state_bounds.clone()
@@ -38,10 +47,22 @@ fn prepare_event(
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let frozen = operators.values(time)?;
-    let (states, state_bounds, circuit, solution) = crate::settlement::prepare(
+    let inputs = trajectory.values(time);
+    let input_bounds = if model.conditions.enabled() {
+        trajectory.value_bounds(time)
+    } else {
+        inputs.iter().copied().map(I::point).collect()
+    };
+    let crate::settlement::Prepared {
+        states,
+        bounds: state_bounds,
+        circuit,
+        solution,
+        assigned,
+    } = crate::settlement::prepare(
         model,
         events,
-        &trajectory.values(time),
+        (&inputs, &input_bounds),
         &accepted.states,
         &frozen,
         &old_bounds,
@@ -49,10 +70,8 @@ fn prepare_event(
     )?;
     // Equal rounded inputs / equal interval endpoints do not prove that an
     // uncertain state assignment left the exact operator target unchanged.
-    let changed: Vec<_> = events
-        .iter()
-        .flat_map(|&id| &model.program.events[id].assignments)
-        .map(|a| a.state)
+    let changed: Vec<_> = assigned
+        .into_iter()
         .filter(|&s| old_bounds[s] != state_bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
     operators.advance(time, &states, &state_bounds, &changed)?;
@@ -79,16 +98,30 @@ fn prepare_batch(
     event_time: f64,
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
-    let next = prepare_event(model, trajectory, accepted, event_time, ids)?;
+    // Calendar IDs identify leaves; settlement IDs identify event bodies.
+    // Same-root certification occurred before this deduplication.
+    let blocks: Vec<_> = ids
+        .iter()
+        .map(|&id| model.triggers[id].event)
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let next = prepare_event(model, trajectory, accepted, event_time, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
-    for &id in ids {
-        let (kind, guard_value) = match &model.program.events[id].trigger {
-            EventTrigger::Cross {
+    for id in blocks {
+        let mut fired = Vec::new();
+        for &leaf_id in ids {
+            let leaf = &model.triggers[leaf_id];
+            if leaf.event != id {
+                continue;
+            }
+            if let EventTrigger::Cross {
                 expression_tolerance,
                 ..
-            } => {
-                let value = model.guards[id]
+            } = &leaf.trigger
+            {
+                let value = model.guards[leaf_id]
                     .as_ref()
                     .unwrap()
                     .value(&next.solution.voltages, &next.states)?;
@@ -98,19 +131,57 @@ fn prepare_batch(
                         "accepted event violates cross expression tolerance",
                     ));
                 }
-                ("cross", Some(value))
+                fired.push(FiredTrigger {
+                    trigger: leaf.index,
+                    guard_value: value,
+                    time_bounds: None,
+                });
             }
+        }
+        let (kind, guard_value) = match &model.program.events[id].trigger {
+            EventTrigger::Cross { .. } => ("cross", Some(fired[0].guard_value)),
             EventTrigger::Timer { .. } => ("timer", None),
+            EventTrigger::Or { .. } => ("or", None),
         };
+        if kind != "or" {
+            fired.clear();
+        }
         records.push(EventRecord {
             time: event_time,
             event: id,
             origin: model.program.events[id].origin.label(),
             kind,
             guard_value,
+            fired_triggers: fired,
             before: accepted.states.clone(),
             after: next.states.clone(),
         });
+    }
+    Ok((next, records))
+}
+
+fn prepare_calendar_batch(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    time: f64,
+    scheduled: &[ScheduledEvent],
+) -> Result<(Frame, Vec<EventRecord>), Error> {
+    let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
+    let (next, mut records) = prepare_batch(model, trajectory, accepted, time, &ids)?;
+    for record in &mut records {
+        for fired in &mut record.fired_triggers {
+            let event = scheduled
+                .iter()
+                .find(|e| {
+                    let leaf = &model.triggers[e.event];
+                    leaf.event == record.event && leaf.index == fired.trigger
+                })
+                .unwrap();
+            let bounds = event.bounds();
+            fired.time_bounds = Some([bounds.lo, bounds.hi]);
+        }
+        record.fired_triggers.sort_by_key(|f| f.trigger);
     }
     Ok((next, records))
 }
@@ -136,10 +207,15 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         circuit,
         operators,
     };
-    if !model.program.operators.is_empty() {
+    if !model.program.operators.is_empty() || model.conditions.enabled() {
+        let inputs = if model.conditions.enabled() {
+            trajectory.value_bounds(0.0)
+        } else {
+            trajectory.values(0.0).into_iter().map(I::point).collect()
+        };
         accepted.state_bounds = model.certify(
-            &[],
-            &trajectory.values(0.0),
+            &model.conditions.select(&[], &inputs)?,
+            &inputs,
             &accepted.state_bounds,
             &accepted.operators.bounds(0.0)?,
             &accepted.solution.voltages,
@@ -173,11 +249,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             while end_event < crossings.len() && crossings[end_event].time == event_time {
                 end_event += 1;
             }
-            let ids: Vec<_> = crossings[event..end_event]
-                .iter()
-                .map(|c| c.event)
-                .collect();
-            let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            let (next, records) = prepare_calendar_batch(
+                &model,
+                &trajectory,
+                &accepted,
+                event_time,
+                &crossings[event..end_event],
+            )?;
             next.operators
                 .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             // Commit frame, circuit, cursor and history only after all checks.
@@ -217,7 +295,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         }
         // A trial beyond an earlier scheduled event is discarded before any
         // residual check: that event may change the future waveform/constraints.
-        let candidate = if model.program.operators.is_empty() {
+        let candidate = if model.program.operators.is_empty() && !model.conditions.enabled() {
             None
         } else {
             Some(prepare_event(&model, &trajectory, &accepted, time, &[]))
@@ -231,11 +309,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             while end_event < crossings.len() && crossings[end_event].time == event_time {
                 end_event += 1;
             }
-            let ids: Vec<_> = crossings[event..end_event]
-                .iter()
-                .map(|c| c.event)
-                .collect();
-            let (next, records) = prepare_batch(&model, &trajectory, &accepted, event_time, &ids)?;
+            let (next, records) = prepare_calendar_batch(
+                &model,
+                &trajectory,
+                &accepted,
+                event_time,
+                &crossings[event..end_event],
+            )?;
             next.operators
                 .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
             accepted = next;
@@ -270,6 +350,169 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
 mod tests {
     use super::*;
     use crate::ir::{Program, Tolerances, TransientInputs};
+
+    fn idt_fixture(
+        clamp: bool,
+        gain: f64,
+        tolerances: Tolerances,
+    ) -> (EventModel, Trajectory, Frame) {
+        let (original, _, _) = fixture(clamp);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([{
+            "kind":"idt", "input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+            "ic":0, "origin":{"source":"rollback.va","line":3,"column":1,"instance":"dut"}
+        }]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply", "left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"add", "left":{"op":"state","state":0},
+                "right":{"op":"multiply", "left":{"op":"affine","constant":gain,"terms":[]},
+                    "right":{"op":"operator","operator":0}}}
+        }))
+        .unwrap();
+        program.events[0].trigger = EventTrigger::Timer {
+            start: 1.0,
+            period: 1.0,
+            time_tolerance: 0.001,
+            enabled: true,
+        };
+        let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
+                output_times: vec![0.0, 3.0],
+                stop: 3.0,
+                max_step: 3.0,
+            },
+            1,
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let frame = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+            operators,
+        };
+        (model, trajectory, frame)
+    }
+
+    fn assert_initial_idt_frame(frame: &Frame, history_bounds: &[I]) {
+        assert_eq!(frame.time, 0.0);
+        assert_eq!(frame.states, [0.0]);
+        assert_eq!(frame.state_bounds, [I::ZERO]);
+        assert_eq!(frame.solution.voltages, [0.0, 0.0, 0.0]);
+        assert_eq!(
+            frame.circuit.solve(&[0.0]).unwrap().voltages,
+            frame.solution.voltages
+        );
+        assert_eq!(frame.operators.values(0.0).unwrap(), [0.0]);
+        assert_eq!(frame.operators.values(1.0).unwrap(), [1.0 / 6.0]);
+        assert_eq!(frame.operators.bounds(1.0).unwrap(), history_bounds);
+        assert_eq!(frame.operators.next_breakpoint(0.0), Some(3.0));
+    }
+
+    #[test]
+    fn idt_failed_certification_preserves_frame_and_same_time_retry_uses_budget() {
+        let (mut model, trajectory, before) = idt_fixture(
+            false,
+            1073741824.0,
+            Tolerances {
+                absolute: 1e-10,
+                relative: 0.0,
+            },
+        );
+        let bounds = before.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_batch(&model, &trajectory, &before, 1.0, &[0])
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_initial_idt_frame(&before, &bounds);
+        }
+        // Same model/cache, accepted state and time; a separately requested
+        // looser budget permits a fresh candidate. No stale failed sample.
+        model.tolerances.absolute = 1e-6;
+        let (discarded, pending) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(discarded.states, [1.0]);
+        assert_eq!(pending.len(), 1);
+        drop(discarded);
+        assert_initial_idt_frame(&before, &bounds);
+        let (next, pending) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(next.states, [1.0]);
+        assert_eq!(next.solution.voltages[2], 1.0 + 1073741824.0 / 6.0);
+        assert_eq!(next.operators.bounds(1.0).unwrap(), bounds);
+        assert_eq!(pending.len(), 1);
+        let (second, _) = prepare_batch(&model, &trajectory, &next, 2.0, &[0]).unwrap();
+        assert_eq!(second.states, [2.0]);
+    }
+
+    #[test]
+    fn idt_residual_failure_and_successful_discard_never_change_accepted_history() {
+        for clamp in [false, true] {
+            let (model, trajectory, before) = idt_fixture(clamp, 1.0, Tolerances::default());
+            let bounds = before.operators.bounds(1.0).unwrap();
+            for _ in 0..2 {
+                let trial = prepare_batch(&model, &trajectory, &before, 1.0, &[0]);
+                if clamp {
+                    assert_eq!(trial.err().unwrap().kind, "residual_failure");
+                } else {
+                    let (next, records) = trial.unwrap();
+                    assert_eq!(next.states, [1.0]);
+                    assert_eq!(records.len(), 1);
+                    assert_eq!(next.solution.voltages[2], 1.0 + 1.0 / 6.0);
+                }
+                assert_initial_idt_frame(&before, &bounds);
+            }
+        }
+    }
+
+    #[test]
+    fn idt_corrected_input_definition_retries_same_time_with_cached_certificate() {
+        let (model, trajectory, before) = idt_fixture(false, 1.0, Tolerances::default());
+        let bounds = before.operators.bounds(1.0).unwrap();
+        let (first, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(first.solution.voltages[2], 1.0 + 1.0 / 6.0);
+        // The complete source is immutable within a request. Correcting it
+        // rebinds the analytic history at the accepted initial frame; it does
+        // not reuse the old Operators merely because the query time matches.
+        let mut config = trajectory.config.clone();
+        config.pwl[0][1][1] = 2.0;
+        let corrected_trajectory = Trajectory::new(config, 1).unwrap();
+        let operators = Operators::new(
+            &model.program,
+            &corrected_trajectory,
+            &model.driven,
+            &before.states,
+        )
+        .unwrap();
+        let circuit = model
+            .circuit_with(&before.states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let corrected = Frame {
+            time: 0.0,
+            states: before.states.clone(),
+            state_bounds: before.state_bounds.clone(),
+            solution: circuit.solve(&corrected_trajectory.values(0.0)).unwrap(),
+            circuit,
+            operators,
+        };
+        let (second, _) =
+            prepare_batch(&model, &corrected_trajectory, &corrected, 1.0, &[0]).unwrap();
+        assert_eq!(second.solution.voltages[2], 1.0 + 1.0 / 3.0);
+        assert_eq!(second.states, [1.0]);
+        let (retry, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(retry.solution.voltages, first.solution.voltages);
+        assert_eq!(retry.state_bounds, first.state_bounds);
+        assert_initial_idt_frame(&before, &bounds);
+    }
 
     #[test]
     fn history_accuracy_failure_and_retry_leave_all_bounds_uncommitted() {
@@ -336,7 +579,7 @@ mod tests {
                 "origin":{"source":"rollback.va","line":1,"column":1,"instance":"dut"}}],
             "events":[{"trigger":{"kind":"cross","guard":{"op":"affine","constant":-0.5,"terms":[{"node":1,"coefficient":1}]},
                 "direction":0,"time_tolerance":1e-12,"expression_tolerance":1e-9},
-                "assignments":[{"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":1,"terms":[]}}}],
+                "body":[{"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},"right":{"op":"affine","constant":1,"terms":[]}}}],
                 "origin":{"source":"rollback.va","line":2,"column":1,"instance":"dut"}}]
         });
         if inconsistent_after_event {
@@ -588,8 +831,8 @@ mod tests {
                         enabled: true,
                     };
                 }
-                let action = program.events[0].assignments[0].clone();
-                program.events[0].assignments.push(action);
+                let action = program.events[0].body[0].clone();
+                program.events[0].body.push(action);
                 let model =
                     EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
                 let circuit = model.circuit(&model.initial()).unwrap();
@@ -635,11 +878,11 @@ mod tests {
         let (original, trajectory, _) = fixture(false);
         let mut program = original.program;
         program.states[0].kind = crate::ir::StateKind::Real;
-        program.events[0].assignments = serde_json::from_value(serde_json::json!([
-            {"state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
-            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+        program.events[0].body = serde_json::from_value(serde_json::json!([
+            {"kind":"assign", "state":0,"rhs":{"op":"affine","constant":1.0,"terms":[]}},
+            {"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
                 "right":{"op":"affine","constant":2_f64.powi(-55),"terms":[]}}},
-            {"state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
+            {"kind":"assign", "state":0,"rhs":{"op":"add","left":{"op":"state","state":0},
                 "right":{"op":"affine","constant":-1.0,"terms":[]}}}
         ]))
         .unwrap();

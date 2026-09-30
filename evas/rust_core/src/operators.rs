@@ -1,19 +1,85 @@
 //! Instance/call-site operator histories. Clone with a candidate frame; never
 //! derive history from output samples or mutate accepted state during a trial.
+use crate::absdelay::AbsDelay;
 use crate::events::{affine, AffineState};
+use crate::idt::Idt;
 use crate::interval::Interval as I;
-use crate::ir::{Error, OperatorSpec, Program};
+use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::pwl::Trajectory;
+use crate::slew::Slew;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
 
+/// Materialize the accepted continuous input definition at its semantic knots.
+/// Dependency validation precedes all numerical binding, so zero coefficients
+/// and algebraic cancellation cannot turn an internal input into a direct one.
+fn direct_points(
+    input: &Expression,
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+    origin: &Origin,
+) -> Result<(Vec<(f64, f64)>, Vec<I>), Error> {
+    let expression = input;
+    let input = affine(input, program, &origin.instance)?;
+    let driven_nodes: Vec<_> = driven
+        .iter()
+        .map(|name| {
+            program
+                .nodes
+                .iter()
+                .position(|node| node == name)
+                .ok_or_else(|| Error::new("invalid_inputs", "unknown directly driven node"))
+        })
+        .collect::<Result<_, _>>()?;
+    if !input.state_dependencies.is_empty()
+        || !input.operator_dependencies.is_empty()
+        || input
+            .node_dependencies
+            .iter()
+            .any(|node| *node != 0 && !driven_nodes.contains(node))
+    {
+        return Err(Error::new(
+            "unsupported_operator",
+            format!("waveform input must be affine in directly driven nodes and constants; internal nodes, state, nesting and feedback are unsupported at {}", origin.label()),
+        ));
+    }
+    let coefficients = crate::affine_bounds::affine(expression, program)?;
+    let mut nodes = vec![0.0; program.nodes.len()];
+    let mut node_bounds = vec![I::ZERO; program.nodes.len()];
+    let mut points = Vec::new();
+    let mut bounds = Vec::new();
+    for &time in &trajectory.knots {
+        for ((&node, value), enclosure) in driven_nodes
+            .iter()
+            .zip(trajectory.values(time))
+            .zip(trajectory.value_bounds(time))
+        {
+            nodes[node] = value;
+            node_bounds[node] = enclosure;
+        }
+        points.push((time, input.value(&nodes, &[])?));
+        bounds.push(
+            coefficients
+                .iter()
+                .zip(&node_bounds)
+                .filter(|(coefficient, _)| !coefficient.zero())
+                .fold(*coefficients.last().unwrap(), |sum, (&a, &b)| sum + a * b),
+        );
+    }
+    Ok((points, bounds))
+}
+
 #[derive(Clone)]
 enum Runtime {
+    Idt(Idt),
+    AbsDelay(AbsDelay),
     Transition {
         input: AffineState,
         input_bounds: Vec<I>,
         history: Transition,
     },
+    Slew(Slew),
 }
 
 #[derive(Clone, Default)]
@@ -24,8 +90,8 @@ pub(crate) struct Operators {
 impl Operators {
     pub(crate) fn new(
         program: &Program,
-        _trajectory: &Trajectory,
-        _driven: &[String],
+        trajectory: &Trajectory,
+        driven: &[String],
         states: &[f64],
     ) -> Result<Self, Error> {
         let mut identities = BTreeSet::new();
@@ -53,6 +119,22 @@ impl Operators {
                 ));
             }
             match spec {
+                OperatorSpec::Idt { input, ic, origin } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::Idt(Idt::enclosed(points, bounds, *ic)?));
+                }
+                OperatorSpec::AbsDelay {
+                    input,
+                    delay,
+                    origin,
+                } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::AbsDelay(AbsDelay::enclosed(
+                        points, bounds, *delay,
+                    )?));
+                }
                 OperatorSpec::Transition {
                     input,
                     delay,
@@ -86,6 +168,16 @@ impl Operators {
                         history: Transition::enclosed(initial, bounds, *delay, *rise, *fall)?,
                     });
                 }
+                OperatorSpec::Slew {
+                    input,
+                    rise,
+                    fall,
+                    origin,
+                } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
+                }
             }
         }
         Ok(Self { entries })
@@ -95,7 +187,10 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::Idt(history) => history.value(time),
+                Runtime::AbsDelay(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
+                Runtime::Slew(history) => history.value(time),
             })
             .collect()
     }
@@ -104,7 +199,10 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
+                Runtime::Idt(history) => history.next_breakpoint(after),
+                Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
+                Runtime::Slew(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
     }
@@ -113,6 +211,9 @@ impl Operators {
         self.entries
             .iter()
             .map(|entry| match entry {
+                Runtime::Idt(history) => history.value_bounds(time),
+                Runtime::Slew(history) => Ok(history.value_bounds(time)),
+                Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
                 Runtime::Transition { history, .. } => history.value_bounds(time),
             })
             .collect()
@@ -127,7 +228,10 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
+                Runtime::Idt(_) => Vec::new(),
+                Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
+                Runtime::Slew(_) => Vec::new(),
             })
             .collect();
         for (index, deadline) in deadlines.iter().enumerate() {
@@ -160,6 +264,8 @@ impl Operators {
     ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
+                Runtime::Idt(_) => {}
+                Runtime::AbsDelay(_) => {}
                 Runtime::Transition {
                     input,
                     input_bounds,
@@ -172,6 +278,7 @@ impl Operators {
                     let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
                     history.advance_enclosed(time, input.value(&[], states)?, bounds, may_change)?
                 }
+                Runtime::Slew(_) => {}
             }
         }
         Ok(())

@@ -54,7 +54,7 @@ class EventAccuracy(unittest.TestCase):
                 p['events'][0]['trigger']['guard'] = dict(op='add',
                     left=p['events'][0]['trigger']['guard'], right=product)
             elif position == 'assignment':
-                p['events'][0]['assignments'][0]['rhs'] = product
+                p['events'][0]['body'][0]['rhs'] = product
             else:
                 p['contributions'][0]['rhs'] = product
                 if position == 'without_events':

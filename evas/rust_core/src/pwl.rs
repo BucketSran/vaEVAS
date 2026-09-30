@@ -148,7 +148,27 @@ impl Trajectory {
             .collect()
     }
 
-    pub(crate) fn roots(&self, values: &[I], direction: i8) -> Result<Vec<Root>, Error> {
+    pub(crate) fn input_knots(&self, inputs: &[usize]) -> Vec<f64> {
+        let mut knots = vec![0.0, self.config.stop];
+        for &input in inputs {
+            knots.extend(
+                self.config.pwl[input]
+                    .iter()
+                    .map(|p| p[0])
+                    .filter(|t| *t < self.config.stop),
+            );
+        }
+        knots.sort_by(f64::total_cmp);
+        knots.dedup();
+        knots
+    }
+
+    pub(crate) fn roots(
+        &self,
+        knots: &[f64],
+        values: &[I],
+        direction: i8,
+    ) -> Result<Vec<Root>, Error> {
         let mut result = Vec::new();
         if values.iter().any(|v| !v.finite() || v.sign().is_none()) {
             return Err(unresolved(
@@ -157,7 +177,7 @@ impl Trajectory {
         }
         for index in 0..values.len() - 1 {
             let (a, b) = (values[index], values[index + 1]);
-            let segment = [self.knots[index], self.knots[index + 1]];
+            let segment = [knots[index], knots[index + 1]];
             let duration = I::point(segment[1]) - I::point(segment[0]);
             let crossing = if !a.zero() && !b.zero() && a.sign() != b.sign() {
                 let bounds = I::point(segment[0]) + (a / (a - b)) * duration;

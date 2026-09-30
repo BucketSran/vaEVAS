@@ -25,12 +25,12 @@ _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|[()+*/;,=@\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|[<>()+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "cross", "transition"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -69,10 +69,26 @@ class Assignment:
 
 
 @dataclass(frozen=True)
-class Event:
+class Conditional:
+    relation: str
+    left: Expr
+    right: Expr
+    then_body: tuple["Assignment | Conditional", ...]
+    else_body: tuple["Assignment | Conditional", ...]
+    token: Token
+
+
+@dataclass(frozen=True)
+class Trigger:
     kind: str
     arguments: tuple[Expr | None, ...]
-    assignments: tuple[Assignment, ...]
+    token: Token
+
+
+@dataclass(frozen=True)
+class Event:
+    triggers: tuple[Trigger, ...]
+    body: tuple[Assignment | Conditional, ...]
     token: Token
 
 
@@ -147,16 +163,17 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
-        elif token.text == "transition":
+        elif token.text in ("transition", "absdelay", "slew", "idt"):
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            if len(arguments) != 4:
-                self.fail("transition requires explicit input, delay, rise and fall", token)
-            left = Expr("transition", None, tuple(arguments), token)
+            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": 2}[token.text]
+            if len(arguments) != required:
+                self.fail(f"{token.text} requires {required} explicit arguments", token)
+            left = Expr(token.text, None, tuple(arguments), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -179,29 +196,38 @@ class Parser:
             left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return left
 
-    def assignments(self) -> tuple[Assignment, ...]:
-        def statement():
-            token = self.token
-            name = self.name()
-            self.take("=")
-            rhs = self.expression()
-            self.take(";")
-            return Assignment(name, rhs, token)
-
-        if self.token.text == ";":
+    def statements(self, conditional=False) -> tuple[Assignment | Conditional, ...]:
+        token = self.token
+        if token.text == ";":
             self.take(";")
             return ()
-        if self.token.text != "begin":
-            return (statement(),)
-        self.take("begin")
-        result = []
-        while self.token.text != "end":
-            if self.token.text == ";":
-                self.take(";")
-            else:
-                result.append(statement())
-        self.take("end")
-        return tuple(result)
+        if token.text == "begin":
+            self.take("begin")
+            result = []
+            while self.token.text != "end":
+                result.extend(self.statements(conditional))
+            self.take("end")
+            return tuple(result)
+        if token.text == "if" and conditional:
+            self.take("if")
+            self.take("(")
+            left = self.expression()
+            relation = self.take()
+            if relation.text not in ("<", "<=", ">", ">="):
+                self.fail("event condition requires <, <=, > or >=", relation)
+            right = self.expression()
+            self.take(")")
+            then_body = self.statements(True)
+            else_body = ()
+            if self.token.text == "else":
+                self.take("else")
+                else_body = self.statements(True)
+            return (Conditional(relation.text, left, right, then_body, else_body, token),)
+        name = self.name()
+        self.take("=")
+        rhs = self.expression()
+        self.take(";")
+        return (Assignment(name, rhs, token),)
 
     def parse(self) -> Model:
         while self.token.kind == "include":
@@ -249,26 +275,35 @@ class Parser:
                 if self.token.text == "initial_step":
                     self.take("initial_step")
                     self.take(")")
-                    initial.extend(self.assignments())
+                    initial.extend(self.statements())
                 else:
-                    kind = self.take().text
-                    if kind not in ("cross", "timer"):
-                        self.fail("only cross and timer events are supported", token)
-                    self.take("(")
-                    arguments = [self.expression()]
-                    while self.token.text == ",":
-                        self.take(",")
-                        if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
-                            arguments.append(None)  # LRM optional period argument
-                        else:
-                            arguments.append(self.expression())
+                    triggers = []
+                    while True:
+                        leaf = self.take()
+                        kind = leaf.text
+                        if kind not in ("cross", "timer"):
+                            self.fail("only cross and timer events are supported", leaf)
+                        self.take("(")
+                        arguments = [self.expression()]
+                        while self.token.text == ",":
+                            self.take(",")
+                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
+                                arguments.append(None)  # LRM optional period argument
+                            else:
+                                arguments.append(self.expression())
+                        self.take(")")
+                        if len(arguments) > 4:
+                            self.fail(f"{kind} accepts at most four supported arguments", leaf)
+                        if kind == "timer" and len(arguments) < 3:
+                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
+                        triggers.append(Trigger(kind, tuple(arguments), leaf))
+                        if self.token.text != "or":
+                            break
+                        self.take("or")
                     self.take(")")
-                    self.take(")")
-                    if len(arguments) > 4:
-                        self.fail(f"{kind} accepts at most four supported arguments", token)
-                    if kind == "timer" and len(arguments) < 3:
-                        self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", token)
-                    events.append(Event(kind, tuple(arguments), self.assignments(), token))
+                    if len(triggers) > 1 and any(t.kind != "cross" for t in triggers):
+                        self.fail("event OR supports only cross leaves", token)
+                    events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
             if self.token.text != "V":
                 self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")

@@ -38,8 +38,9 @@
 ## 已有实验入口
 
 [旧 EVAS 迁移候选审查](legacy-evas-migration/README.md)固定旧 `v0.8.7` 源码身份，
-整理 47 个本地诊断观测、反例和最小迁移边界，优先筛选回归素材、受限积分/相位与一阶滤波。
-这是源码审查及设计证据，尚未迁入新运行时，也不增加原独立验证集通过数。
+保留 2026-09-29 的冻结报告、47 个本地诊断观测、反例和最小迁移边界。
+报告中的实施建议属于当时规划；受限 `idt` 已由 PR19 另行交付，其他候选状态见[当前能力表](../evas/docs/CAPABILITIES.md)。
+旧运行时尚未整包迁入；本归档提供源码审查及设计证据，不增加原独立验证集通过数。
 
 当前已完成 [DVS-2 起步卡四后端试点](dvs2-starter-pilot/RESULTS.md)，
 其 [协议与执行入口](dvs2-starter-pilot/README.md) 固定了 15 个条件和两档设置。
@@ -53,10 +54,14 @@
 
 [四后端补测](dvs2-four-backend-validation/README.md) 已在 thu-sui 完成 130 条新配置，
 结合 118 条复用记录，补齐 [31 条件 × 四后端 × 两档矩阵](dvs2-four-backend-validation/results/MATRIX.md)。
-基础档/细化档达标数分别为 Spectre 31/31、EVAS 18/8、OpenVAF＋ngspice 16/16、Gnucap 17/16，
+该旧 EVAS 0.8.7 基线的基础档/细化档达标数分别为 Spectre 31/31、EVAS 18/8、OpenVAF＋ngspice 16/16、Gnucap 17/16，
 各档分母均为 31；编译、执行、数值失败与超时完整保留，正式资格仍为 I。
 [后续故障归因](dvs2-four-backend-validation/DIAGNOSIS.md)通过 15 个诊断探针追查机制，
 保留原矩阵，尚未开展仿真器修复。
+
+[PR14/15 合并前验证](pr14-pr15-validation/RESULTS.md)使用新 EVAS 内核瞬态 API，重新执行
+原 31 条件 × 四后端 × 两档的 248 单元：EVAS 两档各 13 条达标、18 条明确拒绝。
+absdelay/slew 专项及 Spectre 步长诊断单列；原始材料尚未公开归档，不与旧内核成绩混称。
 
 任务失败、仿真器问题和执行环境失败应分别记录；
 影响判分的修复需要评估哪些结果必须重跑。

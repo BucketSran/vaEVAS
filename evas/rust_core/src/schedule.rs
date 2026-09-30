@@ -180,28 +180,31 @@ pub(crate) fn schedule(
     };
     if let Some(bounds) = &bounds {
         let circuit = model.circuit(&model.initial())?;
-        let mut values = vec![Vec::new(); model.guards.len()];
+        // Preserve network-consistency checks on all physical input knots.
         for &time in &trajectory.knots {
             circuit.solve(&trajectory.values(time))?;
-            for (value, row) in bounds
-                .values(&trajectory.value_bounds(time))
-                .into_iter()
-                .zip(&mut values)
-            {
-                row.push(value);
-            }
         }
-        for (index, values) in values.iter().enumerate() {
-            let event = &model.program.events[index];
-            let EventTrigger::Cross { direction, .. } = &event.trigger else {
+        for (index, leaf) in model.triggers.iter().enumerate() {
+            let event = &model.program.events[leaf.event];
+            let EventTrigger::Cross { direction, .. } = &leaf.trigger else {
                 continue;
             };
-            let roots = trajectory.roots(values, *direction).map_err(|mut error| {
-                error
-                    .message
-                    .push_str(&format!(" at {}", event.origin.label()));
-                error
-            })?;
+            // A state-independent guard is affine on the union of the knots
+            // of its nonzero input coefficients. Unrelated knots must not
+            // introduce artificial near-boundary root uncertainty.
+            let knots = trajectory.input_knots(&bounds.active_inputs(index));
+            let values: Vec<_> = knots
+                .iter()
+                .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
+                .collect();
+            let roots = trajectory
+                .roots(&knots, &values, *direction)
+                .map_err(|mut error| {
+                    error
+                        .message
+                        .push_str(&format!(" at {}", event.origin.label()));
+                    error
+                })?;
             for root in roots {
                 if events.len() == EVENT_BUDGET {
                     return Err(Error::new(
@@ -217,8 +220,8 @@ pub(crate) fn schedule(
             }
         }
     }
-    for (index, event) in model.program.events.iter().enumerate() {
-        add_timer(&mut events, index, &event.trigger, trajectory.config.stop)?;
+    for (index, leaf) in model.triggers.iter().enumerate() {
+        add_timer(&mut events, index, &leaf.trigger, trajectory.config.stop)?;
     }
     events.sort_by(|a, b| {
         a.moment
@@ -237,8 +240,8 @@ pub(crate) fn schedule(
             let first = &events[start];
             let next = &events[end];
             let same_guard = match (
-                &model.program.events[first.event].trigger,
-                &model.program.events[next.event].trigger,
+                &model.triggers[first.event].trigger,
+                &model.triggers[next.event].trigger,
             ) {
                 (EventTrigger::Cross { guard: a, .. }, EventTrigger::Cross { guard: b, .. }) => {
                     a == b
@@ -259,8 +262,9 @@ pub(crate) fn schedule(
             end += 1;
         }
         for event in &mut events[start..end] {
-            let spec = &model.program.events[event.event];
-            if !event.moment.accepts(time, &spec.trigger) {
+            let leaf = &model.triggers[event.event];
+            let spec = &model.program.events[leaf.event];
+            if !event.moment.accepts(time, &leaf.trigger) {
                 return Err(unresolved(&format!(
                     "event uncertainty or representable time exceeds tolerances at {}",
                     spec.origin.label()

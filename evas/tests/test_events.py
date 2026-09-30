@@ -332,7 +332,7 @@ class EventRejections(unittest.TestCase):
                                       stop=3e-6,max_step=1e-6))
         mutations = [lambda p:p['states'][0].update(initial=.5),
                      lambda p:p['events'][0]['trigger'].update(direction=2),
-                     lambda p:p['events'][0]['assignments'][0].update(state=999),
+                     lambda p:p['events'][0]['body'][0].update(state=999),
                      lambda p:p['events'][0]['trigger'].update(time_tolerance=0),
                      lambda p:p['states'][0].update(instance='foreign'),
                      lambda p:p['events'][0].update(extra_semantics=True)]
