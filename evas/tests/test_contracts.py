@@ -7,6 +7,7 @@ import subprocess
 import unittest
 
 from evas import CompileError, compile_sources
+from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, execute, instance, model
 
 
@@ -71,8 +72,8 @@ class ParameterContracts(unittest.TestCase):
 
 
 def wire_request():
-    """Independent v8 request: V(r)-V(y)=-2, with r bound to ground."""
-    return dict(program=dict(schema_version=9, nodes=["0", "y"], contributions=[dict(
+    """Independent handwritten request: V(r)-V(y)=-2, with r bound to ground."""
+    return dict(program=dict(schema_version=SCHEMA_VERSION, nodes=["0", "y"], contributions=[dict(
         branch=dict(instance="dut", local_positive="r", local_negative="y", kind="voltage"),
         positive=0, negative=1, rhs=dict(op="affine", constant=-2, terms=[]),
         origin=dict(source="wire.va", line=1, column=1, instance="dut"))]), driven=[], samples=[[]])
@@ -90,13 +91,13 @@ class BranchContracts(unittest.TestCase):
             return detail
         self.assertEqual(result.returncode, 0, result.stderr)
         response = json.loads(result.stdout)
-        self.assertEqual(response["schema_version"], 9)
+        self.assertEqual(response["schema_version"], SCHEMA_VERSION)
         return response
 
     def test_compiler_preserves_local_identity_and_reversed_contributions(self):
         source = model("V(y,r)<+1; V(r,y)<+-2;")
         program = compile_sources({"branch.va": source}, [instance()]).to_dict()
-        self.assertEqual(program["schema_version"], 9)
+        self.assertEqual(program["schema_version"], SCHEMA_VERSION)
         for contribution in program["contributions"]:
             self.assertEqual(contribution["branch"], dict(
                 instance="dut", local_positive="r", local_negative="y", kind="voltage"))
@@ -162,7 +163,7 @@ class BranchContracts(unittest.TestCase):
                 self.request(request, "invalid_ir")
 
     def test_old_and_unknown_versions_are_rejected_before_payload_decoding(self):
-        for version in (1, 2, 3, 4, 5, 6, 7, 8, 99):
+        for version in tuple(range(1, SCHEMA_VERSION)) + (99,):
             request = wire_request()
             request["program"]["schema_version"] = version
             request["program"]["contributions"][0]["branch"] = "r,y"

@@ -5,6 +5,7 @@ use crate::events::{affine, AffineState};
 use crate::idt::Idt;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
+use crate::laplace::LaplaceNd;
 use crate::pwl::Trajectory;
 use crate::slew::Slew;
 use crate::transition::Transition;
@@ -74,6 +75,7 @@ fn direct_points(
 enum Runtime {
     Idt(Idt),
     AbsDelay(AbsDelay),
+    LaplaceNd(LaplaceNd),
     Transition {
         input: AffineState,
         input_bounds: Vec<I>,
@@ -135,6 +137,21 @@ impl Operators {
                         points, bounds, *delay,
                     )?));
                 }
+                OperatorSpec::LaplaceNd {
+                    input,
+                    numerator,
+                    denominator,
+                    origin,
+                } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::LaplaceNd(LaplaceNd::enclosed(
+                        points,
+                        bounds,
+                        numerator,
+                        denominator,
+                    )?));
+                }
                 OperatorSpec::Transition {
                     input,
                     delay,
@@ -189,6 +206,7 @@ impl Operators {
             .map(|entry| match entry {
                 Runtime::Idt(history) => history.value(time),
                 Runtime::AbsDelay(history) => history.value(time),
+                Runtime::LaplaceNd(history) => history.value(time),
                 Runtime::Transition { history, .. } => history.value(time),
                 Runtime::Slew(history) => history.value(time),
             })
@@ -201,6 +219,7 @@ impl Operators {
             .filter_map(|entry| match entry {
                 Runtime::Idt(history) => history.next_breakpoint(after),
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
+                Runtime::LaplaceNd(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
                 Runtime::Slew(history) => history.next_breakpoint(after),
             })
@@ -214,6 +233,7 @@ impl Operators {
                 Runtime::Idt(history) => history.value_bounds(time),
                 Runtime::Slew(history) => Ok(history.value_bounds(time)),
                 Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
+                Runtime::LaplaceNd(history) => history.value_bounds(time),
                 Runtime::Transition { history, .. } => history.value_bounds(time),
             })
             .collect()
@@ -230,6 +250,7 @@ impl Operators {
             .flat_map(|entry| match entry {
                 Runtime::Idt(_) => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
+                Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
                 Runtime::Slew(_) => Vec::new(),
             })
@@ -266,6 +287,7 @@ impl Operators {
             match entry {
                 Runtime::Idt(_) => {}
                 Runtime::AbsDelay(_) => {}
+                Runtime::LaplaceNd(_) => {}
                 Runtime::Transition {
                     input,
                     input_bounds,

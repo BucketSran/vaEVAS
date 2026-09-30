@@ -8,6 +8,7 @@ mod expression;
 mod idt;
 mod interval;
 pub mod ir;
+mod laplace;
 mod linear;
 mod nonlinear;
 mod operators;

@@ -1,4 +1,4 @@
-"""Version 8: voltage/event IR with ordered conditional event bodies.
+"""Version 12: voltage/event IR with first-order laplace_nd.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 12
 
 
 @dataclass(frozen=True)
@@ -98,6 +98,15 @@ class Idt:
 
 
 @dataclass(frozen=True)
+class LaplaceNd:
+    input: Expression
+    numerator: tuple[float, ...]
+    denominator: tuple[float, ...]
+    origin: Origin
+    kind: str = field(default="laplace_nd", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -178,7 +187,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

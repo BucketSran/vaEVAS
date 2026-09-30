@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
-                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
+                 Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser, Conditional as SyntaxConditional
 
@@ -49,7 +49,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets["0"] = "0"
         bindings.append((instance, model, nets))
     def contains_operator(expr):
-        return expr.op in ("transition", "absdelay", "slew", "idt") or any(contains_operator(arg) for arg in expr.args)
+        return expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd") or any(contains_operator(arg) for arg in expr.args)
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
@@ -184,13 +184,32 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         def waveform(expr):
             input_nodes = {} if expr.op == "transition" else node_ids
             value = lower(expr.args[0], symbol, input_nodes, model.source, preserve_structure=True)
-            settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
-            if any(not isinstance(v, Affine) or v.terms for v in settings):
-                raise CompileError(f"{expr.op} settings must be instance constants")
+            if expr.op == "laplace_nd":
+                def coefficients(array):
+                    if array.op != "array":
+                        raise CompileError(f"{model.source}:{array.token.line}:{array.token.column}: laplace_nd coefficients must use standard constant array literals")
+                    result = []
+                    for item in array.args:
+                        value = lower(item, parameter, {}, model.source)
+                        if not isinstance(value, Affine) or value.terms:
+                            raise CompileError(f"{model.source}:{item.token.line}:{item.token.column}: laplace_nd coefficients must be instance constants")
+                        result.append(value.constant)
+                    return tuple(result)
+                numerator = coefficients(expr.args[1])
+                denominator = coefficients(expr.args[2])
+                if len(numerator) != 1 or len(denominator) != 2:
+                    raise CompileError("laplace_nd supports only one numerator coefficient and a first-order denominator")
+                settings = ()
+            else:
+                settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
+                if any(not isinstance(v, Affine) or v.terms for v in settings):
+                    raise CompileError(f"{expr.op} settings must be instance constants")
             origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
             index = len(operators)
             if expr.op == "idt":
                 operators.append(Idt(value, settings[0].constant, origin))
+            elif expr.op == "laplace_nd":
+                operators.append(LaplaceNd(value, numerator, denominator, origin))
             elif expr.op == "absdelay":
                 delay = settings[0].constant
                 if delay < 0:
