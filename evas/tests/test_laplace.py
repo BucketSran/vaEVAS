@@ -11,6 +11,7 @@ import math
 import subprocess
 import unittest
 
+from evas.ir import SCHEMA_VERSION
 from evas import CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance, model
 
@@ -64,7 +65,7 @@ def expected(points, time, gain=1.0, tau=0.5e-6):
 class LaplaceContracts(unittest.TestCase):
     def test_standard_constant_arrays_and_first_order_ramp_oracle(self):
         program = compile_filter()
-        self.assertEqual(program.schema_version, 12)
+        self.assertEqual(program.schema_version, SCHEMA_VERSION)
         self.assertEqual(program.operators[0].kind, "laplace_nd")
         self.assertEqual(program.operators[0].numerator, (1.0,))
         self.assertEqual(program.operators[0].denominator, (1.0, 0.5e-6))

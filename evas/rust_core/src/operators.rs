@@ -351,13 +351,7 @@ impl Operators {
         if previous.len() != self.entries.len() {
             return Ok(false);
         }
-        for (entry, &before) in self.entries.iter().zip(previous) {
-            let after = match entry {
-                Runtime::Idt { history, .. } => history.value(time)?,
-                Runtime::AbsDelay(history) => history.value(time)?,
-                Runtime::Transition { history, .. } => history.value(time)?,
-                Runtime::Slew(history) => history.value(time)?,
-            };
+        for ((entry, &before), after) in self.entries.iter().zip(previous).zip(self.values(time)?) {
             if after == before {
                 continue;
             }
