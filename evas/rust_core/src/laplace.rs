@@ -21,6 +21,8 @@ pub(crate) struct LaplaceNd {
     knots: Arc<[Knot]>,
     gain: f64,
     tau: f64,
+    gain_bounds: I,
+    tau_bounds: I,
 }
 
 impl LaplaceNd {
@@ -45,10 +47,18 @@ impl LaplaceNd {
         }
         let gain = b0 / d0;
         let tau = d1 / d0;
-        if !gain.is_finite() || !tau.is_finite() || tau <= 0.0 {
+        let gain_bounds = I::point(b0) / I::point(d0);
+        let tau_bounds = I::point(d1) / I::point(d0);
+        if !gain.is_finite()
+            || !tau.is_finite()
+            || tau <= 0.0
+            || !gain_bounds.finite()
+            || !tau_bounds.finite()
+            || tau_bounds.lo <= 0.0
+        {
             return Err(Error::new(
                 "unsupported_operator",
-                "laplace_nd coefficient scale is nonfinite or unstable",
+                "laplace_nd coefficient scale is nonfinite, underflowed or unstable",
             ));
         }
         if points.len() < 2
@@ -71,6 +81,7 @@ impl LaplaceNd {
         for ((time, input), input_bounds) in points.into_iter().zip(bounds) {
             let (output, output_bounds) = if let Some(previous) = knots.last() {
                 let duration = time - previous.time;
+                let duration_bounds = interval_delta(previous.time, time)?;
                 let output = segment_value(
                     previous.output,
                     previous.input,
@@ -84,15 +95,15 @@ impl LaplaceNd {
                     previous.output_bounds,
                     previous.input_bounds,
                     input_bounds,
-                    duration,
-                    duration,
-                    gain,
-                    tau,
+                    duration_bounds,
+                    duration_bounds,
+                    gain_bounds,
+                    tau_bounds,
                 )?;
                 (output, output_bounds)
             } else {
                 let output = gain * input;
-                let output_bounds = expand(I::point(gain) * input_bounds);
+                let output_bounds = expand(gain_bounds * input_bounds);
                 (output, output_bounds)
             };
             if !output.is_finite() || !output_bounds.finite() {
@@ -113,6 +124,8 @@ impl LaplaceNd {
             knots: knots.into(),
             gain,
             tau,
+            gain_bounds,
+            tau_bounds,
         })
     }
 
@@ -155,10 +168,10 @@ impl LaplaceNd {
             start.output_bounds,
             start.input_bounds,
             end.input_bounds,
-            time - start.time,
-            end.time - start.time,
-            self.gain,
-            self.tau,
+            interval_delta(start.time, time)?,
+            interval_delta(start.time, end.time)?,
+            self.gain_bounds,
+            self.tau_bounds,
         )
     }
 
@@ -191,19 +204,16 @@ fn segment_value(
     Ok(value)
 }
 
-fn segment_bounds(
-    y0: I,
-    u0: I,
-    u1: I,
-    h: f64,
-    duration: f64,
-    gain: f64,
-    tau: f64,
-) -> Result<I, Error> {
+fn segment_bounds(y0: I, u0: I, u1: I, h: I, duration: I, gain: I, tau: I) -> Result<I, Error> {
+    if !duration.finite() || duration.lo <= 0.0 || !gain.finite() || !tau.finite() || tau.lo <= 0.0
+    {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound laplace_nd coefficient or time scale",
+        ));
+    }
     let (g, b) = laplace_weights(h, tau)?;
-    let gain = I::point(gain);
-    let tau = I::point(tau);
-    let slope = (u1 - u0) / I::point(duration);
+    let slope = (u1 - u0) / duration;
     let bound = y0 + (gain * u0 - y0) * g + gain * slope * tau * b;
     if !bound.finite() {
         return Err(Error::new(
@@ -227,11 +237,17 @@ fn lag_term(h: f64, tau: f64) -> f64 {
     }
 }
 
-fn laplace_weights(h: f64, tau: f64) -> Result<(I, I), Error> {
-    if h == 0.0 {
+fn laplace_weights(h: I, tau: I) -> Result<(I, I), Error> {
+    if h.zero() {
         return Ok((I::ZERO, I::ZERO));
     }
-    let x = I::point(h) / I::point(tau);
+    if !h.finite() || h.lo < 0.0 || !tau.finite() || tau.lo <= 0.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound laplace_nd exponential argument",
+        ));
+    }
+    let x = h / tau;
     if !x.finite() || x.lo < 0.0 {
         return Err(Error::new(
             "waveform_accuracy",
@@ -299,6 +315,17 @@ fn small_weights(x: I) -> Result<(I, I), Error> {
     Ok((g, b))
 }
 
+fn interval_delta(start: f64, end: f64) -> Result<I, Error> {
+    let delta = I::point(end) - I::point(start);
+    if !delta.finite() || delta.lo < 0.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound laplace_nd time interval",
+        ));
+    }
+    Ok(delta)
+}
+
 fn symmetric(radius: f64) -> I {
     I {
         lo: -radius.abs(),
@@ -353,15 +380,28 @@ mod tests {
             (&[1.0][..], &[1.0][..]),
             (&[1.0][..], &[1.0, -1.0][..]),
             (&[1.0][..], &[0.0, 1.0][..]),
+            (&[1.0][..], &[1.0e308, 1.0e-308][..]),
         ] {
             assert!(LaplaceNd::enclosed(points.clone(), bounds.clone(), num, den).is_err());
         }
     }
 
     #[test]
+    fn coefficient_and_time_bounds_keep_nonexact_arithmetic() {
+        let points = vec![(0.0, 1.0), (1.0e16, 2.0)];
+        let bounds = points.iter().map(|p| I::point(p.1)).collect();
+        let history = LaplaceNd::enclosed(points, bounds, &[1.0], &[3.0, 3.0]).unwrap();
+        assert!(history.gain_bounds.lo < history.gain);
+        assert!(history.gain < history.gain_bounds.hi);
+        let duration = interval_delta(1.0, 1.0e16).unwrap();
+        assert!(duration.lo < 1.0e16);
+        assert!(1.0e16 < duration.hi);
+    }
+
+    #[test]
     fn proved_weights_enclose_tiny_ordinary_and_large_arguments() {
         for x in [1e-12, 1e-4, 0.25, 4.0, 100.0, 1024.0] {
-            let (g, b) = laplace_weights(x, 1.0).unwrap();
+            let (g, b) = laplace_weights(I::point(x), I::ONE).unwrap();
             let exact_g = -(-x).exp_m1();
             let exact_b = if x < 0.5 {
                 let mut term = x;

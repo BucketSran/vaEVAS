@@ -40,6 +40,15 @@ def column(result, name="y"):
 def expected(points, time, gain=1.0, tau=0.5e-6):
     tau = Decimal(tau)
     gain = Decimal(gain)
+    return expected_with_decimal_gain_tau(points, time, gain, tau)
+
+
+def expected_from_coefficients(points, time, b0, d0, d1):
+    return expected_with_decimal_gain_tau(
+        points, time, Decimal(b0) / Decimal(d0), Decimal(d1) / Decimal(d0))
+
+
+def expected_with_decimal_gain_tau(points, time, gain, tau):
     y = gain * Decimal(points[0][1])
     now = Decimal(points[0][0])
     target = Decimal(time)
@@ -113,6 +122,30 @@ class LaplaceContracts(unittest.TestCase):
                          step=1e-12, vabstol=1e-10, reltol=0)
         for actual, t in zip(column(result), [0, 1e-12, 2e-12, 4e-12]):
             self.assertAlmostEqual(actual, expected(points, t, gain=.5, tau=2e-12), delta=1e-10)
+
+    def test_original_coefficient_division_uses_decimal_oracle(self):
+        points = [[0.0, 1.0], [2.0, 2.0], [5.0, -1.0]]
+        program = compile_filter("V(y,r)<+laplace_nd(V(u,r),'{1.0},'{3.0,3.0});")
+        times = [0, 0.5, 2.0, 3.5, 5.0]
+        result = execute(program, points=points, times=times, step=5.0, vabstol=2e-12, reltol=0)
+        for actual, t in zip(column(result), times):
+            self.assertAlmostEqual(
+                actual, expected_from_coefficients(points, t, 1.0, 3.0, 3.0), delta=2e-12)
+
+    def test_large_absolute_time_uncertainty_is_budgeted(self):
+        body = ("V(z,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,1.0e16}); "
+                "V(y,r)<+1.0e12*V(z,r);")
+        program = compile_filter(body, "electrical z;")
+        points = [[0.0, 0.0], [1.0, 0.0], [1.0e16, 1.0]]
+        times = [0, 1.0, 5.0e15, 1.0e16]
+        ok = execute(program, points=points, times=times, step=1.0e16, vabstol=1e-2, reltol=0)
+        for actual, t in zip(column(ok, "y"), times):
+            self.assertAlmostEqual(
+                actual, 1.0e12 * expected_from_coefficients(points, t, 1.0, 1.0, 1.0e16),
+                delta=1e-2)
+        with self.assertRaisesRegex(
+                KernelError, "waveform_accuracy: .*budget 1e-6"):
+            execute(program, points=points, times=times, step=1.0e16, vabstol=1e-6, reltol=0)
 
     def test_decimal_oracle_covers_ordinary_and_large_exponential_weights(self):
         cases = [
