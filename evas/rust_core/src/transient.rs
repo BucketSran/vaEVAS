@@ -197,15 +197,22 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     if request.program.states.is_empty()
         && request.program.events.is_empty()
         && request.program.operators.is_empty()
+        && request
+            .program
+            .contributions
+            .iter()
+            .any(|c| crate::expression::has_select(&c.rhs))
     {
-        let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
+        let nodes = request.program.nodes.clone();
+        let mut circuit =
+            crate::analog::Analog::new(request.program, request.driven, request.tolerances)?;
         let output_times = trajectory.config.output_times.clone();
         let solutions = output_times
             .iter()
             .enumerate()
             .map(|(index, &time)| {
                 circuit
-                    .solve(&trajectory.values(time))
+                    .solve(&trajectory.values(time), &trajectory.value_bounds(time))
                     .map_err(|mut error| {
                         error.sample = Some(index);
                         error
@@ -215,7 +222,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         return Ok(Response {
             engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
             schema_version: SCHEMA_VERSION,
-            nodes: circuit.nodes,
+            nodes,
             solutions,
             transient: Some(TransientTrace {
                 times: trajectory.config.output_times,

@@ -38,6 +38,98 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
         self.assertEqual(result["transient"]["states"], [[], [], []])
         self.assertEqual([row["yout"] for row in rows], [-0.75, 0.125, 0.875])
 
+    def test_pwl_threshold_cannot_be_certified_from_rounded_input(self):
+        from fractions import Fraction
+        # The real PWL value is 1/3, strictly above the binary64 threshold.
+        # Rounded interpolation equals that threshold and selects the wrong arm.
+        self.assertGreater(Fraction(1, 3), Fraction(float("0.3333333333333333")))
+        source = model("""
+            if (V(u,r)>0.3333333333333333) tmp=1; else tmp=0;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;")
+        program = compile_sources({"test.va": source}, [instance()])
+        with self.assertRaisesRegex(KernelError, "condition_precision"):
+            transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
+                      stop=3.0, max_step=0.25, kernel=KERNEL,
+                      vabstol=1e-9, reltol=1e-10)
+
+    def test_selected_branch_propagates_pwl_error_through_voltage_gain(self):
+        from fractions import Fraction
+        exact = Fraction(10**16) * (Fraction(1, 3) - Fraction(float("0.3333333333333333")))
+        self.assertGreater(exact, Fraction(1, 10))
+        source = model("""
+            tmp=0;
+            if (V(u,r)>-0.1) tmp=1e16*(V(u,r)-0.3333333333333333);
+            V(y,r)<+tmp;
+        """, declarations="real tmp;")
+        program = compile_sources({"test.va": source}, [instance()])
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
+                      stop=3.0, max_step=0.25, kernel=KERNEL,
+                      vabstol=1e-9, reltol=1e-10)
+
+    def test_unrelated_and_empty_if_statements_do_not_duplicate_local_expression(self):
+        def compile_rhs(empty_conditions):
+            # Both sources contain a real conditional, hence use the same
+            # structure-preserving lowering. Only unused statements differ.
+            body = ("tmp=V(u,r); unused=0; if(V(u,r)>-10) unused=1; "
+                    + "if(V(u,r)>0) begin end " * empty_conditions
+                    + "V(y,r)<+tmp;")
+            return compile_sources({"test.va": model(body, declarations="real tmp,unused;")},
+                                   [instance()]).to_dict()["contributions"][0]["rhs"]
+        self.assertEqual(compile_rhs(12), compile_rhs(0))
+
+    def test_transient_source_knot_keeps_strict_and_inclusive_equality(self):
+        threshold = float("0.3333333333333333")
+        source = model("""
+            tmp=0;
+            if(V(u,r)>0.3333333333333333) tmp=tmp+1;
+            if(V(u,r)<0.3333333333333333) tmp=tmp+2;
+            if(V(u,r)>=0.3333333333333333) tmp=tmp+4;
+            if(V(u,r)<=0.3333333333333333) tmp=tmp+8;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;")
+        result = transient(compile_sources({"test.va": source}, [instance()]),
+                           {"u": [[0, 0], [1, threshold], [3, 1]]}, [1.0],
+                           stop=3.0, max_step=0.25, kernel=KERNEL)
+        self.assertEqual(result["solutions"][0]["voltages"][result["nodes"].index("y")], 12.0)
+
+    def test_transient_skips_unreachable_ambiguous_predicate(self):
+        source = model("""
+            if(V(sel,r)>0) begin
+                if(V(u,r)>0.3333333333333333) tmp=1; else tmp=2;
+            end else tmp=3;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;", ports="u,sel,y,r",
+           directions="input u; input sel; output y; inout r;")
+        program = compile_sources({"test.va": source},
+                                  [instance(connections=dict(u="u", sel="sel", y="y", r="0"))])
+        result = transient(program, {"u": [[0, 0], [3, 1]], "sel": [[0, -1], [3, -1]]},
+                           [1.0], stop=3.0, max_step=0.25, kernel=KERNEL)
+        self.assertEqual(result["solutions"][0]["voltages"][result["nodes"].index("y")], 3.0)
+
+    def test_unrelated_pwl_uncertainty_preserves_exact_point_predicate(self):
+        source = model("""
+            if(V(u,r)+1e16>1e16) tmp=1; else tmp=0;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;", ports="u,sel,y,r",
+           directions="input u; input sel; output y; inout r;")
+        program = compile_sources({"test.va": source},
+                                  [instance(connections=dict(u="u", sel="sel", y="y", r="0"))])
+        result = transient(program, {"u": [[0, 1], [3, 1]], "sel": [[0, 0], [3, 1]]},
+                           [1.0], stop=3.0, max_step=0.25, kernel=KERNEL)
+        self.assertEqual(result["solutions"][0]["voltages"][result["nodes"].index("y")], 1.0)
+
+    def test_additional_output_samples_preserve_piecewise_affine_solution(self):
+        program = compile_sources({"test.va": limiter_source()},
+                                  [instance(connections=dict(u="u", yout="yout", r="0"))])
+        sources = {"u": [[0, -1], [1, 1]]}
+        sparse = transient(program, sources, [0.0, 0.5, 1.0],
+                           stop=1.0, max_step=0.25, kernel=KERNEL)
+        dense = transient(program, sources, [0.0, 0.125, 0.5, 0.875, 1.0],
+                          stop=1.0, max_step=0.25, kernel=KERNEL)
+        self.assertEqual(sparse["solutions"], [dense["solutions"][k] for k in [0, 2, 4]])
+
     def test_sequential_assignment_is_not_contribution_accumulation(self):
         source = model("""
             tmp = V(u,r);

@@ -1,5 +1,6 @@
 mod absdelay;
 mod affine_bounds;
+mod analog;
 mod assembly;
 mod event_accuracy;
 mod event_conditions;

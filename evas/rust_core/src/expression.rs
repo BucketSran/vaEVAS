@@ -367,7 +367,7 @@ fn affine_product_terms(
     }
 }
 
-fn expression_interval(expr: &Expression, nodes: &[f64]) -> Result<I, Error> {
+fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
         Expression::State { .. } | Expression::Operator { .. } => Err(Error::new(
             "unsupported_analysis",
@@ -376,7 +376,7 @@ fn expression_interval(expr: &Expression, nodes: &[f64]) -> Result<I, Error> {
         Expression::Affine { constant, terms } => {
             let mut value = I::point(*constant);
             for term in terms {
-                value = value + I::point(term.coefficient) * I::point(nodes[term.node]);
+                value = value + I::point(term.coefficient) * nodes[term.node];
             }
             Ok(value)
         }
@@ -406,7 +406,7 @@ fn expression_interval(expr: &Expression, nodes: &[f64]) -> Result<I, Error> {
             origin,
         } => {
             let selected =
-                if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                if enclosed_predicate(*relation, left, right, nodes).map_err(|mut error| {
                     error.message.push_str(&format!(" at {}", origin.label()));
                     error
                 })? {
@@ -429,7 +429,8 @@ fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Resul
             return Ok(sign);
         }
     }
-    let interval = expression_interval(left, nodes)? - expression_interval(right, nodes)?;
+    let bounds: Vec<_> = nodes.iter().copied().map(I::point).collect();
+    let interval = expression_interval(left, &bounds)? - expression_interval(right, &bounds)?;
     if let Some(sign) = interval.sign() {
         return Ok(sign);
     }
@@ -448,6 +449,87 @@ fn select_predicate(
     Ok(relation.selects_sign(predicate_sign(left, right, nodes)?))
 }
 
+fn enclosed_predicate(
+    relation: Relation,
+    left: &Expression,
+    right: &Expression,
+    nodes: &[I],
+) -> Result<bool, Error> {
+    let mut dependencies = BTreeSet::new();
+    predicate_nodes(left, &mut dependencies);
+    predicate_nodes(right, &mut dependencies);
+    if dependencies.iter().all(|&n| nodes[n].lo == nodes[n].hi) {
+        // Exact source knots retain the exact binary64 product-sum test.
+        // An unrelated interpolated source must not disable that proof.
+        let values: Vec<_> = nodes.iter().map(|v| v.lo).collect();
+        return select_predicate(relation, left, right, &values);
+    }
+    let difference = expression_interval(left, nodes)? - expression_interval(right, nodes)?;
+    if difference.finite() {
+        let decision = match relation {
+            Relation::Lt => (difference.hi < 0.0, difference.lo >= 0.0),
+            Relation::Le => (difference.hi <= 0.0, difference.lo > 0.0),
+            Relation::Gt => (difference.lo > 0.0, difference.hi <= 0.0),
+            Relation::Ge => (difference.lo >= 0.0, difference.hi < 0.0),
+        };
+        if decision.0 || decision.1 {
+            return Ok(decision.0);
+        }
+    }
+    Err(Error::new(
+        "condition_precision",
+        "ordinary analog if predicate cannot be certified from the original PWL input enclosure",
+    ))
+}
+
+pub(crate) fn has_select(expr: &Expression) -> bool {
+    match expr {
+        Expression::Select { .. } => true,
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            has_select(left) || has_select(right)
+        }
+        Expression::Power { base, .. } => has_select(base),
+        _ => false,
+    }
+}
+
+/// Resolve only reachable conditions using source enclosures. Structural
+/// validation of both arms is the caller's responsibility and precedes this.
+pub(crate) fn resolve_selects(expr: &Expression, nodes: &[I]) -> Result<Expression, Error> {
+    Ok(match expr {
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let left = resolve_selects(left, nodes)?;
+            let right = resolve_selects(right, nodes)?;
+            let decision =
+                enclosed_predicate(*relation, &left, &right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })?;
+            return resolve_selects(if decision { then_value } else { else_value }, nodes);
+        }
+        Expression::Add { left, right } => Expression::Add {
+            left: Box::new(resolve_selects(left, nodes)?),
+            right: Box::new(resolve_selects(right, nodes)?),
+        },
+        Expression::Multiply { left, right } => Expression::Multiply {
+            left: Box::new(resolve_selects(left, nodes)?),
+            right: Box::new(resolve_selects(right, nodes)?),
+        },
+        Expression::Power { base, exponent } => Expression::Power {
+            base: Box::new(resolve_selects(base, nodes)?),
+            exponent: *exponent,
+        },
+        _ => expr.clone(),
+    })
+}
+
 pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
     let mut sum = Accumulator::new();
     sum.add_expression(expr, 1.0, nodes)?;
@@ -457,6 +539,40 @@ pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error>
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn enclosed_relations_certify_one_sided_zero_boundaries() {
+        let x = Expression::Affine {
+            constant: 0.0,
+            terms: vec![crate::ir::Term {
+                node: 0,
+                coefficient: 1.0,
+            }],
+        };
+        let zero = Expression::Affine {
+            constant: 0.0,
+            terms: vec![],
+        };
+        for (bounds, relation, expected) in [
+            (I { lo: 0.0, hi: 1.0 }, Relation::Lt, false),
+            (I { lo: 0.0, hi: 1.0 }, Relation::Ge, true),
+            (I { lo: -1.0, hi: 0.0 }, Relation::Le, true),
+            (I { lo: -1.0, hi: 0.0 }, Relation::Gt, false),
+        ] {
+            assert_eq!(
+                enclosed_predicate(relation, &x, &zero, &[bounds]).unwrap(),
+                expected
+            );
+        }
+        for relation in [Relation::Lt, Relation::Le, Relation::Gt, Relation::Ge] {
+            assert_eq!(
+                enclosed_predicate(relation, &x, &zero, &[I { lo: -1.0, hi: 1.0 }])
+                    .unwrap_err()
+                    .kind,
+                "condition_precision"
+            );
+        }
+    }
 
     #[test]
     fn signed_sum_preserves_small_residual_and_derivative() {

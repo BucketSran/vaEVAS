@@ -285,6 +285,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                             continue
                         if name not in then_env or name not in else_env:
                             raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if leaves local real {name!r} unassigned")
+                        if then_env[name] is else_env[name]:
+                            result[name] = then_env[name]
+                            continue
                         result[name] = Select(relation[statement.relation], left, right, then_env[name], else_env[name], origin)
                 else:
                     if statement.name not in local_variables:
