@@ -159,6 +159,133 @@ enum Runtime {
     Slew(Slew),
 }
 
+const SIN_MAX_WIDTH: f64 = 1.0e-6;
+const SIN_MAX_MAGNITUDE: f64 = 128.0;
+const PI_BITS: u64 = 0x4009_21fb_5444_2d18;
+const FRAC_PI_2_BITS: u64 = 0x3ff9_21fb_5444_2d18;
+
+fn constant_interval(bits: u64) -> I {
+    I {
+        lo: f64::from_bits(bits - 1),
+        hi: f64::from_bits(bits + 1),
+    }
+}
+
+fn union(a: I, b: I) -> I {
+    I {
+        lo: a.lo.min(b.lo),
+        hi: a.hi.max(b.hi),
+    }
+}
+
+fn widen(a: I, epsilon: f64) -> I {
+    I {
+        lo: (a.lo - epsilon).next_down(),
+        hi: (a.hi + epsilon).next_up(),
+    }
+}
+
+fn taylor_remainder(radius: f64, start_power: i32, factorial: f64) -> f64 {
+    (radius.next_up().powi(start_power) / factorial).next_up()
+}
+
+fn sin_reduced(r: I) -> Result<I, Error> {
+    let limit = constant_interval(FRAC_PI_2_BITS).hi;
+    if !r.finite() || r.lo < -limit || r.hi > limit {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "reduced sine interval is outside the certified Taylor domain",
+        ));
+    }
+    let r2 = r * r;
+    let mut term = r;
+    let mut sum = term;
+    for (a, b) in [
+        (2.0, 3.0),
+        (4.0, 5.0),
+        (6.0, 7.0),
+        (8.0, 9.0),
+        (10.0, 11.0),
+        (12.0, 13.0),
+        (14.0, 15.0),
+        (16.0, 17.0),
+    ] {
+        term = -term * r2 / I::point(a * b);
+        sum = sum + term;
+    }
+    Ok(widen(
+        sum,
+        taylor_remainder(limit, 19, 121_645_100_408_832_000.0),
+    ))
+}
+
+fn cos_reduced(r: I) -> Result<I, Error> {
+    let limit = constant_interval(FRAC_PI_2_BITS).hi;
+    if !r.finite() || r.lo < -limit || r.hi > limit {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "reduced cosine interval is outside the certified Taylor domain",
+        ));
+    }
+    let r2 = r * r;
+    let mut term = I::ONE;
+    let mut sum = term;
+    for (a, b) in [
+        (1.0, 2.0),
+        (3.0, 4.0),
+        (5.0, 6.0),
+        (7.0, 8.0),
+        (9.0, 10.0),
+        (11.0, 12.0),
+        (13.0, 14.0),
+        (15.0, 16.0),
+        (17.0, 18.0),
+    ] {
+        term = -term * r2 / I::point(a * b);
+        sum = sum + term;
+    }
+    Ok(widen(
+        sum,
+        taylor_remainder(limit, 20, 2_432_902_008_176_640_000.0),
+    ))
+}
+
+fn sin_point_bounds(x: f64) -> Result<I, Error> {
+    if !x.is_finite() || x.abs() > SIN_MAX_MAGNITUDE {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine argument exceeds certified finite Taylor domain",
+        ));
+    }
+    let half_pi = constant_interval(FRAC_PI_2_BITS);
+    let n = (x / std::f64::consts::FRAC_PI_2).round();
+    if n.abs() > 128.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine range reduction turn count is outside certified domain",
+        ));
+    }
+    let r = I::point(x) - I::point(n) * half_pi;
+    match (n as i64).rem_euclid(4) {
+        0 => sin_reduced(r),
+        1 => cos_reduced(r),
+        2 => Ok(-sin_reduced(r)?),
+        _ => Ok(-cos_reduced(r)?),
+    }
+}
+
+fn overlaps(a: I, b: I) -> bool {
+    a.lo <= b.hi && b.lo <= a.hi
+}
+
+fn contains_critical(input: I, critical: I, period: I) -> bool {
+    let nominal_critical = (critical.lo + critical.hi) / 2.0;
+    let nominal_period = (period.lo + period.hi) / 2.0;
+    let start = ((input.lo - nominal_critical) / nominal_period).floor() as i64 - 1;
+    let end = ((input.hi - nominal_critical) / nominal_period).ceil() as i64 + 1;
+    (start..=end).any(|k| overlaps(input, critical + I::point(k as f64) * period))
+}
+
 fn sin_bounds(input: I) -> Result<I, Error> {
     if !input.finite() {
         return Err(Error::new(
@@ -166,27 +293,29 @@ fn sin_bounds(input: I) -> Result<I, Error> {
             "cannot bound nonfinite sine input",
         ));
     }
-    let two_pi = 2.0 * std::f64::consts::PI;
-    if input.hi - input.lo >= two_pi {
+    if input.lo.abs().max(input.hi.abs()) > SIN_MAX_MAGNITUDE {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine argument exceeds certified finite Taylor domain",
+        ));
+    }
+    let two_pi = I::point(2.0) * constant_interval(PI_BITS);
+    if input.hi - input.lo >= two_pi.lo || input.hi - input.lo > SIN_MAX_WIDTH {
         return Ok(I { lo: -1.0, hi: 1.0 });
     }
-    let mut lo = input.lo.sin().min(input.hi.sin()).next_down();
-    let mut hi = input.lo.sin().max(input.hi.sin()).next_up();
-    for (critical, value) in [
-        (std::f64::consts::FRAC_PI_2, 1.0),
-        (-std::f64::consts::FRAC_PI_2, -1.0),
-    ] {
-        let start = ((input.lo - critical) / two_pi).ceil() as i64;
-        let end = ((input.hi - critical) / two_pi).floor() as i64;
-        if start <= end {
-            if value > 0.0 {
-                hi = 1.0;
-            } else {
-                lo = -1.0;
-            }
-        }
+    let mut result = union(sin_point_bounds(input.lo)?, sin_point_bounds(input.hi)?);
+    let period = I::point(2.0) * constant_interval(PI_BITS);
+    let half_pi = constant_interval(FRAC_PI_2_BITS);
+    if contains_critical(input, half_pi, period) {
+        result.hi = 1.0;
     }
-    Ok(I { lo, hi })
+    if contains_critical(input, -half_pi, period) {
+        result.lo = -1.0;
+    }
+    Ok(I {
+        lo: result.lo.max(-1.0),
+        hi: result.hi.min(1.0),
+    })
 }
 
 #[derive(Clone, Default)]
@@ -387,15 +516,8 @@ impl Operators {
                             coefficient,
                             constant,
                         } => {
-                            let input = match &self.entries[*operator] {
-                                Runtime::IdtMod(history) => {
-                                    I::point(*constant)
-                                        + I::point(*coefficient) * history.raw_value_bounds(time)?
-                                }
-                                _ => {
-                                    I::point(*constant) + I::point(*coefficient) * bounds[*operator]
-                                }
-                            };
+                            let input =
+                                I::point(*constant) + I::point(*coefficient) * bounds[*operator];
                             sin_bounds(input)?
                         }
                     },
@@ -476,5 +598,27 @@ impl Operators {
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod phase_operator_tests {
+    use super::*;
+
+    #[test]
+    fn sine_bounds_cover_critical_points_without_libm_endpoint_trust() {
+        let half_pi = constant_interval(FRAC_PI_2_BITS);
+        let bounds = sin_bounds(half_pi).unwrap();
+        assert!(bounds.lo <= 1.0 && bounds.hi >= 1.0);
+        let zero = sin_bounds(I::point(0.0)).unwrap();
+        assert!(zero.lo <= 0.0 && zero.hi >= 0.0);
+    }
+
+    #[test]
+    fn sine_bounds_reject_uncertified_huge_angles() {
+        assert_eq!(
+            sin_bounds(I::point(129.0)).unwrap_err().kind,
+            "waveform_accuracy"
+        );
     }
 }

@@ -14,6 +14,20 @@ fn wrap(value: f64, modulus: f64, offset: f64) -> f64 {
     (value - offset).rem_euclid(modulus) + offset
 }
 
+fn full_range(modulus: f64, offset: f64) -> I {
+    I {
+        lo: offset,
+        hi: offset + modulus,
+    }
+}
+
+fn intersect(a: I, b: I) -> I {
+    I {
+        lo: a.lo.max(b.lo),
+        hi: a.hi.min(b.hi),
+    }
+}
+
 impl IdtMod {
     pub(crate) fn enclosed(
         points: Vec<(f64, f64)>,
@@ -56,35 +70,36 @@ impl IdtMod {
                 "nonfinite idtmod query enclosure",
             ));
         }
+        let declared = full_range(self.modulus, self.offset);
         if raw.hi - raw.lo >= self.modulus {
-            return Ok(I {
-                lo: self.offset,
-                hi: self.offset + self.modulus,
-            });
+            return Ok(declared);
         }
-        let nominal = self.integral.value(time)?;
-        let nominal_wrapped = wrap(nominal, self.modulus, self.offset);
-        let lo_turn = ((raw.lo - self.offset) / self.modulus).floor();
-        let hi_turn = ((raw.hi - self.offset) / self.modulus).floor();
-        if lo_turn == hi_turn {
-            let lo = wrap(raw.lo, self.modulus, self.offset);
-            let hi = wrap(raw.hi, self.modulus, self.offset);
-            return Ok(I { lo, hi });
+        let normalized = (raw - I::point(self.offset)) / I::point(self.modulus);
+        if !normalized.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify idtmod turn for nonfinite normalized phase",
+            ));
         }
-        let width = raw.hi - raw.lo;
-        let edge_distance = (nominal_wrapped - self.offset)
-            .abs()
-            .min((self.offset + self.modulus - nominal_wrapped).abs());
-        if width <= 1e-9 * self.modulus.max(1.0) && edge_distance <= width.max(f64::EPSILON) {
-            return Ok(I {
-                lo: (nominal_wrapped - width).max(self.offset),
-                hi: (nominal_wrapped + width).min(self.offset + self.modulus),
-            });
+        let lo_turn = normalized.lo.floor();
+        let hi_turn = normalized.hi.floor();
+        if lo_turn != hi_turn {
+            return Ok(declared);
         }
-        Ok(I {
-            lo: self.offset,
-            hi: self.offset + self.modulus,
-        })
+        if lo_turn.abs() > 4_503_599_627_370_496.0 {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify idtmod wrap after a non-representable turn count",
+            ));
+        }
+        let wrapped = raw - I::point(lo_turn) * I::point(self.modulus);
+        if !wrapped.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "nonfinite idtmod wrapped enclosure",
+            ));
+        }
+        Ok(intersect(wrapped, declared))
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
@@ -129,5 +144,37 @@ mod tests {
         )
         .unwrap();
         assert_eq!(h.value_bounds(1.0).unwrap(), I { lo: -0.5, hi: 0.5 });
+    }
+
+    #[test]
+    fn tiny_uncertain_wrap_does_not_drop_the_opposite_side() {
+        let h = IdtMod::enclosed(
+            vec![(0.0, 0.0), (1.0, 0.0)],
+            vec![
+                I {
+                    lo: -f64::EPSILON,
+                    hi: f64::EPSILON,
+                };
+                2
+            ],
+            1.0,
+            1.0,
+            0.0,
+        )
+        .unwrap();
+        assert_eq!(h.value_bounds(1.0).unwrap(), I { lo: 0.0, hi: 1.0 });
+    }
+
+    #[test]
+    fn huge_turn_bounds_are_rejected_when_turn_count_is_not_exact() {
+        let h = IdtMod::enclosed(
+            vec![(0.0, 0.0), (1.0, 0.0)],
+            vec![I::point(0.0); 2],
+            9_007_199_254_740_992.0,
+            1.0,
+            0.0,
+        )
+        .unwrap();
+        assert_eq!(h.value_bounds(0.0).unwrap_err().kind, "waveform_accuracy");
     }
 }

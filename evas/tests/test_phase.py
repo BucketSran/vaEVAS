@@ -3,10 +3,32 @@ import math
 import subprocess
 import json
 import unittest
+from decimal import Decimal, getcontext
 from fractions import Fraction as F
 
 from evas import CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
+
+
+
+def decimal_sin(value):
+    getcontext().prec = 80
+    x = Decimal.from_float(value)
+    pi = Decimal("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899")
+    two_pi = 2 * pi
+    while x > pi:
+        x -= two_pi
+    while x < -pi:
+        x += two_pi
+    term = x
+    total = x
+    n = 1
+    while True:
+        term *= -x * x / Decimal((2 * n) * (2 * n + 1))
+        total += term
+        if abs(term) < Decimal("1e-70"):
+            return total
+        n += 1
 
 
 def source(body, ports="f,out,total,phase,r", declarations=""):
@@ -92,6 +114,15 @@ class PhaseContracts(unittest.TestCase):
         dense = run_phase(points, [0, .5, 1, 1.5, 2], body, declarations="", vabstol=1e-12, reltol=0)
         self.assertEqual(voltages(sparse, "out"), [0, 1, math.sin(math.pi)])
         self.assertEqual([voltages(dense, "out")[i] for i in [0, 2, 4]], voltages(sparse, "out"))
+
+    def test_direct_sin_matches_decimal_reference_for_binary64_inputs(self):
+        body = "V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;"
+        values = [0.1, -0.7, 1.23456789012345, 3.0]
+        points = [(float(i), v) for i, v in enumerate(values)]
+        result = run_phase(points, [p[0] for p in points], body, declarations="", vabstol=1e-12, reltol=0)
+        for observed, source_value in zip(voltages(result, "out"), values):
+            expected = decimal_sin(source_value)
+            self.assertLessEqual(abs(Decimal.from_float(observed) - expected), Decimal("1e-12"))
 
     def test_direct_sin_is_transient_operator_not_static_nonlinear_solve(self):
         program = compile_phase("V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;", declarations="")
