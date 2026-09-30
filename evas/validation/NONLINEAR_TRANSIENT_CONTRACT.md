@@ -39,8 +39,7 @@ therefore a restricted Krawczyk box certificate.
 
 The residual and interval-Jacobian calculations use the original RHS expression
 trees saved by assembly for each branch equation, not the collapsed affine row
-used by the fast nominal solve. This preserves repeated terms and cancellation
-inside a raw IR expression tree for the certificate. The implementation builds an
+used by the fast nominal solve. This preserves cancellation across a legal raw IR expression tree for the certificate; duplicate-node terms inside one affine expression remain invalid IR. The implementation builds an
 inner representable voltage box around the accepted nominal solution:
 
 ```text
@@ -149,7 +148,8 @@ certification.
 The current branch still rejects nonlinear events, state/history/operator
 coupling, and non-affine transient dynamics. The Krawczyk certificate is limited
 to square, single-origin branch systems at off-knot stateless samples. It uses the
-saved original RHS tree within that branch, including repeated raw affine terms,
-but does not recover separate source-level contributions after assembly has merged
-multiple origins. It does not replace a future general interval solve for broader
+saved original RHS tree within that branch, including legal nested expression
+cancellation, but does not recover separate source-level contributions after
+assembly has merged multiple origins. Duplicate-node terms inside one affine
+expression remain invalid IR. It does not replace a future general interval solve for broader
 nonlinear dynamic features.
