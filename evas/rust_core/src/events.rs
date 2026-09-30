@@ -211,6 +211,12 @@ pub(crate) fn affine(
                 "polynomial transient equations are not supported",
             ))
         }
+        Expression::Select { .. } => {
+            return Err(Error::new(
+                "unsupported_transient",
+                "ordinary analog conditionals are not supported in transient event equations",
+            ))
+        }
     }
     if !result.constant.is_finite()
         || result

@@ -1,4 +1,4 @@
-"""Version 8: voltage/event IR with ordered conditional event bodies.
+"""Version 10: voltage/event IR with ordered event bodies and analog select.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 10
 
 
 @dataclass(frozen=True)
@@ -48,6 +48,17 @@ class Power:
 
 
 @dataclass(frozen=True)
+class Select:
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: "Expression"
+    right: "Expression"
+    then_value: "Expression"
+    else_value: "Expression"
+    origin: Origin
+    op: str = field(default="select", init=False)
+
+
+@dataclass(frozen=True)
 class StateRef:
     state: int
     op: str = field(default="state", init=False)
@@ -59,7 +70,7 @@ class OperatorRef:
     op: str = field(default="operator", init=False)
 
 
-Expression = Affine | Binary | Power | StateRef | OperatorRef
+Expression = Affine | Binary | Power | Select | StateRef | OperatorRef
 
 
 @dataclass(frozen=True)

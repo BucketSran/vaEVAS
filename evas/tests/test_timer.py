@@ -12,6 +12,7 @@ import subprocess
 import unittest
 
 from evas import CompileError, KernelError, compile_sources, transient
+from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
 
 
@@ -69,7 +70,7 @@ class TimerContracts(unittest.TestCase):
 
     def test_periodic_independent_count_answers_and_typed_records(self):
         result = run_timer()
-        self.assertEqual(result['schema_version'], 9)
+        self.assertEqual(result['schema_version'], SCHEMA_VERSION)
         self.assertEqual(result['transient']['states'], [[n] for n in [0, 0, 1, 2, 3, 4, 4]])
         self.assertEqual([e['time'] for e in result['transient']['events']], [2, 7, 12, 17])
         for event in result['transient']['events']:

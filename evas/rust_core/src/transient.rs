@@ -206,6 +206,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         );
     }
     let trajectory = Trajectory::new(transient, request.driven.len())?;
+
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;

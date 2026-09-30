@@ -1,6 +1,6 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
-use crate::ir::{Error, Expression};
-use std::collections::BTreeSet;
+use crate::ir::{Error, Expression, Relation};
+use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
@@ -33,6 +33,92 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
             }
             validate(base, count)?;
         }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+            ..
+        } => {
+            if origin.instance.is_empty()
+                || origin.source.is_empty()
+                || origin.line == 0
+                || origin.column == 0
+            {
+                return Err(Error::new("invalid_ir", "invalid select source identity"));
+            }
+            validate(left, count)?;
+            validate(right, count)?;
+            validate(then_value, count)?;
+            validate(else_value, count)?;
+        }
+    }
+    Ok(())
+}
+
+fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
+    match expr {
+        Expression::Affine { terms, .. } => {
+            nodes.extend(terms.iter().map(|t| t.node));
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            predicate_nodes(left, nodes);
+            predicate_nodes(right, nodes);
+        }
+        Expression::Power { base, .. } => predicate_nodes(base, nodes),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            predicate_nodes(left, nodes);
+            predicate_nodes(right, nodes);
+            predicate_nodes(then_value, nodes);
+            predicate_nodes(else_value, nodes);
+        }
+        Expression::State { .. } | Expression::Operator { .. } => {}
+    }
+}
+
+pub(crate) fn validate_select_predicates(
+    expr: &Expression,
+    allowed_nodes: &HashSet<usize>,
+) -> Result<(), Error> {
+    match expr {
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+            ..
+        } => {
+            let mut nodes = BTreeSet::new();
+            predicate_nodes(left, &mut nodes);
+            predicate_nodes(right, &mut nodes);
+            if !nodes.iter().all(|node| allowed_nodes.contains(node)) {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    format!(
+                        "ordinary analog if predicate depends on an undriven voltage at {}",
+                        origin.label()
+                    ),
+                ));
+            }
+            validate_select_predicates(left, allowed_nodes)?;
+            validate_select_predicates(right, allowed_nodes)?;
+            validate_select_predicates(then_value, allowed_nodes)?;
+            validate_select_predicates(else_value, allowed_nodes)?;
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            validate_select_predicates(left, allowed_nodes)?;
+            validate_select_predicates(right, allowed_nodes)?;
+        }
+        Expression::Power { base, .. } => validate_select_predicates(base, allowed_nodes)?,
+        Expression::Affine { .. } | Expression::State { .. } | Expression::Operator { .. } => {}
     }
     Ok(())
 }
@@ -150,6 +236,23 @@ impl Accumulator {
                     self.add_derivative(node, derivative * da);
                 }
             }
+            Expression::Select {
+                relation,
+                left,
+                right,
+                then_value,
+                else_value,
+                ..
+            } => {
+                let left = evaluate(left, nodes)?;
+                let right = evaluate(right, nodes)?;
+                let selected = if relation.selects(left.value, right.value) {
+                    then_value
+                } else {
+                    else_value
+                };
+                self.add_expression(selected, factor, nodes)?;
+            }
         }
         Ok(())
     }
@@ -170,6 +273,17 @@ impl Accumulator {
             ));
         }
         Ok(result)
+    }
+}
+
+impl Relation {
+    fn selects(self, left: f64, right: f64) -> bool {
+        match self {
+            Self::Lt => left < right,
+            Self::Le => left <= right,
+            Self::Gt => left > right,
+            Self::Ge => left >= right,
+        }
     }
 }
 

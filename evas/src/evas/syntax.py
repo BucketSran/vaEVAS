@@ -79,6 +79,13 @@ class Conditional:
 
 
 @dataclass(frozen=True)
+class ContributionStatement:
+    branch: Expr
+    rhs: Expr
+    token: Token
+
+
+@dataclass(frozen=True)
 class Trigger:
     kind: str
     arguments: tuple[Expr | None, ...]
@@ -97,9 +104,10 @@ class Model:
     name: str
     source: str
     ports: tuple[str, ...]
+    directions: dict[str, str]
     nodes: set[str]
     parameters: dict[str, Expr]
-    contributions: list[tuple[Expr, Expr]]
+    analog: list[Assignment | Conditional | ContributionStatement]
     variables: dict[str, str]
     initial: list[Assignment]
     events: list[Event]
@@ -267,7 +275,7 @@ class Parser:
             self.fail("every port must have a direction and an electrical declaration")
         self.take("analog")
         self.take("begin")
-        contributions, initial, events = [], [], []
+        analog, initial, events = [], [], []
         while self.token.text != "end":
             if self.token.text == "@":
                 token = self.take("@")
@@ -305,18 +313,20 @@ class Parser:
                         self.fail("event OR supports only cross leaves", token)
                     events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
-            if self.token.text != "V":
-                self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")
-            branch = self.expression()
-            if branch.op != "voltage":
-                self.fail("contribution target must be V(p) or V(p,n)", branch.token)
-            self.take("<+")
-            rhs = self.expression()
-            self.take(";")
-            contributions.append((branch, rhs))
+            if self.token.text == "V":
+                token = self.token
+                branch = self.expression()
+                if branch.op != "voltage":
+                    self.fail("contribution target must be V(p) or V(p,n)", branch.token)
+                self.take("<+")
+                rhs = self.expression()
+                self.take(";")
+                analog.append(ContributionStatement(branch, rhs, token))
+            else:
+                analog.extend(self.statements(True))
         self.take("end")
         self.take("endmodule")
         self.take("<eof>")
-        if not contributions:
+        if not any(isinstance(statement, ContributionStatement) for statement in analog):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        return Model(name, self.source, tuple(ports), nodes, parameters, contributions, variables, initial, events)
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events)

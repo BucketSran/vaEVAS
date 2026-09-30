@@ -11,6 +11,7 @@ import subprocess
 import unittest
 
 from evas import CompileError, KernelError, compile_sources, solve, transient
+from evas.ir import SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
 
 
@@ -176,7 +177,7 @@ class IdtContracts(unittest.TestCase):
 
     def test_raw_ir_rejects_bad_version_fields_and_dependencies(self):
         good = compiled().to_dict()
-        self.assertEqual(good['schema_version'], 9)
+        self.assertEqual(good['schema_version'], SCHEMA_VERSION)
         mutations = []
         for key, value in [('ic', None), ('ic', '0'), ('reset', 0), ('ic', float('inf'))]:
             bad = copy.deepcopy(good)
