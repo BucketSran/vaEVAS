@@ -163,15 +163,9 @@ impl Idt {
         Ok(value)
     }
 
-    fn prefix_bounds(&self, time: f64) -> Result<I, Error> {
-        let index = self.index(time)?;
-        let end = &self.knots[index];
-        if time == end.time {
-            return Ok(end.integral_bounds);
-        }
-        let start = &self.knots[index - 1];
-        let h = I::point(time) - I::point(start.time);
-        let half_fraction = I::point(0.5) * (h / (I::point(end.time) - I::point(start.time)));
+    fn segment_prefix_bounds(&self, start: &Knot, end: &Knot, h: I) -> Result<I, Error> {
+        let duration = I::point(end.time) - I::point(start.time);
+        let half_fraction = I::point(0.5) * (h / duration);
         let bound = start.integral_bounds
             + h * ((I::ONE - half_fraction) * start.input_bounds
                 + half_fraction * end.input_bounds);
@@ -184,13 +178,27 @@ impl Idt {
         Ok(bound)
     }
 
+    fn prefix_bounds(&self, time: f64) -> Result<I, Error> {
+        let index = self.index(time)?;
+        let end = &self.knots[index];
+        if time == end.time {
+            return Ok(end.integral_bounds);
+        }
+        let start = &self.knots[index - 1];
+        let h = I::point(time) - I::point(start.time);
+        self.segment_prefix_bounds(start, end, h)
+    }
+
     fn prefix_range(&self, times: I) -> Result<I, Error> {
+        if !times.finite() || times.lo > times.hi {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid idt reset time bounds",
+            ));
+        }
         self.index(times.lo)?;
         self.index(times.hi)?;
-        let left_bound = self.prefix_bounds(times.lo)?;
-        let right_bound = self.prefix_bounds(times.hi)?;
-        let mut lo = left_bound.lo.min(right_bound.lo);
-        let mut hi = left_bound.hi.max(right_bound.hi);
+        let mut range: Option<I> = None;
         for pair in self.knots.windows(2) {
             let (start, end) = (&pair[0], &pair[1]);
             let left = times.lo.max(start.time);
@@ -198,25 +206,22 @@ impl Idt {
             if left > right {
                 continue;
             }
-            if start.input == 0.0 && (left..=right).contains(&start.time) {
-                let value = start.integral_bounds;
-                lo = lo.min(value.lo);
-                hi = hi.max(value.hi);
-            }
-            if start.input != end.input {
-                let zero =
-                    start.time - start.input * (end.time - start.time) / (end.input - start.input);
-                if (left..=right).contains(&zero) {
-                    let value = self.prefix_bounds(zero)?;
-                    lo = lo.min(value.lo);
-                    hi = hi.max(value.hi);
-                }
-            }
+            let h = I {
+                lo: left,
+                hi: right,
+            } - I::point(start.time);
+            let segment = self.segment_prefix_bounds(start, end, h)?;
+            range = Some(match range {
+                Some(current) => current.hull(segment),
+                None => segment,
+            });
         }
-        Ok(I {
-            lo: lo.next_down(),
-            hi: hi.next_up(),
-        })
+        range
+            .map(|value| I {
+                lo: value.lo.next_down(),
+                hi: value.hi.next_up(),
+            })
+            .ok_or_else(|| Error::new("event_resolution", "idt reset range has no source segment"))
     }
 
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
@@ -309,6 +314,43 @@ mod tests {
         let fractional = history(vec![(0.0, 0.0), (3.0, 1.0)], 0.0);
         let bound = fractional.value_bounds(1.0).unwrap();
         assert!(bound.lo < 1.0 / 6.0 && bound.hi > 1.0 / 6.0);
+    }
+
+    #[test]
+    fn reset_release_range_encloses_uncertain_zero_and_knot_crossing() {
+        let history = Idt::enclosed(
+            vec![(0.0, 0.25), (1.0, -0.75), (2.0, 0.5), (3.0, -0.5)],
+            vec![
+                I { lo: 0.25, hi: 1.0 },
+                I {
+                    lo: -1.0,
+                    hi: -0.75,
+                },
+                I { lo: 0.25, hi: 0.75 },
+                I {
+                    lo: -0.75,
+                    hi: -0.25,
+                },
+            ],
+            0.0,
+        )
+        .unwrap();
+        let range = history.prefix_range(I { lo: 0.45, hi: 1.25 }).unwrap();
+
+        // Independent dyadic hand integrals:
+        // possible first segment u(0)=1,u(1)=-1 has an interior zero at 0.5,
+        // with prefix 1/4.  Another legal history u(0)=1/4,u(1)=-1,
+        // u(2)=1/4 has prefix -75/128 at t=1.25.  The reset range must cover
+        // both despite the release interval also crossing the source knot at 1.
+        assert!(range.lo <= -75.0 / 128.0, "{range:?}");
+        assert!(range.hi >= 0.25, "{range:?}");
+
+        let mut reset = history.with_reset(true);
+        reset
+            .advance_reset(1.0, I { lo: 0.45, hi: 1.25 }, false)
+            .unwrap();
+        let after_release = reset.value_bounds(1.5).unwrap();
+        assert!(after_release.lo < -0.25 && after_release.hi > 0.25);
     }
 
     #[test]
