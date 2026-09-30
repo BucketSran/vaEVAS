@@ -5,12 +5,44 @@
 
 | 检查点 | 执行范围与观测结果 |
 | --- | --- |
+| [普通 analog 条件：验收入口与谓词范围修复](#analog-conditions-acceptance-review) | 原 31×2 全矩阵新本地执行，两档各 25/31；旧达标 48 份 CSV 哈希一致，6 条拒绝；候选未合并。 |
 | [普通 analog 条件候选](#analog-conditions-review) | 仅 v1-main 两档的新本地执行，4,001 / 40,001 个观察点均符合判据；未合并，不更新 main 矩阵成绩。 |
 | [PR26：已合并 idt 复位](#idt-reset-merge-validation) | 两个检查点共 124 次新本地 EVAS 执行；PR25 基线两档各 22/31，PR26 运行时各 24/31，7 条拒绝。 |
 | [PR23：事件条件与 cross OR](#event-conditions-090) | 62 次新本地 EVAS 执行，两档各 21/31，10 条拒绝；额外专项与 Spectre 追加对照另列。 |
 | [原 PR14/15 矩阵](#原-31-条件矩阵) | 31 条件 × 四后端 × 两档，248 单元；新 EVAS 两档各 13/31，18 条拒绝。absdelay/slew 专项另列。 |
 
 各轮正式资格仍为 I；后续本地 EVAS 运行不能替代旧四后端矩阵或构成最新跨后端排名。
+
+<a id="analog-conditions-acceptance-review"></a>
+
+## 普通 analog 条件：验收入口与谓词范围修复
+
+被测运行时为 `9c5d6c5a7c75e1f9acea1e8bca490a37edc8329d`，包版本 0.9.0 / IR v12，
+仍在 `feat/evas-analog-conditions` 候选分支。修复两个审阅问题：无状态仿射瞬态统一认证
+PWL 前向误差，不以优化后是否存在 `select` 为开关；Python/Rust 同时限制谓词为输入
+驱动的仿射或限定分段仿射表达式，非线性项在空/不可达臂也拒绝。普通局部赋值没有条件时
+仍保留运算结构；原有无局部变量模型的静态矩阵路径继续保留。
+
+4 个新回归方法先在 `a8e7b63` 上产生 18 处失败（含子测试）、无测试夹具错误，再在修复后通过。
+独立有理数答案显示 `(0,0),(3,1)` 的 PWL 在 `t=1` 经大增益后的精确输出约为
+`0.18503717077085943 V`；五种等价写法在 `1e-9 V` 预算下均应拒绝，不能因残差为零接受。
+最终 **306 Python、64 Rust** 回归、locked 构建、Clippy all-targets warnings-as-errors、
+格式、diff 与冻结验证身份检查通过。数学和支持边界见[条件契约](../../evas/validation/ANALOG_CONDITIONS_CONTRACT.md)。
+
+本轮对原 31 条件 × 两档新执行 62 个本地 EVAS 配置；每个配置的 DUT、condition 和 settings
+三个文件哈希均与 PR26 收据一致，checker 与阈值未变。基础/细化各 **25/31** 有限观测达标，
+各有 4 个编译拒绝和 2 个内核拒绝。相较 main 已有的 24/31 记录，新增 `v1-main`；
+其 4,001 / 40,001 个点最大输出误差均约 `6.66×10⁻¹⁶ V`。原达标 48 份 CSV 的 SHA-256
+与 PR26 收据全部一致，没有原达标条件退化。本轮复用 main 记录，没有重新执行 main。
+
+剩余拒绝为 `v6-standard` / `c2-main` 的数组与滤波、`d2-constant` / `d2-chirp` 的宏及相位函数，
+以及 `v7-nonlinear-0.5` / `v7-nonlinear-2.0` 的非线性瞬态；拒绝不计为达标。
+首次矩阵因归档内核副本丢失执行权限产生 54 个适配器失败，修复文件模式后使用独立输出目录
+重跑；另一次重试在 JSON 元组/列表预检查时停止，未启动配置。失败记录均保留，未冒充数值结论。
+
+[整理收据](results/analog-conditions-acceptance-review.json)记录被测源码、内核、工具链、
+冻结输入、请求/生效设置、逐配置结论、失败尝试及工件哈希。原始材料仅本地保留。
+本候选尚未合入 main，也未新执行 Spectre；正式资格仍 I，不声明连续时间精度或最新后端排名。
 
 <a id="analog-conditions-review"></a>
 

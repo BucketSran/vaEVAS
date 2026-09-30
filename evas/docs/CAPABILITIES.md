@@ -6,8 +6,9 @@
 
 候选 `feat/evas-analog-conditions` 已同步该 main，序列化格式为 IR v12，待本轮 review。
 它的局部条件与 PWL 误差认证见[开发契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)；分支检查不改变下表 main 范围或原矩阵成绩。
-候选 `3fd58da` 的 302 Python / 64 Rust 与 v1-main 两档结果见[专项记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)，
-未新跑完整矩阵或 Spectre，原始材料仅本地保留。
+候选 `9c5d6c5` 的 306 Python / 64 Rust 与原 31×2 新本地矩阵见[验收修复记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)：
+两档各 25/31，原达标 48 份 CSV 哈希一致；未合并，未新跑 Spectre，原始材料仅本地保留。
+此前 `3fd58da` 的 v1-main 专项作为[历史检查点](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)保留。
 
 ## 状态约定
 
@@ -23,8 +24,8 @@
 
 | ID / 能力 | main 范围 | 交付来源 / 检查点 | 证据状态 | 剩余缺口与说明入口 |
 | --- | --- | --- | --- | --- |
-| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 交付事件条件/OR；main 使用 IR v11；普通 analog 条件为待 review 的 IR v12 分支 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions)；候选的限幅、PWL 阈值、误差放大和语义不变性见[契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | 分支仍限无事件/动态算子的输入驱动条件；隐式反馈/数组/循环及更多函数待补；[当前语法](../README.md#实现范围) |
-| LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
+| LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 交付事件条件/OR；main 使用 IR v11；普通 analog 条件为待 review 的 IR v12 分支 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions)；候选的限幅、PWL 阈值、误差放大、统一验收和两端谓词限制见[契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)及[31×2 记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review) | 分支仍限无事件/动态算子的输入驱动仿射/限定分段仿射谓词；隐式反馈/数组/循环及更多函数待补；[当前语法](../README.md#实现范围) |
+| LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放；候选无状态 PWL 统一验收见[修复记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review) | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
 | NONLINEAR：多项式反馈 | 静态 `solve` 的阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 非线性瞬态、初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | [PR8](https://github.com/BucketSran/vaEVAS/pull/8) 于 0.7.1 / IR v7 交付 | 该检查点的整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达及 cross OR | 已合并 PR7/10；PR23 审阅交付 OR、逐叶证书与同块去重 | 数学/开发回归、历史限定 Spectre 对照；0.9.0 原 31 矩阵见[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090) | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
