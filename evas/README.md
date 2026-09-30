@@ -1,8 +1,8 @@
 # EVAS
 
-当前分支为 **EVAS 0.9.0，IR v9（待 review）**：稠密/稀疏混合的静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`，以及显式常量初值的受限 `idt`。尚未替换旧 EVAS 0.8.7。
+当前 main 为 **EVAS 0.9.0，IR v9**：稠密/稀疏混合的静态多项式求解，以及限定 PWL/仿射网络的 `cross` 和固定参数 `timer` 事件执行、离散状态驱动的 `transition` 波形及直接 PWL 输入的 `absdelay` / `slew`，以及显式常量初值的受限 `idt`。尚未替换旧 EVAS 0.8.7。
 
-本分支新增 `cross` / 固定 `timer` 事件体的受限 `if/else` 及仅 cross 的事件 OR，以及选支、采样与状态历史的区间认证。
+0.9.0 支持 `cross` / 固定 `timer` 事件体的受限 `if/else` 及仅 cross 的事件 OR，以及选支、采样与状态历史的区间认证。旧 IR v1–v8 必须从原始 VA 重新编译；尚未发布版本 tag。
 数学、实现和限制见[事件条件说明](docs/EVENTS.md#event-conditions)；复合 `cross` 的叶子定位与同块去重见[OR 说明](docs/EVENTS.md#event-or)。
 main 与历史证据的身份见[能力表](docs/CAPABILITIES.md)。
 

@@ -1,11 +1,11 @@
 # 事件、时间推进与历史
 
-适用范围：本分支为 EVAS 0.9.0 / IR v9，新增受限事件体条件与 cross 的 OR；main 基线及其他分支身份见
+适用范围：EVAS 0.9.0 / IR v9，支持受限事件体条件与 cross 的 OR；当前与历史检查点身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 <a id="event-or"></a>
 
-## cross 的事件 OR（0.9.0 分支）
+## cross 的事件 OR（0.9.0）
 
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
@@ -185,12 +185,12 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 <a id="event-conditions"></a>
 
-## 受限事件体条件（0.8.0 分支）
+## 受限事件体条件（0.8.0 实现切片，0.9.0 延续）
 
 单个 `cross` 或固定 `timer` 的事件体可含嵌套 `if/else`、顺序块、空语句及无 else 分支。
 仅接受 `< <= > >=`，两侧为实例常数或状态独立的仿射电压表达式；else 归最近未配对 if。
 依据是 LRM 2.4 §4.2.5、§5.3、§5.7、§5.8.1。以下数值认证方法是 EVAS 的实现选择，
-不是 Spectre 内部算法的陈述。本轮未执行新的后端对照。
+不是 Spectre 内部算法的陈述。0.8.0 切片当时未执行新的后端对照；0.9.0 对照见[OR 说明](#event-or)。
 
 例如 `@(timer(.5,.5,.001)) if (V(rst)>=.5) held=0; else held=V(vin);` 在每次实际事件时间
 读取 rst 并选择复位或采样。所有分支都做静态合法性检查，执行时只判断沿路径实际到达的条件。
@@ -233,10 +233,10 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 [settlement_bounds.rs](../rust_core/src/settlement_bounds.rs) 负责选中原 IR 的误差传播。
 独立答案与边界控制见 [test_event_conditions.py](../tests/test_event_conditions.py)，
 实际帧回退见 [transient_condition_tests.rs](../rust_core/src/transient_condition_tests.rs)。
-完整目标契约及尚未接入的复合事件见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
+完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
-此检查点不支持 `cross … or cross …`、状态反馈谓词、通用非线性谓词、多块写同一状态、
-普通 analog if 或 idt reset；尚不能宣称原采样复位 8 条件已通过。区间传播会增加运算和存储，
+0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
+状态反馈谓词、通用非线性谓词、多块写同一状态、普通 analog if 和 idt reset 仍不支持。区间传播会增加运算和存储，
 丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性

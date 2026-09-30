@@ -1,9 +1,9 @@
 # 事件条件赋值与采样复位：第一阶段契约
 
-状态：**分支限定实现；0.9.0 / IR v9 已接入受限事件 if/else 与 cross OR，原 8 条件两档新执行满足有限观测判据；待 review，正式资格仍为 I。**
-设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；本轮在分支 `feat/evas-event-conditions`
-同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后实现，停止于可 review 的本地检查点。
-以下完整目标继续约束后续 OR 接入；原设计阶段事实和校准结果不当作本轮仿真证据。
+状态：**main 限定支持；0.9.0 / IR v9 经 PR23 审阅交付受限事件 if/else 与 cross OR，原 8 条件两档执行满足有限观测判据；正式资格仍为 I。**
+设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；实现在分支 `feat/evas-event-conditions`
+同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后推进，条件切片与 OR 检查点分别见 §9、§10。
+以下完整目标继续约束受限实现及后续扩展；原设计阶段事实和校准结果不当作仿真证据。
 当前实现、数学与精度边界以[事件手册](../docs/EVENTS.md#event-conditions)为准。
 能力归属为 LANG、CROSS、EVENT-ORDER、COMPOSE；依赖已有 TRANSITION。
 本地数学检查的组数不是模型条件数，也不改变原 31 条件的分母。
