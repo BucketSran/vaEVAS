@@ -257,3 +257,62 @@ fn simultaneous_cross_block_state_writers_fail_without_committing_history() {
     let (second_only, _) = prepare_batch(&model, &trajectory, &accepted, 0.25, &[1]).unwrap();
     assert_eq!(second_only.states, [7.0]);
 }
+
+#[test]
+fn cross_block_state_reads_reject_structural_cancellation_in_raw_ir() {
+    let origin = json!({"source":"raw-read.va","line":2,"column":1,"instance":"dut"});
+    let cases = [
+        (
+            json!([
+                {"instance":"dut","name":"p","kind":"real","initial":3},
+                {"instance":"dut","name":"q","kind":"real","initial":0}
+            ]),
+            0,
+            1,
+            json!({"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"multiply","left":{"op":"affine","constant":-1.0,"terms":[]},
+                    "right":{"op":"state","state":0}}}),
+        ),
+        (
+            json!([
+                {"instance":"dut","name":"p","kind":"real","initial":3},
+                {"instance":"dut","name":"q","kind":"real","initial":0}
+            ]),
+            0,
+            1,
+            json!({"op":"multiply","left":{"op":"affine","constant":0.0,"terms":[]},
+                "right":{"op":"state","state":0}}),
+        ),
+        (
+            json!([{"instance":"dut","name":"q","kind":"real","initial":3}]),
+            0,
+            0,
+            json!({"op":"multiply","left":{"op":"affine","constant":0.0,"terms":[]},
+                "right":{"op":"state","state":0}}),
+        ),
+    ];
+    for (states, first_state, second_state, rhs) in cases {
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":states,
+            "events":[
+                {"trigger":{"kind":"timer","start":0.25,"period":0,"time_tolerance":0.001,"enabled":true},
+                    "origin":origin,"body":[{"kind":"assign","state":first_state,"rhs":{"op":"affine","constant":7,"terms":[]}}]},
+                {"trigger":{"kind":"timer","start":0.5,"period":0,"time_tolerance":0.001,"enabled":true},
+                    "origin":origin,"body":[{"kind":"assign","state":second_state,"rhs":rhs}]}
+            ],
+            "operators":[],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"r","local_negative":"y","kind":"voltage"},
+                "positive":0,"negative":2,"origin":origin,
+                "rhs":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+                    "right":{"op":"state","state":second_state}}}]
+        })).unwrap();
+        assert_eq!(
+            EventModel::new(program, vec!["u".into()], Tolerances::default())
+                .err()
+                .unwrap()
+                .kind,
+            "unsupported_cross"
+        );
+    }
+}

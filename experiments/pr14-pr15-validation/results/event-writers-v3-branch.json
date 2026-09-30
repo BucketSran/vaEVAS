@@ -1,0 +1,88 @@
+{
+  "run_id": "event-writers-v3-20260930-150531",
+  "scope": "v3-main only, base and fine profiles, frozen original matrix inputs copied from matrix-spectre; compact receipt only",
+  "source_matrix_id": "pr14-pr15-validation-20260929-01/matrix-spectre",
+  "source_matrix_availability": "local-only frozen source under ignored runs; original inputs identified by INPUT_MANIFEST hash",
+  "source_matrix_manifest": "INPUT_MANIFEST.json",
+  "source_input_manifest_sha256": "837787b02fbc503e33108baecb38794d03772fc9e3257e9601c2815b18265421",
+  "git_head_at_execution": "44b148cc327219af155bf76995bd3fc810983c4d",
+  "git_status_at_execution": [
+    " M evas/docs/CAPABILITIES.md",
+    " M evas/docs/EVENTS.md",
+    " M evas/rust_core/src/events.rs",
+    " M evas/rust_core/src/transient_condition_tests.rs",
+    " M evas/tests/test_event_writers.py"
+  ],
+  "post_execution_note": "Run executed before committing this branch fix: git_head_at_execution remains 44b148cc327219af155bf76995bd3fc810983c4d and git_status_at_execution records the dirty runtime/doc/test changes used to build the recorded kernel. Those changes were later committed as 144d8b0d90f4812fa4924597bcb0c1fa1337f20e; root independently checked the recorded binary/hash and V3 outputs. This receipt does not claim the execution checkout was clean.",
+  "kernel": "evas/rust_core/target/debug/evas-kernel",
+  "kernel_path_kind": "repository-relative local debug binary; binary content identified by kernel_sha256",
+  "kernel_sha256": "b3cf1d076325dea136ac806823f9f78d434f174b9199fd9d6a1ed8710cedcd83",
+  "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+  "matrix_worker_sha256": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "records": [
+    {
+      "condition": "v3-main",
+      "profile": "base",
+      "execution_status": "waveform_available",
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "sample_count": 4001,
+        "max_gap_s": 1.0000000000004986e-09,
+        "input_max_error_v": {
+          "vin": 2.220446049250313e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 2.042810365310288e-14,
+            "time_s": 3.3899999999999993e-06
+          }
+        },
+        "plateau_error_v": 0.0,
+        "violating_sample_count": 0,
+        "history_exact_export_status": "P",
+        "history_budget_sensitivity_status": "P",
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "requested_settings_sha256": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+      "waveform_sha256": "14e5e84f93b1dc69c76658f186ea63b3358177b331e4b3f016ead7383a96e5fb",
+      "raw_work_rel": "runs/event-writers-v3-20260930-150531/v3-main/base"
+    },
+    {
+      "condition": "v3-main",
+      "profile": "fine",
+      "execution_status": "waveform_available",
+      "analysis": {
+        "status": "observations_within_targets",
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "sample_count": 40001,
+        "max_gap_s": 1.0000000000021927e-10,
+        "input_max_error_v": {
+          "vin": 2.220446049250313e-16
+        },
+        "max_observed_error": {
+          "vout": {
+            "error_v": 2.117750419472486e-14,
+            "time_s": 3.425e-06
+          }
+        },
+        "plateau_error_v": 0.0,
+        "violating_sample_count": 0,
+        "history_exact_export_status": "P",
+        "history_budget_sensitivity_status": "P",
+        "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+      },
+      "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+      "condition_sha256": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+      "requested_settings_sha256": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac",
+      "waveform_sha256": "7022ee4b1b8cbf9f4438a37519a365b63c5e0a81d01697c9ea55be20263265d0",
+      "raw_work_rel": "runs/event-writers-v3-20260930-150531/v3-main/fine"
+    }
+  ],
+  "raw_artifacts": "local ignored runs directory; waveform/effective CSV/JSON not committed"
+}

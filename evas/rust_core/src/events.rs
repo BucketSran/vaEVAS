@@ -451,10 +451,9 @@ impl EventModel {
         }
         for (index, body) in actions.iter().enumerate() {
             if body.iter().any(|(_, rhs)| {
-                rhs.states
+                rhs.state_dependencies
                     .iter()
-                    .enumerate()
-                    .any(|(s, c)| *c != 0.0 && writers[s].iter().any(|&writer| writer != index))
+                    .any(|&state| writers[state].iter().any(|&writer| writer != index))
             }) {
                 return Err(Error::new(
                     "unsupported_cross",

@@ -254,9 +254,10 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 实际帧回退见 [transient_condition_tests.rs](../rust_core/src/transient_condition_tests.rs)。
 完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
-0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
-状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset 仍不支持。区间传播会增加运算和存储，
-丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
+0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 main 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
+该历史检查点仍不支持状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset。
+本分支仅在候选批次可证明至多一个实际选中块写同一状态时，受限支持多事件块写同一状态；边界见下方分支检查点。
+区间传播会增加运算和存储，丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
 
