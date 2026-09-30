@@ -38,6 +38,12 @@ impl Interval {
             None
         }
     }
+    pub fn hull(self, other: Self) -> Self {
+        Self {
+            lo: self.lo.min(other.lo),
+            hi: self.hi.max(other.hi),
+        }
+    }
 
     fn rounded(value: f64, exact: bool) -> Self {
         if !value.is_finite() {
