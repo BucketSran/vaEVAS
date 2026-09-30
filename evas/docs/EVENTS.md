@@ -42,7 +42,7 @@ C1 的第二实例及独立的无关输入断点探针实际复现了这种拒�
 独立回归在 `test_event_or.py`；实际已接受帧的失败/重试检查在
 `transient_condition_tests.rs`。数学/测试方法数与原 31 条件计数分别记录。
 
-剩余边界：反馈或非线性 guard、timer OR、同批多块写同一状态、全部故障点的系统性注入，
+剩余边界：反馈或非线性 guard、timer OR、多块同状态写入、全部故障点的系统性注入，
 以及完整连续时间误差资格；此次不放开这些能力。
 
 ## 仿射轨迹上的数学定位
@@ -189,6 +189,19 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 s− 开始，因此求解、重放或缓存重试不会再累计一次事件。验收后才原子提交；失败时旧帧不变。
 0.5.3 只移除输入绑定时的 integer 重复写禁令，没有改动这三条路径或放宽原精度/范围检查。
 
+### 分支：多事件块写同一状态
+
+`feat/evas-multiple-event-writers` 在 0.9.0 / IR v9 之后增加候选批次 writer 检查，不改变 IR。
+构建期允许不同事件块潜在写同一 state，但仍拒绝事件块读取另一个事件块也可能写入的 state。
+每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
+只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
+同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
+失败候选不提交 state、state bounds、算子历史、事件游标或记录。
+
+本分支新增 `test_event_writers.py` 及一项 Rust 已接受帧回退测试，并用原 31 源中的
+`v3-main` 两档冻结输入做局部 worker 回放；两档均生成波形且原 checker 给出
+`observations_within_targets`。这些证据不替代完整矩阵重跑，不 retroactively 改写 0.9.0 检查点。
+
 <a id="event-conditions"></a>
 
 ## 受限事件体条件（0.8.0 实现切片，0.9.0 延续）
@@ -241,10 +254,11 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 实际帧回退见 [transient_condition_tests.rs](../rust_core/src/transient_condition_tests.rs)。
 完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
-0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
-状态反馈谓词、通用非线性谓词、同批多块写同一状态、普通 analog if 和 main 上的 idt reset 仍不支持；
-`feat/evas-idt-reset` 分支正在以状态 reset 的限定形式补齐。区间传播会增加运算和存储，
-丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
+0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 main 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
+该历史检查点仍不支持状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset。
+本分支仅在候选批次可证明至多一个实际选中块写同一状态时，受限支持多事件块写同一状态；`feat/evas-idt-reset`
+分支另以状态 reset 的限定形式补齐 idt reset。边界见下方分支检查点。
+区间传播会增加运算和存储，丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
 

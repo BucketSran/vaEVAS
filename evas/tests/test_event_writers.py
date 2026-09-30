@@ -22,6 +22,10 @@ def compile_v3(instances=None):
     return compile_sources({'event_writers.va': V3_SOURCE}, instances or [instance()])
 
 
+def event_writer_instance():
+    return instance(connections=dict(u='u', sel='sel', y='y', r='0'))
+
+
 def execute_v3(*, sources=None, times=None, instances=None):
     return transient(
         compile_v3(instances),
@@ -80,6 +84,74 @@ class EventWriterContracts(unittest.TestCase):
                 max_step=10e-6,
                 kernel=KERNEL,
             )
+
+    def test_same_time_conditional_blocks_count_only_selected_assignments(self):
+        writers = [
+            '@(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)>=.5) q=1;',
+            '@(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)<.5) q=2;',
+        ]
+        for label, body in [('selected_first', writers), ('selected_second', list(reversed(writers)))]:
+            source = model('@(initial_step) q=0;' + ''.join(body) + 'V(y,r)<+q;',
+                           'integer q;', ports='u,sel,y,r',
+                           directions='input u,sel; output y; inout r;')
+            program = compile_sources({'event_writers.va': source}, [event_writer_instance()])
+            result = transient(
+                program,
+                {'u': [[0,.4],[1e-6,.6]], 'sel': [[0,.5],[1e-6,.5]]},
+                [0,1e-6],
+                stop=1e-6,
+                max_step=10e-6,
+                kernel=KERNEL,
+            )
+            with self.subTest(order=label):
+                self.assertEqual([event['event'] for event in result['transient']['events']], [0,1])
+                self.assertEqual(result['transient']['events'][0]['after'], [1])
+                self.assertEqual(result['transient']['events'][1]['after'], [1])
+                self.assertEqual(result['transient']['states'], [[0],[1]])
+                y = result['nodes'].index('y')
+                self.assertEqual([row['voltages'][y] for row in result['solutions']], [0,1])
+
+    def test_same_time_conditional_blocks_conflict_when_both_selected_even_same_value(self):
+        source = model('''@(initial_step) q=0;
+          @(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)>=.5) q=1;
+          @(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)<=.5) q=1;
+          V(y,r)<+q;''', 'integer q;', ports='u,sel,y,r',
+                       directions='input u,sel; output y; inout r;')
+        program = compile_sources({'event_writers.va': source}, [event_writer_instance()])
+        with self.assertRaisesRegex(KernelError, 'event_conflict'):
+            transient(
+                program,
+                {'u': [[0,.4],[1e-6,.6]], 'sel': [[0,.5],[1e-6,.5]]},
+                [0,1e-6],
+                stop=1e-6,
+                max_step=10e-6,
+                kernel=KERNEL,
+            )
+
+    def test_cross_block_state_reads_use_structural_dependencies(self):
+        cases = [
+            ('same_cancel', 'real q;', '@(initial_step) q=3;', 'q', 'q-q'),
+            ('same_zero', 'real q;', '@(initial_step) q=3;', 'q', '0*q'),
+            ('same_underflow', 'real q;', '@(initial_step) q=3;', 'q', '(1e-200*1e-200)*q'),
+            ('other_cancel', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', 'p-p'),
+            ('other_zero', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', '0*p'),
+            ('other_underflow', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', '(1e-200*1e-200)*p'),
+        ]
+        for label, declarations, initial, written, rhs in cases:
+            source = model(f'''{initial}
+              @(timer(0.5,0,1e-12)) {written}=7;
+              @(timer(1.0,0,1e-12)) q={rhs};
+              V(y,r)<+q;''', declarations)
+            program = compile_sources({label + '.va': source}, [instance()])
+            with self.subTest(label=label), self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+                transient(
+                    program,
+                    {'u': [[0,0],[1,0]]},
+                    [0,0.5,1.0],
+                    stop=1.0,
+                    max_step=2,
+                    kernel=KERNEL,
+                )
 
 
 if __name__ == '__main__':
