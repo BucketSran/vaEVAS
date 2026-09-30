@@ -83,6 +83,26 @@ def wrapped(x):
     return x - math.floor(x)
 
 
+def floor_fraction(value):
+    return value.numerator // value.denominator
+
+
+def rational_wrapped(raw, modulus=1.0, offset=0.0):
+    raw = F(raw)
+    modulus = F(modulus)
+    offset = F(offset)
+    turn = floor_fraction((raw - offset) / modulus)
+    return raw - turn * modulus
+
+
+def rational_constant_raw(time, freq, ic=0.125):
+    return F(ic) + F(freq) * F(time)
+
+
+def is_exact_wrap_boundary(raw, modulus=1.0, offset=0.0):
+    return (F(raw) - F(offset)) % F(modulus) == 0
+
+
 class PhaseContracts(unittest.TestCase):
     def test_constant_phase_accumulates_wraps_and_sine_uses_constants_macro(self):
         points = [(0, 0.25), (4, 0.25)]
@@ -197,15 +217,79 @@ V(phase,r)<+phase_v;
                            declarations="real phase_v;", vabstol=1e-9, reltol=0)
         self.assertLessEqual(abs(voltages(result, "out")[0]), 1e-12)
 
-    def test_wrapped_phase_voltage_rejects_discontinuous_wrap_certificate(self):
+    def test_wrapped_phase_voltage_certifies_binary64_side_and_exact_boundary(self):
         body = """
 phase_v = idtmod(V(f,r), .125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
+        times = [1.7499999999999998, 1.75, 1.7500000000000002]
+        sparse = run_phase([(0, .5), (4, .5)], times, body,
+                           declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        dense = run_phase([(0, .5), (4, .5)], [0, *times, 4], body,
+                          declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        budget = F(1, 10**12)
+        for observed, t in zip(voltages(sparse, "phase"), times):
+            raw = rational_constant_raw(t, .5)
+            exact = rational_wrapped(raw)
+            if is_exact_wrap_boundary(raw):
+                self.assertEqual(F(observed), F(0))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
+        self.assertEqual([voltages(dense, "phase")[i] for i in [1, 2, 3]],
+                         voltages(sparse, "phase"))
+
+    def test_wrapped_phase_voltage_certifies_negative_frequency_and_offset_boundary(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        neg_times = [.24999999999999997, .25, .25000000000000006]
+        result = run_phase([(0, -.5), (1, -.5)], neg_times,
+                           body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        budget = F(1, 10**12)
+        for observed, t in zip(voltages(result, "phase"), neg_times):
+            raw = rational_constant_raw(t, -.5)
+            exact = rational_wrapped(raw)
+            if is_exact_wrap_boundary(raw):
+                self.assertEqual(F(observed), F(0))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
+
+        offset_body = """
+phase_v = idtmod(V(f,r), .125, 1, .25);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        offset_times = [.2499999999999999, .25, .2500000000000001]
+        offset = run_phase([(0, .5), (1, .5)], offset_times,
+                           offset_body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        for observed, t in zip(voltages(offset, "phase"), offset_times):
+            raw = rational_constant_raw(t, .5)
+            exact = rational_wrapped(raw, offset=.25)
+            if is_exact_wrap_boundary(raw, offset=.25):
+                self.assertEqual(F(observed), F(.25))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
+
         with self.assertRaises(KernelError) as error:
-            run_phase([(0, .5), (4, .5)], [1.7499999999999998], body,
+            run_phase([(0, .5), (1, .5)], [.24999999999999997], offset_body,
+                      declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+
+    def test_wrapped_phase_voltage_rejects_unproved_nonexact_coefficient_boundary(self):
+        body = """
+phase_v = idtmod(V(f,r)/3, .125, 1, 0);
+V(out,r)<+0;
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 1.5), (4, 1.5)], [1.7499999999999998], body,
                       declarations="real phase_v;", vabstol=1e-5, reltol=0)
         self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
         self.assertIn("phase", error.exception.detail["message"])
