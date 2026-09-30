@@ -1,0 +1,633 @@
+{
+  "run_id": "legacy-evas-migration-20260929",
+  "execution": "new local probes during the audit; reused for this documentation PR",
+  "captured_utc": "2026-09-29T13:28:51.361243+00:00",
+  "scope": "legacy source audit and migration recommendations; no new EVAS implementation or qualification",
+  "capability_ids": [
+    "DYNAMICS",
+    "LANG",
+    "EVENT-ORDER",
+    "COMPOSE"
+  ],
+  "publication_base": "e026cda71d4c8a6a5dde45d99b8c51ba3c182b94",
+  "old_source": {
+    "repository": "https://github.com/Arcadia-1/EVAS",
+    "tag": "v0.8.7",
+    "commit": "6cb6fa7a7dac70fc0d4120126d8cf74258e6637b",
+    "tree": "743f3be7022bbcabdd069af57cff4aac3e3e9054",
+    "availability": "public Git commit; local export remained unchanged",
+    "license": "https://github.com/Arcadia-1/EVAS/blob/6cb6fa7a7dac70fc0d4120126d8cf74258e6637b/LICENSE",
+    "source_file_sha256": {
+      ".github/workflows/ci.yml": "93eaf65cc73024b5eb75f336fb94f16c6e525bee2036d093998dbd549cdd9763",
+      ".github/workflows/docs.yml": "aa957ba17d12a06799007e58268b0f01944f8ebe21a77924622a4d4488da0b32",
+      ".github/workflows/publish.yml": "980dd05e5b82637ad29ca3f1c9141eefcbb4373b87e69960621806c2571ac10a",
+      ".gitignore": "cad7147853d82ce47176fc7ed90f9f01616b2214db2570ffdba97c97bab4bf3a",
+      "AGENTS.md": "e32a0102daba7aadb0e1ddcc6abfa8c606ac3a75ba3561ccbdf50c19d541e607",
+      "CHANGELOG.md": "866d2ee558403385bab46db03759617390afbe1fa65c891e8795e966c6973eb9",
+      "CLAUDE.md": "dbb924829559d0c69496e0418e63119c6fd457f78369d845cbb062853fb8bcf3",
+      "LICENSE": "1dc552387c63fa2b0003c60a63ebbffe2a2fc212dd7788f13c15a32590212162",
+      "MANIFEST.in": "7638e31be3008c3a701a8522e806b322d7eb6de896b915848996ae167d075382",
+      "README.md": "003b4cb73b6b0a1ed4598cb4489432080337db899464eec98fb27f286bd760f6",
+      "docs_en/_static/custom.css": "9feeb5a3af87f7ed6919e20ffed7112fc2adc2d68daad5f6b13ea350be642c75",
+      "docs_en/_static/favicon.svg": "ffc57ab8df2a2f229430718edbe95e9cffc4cf5289717c1101fdd057eb94b848",
+      "docs_en/_templates/page.html": "e28c6eecd45f2e451ee2cb832d73a0d81e0da8c71b9f61e8a11c319d7795ee14",
+      "docs_en/api/compiler.rst": "dba284ce4072c34ece427a205bf77f0f8b273918d87954bc80352ced522dc7a5",
+      "docs_en/api/index.rst": "d8b797accfc8f50c98374917aea6318d3092a70860e376ea2ac3c07cc142ceaa",
+      "docs_en/api/netlist.rst": "a9bb9afab70edbc7ef067feeb7a612b2bc6646bacf6488470a86a003809a3f0d",
+      "docs_en/api/simulator.rst": "8bb76859927dd06e09ab042aba219c58ca053c519919809ee0acdd3a109e002e",
+      "docs_en/changelog.md": "c40acffbaea8599ecb9e9b1210a41b17f99510942a6da40cf40ccee0593ebbba",
+      "docs_en/cli.md": "fdc7f87775d826efe674cb4302db0bc4437d23c1f1518e9202c6f8fd48825833",
+      "docs_en/conf.py": "9bbe6704b55ccba9ffa5eb1c7b5b68865385a035af40cf7780a26f5b07d1a9f9",
+      "docs_en/examples/index.md": "22af636d3e1686334823d81a38fea0e2ca4882137960d2eea721edc4f9de2017",
+      "docs_en/index.rst": "57252580666353db8c4fb3ddbd28988b98396dc41c6b09bb64b62723b9a1a372",
+      "docs_en/installation.md": "1aadb39b3c14c9c3084c832a1dcedcfc260b71b5cecf3ff29033f3079506f859",
+      "docs_en/quickstart.md": "656c47cd758aa99bbd44c969c2cc2401f131e64edea0f08a4ecaac778cfce27e",
+      "docs_en/support_tiers.md": "f0ab3a3357ec9aa97f096823a63e23c28066d14abd19c799ca85f521ecf003eb",
+      "evas/__init__.py": "53255c05d8ab7425daad39a59af649a8d4134157b537dc965434b6ecfb58bc59",
+      "evas/__main__.py": "bcf95288a2a310cbdfb7203e11fc8b836b9f99b953b941b85da6b54afaf9773d",
+      "evas/build_identity.py": "d3e4d191622817e733e54df26ad2159cf0f42a7b9e243404f3c9a418b125b26a",
+      "evas/cli.py": "5ef8c4a5631c82b6ad131d1b3188c5edf1cf6e04b48c1241d36b07ff88468664",
+      "evas/compiler/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/compiler/ast_nodes.py": "fdddc05c5b15618a8d59cd1fcd1379c7f3186715bccbea3cdfbba704317afe07",
+      "evas/compiler/lexer.py": "18145866da9abe364fc6eb320a6fcff0fc7d7508e61f8fb1531b7e4d7fa12e02",
+      "evas/compiler/linter.py": "2a524cf618eb6854e854ed3926df7951394063ab1430ba234181fa041e58e37a",
+      "evas/compiler/parser.py": "b34a5f2478c560bb98b4a62657e26e940b33dd5ce6afb991017f97ff03fee6fd",
+      "evas/compiler/preprocessor.py": "78c34bc022f1e44cd8518777b1f045d3780c4c06d15fc68b765dab46f83ee780",
+      "evas/examples/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/adc_dac_ideal_4b/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/adc_dac_ideal_4b/adc_ideal_4b.va": "503d6b7e97c71255f4ca60d1d562f323a9e46465df229e4217cd2ab11bd35322",
+      "evas/examples/adc_dac_ideal_4b/analyze_adc_dac_ideal_4b.py": "91225cbc5b7f6fbc81aadac16dfc389fb7da3544f79ea3f48fb56840ffd4ee99",
+      "evas/examples/adc_dac_ideal_4b/dac_ideal_4b.va": "4375b117969e22fe94c38c7df54bb403cab088e6c12be7181ccfdd399cdb5ab4",
+      "evas/examples/adc_dac_ideal_4b/sh_ideal.va": "a0aeed7ac91b4ee6cac1ff781ef5cc8ab9b841846c1ca3b39e5f8e425be1c830",
+      "evas/examples/adc_dac_ideal_4b/tb_adc_dac_ideal_4b_ramp.scs": "becfa8c7cd3b7124edb33bfafbb940f31d9de185e665f0dd248b58a75e64598c",
+      "evas/examples/adc_dac_ideal_4b/tb_adc_dac_ideal_4b_sine.scs": "2f3d6792a388ba57053babebcb4e0b669bb8747deb955426189232d3c25a30b5",
+      "evas/examples/adc_dac_ideal_4b/tb_adc_dac_ideal_4b_sine1000.scs": "b288b077511f33db6cc0e1997a7425be492c2931793df0d456fb95a5ded0427e",
+      "evas/examples/adc_dac_ideal_4b/validate_adc_dac_ideal_4b.py": "d644cc9660d68fb88d1f31e8b8830f67097f01032ddb10c9fdb799b95e375adb",
+      "evas/examples/backend_migration_capability_manifest.json": "d3d4ab9fbc0a49312382190d6b5db294d69b0f7eb90555ddd400cd8770245619",
+      "evas/examples/clk_div/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/clk_div/analyze_clk_div.py": "97a78fe25daf34404cce051760844cda37420d6ca10d559c0a015e56bc86989c",
+      "evas/examples/clk_div/clk_div.va": "67a9d85f6e543929289122c2c1f0af7227e478b5f796fa93604aa13b94473f17",
+      "evas/examples/clk_div/tb_clk_div.scs": "3e6fa5711974da990c46e5358fd6f79c172ecaa3701e5a3d8b1d2552f5aae3eb",
+      "evas/examples/clk_div/tb_clk_div_div2.scs": "38c270478e7db90275991df17069ddba7706df717e9385f1d9467d00781f8467",
+      "evas/examples/clk_div/tb_clk_div_div8.scs": "ac9e2f6e8996cac6f5babb8754dd5cc86238e59b966b64b061014df8716bba3e",
+      "evas/examples/clk_div/validate_clk_div.py": "5f22c4eee79f36f546107d9bc5c40029884794f165d8adb39e33b38b42ece4c5",
+      "evas/examples/comparator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/comparator/analyze_cmp_delay.py": "ec63a3d7e9f3068cf8a2703d39eeb33ea121db209ed88189e9a1af0dc71232f0",
+      "evas/examples/comparator/analyze_cmp_ideal.py": "8bd39c77954f01d8b9acaafb8f78c2a050be1d321ce8cacfbd5de467494bfecf",
+      "evas/examples/comparator/analyze_cmp_offset_search.py": "781f4379c1ad63d0ac3d1be718531998f385b4e81cf02fea1ac8ea3cfdf663a7",
+      "evas/examples/comparator/analyze_cmp_strongarm.py": "e381329cdaa9b8e6962d153c83ea144ad599d28c19a5daa477bbfcbd81a34233",
+      "evas/examples/comparator/cmp_delay.va": "ecf7a0df52c979302f07f3f1283cdb4e7cb73c99b8ff159a5e51863ee58cb91e",
+      "evas/examples/comparator/cmp_ideal.va": "b42ff8365addacacb52c1977fcd9b98c38d2c6afe4c2b99ea1a19f73dc578e1f",
+      "evas/examples/comparator/cmp_offset_search.va": "dbba4ab8e9189e4758bc1692aa79b7eac3d6426ac69d07bbe0c0fc4d47bd138a",
+      "evas/examples/comparator/cmp_strongarm.va": "c450bdf5a65753ad1ae3e2df8cc47398791d33a9d94086f11426f4c7696ec076",
+      "evas/examples/comparator/edge_interval_timer.va": "6effe5a416c7278806264e40a32470ade4ff6118488e34bf9e9d53704b24fe77",
+      "evas/examples/comparator/tb_cmp_delay.scs": "9f0dbe1a4c4b093d8ab3a6e4608651050d71cb713caf6f6ce40785c0cf9f2d2e",
+      "evas/examples/comparator/tb_cmp_ideal.scs": "da920bd841205f281f4d086ed51e0ae5bf8b02779a5a869d1671a34fe62f7723",
+      "evas/examples/comparator/tb_cmp_offset_search.scs": "b8239425e779e72cb546e2c3f005c213b7a3a60f29f3f95138c7caee2d7d24d5",
+      "evas/examples/comparator/tb_cmp_strongarm.scs": "9dbe6c4acbea513d13bab6d153c949e75d807db523fcd69c7edbb55794816552",
+      "evas/examples/comparator/validate_cmp_delay.py": "895b116f6a695c5740a68a0aca66e100241414c866656e3312673c8e97e1f17f",
+      "evas/examples/comparator/validate_cmp_ideal.py": "ed05127804ca46e70887538c0cafcf45858b2c7ae38d1f4c93a99bec7cf4bb5c",
+      "evas/examples/comparator/validate_cmp_offset_search.py": "2b519dc179cd81d5ec8e8fcc04a3786037d5e589d243a6af354b881591c84cb2",
+      "evas/examples/comparator/validate_cmp_strongarm.py": "c2794cd3831e0f6de7337ecaaddf3e2b50e0d55fee8afaeabe34449e5b8a48c8",
+      "evas/examples/digital_basics/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/digital_basics/analyze_digital_basics.py": "c78e1776c0fb7062bfca1be0a457fa01d6b94a1da5407fa924410021935fc400",
+      "evas/examples/digital_basics/analyze_inverter_chain.py": "dc7d811e58002334c9e30f04d7c21e9f41969360d03ef8bfbe45e138bed97168",
+      "evas/examples/digital_basics/and_gate.va": "9e0e7a5077dac3bfee216321550b07ff42ff97b26cc82599c5b202b66f9fd7d2",
+      "evas/examples/digital_basics/dff_rst.va": "1d4c4cf232897ed740747ce6d4949edc823fee6466c43193db9aaed989df6b14",
+      "evas/examples/digital_basics/inverter.va": "9f140f47a0e93dd1aa9238f23cb5b715e070396c75fe425286a0c0edee35e705",
+      "evas/examples/digital_basics/not_gate.va": "bac9521e69dfa23f6bd9407d2dfdbe965df1f16fc594ee9b8806f7389737f4ed",
+      "evas/examples/digital_basics/or_gate.va": "5baf31919628bccee56d575813ff9e857704f37be80f36c6b646d91dfe9dbadb",
+      "evas/examples/digital_basics/tb_and_gate.scs": "6e8a2684a092769048ad2f4dbee836a26fbe4e200820aebc41105d68d46e03cc",
+      "evas/examples/digital_basics/tb_dff_rst.scs": "4da0c761cd894ece9297474222638b27c20f06fdafe118fece6e1eda0916bbea",
+      "evas/examples/digital_basics/tb_inverter_chain.scs": "b2dd2df6720c12ae3d3e884b776f415c39b91940c4db6f1f9b288dfd2bc6a552",
+      "evas/examples/digital_basics/tb_not_gate.scs": "f6dfee7132adb56e81a43dc998444db375562cdc5fb506ede8e8a2f51480464f",
+      "evas/examples/digital_basics/tb_or_gate.scs": "f719f5560ee6f587b62823f8b10331c37f86a2fd8c77ba55f28da445f85e5e9a",
+      "evas/examples/digital_basics/validate_digital_basics.py": "d9c3c5b45acd367c64df3c4816563cc188bfd974e24d41f7b35ef1a8a19cc667",
+      "evas/examples/noise_gen/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/examples/noise_gen/analyze_noise_gen.py": "d012db1b984675d723a05a9d2bcbc587d4203314608cd2ab15ee4bc02a125cda",
+      "evas/examples/noise_gen/noise_gen.va": "81393f7095d48a98dcb21473b659a0ea88e9d506856ac68650c9138f514f6400",
+      "evas/examples/noise_gen/tb_noise_gen.scs": "80d84f7f7447046620ff14a1e4a795102e7a5aca99931c298c0864cb0e751079",
+      "evas/examples/noise_gen/validate_noise_gen.py": "0e1c885cd53211b892d48b9e6954e23f789399b4cdcf478ae967f7543523189c",
+      "evas/netlist/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/netlist/compile_audit_replay.py": "c962e604be3a406f1a95d8eda070bddbd576bab26f11633e9c70c21de0a51d20",
+      "evas/netlist/runner.py": "9d3438c85195bc31762abba2781ad7680bbc6315904b42d5e2fd75858b4c1cde",
+      "evas/netlist/spectre_parser.py": "b55dbd4e64b35e3f69f18d556d91658d1f0a4600dc9f0d9dc60ec05a97d10f8b",
+      "evas/rust_core/Cargo.lock": "abb4c2ae55d5e6425023a7df34d5acbb47c3d44d20be439edc75533c60d961a4",
+      "evas/rust_core/Cargo.toml": "e7c5a63492586f6352a678984259bbfd00ff0fcf8ed02f37e85074bb56d43f15",
+      "evas/rust_core/__init__.py": "9b58fe8bb6d3c8ff3722a8783adc3c390d11cf295941a1452207180f259834e8",
+      "evas/rust_core/src/abi.rs": "4371bd78a25aceaa331d2f94292a2f12e2569bda9392c90edc242fc8b0b5f659",
+      "evas/rust_core/src/event.rs": "2f29c87c02541388cca6f1b81995dda6a74ea816dd9974d0353dfd66fe5be74a",
+      "evas/rust_core/src/expr.rs": "e26348ce379dc229f183fce88dd433375f86efcb2dcb5b5f17fc2424487acb23",
+      "evas/rust_core/src/ffi.rs": "adeb3d3d153df026d702b40011a1fe815cc22699a010699a45062f64b76b0412",
+      "evas/rust_core/src/lib.rs": "7932cd52f667fa6e61751961ee23329011c51883f9d7e65c5a741d5238e220a6",
+      "evas/rust_core/src/program.rs": "f0338eb51a30f414a48b63770bdaebba48b251c4954cfae395253b9ad480bb78",
+      "evas/rust_core/src/specialized.rs": "87b97eb886ea37d09a8b54c598f80f10e7d142878bf0117a05ffbe3333e2ee6f",
+      "evas/rust_core/src/tests.rs": "32385b6c45ce0d85da5c5d5b66688ce4491dc3300d9e01f4e35f5f4b1271220b",
+      "evas/rust_core/src/transition.rs": "4ada74cc1f6a2732dbeb00b17378b5e5082dc14931b65472c3c109f6c47c5de4",
+      "evas/rust_core/src/util.rs": "a7b77a81f70f8bd01db112a3f2d4e8a61d6642b2b009c24de784da3fead29a8e",
+      "evas/simulator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evas/simulator/analog_block_runtime.py": "034ae4918dc2b67ff8f0df3bf4d2523a7ebc1482a5d92f813017b455d1601145",
+      "evas/simulator/backend.py": "047ea52a100b945016b15944dbf32a077e42e244e081ad691a2c784fc8903ed4",
+      "evas/simulator/engine.py": "d7d3592a5576b4091b4fd09100ddee6c5a6cbe8910a25f8838768aca3f8db09d",
+      "evas/simulator/evaluate_ir.py": "6d2e09262d16b055e808cd70bc82dcd4b71c81badcbcead25fdff7c5b7148052",
+      "evas/simulator/event_due_runtime.py": "4f9613fcfdfaca2e99fe200c845bb85efd54de4ce7ea9d5c88790666e97b1c0a",
+      "evas/simulator/event_transition_plan.py": "feee0534f50e528f6beebdd678475e1327dbfd386e6265565a9cac15cbdfec83",
+      "evas/simulator/expr_ir.py": "5f5c8274002aae0ca303b1d70fa14aef03a4cf22c559cd5c444e8ba6945c8301",
+      "evas/simulator/indexed.py": "b75b1edd0c2737a64ce4b2bb90e2a7bc78dc18f78b0f1988d5a1a9ec74089178",
+      "evas/simulator/rust_backend.py": "5781b355dd94ea957fe80d766431810b2be5cb5896038fbed2d912cf11ee4bf5",
+      "evas/simulator/rust_coverage.py": "8342e348895476b15313483767602f56efee13c3c15c555d2e6a75f32670b24e",
+      "evas/simulator/rust_program.py": "0dae15b2fe6075a1b0b2a82651d6fc41ec11f6441212b8d7c7f20b2429f06e1e",
+      "evas/simulator/schedule_ir.py": "5b91f2e572d57f232770e72a4e4674cf21b45db7dac24eeefc3fe69a1349a982",
+      "evas/simulator/slew_runtime.py": "fc335140a2815414d3e45fa3c26e5c665ba2c6177f5c73c5cbce65e96df56da9",
+      "evas/simulator/stmt_ir.py": "2da70dc4e9d66a2a0ed7d1d55418eb241d4ba84be3c5b1da71456f4b0a6c4c05",
+      "evas/simulator/transition_runtime.py": "bf9819c6ca6ecaf12991ca81cae09f566d06f6e39f92dfac2cdc6c61788b86aa",
+      "evas/simulator/whole_segment.py": "fd9a8177e4aa6291653a5ef4276e1b4ac79af5c115b8a71ef338fef72682a245",
+      "evas/support_tiers.py": "5c790f1ec82dea692b212791c7557dcb8fbaab9131b5c0d63067ebbd56e16276",
+      "evas/vams/constants.vams": "265acd95997ea17e3ada9993190a91402d75bcc381454f62cd6281ba4363c112",
+      "evas/vams/disciplines.vams": "153e8c3134deca1159b9bf07c1e7532bdb580772be9a8e97dee6acc52efdd455",
+      "evas-capabilities.manifest": "0adfb26396f4cad6343e387dceac860f46f893fe39a9bd03d47de4a0bce28976",
+      "pyproject.toml": "d893d1d8cf420c6af1e35cc8f6028e04c375869121cb5e5bfce86d0b10e8bb7a",
+      "requirements.txt": "bc49a5f2c50b3f2c894c17ccd165fd2f5a5f4bce2b8c7ead698527bb1e572506",
+      "setup.py": "65ca0ca6069d7432a21ebfdec1ed3c4cc71fcea66cd69858d13044de9e400e54",
+      "skills/evas/SKILL.md": "ebe761caea26ac22b79966bda989a347c27daf8ccb63c138c10c772c7fc2262e",
+      "skills/evas/agents/openai.yaml": "712826e3e14152572b5b819a8a723f33f01a47664405e2ddcdf0ad5b82b90342",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5003_transition_missing_rise_time.va": "13a8da06de6f8a842a6aa248bf9d8ad0199b0f0ae86ec3692e9e7b3a5adbadc5",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5007_transition_continuous_assignment.va": "af1279fe5ad1d9a277ea26b68f977f3459d51cf464f2a80663f961a73bdc603d",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5008_supply_scaled_discrete_contribution.va": "e0a7459f62b404c3c63f912d7a8ab49dbe076bcaf8a1cb401c4e2d8277f3290c",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5011_case_without_default.va": "bb3f3e719d47aa44e36bc15c334488b66863a95e0f9c07de4313d00ce355737c",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5013_branch_exact_equality.va": "68bb486af22fda15e41162406cf40323408948c63d914f71c2030069930665b6",
+      "tests/fixtures/lint_oracle_cases/ahdllint_5018_discrete_continuous_function_arg.va": "a40229555eecff90f480abd50db31d6181cc83fbd8e0850fbdf9bfd66802b638",
+      "tests/fixtures/lint_oracle_cases/manifest.json": "246c5753196c02c58a029a63870a7b39bf409a7bd7d5a614d1ff25b0145c7c0d",
+      "tests/fixtures/lint_oracle_cases/spectre_event_local_contribution.va": "80a80f232612f52696663812cd84d9f044356121ea13132d35dd3ba77cc29aa2",
+      "tests/test_audit_088_transition_batch.py": "266c5ddec44a585e1873faa169e36564db91dc72e6a30d67c106e39c7dcb9e33",
+      "tests/test_audit_089_cross_above_production.py": "9178b23ffdd4b013340be21dab1d4aef5a2f93d0a7366aaccd696712653537a1",
+      "tests/test_audit_091b_generic_candidate.py": "ad34afd9ce7b7b5adb5414e091039daf79a011a422f6469b2648cfb59113348e",
+      "tests/test_audit_091c_generic_dispatch.py": "7444a261a8b8f722e3b9412d83bad27ef9f9eeaf18e0131d0508c3ed79c60809",
+      "tests/test_audit_091d_generic_executor.py": "725964c05c1f95d2c7ba0dfd90f96cbbd042a26fa2da508bbdfd411565a77b5d",
+      "tests/test_audit_094a_expr_ir.py": "be0a608260f07b99ecc5c3c05d5e946fddd09b1c033bd804f30c3dc32b24ae86",
+      "tests/test_audit_094b_stmt_schedule_ir.py": "8f71d3eff50b57fc283871ccae85d0aa265da04c49f98706d00cb6cd301a5afd",
+      "tests/test_audit_094d_state_binding_ir.py": "42903f890e9b781a21314f399fadc935fcdaade40bbc2b339f8a1fdac6c618e8",
+      "tests/test_audit_094f_body_ir_encoder.py": "a0faf0609f96522c6872a212c712ee630626556d7b448f135f8527ed5e28e90d",
+      "tests/test_audit_094h_event_due_program.py": "4396e5d813a2bc891ecce4df8985bb1d7ec83b7bcef115fb5b4d821507dfd7c8",
+      "tests/test_audit_094n_transition_runtime.py": "02125c6a1ef8e59fcde7770d3202c2b9225bba7bf73128c8fb0cd4752e5ea556",
+      "tests/test_audit_094o_analog_block_runtime.py": "4c6c0171c599aacd323c38e270182483c394f7c7e5f6b6d349997e74f58b9ede",
+      "tests/test_audit_300_idtmod_fourth_arg.py": "d29b879cf607a74c50d69e8c9f5babd7b3d47c962acd1294d30b572b7a3356c5",
+      "tests/test_backend_migration_capability_manifest.py": "9468e89f9a532796a7388cc5bd2a85480a624de8366aed68f2174b0ee8a48319",
+      "tests/test_build_identity.py": "1a4e718b64781296aef3ecbd0cca882e6f368eb0a4a02970c78bd8adefbcc126",
+      "tests/test_cli.py": "672fb6e721ffd84d314b69e5963afaf8dbef228808cefe39ed582494717fd239",
+      "tests/test_compile_audit_replay.py": "ee7253ac094d1ec86835f7cdd2871986a8c62d75a7feb9e588cbd5fb8ba97569",
+      "tests/test_compile_gate.py": "1d223d3bd8a86192f33cba1b4bf53684e443d7033f34fa7fece732751a28498c",
+      "tests/test_compiler.py": "d2a73416c7813b293f9e98a3431587d1bbce7033f2ecf694a572e188303cc3d8",
+      "tests/test_engine.py": "e404d732e9d8bfc07e9e95cde0d9bf6ad38656ffedc0b33caf7b3e00b5eacb02",
+      "tests/test_examples.py": "24de43ec108cfddf573f9a5a16234e534b5beeb4c1380cab1272e9c07424e47b",
+      "tests/test_examples_rust_parity.py": "31962ba8f63baaf8be4204c727dc6c4ec2a05657626ba6d5889b97b55682e28b",
+      "tests/test_indexed_backend.py": "1fee2b07d1825c1fb55da3bfe6d0c3655a859080292b2b05a5ee784ed7c3c342",
+      "tests/test_lint_oracle_cases.py": "21682544f1cbbcc885b935398125df6423b22ace36d5910a17ee51517eeeacb6",
+      "tests/test_linter.py": "49fc1b408736579cc185cbed74415dbfeda4aa15bcc2a3ed5e5170df4e885adf",
+      "tests/test_netlist.py": "358f07e7db2b2d1316efe8babbbed6a28d08a267b3f5c481b9dfd656346b298d",
+      "tests/test_r53_case_transition_regression.py": "5556166dbea0fa166b6426c2b416a4eb828bb75f6312be3b8148e7bd6b25a603",
+      "tests/test_r53_event_kernel_regression.py": "b973bf13f5786ed29c7f031b7281776fd6e20690e4f6ac4929afc7aba4575862",
+      "tests/test_r54_clock_publication_regression.py": "dc5dd03acf5d62641f5ace6fa1a833846db82b52b6acd766daf176f30963f011",
+      "tests/test_r54_timer_transition_publication.py": "fad4c959ea90ba244a16069c1e8b8c089ba4b6bb6ef55ac8ed64b44916cddafd",
+      "tests/test_rust_backend.py": "7bf00b398d57cb6ed832092a7a1e24f1968d98c8c1d5a9dd8648cd1fdb9606dd",
+      "tests/test_rust_dense_timer_capacity.py": "8fefefaed5127d064e2fb38406b39d6f749701a945212d446193b40f89304029",
+      "tests/test_spectre_cross_parity.py": "9d7687865455890f9ad057019ac2f8ba45382cc25fbf7018d1d95e38bb6d4332",
+      "tests/test_spectre_numeric_parity.py": "a8b6cc644b48bee00c661843ef82d40f570b43ee321d66c73cd83890c77c8daa",
+      "tests/test_spectre_parser_acceptance.py": "bb4a3cdf8c33950c8af51d28955a30979a63b0de8150f5771e87343f532b81fd",
+      "tests/test_spectre_source_topology_parity.py": "e80f3c2b2914d0bc667bd0e755708a9f936b4469efd41f9d72b9e70fa738d9b5",
+      "tests/test_timer_declared_constant_state.py": "a0b77b22c836448ef76df17268ce868ee6f173be068cd44bc96f76d4cba2ed48",
+      "tests/verify_installed_wheel.py": "6196a74235cb9d851c4ca6e18c6958158a8817a6db6c8e14a5da3edb61fb8d30",
+      "wiki/rust-kernel-design.md": "a50cd7206285657055dc8f5b3efc2f435ed2c95f9dd2261ee90b1cc9fd9d906f"
+    }
+  },
+  "historical_image": {
+    "sha256": "420a1e17403ac03eb3de8bdd6bbce88169f33185ed824e9b64469329ac845bdc",
+    "files": {
+      "evas/__init__.py": {
+        "image_extracted_sha256": "53255c05d8ab7425daad39a59af649a8d4134157b537dc965434b6ecfb58bc59",
+        "tag_sha256": "53255c05d8ab7425daad39a59af649a8d4134157b537dc965434b6ecfb58bc59",
+        "same_as_tag": true
+      },
+      "evas/__main__.py": {
+        "image_extracted_sha256": "bcf95288a2a310cbdfb7203e11fc8b836b9f99b953b941b85da6b54afaf9773d",
+        "tag_sha256": "bcf95288a2a310cbdfb7203e11fc8b836b9f99b953b941b85da6b54afaf9773d",
+        "same_as_tag": true
+      },
+      "evas/build_identity.py": {
+        "image_extracted_sha256": "d3e4d191622817e733e54df26ad2159cf0f42a7b9e243404f3c9a418b125b26a",
+        "tag_sha256": "d3e4d191622817e733e54df26ad2159cf0f42a7b9e243404f3c9a418b125b26a",
+        "same_as_tag": true
+      },
+      "evas/cli.py": {
+        "image_extracted_sha256": "5ef8c4a5631c82b6ad131d1b3188c5edf1cf6e04b48c1241d36b07ff88468664",
+        "tag_sha256": "5ef8c4a5631c82b6ad131d1b3188c5edf1cf6e04b48c1241d36b07ff88468664",
+        "same_as_tag": true
+      },
+      "evas/support_tiers.py": {
+        "image_extracted_sha256": "5c790f1ec82dea692b212791c7557dcb8fbaab9131b5c0d63067ebbd56e16276",
+        "tag_sha256": "5c790f1ec82dea692b212791c7557dcb8fbaab9131b5c0d63067ebbd56e16276",
+        "same_as_tag": true
+      },
+      "evas/compiler/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/compiler/ast_nodes.py": {
+        "image_extracted_sha256": "fdddc05c5b15618a8d59cd1fcd1379c7f3186715bccbea3cdfbba704317afe07",
+        "tag_sha256": "fdddc05c5b15618a8d59cd1fcd1379c7f3186715bccbea3cdfbba704317afe07",
+        "same_as_tag": true
+      },
+      "evas/compiler/lexer.py": {
+        "image_extracted_sha256": "18145866da9abe364fc6eb320a6fcff0fc7d7508e61f8fb1531b7e4d7fa12e02",
+        "tag_sha256": "18145866da9abe364fc6eb320a6fcff0fc7d7508e61f8fb1531b7e4d7fa12e02",
+        "same_as_tag": true
+      },
+      "evas/compiler/linter.py": {
+        "image_extracted_sha256": "2a524cf618eb6854e854ed3926df7951394063ab1430ba234181fa041e58e37a",
+        "tag_sha256": "2a524cf618eb6854e854ed3926df7951394063ab1430ba234181fa041e58e37a",
+        "same_as_tag": true
+      },
+      "evas/compiler/parser.py": {
+        "image_extracted_sha256": "b34a5f2478c560bb98b4a62657e26e940b33dd5ce6afb991017f97ff03fee6fd",
+        "tag_sha256": "b34a5f2478c560bb98b4a62657e26e940b33dd5ce6afb991017f97ff03fee6fd",
+        "same_as_tag": true
+      },
+      "evas/compiler/preprocessor.py": {
+        "image_extracted_sha256": "78c34bc022f1e44cd8518777b1f045d3780c4c06d15fc68b765dab46f83ee780",
+        "tag_sha256": "78c34bc022f1e44cd8518777b1f045d3780c4c06d15fc68b765dab46f83ee780",
+        "same_as_tag": true
+      },
+      "evas/examples/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/adc_dac_ideal_4b/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/adc_dac_ideal_4b/analyze_adc_dac_ideal_4b.py": {
+        "image_extracted_sha256": "91225cbc5b7f6fbc81aadac16dfc389fb7da3544f79ea3f48fb56840ffd4ee99",
+        "tag_sha256": "91225cbc5b7f6fbc81aadac16dfc389fb7da3544f79ea3f48fb56840ffd4ee99",
+        "same_as_tag": true
+      },
+      "evas/examples/adc_dac_ideal_4b/validate_adc_dac_ideal_4b.py": {
+        "image_extracted_sha256": "d644cc9660d68fb88d1f31e8b8830f67097f01032ddb10c9fdb799b95e375adb",
+        "tag_sha256": "d644cc9660d68fb88d1f31e8b8830f67097f01032ddb10c9fdb799b95e375adb",
+        "same_as_tag": true
+      },
+      "evas/examples/clk_div/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/clk_div/analyze_clk_div.py": {
+        "image_extracted_sha256": "97a78fe25daf34404cce051760844cda37420d6ca10d559c0a015e56bc86989c",
+        "tag_sha256": "97a78fe25daf34404cce051760844cda37420d6ca10d559c0a015e56bc86989c",
+        "same_as_tag": true
+      },
+      "evas/examples/clk_div/validate_clk_div.py": {
+        "image_extracted_sha256": "5f22c4eee79f36f546107d9bc5c40029884794f165d8adb39e33b38b42ece4c5",
+        "tag_sha256": "5f22c4eee79f36f546107d9bc5c40029884794f165d8adb39e33b38b42ece4c5",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/analyze_cmp_delay.py": {
+        "image_extracted_sha256": "ec63a3d7e9f3068cf8a2703d39eeb33ea121db209ed88189e9a1af0dc71232f0",
+        "tag_sha256": "ec63a3d7e9f3068cf8a2703d39eeb33ea121db209ed88189e9a1af0dc71232f0",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/analyze_cmp_ideal.py": {
+        "image_extracted_sha256": "8bd39c77954f01d8b9acaafb8f78c2a050be1d321ce8cacfbd5de467494bfecf",
+        "tag_sha256": "8bd39c77954f01d8b9acaafb8f78c2a050be1d321ce8cacfbd5de467494bfecf",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/analyze_cmp_offset_search.py": {
+        "image_extracted_sha256": "781f4379c1ad63d0ac3d1be718531998f385b4e81cf02fea1ac8ea3cfdf663a7",
+        "tag_sha256": "781f4379c1ad63d0ac3d1be718531998f385b4e81cf02fea1ac8ea3cfdf663a7",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/analyze_cmp_strongarm.py": {
+        "image_extracted_sha256": "e381329cdaa9b8e6962d153c83ea144ad599d28c19a5daa477bbfcbd81a34233",
+        "tag_sha256": "e381329cdaa9b8e6962d153c83ea144ad599d28c19a5daa477bbfcbd81a34233",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/validate_cmp_delay.py": {
+        "image_extracted_sha256": "895b116f6a695c5740a68a0aca66e100241414c866656e3312673c8e97e1f17f",
+        "tag_sha256": "895b116f6a695c5740a68a0aca66e100241414c866656e3312673c8e97e1f17f",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/validate_cmp_ideal.py": {
+        "image_extracted_sha256": "ed05127804ca46e70887538c0cafcf45858b2c7ae38d1f4c93a99bec7cf4bb5c",
+        "tag_sha256": "ed05127804ca46e70887538c0cafcf45858b2c7ae38d1f4c93a99bec7cf4bb5c",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/validate_cmp_offset_search.py": {
+        "image_extracted_sha256": "2b519dc179cd81d5ec8e8fcc04a3786037d5e589d243a6af354b881591c84cb2",
+        "tag_sha256": "2b519dc179cd81d5ec8e8fcc04a3786037d5e589d243a6af354b881591c84cb2",
+        "same_as_tag": true
+      },
+      "evas/examples/comparator/validate_cmp_strongarm.py": {
+        "image_extracted_sha256": "c2794cd3831e0f6de7337ecaaddf3e2b50e0d55fee8afaeabe34449e5b8a48c8",
+        "tag_sha256": "c2794cd3831e0f6de7337ecaaddf3e2b50e0d55fee8afaeabe34449e5b8a48c8",
+        "same_as_tag": true
+      },
+      "evas/examples/digital_basics/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/digital_basics/analyze_digital_basics.py": {
+        "image_extracted_sha256": "c78e1776c0fb7062bfca1be0a457fa01d6b94a1da5407fa924410021935fc400",
+        "tag_sha256": "c78e1776c0fb7062bfca1be0a457fa01d6b94a1da5407fa924410021935fc400",
+        "same_as_tag": true
+      },
+      "evas/examples/digital_basics/analyze_inverter_chain.py": {
+        "image_extracted_sha256": "dc7d811e58002334c9e30f04d7c21e9f41969360d03ef8bfbe45e138bed97168",
+        "tag_sha256": "dc7d811e58002334c9e30f04d7c21e9f41969360d03ef8bfbe45e138bed97168",
+        "same_as_tag": true
+      },
+      "evas/examples/digital_basics/validate_digital_basics.py": {
+        "image_extracted_sha256": "d9c3c5b45acd367c64df3c4816563cc188bfd974e24d41f7b35ef1a8a19cc667",
+        "tag_sha256": "d9c3c5b45acd367c64df3c4816563cc188bfd974e24d41f7b35ef1a8a19cc667",
+        "same_as_tag": true
+      },
+      "evas/examples/noise_gen/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/examples/noise_gen/analyze_noise_gen.py": {
+        "image_extracted_sha256": "d012db1b984675d723a05a9d2bcbc587d4203314608cd2ab15ee4bc02a125cda",
+        "tag_sha256": "d012db1b984675d723a05a9d2bcbc587d4203314608cd2ab15ee4bc02a125cda",
+        "same_as_tag": true
+      },
+      "evas/examples/noise_gen/validate_noise_gen.py": {
+        "image_extracted_sha256": "0e1c885cd53211b892d48b9e6954e23f789399b4cdcf478ae967f7543523189c",
+        "tag_sha256": "0e1c885cd53211b892d48b9e6954e23f789399b4cdcf478ae967f7543523189c",
+        "same_as_tag": true
+      },
+      "evas/netlist/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/netlist/compile_audit_replay.py": {
+        "image_extracted_sha256": "c962e604be3a406f1a95d8eda070bddbd576bab26f11633e9c70c21de0a51d20",
+        "tag_sha256": "c962e604be3a406f1a95d8eda070bddbd576bab26f11633e9c70c21de0a51d20",
+        "same_as_tag": true
+      },
+      "evas/netlist/runner.py": {
+        "image_extracted_sha256": "9d3438c85195bc31762abba2781ad7680bbc6315904b42d5e2fd75858b4c1cde",
+        "tag_sha256": "9d3438c85195bc31762abba2781ad7680bbc6315904b42d5e2fd75858b4c1cde",
+        "same_as_tag": true
+      },
+      "evas/netlist/spectre_parser.py": {
+        "image_extracted_sha256": "b55dbd4e64b35e3f69f18d556d91658d1f0a4600dc9f0d9dc60ec05a97d10f8b",
+        "tag_sha256": "b55dbd4e64b35e3f69f18d556d91658d1f0a4600dc9f0d9dc60ec05a97d10f8b",
+        "same_as_tag": true
+      },
+      "evas/rust_core/__init__.py": {
+        "image_extracted_sha256": "9b58fe8bb6d3c8ff3722a8783adc3c390d11cf295941a1452207180f259834e8",
+        "tag_sha256": "9b58fe8bb6d3c8ff3722a8783adc3c390d11cf295941a1452207180f259834e8",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/abi.rs": {
+        "image_extracted_sha256": "4371bd78a25aceaa331d2f94292a2f12e2569bda9392c90edc242fc8b0b5f659",
+        "tag_sha256": "4371bd78a25aceaa331d2f94292a2f12e2569bda9392c90edc242fc8b0b5f659",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/event.rs": {
+        "image_extracted_sha256": "2f29c87c02541388cca6f1b81995dda6a74ea816dd9974d0353dfd66fe5be74a",
+        "tag_sha256": "2f29c87c02541388cca6f1b81995dda6a74ea816dd9974d0353dfd66fe5be74a",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/expr.rs": {
+        "image_extracted_sha256": "e26348ce379dc229f183fce88dd433375f86efcb2dcb5b5f17fc2424487acb23",
+        "tag_sha256": "e26348ce379dc229f183fce88dd433375f86efcb2dcb5b5f17fc2424487acb23",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/ffi.rs": {
+        "image_extracted_sha256": "adeb3d3d153df026d702b40011a1fe815cc22699a010699a45062f64b76b0412",
+        "tag_sha256": "adeb3d3d153df026d702b40011a1fe815cc22699a010699a45062f64b76b0412",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/lib.rs": {
+        "image_extracted_sha256": "7932cd52f667fa6e61751961ee23329011c51883f9d7e65c5a741d5238e220a6",
+        "tag_sha256": "7932cd52f667fa6e61751961ee23329011c51883f9d7e65c5a741d5238e220a6",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/program.rs": {
+        "image_extracted_sha256": "f0338eb51a30f414a48b63770bdaebba48b251c4954cfae395253b9ad480bb78",
+        "tag_sha256": "f0338eb51a30f414a48b63770bdaebba48b251c4954cfae395253b9ad480bb78",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/specialized.rs": {
+        "image_extracted_sha256": "87b97eb886ea37d09a8b54c598f80f10e7d142878bf0117a05ffbe3333e2ee6f",
+        "tag_sha256": "87b97eb886ea37d09a8b54c598f80f10e7d142878bf0117a05ffbe3333e2ee6f",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/tests.rs": {
+        "image_extracted_sha256": "32385b6c45ce0d85da5c5d5b66688ce4491dc3300d9e01f4e35f5f4b1271220b",
+        "tag_sha256": "32385b6c45ce0d85da5c5d5b66688ce4491dc3300d9e01f4e35f5f4b1271220b",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/transition.rs": {
+        "image_extracted_sha256": "4ada74cc1f6a2732dbeb00b17378b5e5082dc14931b65472c3c109f6c47c5de4",
+        "tag_sha256": "4ada74cc1f6a2732dbeb00b17378b5e5082dc14931b65472c3c109f6c47c5de4",
+        "same_as_tag": true
+      },
+      "evas/rust_core/src/util.rs": {
+        "image_extracted_sha256": "a7b77a81f70f8bd01db112a3f2d4e8a61d6642b2b009c24de784da3fead29a8e",
+        "tag_sha256": "a7b77a81f70f8bd01db112a3f2d4e8a61d6642b2b009c24de784da3fead29a8e",
+        "same_as_tag": true
+      },
+      "evas/simulator/__init__.py": {
+        "image_extracted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "same_as_tag": true
+      },
+      "evas/simulator/analog_block_runtime.py": {
+        "image_extracted_sha256": "034ae4918dc2b67ff8f0df3bf4d2523a7ebc1482a5d92f813017b455d1601145",
+        "tag_sha256": "034ae4918dc2b67ff8f0df3bf4d2523a7ebc1482a5d92f813017b455d1601145",
+        "same_as_tag": true
+      },
+      "evas/simulator/backend.py": {
+        "image_extracted_sha256": "047ea52a100b945016b15944dbf32a077e42e244e081ad691a2c784fc8903ed4",
+        "tag_sha256": "047ea52a100b945016b15944dbf32a077e42e244e081ad691a2c784fc8903ed4",
+        "same_as_tag": true
+      },
+      "evas/simulator/engine.py": {
+        "image_extracted_sha256": "d7d3592a5576b4091b4fd09100ddee6c5a6cbe8910a25f8838768aca3f8db09d",
+        "tag_sha256": "d7d3592a5576b4091b4fd09100ddee6c5a6cbe8910a25f8838768aca3f8db09d",
+        "same_as_tag": true
+      },
+      "evas/simulator/evaluate_ir.py": {
+        "image_extracted_sha256": "6d2e09262d16b055e808cd70bc82dcd4b71c81badcbcead25fdff7c5b7148052",
+        "tag_sha256": "6d2e09262d16b055e808cd70bc82dcd4b71c81badcbcead25fdff7c5b7148052",
+        "same_as_tag": true
+      },
+      "evas/simulator/event_due_runtime.py": {
+        "image_extracted_sha256": "4f9613fcfdfaca2e99fe200c845bb85efd54de4ce7ea9d5c88790666e97b1c0a",
+        "tag_sha256": "4f9613fcfdfaca2e99fe200c845bb85efd54de4ce7ea9d5c88790666e97b1c0a",
+        "same_as_tag": true
+      },
+      "evas/simulator/event_transition_plan.py": {
+        "image_extracted_sha256": "feee0534f50e528f6beebdd678475e1327dbfd386e6265565a9cac15cbdfec83",
+        "tag_sha256": "feee0534f50e528f6beebdd678475e1327dbfd386e6265565a9cac15cbdfec83",
+        "same_as_tag": true
+      },
+      "evas/simulator/expr_ir.py": {
+        "image_extracted_sha256": "5f5c8274002aae0ca303b1d70fa14aef03a4cf22c559cd5c444e8ba6945c8301",
+        "tag_sha256": "5f5c8274002aae0ca303b1d70fa14aef03a4cf22c559cd5c444e8ba6945c8301",
+        "same_as_tag": true
+      },
+      "evas/simulator/indexed.py": {
+        "image_extracted_sha256": "b75b1edd0c2737a64ce4b2bb90e2a7bc78dc18f78b0f1988d5a1a9ec74089178",
+        "tag_sha256": "b75b1edd0c2737a64ce4b2bb90e2a7bc78dc18f78b0f1988d5a1a9ec74089178",
+        "same_as_tag": true
+      },
+      "evas/simulator/rust_backend.py": {
+        "image_extracted_sha256": "5781b355dd94ea957fe80d766431810b2be5cb5896038fbed2d912cf11ee4bf5",
+        "tag_sha256": "5781b355dd94ea957fe80d766431810b2be5cb5896038fbed2d912cf11ee4bf5",
+        "same_as_tag": true
+      },
+      "evas/simulator/rust_coverage.py": {
+        "image_extracted_sha256": "8342e348895476b15313483767602f56efee13c3c15c555d2e6a75f32670b24e",
+        "tag_sha256": "8342e348895476b15313483767602f56efee13c3c15c555d2e6a75f32670b24e",
+        "same_as_tag": true
+      },
+      "evas/simulator/rust_program.py": {
+        "image_extracted_sha256": "0dae15b2fe6075a1b0b2a82651d6fc41ec11f6441212b8d7c7f20b2429f06e1e",
+        "tag_sha256": "0dae15b2fe6075a1b0b2a82651d6fc41ec11f6441212b8d7c7f20b2429f06e1e",
+        "same_as_tag": true
+      },
+      "evas/simulator/schedule_ir.py": {
+        "image_extracted_sha256": "5b91f2e572d57f232770e72a4e4674cf21b45db7dac24eeefc3fe69a1349a982",
+        "tag_sha256": "5b91f2e572d57f232770e72a4e4674cf21b45db7dac24eeefc3fe69a1349a982",
+        "same_as_tag": true
+      },
+      "evas/simulator/slew_runtime.py": {
+        "image_extracted_sha256": "fc335140a2815414d3e45fa3c26e5c665ba2c6177f5c73c5cbce65e96df56da9",
+        "tag_sha256": "fc335140a2815414d3e45fa3c26e5c665ba2c6177f5c73c5cbce65e96df56da9",
+        "same_as_tag": true
+      },
+      "evas/simulator/stmt_ir.py": {
+        "image_extracted_sha256": "2da70dc4e9d66a2a0ed7d1d55418eb241d4ba84be3c5b1da71456f4b0a6c4c05",
+        "tag_sha256": "2da70dc4e9d66a2a0ed7d1d55418eb241d4ba84be3c5b1da71456f4b0a6c4c05",
+        "same_as_tag": true
+      },
+      "evas/simulator/transition_runtime.py": {
+        "image_extracted_sha256": "bf9819c6ca6ecaf12991ca81cae09f566d06f6e39f92dfac2cdc6c61788b86aa",
+        "tag_sha256": "bf9819c6ca6ecaf12991ca81cae09f566d06f6e39f92dfac2cdc6c61788b86aa",
+        "same_as_tag": true
+      },
+      "evas/simulator/whole_segment.py": {
+        "image_extracted_sha256": "fd9a8177e4aa6291653a5ef4276e1b4ac79af5c115b8a71ef338fef72682a245",
+        "tag_sha256": "fd9a8177e4aa6291653a5ef4276e1b4ac79af5c115b8a71ef338fef72682a245",
+        "same_as_tag": true
+      }
+    },
+    "historical_binary_sha256": "e2a6a54b470578e9451e48427efede3f91b501ba8da20d368087ccad083928a4",
+    "build_revision": "unknown; byte equality does not attest binary build",
+    "availability": "local-only; 66/66 archived files match the source tag, which does not establish the historical binary build revision"
+  },
+  "verified_new_source_references": {
+    "vaEVAS-transition/evas/src/evas/lowering.py": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "ca8bbec3c6302d5d634e91aa5489dfd0b98f32fe948129d42716baceb0868993"
+    },
+    "vaEVAS-transition/evas/rust_core/src/ir.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "1250de435a114c103d7fc4403420e5d97701b3fa955c57bec4351115d401f334"
+    },
+    "vaEVAS-transition/evas/src/evas/syntax.py": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "8dd927a87d9892c3fb446fc4d39be86247e73d411f07f47f62827f702fe46b02"
+    },
+    "vaEVAS-transition/evas/rust_core/src/pwl.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "fae9cd07f6cd69d22df238fcdf935d39e91d79af1050be0e288ba0ba564e1ec7"
+    },
+    "vaEVAS-transition/evas/rust_core/src/interval.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "cb4fb6d2e4fcfca191b9bc786e6afdd5d75b608777823f7885598f2171644aa7"
+    },
+    "vaEVAS-transition/evas/rust_core/src/solver.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "3ce7df4ed3011d91560c2d9725fa19cb42fa2428fd8708f35fbeafde5d8da94d"
+    },
+    "vaEVAS-transition/evas/rust_core/src/transient.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "119bca070d5e8f225e70c383ea1982772870b7db20465e786f1680415afc0c6c"
+    },
+    "vaEVAS-transition/evas/rust_core/src/operators.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "d616b9c4c231b633b2191dee75c5811a90b2a8ffb7529df47923de45b191f5c6"
+    },
+    "vaEVAS-absdelay/evas/rust_core/src/absdelay.rs": {
+      "commit": "a4b4fbe628c798c616ccdbcd82e04f36fcd41bb0",
+      "sha256": "1ba85152be6735660accbd5d6899518d106a581fde70b651a186792204f835b4"
+    },
+    "vaEVAS-slew/evas/rust_core/src/operators.rs": {
+      "commit": "5f0aba6a4312fbcddd261cc3e9de7f63736bef9a",
+      "sha256": "02f0c3e85164ea623d1dfb4a0c991a4e3d14b6c87bb79333e942b371da32cf1e"
+    },
+    "vaEVAS-transition/evas/rust_core/src/assembly.rs": {
+      "commit": "9850450505e7c43a5d62ce6dab6d74dcf65e7cf4",
+      "sha256": "38033bd760b39bc6bf947e968ee94db618860091d6e5500b1138f70ac7190c55"
+    }
+  },
+  "local_build": {
+    "availability": "local-only; not distributed in this PR",
+    "profile": "debug",
+    "platform": "macOS",
+    "command": "CARGO_TARGET_DIR=\"$PWD/rust-target\" cargo build --locked --offline --manifest-path source-v0.8.7/evas/rust_core/Cargo.toml",
+    "binary": "rust-target/debug/libevas_rust_core.dylib",
+    "sha256": "cbaa762b260fa1fd4cbacee39d1511ce90fe107188968c805fe832e4db8e1bf7",
+    "python": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+    "core_version": "0.2.4",
+    "build_revision": null,
+    "tools": {
+      "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+      "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+    },
+    "python_packages_recorded_at_publication": {
+      "numpy": "2.5.1",
+      "matplotlib": "3.11.1"
+    },
+    "environment_lock_limitation": "Package versions collected from the same local environment at publication; no independent execution-time lockfile was captured."
+  },
+  "input_and_oracle": "Exact models, stimuli, grids, initial values, expectations and Rust-required flags are in the unchanged probes/ runners. This is diagnostic evidence, with no aggregate qualification threshold or pass count.",
+  "artifact_transformations": {
+    "python-probes.json": "Only source and binary fields replaced with relative locations; records unchanged.",
+    "provenance.json": "Curated from the original local provenance; omit machine paths and unrelated working-tree details; add verified public links and availability.",
+    "summary.json": "Unchanged original analytic metrics and local snapshot integrity observations; not new-runtime verification.",
+    "probes": "All three runners byte-identical to the executed originals."
+  },
+  "original_artifact_sha256": {
+    "probe_legacy.py": "2263e27a4ad07450b8f4f82c9ad05cb4cc0a15a10a617ee09e37a19ecce79ba6",
+    "probe_frontend_waveforms.py": "97fc3db2d68bc87ab228e9ed87346dc2215a61d724fe4e389e1d873ad336ea99",
+    "probe_kernels.rs": "b74174cc6e9b8ffcb7eef5f61d59bf114951b7b8a1b1660af5c786c44c532216",
+    "evidence/python-probes.json": "5fa455f237f85f971f6d086242ac806d4b679cd57ad79b108e7d223efc56863c",
+    "evidence/provenance.json": "5d194a6eb6b5cb4183454b9e99271d3817b4932faaadcbe1fb8f6f70b616dfcd",
+    "evidence/summary.json": "08aa715934d24ada9cf4f5e8998958ceca2853a72a72a2d3cf57e945d32de67e"
+  },
+  "availability": {
+    "repository_contained": "report, runners, curated JSON observations and hashes",
+    "public_git": "old source and 11 verified new-source reference files",
+    "local_only": "historical image source archive and binary, local debug library, complete logs and worktree snapshots"
+  },
+  "not_run": [
+    "new EVAS tests",
+    "legacy pytest suite",
+    "Spectre",
+    "remote backend matrix"
+  ]
+}

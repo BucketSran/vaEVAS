@@ -1,0 +1,104 @@
+[
+  {
+    "id": "F07_pure_function",
+    "expectation": "y=2x at -1,.125,3",
+    "observation": [
+      {
+        "x": -1.0,
+        "y": -2.0
+      },
+      {
+        "x": 0.125,
+        "y": 0.25
+      },
+      {
+        "x": 3.0,
+        "y": 6.0
+      }
+    ]
+  },
+  {
+    "id": "F08_bounded_loop",
+    "expectation": "y=3x at -1,.125,3",
+    "observation": [
+      {
+        "x": -1.0,
+        "y": -3.0
+      },
+      {
+        "x": 0.125,
+        "y": 0.375
+      },
+      {
+        "x": 3.0,
+        "y": 9.0
+      }
+    ]
+  },
+  {
+    "id": "F09_based_invalid",
+    "expectation": "8'hGG is invalid and should be rejected",
+    "observation": [
+      {
+        "kind": "NUMBER",
+        "value": "0.0",
+        "raw": "8'hGG"
+      },
+      {
+        "kind": "EOF",
+        "value": "",
+        "raw": ""
+      }
+    ]
+  },
+  {
+    "id": "F10_based_unknown",
+    "expectation": "4'b10x1 contains unknown logic; do not silently relabel as ordinary numeric value",
+    "observation": [
+      {
+        "kind": "NUMBER",
+        "value": "9.0",
+        "raw": "4'b10x1"
+      },
+      {
+        "kind": "EOF",
+        "value": "",
+        "raw": ""
+      }
+    ]
+  },
+  {
+    "id": "H03_pulse_plateau",
+    "expectation": "with rise=1,width=2,fall=1, points at 0,.5,1,2,3,3.5,4 are 0,.5,1,1,1,.5,0",
+    "observation": [
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      0.5,
+      0.0
+    ]
+  },
+  {
+    "id": "H04_pwl_basic",
+    "expectation": "linear interpolation and held ends -> 1,1,2,3,3",
+    "observation": [
+      1.0,
+      1.0,
+      2.0,
+      3.0,
+      3.0
+    ]
+  },
+  {
+    "id": "H05_pwl_overflow",
+    "expectation": "midpoint of -1e308,+1e308 is zero",
+    "observation": "inf"
+  },
+  {
+    "id": "H06_pwl_nonfinite",
+    "expectation": "nonfinite knot should be rejected at construction",
+    "observation": "1.0"
+  }
+]
