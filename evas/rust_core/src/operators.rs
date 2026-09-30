@@ -12,6 +12,8 @@ use crate::slew::Slew;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
 
+type DirectPoints = (Vec<(f64, f64)>, Vec<I>);
+
 /// Materialize the accepted continuous input definition at its semantic knots.
 /// Dependency validation precedes all numerical binding, so zero coefficients
 /// and algebraic cancellation cannot turn an internal input into a direct one.
@@ -21,7 +23,7 @@ fn direct_points(
     trajectory: &Trajectory,
     driven: &[String],
     origin: &Origin,
-) -> Result<(Vec<(f64, f64)>, Vec<I>), Error> {
+) -> Result<DirectPoints, Error> {
     let expression = input;
     let input = affine(input, program, &origin.instance)?;
     let driven_nodes: Vec<_> = driven
@@ -161,7 +163,7 @@ enum Runtime {
     Transition {
         input: AffineState,
         input_bounds: Vec<I>,
-        history: Transition,
+        history: Box<Transition>,
     },
     Slew(Slew),
 }
@@ -766,7 +768,9 @@ impl Operators {
                     entries.push(Runtime::Transition {
                         input,
                         input_bounds,
-                        history: Transition::enclosed(initial, bounds, *delay, *rise, *fall)?,
+                        history: Box::new(Transition::enclosed(
+                            initial, bounds, *delay, *rise, *fall,
+                        )?),
                     });
                 }
                 OperatorSpec::Slew {
@@ -955,6 +959,20 @@ impl Operators {
             }
         }
         Ok(())
+    }
+
+    pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        self.entries.len() == other.entries.len()
+            && self
+                .entries
+                .iter()
+                .zip(&other.entries)
+                .all(|(a, b)| match (a, b) {
+                    (Runtime::Idt { history: a, .. }, Runtime::Idt { history: b, .. }) => {
+                        a.same_reset_history(b)
+                    }
+                    _ => true,
+                })
     }
 
     pub(crate) fn permits_same_time_change(

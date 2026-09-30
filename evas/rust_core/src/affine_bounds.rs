@@ -70,16 +70,21 @@ pub(crate) fn eliminate(
             .ok_or_else(|| unresolved("cannot certify event network pivot away from zero"))?;
         rows.swap(col, pivot);
         let divisor = rows[col][col];
-        for k in col + 1..n + width {
-            rows[col][k] = rows[col][k] / divisor;
+        let (leading, remaining) = rows.split_at_mut(col + 1);
+        let pivot_row = &mut leading[col];
+        for value in &mut pivot_row[col + 1..n + width] {
+            *value = *value / divisor;
         }
-        rows[col][col] = I::ONE;
-        for r in col + 1..rows.len() {
-            let factor = rows[r][col];
-            for k in col + 1..n + width {
-                rows[r][k] = rows[r][k] - factor * rows[col][k];
+        pivot_row[col] = I::ONE;
+        for row in remaining {
+            let factor = row[col];
+            for (value, &pivot_value) in row[col + 1..n + width]
+                .iter_mut()
+                .zip(&pivot_row[col + 1..n + width])
+            {
+                *value = *value - factor * pivot_value;
             }
-            rows[r][col] = I::ZERO;
+            row[col] = I::ZERO;
         }
     }
     // A redundant constraint must be identically satisfied over all inputs.

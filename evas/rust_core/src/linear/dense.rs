@@ -50,13 +50,18 @@ impl Factorization {
             }
             a.swap(col, pivot);
             pivots.push(pivot);
-            for row in col + 1..a.len() {
-                let factor = a[row][col] / a[col][col];
+            let (leading, remaining) = a.split_at_mut(col + 1);
+            let pivot_row = &leading[col];
+            for row in remaining {
+                let factor = row[col] / pivot_row[col];
                 // Keep the multiplier below the diagonal. Subsequent row swaps
                 // also move earlier multipliers, as in a rectangular LU factor.
-                a[row][col] = factor;
-                for k in col + 1..columns {
-                    a[row][k] -= factor * a[col][k];
+                row[col] = factor;
+                for (value, &pivot_value) in row[col + 1..columns]
+                    .iter_mut()
+                    .zip(&pivot_row[col + 1..columns])
+                {
+                    *value -= factor * pivot_value;
                 }
             }
         }

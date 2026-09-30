@@ -65,13 +65,13 @@ fn compile(
                     return Err(Error::new("invalid_ir", "invalid condition origin"));
                 }
                 let expression = Expression::Add {
-                    left: Box::new(left.clone()),
+                    left: left.clone(),
                     right: Box::new(Expression::Multiply {
                         left: Box::new(Expression::Affine {
                             constant: -1.0,
                             terms: vec![],
                         }),
-                        right: Box::new(right.clone()),
+                        right: right.clone(),
                     }),
                 };
                 let dependencies = affine(&expression, p, owner)?;

@@ -63,23 +63,33 @@ fn prepare_event_with_bounds(
         &old_bounds,
         &operators.bounds(time)?,
     )?;
-    // Equal rounded inputs / equal interval endpoints do not prove that an
-    // uncertain state assignment left the exact operator target unchanged.
-    let changed: Vec<_> = prepared
-        .assigned
-        .iter()
-        .copied()
-        .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
-        .collect();
-    operators.advance(
-        time,
-        time_bounds,
-        &prepared.states,
-        &prepared.bounds,
-        &changed,
-    )?;
+    // Every provisional update starts from the same accepted-history base.
+    // A first reset trial must never become the history of the second solve.
+    let base = operators;
+    let advance_candidate = |prepared: &crate::settlement::Prepared| -> Result<Operators, Error> {
+        let changed: Vec<_> = prepared
+            .assigned
+            .iter()
+            .copied()
+            .filter(|&s| {
+                old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi
+            })
+            .collect();
+        let mut candidate = base.clone();
+        candidate.advance(
+            time,
+            time_bounds,
+            &prepared.states,
+            &prepared.bounds,
+            &changed,
+        )?;
+        Ok(candidate)
+    };
+    let mut operators = advance_candidate(&prepared)?;
     let settled = operators.values(time)?;
-    if settled != frozen {
+    let settled_bounds = operators.bounds(time)?;
+    // Equal representative values do not certify a changed history enclosure.
+    if settled != frozen || settled_bounds != base.bounds(time)? {
         if !operators.permits_same_time_change(time, &frozen)? {
             return Err(Error::new(
                 "event_consistency",
@@ -93,29 +103,19 @@ fn prepare_event_with_bounds(
             &accepted.states,
             &settled,
             &old_bounds,
-            &operators.bounds(time)?,
+            &settled_bounds,
         )?;
-        let changed: Vec<_> = prepared
-            .assigned
-            .iter()
-            .copied()
-            .filter(|&s| {
-                old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi
-            })
-            .collect();
-        operators.advance(
-            time,
-            time_bounds,
-            &prepared.states,
-            &prepared.bounds,
-            &changed,
-        )?;
-    }
-    if operators.values(time)? != settled {
-        return Err(Error::new(
-            "event_consistency",
-            "operator changed during same-time settlement",
-        ));
+        let replay = advance_candidate(&prepared)?;
+        if !replay.same_reset_history(&operators)
+            || replay.values(time)? != settled
+            || replay.bounds(time)? != settled_bounds
+        {
+            return Err(Error::new(
+                "event_consistency",
+                "operator history changed during same-time settlement replay",
+            ));
+        }
+        operators = replay;
     }
     Ok(Frame {
         time,
@@ -613,6 +613,72 @@ mod tests {
                 assert_initial_idt_frame(&before, &bounds);
             }
         }
+    }
+
+    #[test]
+    fn reset_release_bounds_are_checked_even_when_value_is_unchanged() {
+        let (original, trajectory, _) = idt_fixture(false, 1.0, Tolerances::default(), true);
+        let mut program = original.program;
+        program.states[0].initial = 1.0;
+        program.events[0].body = serde_json::from_value(serde_json::json!([
+            {"kind":"assign","state":0,"rhs":{"op":"affine","constant":0,"terms":[]}}
+        ]))
+        .unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let initial = Frame {
+            time: 0.0,
+            state_bounds: vec![I::ONE],
+            states,
+            operators,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+        };
+        let accepted = prepare_event(&model, &trajectory, &initial, 0.5, &[]).unwrap();
+        let bounds = accepted.operators.bounds(1.0).unwrap();
+        for _ in 0..2 {
+            let error = prepare_batch_with_bounds(
+                &model,
+                &trajectory,
+                &accepted,
+                1.0,
+                I {
+                    lo: 1.0f64.next_down(),
+                    hi: 1.0f64.next_up(),
+                },
+                &[0],
+            )
+            .err()
+            .unwrap();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert_eq!(accepted.time, 0.5);
+            assert_eq!(accepted.states, [1.0]);
+            assert_eq!(accepted.state_bounds, [I::ONE]);
+            assert_eq!(accepted.operators.bounds(1.0).unwrap(), bounds);
+            assert_eq!(accepted.operators.values(2.0).unwrap(), [0.25]);
+        }
+        // Exact release has zero-length integral. The failed uncertain trials
+        // must not prevent the same accepted frame from succeeding on retry.
+        let (retry, records) = prepare_batch(&model, &trajectory, &accepted, 1.0, &[0]).unwrap();
+        assert_eq!(records.len(), 1);
+        assert_eq!(retry.states, [0.0]);
+        assert_eq!(retry.solution.voltages[2], 0.25);
+        assert_eq!(retry.operators.bounds(1.0).unwrap(), [I::point(0.25)]);
+        // u(t)=t/3: integral from 1 to 3/2 is 5/24, plus IC=1/4.
+        assert!((retry.operators.values(1.5).unwrap()[0] - 11.0 / 24.0).abs() < 1e-15);
     }
 
     #[test]

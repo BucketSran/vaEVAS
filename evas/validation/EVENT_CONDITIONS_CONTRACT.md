@@ -1,6 +1,10 @@
 # 事件条件赋值与采样复位：第一阶段契约
 
-状态：**main 限定支持；0.9.0 / IR v9 经 PR23 审阅交付受限事件 if/else 与 cross OR，原 8 条件两档执行满足有限观测判据；正式资格仍为 I。**
+状态：**main 已交付受限事件 if/else、cross OR 与多事件写者；正式资格仍为 I。**
+[PR23](https://github.com/BucketSran/vaEVAS/pull/23) 的 0.9.0 / IR v9 检查点完成原 8 条件两档有限观测验证，
+[PR25](https://github.com/BucketSran/vaEVAS/pull/25) 另交付多事件写者；下文分别保留其历史身份。
+PR26 后 main 为 IR v11，最新完整矩阵从[验证集入口](README.md#latest-evas-checkpoint)查看，
+不能把本页的 IR v9 历史成绩当成新检查点结果。
 设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；实现在分支 `feat/evas-event-conditions`
 同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后推进，条件切片与 OR 检查点分别见 §9、§10。
 以下完整目标继续约束受限实现及后续扩展；原设计阶段事实和校准结果不当作仿真证据。
@@ -344,7 +348,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 <a id="current-checkpoint"></a>
 
-## 10. 当前 0.9.0 / IR v9 检查点
+## 10. PR23 的 0.9.0 / IR v9 检查点
 
 在 §9 实现上增加一个 block 多个 cross 叶子的 OR。所有根先保留独立身份、定位区间与
 容差，再在认证的同根批次按 block 去重；同块执行一次并记录全部 fired_triggers。
@@ -367,9 +371,9 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
 多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。
 
-## 11. 多事件块写同一状态分支检查点
+## 11. 多事件块写同一状态交付检查点
 
-本分支从 0.9.0 / IR v9 main 后推进，不改变 IR 格式或原 0.8.0、0.9.0 检查点的证据身份。
+本检查点从 0.9.0 / IR v9 main 后推进，不改变 IR 格式或原 0.8.0、0.9.0 检查点的证据身份。
 提交 `9ddd4f8` 起，`EventModel` 构建期记录每个 state 的潜在事件块写者，
 但不再因不同事件块可能写同一 state 而整体拒绝。`settlement::prepare` 在条件路径选择完成后，
 调用 `check_selection_writers(selection)` 检查实际选中赋值集合：同一候选批次里每个 state 最多一个

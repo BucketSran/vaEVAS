@@ -645,7 +645,14 @@ impl EventModel {
                 ));
             }
         }
-        self.conditions.check_dependencies(&affected)
+        self.conditions.check_dependencies(&affected)?;
+        crate::reset_dependencies::check(
+            &self.program,
+            &self.rhs,
+            &self.actions,
+            &groups,
+            &assembled,
+        )
     }
 
     /// Replay against supplied trial voltages and the fixed accepted old state.

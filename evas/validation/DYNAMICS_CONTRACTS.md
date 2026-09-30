@@ -1,19 +1,26 @@
 # 受限积分的独立契约与语义回归
 
 本页固定 DYNAMICS 首版 `idt` 的受限子集、解析答案和验证边界；实现说明见[算子手册](../docs/OPERATORS.md#idt)。
-起点为 `main` 的 `5b090571c7de7c6ec08a05c803479505c5d745ee`（EVAS 0.6.1 / IR v6）；
-该基线没有 `idt`。这些开发样例不增加原 31 条件分母，也不替代包含复位的 D1 条件。
+设计起点为 `main` 的 `5b090571c7de7c6ec08a05c803479505c5d745ee`（EVAS 0.6.1 / IR v6）；
+该历史基线没有 `idt`。后续 [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 已交付
+受限二参数积分，[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 已交付三参数复位（IR v11）。
+原 `d1-free`、`d1-reset` 两档均满足有限观测判据，身份及限制见
+[完整对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；正式资格仍 I。
+本页开发样例不增加原 31 条件分母，也不替代 D1 原源码、刺激及检查器的回放。
 所有积分答案由下列数学关系重新推导，未使用新旧 EVAS 输出或复制旧探针源码。
 规范要求、实现选择及三类证据的写法沿用[现有合同](../docs/README.md#feature-documentation-contract)。
 
 ## 首版边界与数学
 
-main 接受 `idt(u,z0)`：显式有限常量初值 `z0`，输入为直接驱动的连续 PWL 或其固定仿射组合；
-`feat/evas-idt-reset` 分支另接受 `idt(u,z0,reset)`，其中 reset 是同实例状态/常数仿射表达式，
+当前接受 `idt(u,z0)`：显式有限常量初值 `z0`，输入为直接驱动的连续 PWL 或其固定仿射组合；
+IR v11 另接受 `idt(u,z0,reset)`，其中 reset 是同实例状态/常数仿射表达式，
 每次事件后必须能证明为零或非零；非零保持 `z0`，归零后从 reset 保持解除/释放时刻重新积分。
 输入拐点取各源的并集。输出可参与现有可解的仿射电压网络；多个调用点、实例分别积分。
 禁止电压或状态反馈进入积分输入；输出侧的静态电压反馈沿用现有联立求解与误差放大验收。
 这是本轮选择的子集，前端与原始 IR 入口均有准入检查。
+三参数实现拒绝复位反馈环：积分输出经电压网络、事件赋值及其他算子中转返回 reset。
+无解/多解示例必须拒绝；无反馈的积分采样仍支持。每次同刻试算从已接受历史重建，
+最终认证复位模式、释放时刻/区间与输出误差；失败后重试与从未发生失败的结果一致。
 缺省初值、状态/内部未知节点输入、动态参数、不连续输入、嵌套、反馈进入积分输入、
 算子输出直接或间接驱动 `cross`，以及导数、滤波、高阶/其他动态算子均不在首版。
 不支持的合法 VA 写法应标能力缺口；不能把本轮拒绝边界写成语言标准的限制。
@@ -85,6 +92,7 @@ z(t_0+h)=z_0+\int_0^h(u_0+ms)\,ds=z_0+u_0h+\tfrac12mh^2.
 | 证据 | 已有覆盖/本轮资产 | 仍不能据此宣称什么 |
 | --- | --- | --- |
 | 独立答案与校准 | [check_dynamics_math.py](check_dynamics_math.py)；上述固定关系与错误控制 | 没有调用 EVAS；不是 idt 仿真通过，也不是回退测试 |
+| D1 原条件回放 | PR26 被测运行时 `edb004d`：`d1-free`、`d1-reset` 各两档，使用未改的原输入与检查器；[收据](../../experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json) | 只满足这四个配置的有限观测；未新增 Spectre 对照，不证明连续积分反馈或全时域精度 |
 | 适用的不变性 | [test_affine.py](../tests/test_affine.py) 的静态贡献排列；[test_idt.py](../tests/test_idt.py) 的同目标调用点、实例、贡献次序和网格/步长检查；[test_settlement.py](../tests/test_settlement.py) 的依赖赋值顺序 | 独立变化的通过不能替代所有组合验证 |
 | 本轮真实缺口回归 | [test_semantic_invariants.py](../tests/test_semantic_invariants.py)：同目标两个 transition 加仿射输入的贡献全排列；节点/实例/局部标识符重命名；额外输出时刻及无负载观察支路；均另核对手算波形、整数状态及完整事件序列 | 不交换有依赖的 `n=n+1; held=n; n=n+1;`；不要求 IR 编号相同；观察支路适用理想电压、无负载反馈模型，不能推广到任意电路探针 |
 | 同一引擎失败后完整性 | [transient.rs 私有测试](../rust_core/src/transient.rs) 的事件、transition 和 idt 初始帧检查；[idt 非零历史测试](../rust_core/src/transient_idt_tests.rs) 的四调用点/两实例精度失败、丢弃与较早候选重试、仅修正未来输入 | 检查接受帧及返回的批次记录；不构成完整调度器持久游标/已提交记录的失败恢复证明 |

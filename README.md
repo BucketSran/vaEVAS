@@ -5,15 +5,16 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 
 ## 当前可用内容
 
-[独立验证集](evas/validation/README.md) 包含 31 个条件，已完成 thu-sui 上四后端、
-两档设置的 [248 条配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)。
-结果仅证明所列有限观测，完整观察资格仍待完成。
+[独立验证集](evas/validation/README.md) 包含原 31 个条件。已合并 EVAS 的
+[PR26 检查点](evas/validation/README.md#latest-evas-checkpoint)两档本地瞬态回放各 24/31 达标，
+剩余 7 条明确拒绝。thu-sui 的[历史四后端 248 配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)
+另行保存，其中 EVAS 为旧版 0.8.7。结果仅证明所列有限观测，完整观察资格仍为 I。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
 [EVAS](evas/README.md) 提供限定语法前端、版本化 IR、Rust 静态线性/非线性方程求解，
 以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `absdelay` / `slew` 波形、显式初值的直接 PWL `idt` 积分与同刻原子提交。
 支持受限事件体 `if/else`、cross 的 OR 与输入误差认证；版本、范围和证据统一见[能力表](evas/docs/CAPABILITIES.md)。
-新内核的历史 [31 条件矩阵与 absdelay/slew 专项](experiments/pr14-pr15-validation/RESULTS.md)分别记录功能覆盖和算子证据。
+新内核的各阶段矩阵、专项和执行身份从[实验索引](experiments/README.md#checkpoint-evidence)进入。
 旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
 

@@ -1,4 +1,4 @@
-"""Version 14: combined voltage/event IR for the local integration checkpoint.
+"""Version 15: combined voltage/event IR with selects, reset histories and operators.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 14
+SCHEMA_VERSION = 15
 
 
 @dataclass(frozen=True)

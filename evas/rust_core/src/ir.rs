@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 14;
+pub const SCHEMA_VERSION: u32 = 15;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -301,8 +301,8 @@ pub enum Statement {
     Assign(Assignment),
     If {
         relation: Relation,
-        left: Expression,
-        right: Expression,
+        left: Box<Expression>,
+        right: Box<Expression>,
         then_body: Vec<Statement>,
         else_body: Vec<Statement>,
         origin: Origin,

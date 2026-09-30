@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：EVAS 0.9.0 / IR v9，支持受限事件体条件与 cross 的 OR；当前与历史检查点身份见
+适用范围：当前 main 的 EVAS 0.9.0 / IR v11，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 <a id="event-or"></a>
@@ -12,7 +12,7 @@
 时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
 首版只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
 
-IR v9 保留一个 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
+OR 结构由 IR v9 引入，当前 v11 继续使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
 `EventModel` 为叶子保存 `(block, leaf)` 身份，写者与赋值路径仍按 block 管理。
 日程按叶子定位和认证；只有证明同根且共同代表时间满足每个叶子的容差后，
 候选批次才将 block 去重，并调用既有顺序赋值和电压联立求解。
@@ -42,8 +42,9 @@ C1 的第二实例及独立的无关输入断点探针实际复现了这种拒�
 独立回归在 `test_event_or.py`；实际已接受帧的失败/重试检查在
 `transient_condition_tests.rs`。数学/测试方法数与原 31 条件计数分别记录。
 
-剩余边界：反馈或非线性 guard、timer OR、多块同状态写入、全部故障点的系统性注入，
-以及完整连续时间误差资格；此次不放开这些能力。
+0.9.0 OR 历史检查点的剩余边界包括反馈或非线性 guard、timer OR、多块同状态写入、
+全部故障点的系统性注入及完整连续时间误差资格。后续多写者的受限扩展见
+[本次交付](#multiple-event-writers)，不改写该历史检查点的范围。
 
 ## 仿射轨迹上的数学定位
 
@@ -68,7 +69,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验�
 仍位于这个窗口。输出 transition 的斜率为 `0.8 V/50 ns`，此时间偏移对应边沿上的 4 mV
 名义波形差值；平台电压及 50 ns 边沿时长相同。
 
-事件日志和六次诊断执行见[实验说明](../../experiments/parallel-gap-integration/REVIEW.md#v3-cross-timing)。
+事件日志和六次诊断执行见[实验收据](../../experiments/pr14-pr15-validation/results/event-writers-timing.json)。
 只收紧 cross 表达式或时间容差显著减小了偏移；只收紧全局求解容差没有减小本例偏移。
 这支持事件定位差异的解释，不证明 Spectre 出错、EVAS 普遍更准确，或其他模型也遵循相同比例。
 
@@ -213,18 +214,27 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 s− 开始，因此求解、重放或缓存重试不会再累计一次事件。验收后才原子提交；失败时旧帧不变。
 0.5.3 只移除输入绑定时的 integer 重复写禁令，没有改动这三条路径或放宽原精度/范围检查。
 
-### 分支：多事件块写同一状态
+<a id="multiple-event-writers"></a>
 
-`feat/evas-multiple-event-writers` 在 0.9.0 / IR v9 之后增加候选批次 writer 检查，不改变 IR。
+### 多事件块写同一状态（PR25 已交付）
+
+本检查点在 0.9.0 / IR v9 之后增加候选批次 writer 检查，不改变 IR。
 构建期允许不同事件块潜在写同一 state，但仍拒绝事件块读取另一个事件块也可能写入的 state。
 每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
 只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
-本分支新增 `test_event_writers.py` 及一项 Rust 已接受帧回退测试，并用原 31 源中的
+本检查点新增 `test_event_writers.py` 及一项 Rust 已接受帧回退测试，并用原 31 源中的
 `v3-main` 两档冻结输入做局部 worker 回放；两档均生成波形且原 checker 给出
-`observations_within_targets`。这些证据不替代完整矩阵重跑，不 retroactively 改写 0.9.0 检查点。
+`observations_within_targets`。这些证据不替代完整矩阵重跑，不改写 0.9.0 检查点。
+
+后续固定干净候选 `bfaf8d3` 与同一内核，EVAS 和 Spectre 21.1.0.509.isr12 各新执行两档，
+四次均满足原 V3 有限观测判据；见[新对照收据](../../experiments/pr14-pr15-validation/results/event-writers-spectre-v3.json)。
+六次 Spectre 单参数/事件日志诊断见[定位收据](../../experiments/pr14-pr15-validation/results/event-writers-timing.json)，
+解释见[后端容差](#backend-cross-tolerances)。原 checker 未改，正式资格仍 I，raw 仅本地/thu-sui 保留。
+重分析入口为 [event_writer_compare.py](../../experiments/pr14-pr15-validation/event_writer_compare.py) 与
+[event_writer_timing.py](../../experiments/pr14-pr15-validation/event_writer_timing.py)；有收据不等于公开完整复现包。
 
 <a id="event-conditions"></a>
 
@@ -280,8 +290,9 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 main 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 该历史检查点仍不支持状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset。
-本分支仅在候选批次可证明至多一个实际选中块写同一状态时，受限支持多事件块写同一状态；`feat/evas-idt-reset`
-分支另以状态 reset 的限定形式补齐 idt reset。边界见下方分支检查点。
+PR25 在候选批次可证明至多一个实际选中块写同一状态时，受限支持多事件块写同一状态；
+见[交付说明](#multiple-event-writers)。`feat/evas-idt-reset` 分支另补状态 reset 的限定形式，
+边界见[算子手册](OPERATORS.md#idt)。
 区间传播会增加运算和存储，丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
