@@ -29,7 +29,7 @@
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 的仿射输入 | 随 PR15 交付；被测 `e01fb5b`，依赖 PR14 已合入 | 局部交点/历史误差回归；[专项](../../experiments/pr14-pr15-validation/RESULTS.md) EVAS 16/16、Spectre 10/16，步长诊断保留 | 内部节点/动态参数/组合；[算子说明](OPERATORS.md#slew) |
 | COMPOSE：实例与组合 | 静态反馈、限定事件采样与实例隔离 | 随 PR15 集成组合回归；另补独立语义不变性回归 | PR15 8 配置独立 Fraction 检查通过；新增 3 项贡献排列、重命名与观测不变性回归见[覆盖映射](../validation/DYNAMICS_CONTRACTS.md)；旧联合检查点保留 | 算子前向组合、算子驱动 cross、状态反馈同刻迭代；单项正确不能推出组合正确 |
 | DYNAMICS：积分、导数、滤波、相位 | 显式常量初值、直接连续 PWL 仿射输入的 idt；导数/滤波/相位未实现 | 0.7.0 / IR v7；[PR19](https://github.com/BucketSran/vaEVAS/pull/19) 交付，未发布 tag | [独立契约与恢复检查](../validation/DYNAMICS_CONTRACTS.md)、有理数区间核对及实际 idt 回归；[数学与实现](OPERATORS.md#idt) | 复位、反馈、嵌套、积分驱动 cross、连续时间资格及完整调度器失败恢复；原 D1 仍拒绝 |
-| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件瞬态矩阵在 PR15 被测实现重跑；0.7.1 仅新跑静态回放 | [248 单元历史执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留；0.7.1 静态 11 条两档通过 | 观察误差界、未见确认集；[协议](../validation/METHOD_QUALIFICATION.md) |
+| QUALIFICATION：独立验收 | 开发条件与检查器，无完整资格结论 | 原 31 条件瞬态矩阵在 PR15 被测实现重跑；0.7.1 仅新跑静态回放 | [248 单元历史执行](../../experiments/pr14-pr15-validation/RESULTS.md)：EVAS 两档各 13/31，其余 18 拒绝；其他后端失败保留；0.7.1 静态 11 条两档通过；[S1 审阅补充](../validation/NEXT_CASE_CARDS.md#s1-review)提供本地检查器校准 | 观察误差界、未见确认集；S1 新顺序条件未执行后端，不增加原矩阵成绩；[协议](../validation/METHOD_QUALIFICATION.md) |
 | PERFORMANCE：效率证据 | 有库内局部基准和稠密/稀疏分流 | PR8 合成检查点保留，0.7.1 未重新计时 | 不同旧提交的局部测量；18.5% 退化未稳定复现，见[边界](NUMERICS.md#稀疏分支与性能边界) | 同版本端到端/瞬态/跨后端比较；首次、重复、内存分开报告 |
 
 电流未知量、器件级负载与完整 SPICE 分析不在当前电压域任务的默认范围内；不将它们自动列为必做待办。
