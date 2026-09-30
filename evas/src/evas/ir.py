@@ -119,6 +119,23 @@ class LaplaceNd:
 
 
 @dataclass(frozen=True)
+class IdtMod:
+    input: Expression
+    ic: float
+    modulus: float
+    offset: float
+    origin: Origin
+    kind: str = field(default="idt_mod", init=False)
+
+
+@dataclass(frozen=True)
+class Sin:
+    input: Expression
+    origin: Origin
+    kind: str = field(default="sin", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -199,7 +216,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

@@ -271,6 +271,47 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 再传入现有电压验收。这仍只证明成功计算点相对编译后 IR 和 binary64 PWL 源的预算；不能据此宣称连续时间全轨迹资格
 或 Spectre LTE 控制等价。
 
+## idtmod 与 sin
+
+分支限定实现新增相位子集：`idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
+电压域相位模型。依据 Verilog-AMS LRM 2.4/2023 的 `idtmod(expr, ic, modulus, offset)`
+形式，当前只接受显式有限常量初值、显式正有限 modulus 和有限 offset；省略 modulus 的
+无界积分形式不映射到本算子，仍应使用普通 `idt` 或明确拒绝。
+
+`idtmod` 的输入沿用 `idt` 首版边界：直接驱动、连续 PWL 的仿射组合，不接受内部节点、
+状态、反馈、嵌套或动态参数。实现先用 [idt](#idt) 的解析积分得到未包裹相位
+`z(t)=ic+∫u(s)ds`，再返回
+
+`phase(t)=offset + (z(t)-offset) mod modulus`，
+
+范围为半开区间 `[offset, offset+modulus)`。负频率用 `rem_euclid` 语义处理，因此
+`ic=1/8,u=-1/4,modulus=1,offset=0` 在 `t=1` 得到 `7/8`。每个调用点和实例仍有独立历史；
+查询、输出网格和失败候选不写历史。
+
+`sin` 在本分支是函数型 operator，不引入通用非线性瞬态方程。接受两类输入：
+直接驱动 PWL 仿射表达式，或 `constant + coefficient * earlier_operator`。后一类覆盖
+``sin(2*`M_PI*phase)``。`phase` 若来自 `idtmod`，误差界使用 wrapped phase 的保守区间；
+不会把 binary64 系数 `2*`M_PI` 当成精确实数周期来抵消整圈误差。其他状态输入、内部节点输入、
+operator 前向引用、多个 operator 混合、算子驱动 cross 和 operator 乘 voltage/state 仍拒绝。
+
+wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给出整个 `[offset,offset+modulus]`
+保守范围；只有通过 outward interval arithmetic 证明 raw phase 落在同一个 turn 内，才返回窄 wrapped 界。
+大不确定度、真实跨越和不可精确表示的巨大 turn 会返回整周期或在 bounds 层触发
+`waveform_accuracy`。这会在严格电压预算下拒绝不确定 wrap 边界；这是 soundness 约束，
+不是连续时间 wrap 轨迹资格。
+
+前端为 D2 暂时接受普通 analog 中每个 `real` 变量一次无条件赋值作为表达式别名，
+例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);``。别名不创建状态，也不提供通用顺序
+程序语义；条件赋值、重复赋值和依赖选择应由后续 LANG 分支统一接管。`constants.vams`
+当前只解析窄集合中的 `` `M_PI``，不会执行 include 文件或引入任意宏系统。
+
+验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
+Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
+`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
+`observations_within_targets`，accumulated/wrapped 最大解析误差不超过 `1.8e-15`，
+vout 最大解析误差不超过 `9e-15`。该证据是本地分支证据，formal qualification 仍为 I，
+未执行 Spectre 或完整 31 条件矩阵。
+
 ## slew
 
 首批输入为直接驱动连续 PWL 的仿射组合，固定正限速 r+ 和负限速 r-，初态 y(0)=u(0)。

@@ -3,6 +3,7 @@
 use crate::absdelay::AbsDelay;
 use crate::events::{affine, AffineState};
 use crate::idt::Idt;
+use crate::idtmod::IdtMod;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::laplace::LaplaceNd;
@@ -72,11 +73,87 @@ fn direct_points(
 }
 
 #[derive(Clone)]
+struct DirectInput {
+    points: Vec<(f64, f64)>,
+    bounds: Vec<I>,
+}
+
+impl DirectInput {
+    fn new(points: Vec<(f64, f64)>, bounds: Vec<I>) -> Self {
+        Self { points, bounds }
+    }
+
+    fn index(&self, time: f64) -> Result<usize, Error> {
+        if !time.is_finite() || time < 0.0 || time > self.points.last().unwrap().0 {
+            return Err(Error::new(
+                "invalid_inputs",
+                "direct function query must be within its finite source history",
+            ));
+        }
+        Ok(self.points.partition_point(|(t, _)| *t < time))
+    }
+
+    fn value(&self, time: f64) -> Result<f64, Error> {
+        let index = self.index(time)?;
+        let (end_t, end_v) = self.points[index];
+        if time == end_t {
+            return Ok(end_v);
+        }
+        let (start_t, start_v) = self.points[index - 1];
+        let f = (time - start_t) / (end_t - start_t);
+        let value = start_v + f * (end_v - start_v);
+        if !value.is_finite() {
+            return Err(Error::new(
+                "numerical_failure",
+                "nonfinite direct function query",
+            ));
+        }
+        Ok(value)
+    }
+
+    fn value_bounds(&self, time: f64) -> Result<I, Error> {
+        let index = self.index(time)?;
+        let (end_t, _) = self.points[index];
+        if time == end_t {
+            return Ok(self.bounds[index]);
+        }
+        let (start_t, _) = self.points[index - 1];
+        let f = (I::point(time) - I::point(start_t)) / (I::point(end_t) - I::point(start_t));
+        let bound = (I::ONE - f) * self.bounds[index - 1] + f * self.bounds[index];
+        if !bound.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "nonfinite direct function enclosure",
+            ));
+        }
+        Ok(bound)
+    }
+
+    fn next_breakpoint(&self, after: f64) -> Option<f64> {
+        self.points
+            .get(self.points.partition_point(|(t, _)| *t <= after))
+            .map(|(t, _)| *t)
+    }
+}
+
+#[derive(Clone)]
+enum SinInput {
+    Direct(DirectInput),
+    Operator {
+        operator: usize,
+        coefficient: f64,
+        constant: f64,
+    },
+}
+
+#[derive(Clone)]
 enum Runtime {
     Idt {
         history: Idt,
         reset: Option<AffineState>,
     },
+    IdtMod(IdtMod),
+    Sin(SinInput),
     AbsDelay(AbsDelay),
     LaplaceNd(LaplaceNd),
     Transition {
@@ -85,6 +162,165 @@ enum Runtime {
         history: Transition,
     },
     Slew(Slew),
+}
+
+const SIN_MAX_WIDTH: f64 = 1.0e-6;
+const SIN_MAX_MAGNITUDE: f64 = 128.0;
+const PI_BITS: u64 = 0x4009_21fb_5444_2d18;
+const FRAC_PI_2_BITS: u64 = 0x3ff9_21fb_5444_2d18;
+
+fn constant_interval(bits: u64) -> I {
+    I {
+        lo: f64::from_bits(bits - 1),
+        hi: f64::from_bits(bits + 1),
+    }
+}
+
+fn union(a: I, b: I) -> I {
+    I {
+        lo: a.lo.min(b.lo),
+        hi: a.hi.max(b.hi),
+    }
+}
+
+fn widen(a: I, epsilon: f64) -> I {
+    I {
+        lo: (a.lo - epsilon).next_down(),
+        hi: (a.hi + epsilon).next_up(),
+    }
+}
+
+fn taylor_remainder(radius: f64, start_power: i32, factorial: f64) -> f64 {
+    (radius.next_up().powi(start_power) / factorial).next_up()
+}
+
+fn sin_reduced(r: I) -> Result<I, Error> {
+    let limit = constant_interval(FRAC_PI_2_BITS).hi;
+    if !r.finite() || r.lo < -limit || r.hi > limit {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "reduced sine interval is outside the certified Taylor domain",
+        ));
+    }
+    let r2 = r * r;
+    let mut term = r;
+    let mut sum = term;
+    for (a, b) in [
+        (2.0, 3.0),
+        (4.0, 5.0),
+        (6.0, 7.0),
+        (8.0, 9.0),
+        (10.0, 11.0),
+        (12.0, 13.0),
+        (14.0, 15.0),
+        (16.0, 17.0),
+    ] {
+        term = -term * r2 / I::point(a * b);
+        sum = sum + term;
+    }
+    Ok(widen(
+        sum,
+        taylor_remainder(limit, 19, 121_645_100_408_832_000.0),
+    ))
+}
+
+fn cos_reduced(r: I) -> Result<I, Error> {
+    let limit = constant_interval(FRAC_PI_2_BITS).hi;
+    if !r.finite() || r.lo < -limit || r.hi > limit {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "reduced cosine interval is outside the certified Taylor domain",
+        ));
+    }
+    let r2 = r * r;
+    let mut term = I::ONE;
+    let mut sum = term;
+    for (a, b) in [
+        (1.0, 2.0),
+        (3.0, 4.0),
+        (5.0, 6.0),
+        (7.0, 8.0),
+        (9.0, 10.0),
+        (11.0, 12.0),
+        (13.0, 14.0),
+        (15.0, 16.0),
+        (17.0, 18.0),
+    ] {
+        term = -term * r2 / I::point(a * b);
+        sum = sum + term;
+    }
+    Ok(widen(
+        sum,
+        taylor_remainder(limit, 20, 2_432_902_008_176_640_000.0),
+    ))
+}
+
+fn sin_point_bounds(x: f64) -> Result<I, Error> {
+    if !x.is_finite() || x.abs() > SIN_MAX_MAGNITUDE {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine argument exceeds certified finite Taylor domain",
+        ));
+    }
+    let half_pi = constant_interval(FRAC_PI_2_BITS);
+    let n = (x / std::f64::consts::FRAC_PI_2).round();
+    if n.abs() > 128.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine range reduction turn count is outside certified domain",
+        ));
+    }
+    let r = I::point(x) - I::point(n) * half_pi;
+    match (n as i64).rem_euclid(4) {
+        0 => sin_reduced(r),
+        1 => cos_reduced(r),
+        2 => Ok(-sin_reduced(r)?),
+        _ => Ok(-cos_reduced(r)?),
+    }
+}
+
+fn overlaps(a: I, b: I) -> bool {
+    a.lo <= b.hi && b.lo <= a.hi
+}
+
+fn contains_critical(input: I, critical: I, period: I) -> bool {
+    let nominal_critical = (critical.lo + critical.hi) / 2.0;
+    let nominal_period = (period.lo + period.hi) / 2.0;
+    let start = ((input.lo - nominal_critical) / nominal_period).floor() as i64 - 1;
+    let end = ((input.hi - nominal_critical) / nominal_period).ceil() as i64 + 1;
+    (start..=end).any(|k| overlaps(input, critical + I::point(k as f64) * period))
+}
+
+fn sin_bounds(input: I) -> Result<I, Error> {
+    if !input.finite() {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound nonfinite sine input",
+        ));
+    }
+    if input.lo.abs().max(input.hi.abs()) > SIN_MAX_MAGNITUDE {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "sine argument exceeds certified finite Taylor domain",
+        ));
+    }
+    let two_pi = I::point(2.0) * constant_interval(PI_BITS);
+    if input.hi - input.lo >= two_pi.lo || input.hi - input.lo > SIN_MAX_WIDTH {
+        return Ok(I { lo: -1.0, hi: 1.0 });
+    }
+    let mut result = union(sin_point_bounds(input.lo)?, sin_point_bounds(input.hi)?);
+    let period = I::point(2.0) * constant_interval(PI_BITS);
+    let half_pi = constant_interval(FRAC_PI_2_BITS);
+    if contains_critical(input, half_pi, period) {
+        result.hi = 1.0;
+    }
+    if contains_critical(input, -half_pi, period) {
+        result.lo = -1.0;
+    }
+    Ok(I {
+        lo: result.lo.max(-1.0),
+        hi: result.hi.min(1.0),
+    })
 }
 
 #[derive(Clone, Default)]
@@ -156,6 +392,46 @@ impl Operators {
                         history = history.with_reset(reset_active(I::point(value))?);
                     }
                     entries.push(Runtime::Idt { history, reset });
+                }
+                OperatorSpec::IdtMod {
+                    input,
+                    ic,
+                    modulus,
+                    offset,
+                    origin,
+                } => {
+                    let (points, bounds) =
+                        direct_points(input, program, trajectory, driven, origin)?;
+                    entries.push(Runtime::IdtMod(IdtMod::enclosed(
+                        points, bounds, *ic, *modulus, *offset,
+                    )?));
+                }
+                OperatorSpec::Sin { input, origin } => {
+                    let bound_input = affine(input, program, &origin.instance)?;
+                    let sin_input = if let Some((operator, coefficient, constant)) =
+                        bound_input.single_operator_form()
+                    {
+                        if operator >= entries.len()
+                            || coefficient == 0.0
+                            || !coefficient.is_finite()
+                            || !constant.is_finite()
+                        {
+                            return Err(Error::new(
+                                "unsupported_operator",
+                                "sin operator input must reference one earlier operator with finite affine coefficients",
+                            ));
+                        }
+                        SinInput::Operator {
+                            operator,
+                            coefficient,
+                            constant,
+                        }
+                    } else {
+                        let (points, bounds) =
+                            direct_points(input, program, trajectory, driven, origin)?;
+                        SinInput::Direct(DirectInput::new(points, bounds))
+                    };
+                    entries.push(Runtime::Sin(sin_input));
                 }
                 OperatorSpec::AbsDelay {
                     input,
@@ -232,16 +508,32 @@ impl Operators {
     }
 
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
-        self.entries
-            .iter()
-            .map(|entry| match entry {
-                Runtime::Idt { history, .. } => history.value(time),
-                Runtime::AbsDelay(history) => history.value(time),
-                Runtime::LaplaceNd(history) => history.value(time),
-                Runtime::Transition { history, .. } => history.value(time),
-                Runtime::Slew(history) => history.value(time),
-            })
-            .collect()
+        self.entries.iter().try_fold(
+            Vec::<f64>::with_capacity(self.entries.len()),
+            |mut values, entry| {
+                let value = match entry {
+                    Runtime::Idt { history, .. } => history.value(time)?,
+                    Runtime::LaplaceNd(history) => history.value(time)?,
+                    Runtime::IdtMod(history) => history.value(time)?,
+                    Runtime::Sin(input) => match input {
+                        SinInput::Direct(source) => source.value(time)?.sin(),
+                        SinInput::Operator {
+                            operator,
+                            coefficient,
+                            constant,
+                        } => (*constant + *coefficient * values[*operator]).sin(),
+                    },
+                    Runtime::AbsDelay(history) => history.value(time)?,
+                    Runtime::Transition { history, .. } => history.value(time)?,
+                    Runtime::Slew(history) => history.value(time)?,
+                };
+                if !value.is_finite() {
+                    return Err(Error::new("numerical_failure", "nonfinite operator value"));
+                }
+                values.push(value);
+                Ok(values)
+            },
+        )
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
@@ -249,6 +541,9 @@ impl Operators {
             .iter()
             .filter_map(|entry| match entry {
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
+                Runtime::IdtMod(history) => history.next_breakpoint(after),
+                Runtime::Sin(SinInput::Direct(source)) => source.next_breakpoint(after),
+                Runtime::Sin(SinInput::Operator { .. }) => None,
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::LaplaceNd(history) => history.next_breakpoint(after),
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
@@ -258,16 +553,33 @@ impl Operators {
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
-        self.entries
-            .iter()
-            .map(|entry| match entry {
-                Runtime::Idt { history, .. } => history.value_bounds(time),
-                Runtime::Slew(history) => Ok(history.value_bounds(time)),
-                Runtime::AbsDelay(history) => Ok(history.value_bounds(time)),
-                Runtime::LaplaceNd(history) => history.value_bounds(time),
-                Runtime::Transition { history, .. } => history.value_bounds(time),
-            })
-            .collect()
+        self.entries.iter().try_fold(
+            Vec::<I>::with_capacity(self.entries.len()),
+            |mut bounds, entry| {
+                let bound = match entry {
+                    Runtime::Idt { history, .. } => history.value_bounds(time)?,
+                    Runtime::LaplaceNd(history) => history.value_bounds(time)?,
+                    Runtime::IdtMod(history) => history.value_bounds(time)?,
+                    Runtime::Sin(input) => match input {
+                        SinInput::Direct(source) => sin_bounds(source.value_bounds(time)?)?,
+                        SinInput::Operator {
+                            operator,
+                            coefficient,
+                            constant,
+                        } => {
+                            let input =
+                                I::point(*constant) + I::point(*coefficient) * bounds[*operator];
+                            sin_bounds(input)?
+                        }
+                    },
+                    Runtime::Slew(history) => history.value_bounds(time),
+                    Runtime::AbsDelay(history) => history.value_bounds(time),
+                    Runtime::Transition { history, .. } => history.value_bounds(time)?,
+                };
+                bounds.push(bound);
+                Ok(bounds)
+            },
+        )
     }
 
     pub(crate) fn check_deadline_order(
@@ -280,6 +592,8 @@ impl Operators {
             .iter()
             .flat_map(|entry| match entry {
                 Runtime::Idt { .. } => Vec::new(),
+                Runtime::IdtMod(_) => Vec::new(),
+                Runtime::Sin(_) => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
@@ -323,6 +637,8 @@ impl Operators {
                         history.advance_reset(time, time_bounds, reset_active(bounds)?)?;
                     }
                 }
+                Runtime::IdtMod(_) => {}
+                Runtime::Sin(_) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::LaplaceNd(_) => {}
                 Runtime::Transition {
@@ -375,5 +691,27 @@ fn reset_active(value: I) -> Result<bool, Error> {
             "unsupported_operator",
             "cannot certify idt reset as zero or nonzero",
         )),
+    }
+}
+
+#[cfg(test)]
+mod phase_operator_tests {
+    use super::*;
+
+    #[test]
+    fn sine_bounds_cover_critical_points_without_libm_endpoint_trust() {
+        let half_pi = constant_interval(FRAC_PI_2_BITS);
+        let bounds = sin_bounds(half_pi).unwrap();
+        assert!(bounds.lo <= 1.0 && bounds.hi >= 1.0);
+        let zero = sin_bounds(I::point(0.0)).unwrap();
+        assert!(zero.lo <= 0.0 && zero.hi >= 0.0);
+    }
+
+    #[test]
+    fn sine_bounds_reject_uncertified_huge_angles() {
+        assert_eq!(
+            sin_bounds(I::point(129.0)).unwrap_err().kind,
+            "waveform_accuracy"
+        );
     }
 }

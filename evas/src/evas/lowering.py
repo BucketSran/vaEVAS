@@ -10,6 +10,8 @@ def affine(constant, terms):
 
 
 def scale(expression: Expression, factor: float) -> Expression:
+    if factor == 1.0:
+        return expression
     if isinstance(expression, Affine):
         return affine(expression.constant * factor, {t.node: t.coefficient * factor for t in expression.terms})
     return Binary("multiply", Affine(factor, ()), expression)
@@ -19,7 +21,7 @@ def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_s
     def fail(message):
         raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
 
-    if expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd"):
+    if expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin"):
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)

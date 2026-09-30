@@ -24,13 +24,14 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
+    r"|(?P<macro>`M_PI)"
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[<>(){}+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt", "laplace_nd"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -162,6 +163,8 @@ class Parser:
             if not math.isfinite(value):
                 self.fail("nonfinite numeric literal", token)
             left = Expr("number", value, (), token)
+        elif token.kind == "macro":
+            left = Expr("number", math.pi, (), token)
         elif token.text == "V":
             self.take("(")
             p = self.name()
@@ -178,19 +181,24 @@ class Parser:
                 arguments.append(self.expression())
             self.take("}")
             left = Expr("array", None, tuple(arguments), token)
-        elif token.text in ("transition", "absdelay", "slew", "idt", "laplace_nd"):
+        elif token.text in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod"):
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3), "laplace_nd": 3}[token.text]
+            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3), "laplace_nd": 3, "idtmod": 4}[token.text]
             allowed = required if isinstance(required, tuple) else (required,)
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)
                 self.fail(f"{token.text} requires {label} explicit arguments", token)
             left = Expr(token.text, None, tuple(arguments), token)
+        elif token.text == "sin":
+            self.take("(")
+            argument = self.expression()
+            self.take(")")
+            left = Expr("sin", None, (argument,), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()

@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
-                 Origin, Program, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd)
+                 Origin, Program, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser, Assignment as SyntaxAssignment, Conditional as SyntaxConditional, ContributionStatement
 
@@ -49,7 +49,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets["0"] = "0"
         bindings.append((instance, model, nets))
     def contains_operator(expr):
-        return expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd") or any(contains_operator(arg) for arg in expr.args)
+        return expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin") or any(contains_operator(arg) for arg in expr.args)
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
@@ -199,9 +199,11 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
             events.append(Event(event_trigger, body(event.body), origin))
 
-        def waveform(expr):
+        def waveform(expr, resolve):
             input_nodes = {} if expr.op == "transition" else node_ids
-            value = lower(expr.args[0], symbol, input_nodes, model.source, preserve_structure=True)
+            value = lower(expr.args[0], resolve, input_nodes, model.source,
+                          (lambda nested: waveform(nested, resolve)) if expr.op == "sin" else None,
+                          preserve_structure=True)
             if expr.op == "laplace_nd":
                 def coefficients(array):
                     if array.op != "array":
@@ -226,10 +228,17 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
             index = len(operators)
             if expr.op == "idt":
-                reset = lower(expr.args[2], symbol, {}, model.source, preserve_structure=True) if len(expr.args) == 3 else None
+                reset = lower(expr.args[2], resolve, {}, model.source, preserve_structure=True) if len(expr.args) == 3 else None
                 operators.append(Idt(value, settings[0].constant, origin, reset))
             elif expr.op == "laplace_nd":
                 operators.append(LaplaceNd(value, numerator, denominator, origin))
+            elif expr.op == "idtmod":
+                ic, modulus, offset = (v.constant for v in settings)
+                if modulus <= 0:
+                    raise CompileError("idtmod requires positive explicit modulus")
+                operators.append(IdtMod(value, ic, modulus, offset, origin))
+            elif expr.op == "sin":
+                operators.append(Sin(value, origin))
             elif expr.op == "absdelay":
                 delay = settings[0].constant
                 if delay < 0:
@@ -275,11 +284,13 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             return resolve
 
         def lower_local(expr, env, *, preserve_structure=False):
-            return lower(expr, local_symbol(env), node_ids, model.source, waveform, preserve_structure)
+            resolve = local_symbol(env)
+            return lower(expr, resolve, node_ids, model.source,
+                         lambda op: waveform(op, resolve), preserve_structure)
 
         relation = {"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}
 
-        def execute_analog(statements, env):
+        def execute_analog(statements, env, conditional=False):
             result = dict(env)
             emitted = []
             for statement in statements:
@@ -293,8 +304,8 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     right = lower_local(statement.right, result, preserve_structure=True)
                     if not expression_nodes(left).issubset(allowed_condition_nodes) or not expression_nodes(right).issubset(allowed_condition_nodes):
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
-                    then_env, then_emitted = execute_analog(statement.then_body, result)
-                    else_env, else_emitted = execute_analog(statement.else_body, result)
+                    then_env, then_emitted = execute_analog(statement.then_body, result, conditional=True)
+                    else_env, else_emitted = execute_analog(statement.else_body, result, conditional=True)
                     if then_emitted or else_emitted:
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if contributions are unsupported in this slice")
                     for name in sorted(set(then_env) | set(else_env) | set(result)):
@@ -306,9 +317,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 else:
                     if statement.name not in local_variables:
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog assignment target must be a local real")
-                    if contains_operator(statement.rhs):
-                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog local assignments do not support waveform operators")
-                    result[statement.name] = lower_local(statement.rhs, result)
+                    if conditional and contains_operator(statement.rhs):
+                        raise CompileError(f"{model.source}:{statement.token.line}: waveform call sites must be unconditional")
+                    result[statement.name] = lower_local(statement.rhs, result, preserve_structure=has_operators or has_conditions)
             return result, emitted
 
         local_env, analog_contributions = execute_analog(model.analog, local_env)

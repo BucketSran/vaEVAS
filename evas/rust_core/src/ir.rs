@@ -115,6 +115,17 @@ pub enum OperatorSpec {
         reset: Option<Expression>,
         origin: Origin,
     },
+    IdtMod {
+        input: Expression,
+        ic: f64,
+        modulus: f64,
+        offset: f64,
+        origin: Origin,
+    },
+    Sin {
+        input: Expression,
+        origin: Origin,
+    },
     AbsDelay {
         input: Expression,
         delay: f64,
@@ -148,7 +159,9 @@ impl OperatorSpec {
             | Self::AbsDelay { origin, .. }
             | Self::Idt { origin, .. }
             | Self::Slew { origin, .. }
-            | Self::LaplaceNd { origin, .. } => origin,
+            | Self::LaplaceNd { origin, .. }
+            | Self::IdtMod { origin, .. }
+            | Self::Sin { origin, .. } => origin,
         }
     }
 }
