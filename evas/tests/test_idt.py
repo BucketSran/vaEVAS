@@ -94,6 +94,20 @@ class IdtContracts(unittest.TestCase):
                 [(1.0, [0.0]), (2.0, [1.0]), (3.0, [0.0]), (4.0, [1.0]), (5.0, [0.0])],
             )
 
+    def test_large_finite_ic_survives_reset_release(self):
+        # Zero input gives the independent answer IC at every time. Prefix
+        # subtraction must not first add two large copies of the same IC.
+        for ic in [1e308, -1e308]:
+            with self.subTest(ic=ic):
+                body = f"""
+                  @(initial_step) reset=1;
+                  @(timer(1,0,1e-15)) reset=0;
+                  V(y,r)<+idt(0,{ic},reset);
+                """
+                result = execute(compiled(body, 'real reset;'),
+                                 [(0, 0), (3, 0)], [0, .5, 1, 2, 3])
+                self.assertEqual(values(result), [ic] * 5)
+
     def test_reset_idt_and_transition_share_event_state(self):
         body = """
           @(initial_step) flag=0;
@@ -127,6 +141,25 @@ class IdtContracts(unittest.TestCase):
             with self.subTest(case=name), self.assertRaisesRegex(KernelError, 'unsupported_operator'):
                 execute(compiled(body, 'real q,a;' + (' electrical z;' if relay else '')),
                         [[0,0],[2,0]], [0,.5,1,1.5,2], 2)
+
+    def test_reset_feedback_across_instances_and_fixed_drive_boundary(self):
+        producer = model("""@(initial_step) q=0;
+            @(timer(1,0,1e-12)) q=V(p,r);
+            V(y,r)<+idt(1,0,q);""", 'real q;', ports='u,p,y,r',
+            directions='input u,p; output y; inout r;')
+        relay = model('V(y,r)<+V(u,r);').replace('module m(', 'module relay(')
+        for sample in ['feedback', 'u']:
+            instances = [instance('integrator', connections=dict(u='u', p=sample, y='z', r='0')),
+                         instance('relay', module='relay', connections=dict(u='z', y='feedback', r='0'))]
+            for order in [instances, instances[::-1]]:
+                program = compile_sources({'producer.va': producer, 'relay.va': relay}, order)
+                with self.subTest(sample=sample, order=[i.name for i in order]):
+                    if sample == 'feedback':
+                        with self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+                            execute(program, [(0, 1), (2, 1)], [0, .5, 1, 1.5, 2])
+                    else:
+                        result = execute(program, [(0, 1), (2, 1)], [0, .5, 1, 1.5, 2])
+                        self.assertEqual(values(result, 'z'), [0, .5, 0, 0, 0])
 
     def test_raw_ir_reset_feedback_is_rejected(self):
         good = compiled('''@(initial_step) q=0;

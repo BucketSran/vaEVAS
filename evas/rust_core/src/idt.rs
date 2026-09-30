@@ -235,7 +235,7 @@ impl Idt {
                 return Ok(self.ic);
             }
             let value =
-                self.ic + self.prefix_value(time)? - self.prefix_value(reset.release_time)?;
+                self.ic + (self.prefix_value(time)? - self.prefix_value(reset.release_time)?);
             if !value.is_finite() {
                 return Err(Error::new("numerical_failure", "nonfinite idt query"));
             }
@@ -254,8 +254,8 @@ impl Idt {
                 self.index(time)?;
                 return Ok(I::point(self.ic));
             }
-            let bound = I::point(self.ic) + self.prefix_bounds(time)?
-                - self.prefix_range(reset.release_bounds)?;
+            let bound = I::point(self.ic)
+                + (self.prefix_bounds(time)? - self.prefix_range(reset.release_bounds)?);
             if !bound.finite() {
                 return Err(Error::new(
                     "waveform_accuracy",
