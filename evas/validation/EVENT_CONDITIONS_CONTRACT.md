@@ -367,9 +367,9 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
 多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。
 
-## 11. 多事件块写同一状态分支检查点
+## 11. 多事件块写同一状态交付检查点
 
-本分支从 0.9.0 / IR v9 main 后推进，不改变 IR 格式或原 0.8.0、0.9.0 检查点的证据身份。
+本检查点从 0.9.0 / IR v9 main 后推进，不改变 IR 格式或原 0.8.0、0.9.0 检查点的证据身份。
 提交 `9ddd4f8` 起，`EventModel` 构建期记录每个 state 的潜在事件块写者，
 但不再因不同事件块可能写同一 state 而整体拒绝。`settlement::prepare` 在条件路径选择完成后，
 调用 `check_selection_writers(selection)` 检查实际选中赋值集合：同一候选批次里每个 state 最多一个

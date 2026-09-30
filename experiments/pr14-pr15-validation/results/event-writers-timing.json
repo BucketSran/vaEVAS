@@ -1,0 +1,788 @@
+{
+  "run_id": "event-writers-timing-20260930-01",
+  "execution_use": "6 new Spectre executions; baseline waveforms reused for diagnosis only",
+  "baseline_run": "event-writers-spectre-20260930-01",
+  "baseline_receipt_sha256": "16e40b008a1187d422ace59823d804f3e1d31b42a0ff8ec5edd17a33de84051b",
+  "baseline_file_manifest_sha256": "503a0a95923bd9cd3a0981ce3764d3b38498ee671fc76aa08acb28e5a721b2a6",
+  "run_plan": {
+    "baseline_run": "event-writers-spectre-20260930-01",
+    "baseline_waveforms": "reused only for diagnosis; two new instrumentation plus four one-factor controls",
+    "configurations": [
+      {
+        "id": "instrument-base",
+        "baseline_profile": "base",
+        "change": "instrument",
+        "source_sha256": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      {
+        "id": "instrument-fine",
+        "baseline_profile": "fine",
+        "change": "instrument",
+        "source_sha256": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      {
+        "id": "maxstep-only",
+        "baseline_profile": "base",
+        "change": "maxstep",
+        "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "netlist_sha256": "6d3c480515ce9f0bda8744d2ae204b1c6b1587816459de47949a730a461063fc",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      {
+        "id": "cross-vtol-only",
+        "baseline_profile": "base",
+        "change": "vtol",
+        "source_sha256": "6763c645cede202519ab2fb2b72f1bb586ceb9c0cd192a33b47cbb842ed7972f",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      {
+        "id": "cross-ttol-only",
+        "baseline_profile": "base",
+        "change": "ttol",
+        "source_sha256": "0ed1063be24cbbc1159036a5ba03f6a18016319654c60c46081a602afdec0d6e",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      {
+        "id": "solver-tolerances-only",
+        "baseline_profile": "base",
+        "change": "solver",
+        "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "netlist_sha256": "8ae373d300190be90e8a9b0873527f9f85f78cece20c342518f4db762fd9f848",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      }
+    ],
+    "max_runs": 6,
+    "timeout_s": 90,
+    "license_timeout_s": 30,
+    "independent_targets": "Original V3 q=0 then 1 then 0; continuous 0.1/0.9 V plateaus and 50 ns linear transition. Controls are diagnostic development evidence, not original 31 cells."
+  },
+  "input_manifest_sha256": "4b71b055163a652403415c720700fb5644f56c363ad8912b4652ff97cc1331ee",
+  "file_manifest_sha256": "9536df5acee0116aa129010f919537b989988ec5056d04cc94b7346bcb9c3dcd",
+  "raw_archive_sha256": "ff4e5ad082763d4c580c6021c84d71fa997b150e39409c3fcca4e620c295ee60",
+  "runner_sha256": "b596023b2810e9ed3b2d810ec0d60ce49eed8ee98ac00a29c6ab407d1ec4914c",
+  "analysis_script_sha256": "77497db129497442135c65a12b01e5683c04063ac9eb3a34ac15a9df1ede09a8",
+  "original_checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+  "original_settings_reader_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+  "spectre_version": "21.1.0.509.isr12",
+  "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "setup_sha256": [
+    "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+    "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+  ],
+  "budget": {
+    "max_runs": 6,
+    "cpu": 0,
+    "timeout_s": 90,
+    "license_timeout_s": 30
+  },
+  "records": [
+    {
+      "configuration": {
+        "id": "instrument-base",
+        "baseline_profile": "base",
+        "change": "instrument",
+        "source_sha256": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "reltol": 1e-05,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-9",
+          "2e-4"
+        ],
+        [
+          "1e-9",
+          "2e-4"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+        "tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+      },
+      "waveform_sha256": "13f6424c4cd483ca566ba489b9d587882649816acd28c07cd0de2da9c0788ab6",
+      "spectre_log_sha256": "3dbcb32923722da34d2ac00ec973cbb6bcf9ba8f5027bf21d0fc50ea62853f0c",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.229292480275035,
+        "log_sha256": "37a699b4389e767560699ef6a62b9ee2cad8cafd58dd82a1e730265a0b92d4d1"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 4006,
+      "max_nominal_error_v": 0.004000000000007997,
+      "predicted_edge_shift_error_v": 0.004000000000001995,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.40025e-06,
+          "inferred_start_error_s": 2.5000000000012466e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.374250000000003e-06,
+            1.37525e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4002499999999998e-06,
+          "inferred_start_error_s": 2.4999999999970114e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.374250000000003e-06,
+            3.37525e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [
+        {
+          "kind": "rise",
+          "time_s": 1.3752499999999999e-06,
+          "q": 1,
+          "delay_s": 2.499999999999129e-10
+        },
+        {
+          "kind": "fall",
+          "time_s": 3.37525e-06,
+          "q": 0,
+          "delay_s": 2.5000000000012466e-10
+        }
+      ],
+      "instrumentation_rows_equal_baseline": true
+    },
+    {
+      "configuration": {
+        "id": "instrument-fine",
+        "baseline_profile": "fine",
+        "change": "instrument",
+        "source_sha256": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "netlist_sha256": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-10,
+        "reltol": 1e-06,
+        "vabstol": 1e-09,
+        "iabstol": 1e-13,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-10,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "iabstol": 1e-13,
+        "reltol": 1e-06,
+        "stop": 4e-06,
+        "step": 1e-10,
+        "maxstep": 1e-10,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-9",
+          "2e-4"
+        ],
+        [
+          "1e-9",
+          "2e-4"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "cd10233d3bde54319b864d138ecc5e90a6ba37c61f8349580ccdc913d44787ba",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac",
+        "tb.scs": "ebb6b30e0ae09c795f7a2e3a41f8fa16292e6d4bd4a01d98ecb845ff75cff332"
+      },
+      "waveform_sha256": "ac52e4842e25431a42c8790dfc6bbefe9f95684f5ebe569816e805a5a3161ddf",
+      "spectre_log_sha256": "ca1f1280ee4d99c1d69ecd4b99209131543a1a9bdd8f53b7b7e08e727f608f6a",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.49200901389122,
+        "log_sha256": "7813c2fb18d61695102b0545abf0094a9b5ceda2ddfa25d5b39a0bc0e3e9c459"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 40006,
+      "max_nominal_error_v": 0.0006524999550539534,
+      "predicted_edge_shift_error_v": 0.000652499955034315,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.400031395833424e-06,
+          "inferred_start_error_s": 3.139583342415752e-11,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.374931395833428e-06,
+            1.375031395833425e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4000407812471897e-06,
+          "inferred_start_error_s": 4.078124718964469e-11,
+          "full_edge_estimate_s": 4.999999999999952e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            3.37504078124718e-06,
+            3.375140781247098e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [
+        {
+          "kind": "rise",
+          "time_s": 1.3750313958334245e-06,
+          "q": 1,
+          "delay_s": 3.139583342458104e-11
+        },
+        {
+          "kind": "fall",
+          "time_s": 3.3750407812471904e-06,
+          "q": 0,
+          "delay_s": 4.0781247190491723e-11
+        }
+      ],
+      "instrumentation_rows_equal_baseline": true
+    },
+    {
+      "configuration": {
+        "id": "maxstep-only",
+        "baseline_profile": "base",
+        "change": "maxstep",
+        "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "netlist_sha256": "6d3c480515ce9f0bda8744d2ae204b1c6b1587816459de47949a730a461063fc",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-10,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "reltol": 1e-05,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-10,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-9",
+          "2e-4"
+        ],
+        [
+          "1e-9",
+          "2e-4"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "b295d814accd71eb5bade8398188be0dba4e25953fd74cd0846b0c3bc5a8cb00",
+        "tb.scs": "6d3c480515ce9f0bda8744d2ae204b1c6b1587816459de47949a730a461063fc"
+      },
+      "waveform_sha256": "aefb1986f1b929bd4b7f70ea693e53ba0205c21da35c9f998ad57238f5844641",
+      "spectre_log_sha256": "46f845834302685dd4042d065f4de8f2ed79581a6880bde9e200775478cf2f2d",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.745421772822738,
+        "log_sha256": "a40e6a4481bf2d4bf3966e81efb84ba3d07e2c91a97fd39e8a533b1789f60a3a"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 40001,
+      "max_nominal_error_v": 0.001599999954141007,
+      "predicted_edge_shift_error_v": 0.0015999999541214277,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.400000000000091e-06,
+          "inferred_start_error_s": 9.105604182983729e-20,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-10,
+          "joint_start_interval_s": [
+            1.374900000000095e-06,
+            1.375000000000092e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4000999999971326e-06,
+          "inferred_start_error_s": 9.999999713258923e-11,
+          "full_edge_estimate_s": 4.999999999999952e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000021927e-10,
+          "joint_start_interval_s": [
+            3.375099999997123e-06,
+            3.375199999997041e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [],
+      "instrumentation_rows_equal_baseline": null
+    },
+    {
+      "configuration": {
+        "id": "cross-vtol-only",
+        "baseline_profile": "base",
+        "change": "vtol",
+        "source_sha256": "6763c645cede202519ab2fb2b72f1bb586ceb9c0cd192a33b47cbb842ed7972f",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "reltol": 1e-05,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-9",
+          "2e-6"
+        ],
+        [
+          "1e-9",
+          "2e-6"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "6763c645cede202519ab2fb2b72f1bb586ceb9c0cd192a33b47cbb842ed7972f",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+        "tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+      },
+      "waveform_sha256": "f053be66b87b93ac7366a14e084ea5a3e41513c2260725a4ccd9bf00f21ef4b9",
+      "spectre_log_sha256": "61c7c71b4d81caf4ef2a56877a93de0b12745d24c2391d170ecc95e4fa205ed0",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.443793656304479,
+        "log_sha256": "bf151f60b0f772b96c88faa1fe17554ff3d52a933e6910e49fff96c1831f94d3"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 4006,
+      "max_nominal_error_v": 4.000000000281556e-05,
+      "predicted_edge_shift_error_v": 3.999999999602195e-05,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.400002499999999e-06,
+          "inferred_start_error_s": 2.499999999116097e-12,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.374002500000003e-06,
+            1.3750025000000001e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4000025e-06,
+          "inferred_start_error_s": 2.499999999751372e-12,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000009222e-09,
+          "joint_start_interval_s": [
+            3.374002500000003e-06,
+            3.3750025e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [],
+      "instrumentation_rows_equal_baseline": null
+    },
+    {
+      "configuration": {
+        "id": "cross-ttol-only",
+        "baseline_profile": "base",
+        "change": "ttol",
+        "source_sha256": "0ed1063be24cbbc1159036a5ba03f6a18016319654c60c46081a602afdec0d6e",
+        "netlist_sha256": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "reltol": 1e-05,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-12",
+          "2e-4"
+        ],
+        [
+          "1e-12",
+          "2e-4"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "0ed1063be24cbbc1159036a5ba03f6a18016319654c60c46081a602afdec0d6e",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3",
+        "tb.scs": "16615961d353cae790e04d4e4fc3355182e2089366fdf987c32b7b26f5302ff0"
+      },
+      "waveform_sha256": "25f6b37a9e2f230577e8ac029083d2f100e3632f1dc38befdfed1dd97596b850",
+      "spectre_log_sha256": "d2b1e66038099a2ce186d60494ad8465981f26a7c6b35f53133bdb500338867d",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.139747470617294,
+        "log_sha256": "347d5bde01c58898e65f9462f580a6260cf6cbcd77cde80570d776dc23e90769"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 4006,
+      "max_nominal_error_v": 8.000000007946095e-06,
+      "predicted_edge_shift_error_v": 8.000000001914895e-06,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.4000005e-06,
+          "inferred_start_error_s": 5.00000000119681e-13,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.374000500000003e-06,
+            1.3750005e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.4000004999999998e-06,
+          "inferred_start_error_s": 4.999999996961645e-13,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.374000500000003e-06,
+            3.3750005e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [],
+      "instrumentation_rows_equal_baseline": null
+    },
+    {
+      "configuration": {
+        "id": "solver-tolerances-only",
+        "baseline_profile": "base",
+        "change": "solver",
+        "source_sha256": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "netlist_sha256": "8ae373d300190be90e8a9b0873527f9f85f78cece20c342518f4db762fd9f848",
+        "independent_nominal_roots_s": [
+          1.375e-06,
+          3.375e-06
+        ]
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-08,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "effective_settings": {
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "reltol": 1e-08,
+        "stop": 4e-06,
+        "step": 1e-09,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "cross_tolerances": [
+        [
+          "1e-9",
+          "2e-4"
+        ],
+        [
+          "1e-9",
+          "2e-4"
+        ]
+      ],
+      "input_sha256": {
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "cecfe06c9e47845dc069efa02d90236382da757a35cceeac636a8a78dac2044e",
+        "tb.scs": "8ae373d300190be90e8a9b0873527f9f85f78cece20c342518f4db762fd9f848"
+      },
+      "waveform_sha256": "80250a0503f88a440dcd97d1299180cb39a4f4cb230df26de22e451f859adcb9",
+      "spectre_log_sha256": "083a54818fca00a0d99ed280db5864a9b2424d08db406dcf1e2388fe9385288c",
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.094574136659503,
+        "log_sha256": "72622aa29d18e8577b1e6c56c3e3fb35fd1f4f769dad8cdfe8b20158d6d49282"
+      },
+      "original_contract_status": "observations_within_targets",
+      "sample_count": 4034,
+      "max_nominal_error_v": 0.004000000000008108,
+      "predicted_edge_shift_error_v": 0.004000000000001995,
+      "plateau_error_v": 0.0,
+      "edges": [
+        {
+          "nominal_start_s": 1.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 1.4002499999999996e-06,
+          "inferred_start_error_s": 2.4999999999970114e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            1.374423652240621e-06,
+            1.375423652240618e-06
+          ],
+          "allowed_start_interval_s": [
+            1.375e-06,
+            1.3755e-06
+          ],
+          "internal_event_observed": false
+        },
+        {
+          "nominal_start_s": 3.375e-06,
+          "status": "joint_brackets_overlap",
+          "output_50_time_s": 3.40025e-06,
+          "inferred_start_error_s": 2.5000000000012466e-10,
+          "full_edge_estimate_s": 5.000000000000005e-08,
+          "nominal_full_edge_s": 5e-08,
+          "max_crossing_bracket_s": 1.0000000000000751e-09,
+          "joint_start_interval_s": [
+            3.374630590806825e-06,
+            3.375630590806822e-06
+          ],
+          "allowed_start_interval_s": [
+            3.375e-06,
+            3.3754999999999997e-06
+          ],
+          "internal_event_observed": false
+        }
+      ],
+      "logged_events": [],
+      "instrumentation_rows_equal_baseline": null
+    }
+  ],
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "raw_availability": "local-only ignored run and thu-sui archive; not publicly downloadable",
+  "limits": "Original-contract verdicts do not certify tightened control tolerances. No internal Spectre algorithm, full matrix, same-time writer or performance claim."
+}
