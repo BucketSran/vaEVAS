@@ -1,7 +1,8 @@
 # 电压方程与数值求解
 
-适用范围：EVAS 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 在
-PR19 的 main `2e3196f` 上集成稀疏求解。同刻事件的额外前向认证见[事件手册](EVENTS.md)。
+适用范围：当前 main 的 EVAS 0.9.0 / IR v11，静态多项式求解与限定仿射瞬态的电压求解。
+稀疏分流由 [PR8](https://github.com/BucketSran/vaEVAS/pull/8) 在 0.7.1 / IR v7 检查点交付；
+该历史身份不表示当前只接受 v7。事件的额外前向认证见[事件手册](EVENTS.md)。
 实现、证据和交付状态见[能力总表](CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
 
 ## 数学对象
@@ -69,10 +70,23 @@ PR19 的 main `2e3196f` 上集成稀疏求解。同刻事件的额外前向认�
 方程错误带源码/实例信息，运行期样本错误带从 0 开始的样本下标。
 任何样本失败都使整个请求失败，不输出部分成功波形。
 
+## 普通 analog 条件候选
+
+`feat/evas-analog-conditions`（IR v12，待 review）新增无事件、无状态、无动态算子的
+输入驱动分段仿射瞬态。局部程序赋值按顺序代入表达式，电压贡献仍联合组装为关系。
+先用原始 PWL 输入的向外舍入区间证明条件真值，再求选中分支；区间无法证明时
+报 `condition_precision`。源结点和静态点输入沿用精确 binary64 乘积和判符号。
+
+选中分支复用原 IR 仿射消元误差映射，传播 PWL 插值及方程运算的误差到节点电压，
+以 `vabstol + reltol*abs(v)` 验收，超限报 `waveform_accuracy`。这层检查补足
+“舍入输入上的残差很小”无法保证原始 PWL 输出正确的问题；缓存不保存输入或解。
+数学、调用点、独立 Fraction 反例及限制见[条件契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)。
+该算法不复制 Spectre 的步进策略，也不证明连续时间观察误差；与事件或动态算子组合尚未支持。
+
 ## 稀疏分支与性能边界
 
-本次整合保留 [PR8 的固定算法来源 `4d20fbc`](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)，
-以保留历史的 merge 同步上述 main。系数、梯度和 Jacobian 保存为按节点/列号排序的非零项。
+稀疏分流的固定算法来源为 [PR8 的 `4d20fbc`](https://github.com/BucketSran/vaEVAS/commit/4d20fbcf1eca0b9e4883d8a59ccdb80ee4f8c331)。
+系数、梯度和 Jacobian 保存为按节点/列号排序的非零项。
 未知量 n≥32 且初始非零项数 `nnz≤0.1*m*n` 时选稀疏矩形 LU，其余仍选稠密 LU；
 m 是方程数，允许 m≥n 的冗余约束。此阈值是实现选择，不是通用性能保证。
 
@@ -139,7 +153,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 - `solver.rs` 的私有测试明确断言实际选择稀疏后端，覆盖原残差失败后的因子复用，以及
   `(u+2^-55)-u` 的数值解成功/状态认证失败：先丢弃成功候选、真正失败两次，再更换输入重试，
   旧电压/状态/区间保持不变。原瞬态帧/算子队列回退测试继续保留。
-- 0.7.1 的被测提交、测试数量与静态回放见[组件回归证据](../README.md#回归证据)，执行身份与哈希见 PR8；
+- 0.7.1 的被测提交、测试数量与静态回放见[固定组件记录](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#回归证据)，执行身份与哈希见 PR8；
   原始日志仅本地保留。测试及其独立答案已在仓库内，不将历史瞬态矩阵或性能记录当作本轮新执行。
 
 这里的电压域约束与 Newton 公式是数学表述；具体行尺度、容差组合、初猜及失败策略是 EVAS 的实现选择。

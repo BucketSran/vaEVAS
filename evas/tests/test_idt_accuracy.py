@@ -69,6 +69,67 @@ fn main() {
             self.assertLessEqual(lo, expected, (points, ic, t, lo, hi))
             self.assertGreaterEqual(hi, expected, (points, ic, t, lo, hi))
 
+    def test_reset_release_interval_encloses_uncertain_zero_knot_and_rounded_zero(self):
+        root = Path(__file__).resolve().parents[1]/'rust_core/src'
+        harness = '''#[allow(dead_code)]
+mod ir {
+    #[derive(Debug)] pub struct Error;
+    impl Error { pub fn new(_: &str, _: impl Into<String>) -> Self { Self } }
+}
+#[allow(dead_code)] #[path=INTERVAL] mod interval;
+#[allow(dead_code)] #[path=IDT] mod idt;
+use interval::Interval as I;
+fn main() {
+    let uncertain = idt::Idt::enclosed(
+        vec![(0.0,0.25),(1.0,-0.75),(2.0,0.5),(3.0,-0.5)],
+        vec![I{lo:0.25,hi:1.0}, I{lo:-1.0,hi:-0.75}, I{lo:0.25,hi:0.75}, I{lo:-0.75,hi:-0.25}],
+        0.0).unwrap();
+    let mut reset = uncertain.with_reset(true);
+    reset.advance_reset(1.0, I{lo:0.45,hi:1.25}, false).unwrap();
+    let b = reset.value_bounds(1.5).unwrap();
+    println!("{} {}", b.lo.to_bits(), b.hi.to_bits());
+
+    let rounded = idt::Idt::enclosed(
+        vec![(0.0,1.0),(1.0,-2.0),(2.0,-2.0)],
+        vec![I::point(1.0), I::point(-2.0), I::point(-2.0)],
+        0.0).unwrap();
+    let root = 1.0f64 / 3.0;
+    let mut reset = rounded.with_reset(true);
+    reset.advance_reset(root, I{lo:root.next_down(), hi:root.next_up()}, false).unwrap();
+    let b = reset.value_bounds(0.75).unwrap();
+    println!("{} {}", b.lo.to_bits(), b.hi.to_bits());
+}'''.replace('INTERVAL', json.dumps(str(root/'interval.rs'))).replace('IDT', json.dumps(str(root/'idt.rs')))
+        def decode(bits): return struct.unpack('>d', struct.pack('>Q', int(bits)))[0]
+        with tempfile.TemporaryDirectory() as directory:
+            source, binary = Path(directory)/'reset_integral.rs', Path(directory)/'reset_integral'
+            source.write_text(harness)
+            subprocess.run(['rustc', '--edition=2021', str(source), '-o', str(binary)],
+                           check=True, capture_output=True, text=True)
+            result = subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+        rows = [[decode(x) for x in line.split()] for line in result.stdout.splitlines()]
+        self.assertEqual(len(rows), 2)
+
+        def exact(points, query, release):
+            return integral(points, query) - integral(points, release)
+
+        # Nonzero input bounds: a legal history has an interior input zero at
+        # x=1/2 inside the reset uncertainty; another legal release at x=5/4
+        # is across the source knot.  Both answers are independent Fractions.
+        uncertain_expectations = [
+            exact([(0, 1), (1, -1), (2, F(1, 4)), (3, F(-1, 4))], F(3, 2), F(1, 2)),
+            exact([(0, F(1, 4)), (1, -1), (2, F(1, 4)), (3, F(-1, 4))], F(3, 2), F(5, 4)),
+        ]
+        for expected in uncertain_expectations:
+            self.assertLessEqual(rows[0][0], expected)
+            self.assertGreaterEqual(rows[0][1], expected)
+
+        # The exact zero of u(t)=1-3t is x=1/3, which is not binary64.  The
+        # release interval is the two neighboring floats around the rounded
+        # representative; the bound must include the exact-root answer.
+        rounded_expected = exact([(0, 1), (1, -2), (2, -2)], F(3, 4), F(1, 3))
+        self.assertLessEqual(rows[1][0], rounded_expected)
+        self.assertGreaterEqual(rows[1][1], rounded_expected)
+
     def test_fractional_integral_and_network_gain_require_history_budget(self):
         points = [[0, 0], [3, 1]]
         for body, gain in [('V(y,r)<+1073741824*idt(V(u,r),0);', 2**30),

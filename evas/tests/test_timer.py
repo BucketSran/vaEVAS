@@ -183,7 +183,7 @@ class TimerContracts(unittest.TestCase):
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
 
-    def test_single_writer_and_cross_block_state_read_restrictions_remain(self):
+    def test_cross_block_state_read_restrictions_remain(self):
         for statement in ['@(cross(V(u)-0.5,1)) n=n+1;',
                           '@(timer(0.5,0,0.001)) n=n+1;',
                           '@(timer(0.5,0,0.001)) m=n+1;']:

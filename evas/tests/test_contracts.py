@@ -72,7 +72,7 @@ class ParameterContracts(unittest.TestCase):
 
 
 def wire_request():
-    """Independent v8 request: V(r)-V(y)=-2, with r bound to ground."""
+    """Independent current-version request: V(r)-V(y)=-2, with r bound to ground."""
     return dict(program=dict(schema_version=SCHEMA_VERSION, nodes=["0", "y"], contributions=[dict(
         branch=dict(instance="dut", local_positive="r", local_negative="y", kind="voltage"),
         positive=0, negative=1, rhs=dict(op="affine", constant=-2, terms=[]),
@@ -163,7 +163,7 @@ class BranchContracts(unittest.TestCase):
                 self.request(request, "invalid_ir")
 
     def test_old_and_unknown_versions_are_rejected_before_payload_decoding(self):
-        for version in (1, 2, 3, 4, 5, 6, 7, 8, 9, 99):
+        for version in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 99):
             request = wire_request()
             request["program"]["schema_version"] = version
             request["program"]["contributions"][0]["branch"] = "r,y"

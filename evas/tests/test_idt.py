@@ -78,6 +78,182 @@ class IdtContracts(unittest.TestCase):
         result = execute(compiled('V(y,r)<+idt(2,0);'))
         self.assertEqual(values(result), [2*t for t in result['transient']['times']])
 
+    def test_level_reset_holds_ic_and_releases_from_reset_time(self):
+        body = """
+          @(initial_step) reset=1;
+          @(timer(1,1,1e-15)) reset=1-reset;
+          V(y,r)<+idt(V(u,r),0.25,reset);
+        """
+        program = compiled(body, 'real reset;')
+        times = [0, 1, 1.5, 2, 3, 3.5, 4, 5]
+        expected = [0.25, 0.25, 1.25, 0.25, 0.25, 1.25, 0.25, 0.25]
+        for step in [10, 0.125]:
+            result = execute(program, [[0, 2], [5, 2]], times, step)
+            self.assertEqual(values(result), expected)
+            self.assertEqual(
+                [(event['time'], event['after']) for event in result['transient']['events']],
+                [(1.0, [0.0]), (2.0, [1.0]), (3.0, [0.0]), (4.0, [1.0]), (5.0, [0.0])],
+            )
+
+    def test_large_finite_ic_survives_reset_release(self):
+        # Zero input gives the independent answer IC at every time. Prefix
+        # subtraction must not first add two large copies of the same IC.
+        for ic in [1e308, -1e308]:
+            with self.subTest(ic=ic):
+                body = f"""
+                  @(initial_step) reset=1;
+                  @(timer(1,0,1e-15)) reset=0;
+                  V(y,r)<+idt(0,{ic},reset);
+                """
+                result = execute(compiled(body, 'real reset;'),
+                                 [(0, 0), (3, 0)], [0, .5, 1, 2, 3])
+                self.assertEqual(values(result), [ic] * 5)
+
+    def test_reset_idt_and_transition_share_event_state(self):
+        body = """
+          @(initial_step) flag=0;
+          @(timer(1,1,1e-15)) flag=1-flag;
+          V(y,r)<+idt(V(u,r),0.25,flag);
+          V(q,r)<+transition(flag,0,0.25,0.25);
+        """
+        source = model(body, 'real flag;', ports='u,y,q,r', directions='input u; output y,q; inout r;')
+        program = compile_sources({'idt.va': source}, [instance(connections=dict(u='u', y='y', q='q', r='r'))])
+        times = [0, 1, 1.125, 1.25, 2, 2.125, 2.25]
+        result = transient(program, {'u': [[0, 1], [3, 1]], 'r': [[0, 0], [3, 0]]},
+                           times, stop=3, max_step=10, kernel=KERNEL)
+        self.assertEqual(values(result, 'y'), [0.25, 0.25, 0.25, 0.25, 0.25, 0.375, 0.5])
+        self.assertEqual(values(result, 'q'), [0, 0, 0.5, 1, 1, 0.5, 0])
+
+    def test_reset_feedback_is_rejected_instead_of_selecting_a_trial_history(self):
+        # At t=1, the unreset integral is 1 and IC is 0. q=y has no fixed
+        # point; q=1-y has two. Numerical stability cannot select a history.
+        cases = [
+            ('no_solution', 'q=V(y,r);', ''),
+            ('two_solutions', 'q=1-V(y,r);', ''),
+            ('relay', 'q=V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('cancelled_relay', 'q=V(z,r)-V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('zero_relay', 'q=0*V(z,r);', 'V(z,r)<+V(y,r);'),
+            ('local_state_relay', 'a=V(y,r); q=a;', ''),
+        ]
+        for name, assignments, relay in cases:
+            body = ('@(initial_step) begin q=0; a=0; end '
+                    f'@(timer(1,0,1e-12)) begin {assignments} end '
+                    'V(y,r)<+idt(1,0,q);' + relay)
+            with self.subTest(case=name), self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+                execute(compiled(body, 'real q,a;' + (' electrical z;' if relay else '')),
+                        [[0,0],[2,0]], [0,.5,1,1.5,2], 2)
+
+    def test_reset_feedback_across_instances_and_fixed_drive_boundary(self):
+        producer = model("""@(initial_step) q=0;
+            @(timer(1,0,1e-12)) q=V(p,r);
+            V(y,r)<+idt(1,0,q);""", 'real q;', ports='u,p,y,r',
+            directions='input u,p; output y; inout r;')
+        relay = model('V(y,r)<+V(u,r);').replace('module m(', 'module relay(')
+        for sample in ['feedback', 'u']:
+            instances = [instance('integrator', connections=dict(u='u', p=sample, y='z', r='0')),
+                         instance('relay', module='relay', connections=dict(u='z', y='feedback', r='0'))]
+            for order in [instances, instances[::-1]]:
+                program = compile_sources({'producer.va': producer, 'relay.va': relay}, order)
+                with self.subTest(sample=sample, order=[i.name for i in order]):
+                    if sample == 'feedback':
+                        with self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+                            execute(program, [(0, 1), (2, 1)], [0, .5, 1, 1.5, 2])
+                    else:
+                        result = execute(program, [(0, 1), (2, 1)], [0, .5, 1, 1.5, 2])
+                        self.assertEqual(values(result, 'z'), [0, .5, 0, 0, 0])
+
+    def test_raw_ir_reset_feedback_is_rejected(self):
+        good = compiled('''@(initial_step) q=0;
+            @(timer(1,0,1e-12)) q=0;
+            V(y,r)<+idt(1,0,q);''', 'real q;').to_dict()
+        good['events'][0]['body'][0]['rhs'] = {
+            'op': 'affine', 'constant': 0,
+            'terms': [{'node': good['nodes'].index('y'), 'coefficient': 1}],
+        }
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0,0],[2,0]]], output_times=[0,1,2],
+                                      stop=2, max_step=2))
+        result = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                capture_output=True, check=False)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('unsupported_operator', result.stderr)
+
+    def test_post_reset_sampling_without_feedback_remains_supported(self):
+        body = '''@(initial_step) begin flag=0; held=0; end
+            @(timer(1,0,1e-12)) begin flag=1; held=V(z,r); end
+            V(z,r)<+idt(1,0,flag); V(y,r)<+held;'''
+        result = execute(compiled(body, 'integer flag; real held; electrical z;'),
+                         [[0,0],[2,0]], [0,.5,1,1.5,2], 2)
+        self.assertEqual(values(result), [0,0,0,0,0])
+        self.assertEqual(values(result, 'dut:z'), [0,.5,0,0,0])
+
+    def test_reset_expression_is_certified_from_original_structure(self):
+        body = """
+          @(initial_step) q=1;
+          @(timer(2,0,.001)) q=0;
+          V(y,r)<+idt(V(u,r),0.25,1e16*q+q-1e16*q);
+        """
+        program = compiled(body, 'integer q;')
+        result = execute(program, [[0, 1], [3, 1]], [0, 1, 2, 3], 3)
+        self.assertEqual(values(result), [0.25, 0.25, 0.25, 1.25])
+
+    def test_inexact_nested_reset_coefficient_is_rejected(self):
+        body = """
+          @(initial_step) q=1;
+          @(timer(2,0,.001)) q=0;
+          V(y,r)<+idt(V(u,r),0.25,(0.1*q)*0.1-0.010000000000000002*q);
+        """
+        with self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+            execute(compiled(body, 'integer q;'), [[0, 1], [3, 1]], [0, 1, 2, 3], 3)
+
+    def test_raw_reset_expression_uses_structural_state_bounds(self):
+        good = compiled().to_dict()
+        good['states'] = [dict(instance='dut', name='q', kind='integer', initial=1)]
+        good['events'] = [{
+            'trigger': {'kind': 'timer', 'start': 2, 'period': 0, 'time_tolerance': .001, 'enabled': True},
+            'body': [{'kind': 'assign', 'state': 0, 'rhs': {'op': 'affine', 'constant': 0, 'terms': []}}],
+            'origin': {'source': 'raw.va', 'line': 1, 'column': 1, 'instance': 'dut'},
+        }]
+        q = {'op': 'state', 'state': 0}
+        product = {'op': 'multiply', 'left': {'op': 'affine', 'constant': 1e16, 'terms': []}, 'right': q}
+        good['operators'][0]['ic'] = .25
+        good['operators'][0]['reset'] = {'op': 'add', 'left': {'op': 'add', 'left': product, 'right': q},
+                                         'right': {'op': 'multiply', 'left': {'op': 'affine', 'constant': -1e16, 'terms': []},
+                                                   'right': q}}
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0, 1], [3, 1]]], output_times=[0, 1, 2, 3],
+                                      stop=3, max_step=3))
+        response = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                  capture_output=True, check=False)
+        self.assertEqual(response.returncode, 0, response.stderr)
+        result = json.loads(response.stdout)
+        y = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in result['solutions']], [0.25, 0.25, 0.25, 1.25])
+
+    def test_raw_inexact_nested_reset_coefficient_is_rejected(self):
+        good = compiled().to_dict()
+        good['states'] = [dict(instance='dut', name='q', kind='integer', initial=1)]
+        good['events'] = [{
+            'trigger': {'kind': 'timer', 'start': 2, 'period': 0, 'time_tolerance': .001, 'enabled': True},
+            'body': [{'kind': 'assign', 'state': 0, 'rhs': {'op': 'affine', 'constant': 0, 'terms': []}}],
+            'origin': {'source': 'raw.va', 'line': 1, 'column': 1, 'instance': 'dut'},
+        }]
+        q = {'op': 'state', 'state': 0}
+        left = {'op': 'multiply',
+                'left': {'op': 'multiply', 'left': {'op': 'affine', 'constant': 0.1, 'terms': []}, 'right': q},
+                'right': {'op': 'affine', 'constant': 0.1, 'terms': []}}
+        right = {'op': 'multiply', 'left': {'op': 'affine', 'constant': -0.010000000000000002, 'terms': []},
+                 'right': q}
+        good['operators'][0]['ic'] = .25
+        good['operators'][0]['reset'] = {'op': 'add', 'left': left, 'right': right}
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0, 1], [3, 1]]], output_times=[0, 1, 2, 3],
+                                      stop=3, max_step=3))
+        response = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                  capture_output=True, check=False)
+        self.assertNotEqual(response.returncode, 0, response.stdout)
+        self.assertIn('unsupported_operator', response.stderr)
+
     def test_output_grid_and_max_step_do_not_accumulate_history(self):
         sparse = [0, 1, 2, 3, 4, 5, 6, 8]
         dense = [i/16 for i in range(129)]
@@ -113,9 +289,10 @@ class IdtContracts(unittest.TestCase):
             self.assertEqual(values(execute(program, points, [0, 1, 2])), expected)
 
     def test_explicit_finite_constant_ic_and_arity(self):
-        for call in ['idt(V(u,r))', 'idt(V(u,r),0,0)', 'idt(V(u,r),0,0,1e-9)',
+        for call in ['idt(V(u,r))', 'idt(V(u,r),0,0,1e-9)',
                      'idt(V(u,r),V(u,r))', 'idt(V(u,r),q)', 'idt(V(u,r),1e999)',
-                     'idt(V(u,r),1e308*10)']:
+                     'idt(V(u,r),1e308*10)', 'idt(V(u,r),0,V(u,r))',
+                     'idt(V(u,r),0,idt(V(u,r),0))']:
             with self.subTest(call=call), self.assertRaises(CompileError):
                 compiled('@(initial_step) q=0; V(y,r)<+'+call+';', 'real q;')
 

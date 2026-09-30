@@ -194,7 +194,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     else:
                         if statement.name not in state_ids:
                             raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
-                        value = lower(statement.rhs, symbol, node_ids, model.source)
+                        # Reset feedback checks need voltage dependencies even
+                        # when a coefficient cancels or underflows to zero.
+                        value = lower(statement.rhs, symbol, node_ids, model.source, preserve_structure=True)
                         if model.variables[statement.name] == "integer" and not integral(value):
                             raise CompileError("integer assignment requires integral state arithmetic")
                         result.append(Assignment(state_ids[statement.name], value))
@@ -206,13 +208,17 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         def waveform(expr):
             input_nodes = {} if expr.op == "transition" else node_ids
             value = lower(expr.args[0], symbol, input_nodes, model.source, preserve_structure=True)
-            settings = [lower(arg, parameter, {}, model.source) for arg in expr.args[1:]]
+            setting_args = expr.args[1:2] if expr.op == "idt" else expr.args[1:]
+            settings = [lower(arg, parameter, {}, model.source) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
             origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
             index = len(operators)
             if expr.op == "idt":
-                operators.append(Idt(value, settings[0].constant, origin))
+                reset = None
+                if len(expr.args) == 3:
+                    reset = lower(expr.args[2], symbol, {}, model.source, preserve_structure=True)
+                operators.append(Idt(value, settings[0].constant, origin, reset))
             elif expr.op == "absdelay":
                 delay = settings[0].constant
                 if delay < 0:

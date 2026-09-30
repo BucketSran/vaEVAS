@@ -411,6 +411,24 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
         with self.assertRaisesRegex(CompileError, "ordinary analog local assignments"):
             compile_sources({"bad.va": source}, [instance()])
 
+    def test_raw_select_in_idt_reset_remains_unsupported(self):
+        program = compile_sources({"test.va": model("V(y,r)<+idt(V(u,r),0);")},
+                                  [instance()]).to_dict()
+        program["operators"][0]["reset"] = {
+            "op": "select", "relation": "gt",
+            "left": {"op": "affine", "constant": 1, "terms": []},
+            "right": {"op": "affine", "constant": 0, "terms": []},
+            "then_value": {"op": "affine", "constant": 1, "terms": []},
+            "else_value": {"op": "affine", "constant": 0, "terms": []},
+            "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"},
+        }
+        raw = type("ProgramLike", (), {
+            "to_dict": lambda self: program, "nodes": tuple(program["nodes"]),
+        })()
+        with self.assertRaisesRegex(KernelError, "unsupported_transient.*ordinary analog conditionals"):
+            transient(raw, {"u": [[0, 1], [1, 1]]}, [0.0, 1.0],
+                      stop=1.0, max_step=0.25, kernel=KERNEL)
+
     def test_raw_ir_select_predicate_must_be_driven(self):
         program = compile_sources(
             {"test.va": limiter_source()},

@@ -301,7 +301,7 @@ impl EventModel {
         let mut guards = Vec::new();
         let mut triggers = Vec::new();
         let mut actions = Vec::new();
-        let mut writers = vec![None; program.states.len()];
+        let mut writers = vec![BTreeSet::new(); program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
             if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
@@ -371,15 +371,13 @@ impl EventModel {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
                 })?;
-                if state.instance != event.origin.instance
-                    || writers[assignment.state].is_some_and(|i| i != index)
-                {
+                if state.instance != event.origin.instance {
                     return Err(Error::new(
                         "unsupported_cross",
-                        "a state may be written by only one event block in its instance",
+                        "event assignment must write a state in its instance",
                     ));
                 }
-                writers[assignment.state] = Some(index);
+                writers[assignment.state].insert(index);
                 let value = affine(&assignment.rhs, &program, &event.origin.instance)?;
                 if !value.operator_dependencies.is_empty() {
                     return Err(Error::new(
@@ -405,10 +403,9 @@ impl EventModel {
         }
         for (index, body) in actions.iter().enumerate() {
             if body.iter().any(|(_, rhs)| {
-                rhs.states
+                rhs.state_dependencies
                     .iter()
-                    .enumerate()
-                    .any(|(s, c)| *c != 0.0 && writers[s].is_some_and(|writer| writer != index))
+                    .any(|&state| writers[state].iter().any(|&writer| writer != index))
             }) {
                 return Err(Error::new(
                     "unsupported_cross",
@@ -459,6 +456,26 @@ impl EventModel {
             .iter()
             .flat_map(|(event, indices)| indices.iter().map(|&index| self.actions[*event][index].0))
             .collect()
+    }
+
+    pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
+        let mut writers = vec![None; self.program.states.len()];
+        for (event, indices) in &selection.actions {
+            for &index in indices {
+                let state = self.actions[*event][index].0;
+                if writers[state].is_some_and(|writer| writer != *event) {
+                    return Err(Error::new(
+                        "event_conflict",
+                        format!(
+                            "simultaneous event blocks write state {}:{}",
+                            self.program.states[state].instance, self.program.states[state].name
+                        ),
+                    ));
+                }
+                writers[state] = Some(*event);
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {
@@ -612,7 +629,14 @@ impl EventModel {
                 ));
             }
         }
-        self.conditions.check_dependencies(&affected)
+        self.conditions.check_dependencies(&affected)?;
+        crate::reset_dependencies::check(
+            &self.program,
+            &self.rhs,
+            &self.actions,
+            &groups,
+            &assembled,
+        )
     }
 
     /// Replay against supplied trial voltages and the fixed accepted old state.

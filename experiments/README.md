@@ -1,7 +1,7 @@
 # Experiments
 
-此工作区组织使用 Harbor 运行 benchmark 的实验配置、结果分析和论文图表生成。
-配置按需要记录模型与 Agent、任务范围、时间和资源预算、重复次数及相关版本。
+此目录保存仿真器验证、源码审查及 benchmark 实验的协议、分析程序和整理结果。
+每项记录实际使用的模型、后端、任务范围、预算及版本；Harbor 和 Agent 信息只在对应实验中记录。
 
 可跟踪内容包括配置、分析脚本和经过整理且可追溯的结果摘要。
 原始轨迹、波形及临时输出使用仓库根目录下的 `runs/` 或外部运行目录，避免提交到 Git。
@@ -35,33 +35,29 @@
 案例数、后端配置数、事件历史数和 unittest 方法数分别报告。测试用于诊断后属于开发证据，
 有限观测不能替代连续时间误差界或独立确认集。已知差异与失败同成功结果一起保留。
 
+<a id="checkpoint-evidence"></a>
+
 ## 已有实验入口
 
-[旧 EVAS 迁移候选审查](legacy-evas-migration/README.md)固定旧 `v0.8.7` 源码身份，
-保留 2026-09-29 的冻结报告、47 个本地诊断观测、反例和最小迁移边界。
-报告中的实施建议属于当时规划；受限 `idt` 已由 PR19 另行交付，其他候选状态见[当前能力表](../evas/docs/CAPABILITIES.md)。
-旧运行时尚未整包迁入；本归档提供源码审查及设计证据，不增加原独立验证集通过数。
+最新已合并检查点为 [PR26 的 idt 复位](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)，
+被测运行时 `edb004dbb4b05ebd91c1f1f3bb7f261fd1d19b8f`。
+原 31 条件两档均 **24/31** 有限观测达标，其余 7 条明确拒绝；
+PR25 基线 `6df7f48` 两档各 22/31，原达标的 44 份 CSV 逐字节一致。
+[整理收据](pr14-pr15-validation/results/idt-reset-merge-validation.json)记录两个检查点共 124 次新本地 EVAS 执行。
+此轮未新增 Spectre 或其他后端对照，正式资格仍为 **I**。
+当前能力范围及后续缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
 
-当前已完成 [DVS-2 起步卡四后端试点](dvs2-starter-pilot/RESULTS.md)，
-其 [协议与执行入口](dvs2-starter-pilot/README.md) 固定了 15 个条件和两档设置。
-这批数据是独立仿真器验证的开发证据，尚非正式论文达标率或性能排名。
+以下入口保留各自冻结身份，旧结果不替代当前源码的新执行，也不构成最新版本的配对性能比较。
 
-[共同历史重判](dvs2-history-validation/README.md) 使用新的精确有理数判定程序复用旧事件波形，
-单列构造校准、条件性相容/不相容及仍未具备的观察资格，不覆盖 v1 的原执行记录。
+| 入口 | 固定范围与证据边界 |
+| --- | --- |
+| [旧 EVAS 源码审查](legacy-evas-migration/README.md) | 2026-09-29 的旧 `v0.8.7` 报告、47 条本地诊断观测与反例；不是通过数。迁移建议属于当时规划，当前交付状态见能力表。 |
+| [DVS-2 起步卡试点](dvs2-starter-pilot/RESULTS.md)及[协议](dvs2-starter-pilot/README.md) | 15 条件、四后端、两档的开发证据，尚非正式达标率或性能排名。 |
+| [共同历史重判](dvs2-history-validation/README.md) | 使用精确有理数检查器重判旧事件波形；不计为新仿真，不覆盖 v1 原执行。 |
+| [Spectre 扩展实测](dvs2-spectre-validation/README.md) | thu-sui 上的历史 31 条件 × 两档，共 62 配置满足固定有限观测判据；后续 cross/timer/transition 专项在原目录分别记录，正式资格仍 I。 |
+| [四后端补测](dvs2-four-backend-validation/README.md)与[矩阵](dvs2-four-backend-validation/results/MATRIX.md) | 130 条新配置加 118 条复用记录；旧 EVAS 0.8.7 的 248 单元。基础档/细化档分别为 Spectre 31/31、EVAS 18/8、OpenVAF＋ngspice 16/16、Gnucap 17/16，各档分母 31；失败与超时保留。 |
+| [后端故障归因](dvs2-four-backend-validation/DIAGNOSIS.md) | 15 个诊断探针追查机制；该轮只诊断，未改运行时，保留原矩阵。后续修复另有提交与收据。 |
+| [新 EVAS 检查点结果](pr14-pr15-validation/RESULTS.md)及[原验证协议](pr14-pr15-validation/README.md) | 原 PR14/15 四后端 248 单元，EVAS 两档各 13/31；absdelay/slew 专项与步长诊断单列。该目录继续保存 PR23、PR26 的本地 EVAS 检查点，导航区分原矩阵与后续运行。 |
 
-[Spectre 扩展实测](dvs2-spectre-validation/README.md) 在 thu-sui 执行当前 31 条件、两档共 62 条配置，
-全部成功执行并满足固定的有限观测判据；新增 16 条件已实现，完整观察资格仍为 I。
-
-[四后端补测](dvs2-four-backend-validation/README.md) 已在 thu-sui 完成 130 条新配置，
-结合 118 条复用记录，补齐 [31 条件 × 四后端 × 两档矩阵](dvs2-four-backend-validation/results/MATRIX.md)。
-该旧 EVAS 0.8.7 基线的基础档/细化档达标数分别为 Spectre 31/31、EVAS 18/8、OpenVAF＋ngspice 16/16、Gnucap 17/16，
-各档分母均为 31；编译、执行、数值失败与超时完整保留，正式资格仍为 I。
-[后续故障归因](dvs2-four-backend-validation/DIAGNOSIS.md)通过 15 个诊断探针追查机制，
-保留原矩阵，尚未开展仿真器修复。
-
-[PR14/15 合并前验证](pr14-pr15-validation/RESULTS.md)使用新 EVAS 内核瞬态 API，重新执行
-原 31 条件 × 四后端 × 两档的 248 单元：EVAS 两档各 13 条达标、18 条明确拒绝。
-absdelay/slew 专项及 Spectre 步长诊断单列；原始材料尚未公开归档，不与旧内核成绩混称。
-
-任务失败、仿真器问题和执行环境失败应分别记录；
-影响判分的修复需要评估哪些结果必须重跑。
+原始材料的可用性以各轮协议及收据为准；本索引不代表已经公开完整波形。
+任务失败、仿真器问题和执行环境失败分别记录；影响判分的修复需评估哪些结果必须重跑。

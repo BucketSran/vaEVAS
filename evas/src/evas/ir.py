@@ -1,4 +1,4 @@
-"""Version 10: voltage/event IR with ordered event bodies and analog select.
+"""Version 12: voltage/event IR with reset histories and analog select.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 12
 
 
 @dataclass(frozen=True)
@@ -105,6 +105,7 @@ class Idt:
     input: Expression
     ic: float
     origin: Origin
+    reset: Expression | None = None
     kind: str = field(default="idt", init=False)
 
 

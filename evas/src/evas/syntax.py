@@ -178,9 +178,11 @@ class Parser:
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": 2}[token.text]
-            if len(arguments) != required:
-                self.fail(f"{token.text} requires {required} explicit arguments", token)
+            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3)}[token.text]
+            allowed = required if isinstance(required, tuple) else (required,)
+            if len(arguments) not in allowed:
+                label = " or ".join(str(count) for count in allowed)
+                self.fail(f"{token.text} requires {label} explicit arguments", token)
             left = Expr(token.text, None, tuple(arguments), token)
         elif token.text == "pow":
             self.take("(")
