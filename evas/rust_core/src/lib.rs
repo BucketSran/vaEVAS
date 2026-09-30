@@ -6,6 +6,7 @@ mod event_conditions;
 mod events;
 mod expression;
 mod idt;
+mod idtmod;
 mod interval;
 pub mod ir;
 mod linear;

@@ -1,4 +1,4 @@
-"""Version 8: voltage/event IR with ordered conditional event bodies.
+"""Version 13: voltage/event IR with bounded phase operators.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 13
 
 
 @dataclass(frozen=True)
@@ -98,6 +98,23 @@ class Idt:
 
 
 @dataclass(frozen=True)
+class IdtMod:
+    input: Expression
+    ic: float
+    modulus: float
+    offset: float
+    origin: Origin
+    kind: str = field(default="idt_mod", init=False)
+
+
+@dataclass(frozen=True)
+class Sin:
+    input: Expression
+    origin: Origin
+    kind: str = field(default="sin", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -178,7 +195,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | IdtMod | Sin, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

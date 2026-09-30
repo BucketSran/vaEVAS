@@ -1,7 +1,7 @@
 """Bind arithmetic to polynomial IR, preserving the affine constant-folding path."""
 import math
 
-from .ir import Affine, Binary, Expression, Power, StateRef, Term
+from .ir import Affine, Binary, Expression, OperatorRef, Power, StateRef, Term
 from .syntax import CompileError, Expr
 
 
@@ -10,6 +10,8 @@ def affine(constant, terms):
 
 
 def scale(expression: Expression, factor: float) -> Expression:
+    if factor == 1.0:
+        return expression
     if isinstance(expression, Affine):
         return affine(expression.constant * factor, {t.node: t.coefficient * factor for t in expression.terms})
     return Binary("multiply", Affine(factor, ()), expression)
@@ -19,7 +21,7 @@ def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_s
     def fail(message):
         raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
 
-    if expr.op in ("transition", "absdelay", "slew", "idt"):
+    if expr.op in ("transition", "absdelay", "slew", "idt", "idtmod", "sin"):
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)
@@ -27,7 +29,7 @@ def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_s
         return Affine(float(expr.value), ())
     if expr.op == "parameter":
         value = parameters(str(expr.value))
-        return value if isinstance(value, StateRef) else Affine(value, ())
+        return value if isinstance(value, (Affine, Binary, Power, StateRef, OperatorRef)) else Affine(value, ())
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:

@@ -99,7 +99,7 @@ class PolynomialContracts(unittest.TestCase):
     def test_unsupported_exponents_divisors_and_calls_are_explicit(self):
         for expression in ('pow(V(u,r),0)','pow(V(u,r),-1)','pow(V(u,r),.5)',
                            'pow(V(u,r),33)','pow(V(u,r),V(u,r))','1/V(u,r)',
-                           'sin(V(u,r))','pow(V(u,r))','pow(V(u,r),2,3)'):
+                           'pow(V(u,r))','pow(V(u,r),2,3)'):
             with self.subTest(expression=expression),self.assertRaises(CompileError):
                 compile_sources({'bad.va':model('V(y,r)<+'+expression+';')},[instance()])
 

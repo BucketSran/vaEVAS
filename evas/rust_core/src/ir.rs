@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 9;
+pub const SCHEMA_VERSION: u32 = 13;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -105,6 +105,17 @@ pub enum OperatorSpec {
         ic: f64,
         origin: Origin,
     },
+    IdtMod {
+        input: Expression,
+        ic: f64,
+        modulus: f64,
+        offset: f64,
+        origin: Origin,
+    },
+    Sin {
+        input: Expression,
+        origin: Origin,
+    },
     AbsDelay {
         input: Expression,
         delay: f64,
@@ -131,6 +142,8 @@ impl OperatorSpec {
             Self::Transition { origin, .. }
             | Self::AbsDelay { origin, .. }
             | Self::Idt { origin, .. }
+            | Self::IdtMod { origin, .. }
+            | Self::Sin { origin, .. }
             | Self::Slew { origin, .. } => origin,
         }
     }
