@@ -24,7 +24,7 @@ def verify(root, name):
             raise ValueError("artifact drift: " + relative)
 
 
-def analyze(source, run, output):
+def analyze(source, run, identity_path, output):
     verify(source, "INPUT_MANIFEST.json")
     verify(run, "FILE_MANIFEST.json")
     cases = json.loads((source / "conditions.json").read_text())
@@ -33,11 +33,19 @@ def analyze(source, run, output):
     if cases != json.loads((run / "conditions.json").read_text()):
         raise ValueError("condition definitions drifted")
     started = json.loads((run / "STARTED.json").read_text())
+    execution_identity = json.loads(identity_path.read_text())
+    if not execution_identity["source_worktree_clean"] or execution_identity["kernel_sha256"] != started["kernel_sha256"]:
+        raise ValueError("execution identity does not match this build")
     if started["source_input_manifest_sha256"] != sha(source / "INPUT_MANIFEST.json"):
         raise ValueError("wrong frozen source identity")
-    for relative, identity in started["source_sha256"].items():
-        if sha(ROOT / relative) != identity:
+    for relative, digest in started["source_sha256"].items():
+        if sha(ROOT / relative) != digest:
             raise ValueError("runtime source changed since execution: " + relative)
+    for relative, digest in started["source_sha256"].items():
+        content = subprocess.check_output(
+            ["git", "show", execution_identity["runtime_commit"] + ":" + relative], cwd=ROOT)
+        if hashlib.sha256(content).hexdigest() != digest:
+            raise ValueError("runtime commit does not match executed source: " + relative)
     records = []
     for case in cases:
         for profile in ("base", "fine"):
@@ -50,6 +58,8 @@ def analyze(source, run, output):
             execution = json.loads((work / "execution.json").read_text())
             analysis = dict(status=result["status"], reason=result.get("reason"),
                             formal_dvs_qualification="I")
+            if "detail" in result:
+                analysis["kernel_error"] = result["detail"]
             if result["status"] == "waveform_available":
                 waveform = work / result["waveform"]
                 if sha(waveform) != result["waveform_sha256"]:
@@ -66,6 +76,8 @@ def analyze(source, run, output):
     receipt = dict(
         evidence_use="62 new local EVAS requests; unchanged original checker; no new Spectre execution",
         commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        execution_identity=execution_identity,
+        execution_identity_sha256=sha(identity_path),
         runtime_identity=started, source_input_manifest_sha256=sha(source / "INPUT_MANIFEST.json"),
         raw_manifest_sha256=sha(run / "FILE_MANIFEST.json"),
         checker_sha256=sha(ROOT / "experiments/dvs2-spectre-validation/check_results.py"),
@@ -87,6 +99,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--identity", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    analyze(args.source.resolve(), args.run.resolve(), args.output)
+    analyze(args.source.resolve(), args.run.resolve(), args.identity.resolve(), args.output)

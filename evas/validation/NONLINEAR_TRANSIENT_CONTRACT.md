@@ -56,9 +56,9 @@ and accepts `y = 3333333333333334.0` with zero residual for that rounded point
 problem. The absolute difference from the exact-PWL reference is `2/3 V`, far
 larger than `vabstol = 1e-12` when `reltol = 0`.
 
-This is expected under the current point-solve contract. It would be a failure
-only if the feature claimed an exact-PWL or total forward-error certificate.
-Providing that stronger claim would require carrying input interpolation
+This demonstrates a confirmed gap relative to the exact-PWL voltage budget.
+Passing the current point residual contract does not close that gap or establish
+the stronger total-accuracy claim. Providing that claim would require carrying input interpolation
 uncertainty and a linear/nonlinear sensitivity budget through the solve, or a
 conservative refusal policy for off-knot observations whose propagated input
 uncertainty exceeds the requested voltage budget.
