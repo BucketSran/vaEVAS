@@ -1,5 +1,5 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
-use crate::interval::{sum_products_sign, Interval as I};
+use crate::interval::{equal_products, sum_products_sign, Interval as I};
 use crate::ir::{Error, Expression, Relation};
 use std::collections::{BTreeSet, HashSet};
 
@@ -290,6 +290,15 @@ impl Relation {
     }
 }
 
+fn exact_product(a: f64, b: f64) -> Option<f64> {
+    let product = a * b;
+    if product.is_finite() && equal_products(a, b, product, 1.0) {
+        Some(product)
+    } else {
+        None
+    }
+}
+
 fn affine_product_terms(
     expr: &Expression,
     factor: f64,
@@ -304,14 +313,37 @@ fn affine_product_terms(
             constant,
             terms: affine_terms,
         } => {
-            terms.push((factor, *constant));
+            let Some(constant) = exact_product(factor, *constant) else {
+                return Ok(false);
+            };
+            terms.push((constant, 1.0));
             for term in affine_terms {
-                terms.push((factor * term.coefficient, nodes[term.node]));
+                let Some(coefficient) = exact_product(factor, term.coefficient) else {
+                    return Ok(false);
+                };
+                terms.push((coefficient, nodes[term.node]));
             }
             Ok(true)
         }
         Expression::Add { left, right } => Ok(affine_product_terms(left, factor, nodes, terms)?
             && affine_product_terms(right, factor, nodes, terms)?),
+        Expression::Multiply { left, right } => {
+            for (scalar, other) in [(left, right), (right, left)] {
+                if let Expression::Affine {
+                    constant,
+                    terms: affine_terms,
+                } = scalar.as_ref()
+                {
+                    if affine_terms.is_empty() {
+                        let Some(factor) = exact_product(factor, *constant) else {
+                            return Ok(false);
+                        };
+                        return affine_product_terms(other, factor, nodes, terms);
+                    }
+                }
+            }
+            Ok(false)
+        }
         Expression::Select {
             relation,
             left,

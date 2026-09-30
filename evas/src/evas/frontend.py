@@ -70,8 +70,8 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     def has_condition(body):
         return any(isinstance(statement, SyntaxConditional) for statement in body)
 
-    has_conditions = (any(has_condition(model.analog) for _, model, _ in bindings)
-                      or any(has_condition(event.body) for _, model, _ in bindings for event in model.events))
+    has_conditions = any(has_condition(model.analog) or any(has_condition(event.body) for event in model.events)
+                         for _, model, _ in bindings)
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
     contributions, states, events, operators = [], [], [], []

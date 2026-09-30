@@ -121,6 +121,138 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
                 expected.append(3.0)
         self.assertEqual([row["y"] for row in rows], expected)
 
+
+    def test_raw_ir_preserved_scalar_predicate_keeps_fraction_boundary(self):
+        from fractions import Fraction
+        source = model("V(y)<+0;", ports="u,y,r", directions="input u; output y; inout r;")
+        program = compile_sources(
+            {"test.va": source},
+            [instance(connections=dict(u="u", y="y", r="r"))],
+        ).to_dict()
+        u = program["nodes"].index("u")
+        r = program["nodes"].index("r")
+        preserved_difference = {
+            "op": "add",
+            "left": {"op": "affine", "constant": 0, "terms": [{"node": u, "coefficient": 1}]},
+            "right": {"op": "affine", "constant": 0, "terms": [{"node": r, "coefficient": -1}]},
+        }
+        scaled = {
+            "op": "add",
+            "left": {
+                "op": "multiply",
+                "left": {"op": "affine", "constant": 1.5, "terms": []},
+                "right": preserved_difference,
+            },
+            "right": {"op": "affine", "constant": 0.125, "terms": []},
+        }
+        selected = {
+            "op": "select", "relation": "lt", "left": scaled,
+            "right": {"op": "affine", "constant": -0.75, "terms": []},
+            "then_value": {"op": "affine", "constant": 1, "terms": []},
+            "else_value": {"op": "affine", "constant": 0, "terms": []},
+            "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"},
+        }
+        program["contributions"][0]["rhs"] = {
+            "op": "multiply",
+            "left": {"op": "affine", "constant": -1, "terms": []},
+            "right": selected,
+        }
+        samples = [[0.0, 7 / 12], [-1e-15, 7 / 12], [1e-15, 7 / 12]]
+        result = solve(
+            type("ProgramLike", (), {
+                "to_dict": lambda self: program,
+                "nodes": tuple(program["nodes"]),
+            })(),
+            ["u", "r"], samples, kernel=KERNEL,
+        )
+        expected = []
+        for u_value, r_value in samples:
+            lhs = Fraction(3, 2) * (Fraction(u_value) - Fraction(r_value)) + Fraction(1, 8)
+            expected.append(1.0 if lhs < Fraction(-3, 4) else 0.0)
+        rows = [dict(zip(result["nodes"], row["voltages"])) for row in result["solutions"]]
+        self.assertEqual([row["y"] for row in rows], expected)
+
+    def test_raw_ir_preserved_scalar_v1_limiter_boundary_matches_fraction(self):
+        from fractions import Fraction
+        source = model("V(y)<+0;", ports="u,y,r", directions="input u; output y; inout r;")
+        program = compile_sources(
+            {"test.va": source},
+            [instance(connections=dict(u="u", y="y", r="0"))],
+        ).to_dict()
+        u = program["nodes"].index("u")
+        scaled = {
+            "op": "add",
+            "left": {
+                "op": "multiply",
+                "left": {"op": "affine", "constant": 1.5, "terms": []},
+                "right": {"op": "affine", "constant": 0, "terms": [{"node": u, "coefficient": 1}]},
+            },
+            "right": {"op": "affine", "constant": 0.125, "terms": []},
+        }
+        lower = {
+            "op": "select", "relation": "lt", "left": scaled,
+            "right": {"op": "affine", "constant": -0.75, "terms": []},
+            "then_value": {"op": "affine", "constant": -0.75, "terms": []},
+            "else_value": scaled,
+            "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"},
+        }
+        selected = {
+            "op": "select", "relation": "gt", "left": scaled,
+            "right": {"op": "affine", "constant": 0.875, "terms": []},
+            "then_value": {"op": "affine", "constant": 0.875, "terms": []},
+            "else_value": lower,
+            "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"},
+        }
+        program["contributions"][0]["rhs"] = {
+            "op": "multiply",
+            "left": {"op": "affine", "constant": -1, "terms": []},
+            "right": selected,
+        }
+        samples = [[-1.0], [-7 / 12], [0.0], [0.5], [2.0]]
+        result = solve(
+            type("ProgramLike", (), {
+                "to_dict": lambda self: program,
+                "nodes": tuple(program["nodes"]),
+            })(),
+            ["u"], samples, kernel=KERNEL,
+        )
+        expected = []
+        for [u_value] in samples:
+            y = Fraction(3, 2) * Fraction(u_value) + Fraction(1, 8)
+            if y > Fraction(7, 8):
+                y = Fraction(7, 8)
+            if y < Fraction(-3, 4):
+                y = Fraction(-3, 4)
+            expected.append(float(y))
+        rows = [dict(zip(result["nodes"], row["voltages"])) for row in result["solutions"]]
+        self.assertEqual([row["y"] for row in rows], expected)
+
+    def test_raw_ir_nonexact_scalar_preserved_predicate_rejects_ambiguous_sign(self):
+        source = model("V(y,r)<+0;")
+        program = compile_sources({"test.va": source}, [instance()]).to_dict()
+        u = program["nodes"].index("u")
+        product = {
+            "op": "multiply",
+            "left": {"op": "affine", "constant": 0.1, "terms": []},
+            "right": {"op": "affine", "constant": 0, "terms": [{"node": u, "coefficient": 0.1}]},
+        }
+        program["contributions"][0]["rhs"] = {
+            "op": "select", "relation": "gt",
+            "left": product,
+            "right": product,
+            "then_value": {"op": "affine", "constant": 1, "terms": []},
+            "else_value": {"op": "affine", "constant": 0, "terms": []},
+            "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"},
+        }
+        with self.assertRaisesRegex(KernelError, "condition_precision"):
+            solve(
+                type("ProgramLike", (), {
+                    "to_dict": lambda self: program,
+                    "nodes": tuple(program["nodes"]),
+                })(),
+                ["u"], [[0.3]], kernel=KERNEL,
+            )
+
     def test_raw_ir_uncertified_condition_is_rejected_instead_of_rounded(self):
         program = compile_sources(
             {"test.va": limiter_source()},
@@ -160,6 +292,21 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
                 })(),
                 ["u"], [[0.5]], kernel=KERNEL,
             )
+
+
+    def test_condition_predicate_rejects_direct_and_alias_cancelled_output_dependency(self):
+        direct = model("""
+            if (V(y,r)-V(y,r)+V(u,r) > 0) tmp=1; else tmp=0;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;")
+        alias = model("""
+            tmp = V(y,r)-V(y,r)+V(u,r);
+            if (tmp > 0) tmp=1; else tmp=0;
+            V(y,r)<+tmp;
+        """, declarations="real tmp;")
+        for source in (direct, alias):
+            with self.subTest(source=source), self.assertRaisesRegex(CompileError, "ordinary analog if"):
+                compile_sources({"bad.va": source}, [instance()])
 
     def test_rejects_unsupported_feedback_predicate(self):
         source = model("tmp=V(y,r); if (tmp>.5) tmp=1; V(y,r)<+tmp;",
