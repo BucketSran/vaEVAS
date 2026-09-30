@@ -74,3 +74,107 @@ class ParameterContracts(unittest.TestCase):
 def wire_request():
     """Independent current-schema request: V(r)-V(y)=-2, with r bound to ground."""
     return dict(program=dict(schema_version=SCHEMA_VERSION, nodes=["0", "y"], contributions=[dict(
+        branch=dict(instance="dut", local_positive="r", local_negative="y", kind="voltage"),
+        positive=0, negative=1, rhs=dict(op="affine", constant=-2, terms=[]),
+        origin=dict(source="wire.va", line=1, column=1, instance="dut"))]), driven=[], samples=[[]])
+
+
+class BranchContracts(unittest.TestCase):
+    def request(self, request, error=None):
+        payload = request if isinstance(request, str) else json.dumps(request)
+        result = subprocess.run([str(KERNEL)], input=payload, text=True, capture_output=True)
+        if error:
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(result.stdout, "")
+            detail = json.loads(result.stderr)
+            self.assertEqual(detail["kind"], error)
+            return detail
+        self.assertEqual(result.returncode, 0, result.stderr)
+        response = json.loads(result.stdout)
+        self.assertEqual(response["schema_version"], SCHEMA_VERSION)
+        return response
+
+    def test_compiler_preserves_local_identity_and_reversed_contributions(self):
+        source = model("V(y,r)<+1; V(r,y)<+-2;")
+        program = compile_sources({"branch.va": source}, [instance()]).to_dict()
+        self.assertEqual(program["schema_version"], SCHEMA_VERSION)
+        for contribution in program["contributions"]:
+            self.assertEqual(contribution["branch"], dict(
+                instance="dut", local_positive="r", local_negative="y", kind="voltage"))
+            self.assertEqual(program["nodes"][contribution["positive"]], "0")
+            self.assertEqual(program["nodes"][contribution["negative"]], "y")
+        self.assertEqual(execute(source)[0]["y"], 3)
+
+    def test_implicit_and_explicit_ground_share_a_branch(self):
+        source = model("V(y)<+1; V(y,0)<+2;")
+        program = compile_sources({"ground.va": source}, [instance()]).to_dict()
+        self.assertEqual(program["contributions"][0]["branch"], program["contributions"][1]["branch"])
+        self.assertEqual(program["contributions"][0]["branch"]["local_positive"], "0")
+        self.assertEqual(execute(source)[0]["y"], 3)
+
+    def test_handwritten_wire_request_and_additive_identity(self):
+        request = wire_request()
+        request["program"]["contributions"].append(copy.deepcopy(request["program"]["contributions"][0]))
+        request["program"]["contributions"][1]["rhs"]["constant"] = -3
+        self.assertEqual(self.request(request)["solutions"][0]["voltages"], [0, 5])
+
+    def test_branch_shape_and_identity_are_checked_by_rust(self):
+        cases = [
+            (dict(instance=""), "invalid_ir"),
+            (dict(instance="other"), "invalid_ir"),
+            (dict(local_positive=""), "invalid_ir"),
+            (dict(local_negative=""), "invalid_ir"),
+            (dict(local_positive="z"), "invalid_ir"),
+            (dict(kind="current"), "invalid_request"),
+            (dict(extra_identity=True), "invalid_request"),
+        ]
+        for fields, error in cases:
+            request = wire_request()
+            request["program"]["contributions"][0]["branch"].update(fields)
+            with self.subTest(fields=fields):
+                self.request(request, error)
+        for malformed in ("r,y", {}, None):
+            request = wire_request()
+            request["program"]["contributions"][0]["branch"] = malformed
+            with self.subTest(branch=malformed):
+                self.request(request, "invalid_request")
+
+    def test_conflicting_bindings_and_port_aliases_are_rejected(self):
+        for mutation in ("same_branch", "shared_node", "alias", "ground", "same_local_node"):
+            request = wire_request()
+            program = request["program"]
+            first = program["contributions"][0]
+            other = copy.deepcopy(first)
+            program["nodes"] += ["u", "v"]
+            if mutation == "same_branch":
+                other["negative"] = 2
+            elif mutation == "shared_node":
+                other["branch"]["local_negative"] = "z"
+                other.update(positive=2, negative=3)
+            elif mutation == "alias":
+                other["branch"]["local_negative"] = "z"
+            elif mutation == "ground":
+                other["branch"]["local_positive"] = "0"
+                other["positive"] = 2
+            else:
+                other["branch"]["local_negative"] = "r"
+            program["contributions"].append(other)
+            with self.subTest(mutation=mutation):
+                self.request(request, "invalid_ir")
+
+    def test_old_and_unknown_versions_are_rejected_before_payload_decoding(self):
+        for version in (1, 2, 3, 4, 5, 6, 7, 8, 9, 99):
+            request = wire_request()
+            request["program"]["schema_version"] = version
+            request["program"]["contributions"][0]["branch"] = "r,y"
+            with self.subTest(version=version):
+                self.request(request, "unsupported_ir_version")
+        for version in (None, "2", 2.5):
+            request = wire_request()
+            request["program"]["schema_version"] = version
+            with self.subTest(version=version):
+                self.request(request, "invalid_request")
+
+    def test_version_preflight_does_not_hide_duplicate_payload_fields(self):
+        payload = json.dumps(wire_request()).replace('"constant": -2', '"constant": -3, "constant": -2')
+        self.request(payload, "invalid_request")

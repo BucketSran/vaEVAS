@@ -211,3 +211,31 @@ class IdtContracts(unittest.TestCase):
     def test_raw_ir_rejects_bad_version_fields_and_dependencies(self):
         good = compiled().to_dict()
         self.assertEqual(good['schema_version'], SCHEMA_VERSION)
+        mutations = []
+        for key, value in [('ic', None), ('ic', '0'), ('reset', 0), ('ic', float('inf'))]:
+            bad = copy.deepcopy(good)
+            bad['operators'][0][key] = value
+            mutations.append(bad)
+        bad = copy.deepcopy(good)
+        del bad['operators'][0]['ic']
+        mutations.append(bad)
+        for expr in [dict(op='operator', operator=0), dict(op='operator', operator=99),
+                     dict(op='state', state=0),
+                     dict(op='affine', constant=0, terms=[dict(node=good['nodes'].index('y'), coefficient=0)])]:
+            bad = copy.deepcopy(good)
+            bad['operators'][0]['input'] = expr
+            mutations.append(bad)
+        bad = copy.deepcopy(good)
+        bad['operators'][0]['origin']['instance'] = 'other'
+        mutations.append(bad)
+        for program in mutations:
+            response = subprocess.run([str(KERNEL)], input=json.dumps(dict(program=program, driven=['u'], samples=[],
+                transient=dict(pwl=[POINTS], output_times=[0, 8], stop=8, max_step=8))),
+                text=True, capture_output=True)
+            with self.subTest(program=program):
+                self.assertEqual(response.returncode, 2, response.stdout)
+                self.assertIn(json.loads(response.stderr)['kind'], ['invalid_ir', 'invalid_request', 'unsupported_operator'])
+
+
+if __name__ == '__main__':
+    unittest.main()
