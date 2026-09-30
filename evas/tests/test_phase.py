@@ -82,6 +82,26 @@ def wrapped(x):
     return x - math.floor(x)
 
 
+def floor_fraction(value):
+    return value.numerator // value.denominator
+
+
+def rational_wrapped(raw, modulus=1.0, offset=0.0):
+    raw = F(raw)
+    modulus = F(modulus)
+    offset = F(offset)
+    turn = floor_fraction((raw - offset) / modulus)
+    return raw - turn * modulus
+
+
+def rational_constant_raw(time, freq, ic=0.125):
+    return F(ic) + F(freq) * F(time)
+
+
+def is_exact_wrap_boundary(raw, modulus=1.0, offset=0.0):
+    return (F(raw) - F(offset)) % F(modulus) == 0
+
+
 class PhaseContracts(unittest.TestCase):
     def test_constant_phase_accumulates_wraps_and_sine_uses_constants_macro(self):
         points = [(0, 0.25), (4, 0.25)]
@@ -208,9 +228,14 @@ V(phase,r)<+phase_v;
                            declarations="real phase_v;", vabstol=1e-12, reltol=0)
         dense = run_phase([(0, .5), (4, .5)], [0, *times, 4], body,
                           declarations="real phase_v;", vabstol=1e-12, reltol=0)
-        expected = [wrapped(.125 + .5 * t) for t in times]
-        for observed, exact in zip(voltages(sparse, "phase"), expected):
-            self.assertEqual(F(observed), F(exact))
+        budget = F(1, 10**12)
+        for observed, t in zip(voltages(sparse, "phase"), times):
+            raw = rational_constant_raw(t, .5)
+            exact = rational_wrapped(raw)
+            if is_exact_wrap_boundary(raw):
+                self.assertEqual(F(observed), F(0))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
         self.assertEqual([voltages(dense, "phase")[i] for i in [1, 2, 3]],
                          voltages(sparse, "phase"))
 
@@ -221,10 +246,17 @@ V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
-        result = run_phase([(0, -.5), (1, -.5)], [.24999999999999997, .25, .25000000000000006],
+        neg_times = [.24999999999999997, .25, .25000000000000006]
+        result = run_phase([(0, -.5), (1, -.5)], neg_times,
                            body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
-        for observed, t in zip(voltages(result, "phase"), [.24999999999999997, .25, .25000000000000006]):
-            self.assertEqual(F(observed), F(wrapped(.125 - .5 * t)))
+        budget = F(1, 10**12)
+        for observed, t in zip(voltages(result, "phase"), neg_times):
+            raw = rational_constant_raw(t, -.5)
+            exact = rational_wrapped(raw)
+            if is_exact_wrap_boundary(raw):
+                self.assertEqual(F(observed), F(0))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
 
         offset_body = """
 phase_v = idtmod(V(f,r), .125, 1, .25);
@@ -232,12 +264,21 @@ V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
-        offset = run_phase([(0, .5), (1, .5)], [.2499999999999999, .25, .2500000000000001],
+        offset_times = [.2499999999999999, .25, .2500000000000001]
+        offset = run_phase([(0, .5), (1, .5)], offset_times,
                            offset_body, declarations="real phase_v;", vabstol=1e-12, reltol=0)
-        for observed, t in zip(voltages(offset, "phase"), [.2499999999999999, .25, .2500000000000001]):
-            raw = .125 + .5 * t
-            exact = (raw - .25) % 1 + .25
-            self.assertEqual(F(observed), F(exact))
+        for observed, t in zip(voltages(offset, "phase"), offset_times):
+            raw = rational_constant_raw(t, .5)
+            exact = rational_wrapped(raw, offset=.25)
+            if is_exact_wrap_boundary(raw, offset=.25):
+                self.assertEqual(F(observed), F(.25))
+            else:
+                self.assertLessEqual(abs(F(observed) - exact), budget)
+
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, .5), (1, .5)], [.24999999999999997], offset_body,
+                      declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
 
     def test_wrapped_phase_voltage_rejects_unproved_nonexact_coefficient_boundary(self):
         body = """

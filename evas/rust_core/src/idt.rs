@@ -130,6 +130,9 @@ impl Idt {
         Ok(bound)
     }
 
+    // This certificate is for the immutable no-reset analytic Idt used inside
+    // IdtMod. Resettable transient idt state must not reuse it without carrying
+    // the reset segment into the exact boundary expression.
     pub(crate) fn value_minus_linear_boundary_sign(
         &self,
         time: f64,
