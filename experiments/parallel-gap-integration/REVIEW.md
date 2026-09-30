@@ -84,6 +84,59 @@ reltol/vabstol/iabstol 均已从 Spectre 日志核对，全部匹配原请求。
 8 项原 checker 校准检查另通过。原始波形、远端清单、运行器快照及候选源码归档仅本地/thu-sui 保留，
 不称为可公开下载的复现包。
 
+<a id="v3-cross-timing"></a>
+
+### V3 差异定位：cross 容差与时间步
+
+`event-writers-timing-20260930-01` 在相同 thu-sui 环境及 Spectre **21.1.0.509.isr12**
+上新执行六次：基础/细化档各一个事件日志配置，另有四个基础档控制配置。
+每次仍为单线程、单 CPU、90 s 执行及 30 s license 等待预算。先冻结输入和配置计划，
+保留原 DUT 与原收据；诊断配置单独计数，不是原 31 矩阵的新单元，也没有新执行 EVAS。
+
+日志配置只在两个事件体中增加 `$strobe`，打印 `$abstime` 与更新后的 q。
+其两档导出波形的时间、输入、输出均与上一节对应 Spectre 基线逐值完全一致，
+日志时刻也与输出 50% 推算的起点一致，因此本例差异不只是导出或插值造成的假象：
+
+| 档位 | 上升事件日志 / μs | 下降事件日志 / μs | 相对名义零点的延后 / ps |
+| --- | ---: | ---: | ---: |
+| 基础 | 1.37525 | 3.37525 | 250 / 250 |
+| 细化 | 1.3750313958334245 | 3.3750407812471904 | 31.39583 / 40.78125 |
+
+日志确认 q 按 0→1→0 更新。下表控制实验的时间来自输出边沿估计；并未增加事件日志。
+`solver-tolerances-only` 同时收紧 reltol/vabstol/iabstol，属于一组全局精度控制，
+不能称为单一标量参数实验。其余控制各只改变列出的设置。
+
+| 配置 | 相对基础档的改变 | 上升 / 下降延后 / ps | 最大名义输出误差 / mV |
+| --- | --- | ---: | ---: |
+| 原基础档，加事件日志 | 日志无观测扰动 | 250 / 250 | 4.000 |
+| maxstep-only | maxstep：1 ns→0.1 ns，step 仍 1 ns | 约 0 / 100 | 1.600 |
+| cross-vtol-only | cross expr_tol：200 μV→2 μV | 2.5 / 2.5 | 0.040 |
+| cross-ttol-only | cross ttol：1 ns→1 ps | 0.5 / 0.5 | 0.008 |
+| solver-tolerances-only | reltol/vabstol/iabstol 分别收紧 1000 倍 | 250 / 250 | 4.000 |
+
+六个配置的平台误差均为 0 V，边沿时长估计均为 50 ns（舍入误差以内）。
+独立名义根为 1.375 / 3.375 μs。输入斜率绝对值为 `4e5 V/s`，
+原事件窗口为 `min(1 ns, 2e-4 V / (4e5 V/s))=500 ps`。
+基础档晚 250 ps 触发时，guard 已越过零点 100 μV，仍在原窗口内。
+输出边沿斜率为 `1.6e7 V/s`，故 `250 ps × 1.6e7 V/s=4 mV`；
+各控制配置实测最大名义误差也与边沿位移乘以此斜率相符。
+
+这些对照支持以下原因链：cross 的实际触发时间不同，transition 随之整体移位，
+而其平台与边沿形状保持一致。收紧 cross 容差有效，全局求解容差收紧无此效果；
+maxstep 控制的两个边沿不同，说明不能把偏移解释为固定步长比例，或认为只改步长就必然落在零点。
+EVAS 当前 PWL/仿射求根及认证方式见[事件手册](../../evas/docs/EVENTS.md#backend-cross-tolerances)。
+不由这些观测推断 Spectre 内部完整定位算法，也不把差异归因于新增写者仲裁。
+
+原 checker 未改，六组导出观测均满足**原 V3 合同**；收紧 cross 的控制并未另获其更严格
+容差下的正式资格。原合同的允许窗口来自
+[LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
+容差内的波形差异不自动构成后端错误；有限观测与内部事件日志也不证明完整连续时间正确性。
+正式资格仍 I；未进行性能测量、同刻写冲突诊断或全矩阵重跑。
+
+整理收据为 [event-writers-timing.json](../pr14-pr15-validation/results/event-writers-timing.json)，
+重分析入口为 [event_writer_timing.py](../pr14-pr15-validation/event_writer_timing.py)。
+原始输入、波形、日志、运行器快照及远端归档仍仅本地/thu-sui 保留。
+
 ## 继续处理的精度问题
 
 ### idt reset
