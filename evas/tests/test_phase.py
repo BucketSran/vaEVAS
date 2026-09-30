@@ -132,6 +132,19 @@ class PhaseContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail["kind"], "unsupported_analysis")
         self.assertIn("transient", error.exception.detail["message"])
 
+    def test_uncertain_wrapped_output_rejects_overstrict_voltage_budget(self):
+        body = """
+phase_v = idtmod(V(f,r), .125, 1, 0);
+V(total,r)<+0;
+V(phase,r)<+phase_v;
+V(out,r)<+0;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, .25), (4, .25)], [0, 3.5000000000000004], body,
+                      declarations="real phase_v;", vabstol=1e-16, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertIn("phase", error.exception.detail["message"])
+
     def test_unsupported_phase_forms_are_explicitly_rejected(self):
         for body in [
             "phase_v = idtmod(V(f,r),0); V(out,r)<+phase_v; V(total,r)<+0; V(phase,r)<+0;",
