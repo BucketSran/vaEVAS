@@ -1,5 +1,5 @@
-//! Stateless, input-selected piecewise-affine voltage relations.
-//! Select a branch from original PWL enclosures, then certify its solved output.
+//! Stateless affine and input-selected piecewise-affine voltage relations.
+//! Resolve any conditions from original PWL enclosures, then certify the output.
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::expression::resolve_selects;

@@ -278,11 +278,6 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     if request.program.states.is_empty()
         && request.program.events.is_empty()
         && request.program.operators.is_empty()
-        && request
-            .program
-            .contributions
-            .iter()
-            .any(|c| crate::expression::has_select(&c.rhs))
     {
         let nodes = request.program.nodes.clone();
         let mut circuit =

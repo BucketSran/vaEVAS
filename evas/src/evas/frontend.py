@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
-                 Origin, Program, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
+                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser, Assignment as SyntaxAssignment, Conditional as SyntaxConditional, ContributionStatement
 
@@ -20,6 +20,30 @@ class Instance:
     module: str
     connections: Mapping[str, str]
     parameters: Mapping[str, float] = field(default_factory=dict)
+
+
+def _predicate_degree(expression):
+    """Structural scope: node-free constant (0), affine/select (1), or unsupported.
+
+    No cancellation removes a dependency. Input-selected constants count as
+    input-dependent, so only a node-free scalar can multiply a predicate.
+    """
+    if isinstance(expression, Affine):
+        return int(bool(expression.terms))
+    if isinstance(expression, Binary):
+        left, right = _predicate_degree(expression.left), _predicate_degree(expression.right)
+        if left is None or right is None:
+            return None
+        degree = max(left, right) if expression.op == "add" else left + right
+        return degree if degree <= 1 else None
+    if isinstance(expression, Power):
+        degree = _predicate_degree(expression.base)
+        return degree if degree == 0 or expression.exponent == 1 else None
+    if isinstance(expression, Select):
+        degrees = [_predicate_degree(value) for value in
+                   (expression.left, expression.right, expression.then_value, expression.else_value)]
+        return None if None in degrees else max(degrees)
+    return None
 
 
 def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
@@ -120,6 +144,10 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         local_variables = set(model.variables) if not model.initial and not model.events else set()
         if local_variables and any(model.variables[name] != "real" for name in local_variables):
             raise CompileError(f"{model.source}: ordinary analog local assignments only support real variables")
+        # Local assignment arithmetic must be preserved even when there is no
+        # conditional, or the last conditional disappears during optimization.
+        # Plain models without locals retain their existing affine lowering.
+        preserve_analog_structure = has_operators or has_conditions or bool(local_variables)
         state_names = tuple(name for name in model.variables if name not in local_variables)
         state_ids = {name: len(states) + index for index, name in enumerate(state_names)}
         initials = {}
@@ -273,7 +301,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             emitted = []
             for statement in statements:
                 if isinstance(statement, ContributionStatement):
-                    emitted.append((statement, lower_local(statement.rhs, result, preserve_structure=has_operators or has_conditions)))
+                    emitted.append((statement, lower_local(statement.rhs, result, preserve_structure=preserve_analog_structure)))
                 elif isinstance(statement, SyntaxConditional):
                     if contains_operator(statement.left) or contains_operator(statement.right):
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
@@ -282,6 +310,8 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     right = lower_local(statement.right, result, preserve_structure=True)
                     if not expression_nodes(left).issubset(allowed_condition_nodes) or not expression_nodes(right).issubset(allowed_condition_nodes):
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates must depend only on input/inout ports")
+                    if _predicate_degree(left) is None or _predicate_degree(right) is None:
+                        raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog if predicates must be affine or input-selected piecewise-affine; nonlinear products and powers are unsupported")
                     then_env, then_emitted = execute_analog(statement.then_body, result)
                     else_env, else_emitted = execute_analog(statement.else_body, result)
                     if then_emitted or else_emitted:
@@ -300,7 +330,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog assignment target must be a local real")
                     if contains_operator(statement.rhs):
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog local assignments do not support waveform operators")
-                    result[statement.name] = lower_local(statement.rhs, result, preserve_structure=has_operators or has_conditions)
+                    result[statement.name] = lower_local(statement.rhs, result, preserve_structure=preserve_analog_structure)
             return result, emitted
 
         local_env, analog_contributions = execute_analog(model.analog, local_env)

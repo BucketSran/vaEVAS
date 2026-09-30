@@ -21,6 +21,79 @@ def limiter_source():
 
 
 class OrdinaryAnalogConditionContracts(unittest.TestCase):
+    def test_pwl_error_acceptance_is_invariant_under_irrelevant_conditions(self):
+        from fractions import Fraction
+        expression = "1e16*(V(u,r)-0.3333333333333333)"
+        exact = Fraction(10**16) * (Fraction(1, 3) - Fraction(float("0.3333333333333333")))
+        self.assertGreater(exact, Fraction(1, 10))
+        bodies = [
+            f"V(y,r)<+{expression};",
+            f"tmp={expression}; V(y,r)<+tmp;",
+            f"tmp={expression}; if(V(u,r)>-0.1) begin end V(y,r)<+tmp;",
+            f"tmp={expression}; unused=0; if(V(u,r)>-0.1) unused=1; V(y,r)<+tmp;",
+            f"tmp={expression}; if(V(u,r)>-0.1) tmp={expression}; V(y,r)<+tmp;",
+        ]
+        accepted = []
+        for body in bodies:
+            with self.subTest(body=body):
+                program = compile_sources({"test.va": model(body, declarations="real tmp,unused;")},
+                                          [instance()])
+                settings = dict(stop=3.0, max_step=0.25, kernel=KERNEL, reltol=1e-10)
+                with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+                    transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
+                              vabstol=1e-9, **settings)
+                # Relaxing the actual voltage budget permits a conservative
+                # enclosure. Check error against the independent rational value.
+                result = transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
+                                   vabstol=2.0, **settings)
+                value = result["solutions"][0]["voltages"][result["nodes"].index("y")]
+                self.assertLessEqual(abs(Fraction(value) - exact), Fraction(2))
+                accepted.append(value)
+        self.assertEqual(accepted, [accepted[0]] * len(bodies))
+
+    def test_plain_and_empty_conditional_preserve_the_same_arithmetic(self):
+        bodies = ["", "if(V(u,r)>0) begin end", "unused=0; if(V(u,r)>0) unused=1;"]
+        expressions = [compile_sources({"test.va": model(
+            "tmp=1e16*(V(u,r)-0.3333333333333333); " + extra + " V(y,r)<+tmp;",
+            declarations="real tmp,unused;")}, [instance()]).to_dict()["contributions"][0]["rhs"]
+            for extra in bodies]
+        self.assertEqual(expressions, [expressions[0]] * len(expressions))
+
+    def test_source_nonlinear_predicates_are_rejected_before_branch_pruning(self):
+        for predicate in ("V(u,r)*V(u,r)", "pow(V(u,r),2)",
+                          "V(u,r)*V(u,r)-V(u,r)*V(u,r)", "squared"):
+            for body in (f"if({predicate}>0.5) tmp=1; else tmp=0; V(y,r)<+tmp;",
+                         f"if({predicate}>0.5) begin end V(y,r)<+0;"):
+                with self.subTest(predicate=predicate, body=body):
+                    source = model("squared=V(u,r)*V(u,r); " + body,
+                                   declarations="real tmp,squared;")
+                    with self.assertRaisesRegex(CompileError, "affine"):
+                        compile_sources({"test.va": source}, [instance()])
+
+    def test_raw_ir_nonlinear_predicates_are_rejected_in_unreachable_arms(self):
+        program = compile_sources({"test.va": model("V(y,r)<+0;")}, [instance()]).to_dict()
+        u = {"op": "affine", "constant": 0,
+             "terms": [{"node": program["nodes"].index("u"), "coefficient": 1}]}
+        zero = {"op": "affine", "constant": 0, "terms": []}
+        one = {"op": "affine", "constant": 1, "terms": []}
+        def select(left, then_value, else_value):
+            return {"op": "select", "relation": "gt", "left": left, "right": zero,
+                    "then_value": then_value, "else_value": else_value,
+                    "origin": {"source": "raw.va", "line": 1, "column": 1, "instance": "dut"}}
+        for predicate in ({"op": "multiply", "left": u, "right": u},
+                          {"op": "power", "base": u, "exponent": 2}):
+            for rhs in (select(predicate, one, zero),
+                        select(one, one, select(predicate, one, zero))):
+                with self.subTest(predicate=predicate, rhs=rhs):
+                    program["contributions"][0]["rhs"] = rhs
+                    raw = type("ProgramLike", (), {"to_dict": lambda self: program,
+                                                   "nodes": tuple(program["nodes"]), "states": ()})()
+                    # A source-knot value avoids accidental numerical rejection:
+                    # unsupported scope must be checked even if sign is obvious.
+                    with self.assertRaisesRegex(KernelError, "unsupported_condition.*affine"):
+                        transient(raw, {"u": [[0, 1], [1, 1]]}, [0.0],
+                                  stop=1.0, max_step=0.25, kernel=KERNEL)
+
     def test_v1_limiter_formula_and_boundaries(self):
         samples = [[-1.0], [-7/12], [0.0], [0.5], [2.0]]
         rows = execute(limiter_source(), [instance(connections=dict(u="u", yout="yout", r="0"))],

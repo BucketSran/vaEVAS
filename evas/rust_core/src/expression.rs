@@ -84,6 +84,39 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
     }
 }
 
+/// Structural scope shared with the frontend: node-free scalar (0),
+/// affine/input-selected piecewise-affine (1), or unsupported. Keep dependencies
+/// in cancelled terms and in all select arms; do not use a sample's value here.
+fn predicate_degree(expr: &Expression) -> Option<u8> {
+    match expr {
+        Expression::Affine { terms, .. } => Some(u8::from(!terms.is_empty())),
+        Expression::Add { left, right } => {
+            Some(predicate_degree(left)?.max(predicate_degree(right)?))
+        }
+        Expression::Multiply { left, right } => {
+            let degree = predicate_degree(left)? + predicate_degree(right)?;
+            (degree <= 1).then_some(degree)
+        }
+        Expression::Power { base, exponent } => {
+            let degree = predicate_degree(base)?;
+            (degree == 0 || *exponent == 1).then_some(degree)
+        }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => Some(
+            predicate_degree(left)?
+                .max(predicate_degree(right)?)
+                .max(predicate_degree(then_value)?)
+                .max(predicate_degree(else_value)?),
+        ),
+        Expression::State { .. } | Expression::Operator { .. } => None,
+    }
+}
+
 pub(crate) fn validate_select_predicates(
     expr: &Expression,
     allowed_nodes: &HashSet<usize>,
@@ -105,6 +138,15 @@ pub(crate) fn validate_select_predicates(
                     "unsupported_condition",
                     format!(
                         "ordinary analog if predicate depends on an undriven voltage at {}",
+                        origin.label()
+                    ),
+                ));
+            }
+            if predicate_degree(left).is_none() || predicate_degree(right).is_none() {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    format!(
+                        "ordinary analog if predicate must be affine or input-selected piecewise-affine at {}",
                         origin.label()
                     ),
                 ));
@@ -480,17 +522,6 @@ fn enclosed_predicate(
         "condition_precision",
         "ordinary analog if predicate cannot be certified from the original PWL input enclosure",
     ))
-}
-
-pub(crate) fn has_select(expr: &Expression) -> bool {
-    match expr {
-        Expression::Select { .. } => true,
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
-            has_select(left) || has_select(right)
-        }
-        Expression::Power { base, .. } => has_select(base),
-        _ => false,
-    }
 }
 
 /// Resolve only reachable conditions using source enclosures. Structural
