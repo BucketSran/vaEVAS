@@ -178,10 +178,10 @@ fn segment_value(
     gain: f64,
     tau: f64,
 ) -> Result<f64, Error> {
-    let one_minus_e = one_minus_exp_decay(h, tau);
-    let e = 1.0 - one_minus_e;
-    let q = lag_term(h, tau) / duration;
-    let value = e * y0 + gain * ((one_minus_e - q) * u0 + q * u1);
+    let g = one_minus_exp_decay(h, tau);
+    let b = lag_term(h, tau) / tau;
+    let slope = (u1 - u0) / duration;
+    let value = y0 + (gain * u0 - y0) * g + gain * slope * tau * b;
     if !value.is_finite() {
         return Err(Error::new(
             "numerical_failure",
@@ -200,10 +200,11 @@ fn segment_bounds(
     gain: f64,
     tau: f64,
 ) -> Result<I, Error> {
-    let one_minus_e = expand(I::point(one_minus_exp_decay(h, tau)));
-    let e = expand(I::point(1.0 - one_minus_exp_decay(h, tau)));
-    let q = expand(I::point(lag_term(h, tau) / duration));
-    let bound = e * y0 + I::point(gain) * ((one_minus_e - q) * u0 + q * u1);
+    let (g, b) = laplace_weights(h, tau)?;
+    let gain = I::point(gain);
+    let tau = I::point(tau);
+    let slope = (u1 - u0) / I::point(duration);
+    let bound = y0 + (gain * u0 - y0) * g + gain * slope * tau * b;
     if !bound.finite() {
         return Err(Error::new(
             "waveform_accuracy",
@@ -223,6 +224,85 @@ fn lag_term(h: f64, tau: f64) -> f64 {
         tau * x * x * (0.5 + x * (-1.0 / 6.0 + x / 24.0))
     } else {
         h + tau * (-x).exp_m1()
+    }
+}
+
+fn laplace_weights(h: f64, tau: f64) -> Result<(I, I), Error> {
+    if h == 0.0 {
+        return Ok((I::ZERO, I::ZERO));
+    }
+    let x = I::point(h) / I::point(tau);
+    if !x.finite() || x.lo < 0.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound laplace_nd exponential argument",
+        ));
+    }
+    if x.lo >= 1024.0 {
+        let g = I {
+            lo: 1.0_f64.next_down(),
+            hi: 1.0,
+        };
+        return Ok((g, x - g));
+    }
+    let mut reduced = x;
+    let mut halvings = 0;
+    while reduced.hi > 1.0 / 16.0 {
+        reduced = reduced / I::point(2.0);
+        halvings += 1;
+        if halvings > 64 || !reduced.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot reduce laplace_nd exponential argument",
+            ));
+        }
+    }
+    let (mut g, mut b) = small_weights(reduced)?;
+    for _ in 0..halvings {
+        b = expand(I::point(2.0) * b + g * g);
+        g = expand(g * (I::point(2.0) - g));
+        if !g.finite() || !b.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "nonfinite laplace_nd exponential weight enclosure",
+            ));
+        }
+    }
+    Ok((g, b))
+}
+
+fn small_weights(x: I) -> Result<(I, I), Error> {
+    if !x.finite() || x.lo < 0.0 || x.hi > 1.0 / 16.0 {
+        return Err(Error::new(
+            "waveform_accuracy",
+            "laplace_nd small exponential range is invalid",
+        ));
+    }
+    let n = 24;
+    let mut term = x;
+    let mut g = term;
+    for k in 2..=n {
+        term = term * x / I::point(k as f64);
+        g = if k % 2 == 0 { g - term } else { g + term };
+    }
+    term = term * x / I::point((n + 1) as f64);
+    let g = expand(g + symmetric(term.magnitude()));
+
+    let mut term = x;
+    let mut b = I::ZERO;
+    for k in 2..=n {
+        term = term * x / I::point(k as f64);
+        b = if k % 2 == 0 { b + term } else { b - term };
+    }
+    term = term * x / I::point((n + 1) as f64);
+    let b = expand(b + symmetric(term.magnitude()));
+    Ok((g, b))
+}
+
+fn symmetric(radius: f64) -> I {
+    I {
+        lo: -radius.abs(),
+        hi: radius.abs(),
     }
 }
 
@@ -275,6 +355,33 @@ mod tests {
             (&[1.0][..], &[0.0, 1.0][..]),
         ] {
             assert!(LaplaceNd::enclosed(points.clone(), bounds.clone(), num, den).is_err());
+        }
+    }
+
+    #[test]
+    fn proved_weights_enclose_tiny_ordinary_and_large_arguments() {
+        for x in [1e-12, 1e-4, 0.25, 4.0, 100.0, 1024.0] {
+            let (g, b) = laplace_weights(x, 1.0).unwrap();
+            let exact_g = -(-x).exp_m1();
+            let exact_b = if x < 0.5 {
+                let mut term = x;
+                let mut sum = 0.0;
+                for k in 2..=40 {
+                    term *= x / k as f64;
+                    sum += if k % 2 == 0 { term } else { -term };
+                }
+                sum
+            } else {
+                x - exact_g
+            };
+            assert!(
+                g.lo <= exact_g && exact_g <= g.hi,
+                "g({x}) = {exact_g:?} not in {g:?}"
+            );
+            assert!(
+                b.lo <= exact_b && exact_b <= b.hi,
+                "b({x}) = {exact_b:?} not in {b:?}"
+            );
         }
     }
 }

@@ -238,18 +238,25 @@ Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新�
 
 `y=e*y0 + gain*((1-e-q)*u0 + q*u1)`，
 
-其中 `e=exp(-h/tau)`、`q=(h-tau*(1-e))/D`。`1-e` 通过 `expm1` 计算；小 `h/tau` 时
-`h-tau*(1-e)` 改用级数，避免消减。历史由源语义拐点递推，输出采样与 `max_step`
+其中 `e=exp(-h/tau)`、`q=(h-tau*(1-e))/D`。代表值用 `expm1` 和小量级数避免消减。
+验收区间改用 `g=1-exp(-x)`、`b=x-g` 的形式：
+
+`y=y0+(gain*u0-y0)*g+gain*m*tau*b`。
+
+对 `x=h/tau>=0`，实现先二分到 `r<=1/16`，用 `g(r)` 与 `b(r)` 的交错级数加显式下一项余量包围，
+再通过 `g(2r)=g(r)*(2-g(r))`、`b(2r)=2*b(r)+g(r)^2` 恢复；`x>=1024` 时用
+`exp(-x)<2^-1022` 的粗尾界。历史由源语义拐点递推，输出采样与 `max_step`
 不写历史；候选帧克隆该不可变解析历史，所以失败或弃步不会改变已接受状态。
 
 实现入口：[laplace.rs](../rust_core/src/laplace.rs)、[operators.rs](../rust_core/src/operators.rs)。
 独立契约与回归见 [LAPLACE_CONTRACTS.md](../validation/LAPLACE_CONTRACTS.md) 和
 [test_laplace.py](../tests/test_laplace.py)。回归用 `Decimal` 重新计算解析答案，覆盖标准数组、
-DC 初始化、阶跃/斜坡/拐点、小时间尺度、实例隔离、网格/步长不变性及 raw IR 拒绝。
+DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺度、实例隔离、网格/步长不变性、
+历史误差经电压网络放大后的过严预算拒绝及 raw IR 拒绝。
 
-当前误差区间复用直接 PWL 输入包围，并对 `exp` 及组合结果作邻近 binary64 外扩。
-这能把历史误差传入现有电压验收，但还不是经过严格证明的 libm 指数函数包围；
-不能据此宣称连续时间全轨迹资格或 Spectre LTE 控制等价。
+当前误差区间复用直接 PWL 输入包围，并用上述级数/倍角权重包围滤波历史，再传入现有电压验收。
+这仍只证明成功计算点相对编译后 IR 和 binary64 PWL 源的预算；不能据此宣称连续时间全轨迹资格
+或 Spectre LTE 控制等价。
 
 ## slew
 

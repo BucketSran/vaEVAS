@@ -106,11 +106,39 @@ class LaplaceContracts(unittest.TestCase):
                     self.assertEqual(selected, baseline)
 
     def test_coefficient_scale_and_long_small_step_queries(self):
-        points = [[0.0, 1.0], [1e-12, 1.0], [4e-12, 1.0]]
+        points = [[0.0, 1.0], [1e-12, 1.25], [4e-12, 0.5]]
         program = compile_filter("V(y,r)<+laplace_nd(V(u,r),'{2.0},'{4.0,8e-12});")
         result = execute(program, points=points, times=[0, 1e-12, 2e-12, 4e-12],
                          step=1e-12, vabstol=1e-10, reltol=0)
-        self.assertEqual(column(result), [0.5, 0.5, 0.5, 0.5])
+        for actual, t in zip(column(result), [0, 1e-12, 2e-12, 4e-12]):
+            self.assertAlmostEqual(actual, expected(points, t, gain=.5, tau=2e-12), delta=1e-10)
+
+    def test_decimal_oracle_covers_ordinary_and_large_exponential_weights(self):
+        cases = [
+            ([[0.0, 0.0], [1e-6, 1.0], [3e-6, -0.5]], 0.5e-6,
+             [0, 0.5e-6, 1.5e-6, 3e-6], 2e-9),
+            ([[0.0, 0.0], [20e-9, 1.0], [100e-9, 1.0]], 1e-9,
+             [0, 1e-9, 20e-9, 100e-9], 3e-9),
+        ]
+        for points, tau, times, delta in cases:
+            program = compile_filter(f"V(y,r)<+laplace_nd(V(u,r),'{{1.0}},'{{1.0,{tau!r}}});")
+            result = execute(program, points=points, times=times, step=100e-9,
+                             vabstol=delta, reltol=0)
+            for actual, t in zip(column(result), times):
+                self.assertAlmostEqual(actual, expected(points, t, tau=tau), delta=delta)
+
+    def test_laplace_history_error_is_amplified_by_voltage_network(self):
+        body = ("V(z,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6}); "
+                "V(y,r)<+1073741824*V(z,r);")
+        program = compile_filter(body, "electrical z;")
+        points = [[0, 0], [1e-6, 1]]
+        ok = execute(program, points=points, times=[0, .5e-6, 1e-6],
+                     step=1e-6, vabstol=1e-3, reltol=0)
+        for actual, t in zip(column(ok, "y"), [0, .5e-6, 1e-6]):
+            self.assertAlmostEqual(actual, 1073741824 * expected(points, t), delta=1e-3)
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            execute(program, points=points, times=[0, .5e-6, 1e-6],
+                    step=1e-6, vabstol=1e-9, reltol=0)
 
     def test_rejections_are_explicit(self):
         compile_errors = [
