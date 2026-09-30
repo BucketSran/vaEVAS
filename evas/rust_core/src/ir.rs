@@ -133,6 +133,12 @@ pub enum OperatorSpec {
         fall: f64,
         origin: Origin,
     },
+    LaplaceNd {
+        input: Expression,
+        numerator: Vec<f64>,
+        denominator: Vec<f64>,
+        origin: Origin,
+    },
 }
 
 impl OperatorSpec {
@@ -141,7 +147,8 @@ impl OperatorSpec {
             Self::Transition { origin, .. }
             | Self::AbsDelay { origin, .. }
             | Self::Idt { origin, .. }
-            | Self::Slew { origin, .. } => origin,
+            | Self::Slew { origin, .. }
+            | Self::LaplaceNd { origin, .. } => origin,
         }
     }
 }

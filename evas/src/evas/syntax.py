@@ -25,12 +25,12 @@ _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|[<>()+*/;,=@\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[<>(){}+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt", "laplace_nd"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -171,14 +171,21 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
-        elif token.text in ("transition", "absdelay", "slew", "idt"):
+        elif token.text == "'{":
+            arguments = [self.expression()]
+            while self.token.text == ",":
+                self.take(",")
+                arguments.append(self.expression())
+            self.take("}")
+            left = Expr("array", None, tuple(arguments), token)
+        elif token.text in ("transition", "absdelay", "slew", "idt", "laplace_nd"):
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3)}[token.text]
+            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3), "laplace_nd": 3}[token.text]
             allowed = required if isinstance(required, tuple) else (required,)
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)

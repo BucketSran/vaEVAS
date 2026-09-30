@@ -1,4 +1,4 @@
-"""Version 10: voltage/event IR with ordered event bodies and analog select.
+"""Version 14: combined voltage/event IR for the local integration checkpoint.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -110,6 +110,15 @@ class Idt:
 
 
 @dataclass(frozen=True)
+class LaplaceNd:
+    input: Expression
+    numerator: tuple[float, ...]
+    denominator: tuple[float, ...]
+    origin: Origin
+    kind: str = field(default="laplace_nd", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -190,7 +199,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

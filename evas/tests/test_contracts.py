@@ -163,7 +163,7 @@ class BranchContracts(unittest.TestCase):
                 self.request(request, "invalid_ir")
 
     def test_old_and_unknown_versions_are_rejected_before_payload_decoding(self):
-        for version in (1, 2, 3, 4, 5, 6, 7, 8, 9, 99):
+        for version in tuple(range(1, SCHEMA_VERSION)) + (99,):
             request = wire_request()
             request["program"]["schema_version"] = version
             request["program"]["contributions"][0]["branch"] = "r,y"
