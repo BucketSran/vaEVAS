@@ -1,7 +1,8 @@
 //! Solve stateless operating points and check the original branch residuals.
 use crate::assembly::{assemble, AssembledCircuit, Equation};
-use crate::ir::{Error, Program, Solution, Tolerances};
-use crate::{linear, nonlinear};
+use crate::interval::Interval as I;
+use crate::ir::{Error, Expression, Program, Solution, Tolerances};
+use crate::{expression, linear, nonlinear};
 use std::sync::OnceLock;
 
 pub struct Circuit {
@@ -48,6 +49,47 @@ impl DenseResidual {
             .zip(&values[self.start..self.start + self.coefficients.len()])
             .map(|(a, v)| a * v)
             .sum()
+    }
+}
+
+fn interval_power(base: I, exponent: u32) -> I {
+    let mut result = I::ONE;
+    for _ in 0..exponent {
+        result = result * base;
+    }
+    result
+}
+
+fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, Error> {
+    let result = match expr {
+        Expression::State { .. } | Expression::Operator { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "unbound state in waveform accuracy expression",
+            ))
+        }
+        Expression::Affine { constant, terms } => {
+            terms.iter().fold(I::point(*constant), |sum, t| {
+                sum + I::point(t.coefficient) * values[t.node]
+            })
+        }
+        Expression::Add { left, right } => {
+            interval_expression(left, values)? + interval_expression(right, values)?
+        }
+        Expression::Multiply { left, right } => {
+            interval_expression(left, values)? * interval_expression(right, values)?
+        }
+        Expression::Power { base, exponent } => {
+            interval_power(interval_expression(base, values)?, *exponent)
+        }
+    };
+    if result.finite() {
+        Ok(result)
+    } else {
+        Err(Error::new(
+            "waveform_accuracy",
+            "cannot bound waveform residual with finite interval arithmetic",
+        ))
     }
 }
 
@@ -108,6 +150,94 @@ impl Circuit {
             driven_coefficients,
             dense_residuals,
         })
+    }
+
+    /// Certify that the accepted point solution also satisfies each original
+    /// branch relation for the exact binary64-PWL input interval represented at
+    /// this observation time. This is a waveform/input uncertainty check, not a
+    /// replacement for Newton convergence at the nominal f64 input point.
+    pub(crate) fn check_waveform_accuracy(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+    ) -> Result<(), Error> {
+        if input_bounds.len() != self.driven.len() {
+            return Err(Error::new(
+                "invalid_inputs",
+                "input bounds must contain one interval per driven node",
+            ));
+        }
+        if input_bounds.iter().any(|b| !b.finite()) {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify waveform accuracy with nonfinite input bounds",
+            ));
+        }
+        let mut values = solution
+            .voltages
+            .iter()
+            .copied()
+            .map(I::point)
+            .collect::<Vec<_>>();
+        for (&node, &bounds) in self.driven.iter().zip(input_bounds) {
+            values[node] = bounds;
+        }
+        for eq in &self.equations {
+            let mut residual =
+                values[eq.positive] - values[eq.negative] - I::point(eq.rhs_constant);
+            for &(node, coefficient) in &eq.rhs_terms {
+                residual = residual - I::point(coefficient) * values[node];
+            }
+            for expr in &eq.nonlinear {
+                residual = residual
+                    - interval_expression(expr, &values).map_err(|mut error| {
+                        error
+                            .message
+                            .push_str(&format!(" at {}", eq.origins.join(", ")));
+                        error
+                    })?;
+            }
+            let lhs = solution.voltages[eq.positive] - solution.voltages[eq.negative];
+            let mut rhs = eq.rhs_constant
+                + eq.rhs_terms
+                    .iter()
+                    .map(|&(node, coefficient)| coefficient * solution.voltages[node])
+                    .sum::<f64>();
+            for expr in &eq.nonlinear {
+                rhs += expression::evaluate(expr, &solution.voltages)
+                    .map_err(|mut error| {
+                        error
+                            .message
+                            .push_str(&format!(" at {}", eq.origins.join(", ")));
+                        error
+                    })?
+                    .value;
+            }
+            let bound =
+                self.tolerances.absolute + self.tolerances.relative * lhs.abs().max(rhs.abs());
+            if !bound.is_finite() || !residual.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "nonfinite waveform accuracy budget at {}",
+                        eq.origins.join(", ")
+                    ),
+                ));
+            }
+            if residual.lo < -bound || residual.hi > bound {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "waveform residual interval [{:e}, {:e}] V exceeds ±{:e} V at {}",
+                        residual.lo,
+                        residual.hi,
+                        bound,
+                        eq.origins.join(", ")
+                    ),
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// A stateless operating point. No previous solution or physical history is

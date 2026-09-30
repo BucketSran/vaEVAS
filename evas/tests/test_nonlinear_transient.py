@@ -164,6 +164,157 @@ class NonlinearTransientContracts(unittest.TestCase):
             budget = abstol + reltol * max(abs(sparse_row["y"]), abs(dense[dense_index]["y"]))
             self.assertLessEqual(abs(sparse_row["y"] - dense[dense_index]["y"]), budget)
 
+    def test_off_knot_pwl_interpolation_error_is_not_silently_accepted(self):
+        source = model(
+            "V(y,r)<+g*(V(u,r)-1);",
+            "parameter real g=1e16;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"high_gain.va": source},
+            [
+                instance(
+                    connections=dict(u="u", y="y", r="0"),
+                    parameters=dict(g=1e16),
+                )
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1.0], [3.0, 2.0]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-12,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertEqual(error.exception.detail["sample"], 0)
+    def test_off_knot_pwl_interpolation_error_can_pass_when_budget_covers_gain(self):
+        source = model(
+            "V(y,r)<+g*(V(u,r)-1);",
+            "parameter real g=1e16;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"high_gain.va": source},
+            [
+                instance(
+                    connections=dict(u="u", y="y", r="0"),
+                    parameters=dict(g=1e16),
+                )
+            ],
+        )
+        result = transient(
+            program,
+            {"u": [[0.0, 1.0], [3.0, 2.0]]},
+            [1.0],
+            stop=3.0,
+            max_step=3.0,
+            kernel=KERNEL,
+            vabstol=8.0,
+            reltol=0.0,
+        )
+        row = dict(zip(result["nodes"], result["solutions"][0]["voltages"]))
+        self.assertEqual(row["y"], 3333333333333334.0)
+
+    def test_nonlinear_path_rejects_amplified_off_knot_input_uncertainty(self):
+        source = model(
+            "V(y,r)<+g*(V(u,r)-1)+eps*pow(V(y,r),3);",
+            "parameter real g=1e16; parameter real eps=1e-60;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"nonlinear_gain.va": source},
+            [
+                instance(
+                    connections=dict(u="u", y="y", r="0"),
+                    parameters=dict(g=1e16, eps=1e-60),
+                )
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1.0], [3.0, 2.0]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-12,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+
+    def test_cross_instance_off_knot_amplification_is_rejected(self):
+        source = model(
+            "V(y,r)<+g*(V(u,r)-1);",
+            "parameter real g=1e16;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"gain.va": source},
+            [
+                instance(
+                    name="a",
+                    connections=dict(u="u", y="ya", r="0"),
+                    parameters=dict(g=1e16),
+                ),
+                instance(
+                    name="b",
+                    connections=dict(u="u", y="yb", r="0"),
+                    parameters=dict(g=-1e16),
+                ),
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1.0], [3.0, 2.0]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-12,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+
+    def test_degenerate_waveform_interval_is_rejected_as_waveform_accuracy(self):
+        source = model(
+            "V(y,r)<+g*V(u,r);",
+            "parameter real g=1e308;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"huge_gain.va": source},
+            [
+                instance(
+                    connections=dict(u="u", y="y", r="0"),
+                    parameters=dict(g=1e308),
+                )
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1e-292], [3.0, 2e-292]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-12,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+
     def test_polynomial_transient_with_events_remains_explicitly_unsupported(self):
         source = model(
             "@(initial_step) held=0; @(timer(0,1,1p)) held=held+1; "

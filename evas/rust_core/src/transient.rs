@@ -375,6 +375,10 @@ fn run_stateless_transient(
                 &trajectory.values(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
             )
+            .and_then(|solution| {
+                circuit.check_waveform_accuracy(&solution, &trajectory.value_bounds(time))?;
+                Ok(solution)
+            })
             .map_err(|mut error| {
                 error.sample = Some(sample);
                 error
