@@ -1,4 +1,5 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
+use crate::interval::{sum_products_sign, Interval as I};
 use crate::ir::{Error, Expression, Relation};
 use std::collections::{BTreeSet, HashSet};
 
@@ -242,15 +243,17 @@ impl Accumulator {
                 right,
                 then_value,
                 else_value,
-                ..
+                origin,
             } => {
-                let left = evaluate(left, nodes)?;
-                let right = evaluate(right, nodes)?;
-                let selected = if relation.selects(left.value, right.value) {
-                    then_value
-                } else {
-                    else_value
-                };
+                let selected =
+                    if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                        error.message.push_str(&format!(" at {}", origin.label()));
+                        error
+                    })? {
+                        then_value
+                    } else {
+                        else_value
+                    };
                 self.add_expression(selected, factor, nodes)?;
             }
         }
@@ -277,14 +280,140 @@ impl Accumulator {
 }
 
 impl Relation {
-    fn selects(self, left: f64, right: f64) -> bool {
+    fn selects_sign(self, sign: i8) -> bool {
         match self {
-            Self::Lt => left < right,
-            Self::Le => left <= right,
-            Self::Gt => left > right,
-            Self::Ge => left >= right,
+            Self::Lt => sign < 0,
+            Self::Le => sign <= 0,
+            Self::Gt => sign > 0,
+            Self::Ge => sign >= 0,
         }
     }
+}
+
+fn affine_product_terms(
+    expr: &Expression,
+    factor: f64,
+    nodes: &[f64],
+    terms: &mut Vec<(f64, f64)>,
+) -> Result<bool, Error> {
+    if !factor.is_finite() {
+        return Ok(false);
+    }
+    match expr {
+        Expression::Affine {
+            constant,
+            terms: affine_terms,
+        } => {
+            terms.push((factor, *constant));
+            for term in affine_terms {
+                terms.push((factor * term.coefficient, nodes[term.node]));
+            }
+            Ok(true)
+        }
+        Expression::Add { left, right } => Ok(affine_product_terms(left, factor, nodes, terms)?
+            && affine_product_terms(right, factor, nodes, terms)?),
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let selected =
+                if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })? {
+                    then_value
+                } else {
+                    else_value
+                };
+            affine_product_terms(selected, factor, nodes, terms)
+        }
+        _ => Ok(false),
+    }
+}
+
+fn expression_interval(expr: &Expression, nodes: &[f64]) -> Result<I, Error> {
+    match expr {
+        Expression::State { .. } | Expression::Operator { .. } => Err(Error::new(
+            "unsupported_analysis",
+            "unbound state in static expression",
+        )),
+        Expression::Affine { constant, terms } => {
+            let mut value = I::point(*constant);
+            for term in terms {
+                value = value + I::point(term.coefficient) * I::point(nodes[term.node]);
+            }
+            Ok(value)
+        }
+        Expression::Add { left, right } => {
+            Ok(expression_interval(left, nodes)? + expression_interval(right, nodes)?)
+        }
+        Expression::Multiply { left, right } => {
+            Ok(expression_interval(left, nodes)? * expression_interval(right, nodes)?)
+        }
+        Expression::Power { base, exponent } => {
+            let base = expression_interval(base, nodes)?;
+            if *exponent == 0 {
+                return Ok(I::ONE);
+            }
+            let mut value = base;
+            for _ in 1..*exponent {
+                value = value * base;
+            }
+            Ok(value)
+        }
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let selected =
+                if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })? {
+                    then_value
+                } else {
+                    else_value
+                };
+            expression_interval(selected, nodes)
+        }
+    }
+}
+
+fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Result<i8, Error> {
+    let mut terms = Vec::new();
+    let affine = affine_product_terms(left, 1.0, nodes, &mut terms)?
+        && affine_product_terms(right, -1.0, nodes, &mut terms)?;
+    if affine {
+        terms.retain(|(a, b)| *a != 0.0 && *b != 0.0);
+        if let Some(sign) = sum_products_sign(&terms) {
+            return Ok(sign);
+        }
+    }
+    let interval = expression_interval(left, nodes)? - expression_interval(right, nodes)?;
+    if let Some(sign) = interval.sign() {
+        return Ok(sign);
+    }
+    Err(Error::new(
+        "condition_precision",
+        "ordinary analog if predicate cannot be certified at binary64 precision",
+    ))
+}
+
+fn select_predicate(
+    relation: Relation,
+    left: &Expression,
+    right: &Expression,
+    nodes: &[f64],
+) -> Result<bool, Error> {
+    Ok(relation.selects_sign(predicate_sign(left, right, nodes)?))
 }
 
 pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
