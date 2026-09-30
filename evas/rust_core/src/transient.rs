@@ -477,7 +477,9 @@ fn run_stateless_transient(
             state_names: Vec::new(),
             states: vec![Vec::new(); sample_count],
             events: Vec::new(),
-            accepted_steps: sample_count.saturating_sub(1),
+            // Stateless observations solve working points; no physical frame
+            // or integration step is accepted on this path.
+            accepted_steps: 0,
             discarded_trials: 0,
         }),
     })
@@ -681,6 +683,67 @@ mod tests {
         assert_eq!(retry.operators.bounds(1.0).unwrap(), [I::point(0.25)]);
         // u(t)=t/3: integral from 1 to 3/2 is 5/24, plus IC=1/4.
         assert!((retry.operators.values(1.5).unwrap()[0] - 11.0 / 24.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn reset_sine_failure_discard_and_retry_preserve_accepted_histories() {
+        let (original, trajectory, _) = idt_fixture(false, 1.0, Tolerances::default(), true);
+        let mut program = original.program;
+        program.operators.push(
+            serde_json::from_value(serde_json::json!({
+                "kind":"sin", "input":{"op":"operator","operator":0},
+                "origin":{"source":"rollback.va","line":4,"column":1,"instance":"dut"}
+            }))
+            .unwrap(),
+        );
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply", "left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"operator","operator":1}
+        }))
+        .unwrap();
+        let mut model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.0).unwrap())
+            .unwrap();
+        let before = Frame {
+            time: 0.0,
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+            circuit,
+            operators,
+        };
+        let original_values = before.operators.values(1.0).unwrap();
+        let original_bounds = before.operators.bounds(1.0).unwrap();
+        model.tolerances = Tolerances {
+            absolute: 1e-30,
+            relative: 0.0,
+        };
+        let error = prepare_batch(&model, &trajectory, &before, 1.0, &[0])
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "waveform_accuracy");
+        model.tolerances = Tolerances::default();
+        let (discarded, _) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(discarded.states, [1.0]);
+        assert_eq!(
+            discarded.operators.values(1.0).unwrap(),
+            [0.25, 0.25f64.sin()]
+        );
+        assert_eq!(discarded.solution.voltages[2], 0.25f64.sin());
+        drop(discarded);
+        assert_eq!(before.time, 0.0);
+        assert_eq!(before.states, [0.0]);
+        assert_eq!(before.operators.values(1.0).unwrap(), original_values);
+        assert_eq!(before.operators.bounds(1.0).unwrap(), original_bounds);
+        let (retry, records) = prepare_batch(&model, &trajectory, &before, 1.0, &[0]).unwrap();
+        assert_eq!(records.len(), 1);
+        assert_eq!(retry.states, [1.0]);
+        assert_eq!(retry.operators.values(1.0).unwrap(), [0.25, 0.25f64.sin()]);
+        assert_eq!(retry.solution.voltages[2], 0.25f64.sin());
     }
 
     #[test]

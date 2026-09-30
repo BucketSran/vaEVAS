@@ -405,7 +405,7 @@ impl Circuit {
             let budget = self.voltage_budget_lower(center)?;
             let lo = (center - budget).next_up();
             let hi = (center + budget).next_down();
-            if !(lo < center && center < hi) || !lo.is_finite() || !hi.is_finite() {
+            if !(lo < center && center < hi && lo.is_finite() && hi.is_finite()) {
                 return Err(Error::new(
                     "waveform_accuracy",
                     format!(
@@ -477,7 +477,7 @@ impl Circuit {
             max_norm = max_norm.max(row_norm.hi);
             krawczyk[j] = image;
         }
-        if !(max_norm < 1.0) {
+        if max_norm.partial_cmp(&1.0) != Some(std::cmp::Ordering::Less) {
             return Err(Error::new(
                 "waveform_accuracy",
                 format!("Krawczyk waveform contraction bound {max_norm:e} is not below 1"),

@@ -101,7 +101,7 @@ class NonlinearTransientContracts(unittest.TestCase):
         rows = [dict(zip(result["nodes"], s["voltages"])) for s in result["solutions"]]
         self.assertEqual(result["transient"]["events"], [])
         self.assertEqual(result["transient"]["states"], [[] for _ in times])
-        self.assertEqual(result["transient"]["accepted_steps"], len(times) - 1)
+        self.assertEqual(result["transient"]["accepted_steps"], 0)
         for row, q in zip(rows, roots):
             self.assertAlmostEqual(row["y"] - row["r"], q, delta=4e-10)
 
