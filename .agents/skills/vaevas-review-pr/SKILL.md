@@ -15,12 +15,25 @@ callers or consumers; keep findings attributable to the reviewed change.
 Preserve the working tree. Perform fixes or publish review comments only when
 the current task authorizes those actions.
 
+Record resolved base/head commit IDs and the actual comparison. For branch changes,
+use the merge-base with the PR's target; for an explicit pair of revisions, compare
+those endpoints. For local work, include the requested staged, unstaged and relevant
+untracked files as well as any committed range. A diff ending at HEAD alone does
+not review uncommitted work; an empty committed diff does not end a local review.
+
 ## Assess the relevant contracts
 
 Use [workspace ownership](../../../README.md),
 [EVAS documentation](../../../evas/README.md), and the owning protocol for the changed
 area. Review against the user's acceptance criteria, rather than every possible
 future simulator feature.
+
+Resolve requirements from the task, PR/Issue and owning capability contract; no extra
+specification file or issue-tracker setup is required. Assess three distinct questions:
+whether the mathematics and requested semantics are implemented, whether architecture
+and documented repository rules are respected, and whether independent evidence
+supports the claims. A pass in one question does not answer the others. Treat code
+smells as hypotheses requiring concrete impact, not automatic blockers.
 
 Resolve the affected [capability rows](../../../evas/docs/CAPABILITIES.md) and
 [handbook explanation](../../../evas/docs/README.md#feature-documentation-contract).
@@ -54,7 +67,10 @@ to identify evidence invalidated by changed code, inputs, checkers or measuremen
   LRM requirements, implementation choices and observations from other backends.
 
 Assess whether a test could detect the relevant bug independently of the
-implementation. Run a focused reproduction when feasible and within task scope;
+implementation. Expected answers should come from a justified analytic or worked
+reference, a qualified independent oracle, or a specified invariant. Preserve focused
+kernel and rollback tests when they protect properties that outer tests do not expose.
+Run a focused reproduction when feasible and within task scope;
 if it would alter shared state or require an unauthorized resource, explain the
 verification gap instead of claiming it passed.
 
@@ -63,9 +79,12 @@ verification gap instead of claiming it passed.
 Lead with actionable findings, ordered by severity. Each finding should identify
 the location, concrete trigger, observed or reasoned impact, and a focused repair
 direction. Separate confirmed defects from open questions and missing evidence.
+Identify which review question each finding concerns while retaining severity order.
 Avoid speculative architecture preferences and unrelated pre-existing issues.
 
 If no actionable defects are found, say so and describe the review scope and
 material verification limits. Complete one review unless new changes, a specific
 unresolved question, or the user's request warrants another pass. No fixed
 reviewer count, clean-round quota, or external reviewer is required.
+Describe direct and independently delegated review accurately; a readiness assessment
+does not authorize merge or claim an independent review that did not happen.
