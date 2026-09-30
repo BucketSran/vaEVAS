@@ -152,6 +152,32 @@ V(phase,r)<+phase_v;
                       declarations="real phase_v;", vabstol=1e-12, reltol=0)
         self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
 
+    def test_sin_rejects_second_operator_hidden_by_exact_cancellation(self):
+        body = """
+phase_p = idtmod(V(f,r), .125, 1, 0);
+phase_q = idtmod(V(f,r), .25, 1, 0);
+V(out,r)<+sin(phase_p + phase_q - phase_q);
+V(total,r)<+0;
+V(phase,r)<+phase_p;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 0), (1, 0)], [0], body,
+                      declarations="real phase_p, phase_q;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "unsupported_operator")
+
+    def test_sin_rejects_second_operator_hidden_by_zero_multiplier(self):
+        body = """
+phase_p = idtmod(V(f,r), .125, 1, 0);
+phase_q = idtmod(V(f,r), .25, 1, 0);
+V(out,r)<+sin(phase_p + 0*phase_q);
+V(total,r)<+0;
+V(phase,r)<+phase_p;
+"""
+        with self.assertRaises(KernelError) as error:
+            run_phase([(0, 0), (1, 0)], [0], body,
+                      declarations="real phase_p, phase_q;", vabstol=1e-12, reltol=0)
+        self.assertEqual(error.exception.detail["kind"], "unsupported_operator")
+
     def test_direct_sin_is_transient_operator_not_static_nonlinear_solve(self):
         program = compile_phase("V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;", declarations="")
         with self.assertRaises(KernelError) as error:

@@ -418,10 +418,12 @@ impl Operators {
                             || coefficient == 0.0
                             || !coefficient.is_finite()
                             || !constant.is_finite()
+                            || bound_input.operator_dependencies.len() != 1
+                            || !bound_input.operator_dependencies.contains(&operator)
                         {
                             return Err(Error::new(
                                 "unsupported_operator",
-                                "sin operator input must reference one earlier operator with finite affine coefficients",
+                                "sin operator input must reference exactly one earlier operator with finite affine coefficients",
                             ));
                         }
                         let (coefficient_bounds, constant_bounds) =
