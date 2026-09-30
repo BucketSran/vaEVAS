@@ -1,6 +1,12 @@
 # PR14 / PR15 合并前验证
 
-本目录记录合并前的冻结验证：执行阶段只验证，未改 EVAS 求解器、原条件或阈值。
+本目录保留原 PR14/15 协议，并在同一原条件矩阵下收纳后续新 EVAS 检查点。
+最新记录为[已合并 PR26 的 idt 复位对照](RESULTS.md#idt-reset-merge-validation)及其[收据](results/idt-reset-merge-validation.json)；
+前一事件条件检查点见[PR23 结果](RESULTS.md#event-conditions-090)。各轮身份、后端与执行次数分别记录。
+
+## 原 PR14 / PR15 验证协议（历史）
+
+以下记录合并前的冻结验证：执行阶段只验证，未改 EVAS 求解器、原条件或阈值。
 后续交付状态见[能力总表](../../evas/docs/CAPABILITIES.md)，不回写本轮被测提交或结果。
 
 - 候选：PR15 `e01fb5b69288118af39470800df3a9819cdd4a5f`，包含 PR14
@@ -28,7 +34,7 @@
 python3 -B -m unittest discover -s experiments/pr14-pr15-validation -p 'test_*.py' -v
 ```
 
-结果见 [RESULTS.md](RESULTS.md)，包含 248 格矩阵、专项失败和只改变步长的追加诊断。
+原结果见 [31 条件矩阵](RESULTS.md#原-31-条件矩阵)，专项失败和只改变步长的追加诊断见 [RESULTS.md](RESULTS.md)。
 本目录的脚本、数学答案、整理后的结果和收据随仓库发布；原始波形、日志和独立 PR14
 全栈回放包装脚本仍仅本地/thu-sui 保留。外部读者可以检查协议与摘要、重新执行，
 但目前不能下载本轮完整原始材料；不宣称完整公开复现。
