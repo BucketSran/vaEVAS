@@ -113,13 +113,37 @@ impl Circuit {
     /// A stateless operating point. No previous solution or physical history is
     /// read or changed. Dynamic trial/commit state is deliberately not present.
     pub fn solve(&self, inputs: &[f64]) -> Result<Solution, Error> {
+        self.solve_with_initial(inputs, None)
+    }
+
+    /// Stateless operating point with a caller-supplied voltage initial guess.
+    /// This is used by transient observation-only polynomial solves; accepted
+    /// voltage history is only a Newton seed and never physical simulator state.
+    pub(crate) fn solve_with_initial(
+        &self,
+        inputs: &[f64],
+        initial_voltages: Option<&[f64]>,
+    ) -> Result<Solution, Error> {
         if inputs.len() != self.driven.len() || inputs.iter().any(|x| !x.is_finite()) {
             return Err(Error::new(
                 "invalid_inputs",
                 "sample must contain one finite value per driven node",
             ));
         }
+        if let Some(guess) = initial_voltages {
+            if guess.len() != self.nodes.len() || guess.iter().any(|x| !x.is_finite()) {
+                return Err(Error::new(
+                    "invalid_inputs",
+                    "initial voltage guess must contain one finite value per node",
+                ));
+            }
+        }
         let mut values = vec![0.0; self.nodes.len()];
+        if let Some(guess) = initial_voltages {
+            for &node in &self.unknown {
+                values[node] = guess[node];
+            }
+        }
         for (&node, &value) in self.driven.iter().zip(inputs) {
             values[node] = value;
         }

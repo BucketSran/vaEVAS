@@ -20,7 +20,7 @@
 | --- | --- | --- | --- | --- |
 | LANG：语法、绑定、IR | 标量、参数、限定表达式、受限事件 if/else 与 cross OR、版本化 IR | PR23 审阅交付：0.9.0 / IR v9；旧 IR 须重编译 | 独立条件与畸形 IR 回归见[事件说明](EVENTS.md#event-conditions) | 普通 analog 条件/数组/循环及更多函数按实际模型需求扩展；[当前语法](../README.md#实现范围) |
 | LIN：线性电压关系 | 稠密/稀疏求解、参考节点、贡献累加、分解复用 | PR8 集成分流，交付见该 PR | 构造解及 0.7.1 新静态回放 | 病态系统与更广规模边界；[数值说明](NUMERICS.md) |
-| NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收 | 已合并 PR6 | 独立高精度参考、缩放/容差及失败回归 | 初猜、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
+| NONLINEAR：多项式反馈 | 阻尼 Newton、解析 Jacobian、三项验收；main 仅静态入口 | 无状态非线性 transient 为分支限定实现，待 review；静态已合并 PR6 | 静态独立高精度参考、缩放/容差及失败回归；分支新增单调三次瞬态根、前一点初猜、容差及拒绝回归 | 非线性事件、状态/历史/算子耦合、延续法、多解及更广函数；[数值说明](NUMERICS.md) |
 | SPARSE：稀疏线性代数 | n≥32、nnz≤0.1mn 时采用稀疏 LU；适用于静态、Newton 及限定事件/历史算子的电压解 | 0.7.1 / IR v7；[PR8](https://github.com/BucketSran/vaEVAS/pull/8) 交付，未发布 tag | 当前整合回归、构造解/原残差、稀疏事件/算子和 idt 检查；性能数据限旧检查点 | 历史区间认证仍稠密；排序/填充/复用由 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) 跟踪；[数值说明](NUMERICS.md#稀疏分支与性能边界) |
 | CROSS：阈值事件 | 连续 PWL/仿射、状态独立 guard；触零/平台/stop 到达及 cross OR | 已合并 PR7/10；PR23 审阅交付 OR、逐叶证书与同块去重 | 数学/开发回归、历史限定 Spectre 对照；0.9.0 原 31 矩阵见[收据](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090) | 非线性轨迹和反馈后的重新定位；[事件说明](EVENTS.md) |
 | TIMER：固定定时事件 | 固定 start/period/time_tol/enable，有限日程 | PR12 合入：0.5.3 / IR v5 | 本地回归；普通/同刻有限对照及顺序赋值回放 | 动态参数、enable 与复合事件；同刻问题关联 EVENT-ORDER |
@@ -67,7 +67,7 @@
 | --- | --- | --- | --- |
 | 1 / LANG | 普通 analog 局部顺序赋值、比较及 if/else；先限定输入驱动的分段仿射关系 | v1-main（1） | 独立限幅公式、等号边界、阈值定位、语句顺序；暂不扩展隐式分支反馈 |
 | 2 / EVENT-ORDER | 多事件块写同一状态；先支持可证明无冲突的更新，同刻冲突另立契约 | v3-main（1），亦为复位积分依赖 | 上/下阈值迟滞、保持区间、同时写冲突及失败回退；不能只删除当前拒绝检查 |
-| 3 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
+| 3 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 分支已有独立单调三次方程根、前一点初猜、容差/失败与事件组合拒绝回归；仍需 review 与原条件专项执行，不声称已支持非线性 cross |
 | 4 / DYNAMICS | 在现有显式初值/PWL idt 上补复位；重新定义复位前后历史及原子提交 | d1-free/reset（2） | 非零初值、复位保持/释放、区间积分误差、撤销重试；依赖多事件状态更新 |
 | 5 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
 | 6 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
