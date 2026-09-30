@@ -4,7 +4,7 @@ use crate::absdelay::AbsDelay;
 use crate::events::{affine, AffineState};
 use crate::idt::Idt;
 use crate::idtmod::IdtMod;
-use crate::interval::Interval as I;
+use crate::interval::{equal_products, sum_products_sign, Interval as I};
 use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
 use crate::laplace::LaplaceNd;
 use crate::pwl::Trajectory;
@@ -152,7 +152,7 @@ enum SinInput {
 enum Runtime {
     Idt {
         history: Idt,
-        reset: Option<AffineState>,
+        reset: Option<ResetExpression>,
     },
     IdtMod(IdtMod),
     Sin(SinInput),
@@ -359,6 +359,241 @@ fn sin_bounds(input: I) -> Result<I, Error> {
     })
 }
 
+#[derive(Clone)]
+struct ResetExpression {
+    expression: Expression,
+}
+
+#[derive(Default)]
+struct ResetTerms {
+    constants: Vec<(f64, bool)>,
+    states: Vec<(usize, f64, bool)>,
+}
+
+fn exact_add(a: f64, b: f64) -> Option<f64> {
+    let value = a + b;
+    if !value.is_finite() {
+        return None;
+    }
+    let virtual_b = value - a;
+    let error = (a - (value - virtual_b)) + (b - virtual_b); // TwoSum
+    (error == 0.0).then_some(value)
+}
+
+impl ResetTerms {
+    fn scale(mut self, factor: (f64, bool)) -> Result<Self, Error> {
+        if !factor.0.is_finite() {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite idt reset coefficient",
+            ));
+        }
+        for (value, exact) in &mut self.constants {
+            let product = *value * factor.0;
+            *exact = *exact && factor.1 && equal_products(*value, factor.0, product, 1.0);
+            *value = product;
+        }
+        for (_, coefficient, exact) in &mut self.states {
+            let product = *coefficient * factor.0;
+            *exact = *exact && factor.1 && equal_products(*coefficient, factor.0, product, 1.0);
+            *coefficient = product;
+        }
+        if self
+            .constants
+            .iter()
+            .map(|(v, _)| v)
+            .chain(self.states.iter().map(|(_, c, _)| c))
+            .any(|v| !v.is_finite())
+        {
+            return Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite idt reset coefficient",
+            ));
+        }
+        Ok(self)
+    }
+
+    fn append(&mut self, mut other: Self) {
+        self.constants.append(&mut other.constants);
+        self.states.append(&mut other.states);
+    }
+
+    fn has_state(&self) -> bool {
+        !self.states.is_empty()
+    }
+
+    fn constant_value(&self) -> Result<(f64, bool), Error> {
+        let mut value = 0.0;
+        let mut exact = true;
+        for &(constant, constant_exact) in &self.constants {
+            if !constant.is_finite() {
+                return Err(Error::new(
+                    "nonfinite_arithmetic",
+                    "nonfinite idt reset constant",
+                ));
+            }
+            match exact_add(value, constant) {
+                Some(sum) => value = sum,
+                None => {
+                    value += constant;
+                    exact = false;
+                }
+            }
+            exact &= constant_exact;
+        }
+        if value.is_finite() {
+            Ok((value, exact))
+        } else {
+            Err(Error::new(
+                "nonfinite_arithmetic",
+                "nonfinite idt reset constant",
+            ))
+        }
+    }
+}
+
+impl ResetExpression {
+    fn new(expression: Expression) -> Self {
+        Self { expression }
+    }
+
+    fn active(&self, states: &[I]) -> Result<bool, Error> {
+        let terms = reset_terms(&self.expression)?;
+        let bound = match reset_exact_sign(&terms, states)? {
+            Some(sign) => sign,
+            None => reset_interval(&self.expression, states)?,
+        };
+        reset_active(bound)
+    }
+}
+
+fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
+    let mut result = ResetTerms::default();
+    match expr {
+        Expression::Affine { constant, terms } => {
+            if !constant.is_finite() || !terms.is_empty() {
+                return Err(Error::new(
+                    "unsupported_operator",
+                    "idt reset must be affine in instance state and constants",
+                ));
+            }
+            result.constants.push((*constant, true));
+        }
+        Expression::State { state } => result.states.push((*state, 1.0, true)),
+        Expression::Operator { .. } => {
+            return Err(Error::new(
+                "unsupported_operator",
+                "idt reset cannot depend on operator history",
+            ))
+        }
+        Expression::Add { left, right } => {
+            result = reset_terms(left)?;
+            result.append(reset_terms(right)?);
+        }
+        Expression::Multiply { left, right } => {
+            let left_terms = reset_terms(left)?;
+            let right_terms = reset_terms(right)?;
+            if left_terms.has_state() && right_terms.has_state() {
+                return Err(Error::new(
+                    "unsupported_operator",
+                    "idt reset must be affine in instance state and constants",
+                ));
+            }
+            result = if left_terms.has_state() {
+                left_terms.scale(right_terms.constant_value()?)?
+            } else {
+                right_terms.scale(left_terms.constant_value()?)?
+            };
+        }
+        Expression::Power { .. } => {
+            return Err(Error::new(
+                "unsupported_operator",
+                "idt reset must be affine in instance state and constants",
+            ))
+        }
+    }
+    Ok(result)
+}
+
+fn reset_exact_sign(terms: &ResetTerms, states: &[I]) -> Result<Option<I>, Error> {
+    let mut exact_terms: Vec<(f64, f64)> = Vec::new();
+    for &(constant, exact) in &terms.constants {
+        if !exact {
+            return Ok(None);
+        }
+        exact_terms.push((constant, 1.0));
+    }
+    for &(state, coefficient, exact) in &terms.states {
+        if !exact {
+            return Ok(None);
+        }
+        let Some(value) = states.get(state) else {
+            return Err(Error::new(
+                "invalid_ir",
+                "idt reset state index out of range",
+            ));
+        };
+        if value.lo != value.hi {
+            return Ok(None);
+        }
+        exact_terms.push((coefficient, value.lo));
+    }
+    if exact_terms.len() > 4 {
+        return Ok(None);
+    }
+    Ok(sum_products_sign(&exact_terms).map(|sign| match sign {
+        -1 => I::point(-1.0),
+        0 => I::ZERO,
+        1 => I::ONE,
+        _ => unreachable!(),
+    }))
+}
+
+fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
+    let value = match expr {
+        Expression::Affine { constant, terms } => {
+            if !constant.is_finite() || !terms.is_empty() {
+                return Err(Error::new(
+                    "unsupported_operator",
+                    "idt reset must be affine in instance state and constants",
+                ));
+            }
+            I::point(*constant)
+        }
+        Expression::State { state } => *states
+            .get(*state)
+            .ok_or_else(|| Error::new("invalid_ir", "idt reset state index out of range"))?,
+        Expression::Operator { .. } => {
+            return Err(Error::new(
+                "unsupported_operator",
+                "idt reset cannot depend on operator history",
+            ))
+        }
+        Expression::Add { left, right } => {
+            reset_interval(left, states)? + reset_interval(right, states)?
+        }
+        Expression::Multiply { left, right } => {
+            let left_value = reset_interval(left, states)?;
+            let right_value = reset_interval(right, states)?;
+            left_value * right_value
+        }
+        Expression::Power { .. } => {
+            return Err(Error::new(
+                "unsupported_operator",
+                "idt reset must be affine in instance state and constants",
+            ))
+        }
+    };
+    if value.finite() {
+        Ok(value)
+    } else {
+        Err(Error::new(
+            "nonfinite_arithmetic",
+            "nonfinite idt reset expression bounds",
+        ))
+    }
+}
+
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
     entries: Vec<Runtime>,
@@ -419,13 +654,13 @@ impl Operators {
                                     ),
                                 ));
                             }
-                            Ok(reset)
+                            Ok(ResetExpression::new(expr.clone()))
                         })
                         .transpose()?;
                     let mut history = Idt::enclosed(points, bounds, *ic)?;
                     if let Some(reset) = &reset {
-                        let value = reset.value(&[], states)?;
-                        history = history.with_reset(reset_active(I::point(value))?);
+                        let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+                        history = history.with_reset(reset.active(&state_bounds)?);
                     }
                     entries.push(Runtime::Idt { history, reset });
                 }
@@ -697,8 +932,7 @@ impl Operators {
             match entry {
                 Runtime::Idt { history, reset } => {
                     if let Some(reset) = reset {
-                        let bounds = reset.bounds_with(&[], bounds, &[])?;
-                        history.advance_reset(time, time_bounds, reset_active(bounds)?)?;
+                        history.advance_reset(time, time_bounds, reset.active(bounds)?)?;
                     }
                 }
                 Runtime::IdtMod(_) => {}
@@ -777,5 +1011,65 @@ mod phase_operator_tests {
             sin_bounds(I::point(129.0)).unwrap_err().kind,
             "waveform_accuracy"
         );
+    }
+}
+
+#[cfg(test)]
+mod reset_operator_tests {
+    use super::*;
+
+    fn q() -> Expression {
+        Expression::State { state: 0 }
+    }
+
+    fn constant(value: f64) -> Expression {
+        Expression::Affine {
+            constant: value,
+            terms: Vec::new(),
+        }
+    }
+
+    fn add(left: Expression, right: Expression) -> Expression {
+        Expression::Add {
+            left: Box::new(left),
+            right: Box::new(right),
+        }
+    }
+
+    fn multiply(left: Expression, right: Expression) -> Expression {
+        Expression::Multiply {
+            left: Box::new(left),
+            right: Box::new(right),
+        }
+    }
+
+    #[test]
+    fn reset_sign_uses_original_state_expression_terms() {
+        let positive = ResetExpression::new(add(
+            add(multiply(constant(1e16), q()), q()),
+            multiply(constant(-1.0), multiply(constant(1e16), q())),
+        ));
+        assert!(positive.active(&[I::ONE]).unwrap());
+        assert!(!positive.active(&[I::ZERO]).unwrap());
+
+        let negative = ResetExpression::new(add(
+            add(
+                multiply(constant(-1e16), q()),
+                multiply(constant(-1.0), q()),
+            ),
+            multiply(constant(1e16), q()),
+        ));
+        assert!(negative.active(&[I::ONE]).unwrap());
+        assert!(!negative.active(&[I::ZERO]).unwrap());
+
+        let uncertain = positive.active(&[I { lo: -1.0, hi: 1.0 }]).err().unwrap();
+        assert_eq!(uncertain.kind, "unsupported_operator");
+
+        let inexact_product = ResetExpression::new(add(
+            multiply(multiply(constant(0.1), q()), constant(0.1)),
+            multiply(constant(-0.010000000000000002), q()),
+        ));
+        let rejected = inexact_product.active(&[I::ONE]).err().unwrap();
+        assert_eq!(rejected.kind, "unsupported_operator");
     }
 }

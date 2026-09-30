@@ -110,6 +110,73 @@ class IdtContracts(unittest.TestCase):
         self.assertEqual(values(result, 'y'), [0.25, 0.25, 0.25, 0.25, 0.25, 0.375, 0.5])
         self.assertEqual(values(result, 'q'), [0, 0, 0.5, 1, 1, 0.5, 0])
 
+    def test_reset_expression_is_certified_from_original_structure(self):
+        body = """
+          @(initial_step) q=1;
+          @(timer(2,0,.001)) q=0;
+          V(y,r)<+idt(V(u,r),0.25,1e16*q+q-1e16*q);
+        """
+        program = compiled(body, 'integer q;')
+        result = execute(program, [[0, 1], [3, 1]], [0, 1, 2, 3], 3)
+        self.assertEqual(values(result), [0.25, 0.25, 0.25, 1.25])
+
+    def test_inexact_nested_reset_coefficient_is_rejected(self):
+        body = """
+          @(initial_step) q=1;
+          @(timer(2,0,.001)) q=0;
+          V(y,r)<+idt(V(u,r),0.25,(0.1*q)*0.1-0.010000000000000002*q);
+        """
+        with self.assertRaisesRegex(KernelError, 'unsupported_operator'):
+            execute(compiled(body, 'integer q;'), [[0, 1], [3, 1]], [0, 1, 2, 3], 3)
+
+    def test_raw_reset_expression_uses_structural_state_bounds(self):
+        good = compiled().to_dict()
+        good['states'] = [dict(instance='dut', name='q', kind='integer', initial=1)]
+        good['events'] = [{
+            'trigger': {'kind': 'timer', 'start': 2, 'period': 0, 'time_tolerance': .001, 'enabled': True},
+            'body': [{'kind': 'assign', 'state': 0, 'rhs': {'op': 'affine', 'constant': 0, 'terms': []}}],
+            'origin': {'source': 'raw.va', 'line': 1, 'column': 1, 'instance': 'dut'},
+        }]
+        q = {'op': 'state', 'state': 0}
+        product = {'op': 'multiply', 'left': {'op': 'affine', 'constant': 1e16, 'terms': []}, 'right': q}
+        good['operators'][0]['ic'] = .25
+        good['operators'][0]['reset'] = {'op': 'add', 'left': {'op': 'add', 'left': product, 'right': q},
+                                         'right': {'op': 'multiply', 'left': {'op': 'affine', 'constant': -1e16, 'terms': []},
+                                                   'right': q}}
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0, 1], [3, 1]]], output_times=[0, 1, 2, 3],
+                                      stop=3, max_step=3))
+        response = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                  capture_output=True, check=False)
+        self.assertEqual(response.returncode, 0, response.stderr)
+        result = json.loads(response.stdout)
+        y = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in result['solutions']], [0.25, 0.25, 0.25, 1.25])
+
+    def test_raw_inexact_nested_reset_coefficient_is_rejected(self):
+        good = compiled().to_dict()
+        good['states'] = [dict(instance='dut', name='q', kind='integer', initial=1)]
+        good['events'] = [{
+            'trigger': {'kind': 'timer', 'start': 2, 'period': 0, 'time_tolerance': .001, 'enabled': True},
+            'body': [{'kind': 'assign', 'state': 0, 'rhs': {'op': 'affine', 'constant': 0, 'terms': []}}],
+            'origin': {'source': 'raw.va', 'line': 1, 'column': 1, 'instance': 'dut'},
+        }]
+        q = {'op': 'state', 'state': 0}
+        left = {'op': 'multiply',
+                'left': {'op': 'multiply', 'left': {'op': 'affine', 'constant': 0.1, 'terms': []}, 'right': q},
+                'right': {'op': 'affine', 'constant': 0.1, 'terms': []}}
+        right = {'op': 'multiply', 'left': {'op': 'affine', 'constant': -0.010000000000000002, 'terms': []},
+                 'right': q}
+        good['operators'][0]['ic'] = .25
+        good['operators'][0]['reset'] = {'op': 'add', 'left': left, 'right': right}
+        request = dict(program=good, driven=['u'], samples=[],
+                       transient=dict(pwl=[[[0, 1], [3, 1]]], output_times=[0, 1, 2, 3],
+                                      stop=3, max_step=3))
+        response = subprocess.run([str(KERNEL)], input=json.dumps(request), text=True,
+                                  capture_output=True, check=False)
+        self.assertNotEqual(response.returncode, 0, response.stdout)
+        self.assertIn('unsupported_operator', response.stderr)
+
     def test_output_grid_and_max_step_do_not_accumulate_history(self):
         sparse = [0, 1, 2, 3, 4, 5, 6, 8]
         dense = [i/16 for i in range(129)]
