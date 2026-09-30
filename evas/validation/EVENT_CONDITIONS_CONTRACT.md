@@ -318,7 +318,7 @@ git diff --check
 新检查覆盖精确等号、舍入伪等号、嵌套/空分支、交替采样复位、状态独立内部电压、
 同刻反馈赋值、结构反馈拒绝、transition 联动与实际已接受帧回退。
 尚未完成：OR 叶子证书/去重、原 8 条件动态回放、所有调度器故障点的系统性注入。
-范围继续排除 idt reset、连续积分反馈、通用非线性 guard、同批多块同状态写入及普通 analog if。
+范围继续排除 idt reset、连续积分反馈、通用非线性 guard、多块同状态写入及普通 analog if。
 
 本轮本地全量 **250 Python / 55 Rust** 通过（分别新增 20 / 3 项），条件数学 14 项、
 既有动态数学 9 项通过。新静态回放 **22 配置、484,022 点**通过原判据，11 条支持、20 条明确拒绝。
@@ -365,4 +365,19 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 这些只满足候选窗口下的有限观察要求，首次编译失败检查点仍保留。
 
 尚未完成全部调度器/游标故障点的系统性注入；timer OR、feedback/nonlinear guard、
-同批多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。
+多块同状态写入、idt reset、连续积分反馈和普通 analog if 仍不在本检查点范围。
+
+## 11. 多事件块写同一状态分支检查点
+
+本分支从 0.9.0 / IR v9 main 后推进，不改变 IR 格式或原 0.8.0、0.9.0 检查点的证据身份。
+提交 `9ddd4f8` 起，`EventModel` 构建期记录每个 state 的潜在事件块写者，
+但不再因不同事件块可能写同一 state 而整体拒绝。`settlement::prepare` 在条件路径选择完成后，
+调用 `check_selection_writers(selection)` 检查实际选中赋值集合：同一候选批次里每个 state 最多一个
+event block 写入；若两个已选 event block 都写同一 state，即使写入相同数值，也返回
+`event_conflict`，且候选帧不提交。跨块读取另一个潜在写者 state 的静态拒绝保持不变。
+
+新增 `test_event_writers.py` 用手算迟滞、无触发保持、实例顺序不变性、同刻冲突、
+条件路径只计入实际选中赋值，以及精确等号下两个条件块同值写入仍冲突来固定该语义。
+Rust `transient_condition_tests.rs` 检查冲突失败后已接受 state、state bounds 和 operator history 均不改变。
+只读复用原 31 源中的 `v3-main` 两档冻结输入，局部 worker 输出均为 `waveform_available`，
+原 checker 均给出 `observations_within_targets`；这不是完整 31×2 矩阵重跑，也不改变历史计数。
