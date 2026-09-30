@@ -68,9 +68,13 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     has_operators = any(contains_operator(expr) for _, model, _ in bindings
                         for expr in body_expressions(model.analog))
     def has_condition(body):
-        return any(isinstance(statement, SyntaxConditional) for statement in body)
+        return any(isinstance(statement, SyntaxConditional)
+                   or has_condition(statement.then_body)
+                   or has_condition(statement.else_body)
+                   for statement in body if isinstance(statement, SyntaxConditional))
 
-    has_conditions = any(has_condition(event.body) for _, model, _ in bindings for event in model.events)
+    has_conditions = any(has_condition(model.analog) or any(has_condition(event.body) for event in model.events)
+                         for _, model, _ in bindings)
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
     contributions, states, events, operators = [], [], [], []
@@ -287,7 +291,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog assignment target must be a local real")
                     if contains_operator(statement.rhs):
                         raise CompileError(f"{model.source}:{statement.token.line}: ordinary analog local assignments do not support waveform operators")
-                    result[statement.name] = lower_local(statement.rhs, result)
+                    result[statement.name] = lower_local(statement.rhs, result, preserve_structure=has_operators or has_conditions)
             return result, emitted
 
         local_env, analog_contributions = execute_analog(model.analog, local_env)
