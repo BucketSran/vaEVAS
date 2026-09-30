@@ -1,7 +1,8 @@
 //! Forward-error enclosure of the original binary64 event IR.
-//! Sampled inputs are fixed; old states and operator history carry enclosures.
+//! Inputs, old states and operator history carry their supplied enclosures.
 //! A cached map never freezes a particular operator sample.
 use crate::affine_bounds::{affine, eliminate};
+use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::interval::Interval as I;
 use crate::ir::{Error, StateKind};
@@ -28,7 +29,7 @@ pub(crate) struct Bounds {
 }
 
 impl Bounds {
-    pub(crate) fn new(model: &EventModel, events: &[usize]) -> Result<Self, Error> {
+    pub(crate) fn new(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
         let p = &model.program;
         let count = p.nodes.len();
         let parameters = p.states.len() + p.operators.len();
@@ -49,9 +50,11 @@ impl Bounds {
             })
             .collect();
         let mut updates = initial.clone();
-        for &event in events {
+        for (event, indices) in &selection.actions {
+            let assignments = p.events[*event].assignments();
             let mut local = initial.clone();
-            for action in &p.events[event].assignments {
+            for &index in indices {
+                let action = assignments[index];
                 local[action.state] = substitute(&affine(&action.rhs, p)?, &local, count);
                 updates[action.state] = local[action.state].clone();
             }
@@ -128,7 +131,7 @@ impl Bounds {
     pub(crate) fn check(
         &self,
         model: &EventModel,
-        inputs: &[f64],
+        inputs: &[I],
         before: &[I],
         operators: &[I],
         voltages: &[f64],
@@ -137,7 +140,6 @@ impl Bounds {
         let parameters: Vec<_> = inputs
             .iter()
             .copied()
-            .map(I::point)
             .chain(before.iter().copied())
             .chain(operators.iter().copied())
             .chain([I::ONE])

@@ -263,11 +263,11 @@ mod tests {
             "states":[{"instance":"dut","name":"q","kind":"real","initial":0}],
             "events":[{"trigger":{"kind":"timer","start":0.5,"period":0,
                                      "time_tolerance":1e-9,"enabled":true},
-                "assignments":[
-                    {"state":0,"rhs":u},
-                    {"state":0,"rhs":{"op":"add","left":q,
+                "body":[
+                    {"kind":"assign", "state":0,"rhs":u},
+                    {"kind":"assign", "state":0,"rhs":{"op":"add","left":q,
                         "right":{"op":"affine","constant":delta,"terms":[]}}},
-                    {"state":0,"rhs":{"op":"add","left":q,"right":{"op":"multiply",
+                    {"kind":"assign", "state":0,"rhs":{"op":"add","left":q,"right":{"op":"multiply",
                         "left":{"op":"affine","constant":-1,"terms":[]},"right":u}}}
                 ],
                 "origin":{"source":"sparse-trial.va","line":41,"column":1,"instance":"dut"}}]
@@ -295,18 +295,32 @@ mod tests {
         // Same event batch throughout. A discarded good trial and a genuinely
         // failed forward certificate must not freeze the input or state values.
         for input in [0.0, 1.0, 1.0, 2.0_f64.powi(-56), 0.0] {
-            let candidate = model.event_circuit(&[0], &before, &[]).unwrap();
+            let selection = model.conditions.select(&[0], &[I::point(input)]).unwrap();
+            let candidate = model.event_circuit(&selection, &before, &[]).unwrap();
             let numeric = candidate.solve(&[input]).unwrap();
             assert_sparse(&candidate);
             assert!(numeric.max_residual_ratio <= 1.0);
-            let prepared =
-                crate::settlement::prepare(&model, &[0], &[input], &before, &[], &bounds, &[]);
+            let prepared = crate::settlement::prepare(
+                &model,
+                &[0],
+                (&[input], &[I::point(input)]),
+                &before,
+                &[],
+                &bounds,
+                &[],
+            );
             if input == 1.0 {
                 // Sequential binary64 replay loses delta in (1+delta)-1,
                 // although the substituted voltage solve has a tiny residual.
                 assert_eq!(prepared.err().unwrap().kind, "event_accuracy");
             } else {
-                let (states, certified, circuit, solution) = prepared.unwrap();
+                let crate::settlement::Prepared {
+                    states,
+                    bounds: certified,
+                    circuit,
+                    solution,
+                    ..
+                } = prepared.unwrap();
                 assert_eq!(states, [delta]);
                 assert!(certified[0].lo <= delta && certified[0].hi >= delta);
                 assert_sparse(&circuit);

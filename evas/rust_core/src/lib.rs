@@ -2,6 +2,7 @@ mod absdelay;
 mod affine_bounds;
 mod assembly;
 mod event_accuracy;
+mod event_conditions;
 mod events;
 mod expression;
 mod idt;

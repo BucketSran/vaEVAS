@@ -8,10 +8,10 @@ from dataclasses import dataclass, field
 import math
 from typing import Mapping
 
-from .ir import (Affine, Assignment, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger,
+from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
                  Origin, Program, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt)
 from .lowering import lower, scale
-from .syntax import CompileError, Expr, Parser
+from .syntax import CompileError, Expr, Parser, Conditional as SyntaxConditional
 
 
 @dataclass(frozen=True)
@@ -55,6 +55,10 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     # the whole program's structural voltage graph before numeric cancellation.
     has_operators = any(contains_operator(rhs) for _, model, _ in bindings
                         for _, rhs in model.contributions)
+    def has_condition(body):
+        return any(isinstance(statement, SyntaxConditional) for statement in body)
+
+    has_conditions = any(has_condition(event.body) for _, model, _ in bindings for event in model.events)
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     indices = {n: i for i, n in enumerate(names)}
     contributions, states, events, operators = [], [], [], []
@@ -125,39 +129,57 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
 
         for event in model.events:
-            def setting(arg):
-                value = lower(arg, parameter, {}, model.source)
-                if not isinstance(value, Affine) or value.terms:
-                    raise CompileError(f"{event.kind} settings must be instance constants")
-                return value.constant
+            def trigger(leaf):
+                def setting(arg):
+                    value = lower(arg, parameter, {}, model.source)
+                    if not isinstance(value, Affine) or value.terms:
+                        raise CompileError(f"{leaf.kind} settings must be instance constants")
+                    return value.constant
 
-            if event.kind == "cross":
-                settings = [0.0, 1e-12, 1e-9]
-                for index, arg in enumerate(event.arguments[1:]):
-                    settings[index] = setting(arg)
-                direction, time_tol, expr_tol = settings
-                if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
-                    raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-                trigger = CrossTrigger(lower(event.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
-                                       int(direction), time_tol, expr_tol)
-            else:
-                start = setting(event.arguments[0])
-                period = 0.0 if event.arguments[1] is None else setting(event.arguments[1])
-                time_tol = setting(event.arguments[2])
-                enabled = setting(event.arguments[3]) != 0 if len(event.arguments) == 4 else True
-                if start < 0 or time_tol <= 0:
-                    raise CompileError("timer requires nonnegative start and positive time_tol")
-                trigger = TimerTrigger(start, period, time_tol, enabled)
-            assignments = []
-            for statement in event.assignments:
-                if statement.name not in state_ids:
-                    raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
-                value = lower(statement.rhs, symbol, node_ids, model.source)
-                if model.variables[statement.name] == "integer" and not integral(value):
-                    raise CompileError("integer assignment requires integral state arithmetic")
-                assignments.append(Assignment(state_ids[statement.name], value))
+                if leaf.kind == "cross":
+                    settings = [0.0, 1e-12, 1e-9]
+                    for index, arg in enumerate(leaf.arguments[1:]):
+                        settings[index] = setting(arg)
+                    direction, time_tol, expr_tol = settings
+                    if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
+                        raise CompileError("cross requires direction -1/0/1 and positive tolerances")
+                    result = CrossTrigger(lower(leaf.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
+                                           int(direction), time_tol, expr_tol)
+                else:
+                    start = setting(leaf.arguments[0])
+                    period = 0.0 if leaf.arguments[1] is None else setting(leaf.arguments[1])
+                    time_tol = setting(leaf.arguments[2])
+                    enabled = setting(leaf.arguments[3]) != 0 if len(leaf.arguments) == 4 else True
+                    if start < 0 or time_tol <= 0:
+                        raise CompileError("timer requires nonnegative start and positive time_tol")
+                    result = TimerTrigger(start, period, time_tol, enabled)
+                return result
+
+            triggers = tuple(trigger(leaf) for leaf in event.triggers)
+            event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
+            def body(statements):
+                result = []
+                for statement in statements:
+                    origin = Origin(model.source, statement.token.line, statement.token.column, instance.name)
+                    if isinstance(statement, SyntaxConditional):
+                        # Predicate state references are rejected even if their
+                        # numeric coefficients would cancel. The kernel also
+                        # proves independence through the voltage network.
+                        left = lower(statement.left, parameter, node_ids, model.source, preserve_structure=True)
+                        right = lower(statement.right, parameter, node_ids, model.source, preserve_structure=True)
+                        result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
+                                                  left, right, body(statement.then_body), body(statement.else_body), origin))
+                    else:
+                        if statement.name not in state_ids:
+                            raise CompileError(f"{model.source}:{statement.token.line}: assignment target must be an instance state")
+                        value = lower(statement.rhs, symbol, node_ids, model.source)
+                        if model.variables[statement.name] == "integer" and not integral(value):
+                            raise CompileError("integer assignment requires integral state arithmetic")
+                        result.append(Assignment(state_ids[statement.name], value))
+                return tuple(result)
+
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
-            events.append(Event(trigger, tuple(assignments), origin))
+            events.append(Event(event_trigger, body(event.body), origin))
 
         def waveform(expr):
             input_nodes = {} if expr.op == "transition" else node_ids
@@ -196,7 +218,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if bound_pair in bound_branches and bound_branches[bound_pair] != pair:
                 raise CompileError(f"{model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
-            expression = lower(rhs, symbol, node_ids, model.source, waveform, has_operators)
+            expression = lower(rhs, symbol, node_ids, model.source, waveform, has_operators or has_conditions)
             sign = 1.0 if (local_p, local_n) == pair else -1.0
             origin = Origin(model.source, branch.token.line, branch.token.column, instance.name)
             identity = BranchIdentity(instance.name, *pair)

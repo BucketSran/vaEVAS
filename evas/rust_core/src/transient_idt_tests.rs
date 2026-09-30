@@ -48,7 +48,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
         states.push(json!({"instance":name,"name":"n","kind":"integer","initial":2+2*instance}));
         events.push(json!({"origin":origin(13),
             "trigger":{"kind":"timer","start":1,"period":1,"time_tolerance":0.001,"enabled":true},
-            "assignments":[{"state":instance,"rhs":{"op":"add","left":{"op":"state","state":instance},
+            "body":[{"kind":"assign","state":instance,"rhs":{"op":"add","left":{"op":"state","state":instance},
                 "right":{"op":"affine","constant":1,"terms":[]}}}]}));
     }
     let program: Program = serde_json::from_value(json!({
