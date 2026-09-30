@@ -381,6 +381,46 @@ mod tests {
     }
 
     #[test]
+    fn initial_voltage_guess_must_match_node_shape_and_be_finite() {
+        let program: Program = serde_json::from_value(json!({
+            "schema_version": SCHEMA_VERSION,
+            "nodes": ["0", "u", "y"],
+            "contributions": [{
+                "branch": {"instance": "dut", "local_positive": "0",
+                           "local_negative": "y", "kind": "voltage"},
+                "positive": 0, "negative": 2,
+                "rhs": {"op": "affine", "constant": 0,
+                        "terms": [{"node": 1, "coefficient": -1}]},
+                "origin": {"source": "guess.va", "line": 1, "column": 1,
+                           "instance": "dut"}
+            }]
+        }))
+        .unwrap();
+        let circuit = Circuit::new(program, &["u".into()], Tolerances::default()).unwrap();
+        assert_eq!(
+            circuit
+                .solve_with_initial(&[1.0], Some(&[0.0, 1.0]))
+                .unwrap_err()
+                .kind,
+            "invalid_inputs"
+        );
+        assert_eq!(
+            circuit
+                .solve_with_initial(&[1.0], Some(&[0.0, 1.0, f64::NAN]))
+                .unwrap_err()
+                .kind,
+            "invalid_inputs"
+        );
+        assert_eq!(
+            circuit
+                .solve_with_initial(&[2.0], Some(&[0.0, 99.0, -4.0]))
+                .unwrap()
+                .voltages,
+            [0.0, 2.0, 2.0]
+        );
+    }
+
+    #[test]
     fn dense_residual_span_keeps_holes_and_node_offset_without_distant_allocation() {
         // All eight products are one; missing positions must contribute zero.
         let terms = vec![
