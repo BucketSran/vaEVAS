@@ -135,6 +135,12 @@ vout - vref = min(0.875, max(-0.75, y0))
 [新收据](../../experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
 尚未合入 main，未新执行 Spectre，正式资格仍 I。
 
+后续[缺口与对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
+复用该原矩阵 EVAS 执行、新跑 Spectre 31×2，后者两档各 31/31；另对六个独立有理数
+边界案例执行两档对照。源结点等号双方一致；大数消去的点输入谓词体现精确判符号与
+分别舍入表达式的差别；PWL 临界阈值和大增益的过严预算 EVAS 明确拒绝。
+这些是开发数值诊断，不改变原矩阵或资格结论，也不证明整体精度排名。
+
 ## 剩余边界
 
 尚未支持隐式分支反馈、输出/内部节点 predicate、普通 analog `if` 内贡献、事件与普通

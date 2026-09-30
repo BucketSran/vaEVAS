@@ -7,7 +7,10 @@
 候选 `feat/evas-analog-conditions` 已同步该 main，序列化格式为 IR v12，待本轮 review。
 它的局部条件与 PWL 误差认证见[开发契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)；分支检查不改变下表 main 范围或原矩阵成绩。
 候选 `9c5d6c5` 的 306 Python / 64 Rust 与原 31×2 新本地矩阵见[验收修复记录](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)：
-两档各 25/31，原达标 48 份 CSV 哈希一致；未合并，未新跑 Spectre，原始材料仅本地保留。
+两档各 25/31，原达标 48 份 CSV 哈希一致；未合并，原始材料仅本地保留。
+后续[新 Spectre 对照与缺口专项](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
+复用该 EVAS 执行、对 Spectre 新跑原 31×2，两档各 31/31；三个旧候选各新跑受影响两条件两档，
+各 4/4。候选基线/IR 尚未统一，不能相加为整合版本 31/31；六个有理数边界探针另列。
 此前 `3fd58da` 的 v1-main 专项作为[历史检查点](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)保留。
 
 ## 状态约定
@@ -62,6 +65,11 @@
 | 2 / NONLINEAR | 无动态状态和事件耦合的非线性瞬态入口：在请求时刻解 F(v,u(t))=0，复用 Newton | v7-nonlinear 两条（2） | 独立单调三次方程根、前一点初猜、容差/失败；不声称已支持非线性 cross |
 | 3 / DYNAMICS + LANG | 标准常量数组与一阶 laplace_nd；先实现 τ y′+y=u 的独立状态演化，再测试采样级联 | v6-standard、c2-main（2） | 指数/斜坡解析解、初值、长时间稳定性及级联；不能只通过数组解析就记支持 |
 | 4 / DYNAMICS + LANG | constants 宏、idtmod 和 sin；累计相位与取模相位分开保存 | d2-constant/chirp（2） | 相位积分、环绕边界、长期累计误差、频率变化；依赖 idt |
+
+已有待整合实现及新专项证据见[缺口对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)：
+非线性候选 `227c77c`、滤波 `4389640`、相位 `11f49d2` 均在受影响原条件两档各 4/4。
+它们基于旧 main `508f5b9`，使用 IR v9/v12/v13；应先同步当前 main、统一共享 IR/瞬态入口并
+保留事件/复位修复，再对联合检查点验收。这条证据不更新上表 main 交付范围。
 
 SPARSE 的共享矩阵与瞬态调用路径已在 PR8 整合验证；后续按 Issue9 优化排序、填充和分解复用。
 固定同一支持范围与误差目标，分开测构建/编译、首次求解、
