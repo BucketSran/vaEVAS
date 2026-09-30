@@ -167,9 +167,9 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
         with self.assertRaisesRegex(CompileError, "ordinary analog if"):
             execute(source)
 
-    def test_rejects_dynamic_local_assignment(self):
-        source = model("tmp=idt(V(u,r),0); V(y,r)<+tmp;", declarations="real tmp;")
-        with self.assertRaisesRegex(CompileError, "ordinary analog local assignments"):
+    def test_rejects_conditional_dynamic_call_site(self):
+        source = model("tmp=0; if(V(u,r)>.5) tmp=idt(V(u,r),0); V(y,r)<+tmp;", declarations="real tmp;")
+        with self.assertRaisesRegex(CompileError, "waveform call sites must be unconditional"):
             compile_sources({"bad.va": source}, [instance()])
 
     def test_raw_ir_select_predicate_must_be_driven(self):

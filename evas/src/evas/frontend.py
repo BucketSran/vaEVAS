@@ -103,7 +103,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         # Check every default's structure; evaluate only the effective graph
         # after overrides. Replaced arithmetic and dependency edges are not used.
         def validate_default(expr):
-            if expr.op == "voltage" or (expr.op == "parameter" and expr.value not in model.parameters):
+            if expr.op in ("voltage", "array") or contains_operator(expr) or (expr.op == "parameter" and expr.value not in model.parameters):
                 raise CompileError(f"{model.source}:{expr.token.line}: invalid parameter default")
             for arg in expr.args:
                 validate_default(arg)

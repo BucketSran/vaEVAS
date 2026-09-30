@@ -94,3 +94,32 @@ class GapIntegration(unittest.TestCase):
         with self.assertRaises(KernelError) as caught:
             rows(program, {"u": [[0,0],[2,1]]}, [0,1,2], max_step=2)
         self.assertEqual(caught.exception.detail["kind"], "unsupported_transient")
+
+
+    def test_sequential_operator_assignments_keep_separate_call_histories(self):
+        source = model("""
+            tmp=idt(V(u,r),1);
+            V(y,r)<+tmp;
+            tmp=idt(V(u,r),2);
+            V(q,r)<+tmp;
+        """, "real tmp;", ports="u,y,q,r",
+            directions="input u; output y,q; inout r;")
+        program=compile_sources({"call-sites.va":source}, [Instance("dut","m",dict(u="u",y="y",q="q",r="0"))])
+        self.assertEqual(len(program.operators),2)
+        for times in ([0,2],[0,.25,.5,1,2]):
+            _,actual=rows(program,{"u":[[0,1],[2,1]]},times,max_step=2)
+            for time,row in zip(times,actual):
+                self.assertAlmostEqual(row["y"],1+time,delta=1e-10)
+                self.assertAlmostEqual(row["q"],2+time,delta=1e-10)
+
+    def test_dynamic_alias_cancellation_cannot_hide_operator_dependency(self):
+        source=model("tmp=V(y,r)-V(y,r); V(y,r)<+idt(tmp,0);", "real tmp;")
+        program=compile_sources({"hidden-dependency.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
+        with self.assertRaisesRegex(KernelError,"unsupported_operator"):
+            rows(program,{"u":[[0,0],[1,0]]},[0,1],max_step=1)
+
+    def test_select_with_dynamic_operator_keeps_documented_rejection(self):
+        source=model("tmp=V(u,r); if(V(u,r)>.5) tmp=1; else tmp=0; V(y,r)<+tmp+idt(V(u,r),0);","real tmp;")
+        program=compile_sources({"select-idt.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
+        with self.assertRaisesRegex(KernelError,"unsupported_transient"):
+            rows(program,{"u":[[0,0],[1,1]]},[0,1],max_step=1)
