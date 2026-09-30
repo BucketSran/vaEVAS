@@ -1,10 +1,42 @@
 """Transient entry contracts for state-free polynomial voltage equations."""
 
-import math
+from decimal import Decimal, getcontext
 import unittest
 
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
+
+
+getcontext().prec = 90
+
+
+def exact_float(value):
+    return Decimal.from_float(float(value))
+
+
+def decimal_cubic_root(u, cubic, scale):
+    """High-precision monotonic root for exact binary64 inputs/parameters."""
+    u = exact_float(u)
+    cubic = exact_float(cubic)
+    scale = exact_float(scale)
+    coefficient = cubic / (scale * scale)
+    lo = min(Decimal(-1), u)
+    hi = max(Decimal(1), u)
+
+    def f(y):
+        return y + coefficient * y * y * y - u
+
+    while f(lo) > 0:
+        lo *= 2
+    while f(hi) < 0:
+        hi *= 2
+    for _ in range(260):
+        mid = (lo + hi) / 2
+        if f(mid) <= 0:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
 
 
 def cubic_root(u, cubic, scale):
@@ -89,6 +121,48 @@ class NonlinearTransientContracts(unittest.TestCase):
             residual = row["y"] + 2.0 * row["y"] ** 3 / 0.25 - u
             self.assertLess(abs(residual), 3e-10)
 
+    def test_decimal_root_precision_and_grid_variation_use_voltage_budget(self):
+        cubic = 0.5
+        scale = 2.0
+        abstol = 1e-10
+        reltol = 1e-10
+        program = self.compile_cubic(cubic=cubic, scale=scale)
+        roots = [-1.75, -0.3, 0.05, 0.9, 1.4]
+        u_values = [q + cubic * q**3 / (scale * scale) for q in roots]
+        dense_times = [0.0, 0.2, 0.7, 1.3, 2.0]
+        sparse_times = [0.0, 0.7, 2.0]
+
+        def run(times, values):
+            result = transient(
+                program,
+                {
+                    "u": list(map(list, zip(times, values))),
+                    "r": [[0.0, 0.0], [times[-1], 0.0]],
+                },
+                times,
+                stop=times[-1],
+                max_step=times[-1],
+                kernel=KERNEL,
+                vabstol=abstol,
+                reltol=reltol,
+            )
+            return [dict(zip(result["nodes"], s["voltages"])) for s in result["solutions"]]
+
+        dense = run(dense_times, u_values)
+        sparse = run(sparse_times, [u_values[0], u_values[2], u_values[-1]])
+        for row, u in zip(dense, u_values):
+            expected = decimal_cubic_root(u, cubic, scale)
+            observed = exact_float(row["y"])
+            rhs = exact_float(u)
+            coefficient = exact_float(cubic) / (exact_float(scale) * exact_float(scale))
+            lhs = observed
+            physical_rhs = rhs - coefficient * observed * observed * observed
+            budget = exact_float(abstol) + exact_float(reltol) * max(abs(lhs), abs(physical_rhs))
+            self.assertLessEqual(abs(observed - expected), Decimal(8) * budget)
+        for dense_index, sparse_row in zip([0, 2, 4], sparse):
+            budget = abstol + reltol * max(abs(sparse_row["y"]), abs(dense[dense_index]["y"]))
+            self.assertLessEqual(abs(sparse_row["y"] - dense[dense_index]["y"]), 8 * budget)
+
     def test_polynomial_transient_with_events_remains_explicitly_unsupported(self):
         source = model(
             "@(initial_step) held=0; @(timer(0,1,1p)) held=held+1; "
@@ -122,6 +196,30 @@ class NonlinearTransientContracts(unittest.TestCase):
             )
         self.assertEqual(error.exception.detail["kind"], "nonconvergence")
         self.assertEqual(error.exception.detail["sample"], 0)
+
+    def test_nonconvergence_after_success_reports_later_output_index(self):
+        source = model(
+            "V(y,r)<+bias+gain*V(u,r)-c*pow(V(y,r),3);",
+            "parameter real bias=0; parameter real gain=0; parameter real c=0;",
+        )
+        program = compile_sources(
+            {"late_bad_transient.va": source},
+            [
+                instance("clamp", parameters=dict(bias=0.0, gain=0.0, c=0.0)),
+                instance("cubic", parameters=dict(bias=0.0, gain=1.0, c=1.0)),
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 0.0], [1.0, 1.0]]},
+                [0.0, 1.0],
+                stop=1.0,
+                max_step=1.0,
+                kernel=KERNEL,
+            )
+        self.assertEqual(error.exception.detail["kind"], "nonconvergence")
+        self.assertEqual(error.exception.detail["sample"], 1)
 
 
 if __name__ == "__main__":
