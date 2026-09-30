@@ -4,6 +4,10 @@
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
+本地六路整合源码统一为 IR14，增加 reset idt、一阶 laplace_nd 和受限 idtmod/sin，尚未合入 main。
+下文单项分支/历史 PR 的版本与测量保留原归属；当前联合身份、原 31 条件与拒绝原因见
+[整合审查](../../experiments/parallel-gap-integration/README.md)。
+
 ## 公共执行方法
 
 PR13 引入实例与源码调用点身份，算子历史与用户状态分开保存。设 q 为离散状态、H 为已接受历史，
@@ -305,9 +309,10 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，只给
 `waveform_accuracy`。这会在严格电压预算下拒绝不确定 wrap 边界；这是 soundness 约束，
 不是连续时间 wrap 轨迹资格。
 
-前端为 D2 暂时接受普通 analog 中每个 `real` 变量一次无条件赋值作为表达式别名，
-例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);``。别名不创建状态，也不提供通用顺序
-程序语义；条件赋值、重复赋值和依赖选择应由后续 LANG 分支统一接管。`constants.vams`
+单项 phase 分支的首版一次赋值别名在本地整合时由统一的顺序 analog lowering 接管。
+无事件/初始化的普通 local real 可重复无条件赋值，每条赋值捕获当时表达式；每个动态调用仍有独立身份。
+例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);`` 不创建持久状态。
+条件动态调用仍拒绝；普通条件与动态算子联立也尚未支持。`constants.vams`
 当前只解析窄集合中的 `` `M_PI``，不会执行 include 文件或引入任意宏系统。
 
 验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
@@ -316,7 +321,8 @@ Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本�
 `d2-chirp` 两档为 `observations_within_targets`；`d2-constant` 两档在 wrapped 电压输出的 binary64 wrap
 邻域返回 `waveform_accuracy`，因为单区间证书不能证明不连续 wrapped 输出落在 0 侧还是 1 侧。
 `sin(idtmod)` 对同一边界使用两侧区间证书仍可通过；overstrict wrap 边界端到端回归会返回
-`waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，未执行 Spectre 或完整 31 条件矩阵。
+`waveform_accuracy`。以上是单项 phase 分支证据，formal qualification 仍为 I，未执行 Spectre。
+随后本地 IR14 联合版本完成原 31 条件两档，见[完整整合收据](../../experiments/parallel-gap-integration/results/original31.json)。
 
 ## slew
 

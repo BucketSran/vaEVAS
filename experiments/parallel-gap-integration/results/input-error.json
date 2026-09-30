@@ -1,0 +1,43 @@
+{
+  "evidence_use": "one new local diagnostic; exact-PWL reference; not a new matrix condition",
+  "commit": "b53f0f734f0aa184704ad9253056184947cfa6d3",
+  "source": "module m(u,y,r);\ninput u; output y; inout r;\nelectrical u,y,r;\nanalog begin\nV(y,r)<+1e16*(V(u,r)-1);\nend\nendmodule\n",
+  "source_sha256": "138822342a70f6cafcd8680c633b87f4051766f7bba03dad658ebbeeb9de5603",
+  "kernel_sha256": "ef1d75757dbbfa8eb9025103433a051712e245e02a06dc03bebfb23b414456f6",
+  "diagnostic_sha256": "e48d6892981205e64cc2a82368ade0ddd3ee23e281fe7182262bb75edd09070c",
+  "inputs": {
+    "u": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        3.0,
+        2.0
+      ]
+    ]
+  },
+  "output_times": [
+    1.0
+  ],
+  "stop": 3.0,
+  "max_step": 3.0,
+  "vabstol": 1e-12,
+  "reltol": 0.0,
+  "exact_source": "4/3",
+  "exact_output": "10000000000000000/3",
+  "unresolved_scope": "input interpolation and full arithmetic error amplification are not certified",
+  "status": "accepted",
+  "observed": 3333333333333334.0,
+  "solution": {
+    "voltages": [
+      0.0,
+      1.3333333333333335,
+      3333333333333334.0
+    ],
+    "max_residual_v": 0.0,
+    "max_residual_ratio": 0.0
+  },
+  "exact_absolute_error": "2/3",
+  "meets_exact_pwl_voltage_budget": false
+}

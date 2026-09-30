@@ -1,0 +1,69 @@
+{
+  "runtime_commit": "bb42a8fd403a33b92acabadaf1aa160b9a6d84ae",
+  "kernel_sha256": "ef1d75757dbbfa8eb9025103433a051712e245e02a06dc03bebfb23b414456f6",
+  "scope": "local integration development gates; not simulator qualification",
+  "checks": [
+    {
+      "check": "python",
+      "command": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -v",
+      "tests": 322,
+      "exit_code": 0,
+      "log_sha256": "6dafebbc26fd420c61bfef42483e8f3434d977a362f6780ede05b014f1c9d8e6",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "rust",
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "tests": 72,
+      "exit_code": 0,
+      "log_sha256": "c8b3940bbf0d20c17ae886a6a7495024bc173968b1b0f2f4b380cb75c9858803",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "build",
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "fmt",
+      "command": "cargo fmt --check --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "warnings",
+      "command": "RUSTFLAGS=-Dwarnings cargo check --all-targets --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "design_math",
+      "command": "python3 -B evas/validation/check_design_math.py",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "dynamics_math",
+      "command": "python3 -B evas/validation/check_dynamics_math.py",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "validation_identity",
+      "command": "python3 -B scripts/verify_validation_version.py",
+      "exit_code": 0,
+      "evidence": "observed process completion during this integration review"
+    },
+    {
+      "check": "changed_document_links",
+      "relative_links_and_anchors": 214,
+      "exit_code": 0
+    },
+    {
+      "check": "diff_whitespace",
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ]
+}
