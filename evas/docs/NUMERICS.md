@@ -30,11 +30,13 @@ PR19 的 main `2e3196f` 上集成稀疏求解。同刻事件的额外前向认�
 Newton 初猜。该初猜不是物理历史，失败不会提交部分波形或改变下一次请求。这里的名义 `u(t)` 是内核
 按 binary64 代表值执行普通浮点 PWL 插值得到的点值；名义点解仍需满足残差、行尺度残差和 Newton 修正量
 三项验收。随后 transient 入口用包含原始 binary64 PWL 精确实数插值的输入区间重放每条原始支路关系，
-要求整个区间残差落入同一电压预算 `vabstol + reltol·scale`。若 off-knot 输入舍入经线性增益或非线性
-灵敏度放大后无法证明满足预算，则返回 `waveform_accuracy`，不静默接受名义残差为零的点解。
-该区间重放不是 Krawczyk/interval Newton 证明：未知电压固定在已接受点解，验证对象是“该点解在 exact-PWL
-输入不确定性下的原关系残差预算”，不是全局唯一根、所有舍入路径或一般病态多项式的完整前向误差。
-设计说明与 high-gain 反例见 [NONLINEAR_TRANSIENT_CONTRACT.md](../validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
+先要求整个区间残差落入同一电压预算 `vabstol + reltol·scale`，再用已接受点的局部 Jacobian 求解
+`J δv = δF`，按 `|δv_j| <= Σ_i |(J^{-1})_{j i}| |δF_i|` 将残差/输入不确定性传播到未知节点电压预算。
+若 off-knot 输入舍入经前向增益、反馈或局部非线性灵敏度放大后无法证明满足预算，则返回
+`waveform_accuracy`，不静默接受名义残差为零的点解。该证书对仿射网络是固定系数线性系统的前向误差上界；
+对多项式网络仍是局部固定 Jacobian 的受限充分检查，不是 Krawczyk/interval Newton 证明。它不证明全局唯一根、
+所有舍入路径或一般病态多项式的完整前向误差。设计说明、high-gain 和反馈增益反例见
+[NONLINEAR_TRANSIENT_CONTRACT.md](../validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
 解析链式法则生成 Jacobian；最多 80 次更新，每次最多 32 次试步，失败则步长减半。
 已接受试步的完整残差、Jacobian 和尺度直接用于下一轮，避免在相同电压上重复求值；
 不同电压处仍重新计算 Jacobian 并进行数值分解，没有改为固定或近似 Jacobian。

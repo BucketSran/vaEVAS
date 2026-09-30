@@ -60,6 +60,12 @@ fn interval_power(base: I, exponent: u32) -> I {
     result
 }
 
+fn add_dense_coefficient(row: &mut [f64], column: Option<usize>, value: f64) {
+    if let Some(column) = column {
+        row[column] += value;
+    }
+}
+
 fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, Error> {
     let result = match expr {
         Expression::State { .. } | Expression::Operator { .. } => {
@@ -152,6 +158,44 @@ impl Circuit {
         })
     }
 
+    fn waveform_jacobian_rows(&self, solution: &Solution) -> Result<Vec<linear::Row>, Error> {
+        self.equations
+            .iter()
+            .map(|eq| {
+                let mut row = vec![0.0; self.unknown.len()];
+                add_dense_coefficient(&mut row, self.unknown_columns[eq.positive], 1.0);
+                add_dense_coefficient(&mut row, self.unknown_columns[eq.negative], -1.0);
+                for &(node, coefficient) in &eq.rhs_terms {
+                    add_dense_coefficient(&mut row, self.unknown_columns[node], -coefficient);
+                }
+                for expr in &eq.nonlinear {
+                    for (node, derivative) in expression::evaluate(expr, &solution.voltages)
+                        .map_err(|mut error| {
+                            error
+                                .message
+                                .push_str(&format!(" at {}", eq.origins.join(", ")));
+                            error
+                        })?
+                        .gradient
+                    {
+                        add_dense_coefficient(&mut row, self.unknown_columns[node], -derivative);
+                    }
+                }
+                if row.iter().any(|value| !value.is_finite()) {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        format!("nonfinite waveform Jacobian at {}", eq.origins.join(", ")),
+                    ));
+                }
+                Ok(row
+                    .into_iter()
+                    .enumerate()
+                    .filter_map(|(column, value)| (value != 0.0).then_some((column, value)))
+                    .collect())
+            })
+            .collect()
+    }
+
     /// Certify that the accepted point solution also satisfies each original
     /// branch relation for the exact binary64-PWL input interval represented at
     /// this observation time. This is a waveform/input uncertainty check, not a
@@ -182,6 +226,7 @@ impl Circuit {
         for (&node, &bounds) in self.driven.iter().zip(input_bounds) {
             values[node] = bounds;
         }
+        let mut residual_magnitudes = Vec::with_capacity(self.equations.len());
         for eq in &self.equations {
             let mut residual =
                 values[eq.positive] - values[eq.negative] - I::point(eq.rhs_constant);
@@ -233,6 +278,72 @@ impl Circuit {
                         residual.hi,
                         bound,
                         eq.origins.join(", ")
+                    ),
+                ));
+            }
+            let magnitude = residual.magnitude();
+            if !magnitude.is_finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "nonfinite waveform residual magnitude at {}",
+                        eq.origins.join(", ")
+                    ),
+                ));
+            }
+            residual_magnitudes.push(magnitude);
+        }
+        if self.unknown.is_empty() {
+            return Ok(());
+        }
+        let jacobian = self.waveform_jacobian_rows(solution)?;
+        let factor = linear::Factorization::new(jacobian, self.unknown.len()).map_err(|error| {
+            Error::new(
+                "waveform_accuracy",
+                format!(
+                    "cannot certify waveform forward error through local Jacobian: {}",
+                    error.message
+                ),
+            )
+        })?;
+        let mut voltage_errors = vec![0.0; self.unknown.len()];
+        for (row_index, residual) in residual_magnitudes.iter().copied().enumerate() {
+            if residual == 0.0 {
+                continue;
+            }
+            let mut rhs = vec![0.0; self.equations.len()];
+            rhs[row_index] = 1.0;
+            let response = factor.solve(rhs).map_err(|error| {
+                Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot propagate waveform residual through local Jacobian: {}",
+                        error.message
+                    ),
+                )
+            })?;
+            for (error, value) in voltage_errors.iter_mut().zip(response) {
+                *error += value.abs() * residual;
+            }
+        }
+        for (&node, error) in self.unknown.iter().zip(voltage_errors) {
+            let bound =
+                self.tolerances.absolute + self.tolerances.relative * solution.voltages[node].abs();
+            if !bound.is_finite() || !error.is_finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "nonfinite waveform forward error budget at node {}",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+            if error > bound {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "waveform forward error bound {error:e} V exceeds {bound:e} V at node {}; input/residual uncertainty is amplified by the local network solve",
+                        self.nodes[node]
                     ),
                 ));
             }

@@ -1,6 +1,8 @@
 """Transient entry contracts for state-free polynomial voltage equations."""
 
 from decimal import Decimal, getcontext
+from fractions import Fraction
+import math
 import unittest
 
 from evas import KernelError, compile_sources, transient
@@ -163,6 +165,45 @@ class NonlinearTransientContracts(unittest.TestCase):
         for dense_index, sparse_row in zip([0, 2, 4], sparse):
             budget = abstol + reltol * max(abs(sparse_row["y"]), abs(dense[dense_index]["y"]))
             self.assertLessEqual(abs(sparse_row["y"] - dense[dense_index]["y"]), budget)
+
+    def test_feedback_gain_propagates_off_knot_input_uncertainty(self):
+        exact_u = (
+            Fraction.from_float(1.0) * 2
+            + Fraction.from_float(math.nextafter(1.0, math.inf))
+        ) / 3
+        exact_a = Fraction.from_float(0.99999999999999)
+        exact_y = (exact_u - 1) / (1 - exact_a)
+        self.assertGreater(abs(exact_y), Fraction(1, 10**12))
+        self.assertAlmostEqual(float(exact_y), 1.0 / 135.0, delta=1e-15)
+
+        source = model(
+            "V(y,r)<+a*V(y,r)+(V(u,r)-1);",
+            "parameter real a=0.99999999999999;",
+            ports="u,y,r",
+            directions="input u; output y; inout r;",
+        )
+        program = compile_sources(
+            {"feedback_gain.va": source},
+            [
+                instance(
+                    connections=dict(u="u", y="y", r="0"),
+                    parameters=dict(a=0.99999999999999),
+                )
+            ],
+        )
+        with self.assertRaises(KernelError) as error:
+            transient(
+                program,
+                {"u": [[0.0, 1.0], [3.0, math.nextafter(1.0, math.inf)]]},
+                [1.0],
+                stop=3.0,
+                max_step=3.0,
+                kernel=KERNEL,
+                vabstol=1e-12,
+                reltol=0.0,
+            )
+        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        self.assertEqual(error.exception.detail["sample"], 0)
 
     def test_off_knot_pwl_interpolation_error_is_not_silently_accepted(self):
         source = model(
