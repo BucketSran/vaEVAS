@@ -66,6 +66,10 @@ fn increment(amount: f64) -> Value {
         "right":{"op":"affine","constant":amount,"terms":[]}}}])
 }
 
+fn set(value: f64) -> Value {
+    json!([{"kind":"assign","state":0,"rhs":{"op":"affine","constant":value,"terms":[]}}])
+}
+
 #[test]
 fn failed_condition_and_discard_preserve_nonzero_history_and_retry_path() {
     let points = [[0.0, 1.0], [0.25, 1.0], [0.5, 0.1], [1.0, 0.9]];
@@ -221,4 +225,35 @@ fn rejected_or_batch_preserves_history_and_retry_executes_body_once() {
         serde_json::to_value(records).unwrap(),
         serde_json::to_value(clean_records).unwrap()
     );
+}
+
+#[test]
+fn simultaneous_cross_block_state_writers_fail_without_committing_history() {
+    let (single, trajectory, accepted) = fixture(set(3.0), true, &[[0.0, 0.0], [1.0, 1.0]]);
+    let mut program = single.program.clone();
+    program.events.push(
+        serde_json::from_value(json!({"trigger":{"kind":"timer","start":0.25,"period":0.25,
+            "time_tolerance":0.001,"enabled":true},
+            "origin":{"source":"conditions.va","line":4,"column":1,"instance":"dut"},
+            "body":[{"kind":"assign","state":0,"rhs":{"op":"affine","constant":7.0,
+                "terms":[]}}]}))
+        .unwrap(),
+    );
+    let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+    let original_history = accepted.operators.bounds(0.5).unwrap();
+    for _ in 0..2 {
+        let error = prepare_batch(&model, &trajectory, &accepted, 0.25, &[0, 1])
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "event_conflict");
+        assert_eq!(accepted.time, 0.0);
+        assert_eq!(accepted.states, [2.0]);
+        assert_eq!(accepted.state_bounds, [I::point(2.0)]);
+        assert_eq!(accepted.operators.bounds(0.5).unwrap(), original_history);
+    }
+    let (first_only, records) = prepare_batch(&model, &trajectory, &accepted, 0.25, &[0]).unwrap();
+    assert_eq!(first_only.states, [3.0]);
+    assert_eq!(records.len(), 1);
+    let (second_only, _) = prepare_batch(&model, &trajectory, &accepted, 0.25, &[1]).unwrap();
+    assert_eq!(second_only.states, [7.0]);
 }
