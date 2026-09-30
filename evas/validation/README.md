@@ -6,9 +6,60 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 ## 当前版本与使用入口
 
-截至 2026-09-28，当前集合为 **31 个条件**：14 个不变的 v1 条件、1 个标准数组语法的
-低通修订、7 张补充卡展开的 16 个条件。已完成 thu-sui 四后端两档基线，共 248 条配置记录。
-每档分母均为 31，基础档／细化档满足有限观测判据的数量如下：
+原矩阵固定为 **31 个条件**：14 个不变的 v1 条件、1 个标准数组语法的低通修订、
+7 张补充卡展开的 16 个条件。基础档与细化档各以 31 为分母；两档配置、开发测试方法数、
+数学样例和输出点数均不增加独立条件数。
+
+先看下面的已合并 EVAS 检查点；跨后端比较另见历史基线。实现的持续状态以
+[能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
+
+<a id="latest-evas-checkpoint"></a>
+
+### 已合并 EVAS：PR26 检查点（2026-09-30）
+
+[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 已合入 `main@38d1c47`，
+交付受限三参数 `idt` 复位；EVAS 0.9.0 / IR v11。
+下表来自[合并前完整对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)
+及其[逐配置收据](../../experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json)：
+被测运行时为 `edb004d`，其后合并收尾仅修改文档、收据和模块说明，不改变运行行为。
+
+| 被测 EVAS 检查点 | 基础档 | 细化档 | 每档未达标条件的执行状态 |
+| --- | ---: | ---: | --- |
+| PR25 main `6df7f48` | 22/31 | 22/31 | 7 个 `compile_rejected`、2 个 `kernel_rejected` |
+| PR26 运行时 `edb004d`（已合并） | **24/31** | **24/31** | **5 个 `compile_rejected`、2 个 `kernel_rejected`** |
+
+该实验新执行了本地 EVAS 的 124 个配置（两个检查点各 31×2），使用相同 DUT、刺激、
+网格、容差和原检查器。新增达标为 `d1-free`、`d1-reset`，原有 44 份达标 CSV
+逐字节一致；没有发现已达标条件退化、超时或有限观测违规。
+没有新增 Spectre 或其他后端执行，不能把本地 EVAS 与下列历史基线当作同轮性能比较。
+
+这里的“达标”指满足所列有限观测判据。**正式 DVS 资格仍为 I（未决）**，
+不代表全时域精度或完整语言合规；这 31 条件已用于诊断，属于开发回归材料，不是未见确认集。
+
+<a id="remaining-original-31"></a>
+
+### 原 31 条件的剩余缺口
+
+PR26 检查点两档均剩以下 7 个条件。执行阶段和缺口依据取自上述收据与能力表；
+拒绝表示当前实现不接受该模型，不表示合法 VA 写法本身有错，也不是求解后数值未达标。
+
+| 条件 | 数量 | 拒绝阶段 | 待交付 main 的能力 |
+| --- | ---: | --- | --- |
+| `v1-main` | 1 | 前端 `compile_rejected` | 普通 analog 局部顺序赋值、比较及 if/else 限幅 |
+| `v6-standard`、`c2-main` | 2 | 前端 `compile_rejected` | 标准常量数组、一阶 `laplace_nd` 与滤波采样级联 |
+| `d2-constant`、`d2-chirp` | 2 | 前端 `compile_rejected` | constants 宏、`idtmod`、`sin` 与相位误差控制 |
+| `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | 内核 `kernel_rejected` | 无动态状态和事件耦合的多项式非线性瞬态求解 |
+
+已经交付的 `v3-main` 多事件写者及 D1 积分复位不再属于这 7 条缺口。
+开发分支实现或专项通过不得提前记为 main 达标；后续合并后，以新检查点的原条件回放更新结果。
+这些是原矩阵的缺口，并非电压域 VA 的完整待办；更广组合和验证资格边界见能力表及下文。
+
+<a id="historical-four-backend-baseline"></a>
+
+### 历史四后端基线（2026-09-28，thu-sui）
+
+已完成四后端两档基线，共 248 条配置记录。每档分母均为 31；
+满足当时有限观测判据的数量如下，保留原后端身份和结果：
 
 | 固定后端 | 基础档 | 细化档 |
 | --- | ---: | ---: |
@@ -17,8 +68,11 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 | OpenVAF-R＋ngspice | 16 | 16 |
 | Gnucap＋modelgen-verilog | 17 | 16 |
 
-这些数字是当前观察方法的结果；**正式 DVS 资格仍为 I**，不代表连续时间正确性、
-全语言支持或新 EVAS 内核的成绩。当前条件已参与诊断，属于开发回归材料，不能称为未见测试。
+该表中的 EVAS 是旧版 0.8.7，不是当前重构内核；不得用新版成绩覆盖旧记录。
+[完整矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md)保留逐条件失败与身份。
+这些数字也不构成连续时间正确性或全语言支持的证明，正式 DVS 资格仍为 I。
+
+### 材料入口与计数边界
 
 2026-09-30 的 [S1 审阅补充](NEXT_CASE_CARDS.md#s1-review)为两条既有条件增加
 独立有理数正例、错误波形及容差边界校准，并单独登记一条贡献顺序条件。
@@ -28,10 +82,13 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 | --- | --- |
 | [起步契约](CASE_CARDS.md) | 8 张卡、15 个原条件的刺激、独立答案与错误对照 |
 | [补充契约](NEXT_CASE_CARDS.md) | 7 张卡、16 个新增条件；不把低通语法修订算作新增条件 |
-| [定时与波形算子候选契约](TIMED_OPERATOR_CONTRACTS.md) | transition、timer、absdelay、slew 的数学样例与验收边界；设计候选，未执行仿真，不增加原 31 条件 |
+| [定时与波形算子候选契约](TIMED_OPERATOR_CONTRACTS.md) | 保留实现前的数学样例；不等于后续实现未执行。受限算子已由 PR12–15 交付，实际证据从能力表进入；这些样例不增加原 31 条件 |
+| [积分独立契约](DYNAMICS_CONTRACTS.md) | 二参数积分、三参数复位、误差与候选生命周期；链接 D1 原条件回放及独立数学/恢复检查 |
+| [事件条件与采样复位契约](EVENT_CONDITIONS_CONTRACT.md) | 事件体 if/else、cross OR 与多事件写者；保留各阶段检查点的语义和证据 |
 | [判定与设置协议](METHOD_QUALIFICATION.md) | 共同事件历史、观察资格、校准与证据复用 |
 | [共同源码](cases/README.md) | 原 DUT、补充模型和标准数组修订 |
-| [当前四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md) | 31×4×2 条配置的逐条件结论 |
+| [PR26 完整 EVAS 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) | 已合并运行时与 PR25 main 的原 31×2 对照、剩余拒绝及兼容性检查 |
+| [历史四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md) | 31×4×2 条配置的逐条件结论，含旧 EVAS 0.8.7 |
 | [执行与诊断](../../experiments/dvs2-four-backend-validation/README.md) | 补测、复用、失败分类、有效设置和证据索引 |
 | [Spectre 核验](../../experiments/dvs2-spectre-validation/README.md) | 62 条配置、独立检查与设置审计 |
 | [共同历史重判](../../experiments/dvs2-history-validation/README.md) | 有理数共同事件见证、校准及历史波形重判 |
@@ -39,7 +96,26 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 v1 是验证集快照，`DVS-2` 是历史设计修订名，`v2-draft-20260928` 是当前补充批次标识，
 均不是 EVAS 软件版本或资格认证。新修订保留旧输入与失败，不覆盖冻结证据。
-原始波形与日志存于 Git 忽略的 `runs/`；整理后的协议、分析及身份记录归 `experiments/`。
+原始波形与日志由 Git 忽略的 `runs/` 或保留的本地归档保存；整理后的协议、分析及身份记录归
+`experiments/`。公开收据中的哈希不等于公开原始数据，具体可用性见各实验说明。
+
+<a id="local-checks"></a>
+
+### 本地数学与身份检查
+
+从仓库根目录执行，以下命令不依赖仿真器：
+
+```sh
+python3 -B evas/validation/check_design_math.py
+python3 -B evas/validation/check_timed_operator_math.py
+python3 -B evas/validation/check_dynamics_math.py
+python3 -B evas/validation/check_event_conditions_math.py
+python3 -B scripts/verify_validation_version.py
+```
+
+前四项检查数学关系与校准控制，最后一项核验冻结 v1 的 Git 对象、快照和原始输入哈希。
+它们不执行后端、不增加矩阵达标数。需要运行 EVAS 或后端比较时，使用
+[构建与运行](../README.md#构建与运行)及对应实验目录的协议，并记录新的执行身份。
 
 ## 范围、编码与可比性
 
@@ -70,8 +146,8 @@ v1 是验证集快照，`DVS-2` 是历史设计修订名，`v2-draft-20260928` �
 | V2 参考与供电关系 | V2.a 两端电压与参考极性；V2.b 差模/共模分别正确；V2.c 模型声明的供电依赖持续生效；V2.d 整体参考平移或共模变化下的规定不变性 | D2-V2-01 及三个单因素对照 | 不声明有限 CMRR/PSRR、阻抗或负载能力 |
 | V3 阈值、迟滞、启动 | V3.a 上/下穿及无穿越；V3.b 同电压不同历史；V3.c 首事件前初态与已满足阈值时的启动；V3.d 事件定位、次数、使能与历史查询 | D2-V3-01；E1 穿越边界与计数 | 迟滞初始高、使能、above/last_crossing 子域仍需补充；时间观察资格待完成 |
 | V4 采样、保持、复位 | V4.a 正确沿与采样值；V4.b 采样间保持；V4.c 初值、复位、释放与明确优先级；V4.d 量化/位序/饱和与离散递推 | D2-V4-01 的 C0/C1；E2 启动与恢复 | 量化边界、位序、离散递推等仍需契约；不任意规定同刻竞态答案 |
-| V5 延迟、边沿、周期 | V5.a 完整上/下沿与规定延迟；V5.b 绝对连续延迟与起始历史；V5.c 正/负限速及追赶；V5.d 周期、门控和动态调度；V5.e 中断边沿/队列 | D2-V5-01 非对称定时脉冲 | absdelay、slew、门控/动态更新和中断沿仍需契约 |
-| V6 连续动态与相位 | V6.a 积分、初值及复位；V6.b 合格输入的导数；V6.c 稳定滤波的完整启动响应；V6.d 变频相位积分/包裹/长期误差；V6.e 采样滤波绝对初态 | D2-V6-01 标准数组修订；D1 积分复位；D2 相位 | 导数、采样滤波、长期累计误差等仍需补充；有限观测不等于整组资格 |
+| V5 延迟、边沿、周期 | V5.a 完整上/下沿与规定延迟；V5.b 绝对连续延迟与起始历史；V5.c 正/负限速及追赶；V5.d 周期、门控和动态调度；V5.e 中断边沿/队列 | 原 31 条件含 D2-V5-01 非对称定时脉冲；absdelay、slew 与中断边沿另有[候选数学契约](TIMED_OPERATOR_CONTRACTS.md) | 算子专项和数学样例不自动进入原矩阵；更广门控/动态更新及完整观察资格待补 |
+| V6 连续动态与相位 | V6.a 积分、初值及复位；V6.b 合格输入的导数；V6.c 稳定滤波的完整启动响应；V6.d 变频相位积分/包裹/长期误差；V6.e 采样滤波绝对初态 | D2-V6-01 标准数组修订；D1 积分复位；D2 相位；C2 滤波采样级联 | 导数、更广输入/采样边界、长期累计误差等仍需补充；有限观测不等于整组资格 |
 | V7 组合、反馈、实例 | V7.a 连续信号与离散选择的持续组合；V7.b 模块级联与连线；V7.c 实例参数/状态隔离；V7.d 唯一线性/非线性反馈关系 | D2-V7-01/02；C1 状态隔离；C2 滤波级联采样 | 离散选择及更广组合仍需补充；已有独立模块不能证明任意组合正确 |
 
 加入新条件的理由必须是：新增独立义务，或能检出已有条件无法检出的具体错误。正常、边界、历史与尺度变化按需要选取，不固定每组相同数量，不做全笛卡尔积。无法构造可验证答案的需求列为缺口，不因某后端失败而事后删除。
