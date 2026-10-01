@@ -1,4 +1,4 @@
-"""Voltage/event IR with ordered conditional event bodies and operator histories.
+"""Version 15: combined voltage/event IR with selects, reset histories and operators.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 15
 
 
 @dataclass(frozen=True)
@@ -48,6 +48,17 @@ class Power:
 
 
 @dataclass(frozen=True)
+class Select:
+    relation: Literal["lt", "le", "gt", "ge"]
+    left: "Expression"
+    right: "Expression"
+    then_value: "Expression"
+    else_value: "Expression"
+    origin: Origin
+    op: str = field(default="select", init=False)
+
+
+@dataclass(frozen=True)
 class StateRef:
     state: int
     op: str = field(default="state", init=False)
@@ -59,7 +70,7 @@ class OperatorRef:
     op: str = field(default="operator", init=False)
 
 
-Expression = Affine | Binary | Power | StateRef | OperatorRef
+Expression = Affine | Binary | Power | Select | StateRef | OperatorRef
 
 
 @dataclass(frozen=True)
@@ -96,6 +107,32 @@ class Idt:
     origin: Origin
     reset: Expression | None = None
     kind: str = field(default="idt", init=False)
+
+
+@dataclass(frozen=True)
+class LaplaceNd:
+    input: Expression
+    numerator: tuple[float, ...]
+    denominator: tuple[float, ...]
+    origin: Origin
+    kind: str = field(default="laplace_nd", init=False)
+
+
+@dataclass(frozen=True)
+class IdtMod:
+    input: Expression
+    ic: float
+    modulus: float
+    offset: float
+    origin: Origin
+    kind: str = field(default="idt_mod", init=False)
+
+
+@dataclass(frozen=True)
+class Sin:
+    input: Expression
+    origin: Origin
+    kind: str = field(default="sin", init=False)
 
 
 @dataclass(frozen=True)
@@ -179,7 +216,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

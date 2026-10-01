@@ -40,6 +40,11 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
         Expression::Power { .. } => {
             return Err(unresolved("cannot bound a polynomial event expression"));
         }
+        Expression::Select { .. } => {
+            return Err(unresolved(
+                "cannot bound an ordinary analog conditional in an event expression",
+            ));
+        }
     }
     Ok(result)
 }

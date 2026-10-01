@@ -15,44 +15,53 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 <a id="latest-evas-checkpoint"></a>
 
-### 已合并 EVAS：PR26 检查点（2026-09-30）
+### EVAS：IR15 交付检查点（2026-10-01）
 
-[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 已合入 `main@38d1c47`，
-交付受限三参数 `idt` 复位；EVAS 0.9.0 / IR v11。
-下表来自[合并前完整对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)
-及其[逐配置收据](../../experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json)：
-被测运行时为 `edb004d`，其后合并收尾仅修改文档、收据和模块说明，不改变运行行为。
+运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`，EVAS 0.9.0 / IR v15。
+普通 analog 条件、一阶滤波、相位与无状态多项式瞬态已联合验证，且保留受限事件与积分复位。
+[精度链 review](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)、
+[逐配置收据](../../experiments/parallel-gap-integration/results/precision-chain-matrix.json)及
+[开发检查收据](../../experiments/parallel-gap-integration/results/precision-chain-checks.json)绑定实际源码与二进制。
 
-| 被测 EVAS 检查点 | 基础档 | 细化档 | 每档未达标条件的执行状态 |
+| 被测 EVAS 检查点 | 基础档 | 细化档 | 执行身份 |
 | --- | ---: | ---: | --- |
-| PR25 main `6df7f48` | 22/31 | 22/31 | 7 个 `compile_rejected`、2 个 `kernel_rejected` |
-| PR26 运行时 `edb004d`（已合并） | **24/31** | **24/31** | **5 个 `compile_rejected`、2 个 `kernel_rejected`** |
+| PR26 运行时 `edb004d` / IR11 | 24/31 | 24/31 | 历史已合并检查点，本轮复用结果 |
+| 联合功能 `39a4545` / IR15 | 31/31 | 31/31 | 历史 62 次本地执行 |
+| 优化 `ddfd379` / IR15 | 31/31 | 31/31 | 历史 62 次本地执行 |
+| 精度链 `d451605` / IR15 | **31/31** | **31/31** | 最新 62 次新本地执行 |
 
-该实验新执行了本地 EVAS 的 124 个配置（两个检查点各 31×2），使用相同 DUT、刺激、
-网格、容差和原检查器。新增达标为 `d1-free`、`d1-reset`，原有 44 份达标 CSV
-逐字节一致；没有发现已达标条件退化、超时或有限观测违规。
-没有新增 Spectre 或其他后端执行，不能把本地 EVAS 与下列历史基线当作同轮性能比较。
+最新的 62 份 CSV、判定和生效设置与 `ddfd379` 一致；原 DUT、刺激、网格、目标、检查器和分母未改。
+372 Python、83 Rust 测试与 locked build、Clippy、格式检查通过；一项旧性能探针 ignored。
+最新修复没有新 Spectre 执行或重分析，也未重测性能；完整 raw 仅本地保留。
+“达标”只指所列有限观测判据，**正式 DVS 资格仍 I（未决）**。
+这些条件已用于开发诊断，不是未见确认集，也不证明全时域精度或完整语言合规。
 
-这里的“达标”指满足所列有限观测判据。**正式 DVS 资格仍为 I（未决）**，
-不代表全时域精度或完整语言合规；这 31 条件已用于诊断，属于开发回归材料，不是未见确认集。
+<a id="candidate-gap-completion"></a>
+
+### 历史功能补齐与 PR26 基线
+
+[联合功能记录](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)固定 `39a4545`：
+相对 analog `9c5d6c5` 的各 25/31 新增六条，原达标 50 份 CSV 逐字节一致。
+该轮重新核验上一轮 Spectre 的 62 次结果，各 31/31；没有新启动 Spectre。
+[PR26 复位对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)保留
+`edb004d` 各 24/31 与 PR25 `6df7f48` 各 22/31 的原执行，不能由新结果覆盖。
 
 <a id="remaining-original-31"></a>
 
-### 原 31 条件的剩余缺口
+### 已补齐的原矩阵缺口
 
-PR26 检查点两档均剩以下 7 个条件。执行阶段和缺口依据取自上述收据与能力表；
-拒绝表示当前实现不接受该模型，不表示合法 VA 写法本身有错，也不是求解后数值未达标。
+PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的新联合矩阵验证。
+拒绝表示实现范围不足，不表示合法 VA 本身有错；历史失败仍保留。
 
-| 条件 | 数量 | 拒绝阶段 | 待交付 main 的能力 |
-| --- | ---: | --- | --- |
-| `v1-main` | 1 | 前端 `compile_rejected` | 普通 analog 局部顺序赋值、比较及 if/else 限幅 |
-| `v6-standard`、`c2-main` | 2 | 前端 `compile_rejected` | 标准常量数组、一阶 `laplace_nd` 与滤波采样级联 |
-| `d2-constant`、`d2-chirp` | 2 | 前端 `compile_rejected` | constants 宏、`idtmod`、`sin` 与相位误差控制 |
-| `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | 内核 `kernel_rejected` | 无动态状态和事件耦合的多项式非线性瞬态求解 |
+| 原条件 | 数量 | IR15 的受限能力与数学入口 |
+| --- | ---: | --- |
+| `v1-main` | 1 | [顺序局部赋值、输入 if/else 限幅](ANALOG_CONDITIONS_CONTRACT.md) |
+| `v6-standard`、`c2-main` | 2 | [常量数组、一阶 laplace_nd 与滤波采样](LAPLACE_CONTRACTS.md) |
+| `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/OPERATORS.md#idtmod-与-sin) |
+| `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
-已经交付的 `v3-main` 多事件写者及 D1 积分复位不再属于这 7 条缺口。
-开发分支实现或专项通过不得提前记为 main 达标；后续合并后，以新检查点的原条件回放更新结果。
-这些是原矩阵的缺口，并非电压域 VA 的完整待办；更广组合和验证资格边界见能力表及下文。
+原 31 条件已没有未达标项；更广积分反馈、动态/非线性事件、算子组合及验证资格缺口仍见
+[能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 <a id="historical-four-backend-baseline"></a>
 
@@ -82,12 +91,14 @@ PR26 检查点两档均剩以下 7 个条件。执行阶段和缺口依据取自
 | --- | --- |
 | [起步契约](CASE_CARDS.md) | 8 张卡、15 个原条件的刺激、独立答案与错误对照 |
 | [补充契约](NEXT_CASE_CARDS.md) | 7 张卡、16 个新增条件；不把低通语法修订算作新增条件 |
+| [普通 analog 条件契约](ANALOG_CONDITIONS_CONTRACT.md) | v1-main 缺口的局部 `real` 顺序赋值、分段仿射公式与拒绝边界；开发契约，不增加原条件数 |
 | [定时与波形算子候选契约](TIMED_OPERATOR_CONTRACTS.md) | 保留实现前的数学样例；不等于后续实现未执行。受限算子已由 PR12–15 交付，实际证据从能力表进入；这些样例不增加原 31 条件 |
 | [积分独立契约](DYNAMICS_CONTRACTS.md) | 二参数积分、三参数复位、误差与候选生命周期；链接 D1 原条件回放及独立数学/恢复检查 |
 | [事件条件与采样复位契约](EVENT_CONDITIONS_CONTRACT.md) | 事件体 if/else、cross OR 与多事件写者；保留各阶段检查点的语义和证据 |
 | [判定与设置协议](METHOD_QUALIFICATION.md) | 共同事件历史、观察资格、校准与证据复用 |
 | [共同源码](cases/README.md) | 原 DUT、补充模型和标准数组修订 |
-| [PR26 完整 EVAS 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) | 已合并运行时与 PR25 main 的原 31×2 对照、剩余拒绝及兼容性检查 |
+| [IR15 最新验证](../../experiments/parallel-gap-integration/README.md#当前证据) | 联合原 31×2 矩阵、精度链与兼容性；完整 raw 仅本地保留 |
+| [PR26 历史 EVAS 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) | 已合并运行时与 PR25 main 的原 31×2 对照、剩余拒绝及兼容性检查 |
 | [历史四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md) | 31×4×2 条配置的逐条件结论，含旧 EVAS 0.8.7 |
 | [执行与诊断](../../experiments/dvs2-four-backend-validation/README.md) | 补测、复用、失败分类、有效设置和证据索引 |
 | [Spectre 核验](../../experiments/dvs2-spectre-validation/README.md) | 62 条配置、独立检查与设置审计 |

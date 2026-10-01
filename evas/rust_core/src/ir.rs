@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 11;
+pub const SCHEMA_VERSION: u32 = 15;
 
 pub(crate) fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -95,6 +95,14 @@ pub enum Expression {
         base: Box<Expression>,
         exponent: u32,
     },
+    Select {
+        relation: Relation,
+        left: Box<Expression>,
+        right: Box<Expression>,
+        then_value: Box<Expression>,
+        else_value: Box<Expression>,
+        origin: Origin,
+    },
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -105,6 +113,17 @@ pub enum OperatorSpec {
         ic: f64,
         #[serde(default)]
         reset: Option<Expression>,
+        origin: Origin,
+    },
+    IdtMod {
+        input: Expression,
+        ic: f64,
+        modulus: f64,
+        offset: f64,
+        origin: Origin,
+    },
+    Sin {
+        input: Expression,
         origin: Origin,
     },
     AbsDelay {
@@ -125,6 +144,12 @@ pub enum OperatorSpec {
         fall: f64,
         origin: Origin,
     },
+    LaplaceNd {
+        input: Expression,
+        numerator: Vec<f64>,
+        denominator: Vec<f64>,
+        origin: Origin,
+    },
 }
 
 impl OperatorSpec {
@@ -133,7 +158,10 @@ impl OperatorSpec {
             Self::Transition { origin, .. }
             | Self::AbsDelay { origin, .. }
             | Self::Idt { origin, .. }
-            | Self::Slew { origin, .. } => origin,
+            | Self::Slew { origin, .. }
+            | Self::LaplaceNd { origin, .. }
+            | Self::IdtMod { origin, .. }
+            | Self::Sin { origin, .. } => origin,
         }
     }
 }
@@ -145,7 +173,7 @@ pub struct Term {
     pub coefficient: f64,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Origin {
     pub source: String,
@@ -273,15 +301,15 @@ pub enum Statement {
     Assign(Assignment),
     If {
         relation: Relation,
-        left: Expression,
-        right: Expression,
+        left: Box<Expression>,
+        right: Box<Expression>,
         then_body: Vec<Statement>,
         else_body: Vec<Statement>,
         origin: Origin,
     },
 }
 
-#[derive(Debug, Clone, Copy, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Relation {
     Lt,

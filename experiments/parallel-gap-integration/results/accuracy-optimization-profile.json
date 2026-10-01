@@ -1,0 +1,461 @@
+{
+  "runtime_commit": "ddfd3795ee7edd7cb5d3e6ccf2160d5872f334d4",
+  "baseline_commit": "4a40f09d52ce5f10c6654fd21a35884b69fe1c5f",
+  "baseline_production_checkpoint": "39a4545c34fb22b1bd69731ca6b8bd8852b0e9dd",
+  "baseline_difference": "4a40f09 adds opt-in test instrumentation only; production behavior unchanged",
+  "schema_version": 15,
+  "package_version": "0.9.0",
+  "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "cpu": "Apple M5",
+  "cargo_version": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+  "rustc_version": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "build_profile": "release",
+  "timing_scope": "in-process kernel; excludes parsing, request cloning, serialization and process launch",
+  "order": "4 rounds: baseline/candidate, candidate/baseline, baseline/candidate, candidate/baseline; 5 timed repeats per case per process after complete-run warmup",
+  "clock_controls": "shared host, no CPU affinity or frequency locking; descriptive local medians and ranges, no statistical or general speed guarantee",
+  "identity": {
+    "binary_sha256": {
+      "baseline": "6993cf1c98ebbb54315d95d424171f7464a481567d6b5c7d75337f6f1d38fd4e",
+      "candidate": "38d76b0199816828d3c1a1ec88d5526cab25876fec465e6f4bcf6926dd31c014"
+    },
+    "input_manifest_sha256": "71145cac01e4c3a4dda41bed1635827ccf941ba4cca95a081645cc31f8c7798f",
+    "input_sha256": {
+      "cubic-half": "e96f3f712a565cd342a63913a401193d519b76cbf33b91a551274f3e7ecfdb52",
+      "cubic-two": "c17b0d903b344adb49abd7fbc9d3322e259e55e5497c6605847efd31ed901dd0",
+      "filter-phase": "639f8481e4e9f2920b826f9cd80cbff67fb24a4f271540c5070ce749c0065f9e",
+      "reset-filter-phase": "ddaa25a4587bb7cbed79fc2adfe13c369026b1b05fdf5ecd54c08fe9346d4e15"
+    },
+    "rounds": 4,
+    "repeats_per_process": 5,
+    "command": [
+      "BINARY",
+      "profile_accuracy_components",
+      "--ignored",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "timing_scope": "in-process kernel; excludes parsing, request cloning, serialization and process launch",
+    "availability": "raw logs and binaries local-only"
+  },
+  "cases": {
+    "cubic-half": {
+      "samples_per_version": 20,
+      "stages": {
+        "complete_kernel_run": {
+          "median_s": {
+            "baseline": 0.005460604500000001,
+            "candidate": 0.004996542
+          },
+          "range_s": {
+            "baseline": [
+              0.005288459,
+              0.007168458
+            ],
+            "candidate": [
+              0.004839417,
+              0.005159792
+            ]
+          },
+          "candidate_speedup": 1.0928767335489227
+        },
+        "nominal_newton": {
+          "median_s": {
+            "baseline": 0.0017387294999999998,
+            "candidate": 0.0017112289999999999
+          },
+          "range_s": {
+            "baseline": [
+              0.001647,
+              0.002594333
+            ],
+            "candidate": [
+              0.001671208,
+              0.0017865
+            ]
+          },
+          "candidate_speedup": 1.016070613576558
+        },
+        "source_values_and_bounds": {
+          "median_s": {
+            "baseline": 0.0001530625,
+            "candidate": 0.0001528125
+          },
+          "range_s": {
+            "baseline": [
+              0.000145417,
+              0.000190375
+            ],
+            "candidate": [
+              0.000145167,
+              0.000165625
+            ]
+          },
+          "candidate_speedup": 1.0016359918200408
+        },
+        "waveform_certificate": {
+          "median_s": {
+            "baseline": 0.00291475,
+            "candidate": 0.002395666
+          },
+          "range_s": {
+            "baseline": [
+              0.002783916,
+              0.003460667
+            ],
+            "candidate": [
+              0.002374292,
+              0.002533084
+            ]
+          },
+          "candidate_speedup": 1.2166762812512262
+        }
+      },
+      "response_sha256": "e329855e8d1d8d147c1aaae7ba150efec337a63cb4b63d6ac0bc77836647a29b"
+    },
+    "cubic-two": {
+      "samples_per_version": 20,
+      "stages": {
+        "complete_kernel_run": {
+          "median_s": {
+            "baseline": 0.005454375,
+            "candidate": 0.0049424585
+          },
+          "range_s": {
+            "baseline": [
+              0.005255792,
+              0.00646425
+            ],
+            "candidate": [
+              0.004774042,
+              0.005190208
+            ]
+          },
+          "candidate_speedup": 1.1035752753412091
+        },
+        "nominal_newton": {
+          "median_s": {
+            "baseline": 0.001723542,
+            "candidate": 0.001675
+          },
+          "range_s": {
+            "baseline": [
+              0.001658417,
+              0.00212225
+            ],
+            "candidate": [
+              0.001629833,
+              0.001748708
+            ]
+          },
+          "candidate_speedup": 1.0289802985074628
+        },
+        "source_values_and_bounds": {
+          "median_s": {
+            "baseline": 0.000150854,
+            "candidate": 0.000146708
+          },
+          "range_s": {
+            "baseline": [
+              0.000142875,
+              0.000187166
+            ],
+            "candidate": [
+              0.000143958,
+              0.000155417
+            ]
+          },
+          "candidate_speedup": 1.0282602175750468
+        },
+        "waveform_certificate": {
+          "median_s": {
+            "baseline": 0.0029026875,
+            "candidate": 0.0023877085000000003
+          },
+          "range_s": {
+            "baseline": [
+              0.002815791,
+              0.003612416
+            ],
+            "candidate": [
+              0.002326833,
+              0.00249875
+            ]
+          },
+          "candidate_speedup": 1.2156791752427063
+        }
+      },
+      "response_sha256": "11263ca98ef5bbe097adca1ca2166419756832a32973bac63678238b6de1bd51"
+    },
+    "filter-phase": {
+      "samples_per_version": 20,
+      "stages": {
+        "complete_kernel_run": {
+          "median_s": {
+            "baseline": 0.029627188,
+            "candidate": 0.0161389585
+          },
+          "range_s": {
+            "baseline": [
+              0.028949334,
+              0.034765334
+            ],
+            "candidate": [
+              0.015589084,
+              0.017786
+            ]
+          },
+          "candidate_speedup": 1.8357558822646454
+        },
+        "immutable_operator_bounds": {
+          "median_s": {
+            "baseline": 0.0068676250000000005,
+            "candidate": 0.0068565415000000005
+          },
+          "range_s": {
+            "baseline": [
+              0.006747084,
+              0.008024167
+            ],
+            "candidate": [
+              0.006730916,
+              0.007212667
+            ]
+          },
+          "candidate_speedup": 1.0016164855124117
+        },
+        "immutable_operator_values": {
+          "median_s": {
+            "baseline": 6.9396e-05,
+            "candidate": 6.7354e-05
+          },
+          "range_s": {
+            "baseline": [
+              6.2666e-05,
+              0.000105209
+            ],
+            "candidate": [
+              6.6042e-05,
+              8.0375e-05
+            ]
+          },
+          "candidate_speedup": 1.0303174273242865
+        },
+        "source_values_and_bounds": {
+          "median_s": {
+            "baseline": 0.000137625,
+            "candidate": 0.0001300835
+          },
+          "range_s": {
+            "baseline": [
+              0.000132125,
+              0.000161291
+            ],
+            "candidate": [
+              0.000126708,
+              0.00014025
+            ]
+          },
+          "candidate_speedup": 1.0579743011219715
+        }
+      },
+      "response_sha256": "6882f7325f5b5b2fe6425f3ff8c519e34a24c50217500b862f30137965e1b8b5"
+    },
+    "reset-filter-phase": {
+      "samples_per_version": 20,
+      "stages": {
+        "complete_kernel_run": {
+          "median_s": {
+            "baseline": 0.0427883335,
+            "candidate": 0.0270679585
+          },
+          "range_s": {
+            "baseline": [
+              0.042164958,
+              0.043435042
+            ],
+            "candidate": [
+              0.0263775,
+              0.04936025
+            ]
+          },
+          "candidate_speedup": 1.5807743129205698
+        },
+        "immutable_operator_bounds": {
+          "median_s": {
+            "baseline": 0.0094990005,
+            "candidate": 0.009548229500000002
+          },
+          "range_s": {
+            "baseline": [
+              0.0094185,
+              0.009658541
+            ],
+            "candidate": [
+              0.009420834,
+              0.029527125
+            ]
+          },
+          "candidate_speedup": 0.9948441750378957
+        },
+        "immutable_operator_values": {
+          "median_s": {
+            "baseline": 9.53125e-05,
+            "candidate": 0.0001015835
+          },
+          "range_s": {
+            "baseline": [
+              9.2667e-05,
+              0.0001025
+            ],
+            "candidate": [
+              9.4167e-05,
+              0.000322875
+            ]
+          },
+          "candidate_speedup": 0.9382675336053592
+        },
+        "source_values_and_bounds": {
+          "median_s": {
+            "baseline": 0.000136812,
+            "candidate": 0.000131938
+          },
+          "range_s": {
+            "baseline": [
+              0.000128084,
+              0.0001405
+            ],
+            "candidate": [
+              0.000126875,
+              0.000511875
+            ]
+          },
+          "candidate_speedup": 1.036941593778896
+        }
+      },
+      "response_sha256": "13bb2abdf3bee5886eba46a55788106d91b61499357cd0c33deba231b3f55f8c"
+    }
+  },
+  "fixtures": {
+    "cubic-half": {
+      "request_sha256": "e96f3f712a565cd342a63913a401193d519b76cbf33b91a551274f3e7ecfdb52",
+      "model_source": "`include \"constants.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+V(u,r)-.5*pow(V(y,r),3); end endmodule",
+      "pwl": [
+        [
+          [
+            0,
+            0.125
+          ],
+          [
+            3,
+            0.875
+          ]
+        ]
+      ],
+      "output_points": 1026,
+      "grid": "i/1024, i=0..1024; plus t=3 for cubic cases",
+      "stop": 3,
+      "max_step": 3,
+      "tolerances": {
+        "absolute": 1e-08,
+        "relative": 1e-08
+      }
+    },
+    "cubic-two": {
+      "request_sha256": "c17b0d903b344adb49abd7fbc9d3322e259e55e5497c6605847efd31ed901dd0",
+      "model_source": "`include \"constants.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+V(u,r)-2*pow(V(y,r),3); end endmodule",
+      "pwl": [
+        [
+          [
+            0,
+            0.125
+          ],
+          [
+            3,
+            0.875
+          ]
+        ]
+      ],
+      "output_points": 1026,
+      "grid": "i/1024, i=0..1024; plus t=3 for cubic cases",
+      "stop": 3,
+      "max_step": 3,
+      "tolerances": {
+        "absolute": 1e-08,
+        "relative": 1e-08
+      }
+    },
+    "filter-phase": {
+      "request_sha256": "639f8481e4e9f2920b826f9cd80cbff67fb24a4f271540c5070ce749c0065f9e",
+      "model_source": "`include \"constants.vams\"\nmodule m(u,y,f,r); input u; output y,f; inout r; electrical u,y,f,r; real p; analog begin p=idtmod(V(u,r),.125,1,0); V(y,r)<+sin(2*`M_PI*p); V(f,r)<+laplace_nd(V(u,r), '{1}, '{1,.1}); end endmodule",
+      "pwl": [
+        [
+          [
+            0,
+            0.25
+          ],
+          [
+            1,
+            0.5
+          ]
+        ]
+      ],
+      "output_points": 1025,
+      "grid": "i/1024, i=0..1024; plus t=3 for cubic cases",
+      "stop": 1,
+      "max_step": 1,
+      "tolerances": {
+        "absolute": 1e-08,
+        "relative": 1e-08
+      }
+    },
+    "reset-filter-phase": {
+      "request_sha256": "ddaa25a4587bb7cbed79fc2adfe13c369026b1b05fdf5ecd54c08fe9346d4e15",
+      "model_source": "`include \"constants.vams\"\nmodule m(u,y,f,p,r); input u; output y,f,p; inout r; electrical u,y,f,p,r; integer q; analog begin @(initial_step) q=0; @(timer(.25,0,1e-14)) q=1; @(timer(.5,0,1e-14)) q=0; V(y,r)<+sin(idt(V(u,r),.125,q)); V(f,r)<+laplace_nd(V(u,r), '{1}, '{1,.1}); V(p,r)<+sin(idtmod(V(u,r),.125,1,0)); end endmodule",
+      "pwl": [
+        [
+          [
+            0,
+            0.25
+          ],
+          [
+            1,
+            0.5
+          ]
+        ]
+      ],
+      "output_points": 1025,
+      "grid": "i/1024, i=0..1024; plus t=3 for cubic cases",
+      "stop": 1,
+      "max_step": 1,
+      "tolerances": {
+        "absolute": 1e-08,
+        "relative": 1e-08
+      }
+    }
+  },
+  "full_responses_identical": true,
+  "profile_source_sha256": "2d75914e5124985f7d2b60b98c5350d45d1f11d249a67da318d1657393a55d80",
+  "probe_source_sha256": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+  "raw_summary_sha256": "0e6a8fa1aab31971b6cb0ec24b1622bbdcaa6d015b4f0c923d3bc306cfa3fc4c",
+  "source_archives": {
+    "baseline-source.tar.gz": "5dc8ba8bc1c48b63f5f3bd319e61bc3a8555dfe02b3e636401b67804eb2f026a",
+    "runtime-source.tar.gz": "f57bb85f045c28ca0b2ce7d4adfeb3f40c7002d0c6c658d85b54c1e3d0c1d1a8"
+  },
+  "logs_sha256": {
+    "round-0-baseline.log": "ab3578b939e55e088e63b13d8c31d4204c3e33120ce98ebdb252712b96b32b70",
+    "round-1-baseline.log": "7c15548632737d9c52c087d74cc576a7267d9b6f29641d28699d1b41b04271a6",
+    "round-1-candidate.log": "6293d5b7a1763661629f4d36e9214da30ec3ae0e165cc3b67d8b6e5295cedcf9",
+    "round-2-candidate.log": "5daf1f8b44da5237bc2609d37a7266c8b7697cc19653c34337e9b4f8dc04bf85",
+    "round-3-candidate.log": "00a9e690fe827d2d67a7aab299ffca08af320d9945271596e5adc3b047003425",
+    "round-0-candidate.log": "4261ff70e4f16236b263d13d3fb486227b3927bf0e3835a1f5d07fdde3383acb",
+    "round-3-baseline.log": "0d8f955f56c8e054d45b08494e1d2c44a5f444bc56d52778090cc80b1b975048",
+    "round-2-baseline.log": "4edda37eb6a461fc8767933f52c6c2e4777853778b1d98a9fdb6a9b8ade8df3e"
+  },
+  "baseline_build_log_sha256": "78e4c10dfffc6fb94e0176c828b1099d3ec37ce40d2c5042b6afd9acb5963278",
+  "candidate_build_log_sha256": "a1156dc734d975f62898c799f15f3d449bc5c7329ab390f037a6a662b4a4dd46",
+  "preserved_exploratory_runs": "Initial dirty instrumentation build and first paired run retained; final baseline rebuilt from committed archive and produced the identical test executable hash.",
+  "raw_availability": "local-only; requests, archived binaries and raw logs are not published",
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "no_new_spectre_execution": true
+}

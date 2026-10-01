@@ -83,6 +83,22 @@ impl AffineState {
         Ok(value)
     }
 
+    pub(crate) fn single_operator_form(&self) -> Option<(usize, f64, f64)> {
+        if !self.node_dependencies.is_empty() || !self.state_dependencies.is_empty() {
+            return None;
+        }
+        let mut found = None;
+        for (index, &coefficient) in self.operators.iter().enumerate() {
+            if coefficient == 0.0 {
+                continue;
+            }
+            if found.replace((index, coefficient, self.constant)).is_some() {
+                return None;
+            }
+        }
+        found
+    }
+
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Expression, Error> {
         Ok(Expression::Affine {
             constant: self.value_with(&[], states, operators)?,
@@ -209,6 +225,12 @@ pub(crate) fn affine(
             return Err(Error::new(
                 "unsupported_transient",
                 "polynomial transient equations are not supported",
+            ))
+        }
+        Expression::Select { .. } => {
+            return Err(Error::new(
+                "unsupported_transient",
+                "ordinary analog conditionals are not supported in transient event equations",
             ))
         }
     }

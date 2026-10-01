@@ -1,0 +1,204 @@
+{
+  "runtime_commit": "d451605bf9991ceea010c68af9cb1143f1b50754",
+  "kernel_sha256": "0d92e770471638182f05fec53c308c0b34d89935c25bbaf70d47f5c9c33f522f",
+  "schema_version": 15,
+  "checks": [
+    {
+      "check": "python",
+      "command": "PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v",
+      "exit_code": 0,
+      "tests": 372,
+      "ignored": 0,
+      "log": "python-final-3.log",
+      "log_sha256": "7b413e0a5cea7da451b8dc9335c272e8ba2788cff3376e0ac4f40245113c7db6",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "rust",
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": 83,
+      "ignored": 1,
+      "log": "rust-final-3.log",
+      "log_sha256": "5157e583ffc4c94be5cf26bae592b9e2a5970df6d049ae866610346b4a4efaca",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "build",
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "build-frozen.log",
+      "log_sha256": "a5f4c585ee974ca44916ac30a98bbc189e067a7e0a6bc6d2e8d6bc525be724af",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "clippy",
+      "command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "clippy-final.log",
+      "log_sha256": "6817ba67f778f12d001b482aa874d8236d3468885df72ea6faf79c4fd3984b1a",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "fmt",
+      "command": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "fmt-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "design_math",
+      "command": "python3 -B evas/validation/check_design_math.py",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "design-math.log",
+      "log_sha256": "5b6d4fe8c6d6733c2974bcc65d8ddc599aebdfa0d74fdd35ba0ec0d0fa9533f9",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "frozen_validation_identity",
+      "command": "python3 -B scripts/verify_validation_version.py",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "frozen-validation-identity.log",
+      "log_sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "diff",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_execution",
+      "command_template": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix.log",
+      "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_analysis",
+      "command_template": "python3 -B experiments/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix-analysis.log",
+      "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
+      "log_availability": "local-only"
+    }
+  ],
+  "test_sources_sha256": {
+    "evas/tests/test_absdelay.py": "99534c8a459196ab09188df97d7dda47c9c90184ad650916e4d8f77e719ca328",
+    "evas/tests/test_absdelay_accuracy.py": "89db111d75762868b1cc5d1b21b09093dfafedc5914e7e74849cf13ee0b7b9eb",
+    "evas/tests/test_accuracy.py": "46f4c9e67bcd21b973426e3c9896daba1a65aab0b819b83806c2f17580978a1f",
+    "evas/tests/test_affine.py": "483bdd4809815e9e82543b5fec3b511a6e197d8417699a4eadfb33ffa8e01a24",
+    "evas/tests/test_analog_conditions.py": "7840dc0f5f6ce5f99b881ee7bacc800e3e5ec31ab563df4381c4fac55520604f",
+    "evas/tests/test_contracts.py": "d10a1098818991921d1dcf273833715e398c332a811d8223ed654db61e04d5ee",
+    "evas/tests/test_event_accuracy.py": "684d7c8e65e48b83be5b6fbb4f0e58e27ca1de37d2d665e3259c666ad144b60d",
+    "evas/tests/test_event_conditions.py": "cd967fa9b5e97876685daf1770fa16b9fdb663528aab6b976e95b37c10d5a831",
+    "evas/tests/test_event_or.py": "8b9324d821753c78e7b9760b9765875cb74e9eae5e774e252f1ee5ecfc48558c",
+    "evas/tests/test_event_writers.py": "6ca961e64a70dc27e33f1bcf37ba5cd557c270fa30799c86e1414d56cdd43a89",
+    "evas/tests/test_events.py": "b5e0b0c31aa7a6b82e3c14084b2d0491e00f8c772edbc33cc341b9e7568c55c6",
+    "evas/tests/test_gap_integration.py": "0aa9d87f04bfd17039f48ae1adba18cf26aad03d056cf5d03aeb8ea54a74345e",
+    "evas/tests/test_idt.py": "a682f0f2556159330af4e8f770ec38553931d7b5bc8de1ddac69cc3f239e2cb2",
+    "evas/tests/test_idt_accuracy.py": "fd5fc1ca810df96f8ad23ad430e0cda50a7ae50950c90b4781f75c1fd358eaed",
+    "evas/tests/test_interval.py": "2b5efe3d217e021cb85d50c22cdf6a7b7076221a9e7cf9bc5cba324a79b0b7f3",
+    "evas/tests/test_laplace.py": "bac5f111ece9bf05c4bfc5fd979136ba54a04365017c17712607b10f98f9b4a7",
+    "evas/tests/test_nonlinear.py": "2a98944e726461625a99404d229fa2831624a5de3e439bf79208adf20dd91b76",
+    "evas/tests/test_nonlinear_transient.py": "46697c2713900084b9a87cacc958aa5f1c2ff408948b5f369a6b6e4b8d9e6a6d",
+    "evas/tests/test_phase.py": "9d43723044c4629ea4258fe3c5dac4f14d1fefe250fced31dcdb127466af5e77",
+    "evas/tests/test_precision_chain.py": "224412bd0df4caefd03f02f1a7a9190da3db2e006a90f0438220092d8afdeff8",
+    "evas/tests/test_reuse.py": "cc648f89cc84c295d53abaec2b8c48d5fb03fd64238b82bf0699e2336fd1a2e6",
+    "evas/tests/test_semantic_invariants.py": "6576bf7517e6258336b93a8b75583491bc06663d759bd9e3058805313d431294",
+    "evas/tests/test_settlement.py": "b949f2eec8bc42b938acc1198062154942392da4cdeb9cca3d21a89d2c5cb39f",
+    "evas/tests/test_slew.py": "24ae71f72bfa989fcfb4a282c0c23b72ba27af64c5afeccdc8e4bb68afd918f3",
+    "evas/tests/test_slew_accuracy.py": "5ffdaffd0193cfbfc5001ae4c724fa1fccf19c17564e64f781c6e8a49d699b22",
+    "evas/tests/test_sparse.py": "1fb96f61b27559c7d969a1d56ee2e488b677348c6a9867059987694145ba3ec6",
+    "evas/tests/test_sparse_transient.py": "5327e50e0d8189025730347d17408c8370abf1a341750182de5c5d1aa78420c9",
+    "evas/tests/test_timed_composition.py": "18f61045a6e93a1c848f83cc7fe3d3d83cb3f632f787fe2aa814d737a75523e2",
+    "evas/tests/test_timer.py": "501eaf74e576990907d12df8eafb0fd8405a00b4dbbd6154a760136992cfa266",
+    "evas/tests/test_transition.py": "b5f1db73ac6703fb28fabed7114529ac4a6b41dc01c2f2cd114cff7aec3e12bf",
+    "evas/tests/test_transition_accuracy.py": "a3eb85bf31bae65750e85c3d398566974dac1a44b16af72f90c31cf934ef22e4"
+  },
+  "red_evidence": [
+    {
+      "log": "red-python-final.log",
+      "log_sha256": "327c23dcb23174540b79093d71cce70e4e8c088e3f28ce6bd1b054ccfada19f8"
+    },
+    {
+      "log": "red-rust.log",
+      "log_sha256": "b0d5774295a4598a06f5fafdb19f213af45fe1c53161e7a9ba40d9a6d7ccca48"
+    }
+  ],
+  "preserved_failures": [
+    {
+      "log": "red-python.log",
+      "log_sha256": "c2b6dec90a0c481ee22bf2e1833acf244104d9301eaed971f82ff8202b6a8d39"
+    },
+    {
+      "log": "python-focused.log",
+      "log_sha256": "c0191d24f033ad5ccb88f65a41a548397de77a638d32f8bd165fd9d43ff9872c"
+    },
+    {
+      "log": "rust-final.log",
+      "log_sha256": "21350a34b523201f35953e0e82786c04ecf6a0cc974773367f058059986de851"
+    },
+    {
+      "log": "python-final.log",
+      "log_sha256": "167e5ca5c9806448397199e11ca4e664e0d5e349d5d6ca61e611f0e1231daa77"
+    },
+    {
+      "log": "rust-final-2.log",
+      "log_sha256": "10315201ac73b275b4b27afc71be139654e25c3f91dd5df1c2229085635188f2"
+    }
+  ],
+  "performance_probe": "one existing ignored Rust probe; no new performance measurement in this repair",
+  "preserved_failure_notes": [
+    "RED: old point-input certification accepted five out-of-budget quadratic roots; the initial six Python methods had nine failing subcases and the new Rust state-bound test failed.",
+    "An initial diagnostic used an invalid cross-block state read; the final RED fixture uses one periodic writer. The initial log remains in the archive.",
+    "Strict uniform input certification exposed an off-knot PWL error before the reset-time probe at 1e-20 V. The fixture now submits its trial times as actual source knots, retaining the strict tolerance and rollback assertions.",
+    "Uniform initialization certification rejects the timer probe with redundant constraints that agree only at initial state zero. The public test now asserts the specific early refusal; Rust still covers true post-update residual failure and rollback.",
+    "The first source-knot fixture edit used tuples where the wire IR requires arrays. The test-only compile failure is retained; the final Rust suite passed."
+  ],
+  "contract_limits": [
+    "Stateless polynomial transient requires a square system at point and off-knot inputs; all original summed contribution trees participate in the proof.",
+    "Static solve retains its local Newton convergence contract without this forward root-error certificate.",
+    "Affine redundant constraints must be identities over the error-map parameter domain; stricter initialization can refuse models earlier.",
+    "Generic real states retain a relative-only error budget and may conservatively reject near-zero uncertainty.",
+    "No general continuous-time error, global root selection, nonlinear history/event coupling, or new performance claim."
+  ],
+  "raw_archive": {
+    "root": "/Users/bucketsran/Documents/TsingProject/vaEVAS-gap-integration/runs/precision-chain-20260930T202707Z-e1c89a",
+    "manifest": "RAW_MANIFEST.json",
+    "manifest_sha256": "a55ea465456f812f05f06be6673e4b9dbc323f38b89ed0f349319521b0a727af",
+    "files": 876,
+    "bytes": 172681211,
+    "availability": "local-only"
+  },
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "matrix_receipt": "experiments/parallel-gap-integration/results/precision-chain-matrix.json",
+  "matrix_receipt_sha256": "010c6c3823238e004c5ae8261a974a675e9b9e4329c301233832fed7fbcc5971",
+  "receipt_formatting": {
+    "original_matrix_sha256": "98c85af7918c82929cf7a8d5ce110c4c7c1e81067a916a92590ed0ece62aca95",
+    "original_matrix_history_url": "https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/precision-chain-matrix.json",
+    "change": "JSON formatting only; all decoded values preserved; no new simulation or reanalysis"
+  }
+}

@@ -1,14 +1,29 @@
 # 有历史的波形算子
 
-适用范围：当前 main 的 EVAS 0.9.0 / IR v11。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
+适用范围：当前 EVAS 0.9.0 / IR v15。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
 PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt，PR26 交付三参数复位。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
+
+IR15 保留受限 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin。
+下文单项分支/历史 PR 的版本与测量保留原归属；当前联合身份、原 31 条件与拒绝原因见
+[整合审查](../../experiments/parallel-gap-integration/README.md)。
 
 ## 公共执行方法
 
 下面固定当刻算子输出的推导适用于正边沿 transition 与直接输入的 absdelay/slew。
 idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组合与拒绝边界)重建并认证候选，不能直接套用输出不变假设。
+当前同样允许纯函数 `sin` 随其已许可的早期复位输入改变；函数链的许可逐项传播，
+随后仍从同一接受历史重放并核对整个算子值/区间及积分复位历史。
+`reset_dependencies.rs` 的结构图包含滤波/相位/正弦输入边，禁止经函数和电压采样返回 reset 的反馈环。
+
+查询优化 `ddfd379` 用临时 `Evaluation` 借用同一个历史基线并固定查询时间。
+同刻候选仍克隆该基线并推进历史；无复位 idt、idtmod、laplace、absdelay、slew
+和直接输入 sin 的查询值/区间可复用。复位 idt、transition 以及沿依赖链消费它们的 sin
+重新求值。每种 Runtime 必须显式分类，新增算子时编译器要求补充该分类。
+这里复用的是该次试算内的查询结果，不跨时间或历史基线缓存；失败候选仍整体丢弃。
+原来的同刻权限、第二次求解、历史/值/区间重放一致性检查均保留，不能用复用跳过验收。
+`operators.rs` 的独立回归核对复位后正弦、transition 后正弦，以及弃候选后从原基线重试。
 
 PR13 引入实例与源码调用点身份，算子历史与用户状态分开保存。设 q 为离散状态、H 为已接受历史，
 先求算子值 `z(t;q,H)`，再将它代入限定仿射电压方程 `A v=b(u,q,z)`。
@@ -143,7 +158,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 ## idt
 
 能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 交付首版受限二参数积分；
-当前 IR v11 扩展三参数 reset，检查点与交付状态见能力总表。
+IR v11 首次扩展三参数 reset，当前沿用 IR15，检查点与交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
 `idt(direct_affine_input, constant_ic)` 与受限的
@@ -225,7 +240,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 失败、丢弃或重试不修改已接受状态及历史。
 
 
-IR v7 新增 `kind=idt,input,ic,origin`；当前 IR v11 在 idt 记录中加入可空 `reset` 表达式。
+IR v7 新增 `kind=idt,input,ic,origin`；IR v11 起在 idt 记录中加入可空 `reset` 表达式。
 调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
 错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.9.0；包内版本号不代表已发布 tag。
@@ -265,6 +280,100 @@ PR26 已交付的被测运行时 `edb004d` 完成[合并前完整审查及原 31
 该运行时两档各 24/31，比较基线为 PR25 main `6df7f48` 的各 22/31；新增 D1 free/reset，
 原达标的 44 份 CSV 逐字节一致。该执行补齐上述早期 targeted smoke 的矩阵缺口，
 没有新增远程后端对照或连续时间资格。
+
+## laplace_nd
+
+能力 ID：DYNAMICS + LANG。本分支新增受限 `laplace_nd`：只接受
+`laplace_nd(u, '{b0}, '{d0,d1})`，其中数组是 Verilog-A 标准的前导撇号常量数组，
+系数按升幂顺序解释。`d0,d1` 必须为有限正数，`b0` 为有限常数；输入 `u` 必须是直接驱动
+连续 PWL 电压和常数的仿射组合。高阶系数、动态系数、非标准 `{...}` 数组、内部节点/状态输入、
+嵌套、反馈及算子驱动 `cross` 均明确拒绝，不能截断额外极点后继续执行。
+
+令 `tau=d1/d0`、`gain=b0/d0`，本版求解：
+
+`tau*y'(t)+y(t)=gain*u(t)`。
+
+初始值取仿真起点的 DC 平衡 `y(0)=gain*u(0)`，不从 0 强行启动。对非零常量输入，
+输出从第一点起就是对应 DC 值；这也是组合测试检查的显式契约。
+在单个 PWL 段上，若端点输入为 `u0,u1`、段长为 `D`、局部时间为 `h`、段起点输出为 `y0`，
+则实现使用
+
+`y=e*y0 + gain*((1-e-q)*u0 + q*u1)`，
+
+其中 `e=exp(-h/tau)`、`q=(h-tau*(1-e))/D`。代表值用 `expm1` 和小量级数避免消减。
+验收区间改用 `g=1-exp(-x)`、`b=x-g` 的形式：
+
+`y=y0+(gain*u0-y0)*g+gain*m*tau*b`。
+
+证书路径不把已经算出的 f64 `gain/tau/h/D` 重新定义为精确量：`b0/d0`、`d1/d0`
+由原始 binary64 系数做外向区间除法，`h=query-start`、`D=end-start` 由 binary64 时间点做外向区间相减。
+对区间 `x=h/tau>=0`，实现先二分到 `r<=1/16`，用 `g(r)` 与 `b(r)` 的交错级数加显式下一项余量包围，
+再通过 `g(2r)=g(r)*(2-g(r))`、`b(2r)=2*b(r)+g(r)^2` 恢复；`x>=1024` 时用
+`exp(-x)<2^-1022` 的粗尾界。历史由源语义拐点递推，输出采样与 `max_step`
+不写历史；候选帧克隆该不可变解析历史，所以失败或弃步不会改变已接受状态。
+
+实现入口：[laplace.rs](../rust_core/src/laplace.rs)、[operators.rs](../rust_core/src/operators.rs)。
+独立契约与回归见 [LAPLACE_CONTRACTS.md](../validation/LAPLACE_CONTRACTS.md) 和
+[test_laplace.py](../tests/test_laplace.py)。回归用 `Decimal` 重新计算解析答案，覆盖标准数组、
+DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺度、非精确原始系数除法、
+长绝对时间差放大、实例隔离、网格/步长不变性、历史误差经电压网络放大后的过严预算拒绝及 raw IR 拒绝。
+
+当前误差区间复用直接 PWL 输入包围，并用原始系数/时间点外向算术和上述级数/倍角权重包围滤波历史，
+再传入现有电压验收。这仍只证明成功计算点相对编译后 IR 和 binary64 PWL 源的预算；不能据此宣称连续时间全轨迹资格
+或 Spectre LTE 控制等价。
+
+## idtmod 与 sin
+
+分支限定实现新增相位子集：`idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
+电压域相位模型。依据 Verilog-AMS LRM 2.4 的 `idtmod(expr, ic, modulus, offset)`
+形式，当前只接受显式有限常量初值、显式正有限 modulus 和有限 offset；省略 modulus 的
+无界积分形式不映射到本算子，仍应使用普通 `idt` 或明确拒绝。
+
+`idtmod` 的输入沿用 `idt` 首版边界：直接驱动、连续 PWL 的仿射组合，不接受内部节点、
+状态、反馈、嵌套或动态参数。实现先用 [idt](#idt) 的解析积分得到未包裹相位
+`z(t)=ic+∫u(s)ds`，再返回
+
+`phase(t)=offset + (z(t)-offset) mod modulus`，
+
+范围为半开区间 `[offset, offset+modulus)`。负频率用 `rem_euclid` 语义处理，因此
+`ic=1/8,u=-1/4,modulus=1,offset=0` 在 `t=1` 得到 `7/8`。每个调用点和实例仍有独立历史；
+查询、输出网格和失败候选不写历史。
+
+`sin` 在本分支是函数型 operator，不引入通用非线性瞬态方程。接受两类输入：
+直接驱动 PWL 仿射表达式，或 `constant + coefficient * earlier_operator`。后一类覆盖
+``sin(2*`M_PI*phase)``。运行值可使用已绑定的代表系数，但精度证书重新从原始输入表达式做
+outward affine arithmetic，保留常量和系数折叠、相消及 binary64 运算造成的区间误差；若代表值可能
+偏离该区间内的实数参考且无法满足电压预算，则返回 `waveform_accuracy`。`phase` 若来自 `idtmod`，
+误差界使用 wrapped phase 的保守区间；不会把 binary64 系数 `2*`M_PI` 当成精确实数周期来抵消整圈误差。
+其他状态输入、内部节点输入、operator 前向引用、多个 operator 混合、算子驱动 cross 和
+operator 乘 voltage/state 仍拒绝。
+
+wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认只能给出整个 `[offset,offset+modulus]`
+保守范围；只有通过 outward interval arithmetic 证明 raw phase 落在同一个 turn 内，才返回窄 wrapped 界。
+对常量输入段、精确点输入/前缀积分和可用 exact binary64 product/sum 判定的请求，若 raw phase 区间
+只跨相邻 turn，内核会比较精确实数 `raw-(offset+k·modulus)` 的符号：小于零取左侧，
+大于零取右侧，等于零取 half-open wrap 的 offset 点。因此 D2 这类 binary64 采样点在 wrap 邻域
+可证明时能通过；非精确系数、非点输入误差、过多乘积项或巨大 turn 仍保守保留两侧并可能拒绝。
+当 `sin` 消费同一个 `idtmod` 输出时，可以保留 wrap 两侧的两个相位区间，分别做正弦区间证明再取并集；
+这只用于该函数证书，不改变 wrapped 电压输出的整周期保守界，也不把 binary64 的 `2π` 当作精确周期。
+大不确定度、真实跨越和不可精确表示的巨大 turn 会返回整周期或在 bounds 层触发
+`waveform_accuracy`。这会在严格电压预算下拒绝不确定 wrap 边界；这是 soundness 约束，
+不是连续时间 wrap 轨迹资格。
+
+单项 phase 分支的首版一次赋值别名在本地整合时由统一的顺序 analog lowering 接管。
+无事件/初始化的普通 local real 可重复无条件赋值，每条赋值捕获当时表达式；每个动态调用仍有独立身份。
+例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);`` 不创建持久状态。
+条件动态调用仍拒绝；普通条件与动态算子联立也尚未支持。`constants.vams`
+当前只解析窄集合中的 `` `M_PI``，不会执行 include 文件或引入任意宏系统。
+
+验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
+Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
+`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
+`observations_within_targets`。针对回归还覆盖同一 phase 的重复仿射引用、隐藏第二 operator 结构依赖拒绝、
+大系数抵消误差拒绝、`sin(idtmod)` 两侧包络、wrapped 电压在近 wrap / exact wrap 的可证通过，以及
+非精确系数边界无法证明时的 `waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，
+未执行 Spectre 或完整 31 条件矩阵。
+此前本地 IR14 联合版本的 30/31 固定证据仍保留在[整合收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/original31.json)；专项新结果不改写旧联合成绩。
 
 ## slew
 

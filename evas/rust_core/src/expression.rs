@@ -1,6 +1,7 @@
 //! Validate polynomial IR and evaluate its value and exact chain-rule gradient.
-use crate::ir::{Error, Expression};
-use std::collections::BTreeSet;
+use crate::interval::{equal_products, sum_products_sign, Interval as I};
+use crate::ir::{Error, Expression, Relation};
+use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
@@ -33,6 +34,134 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
             }
             validate(base, count)?;
         }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+            ..
+        } => {
+            if origin.instance.is_empty()
+                || origin.source.is_empty()
+                || origin.line == 0
+                || origin.column == 0
+            {
+                return Err(Error::new("invalid_ir", "invalid select source identity"));
+            }
+            validate(left, count)?;
+            validate(right, count)?;
+            validate(then_value, count)?;
+            validate(else_value, count)?;
+        }
+    }
+    Ok(())
+}
+
+fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
+    match expr {
+        Expression::Affine { terms, .. } => {
+            nodes.extend(terms.iter().map(|t| t.node));
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            predicate_nodes(left, nodes);
+            predicate_nodes(right, nodes);
+        }
+        Expression::Power { base, .. } => predicate_nodes(base, nodes),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            predicate_nodes(left, nodes);
+            predicate_nodes(right, nodes);
+            predicate_nodes(then_value, nodes);
+            predicate_nodes(else_value, nodes);
+        }
+        Expression::State { .. } | Expression::Operator { .. } => {}
+    }
+}
+
+/// Structural scope shared with the frontend: node-free scalar (0),
+/// affine/input-selected piecewise-affine (1), or unsupported. Keep dependencies
+/// in cancelled terms and in all select arms; do not use a sample's value here.
+fn predicate_degree(expr: &Expression) -> Option<u8> {
+    match expr {
+        Expression::Affine { terms, .. } => Some(u8::from(!terms.is_empty())),
+        Expression::Add { left, right } => {
+            Some(predicate_degree(left)?.max(predicate_degree(right)?))
+        }
+        Expression::Multiply { left, right } => {
+            let degree = predicate_degree(left)? + predicate_degree(right)?;
+            (degree <= 1).then_some(degree)
+        }
+        Expression::Power { base, exponent } => {
+            let degree = predicate_degree(base)?;
+            (degree == 0 || *exponent == 1).then_some(degree)
+        }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => Some(
+            predicate_degree(left)?
+                .max(predicate_degree(right)?)
+                .max(predicate_degree(then_value)?)
+                .max(predicate_degree(else_value)?),
+        ),
+        Expression::State { .. } | Expression::Operator { .. } => None,
+    }
+}
+
+pub(crate) fn validate_select_predicates(
+    expr: &Expression,
+    allowed_nodes: &HashSet<usize>,
+) -> Result<(), Error> {
+    match expr {
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+            ..
+        } => {
+            let mut nodes = BTreeSet::new();
+            predicate_nodes(left, &mut nodes);
+            predicate_nodes(right, &mut nodes);
+            if !nodes.iter().all(|node| allowed_nodes.contains(node)) {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    format!(
+                        "ordinary analog if predicate depends on an undriven voltage at {}",
+                        origin.label()
+                    ),
+                ));
+            }
+            if predicate_degree(left).is_none() || predicate_degree(right).is_none() {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    format!(
+                        "ordinary analog if predicate must be affine or input-selected piecewise-affine at {}",
+                        origin.label()
+                    ),
+                ));
+            }
+            validate_select_predicates(left, allowed_nodes)?;
+            validate_select_predicates(right, allowed_nodes)?;
+            validate_select_predicates(then_value, allowed_nodes)?;
+            validate_select_predicates(else_value, allowed_nodes)?;
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            validate_select_predicates(left, allowed_nodes)?;
+            validate_select_predicates(right, allowed_nodes)?;
+        }
+        Expression::Power { base, .. } => validate_select_predicates(base, allowed_nodes)?,
+        Expression::Affine { .. } | Expression::State { .. } | Expression::Operator { .. } => {}
     }
     Ok(())
 }
@@ -150,6 +279,25 @@ impl Accumulator {
                     self.add_derivative(node, derivative * da);
                 }
             }
+            Expression::Select {
+                relation,
+                left,
+                right,
+                then_value,
+                else_value,
+                origin,
+            } => {
+                let selected =
+                    if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                        error.message.push_str(&format!(" at {}", origin.label()));
+                        error
+                    })? {
+                        then_value
+                    } else {
+                        else_value
+                    };
+                self.add_expression(selected, factor, nodes)?;
+            }
         }
         Ok(())
     }
@@ -173,6 +321,246 @@ impl Accumulator {
     }
 }
 
+impl Relation {
+    fn selects_sign(self, sign: i8) -> bool {
+        match self {
+            Self::Lt => sign < 0,
+            Self::Le => sign <= 0,
+            Self::Gt => sign > 0,
+            Self::Ge => sign >= 0,
+        }
+    }
+}
+
+fn exact_product(a: f64, b: f64) -> Option<f64> {
+    let product = a * b;
+    if product.is_finite() && equal_products(a, b, product, 1.0) {
+        Some(product)
+    } else {
+        None
+    }
+}
+
+fn affine_product_terms(
+    expr: &Expression,
+    factor: f64,
+    nodes: &[f64],
+    terms: &mut Vec<(f64, f64)>,
+) -> Result<bool, Error> {
+    if !factor.is_finite() {
+        return Ok(false);
+    }
+    match expr {
+        Expression::Affine {
+            constant,
+            terms: affine_terms,
+        } => {
+            let Some(constant) = exact_product(factor, *constant) else {
+                return Ok(false);
+            };
+            terms.push((constant, 1.0));
+            for term in affine_terms {
+                let Some(coefficient) = exact_product(factor, term.coefficient) else {
+                    return Ok(false);
+                };
+                terms.push((coefficient, nodes[term.node]));
+            }
+            Ok(true)
+        }
+        Expression::Add { left, right } => Ok(affine_product_terms(left, factor, nodes, terms)?
+            && affine_product_terms(right, factor, nodes, terms)?),
+        Expression::Multiply { left, right } => {
+            for (scalar, other) in [(left, right), (right, left)] {
+                if let Expression::Affine {
+                    constant,
+                    terms: affine_terms,
+                } = scalar.as_ref()
+                {
+                    if affine_terms.is_empty() {
+                        let Some(factor) = exact_product(factor, *constant) else {
+                            return Ok(false);
+                        };
+                        return affine_product_terms(other, factor, nodes, terms);
+                    }
+                }
+            }
+            Ok(false)
+        }
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let selected =
+                if select_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })? {
+                    then_value
+                } else {
+                    else_value
+                };
+            affine_product_terms(selected, factor, nodes, terms)
+        }
+        _ => Ok(false),
+    }
+}
+
+fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
+    match expr {
+        Expression::State { .. } | Expression::Operator { .. } => Err(Error::new(
+            "unsupported_analysis",
+            "unbound state in static expression",
+        )),
+        Expression::Affine { constant, terms } => {
+            let mut value = I::point(*constant);
+            for term in terms {
+                value = value + I::point(term.coefficient) * nodes[term.node];
+            }
+            Ok(value)
+        }
+        Expression::Add { left, right } => {
+            Ok(expression_interval(left, nodes)? + expression_interval(right, nodes)?)
+        }
+        Expression::Multiply { left, right } => {
+            Ok(expression_interval(left, nodes)? * expression_interval(right, nodes)?)
+        }
+        Expression::Power { base, exponent } => {
+            let base = expression_interval(base, nodes)?;
+            if *exponent == 0 {
+                return Ok(I::ONE);
+            }
+            let mut value = base;
+            for _ in 1..*exponent {
+                value = value * base;
+            }
+            Ok(value)
+        }
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let selected =
+                if enclosed_predicate(*relation, left, right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })? {
+                    then_value
+                } else {
+                    else_value
+                };
+            expression_interval(selected, nodes)
+        }
+    }
+}
+
+fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Result<i8, Error> {
+    let mut terms = Vec::new();
+    let affine = affine_product_terms(left, 1.0, nodes, &mut terms)?
+        && affine_product_terms(right, -1.0, nodes, &mut terms)?;
+    if affine {
+        terms.retain(|(a, b)| *a != 0.0 && *b != 0.0);
+        if let Some(sign) = sum_products_sign(&terms) {
+            return Ok(sign);
+        }
+    }
+    let bounds: Vec<_> = nodes.iter().copied().map(I::point).collect();
+    let interval = expression_interval(left, &bounds)? - expression_interval(right, &bounds)?;
+    if let Some(sign) = interval.sign() {
+        return Ok(sign);
+    }
+    Err(Error::new(
+        "condition_precision",
+        "ordinary analog if predicate cannot be certified at binary64 precision",
+    ))
+}
+
+fn select_predicate(
+    relation: Relation,
+    left: &Expression,
+    right: &Expression,
+    nodes: &[f64],
+) -> Result<bool, Error> {
+    Ok(relation.selects_sign(predicate_sign(left, right, nodes)?))
+}
+
+fn enclosed_predicate(
+    relation: Relation,
+    left: &Expression,
+    right: &Expression,
+    nodes: &[I],
+) -> Result<bool, Error> {
+    let mut dependencies = BTreeSet::new();
+    predicate_nodes(left, &mut dependencies);
+    predicate_nodes(right, &mut dependencies);
+    if dependencies.iter().all(|&n| nodes[n].lo == nodes[n].hi) {
+        // Exact source knots retain the exact binary64 product-sum test.
+        // An unrelated interpolated source must not disable that proof.
+        let values: Vec<_> = nodes.iter().map(|v| v.lo).collect();
+        return select_predicate(relation, left, right, &values);
+    }
+    let difference = expression_interval(left, nodes)? - expression_interval(right, nodes)?;
+    if difference.finite() {
+        let decision = match relation {
+            Relation::Lt => (difference.hi < 0.0, difference.lo >= 0.0),
+            Relation::Le => (difference.hi <= 0.0, difference.lo > 0.0),
+            Relation::Gt => (difference.lo > 0.0, difference.hi <= 0.0),
+            Relation::Ge => (difference.lo >= 0.0, difference.hi < 0.0),
+        };
+        if decision.0 || decision.1 {
+            return Ok(decision.0);
+        }
+    }
+    Err(Error::new(
+        "condition_precision",
+        "ordinary analog if predicate cannot be certified from the original PWL input enclosure",
+    ))
+}
+
+/// Resolve only reachable conditions using source enclosures. Structural
+/// validation of both arms is the caller's responsibility and precedes this.
+pub(crate) fn resolve_selects(expr: &Expression, nodes: &[I]) -> Result<Expression, Error> {
+    Ok(match expr {
+        Expression::Select {
+            relation,
+            left,
+            right,
+            then_value,
+            else_value,
+            origin,
+        } => {
+            let left = resolve_selects(left, nodes)?;
+            let right = resolve_selects(right, nodes)?;
+            let decision =
+                enclosed_predicate(*relation, &left, &right, nodes).map_err(|mut error| {
+                    error.message.push_str(&format!(" at {}", origin.label()));
+                    error
+                })?;
+            return resolve_selects(if decision { then_value } else { else_value }, nodes);
+        }
+        Expression::Add { left, right } => Expression::Add {
+            left: Box::new(resolve_selects(left, nodes)?),
+            right: Box::new(resolve_selects(right, nodes)?),
+        },
+        Expression::Multiply { left, right } => Expression::Multiply {
+            left: Box::new(resolve_selects(left, nodes)?),
+            right: Box::new(resolve_selects(right, nodes)?),
+        },
+        Expression::Power { base, exponent } => Expression::Power {
+            base: Box::new(resolve_selects(base, nodes)?),
+            exponent: *exponent,
+        },
+        _ => expr.clone(),
+    })
+}
+
 pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error> {
     let mut sum = Accumulator::new();
     sum.add_expression(expr, 1.0, nodes)?;
@@ -182,6 +570,40 @@ pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error>
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn enclosed_relations_certify_one_sided_zero_boundaries() {
+        let x = Expression::Affine {
+            constant: 0.0,
+            terms: vec![crate::ir::Term {
+                node: 0,
+                coefficient: 1.0,
+            }],
+        };
+        let zero = Expression::Affine {
+            constant: 0.0,
+            terms: vec![],
+        };
+        for (bounds, relation, expected) in [
+            (I { lo: 0.0, hi: 1.0 }, Relation::Lt, false),
+            (I { lo: 0.0, hi: 1.0 }, Relation::Ge, true),
+            (I { lo: -1.0, hi: 0.0 }, Relation::Le, true),
+            (I { lo: -1.0, hi: 0.0 }, Relation::Gt, false),
+        ] {
+            assert_eq!(
+                enclosed_predicate(relation, &x, &zero, &[bounds]).unwrap(),
+                expected
+            );
+        }
+        for relation in [Relation::Lt, Relation::Le, Relation::Gt, Relation::Ge] {
+            assert_eq!(
+                enclosed_predicate(relation, &x, &zero, &[I { lo: -1.0, hi: 1.0 }])
+                    .unwrap_err()
+                    .kind,
+                "condition_precision"
+            );
+        }
+    }
 
     #[test]
     fn signed_sum_preserves_small_residual_and_derivative() {

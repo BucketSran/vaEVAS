@@ -1,8 +1,37 @@
 # PR14 / PR15 合并前验证
 
 本目录保留原 PR14/15 协议，并在同一原条件矩阵下收纳后续新 EVAS 检查点。
-最新记录为[已合并 PR26 的 idt 复位对照](RESULTS.md#idt-reset-merge-validation)及其[收据](results/idt-reset-merge-validation.json)；
-前一事件条件检查点见[PR23 结果](RESULTS.md#event-conditions-090)。各轮身份、后端与执行次数分别记录。
+本目录记录历史 analog/Spectre 对照、PR23 与 PR26，不作为当前 main 的能力清单。
+最新 IR15 联合验证见[当前交付证据](../parallel-gap-integration/README.md#当前证据)；
+[PR26 复位对照](RESULTS.md#idt-reset-merge-validation)及[收据](results/idt-reset-merge-validation.json)保留原身份。
+大历史 JSON 采用无损 gzip，原路径/哈希与固定历史入口见[归档清单](../parallel-gap-integration/results/historical-receipts.json)。
+`analog_matrix_compare.py` 可直接读取归档后的 analog 收据，`reused_receipt_sha256` 仍针对原解压字节。
+它继续检查冻结运行时，不允许用当前 IR15 代替历史 `9c5d6c5` 的源码做原执行重判。
+
+## analog 缺口对照入口
+
+原 31 矩阵的冻结和 Spectre 执行继续用 `../dvs2-spectre-validation/run_suite.py`
+与其 `remote.py`，EVAS 编译/执行继续用 `matrix.py`。本轮只新增分析入口和六个有理数
+诊断；原 DUT、输入、两档设置与 checker 未改。逐项结果见[矩阵](results/analog-gap-comparison.md)。
+
+以下命令从仓库根目录执行，使用新的目录；Spectre 命令在已配置的主机执行。
+
+```sh
+python3 -B experiments/pr14-pr15-validation/analog_boundaries.py build runs/NEW-BOUNDARIES
+python3 -B experiments/pr14-pr15-validation/analog_boundaries.py evas runs/NEW-BOUNDARIES --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B experiments/pr14-pr15-validation/analog_boundaries.py spectre runs/NEW-BOUNDARIES --spectre-profile /PRIVATE/profile.json
+python3 -B experiments/pr14-pr15-validation/analog_boundaries.py check runs/NEW-BOUNDARIES --remote runs/DOWNLOADED-SPECTRE-BOUNDARIES --output runs/NEW-BOUNDARY-ANALYSIS.json
+python3 -B -m unittest discover -s experiments/pr14-pr15-validation -p 'test_analog_boundaries.py' -v
+```
+
+只发送冻结 `INPUT_MANIFEST.json` 所列输入及清单到新远端目录；不要发送本地 EVAS 产物
+或私有 profile。远端结果归档包含全部 manifest 所列文件，下载后再分析。
+
+`analog_matrix_compare.py matrix ROOT OUTPUT --old-root OLD_ACCEPTANCE_ROOT` 对本轮的
+`ROOT/spectre-remote` 与最近验收 raw 工件配对，显式验证复用的源码、内核、输入和旧清单。
+`analog_matrix_compare.py features ROOT OUTPUT` 分析 `ROOT/feature-affected` 三分支专项，
+与同一 Spectre 矩阵核对共同输入。收据保存既定目录结构及原始身份；目前这些 raw 工件
+仅本地/thu-sui 可取得，外部读者应另建新执行身份，不能将缺失归档当成复用成功。
 
 ## 原 PR14 / PR15 验证协议（历史）
 

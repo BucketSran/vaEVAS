@@ -3,7 +3,7 @@
 //! Prefix integrals belong to source knots, never accepted solver/output steps.
 //! A Frame clone shares this analytic definition; a trial only queries it. A
 //! corrected source definition requires a new history, not a time-only cache.
-use crate::interval::Interval as I;
+use crate::interval::{sum_products_sign, Interval as I};
 use crate::ir::Error;
 use std::sync::Arc;
 
@@ -267,6 +267,54 @@ impl Idt {
         self.prefix_bounds(time)
     }
 
+    // This certificate is for the immutable no-reset analytic Idt used inside
+    // IdtMod. Resettable transient idt state must not reuse it without carrying
+    // the reset segment into the exact boundary expression.
+    pub(crate) fn value_minus_linear_boundary_sign(
+        &self,
+        time: f64,
+        offset: f64,
+        turn: f64,
+        modulus: f64,
+    ) -> Result<Option<i8>, Error> {
+        if self.reset.is_some() || !offset.is_finite() || !turn.is_finite() || !modulus.is_finite()
+        {
+            return Ok(None);
+        }
+        let index = self.index(time)?;
+        let end = &self.knots[index];
+        let mut terms = Vec::new();
+        let push = |terms: &mut Vec<(f64, f64)>, a: f64, b: f64| {
+            if a != 0.0 && b != 0.0 {
+                terms.push((a, b));
+            }
+        };
+        if time == end.time {
+            if end.integral_bounds != I::point(end.integral) {
+                return Ok(None);
+            }
+            push(&mut terms, end.integral, 1.0);
+        } else {
+            let start = &self.knots[index - 1];
+            if start.integral_bounds != I::point(start.integral)
+                || start.input_bounds != I::point(start.input)
+                || end.input_bounds != I::point(end.input)
+                || start.input != end.input
+            {
+                return Ok(None);
+            }
+            push(&mut terms, start.integral, 1.0);
+            push(&mut terms, time, start.input);
+            push(&mut terms, -start.time, start.input);
+        }
+        push(&mut terms, -offset, 1.0);
+        push(&mut terms, -turn, modulus);
+        if terms.len() > 4 {
+            return Ok(None);
+        }
+        Ok(sum_products_sign(&terms))
+    }
+
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
         self.knots
             .get(self.knots.partition_point(|k| k.time <= after))
@@ -373,6 +421,30 @@ mod tests {
             .unwrap();
         let after_release = reset.value_bounds(1.5).unwrap();
         assert!(after_release.lo < -0.25 && after_release.hi > 0.25);
+    }
+
+    #[test]
+    fn raw_phase_certificate_cannot_ignore_reset_history() {
+        let h = history(vec![(0.0, 1.0), (2.0, 1.0)], 0.0);
+        assert_eq!(
+            h.value_minus_linear_boundary_sign(1.0, 0.0, 1.0, 1.0)
+                .unwrap(),
+            Some(0)
+        );
+        let mut reset = h.with_reset(true);
+        assert_eq!(
+            reset
+                .value_minus_linear_boundary_sign(1.0, 0.0, 1.0, 1.0)
+                .unwrap(),
+            None
+        );
+        reset.advance_reset(1.0, I::ONE, false).unwrap();
+        assert_eq!(
+            reset
+                .value_minus_linear_boundary_sign(2.0, 0.0, 1.0, 1.0)
+                .unwrap(),
+            None
+        );
     }
 
     #[test]

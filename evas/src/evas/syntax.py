@@ -24,13 +24,14 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
+    r"|(?P<macro>`M_PI)"
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|[<>()+*/;,=@\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[<>(){}+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 _RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt"}
+             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin"}
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -79,6 +80,13 @@ class Conditional:
 
 
 @dataclass(frozen=True)
+class ContributionStatement:
+    branch: Expr
+    rhs: Expr
+    token: Token
+
+
+@dataclass(frozen=True)
 class Trigger:
     kind: str
     arguments: tuple[Expr | None, ...]
@@ -97,9 +105,10 @@ class Model:
     name: str
     source: str
     ports: tuple[str, ...]
+    directions: dict[str, str]
     nodes: set[str]
     parameters: dict[str, Expr]
-    contributions: list[tuple[Expr, Expr]]
+    analog: list[Assignment | Conditional | ContributionStatement]
     variables: dict[str, str]
     initial: list[Assignment]
     events: list[Event]
@@ -154,6 +163,8 @@ class Parser:
             if not math.isfinite(value):
                 self.fail("nonfinite numeric literal", token)
             left = Expr("number", value, (), token)
+        elif token.kind == "macro":
+            left = Expr("number", math.pi, (), token)
         elif token.text == "V":
             self.take("(")
             p = self.name()
@@ -163,19 +174,31 @@ class Parser:
                 n = self.take().text if self.token.text == "0" else self.name()
             self.take(")")
             left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
-        elif token.text in ("transition", "absdelay", "slew", "idt"):
+        elif token.text == "'{":
+            arguments = [self.expression()]
+            while self.token.text == ",":
+                self.take(",")
+                arguments.append(self.expression())
+            self.take("}")
+            left = Expr("array", None, tuple(arguments), token)
+        elif token.text in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod"):
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3)}[token.text]
+            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3), "laplace_nd": 3, "idtmod": 4}[token.text]
             allowed = required if isinstance(required, tuple) else (required,)
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)
                 self.fail(f"{token.text} requires {label} explicit arguments", token)
             left = Expr(token.text, None, tuple(arguments), token)
+        elif token.text == "sin":
+            self.take("(")
+            argument = self.expression()
+            self.take(")")
+            left = Expr("sin", None, (argument,), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -269,7 +292,7 @@ class Parser:
             self.fail("every port must have a direction and an electrical declaration")
         self.take("analog")
         self.take("begin")
-        contributions, initial, events = [], [], []
+        analog, initial, events = [], [], []
         while self.token.text != "end":
             if self.token.text == "@":
                 token = self.take("@")
@@ -307,18 +330,20 @@ class Parser:
                         self.fail("event OR supports only cross leaves", token)
                     events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
-            if self.token.text != "V":
-                self.fail("only voltage contributions, initial_step, cross and timer assignments are supported")
-            branch = self.expression()
-            if branch.op != "voltage":
-                self.fail("contribution target must be V(p) or V(p,n)", branch.token)
-            self.take("<+")
-            rhs = self.expression()
-            self.take(";")
-            contributions.append((branch, rhs))
+            if self.token.text == "V":
+                token = self.token
+                branch = self.expression()
+                if branch.op != "voltage":
+                    self.fail("contribution target must be V(p) or V(p,n)", branch.token)
+                self.take("<+")
+                rhs = self.expression()
+                self.take(";")
+                analog.append(ContributionStatement(branch, rhs, token))
+            else:
+                analog.extend(self.statements(True))
         self.take("end")
         self.take("endmodule")
         self.take("<eof>")
-        if not contributions:
+        if not any(isinstance(statement, ContributionStatement) for statement in analog):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        return Model(name, self.source, tuple(ports), nodes, parameters, contributions, variables, initial, events)
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events)

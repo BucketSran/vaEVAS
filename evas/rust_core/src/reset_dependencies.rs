@@ -55,7 +55,10 @@ pub(crate) fn check(
             OperatorSpec::Idt { input, .. }
             | OperatorSpec::Transition { input, .. }
             | OperatorSpec::AbsDelay { input, .. }
-            | OperatorSpec::Slew { input, .. } => input,
+            | OperatorSpec::Slew { input, .. }
+            | OperatorSpec::LaplaceNd { input, .. }
+            | OperatorSpec::IdtMod { input, .. }
+            | OperatorSpec::Sin { input, .. } => input,
         };
         let mut expressions = vec![input];
         if let OperatorSpec::Idt {

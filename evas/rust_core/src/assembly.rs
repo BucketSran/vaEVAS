@@ -1,7 +1,7 @@
 //! Validate IR and assemble one equation per instance-local voltage branch.
 use crate::ir::{check_schema_version, BranchIdentity, Error, Expression, Program, Tolerances};
 use crate::{expression, linear::Row};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 
 pub(crate) struct Equation {
     pub(crate) branch: BranchIdentity,
@@ -11,6 +11,7 @@ pub(crate) struct Equation {
     pub(crate) rhs_terms: Row,
     pub(crate) coefficients: Row,
     pub(crate) nonlinear: Vec<Expression>,
+    pub(crate) original_rhs: Vec<Expression>,
     pub(crate) origins: Vec<String>,
 }
 
@@ -79,6 +80,8 @@ pub(crate) fn assemble(
         }
         driven.push(index);
     }
+    let mut predicate_nodes: HashSet<usize> = driven.iter().copied().collect();
+    predicate_nodes.insert(0);
     if program.contributions.is_empty() {
         return Err(Error::new(
             "invalid_ir",
@@ -140,6 +143,10 @@ pub(crate) fn assemble(
             error.message.push_str(&format!(" at {}", c.origin.label()));
             error
         })?;
+        expression::validate_select_predicates(&c.rhs, &predicate_nodes).map_err(|mut error| {
+            error.message.push_str(&format!(" at {}", c.origin.label()));
+            error
+        })?;
         let branch = c.branch.clone();
         let equation = grouped.entry(c.branch).or_insert_with(|| Equation {
             branch,
@@ -149,6 +156,7 @@ pub(crate) fn assemble(
             rhs_terms: Row::new(),
             coefficients: Row::new(),
             nonlinear: Vec::new(),
+            original_rhs: Vec::new(),
             origins: Vec::new(),
         });
         if (equation.positive, equation.negative) != (c.positive, c.negative) {
@@ -157,6 +165,7 @@ pub(crate) fn assemble(
                 "one branch identity has conflicting endpoint bindings",
             ));
         }
+        equation.original_rhs.push(c.rhs.clone());
         match c.rhs {
             Expression::Affine { constant, terms } => {
                 equation.rhs_constant += constant;

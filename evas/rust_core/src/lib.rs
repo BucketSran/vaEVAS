@@ -1,13 +1,16 @@
 mod absdelay;
 mod affine_bounds;
+mod analog;
 mod assembly;
 mod event_accuracy;
 mod event_conditions;
 mod events;
 mod expression;
 mod idt;
+mod idtmod;
 mod interval;
 pub mod ir;
+mod laplace;
 mod linear;
 mod nonlinear;
 mod operators;
@@ -20,6 +23,9 @@ mod slew;
 pub mod solver;
 mod transient;
 mod transition;
+
+#[cfg(test)]
+mod performance_probes;
 
 use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;

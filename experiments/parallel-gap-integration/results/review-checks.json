@@ -1,0 +1,47 @@
+{
+  "runtime_commit": "fc106879e40e993fa5fe41fd07151f8f96a8d358",
+  "kernel_sha256": "77e740300eb43992d5978f5e7c6dbab5217efa3d9282c18de9c77a981f941581",
+  "scope": "affected integration checks, not full Python suite or full original31 rerun",
+  "checks": [
+    {
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "status": "passed"
+    },
+    {
+      "command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -q test_event_writers test_idt test_idt_accuracy test_phase test_gap_integration",
+      "status": "passed",
+      "tests": 58
+    },
+    {
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "status": "passed",
+      "tests": 75
+    },
+    {
+      "command": "RUSTFLAGS='-D warnings' cargo check --locked --manifest-path evas/rust_core/Cargo.toml --all-targets",
+      "status": "passed"
+    },
+    {
+      "command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "status": "unavailable",
+      "reason": "cargo-clippy is not installed for stable-aarch64-apple-darwin; no installation attempted"
+    },
+    {
+      "command": "cargo fmt --manifest-path evas/rust_core/Cargo.toml",
+      "status": "completed"
+    }
+  ],
+  "affected_original_replay": {
+    "receipt": "review-affected.json",
+    "configurations": 10,
+    "observations_within_targets": 10,
+    "observed_samples": 220010,
+    "new_spectre_execution": false,
+    "qualification": "I"
+  },
+  "integration_repairs": [
+    "preserve phase helpers while replacing reset certification",
+    "reject Select in reset certificate after shared IR integration",
+    "do not reuse immutable raw phase certificate on reset-enabled idt"
+  ]
+}
