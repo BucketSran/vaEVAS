@@ -648,18 +648,55 @@ impl Evaluation<'_> {
     ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
         let mut candidate = self.base.clone();
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
-        let values = candidate.values_reusing(self.time, Some(&self.values))?;
-        let bounds = candidate.bounds_reusing(self.time, Some(&self.bounds))?;
+        let mut values = candidate.values_reusing(self.time, Some(&self.values))?;
+        let mut bounds = if time_bounds.lo == time_bounds.hi {
+            candidate.bounds_reusing(self.time, Some(&self.bounds))?
+        } else {
+            candidate.event_bounds(self.time, time_bounds)?
+        };
+        // Event assignments observe the instant tau, not the new flow from
+        // tau to its representative b. Unreset integral / strictly proper
+        // filter outputs are continuous across the event and keep that sample.
+        for (i, entry) in candidate.entries.iter().enumerate() {
+            if let Runtime::Continuous(slot) = entry {
+                if candidate
+                    .continuous
+                    .as_ref()
+                    .unwrap()
+                    .keeps_value_on_event(*slot)
+                {
+                    values[i] = self.values[i];
+                    bounds[i] = self.bounds[i];
+                }
+            }
+        }
         Ok((candidate, values, bounds))
     }
 }
 
 impl Operators {
-    pub(crate) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
-        if let Some(continuous) = &self.continuous {
-            continuous.validate_event_window(window, events)?;
+    pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
+        if window.lo == window.hi
+            || !self
+                .continuous
+                .as_ref()
+                .is_some_and(|c| c.changes_on_event())
+        {
+            return self.bounds(time);
         }
-        Ok(())
+        let continuous = self
+            .continuous
+            .as_ref()
+            .map(|c| c.event_bounds(window))
+            .transpose()?;
+        self.entries
+            .iter()
+            .enumerate()
+            .map(|(index, entry)| match entry {
+                Runtime::Continuous(slot) => Ok(continuous.as_ref().unwrap()[*slot]),
+                _ => self.range(index, window).map(|(value, _)| value),
+            })
+            .collect()
     }
 
     pub(crate) fn new(
@@ -703,7 +740,10 @@ impl Operators {
             };
             // Validate raw indices and ownership before any interval indexing.
             // The kernel must not assume a trusted Python producer.
-            if matches!(spec, OperatorSpec::Idt { .. }) {
+            if matches!(
+                spec,
+                OperatorSpec::Idt { .. } | OperatorSpec::LaplaceNd { .. }
+            ) {
                 crate::continuous::validate_integral_input(input, program, &origin.instance)?;
             } else {
                 affine(input, program, &origin.instance)?;

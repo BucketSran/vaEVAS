@@ -87,7 +87,7 @@ class JointEventDynamicsContracts(unittest.TestCase):
         program = compile_model(
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_resolution.*input-dependent branches"):
+        with self.assertRaisesRegex(KernelError, "event_condition"):
             run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2, vabstol=1e-4, reltol=0)
 
     def test_uncertain_linear_restart_rejects_uncertified_sampling(self):
@@ -97,7 +97,7 @@ class JointEventDynamicsContracts(unittest.TestCase):
         program = compile_model(
             "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "q=V(u,r); V(y,r)<+idt(q,0);", "real q;")
-        with self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
             run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
                 vabstol=2e-5, reltol=1e-10)
 
@@ -268,12 +268,15 @@ class NonlinearIntegralContracts(unittest.TestCase):
         self.assertEqual(len(events),1)
         self.assertAlmostEqual(events[0]["time"],1,delta=1e-9)
 
-    def test_nonlinear_mixed_filter_network_is_explicitly_rejected(self):
+    def test_nonlinear_mixed_filter_preserves_nonstationary_integral_ic(self):
         program = compile_model(
             "V(z,r)<+idt(-pow(V(z,r),2),1); "
-            "V(y,r)<+laplace_nd(V(z,r),'{1},'{1,1});", "electrical z;")
-        with self.assertRaisesRegex(KernelError, "nonlinear continuous network currently requires"):
-            run(program, times=[0, .5, 1], stop=1)
+            "V(y,r)<+laplace_nd(V(z,r),'{1,1},'{1,1});", "electrical z;")
+        times = [0, .5, 1]
+        result = run(program, times=times, stop=1, vabstol=1e-10, reltol=0)
+        for t, row in zip(times, rows(result)):
+            assert_close(self, row["dut:z"], 1/(1+t), delta=1e-10)
+            assert_close(self, row["y"], 1/(1+t), delta=1e-10)
 
     def test_uncertain_nonlinear_restart_does_not_discard_event_time_error(self):
         program = compile_model(
@@ -339,7 +342,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
             program = compile_model(
                 f"@(initial_step) q={initial}; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
                 "V(y,r)<+idt(pow(q,2),0);", "real q;")
-            with self.subTest(initial=initial), self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
+            with self.subTest(initial=initial), self.assertRaisesRegex(KernelError, "waveform_accuracy"):
                 run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
                     vabstol=2e7, reltol=0)
 
@@ -364,7 +367,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
             "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "if (V(u,r)>1.414214) q=2; else q=3; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "event_resolution.*input-dependent branches"):
+        with self.assertRaisesRegex(KernelError, "event_condition"):
             run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
                 vabstol=1e-4, reltol=0)
 

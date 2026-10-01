@@ -21,6 +21,51 @@ pub(crate) fn prepare(
     before_bounds: &[I],
     operator_bounds: &[I],
 ) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        events,
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        true,
+    )
+}
+
+pub(crate) fn prepare_window(
+    model: &EventModel,
+    events: &[usize],
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        events,
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        false,
+    )
+}
+
+// Two certificates: assignments at tau and output voltages at representative b.
+#[allow(clippy::too_many_arguments)]
+fn prepare_impl(
+    model: &EventModel,
+    events: &[usize],
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    check_voltages: bool,
+) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
     let selection = model.conditions.select(events, input_bounds)?;
     model.check_selection_writers(&selection)?;
@@ -59,7 +104,13 @@ pub(crate) fn prepare(
             ));
         }
     }
-    let bounds = model.certify(
+    let certify = if check_voltages {
+        EventModel::certify
+    } else {
+        EventModel::certify_event_states
+    };
+    let bounds = certify(
+        model,
         &selection,
         input_bounds,
         before_bounds,

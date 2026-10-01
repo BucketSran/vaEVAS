@@ -137,6 +137,30 @@ impl Bounds {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
+        self.check_selected(model, (inputs, before, operators), voltages, states, true)
+    }
+
+    pub(crate) fn check_states(
+        &self,
+        model: &EventModel,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<Vec<I>, Error> {
+        self.check_selected(model, (inputs, before, operators), voltages, states, false)
+    }
+
+    fn check_selected(
+        &self,
+        model: &EventModel,
+        inputs: (&[I], &[I], &[I]),
+        voltages: &[f64],
+        states: &[f64],
+        check_voltages: bool,
+    ) -> Result<Vec<I>, Error> {
+        let (inputs, before, operators) = inputs;
         let parameters: Vec<_> = inputs
             .iter()
             .copied()
@@ -148,6 +172,9 @@ impl Bounds {
         for (rows, actual, voltage) in
             [(&self.nodes, voltages, true), (&self.states, states, false)]
         {
+            if voltage && !check_voltages {
+                continue;
+            }
             for (k, (row, &value)) in rows.iter().zip(actual).enumerate() {
                 let exact = row
                     .iter()

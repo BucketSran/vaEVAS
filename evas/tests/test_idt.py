@@ -302,14 +302,21 @@ class IdtContracts(unittest.TestCase):
             body = f'@(initial_step) q=0; V(z,r)<+V(u,r); V(y,r)<+idt({expr},0);'
             with self.subTest(expr=expr), self.assertRaises((CompileError, KernelError)):
                 execute(compiled(body, 'electrical z; real q;'))
-        for body in ['V(y,r)<+idt(V(u,r),0)*V(u,r);',
-                     'V(y,r)<+idt(V(u,r),0)*idt(V(u,r),0);',
-                     'V(y,r)<+absdelay(idt(V(u,r),0),1);',
+        for body in ['V(y,r)<+absdelay(idt(V(u,r),0),1);',
                      'V(y,r)<+slew(idt(V(u,r),0),1,-1);']:
             with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
                 execute(compiled(body))
         with self.assertRaises(KernelError):
             solve(compiled(), ['u'], [[1]], kernel=KERNEL)
+
+    def test_integral_products_keep_call_site_history_and_exact_area(self):
+        for body,answer in [
+            ('V(y,r)<+idt(V(u,r),0)*V(u,r);',lambda t: integral(POINTS,t)*next(v for time,v in [(0,0),(1,2),(2,4),(3,2),(4,0),(5,-2),(6,-2),(8,-2)] if time==t)),
+            ('V(y,r)<+idt(V(u,r),0)*idt(V(u,r),0);',lambda t: integral(POINTS,t)**2),
+        ]:
+            result=execute(compiled(body),vabstol=1e-8,reltol=0)
+            for t,actual in zip(result['transient']['times'],values(result)):
+                self.assertAlmostEqual(actual,float(answer(t)),delta=1e-8)
 
     def test_nontransverse_operator_guard_is_explicitly_unresolved(self):
         for expression in ['V(z,r)', 'V(z,r)-V(z,r)', '0*V(z,r)']:

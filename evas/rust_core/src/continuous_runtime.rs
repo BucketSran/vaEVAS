@@ -14,7 +14,7 @@ impl Continuous {
         driven: &[String],
         states: &[f64],
     ) -> Result<Option<Self>, Error> {
-        if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } if affine_bounds::affine(input, program).is_err())) {
+        if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } if affine_bounds::affine(input, program).is_err())) {
             return nonlinear::NonlinearContinuous::new(program, trajectory, driven, states).map(|v| Some(Self::Nonlinear(Box::new(v))));
         }
         LinearContinuous::new(program, trajectory, driven, states)
@@ -32,18 +32,31 @@ impl Continuous {
             Self::Nonlinear(_) => true,
         }
     }
+    pub(crate) fn keeps_value_on_event(&self, slot: usize) -> bool {
+        let spec = match self {
+            Self::Linear(v) => &v.context.program.operators[v.slots[slot].operator],
+            Self::Nonlinear(v) => v.operator_spec(slot),
+        };
+        match spec {
+            OperatorSpec::Idt { reset: None, .. } => true,
+            OperatorSpec::LaplaceNd {
+                numerator,
+                denominator,
+                ..
+            } => numerator.len() < denominator.len() || *numerator.last().unwrap() == 0.0,
+            _ => false,
+        }
+    }
     pub(crate) fn changes_on_event(&self) -> bool {
         match self {
             Self::Linear(v) => v.changes_on_event(),
             Self::Nonlinear(v) => v.changes_on_event(),
         }
     }
-    pub(crate) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
+    pub(crate) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
         match self {
-            Self::Linear(v) => {
-                validate_event_bodies(&v.context.program, v.changes_on_event(), window, events)
-            }
-            Self::Nonlinear(v) => v.validate_event_window(window, events),
+            Self::Linear(v) => v.event_bounds(window),
+            Self::Nonlinear(v) => v.event_bounds(window),
         }
     }
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
@@ -90,58 +103,4 @@ impl Continuous {
                 .map(|v| Self::Nonlinear(Box::new(v))),
         }
     }
-}
-
-pub(super) fn validate_event_bodies(
-    program: &Program,
-    event_dependent: bool,
-    window: I,
-    events: &[usize],
-) -> Result<(), Error> {
-    if event_dependent && window.lo != window.hi {
-        // Settlement certifies samples/conditions at the representative time,
-        // not over the actual event window. This obligation is independent of
-        // the continuous solver and of whether a parameter value changes.
-        for &id in events {
-            let event = &program.events[id];
-            if time_sensitive_body(&event.body, program, &event.origin.instance)? {
-                return Err(Error::new("event_resolution", "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"));
-            }
-        }
-    }
-    Ok(())
-}
-
-fn time_sensitive_body(
-    body: &[crate::ir::Statement],
-    program: &Program,
-    owner: &str,
-) -> Result<bool, Error> {
-    let reads_time = |expr| {
-        let dependencies = crate::events::affine(expr, program, owner)?;
-        Ok::<_, Error>(
-            !dependencies.node_dependencies.is_empty()
-                || !dependencies.operator_dependencies.is_empty(),
-        )
-    };
-    for statement in body {
-        match statement {
-            crate::ir::Statement::Assign(a) if reads_time(&a.rhs)? => return Ok(true),
-            crate::ir::Statement::If {
-                left,
-                right,
-                then_body,
-                else_body,
-                ..
-            } if reads_time(left)?
-                || reads_time(right)?
-                || time_sensitive_body(then_body, program, owner)?
-                || time_sensitive_body(else_body, program, owner)? =>
-            {
-                return Ok(true);
-            }
-            _ => {}
-        }
-    }
-    Ok(false)
 }

@@ -27,6 +27,10 @@ mod idt_accepted_history_tests;
 #[path = "transient_condition_tests.rs"]
 mod condition_history_tests;
 
+#[cfg(test)]
+#[path = "transient_window_tests.rs"]
+mod window_history_tests;
+
 fn prepare_event_with_bounds(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -35,9 +39,6 @@ fn prepare_event_with_bounds(
     time_bounds: I,
     events: &[usize],
 ) -> Result<Frame, Error> {
-    accepted
-        .operators
-        .validate_event_window(time_bounds, events)?;
     let mut operators = accepted.operators.clone();
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
@@ -47,10 +48,16 @@ fn prepare_event_with_bounds(
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let base = operators;
-    let frozen = base.evaluation(time)?;
+    let mut frozen = base.evaluation(time)?;
+    frozen.bounds = base.event_bounds(time, time_bounds)?;
     let inputs = trajectory.values(time);
-    let input_bounds = trajectory.value_bounds(time);
-    let mut prepared = crate::settlement::prepare(
+    let input_bounds = trajectory.range(time_bounds)?.0;
+    let settle = if time_bounds.lo == time_bounds.hi {
+        crate::settlement::prepare
+    } else {
+        crate::settlement::prepare_window
+    };
+    let mut prepared = settle(
         model,
         events,
         (&inputs, &input_bounds),
@@ -81,7 +88,7 @@ fn prepare_event_with_bounds(
                 "operator changed during same-time settlement",
             ));
         }
-        prepared = crate::settlement::prepare(
+        prepared = settle(
             model,
             events,
             (&inputs, &input_bounds),
@@ -101,6 +108,20 @@ fn prepare_event_with_bounds(
             ));
         }
         operators = replay;
+    }
+    if time_bounds.lo != time_bounds.hi {
+        // Sampling at tau and observing the committed frame at b are distinct
+        // obligations. Do not resample the event using post-event history.
+        model.certify(
+            &model
+                .conditions
+                .select(&[], &trajectory.value_bounds(time))?,
+            &trajectory.value_bounds(time),
+            &prepared.bounds,
+            &operators.bounds(time)?,
+            &prepared.solution.voltages,
+            &prepared.states,
+        )?;
     }
     Ok(Frame {
         time,
@@ -300,6 +321,27 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         && request.program.operators.is_empty()
     {
         return run_stateless_transient(
+            request.program,
+            request.driven,
+            transient,
+            request.tolerances,
+        );
+    }
+    if !request.program.operators.is_empty()
+        && request.program.states.is_empty()
+        && request.program.events.is_empty()
+        && request
+            .program
+            .contributions
+            .iter()
+            .all(|c| !crate::analog::has_select(&c.rhs))
+        && request
+            .program
+            .contributions
+            .iter()
+            .any(|c| crate::events::affine(&c.rhs, &request.program, &c.origin.instance).is_err())
+    {
+        return crate::continuous::run_implicit(
             request.program,
             request.driven,
             transient,

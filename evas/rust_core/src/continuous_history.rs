@@ -12,6 +12,29 @@ impl LinearContinuous {
             && self.initial == other.initial
     }
 
+    pub(crate) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
+        if window.lo < self.start && window.hi == self.start {
+            let segment = self.segments.first().ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "no linear candidate segment for event sample",
+                )
+            })?;
+            let mut forcing = segment.initial.clone();
+            let (sources, slopes) = self.context.trajectory.range(window)?;
+            let count = self.initial.len();
+            forcing[count..count + sources.len()].copy_from_slice(&sources);
+            forcing[count + sources.len()..count + 2 * sources.len()].copy_from_slice(&slopes);
+            segment
+                .values
+                .iter()
+                .map(|row| dot(row, &forcing, "linear event sample"))
+                .collect()
+        } else {
+            self.range_bounds(window)
+        }
+    }
+
     pub(crate) fn restarted(
         &self,
         time: f64,

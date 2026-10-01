@@ -470,6 +470,26 @@ impl EventModel {
             .check(self, inputs, before, operators, voltages, states)
     }
 
+    pub(crate) fn certify_event_states(
+        &self,
+        selection: &Selection,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<Vec<I>, Error> {
+        let mut cache = self.certificate.borrow_mut();
+        if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
+            *cache = Some((selection.clone(), Bounds::new(self, selection)?));
+        }
+        cache
+            .as_ref()
+            .unwrap()
+            .1
+            .check_states(self, inputs, before, operators, voltages, states)
+    }
+
     pub(crate) fn assigned(&self, selection: &Selection) -> Vec<usize> {
         selection
             .actions
