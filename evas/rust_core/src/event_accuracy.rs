@@ -3,7 +3,6 @@
 use crate::affine_bounds::affine;
 use crate::interval::{equal_products, Interval as I};
 use crate::ir::{Error, EventTrigger, Expression, Program};
-use std::collections::BTreeMap;
 
 pub(crate) fn unresolved(message: &str) -> Error {
     Error::new("event_resolution", message)
@@ -15,12 +14,18 @@ pub(crate) struct GuardBounds {
 }
 
 impl GuardBounds {
-    pub(crate) fn new(program: &Program, driven: &[String]) -> Result<Self, Error> {
+    pub(crate) fn new(
+        program: &Program,
+        driven: &[String],
+        dynamic: &[bool],
+    ) -> Result<Self, Error> {
         let mut expressions = Vec::new();
         for event in &program.events {
             for trigger in event.trigger.leaves()? {
                 expressions.push(match trigger {
-                    EventTrigger::Cross { guard, .. } => Some(guard),
+                    EventTrigger::Cross { guard, .. } => {
+                        (!dynamic[expressions.len()]).then_some(guard)
+                    }
                     EventTrigger::Timer { .. } => None,
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 });
@@ -37,53 +42,8 @@ impl GuardBounds {
     ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
-        let driven: Vec<_> = driven
-            .iter()
-            .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
-            .collect();
-        let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
-        let n = unknown.len();
         let width = driven.len() + program.states.len() + program.operators.len() + 1;
-        let mut groups = BTreeMap::new();
-        for c in &program.contributions {
-            let rhs = affine(&c.rhs, program)?;
-            let row = groups.entry(&c.branch).or_insert_with(|| {
-                let mut row = vec![I::ZERO; variables + 1];
-                row[c.positive] = row[c.positive] + I::ONE;
-                row[c.negative] = row[c.negative] - I::ONE;
-                row
-            });
-            for (value, term) in row.iter_mut().zip(rhs) {
-                *value = *value - term;
-            }
-        }
-        let rows: Vec<Vec<I>> = groups
-            .values()
-            .map(|row| {
-                unknown
-                    .iter()
-                    .map(|&k| row[k])
-                    .chain(driven.iter().map(|&k| -row[k]))
-                    .chain((count..variables).map(|k| -row[k]))
-                    .chain([-row[variables]])
-                    .collect()
-            })
-            .collect();
-        let rows = crate::affine_bounds::eliminate(rows, n, width)?;
-        let mut nodes = vec![vec![I::ZERO; width]; variables];
-        for (k, &node) in driven.iter().enumerate() {
-            nodes[node][k] = I::ONE;
-        }
-        for state in 0..(program.states.len() + program.operators.len()) {
-            nodes[count + state][driven.len() + state] = I::ONE;
-        }
-        for r in (0..n).rev() {
-            for k in 0..width {
-                let rest =
-                    (r + 1..n).fold(I::ZERO, |sum, c| sum + rows[r][c] * nodes[unknown[c]][k]);
-                nodes[unknown[r]][k] = rows[r][n + k] - rest;
-            }
-        }
+        let nodes = crate::affine_bounds::node_map(program, driven)?;
         let coefficients = expressions
             .iter()
             .map(|expression| {

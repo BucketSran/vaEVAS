@@ -9,7 +9,7 @@ import math
 from typing import Mapping
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
-                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin)
+                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
 from .lowering import lower, scale
 from .syntax import CompileError, Expr, Parser, Assignment as SyntaxAssignment, Conditional as SyntaxConditional, ContributionStatement
 
@@ -73,7 +73,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
         nets["0"] = "0"
         bindings.append((instance, model, nets))
     def contains_operator(expr):
-        return expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin") or any(contains_operator(arg) for arg in expr.args)
+        return expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "ddt", "sin") or any(contains_operator(arg) for arg in expr.args)
 
     # A separate instance may connect an operator output to a guard. Preserve
     # the whole program's structural voltage graph before numeric cancellation.
@@ -90,7 +90,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 yield from body_expressions(statement.else_body)
 
     has_operators = any(contains_operator(expr) for _, model, _ in bindings
-                        for expr in body_expressions(model.analog))
+                        for expr in (*body_expressions(model.analog),
+                                     *(arg for event in model.events for leaf in event.triggers
+                                       for arg in leaf.arguments if arg is not None)))
     def has_condition(body):
         return any(isinstance(statement, SyntaxConditional) for statement in body)
 
@@ -175,6 +177,65 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                 return states[expression.state].kind == "integer"
             return isinstance(expression, Binary) and integral(expression.left) and integral(expression.right)
 
+        def waveform(expr, resolve):
+            input_nodes = {} if expr.op == "transition" else node_ids
+            value = lower(expr.args[0], resolve, input_nodes, model.source,
+                          (lambda nested: waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "ddt") else None,
+                          preserve_structure=True)
+            if expr.op == "laplace_nd":
+                def coefficients(array):
+                    if array.op != "array":
+                        raise CompileError(f"{model.source}:{array.token.line}:{array.token.column}: laplace_nd coefficients must use standard constant array literals")
+                    result = []
+                    for item in array.args:
+                        value = lower(item, parameter, {}, model.source)
+                        if not isinstance(value, Affine) or value.terms:
+                            raise CompileError(f"{model.source}:{item.token.line}:{item.token.column}: laplace_nd coefficients must be instance constants")
+                        result.append(value.constant)
+                    return tuple(result)
+                numerator = coefficients(expr.args[1])
+                denominator = coefficients(expr.args[2])
+                if not numerator or not 2 <= len(denominator) <= 9 or len(numerator) > len(denominator):
+                    raise CompileError("laplace_nd requires a proper rational filter of order 1 through 8")
+                settings = ()
+            else:
+                setting_args = expr.args[1:2] if expr.op == "idt" else expr.args[1:]
+                settings = [lower(arg, parameter, {}, model.source) for arg in setting_args]
+                if any(not isinstance(v, Affine) or v.terms for v in settings):
+                    raise CompileError(f"{expr.op} settings must be instance constants")
+            origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
+            index = len(operators)
+            if expr.op == "idt":
+                reset = lower(expr.args[2], resolve, {}, model.source, preserve_structure=True) if len(expr.args) == 3 else None
+                operators.append(Idt(value, settings[0].constant, origin, reset))
+            elif expr.op == "ddt":
+                operators.append(Ddt(value, origin))
+            elif expr.op == "laplace_nd":
+                operators.append(LaplaceNd(value, numerator, denominator, origin))
+            elif expr.op == "idtmod":
+                ic, modulus, offset = (v.constant for v in settings)
+                if modulus <= 0:
+                    raise CompileError("idtmod requires positive explicit modulus")
+                operators.append(IdtMod(value, ic, modulus, offset, origin))
+            elif expr.op == "sin":
+                operators.append(Sin(value, origin))
+            elif expr.op == "absdelay":
+                delay = settings[0].constant
+                if delay < 0:
+                    raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
+                operators.append(AbsDelay(value, delay, origin))
+            elif expr.op == "transition":
+                delay, rise, fall = (v.constant for v in settings)
+                if delay < 0 or rise <= 0 or fall <= 0:
+                    raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+                operators.append(Transition(value, delay, rise, fall, origin))
+            else:
+                rise, fall = (v.constant for v in settings)
+                if rise <= 0 or fall >= 0:
+                    raise CompileError("slew requires explicit rise > 0 and fall < 0")
+                operators.append(Slew(value, rise, fall, origin))
+            return OperatorRef(index)
+
         for event in model.events:
             def trigger(leaf):
                 def setting(arg):
@@ -190,7 +251,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                     direction, time_tol, expr_tol = settings
                     if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                         raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-                    result = CrossTrigger(lower(leaf.arguments[0], symbol, node_ids, model.source, preserve_structure=True),
+                    result = CrossTrigger(lower(leaf.arguments[0], symbol, node_ids, model.source, lambda expr: waveform(expr, symbol), preserve_structure=True),
                                            int(direction), time_tol, expr_tol)
                 else:
                     start = setting(leaf.arguments[0])
@@ -229,63 +290,6 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
 
             origin = Origin(model.source, event.token.line, event.token.column, instance.name)
             events.append(Event(event_trigger, body(event.body), origin))
-
-        def waveform(expr, resolve):
-            input_nodes = {} if expr.op == "transition" else node_ids
-            value = lower(expr.args[0], resolve, input_nodes, model.source,
-                          (lambda nested: waveform(nested, resolve)) if expr.op == "sin" else None,
-                          preserve_structure=True)
-            if expr.op == "laplace_nd":
-                def coefficients(array):
-                    if array.op != "array":
-                        raise CompileError(f"{model.source}:{array.token.line}:{array.token.column}: laplace_nd coefficients must use standard constant array literals")
-                    result = []
-                    for item in array.args:
-                        value = lower(item, parameter, {}, model.source)
-                        if not isinstance(value, Affine) or value.terms:
-                            raise CompileError(f"{model.source}:{item.token.line}:{item.token.column}: laplace_nd coefficients must be instance constants")
-                        result.append(value.constant)
-                    return tuple(result)
-                numerator = coefficients(expr.args[1])
-                denominator = coefficients(expr.args[2])
-                if len(numerator) != 1 or len(denominator) != 2:
-                    raise CompileError("laplace_nd supports only one numerator coefficient and a first-order denominator")
-                settings = ()
-            else:
-                setting_args = expr.args[1:2] if expr.op == "idt" else expr.args[1:]
-                settings = [lower(arg, parameter, {}, model.source) for arg in setting_args]
-                if any(not isinstance(v, Affine) or v.terms for v in settings):
-                    raise CompileError(f"{expr.op} settings must be instance constants")
-            origin = Origin(model.source, expr.token.line, expr.token.column, instance.name)
-            index = len(operators)
-            if expr.op == "idt":
-                reset = lower(expr.args[2], resolve, {}, model.source, preserve_structure=True) if len(expr.args) == 3 else None
-                operators.append(Idt(value, settings[0].constant, origin, reset))
-            elif expr.op == "laplace_nd":
-                operators.append(LaplaceNd(value, numerator, denominator, origin))
-            elif expr.op == "idtmod":
-                ic, modulus, offset = (v.constant for v in settings)
-                if modulus <= 0:
-                    raise CompileError("idtmod requires positive explicit modulus")
-                operators.append(IdtMod(value, ic, modulus, offset, origin))
-            elif expr.op == "sin":
-                operators.append(Sin(value, origin))
-            elif expr.op == "absdelay":
-                delay = settings[0].constant
-                if delay < 0:
-                    raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
-                operators.append(AbsDelay(value, delay, origin))
-            elif expr.op == "transition":
-                delay, rise, fall = (v.constant for v in settings)
-                if delay < 0 or rise <= 0 or fall <= 0:
-                    raise CompileError("transition requires nonnegative delay and positive explicit edge times")
-                operators.append(Transition(value, delay, rise, fall, origin))
-            else:
-                rise, fall = (v.constant for v in settings)
-                if rise <= 0 or fall >= 0:
-                    raise CompileError("slew requires explicit rise > 0 and fall < 0")
-                operators.append(Slew(value, rise, fall, origin))
-            return OperatorRef(index)
 
         local_env = {}
         allowed_condition_nodes = {0}

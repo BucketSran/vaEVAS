@@ -21,7 +21,7 @@ def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_s
     def fail(message):
         raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
 
-    if expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "sin"):
+    if expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "ddt", "sin"):
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)

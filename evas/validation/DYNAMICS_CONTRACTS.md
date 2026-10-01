@@ -1,5 +1,8 @@
 # 受限积分的独立契约与语义回归
 
+本页维护原直接输入路径与历史交付契约。IR16 开发分支新增的联合动态范围、数学和独立检查
+见[连续动态章节](../docs/CONTINUOUS.md)，下文首版拒绝项不能当作新范围的语言限制。
+
 本页固定 DYNAMICS 首版 `idt` 的受限子集、解析答案和验证边界；实现说明见[算子手册](../docs/OPERATORS.md#idt)。
 设计起点为 `main` 的 `5b090571c7de7c6ec08a05c803479505c5d745ee`（EVAS 0.6.1 / IR v6）；
 该历史基线没有 `idt`。后续 [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 已交付

@@ -275,6 +275,8 @@ pub(crate) struct EventModel {
     pub(crate) program: Program,
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
+    pub(crate) dynamic_guards: Vec<bool>,
+    pub(crate) guard_operators: Vec<BTreeSet<usize>>,
     pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) conditions: Conditions,
@@ -315,6 +317,7 @@ impl EventModel {
             .map(|c| affine(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
         let mut guards = Vec::new();
+        let mut dynamic_guards = Vec::new();
         let mut triggers = Vec::new();
         let mut actions = Vec::new();
         let mut writers = vec![BTreeSet::new(); program.states.len()];
@@ -346,16 +349,14 @@ impl EventModel {
                         {
                             return Err(Error::new("invalid_ir", "invalid cross settings"));
                         }
-                        let guard = affine(guard, &program, &event.origin.instance)?;
-                        if !guard.state_dependencies.is_empty()
-                            || !guard.operator_dependencies.is_empty()
-                        {
-                            return Err(Error::new(
-                                "unsupported_cross",
-                                format!("cross guard depends on state at {}", event.origin.label()),
-                            ));
-                        }
-                        Some(guard)
+                        crate::guard_trajectory::dependencies(
+                            guard,
+                            &program,
+                            &event.origin.instance,
+                        )?;
+                        let bound = affine(guard, &program, &event.origin.instance).ok();
+                        dynamic_guards.push(bound.is_none());
+                        bound
                     }
                     EventTrigger::Timer {
                         start,
@@ -371,6 +372,7 @@ impl EventModel {
                         {
                             return Err(Error::new("invalid_ir", "invalid timer settings"));
                         }
+                        dynamic_guards.push(false);
                         None
                     }
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
@@ -435,6 +437,8 @@ impl EventModel {
             program,
             rhs,
             guards,
+            dynamic_guards,
+            guard_operators: Vec::new(),
             triggers,
             actions,
             driven,
@@ -566,7 +570,7 @@ impl EventModel {
         Ok(program)
     }
 
-    fn check_guard_dependencies(&self) -> Result<(), Error> {
+    fn check_guard_dependencies(&mut self) -> Result<(), Error> {
         // Conservative undirected equation connectivity, excluding fixed inputs
         // and ground. No floating-point sensitivity threshold can hide feedback.
         let assembled = crate::assembly::assemble(
@@ -630,19 +634,76 @@ impl EventModel {
                 break;
             }
         }
-        for (guard, leaf) in self.guards.iter().zip(&self.triggers) {
+        // Event-state influence is forbidden; continuous operator influence is
+        // handled by dynamic localization instead of being misclassified as q.
+        let mut event_affected = vec![false; self.program.nodes.len()];
+        let mut operator_influence = vec![BTreeSet::new(); self.program.nodes.len()];
+        for (group, equation) in groups.iter().zip(&assembled.equations) {
+            let ops: BTreeSet<_> = self
+                .program
+                .contributions
+                .iter()
+                .zip(&self.rhs)
+                .filter(|(c, _)| c.branch == equation.branch)
+                .flat_map(|(_, rhs)| rhs.operator_dependencies.iter().copied())
+                .collect();
+            for &node in group {
+                operator_influence[node].extend(&ops);
+            }
+            if self
+                .program
+                .contributions
+                .iter()
+                .zip(&self.rhs)
+                .any(|(c, rhs)| c.branch == equation.branch && !rhs.state_dependencies.is_empty())
+            {
+                for &node in group {
+                    event_affected[node] = true;
+                }
+            }
+        }
+        loop {
+            let mut changed = false;
+            for group in &groups {
+                let ops: BTreeSet<_> = group
+                    .iter()
+                    .flat_map(|&node| operator_influence[node].iter().copied())
+                    .collect();
+                for &node in group {
+                    let before = operator_influence[node].len();
+                    operator_influence[node].extend(&ops);
+                    changed |= operator_influence[node].len() != before;
+                }
+                if group.iter().any(|n| event_affected[*n]) {
+                    for &node in group {
+                        changed |= !event_affected[node];
+                        event_affected[node] = true;
+                    }
+                }
+            }
+            if !changed {
+                break;
+            }
+        }
+        for (index, leaf) in self.triggers.iter().enumerate() {
             let event = &self.program.events[leaf.event];
-            let Some(guard) = guard else {
-                continue;
-            };
-            if guard.node_dependencies.iter().any(|node| affected[*node]) {
-                return Err(Error::new(
-                    "unsupported_cross",
-                    format!(
-                        "cross guard may depend on state through the voltage network at {}",
-                        event.origin.label()
-                    ),
-                ));
+            if let EventTrigger::Cross { guard, .. } = &leaf.trigger {
+                let (nodes, mut operators) = crate::guard_trajectory::dependencies(
+                    guard,
+                    &self.program,
+                    &event.origin.instance,
+                )?;
+                if nodes.iter().any(|node| event_affected[*node]) {
+                    return Err(Error::new("unsupported_cross",format!("cross guard may depend on event state through the voltage network at {}",event.origin.label())));
+                }
+                for node in &nodes {
+                    operators.extend(&operator_influence[*node]);
+                }
+                self.dynamic_guards[index] |=
+                    !operators.is_empty() || nodes.iter().any(|node| affected[*node]);
+                self.guard_operators.push(operators);
+            } else {
+                self.guard_operators.push(BTreeSet::new());
             }
         }
         self.conditions.check_dependencies(&affected)?;

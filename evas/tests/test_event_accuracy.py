@@ -35,7 +35,7 @@ class EventAccuracy(unittest.TestCase):
                 with self.assertRaises(KernelError) as caught:
                     execute_event(source, sources={'u':[[0,0],[1,1]]},
                                   times=[0,1], stop=1, max_step=1)
-                self.assertEqual(caught.exception.detail['kind'], 'unsupported_transient')
+                self.assertEqual(caught.exception.detail['kind'], 'unsupported_cross')
 
     def test_raw_ir_cannot_hide_voltage_products_in_any_event_expression(self):
         program = compile_event(model('''@(initial_step) held=0;
@@ -65,7 +65,8 @@ class EventAccuracy(unittest.TestCase):
                 result = subprocess.run([str(KERNEL)], input=json.dumps(request),
                                         text=True, capture_output=True)
                 self.assertEqual(result.returncode, 2)
-                self.assertEqual(json.loads(result.stderr)['kind'], 'unsupported_transient')
+                self.assertEqual(json.loads(result.stderr)['kind'],
+                                 'event_resolution' if position == 'guard' else 'unsupported_transient')
 
     def assert_root(self, result, root, ttol, expression, etol):
         events = result['transient']['events']

@@ -1,6 +1,7 @@
 //! Instance/call-site operator histories. Clone with a candidate frame; never
 //! derive history from output samples or mutate accepted state during a trial.
 use crate::absdelay::AbsDelay;
+use crate::continuous::Continuous;
 use crate::events::{affine, AffineState};
 use crate::idt::Idt;
 use crate::idtmod::IdtMod;
@@ -11,6 +12,7 @@ use crate::pwl::Trajectory;
 use crate::slew::Slew;
 use crate::transition::Transition;
 use std::collections::BTreeSet;
+use std::sync::Arc;
 
 type DirectPoints = (Vec<(f64, f64)>, Vec<I>);
 
@@ -81,6 +83,29 @@ struct DirectInput {
 }
 
 impl DirectInput {
+    fn range(&self, time: I) -> Result<(I, I), Error> {
+        let mut slopes = None;
+        for (k, pair) in self.points.windows(2).enumerate() {
+            if pair[0].0 < time.hi && pair[1].0 > time.lo
+                || time.lo == time.hi && pair[0].0 <= time.lo && time.lo <= pair[1].0
+            {
+                let slope = (self.bounds[k + 1] - self.bounds[k])
+                    / (I::point(pair[1].0) - I::point(pair[0].0));
+                slopes = Some(slopes.map_or(slope, |previous: I| previous.hull(slope)));
+            }
+        }
+        // PWL extrema occur at endpoints or included knots. Do not include
+        // remote segment endpoints: they would prevent root refinement.
+        let mut values_local = self
+            .value_bounds(time.lo)?
+            .hull(self.value_bounds(time.hi)?);
+        for (k, &(t, _)) in self.points.iter().enumerate() {
+            if t > time.lo && t < time.hi {
+                values_local = values_local.hull(self.bounds[k]);
+            }
+        }
+        Ok((values_local, slopes.unwrap_or(I::ZERO)))
+    }
     fn new(points: Vec<(f64, f64)>, bounds: Vec<I>) -> Self {
         Self { points, bounds }
     }
@@ -152,6 +177,7 @@ enum SinInput {
 
 #[derive(Clone)]
 enum Runtime {
+    Continuous(usize),
     Idt {
         history: Idt,
         reset: Option<ResetExpression>,
@@ -168,7 +194,6 @@ enum Runtime {
     Slew(Slew),
 }
 
-const SIN_MAX_WIDTH: f64 = 1.0e-6;
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
 const PI_BITS: u64 = 0x4009_21fb_5444_2d18;
 const FRAC_PI_2_BITS: u64 = 0x3ff9_21fb_5444_2d18;
@@ -343,7 +368,7 @@ fn sin_bounds(input: I) -> Result<I, Error> {
         ));
     }
     let two_pi = I::point(2.0) * constant_interval(PI_BITS);
-    if input.hi - input.lo >= two_pi.lo || input.hi - input.lo > SIN_MAX_WIDTH {
+    if input.hi - input.lo >= two_pi.lo {
         return Ok(I { lo: -1.0, hi: 1.0 });
     }
     let mut result = union(sin_point_bounds(input.lo)?, sin_point_bounds(input.hi)?);
@@ -600,6 +625,8 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
 pub(crate) struct Operators {
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
+    direct: Vec<Option<DirectInput>>,
+    continuous: Option<Arc<Continuous>>,
 }
 
 // Borrows one immutable history base at one time. Every advanced trial clones
@@ -635,7 +662,6 @@ impl Operators {
         states: &[f64],
     ) -> Result<Self, Error> {
         let mut identities = BTreeSet::new();
-        let mut entries = Vec::new();
         for spec in &program.operators {
             let origin = spec.origin();
             if origin.instance.is_empty()
@@ -658,7 +684,48 @@ impl Operators {
                     "invalid or duplicate operator call-site identity",
                 ));
             }
+            let input = match spec {
+                OperatorSpec::Idt { input, .. }
+                | OperatorSpec::LaplaceNd { input, .. }
+                | OperatorSpec::Ddt { input, .. }
+                | OperatorSpec::Sin { input, .. }
+                | OperatorSpec::AbsDelay { input, .. }
+                | OperatorSpec::Transition { input, .. }
+                | OperatorSpec::Slew { input, .. }
+                | OperatorSpec::IdtMod { input, .. } => input,
+            };
+            // Validate raw indices and ownership before any interval indexing.
+            // The kernel must not assume a trusted Python producer.
+            affine(input, program, &origin.instance)?;
+        }
+        let continuous = Continuous::new(program, trajectory, driven)?.map(Arc::new);
+        let mut entries = Vec::new();
+        let mut direct = Vec::new();
+        for (index, spec) in program.operators.iter().enumerate() {
+            let direct_input = match spec {
+                OperatorSpec::Idt { input, origin, .. }
+                | OperatorSpec::LaplaceNd { input, origin, .. } => {
+                    direct_points(input, program, trajectory, driven, origin)
+                        .ok()
+                        .map(|(points, bounds)| DirectInput::new(points, bounds))
+                }
+                _ => None,
+            };
+            direct.push(direct_input);
+            if let Some(slot) = continuous
+                .as_ref()
+                .and_then(|c| c.operator_value_index(index))
+            {
+                entries.push(Runtime::Continuous(slot));
+                continue;
+            }
             match spec {
+                OperatorSpec::Ddt { .. } => {
+                    return Err(Error::new(
+                        "invalid_ir",
+                        "ddt is missing its continuous trajectory slot",
+                    ))
+                }
                 OperatorSpec::Idt {
                     input,
                     ic,
@@ -816,7 +883,8 @@ impl Operators {
             let changes = match entry {
                 Runtime::Idt { reset: Some(_), .. } | Runtime::Transition { .. } => true,
                 Runtime::Sin(SinInput::Operator { operator, .. }) => changes_on_advance[*operator],
-                Runtime::Idt { reset: None, .. }
+                Runtime::Continuous(_)
+                | Runtime::Idt { reset: None, .. }
                 | Runtime::IdtMod(_)
                 | Runtime::Sin(SinInput::Direct(_))
                 | Runtime::AbsDelay(_)
@@ -828,7 +896,78 @@ impl Operators {
         Ok(Self {
             entries,
             changes_on_advance,
+            direct,
+            continuous,
         })
+    }
+
+    pub(crate) fn range(&self, index: usize, time: I) -> Result<(I, I), Error> {
+        let entry = self
+            .entries
+            .get(index)
+            .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
+        if self.changes_on_advance[index] {
+            return Err(Error::new(
+                "unsupported_cross",
+                "cross cannot depend on event-modified operator history",
+            ));
+        }
+        let result = match entry {
+            Runtime::Continuous(slot) => {
+                let c = self.continuous.as_ref().unwrap();
+                if !c.is_continuous(*slot) {
+                    return Err(Error::new("unsupported_cross","ddt of PWL can jump at source corners; continuous cross trajectory required"));
+                }
+                (
+                    c.range_bounds(time)?[*slot],
+                    c.derivative_bounds(time)?[*slot],
+                )
+            }
+            Runtime::Idt { history, .. } => {
+                let input = self.direct[index].as_ref().unwrap().range(time)?.0;
+                (
+                    history.value_bounds(time.lo)? + input * (time - I::point(time.lo)),
+                    input,
+                )
+            }
+            Runtime::LaplaceNd(history) => {
+                history.range(time, self.direct[index].as_ref().unwrap().range(time)?.0)?
+            }
+            Runtime::Sin(input) => {
+                let (value, derivative) = match input {
+                    SinInput::Direct(source) => source.range(time)?,
+                    SinInput::Operator {
+                        operator,
+                        coefficient_bounds,
+                        constant_bounds,
+                        ..
+                    } => {
+                        let (v, d) = self.range(*operator, time)?;
+                        (
+                            *constant_bounds + *coefficient_bounds * v,
+                            *coefficient_bounds * d,
+                        )
+                    }
+                };
+                (
+                    sin_bounds(value)?,
+                    sin_bounds(value + constant_interval(FRAC_PI_2_BITS))? * derivative,
+                )
+            }
+            _ => {
+                return Err(Error::new(
+                    "unsupported_cross",
+                    "operator guard requires a certified continuous trajectory and derivative",
+                ))
+            }
+        };
+        if !result.0.finite() || !result.1.finite() {
+            return Err(Error::new(
+                "event_resolution",
+                "nonfinite dynamic guard history",
+            ));
+        }
+        Ok(result)
     }
 
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
@@ -845,6 +984,11 @@ impl Operators {
     }
 
     fn values_reusing(&self, time: f64, previous: Option<&[f64]>) -> Result<Vec<f64>, Error> {
+        let continuous = self
+            .continuous
+            .as_ref()
+            .map(|c| c.values(time))
+            .transpose()?;
         self.entries.iter().enumerate().try_fold(
             Vec::<f64>::with_capacity(self.entries.len()),
             |mut values, (index, entry)| {
@@ -855,6 +999,7 @@ impl Operators {
                     }
                 }
                 let value = match entry {
+                    Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value(time)?,
                     Runtime::LaplaceNd(history) => history.value(time)?,
                     Runtime::IdtMod(history) => history.value(time)?,
@@ -884,6 +1029,7 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
+                Runtime::Continuous(_) => self.continuous.as_ref().unwrap().next_breakpoint(after),
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
                 Runtime::IdtMod(history) => history.next_breakpoint(after),
                 Runtime::Sin(SinInput::Direct(source)) => source.next_breakpoint(after),
@@ -901,6 +1047,11 @@ impl Operators {
     }
 
     fn bounds_reusing(&self, time: f64, previous: Option<&[I]>) -> Result<Vec<I>, Error> {
+        let continuous = self
+            .continuous
+            .as_ref()
+            .map(|c| c.bounds(time))
+            .transpose()?;
         self.entries.iter().enumerate().try_fold(
             Vec::<I>::with_capacity(self.entries.len()),
             |mut bounds, (index, entry)| {
@@ -911,6 +1062,7 @@ impl Operators {
                     }
                 }
                 let bound = match entry {
+                    Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
                     Runtime::LaplaceNd(history) => history.value_bounds(time)?,
                     Runtime::IdtMod(history) => history.value_bounds(time)?,
@@ -966,6 +1118,7 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
+                Runtime::Continuous(_) => Vec::new(),
                 Runtime::Idt { .. } => Vec::new(),
                 Runtime::IdtMod(_) => Vec::new(),
                 Runtime::Sin(_) => Vec::new(),
@@ -1006,6 +1159,7 @@ impl Operators {
     ) -> Result<(), Error> {
         for entry in &mut self.entries {
             match entry {
+                Runtime::Continuous(_) => {}
                 Runtime::Idt { history, reset } => {
                     if let Some(reset) = reset {
                         history.advance_reset(time, time_bounds, reset.active(bounds)?)?;

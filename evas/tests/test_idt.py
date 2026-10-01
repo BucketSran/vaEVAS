@@ -297,15 +297,14 @@ class IdtContracts(unittest.TestCase):
                 compiled('@(initial_step) q=0; V(y,r)<+'+call+';', 'real q;')
 
     def test_structural_rejections_survive_zero_and_cancellation(self):
-        inputs = ['V(z,r)', 'V(z,r)-V(z,r)', '0*V(z,r)', 'V(z,z)',
-                  '1e-200*(1e-200*V(z,r))', 'q-q', '0*q',
-                  'idt(V(u,r),0)', 'absdelay(V(u,r),1)', 'V(u,r)*V(u,r)', 'pow(V(u,r),2)']
+        inputs = ['V(z,r)-V(z,r)', '0*V(z,r)', 'V(z,z)',
+                  'q-q', '0*q',
+                  'absdelay(V(u,r),1)', 'V(u,r)*V(u,r)', 'pow(V(u,r),2)']
         for expr in inputs:
             body = f'@(initial_step) q=0; V(z,r)<+V(u,r); V(y,r)<+idt({expr},0);'
             with self.subTest(expr=expr), self.assertRaises((CompileError, KernelError)):
                 execute(compiled(body, 'electrical z; real q;'))
-        for body in ['V(y,r)<+idt(V(y,r),0);',
-                     'V(y,r)<+idt(V(u,r),0)*V(u,r);',
+        for body in ['V(y,r)<+idt(V(u,r),0)*V(u,r);',
                      'V(y,r)<+idt(V(u,r),0)*idt(V(u,r),0);',
                      'V(y,r)<+absdelay(idt(V(u,r),0),1);',
                      'V(y,r)<+slew(idt(V(u,r),0),1,-1);']:
@@ -314,14 +313,14 @@ class IdtContracts(unittest.TestCase):
         with self.assertRaises(KernelError):
             solve(compiled(), ['u'], [[1]], kernel=KERNEL)
 
-    def test_operator_driven_cross_is_rejected_through_cancelled_relay(self):
+    def test_nontransverse_operator_guard_is_explicitly_unresolved(self):
         for expression in ['V(z,r)', 'V(z,r)-V(z,r)', '0*V(z,r)']:
             body = ('@(initial_step) n=0; @(cross(V(y,r),1)) n=n+1; '
                     f'V(z,r)<+idt(V(u,r),0); V(y,r)<+{expression};')
-            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError, 'event_resolution'):
                 execute(compiled(body, 'electrical z; integer n;'))
-        with self.assertRaises(CompileError):
-            compiled('@(initial_step) n=0; @(cross(idt(V(u,r),0))) n=n+1; V(y,r)<+n;', 'integer n;')
+        with self.assertRaisesRegex(KernelError, 'event_resolution'):
+            execute(compiled('@(initial_step) n=0; @(cross(idt(V(u,r),0))) n=n+1; V(y,r)<+n;', 'integer n;'))
 
     def test_source_cross_timer_sampling_and_discarded_overshoot(self):
         body = ('@(initial_step) begin q=0; n=0; end '
@@ -349,7 +348,7 @@ class IdtContracts(unittest.TestCase):
             for order in [instances, instances[::-1]]:
                 program = compile_sources({'producer.va': producer, 'relay.va': relay, 'watcher.va': watcher}, order)
                 with self.subTest(expression=expression, order=[i.name for i in order]):
-                    with self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+                    with self.assertRaisesRegex(KernelError, 'event_resolution'):
                         execute(program)
 
     def test_raw_ir_rejects_bad_version_fields_and_dependencies(self):
@@ -363,7 +362,7 @@ class IdtContracts(unittest.TestCase):
         bad = copy.deepcopy(good)
         del bad['operators'][0]['ic']
         mutations.append(bad)
-        for expr in [dict(op='operator', operator=0), dict(op='operator', operator=99),
+        for expr in [dict(op='operator', operator=99),
                      dict(op='state', state=0),
                      dict(op='affine', constant=0, terms=[dict(node=good['nodes'].index('y'), coefficient=0)])]:
             bad = copy.deepcopy(good)

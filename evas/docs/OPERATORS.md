@@ -1,6 +1,6 @@
 # 有历史的波形算子
 
-适用范围：当前 EVAS 0.9.0 / IR v15。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
+适用范围：已合并 EVAS 0.9.0 / IR v15 的单项基础范围。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
 PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt，PR26 交付三参数复位。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
@@ -8,6 +8,9 @@ PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt�
 IR15 保留受限 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin。
 下文单项分支/历史 PR 的版本与测量保留原归属；当前联合身份、原 31 条件与拒绝原因见
 [整合审查](../../experiments/parallel-gap-integration/README.md)。
+
+IR16 开发分支的仿射积分反馈、完整分子的高阶滤波和直接 PWL `ddt` 由[连续动态章节](CONTINUOUS.md)维护。
+下文直接输入路径及其历史版本不自动推广到新联合网络。
 
 ## 公共执行方法
 
