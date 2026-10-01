@@ -1,11 +1,11 @@
 # 有历史的波形算子
 
-适用范围：当前 main 的 EVAS 0.9.0 / IR v11。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
+适用范围：当前 EVAS 0.9.0 / IR v15。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
 PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt，PR26 交付三参数复位。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
 
-本地联合候选源码统一为 IR v15，保留当前 main 的 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin，尚未合入 main。
+IR15 保留受限 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin。
 下文单项分支/历史 PR 的版本与测量保留原归属；当前联合身份、原 31 条件与拒绝原因见
 [整合审查](../../experiments/parallel-gap-integration/README.md)。
 
@@ -13,11 +13,11 @@ PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt�
 
 下面固定当刻算子输出的推导适用于正边沿 transition 与直接输入的 absdelay/slew。
 idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组合与拒绝边界)重建并认证候选，不能直接套用输出不变假设。
-联合候选同样允许纯函数 `sin` 随其已许可的早期复位输入改变；函数链的许可逐项传播，
+当前同样允许纯函数 `sin` 随其已许可的早期复位输入改变；函数链的许可逐项传播，
 随后仍从同一接受历史重放并核对整个算子值/区间及积分复位历史。
 `reset_dependencies.rs` 的结构图包含滤波/相位/正弦输入边，禁止经函数和电压采样返回 reset 的反馈环。
 
-本地优化 `ddfd379` 用临时 `Evaluation` 借用同一个历史基线并固定查询时间。
+查询优化 `ddfd379` 用临时 `Evaluation` 借用同一个历史基线并固定查询时间。
 同刻候选仍克隆该基线并推进历史；无复位 idt、idtmod、laplace、absdelay、slew
 和直接输入 sin 的查询值/区间可复用。复位 idt、transition 以及沿依赖链消费它们的 sin
 重新求值。每种 Runtime 必须显式分类，新增算子时编译器要求补充该分类。
@@ -158,7 +158,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 ## idt
 
 能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 交付首版受限二参数积分；
-当前 IR v11 扩展三参数 reset，检查点与交付状态见能力总表。
+IR v11 首次扩展三参数 reset，当前沿用 IR15，检查点与交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
 `idt(direct_affine_input, constant_ic)` 与受限的
@@ -240,7 +240,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 失败、丢弃或重试不修改已接受状态及历史。
 
 
-IR v7 新增 `kind=idt,input,ic,origin`；当前 IR v11 在 idt 记录中加入可空 `reset` 表达式。
+IR v7 新增 `kind=idt,input,ic,origin`；IR v11 起在 idt 记录中加入可空 `reset` 表达式。
 调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
 错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.9.0；包内版本号不代表已发布 tag。
@@ -373,7 +373,7 @@ Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本�
 大系数抵消误差拒绝、`sin(idtmod)` 两侧包络、wrapped 电压在近 wrap / exact wrap 的可证通过，以及
 非精确系数边界无法证明时的 `waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，
 未执行 Spectre 或完整 31 条件矩阵。
-此前本地 IR14 联合版本的 30/31 固定证据仍保留在[整合收据](../../experiments/parallel-gap-integration/results/original31.json)；专项新结果不改写旧联合成绩。
+此前本地 IR14 联合版本的 30/31 固定证据仍保留在[整合收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/original31.json)；专项新结果不改写旧联合成绩。
 
 ## slew
 

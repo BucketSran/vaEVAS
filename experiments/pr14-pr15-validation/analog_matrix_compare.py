@@ -5,6 +5,8 @@ Every Spectre export goes through the frozen original independent checker.
 """
 import argparse
 from collections import Counter
+import gzip
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -31,7 +33,10 @@ def analyze(root, old_root, output):
         if rel.endswith(".py") and sha(ROOT/rel) != expected:
             raise ValueError("checker dependency changed: " + rel)
     old_receipt = ROOT/"experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json"
-    prior = json.loads(old_receipt.read_text())
+    # Historical receipts retain their original bytes in repository gzip archives.
+    old_bytes = (old_receipt.read_bytes() if old_receipt.exists() else
+                 gzip.decompress(old_receipt.with_suffix(".json.gz").read_bytes()))
+    prior = json.loads(old_bytes)
     checkpoint = prior["checkpoint"]
     for rel, expected in checkpoint["source_sha256"].items():
         if sha(ROOT/rel) != expected:
@@ -89,7 +94,7 @@ def analyze(root, old_root, output):
     save(output, dict(run_id=root.name, conditions=31, configurations_per_backend=62,
          summary=summary, records=records, v1_pairwise_diagnostics=pairs,
          evas_checkpoint=checkpoint, reused_receipt=str(old_receipt.relative_to(ROOT)),
-         reused_receipt_sha256=sha(old_receipt), reused_raw_manifest_sha256=sha(old_root/"RAW_MANIFEST.json"),
+         reused_receipt_sha256=hashlib.sha256(old_bytes).hexdigest(), reused_raw_manifest_sha256=sha(old_root/"RAW_MANIFEST.json"),
          spectre_version=re.search(r"sub-version\s+([^\n]+)", version).group(1).strip(),
          spectre_tool_identity=tool, spectre_budget=json.loads((remote/"STARTED.json").read_text()),
          input_manifest_sha256=sha(remote/"INPUT_MANIFEST.json"),

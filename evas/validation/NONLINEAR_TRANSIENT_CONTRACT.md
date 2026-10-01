@@ -1,8 +1,8 @@
 # Stateless nonlinear transient waveform-accuracy contract
 
-This note records the precision boundary and the branch-local repair for the
-stateless nonlinear transient entry in the IR v15 integration candidate. It is a diagnostic contract, not a frozen
-preferred rounded output.
+This note records the precision boundary for the stateless nonlinear transient
+entry in the IR v15 checkpoint. Its proof and independent answers define the
+contract; no preferred rounded output is frozen.
 
 ## Proof object
 
@@ -82,7 +82,7 @@ Input-selected branches remain restricted to affine leaves. For polynomial syste
 inside the requested voltage box under the stated restricted conditions. It
 is still not a general-purpose interval solver for arbitrary coupled dynamics;
 nonlinear events, state/history/operator coupling and unsupported non-square
-cases remain outside this branch. Non-square polynomial systems are refused at
+cases remain outside this supported subset. Non-square polynomial systems are refused at
 point inputs too; the public static `solve` keeps its existing local Newton
 contract and does not acquire this transient forward-error proof.
 

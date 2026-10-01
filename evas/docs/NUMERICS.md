@@ -1,6 +1,6 @@
 # 电压方程与数值求解
 
-适用范围：当前 main 的 EVAS 0.9.0 / IR v11，静态多项式求解与限定仿射瞬态的电压求解。
+适用范围：当前 EVAS 0.9.0 / IR v15，静态多项式、限定仿射与无状态多项式瞬态的电压求解。
 稀疏分流由 [PR8](https://github.com/BucketSran/vaEVAS/pull/8) 在 0.7.1 / IR v7 检查点交付；
 该历史身份不表示当前只接受 v7。事件的额外前向认证见[事件手册](EVENTS.md)。
 实现、证据和交付状态见[能力总表](CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
@@ -26,7 +26,7 @@
 冗余方程在残差检查中保留；欠定或数值秩不足时明确失败。
 
 静态非线性求解每个样本从未知节点全零开始，驱动电压固定，不读取上一样本作为初猜。
-联合候选新增的无状态、无事件、无历史算子的受限瞬态非线性入口在每个输出时刻先对直接 PWL 输入求值，
+当前的无状态、无事件、无历史算子的受限瞬态非线性入口在每个输出时刻先对直接 PWL 输入求值，
 再解同一组 `F(v;u(t))=0`；第一个输出点沿用零初猜，后续输出点只把前一已成功输出点电压作为
 Newton 初猜。该初猜不是物理历史，失败不会提交部分波形或改变下一次请求。这里的名义 `u(t)` 是内核
 按 binary64 代表值执行普通浮点 PWL 插值得到的点值；名义点解仍需满足残差、行尺度残差和 Newton 修正量
@@ -95,9 +95,9 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 方程错误带源码/实例信息，运行期样本错误带从 0 开始的样本下标。
 任何样本失败都使整个请求失败，不输出部分成功波形。
 
-## 普通 analog 条件候选
+## 普通 analog 条件
 
-联合候选的普通条件入口（IR v15，待 review）新增无事件、无状态、无动态算子的
+普通条件入口（IR v15）支持无事件、无状态、无动态算子的
 输入驱动分段仿射瞬态。局部程序赋值按顺序代入表达式，电压贡献仍联合组装为关系。
 先用原始 PWL 输入的向外舍入区间证明条件真值，再求选中分支；区间无法证明时
 报 `condition_precision`。源结点和静态点输入沿用精确 binary64 乘积和判符号。
@@ -170,10 +170,10 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 ## 实现与证据
 
-- 本地精度链修复及兼容边界见[review 记录](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)。
+- 精度链修复及兼容边界见[review 记录](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)。
   [独立回归](../tests/test_precision_chain.py)覆盖点输入近重根、贡献拆分、采样误差跨事件放大及正控制。
-- 本地 `ddfd379` 的标量根盒与同刻不可变查询优化见[专项 review 与测量](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)。
-  固定四个工作负载、同一误差预算的 release 内核计时，不包含 Python/JSON 开销；尚未合入 main。
+- 历史 `ddfd379` 的标量根盒与同刻不可变查询优化见[专项 review 与测量](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)。
+  固定四个工作负载、同一误差预算的 release 内核计时，不包含 Python/JSON 开销；不能外推到最新精度链修复。
 - 组装：[assembly.rs](../rust_core/src/assembly.rs)；静态求解：[solver.rs](../rust_core/src/solver.rs)。
 - 多项式值/导数：[expression.rs](../rust_core/src/expression.rs)；阻尼迭代：[nonlinear.rs](../rust_core/src/nonlinear.rs)。
 - 无状态非线性瞬态入口：[transient.rs](../rust_core/src/transient.rs)；回归：
@@ -202,7 +202,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 早期无状态入口仅解 binary64 PWL 代表值上的方程。源 `(0,1),(3,2)` 在 `t=1` 的精确插值为
 `4/3`，关系 `y=1e16*(u-1)` 曾返回 `3333333333333334 V`，误差约 `2/3 V`，却通过
-`vabstol=1e-12,reltol=0` 的名义残差门。联合候选已经用原 IR 仿射映射或多项式根盒拒绝该请求，
+`vabstol=1e-12,reltol=0` 的名义残差门。当前已用原 IR 仿射映射或多项式根盒拒绝该请求，
 不是当前仍未修复的缺口。
 
 随后审查发现点输入仍跳过根盒：`y=u+y²,u=.25` 的名义残差与修正量都可舍入到零，
@@ -210,7 +210,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 输入统一要求根盒证明；重根和无法证明的近重根明确拒绝。静态 `solve` 仍只有局部 Newton 验收，
 没有因此获得前向误差证明。
 
-无条件、无算子的事件路径原先会把采样输入及旧状态包围压成点值。本地修复在初始化、事件候选
+无条件、无算子的事件路径原先会把采样输入及旧状态包围压成点值。IR15 修复在初始化、事件候选
 和普通观察时刻均保留原 PWL 区间与已接受状态区间，后续增益不能丢弃这份不确定性。
 无算子的固定电路仍复用分解，但每次观察都重新认证。状态域中的冗余关系若不能证明恒等，
 现在可能在初始化提前拒绝；real 状态接近零时也可能因没有绝对状态容差而保守拒绝。

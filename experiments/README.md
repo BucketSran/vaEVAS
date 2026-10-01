@@ -39,22 +39,18 @@
 
 ## 已有实验入口
 
-最新已合并检查点为 [PR26 的 idt 复位](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)，
-被测运行时 `edb004dbb4b05ebd91c1f1f3bb7f261fd1d19b8f`。
-原 31 条件两档均 **24/31** 有限观测达标，其余 7 条明确拒绝；
-PR25 基线 `6df7f48` 两档各 22/31，原达标的 44 份 CSV 逐字节一致。
-[整理收据](pr14-pr15-validation/results/idt-reset-merge-validation.json)记录两个检查点共 124 次新本地 EVAS 执行。
-此轮未新增 Spectre 或其他后端对照，正式资格仍为 **I**。
-当前能力范围及后续缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
+最新 IR15 检查点见[联合交付与精度链](parallel-gap-integration/README.md)，
+被测运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`：原 31 条件两档均
+**31/31 有限观测达标**，62 份 CSV、判定及生效设置和前一优化检查点 `ddfd379` 一致。
+[检查收据](parallel-gap-integration/results/precision-chain-checks.json)与
+[逐配置矩阵](parallel-gap-integration/results/precision-chain-matrix.json)保留完整身份。
+372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
+最新修复没有新 Spectre 执行或新性能测量，正式资格仍 **I**，完整 raw 为 **仅本地保留**。
+当前能力和更广缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
 
-本地联合候选（未合并）：[剩余六条件补齐及分批复审](parallel-gap-integration/REVIEW.md#gap-completion)，
-运行时 `39a4545` / IR v15，同步 main `78e914f`。本轮 62 次新 EVAS 执行两档均 31/31，
-相对 analog 基线各 25/31 新增六条，原达标 50 份 CSV 不变；上一轮 Spectre 62 次结果
-重新核验后也各 31/31，没有新远端执行。[矩阵](parallel-gap-integration/results/gap-completion-matrix.md)
-及[检查收据](parallel-gap-integration/results/gap-completion-checks.json)保留来源和限制；正式资格 I。
-最新本地[精度链修复](parallel-gap-integration/REVIEW.md#precision-chain)固定运行时 `d451605`，
-统一点输入根盒与无条件采样误差传播；新原矩阵两档各 31/31、62 份 CSV 与 `ddfd379` 不变，
-[新收据](parallel-gap-integration/results/precision-chain-matrix.json)单独绑定执行身份。未新增 Spectre 执行或合入 main。
+PR26 `edb004d` 的两档各 24/31 保留在[历史复位对照](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
+功能补齐 `39a4545` 与优化 `ddfd379` 的原执行、初期失败和测量从
+[历史入口及无损收据](parallel-gap-integration/README.md#历史与资产)进入，不由新结果改写。
 
 以下入口保留各自冻结身份，旧结果不替代当前源码的新执行，也不构成最新版本的配对性能比较。
 

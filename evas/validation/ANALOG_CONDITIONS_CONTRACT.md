@@ -1,8 +1,7 @@
 # 普通 analog 条件与局部 real 契约
 
-状态：分支开发契约。本文说明普通 `analog` 语句中的顺序局部 `real` 赋值、
-比较和 `if/else` 如何形成电压方程 RHS；不改变原 31 条件分母，也不声明 main
-已支持完整 Verilog-A 条件语句。
+本文维护 IR15 的限定实现契约，说明普通 `analog` 语句中的顺序局部 `real` 赋值、
+比较和 `if/else` 如何形成电压方程 RHS；不改变原 31 条件分母，也不声明完整条件语句支持。
 
 ## 行为范围
 
@@ -82,8 +81,8 @@ vout - vref = min(0.875, max(-0.75, y0))
 解析器将普通 analog body 保存为顺序语句。前端把无状态局部 `real` 与事件状态区分开：
 没有事件/初始化的声明变量是组合临时量；有事件或初始化时沿用状态变量规则。
 
-前端把普通 `if` 合并成联合候选 IR v15 的 `select` 表达式（main 为 v11，须从原始 VA
-重新编译；v15 同时保留当前 main 的三参数 idt 复位字段及滤波/相位算子）。Rust 工作点求解器在表达式求值时
+前端把普通 `if` 合并成 IR v15 的 `select` 表达式。旧 IR 1–14 须从原始 VA
+重新编译；v15 保留三参数 idt 复位字段及滤波/相位算子。Rust 工作点求解器在表达式求值时
 只求被选中的分支及其梯度；由于谓词被限制为驱动输入，Newton 不需要求解不连续反馈
 边界。事件仿射认证、历史算子和 transient 事件方程仍明确拒绝普通 analog `select`。
 
@@ -128,12 +127,13 @@ vout - vref = min(0.875, max(-0.75, y0))
 [历史结果](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)和
 [收据](../../experiments/pr14-pr15-validation/results/analog-conditions-review.json)。该检查点未新跑完整矩阵或 Spectre。
 
-后续候选 `9c5d6c5` 修复优化后丢失 `select` 的验收漏洞并收紧两端谓词范围，
+后续历史候选 `9c5d6c5` 修复优化后丢失 `select` 的验收漏洞并收紧两端谓词范围，
 306 Python / 64 Rust 与 Clippy、格式检查通过。原 31×2 全矩阵沿用冻结输入和判据新执行，
 两档各 25/31；原达标 48 份 CSV 哈希与 PR26 收据一致，剩余 6 条明确拒绝。
 详情见[验收修复结果](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)与
-[新收据](../../experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
-尚未合入 main，未新执行 Spectre，正式资格仍 I。
+[新收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
+该轮执行时尚未合入 main，未新执行 Spectre，正式资格仍 I。
+当前联合矩阵与精度链见[最新验证](README.md#latest-evas-checkpoint)，不改写这些历史身份。
 
 后续[缺口与对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
 复用该原矩阵 EVAS 执行、新跑 Spectre 31×2，后者两档各 31/31；另对六个独立有理数
@@ -145,12 +145,12 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 尚未支持隐式分支反馈、输出/内部节点 predicate、普通 analog `if` 内贡献、事件与普通
 条件组合、条件选择的多项式/动态算子叶子、循环、连续时间观察误差界和未见确认集。
-联合候选另有标准常量数组、受限 `sin` 和无条件局部算子别名，范围由各算子契约定义。
+当前另有标准常量数组、受限 `sin` 和无条件局部算子别名，范围由各算子契约定义。
 这些缺口需要各自的数学契约与独立答案，不能由本切片的 `select` 表达式外推。
 
 ## 六路整合的局部算子别名
 
-整合候选允许无条件局部赋值接收受限算子结果；赋值和贡献使用同一份顺序环境。
+当前允许无条件局部赋值接收受限算子结果；赋值和贡献使用同一份顺序环境。
 先贡献、再覆盖局部变量，不会追溯修改前一条贡献。两个算子调用赋给同一局部名仍有两个调用点，
 不共享历史。算子回调读取调用处的环境；后续算子参数仍必须符合各自的直接 PWL 或状态输入契约。
 局部别名里的零系数和相消表达式保留结构依赖，不能隐藏反馈条件或算子输入。
