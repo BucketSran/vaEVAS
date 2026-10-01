@@ -639,49 +639,96 @@ pub(crate) struct Evaluation<'a> {
 }
 
 impl Evaluation<'_> {
+    // Reset/instantaneous algebraic map only. It does not install transition
+    // targets or propagate the new continuous flow to the representative.
+    // Each closure solve observes the same accepted physical history.
+    pub(crate) fn observed_after(
+        &self,
+        time_bounds: I,
+        parameters: &[I],
+    ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
+        let mut observed = self.base.clone();
+        if let Some(continuous) = &self.base.continuous {
+            observed.continuous = Some(Arc::new(continuous.mapped_event(
+                self.time,
+                time_bounds,
+                parameters,
+            )?));
+        }
+        for entry in &mut observed.entries {
+            if let Runtime::Idt {
+                history,
+                reset: Some(reset),
+            } = entry
+            {
+                history.advance_reset(self.time, time_bounds, reset.active(parameters)?)?;
+            }
+        }
+        let mut values = observed.values_reusing(self.time, Some(&self.values))?;
+        let mut bounds = observed.event_bounds(self.time, time_bounds)?;
+        for (i, entry) in observed.entries.iter().enumerate() {
+            match entry {
+                Runtime::Continuous(slot)
+                    if observed
+                        .continuous
+                        .as_ref()
+                        .unwrap()
+                        .keeps_value_on_event(*slot)? =>
+                {
+                    values[i] = self.values[i];
+                    bounds[i] = self.bounds[i];
+                }
+                Runtime::Idt {
+                    history,
+                    reset: Some(_),
+                } if history.reset_active() => {
+                    values[i] = history.ic();
+                    bounds[i] = I::point(history.ic());
+                }
+                Runtime::Idt { .. } => {
+                    // Releasing a reset changes future flow, not the sample
+                    // at the release instant. Preserve the frozen observation.
+                    values[i] = self.values[i];
+                    bounds[i] = self.bounds[i];
+                }
+                Runtime::Sin(SinInput::Operator {
+                    operator,
+                    coefficient,
+                    constant,
+                    coefficient_bounds,
+                    constant_bounds,
+                }) if values[*operator] != self.values[*operator]
+                    || bounds[*operator] != self.bounds[*operator] =>
+                {
+                    values[i] = (*constant + *coefficient * values[*operator]).sin();
+                    bounds[i] =
+                        sin_bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?;
+                }
+                _ => {}
+            }
+        }
+        Ok((observed, values, bounds))
+    }
+
+    // Install only future history. Event observations are obtained separately
+    // from observed_after; querying a newly installed transition over an old
+    // root window would mix the two lifecycle phases.
     pub(crate) fn advanced(
         &self,
         time_bounds: I,
         states: &[f64],
         bounds: &[I],
         changed: &[usize],
-    ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
+    ) -> Result<Operators, Error> {
         let mut candidate = self.base.clone();
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
-        let mut values = candidate.values_reusing(self.time, Some(&self.values))?;
-        let mut bounds = if time_bounds.lo == time_bounds.hi {
-            candidate.bounds_reusing(self.time, Some(&self.bounds))?
-        } else {
-            candidate.event_bounds(self.time, time_bounds)?
-        };
-        // Event assignments observe the instant tau, not the new flow from
-        // tau to its representative b. Integrals whose candidate reset is
-        // inactive and strictly proper filters keep that continuous sample.
-        for (i, entry) in candidate.entries.iter().enumerate() {
-            if let Runtime::Continuous(slot) = entry {
-                if candidate
-                    .continuous
-                    .as_ref()
-                    .unwrap()
-                    .keeps_value_on_event(*slot)?
-                {
-                    values[i] = self.values[i];
-                    bounds[i] = self.bounds[i];
-                }
-            }
-        }
-        Ok((candidate, values, bounds))
+        Ok(candidate)
     }
 }
 
 impl Operators {
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
-        if window.lo == window.hi
-            || !self
-                .continuous
-                .as_ref()
-                .is_some_and(|c| c.changes_on_event())
-        {
+        if window.lo == window.hi {
             return self.bounds(time);
         }
         let continuous = self
@@ -689,14 +736,45 @@ impl Operators {
             .as_ref()
             .map(|c| c.event_bounds(window))
             .transpose()?;
-        self.entries
-            .iter()
-            .enumerate()
-            .map(|(index, entry)| match entry {
-                Runtime::Continuous(slot) => Ok(continuous.as_ref().unwrap()[*slot]),
-                _ => self.range(index, window).map(|(value, _)| value),
-            })
-            .collect()
+        // Value observation has a different contract from a cross guard:
+        // it also covers reset histories and need not provide a derivative.
+        let mut bounds = Vec::with_capacity(self.entries.len());
+        for (index, entry) in self.entries.iter().enumerate() {
+            let bound = match entry {
+                Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
+                Runtime::Idt { history, .. } => history.value_range(window)?,
+                Runtime::LaplaceNd(history) => {
+                    history
+                        .range(
+                            window,
+                            self.direct[index].as_ref().unwrap().range(window)?.0,
+                        )?
+                        .0
+                }
+                Runtime::Sin(SinInput::Direct(source)) => sin_bounds(source.range(window)?.0)?,
+                Runtime::Sin(SinInput::Operator {
+                    operator,
+                    coefficient_bounds,
+                    constant_bounds,
+                    ..
+                }) => sin_bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
+                Runtime::Transition { history, .. } => history.value_range(window)?,
+                _ => {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "operator has no certified observation over a nonpoint event window",
+                    ))
+                }
+            };
+            if !bound.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite event observation range",
+                ));
+            }
+            bounds.push(bound);
+        }
+        Ok(bounds)
     }
 
     pub(crate) fn new(
@@ -1359,10 +1437,10 @@ mod phase_operator_tests {
             if nonlinear {
                 // A bounded nonlinear flow can cross the source corner. Its
                 // candidate must remain disposable and reproducible.
-                let (candidate, _, _) = uncertain.unwrap();
+                let candidate = uncertain.unwrap();
                 let bounds = candidate.bounds(1.0).unwrap();
                 drop(candidate);
-                let (retry, _, _) = frozen
+                let retry = frozen
                     .advanced(
                         I {
                             lo: 0.5 - 1e-8,
@@ -1382,7 +1460,7 @@ mod phase_operator_tests {
                 .advanced(I::point(0.5), &[1.0], &[I { lo: -1.0, hi: 1.0 }], &[0])
                 .is_err());
             assert_eq!(base.bounds(1.0).unwrap(), original);
-            let (discarded, _, _) = frozen
+            let discarded = frozen
                 .advanced(I::point(0.5), &[1.0], &[I::ONE], &[0])
                 .unwrap();
             let expected_outer = frozen.values[1] + 0.5;
@@ -1397,7 +1475,7 @@ mod phase_operator_tests {
             }
             drop(discarded);
             assert_eq!(base.bounds(1.0).unwrap(), original);
-            let (retry, _, _) = frozen
+            let retry = frozen
                 .advanced(I::point(0.5), &[1.0], &[I::ONE], &[0])
                 .unwrap();
             assert_eq!(retry.bounds(1.0).unwrap(), candidate_bounds);
@@ -1447,7 +1525,9 @@ mod phase_operator_tests {
         let frozen = base.evaluation(1.0).unwrap();
         assert_eq!(frozen.values[0], 1.25);
         assert_eq!(frozen.values[1], 0.375);
-        let (reset_trial, reset_values, reset_bounds) = frozen
+        let (_, reset_values, reset_bounds) =
+            frozen.observed_after(I::point(1.0), &[I::ONE]).unwrap();
+        let reset_trial = frozen
             .advanced(I::point(1.0), &[1.0], &[I::ONE], &[0])
             .unwrap();
         assert_eq!(reset_values[1], 0.125);
@@ -1459,18 +1539,15 @@ mod phase_operator_tests {
         assert_eq!(reset_values, reset_trial.values(1.0).unwrap());
         assert_eq!(reset_bounds, reset_trial.bounds(1.0).unwrap());
         // Discard the reset trial and retry from the borrowed base.
-        let (_, retry_values, retry_bounds) = frozen
-            .advanced(I::point(1.0), &[0.0], &[I::ZERO], &[])
-            .unwrap();
+        let (_, retry_values, retry_bounds) =
+            frozen.observed_after(I::point(1.0), &[I::ZERO]).unwrap();
         assert_eq!(retry_values, frozen.values);
         assert_eq!(retry_bounds, frozen.bounds);
         assert_eq!(base.values(1.0).unwrap(), frozen.values);
         // A later query creates a new evaluation; transition and its sine
         // dependent must observe the new edge, not the old-time snapshot.
         let later = reset_trial.evaluation(1.125).unwrap();
-        let (_, values, bounds) = later
-            .advanced(I::point(1.125), &[1.0], &[I::ONE], &[])
-            .unwrap();
+        let (_, values, bounds) = later.observed_after(I::point(1.125), &[I::ONE]).unwrap();
         assert_eq!(values[6], 0.5);
         assert_eq!(values[7], 0.5_f64.sin());
         assert!(bounds[7].lo <= values[7] && bounds[7].hi >= values[7]);

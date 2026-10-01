@@ -728,21 +728,10 @@ impl NonlinearContinuous {
     }
 
     pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
+        let mut next = self.mapped_event(time, window, parameters)?;
         if !self.event_dependent || self.parameters == parameters {
-            return Ok(self.clone());
+            return Ok(next);
         }
-        if !time.is_finite() || !window.finite() || window.hi != time {
-            return Err(Error::new(
-                "event_resolution",
-                "nonlinear event representative must be the upper endpoint of its time enclosure",
-            ));
-        }
-        let mut next = Self::initialized(
-            self.context.clone(),
-            parameters.to_vec(),
-            time,
-            Some(self.state_bounds(window)?),
-        )?;
         if window.lo != window.hi {
             let elapsed = I {
                 lo: 0.0,
@@ -756,13 +745,33 @@ impl NonlinearContinuous {
                         "cannot certify nonlinear event-to-representative trajectory tube",
                     )
                 })?;
-            // Include BOTH pre-event history uncertainty and post-event flow.
-            // Only reset states were clamped; every other call-site history
-            // survives, including all rounding and event-time uncertainty.
             next.initial = image;
         }
         next.propagate()?;
         Ok(next)
+    }
+
+    pub(super) fn mapped_event(
+        &self,
+        time: f64,
+        window: I,
+        parameters: &[I],
+    ) -> Result<Self, Error> {
+        if !self.event_dependent || self.parameters == parameters {
+            return Ok(self.clone());
+        }
+        if !time.is_finite() || !window.finite() || window.hi != time {
+            return Err(Error::new(
+                "event_resolution",
+                "nonlinear event representative must be the upper endpoint of its time enclosure",
+            ));
+        }
+        Self::initialized(
+            self.context.clone(),
+            parameters.to_vec(),
+            time,
+            Some(self.state_bounds(window)?),
+        )
     }
 }
 

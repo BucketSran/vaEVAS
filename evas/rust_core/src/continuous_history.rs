@@ -41,6 +41,25 @@ impl LinearContinuous {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
+        self.event_candidate(time, time_bounds, parameters, true)
+    }
+
+    pub(crate) fn mapped_event(
+        &self,
+        time: f64,
+        time_bounds: I,
+        parameters: &[I],
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, time_bounds, parameters, false)
+    }
+
+    fn event_candidate(
+        &self,
+        time: f64,
+        time_bounds: I,
+        parameters: &[I],
+        propagate_to_representative: bool,
+    ) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
         }
@@ -107,7 +126,7 @@ impl LinearContinuous {
                 "continuous network disappeared during event replay",
             )
         })?;
-        if time_bounds.lo != time_bounds.hi {
+        if propagate_to_representative && time_bounds.lo != time_bounds.hi {
             // Enclose post-event propagation from any actual event in its root
             // box to the representative time. Prior and future dynamics both
             // participate; no event-time uncertainty is silently discarded.

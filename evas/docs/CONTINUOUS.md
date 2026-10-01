@@ -1,6 +1,6 @@
 # 连续动态联合求解与动态 cross
 
-此页描述 EVAS 0.12.0 / IR16 的限定连续动态能力；本轮在本地分支等待 review，版本 tag 尚未发布。
+此页描述 EVAS 0.12.1 / IR16 的限定连续动态能力；本轮在本地分支等待 review，版本 tag 尚未发布。
 已合并基线为 PR31 / `main` 的 `09b4222`；原 0.10.0、0.11.0 收据保留执行时的身份。
 IR16 的传输和已接受模型的数学含义未改变，本次扩展不要求 IR16 重新编译。
 能力 ID：DYNAMICS、CROSS、COMPOSE、LANG。旧 IR15 检查点和实验收据保留原身份。
@@ -154,12 +154,88 @@ b 时重新使用点输入、新历史和 Q 的区间检查原电压关系，未
 0.12.0 将这类非点 cross 的条件语义明确为数学根 tau；此前只在代表时刻 b 判断。
 例如 `u=3t, cross(u-1)` 的 `u>1` 在 tau=1/3 为假，不能因 b 的舍入延迟变成真。
 这是本轮需要 review 的观察约定，不据此声称与 Spectre 的事件回调取值一致；点时刻 timer 仍在该点判断。
+后续共同接口须区分真根 tau、实际触发 te 和代表时刻 b，见
+[第一批生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
+LRM 允许 cross 在真根之后的容差窗口触发；不能用这里的 `g(tau)=0` 证明 `g(te)=0`。
+0.12.1 用共同事件对象显式保留 `te=tau` 的策略，并记录观测区间；尚未增加可选择的晚触发策略。
 积分的候选 reset 被认证为零时，包括显式传入零 reset 和释放复位的情形，
 输出与严格 proper 滤波一样在事件瞬间连续；同刻重放保留旧历史在 tau 上的采样，
 不能把从 tau 到 b 的新流再当作 tau 的采样。reset 被认证为非零时使用 IC，
 直接通路按其事件后关系处理；不能确定 reset 为零或非零时仍拒绝。
 若同刻关系不能收敛、状态不确定性超预算、输出放大后超预算或路径不确定，候选被拒绝。
 这种保守的区间联立不支持一般非线性事件赋值或复位固定点环。
+
+<a id="shared-lifecycle-closure"></a>
+
+### 0.12.1：复位观察闭包与未来历史分开
+
+同一事件中的 `rst=1; q=V(z)`，其中 `z=idt(q,1,rst)`，现在读取共同复位后的 z。
+关系 `rst+=1, z+=1, q+=z+` 唯一给出 q+=1。交换这两条独立赋值仍得 1；
+`q=V(z); q=q+1` 则保留局部顺序语义，最终 q=2。后者不允许因闭包试算次数而继续累加。
+积分释放后从 IC 续算；其下游严格 proper 滤波的物理状态不复位、不重新做 DC。
+
+令 `X-=H_accepted(W)` 为旧历史在共同观测区间 W 的包围，`M_Q` 为实际 reset 映射。
+事件闭包的观察量由 `O+(W,Q)=observe(M_Q(X-),U(W),Q)` 给出；它不包含 te 到 b 的新流。
+事件联立求解保持 `Q=Phi(q-,V+)` 和原电压关系，局部赋值始终从同一 q- 重放。
+实际 reset 的积分读 IC；未复位积分、严格 proper 滤波读旧物理状态。
+从冻结观察开始传播允许的同刻变化，观察点值和包围均稳定后，才安装由最终 Q 决定的未来历史。
+之后按前述线性区间指数或非线性 Picard/Taylor 方法传播 te 到 b；
+重放仍须精确保持事件状态、包围和 `same_reset_history`，没有放宽历史比较。
+
+这不是一般非线性复位固定点求解器：结构复位反馈环仍拒绝；每个固定观察下的仿射事件解须唯一。
+有限闭包轮次是受限 reset 依赖传播的实现上限，不能作为任意直接通路反馈有唯一解的证明。
+`H(s)=1`、`q=V(y)`、`y=H(q)` 的事件关系成为 q+=q+，具有多个解；旧准入会接受停住的迭代。
+本批在结构图中检测滤波直接项或导数暴露的瞬时通路经过事件状态回到自身的环，明确报
+`unsupported_operator: instantaneous event feedback`，不把某个已有值当作唯一解。
+这是保守准入，也可能拒绝有唯一解的直接项反馈；其联合求解及认证留待后续。
+依赖图分开表示值和一阶导数：`z'=u` 给出 `u → z'`，而不是 `u → z`；
+`ddt(z)` 则读取 z'。因此正时间瞬态中的 `ddt(idt(q))=q` 恢复瞬时通路，外包恒等滤波或经过内部节点也不能将它隐藏。
+对 `x'=Ax+Bu, y=Cx+Du`，有 `y'=CAx+CBu+Du'`：D 非零保留值直接项与输入导数项；
+严格 proper 的相对阶为 1 时保留 `u → y'`，相对阶至少为 2 时仍隔着物理状态。
+`ddt(idt(idt(q)))` 和二阶低通的一阶导数因此不被当作无状态通路。
+原电压关系在两个图层内传播；事件赋值只连接值层，实际 reset 依赖仍保留。
+这是当前受限一阶导数实现的保守准入，不替代连续模块已有的冲激/高指标拒绝。
+普通局部 `q=q+1`、没有节点采样反馈的直接项更新，以及经过严格 proper 物理状态的采样控制保持可执行。
+未稳定、路径不确定、状态/电压超预算或未来历史验收失败时不提交。
+
+`EventMoment` 将代表时刻 b、共同观测区间 W 与实际触发叶子证书绑定。
+当前非点 cross 仍选择 te=tau；源采样、条件、reset 和未来历史均使用这个共同 W。
+输出 trace 新增可选 `observation_time_bounds=[a,b]`，`time` 仍为存储代表时刻 b；
+点时刻事件省略该字段。它报告不确定性，不能把区间内每个时刻当作一次独立回调。
+IR 程序版本仍为 16，该字段只扩展 JSON 输出元数据。
+
+生产 `Controller` 在准备整批事件和检查下一截止点成功后，一次更新接受帧、事件游标及记录。
+失败不消费日程；成功但丢弃的候选也不安装算子目标。
+实现入口为 [transient.rs](../rust_core/src/transient.rs)、[operators.rs](../rust_core/src/operators.rs)、
+[continuous_history.rs](../rust_core/src/continuous_history.rs) 与 [nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs)。
+直接项及导数暴露的事件环准入检查由 [reset_dependencies.rs](../rust_core/src/reset_dependencies.rs) 维护。
+公共闭式回归见 [test_lifecycle_closure.py](../tests/test_lifecycle_closure.py)，真实控制器回退见
+[transient_lifecycle_tests.rs](../rust_core/src/transient_lifecycle_tests.rs)；
+[本批收据](../../experiments/parallel-gap-integration/results/lifecycle-closure-checks.json)保留 RED、原六个反例、
+两档原矩阵和失败记录。Spectre 复用第一批原始导出，没有新远端执行或性能测量。
+
+<a id="lifecycle-observation-review-fixes"></a>
+
+#### 共同观察与导数依赖的审查修复
+
+`H_accepted(W)` 必须覆盖整个根时刻盒 W。历史是否会被事件修改，只能决定同一时刻的缓存复用，
+不能决定历史是否随时间变化。不可变直接 PWL 积分、滤波和共同连续网络现在都通过区间观察入口；
+纯函数在这些区间上继续求值。直接积分释放保留事件瞬间的旧样本，新的积分流只在未来历史中安装。
+`Evaluation::observed_after` 返回同刻观察，`advanced` 只返回未来历史，避免新 transition 目标参与旧根盒观察。
+这两个阶段的返回类型也不再混用。
+
+独立反例：u=t，在 `cross(u²-2)` 采样 `z=idt(u,0)`，正确值是 1；
+`z=idt(u²,0)` 的正确值是 `2*sqrt(2)/3`。宽根盒 `ttol=1e-5, etol=1e-4` 在
+`vabstol=reltol=1e-7` 下应拒绝；缩窄到 `1e-10,1e-9` 可接受。
+加一个断开的恒零 `idt(0*q,0)` 或外包恒等滤波，不得改变这项误差义务。
+另有四种 `q+=y+=q+` 的等价写法检查非唯一事件环，以及双重积分、二阶滤波、普通局部更新的合法控制组。
+
+transition 只在保留下来的已知斜坡/平台上提供根盒观察；激活点排序仍须认证。
+absdelay、slew、idtmod 的非点事件观察尚无对应区间接口，现在明确拒绝而不退回代表时刻采样；
+精确时刻的原支持保持。该拒绝目前作用于同一模型的算子向量，即使该算子未被事件直接读取也可能保守拒绝。
+这不构成所有算子的连续时间精度证明，也未实现一般事件固定点的唯一性认证。
+新修复的执行身份和验证见[审查修复收据](../../experiments/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)；
+上方共同闭包收据描述修复前快照，不改写为本次成绩。
 
 PR31 开发反例中，`u=t`、`cross(u²-2)` 时采样 `q=10⁶*u`，随后积分 `q²`。
 实际根为 sqrt(2)，所以 `y(10)=2*10¹²*(10-sqrt(2))`。只采样代表时刻的版本
@@ -174,10 +250,10 @@ PR31 开发反例中，`u=t`、`cross(u²-2)` 时采样 `q=10⁶*u`，随后积�
 [同 IR 前后对照及审查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)。
 候选拥有新的不可变历史，正式历史仅在 Frame 全部验收通过后替换。
 查询、失败、丢弃和重试均不改写已接受历史；同刻重放也从同一份已接受状态开始。
-独立复核另发现既存误拒绝：同一事件同时激活积分复位并采样该积分到其输入状态，
+0.12.0 的独立复核另发现既存误拒绝：同一事件同时激活积分复位并采样该积分到其输入状态，
 即使采样状态不参与 reset 谓词，也可能触发 `event_consistency` 的严格历史重放检查。
 精确 timer 和非点 cross、线性和非线性路径均有反例；单独激活复位仍通过。
-这项组合尚未修复，不将其计为支持，也不以放松历史一致性检查绕过。
+该历史误拒绝已由上面的 [0.12.1 共同闭包](#shared-lifecycle-closure)修复；历史失败收据保留，严格重放检查未放松。
 
 ## 多项式非线性积分与误差证明
 

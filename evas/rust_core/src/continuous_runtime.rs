@@ -113,4 +113,14 @@ impl Continuous {
                 .map(|v| Self::Nonlinear(Box::new(v))),
         }
     }
+    pub(crate) fn mapped_event(&self, time: f64, bounds: I, states: &[I]) -> Result<Self, Error> {
+        match self {
+            Self::Linear(v) => v
+                .mapped_event(time, bounds, states)
+                .map(|v| Self::Linear(Box::new(v))),
+            Self::Nonlinear(v) => v
+                .mapped_event(time, bounds, states)
+                .map(|v| Self::Nonlinear(Box::new(v))),
+        }
+    }
 }

@@ -4,7 +4,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 `solve` 对每个样本独立求静态工作点；`transient` 沿物理时间推进输入、事件、实例状态和算子历史。
 贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
 
-当前本地实现为 **EVAS 0.12.0 / IR v16**，等待 review，尚未发布版本 tag。支持范围和剩余缺口以
+当前本地实现为 **EVAS 0.12.1 / IR v16**，等待 review，尚未发布版本 tag。支持范围和剩余缺口以
 [能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
 支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
 以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
@@ -14,6 +14,9 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 不能证明电压预算时明确拒绝。[精度链审查](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)
 绑定历史运行时 `d451605`；[已合并验证](validation/README.md#latest-evas-checkpoint)与本地新检查分别登记。
 旧 IR 1–15 需要重新编译，更严格认证的具体边界见[迁移说明](#ir-v8-migration)。
+
+本轮共同闭包审查的[追加修复](docs/CONTINUOUS.md#lifecycle-observation-review-fixes)统一非点历史观察、
+传播导数恢复的瞬时依赖，并分开同刻观察与未来安装接口；适用边界和新旧验证身份单独记录。
 
 ## 构建与运行
 
@@ -59,7 +62,7 @@ PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experime
 24 个新增开发方法不增加原矩阵分母，前一轮 26/31 的失败归档保留；本轮没有新 Spectre/性能测量。
 独立审查后，`d3daff0` 修复显式零 reset 的事件采样与已有混合历史重启的 DC 误拒绝。
 [修复检查](../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)单独记录新内核、
-回归、原矩阵和未解决边界，不改写 `fd60d11` 的旧收据；同刻实际复位并采样同一积分仍有既存误拒绝。
+回归、原矩阵和当时未解决边界，不改写 `fd60d11` 的旧收据；该快照的实际复位/采样误拒绝已由后续共同闭包修复。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 

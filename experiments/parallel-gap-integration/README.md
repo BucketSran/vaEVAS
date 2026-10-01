@@ -129,9 +129,120 @@ CSV、判定和数值设置与 PR30 一致。27 个新动态开发方法不增�
 保留修复前失败、修复后的 484 Python / 121 Rust 及原矩阵新执行：两档各 31/31，
 62 份 CSV 与 `fd60d11` 和 PR31 一致。原模型、检查器、容差与分母保持冻结。
 修复仅针对显式零 reset 的 tau 采样和已知混合历史重启的 DC 误拒绝；
-独立复核另发现的“同刻实际复位并采样同一积分”误拒绝前后都存在，明确保留为未解决组合。
+独立复核另发现的“同刻实际复位并采样同一积分”误拒绝在该 0.12.0 检查点前后都存在；
+后续修复见[第二批共同闭包](#lifecycle-closure-review)，历史失败不改写。
 爆炸方程探针在 25 秒上限内未得到最终判定，不能计为通过；本轮没有新 Spectre 或性能实验。
 新 raw 在 `runs/mixed-review-fixes-20261001T211952/`，旧失败、旧验证归档与收据保持不变，均为仅本地保留。
+
+<a id="shared-lifecycle-review"></a>
+
+## 共同生命周期：第一批审查
+
+本批只交付[共同契约](../../evas/validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)、
+独立答案和对照证据，未修改求解器。使用本地 `0d255b0` 分支，运行时与 `d3daff0`
+完全相同，EVAS 0.12.0 / IR16；没有合并或发布。
+首次初始化、已知历史续算、事件复位/采样、只读观察和整批提交分别定义。
+数学根 tau、实际触发 te 与内部代表时刻 b 分开记录；同刻采样阶段是待审查的实现选择。
+
+10 类开发探针各两档：cross 严格条件、零复位 timer/非线性 cross 采样、
+实际复位采样正序/逆序/非线性 cross、单独复位、释放时采样、已知历史非线性续算、
+首次积分加滤波。新执行的[综合收据](results/shared-lifecycle-review.json)保留全部 40 条配置记录。
+
+| 最终执行与观测 | EVAS | Spectre 21.1.0.509.isr12 / thu-sui |
+| --- | --- | --- |
+| 新执行配置 | 20 | 20，全部正常退出 |
+| 有限轨迹与独立答案一致 | 12 | 9 |
+| cross 条件/采样分类观察 | 2；根附近采样，严格条件为假 | 2；稍晚采样，严格条件为真 |
+| 其余结果 | 6 个实际复位并采样配置明确拒绝 | 8 条轨迹超本实验 allowance；1 条释放样值超 IC allowance，观测检查未通过 |
+
+Spectre 六个实际复位/采样配置都接近复位后初值 1，而不是复位前约 1.5；
+交换两句赋值仍得到相同分类。EVAS 对同一合法组合报
+`operator history changed during same-time settlement replay`。
+这支持下一批共同闭包的方向；不能通过放宽历史比较或固定追加一次重放掩盖问题。
+
+cross 对照的 base/fine 触发见证分别约为 `0.50390625 T` / `0.5000004768371582 T`，
+EVAS 为 `0.5 T`；时钟采样和输入采样在本实验 allowance 下承认共同 te。
+严格条件可以随合法触发时刻改变，不能从 `g(tau)=0` 推出 `g(te)=0`。
+根触发和晚触发的取舍要随采样及未来历史一起审查，不单独追求条件位一致。
+
+Spectre 的部分复位后滤波偏差约 1e-5 V，在 fine 档仍超当前有限观测判据。
+最大偏差来自滤波 y；检查按该次实际事件见证重新计算解析分段轨迹，已计入早/晚触发。
+本批未调节 Spectre 的 LTE、积分方法或复位附近步长，不能归因为某个未验证的内部算法，
+也不能据此判断 EVAS 普遍更准确。释放 base 的保持样值为 `1.000001300271197`，
+超 `1e-6 V` 的 IC allowance；此条没有完整轨迹误差判定。
+
+观察 allowance 为 `1e-6 V`，平滑组合轨迹采用 `4*allowance`，首次初始化轨迹采用
+`allowance`；均在首次执行前固定，重判没有扩大。边界附近原始导出保留、平滑误差统计排除，
+事件阶段、保持状态和时间见证另查。没有物理观察误差上界、完整边界认证、真实性能测量
+或真实控制流程的失败回退试验；正式资格 I。原 31 条输入、检查器、阈值和分母未动，本批未重跑它们。
+
+首次冻结预检缺少 checker identity 时没有仿真执行。随后 r2 的 20 次 Spectre 尝试中，
+8 条因源码 `.5` 字面量不兼容而失败，12 条正常退出；原失败保留。
+仅将源码改为 `0.5` 后用新身份 r3 重跑全部配置。r2 和 r3 各另有 20 次 EVAS 新请求。
+分析阶段修正了日志显示舍入的误判，以及释放采样的阶段绑定；旧判定保留，新分析绑定独立源码哈希。
+日志设置仅能确认精确提交值落入显示舍入区间，不能宣称日志暴露了内部完整浮点设置。
+
+完整 raw、冻结输入、源码和分析归档为仅本地/thu-sui 保留，路径及清单哈希见收据。
+仓库包含生成器、数学校准和整理结果；这不等于完整 raw 已公开可取。
+以下在仓库根目录执行，使用新目录；远端只运行冻结源码，不修改私有配置：
+
+```sh
+python3 -B evas/validation/check_lifecycle_math.py
+python3 -B -m unittest discover -s experiments/parallel-gap-integration -p test_lifecycle_contract.py -v
+python3 -B experiments/parallel-gap-integration/lifecycle_contract.py build runs/NEW-LIFECYCLE
+python3 -B runs/NEW-LIFECYCLE/snapshot/experiments/parallel-gap-integration/lifecycle_contract.py evas \
+  runs/NEW-LIFECYCLE --kernel evas/rust_core/target/debug/evas-kernel
+# 将冻结输入复制到远端新目录；PROFILE 是已授权使用的私有 Spectre 配置。
+python3 -B runs/NEW-LIFECYCLE/snapshot/experiments/parallel-gap-integration/lifecycle_contract.py spectre \
+  runs/NEW-LIFECYCLE --spectre-profile PROFILE
+# 取回远端目录为本地 runs/NEW-LIFECYCLE/spectre-remote 后：
+python3 -B experiments/parallel-gap-integration/lifecycle_contract.py analyze \
+  runs/NEW-LIFECYCLE --output runs/NEW-LIFECYCLE/analysis.json
+```
+
+第一批独立校准为 7 项纯数学、9 项检查器正反例。其后实施结果另列下节，不改写第一批失败。
+
+<a id="lifecycle-closure-review"></a>
+
+## 共同生命周期：第二批实现待 review
+
+0.12.1 / IR16 在原分支实现[复位观察闭包](../../evas/docs/CONTINUOUS.md#shared-lifecycle-closure)，
+未提交、发布或合并。运行时身份采用完整本地源码快照和内核哈希，基于 `0d255b0`；
+不能把该基准 commit 当作新内核源码。数学、代码入口、RED 与全部失败见[实施收据](results/lifecycle-closure-checks.json)。
+
+实际复位后的 IC 与事件体采样共同求解，闭包稳定后安装未来历史；每轮赋值从同一接受状态重放。
+未复位的积分和严格 proper 滤波保持物理历史；局部 `q=q+1` 只按源程序顺序执行一次。
+真实生产 Controller 的拒绝、丢弃和重试测试覆盖接受时间、状态/误差、历史查询、算子截止点、记录及游标。
+共同观测时间区间进入事件 trace，保留 te=tau 的 cross 策略；没有增加晚触发模式或泛化复位固定点求解。
+审查还发现非严格 proper 滤波的直接项事件反馈可能有多个同刻解：新增结构准入明确拒绝，
+并验证局部顺序更新和经过严格 proper 状态的控制组。先前接受结果与修复前 RED 保留。
+
+| 本批检查 | 实际结果 |
+| --- | --- |
+| 同 IR 生命周期回放 | 20 个新 EVAS 请求：18 个有限一致，2 个 cross 分类；原六个误拒绝全部消除 |
+| Spectre 对照 | 复用第一批 20 条 raw，冻结的最终检查器重判：9 个有限一致、2 个分类、8 个有限不一致、1 个观察检查失败；无新远端执行 |
+| 原 31 条件矩阵 | 62 个新 EVAS 请求，两档各 31/31；62 份 CSV、独立判定、输入及除引擎版本外的设置与前检查点一致 |
+| 开发检查 | 490 Python、122 Rust；另有 1 个旧性能探针 ignored；locked build、Clippy、格式通过 |
+| 独立检查器 | 7 项纯数学及 9 项正反校准，阈值不变 |
+
+复位反例的最大有限输出偏差约 `8.66e-15 V`；这只是该批采样结果，不是一般精度或速度排名。
+原矩阵分母与正式资格 I 不变；完整 raw 和二进制仅本地保留，仓库内收据不等于全部原始资产已公开。
+回放工具曾因原执行快照缺少后期分析接口而预检失败，随后因复制二进制未保留执行权限产生
+20 条启动失败（没有内核进程执行）；这些记录均保留，最终回放另用新目录。
+新增 trace 回归的首稿把 real 状态相对预算设为零而被拒绝，修正为非零相对预算后验证时间绑定，
+没有修改原 20 配置、原矩阵或检查器阈值；通用状态绝对预算仍是缺口。
+
+以下回放需要第一批本地冻结 raw；工具不会重新编译请求或运行 Spectre：
+
+```sh
+python3 -B experiments/parallel-gap-integration/lifecycle_closure.py \
+  --prior runs/lifecycle-contract-20261001150222-r3 \
+  --root runs/NEW-CLOSURE --kernel evas/rust_core/target/debug/evas-kernel
+PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_lifecycle_closure
+```
+
+矩阵分析允许显式 `source_snapshot` 加完整源码哈希描述未提交的运行时；继续逐项核对当前源码、
+冻结源码、执行记录和内核，不把工作树伪标为 clean，也不继承旧 commit 的结果。
 
 ## 复现入口
 
@@ -153,6 +264,21 @@ python3 -B experiments/parallel-gap-integration/analyze.py \
 不能复制旧身份描述新内核。上述是复现入口，不声明外部读者已能取得完整 frozen/raw。
 兼容比较可对 gzip 归档解压出的原 JSON 使用 `--baseline`；历史 Spectre 重判用
 `--spectre-receipt`，不计为新 Spectre 仿真。
+
+<a id="lifecycle-observation-review-fixes"></a>
+
+## 共同闭包审查的追加修复
+
+[追加收据](results/lifecycle-observation-review-fixes.json)记录共同闭包之后的本地源码快照，
+[数学与边界](../../evas/docs/CONTINUOUS.md#lifecycle-observation-review-fixes)随实现更新。
+两个 RED 反例分别针对不可变历史遗漏根时刻误差、ddt 消除积分后遗漏瞬时依赖。
+测试还覆盖恒等包装、断开恒零组件、内部电压中转、保留一层状态的合法组合和直接积分释放。
+同刻观察接口与未来安装接口分开，未来 transition 目标不会被拿回去查询旧根盒。
+
+旧收据和失败日志保留；本次原 31 条件、20 条共同生命周期回放使用原输入/检查器，
+Spectre 部分仅复用历史原始结果。没有新远端仿真、性能测量或合并/发布。
+未提供非点历史观察的算子明确拒绝，精确 timer 的正常支持作为通过控制。
+原始日志与源码/内核快照仍为仅本地可用；公开收据不代表完整原始资产已经公开。
 
 ## 历史与资产
 

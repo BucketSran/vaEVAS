@@ -19,6 +19,51 @@ struct Frame {
     operators: Operators,
 }
 
+// Own every event-commit mutation in the production controller. Preparing a
+// batch or rejecting its deadlines cannot consume a calendar entry or record.
+struct Controller {
+    accepted: Frame,
+    event: usize,
+    records: Vec<EventRecord>,
+}
+
+impl Controller {
+    fn accept_events(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        crossings: &[ScheduledEvent],
+    ) -> Result<(), Error> {
+        let time = crossings[self.event].time;
+        let mut end = self.event;
+        while end < crossings.len() && crossings[end].time == time {
+            end += 1;
+        }
+        let (next, records) = prepare_calendar_batch(
+            model,
+            trajectory,
+            &self.accepted,
+            time,
+            &crossings[self.event..end],
+        )?;
+        next.operators
+            .check_deadline_order(time, crossings.get(end).map(|e| e.bounds()))?;
+        self.accepted = next;
+        self.event = end;
+        self.records.extend(records);
+        Ok(())
+    }
+}
+
+// Current policy chooses the certified mathematical root as the actual cross
+// observation. Its enclosure and fired-root constraints travel together; b is
+// only a representative. No late-trigger policy is silently substituted.
+struct EventMoment<'a> {
+    representative: f64,
+    observation: I,
+    fired_roots: &'a [usize],
+}
+
 #[cfg(test)]
 #[path = "transient_idt_tests.rs"]
 mod idt_accepted_history_tests;
@@ -30,6 +75,10 @@ mod condition_history_tests;
 #[cfg(test)]
 #[path = "transient_window_tests.rs"]
 mod window_history_tests;
+
+#[cfg(test)]
+#[path = "transient_lifecycle_tests.rs"]
+mod lifecycle_controller_tests;
 
 fn prepare_event_with_bounds(
     model: &EventModel,
@@ -43,8 +92,11 @@ fn prepare_event_with_bounds(
         model,
         trajectory,
         accepted,
-        time,
-        (time_bounds, &[]),
+        EventMoment {
+            representative: time,
+            observation: time_bounds,
+            fired_roots: &[],
+        },
         events,
     )
 }
@@ -53,11 +105,14 @@ fn prepare_root_window(
     model: &EventModel,
     trajectory: &Trajectory,
     accepted: &Frame,
-    time: f64,
-    window_and_leaves: (I, &[usize]),
+    moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<Frame, Error> {
-    let (time_bounds, fired_leaves) = window_and_leaves;
+    let EventMoment {
+        representative: time,
+        observation: time_bounds,
+        fired_roots: fired_leaves,
+    } = moment;
     let mut operators = accepted.operators.clone();
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
@@ -95,40 +150,50 @@ fn prepare_root_window(
         }
     };
     let mut prepared = settle(&frozen.values, &frozen.bounds)?;
-    // Every provisional update starts from the same accepted-history base.
-    // A first reset trial must never become the history of the second solve.
-    let advance_candidate = |prepared: &crate::settlement::Prepared| {
-        let changed: Vec<_> = prepared
-            .assigned
-            .iter()
-            .copied()
-            .filter(|&s| {
-                old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi
-            })
-            .collect();
-        frozen.advanced(time_bounds, &prepared.states, &prepared.bounds, &changed)
-    };
-    let (mut operators, settled, settled_bounds) = advance_candidate(&prepared)?;
-    // Equal representative values do not certify a changed history enclosure.
-    if settled != frozen.values || settled_bounds != frozen.bounds {
-        if !operators.permits_same_time_change(&frozen.values, &settled) {
+    let mut observation = (frozen.values.clone(), frozen.bounds.clone());
+    let mut closed = false;
+    // Reset dependencies are structurally acyclic. Propagate their instant
+    // maps until stable, rebuilding assignments from accepted state each time.
+    // This is an observation closure, never a chain of provisional histories.
+    for _ in 0..=model.program.operators.len() {
+        let (mapped, values, bounds) = frozen.observed_after(time_bounds, &prepared.bounds)?;
+        if values == observation.0 && bounds == observation.1 {
+            closed = true;
+            break;
+        }
+        if !mapped.permits_same_time_change(&observation.0, &values) {
             return Err(Error::new(
                 "event_consistency",
                 "operator changed during same-time settlement",
             ));
         }
-        prepared = settle(&settled, &settled_bounds)?;
-        let (replay, replay_values, replay_bounds) = advance_candidate(&prepared)?;
-        if !replay.same_reset_history(&operators)
-            || replay_values != settled
-            || replay_bounds != settled_bounds
-        {
-            return Err(Error::new(
-                "event_consistency",
-                "operator history changed during same-time settlement replay",
-            ));
-        }
-        operators = replay;
+        observation = (values, bounds);
+        prepared = settle(&observation.0, &observation.1)?;
+    }
+    if !closed {
+        return Err(Error::new(
+            "event_consistency",
+            "same-time observation closure did not stabilize",
+        ));
+    }
+    // Only the final closed state may define the future flow and targets.
+    let changed: Vec<_> = prepared
+        .assigned
+        .iter()
+        .copied()
+        .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
+        .collect();
+    let operators = frozen.advanced(time_bounds, &prepared.states, &prepared.bounds, &changed)?;
+    let replay = settle(&observation.0, &observation.1)?;
+    let history_replay = frozen.advanced(time_bounds, &replay.states, &replay.bounds, &changed)?;
+    if prepared.states != replay.states
+        || prepared.bounds != replay.bounds
+        || !history_replay.same_reset_history(&operators)
+    {
+        return Err(Error::new(
+            "event_consistency",
+            "closed event state or future history changed during replay",
+        ));
     }
     if time_bounds.lo != time_bounds.hi {
         // Sampling at tau and observing the committed frame at b are distinct
@@ -202,8 +267,11 @@ fn prepare_batch_with_bounds(
         model,
         trajectory,
         accepted,
-        event_time,
-        (event_bounds, ids),
+        EventMoment {
+            representative: event_time,
+            observation: event_bounds,
+            fired_roots: ids,
+        },
         &blocks,
     )?;
     next.operators.check_deadline_order(event_time, None)?;
@@ -282,6 +350,8 @@ fn prepare_batch_with_bounds(
         }
         records.push(EventRecord {
             time: event_time,
+            observation_time_bounds: (event_bounds.lo != event_bounds.hi)
+                .then_some([event_bounds.lo, event_bounds.hi]),
             event: id,
             origin: model.program.events[id].origin.label(),
             kind,
@@ -407,42 +477,34 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         discarded_trials: 0,
     };
     let mut solutions = Vec::new();
-    let (mut output, mut event, mut knot) = (0, 0, 1);
+    let (mut output, mut knot) = (0, 1);
+    let mut controller = Controller {
+        accepted,
+        event: 0,
+        records: Vec::new(),
+    };
     loop {
-        accepted
-            .operators
-            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
+        controller.accepted.operators.check_deadline_order(
+            controller.accepted.time,
+            crossings.get(controller.event).map(|e| e.bounds()),
+        )?;
         // t=0 is processed after initial_step and before the initial observation.
         // Later events are reached by the same loop after advancing to their time.
-        if event < crossings.len() && crossings[event].time == accepted.time {
-            let event_time = accepted.time;
-            let mut end_event = event;
-            while end_event < crossings.len() && crossings[end_event].time == event_time {
-                end_event += 1;
-            }
-            let (next, records) = prepare_calendar_batch(
-                &model,
-                &trajectory,
-                &accepted,
-                event_time,
-                &crossings[event..end_event],
-            )?;
-            next.operators
-                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
-            // Commit frame, circuit, cursor and history only after all checks.
-            accepted = next;
-            event = end_event;
-            trace.events.extend(records);
+        if controller.event < crossings.len()
+            && crossings[controller.event].time == controller.accepted.time
+        {
+            controller.accept_events(&model, &trajectory, &crossings)?;
         }
-        accepted
-            .operators
-            .check_deadline_order(accepted.time, crossings.get(event).map(|e| e.bounds()))?;
-        if output < trace.times.len() && accepted.time == trace.times[output] {
-            solutions.push(accepted.solution.clone());
-            trace.states.push(accepted.states.clone());
+        controller.accepted.operators.check_deadline_order(
+            controller.accepted.time,
+            crossings.get(controller.event).map(|e| e.bounds()),
+        )?;
+        if output < trace.times.len() && controller.accepted.time == trace.times[output] {
+            solutions.push(controller.accepted.solution.clone());
+            trace.states.push(controller.accepted.states.clone());
             output += 1;
         }
-        if accepted.time == trajectory.config.stop {
+        if controller.accepted.time == trajectory.config.stop {
             break;
         }
         if trace.accepted_steps >= 1_000_000 {
@@ -451,14 +513,19 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 "transient execution exceeded 1,000,000 accepted steps",
             ));
         }
-        let mut time = (accepted.time + trajectory.config.max_step).min(trajectory.knots[knot]);
+        let mut time =
+            (controller.accepted.time + trajectory.config.max_step).min(trajectory.knots[knot]);
         if output < trace.times.len() {
             time = time.min(trace.times[output]);
         }
-        if let Some(deadline) = accepted.operators.next_breakpoint(accepted.time) {
+        if let Some(deadline) = controller
+            .accepted
+            .operators
+            .next_breakpoint(controller.accepted.time)
+        {
             time = time.min(deadline);
         }
-        if time <= accepted.time {
+        if time <= controller.accepted.time {
             return Err(Error::new(
                 "event_resolution",
                 "max_step cannot advance representable time",
@@ -469,35 +536,27 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         let candidate = if model.program.operators.is_empty() {
             None
         } else {
-            Some(prepare_event(&model, &trajectory, &accepted, time, &[]))
-        };
-        if event < crossings.len() && crossings[event].time <= time {
-            let event_time = crossings[event].time;
-            if event_time < time {
-                trace.discarded_trials += 1;
-            }
-            let mut end_event = event;
-            while end_event < crossings.len() && crossings[end_event].time == event_time {
-                end_event += 1;
-            }
-            let (next, records) = prepare_calendar_batch(
+            Some(prepare_event(
                 &model,
                 &trajectory,
-                &accepted,
-                event_time,
-                &crossings[event..end_event],
-            )?;
-            next.operators
-                .check_deadline_order(event_time, crossings.get(end_event).map(|e| e.bounds()))?;
-            accepted = next;
-            event = end_event;
-            trace.events.extend(records);
+                &controller.accepted,
+                time,
+                &[],
+            ))
+        };
+        if controller.event < crossings.len() && crossings[controller.event].time <= time {
+            if crossings[controller.event].time < time {
+                trace.discarded_trials += 1;
+            }
+            controller.accept_events(&model, &trajectory, &crossings)?;
         } else {
             if let Some(candidate) = candidate {
                 let next = candidate?;
-                next.operators
-                    .check_deadline_order(time, crossings.get(event).map(|e| e.bounds()))?;
-                accepted = next;
+                next.operators.check_deadline_order(
+                    time,
+                    crossings.get(controller.event).map(|e| e.bounds()),
+                )?;
+                controller.accepted = next;
             } else {
                 // Without history operators or an event, the state and matrix
                 // are unchanged. Reuse the accepted factorization, but certify
@@ -505,25 +564,26 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 // committing any observation or time advance.
                 let inputs = trajectory.values(time);
                 let input_bounds = trajectory.value_bounds(time);
-                let solution = accepted.circuit.solve(&inputs)?;
+                let solution = controller.accepted.circuit.solve(&inputs)?;
                 let state_bounds = model.certify(
                     &model.conditions.select(&[], &input_bounds)?,
                     &input_bounds,
-                    &accepted.state_bounds,
+                    &controller.accepted.state_bounds,
                     &[],
                     &solution.voltages,
-                    &accepted.states,
+                    &controller.accepted.states,
                 )?;
-                accepted.solution = solution;
-                accepted.state_bounds = state_bounds;
-                accepted.time = time;
+                controller.accepted.solution = solution;
+                controller.accepted.state_bounds = state_bounds;
+                controller.accepted.time = time;
             }
         }
         trace.accepted_steps += 1;
-        if accepted.time == trajectory.knots[knot] {
+        if controller.accepted.time == trajectory.knots[knot] {
             knot += 1;
         }
     }
+    trace.events = controller.records;
     Ok(Response {
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,

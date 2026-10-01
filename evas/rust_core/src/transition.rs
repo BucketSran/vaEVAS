@@ -127,6 +127,27 @@ impl Transition {
         Ok(held)
     }
 
+    pub(crate) fn value_range(&self, times: I) -> Result<I, Error> {
+        if !times.finite()
+            || times.lo > times.hi
+            || self
+                .edge
+                .as_ref()
+                .is_some_and(|edge| times.lo < edge.start_bounds.hi)
+            || self
+                .pending
+                .front()
+                .is_some_and(|(deadline, _, _)| deadline.bounds.lo <= times.hi)
+        {
+            return Err(invalid(
+                "cannot certify transition observation across an activation",
+            ));
+        }
+        // The controller rejects overlapping operator deadlines before this
+        // query; the complete window belongs to this retained ramp/plateau.
+        Ok(self.bounds_at(times))
+    }
+
     fn bounds_at(&self, time: I) -> I {
         match &self.edge {
             Some(edge) if time.lo < edge.end.bounds.hi => {

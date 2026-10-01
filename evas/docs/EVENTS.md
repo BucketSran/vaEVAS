@@ -1,7 +1,13 @@
 # 事件、时间推进与历史
 
-适用范围：EVAS 0.12.0 / IR16 本地候选，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
+适用范围：EVAS 0.12.1 / IR16 本地候选，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
+
+共同重构的第一批审查从[生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)进入：
+首次初始化、已知历史续算、实际复位、只读观察及原子提交分别定义。
+数学根 tau、实际触发 te 与内部代表时刻 b 也分别记录。
+本页已有的同刻联立规则是 EVAS 当前选择；特别是非点 cross 的真根条件约定，
+不能被读成 LRM 要求所有事件体在真根处读取。第一批反例/对照不修改当前求解器。
 
 <a id="event-or"></a>
 
@@ -252,6 +258,11 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 <a id="event-conditions"></a>
 
 ## 受限事件体条件（0.8.0 实现切片，0.9.0 延续）
+
+0.12.1 的[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
+保留每次事件体的局部赋值顺序及整批提交。非点事件日志的可选 `observation_time_bounds`
+报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。当前 cross 策略显式选择 te=tau，
+没有改成 Spectre 的晚触发条件取值；第一批对照仍是这一兼容差异的证据。
 
 0.12.0 的非点 cross 候选在数学根 tau 上认证赋值和条件，代表时刻 b 另作提交电压验收。
 完整根盒保留源/历史误差；若条件差值与实际触发的仿射 guard 有精确的同零集证明，
