@@ -4,7 +4,7 @@
 use crate::event_accuracy::GuardBounds;
 use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
-use crate::ir::{Error, Expression, Origin, Program, Relation, Statement};
+use crate::ir::{Error, EventTrigger, Expression, Origin, Program, Relation, Statement};
 
 #[derive(Clone, Default, PartialEq, Eq)]
 pub(crate) struct Selection {
@@ -33,6 +33,8 @@ pub(crate) struct Conditions {
     bodies: Vec<Vec<Step>>,
     predicates: Vec<Predicate>,
     bounds: Option<GuardBounds>,
+    // Exact zero-set certificates, indexed by calendar leaf, not event body.
+    root_predicates: Vec<Vec<usize>>,
 }
 
 fn compile(
@@ -123,6 +125,7 @@ impl Conditions {
             bodies,
             predicates,
             bounds: None,
+            root_predicates: Vec::new(),
         })
     }
 
@@ -151,6 +154,7 @@ impl Conditions {
     }
 
     pub(crate) fn prepare(&mut self, program: &Program, driven: &[String]) -> Result<(), Error> {
+        self.root_predicates.clear();
         if self.enabled() {
             let expressions: Vec<_> = self
                 .predicates
@@ -161,16 +165,54 @@ impl Conditions {
                 GuardBounds::expressions(program, driven, &expressions)
                     .map_err(|e| Error::new("event_condition", e.message))?,
             );
+            // A root enclosure contains times other than the actual root.
+            // Preserve g(tau)=0 when a predicate has the same proven zero set.
+            // Projection must be exact; rounded matching is never a proof.
+            for event in &program.events {
+                for trigger in event.trigger.leaves()? {
+                    let matches = if let EventTrigger::Cross { guard, .. } = trigger {
+                        let expressions: Vec<_> = std::iter::once(Some(guard))
+                            .chain(self.predicates.iter().map(|p| Some(&p.expression)))
+                            .collect();
+                        GuardBounds::expressions(program, driven, &expressions)
+                            .map(|bounds| {
+                                (0..self.predicates.len())
+                                    .filter(|&i| bounds.same_zero_set(0, i + 1))
+                                    .collect()
+                            })
+                            .unwrap_or_default()
+                    } else {
+                        vec![]
+                    };
+                    self.root_predicates.push(matches);
+                }
+            }
         }
         Ok(())
     }
 
     pub(crate) fn select(&self, events: &[usize], inputs: &[I]) -> Result<Selection, Error> {
-        let values = self
+        self.select_at_roots(events, inputs, &[])
+    }
+
+    pub(crate) fn select_at_roots(
+        &self,
+        events: &[usize],
+        inputs: &[I],
+        fired_leaves: &[usize],
+    ) -> Result<Selection, Error> {
+        let mut values = self
             .bounds
             .as_ref()
             .map(|b| b.values(inputs))
             .unwrap_or_default();
+        for &leaf in fired_leaves {
+            if let Some(predicates) = self.root_predicates.get(leaf) {
+                for &predicate in predicates {
+                    values[predicate] = I::ZERO;
+                }
+            }
+        }
         fn walk(
             body: &[Step],
             values: &[I],

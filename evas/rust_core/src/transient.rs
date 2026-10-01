@@ -39,6 +39,25 @@ fn prepare_event_with_bounds(
     time_bounds: I,
     events: &[usize],
 ) -> Result<Frame, Error> {
+    prepare_root_window(
+        model,
+        trajectory,
+        accepted,
+        time,
+        (time_bounds, &[]),
+        events,
+    )
+}
+
+fn prepare_root_window(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    time: f64,
+    window_and_leaves: (I, &[usize]),
+    events: &[usize],
+) -> Result<Frame, Error> {
+    let (time_bounds, fired_leaves) = window_and_leaves;
     let mut operators = accepted.operators.clone();
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
@@ -52,20 +71,30 @@ fn prepare_event_with_bounds(
     frozen.bounds = base.event_bounds(time, time_bounds)?;
     let inputs = trajectory.values(time);
     let input_bounds = trajectory.range(time_bounds)?.0;
-    let settle = if time_bounds.lo == time_bounds.hi {
-        crate::settlement::prepare
-    } else {
-        crate::settlement::prepare_window
+    let settle = |values: &[f64], bounds: &[I]| {
+        if time_bounds.lo == time_bounds.hi {
+            crate::settlement::prepare(
+                model,
+                events,
+                (&inputs, &input_bounds),
+                &accepted.states,
+                values,
+                old_bounds,
+                bounds,
+            )
+        } else {
+            crate::settlement::prepare_window(
+                model,
+                (events, fired_leaves),
+                (&inputs, &input_bounds),
+                &accepted.states,
+                values,
+                old_bounds,
+                bounds,
+            )
+        }
     };
-    let mut prepared = settle(
-        model,
-        events,
-        (&inputs, &input_bounds),
-        &accepted.states,
-        &frozen.values,
-        old_bounds,
-        &frozen.bounds,
-    )?;
+    let mut prepared = settle(&frozen.values, &frozen.bounds)?;
     // Every provisional update starts from the same accepted-history base.
     // A first reset trial must never become the history of the second solve.
     let advance_candidate = |prepared: &crate::settlement::Prepared| {
@@ -88,15 +117,7 @@ fn prepare_event_with_bounds(
                 "operator changed during same-time settlement",
             ));
         }
-        prepared = settle(
-            model,
-            events,
-            (&inputs, &input_bounds),
-            &accepted.states,
-            &settled,
-            old_bounds,
-            &settled_bounds,
-        )?;
+        prepared = settle(&settled, &settled_bounds)?;
         let (replay, replay_values, replay_bounds) = advance_candidate(&prepared)?;
         if !replay.same_reset_history(&operators)
             || replay_values != settled
@@ -177,12 +198,12 @@ fn prepare_batch_with_bounds(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
-    let next = prepare_event_with_bounds(
+    let next = prepare_root_window(
         model,
         trajectory,
         accepted,
         event_time,
-        event_bounds,
+        (event_bounds, ids),
         &blocks,
     )?;
     next.operators.check_deadline_order(event_time, None)?;

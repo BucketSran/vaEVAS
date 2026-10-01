@@ -23,7 +23,7 @@ pub(crate) fn prepare(
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
-        events,
+        (events, &[]),
         inputs,
         before,
         operators,
@@ -35,7 +35,7 @@ pub(crate) fn prepare(
 
 pub(crate) fn prepare_window(
     model: &EventModel,
-    events: &[usize],
+    events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
     before: &[f64],
     operators: &[f64],
@@ -44,7 +44,7 @@ pub(crate) fn prepare_window(
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
-        events,
+        events_and_roots,
         inputs,
         before,
         operators,
@@ -58,7 +58,7 @@ pub(crate) fn prepare_window(
 #[allow(clippy::too_many_arguments)]
 fn prepare_impl(
     model: &EventModel,
-    events: &[usize],
+    events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
     before: &[f64],
     operators: &[f64],
@@ -67,7 +67,10 @@ fn prepare_impl(
     check_voltages: bool,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
-    let selection = model.conditions.select(events, input_bounds)?;
+    let selection =
+        model
+            .conditions
+            .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?;
     model.check_selection_writers(&selection)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
@@ -79,9 +82,13 @@ fn prepare_impl(
     // state. Substitution roundoff must not replace the physical residual check.
     let circuit = model.circuit_with(&states, operators)?;
     let solution = circuit.solve(inputs)?;
-    // Recheck control flow at the representative time. A small equation
-    // residual cannot certify a branch chosen from rounded input values.
-    if model.conditions.select(events, input_bounds)? != selection {
+    // Replay the same input/root certificate. A small equation residual
+    // cannot certify a branch chosen from rounded representative inputs.
+    if model
+        .conditions
+        .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?
+        != selection
+    {
         return Err(Error::new(
             "event_consistency",
             "condition replay changed the selected path",

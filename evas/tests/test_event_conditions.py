@@ -67,17 +67,12 @@ class ConditionalEvents(unittest.TestCase):
         text = source('if (V(u,r)>=.5) q=2; else q=3;',
                       trigger='cross(V(u,r)-.5,1,.001,.001)')
         self.assertEqual(states(execute(text)), [0,2,2])
-        # A nonrepresentable 1/3 root may be represented later within tolerance.
-        # Decide using exact PWL at the emitted time; never assume guard == 0.
+        # The exact root is 1/3, where u=1. The representative may be later;
+        # an exact matching-guard certificate still proves u>1 is false at tau.
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,1,.001,.001)')
-        try:
-            result = execute(text, points=[[0,0],[1,3]])
-        except KernelError as error:
-            self.assertIn('event_condition', str(error))  # uncertainty is explicit
-        else:
-            event = result['transient']['events'][0]
-            self.assertEqual(event['after'], [2 if 3*Q(event['time'])>1 else 3])
+        result = execute(text, points=[[0,0],[1,3]])
+        self.assertEqual(result['transient']['events'][0]['after'], [3])
 
     def test_rounded_equality_is_not_a_truth_certificate(self):
         controls = [(.1,.9,'>',True), (.2,.7999999999999999,'>=',False)]
