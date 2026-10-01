@@ -387,7 +387,7 @@ fn sin_bounds(input: I) -> Result<I, Error> {
 }
 
 #[derive(Clone)]
-struct ResetExpression {
+pub(crate) struct ResetExpression {
     expression: Expression,
 }
 
@@ -480,11 +480,11 @@ impl ResetTerms {
 }
 
 impl ResetExpression {
-    fn new(expression: Expression) -> Self {
+    pub(crate) fn new(expression: Expression) -> Self {
         Self { expression }
     }
 
-    fn active(&self, states: &[I]) -> Result<bool, Error> {
+    pub(crate) fn active(&self, states: &[I]) -> Result<bool, Error> {
         let terms = reset_terms(&self.expression)?;
         let bound = match reset_exact_sign(&terms, states)? {
             Some(sign) => sign,
@@ -696,9 +696,13 @@ impl Operators {
             };
             // Validate raw indices and ownership before any interval indexing.
             // The kernel must not assume a trusted Python producer.
-            affine(input, program, &origin.instance)?;
+            if matches!(spec, OperatorSpec::Idt { .. }) {
+                crate::continuous::validate_integral_input(input, program, &origin.instance)?;
+            } else {
+                affine(input, program, &origin.instance)?;
+            }
         }
-        let continuous = Continuous::new(program, trajectory, driven)?.map(Arc::new);
+        let continuous = Continuous::new(program, trajectory, driven, states)?.map(Arc::new);
         let mut entries = Vec::new();
         let mut direct = Vec::new();
         for (index, spec) in program.operators.iter().enumerate() {
@@ -883,8 +887,8 @@ impl Operators {
             let changes = match entry {
                 Runtime::Idt { reset: Some(_), .. } | Runtime::Transition { .. } => true,
                 Runtime::Sin(SinInput::Operator { operator, .. }) => changes_on_advance[*operator],
-                Runtime::Continuous(_)
-                | Runtime::Idt { reset: None, .. }
+                Runtime::Continuous(_) => continuous.as_ref().is_some_and(|c| c.changes_on_event()),
+                Runtime::Idt { reset: None, .. }
                 | Runtime::IdtMod(_)
                 | Runtime::Sin(SinInput::Direct(_))
                 | Runtime::AbsDelay(_)
@@ -1160,6 +1164,12 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
+        if !changed.is_empty() {
+            if let Some(continuous) = &self.continuous {
+                self.continuous =
+                    Some(Arc::new(continuous.restarted(time, time_bounds, bounds)?));
+            }
+        }
         for entry in &mut self.entries {
             match entry {
                 Runtime::Continuous(_) => {}
@@ -1191,6 +1201,10 @@ impl Operators {
     }
 
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        match (&self.continuous, &other.continuous) {
+            (Some(a), Some(b)) if !a.same_history(b) => return false,
+            _ => {}
+        }
         self.entries.len() == other.entries.len()
             && self
                 .entries
@@ -1211,6 +1225,10 @@ impl Operators {
         let mut permitted_changes = Vec::with_capacity(self.entries.len());
         for ((entry, &before), &after) in self.entries.iter().zip(previous).zip(current) {
             let permitted = match entry {
+                Runtime::Continuous(_) => self
+                    .continuous
+                    .as_ref()
+                    .is_some_and(|c| c.changes_on_event()),
                 Runtime::Idt {
                     history,
                     reset: Some(_),
@@ -1246,9 +1264,79 @@ mod phase_operator_tests {
     use super::*;
 
     #[test]
+    fn joint_candidates_preserve_both_histories_after_reset_failure_and_discard() {
+        use serde_json::json;
+        for nonlinear in [false, true] {
+            let origin =
+                |column| json!({"source":"joint.va","line":1,"column":column,"instance":"dut"});
+            let z = json!({"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]});
+            let input = if nonlinear {
+                json!({"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},"right":{"op":"power","base":z,"exponent":2}})
+            } else {
+                json!({"op":"affine","constant":0,"terms":[{"node":2,"coefficient":-1}]})
+            };
+            let program:Program=serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","z","y"],
+            "states":[{"instance":"dut","name":"rst","kind":"integer","initial":0}],
+            "operators":[
+                {"kind":"idt","input":input,"ic":1,"reset":{"op":"state","state":0},"origin":origin(1)},
+                {"kind":"idt","input":z,"ic":0,"origin":origin(2)}],
+            "contributions":[
+                {"branch":{"instance":"dut","local_positive":"z","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
+                {"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)}]
+        })).unwrap();
+            let trajectory = Trajectory::new(
+                crate::ir::TransientInputs {
+                    pwl: vec![vec![[0.0, 0.0], [0.5, 0.0], [2.0, 0.0]]],
+                    output_times: vec![0.0, 0.5, 2.0],
+                    stop: 2.0,
+                    max_step: 2.0,
+                },
+                1,
+            )
+            .unwrap();
+            let base = Operators::new(&program, &trajectory, &["u".into()], &[0.0]).unwrap();
+            let original = base.bounds(1.0).unwrap();
+            let frozen = base.evaluation(0.5).unwrap();
+            assert!(frozen
+                .advanced(
+                    I {
+                        lo: 0.5 - 1e-8,
+                        hi: 0.5
+                    },
+                    &[1.0],
+                    &[I::ONE],
+                    &[0]
+                )
+                .is_err());
+            assert_eq!(base.bounds(1.0).unwrap(), original);
+            assert!(frozen
+                .advanced(I::point(0.5), &[1.0], &[I { lo: -1.0, hi: 1.0 }], &[0])
+                .is_err());
+            assert_eq!(base.bounds(1.0).unwrap(), original);
+            let (discarded, _, _) = frozen
+                .advanced(I::point(0.5), &[1.0], &[I::ONE], &[0])
+                .unwrap();
+            let expected_outer = frozen.values[1] + 0.5;
+            assert!((discarded.values(1.0).unwrap()[1] - expected_outer).abs() < 1e-10);
+            let candidate_bounds = discarded.bounds(1.0).unwrap();
+            drop(discarded);
+            assert_eq!(base.bounds(1.0).unwrap(), original);
+            let (retry, _, _) = frozen
+                .advanced(I::point(0.5), &[1.0], &[I::ONE], &[0])
+                .unwrap();
+            assert_eq!(retry.bounds(1.0).unwrap(), candidate_bounds);
+            assert!((retry.values(1.0).unwrap()[0] - 1.0).abs() < 1e-10);
+            let reset_bound = retry.bounds(1.0).unwrap()[0];
+            assert!(reset_bound.lo <= 1.0 && reset_bound.hi >= 1.0);
+        }
+    }
+
+    #[test]
     fn evaluation_trials_reuse_only_immutable_histories_and_recompute_function_dependents() {
         use crate::ir::{TransientInputs, SCHEMA_VERSION};
         use serde_json::json;
+
         let origin =
             |line| json!({"instance":"dut", "source":"snapshot.va", "line":line, "column":1});
         let input = json!({"op":"affine", "constant":0, "terms":[{"node":1,"coefficient":1}]});

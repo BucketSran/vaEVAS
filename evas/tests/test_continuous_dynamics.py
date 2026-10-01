@@ -137,7 +137,7 @@ class AffineIntegralFeedbackContracts(unittest.TestCase):
                     assert_close(self, row["dut:z"], 1.0, delta=2e-9)
                     assert_close(self, row["y"], 0.0, delta=2e-9)
 
-    def test_canceled_internal_voltage_with_hidden_event_state_still_rejects(self):
+    def test_canceled_internal_voltage_with_event_state_has_zero_integral(self):
         expressions = ["V(z,r)-V(z,r)", "0*V(z,r)", "V(z,z)"]
         for expression in expressions:
             with self.subTest(expression=expression):
@@ -146,8 +146,9 @@ class AffineIntegralFeedbackContracts(unittest.TestCase):
                     f"V(z,r)<+V(u,r)+0*q; V(y,r)<+idt({expression},0);"
                 )
                 program = compile_model(body, "real q; electrical z;")
-                with self.assertRaisesRegex(KernelError, "unsupported_operator"):
-                    run(program, {"u": [[0.0, 1.0], [3.0, 1.0]]}, [0.0, 1.0, 3.0], stop=3.0, max_step=3.0)
+                result = run(program, {"u": [[0.0, 1.0], [3.0, 1.0]]}, [0.0, 1.0, 3.0], stop=3.0, max_step=3.0)
+                for value in values(result):
+                    assert_close(self, value, 0.0, delta=1e-10)
 
     def test_output_grid_and_max_step_do_not_define_integral_history(self):
         program = compile_model("V(y,r)<+idt(1-V(y,r),0);")
@@ -244,14 +245,10 @@ class DerivativeContracts(unittest.TestCase):
         for actual, answer in zip(values(result), expected):
             assert_close(self, actual, answer, delta=1e-12)
 
-    def test_ddt_rejects_structural_internal_state_operator_and_guard_use(self):
+    def test_ddt_rejects_event_state_impulses_and_discontinuous_guard_use(self):
         cases = [
-            ("internal", "V(z,r)<+V(u,r); V(y,r)<+ddt(V(z,r));", "electrical z;"),
-            ("canceled_internal", "V(z,r)<+V(u,r); V(y,r)<+ddt(V(z,r)-V(z,r));", "electrical z;"),
             ("state", "@(initial_step) q=0; @(timer(1,0,1e-12)) q=1; V(y,r)<+ddt(q);", "real q;"),
             ("canceled_state", "@(initial_step) q=0; @(timer(1,0,1e-12)) q=1; V(y,r)<+ddt(q-q);", "real q;"),
-            ("operator", "V(y,r)<+ddt(idt(V(u,r),0));", ""),
-            ("canceled_operator", "V(y,r)<+ddt(idt(V(u,r),0)-idt(V(u,r),0));", ""),
         ]
         for name, body, declarations in cases:
             with self.subTest(name=name):
@@ -358,7 +355,6 @@ class AccuracyAndBoundaryContracts(unittest.TestCase):
 
     def test_state_and_reset_feedback_boundaries_are_explicit_rejections(self):
         cases = [
-            ("state_feedback", "@(initial_step) q=0; @(timer(1,0,1e-12)) q=V(y,r); V(y,r)<+idt(1-q,0);"),
             ("reset_feedback", "@(initial_step) q=0; @(timer(1,0,1e-12)) q=V(y,r); V(y,r)<+idt(1,0,q);"),
         ]
         for name, body in cases:

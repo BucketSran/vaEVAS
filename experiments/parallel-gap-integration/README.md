@@ -28,7 +28,7 @@ RAW_MANIFEST SHA256：`a55ea465456f812f05f06be6673e4b9dbc323f38b89ed0f349319521b
 ## IR16 连续动态开发检查点
 
 本地运行时 `ba5ab46e90ec4769e47478a492b80ab2dc7a09b6`，EVAS 0.10.0 / IR16，
-位于 `feat/evas-continuous-dynamics`，尚未合并或发布。
+该实现已随 PR30 合并；执行收据仍保留当时的分支身份，未发布 tag。
 [数学、状态生命周期与组合边界](../../evas/docs/CONTINUOUS.md)记录仿射积分反馈、固定系数
 1–8 阶完整滤波、直接 PWL `ddt` 和状态独立动态 cross。
 
@@ -50,7 +50,8 @@ RAW_MANIFEST SHA256：`956d566e2afbc280aafe4980c1ac916294fe3fe6d8ac10cb9012569ad
 
 ### PR30 初始化 review 修复
 
-最新开发运行时 `071a813db83f92714f9a4f946ab2d0a2159f31b2`，仍为 EVAS 0.10.0 / IR16，尚未合并。
+初始化修复运行时 `071a813db83f92714f9a4f946ab2d0a2159f31b2`，EVAS 0.10.0 / IR16，
+已随 PR30 合并到 main `bedf20f`。原收据的未合并状态描述保留为执行时快照。
 此前单位斜坡的 `ddt` 在 DC 返回 0，但恒等滤波后的输出返回 1，且残差为零。
 修复在整个网络中分别使用 DC 的零输入导数和瞬态 PWL 斜率；查询不修改物理初始状态。
 连续 guard 准入还需排除经滤波直接通路留下的 ddt 跳变。
@@ -67,6 +68,16 @@ RAW_MANIFEST SHA256：`956d566e2afbc280aafe4980c1ac916294fe3fe6d8ac10cb9012569ad
 没有新 Spectre 或性能测量；它们已经用于修复，属于开发证据，正式资格仍 I。
 完整源码快照、内核、日志和波形仅本地保留；其目录及封存清单哈希见修复收据。
 首轮 IR16 和历史 IR15 的收据/归档保持原身份。
+
+## 动态补齐开发检查点
+
+`feat/evas-dynamic-closure` 为 0.11.0 / IR16，基于已合并 PR30，尚未合并或发布。
+内部/算子输入 ddt 采用质量关系；事件后的积分/复位保留全部调用点状态；
+受限多项式积分采用 Picard 管和区间 Taylor。数学、状态和组合边界见
+[连续动态章节](../../evas/docs/CONTINUOUS.md)，精确执行身份见[分支检查收据](results/dynamic-closure-checks.json)。
+原 31 条件和阈值保持不变；新增开发回归不增加分母。
+非线性代数 DAE、混合算子、非精确时刻非线性重启及事件后 guard 重定位仍缺。
+本批没有新 Spectre 或性能测量，完整 raw 仅本地保留，正式资格仍 I。
 
 ## 复现入口
 

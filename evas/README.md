@@ -4,7 +4,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 `solve` 对每个样本独立求静态工作点；`transient` 沿物理时间推进输入、事件、实例状态和算子历史。
 贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
 
-当前开发分支为 **EVAS 0.10.0 / IR v16**，尚未合并或发布版本 tag。支持范围和剩余缺口以
+当前开发分支为 **EVAS 0.11.0 / IR v16**，尚未合并或发布版本 tag。支持范围和剩余缺口以
 [能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
 支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
 以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
@@ -43,7 +43,8 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 最新 IR16 开发运行时 `071a813` 的[初始化 review 修复收据](../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
 保留恒等滤波初值的反例、统一 DC 求值后的组合回归及原矩阵新执行。
-原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；源码仍在开发分支，尚未合并。
+原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；已随 PR30 合并到 main `bedf20f`。
+当前 0.11.0 的三项动态扩展独立登记于[分支收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，尚未合并。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 
@@ -82,7 +83,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 | 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
 | 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
 | 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs`、`idt.rs`、`laplace.rs`、`idtmod.rs` | 校验独立调用点/输入，保存延迟、边沿、限速、积分/滤波/相位历史；`operators.rs` 计算受限 sin 的值与包络 |
-| 连续动态 | `rust_core/src/continuous.rs`、`state_space.rs` | 联立仿射电压/积分/滤波关系，区间矩阵指数传播；不可变历史查询 |
+| 连续动态 | `continuous.rs`、`continuous_runtime.rs`、`continuous_history.rs`、`continuous_derivatives.rs`、`nonlinear_dynamics.rs`、`state_space.rs`（均在 `rust_core/src/`） | 仿射电压关系、导数质量关系、线性/多项式传播和候选历史 |
 | 动态 guard | `rust_core/src/guard_trajectory.rs`、`dynamic_roots.rs` | 连续值/导数包围，区间隔离并认证多项式与算子驱动 cross |
 | IR 重编译 | `src/evas/migrate.py`、`../scripts/recompile_evas_manifests.py` | 从原始 manifest/VA 真正重编译，独占新目录并记录源身份 |
 | 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
@@ -136,8 +137,9 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
 另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
 须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
-IR16 开发分支增加仿射内部节点、线性嵌套和积分电压反馈；状态输入、联合网络 reset 和非线性动态反馈仍拒绝。
-积分输出的受限连续 cross、直接 PWL 的 ddt、完整分子的 1–8 阶 proper 滤波见[连续动态说明](docs/CONTINUOUS.md)；
+PR30 已交付仿射内部节点、线性嵌套和积分电压反馈；本分支增加事件保持输入/联合 reset、
+多项式积分反馈及受限内部/算子输入 ddt。电压代数关系仍须仿射，非线性混合算子和事件后 guard 重定位尚缺。
+精确范围、质量关系、历史生命周期和误差证明见[连续动态说明](docs/CONTINUOUS.md)；
 数学与限制见[算子手册](docs/OPERATORS.md#idt)，历史复位对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 
 事件体条件的精度和支持边界见[事件手册](docs/EVENTS.md#event-conditions)。

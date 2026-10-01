@@ -11,7 +11,9 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 数学样例和输出点数均不增加独立条件数。
 
 IR16 连续动态开发中的新契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
-它们单独计数，尚未合并，不改写原 31 条件或以下 IR15 身份。
+PR30 已合并；回归单独计数，不改写原 31 条件或以下历史 IR15 身份。
+0.11.0 分支补充内部导数、联合事件/复位和多项式积分的独立答案，见
+[动态数学](../docs/CONTINUOUS.md)及[检查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)；尚未合并。
 PR30 review 补充的[初始化组合义务](../docs/CONTINUOUS.md#初始化组合的独立行为义务)覆盖
 DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间与连续 guard 边界；属于开发回归。
 [开发检查与迁移](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)及
@@ -72,7 +74,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/OPERATORS.md#idtmod-与-sin) |
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
-原 31 条件已没有未达标项；更广的非线性/事件状态积分反馈、动态事件、算子组合及验证资格缺口仍见
+原 31 条件已没有未达标项；更广的隐式非线性 DAE、事件后轨迹重定位、混合算子及验证资格缺口仍见
 [能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 <a id="historical-four-backend-baseline"></a>

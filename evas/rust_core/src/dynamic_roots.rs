@@ -152,10 +152,23 @@ fn bisect_monotone(
             ));
         }
         let mid_value = endpoint_value(mid, range)?;
-        let mid_sign = strict_sign(
-            mid_value,
-            "cannot determine dynamic cross sign at bisection midpoint",
-        )?;
+        let Some(mid_sign) = mid_value.sign() else {
+            // The original bracket already proves existence, and the signed
+            // derivative proves uniqueness. The mean value theorem then gives
+            // r in mid - g(mid)/g'([lo,hi]), even when the history enclosure
+            // straddles zero at mid. Retain that proof while contracting.
+            let enclosure = I::point(mid) - mid_value / slope;
+            let next_lo = lo.max(enclosure.lo);
+            let next_hi = hi.min(enclosure.hi);
+            if !enclosure.finite() || next_lo > next_hi || (next_lo == lo && next_hi == hi) {
+                return Err(unresolved(
+                    "dynamic cross history uncertainty prevents root contraction",
+                ));
+            }
+            lo = next_lo;
+            hi = next_hi;
+            continue;
+        };
         if mid_sign == 0 {
             let point = I::point(mid);
             let slope = derivative_bounds(point, derivative)?;
@@ -411,6 +424,25 @@ mod tests {
         assert!(roots[0].bounds.lo <= expected);
         assert!(roots[0].bounds.hi >= expected);
         assert!(roots[0].bounds.hi - roots[0].bounds.lo <= 1e-10);
+    }
+
+    #[test]
+    fn midpoint_history_uncertainty_contracts_without_inventing_a_sign() {
+        for orientation in [-1.0, 1.0] {
+            let mut range =
+                |time: I| Ok((time - I::ONE) * I::point(orientation) + iv(-1e-12, 1e-12));
+            let mut derivative = |_time: I| Ok(I::point(orientation));
+            let roots = isolate(0.0, 2.0, &mut range, &mut derivative, 0, 1e-9, 1e-9).unwrap();
+            assert_eq!(roots.len(), 1);
+            assert!(roots[0].bounds.lo <= 1.0 && roots[0].bounds.hi >= 1.0);
+            assert!(roots[0].bounds.hi - roots[0].bounds.lo <= 1e-9);
+            assert_eq!(
+                isolate(0.0, 2.0, &mut range, &mut derivative, 0, 1e-14, 1e-14)
+                    .unwrap_err()
+                    .kind,
+                "event_resolution"
+            );
+        }
     }
 
     #[test]
