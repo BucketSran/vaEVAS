@@ -655,15 +655,15 @@ impl Evaluation<'_> {
             candidate.event_bounds(self.time, time_bounds)?
         };
         // Event assignments observe the instant tau, not the new flow from
-        // tau to its representative b. Unreset integral / strictly proper
-        // filter outputs are continuous across the event and keep that sample.
+        // tau to its representative b. Integrals whose candidate reset is
+        // inactive and strictly proper filters keep that continuous sample.
         for (i, entry) in candidate.entries.iter().enumerate() {
             if let Runtime::Continuous(slot) = entry {
                 if candidate
                     .continuous
                     .as_ref()
                     .unwrap()
-                    .keeps_value_on_event(*slot)
+                    .keeps_value_on_event(*slot)?
                 {
                     values[i] = self.values[i];
                     bounds[i] = self.bounds[i];
@@ -1311,7 +1311,7 @@ mod phase_operator_tests {
     use super::*;
 
     #[test]
-    fn joint_candidates_preserve_both_histories_after_reset_failure_and_discard() {
+    fn joint_candidates_preserve_integral_and_filter_histories_after_reset_failure_and_discard() {
         use serde_json::json;
         for nonlinear in [false, true] {
             let origin =
@@ -1323,14 +1323,16 @@ mod phase_operator_tests {
                 json!({"op":"affine","constant":0,"terms":[{"node":2,"coefficient":-1}]})
             };
             let program:Program=serde_json::from_value(json!({
-            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","z","y"],
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","z","y","filtered"],
             "states":[{"instance":"dut","name":"rst","kind":"integer","initial":0}],
             "operators":[
                 {"kind":"idt","input":input,"ic":1,"reset":{"op":"state","state":0},"origin":origin(1)},
-                {"kind":"idt","input":z,"ic":0,"origin":origin(2)}],
+                {"kind":"idt","input":z,"ic":0,"origin":origin(2)},
+                {"kind":"laplace_nd","input":z,"numerator":[1],"denominator":[1,2,1],"origin":origin(5)}],
             "contributions":[
                 {"branch":{"instance":"dut","local_positive":"z","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
-                {"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)}]
+                {"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},"positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)},
+                {"branch":{"instance":"dut","local_positive":"filtered","local_negative":"r","kind":"voltage"},"positive":4,"negative":0,"rhs":{"op":"operator","operator":2},"origin":origin(6)}]
         })).unwrap();
             let trajectory = Trajectory::new(
                 crate::ir::TransientInputs {
@@ -1386,6 +1388,13 @@ mod phase_operator_tests {
             let expected_outer = frozen.values[1] + 0.5;
             assert!((discarded.values(1.0).unwrap()[1] - expected_outer).abs() < 1e-10);
             let candidate_bounds = discarded.bounds(1.0).unwrap();
+            // A reset replaces z, not either physical state of the filter.
+            // Reinitializing the filter to the new DC input would give 1.
+            assert!(candidate_bounds[2].hi < 1.0);
+            if !nonlinear {
+                let expected_filter = 1.0 + 2.375 * (-1.0_f64).exp() - 1.5 * (-0.5_f64).exp();
+                assert!((discarded.values(1.0).unwrap()[2] - expected_filter).abs() < 1e-10);
+            }
             drop(discarded);
             assert_eq!(base.bounds(1.0).unwrap(), original);
             let (retry, _, _) = frozen

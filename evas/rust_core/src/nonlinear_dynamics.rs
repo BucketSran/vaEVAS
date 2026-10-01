@@ -313,9 +313,6 @@ impl NonlinearContinuous {
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
         let values = build_value_rows(&operators, &system, &mapping)?;
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
-        // These affine derivatives are used only for filter DC equations;
-        // integral DC equations pin their IC, not their derivative to zero.
-        let mut dc_derivatives = vec![vec![I::ZERO; system.width]; state_count];
         for op in &operators {
             match &program.operators[op.operator] {
                 OperatorSpec::Idt { input, .. } if !op.held_reset => {
@@ -344,33 +341,38 @@ impl NonlinearContinuous {
                 _ => {}
             }
         }
-        let mut known = vec![None; system.width - 1];
-        for op in &operators {
-            if let OperatorSpec::Idt { ic, .. } = &program.operators[op.operator] {
-                known[op.states[0]] = Some(I::point(*ic));
-            }
-        }
-        for (slot, value) in known[state_count..]
-            .iter_mut()
-            .zip(context.trajectory.value_bounds(0.0))
-        {
-            *slot = Some(value);
-        }
-        for slot in &mut known[state_count + driven.len()..] {
-            *slot = Some(I::ZERO);
-        }
-        for op in operators
-            .iter()
-            .filter(|op| op.kind == ContinuousKind::LaplaceNd)
-        {
-            for &state in &op.states {
-                dc_derivatives[state] = functions[state].dc_affine(&known).ok_or_else(||
-                    unsupported(&op.origin, "nonlinear filter DC feedback requires a certified algebraic initialization"))?;
-            }
-        }
         let mut initial = if let Some(state) = restart {
+            // Restart is an IVP with accepted physical history. It must not
+            // impose a new DC equilibrium on the event's future vector field.
             state
         } else {
+            // Only cold initialization needs filter DC equations. Integral
+            // states pin their IC, not their derivative to zero.
+            let mut dc_derivatives = vec![vec![I::ZERO; system.width]; state_count];
+            let mut known = vec![None; system.width - 1];
+            for op in &operators {
+                if let OperatorSpec::Idt { ic, .. } = &program.operators[op.operator] {
+                    known[op.states[0]] = Some(I::point(*ic));
+                }
+            }
+            for (slot, value) in known[state_count..]
+                .iter_mut()
+                .zip(context.trajectory.value_bounds(0.0))
+            {
+                *slot = Some(value);
+            }
+            for slot in &mut known[state_count + driven.len()..] {
+                *slot = Some(I::ZERO);
+            }
+            for op in operators
+                .iter()
+                .filter(|op| op.kind == ContinuousKind::LaplaceNd)
+            {
+                for &state in &op.states {
+                    dc_derivatives[state] = functions[state].dc_affine(&known).ok_or_else(||
+                        unsupported(&op.origin, "nonlinear filter DC feedback requires a certified algebraic initialization"))?;
+                }
+            }
             initial_state(
                 program,
                 &operators,
@@ -595,6 +597,9 @@ impl NonlinearContinuous {
     }
     pub(super) fn operator_spec(&self, slot: usize) -> &OperatorSpec {
         &self.context.program.operators[self.operators[slot].operator]
+    }
+    pub(super) fn reset_active(&self, slot: usize) -> bool {
+        self.operators[slot].held_reset
     }
     pub(super) fn changes_on_event(&self) -> bool {
         self.event_dependent

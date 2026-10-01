@@ -1,6 +1,7 @@
 """Independent dynamic composition answers, separate from the frozen 31 cases."""
 import math
 import unittest
+from fractions import Fraction
 
 from evas.runtime import KernelError
 from test_continuous_dynamics import compile_model, run, rows, values, assert_close
@@ -269,14 +270,29 @@ class NonlinearIntegralContracts(unittest.TestCase):
         self.assertAlmostEqual(events[0]["time"],1,delta=1e-9)
 
     def test_nonlinear_mixed_filter_preserves_nonstationary_integral_ic(self):
-        program = compile_model(
-            "V(z,r)<+idt(-pow(V(z,r),2),1); "
-            "V(y,r)<+laplace_nd(V(z,r),'{1,1},'{1,1});", "electrical z;")
-        times = [0, .5, 1]
-        result = run(program, times=times, stop=1, vabstol=1e-10, reltol=0)
-        for t, row in zip(times, rows(result)):
-            assert_close(self, row["dut:z"], 1/(1+t), delta=1e-10)
-            assert_close(self, row["y"], 1/(1+t), delta=1e-10)
+        for numerator, times in [("'{1,1}", [0, .5, 1]),
+                                 ("'{1}", [0, .125, .25, .5])]:
+            with self.subTest(numerator=numerator):
+                program = compile_model(
+                    "V(z,r)<+idt(-pow(V(z,r),2),1); "
+                    f"V(y,r)<+laplace_nd(V(z,r),{numerator},'{{1,1}});", "electrical z;")
+                result = run(program, times=times, stop=times[-1], vabstol=1e-10, reltol=0)
+                for t, row in zip(times, rows(result)):
+                    expected = 1/(1+t)
+                    if numerator == "'{1}":
+                        # y'+y=1/(1+t), y(0)=1. Independent integrating factor:
+                        # y=e^-t*(1+integral_0^t e^s/(1+s) ds).
+                        # a_k=1/k!-a_(k-1), |a_k|<=1. At t<=.5 the
+                        # 81-term integral tail is < .5^82/(82*.5) < 1e-26.
+                        x = Fraction.from_float(t)
+                        coefficient = Fraction(0)
+                        area = Fraction(0)
+                        for k in range(81):
+                            coefficient = Fraction(1, math.factorial(k))-coefficient
+                            area += coefficient*x**(k+1)/(k+1)
+                        expected = math.exp(-t)*float(1+area)
+                    assert_close(self, row["dut:z"], 1/(1+t), delta=1e-10)
+                    assert_close(self, row["y"], expected, delta=1e-10)
 
     def test_uncertain_nonlinear_restart_does_not_discard_event_time_error(self):
         program = compile_model(

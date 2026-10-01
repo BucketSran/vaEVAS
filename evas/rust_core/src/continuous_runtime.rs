@@ -32,20 +32,30 @@ impl Continuous {
             Self::Nonlinear(_) => true,
         }
     }
-    pub(crate) fn keeps_value_on_event(&self, slot: usize) -> bool {
+    pub(crate) fn keeps_value_on_event(&self, slot: usize) -> Result<bool, Error> {
         let spec = match self {
             Self::Linear(v) => &v.context.program.operators[v.slots[slot].operator],
             Self::Nonlinear(v) => v.operator_spec(slot),
         };
-        match spec {
-            OperatorSpec::Idt { reset: None, .. } => true,
+        Ok(match spec {
+            OperatorSpec::Idt { reset, .. } => match self {
+                Self::Linear(v) => !reset
+                    .as_ref()
+                    .map(|expression| {
+                        crate::operators::ResetExpression::new(expression.clone())
+                            .active(&v.parameters)
+                    })
+                    .transpose()?
+                    .unwrap_or(false),
+                Self::Nonlinear(v) => !v.reset_active(slot),
+            },
             OperatorSpec::LaplaceNd {
                 numerator,
                 denominator,
                 ..
             } => numerator.len() < denominator.len() || *numerator.last().unwrap() == 0.0,
             _ => false,
-        }
+        })
     }
     pub(crate) fn changes_on_event(&self) -> bool {
         match self {
