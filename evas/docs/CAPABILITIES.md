@@ -31,10 +31,14 @@
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#slew)、历史 PR15 专项：EVAS 16/16，Spectre 10/16，步长诊断保留 | 内部节点、动态参数、更广组合尚缺；旧测量不替代当前版本执行 |
 | DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；开发新增仿射积分电压反馈/线性嵌套、1–8 阶 proper laplace_nd 完整分子、直接 PWL ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[独立闭式回归](../tests/test_continuous_dynamics.py) | 非线性或事件状态动态反馈、联合 reset、内部/算子 ddt、缺省 IC、动态参数、长时间范围和数值预算尚缺 |
 | COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；开发新增线性积分/滤波闭包经过算子和电压关系，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值 | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；事件驱动联合网络、非线性动态组合待契约 |
-| QUALIFICATION：独立验收 | IR16 开发检查点重跑原 31 条件两档各 31/31；连续动态的独立数学答案、不变性与失败回归 | [IR16 检查收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[IR16 矩阵](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)、[已合并 IR15 证据](../validation/README.md#latest-evas-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
+| QUALIFICATION：独立验收 | IR16 初始化修复检查点重跑原 31 条件两档各 31/31；连续动态的独立数学答案、不变性、区间与失败回归 | [最新初始化 review 收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[已合并 IR15 证据](../validation/README.md#latest-evas-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
 | PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 最新精度链未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
 
 ## 工作与证据身份
+
+最新开发运行时 `071a813` 的[初始化 review 修复](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
+统一整个连续网络的 DC 求值，补充组合不变性和连续 guard 边界；原矩阵新执行与首轮 IR16 波形一致。
+源码仍在 PR30 开发分支，未合并；测试与完整 raw 可用性分别见收据。
 
 本地开发运行时 `ba5ab46` 的 [IR16 新执行](../../experiments/parallel-gap-integration/README.md#continuous-dynamics)
 包括原矩阵两档、连续动态独立回归和仓库全部可运行 manifest 的重编译/执行。

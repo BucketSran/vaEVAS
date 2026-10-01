@@ -146,9 +146,14 @@ INIT-C1–4 和网格/断点观察由 `ContinuousInitializationContracts` 检查
 ## 检查点与审阅入口
 
 本地开发运行时 `ba5ab46e90ec4769e47478a492b80ab2dc7a09b6` 固定 EVAS 0.10.0 / IR16，
-尚未合并或发布。[检查与迁移收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
+是初始化 review 修复前的检查点。[检查与迁移收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 绑定源码、测试、工具环境与内核；[原矩阵收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
 记录最终代码的新执行及 IR15 字节兼容性。完整 raw 仅本地保留，历史 IR15 收据没有改写。
+
+最新初始化修复运行时为 `071a813db83f92714f9a4f946ab2d0a2159f31b2`，仍为 EVAS 0.10.0 / IR16，
+尚未合并或发布。[review 修复收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
+保留旧内核的失败、新旧内核对相同 IR 请求的初值对照、新组合回归和原矩阵新执行。
+旧检查点的小残差没有发现 ddt 下游的错误 DC 值；最新修复统一了该阶段的整个网络求值。
 
 审阅时依次核对：贡献累加和代数消元是否保持原关系；每个调用点的状态/初值是否唯一；
 历史包围及根盒是否传入电压和事件验收；结构依赖是否先于相消检查组合边界。

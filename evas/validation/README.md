@@ -15,9 +15,12 @@ IR16 连续动态开发中的新契约与解析回归见[连续动态说明](../
 PR30 review 补充的[初始化组合义务](../docs/CONTINUOUS.md#初始化组合的独立行为义务)覆盖
 DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间与连续 guard 边界；属于开发回归。
 [开发检查与迁移](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)及
-[新原矩阵执行](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
+[首轮原矩阵执行](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
 绑定运行时 `ba5ab46`：两档各 31/31，62 份 CSV 与 IR15 基线逐字节一致，
 数值设置不变，仅引擎版本元数据更新；没有新 Spectre 执行或性能测量。
+[最新初始化修复收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
+绑定 `071a813`，保留同一 IR 请求的修复前后反例及新组合回归；原矩阵两档新执行仍各 31/31，
+62 份 CSV、判定和生效设置与首轮 IR16 一致。
 
 先看下面的已合并 EVAS 检查点；跨后端比较另见历史基线。实现的持续状态以
 [能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
