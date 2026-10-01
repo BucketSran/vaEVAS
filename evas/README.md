@@ -4,7 +4,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 `solve` 对每个样本独立求静态工作点；`transient` 沿物理时间推进输入、事件、实例状态和算子历史。
 贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
 
-当前开发分支为 **EVAS 0.11.0 / IR v16**，尚未合并或发布版本 tag。支持范围和剩余缺口以
+当前实现为 **EVAS 0.11.0 / IR v16**，尚未发布版本 tag。支持范围和剩余缺口以
 [能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
 支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
 以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
@@ -12,7 +12,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 
 瞬态的 PWL、采样状态和算子历史误差进入输出验收。多项式瞬态的点输入也要求根盒证明；
 不能证明电压预算时明确拒绝。[精度链审查](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)
-绑定历史运行时 `d451605`；[已合并 PR30 验证](validation/README.md#latest-evas-checkpoint)与本分支新检查分别登记。
+绑定历史运行时 `d451605`；[已合并 PR30 验证](validation/README.md#latest-evas-checkpoint)与后续新检查分别登记。
 旧 IR 1–15 需要重新编译，更严格认证的具体边界见[迁移说明](#ir-v8-migration)。
 
 ## 构建与运行
@@ -44,11 +44,13 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
 保留恒等滤波初值的反例、统一 DC 求值后的组合回归及原矩阵新执行。
 原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；已随 PR30 合并到 main `bedf20f`。
-当前 0.11.0 的三项动态扩展独立登记于[分支收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，尚未合并。
+0.11.0 三项动态扩展的首轮执行独立登记于[检查收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)。
 首轮运行时 `71c6ceb` 的 450 Python、116 Rust 与 Clippy/格式/数学/冻结身份检查通过；一项性能探针 ignored。
 原矩阵 62 次新执行，两档各 31/31，CSV、判定和数值设置与 PR30 一致；没有新 Spectre/性能测量。
 后续 `4642cd2` 的[事件窗口检查](../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)
-覆盖非线性根盒重启及其采样拒绝边界：456 Python、117 Rust、原矩阵两档各 31/31，仍未合并。
+覆盖非线性根盒重启及其采样拒绝边界：456 Python、117 Rust、原矩阵两档各 31/31。
+合并前审查 `d06e7f3` 的[最终检查](../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)
+统一线性/非线性事件准入，并拒绝时间盒内部代表时刻的联合重启；458 Python、118 Rust 通过。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 
@@ -100,13 +102,13 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-当前开发分支 Python 前端与 Rust 内核使用 IR v16；版本迁移规则见[下文](#ir-v8-migration)。
+当前实现 Python 前端与 Rust 内核使用 IR v16；版本迁移规则见[下文](#ir-v8-migration)。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前开发分支表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
@@ -141,7 +143,7 @@ EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline 
 瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
 另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
 须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
-PR30 已交付仿射内部节点、线性嵌套和积分电压反馈；本分支增加事件保持输入/联合 reset、
+PR30 已交付仿射内部节点、线性嵌套和积分电压反馈；0.11.0 增加事件保持输入/联合 reset、
 多项式积分反馈及受限内部/算子输入 ddt。电压代数关系仍须仿射，非线性混合算子和事件后 guard 重定位尚缺。
 精确范围、质量关系、历史生命周期和误差证明见[连续动态说明](docs/CONTINUOUS.md)；
 数学与限制见[算子手册](docs/OPERATORS.md#idt)，历史复位对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
@@ -180,7 +182,7 @@ PR30 已交付仿射内部节点、线性嵌套和积分电压反馈；本分支
 
 ## IR 与贡献契约
 
-当前开发分支使用 IR v16，增加 ddt、连续动态网络与动态 guard，延续 v11 的 idt 复位与逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v16，增加 ddt、连续动态网络与动态 guard，延续 v11 的 idt 复位与逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；`select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
@@ -219,7 +221,7 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 Program 和成功 Response 的 `schema_version` 均为 **16**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
 `invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–15 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用，IR15 main 内核不能消费此开发分支的 IR16。
+前端与内核须配套使用，旧 IR15 内核不能消费 IR16。
 
 仓库可运行 manifest 的默认范围为 `evas/examples/`。批量工具读取原 VA 和实例参数，写入新的 IR16，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：

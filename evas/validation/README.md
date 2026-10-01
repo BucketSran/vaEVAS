@@ -12,12 +12,12 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 <a id="latest-evas-checkpoint"></a>
 
-### 已合并 PR30 与动态扩展分支
+### IR16 连续动态与动态补齐检查点
 
 IR16 连续动态的契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
 PR30 已合并；回归单独计数，不改写原 31 条件或以下历史 IR15 身份。
-0.11.0 分支补充内部导数、联合事件/复位和多项式积分的独立答案，见
-[动态数学](../docs/CONTINUOUS.md)及[检查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)；尚未合并。
+0.11.0 补充内部导数、联合事件/复位和多项式积分的独立答案，见
+[动态数学](../docs/CONTINUOUS.md)及[检查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)。
 PR30 review 补充的[初始化组合义务](../docs/CONTINUOUS.md#初始化组合的独立行为义务)覆盖
 DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间与连续 guard 边界；属于开发回归。
 [开发检查与迁移](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)及
@@ -33,7 +33,10 @@ DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间�
 新增 27 个动态开发方法单独计数；没有新 Spectre 执行或性能测量。
 后续 `4642cd2` 的[根盒重启与采样边界检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)
 重跑原矩阵两档各 31/31，456 Python、117 Rust 通过（另有一项性能探针 ignored）。
-动态开发方法增至 33 个，不改变原条件或正式资格的分母；该分支仍未合并。
+该执行时动态开发方法为 33 个，不改变原条件或正式资格的分母。
+最终审查 `d06e7f3` 的[新执行与反例](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)
+覆盖线性采样/条件及重启代表时刻，458 Python、118 Rust 通过（另有一项性能探针 ignored）。
+35 个动态开发方法与原矩阵分别计数，两档仍各 31/31。
 
 跨后端比较与 IR15 检查点见下面的历史记录。实现的持续状态以
 [能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
