@@ -6,6 +6,7 @@ use super::*;
 
 const ORDER: usize = 12;
 const MAX_STEPS: usize = 16_384;
+const TUBE_ATTEMPTS: usize = 16;
 type Jet = Vec<I>;
 
 #[derive(Clone)]
@@ -159,6 +160,19 @@ impl NonlinearContinuous {
         start: f64,
         restart: Option<Vec<I>>,
     ) -> Result<Self, Error> {
+        let mut result = Self::initialized(context, parameters, start, restart)?;
+        result.propagate()?;
+        Ok(result)
+    }
+
+    // Compile the new mode and apply reset before propagating. A candidate
+    // restart must first enclose its uncertain event-to-representative flow.
+    fn initialized(
+        context: Arc<Context>,
+        parameters: Vec<I>,
+        start: f64,
+        restart: Option<Vec<I>>,
+    ) -> Result<Self, Error> {
         let program = &context.program;
         let driven = driven_node_indices(program, &context.driven)?;
         let mut sources = vec![None; program.nodes.len()];
@@ -257,7 +271,7 @@ impl NonlinearContinuous {
                 initial[i] = I::point(*ic);
             }
         }
-        let mut result = Self {
+        Ok(Self {
             context,
             parameters,
             functions,
@@ -265,9 +279,7 @@ impl NonlinearContinuous {
             steps: Vec::new(),
             start,
             event_dependent,
-        };
-        result.propagate()?;
-        Ok(result)
+        })
     }
 
     fn jets(&self, state: &[I], source: &[I], slopes: &[I], order: usize) -> Vec<Jet> {
@@ -316,30 +328,7 @@ impl NonlinearContinuous {
             .zip(slopes)
             .map(|(&u, &m)| u + elapsed * m)
             .collect();
-        let point_variables: Vec<_> = state.iter().chain(&source_tube).map(|&v| vec![v]).collect();
-        let f: Vec<_> = self
-            .functions
-            .iter()
-            .map(|p| p.jet(&point_variables, 0)[0])
-            .collect();
-        let tube: Vec<_> = state
-            .iter()
-            .zip(&f)
-            .map(|(&v, &d)| {
-                let radius = (duration * I::point(d.magnitude().max(1e-15)) * I::point(2.0)).hi;
-                v + I {
-                    lo: -radius,
-                    hi: radius,
-                }
-            })
-            .collect();
-        let variables: Vec<_> = tube.iter().chain(&source_tube).map(|&v| vec![v]).collect();
-        for ((&initial, &box_), function) in state.iter().zip(&tube).zip(&self.functions) {
-            let image = initial + elapsed * function.jet(&variables, 0)[0];
-            if !image.finite() || !box_.finite() || image.lo <= box_.lo || image.hi >= box_.hi {
-                return None;
-            }
-        }
+        let (tube, _) = self.picard_enclosure(state, &source_tube, elapsed)?;
         let coefficients = self.jets(state, source, slopes, ORDER);
         let remainder: Vec<_> = self
             .jets(&tube, &source_tube, slopes, ORDER + 1)
@@ -363,6 +352,63 @@ impl NonlinearContinuous {
             return None;
         }
         Some(step)
+    }
+
+    // Bounds all flows starting anywhere in `initial`, with any source value
+    // in `source`, over any duration in [0, elapsed.hi]. This needs no PWL
+    // slope assumption and is therefore also valid across a source corner.
+    fn picard_enclosure(
+        &self,
+        initial: &[I],
+        source: &[I],
+        elapsed: I,
+    ) -> Option<(Vec<I>, Vec<I>)> {
+        let evaluate = |state: &[I]| {
+            let variables: Vec<_> = state.iter().chain(source).map(|&v| vec![v]).collect();
+            self.functions
+                .iter()
+                .map(|p| p.jet(&variables, 0)[0])
+                .collect::<Vec<_>>()
+        };
+        let mut derivative = evaluate(initial);
+        for _ in 0..TUBE_ATTEMPTS {
+            let tube: Vec<_> = initial
+                .iter()
+                .zip(&derivative)
+                .map(|(&v, &d)| {
+                    let radius =
+                        (I::point(elapsed.hi) * I::point(d.magnitude().max(1e-15)) * I::point(2.0))
+                            .hi;
+                    let expanded = v + I {
+                        lo: -radius,
+                        hi: radius,
+                    };
+                    // Even zero flows and sub-ulp durations require a strict
+                    // tube around every possible initial value.
+                    I {
+                        lo: expanded.lo.next_down(),
+                        hi: expanded.hi.next_up(),
+                    }
+                })
+                .collect();
+            if tube.iter().any(|v| !v.finite()) {
+                return None;
+            }
+            derivative = evaluate(&tube);
+            let image: Vec<_> = initial
+                .iter()
+                .zip(&derivative)
+                .map(|(&v, &d)| v + elapsed * d)
+                .collect();
+            if image
+                .iter()
+                .zip(&tube)
+                .all(|(v, z)| v.finite() && v.lo > z.lo && v.hi < z.hi)
+            {
+                return Some((tube, image));
+            }
+        }
+        None
     }
 
     fn propagate(&mut self) -> Result<(), Error> {
@@ -474,6 +520,15 @@ impl NonlinearContinuous {
     }
     pub(super) fn derivative_bounds(&self, time: I) -> Result<Vec<I>, Error> {
         let state = self.range_bounds(time)?;
+        let source = self.source_bounds(time);
+        let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
+        Ok(self
+            .functions
+            .iter()
+            .map(|p| p.jet(&variables, 0)[0])
+            .collect())
+    }
+    fn source_bounds(&self, time: I) -> Vec<I> {
         let trajectory = &self.context.trajectory;
         let mut source = trajectory.value_bounds(time.lo);
         for t in std::iter::once(time.hi).chain(
@@ -487,29 +542,44 @@ impl NonlinearContinuous {
                 *u = u.hull(v);
             }
         }
-        let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
-        Ok(self
-            .functions
-            .iter()
-            .map(|p| p.jet(&variables, 0)[0])
-            .collect())
+        source
     }
     pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
         }
-        if window.lo != window.hi {
+        if !time.is_finite() || !window.finite() || window.hi != time {
             return Err(Error::new(
                 "event_resolution",
-                "nonlinear event restart requires an exactly certified event time",
+                "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
         }
-        Self::build(
+        let mut next = Self::initialized(
             self.context.clone(),
             parameters.to_vec(),
             time,
             Some(self.range_bounds(window)?),
-        )
+        )?;
+        if window.lo != window.hi {
+            let elapsed = I {
+                lo: 0.0,
+                hi: (I::point(time) - I::point(window.lo)).hi,
+            };
+            let (_, image) = next
+                .picard_enclosure(&next.initial, &self.source_bounds(window), elapsed)
+                .ok_or_else(|| {
+                    Error::new(
+                        "event_resolution",
+                        "cannot certify nonlinear event-to-representative trajectory tube",
+                    )
+                })?;
+            // Include BOTH pre-event history uncertainty and post-event flow.
+            // Only reset states were clamped; every other call-site history
+            // survives, including all rounding and event-time uncertainty.
+            next.initial = image;
+        }
+        next.propagate()?;
+        Ok(next)
     }
 }
 
@@ -614,5 +684,61 @@ mod tests {
         assert!(at_start.lo <= uncertain.lo && at_start.hi >= uncertain.hi);
         let at_end = step.range(I::point(1.0 / 32.0))[0];
         assert!(at_end.hi - at_end.lo >= uncertain.hi - uncertain.lo);
+    }
+
+    #[test]
+    fn uncertain_restart_encloses_new_flow_across_source_corner_without_mutating_base() {
+        use serde_json::json;
+        let origin = json!({"source":"window.va","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "states":[{"instance":"dut","name":"q","kind":"integer","initial":0}],
+            "operators":[{"kind":"idt","ic":0,"origin":origin,
+                "input":{"op":"multiply","left":{"op":"state","state":0},
+                    "right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}}}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl: vec![vec![[0.0, 0.0], [0.5, 1.0], [1.0, 0.0]]],
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            1,
+        )
+        .unwrap();
+        let base = NonlinearContinuous::new(&program, &trajectory, &["u".into()], &[0.0]).unwrap();
+        let original = base.range_bounds(I::point(0.75)).unwrap();
+        let window = I {
+            lo: 0.5 - 1.0 / 1024.0,
+            hi: 0.5 + 1.0 / 1024.0,
+        };
+        // Interior representatives still require a separate timing contract.
+        let failure = base
+            .restarted(window.lo, window, &[I::point(2.0)])
+            .err()
+            .unwrap();
+        assert_eq!(failure.kind, "event_resolution");
+        assert_eq!(base.range_bounds(I::point(0.75)).unwrap(), original);
+        let candidate = base.restarted(window.hi, window, &[I::point(2.0)]).unwrap();
+        let at_start = candidate.range_bounds(I::point(window.hi)).unwrap()[0];
+        // q switches from 0 to 2 at any tau in the window, u is a triangle.
+        // At tau=lo, integral(tau..hi) 2*u^2 is exactly numerator/denominator.
+        // Including the interior source maximum u(.5)=1 is essential here.
+        let numerator = (2_u64 * (1 << 30) - 16 * 511_u64.pow(3)) as f64;
+        let denominator = (3_u64 * (1 << 30)) as f64;
+        assert!(at_start.lo <= 0.0);
+        assert!(
+            crate::interval::sum_products_sign(&[(at_start.hi, denominator), (-numerator, 1.0)])
+                .unwrap()
+                >= 0
+        );
+        let future = candidate.range_bounds(I::point(0.75)).unwrap();
+        assert_eq!(base.range_bounds(I::point(0.75)).unwrap(), original);
+        drop(candidate);
+        let retry = base.restarted(window.hi, window, &[I::point(2.0)]).unwrap();
+        assert_eq!(retry.range_bounds(I::point(0.75)).unwrap(), future);
     }
 }

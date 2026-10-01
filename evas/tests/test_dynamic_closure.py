@@ -168,6 +168,15 @@ class NonlinearIntegralContracts(unittest.TestCase):
             assert_close(self, row["y"], 1/(1+t), delta=1e-10)
             assert_close(self, row["q"], t/(1+t), delta=1e-10)
 
+    def test_zero_initial_derivative_does_not_hide_coupled_state_growth(self):
+        # z'=1, z(0)=0, y'=z^2, y(0)=0 => z=t, y=t^3/3.
+        program = compile_model("V(z,r)<+idt(1,0); V(y,r)<+idt(pow(V(z,r),2),0);", "electrical z;")
+        times = [0, .125, .5, 1]
+        result = run(program, times=times, stop=1, vabstol=1e-10, reltol=0)
+        for t, row in zip(times, rows(result)):
+            assert_close(self, row["dut:z"], t, delta=1e-10)
+            assert_close(self, row["y"], t**3/3, delta=1e-10)
+
     def test_nonlinear_input_source_and_relay_have_exact_integral(self):
         for expression, decl, prefix in [("pow(V(u,r),2)", "", ""),
                                         ("pow(V(z,r),2)", "electrical z;", "V(z,r)<+V(u,r);")]:
@@ -250,8 +259,54 @@ class NonlinearIntegralContracts(unittest.TestCase):
         program = compile_model(
             "@(initial_step) q=1; @(cross(V(u,r)-.1,1,1e-9,1e-8)) q=2; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
-        with self.assertRaisesRegex(KernelError, "nonlinear event restart requires an exactly certified event time"):
-            run(program, {"u": [[0, 0], [1, 3]]}, [0, 1], stop=1)
+        sparse = [0, .125, .5, 1]
+        baseline = None
+        for times, step in [(sparse, 1), ([i/16 for i in range(17)], .0625)]:
+            result = run(program, {"u": [[0, 0], [1, 3]]}, times, stop=1,
+                         max_step=step, vabstol=1e-10, reltol=0)
+            for t, actual in zip(times, values(result)):
+                # Before tau=.1/3: y=1/(1+t); afterwards y=1/(1+2*t-tau).
+                expected = 1/(1+t) if t <= .1/3 else 1/(1+2*t-.1/3)
+                assert_close(self, actual, expected, delta=1e-10)
+            common = [values(result)[times.index(t)] for t in sparse]
+            if baseline is None:
+                baseline = common
+            self.assertEqual(common, baseline)
+
+    def test_nonlinear_root_window_is_rejected_when_voltage_budget_is_tighter(self):
+        program = compile_model(
+            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=2; "
+            "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
+        sources = {"u": [[0, 0], [2, 2]]}
+        times = [0, .5, 1, 1.75, 2]
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            run(program, sources, times, stop=2, vabstol=1e-10, reltol=0)
+        result = run(program, sources, times, stop=2, vabstol=1e-4, reltol=0)
+        tau = math.sqrt(2)
+        for t, actual in zip(times, values(result)):
+            expected = 1/(1+t) if t <= tau else 1/(1+2*t-tau)
+            assert_close(self, actual, expected, delta=1e-4)
+        amplified = compile_model(
+            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=2; "
+            "V(z,r)<+idt(-q*pow(V(z,r),2),1); V(y,r)<+1e6*V(z,r);",
+            "integer q; electrical z;")
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            run(amplified, sources, times, stop=2, vabstol=1e-4, reltol=0)
+
+    def test_uncertain_nonlinear_reset_preserves_the_other_integral(self):
+        program = compile_model(
+            "@(initial_step) rst=0; @(cross(V(u,r)-1,1,1e-9,1e-8)) rst=1; "
+            "@(cross(V(u,r)-2,1,1e-9,1e-8)) rst=0; "
+            "V(z,r)<+idt(-pow(V(z,r),2),1,rst); V(y,r)<+idt(pow(V(z,r),2),0);",
+            "integer rst; electrical z;")
+        times = [0, .125, .375, .5, .75, 1]
+        result = run(program, {"u": [[0, 0], [1, 3]]}, times, stop=1,
+                     vabstol=1e-10, reltol=0)
+        for t, row in zip(times, rows(result)):
+            first = 1/(1+t) if t < 1/3 else 1 if t <= 2/3 else 1/(1+t-2/3)
+            second = t/(1+t) if t < 1/3 else .25+t-1/3 if t <= 2/3 else 7/12+1-first
+            assert_close(self, row["dut:z"], first, delta=1e-10)
+            assert_close(self, row["y"], second, delta=1e-10)
 
 
 if __name__ == "__main__":

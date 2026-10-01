@@ -1298,17 +1298,36 @@ mod phase_operator_tests {
             let base = Operators::new(&program, &trajectory, &["u".into()], &[0.0]).unwrap();
             let original = base.bounds(1.0).unwrap();
             let frozen = base.evaluation(0.5).unwrap();
-            assert!(frozen
-                .advanced(
-                    I {
-                        lo: 0.5 - 1e-8,
-                        hi: 0.5
-                    },
-                    &[1.0],
-                    &[I::ONE],
-                    &[0]
-                )
-                .is_err());
+            let uncertain = frozen.advanced(
+                I {
+                    lo: 0.5 - 1e-8,
+                    hi: 0.5,
+                },
+                &[1.0],
+                &[I::ONE],
+                &[0],
+            );
+            if nonlinear {
+                // A bounded nonlinear flow can cross the source corner. Its
+                // candidate must remain disposable and reproducible.
+                let (candidate, _, _) = uncertain.unwrap();
+                let bounds = candidate.bounds(1.0).unwrap();
+                drop(candidate);
+                let (retry, _, _) = frozen
+                    .advanced(
+                        I {
+                            lo: 0.5 - 1e-8,
+                            hi: 0.5,
+                        },
+                        &[1.0],
+                        &[I::ONE],
+                        &[0],
+                    )
+                    .unwrap();
+                assert_eq!(retry.bounds(1.0).unwrap(), bounds);
+            } else {
+                assert!(uncertain.is_err());
+            }
             assert_eq!(base.bounds(1.0).unwrap(), original);
             assert!(frozen
                 .advanced(I::point(0.5), &[1.0], &[I { lo: -1.0, hi: 1.0 }], &[0])
