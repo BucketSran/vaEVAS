@@ -1,7 +1,8 @@
 # EVAS 能力与缺口总表
 
 核对日期：2026-10-01。当前源码为 **EVAS 0.9.0 / IR v15**，未发布版本 tag。
-本交付的运行时固定于 `d451605bf9991ceea010c68af9cb1143f1b50754`；包版本号不能代替提交身份。
+本检查点的交付与整合记录为 [PR29](https://github.com/BucketSran/vaEVAS/pull/29)。
+运行时固定于 `d451605bf9991ceea010c68af9cb1143f1b50754`；包版本号不能代替提交身份。
 旧 IR 1–14 需要从原始 VA/manifest 重新编译，Python 与 Rust 必须使用同一 IR 版本。
 数学从[手册](README.md)进入，运行身份从[当前证据](../../experiments/parallel-gap-integration/README.md#当前证据)进入。
 
