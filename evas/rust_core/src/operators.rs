@@ -655,6 +655,13 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    pub(crate) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
+        if let Some(continuous) = &self.continuous {
+            continuous.validate_event_window(window, events)?;
+        }
+        Ok(())
+    }
+
     pub(crate) fn new(
         program: &Program,
         trajectory: &Trajectory,

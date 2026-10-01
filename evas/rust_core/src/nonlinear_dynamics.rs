@@ -544,6 +544,22 @@ impl NonlinearContinuous {
         }
         source
     }
+    pub(super) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
+        if self.event_dependent && window.lo != window.hi {
+            // The current settlement certifies samples/conditions at the
+            // representative time, not over the event window. Do not extend
+            // that certificate to ideal-root parameter values. Check actual
+            // firing bodies even when the sampled representative is unchanged.
+            for &id in events {
+                let event = &self.context.program.events[id];
+                if time_sensitive_body(&event.body, &self.context.program, &event.origin.instance)?
+                {
+                    return Err(Error::new("event_resolution", "uncertain nonlinear restart cannot certify event sampling or input-dependent branches over its time window"));
+                }
+            }
+        }
+        Ok(())
+    }
     pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
@@ -553,27 +569,6 @@ impl NonlinearContinuous {
                 "event_resolution",
                 "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
-        }
-        if window.lo != window.hi {
-            // The current settlement certifies samples/conditions at the
-            // representative time, not over the event window. Do not extend
-            // that certificate to ideal-root parameter values. Conservatively
-            // inspect all writers of each changed state, since this immutable
-            // history has no identity for the currently firing event body.
-            for event in &self.context.program.events {
-                if event
-                    .assignments()
-                    .iter()
-                    .any(|a| self.parameters[a.state] != parameters[a.state])
-                    && time_sensitive_body(
-                        &event.body,
-                        &self.context.program,
-                        &event.origin.instance,
-                    )?
-                {
-                    return Err(Error::new("event_resolution", "uncertain nonlinear restart cannot certify event sampling or input-dependent branches over its time window"));
-                }
-            }
         }
         let mut next = Self::initialized(
             self.context.clone(),

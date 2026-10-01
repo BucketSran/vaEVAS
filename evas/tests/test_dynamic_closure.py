@@ -313,21 +313,27 @@ class NonlinearIntegralContracts(unittest.TestCase):
         # Sampling q at the representative root's upper endpoint can instead
         # miss this answer by >2e8 V while accepting a 2e7 V budget. Until
         # sampling includes the full event-time box this combination must fail.
-        program = compile_model(
-            "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
-            "V(y,r)<+idt(pow(q,2),0);", "real q;")
-        with self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
-            run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
-                vabstol=2e7, reltol=0)
+        for initial in [0, 1414222.7172851562]:
+            # The second initial value equals the sampled representative:
+            # equality of representative values must not bypass admission.
+            program = compile_model(
+                f"@(initial_step) q={initial}; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
+                "V(y,r)<+idt(pow(q,2),0);", "real q;")
+            with self.subTest(initial=initial), self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
+                run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
+                    vabstol=2e7, reltol=0)
 
     def test_exact_nonlinear_sampling_keeps_the_certified_event_contract(self):
         program = compile_model(
-            "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=V(y,r); "
+            "@(initial_step) q=1; @(cross(V(u,r)-1,1,1e-9,1e-8)) q=2; "
+            "@(timer(.5,0,1e-12)) q=V(y,r); "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "real q;")
-        times = [0, .25, .5, .75, 1]
-        result = run(program, times=times, stop=1, vabstol=1e-10, reltol=1e-10)
+        times = [0, .125, .375, .5, .75, 1]
+        result = run(program, {"u": [[0, 0], [1, 3]]}, times=times, stop=1,
+                     vabstol=1e-10, reltol=1e-10)
         for t, actual in zip(times, values(result)):
-            expected = 1/(1+t) if t <= .5 else 1/(1.5+(2/3)*(t-.5))
+            expected = (1/(1+t) if t <= 1/3 else 1/(1+2*t-1/3) if t <= .5
+                        else 1/(5/3+(3/5)*(t-.5)))
             assert_close(self, actual, expected, delta=1e-10)
 
     def test_uncertain_nonlinear_restart_rejects_uncertified_branch_selection(self):

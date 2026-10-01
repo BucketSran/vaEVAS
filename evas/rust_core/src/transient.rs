@@ -35,6 +35,9 @@ fn prepare_event_with_bounds(
     time_bounds: I,
     events: &[usize],
 ) -> Result<Frame, Error> {
+    accepted
+        .operators
+        .validate_event_window(time_bounds, events)?;
     let mut operators = accepted.operators.clone();
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.

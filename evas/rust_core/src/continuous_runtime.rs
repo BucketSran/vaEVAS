@@ -38,6 +38,12 @@ impl Continuous {
             Self::Nonlinear(v) => v.changes_on_event(),
         }
     }
+    pub(crate) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
+        match self {
+            Self::Linear(_) => Ok(()),
+            Self::Nonlinear(v) => v.validate_event_window(window, events),
+        }
+    }
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
         self.bounds(time)?.into_iter().map(point_value).collect()
     }
