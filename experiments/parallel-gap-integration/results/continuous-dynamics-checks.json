@@ -1,0 +1,383 @@
+{
+  "runtime_commit": "ba5ab46e90ec4769e47478a492b80ab2dc7a09b6",
+  "kernel_sha256": "6a33d40145edace830285cf6b17615d6010a3391db0368cd6566fe393b382335",
+  "schema_version": 16,
+  "package_version": "0.10.0",
+  "integration_status": "local development checkpoint; not merged or released",
+  "execution_identity": {
+    "runtime_commit": "ba5ab46e90ec4769e47478a492b80ab2dc7a09b6",
+    "source_worktree_clean": true,
+    "branch": "feat/evas-continuous-dynamics",
+    "kernel_sha256": "6a33d40145edace830285cf6b17615d6010a3391db0368cd6566fe393b382335",
+    "kernel_executable": true,
+    "schema_version": 16,
+    "package_version": "0.10.0",
+    "frozen_utc": "2026-10-01T06:37:53.847542+00:00",
+    "build_command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "build_profile": "debug",
+    "cargo_version": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc_version": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "source_sha256": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/src/evas/frontend.py": "a72e6f0a8e1ad339e1a51282b71b784406206a977399dc801bf563b5b39de0ef",
+      "evas/src/evas/ir.py": "f2244b3096a8143f6610d166b0fa54796774fe513ff3ae18ca34e469427aa388",
+      "evas/src/evas/lowering.py": "515f4a6ac5852abb6075eab44c1e34006edfe30bccc4d5e7dde4b739d6d6f745",
+      "evas/src/evas/migrate.py": "b6e0b237565a6b288f824eb5a1b7bc9f6b372ec45d163445f5f19a1bfe705d9f",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "e71ed332e855fcf6dcbdea8ba3b8b24d5fb8516ee08528d786464dcc7ac9e1ea",
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "39b69eb57181631a77a36f225469f5a70a5597f97c1d380a2105b378b9612dca",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/continuous.rs": "a2516a46a1ce5f1a3e9f2b476ca0eda085c44488d35b9c42a35f8d93e4531d60",
+      "evas/rust_core/src/dynamic_roots.rs": "a1f0d106dff98fb4fa125502b4b9bcbbd9187f0549e1c235d9b3688ac17b8e8f",
+      "evas/rust_core/src/event_accuracy.rs": "c4364a6b9fc743a981e167989a7700958d8fd87db45db2c3ac1f8cba84a9108f",
+      "evas/rust_core/src/event_conditions.rs": "2470b442ac05952c703e25908e9c76da56289e9a31cbe3b2cff508ae9d7002ff",
+      "evas/rust_core/src/events.rs": "65fd4c041e4f4300c519df002aaebe5bc5ad6ed2a510b224af69c5b8c4d98e8b",
+      "evas/rust_core/src/expression.rs": "e153146cfcf5dc4db6ea7d0d1967ae13f76a28a939b7a6b1e0e5416d48b56116",
+      "evas/rust_core/src/guard_trajectory.rs": "feb38b94f921176fed4924836e588437ae39207fe30762096a0d2ebb0d6acd53",
+      "evas/rust_core/src/idt.rs": "caf0af440b8edacc4769562e874421cd0a3a845fc845ffe2576384168ee53d95",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/interval.rs": "578f32b3a579314155456eb071d1ec43fded59b524250f78ff592cc8c2fb0cb2",
+      "evas/rust_core/src/ir.rs": "2b89d74684d6b1deb7bbab6fe136420b1362554f7862f4a3173f319cbfe4c0b4",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "48e6d0348e1f65d443864118a03245489b5bd0a3d9e4507cc98a960485b8ed6a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "9e7c66eeb4e3c2b170278b10108c6ab1ea9dd0eb601f1958507b10fdcf99e910",
+      "evas/rust_core/src/linear/sparse.rs": "63766cdea80653bc146c8e65a05ee0f54e70cf091488262f64cb1d929a466773",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "cd7207261a78b6f41183d4f237eb08505b05edd155d9a2c9b3ffe4ad81e797ee",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/nonlinear.rs": "34c7334688651b28bcd880ce5fe509cc90c85091c81e40f3a81a053570e9f9d8",
+      "evas/rust_core/src/operators.rs": "d1ea5423eec5fd9ed8ba4acb56141d484fdeada7b82c62f719e5748af4089f0c",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "ae4eb76111b7db78be531a69fd9ec3bae637ace55100b265307f138259d4307d",
+      "evas/rust_core/src/reset_dependencies.rs": "3abb8fde08890e5bb0f9985799ca0046daf5b593d9995f502e29d81c3a1dd82a",
+      "evas/rust_core/src/schedule.rs": "e1d47eed9ebe09c65eb952337434819d0d243c80141a4ae747380fe02cd73b07",
+      "evas/rust_core/src/settlement.rs": "032828b1ae49ba5db0d77c29810a991878b659ff047efdb84deaaad6b1c153dc",
+      "evas/rust_core/src/settlement_bounds.rs": "1468e0c2ae6b80f84cb7dab4d3d98e437ba237de63e4fe843d0f1596f4801f73",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "ff2c7e939c6df03cf46095ccd6dcc653ffbb21d2c35e4090dd06250cc3c8d0e8",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "3ae60d245419e434c48492fedcc9340b25e16ad3157566f0f9728e05e8926c4c",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transition.rs": "447e344a1f55ec9df6eafea803e21095e7c6b510141cb63c75941d0c295fda40"
+    }
+  },
+  "checks": [
+    {
+      "check": "python",
+      "command": "PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v",
+      "exit_code": 0,
+      "tests": 416,
+      "ignored": 0,
+      "log": "checks/python-final.log",
+      "log_sha256": "f052ea697bd39bc07a211e3dc5e76c9571fe8a675b7f73b39ed97206d5f4a5e0",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "rust",
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": 110,
+      "ignored": 1,
+      "log": "checks/rust-final.log",
+      "log_sha256": "7da18a99c2ba1f965fa3b44396185149db3b3e83a39351f97bdd17fa711843ce",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "build",
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/build-frozen.log",
+      "log_sha256": "59639588a6f1826f129cbcd121edc07279dab94786f5fa5bde6b3439b2e845cc",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "clippy",
+      "command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/clippy-final.log",
+      "log_sha256": "42ab6089df81a2ccbb3715c23f64f3050ed76bbb5872c4678fa146968a2801e1",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "fmt",
+      "command": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/fmt-final.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "design_math",
+      "command": "python3 -B evas/validation/check_design_math.py",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/design-math.log",
+      "log_sha256": "5b6d4fe8c6d6733c2974bcc65d8ddc599aebdfa0d74fdd35ba0ec0d0fa9533f9",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "frozen_validation_identity",
+      "command": "python3 -B scripts/verify_validation_version.py",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/frozen-validation-identity.log",
+      "log_sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "diff",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "tests": null,
+      "ignored": null,
+      "log": "checks/diff.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "manifest_recompile",
+      "command": "python3 scripts/recompile_evas_manifests.py --output runs/continuous-dynamics-20261001T063752Z-128260/recompiled",
+      "exit_code": 0,
+      "tests": 7,
+      "ignored": 0,
+      "log": "recompile.log",
+      "log_sha256": "962421c538d7aec16165f7067b8eb7fff1aee1a886641f0e075635b9142357e4",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "generated_ir_execution",
+      "command": "python3 runs/continuous-dynamics-20261001T063752Z-128260/verify_migration.py runs/continuous-dynamics-20261001T063752Z-128260",
+      "exit_code": 0,
+      "tests": 7,
+      "ignored": 0,
+      "log": "migration-verification.log",
+      "log_sha256": "b668034a97ba59d9a17619ead34212db98d4ebac95e2b2aefe75622039c4efd0",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_execution",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --kernel runs/continuous-dynamics-20261001T063752Z-128260/bin/evas-kernel",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix.log",
+      "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
+      "log_availability": "local-only"
+    },
+    {
+      "check": "matrix_analysis",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --identity runs/continuous-dynamics-20261001T063752Z-128260/SOURCE_IDENTITY.json --output runs/continuous-dynamics-20261001T063752Z-128260/matrix-analysis.json",
+      "exit_code": 0,
+      "tests": 62,
+      "ignored": 0,
+      "log": "matrix-analysis.log",
+      "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
+      "log_availability": "local-only"
+    }
+  ],
+  "test_sources_sha256": {
+    "evas/tests/benchmark_events.py": "3057823d173dc65735eb41c3d17754b05969f98a9f0279aec5e248528c3f4d46",
+    "evas/tests/run_static_regression.py": "0ccc40d16a8d43186315ffa498c4c1034dda5e4cbacdc8d03983ab8ab232dc52",
+    "evas/tests/test_absdelay.py": "99534c8a459196ab09188df97d7dda47c9c90184ad650916e4d8f77e719ca328",
+    "evas/tests/test_absdelay_accuracy.py": "89db111d75762868b1cc5d1b21b09093dfafedc5914e7e74849cf13ee0b7b9eb",
+    "evas/tests/test_accuracy.py": "46f4c9e67bcd21b973426e3c9896daba1a65aab0b819b83806c2f17580978a1f",
+    "evas/tests/test_affine.py": "483bdd4809815e9e82543b5fec3b511a6e197d8417699a4eadfb33ffa8e01a24",
+    "evas/tests/test_analog_conditions.py": "7840dc0f5f6ce5f99b881ee7bacc800e3e5ec31ab563df4381c4fac55520604f",
+    "evas/tests/test_continuous_dynamics.py": "981e6e572dc9249173d95368ac4303fee346d50018ef416840fed2f969c644af",
+    "evas/tests/test_contracts.py": "d10a1098818991921d1dcf273833715e398c332a811d8223ed654db61e04d5ee",
+    "evas/tests/test_dynamic_cross.py": "d16eb818f46f6259453c6d85481f2b4fed76f113d993ce35d995e6a710fcd6bc",
+    "evas/tests/test_event_accuracy.py": "5c30760302555e6a583581f75fa3b7c3b1742daf2d3633aa5e00beac7e2a9156",
+    "evas/tests/test_event_conditions.py": "cd967fa9b5e97876685daf1770fa16b9fdb663528aab6b976e95b37c10d5a831",
+    "evas/tests/test_event_or.py": "8b9324d821753c78e7b9760b9765875cb74e9eae5e774e252f1ee5ecfc48558c",
+    "evas/tests/test_event_writers.py": "6ca961e64a70dc27e33f1bcf37ba5cd557c270fa30799c86e1414d56cdd43a89",
+    "evas/tests/test_events.py": "b5e0b0c31aa7a6b82e3c14084b2d0491e00f8c772edbc33cc341b9e7568c55c6",
+    "evas/tests/test_gap_integration.py": "1f4f7ee1b803c5a519b9df7905c03b4b846d64f200f2860ecac9cb79fabd07c1",
+    "evas/tests/test_idt.py": "dee9467b5856861ab604dc71772f963b144d53dc3d7c03248fa54741d71f77f0",
+    "evas/tests/test_idt_accuracy.py": "fd5fc1ca810df96f8ad23ad430e0cda50a7ae50950c90b4781f75c1fd358eaed",
+    "evas/tests/test_interval.py": "2b5efe3d217e021cb85d50c22cdf6a7b7076221a9e7cf9bc5cba324a79b0b7f3",
+    "evas/tests/test_laplace.py": "b6aaf16938aa13aaf6687d21eccc203bb55cbd66531ca5f7b84c36d23f336712",
+    "evas/tests/test_migrate.py": "c871b6759dae37c6f1abbdc7eb001bef6efc3fc1d8f2e170fcbd79b136360737",
+    "evas/tests/test_nonlinear.py": "2a98944e726461625a99404d229fa2831624a5de3e439bf79208adf20dd91b76",
+    "evas/tests/test_nonlinear_transient.py": "46697c2713900084b9a87cacc958aa5f1c2ff408948b5f369a6b6e4b8d9e6a6d",
+    "evas/tests/test_phase.py": "9d43723044c4629ea4258fe3c5dac4f14d1fefe250fced31dcdb127466af5e77",
+    "evas/tests/test_precision_chain.py": "224412bd0df4caefd03f02f1a7a9190da3db2e006a90f0438220092d8afdeff8",
+    "evas/tests/test_reuse.py": "cc648f89cc84c295d53abaec2b8c48d5fb03fd64238b82bf0699e2336fd1a2e6",
+    "evas/tests/test_semantic_invariants.py": "6576bf7517e6258336b93a8b75583491bc06663d759bd9e3058805313d431294",
+    "evas/tests/test_settlement.py": "b949f2eec8bc42b938acc1198062154942392da4cdeb9cca3d21a89d2c5cb39f",
+    "evas/tests/test_slew.py": "24ae71f72bfa989fcfb4a282c0c23b72ba27af64c5afeccdc8e4bb68afd918f3",
+    "evas/tests/test_slew_accuracy.py": "5ffdaffd0193cfbfc5001ae4c724fa1fccf19c17564e64f781c6e8a49d699b22",
+    "evas/tests/test_sparse.py": "1fb96f61b27559c7d969a1d56ee2e488b677348c6a9867059987694145ba3ec6",
+    "evas/tests/test_sparse_transient.py": "5327e50e0d8189025730347d17408c8370abf1a341750182de5c5d1aa78420c9",
+    "evas/tests/test_timed_composition.py": "18f61045a6e93a1c848f83cc7fe3d3d83cb3f632f787fe2aa814d737a75523e2",
+    "evas/tests/test_timer.py": "501eaf74e576990907d12df8eafb0fd8405a00b4dbbd6154a760136992cfa266",
+    "evas/tests/test_transition.py": "b5f1db73ac6703fb28fabed7114529ac4a6b41dc01c2f2cd114cff7aec3e12bf",
+    "evas/tests/test_transition_accuracy.py": "a3eb85bf31bae65750e85c3d398566974dac1a44b16af72f90c31cf934ef22e4"
+  },
+  "independent_new_modules": {
+    "test_continuous_dynamics": 21,
+    "test_dynamic_cross": 9,
+    "test_migrate": 12
+  },
+  "oracle_basis": [
+    "closed-form integral feedback and oscillator solutions",
+    "exact rational PWL integral areas",
+    "full-numerator second/third-order ramp and DC/feedthrough formulas",
+    "known polynomial/sine/integral roots",
+    "grid/contribution invariance and failure-integrity checks"
+  ],
+  "migration": {
+    "runtime_commit": "ba5ab46e90ec4769e47478a492b80ab2dc7a09b6",
+    "kernel_sha256": "6a33d40145edace830285cf6b17615d6010a3391db0368cd6566fe393b382335",
+    "inventory": [
+      "evas/examples/absdelay.json",
+      "evas/examples/cross_counter.json",
+      "evas/examples/idt.json",
+      "evas/examples/static_nonlinear.json",
+      "evas/examples/static_sum.json",
+      "evas/examples/timer_counter.json",
+      "evas/examples/transition_pulse.json"
+    ],
+    "inventory_method": "tracked JSON objects with models and instances fields",
+    "recompiled": 7,
+    "executed": 7,
+    "results": [
+      {
+        "manifest": "evas/examples/absdelay.json",
+        "manifest_sha256": "8954098f85bdb889bc807a1be23da54e3685c8e6595b194144e622698f3596ac",
+        "source_sha256": {
+          "absdelay.va": "6e71eedc36f895aa377278569fb670355ef1c7fe8f10f965f024313569cd7a72"
+        },
+        "ir_sha256": "0d23c672d040010e621deba6712f4fa3cf9830fe3beff8690df475c762487270",
+        "request_sha256": "ad47f11f6e09fadf919c4a6731859a7f6c3a7e4a23b7d9457c173d0e6666fd4f",
+        "response_sha256": "dda310eef0f0aab4f87f9b7e2a49ef1482ed56c41fd4e48bb396f049cb4916b8",
+        "exit_code": 0,
+        "solutions": 5,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/cross_counter.json",
+        "manifest_sha256": "cee72b20f2ff3581062e267b7b392d8e0f440f07e589e58c873d8afbb8e8f93f",
+        "source_sha256": {
+          "cross_counter.va": "9bdd89f5db64631c1c28b9a64b5c0b1327f960335f4ff232b8ba2ca4ba2906b1"
+        },
+        "ir_sha256": "cab1fbe627d3d5e40b5dd03707e951642797f09dbbe5a7038fe1cd832da460f0",
+        "request_sha256": "f38add4a0aee3db540354ef894f836797e45ab7ce23340f576a861df0b177049",
+        "response_sha256": "1b81d7df372d75b7595077c0d97670008f86aa40d49c04fcc006b9aa67f8cfb6",
+        "exit_code": 0,
+        "solutions": 5,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/idt.json",
+        "manifest_sha256": "96bb501897f44df36c55104ad0961142aadecbd32e3c4dc02a69845830154599",
+        "source_sha256": {
+          "idt.va": "06a5249efa77c3b85a522a10e22c55a17661c06cbea9ac4736075e7fbfa806ba"
+        },
+        "ir_sha256": "339a6ab24929645535027188202f33049ba7597e44b90202c2fe5f67ba85bbb0",
+        "request_sha256": "a8737fbb8693df1725a5cae7db94afc62fca8a499732797f3206f6082113e24d",
+        "response_sha256": "d32625760e99b14c1ee4acb2e69bdf4f0543a924f3b1b2d2337dec3e828ab0bc",
+        "exit_code": 0,
+        "solutions": 5,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/static_nonlinear.json",
+        "manifest_sha256": "9880fb503dc21008d3d71ccd1ea5883beabc22a016f5a87f2fc0d1868247b270",
+        "source_sha256": {
+          "../validation/cases/d2_v7_02/dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d"
+        },
+        "ir_sha256": "f06b5480c931e0e4b0e7545ed79e1b87dff11958bcc6da137ff2f1816cb4d1cb",
+        "request_sha256": "0fdda2f4f128f5659959c386c184c01c61ec4b9d1d952b06b2c227340b640719",
+        "response_sha256": "641199e9c84692a86c94f94d5ddf70573365ce6edb9396a1ade1345771899d5b",
+        "exit_code": 0,
+        "solutions": 3,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/static_sum.json",
+        "manifest_sha256": "4f2ef537233845a2fcadf63a9ae3a8e5e71e1ea92c33bc7672f78f0723e39fc5",
+        "source_sha256": {
+          "../validation/cases/n_v1_02/dut.va": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651"
+        },
+        "ir_sha256": "03bbc5da65cddd40ec68761d0da5200bb6947ccfa73c0f26406eb2e1da37670c",
+        "request_sha256": "7c9a01ebe6cb495d683bd9ce1801d18c7f5e1c77529c87042ad388aebd75b1d8",
+        "response_sha256": "3a7da38f14a29d509332016bd4a05adc0da767bd0c8a2a9d68ed051415a01fd4",
+        "exit_code": 0,
+        "solutions": 3,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/timer_counter.json",
+        "manifest_sha256": "eca6b63a749b12db16a7bc7cf391705fbeb341bb358e8ff28d44ef968a88de8c",
+        "source_sha256": {
+          "timer_counter.va": "99ff50acde19b4d20f3b8d4f504b8d94a7cc7a35f77c3308a6cc0d373e48c44c"
+        },
+        "ir_sha256": "40f253ce8521b0ae129e768ab7e4f5d4ed7710aecb90b399bad1783c0f1f951f",
+        "request_sha256": "e0ee95ab0ec4951df38afc4237901c8d90fbd15f33fc3921b2f24aa845afc58b",
+        "response_sha256": "f890cb273be5483318434298b8d090569c0d47ef5219241f2c278bc47e788947",
+        "exit_code": 0,
+        "solutions": 6,
+        "schema_version": 16
+      },
+      {
+        "manifest": "evas/examples/transition_pulse.json",
+        "manifest_sha256": "958e2d7d0f44e51304ab5cf8933b987f49460f08231d2fbdf8103d36164f4004",
+        "source_sha256": {
+          "transition_pulse.va": "8da91dc3490aee9550104df9d553bd1d0a708868bcc30d5b57ee5c3faaa31d2d"
+        },
+        "ir_sha256": "336fcf8b64bad454d6525449d620691e55429336f8e073e919923948a1be48ee",
+        "request_sha256": "25f9aee7008c3fc99962b891f916b95b31df02b46f8491015aabbe070c5d0bc2",
+        "response_sha256": "367bbf70a3c5c756694be03aacee87c2a8195f38c6402ac03e556ac787c6f2fa",
+        "exit_code": 0,
+        "solutions": 5,
+        "schema_version": 16
+      }
+    ]
+  },
+  "development_evidence": {
+    "observations": "development/OBSERVATIONS.json",
+    "observations_sha256": "a89f12096d9a6990cdb1f1a01a9db74a754f19d9e1a43ccf618a5a028898174f",
+    "availability": "local-only",
+    "limits": "unfrozen integration diagnostics and one conversation-only intermediate failure; not results of the final checkpoint"
+  },
+  "raw_archive": {
+    "root": "runs/continuous-dynamics-20261001T063752Z-128260",
+    "manifest": "RAW_MANIFEST.json",
+    "manifest_sha256": "956d566e2afbc280aafe4980c1ac916294fe3fe6d8ac10cb9012569ad6aaa97c",
+    "files": 621,
+    "bytes": 166825131,
+    "availability": "local-only"
+  },
+  "baseline_raw_archive": {
+    "root": "runs/precision-chain-20260930T202707Z-e1c89a",
+    "manifest_sha256": "a55ea465456f812f05f06be6673e4b9dbc323f38b89ed0f349319521b0a727af",
+    "availability": "local-only"
+  },
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "matrix_receipt": "experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json",
+  "matrix_receipt_sha256": "63818ae388bdb05ee241ba20f48306eb7cac92cac57281dc291c91765872a835",
+  "contract_limits": [
+    "Affine continuous voltage/integral/filter systems only; no general nonlinear DAE or event-modified continuous feedback/reset.",
+    "Dynamic cross supports state-independent polynomial and certified continuous operator trajectories; tangencies, plateaus, implicit nonlinear voltage trajectories and uncertifiable ordering fail explicitly.",
+    "ddt is restricted to directly driven continuous affine PWL; zero at DC, right derivative at interior knots, left derivative at stop; no impulse representation.",
+    "laplace_nd uses full fixed proper coefficients, order 1–8 and a unique DC initialization; augmented dimension at most 32; numerical enclosure limits may conservatively refuse.",
+    "Original 31 conditions are development material; finite observations do not establish an untouched holdout or formal continuous-time qualification.",
+    "No new Spectre execution, paired backend compatibility measurement or performance measurement in this batch."
+  ]
+}

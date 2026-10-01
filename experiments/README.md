@@ -39,7 +39,7 @@
 
 ## 已有实验入口
 
-最新 IR15 检查点见[联合交付与精度链](parallel-gap-integration/README.md)，
+最新已合并 IR15 检查点见[联合交付与精度链](parallel-gap-integration/README.md#当前证据)，
 被测运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`：原 31 条件两档均
 **31/31 有限观测达标**，62 份 CSV、判定及生效设置和前一优化检查点 `ddfd379` 一致。
 [检查收据](parallel-gap-integration/results/precision-chain-checks.json)与
@@ -47,6 +47,10 @@
 372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
 最新修复没有新 Spectre 执行或新性能测量，正式资格仍 **I**，完整 raw 为 **仅本地保留**。
 当前能力和更广缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
+
+IR16 本地开发检查点另见[连续动态执行与迁移](parallel-gap-integration/README.md#continuous-dynamics)：
+原矩阵两档均达标，CSV 与 IR15 基线一致；数学/组合扩展、精确身份和限制单独记录。
+这些是新本地 EVAS 执行，尚未合并，不计为新 Spectre 仿真或原矩阵的新条件。
 
 PR26 `edb004d` 的两档各 24/31 保留在[历史复位对照](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 功能补齐 `39a4545` 与优化 `ddfd379` 的原执行、初期失败和测量从

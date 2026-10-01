@@ -114,3 +114,18 @@
 旧 Rust 候选失败/重试检查继续覆盖 Frame 生命周期；不可变连续查询没有额外正式历史提交。
 本开发批次没有新的 Spectre 执行，不从独立数学通过推导跨后端兼容或性能领先。
 精确执行身份和数量在最终检查收据中记录；原 31 条件分母不变。
+
+<a id="checkpoint-evidence"></a>
+
+## 检查点与审阅入口
+
+本地开发运行时 `ba5ab46e90ec4769e47478a492b80ab2dc7a09b6` 固定 EVAS 0.10.0 / IR16，
+尚未合并或发布。[检查与迁移收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
+绑定源码、测试、工具环境与内核；[原矩阵收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
+记录最终代码的新执行及 IR15 字节兼容性。完整 raw 仅本地保留，历史 IR15 收据没有改写。
+
+审阅时依次核对：贡献累加和代数消元是否保持原关系；每个调用点的状态/初值是否唯一；
+历史包围及根盒是否传入电压和事件验收；结构依赖是否先于相消检查组合边界。
+直接 PWL `ddt` 的折点观察约定、滤波 DC 初始化及所有保守拒绝也属于接口合同。
+后续若增加事件修改历史或非线性动态反馈，需要另行设计联合误差和失败重试，不能复用
+本版“轨迹不受事件修改，所以可以提前定位”的前提。

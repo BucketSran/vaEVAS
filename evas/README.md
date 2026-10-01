@@ -41,6 +41,10 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 以下结果绑定已合并 IR15 检查点。IR16 的新能力与验证另见[连续动态说明](docs/CONTINUOUS.md)，不继承历史运行身份。
 
+IR16 开发运行时 `ba5ab46` 的[检查与迁移收据](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
+及[原矩阵新执行](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)已经固定。
+原 31 条件两档均达标，CSV 与 IR15 基线逐字节一致；源码仍在开发分支，尚未合并。
+
 被测运行时 `d451605` 的原 31 条件两档本地瞬态回放均 **31/31 有限观测达标**，
 62 份 CSV、判定与生效设置和优化检查点 `ddfd379` 一致。
 **372 Python、83 Rust** 测试及 locked build、Clippy、格式检查通过；一项旧性能探针 ignored。

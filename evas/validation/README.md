@@ -12,6 +12,10 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 IR16 连续动态开发中的新契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
 它们单独计数，尚未合并，不改写原 31 条件或以下 IR15 身份。
+[开发检查与迁移](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)及
+[新原矩阵执行](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
+绑定运行时 `ba5ab46`：两档各 31/31，62 份 CSV 与 IR15 基线逐字节一致，
+数值设置不变，仅引擎版本元数据更新；没有新 Spectre 执行或性能测量。
 
 先看下面的已合并 EVAS 检查点；跨后端比较另见历史基线。实现的持续状态以
 [能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
@@ -63,7 +67,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/OPERATORS.md#idtmod-与-sin) |
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
-原 31 条件已没有未达标项；更广积分反馈、动态/非线性事件、算子组合及验证资格缺口仍见
+原 31 条件已没有未达标项；更广的非线性/事件状态积分反馈、动态事件、算子组合及验证资格缺口仍见
 [能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 <a id="historical-four-backend-baseline"></a>
