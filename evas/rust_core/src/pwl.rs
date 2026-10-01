@@ -90,6 +90,7 @@ impl Root {
     }
 }
 
+#[derive(Clone)]
 pub(crate) struct Trajectory {
     pub(crate) config: TransientInputs,
     pub(crate) knots: Vec<f64>,

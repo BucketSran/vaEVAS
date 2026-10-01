@@ -9,8 +9,50 @@ use crate::interval::Interval as I;
 use crate::ir::{BranchIdentity, Error, Expression, OperatorSpec, Origin, Program};
 use crate::pwl::Trajectory;
 use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Arc;
 
 const MAX_LAPLACE_ORDER: usize = 8;
+
+#[path = "continuous_derivatives.rs"]
+mod derivatives;
+#[path = "nonlinear_dynamics.rs"]
+mod nonlinear;
+
+pub(crate) fn validate_integral_input(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<(), Error> {
+    nonlinear::validate(expr, program, owner)
+}
+
+type DependencySets = (BTreeSet<usize>, BTreeSet<usize>, BTreeSet<usize>);
+
+pub(crate) fn integral_dependency_edges(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<DependencySets, Error> {
+    match expr {
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            let (mut n, mut s, mut o) = integral_dependency_edges(left, program, owner)?;
+            let (nn, ss, oo) = integral_dependency_edges(right, program, owner)?;
+            n.extend(nn);
+            s.extend(ss);
+            o.extend(oo);
+            Ok((n, s, o))
+        }
+        Expression::Power { base, .. } => integral_dependency_edges(base, program, owner),
+        _ => {
+            let a = crate::events::affine(expr, program, owner)?;
+            Ok((
+                a.node_dependencies,
+                a.state_dependencies,
+                a.operator_dependencies,
+            ))
+        }
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum ContinuousKind {
@@ -26,13 +68,30 @@ pub(crate) struct OperatorSlot {
     pub(crate) value: usize,
 }
 
+#[path = "continuous_history.rs"]
+mod history;
+#[path = "continuous_runtime.rs"]
+mod runtime;
+pub(crate) use runtime::Continuous;
+
 #[derive(Clone)]
-pub(crate) struct Continuous {
+pub(crate) struct LinearContinuous {
     slots: Vec<OperatorSlot>,
     segments: Vec<Segment>,
     value_count: usize,
     dc_values: Vec<I>,
     stop: f64,
+    context: Arc<Context>,
+    parameters: Vec<I>,
+    start: f64,
+    initial: Vec<I>,
+    event_dependent: bool,
+}
+
+struct Context {
+    program: Program,
+    trajectory: Trajectory,
+    driven: Vec<String>,
 }
 
 #[derive(Clone)]
@@ -53,6 +112,7 @@ struct NetworkOperator {
     states: Vec<usize>,
     input: Option<Vec<I>>,
     laplace: Option<LaplaceSystem>,
+    held_reset: bool,
 }
 
 #[derive(Clone)]
@@ -63,22 +123,46 @@ struct LaplaceSystem {
     d: I,
 }
 
+#[derive(Clone)]
 struct AlgebraicSystem {
     rows: Vec<Vec<I>>,
+    dc_rows: Vec<Vec<I>>,
     x_count: usize,
     width: usize,
     node_columns: Vec<Option<usize>>,
     operator_columns: Vec<Option<usize>>,
     source_columns: Vec<Option<usize>>,
     state_count: usize,
+    parameters: Vec<I>,
 }
 
-impl Continuous {
+impl LinearContinuous {
     pub(crate) fn new(
         program: &Program,
         trajectory: &Trajectory,
         driven: &[String],
+        states: &[f64],
     ) -> Result<Option<Self>, Error> {
+        Self::build(
+            Arc::new(Context {
+                program: program.clone(),
+                trajectory: trajectory.clone(),
+                driven: driven.to_vec(),
+            }),
+            states.iter().copied().map(I::point).collect(),
+            0.0,
+            None,
+        )
+    }
+
+    fn build(
+        context: Arc<Context>,
+        parameters: Vec<I>,
+        start: f64,
+        restart: Option<Vec<I>>,
+    ) -> Result<Option<Self>, Error> {
+        let (program, trajectory, driven) =
+            (&context.program, &context.trajectory, &context.driven);
         let driven_nodes = driven_node_indices(program, driven)?;
         let network_ids = select_network_operators(program, &driven_nodes)?;
         if network_ids.is_empty() {
@@ -96,18 +180,7 @@ impl Continuous {
             let spec = &program.operators[operator];
             let origin = spec.origin().clone();
             let (kind, states, input, laplace) = match spec {
-                OperatorSpec::Idt {
-                    input,
-                    ic: _,
-                    reset,
-                    ..
-                } => {
-                    if reset.is_some() {
-                        return Err(unsupported(
-                            &origin,
-                            "continuous idt reset is not part of the linear trajectory network",
-                        ));
-                    }
+                OperatorSpec::Idt { input, ic: _, .. } => {
                     let row = affine_for_operator_input(input, program, &origin)?;
                     let state = state_count;
                     state_count += 1;
@@ -126,13 +199,29 @@ impl Continuous {
                     (ContinuousKind::LaplaceNd, states, Some(row), Some(system))
                 }
                 OperatorSpec::Ddt { input, .. } => {
-                    validate_direct_pwl_input(input, program, &driven_nodes, &origin)?;
                     let row = affine_for_operator_input(input, program, &origin)?;
                     (ContinuousKind::Ddt, Vec::new(), Some(row), None)
                 }
                 _ => unreachable!("network operator selection returned a non-continuous operator"),
             };
             let value = operators.len();
+            let held_reset = if let OperatorSpec::Idt {
+                reset: Some(reset), ..
+            } = spec
+            {
+                let dependencies = structural_affine(reset, program, &origin)?;
+                if !dependencies.node_dependencies.is_empty()
+                    || !dependencies.operator_dependencies.is_empty()
+                {
+                    return Err(unsupported(
+                        &origin,
+                        "joint idt reset must depend only on instance event state and constants",
+                    ));
+                }
+                crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+            } else {
+                false
+            };
             operators.push(NetworkOperator {
                 operator,
                 kind,
@@ -140,6 +229,7 @@ impl Continuous {
                 states,
                 input,
                 laplace,
+                held_reset,
             });
             slots.push(OperatorSlot {
                 operator,
@@ -154,6 +244,7 @@ impl Continuous {
             &source_columns,
             state_count,
             source_count,
+            &parameters,
         )?;
         let solved =
             affine_bounds::eliminate(algebraic.rows.clone(), algebraic.x_count, algebraic.width)?;
@@ -172,13 +263,31 @@ impl Continuous {
         }
         let derivative_rows =
             build_derivative_rows(&value_rows, &state_derivatives, state_count, source_count);
-        let initial = initial_state(
-            program,
-            &operators,
-            &algebraic,
-            &state_derivatives,
-            trajectory,
+        // DC fixes every derivative output to zero. Its algebraic solve is
+        // distinct from the transient mass relation, including downstream DC
+        // filter initialization when an explicit integral IC is nonstationary.
+        let dc_solved = affine_bounds::eliminate(
+            algebraic.dc_rows.clone(),
+            algebraic.x_count,
+            algebraic.width,
         )?;
+        let dc_mapping =
+            back_substitute_eliminated(&dc_solved, algebraic.x_count, algebraic.width)?;
+        let dc_derivatives = build_state_derivatives(program, &operators, &algebraic, &dc_mapping)?;
+        let dc_value_rows = build_value_rows(&operators, &algebraic, &dc_mapping)?;
+        let mut initial = if let Some(restart) = restart {
+            restart
+        } else {
+            initial_state(program, &operators, &algebraic, &dc_derivatives, trajectory)?
+        };
+        for op in &operators {
+            if op.held_reset {
+                let OperatorSpec::Idt { ic, .. } = &program.operators[op.operator] else {
+                    unreachable!()
+                };
+                initial[op.states[0]] = I::point(*ic);
+            }
+        }
         // The DC phase uses the same solved network and initial states as the
         // transient phase, with source slopes set to zero for every output.
         // Do not patch only ddt after downstream outputs have been evaluated.
@@ -186,7 +295,7 @@ impl Continuous {
         dc_forcing.extend(trajectory.value_bounds(0.0));
         dc_forcing.extend(vec![I::ZERO; source_count]);
         dc_forcing.push(I::ONE);
-        let dc_values = value_rows
+        let dc_values = dc_value_rows
             .iter()
             .map(|row| dot(row, &dc_forcing, "continuous DC value"))
             .collect::<Result<Vec<_>, _>>()?;
@@ -199,13 +308,33 @@ impl Continuous {
             &value_rows,
             &derivative_rows,
             initial,
+            start,
         )?;
+        let initial = segments[0].initial[..state_count].to_vec();
+        let event_dependent = operators.iter().any(|op| {
+            let spec = &program.operators[op.operator];
+            matches!(spec, OperatorSpec::Idt { reset: Some(_), .. })
+                || continuous_operator_input(spec).is_some_and(|(input, origin)| {
+                    history_event_dependency(
+                        input,
+                        program,
+                        origin,
+                        &driven_nodes,
+                        &mut BTreeSet::new(),
+                    )
+                })
+        });
         Ok(Some(Self {
             slots,
             segments,
             value_count: operators.len(),
             dc_values,
             stop: trajectory.config.stop,
+            context,
+            parameters,
+            start,
+            initial,
+            event_dependent,
         }))
     }
 
@@ -221,13 +350,6 @@ impl Continuous {
             .iter()
             .find(|entry| entry.value == slot)
             .is_some_and(|entry| entry.continuous)
-    }
-
-    pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
-        self.eval_rows(time, Query::Value)?
-            .into_iter()
-            .map(point_value)
-            .collect()
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
@@ -374,6 +496,57 @@ impl Continuous {
     }
 }
 
+fn history_event_dependency(
+    expr: &Expression,
+    program: &Program,
+    origin: &Origin,
+    driven: &[usize],
+    seen: &mut BTreeSet<usize>,
+) -> bool {
+    match expr {
+        Expression::State { .. } => true,
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            history_event_dependency(left, program, origin, driven, seen)
+                || history_event_dependency(right, program, origin, driven, seen)
+        }
+        Expression::Power { base, .. } => {
+            history_event_dependency(base, program, origin, driven, seen)
+        }
+        _ => {
+            let Ok(deps) = structural_affine(expr, program, origin) else {
+                return true;
+            };
+            for node in deps.node_dependencies {
+                if node == 0 || driven.contains(&node) || !seen.insert(node) {
+                    continue;
+                }
+                for c in &program.contributions {
+                    if (c.positive == node || c.negative == node)
+                        && history_event_dependency(&c.rhs, program, &c.origin, driven, seen)
+                    {
+                        return true;
+                    }
+                }
+            }
+            for op in deps.operator_dependencies {
+                if !seen.insert(program.nodes.len() + op) {
+                    continue;
+                }
+                let spec = &program.operators[op];
+                if matches!(spec, OperatorSpec::Idt { reset: Some(_), .. }) {
+                    return true;
+                }
+                if let Some((input, origin)) = continuous_operator_input(spec) {
+                    if history_event_dependency(input, program, origin, driven, seen) {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+    }
+}
+
 #[derive(Clone, Copy)]
 enum Query {
     Value,
@@ -388,6 +561,7 @@ impl AlgebraicSystem {
         source_columns: &[Option<usize>],
         state_count: usize,
         source_count: usize,
+        parameters: &[I],
     ) -> Result<Self, Error> {
         let mut operator_columns = vec![None; program.operators.len()];
         let mut column = 0;
@@ -444,7 +618,7 @@ impl AlgebraicSystem {
             if !relevant {
                 continue;
             }
-            validate_no_structural_event_state(&contribution.rhs, program, &contribution.origin)?;
+            validate_affine_structure(&contribution.rhs, program, &contribution.origin)?;
             if !grouped.contains_key(&contribution.branch) {
                 let mut row = vec![I::ZERO; x_count + width];
                 add_node(
@@ -475,6 +649,7 @@ impl AlgebraicSystem {
                 &operator_columns,
                 source_columns,
                 state_count,
+                parameters,
             )?;
         }
         let mut rows = Vec::new();
@@ -509,23 +684,19 @@ impl AlgebraicSystem {
                         &operator_columns,
                         source_columns,
                         state_count,
+                        parameters,
                     )?;
                 }
                 ContinuousKind::Ddt => {
-                    add_source_slope_expr(
-                        &mut row,
-                        op.input.as_ref().unwrap(),
-                        -I::ONE,
-                        program,
-                        source_columns,
-                        state_count,
-                    )?;
+                    // DC derivative zero. Transient equations are derived
+                    // together after the voltage constraints have been mapped.
                 }
             }
             rows.push(row);
         }
         residual_rows_to_rhs(&mut rows, x_count);
-        Ok(Self {
+        let mut system = Self {
+            dc_rows: rows.clone(),
             rows,
             x_count,
             width,
@@ -533,7 +704,10 @@ impl AlgebraicSystem {
             operator_columns,
             source_columns: source_columns.to_vec(),
             state_count,
-        })
+            parameters: parameters.to_vec(),
+        };
+        system.rows = derivatives::transient_rows(program, operators, &system)?;
+        Ok(system)
     }
 }
 
@@ -557,9 +731,7 @@ fn select_network_operators(
                 reset,
                 origin,
                 ..
-            } if reset.is_none()
-                && has_network_dependency(input, program, driven_nodes, origin)? =>
-            {
+            } if has_network_dependency(input, program, driven_nodes, origin)? => {
                 selected.insert(index);
             }
             OperatorSpec::LaplaceNd {
@@ -632,11 +804,7 @@ fn close_selected_through_voltage_relations(
                     .iter()
                     .any(|operator| network_outputs.contains(operator))
             {
-                validate_no_structural_event_state(
-                    &contribution.rhs,
-                    program,
-                    &contribution.origin,
-                )?;
+                validate_affine_structure(&contribution.rhs, program, &contribution.origin)?;
                 if contribution.positive != 0 && !driven_nodes.contains(&contribution.positive) {
                     active_nodes.insert(contribution.positive);
                 }
@@ -665,12 +833,7 @@ fn close_selected_through_voltage_relations(
 
 fn continuous_operator_input(spec: &OperatorSpec) -> Option<(&Expression, &Origin)> {
     match spec {
-        OperatorSpec::Idt {
-            input,
-            reset: None,
-            origin,
-            ..
-        }
+        OperatorSpec::Idt { input, origin, .. }
         | OperatorSpec::LaplaceNd { input, origin, .. }
         | OperatorSpec::Ddt { input, origin, .. } => Some((input, origin)),
         _ => None,
@@ -702,9 +865,7 @@ fn select_operator_dependencies(
 fn selectable_continuous_dependency(spec: &OperatorSpec) -> bool {
     matches!(
         spec,
-        OperatorSpec::Idt { reset: None, .. }
-            | OperatorSpec::LaplaceNd { .. }
-            | OperatorSpec::Ddt { .. }
+        OperatorSpec::Idt { .. } | OperatorSpec::LaplaceNd { .. } | OperatorSpec::Ddt { .. }
     )
 }
 
@@ -748,49 +909,19 @@ fn affine_for_operator_input(
     program: &Program,
     origin: &Origin,
 ) -> Result<Vec<I>, Error> {
-    validate_no_structural_event_state(input, program, origin)?;
+    validate_affine_structure(input, program, origin)?;
     affine_bounds::affine(input, program).map_err(|mut error| {
         error.message.push_str(&format!(" at {}", origin.label()));
         error
     })
 }
 
-fn validate_no_structural_event_state(
+fn validate_affine_structure(
     expr: &Expression,
     program: &Program,
     origin: &Origin,
 ) -> Result<(), Error> {
-    let affine = crate::events::affine(expr, program, &origin.instance)?;
-    if affine.state_dependencies.is_empty() {
-        Ok(())
-    } else {
-        Err(unsupported(
-            origin,
-            "continuous network cannot depend on event state, even if the numeric coefficient cancels",
-        ))
-    }
-}
-
-fn validate_direct_pwl_input(
-    input: &Expression,
-    program: &Program,
-    driven_nodes: &[usize],
-    origin: &Origin,
-) -> Result<(), Error> {
-    let affine = crate::events::affine(input, program, &origin.instance)?;
-    if affine
-        .node_dependencies
-        .iter()
-        .any(|node| *node != 0 && !driven_nodes.contains(node))
-        || !affine.state_dependencies.is_empty()
-        || !affine.operator_dependencies.is_empty()
-    {
-        return Err(unsupported(
-            origin,
-            "ddt currently requires a directly driven affine PWL input",
-        ));
-    }
-    Ok(())
+    crate::events::affine(expr, program, &origin.instance).map(|_| ())
 }
 
 fn laplace_system(
@@ -915,8 +1046,10 @@ fn build_state_derivatives(
     for op in operators {
         match op.kind {
             ContinuousKind::Idt => {
-                rows[op.states[0]] =
-                    expand_input(op.input.as_ref().unwrap(), program, algebraic, x_to_forcing)?;
+                if !op.held_reset {
+                    rows[op.states[0]] =
+                        expand_input(op.input.as_ref().unwrap(), program, algebraic, x_to_forcing)?;
+                }
             }
             ContinuousKind::LaplaceNd => {
                 let input =
@@ -1051,19 +1184,29 @@ fn build_segments(
     value_rows: &[Vec<I>],
     derivative_rows: &[Vec<I>],
     initial_state: Vec<I>,
+    start_time: f64,
 ) -> Result<Vec<Segment>, Error> {
     let mut state = initial_state;
     let mut segments = Vec::new();
-    for window in trajectory.knots.windows(2) {
+    let mut knots = vec![start_time];
+    knots.extend(trajectory.knots.iter().copied().filter(|t| *t > start_time));
+    if knots.len() == 1 {
+        knots.push(start_time);
+    }
+    for window in knots.windows(2) {
         let (start, end) = (window[0], window[1]);
         let source_start = trajectory.value_bounds(start);
         let source_end = trajectory.value_bounds(end);
         let duration = I::point(end) - I::point(start);
-        let slopes = source_start
-            .iter()
-            .zip(&source_end)
-            .map(|(&a, &b)| (b - a) / duration)
-            .collect::<Vec<_>>();
+        let slopes = if start == end {
+            vec![I::ZERO; source_count]
+        } else {
+            source_start
+                .iter()
+                .zip(&source_end)
+                .map(|(&a, &b)| (b - a) / duration)
+                .collect::<Vec<_>>()
+        };
         if slopes.iter().any(|x| !x.finite()) {
             return Err(Error::new(
                 "waveform_accuracy",
@@ -1120,6 +1263,7 @@ fn expand_input(
         &algebraic.operator_columns,
         &algebraic.source_columns,
         algebraic.state_count,
+        &algebraic.parameters,
     )?;
     substitute_x(&mut out, x_to_forcing, algebraic.x_count);
     Ok(out)
@@ -1192,6 +1336,7 @@ fn add_expression(
     operator_columns: &[Option<usize>],
     source_columns: &[Option<usize>],
     state_count: usize,
+    parameters: &[I],
 ) -> Result<(), Error> {
     let source_count = source_columns.iter().filter(|x| x.is_some()).count();
     let x_count = row.len() - (state_count + source_count + source_count + 1);
@@ -1208,12 +1353,8 @@ fn add_expression(
     let state_base = program.nodes.len();
     let operator_base = state_base + program.states.len();
     for (state, &coefficient) in expr[state_base..operator_base].iter().enumerate() {
-        if !coefficient.zero() {
-            return Err(Error::new(
-                "unsupported_operator",
-                format!("continuous network cannot depend on event state index {state} without an accepted-state parameter"),
-            ));
-        }
+        let column = row.len() - 1;
+        row[column] = row[column] + scale * coefficient * parameters[state];
     }
     for (operator, &coefficient) in expr[operator_base..operator_base + program.operators.len()]
         .iter()
@@ -1260,34 +1401,6 @@ fn add_node(
         "unsupported_operator",
         "continuous network references an internal voltage that is not solved by the network",
     ))
-}
-
-fn add_source_slope_expr(
-    row: &mut [I],
-    expr: &[I],
-    scale: I,
-    program: &Program,
-    source_columns: &[Option<usize>],
-    state_count: usize,
-) -> Result<(), Error> {
-    let source_count = source_columns.iter().filter(|x| x.is_some()).count();
-    let x_count = row.len() - (state_count + source_count + source_count + 1);
-    let slope_base = x_count + state_count + source_count;
-    for (node, &coefficient) in expr[..program.nodes.len()].iter().enumerate() {
-        if node == 0 || coefficient.zero() {
-            continue;
-        }
-        let Some(source) = source_columns[node] else {
-            return Err(Error::new(
-                "unsupported_operator",
-                "ddt input must be affine in directly driven PWL sources",
-            ));
-        };
-        row[slope_base + source] = row[slope_base + source] + scale * coefficient;
-    }
-    let constant_column = x_count + state_count + source_count + source_count;
-    row[constant_column] = row[constant_column] + scale * I::ZERO * *expr.last().unwrap();
-    Ok(())
 }
 
 fn row_refs_network(row: &[I], program: &Program, network_outputs: &BTreeSet<usize>) -> bool {
@@ -1540,9 +1653,14 @@ mod tests {
     fn ddt_identity_filter_dc_and_range_bounds_share_one_phase() {
         let program = ddt_filter_program(vec![1.0, 1.0], vec![1.0, 1.0]);
         let trajectory = ramp_filter_trajectory(1.0);
-        let continuous = Continuous::new(&program, &trajectory, &["u".to_string()])
-            .unwrap()
-            .unwrap();
+        let continuous = Continuous::new(
+            &program,
+            &trajectory,
+            &["u".to_string()],
+            &vec![0.0; program.states.len()],
+        )
+        .unwrap()
+        .unwrap();
         let d = continuous.operator_value_index(0).unwrap();
         let y = continuous.operator_value_index(1).unwrap();
         for slot in [d, y] {
@@ -1570,10 +1688,14 @@ mod tests {
     fn continuous_guard_classification_follows_ddt_feedthrough() {
         for (numerator, expected) in [(vec![1.0, 1.0], false), (vec![1.0], true)] {
             let program = ddt_filter_program(numerator, vec![1.0, 1.0]);
-            let continuous =
-                Continuous::new(&program, &ramp_filter_trajectory(1.0), &["u".to_string()])
-                    .unwrap()
-                    .unwrap();
+            let continuous = Continuous::new(
+                &program,
+                &ramp_filter_trajectory(1.0),
+                &["u".to_string()],
+                &vec![0.0; program.states.len()],
+            )
+            .unwrap()
+            .unwrap();
             assert!(!continuous.is_continuous(continuous.operator_value_index(0).unwrap()));
             assert_eq!(
                 continuous.is_continuous(continuous.operator_value_index(1).unwrap()),
@@ -1616,15 +1738,16 @@ mod tests {
             }],
         };
         let trajectory = no_source_trajectory(1.0);
-        let continuous = Continuous::new(&program, &trajectory, &[])
-            .unwrap()
-            .expect("structural internal dependency should dispatch to the continuous network");
+        let continuous =
+            Continuous::new(&program, &trajectory, &[], &vec![0.0; program.states.len()])
+                .unwrap()
+                .expect("structural internal dependency should dispatch to the continuous network");
 
         assert_close(continuous.values(1.0).unwrap()[0], 0.0, 1e-12);
     }
 
     #[test]
-    fn cancelled_internal_relay_still_rejects_hidden_event_state() {
+    fn cancelled_internal_relay_keeps_event_history_dependency() {
         let program = Program {
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
@@ -1669,13 +1792,11 @@ mod tests {
             }],
         };
         let trajectory = no_source_trajectory(1.0);
-        let error = match Continuous::new(&program, &trajectory, &[]) {
-            Ok(_) => panic!("hidden event state behind a cancelled relay must be rejected"),
-            Err(error) => error,
-        };
-
-        assert_eq!(error.kind, "unsupported_operator");
-        assert!(error.message.contains("event state"), "{}", error.message);
+        let continuous = Continuous::new(&program, &trajectory, &[], &[0.0])
+            .unwrap()
+            .unwrap();
+        assert!(continuous.changes_on_event());
+        assert_eq!(continuous.values(1.0).unwrap(), vec![0.0]);
     }
     #[test]
     fn selection_closes_through_voltage_relation_producers() {
@@ -1753,9 +1874,14 @@ mod tests {
         )
         .unwrap();
         let driven = vec!["u".to_string()];
-        let continuous = Continuous::new(&program, &trajectory, &driven)
-            .unwrap()
-            .expect("downstream feedback idt should pull in the voltage producer idt");
+        let continuous = Continuous::new(
+            &program,
+            &trajectory,
+            &driven,
+            &vec![0.0; program.states.len()],
+        )
+        .unwrap()
+        .expect("downstream feedback idt should pull in the voltage producer idt");
         let z_value = continuous.operator_value_index(0).unwrap();
         let y_value = continuous.operator_value_index(1).unwrap();
         let values = continuous.values(1.0).unwrap();
@@ -1765,7 +1891,7 @@ mod tests {
     }
 
     #[test]
-    fn selected_network_rejects_structural_event_state_even_when_cancelled() {
+    fn selected_network_keeps_cancelled_event_state_dependency() {
         let cancelled_state = Expression::Add {
             left: Box::new(Expression::State { state: 0 }),
             right: Box::new(Expression::Multiply {
@@ -1796,13 +1922,10 @@ mod tests {
             initial: 0.0,
         }];
         let trajectory = no_source_trajectory(1.0);
-        let error = match Continuous::new(&program, &trajectory, &[]) {
-            Ok(_) => panic!("cancelled event-state dependencies must remain structural rejects"),
-            Err(error) => error,
-        };
-
-        assert_eq!(error.kind, "unsupported_operator");
-        assert!(error.message.contains("event state"), "{}", error.message);
+        let continuous = Continuous::new(&program, &trajectory, &[], &[0.0])
+            .unwrap()
+            .unwrap();
+        assert!(continuous.changes_on_event());
     }
 
     #[test]
@@ -1811,9 +1934,14 @@ mod tests {
             let program = ramp_filter_program(tau);
             let trajectory = ramp_filter_trajectory(tau);
             let driven = vec!["u".to_string()];
-            let continuous = Continuous::new(&program, &trajectory, &driven)
-                .unwrap()
-                .expect("second-order laplace should use the continuous network");
+            let continuous = Continuous::new(
+                &program,
+                &trajectory,
+                &driven,
+                &vec![0.0; program.states.len()],
+            )
+            .unwrap()
+            .expect("second-order laplace should use the continuous network");
             for x in [0.0_f64, 0.5, 1.0, 2.0] {
                 let value = continuous.values(x * tau).unwrap()[0];
                 assert_close(value, normalized_two_pole_ramp(x), 2e-8);
@@ -1833,9 +1961,10 @@ mod tests {
             3.0,
         );
         let trajectory = no_source_trajectory(1.0);
-        let continuous = Continuous::new(&program, &trajectory, &[])
-            .unwrap()
-            .expect("self-feedback idt should enter the continuous network");
+        let continuous =
+            Continuous::new(&program, &trajectory, &[], &vec![0.0; program.states.len()])
+                .unwrap()
+                .expect("self-feedback idt should enter the continuous network");
 
         assert_close(continuous.values(0.0).unwrap()[0], 3.0, 1e-12);
         let t = 0.5_f64;
@@ -1855,9 +1984,10 @@ mod tests {
             0.0,
         );
         let trajectory = no_source_trajectory(1.0);
-        let continuous = Continuous::new(&program, &trajectory, &[])
-            .unwrap()
-            .expect("feedback idt should enter the continuous network");
+        let continuous =
+            Continuous::new(&program, &trajectory, &[], &vec![0.0; program.states.len()])
+                .unwrap()
+                .expect("feedback idt should enter the continuous network");
 
         let t = 1.0_f64;
         assert_close(continuous.values(t).unwrap()[0], 1.0 - (-t).exp(), 1e-9);

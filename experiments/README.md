@@ -50,7 +50,9 @@
 
 IR16 本地开发检查点另见[连续动态执行与迁移](parallel-gap-integration/README.md#continuous-dynamics)：
 原矩阵两档均达标，CSV 与 IR15 基线一致；数学/组合扩展、精确身份和限制单独记录。
-这些是新本地 EVAS 执行，尚未合并，不计为新 Spectre 仿真或原矩阵的新条件。
+首轮连续动态已随 PR30 合并；0.11.0 动态补齐的[最终审查执行](parallel-gap-integration/results/dynamic-closure-review-checks.json)
+绑定 `d06e7f3`，458 Python、118 Rust 与原矩阵两档各 31/31。
+这些是新本地 EVAS 执行，不计为新 Spectre 仿真或原矩阵的新条件；历史状态仍保留在原收据中。
 
 PR26 `edb004d` 的两档各 24/31 保留在[历史复位对照](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 功能补齐 `39a4545` 与优化 `ddfd379` 的原执行、初期失败和测量从
