@@ -3,6 +3,7 @@ use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger};
+use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
 
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
@@ -21,6 +22,11 @@ impl ScheduledEvent {
 
 enum Moment {
     Cross(Root),
+    Dynamic {
+        bounds: I,
+        derivative: I,
+        end: f64,
+    },
     Timer {
         bounds: I,
         start: f64,
@@ -33,6 +39,7 @@ impl Moment {
     fn bounds(&self) -> I {
         match self {
             Self::Cross(root) => root.bounds,
+            Self::Dynamic { bounds, .. } => *bounds,
             Self::Timer { bounds, .. } => *bounds,
         }
     }
@@ -43,6 +50,9 @@ impl Moment {
             return true;
         }
         match (self, other) {
+            (Self::Dynamic { bounds: a, .. }, Self::Dynamic { bounds: b, .. }) => {
+                same_guard && a == b
+            }
             (Self::Cross(a), Self::Cross(b)) => a.coincides(b, same_guard),
             (
                 Self::Timer {
@@ -64,6 +74,25 @@ impl Moment {
 
     fn accepts(&self, time: f64, trigger: &EventTrigger) -> bool {
         match (self, trigger) {
+            (
+                Self::Dynamic {
+                    bounds,
+                    derivative,
+                    end,
+                },
+                EventTrigger::Cross {
+                    time_tolerance,
+                    expression_tolerance,
+                    ..
+                },
+            ) => {
+                let delay = I::point(time) - *bounds;
+                time >= bounds.hi
+                    && time <= *end
+                    && delay.hi <= *time_tolerance
+                    && (*derivative * delay).magnitude() <= *expression_tolerance
+            }
+
             (
                 Self::Cross(root),
                 EventTrigger::Cross {
@@ -170,11 +199,16 @@ fn add_timer(
 pub(crate) fn schedule(
     model: &EventModel,
     trajectory: &Trajectory,
+    operators: &Operators,
 ) -> Result<Vec<ScheduledEvent>, Error> {
     let mut events = Vec::new();
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
-        Some(GuardBounds::new(&model.program, &model.driven)?)
+        Some(GuardBounds::new(
+            &model.program,
+            &model.driven,
+            &model.dynamic_guards,
+        )?)
     } else {
         None
     };
@@ -185,6 +219,9 @@ pub(crate) fn schedule(
             circuit.solve(&trajectory.values(time))?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {
+            if model.dynamic_guards[index] {
+                continue;
+            }
             let event = &model.program.events[leaf.event];
             let EventTrigger::Cross { direction, .. } = &leaf.trigger else {
                 continue;
@@ -220,6 +257,52 @@ pub(crate) fn schedule(
             }
         }
     }
+    if model.dynamic_guards.iter().any(|&g| g) {
+        let guards = crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?;
+        for (index, leaf) in model.triggers.iter().enumerate() {
+            if !model.dynamic_guards[index] {
+                continue;
+            }
+            let EventTrigger::Cross {
+                guard,
+                direction,
+                time_tolerance,
+                expression_tolerance,
+            } = &leaf.trigger
+            else {
+                unreachable!()
+            };
+            let origin = &model.program.events[leaf.event].origin;
+            for segment in trajectory.knots.windows(2) {
+                let roots = crate::dynamic_roots::isolate(
+                    segment[0],
+                    segment[1],
+                    &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+                    &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+                    *direction,
+                    *time_tolerance,
+                    *expression_tolerance,
+                )?;
+                for root in roots {
+                    if events.len() >= EVENT_BUDGET {
+                        return Err(Error::new(
+                            "event_budget",
+                            "dynamic event calendar exceeds budget",
+                        ));
+                    }
+                    events.push(ScheduledEvent {
+                        time: root.bounds.hi,
+                        event: index,
+                        moment: Moment::Dynamic {
+                            bounds: root.bounds,
+                            derivative: root.derivative,
+                            end: segment[1],
+                        },
+                    });
+                }
+            }
+        }
+    }
     for (index, leaf) in model.triggers.iter().enumerate() {
         add_timer(&mut events, index, &leaf.trigger, trajectory.config.stop)?;
     }
@@ -245,10 +328,11 @@ pub(crate) fn schedule(
             ) {
                 (EventTrigger::Cross { guard: a, .. }, EventTrigger::Cross { guard: b, .. }) => {
                     a == b
-                        || bounds
-                            .as_ref()
-                            .unwrap()
-                            .same_zero_set(first.event, next.event)
+                        || (!model.dynamic_guards[first.event]
+                            && !model.dynamic_guards[next.event]
+                            && bounds
+                                .as_ref()
+                                .is_some_and(|b| b.same_zero_set(first.event, next.event)))
                 }
                 _ => false,
             };

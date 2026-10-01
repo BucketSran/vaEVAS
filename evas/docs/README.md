@@ -1,6 +1,6 @@
 # EVAS technical handbook
 
-本手册说明电压域行为如何被编译、求解和验证，供使用者与贡献者复核。当前 IR15 限定范围、
+本手册说明电压域行为如何被编译、求解和验证，供使用者与贡献者复核。当前 IR16 开发范围、
 历史检查点及其证据分别记录在[能力与缺口总表](CAPABILITIES.md)，不通过 PR 编号推断支持范围。
 构建、API 和 CLI 从 [EVAS 入口](../README.md) 开始。
 
@@ -12,6 +12,7 @@
 | 电压方程、稠密/稀疏线性代数、Newton、精度 | [NUMERICS](NUMERICS.md) |
 | cross、timer、同刻事件与提交/回退 | [EVENTS](EVENTS.md) |
 | transition、absdelay、slew、idt，以及一阶滤波/受限相位的数学与实现 | [OPERATORS](OPERATORS.md) |
+| 仿射积分反馈、高阶滤波、ddt、连续动态 guard | [CONTINUOUS](CONTINUOUS.md) |
 | 独立需求、模型及观察判据 | [验证集](../validation/README.md)、[观察资格协议](../validation/METHOD_QUALIFICATION.md) |
 | 执行身份、复现实验及公开资产 | [实验入口](../../experiments/README.md) |
 | 分支、责任归属、发布与清理 | [CONTRIBUTING](../../CONTRIBUTING.md)；agent 快速入口为 [AGENTS.md](../../AGENTS.md) |

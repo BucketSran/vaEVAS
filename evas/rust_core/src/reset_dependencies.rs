@@ -52,7 +52,8 @@ pub(crate) fn check(
     let mut resets = Vec::new();
     for (index, spec) in program.operators.iter().enumerate() {
         let input = match spec {
-            OperatorSpec::Idt { input, .. }
+            OperatorSpec::Ddt { input, .. }
+            | OperatorSpec::Idt { input, .. }
             | OperatorSpec::Transition { input, .. }
             | OperatorSpec::AbsDelay { input, .. }
             | OperatorSpec::Slew { input, .. }

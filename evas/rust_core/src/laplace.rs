@@ -26,6 +26,29 @@ pub(crate) struct LaplaceNd {
 }
 
 impl LaplaceNd {
+    /// Stable first-order output remains in the convex hull of its initial
+    /// output and the gain-scaled input over an interval (positive tau).
+    pub(crate) fn range(&self, time: I, input: I) -> Result<(I, I), Error> {
+        let output = self.value_bounds(time.lo)?.hull(self.gain_bounds * input);
+        let derivative = (self.gain_bounds * input - output) / self.tau_bounds;
+        if !output.finite() || !derivative.finite() {
+            return Err(Error::new(
+                "event_resolution",
+                "nonfinite filter guard trajectory",
+            ));
+        }
+        // Also use |y(t)-y(a)| <= sup |y'| * (t-a), to converge as the
+        // localization interval shrinks rather than retain a whole DC hull.
+        let local = self.value_bounds(time.lo)? + derivative * (time - I::point(time.lo));
+        let output = I {
+            lo: output.lo.max(local.lo),
+            hi: output.hi.min(local.hi),
+        };
+        Ok((
+            output,
+            (self.gain_bounds * input - output) / self.tau_bounds,
+        ))
+    }
     pub(crate) fn enclosed(
         points: Vec<(f64, f64)>,
         bounds: Vec<I>,

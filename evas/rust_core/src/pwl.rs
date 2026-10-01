@@ -96,6 +96,37 @@ pub(crate) struct Trajectory {
 }
 
 impl Trajectory {
+    pub(crate) fn range(&self, time: I) -> Result<(Vec<I>, Vec<I>), Error> {
+        if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid guard time interval",
+            ));
+        }
+        let left = self.value_bounds(time.lo);
+        let right = self.value_bounds(time.hi);
+        let mut values: Vec<_> = left.iter().zip(right).map(|(&a, b)| a.hull(b)).collect();
+        let mut derivatives = Vec::new();
+        for (k, source) in self.config.pwl.iter().enumerate() {
+            let mut slope = None;
+            for pair in source.windows(2) {
+                if pair[0][0] < time.hi && pair[1][0] > time.lo
+                    || time.lo == time.hi && pair[0][0] <= time.lo && time.lo <= pair[1][0]
+                {
+                    let d = (I::point(pair[1][1]) - I::point(pair[0][1]))
+                        / (I::point(pair[1][0]) - I::point(pair[0][0]));
+                    slope = Some(slope.map_or(d, |previous: I| previous.hull(d)));
+                }
+            }
+            for &[t, v] in source {
+                if t > time.lo && t < time.hi {
+                    values[k] = values[k].hull(I::point(v));
+                }
+            }
+            derivatives.push(slope.unwrap_or(I::ZERO));
+        }
+        Ok((values, derivatives))
+    }
     pub(crate) fn new(config: TransientInputs, driven_count: usize) -> Result<Self, Error> {
         let invalid = || {
             Error::new("invalid_inputs", "PWL sources must start at 0, strictly increase and cover stop; output times must strictly increase within [0,stop]; stop/max_step must be positive and finite")

@@ -178,8 +178,8 @@ class LaplaceContracts(unittest.TestCase):
         compile_errors = [
             "V(y,r)<+laplace_nd(V(u,r),{1.0},{1.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0});",
-            "V(y,r)<+laplace_nd(V(u,r),'{1.0,2.0},'{1.0,0.5e-6});",
-            "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6,1e-12});",
+            "V(y,r)<+laplace_nd(V(u,r),'{1.0,2.0,3.0},'{1.0,0.5e-6});",
+            "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,1,1,1,1,1,1,1,1,1});",
             "V(y,r)<+laplace_nd(V(u,r),'{V(u,r)},'{1.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{tau,V(u,r)});",
             "V(y,r)<+laplace_nd(V(u,r));",
@@ -190,9 +190,7 @@ class LaplaceContracts(unittest.TestCase):
         kernel_errors = [
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{0.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,-0.5e-6});",
-            "V(z,r)<+V(u,r); V(y,r)<+laplace_nd(V(z,r),'{1.0},'{1.0,0.5e-6});",
             "@(initial_step) q=0; V(y,r)<+laplace_nd(q,'{1.0},'{1.0,0.5e-6});",
-            "V(y,r)<+laplace_nd(laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6}),'{1.0},'{1.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(y,r),'{1.0},'{1.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6})*V(u,r);",
         ]
@@ -205,17 +203,14 @@ class LaplaceContracts(unittest.TestCase):
     def test_raw_ir_rejects_bad_coefficients_and_dependencies(self):
         good = compile_filter().to_dict()
         bad_programs = []
-        for key, value in [("numerator", [1.0, 2.0]), ("denominator", [1.0]),
-                           ("denominator", [1.0, 0.5e-6, 1e-12]), ("denominator", [1.0, -1.0]),
+        for key, value in [("numerator", [1.0, 2.0, 3.0]), ("denominator", [1.0]),
+                           ("denominator", [1.0] * 10), ("denominator", [1.0, -1.0]),
                            ("extra", 0)]:
             raw = copy.deepcopy(good)
             raw["operators"][0][key] = value
             bad_programs.append(raw)
         raw = copy.deepcopy(good)
         del raw["operators"][0]["numerator"]
-        bad_programs.append(raw)
-        raw = copy.deepcopy(good)
-        raw["operators"][0]["input"] = dict(op="operator", operator=0)
         bad_programs.append(raw)
         for program in bad_programs:
             response = subprocess.run([str(KERNEL)], input=json.dumps(dict(
@@ -226,6 +221,17 @@ class LaplaceContracts(unittest.TestCase):
                 self.assertEqual(response.returncode, 2, response.stdout)
                 self.assertIn(json.loads(response.stderr)["kind"],
                               ["invalid_ir", "invalid_request", "unsupported_operator"])
+
+    def test_raw_self_feedback_without_unique_dc_initial_state_fails(self):
+        raw = compile_filter().to_dict()
+        raw["operators"][0]["input"] = dict(op="operator", operator=0)
+        response = subprocess.run([str(KERNEL)], input=json.dumps(dict(
+            program=raw, driven=["u"], samples=[],
+            transient=dict(pwl=[POINTS], output_times=[0, 6e-6], stop=6e-6, max_step=10e-6))),
+            text=True, capture_output=True)
+        self.assertEqual(response.returncode, 2, response.stdout)
+        # x'=(x-x)/tau gives no DC equation that determines x(0).
+        self.assertEqual(json.loads(response.stderr)["kind"], "event_resolution")
 
 
 if __name__ == "__main__":

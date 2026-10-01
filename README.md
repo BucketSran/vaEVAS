@@ -6,8 +6,10 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 ## 当前可用内容
 
 [独立验证集](evas/validation/README.md) 包含原 31 个条件。已合并 EVAS 的
-[PR26 检查点](evas/validation/README.md#latest-evas-checkpoint)两档本地瞬态回放各 24/31 达标，
-剩余 7 条明确拒绝。thu-sui 的[历史四后端 248 配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)
+[IR15 检查点](evas/validation/README.md#latest-evas-checkpoint)两档本地瞬态回放各 31/31 达标。
+IR16 的[连续动态开发检查点](evas/docs/CONTINUOUS.md#checkpoint-evidence)另外记录积分反馈、动态 cross、
+ddt、高阶滤波与 manifest 重编译，尚未合并；新检查不增加原矩阵的条件数。
+thu-sui 的[历史四后端 248 配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)
 另行保存，其中 EVAS 为旧版 0.8.7。结果仅证明所列有限观测，完整观察资格仍为 I。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 

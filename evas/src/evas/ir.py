@@ -1,4 +1,4 @@
-"""Version 15: combined voltage/event IR with selects, reset histories and operators.
+"""Version 16: combined voltage/event IR with selects, reset histories and operators.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Literal
 
 
-SCHEMA_VERSION = 15
+SCHEMA_VERSION = 16
 
 
 @dataclass(frozen=True)
@@ -107,6 +107,13 @@ class Idt:
     origin: Origin
     reset: Expression | None = None
     kind: str = field(default="idt", init=False)
+
+
+@dataclass(frozen=True)
+class Ddt:
+    input: Expression
+    origin: Origin
+    kind: str = field(default="ddt", init=False)
 
 
 @dataclass(frozen=True)
@@ -216,7 +223,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | Ddt, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

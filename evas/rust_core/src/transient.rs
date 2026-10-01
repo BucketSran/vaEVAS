@@ -175,10 +175,45 @@ fn prepare_batch_with_bounds(
                 ..
             } = &leaf.trigger
             {
-                let value = model.guards[leaf_id]
-                    .as_ref()
-                    .unwrap()
-                    .value(&next.solution.voltages, &next.states)?;
+                let value = if let Some(guard) = &model.guards[leaf_id] {
+                    guard.value_with(
+                        &next.solution.voltages,
+                        &next.states,
+                        &next.operators.values(event_time)?,
+                    )?
+                } else {
+                    let EventTrigger::Cross { guard, .. } = &leaf.trigger else {
+                        unreachable!()
+                    };
+                    let nodes: Vec<_> = next
+                        .solution
+                        .voltages
+                        .iter()
+                        .copied()
+                        .map(I::point)
+                        .collect();
+                    let operators: Vec<_> = next
+                        .operators
+                        .values(event_time)?
+                        .into_iter()
+                        .map(I::point)
+                        .collect();
+                    let bound = crate::guard_trajectory::evaluate(
+                        guard,
+                        &nodes,
+                        &operators,
+                        &vec![I::ZERO; nodes.len()],
+                        &vec![I::ZERO; operators.len()],
+                    )?
+                    .0;
+                    if bound.magnitude() > *expression_tolerance {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "post-event polynomial guard exceeds expression tolerance",
+                        ));
+                    }
+                    bound.lo + (bound.hi - bound.lo) * 0.5
+                };
                 if value.abs() > *expression_tolerance {
                     return Err(Error::new(
                         "event_resolution",
@@ -273,7 +308,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;
-    let crossings = schedule(&model, &trajectory)?;
+    let crossings = schedule(&model, &trajectory, &operators)?;
     let circuit = model.circuit_with(&initial, &operators.values(0.0)?)?;
     let mut accepted = Frame {
         time: 0.0,

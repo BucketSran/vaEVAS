@@ -2,6 +2,71 @@
 use crate::event_accuracy::unresolved;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program};
+use std::collections::BTreeMap;
+
+/// Original affine circuit projected onto driven inputs, event states,
+/// operator outputs and one constant. Shared by affine/dynamic event timing.
+pub(crate) fn node_map(program: &Program, driven: &[String]) -> Result<Vec<Vec<I>>, Error> {
+    let count = program.nodes.len();
+    let parameters = program.states.len() + program.operators.len();
+    let variables = count + parameters;
+    let driven: Vec<_> = driven
+        .iter()
+        .map(|name| {
+            program
+                .nodes
+                .iter()
+                .position(|n| n == name)
+                .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))
+        })
+        .collect::<Result<_, _>>()?;
+    let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
+    let n = unknown.len();
+    let width = driven.len() + parameters + 1;
+    let mut groups = BTreeMap::new();
+    for c in &program.contributions {
+        let rhs = affine(&c.rhs, program)?;
+        let row = groups.entry(&c.branch).or_insert_with(|| {
+            let mut row = vec![I::ZERO; variables + 1];
+            row[c.positive] = row[c.positive] + I::ONE;
+            row[c.negative] = row[c.negative] - I::ONE;
+            row
+        });
+        for (v, term) in row.iter_mut().zip(rhs) {
+            *v = *v - term;
+        }
+    }
+    let rows = groups
+        .values()
+        .map(|row: &Vec<I>| {
+            unknown
+                .iter()
+                .map(|&k| row[k])
+                .chain(driven.iter().map(|&k| -row[k]))
+                .chain((count..variables).map(|k| -row[k]))
+                .chain([-row[variables]])
+                .collect()
+        })
+        .collect();
+    let rows = eliminate(rows, n, width)?;
+    let mut values = vec![vec![I::ZERO; width]; variables];
+    for (k, &node) in driven.iter().enumerate() {
+        values[node][k] = I::ONE;
+    }
+    for k in 0..parameters {
+        values[count + k][driven.len() + k] = I::ONE;
+    }
+    for r in (0..n).rev() {
+        for k in 0..width {
+            let rest = (r + 1..n).fold(I::ZERO, |sum, c| sum + rows[r][c] * values[unknown[c]][k]);
+            values[unknown[r]][k] = rows[r][n + k] - rest;
+        }
+    }
+    if values.iter().flatten().any(|v| !v.finite()) {
+        return Err(unresolved("nonfinite affine network projection"));
+    }
+    Ok(values)
+}
 
 // Last entry is the constant. Recheck affinity before dropping product terms,
 // even though EventModel also checks the original expression's structure.
