@@ -308,6 +308,40 @@ class NonlinearIntegralContracts(unittest.TestCase):
             assert_close(self, row["dut:z"], first, delta=1e-10)
             assert_close(self, row["y"], second, delta=1e-10)
 
+    def test_uncertain_nonlinear_restart_does_not_accept_uncertified_sampling(self):
+        # At the exact root u=sqrt(2), q^2=2e12, so y(10)=2e12*(10-sqrt(2)).
+        # Sampling q at the representative root's upper endpoint can instead
+        # miss this answer by >2e8 V while accepting a 2e7 V budget. Until
+        # sampling includes the full event-time box this combination must fail.
+        program = compile_model(
+            "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
+            "V(y,r)<+idt(pow(q,2),0);", "real q;")
+        with self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
+            run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
+                vabstol=2e7, reltol=0)
+
+    def test_exact_nonlinear_sampling_keeps_the_certified_event_contract(self):
+        program = compile_model(
+            "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=V(y,r); "
+            "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "real q;")
+        times = [0, .25, .5, .75, 1]
+        result = run(program, times=times, stop=1, vabstol=1e-10, reltol=1e-10)
+        for t, actual in zip(times, values(result)):
+            expected = 1/(1+t) if t <= .5 else 1/(1.5+(2/3)*(t-.5))
+            assert_close(self, actual, expected, delta=1e-10)
+
+    def test_uncertain_nonlinear_restart_rejects_uncertified_branch_selection(self):
+        # u=sqrt(2)<1.414214 at the true root; the certified representative can
+        # lie above 1.414214 and select the opposite branch. Literal RHS values
+        # do not remove that event-time-dependent choice.
+        program = compile_model(
+            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
+            "if (V(u,r)>1.414214) q=2; else q=3; "
+            "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
+        with self.assertRaisesRegex(KernelError, "event_resolution.*input-dependent branches"):
+            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2,
+                vabstol=1e-4, reltol=0)
+
 
 if __name__ == "__main__":
     unittest.main()

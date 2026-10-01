@@ -554,6 +554,27 @@ impl NonlinearContinuous {
                 "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
         }
+        if window.lo != window.hi {
+            // The current settlement certifies samples/conditions at the
+            // representative time, not over the event window. Do not extend
+            // that certificate to ideal-root parameter values. Conservatively
+            // inspect all writers of each changed state, since this immutable
+            // history has no identity for the currently firing event body.
+            for event in &self.context.program.events {
+                if event
+                    .assignments()
+                    .iter()
+                    .any(|a| self.parameters[a.state] != parameters[a.state])
+                    && time_sensitive_body(
+                        &event.body,
+                        &self.context.program,
+                        &event.origin.instance,
+                    )?
+                {
+                    return Err(Error::new("event_resolution", "uncertain nonlinear restart cannot certify event sampling or input-dependent branches over its time window"));
+                }
+            }
+        }
         let mut next = Self::initialized(
             self.context.clone(),
             parameters.to_vec(),
@@ -581,6 +602,42 @@ impl NonlinearContinuous {
         next.propagate()?;
         Ok(next)
     }
+}
+
+fn time_sensitive_body(
+    body: &[crate::ir::Statement],
+    program: &Program,
+    owner: &str,
+) -> Result<bool, Error> {
+    let reads_time = |expr| {
+        let dependencies = crate::events::affine(expr, program, owner)?;
+        Ok::<_, Error>(
+            !dependencies.node_dependencies.is_empty()
+                || !dependencies.operator_dependencies.is_empty(),
+        )
+    };
+    for statement in body {
+        match statement {
+            crate::ir::Statement::Assign(a) if reads_time(&a.rhs)? => return Ok(true),
+            crate::ir::Statement::If {
+                left,
+                right,
+                then_body,
+                else_body,
+                ..
+            } => {
+                if reads_time(left)?
+                    || reads_time(right)?
+                    || time_sensitive_body(then_body, program, owner)?
+                    || time_sensitive_body(else_body, program, owner)?
+                {
+                    return Ok(true);
+                }
+            }
+            _ => {}
+        }
+    }
+    Ok(false)
 }
 
 fn collect_structure(
