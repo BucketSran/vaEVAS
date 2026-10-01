@@ -625,14 +625,12 @@ fn time_sensitive_body(
                 then_body,
                 else_body,
                 ..
-            } => {
-                if reads_time(left)?
-                    || reads_time(right)?
-                    || time_sensitive_body(then_body, program, owner)?
-                    || time_sensitive_body(else_body, program, owner)?
-                {
-                    return Ok(true);
-                }
+            } if reads_time(left)?
+                || reads_time(right)?
+                || time_sensitive_body(then_body, program, owner)?
+                || time_sensitive_body(else_body, program, owner)? =>
+            {
+                return Ok(true);
             }
             _ => {}
         }
