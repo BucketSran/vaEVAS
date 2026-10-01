@@ -81,6 +81,26 @@ class InternalDerivativeContracts(unittest.TestCase):
 
 
 class JointEventDynamicsContracts(unittest.TestCase):
+    def test_uncertain_linear_restart_rejects_uncertified_input_branches(self):
+        # At tau=sqrt(2)<1.414214, the correct branch sets q=3.
+        # Thus y(2)=tau+3*(2-tau)=6-2*sqrt(2), not 4-sqrt(2).
+        program = compile_model(
+            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
+            "if (V(u,r)>1.414214) q=2; else q=3; V(y,r)<+idt(q,0);", "integer q;")
+        with self.assertRaisesRegex(KernelError, "event_resolution.*input-dependent branches"):
+            run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2, vabstol=1e-4, reltol=0)
+
+    def test_uncertain_linear_restart_rejects_uncertified_sampling(self):
+        # q=sqrt(2) at the ideal root; y(10)=10*sqrt(2)-2.
+        # The representative sample can miss by >7e-5 V while the old
+        # linear restart accepts the requested 2e-5 V budget.
+        program = compile_model(
+            "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
+            "q=V(u,r); V(y,r)<+idt(q,0);", "real q;")
+        with self.assertRaisesRegex(KernelError, "event_resolution.*sampling"):
+            run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
+                vabstol=2e-5, reltol=1e-10)
+
     def test_event_input_change_preserves_integral_state_and_rebuilds_future(self):
         program = compile_model(
             "@(initial_step) q=0; @(timer(.5,0,1e-12)) q=2; "

@@ -21,6 +21,12 @@ impl LinearContinuous {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
         }
+        if !time.is_finite() || !time_bounds.finite() || time_bounds.hi != time {
+            return Err(Error::new(
+                "event_resolution",
+                "linear event representative must be the upper endpoint of its time enclosure",
+            ));
+        }
         if time_bounds.lo != time_bounds.hi
             && self
                 .context
@@ -119,5 +125,44 @@ impl LinearContinuous {
             .unwrap();
         }
         Ok(next)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn interior_event_representative_is_not_a_certified_forward_restart() {
+        let origin = serde_json::json!({"source":"window.va","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"integer","initial":0}],
+            "operators":[{"kind":"idt","input":{"op":"state","state":0},"ic":0,"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl: vec![],
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            0,
+        )
+        .unwrap();
+        let base = LinearContinuous::new(&program, &trajectory, &[], &[0.0])
+            .unwrap()
+            .unwrap();
+        let original = base.bounds(1.0).unwrap();
+        let window = I { lo: 0.25, hi: 0.75 };
+        // With q:0->1 at tau=.75, y(1)=.25. Forward-only propagation
+        // from representative .5 instead gives [.5,.75], excluding .25.
+        assert!(base.restarted(0.5, window, &[I::ONE]).is_err());
+        assert_eq!(base.bounds(1.0).unwrap(), original);
+        let candidate = base.restarted(window.hi, window, &[I::ONE]).unwrap();
+        let at_stop = candidate.bounds(1.0).unwrap()[0];
+        assert!(at_stop.lo <= 0.25 && at_stop.hi >= 0.75);
     }
 }

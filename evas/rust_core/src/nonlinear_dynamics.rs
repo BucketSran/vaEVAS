@@ -545,21 +545,9 @@ impl NonlinearContinuous {
         source
     }
     pub(super) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
-        if self.event_dependent && window.lo != window.hi {
-            // The current settlement certifies samples/conditions at the
-            // representative time, not over the event window. Do not extend
-            // that certificate to ideal-root parameter values. Check actual
-            // firing bodies even when the sampled representative is unchanged.
-            for &id in events {
-                let event = &self.context.program.events[id];
-                if time_sensitive_body(&event.body, &self.context.program, &event.origin.instance)?
-                {
-                    return Err(Error::new("event_resolution", "uncertain nonlinear restart cannot certify event sampling or input-dependent branches over its time window"));
-                }
-            }
-        }
-        Ok(())
+        runtime::validate_event_bodies(&self.context.program, self.event_dependent, window, events)
     }
+
     pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
@@ -597,40 +585,6 @@ impl NonlinearContinuous {
         next.propagate()?;
         Ok(next)
     }
-}
-
-fn time_sensitive_body(
-    body: &[crate::ir::Statement],
-    program: &Program,
-    owner: &str,
-) -> Result<bool, Error> {
-    let reads_time = |expr| {
-        let dependencies = crate::events::affine(expr, program, owner)?;
-        Ok::<_, Error>(
-            !dependencies.node_dependencies.is_empty()
-                || !dependencies.operator_dependencies.is_empty(),
-        )
-    };
-    for statement in body {
-        match statement {
-            crate::ir::Statement::Assign(a) if reads_time(&a.rhs)? => return Ok(true),
-            crate::ir::Statement::If {
-                left,
-                right,
-                then_body,
-                else_body,
-                ..
-            } if reads_time(left)?
-                || reads_time(right)?
-                || time_sensitive_body(then_body, program, owner)?
-                || time_sensitive_body(else_body, program, owner)? =>
-            {
-                return Ok(true);
-            }
-            _ => {}
-        }
-    }
-    Ok(false)
 }
 
 fn collect_structure(
