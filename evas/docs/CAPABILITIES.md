@@ -1,8 +1,9 @@
 # EVAS 能力与缺口总表
 
 核对日期：2026-10-02。当前源码为 **EVAS 0.12.1 / IR v16**，版本 tag 尚未发布；合并身份以 Git/PR 为准。
-已合并基线为 [PR31](https://github.com/BucketSran/vaEVAS/pull/31)，main `09b4222`；
-本轮三个连续动态扩展及共同生命周期修复在本地分支等待分批 review。旧运行时/收据保留原执行身份。
+三个连续动态扩展及共同生命周期修复由 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成，基于
+[PR31](https://github.com/BucketSran/vaEVAS/pull/31) 的 `09b4222`。被测运行时代码现提交为 `1b99c33`，
+与追加修复收据的 56 份运行时源码哈希一致；旧收据保留当时执行身份，合并记录不改写实验结果。
 旧 IR 1–15 需要从原始 VA/manifest 重新编译；[批量入口](../README.md#ir-v8-migration)
 不会重写历史 IR 或收据。Python 与 Rust 必须使用同一 IR 版本。
 限定范围和独立验证见[连续动态](CONTINUOUS.md#checkpoint-evidence)；已合并实验身份从
@@ -50,14 +51,14 @@
 统一两类路径的采样边界及重启代表时刻；458 Python、118 Rust 与原矩阵两档检查通过。
 该实现已随 PR31 合并到 main `09b4222`；其原收据保留执行时的本地分支状态。
 
-0.12.0 的本地实现分为三批审查：
+0.12.0 开发实现分为三批审查：
 [混合积分/滤波](../tests/test_mixed_dynamics.py)、[根盒采样/条件](../tests/test_event_window_sampling.py)、
 [index-one 隐式 DAE](../tests/test_implicit_dynamics.py)。数学和边界在 [CONTINUOUS](CONTINUOUS.md)，
 运行时 `fd60d11` 的[本轮新执行](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)
 包括 482 Python、121 Rust（另有一项旧性能探针 ignored）及原矩阵两档各 31/31；
 62 份 CSV、判定、输入和除引擎版本外的生效设置与 PR31 完全一致。
 前一检查点 `cc68572` 的两档 26/31 保留在失败归档中：根盒条件需要额外保留实际触发 guard 的零集关系。
-本轮无新 Spectre/性能测量；不继承 PR31 的内核身份，也不把本地实现标为已合并。
+该次执行无新 Spectre/性能测量，不继承 PR31 的内核身份；收据状态描述当时尚未集成的快照。
 独立审查修复 `d3daff0` 的[新收据](../../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)
 保留两项原失败和新执行：reset 为零时仍保留 tau 采样；带已知物理历史的事件重启不重新做 DC 初始化。
 484 Python、121 Rust 通过；原矩阵两档各 31/31，62 份 CSV 与修复前及 PR31 一致。
@@ -73,7 +74,7 @@ QUALIFICATION 仍为 I，原 31 矩阵本批没有新执行，PERFORMANCE 没有
 
 0.12.1 的[第二批共同闭包](CONTINUOUS.md#shared-lifecycle-closure)在相同分支实施；
 [新收据](../../experiments/parallel-gap-integration/results/lifecycle-closure-checks.json)以未提交的源码快照和内核哈希标识，
-没有冒用旧 commit 作为新运行时身份，也没有合并/发布。原六个误拒绝配置同 IR 回放全部完成，
+没有冒用旧 commit 作为新运行时身份；未提交/未合并字段描述当时执行状态。原六个误拒绝配置同 IR 回放全部完成，
 共同观察使用 te=tau 的既有策略并显式输出区间；真实生产控制器验证失败/丢弃/重试。
 该实施快照的 490 Python、122 Rust 通过；原矩阵两档各 31/31，62 份 CSV 与 0.12.0 检查点逐字节一致。
 非严格 proper 滤波直接项的事件反馈环保守拒绝，不能用停住的观察迭代替代唯一性证明；
@@ -103,7 +104,7 @@ Spectre 复用第一批的 20 次导出，失败与严格条件差异保留；�
 
 | 方向 | 下一步需先固定的设计与独立验收 |
 | --- | --- |
-| 联合动态求解 | 本地已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、首次启动的非线性滤波 DC、非线性直接通路、时间盒内部代表时刻和未来事件稳定化传播 |
+| 联合动态求解 | 已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、首次启动的非线性滤波 DC、非线性直接通路、时间盒内部代表时刻和未来事件稳定化传播 |
 | 事件扩展 | 已补状态独立多项式/连续算子 guard；剩余事件后轨迹重定位、切线、隐式非线性电压 guard、动态 timer/混合 OR |
 | 语言和算子 | 已补受限内部/算子输入 ddt 和 1–8 阶滤波；剩余跳变/高指标导数、通用函数/过程控制/数组及更广初值/参数语义 |
 | 精度/资格 | 通用状态预算、前端折叠误差、一般连续时间误差、独立观察资格与未见确认集，保留拒绝及错误对照 |
@@ -114,6 +115,6 @@ Spectre 复用第一批的 20 次导出，失败与严格条件差异保留；�
 
 按[共同生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)分批审查。
 第一批交付独立数学、输入冻结及初始化/续算/事件采样/复位对照；
-第二批已补受限共同复位观察闭包、生产事件提交/回退及 te=tau 的显式时间绑定，等待 review。
+第二批已补受限共同复位观察闭包、生产事件提交/回退及 te=tau 的显式时间绑定，集成记录见 PR32。
 之后才补非线性初始化、DAE 与事件/复位组合、改变轨迹后的根重定位；晚触发策略与更广历史认证另行验收。
 资格确认与性能测量分别推进，原 31 条开发回归继续保留。

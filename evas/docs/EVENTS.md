@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：EVAS 0.12.1 / IR16 本地候选，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
+适用范围：EVAS 0.12.1 / IR16，支持受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
 [能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
 
 共同重构的第一批审查从[生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)进入：

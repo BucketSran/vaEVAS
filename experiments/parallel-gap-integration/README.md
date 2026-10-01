@@ -1,11 +1,15 @@
 # EVAS 联合交付与验证
 
-本检查点整合普通 analog 局部赋值/输入条件、一阶滤波、相位和无状态多项式瞬态，
-保留已交付的事件与积分复位能力。数学、试算生命周期和拒绝范围分别由
-[能力表](../../evas/docs/CAPABILITIES.md)、[手册](../../evas/docs/README.md)与[复审记录](REVIEW.md)维护。
-运行时固定于 `d451605bf9991ceea010c68af9cb1143f1b50754`，EVAS 0.9.0 / IR v15；没有发布 tag。
+本页按执行身份保存各阶段的联合验证。当前 EVAS 0.12.1 / IR16 的集成记录为
+[PR32](https://github.com/BucketSran/vaEVAS/pull/32)，被测运行时代码现提交为 `1b99c33`，
+与[追加修复收据](results/lifecycle-observation-review-fixes.json)的源码快照一致；版本 tag 尚未发布。
+数学、试算生命周期和拒绝范围分别由[能力表](../../evas/docs/CAPABILITIES.md)、
+[手册](../../evas/docs/README.md)维护。旧收据中的未提交/未合并状态描述执行当时的快照。
 
 ## 当前证据
+
+最新共同事件观察/依赖修复见[追加收据](results/lifecycle-observation-review-fixes.json)。
+下表是 EVAS 0.9.0 / IR15 运行时 `d451605` 的历史精度链证据，不描述新运行时。
 
 | 收据 | 实际执行与限制 |
 | --- | --- |
@@ -100,10 +104,10 @@ CSV、判定和数值设置与 PR30 一致。27 个新动态开发方法不增�
 
 <a id="certified-mixed-dynamics"></a>
 
-## 本地连续动态三项检查点
+## 连续动态三项开发检查点
 
-0.12.0 / IR16 基于已合并 PR31 / main `09b4222`；本地运行时为 `fd60d11`，等待分批 review，
-尚未发布或合并。三组实现共用历史/误差接口，数学与边界见 [CONTINUOUS](../../evas/docs/CONTINUOUS.md)：
+0.12.0 / IR16 基于 PR31 / main `09b4222`；该次被测运行时为 `fd60d11`，
+记录的是当时尚未集成的开发检查点。三组实现共用历史/误差接口，数学与边界见 [CONTINUOUS](../../evas/docs/CONTINUOUS.md)：
 积分与 proper 滤波共同传播；根盒采样/条件与代表时刻输出分别认证；无事件 index-one 多项式隐式 DAE。
 每项都保留显式初值、调用点身份和不可变候选历史，超出范围或不能证明预算时拒绝。
 
@@ -204,10 +208,10 @@ python3 -B experiments/parallel-gap-integration/lifecycle_contract.py analyze \
 
 <a id="lifecycle-closure-review"></a>
 
-## 共同生命周期：第二批实现待 review
+## 共同生命周期：第二批实现
 
 0.12.1 / IR16 在原分支实现[复位观察闭包](../../evas/docs/CONTINUOUS.md#shared-lifecycle-closure)，
-未提交、发布或合并。运行时身份采用完整本地源码快照和内核哈希，基于 `0d255b0`；
+该次执行发生在提交、集成之前。运行时身份采用完整本地源码快照和内核哈希，基于 `0d255b0`；
 不能把该基准 commit 当作新内核源码。数学、代码入口、RED 与全部失败见[实施收据](results/lifecycle-closure-checks.json)。
 
 实际复位后的 IC 与事件体采样共同求解，闭包稳定后安装未来历史；每轮赋值从同一接受状态重放。
@@ -276,7 +280,7 @@ python3 -B experiments/parallel-gap-integration/analyze.py \
 同刻观察接口与未来安装接口分开，未来 transition 目标不会被拿回去查询旧根盒。
 
 旧收据和失败日志保留；本次原 31 条件、20 条共同生命周期回放使用原输入/检查器，
-Spectre 部分仅复用历史原始结果。没有新远端仿真、性能测量或合并/发布。
+Spectre 部分仅复用历史原始结果。实验阶段没有新远端仿真或性能测量；后续集成记录见 PR32。
 未提供非点历史观察的算子明确拒绝，精确 timer 的正常支持作为通过控制。
 原始日志与源码/内核快照仍为仅本地可用；公开收据不代表完整原始资产已经公开。
 

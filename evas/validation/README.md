@@ -15,6 +15,10 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 ### IR16 连续动态与动态补齐检查点
 
 IR16 连续动态的契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
+0.12.1 的 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成检查点采用被测运行时 `1b99c33`，
+其源码与[观察及依赖修复收据](../../experiments/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)的快照完全匹配。
+原矩阵两档各 31/31，62 份波形、判定和生效设置与修复前相同；新数学/组合回归另行计数。
+下方历史收据保留原始运行身份，不以集成动作替代新的仿真执行。
 PR30 已合并；回归单独计数，不改写原 31 条件或以下历史 IR15 身份。
 0.11.0 补充内部导数、联合事件/复位和多项式积分的独立答案，见
 [动态数学](../docs/CONTINUOUS.md)及[检查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)。
