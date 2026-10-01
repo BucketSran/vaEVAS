@@ -35,18 +35,33 @@ def analyze(source, run, identity_path, output, spectre=None, baseline=None, spe
         raise ValueError("condition definitions drifted")
     started = json.loads((run / "STARTED.json").read_text())
     execution_identity = json.loads(identity_path.read_text())
-    if not execution_identity["source_worktree_clean"] or execution_identity["kernel_sha256"] != started["kernel_sha256"]:
+    if execution_identity["kernel_sha256"] != started["kernel_sha256"]:
         raise ValueError("execution identity does not match this build")
+    snapshot_name = execution_identity.get("source_snapshot")
+    if snapshot_name is not None:
+        snapshot = (identity_path.parent / snapshot_name).resolve()
+        if not snapshot.is_relative_to(identity_path.parent.resolve()):
+            raise ValueError("source snapshot is outside the execution archive")
+        for relative, digest in execution_identity["source_sha256"].items():
+            frozen = (snapshot / relative).resolve()
+            if not frozen.is_relative_to(snapshot) or sha(frozen) != digest or sha(ROOT / relative) != digest:
+                raise ValueError("local source snapshot drift: " + relative)
+        if any(execution_identity["source_sha256"].get(rel) != digest
+               for rel, digest in started["source_sha256"].items()):
+            raise ValueError("source snapshot differs from executed runtime")
+    elif not execution_identity["source_worktree_clean"]:
+        raise ValueError("uncommitted runtime requires an explicit frozen source snapshot")
     if started["source_input_manifest_sha256"] != sha(source / "INPUT_MANIFEST.json"):
         raise ValueError("wrong frozen source identity")
     for relative, digest in started["source_sha256"].items():
         if sha(ROOT / relative) != digest:
             raise ValueError("runtime source changed since execution: " + relative)
-    for relative, digest in started["source_sha256"].items():
-        content = subprocess.check_output(
-            ["git", "show", execution_identity["runtime_commit"] + ":" + relative], cwd=ROOT)
-        if hashlib.sha256(content).hexdigest() != digest:
-            raise ValueError("runtime commit does not match executed source: " + relative)
+    if snapshot_name is None:
+        for relative, digest in started["source_sha256"].items():
+            content = subprocess.check_output(
+                ["git", "show", execution_identity["runtime_commit"] + ":" + relative], cwd=ROOT)
+            if hashlib.sha256(content).hexdigest() != digest:
+                raise ValueError("runtime commit does not match executed source: " + relative)
     records = []
     for case in cases:
         for profile in ("base", "fine"):
@@ -92,6 +107,7 @@ def analyze(source, run, identity_path, output, spectre=None, baseline=None, spe
     receipt = dict(
         evidence_use="62 new local EVAS requests; unchanged original checker; no new Spectre execution",
         commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        commit_role="analysis checkout HEAD; runtime identity is recorded separately",
         execution_identity=execution_identity,
         execution_identity_sha256=sha(identity_path),
         runtime_identity=started, source_input_manifest_sha256=sha(source / "INPUT_MANIFEST.json"),

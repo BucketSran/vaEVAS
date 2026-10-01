@@ -12,11 +12,53 @@ impl LinearContinuous {
             && self.initial == other.initial
     }
 
+    pub(crate) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
+        if window.lo < self.start && window.hi == self.start {
+            let segment = self.segments.first().ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "no linear candidate segment for event sample",
+                )
+            })?;
+            let mut forcing = segment.initial.clone();
+            let (sources, slopes) = self.context.trajectory.range(window)?;
+            let count = self.initial.len();
+            forcing[count..count + sources.len()].copy_from_slice(&sources);
+            forcing[count + sources.len()..count + 2 * sources.len()].copy_from_slice(&slopes);
+            segment
+                .values
+                .iter()
+                .map(|row| dot(row, &forcing, "linear event sample"))
+                .collect()
+        } else {
+            self.range_bounds(window)
+        }
+    }
+
     pub(crate) fn restarted(
         &self,
         time: f64,
         time_bounds: I,
         parameters: &[I],
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, time_bounds, parameters, true)
+    }
+
+    pub(crate) fn mapped_event(
+        &self,
+        time: f64,
+        time_bounds: I,
+        parameters: &[I],
+    ) -> Result<Self, Error> {
+        self.event_candidate(time, time_bounds, parameters, false)
+    }
+
+    fn event_candidate(
+        &self,
+        time: f64,
+        time_bounds: I,
+        parameters: &[I],
+        propagate_to_representative: bool,
     ) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
@@ -84,7 +126,7 @@ impl LinearContinuous {
                 "continuous network disappeared during event replay",
             )
         })?;
-        if time_bounds.lo != time_bounds.hi {
+        if propagate_to_representative && time_bounds.lo != time_bounds.hi {
             // Enclose post-event propagation from any actual event in its root
             // box to the representative time. Prior and future dynamics both
             // participate; no event-time uncertainty is silently discarded.

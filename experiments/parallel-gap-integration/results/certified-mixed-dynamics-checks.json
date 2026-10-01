@@ -1,0 +1,1167 @@
+{
+  "scope": "three bounded continuous-dynamic features; local implementation, pending batch review",
+  "runtime_commit": "fd60d11e9a516c97437fe3dec6f9e240622373d0",
+  "base_commit": "09b42227033d2cea0f0432a2e83f7888f7aa41cb",
+  "branch": "feat/evas-certified-mixed-dynamics",
+  "package_version": "0.12.0",
+  "schema_version": 16,
+  "implementation_status": "local committed candidate; not published or merged",
+  "review_groups": [
+    {
+      "capability": "polynomial integral / proper filter composition",
+      "test": "evas/tests/test_mixed_dynamics.py",
+      "mathematics": "joint call-site state space plus validated Picard/Taylor; explicit integral IC and certifiable affine filter DC",
+      "limit": "nonlinear DC filter feedback and nonlinear direct feedthrough refused"
+    },
+    {
+      "capability": "non-point event sampling and condition certification",
+      "test": "evas/tests/test_event_window_sampling.py",
+      "mathematics": "whole root-window samples, separate sampled-state and representative-voltage certificates; fired exact affine zero sets refine feasible root predicates",
+      "limit": "upper-endpoint restart, no uncertain branch selection; full history sampling certificate limited to event-dependent continuous networks"
+    },
+    {
+      "capability": "index-one polynomial implicit voltage DAE",
+      "test": "evas/tests/test_implicit_dynamics.py",
+      "mathematics": "F_v v'=-F_z f-F_u u'; certify initial roots and interval Jacobian invertibility in every trajectory tube",
+      "limit": "event-free, square polynomial voltage equations, explicit-IC unreset idt only"
+    }
+  ],
+  "new_development_methods": {
+    "evas/tests/test_mixed_dynamics.py": 9,
+    "evas/tests/test_event_window_sampling.py": 7,
+    "evas/tests/test_implicit_dynamics.py": 7,
+    "evas/tests/test_idt.py::test_integral_products_keep_call_site_history_and_exact_area": 1
+  },
+  "new_development_method_count": 24,
+  "checks": [
+    {
+      "check": "build",
+      "returncode": 0,
+      "elapsed_s": 0.20020595798268914,
+      "log": "build.log",
+      "log_sha256": "2b34696728dc82b03cbf6311d7e3a6a41658bbde097834c3010a78bc82842c1a",
+      "command_display": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml"
+    },
+    {
+      "check": "python",
+      "returncode": 0,
+      "elapsed_s": 235.82405787496828,
+      "log": "python.log",
+      "log_sha256": "1d3635d6517fcb8ea18992c00ead831331b849cc23f5fb189f4e28bebca2a0e2",
+      "passed": 482,
+      "command_display": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -v"
+    },
+    {
+      "check": "rust",
+      "returncode": 0,
+      "elapsed_s": 4.217397875036113,
+      "log": "rust.log",
+      "log_sha256": "84bd2c3811116547ee0d43d1b9eafa8964aea097a3af7c953d1cb076c3c41055",
+      "passed": 121,
+      "ignored": 1,
+      "command_display": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml"
+    },
+    {
+      "check": "clippy",
+      "returncode": 0,
+      "elapsed_s": 0.16535895795095712,
+      "log": "clippy.log",
+      "log_sha256": "59639588a6f1826f129cbcd121edc07279dab94786f5fa5bde6b3439b2e845cc",
+      "command_display": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings"
+    },
+    {
+      "check": "format",
+      "returncode": 0,
+      "elapsed_s": 0.32355833298061043,
+      "log": "format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "command_display": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check"
+    },
+    {
+      "check": "math",
+      "returncode": 0,
+      "elapsed_s": 0.06022554205264896,
+      "log": "math.log",
+      "log_sha256": "5b6d4fe8c6d6733c2974bcc65d8ddc599aebdfa0d74fdd35ba0ec0d0fa9533f9",
+      "command_display": "python3 -B evas/validation/check_design_math.py"
+    },
+    {
+      "check": "frozen_validation",
+      "returncode": 0,
+      "elapsed_s": 1.0861787080066279,
+      "log": "frozen_validation.log",
+      "log_sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "command_display": "python3 -B scripts/verify_validation_version.py"
+    },
+    {
+      "check": "diff",
+      "returncode": 0,
+      "elapsed_s": 0.02446012501604855,
+      "log": "diff.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "command_display": "git diff --check"
+    },
+    {
+      "check": "original31_execution",
+      "returncode": 0,
+      "elapsed_s": 238.26046454103198,
+      "log": "original31_execution.log",
+      "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
+      "command_display": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --root runs/certified-mixed-review-20261001T121949Z-311235/matrix --kernel runs/certified-mixed-review-20261001T121949Z-311235/bin/evas-kernel"
+    },
+    {
+      "check": "original31_analysis",
+      "returncode": 0,
+      "elapsed_s": 40.66592237504665,
+      "log": "original31_analysis.log",
+      "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
+      "command_display": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --run runs/certified-mixed-review-20261001T121949Z-311235/matrix --identity runs/certified-mixed-review-20261001T121949Z-311235/SOURCE_IDENTITY.json --output runs/certified-mixed-review-20261001T121949Z-311235/matrix-analysis.json"
+    }
+  ],
+  "source_identity": {
+    "sha256": "28f4360b03bf3d9b416d7c77db703f87f9b9cd118246190717abe9a996d99aeb",
+    "source_files": 96,
+    "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+    "source_worktree_clean_at_freeze": true,
+    "build_profile": "debug",
+    "cargo_version": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc_version": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O"
+  },
+  "same_ir_probes": {
+    "evidence_use": "same IR requests in baseline and candidate; independent analytic answers; development evidence",
+    "baseline_runtime": "d06e7f3b012c10a134ed58d3d88e664385b057ea",
+    "records": [
+      {
+        "case": "mixed-feedback",
+        "independent_answer": "z=t, y=t^2",
+        "request_sha256": "f148d5fd6d95b3a729e37925c0f73b10be21f3386985b1a727567f6658ef1f6a",
+        "expected_rejection": null,
+        "settings": {
+          "absolute": 1e-10,
+          "relative": 0
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "22d49169032fa1c03339ad40c526fa55461c00330fb1772ca1b59136de2c28fb",
+            "error": {
+              "kind": "unsupported_transient",
+              "message": "polynomial transient equations are not supported"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "f68ebeddd01d95d1ae8cc58f1f841a9f007314ad659d74500075038413f7a14f",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "engine": "evas-events-0.12.0",
+            "actual_voltages": [
+              -0.0,
+              0.25000000000000006,
+              1.0,
+              4.000000000000001
+            ],
+            "expected_voltages": [
+              0,
+              0.25,
+              1,
+              4
+            ],
+            "max_error_v": 8.881784197001252e-16,
+            "independent_answer_passed": true
+          }
+        }
+      },
+      {
+        "case": "implicit-feedback",
+        "independent_answer": "y=t; y+y^2=z, z'=1+2y",
+        "request_sha256": "6979c72e3c17d2153053ba9a598fecd98c92010241e0b8e13a695bd3315b1c74",
+        "expected_rejection": null,
+        "settings": {
+          "absolute": 1e-10,
+          "relative": 0
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "22d49169032fa1c03339ad40c526fa55461c00330fb1772ca1b59136de2c28fb",
+            "error": {
+              "kind": "unsupported_transient",
+              "message": "polynomial transient equations are not supported"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "aa575a22d50b59b8248421712c07a8694938d5b297534eb04db3aeb3f61e63f0",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "engine": "evas-implicit-0.12.0",
+            "actual_voltages": [
+              0.0,
+              0.5000000000000001,
+              1.0000000000000002
+            ],
+            "expected_voltages": [
+              0,
+              0.5,
+              1
+            ],
+            "max_error_v": 2.220446049250313e-16,
+            "independent_answer_passed": true
+          }
+        }
+      },
+      {
+        "case": "root-source-sample",
+        "independent_answer": "y=2*(t-sqrt(2)) after the crossing",
+        "request_sha256": "9abb1d78457dd8d0955207bb68496552074391101b1a4d9439a41453e1350cd2",
+        "expected_rejection": null,
+        "settings": {
+          "absolute": 1e-07,
+          "relative": 1e-07
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "9bce2afe8d0a36802133025a78a63aa7df0e668c831c6ad8a9cd8fd800f24b3c",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "engine": "evas-events-0.12.0",
+            "actual_voltages": [
+              -0.0,
+              -0.0,
+              0.6715728757311588,
+              1.171572875409773
+            ],
+            "expected_voltages": [
+              0,
+              0,
+              0.6715728752538097,
+              1.1715728752538097
+            ],
+            "max_error_v": 4.773490491771781e-10,
+            "independent_answer_passed": true
+          }
+        }
+      },
+      {
+        "case": "root-history-sample",
+        "independent_answer": "z=t, q=z(sqrt(2)), y=2*(t-sqrt(2))",
+        "request_sha256": "a8ffa637b95f91058bc03d2891f820ca650cfa2a7092e16ed8f23a549cff885f",
+        "expected_rejection": null,
+        "settings": {
+          "absolute": 1e-07,
+          "relative": 1e-07
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "540a8439b5c631bbe2f4b355a5ecb9fd19a2c5458358e2aed430ddb0487c8515",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "engine": "evas-events-0.12.0",
+            "actual_voltages": [
+              -0.0,
+              -0.0,
+              0.6715728757311588,
+              1.171572875409773
+            ],
+            "expected_voltages": [
+              0,
+              0,
+              0.6715728752538097,
+              1.1715728752538097
+            ],
+            "max_error_v": 4.773490491771781e-10,
+            "independent_answer_passed": true
+          }
+        }
+      },
+      {
+        "case": "ambiguous-root-branch",
+        "independent_answer": "condition changes within the root enclosure",
+        "request_sha256": "8240accb8c20e9b402a98e027ec747d165b1f9a92402f4496853ea0d9bb46add",
+        "expected_rejection": "event_condition",
+        "settings": {
+          "absolute": 0.0001,
+          "relative": 0
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "candidate": {
+            "returncode": 2,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "46b2b1408a5830e282861595b369545b6fd4b0171952714330b078ad4e493616",
+            "error": {
+              "kind": "event_condition",
+              "message": "cannot certify Gt condition at continuous.va:1:147 (dut): difference in [-6.5415039063321245e-6, 1.0878906249178755e-6]"
+            }
+          }
+        }
+      },
+      {
+        "case": "amplified-root-sample",
+        "independent_answer": "exact y(10)=2e12*(10-sqrt(2)); root uncertainty must enter the budget",
+        "request_sha256": "2e999de0afd447eb9c42e246e590a2e96f294a3f4f7d8213f72d547b9f82c21a",
+        "expected_rejection": "waveform_accuracy",
+        "settings": {
+          "absolute": 20000000.0,
+          "relative": 1e-10
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "candidate": {
+            "returncode": 2,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "0158c3c67e55efd965a4cc0a71f1356944290747b800f57db921912761eee28e",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at dut:q: bound 9.5367431640625e0, budget 1.414222717285156e-4"
+            }
+          }
+        }
+      },
+      {
+        "case": "nonlinear-filter-dc",
+        "independent_answer": "nonlinear DC filter feedback requires a separate initialization proof",
+        "request_sha256": "6085979dfb43503af05466db683e985b9edc517f363d62a0da6df147a6ee3677",
+        "expected_rejection": "unsupported_operator",
+        "settings": {
+          "absolute": 1e-08,
+          "relative": 0
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "22d49169032fa1c03339ad40c526fa55461c00330fb1772ca1b59136de2c28fb",
+            "error": {
+              "kind": "unsupported_transient",
+              "message": "polynomial transient equations are not supported"
+            }
+          },
+          "candidate": {
+            "returncode": 2,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "f49ed05bd74b1be635a657f7ab9f20da87ee64ac94b50c66bf0e6d40547b494b",
+            "error": {
+              "kind": "unsupported_operator",
+              "message": "nonlinear filter DC feedback requires a certified algebraic initialization at continuous.va:1:86 (dut)"
+            }
+          }
+        }
+      },
+      {
+        "case": "nonlinear-filter-feedthrough",
+        "independent_answer": "polynomial filter input requires D=0",
+        "request_sha256": "494f923cbcc08959a1bf9400ddcf1ce6def92684751a120ea92065e42f6e697c",
+        "expected_rejection": "unsupported_operator",
+        "settings": {
+          "absolute": 1e-08,
+          "relative": 0
+        },
+        "results": {
+          "baseline": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "22d49169032fa1c03339ad40c526fa55461c00330fb1772ca1b59136de2c28fb",
+            "error": {
+              "kind": "unsupported_transient",
+              "message": "polynomial transient equations are not supported"
+            }
+          },
+          "candidate": {
+            "returncode": 2,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac428182c765d1df0984af6146b4e08dfc5b7e3886f0228b5af16b8aa0e7bf97",
+            "error": {
+              "kind": "unsupported_operator",
+              "message": "polynomial filter input requires a strictly proper transfer function at continuous.va:1:86 (dut)"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "same_ir_root_probes": {
+    "evidence_use": "same IR in PR31, pre-root-fix cc68572 and final fd60d11; exact-rational root oracle",
+    "records": [
+      {
+        "case": "root-ge",
+        "exact_root_fraction": "5404319552844595/10808639105689191",
+        "expected_after_state": 2,
+        "expected_final_y": 2.0,
+        "request_sha256": "f8789736b521ba34cafbf4bf2e7d266d18611ef10ed88cd7613b78cc88987a77",
+        "results": {
+          "pr31": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "pre_root_fix": {
+            "returncode": 2,
+            "kernel_sha256": "39ba1afa813d2e5d4a45c2d0c6bf003ee9c75b9be13d3ad530198dced46c92f6",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "bae6d3ebc87b260f5a9d0250978ce8cec7f2fc3b30ee21b5f2b156214428bea4",
+            "error": {
+              "kind": "event_condition",
+              "message": "cannot certify Ge condition at continuous.va:1:142 (dut): difference in [-1.6653345369377348e-16, 1.1102230246251565e-16]"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "806861e7dac6e5c8cd9b8038486e04ee60f86ef596511b784fa84535c969fd5d",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "after": [
+              2.0
+            ],
+            "final_y": 2.0000000000000004
+          }
+        }
+      },
+      {
+        "case": "root-gt",
+        "exact_root_fraction": "5404319552844595/10808639105689191",
+        "expected_after_state": 3,
+        "expected_final_y": 4.5,
+        "request_sha256": "bf132a223cfbc94973b8f48b69a8e0a67beafec67b403b627a619d645daf8668",
+        "results": {
+          "pr31": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "ac4a9c57d80eef57fc3ac6b72fde0243f69048a501572f78e225eef41823ef7c",
+            "error": {
+              "kind": "event_resolution",
+              "message": "uncertain continuous restart cannot certify event sampling or input-dependent branches over its time window"
+            }
+          },
+          "pre_root_fix": {
+            "returncode": 2,
+            "kernel_sha256": "39ba1afa813d2e5d4a45c2d0c6bf003ee9c75b9be13d3ad530198dced46c92f6",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "310f081e04277ab6483d3a459af724effcd49ed1035f853b14e1cf5d68fd0bf6",
+            "error": {
+              "kind": "event_condition",
+              "message": "cannot certify Gt condition at continuous.va:1:142 (dut): difference in [-1.6653345369377348e-16, 1.1102230246251565e-16]"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "1270c705b8ddf959d58185e779cc814f1799f1d242c9cb20d00c6b150d98175d",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "after": [
+              3.0
+            ],
+            "final_y": 4.500000000000002
+          }
+        }
+      },
+      {
+        "case": "legacy-gt-convention",
+        "exact_root_fraction": "1/3",
+        "expected_after_state": 3,
+        "expected_final_y": 3,
+        "request_sha256": "5dd4df0ec9dff18e22f93b59ad29ecaeedf5be3743b6eca2cdf1e4d52382e41b",
+        "results": {
+          "pr31": {
+            "returncode": 2,
+            "kernel_sha256": "b81332fa8f83321fa3bbf03752071cba54a59b65b59f7e9e0af47f0470435b80",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "d48875958cd02d18e3ce596cd575ac2ace67eaa097500a3750f17d14b65805a7",
+            "error": {
+              "kind": "event_condition",
+              "message": "cannot certify Gt condition at continuous.va:1:140 (dut): difference in [-1.1102230246251565e-16, 2.220446049250313e-16]"
+            }
+          },
+          "pre_root_fix": {
+            "returncode": 2,
+            "kernel_sha256": "39ba1afa813d2e5d4a45c2d0c6bf003ee9c75b9be13d3ad530198dced46c92f6",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "3ee6e036752892abbf0e0c4725a9d8bb8d2ebf40d8b406f3c27c9ad908a64b09",
+            "error": {
+              "kind": "event_condition",
+              "message": "cannot certify Gt condition at continuous.va:1:140 (dut): difference in [-2.220446049250313e-16, 2.220446049250313e-16]"
+            }
+          },
+          "candidate": {
+            "returncode": 0,
+            "kernel_sha256": "edee0c9d3e28ff1b929e92f06c3ed889347cd3aec093b028b2cb43219f069eeb",
+            "stdout_sha256": "0736b4a7e906dee2afe75fa20be7eb76043c53f7c059d21d23e205c1858d4143",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "after": [
+              3.0
+            ],
+            "final_y": 3.0
+          }
+        }
+      }
+    ]
+  },
+  "prior_negative_checkpoint": {
+    "path": "runs/certified-mixed-dynamics-20261001T115742Z-dafb6b",
+    "runtime_commit": "cc685721a2234b003eed4e1c21cc70edd7d830a9",
+    "raw_manifest_sha256": "f3d392d7fbf795e62ccb5c1749dfd4daed3ade09afb4031927c3cbc08794c2cb",
+    "matrix_analysis_sha256": "74f7409354d80b2a0ba00034608eff17179fa5753aea7cc859903358d17635cf",
+    "summary": {
+      "base": {
+        "observations_within_targets": 26,
+        "kernel_rejected": 5
+      },
+      "fine": {
+        "observations_within_targets": 26,
+        "kernel_rejected": 5
+      }
+    },
+    "availability": "local-only"
+  },
+  "test_first_evidence": {
+    "preserved_logs": [
+      {
+        "log": "development/mixed-red.log",
+        "sha256": "6d7354ad7d410ebb5cf7631695e0b5d081b87d067f1463f365b6761d2f7d86f3"
+      },
+      {
+        "log": "development/implicit-red.log",
+        "sha256": "e13799051a5e17dc087a80cb287bcc92b4fbbfae2e1ebd3046e2444ea35258b7"
+      },
+      {
+        "log": "development/window-red.log",
+        "sha256": "2a483fac08d7fbf959b06afd8ad44f2d4f63b5074208e1d0fc1b3b2a5781e7d7"
+      },
+      {
+        "log": "development/history-sample-red.log",
+        "sha256": "07dc71506d20dd3beae4f1eb74f6c81fd7ce330f2b58e8589be067d07e23214b"
+      },
+      {
+        "log": "development/root-equality-red.log",
+        "sha256": "6005a454177b5ed374cc36178fcc65036086b30ec74f505817a317c822ab1d67"
+      }
+    ],
+    "identity_limits": "Intermediate uncommitted prototypes were not all frozen. Exact baseline/final and pre-root-fix requests are retained separately; no complete prototype reproducibility claim.",
+    "exploratory_not_feature_red": "reset-edge-red.log is an expected-diagnostic mismatch, not a proven feature defect"
+  },
+  "matrix": {
+    "configurations": 62,
+    "conditions": 31,
+    "profiles": {
+      "base": {
+        "observations_within_targets": 31
+      },
+      "fine": {
+        "observations_within_targets": 31
+      }
+    },
+    "source_input_manifest_sha256": "ca8518198aed16ba02a1efcc967fe9cceeb3d15d1d9dbc0db83ba8d933cedec4",
+    "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "matrix_analysis_sha256": "9489a877985a1f26822bec6c89b607ec915a830eb7e457a0e691dbe48da283b9",
+    "compatibility": {
+      "baseline_runtime": "d06e7f3b012c10a134ed58d3d88e664385b057ea",
+      "candidate_runtime": "fd60d11e9a516c97437fe3dec6f9e240622373d0",
+      "baseline_analysis_sha256": "cdbe1fb72a330d9101330d3df97163f6783237e106d0f10e66b708b3b1349d0e",
+      "candidate_analysis_sha256": "9489a877985a1f26822bec6c89b607ec915a830eb7e457a0e691dbe48da283b9",
+      "denominator": 62,
+      "counts": {
+        "waveform_identical": 62,
+        "independent_verdict_identical": 62,
+        "input_identical": 62,
+        "effective_settings_identical": 62
+      },
+      "engine_metadata_only_change": true,
+      "records": [
+        {
+          "condition": "v1-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v1-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-reference-zero",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-reference-zero",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-supply-fixed",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-supply-fixed",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-input-common-mode",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v2-input-common-mode",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v3-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v3-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v4-c0",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v4-c0",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v4-c1",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v4-c1",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v5-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v5-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v6-standard",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v6-standard",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-swapped",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-swapped",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-a-half",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-linear-a-half",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-nonlinear-0.5",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-nonlinear-0.5",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-nonlinear-2.0",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "v7-nonlinear-2.0",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-aligned",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-aligned",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-shifted",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-shifted",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-slow",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e1-slow",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-low",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-low",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-clock-high",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-clock-high",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-reset-high",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "e2-reset-high",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-swapped",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-swapped",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-no-reset-a",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c1-no-reset-a",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c2-main",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "c2-main",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d1-free",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d1-free",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d1-reset",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d1-reset",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d2-constant",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d2-constant",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d2-chirp",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "d2-chirp",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "s1-default",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "s1-default",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "s1-override",
+          "profile": "base",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        },
+        {
+          "condition": "s1-override",
+          "profile": "fine",
+          "waveform_identical": true,
+          "independent_verdict_identical": true,
+          "input_identical": true,
+          "effective_settings_identical": true
+        }
+      ]
+    },
+    "original_models_checker_thresholds_denominator_unchanged": true,
+    "new_spectre_execution": false,
+    "new_performance_measurement": false
+  },
+  "observation_convention": "For a non-point cross, a matching exact fired-guard certificate proves the predicate at the mathematical root tau, not at delayed representative b. Point timer semantics remain unchanged.",
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "limits": [
+    "No general/high-index DAE, global multiple-root selection, implicit DAE with events/reset/filter/ddt, or universal nonlinear operators.",
+    "Polynomial filter input requires D=0; nonlinear filter DC feedback and nonlinear ddt/function coupling still refused.",
+    "Interior event representatives, event-modified guard relocation and future-event stabilization remain outside scope.",
+    "General non-continuous operator history sampling, frontend folding and general continuous-time qualification are not established.",
+    "This is development evidence, not an untouched holdout or proof of Spectre compatibility/performance."
+  ],
+  "raw_archive": {
+    "path": "runs/certified-mixed-review-20261001T121949Z-311235",
+    "availability": "local-only; source, inputs, binaries, logs, requests/responses and waves retained",
+    "manifest_sha256": "498fde7e5096d0bd218c7d7f34e1e86f444c6849ddad475795e5bfd182facbcd",
+    "manifest": "RAW_MANIFEST.json",
+    "manifested_files": 1137,
+    "manifested_bytes": 178874207,
+    "manifest_excludes_itself": true,
+    "sealed_read_only": true
+  },
+  "final_metadata_checks": {
+    "documentation": {
+      "record": "FINAL_DOCUMENTATION_CHECK.json",
+      "sha256": "139ff0a517cce225e747df74995c353e13d5fac24719b85f3f7fa13f5948ec3e",
+      "checked_links": 235,
+      "errors": []
+    },
+    "identity": {
+      "record": "FINAL_IDENTITY_CHECK.json",
+      "sha256": "ee3a37bfbfbf6bf608d8c2cc0cb9d9c4594ffccf4c7dbd5d7ac589c326d49e59",
+      "source_files_verified": 96,
+      "frozen_protocol_files_verified": 9,
+      "code_unchanged_since_verified_runtime": true,
+      "main_worktree_clean": true
+    }
+  }
+}

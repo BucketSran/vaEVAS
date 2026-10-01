@@ -47,6 +47,9 @@
 
 受限积分的独立样例和待补生命周期断言见 [DYNAMICS_CONTRACTS](../validation/DYNAMICS_CONTRACTS.md)；
 已有与新增不变性回归的覆盖映射也在该页。它们不改变能力总表的实现状态或原验证集分母。
+后续共同执行接口与第一批组合反例见该页的[共同生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
+0.12.1 的复位观察闭包、时间绑定及生产控制器提交/回退见[实施章节](CONTINUOUS.md#shared-lifecycle-closure)。
+先审查冷启动/续算、事件时间与采样阶段，再迁移控制流程；多个数值方法继续共享同一套语义与验收义务。
 
 ## 状态与文档维护
 

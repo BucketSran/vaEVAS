@@ -18,6 +18,8 @@ mod derivatives;
 #[path = "nonlinear_dynamics.rs"]
 mod nonlinear;
 
+pub(crate) use nonlinear::run_implicit;
+
 pub(crate) fn validate_integral_input(
     expr: &Expression,
     program: &Program,

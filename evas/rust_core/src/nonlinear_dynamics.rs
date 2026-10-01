@@ -1,4 +1,4 @@
-//! Validated polynomial ODE propagation for integral call-site states.
+//! Validated polynomial ODE propagation for integral and filter call-site states.
 //! A Picard enclosure proves a finite trajectory tube. Order-12 interval Taylor
 //! coefficients propagate accepted uncertainty; order 13 over the tube bounds
 //! the entire-step remainder. Output queries are immutable dense observations.
@@ -8,6 +8,10 @@ const ORDER: usize = 12;
 const MAX_STEPS: usize = 16_384;
 const TUBE_ATTEMPTS: usize = 16;
 type Jet = Vec<I>;
+
+#[path = "implicit_dynamics.rs"]
+mod implicit;
+pub(crate) use implicit::run as run_implicit;
 
 #[derive(Clone)]
 enum Polynomial {
@@ -62,6 +66,53 @@ impl Polynomial {
             )?),
         };
         Ok(result)
+    }
+
+    fn dc_affine(&self, known: &[Option<I>]) -> Option<Vec<I>> {
+        match self {
+            Self::Linear(row) => {
+                let mut row = row.clone();
+                for (i, value) in known.iter().enumerate() {
+                    if let Some(value) = value {
+                        let last = row.len() - 1;
+                        row[last] = row[last] + row[i] * *value;
+                        row[i] = I::ZERO;
+                    }
+                }
+                Some(row)
+            }
+            Self::Add(a, b) => Some(
+                a.dc_affine(known)?
+                    .into_iter()
+                    .zip(b.dc_affine(known)?)
+                    .map(|(a, b)| a + b)
+                    .collect(),
+            ),
+            Self::Multiply(a, b) => {
+                let a = a.dc_affine(known)?;
+                let b = b.dc_affine(known)?;
+                let constant = |row: &[I]| row[..row.len() - 1].iter().all(|v| v.zero());
+                if constant(&a) {
+                    Some(b.iter().map(|&v| *a.last().unwrap() * v).collect())
+                } else if constant(&b) {
+                    Some(a.iter().map(|&v| *b.last().unwrap() * v).collect())
+                } else {
+                    None
+                }
+            }
+            Self::Power(a, n) => {
+                let mut row = a.dc_affine(known)?;
+                if *n == 1 {
+                    return Some(row);
+                }
+                if row[..row.len() - 1].iter().any(|v| !v.zero()) {
+                    return None;
+                }
+                let last = row.len() - 1;
+                row[last] = (0..*n).fold(I::ONE, |value, _| value * row[last]);
+                Some(row)
+            }
+        }
     }
 
     fn jet(&self, variables: &[Jet], order: usize) -> Jet {
@@ -129,6 +180,9 @@ pub(crate) struct NonlinearContinuous {
     context: Arc<Context>,
     parameters: Vec<I>,
     functions: Vec<Polynomial>,
+    implicit: Option<implicit::ImplicitField>,
+    operators: Vec<NetworkOperator>,
+    values: Vec<Vec<I>>,
     initial: Vec<I>,
     steps: Vec<DenseStep>,
     start: f64,
@@ -180,57 +234,67 @@ impl NonlinearContinuous {
             sources[node] = Some(i);
         }
         let mut operators = Vec::new();
-        let mut initial = Vec::new();
+        let mut state_count = 0;
         let mut event_dependent = false;
         for (i, spec) in program.operators.iter().enumerate() {
-            let OperatorSpec::Idt {
-                input,
-                ic,
-                reset,
-                origin,
-            } = spec
-            else {
-                return Err(Error::new("unsupported_operator", "nonlinear continuous network currently requires explicit-IC idt operators without filter or derivative operators"));
+            let origin = spec.origin();
+            let (kind, input, states, laplace, held_reset) = match spec {
+                OperatorSpec::Idt { input, ic, reset, .. } => {
+                    validate(input, program, &origin.instance)?;
+                    if !ic.is_finite() {
+                        return Err(unsupported(origin, "nonfinite nonlinear integral IC"));
+                    }
+                    let held = if let Some(reset) = reset {
+                        let dependencies = crate::events::affine(reset, program, &origin.instance)?;
+                        if !dependencies.node_dependencies.is_empty()
+                            || !dependencies.operator_dependencies.is_empty()
+                        {
+                            return Err(unsupported(origin,
+                                "nonlinear integral reset must depend on event state and constants"));
+                        }
+                        event_dependent = true;
+                        crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
+                    } else { false };
+                    let state = state_count;
+                    state_count += 1;
+                    (ContinuousKind::Idt, input, vec![state], None, held)
+                }
+                OperatorSpec::LaplaceNd { input, numerator, denominator, .. } => {
+                    validate(input, program, &origin.instance)?;
+                    let filter = laplace_system(numerator, denominator, origin)?;
+                    if !filter.d.zero() && affine_for_operator_input(input, program, origin).is_err() {
+                        return Err(unsupported(origin, "polynomial filter input requires a strictly proper transfer function"));
+                    }
+                    let states = (state_count..state_count + filter.a.len()).collect();
+                    state_count += filter.a.len();
+                    (ContinuousKind::LaplaceNd, input, states, Some(filter), false)
+                }
+                _ => return Err(unsupported(origin,
+                    "polynomial continuous network supports explicit-IC integrals and affine-input proper filters; derivative/function coupling needs a certified reduction")),
             };
-            validate(input, program, &origin.instance)?;
-            if !ic.is_finite() {
-                return Err(unsupported(origin, "nonfinite nonlinear integral IC"));
-            }
             event_dependent |=
                 history_event_dependency(input, program, origin, &driven, &mut BTreeSet::new());
-            let held_reset = if let Some(reset) = reset {
-                let dependencies = crate::events::affine(reset, program, &origin.instance)?;
-                if !dependencies.node_dependencies.is_empty()
-                    || !dependencies.operator_dependencies.is_empty()
-                {
-                    return Err(unsupported(
-                        origin,
-                        "nonlinear integral reset must depend on event state and constants",
-                    ));
-                }
-                event_dependent = true;
-                crate::operators::ResetExpression::new(reset.clone()).active(&parameters)?
-            } else {
-                false
-            };
-            initial.push(I::point(*ic));
             let mut structural =
                 vec![
                     I::ZERO;
                     program.nodes.len() + program.states.len() + program.operators.len() + 1
                 ];
-            collect_structure(input, program, &origin.instance, &mut structural)?;
+            if let Ok(row) = affine_for_operator_input(input, program, origin) {
+                structural = row;
+            } else {
+                collect_structure(input, program, &origin.instance, &mut structural)?;
+            }
             operators.push(NetworkOperator {
                 operator: i,
-                kind: ContinuousKind::Idt,
+                kind,
                 origin: origin.clone(),
-                states: vec![i],
+                states,
                 input: Some(structural),
-                laplace: None,
+                laplace,
                 held_reset,
             });
         }
-        if initial.len() + 2 * driven.len() + 1 > 32 {
+        if state_count + 2 * driven.len() + 1 > 32 {
             return Err(Error::new(
                 "waveform_accuracy",
                 "nonlinear state/source dimension exceeds 32",
@@ -241,40 +305,97 @@ impl NonlinearContinuous {
             &operators,
             &driven,
             &sources,
-            initial.len(),
+            state_count,
             driven.len(),
             &parameters,
         )?;
         let rows = affine_bounds::eliminate(system.rows.clone(), system.x_count, system.width)?;
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
-        let functions = program
-            .operators
-            .iter()
-            .enumerate()
-            .map(|(i, op)| {
-                let OperatorSpec::Idt { input, .. } = op else {
-                    unreachable!()
-                };
-                if operators[i].held_reset {
-                    Ok(Polynomial::Linear(vec![I::ZERO; system.width]))
-                } else {
-                    Polynomial::compile(input, program, &system, &mapping)
+        let values = build_value_rows(&operators, &system, &mapping)?;
+        let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
+        for op in &operators {
+            match &program.operators[op.operator] {
+                OperatorSpec::Idt { input, .. } if !op.held_reset => {
+                    functions[op.states[0]] =
+                        Polynomial::compile(input, program, &system, &mapping)?;
                 }
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-        let mut initial = restart.unwrap_or(initial);
-        for (i, op) in operators.iter().enumerate() {
+                OperatorSpec::LaplaceNd { input, .. } => {
+                    let input = Polynomial::compile(input, program, &system, &mapping)?;
+                    let filter = op.laplace.as_ref().unwrap();
+                    for (local, &state) in op.states.iter().enumerate() {
+                        let mut row = vec![I::ZERO; system.width];
+                        for (&other, &coefficient) in op.states.iter().zip(&filter.a[local]) {
+                            row[other] = row[other] + coefficient;
+                        }
+                        let mut gain = vec![I::ZERO; system.width];
+                        *gain.last_mut().unwrap() = filter.b[local];
+                        functions[state] = Polynomial::Add(
+                            Box::new(Polynomial::Linear(row)),
+                            Box::new(Polynomial::Multiply(
+                                Box::new(Polynomial::Linear(gain)),
+                                Box::new(input.clone()),
+                            )),
+                        );
+                    }
+                }
+                _ => {}
+            }
+        }
+        let mut initial = if let Some(state) = restart {
+            // Restart is an IVP with accepted physical history. It must not
+            // impose a new DC equilibrium on the event's future vector field.
+            state
+        } else {
+            // Only cold initialization needs filter DC equations. Integral
+            // states pin their IC, not their derivative to zero.
+            let mut dc_derivatives = vec![vec![I::ZERO; system.width]; state_count];
+            let mut known = vec![None; system.width - 1];
+            for op in &operators {
+                if let OperatorSpec::Idt { ic, .. } = &program.operators[op.operator] {
+                    known[op.states[0]] = Some(I::point(*ic));
+                }
+            }
+            for (slot, value) in known[state_count..]
+                .iter_mut()
+                .zip(context.trajectory.value_bounds(0.0))
+            {
+                *slot = Some(value);
+            }
+            for slot in &mut known[state_count + driven.len()..] {
+                *slot = Some(I::ZERO);
+            }
+            for op in operators
+                .iter()
+                .filter(|op| op.kind == ContinuousKind::LaplaceNd)
+            {
+                for &state in &op.states {
+                    dc_derivatives[state] = functions[state].dc_affine(&known).ok_or_else(||
+                        unsupported(&op.origin, "nonlinear filter DC feedback requires a certified algebraic initialization"))?;
+                }
+            }
+            initial_state(
+                program,
+                &operators,
+                &system,
+                &dc_derivatives,
+                &context.trajectory,
+            )?
+        };
+        for op in &operators {
             if op.held_reset {
-                let OperatorSpec::Idt { ic, .. } = &program.operators[i] else {
+                let OperatorSpec::Idt { ic, .. } = &program.operators[op.operator] else {
                     unreachable!()
                 };
-                initial[i] = I::point(*ic);
+                initial[op.states[0]] = I::point(*ic);
             }
         }
         Ok(Self {
             context,
             parameters,
             functions,
+            implicit: None,
+            operators,
+            values,
             initial,
             steps: Vec::new(),
             start,
@@ -282,7 +403,20 @@ impl NonlinearContinuous {
         })
     }
 
-    fn jets(&self, state: &[I], source: &[I], slopes: &[I], order: usize) -> Vec<Jet> {
+    fn derivative_jets(&self, variables: &[Jet], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
+        if let Some(field) = &self.implicit {
+            field.jets(&self.functions, variables, slopes, order)
+        } else {
+            Some(
+                self.functions
+                    .iter()
+                    .map(|f| f.jet(variables, order))
+                    .collect(),
+            )
+        }
+    }
+
+    fn jets(&self, state: &[I], source: &[I], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
         let mut variables: Vec<_> = state
             .iter()
             .chain(source)
@@ -299,15 +433,15 @@ impl NonlinearContinuous {
         }
         for n in 0..order {
             let derivatives: Vec<_> = self
-                .functions
-                .iter()
-                .map(|f| f.jet(&variables, n)[n] / I::point((n + 1) as f64))
+                .derivative_jets(&variables, slopes, n)?
+                .into_iter()
+                .map(|row| row[n] / I::point((n + 1) as f64))
                 .collect();
             for (variable, value) in variables.iter_mut().zip(derivatives) {
                 variable[n + 1] = value;
             }
         }
-        variables[..state.len()].to_vec()
+        Some(variables[..state.len()].to_vec())
     }
 
     fn trial(
@@ -328,10 +462,10 @@ impl NonlinearContinuous {
             .zip(slopes)
             .map(|(&u, &m)| u + elapsed * m)
             .collect();
-        let (tube, _) = self.picard_enclosure(state, &source_tube, elapsed)?;
-        let coefficients = self.jets(state, source, slopes, ORDER);
+        let (tube, _) = self.picard_enclosure(state, &source_tube, slopes, elapsed)?;
+        let coefficients = self.jets(state, source, slopes, ORDER)?;
         let remainder: Vec<_> = self
-            .jets(&tube, &source_tube, slopes, ORDER + 1)
+            .jets(&tube, &source_tube, slopes, ORDER + 1)?
             .into_iter()
             .map(|row| row[ORDER + 1])
             .collect();
@@ -361,16 +495,15 @@ impl NonlinearContinuous {
         &self,
         initial: &[I],
         source: &[I],
+        slopes: &[I],
         elapsed: I,
     ) -> Option<(Vec<I>, Vec<I>)> {
         let evaluate = |state: &[I]| {
             let variables: Vec<_> = state.iter().chain(source).map(|&v| vec![v]).collect();
-            self.functions
-                .iter()
-                .map(|p| p.jet(&variables, 0)[0])
-                .collect::<Vec<_>>()
+            self.derivative_jets(&variables, slopes, 0)
+                .map(|rows| rows.into_iter().map(|row| row[0]).collect::<Vec<_>>())
         };
-        let mut derivative = evaluate(initial);
+        let mut derivative = evaluate(initial)?;
         for _ in 0..TUBE_ATTEMPTS {
             let tube: Vec<_> = initial
                 .iter()
@@ -394,7 +527,7 @@ impl NonlinearContinuous {
             if tube.iter().any(|v| !v.finite()) {
                 return None;
             }
-            derivative = evaluate(&tube);
+            derivative = evaluate(&tube)?;
             let image: Vec<_> = initial
                 .iter()
                 .zip(&derivative)
@@ -460,7 +593,13 @@ impl NonlinearContinuous {
     }
 
     pub(super) fn operator_value_index(&self, op: usize) -> Option<usize> {
-        (op < self.initial.len()).then_some(op)
+        self.operators.iter().position(|slot| slot.operator == op)
+    }
+    pub(super) fn operator_spec(&self, slot: usize) -> &OperatorSpec {
+        &self.context.program.operators[self.operators[slot].operator]
+    }
+    pub(super) fn reset_active(&self, slot: usize) -> bool {
+        self.operators[slot].held_reset
     }
     pub(super) fn changes_on_event(&self) -> bool {
         self.event_dependent
@@ -478,7 +617,7 @@ impl NonlinearContinuous {
             .copied()
             .find(|t| *t > time)
     }
-    pub(super) fn range_bounds(&self, time: I) -> Result<Vec<I>, Error> {
+    fn state_bounds(&self, time: I) -> Result<Vec<I>, Error> {
         if !time.finite()
             || time.lo < self.start
             || time.hi > self.context.trajectory.config.stop
@@ -518,15 +657,37 @@ impl NonlinearContinuous {
             })
             .collect()
     }
-    pub(super) fn derivative_bounds(&self, time: I) -> Result<Vec<I>, Error> {
-        let state = self.range_bounds(time)?;
+    pub(super) fn range_bounds(&self, time: I) -> Result<Vec<I>, Error> {
+        let state = self.state_bounds(time)?;
         let source = self.source_bounds(time);
-        let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
-        Ok(self
-            .functions
+        let forcing: Vec<_> = state
+            .into_iter()
+            .chain(source.iter().copied())
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        self.values
             .iter()
-            .map(|p| p.jet(&variables, 0)[0])
-            .collect())
+            .map(|row| dot(row, &forcing, "nonlinear operator output"))
+            .collect()
+    }
+    pub(super) fn derivative_bounds(&self, time: I) -> Result<Vec<I>, Error> {
+        let state = self.state_bounds(time)?;
+        let (source, slopes) = self.context.trajectory.range(time)?;
+        let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
+        let forcing: Vec<_> = self
+            .derivative_jets(&variables, &slopes, 0)
+            .ok_or_else(|| Error::new("waveform_accuracy", "cannot certify implicit derivative"))?
+            .into_iter()
+            .map(|row| row[0])
+            .chain(slopes)
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ZERO])
+            .collect();
+        self.values
+            .iter()
+            .map(|row| dot(row, &forcing, "nonlinear operator derivative"))
+            .collect()
     }
     fn source_bounds(&self, time: I) -> Vec<I> {
         let trajectory = &self.context.trajectory;
@@ -544,11 +705,58 @@ impl NonlinearContinuous {
         }
         source
     }
-    pub(super) fn validate_event_window(&self, window: I, events: &[usize]) -> Result<(), Error> {
-        runtime::validate_event_bodies(&self.context.program, self.event_dependent, window, events)
+    pub(super) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
+        if window.lo < self.start && window.hi == self.start {
+            // Candidate initial already encloses R(z(tau)) and the new flow
+            // to b. Include the full source window for direct filter paths.
+            let source = self.source_bounds(window);
+            let forcing: Vec<_> = self
+                .initial
+                .iter()
+                .copied()
+                .chain(source.iter().copied())
+                .chain(vec![I::ZERO; source.len()])
+                .chain([I::ONE])
+                .collect();
+            self.values
+                .iter()
+                .map(|row| dot(row, &forcing, "nonlinear event sample"))
+                .collect()
+        } else {
+            self.range_bounds(window)
+        }
     }
 
     pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
+        let mut next = self.mapped_event(time, window, parameters)?;
+        if !self.event_dependent || self.parameters == parameters {
+            return Ok(next);
+        }
+        if window.lo != window.hi {
+            let elapsed = I {
+                lo: 0.0,
+                hi: (I::point(time) - I::point(window.lo)).hi,
+            };
+            let (_, image) = next
+                .picard_enclosure(&next.initial, &self.source_bounds(window), &[], elapsed)
+                .ok_or_else(|| {
+                    Error::new(
+                        "event_resolution",
+                        "cannot certify nonlinear event-to-representative trajectory tube",
+                    )
+                })?;
+            next.initial = image;
+        }
+        next.propagate()?;
+        Ok(next)
+    }
+
+    pub(super) fn mapped_event(
+        &self,
+        time: f64,
+        window: I,
+        parameters: &[I],
+    ) -> Result<Self, Error> {
         if !self.event_dependent || self.parameters == parameters {
             return Ok(self.clone());
         }
@@ -558,32 +766,12 @@ impl NonlinearContinuous {
                 "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
         }
-        let mut next = Self::initialized(
+        Self::initialized(
             self.context.clone(),
             parameters.to_vec(),
             time,
-            Some(self.range_bounds(window)?),
-        )?;
-        if window.lo != window.hi {
-            let elapsed = I {
-                lo: 0.0,
-                hi: (I::point(time) - I::point(window.lo)).hi,
-            };
-            let (_, image) = next
-                .picard_enclosure(&next.initial, &self.source_bounds(window), elapsed)
-                .ok_or_else(|| {
-                    Error::new(
-                        "event_resolution",
-                        "cannot certify nonlinear event-to-representative trajectory tube",
-                    )
-                })?;
-            // Include BOTH pre-event history uncertainty and post-event flow.
-            // Only reset states were clamped; every other call-site history
-            // survives, including all rounding and event-time uncertainty.
-            next.initial = image;
-        }
-        next.propagate()?;
-        Ok(next)
+            Some(self.state_bounds(window)?),
+        )
     }
 }
 
@@ -639,10 +827,13 @@ mod tests {
                 driven: vec![],
             }),
             parameters: vec![],
+            implicit: None,
             initial: vec![I::ONE],
             steps: vec![],
             start: 0.0,
             event_dependent: false,
+            operators: Vec::new(),
+            values: vec![vec![I::ONE, I::ZERO]],
             functions: vec![Polynomial::Multiply(
                 Box::new(Polynomial::Linear(vec![I::ZERO, I::point(quadratic_sign)])),
                 Box::new(Polynomial::Power(

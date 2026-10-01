@@ -244,6 +244,27 @@ impl Idt {
         self.prefix_value(time)
     }
 
+    // Observation at an uncertain event time is a range of the physical
+    // history, even when the event cannot modify this operator.
+    pub(crate) fn value_range(&self, times: I) -> Result<I, Error> {
+        if times.lo == times.hi {
+            return self.value_bounds(times.lo);
+        }
+        let prefix = self.prefix_range(times)?;
+        let bound = match &self.reset {
+            Some(reset) if reset.active => I::point(self.ic),
+            Some(reset) => I::point(self.ic) + prefix - self.prefix_range(reset.release_bounds)?,
+            None => prefix,
+        };
+        if !bound.finite() {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "nonfinite idt observation range",
+            ));
+        }
+        Ok(bound)
+    }
+
     pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
         if let Some(reset) = &self.reset {
             // At an exact release instant the integral has zero length, even

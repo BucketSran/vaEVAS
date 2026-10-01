@@ -24,7 +24,7 @@ pub(crate) struct Analog {
     has_select: bool,
 }
 
-fn has_select(expr: &Expression) -> bool {
+pub(crate) fn has_select(expr: &Expression) -> bool {
     match expr {
         Expression::Select { .. } => true,
         Expression::Add { left, right } | Expression::Multiply { left, right } => {

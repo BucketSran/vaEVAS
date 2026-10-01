@@ -396,7 +396,11 @@ pub struct TransientInputs {
 
 #[derive(Debug, Serialize)]
 pub struct EventRecord {
+    // Representative storage time; a nonpoint actual observation is enclosed
+    // separately, rather than falsely reporting the representative as exact.
     pub time: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub observation_time_bounds: Option<[f64; 2]>,
     pub event: usize,
     pub origin: String,
     pub kind: &'static str,

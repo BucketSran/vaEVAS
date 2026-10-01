@@ -21,8 +21,56 @@ pub(crate) fn prepare(
     before_bounds: &[I],
     operator_bounds: &[I],
 ) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        (events, &[]),
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        true,
+    )
+}
+
+pub(crate) fn prepare_window(
+    model: &EventModel,
+    events_and_roots: (&[usize], &[usize]),
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+) -> Result<Prepared, Error> {
+    prepare_impl(
+        model,
+        events_and_roots,
+        inputs,
+        before,
+        operators,
+        before_bounds,
+        operator_bounds,
+        false,
+    )
+}
+
+// Two certificates: assignments at tau and output voltages at representative b.
+#[allow(clippy::too_many_arguments)]
+fn prepare_impl(
+    model: &EventModel,
+    events_and_roots: (&[usize], &[usize]),
+    inputs: (&[f64], &[I]),
+    before: &[f64],
+    operators: &[f64],
+    before_bounds: &[I],
+    operator_bounds: &[I],
+    check_voltages: bool,
+) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
-    let selection = model.conditions.select(events, input_bounds)?;
+    let selection =
+        model
+            .conditions
+            .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?;
     model.check_selection_writers(&selection)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
@@ -34,9 +82,13 @@ pub(crate) fn prepare(
     // state. Substitution roundoff must not replace the physical residual check.
     let circuit = model.circuit_with(&states, operators)?;
     let solution = circuit.solve(inputs)?;
-    // Recheck control flow at the representative time. A small equation
-    // residual cannot certify a branch chosen from rounded input values.
-    if model.conditions.select(events, input_bounds)? != selection {
+    // Replay the same input/root certificate. A small equation residual
+    // cannot certify a branch chosen from rounded representative inputs.
+    if model
+        .conditions
+        .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?
+        != selection
+    {
         return Err(Error::new(
             "event_consistency",
             "condition replay changed the selected path",
@@ -59,7 +111,13 @@ pub(crate) fn prepare(
             ));
         }
     }
-    let bounds = model.certify(
+    let certify = if check_voltages {
+        EventModel::certify
+    } else {
+        EventModel::certify_event_states
+    };
+    let bounds = certify(
+        model,
         &selection,
         input_bounds,
         before_bounds,
