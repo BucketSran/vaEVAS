@@ -161,6 +161,77 @@ class AffineIntegralFeedbackContracts(unittest.TestCase):
                 self.assertAlmostEqual(observed, answer, delta=2e-9)
 
 
+class ContinuousInitializationContracts(unittest.TestCase):
+    def test_ddt_identity_filter_preserves_dc_in_equivalent_encodings(self):
+        bodies = [
+            ("V(y,r)<+ddt(V(u,r));", ""),
+            ("V(y,r)<+laplace_nd(ddt(V(u,r)),'{1,1},'{1,1});", ""),
+            ("V(y,r)<+laplace_nd(ddt(V(u,r)),'{1,2,1},'{1,2,1});", ""),
+            ("V(d,r)<+ddt(V(u,r)); V(y,r)<+laplace_nd(V(d,r),'{1,1},'{1,1});", "electrical d;"),
+        ]
+        times = [0.0, 2.0 ** -20, 0.5, 1.0]
+        # H(s)=1 must preserve both the zero DC derivative and the nonzero
+        # right-side transient derivative. Nonzero u(0) is not a derivative.
+        for slope in (-1.0, 1.0):
+            for body, declarations in bodies:
+                with self.subTest(slope=slope, body=body):
+                    result = run(compile_model(body, declarations),
+                                 {"u": [[0.0, 2.0], [1.0, 2.0 + slope]]}, times,
+                                 stop=1.0, max_step=1.0, vabstol=1e-10, reltol=0.0)
+                    for actual, expected in zip(values(result), [0.0, slope, slope, slope]):
+                        assert_close(self, actual, expected, delta=1e-10)
+                    if declarations:
+                        for row in rows(result):
+                            assert_close(self, row["y"], row["dut:d"], delta=1e-10)
+
+    def test_ddt_feedthrough_uses_nonzero_joint_dc_equilibrium(self):
+        times = [0.0, 2.0 ** -20, 0.5, 1.0]
+        # H(s)=(1+s)/(1+2s), input=2+ddt(u). The DC output is 2;
+        # for t>0, the added derivative step gives m*(1-.5*exp(-t/2)).
+        program = compile_model("V(y,r)<+laplace_nd(2+ddt(V(u,r)),'{1,1},'{1,2});")
+        for slope in (-1.0, 1.0):
+            with self.subTest(slope=slope):
+                result = run(program, {"u": [[0.0, 2.0], [1.0, 2.0 + slope]]}, times,
+                             stop=1.0, max_step=1.0, vabstol=1e-10, reltol=0.0)
+                expected = [2.0 if t == 0.0 else 2.0 + slope * (1.0 - 0.5 * math.exp(-t / 2.0))
+                            for t in times]
+                for actual, answer in zip(values(result), expected):
+                    assert_close(self, actual, answer, delta=1e-10)
+
+    def test_ddt_identity_feedback_keeps_contribution_order_and_dc(self):
+        pieces = ["V(y,r)<+1;", "V(y,r)<+laplace_nd(2+ddt(V(u,r))+.5*V(y,r),'{1,1},'{1,1});"]
+        # y=1+2+d+.5*y => y=6+2*d, with d(DC)=0 and d(t>0)=m.
+        for slope in (-1.0, 1.0):
+            for order in itertools.permutations(pieces):
+                with self.subTest(slope=slope, order=order):
+                    result = run(compile_model("".join(order)),
+                                 {"u": [[0.0, 2.0], [1.0, 2.0 + slope]]}, [0.0, 0.5, 1.0],
+                                 stop=1.0, max_step=1.0, vabstol=1e-10, reltol=0.0)
+                    for actual, answer in zip(values(result), [6.0, 6.0 + 2.0 * slope, 6.0 + 2.0 * slope]):
+                        assert_close(self, actual, answer, delta=1e-10)
+
+    def test_ddt_integral_feedback_preserves_explicit_initial_state(self):
+        program = compile_model("V(y,r)<+idt(ddt(V(u,r))-V(y,r),3);")
+        times = [0.0, 0.25, 0.5, 1.0]
+        result = run(program, {"u": [[0.0, 2.0], [1.0, 3.0]]}, times,
+                     stop=1.0, max_step=1.0, vabstol=1e-10, reltol=0.0)
+        for time, actual in zip(times, values(result)):
+            assert_close(self, actual, 1.0 + 2.0 * math.exp(-time), delta=1e-10)
+
+    def test_ddt_filter_observations_preserve_dc_and_corner_sides(self):
+        program = compile_model("V(y,r)<+laplace_nd(ddt(V(u,r)),'{1,1},'{1,1});")
+        sources = {"u": [[0.0, 2.0], [0.5, 2.5], [1.0, 2.0]]}
+        for times, step in (([0.0, 0.25, 0.5, 1.0], 1.0),
+                            ([0.0, 0.125, 0.25, 0.5, 0.75, 1.0], 0.125),
+                            ([0.25, 0.5, 1.0], 1.0)):
+            with self.subTest(times=times, step=step):
+                result = run(program, sources, times, stop=1.0, max_step=step,
+                             vabstol=1e-10, reltol=0.0)
+                expected = [0.0 if t == 0.0 else (1.0 if t < 0.5 else -1.0) for t in times]
+                for actual, answer in zip(values(result), expected):
+                    assert_close(self, actual, answer, delta=1e-10)
+
+
 class DerivativeContracts(unittest.TestCase):
     def test_ddt_of_direct_pwl_uses_documented_side_convention(self):
         program = compile_model("V(y,r)<+ddt(V(u,r));")

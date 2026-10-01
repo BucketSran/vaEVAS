@@ -12,6 +12,8 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 
 IR16 连续动态开发中的新契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
 它们单独计数，尚未合并，不改写原 31 条件或以下 IR15 身份。
+PR30 review 补充的[初始化组合义务](../docs/CONTINUOUS.md#初始化组合的独立行为义务)覆盖
+DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间与连续 guard 边界；属于开发回归。
 [开发检查与迁移](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)及
 [新原矩阵执行](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
 绑定运行时 `ba5ab46`：两档各 31/31，62 份 CSV 与 IR15 基线逐字节一致，

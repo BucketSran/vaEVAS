@@ -69,6 +69,21 @@ class DynamicCrossContracts(unittest.TestCase):
         self.assertEqual(len(events), 1)
         self.assertAlmostEqual(events[0]["time"], math.log(2), delta=1e-9)
 
+    def test_strictly_proper_filter_of_ddt_has_continuous_guard(self):
+        # u=t gives ddt(u)=1 for t>0; 1/(1+s) with DC state zero
+        # produces z=1-exp(-t), which crosses .5 at log(2).
+        result = run_guard("V(z,r)-.5",
+                           extra="V(z,r)<+laplace_nd(ddt(V(u,r)),'{1},'{1,1});", direction=1)
+        events = result["transient"]["events"]
+        self.assertEqual(len(events), 1)
+        self.assertAlmostEqual(events[0]["time"], math.log(2), delta=1e-9)
+
+    def test_ddt_feedthrough_cannot_be_hidden_in_a_continuous_guard(self):
+        # The guard stays positive, so this tests preflight continuity rather
+        # than letting root search happen to reject a particular jump.
+        with self.assertRaisesRegex(KernelError, "unsupported_cross"):
+            run_guard("laplace_nd(ddt(V(u,r)),'{1,1},'{1,1})+.5")
+
     def test_guard_only_operator_does_not_erase_state_dependency_in_relay(self):
         source = model("""
           @(initial_step) n=0;

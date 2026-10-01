@@ -22,7 +22,7 @@ pub(crate) enum ContinuousKind {
 #[derive(Clone, Debug)]
 pub(crate) struct OperatorSlot {
     pub(crate) operator: usize,
-    pub(crate) kind: ContinuousKind,
+    continuous: bool,
     pub(crate) value: usize,
 }
 
@@ -31,6 +31,7 @@ pub(crate) struct Continuous {
     slots: Vec<OperatorSlot>,
     segments: Vec<Segment>,
     value_count: usize,
+    dc_values: Vec<I>,
     stop: f64,
 }
 
@@ -142,7 +143,7 @@ impl Continuous {
             });
             slots.push(OperatorSlot {
                 operator,
-                kind,
+                continuous: kind != ContinuousKind::Ddt,
                 value,
             });
         }
@@ -160,6 +161,15 @@ impl Continuous {
         let state_derivatives =
             build_state_derivatives(program, &operators, &algebraic, &x_to_forcing)?;
         let value_rows = build_value_rows(&operators, &algebraic, &x_to_forcing)?;
+        // States and source values are continuous, but a source's PWL slope
+        // can jump. Follow the solved output relation rather than just the
+        // outer operator kind when certifying a guard's continuity.
+        let slope_start = state_count + source_count;
+        for (slot, row) in slots.iter_mut().zip(&value_rows) {
+            slot.continuous &= row[slope_start..slope_start + source_count]
+                .iter()
+                .all(|value| value.zero());
+        }
         let derivative_rows =
             build_derivative_rows(&value_rows, &state_derivatives, state_count, source_count);
         let initial = initial_state(
@@ -169,6 +179,17 @@ impl Continuous {
             &state_derivatives,
             trajectory,
         )?;
+        // The DC phase uses the same solved network and initial states as the
+        // transient phase, with source slopes set to zero for every output.
+        // Do not patch only ddt after downstream outputs have been evaluated.
+        let mut dc_forcing = initial.clone();
+        dc_forcing.extend(trajectory.value_bounds(0.0));
+        dc_forcing.extend(vec![I::ZERO; source_count]);
+        dc_forcing.push(I::ONE);
+        let dc_values = value_rows
+            .iter()
+            .map(|row| dot(row, &dc_forcing, "continuous DC value"))
+            .collect::<Result<Vec<_>, _>>()?;
         let segments = build_segments(
             trajectory,
             state_count,
@@ -177,12 +198,13 @@ impl Continuous {
             &state_derivatives,
             &value_rows,
             &derivative_rows,
-            initial.clone(),
+            initial,
         )?;
         Ok(Some(Self {
             slots,
             segments,
             value_count: operators.len(),
+            dc_values,
             stop: trajectory.config.stop,
         }))
     }
@@ -198,7 +220,7 @@ impl Continuous {
         self.slots
             .iter()
             .find(|entry| entry.value == slot)
-            .is_some_and(|entry| entry.kind != ContinuousKind::Ddt)
+            .is_some_and(|entry| entry.continuous)
     }
 
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
@@ -221,7 +243,16 @@ impl Continuous {
         }
         self.ensure_time(time.lo)?;
         self.ensure_time(time.hi)?;
-        let mut out: Vec<Option<I>> = vec![None; self.value_count];
+        if time == I::ZERO {
+            return Ok(self.dc_values.clone());
+        }
+        // An interval starting at zero includes the DC observation as well
+        // as the right-side transient limit, which may differ by feedthrough.
+        let mut out: Vec<Option<I>> = if time.lo == 0.0 {
+            self.dc_values.iter().copied().map(Some).collect()
+        } else {
+            vec![None; self.value_count]
+        };
         for segment in &self.segments {
             let lo = time.lo.max(segment.start);
             let hi = time.hi.min(segment.end);
@@ -234,13 +265,6 @@ impl Continuous {
                     Some(current) => current.hull(value),
                     None => value,
                 });
-            }
-        }
-        if time == I::ZERO {
-            for slot in &self.slots {
-                if slot.kind == ContinuousKind::Ddt {
-                    out[slot.value] = Some(I::ZERO);
-                }
             }
         }
         out.into_iter()
@@ -320,16 +344,11 @@ impl Continuous {
     }
 
     fn eval_rows(&self, time: f64, query: Query) -> Result<Vec<I>, Error> {
-        let segment = self.segment_at(time)?;
-        let mut values = self.eval_segment_rows(segment, I::point(time), query)?;
         if matches!(query, Query::Value) && time == 0.0 {
-            for slot in &self.slots {
-                if slot.kind == ContinuousKind::Ddt {
-                    values[slot.value] = I::ZERO;
-                }
-            }
+            return Ok(self.dc_values.clone());
         }
-        Ok(values)
+        let segment = self.segment_at(time)?;
+        self.eval_segment_rows(segment, I::point(time), query)
     }
 
     fn eval_segment_rows(&self, segment: &Segment, time: I, query: Query) -> Result<Vec<I>, Error> {
@@ -1491,6 +1510,76 @@ mod tests {
 
     fn normalized_two_pole_ramp(x: f64) -> f64 {
         x - 2.0 + (x + 2.0) * (-x).exp()
+    }
+    fn ddt_filter_program(numerator: Vec<f64>, denominator: Vec<f64>) -> Program {
+        let mut program = ramp_filter_program(1.0);
+        let input = Expression::Affine {
+            constant: 0.0,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.0,
+            }],
+        };
+        program.operators = vec![
+            OperatorSpec::Ddt {
+                input,
+                origin: origin(),
+            },
+            OperatorSpec::LaplaceNd {
+                input: Expression::Operator { operator: 0 },
+                numerator,
+                denominator,
+                origin: origin(),
+            },
+        ];
+        program.contributions[0].rhs = Expression::Operator { operator: 1 };
+        program
+    }
+
+    #[test]
+    fn ddt_identity_filter_dc_and_range_bounds_share_one_phase() {
+        let program = ddt_filter_program(vec![1.0, 1.0], vec![1.0, 1.0]);
+        let trajectory = ramp_filter_trajectory(1.0);
+        let continuous = Continuous::new(&program, &trajectory, &["u".to_string()])
+            .unwrap()
+            .unwrap();
+        let d = continuous.operator_value_index(0).unwrap();
+        let y = continuous.operator_value_index(1).unwrap();
+        for slot in [d, y] {
+            let initial = continuous.bounds(0.0).unwrap()[slot];
+            assert!(initial.lo <= 0.0 && initial.hi >= 0.0, "{initial:?}");
+            assert!(initial.hi - initial.lo <= 1e-12, "{initial:?}");
+            assert_eq!(continuous.range_bounds(I::ZERO).unwrap()[slot], initial);
+            let both = continuous.range_bounds(I { lo: 0.0, hi: 0.25 }).unwrap()[slot];
+            assert!(both.lo <= 0.0 && both.hi >= 1.0, "{both:?}");
+            let positive = continuous.range_bounds(I::point(0.25)).unwrap()[slot];
+            assert!(positive.lo <= 1.0 && positive.hi >= 1.0, "{positive:?}");
+            assert!(
+                positive.lo > 0.0,
+                "DC must not leak into a positive-time query: {positive:?}"
+            );
+        }
+        let initial = continuous.bounds(0.0).unwrap();
+        let positive = continuous.bounds(0.25).unwrap();
+        continuous.values(1.0).unwrap();
+        assert_eq!(continuous.bounds(0.0).unwrap(), initial);
+        assert_eq!(continuous.bounds(0.25).unwrap(), positive);
+    }
+
+    #[test]
+    fn continuous_guard_classification_follows_ddt_feedthrough() {
+        for (numerator, expected) in [(vec![1.0, 1.0], false), (vec![1.0], true)] {
+            let program = ddt_filter_program(numerator, vec![1.0, 1.0]);
+            let continuous =
+                Continuous::new(&program, &ramp_filter_trajectory(1.0), &["u".to_string()])
+                    .unwrap()
+                    .unwrap();
+            assert!(!continuous.is_continuous(continuous.operator_value_index(0).unwrap()));
+            assert_eq!(
+                continuous.is_continuous(continuous.operator_value_index(1).unwrap()),
+                expected
+            );
+        }
     }
     fn assert_close(actual: f64, expected: f64, tolerance: f64) {
         assert!(

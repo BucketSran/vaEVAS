@@ -916,7 +916,10 @@ impl Operators {
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
-                    return Err(Error::new("unsupported_cross","ddt of PWL can jump at source corners; continuous cross trajectory required"));
+                    return Err(Error::new(
+                        "unsupported_cross",
+                        "ddt or its feedthrough can jump at DC/source corners; continuous cross trajectory required",
+                    ));
                 }
                 (
                     c.range_bounds(time)?[*slot],
