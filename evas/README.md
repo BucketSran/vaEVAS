@@ -45,8 +45,10 @@ PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experime
 保留恒等滤波初值的反例、统一 DC 求值后的组合回归及原矩阵新执行。
 原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；已随 PR30 合并到 main `bedf20f`。
 当前 0.11.0 的三项动态扩展独立登记于[分支收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，尚未合并。
-本分支 450 Python、116 Rust 与 Clippy/格式/数学/冻结身份检查通过；一项性能探针 ignored。
+首轮运行时 `71c6ceb` 的 450 Python、116 Rust 与 Clippy/格式/数学/冻结身份检查通过；一项性能探针 ignored。
 原矩阵 62 次新执行，两档各 31/31，CSV、判定和数值设置与 PR30 一致；没有新 Spectre/性能测量。
+后续 `4642cd2` 的[事件窗口检查](../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)
+覆盖非线性根盒重启及其采样拒绝边界：456 Python、117 Rust、原矩阵两档各 31/31，仍未合并。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 

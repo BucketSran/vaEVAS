@@ -29,9 +29,9 @@
 | TRANSITION：延迟与边沿 | 固定延迟、显式正边沿、状态仿射输入；历史误差参与验收 | [算子说明](OPERATORS.md#transition)、历史 PR13 独立 Fraction 与 16/16 配置对照 | 动态参数、零/省略边沿、完整观察资格及更广组合尚缺 |
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#absdelay)、历史 PR14 独立答案与 12/12 专项 | 内部节点/状态、可变延迟、跳变、嵌套和反馈尚缺 |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#slew)、历史 PR15 专项：EVAS 16/16，Spectre 10/16，步长诊断保留 | 内部节点、动态参数、更广组合尚缺；旧测量不替代当前版本执行 |
-| DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、线性嵌套、1–8 阶 proper laplace_nd 完整分子、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式非线性 DAE、非线性混合算子、不确定时刻非线性重启、复位固定点环、跳变/高指标导数、缺省 IC、动态参数与数值预算尚缺 |
+| DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、时间独立写者和上端点代表时刻的非线性根盒重启、线性嵌套、1–8 阶 proper laplace_nd 完整分子、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式非线性 DAE、非线性混合算子、非精确事件的连续采样/输入条件写者、时间盒内部代表时刻的非线性重启、复位固定点环、跳变/高指标导数、缺省 IC、动态参数与数值预算尚缺 |
 | COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；开发新增线性积分/滤波闭包经过算子和电压关系，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值 | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；事件改变保持输入/联合 reset 和显式多项式积分已补；事件后 guard 重定位及非线性混合算子仍缺 |
-| QUALIFICATION：独立验收 | 0.11.0 本地分支重跑原 31 条件，两档各 31/31；27 个新动态开发方法和私有区间/回退检查 | [本分支检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
+| QUALIFICATION：独立验收 | 0.11.0 本地分支重跑原 31 条件，两档各 31/31；动态开发方法和私有区间/回退检查分别计数 | [事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[本分支首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
 | PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 最新精度链未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
 
 ## 工作与证据身份
@@ -45,6 +45,7 @@
 原矩阵的 CSV、判定和数值设置与下述 IR15 基线一致；仅引擎版本元数据变化。
 该检查点已随 PR30 合并；不计为新 Spectre 执行或性能测量。
 本分支三项扩展的源码/内核与检查身份见[动态补齐收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，不继承基线验证。
+后续非线性根盒重启和采样边界修复绑定运行时 `4642cd2` 的[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)。
 
 历史已合并 IR15 运行时 `d451605` 的 **62 次新本地执行**均达标，CSV、判定和生效设置与 `ddfd379` 一致；
 372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
@@ -63,7 +64,7 @@
 
 | 方向 | 下一步需先固定的设计与独立验收 |
 | --- | --- |
-| 联合动态求解 | 已补事件保持参数/联合 reset 与显式多项式 ODE；剩余隐式非线性 DAE、混合算子、非精确事件时刻和未来事件稳定化传播 |
+| 联合动态求解 | 已补事件保持参数/联合 reset、显式多项式 ODE 及时间独立写者的上端点根盒重启；剩余根盒采样/条件联合认证、隐式非线性 DAE、混合算子、时间盒内部代表时刻和未来事件稳定化传播 |
 | 事件扩展 | 本分支已补状态独立多项式/连续算子 guard；剩余事件后轨迹重定位、切线、隐式非线性电压 guard、动态 timer/混合 OR |
 | 语言和算子 | 已补受限内部/算子输入 ddt 和 1–8 阶滤波；剩余跳变/高指标导数、通用函数/过程控制/数组及更广初值/参数语义 |
 | 精度/资格 | 通用状态预算、前端折叠误差、一般连续时间误差、独立观察资格与未见确认集，保留拒绝及错误对照 |

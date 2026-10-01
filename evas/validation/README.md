@@ -31,6 +31,9 @@ DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间�
 0.11.0 本地分支运行时 `71c6ceb` 新执行原矩阵两档各 31/31；62 份 CSV、判定和数值设置
 与 PR30 一致，450 Python、116 Rust 通过（另有一项性能探针 ignored）。
 新增 27 个动态开发方法单独计数；没有新 Spectre 执行或性能测量。
+后续 `4642cd2` 的[根盒重启与采样边界检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)
+重跑原矩阵两档各 31/31，456 Python、117 Rust 通过（另有一项性能探针 ignored）。
+动态开发方法增至 33 个，不改变原条件或正式资格的分母；该分支仍未合并。
 
 跨后端比较与 IR15 检查点见下面的历史记录。实现的持续状态以
 [能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
