@@ -297,8 +297,7 @@ class IdtContracts(unittest.TestCase):
                 compiled('@(initial_step) q=0; V(y,r)<+'+call+';', 'real q;')
 
     def test_structural_rejections_survive_zero_and_cancellation(self):
-        inputs = ['V(z,r)-V(z,r)', '0*V(z,r)', 'V(z,z)',
-                  'q-q', '0*q',
+        inputs = ['q-q', '0*q',
                   'absdelay(V(u,r),1)', 'V(u,r)*V(u,r)', 'pow(V(u,r),2)']
         for expr in inputs:
             body = f'@(initial_step) q=0; V(z,r)<+V(u,r); V(y,r)<+idt({expr},0);'
@@ -362,9 +361,7 @@ class IdtContracts(unittest.TestCase):
         bad = copy.deepcopy(good)
         del bad['operators'][0]['ic']
         mutations.append(bad)
-        for expr in [dict(op='operator', operator=99),
-                     dict(op='state', state=0),
-                     dict(op='affine', constant=0, terms=[dict(node=good['nodes'].index('y'), coefficient=0)])]:
+        for expr in [dict(op='operator', operator=99), dict(op='state', state=0)]:
             bad = copy.deepcopy(good)
             bad['operators'][0]['input'] = expr
             mutations.append(bad)
@@ -378,6 +375,19 @@ class IdtContracts(unittest.TestCase):
             with self.subTest(program=program):
                 self.assertEqual(response.returncode, 2, response.stdout)
                 self.assertIn(json.loads(response.stderr)['kind'], ['invalid_ir', 'invalid_request', 'unsupported_operator'])
+
+    def test_raw_zero_voltage_feedback_preserves_explicit_initial_value(self):
+        program=compiled().to_dict()
+        program['operators'][0]['input']=dict(op='affine',constant=0,
+            terms=[dict(node=program['nodes'].index('y'),coefficient=0)])
+        response=subprocess.run([str(KERNEL)],input=json.dumps(dict(
+            program=program,driven=['u'],samples=[],
+            transient=dict(pwl=[POINTS],output_times=[0,8],stop=8,max_step=8))),
+            text=True,capture_output=True)
+        self.assertEqual(response.returncode,0,response.stderr)
+        result=json.loads(response.stdout)
+        for row in result['solutions']:
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],3,delta=1e-10)
 
 
 if __name__ == '__main__':

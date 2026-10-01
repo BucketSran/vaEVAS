@@ -112,11 +112,12 @@ class GapIntegration(unittest.TestCase):
                 self.assertAlmostEqual(row["y"],1+time,delta=1e-10)
                 self.assertAlmostEqual(row["q"],2+time,delta=1e-10)
 
-    def test_dynamic_alias_cancellation_cannot_hide_operator_dependency(self):
+    def test_dynamic_alias_cancellation_preserves_zero_feedback_semantics(self):
         source=model("tmp=V(y,r)-V(y,r); V(y,r)<+idt(tmp,0);", "real tmp;")
         program=compile_sources({"hidden-dependency.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
-        with self.assertRaisesRegex(KernelError,"unsupported_operator"):
-            rows(program,{"u":[[0,0],[1,0]]},[0,1],max_step=1)
+        _, actual=rows(program,{"u":[[0,0],[1,0]]},[0,.5,1],max_step=1)
+        for row in actual:
+            self.assertAlmostEqual(row["y"],0,delta=1e-12)
 
     def test_select_with_dynamic_operator_keeps_documented_rejection(self):
         source=model("tmp=V(u,r); if(V(u,r)>.5) tmp=1; else tmp=0; V(y,r)<+tmp+idt(V(u,r),0);","real tmp;")

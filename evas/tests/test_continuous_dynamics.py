@@ -125,6 +125,30 @@ class AffineIntegralFeedbackContracts(unittest.TestCase):
             expected = Fraction.from_float(time) ** 2 / 2
             assert_close(self, row["y"], float(expected), delta=2e-9)
 
+    def test_canceled_internal_voltage_inputs_still_select_joint_network(self):
+        expressions = ["V(z,r)-V(z,r)", "0*V(z,r)", "V(z,z)"]
+        points = [[0.0, 1.0], [3.0, 1.0]]
+        times = [0.0, 0.5, 1.0, 3.0]
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                program = compile_model(f"V(z,r)<+V(u,r); V(y,r)<+idt({expression},0);", "electrical z;")
+                result = run(program, {"u": points}, times, stop=3.0, max_step=3.0)
+                for row in rows(result):
+                    assert_close(self, row["dut:z"], 1.0, delta=2e-9)
+                    assert_close(self, row["y"], 0.0, delta=2e-9)
+
+    def test_canceled_internal_voltage_with_hidden_event_state_still_rejects(self):
+        expressions = ["V(z,r)-V(z,r)", "0*V(z,r)", "V(z,z)"]
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                body = (
+                    "@(initial_step) q=0; @(timer(1,0,1e-12)) q=1; "
+                    f"V(z,r)<+V(u,r)+0*q; V(y,r)<+idt({expression},0);"
+                )
+                program = compile_model(body, "real q; electrical z;")
+                with self.assertRaisesRegex(KernelError, "unsupported_operator"):
+                    run(program, {"u": [[0.0, 1.0], [3.0, 1.0]]}, [0.0, 1.0, 3.0], stop=3.0, max_step=3.0)
+
     def test_output_grid_and_max_step_do_not_define_integral_history(self):
         program = compile_model("V(y,r)<+idt(1-V(y,r),0);")
         sparse = [0.0, 0.5, 1.0, 2.0]

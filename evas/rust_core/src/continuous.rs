@@ -533,8 +533,13 @@ fn select_network_operators(
     let mut selected = BTreeSet::new();
     for (index, spec) in program.operators.iter().enumerate() {
         match spec {
-            OperatorSpec::Idt { input, reset, .. }
-                if reset.is_none() && has_network_dependency(input, program, driven_nodes)? =>
+            OperatorSpec::Idt {
+                input,
+                reset,
+                origin,
+                ..
+            } if reset.is_none()
+                && has_network_dependency(input, program, driven_nodes, origin)? =>
             {
                 selected.insert(index);
             }
@@ -542,10 +547,11 @@ fn select_network_operators(
                 input,
                 numerator,
                 denominator,
+                origin,
                 ..
             } if numerator.len() != 1
                 || denominator.len() != 2
-                || has_network_dependency(input, program, driven_nodes)? =>
+                || has_network_dependency(input, program, driven_nodes, origin)? =>
             {
                 selected.insert(index);
             }
@@ -559,17 +565,17 @@ fn select_network_operators(
         let before = selected.len();
         let mut active_nodes = BTreeSet::new();
         for index in selected.clone() {
-            let Some(input) = continuous_operator_input(&program.operators[index]) else {
+            let Some((input, origin)) = continuous_operator_input(&program.operators[index]) else {
                 continue;
             };
-            let row = affine_bounds::affine(input, program)?;
-            add_rhs_internal_nodes(
-                &mut active_nodes,
-                &row,
+            let deps = structural_affine(input, program, origin)?;
+            add_structural_internal_nodes(&mut active_nodes, &deps.node_dependencies, driven_nodes);
+            select_operator_dependencies(
+                &mut selected,
+                &deps.operator_dependencies,
                 program,
-                &driven_nodes.iter().copied().collect(),
-            );
-            select_operator_dependencies(&mut selected, &row, program);
+                origin,
+            )?;
         }
         close_selected_through_voltage_relations(
             program,
@@ -590,26 +596,45 @@ fn close_selected_through_voltage_relations(
     selected: &mut BTreeSet<usize>,
     mut active_nodes: BTreeSet<usize>,
 ) -> Result<(), Error> {
-    let driven: BTreeSet<_> = driven_nodes.iter().copied().collect();
     loop {
         let before = active_nodes.len();
         let network_outputs = selected.clone();
         for contribution in &program.contributions {
-            let row = affine_bounds::affine(&contribution.rhs, program)?;
+            let deps = structural_affine(&contribution.rhs, program, &contribution.origin)?;
             let active_lhs = active_nodes.contains(&contribution.positive)
                 || active_nodes.contains(&contribution.negative);
             if active_lhs
-                || row_refs_nodes(&row, &active_nodes)
-                || row_refs_network(&row, program, &network_outputs)
+                || deps
+                    .node_dependencies
+                    .iter()
+                    .any(|node| active_nodes.contains(node))
+                || deps
+                    .operator_dependencies
+                    .iter()
+                    .any(|operator| network_outputs.contains(operator))
             {
-                if contribution.positive != 0 && !driven.contains(&contribution.positive) {
+                validate_no_structural_event_state(
+                    &contribution.rhs,
+                    program,
+                    &contribution.origin,
+                )?;
+                if contribution.positive != 0 && !driven_nodes.contains(&contribution.positive) {
                     active_nodes.insert(contribution.positive);
                 }
-                if contribution.negative != 0 && !driven.contains(&contribution.negative) {
+                if contribution.negative != 0 && !driven_nodes.contains(&contribution.negative) {
                     active_nodes.insert(contribution.negative);
                 }
-                add_rhs_internal_nodes(&mut active_nodes, &row, program, &driven);
-                select_operator_dependencies(selected, &row, program);
+                add_structural_internal_nodes(
+                    &mut active_nodes,
+                    &deps.node_dependencies,
+                    driven_nodes,
+                );
+                select_operator_dependencies(
+                    selected,
+                    &deps.operator_dependencies,
+                    program,
+                    &contribution.origin,
+                )?;
             }
         }
         if active_nodes.len() == before {
@@ -619,30 +644,40 @@ fn close_selected_through_voltage_relations(
     Ok(())
 }
 
-fn continuous_operator_input(spec: &OperatorSpec) -> Option<&Expression> {
+fn continuous_operator_input(spec: &OperatorSpec) -> Option<(&Expression, &Origin)> {
     match spec {
         OperatorSpec::Idt {
-            input, reset: None, ..
+            input,
+            reset: None,
+            origin,
+            ..
         }
-        | OperatorSpec::LaplaceNd { input, .. }
-        | OperatorSpec::Ddt { input, .. } => Some(input),
+        | OperatorSpec::LaplaceNd { input, origin, .. }
+        | OperatorSpec::Ddt { input, origin, .. } => Some((input, origin)),
         _ => None,
     }
 }
 
-fn select_operator_dependencies(selected: &mut BTreeSet<usize>, row: &[I], program: &Program) {
-    let operator_base = program.nodes.len() + program.states.len();
-    for (operator, coefficient) in row[operator_base..operator_base + program.operators.len()]
-        .iter()
-        .enumerate()
-    {
-        if coefficient.zero() || selected.contains(&operator) {
+fn select_operator_dependencies(
+    selected: &mut BTreeSet<usize>,
+    dependencies: &BTreeSet<usize>,
+    program: &Program,
+    origin: &Origin,
+) -> Result<(), Error> {
+    for &operator in dependencies {
+        if selected.contains(&operator) {
             continue;
         }
         if selectable_continuous_dependency(&program.operators[operator]) {
             selected.insert(operator);
+        } else {
+            return Err(unsupported(
+                origin,
+                "continuous network cannot depend on an unsupported dynamic operator, even if the numeric coefficient cancels",
+            ));
         }
     }
+    Ok(())
 }
 
 fn selectable_continuous_dependency(spec: &OperatorSpec) -> bool {
@@ -658,18 +693,35 @@ fn has_network_dependency(
     expr: &Expression,
     program: &Program,
     driven_nodes: &[usize],
+    origin: &Origin,
 ) -> Result<bool, Error> {
-    let row = affine_bounds::affine(expr, program)?;
-    let node_limit = program.nodes.len();
-    let state_limit = node_limit + program.states.len();
-    Ok(row[1..node_limit]
+    let deps = structural_affine(expr, program, origin)?;
+    Ok(deps
+        .node_dependencies
         .iter()
-        .enumerate()
-        .any(|(offset, x)| !x.zero() && !driven_nodes.contains(&(offset + 1)))
-        || row[node_limit..state_limit].iter().any(|x| !x.zero())
-        || row[state_limit..state_limit + program.operators.len()]
-            .iter()
-            .any(|x| !x.zero()))
+        .any(|node| *node != 0 && !driven_nodes.contains(node))
+        || !deps.state_dependencies.is_empty()
+        || !deps.operator_dependencies.is_empty())
+}
+
+fn structural_affine(
+    expr: &Expression,
+    program: &Program,
+    origin: &Origin,
+) -> Result<crate::events::AffineState, Error> {
+    crate::events::affine(expr, program, &origin.instance)
+}
+
+fn add_structural_internal_nodes(
+    nodes: &mut BTreeSet<usize>,
+    dependencies: &BTreeSet<usize>,
+    driven_nodes: &[usize],
+) {
+    for &node in dependencies {
+        if node != 0 && !driven_nodes.contains(&node) {
+            nodes.insert(node);
+        }
+    }
 }
 
 fn affine_for_operator_input(
@@ -1354,6 +1406,43 @@ mod tests {
         .unwrap()
     }
 
+    fn cancelled_node(node: usize) -> Expression {
+        Expression::Add {
+            left: Box::new(Expression::Affine {
+                constant: 0.0,
+                terms: vec![Term {
+                    node,
+                    coefficient: 1.0,
+                }],
+            }),
+            right: Box::new(Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: -1.0,
+                    terms: Vec::new(),
+                }),
+                right: Box::new(Expression::Affine {
+                    constant: 0.0,
+                    terms: vec![Term {
+                        node,
+                        coefficient: 1.0,
+                    }],
+                }),
+            }),
+        }
+    }
+
+    fn cancelled_state(state: usize) -> Expression {
+        Expression::Add {
+            left: Box::new(Expression::State { state }),
+            right: Box::new(Expression::Multiply {
+                left: Box::new(Expression::Affine {
+                    constant: -1.0,
+                    terms: Vec::new(),
+                }),
+                right: Box::new(Expression::State { state }),
+            }),
+        }
+    }
     fn ramp_filter_program(tau: f64) -> Program {
         Program {
             schema_version: SCHEMA_VERSION,
@@ -1411,6 +1500,94 @@ mod tests {
         );
     }
 
+    #[test]
+    fn cancelled_internal_relay_enters_continuous_network_as_exact_zero() {
+        let program = Program {
+            schema_version: SCHEMA_VERSION,
+            nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
+            contributions: vec![Contribution {
+                branch: BranchIdentity {
+                    instance: "uut".to_string(),
+                    local_positive: "y".to_string(),
+                    local_negative: "0".to_string(),
+                    kind: ContributionKind::Voltage,
+                },
+                positive: 2,
+                negative: 0,
+                rhs: Expression::Operator { operator: 0 },
+                origin: origin(),
+            }],
+            states: Vec::new(),
+            events: Vec::new(),
+            operators: vec![OperatorSpec::Idt {
+                input: cancelled_node(1),
+                ic: 0.0,
+                reset: None,
+                origin: origin(),
+            }],
+        };
+        let trajectory = no_source_trajectory(1.0);
+        let continuous = Continuous::new(&program, &trajectory, &[])
+            .unwrap()
+            .expect("structural internal dependency should dispatch to the continuous network");
+
+        assert_close(continuous.values(1.0).unwrap()[0], 0.0, 1e-12);
+    }
+
+    #[test]
+    fn cancelled_internal_relay_still_rejects_hidden_event_state() {
+        let program = Program {
+            schema_version: SCHEMA_VERSION,
+            nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
+            contributions: vec![
+                Contribution {
+                    branch: BranchIdentity {
+                        instance: "uut".to_string(),
+                        local_positive: "z".to_string(),
+                        local_negative: "0".to_string(),
+                        kind: ContributionKind::Voltage,
+                    },
+                    positive: 1,
+                    negative: 0,
+                    rhs: cancelled_state(0),
+                    origin: origin(),
+                },
+                Contribution {
+                    branch: BranchIdentity {
+                        instance: "uut".to_string(),
+                        local_positive: "y".to_string(),
+                        local_negative: "0".to_string(),
+                        kind: ContributionKind::Voltage,
+                    },
+                    positive: 2,
+                    negative: 0,
+                    rhs: Expression::Operator { operator: 0 },
+                    origin: origin(),
+                },
+            ],
+            states: vec![State {
+                instance: "uut".to_string(),
+                name: "n".to_string(),
+                kind: StateKind::Real,
+                initial: 0.0,
+            }],
+            events: Vec::new(),
+            operators: vec![OperatorSpec::Idt {
+                input: cancelled_node(1),
+                ic: 0.0,
+                reset: None,
+                origin: origin(),
+            }],
+        };
+        let trajectory = no_source_trajectory(1.0);
+        let error = match Continuous::new(&program, &trajectory, &[]) {
+            Ok(_) => panic!("hidden event state behind a cancelled relay must be rejected"),
+            Err(error) => error,
+        };
+
+        assert_eq!(error.kind, "unsupported_operator");
+        assert!(error.message.contains("event state"), "{}", error.message);
+    }
     #[test]
     fn selection_closes_through_voltage_relation_producers() {
         let program = Program {
