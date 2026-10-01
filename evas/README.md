@@ -53,7 +53,10 @@ PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experime
 统一线性/非线性事件准入，并拒绝时间盒内部代表时刻的联合重启；458 Python、118 Rust 通过。
 这部分已随 PR31 合并到 main `09b4222`。本轮 0.12.0 在本地分支扩展混合积分/滤波、
 非精确事件采样/稳定条件认证和无事件 index-one 多项式隐式 DAE；
-数学、调用点历史和明确拒绝边界见 [CONTINUOUS](docs/CONTINUOUS.md)，开发验证单独计数。
+数学、调用点历史和明确拒绝边界见 [CONTINUOUS](docs/CONTINUOUS.md)。
+[本轮检查](../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)绑定 `fd60d11`：
+482 Python、121 Rust 和原矩阵两档各 31/31；62 份 CSV 与 PR31 逐字节相同。
+24 个新增开发方法不增加原矩阵分母，前一轮 26/31 的失败归档保留；本轮没有新 Spectre/性能测量。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 

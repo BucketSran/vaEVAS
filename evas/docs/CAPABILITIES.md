@@ -31,7 +31,7 @@
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#slew)、历史 PR15 专项：EVAS 16/16，Spectre 10/16，步长诊断保留 | 内部节点、动态参数、更广组合尚缺；旧测量不替代当前版本执行 |
 | DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、上端点代表时刻的根盒采样/稳定条件与触发根等号认证、积分与 proper 滤波混合、无事件 index-one 多项式隐式 DAE、1–8 阶完整滤波、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式 DAE 与事件/复位/滤波/ddt 组合；非线性滤波 DC/直接通路、通用函数/ddt 混合、时间盒内部代表时刻、复位固定点环、跳变/高指标导数、缺省 IC、动态参数；其他算子的非精确历史采样未纳入本轮认证；不确定条件或超预算采样仍拒绝 |
 | COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；积分/滤波闭包经过算子和电压关系，支持受限多项式混合和隐式 DAE，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值 | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；非线性混合只含积分和 proper 滤波；非线性滤波 DC/直接通路、隐式 DAE 与事件/其他算子组合及事件后 guard 重定位仍缺 |
-| QUALIFICATION：独立验收 | 0.11.0 的审查运行时重跑原 31 条件，两档各 31/31；动态开发方法和私有区间/回退检查分别计数 | [最终审查检查](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
+| QUALIFICATION：独立验收 | 0.12.0 本地审查运行时重跑原 31 条件，两档各 31/31；新增 24 个开发方法，矩阵分母不变 | [本轮检查](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)、[本轮矩阵](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-matrix.json)、 [最终审查检查](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
 | PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 最新精度链未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
 
 ## 工作与证据身份
@@ -53,7 +53,11 @@
 0.12.0 的本地实现分为三批审查：
 [混合积分/滤波](../tests/test_mixed_dynamics.py)、[根盒采样/条件](../tests/test_event_window_sampling.py)、
 [index-one 隐式 DAE](../tests/test_implicit_dynamics.py)。数学和边界在 [CONTINUOUS](CONTINUOUS.md)，
-当前新执行另行登记，不继承 PR31 的内核身份或把本地实现标为已合并。
+运行时 `fd60d11` 的[本轮新执行](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)
+包括 482 Python、121 Rust（另有一项旧性能探针 ignored）及原矩阵两档各 31/31；
+62 份 CSV、判定、输入和除引擎版本外的生效设置与 PR31 完全一致。
+前一检查点 `cc68572` 的两档 26/31 保留在失败归档中：根盒条件需要额外保留实际触发 guard 的零集关系。
+本轮无新 Spectre/性能测量；不继承 PR31 的内核身份，也不把本地实现标为已合并。
 
 历史已合并 IR15 运行时 `d451605` 的 **62 次新本地执行**均达标，CSV、判定和生效设置与 `ddfd379` 一致；
 372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。

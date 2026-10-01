@@ -277,3 +277,9 @@ python3 -B scripts/verify_validation_version.py
 [设计历史](https://github.com/BucketSran/vaEVAS/blob/ead6c30/evas/validation/INDEPENDENT_SET_DESIGN.md)与
 [表格历史](https://github.com/BucketSran/vaEVAS/blob/ead6c30/evas/validation/COMPARISON_TABLE.md)。
 当前有效契约维护在本页及案例/方法文档，阶段安排和 review 记录维护在 PR 中。
+
+0.12.0 / IR16 本地候选的三项连续动态检查见
+[本轮收据](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)。
+原 31 条件两档重新执行各 31/31，输入与检查器不变，62 份 CSV 与 PR31 逐字节相同；
+24 个新增方法属于开发回归，不增加独立条件分母或正式资格。前一轮 26/31 的失败保留；
+本轮尚未合并，没有新 Spectre/性能测量，完整 raw 仅本地保留。

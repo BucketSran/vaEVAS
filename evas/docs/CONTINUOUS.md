@@ -342,6 +342,13 @@ INIT-C1–4 和网格/断点观察由 `ContinuousInitializationContracts` 检查
 
 ## 检查点与审阅入口
 
+0.12.0 本地候选运行时 `fd60d11` 的[检查收据](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)
+记录 482 Python、121 Rust 通过（另有一项旧性能探针 ignored），以及本轮三组解析开发回归、
+原 31 条件两档的新执行、与 PR31 的 62 份字节相同波形。24 个新增方法单独计数。
+第一次矩阵两档仅 26/31 的源码、内核和完整失败结果均已保留，未被后续结果覆盖；等号修复按触发叶子的精确同零集证明，
+不是容差放宽。分批 review 顺序可用混合网络、根盒采样/条件、隐式 DAE 三个测试文件。
+实现尚未合并或发布；完整 raw 仅本地保留，无新 Spectre/性能对照和全时域资格。
+
 本地开发运行时 `ba5ab46e90ec4769e47478a492b80ab2dc7a09b6` 固定 EVAS 0.10.0 / IR16，
 是初始化 review 修复前的检查点。[检查与迁移收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 绑定源码、测试、工具环境与内核；[原矩阵收据](../../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)
