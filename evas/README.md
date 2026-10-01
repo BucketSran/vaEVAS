@@ -12,7 +12,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 
 瞬态的 PWL、采样状态和算子历史误差进入输出验收。多项式瞬态的点输入也要求根盒证明；
 不能证明电压预算时明确拒绝。[精度链审查](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)
-与[最新验证](validation/README.md#latest-evas-checkpoint)绑定被测运行时 `d451605`。
+绑定历史运行时 `d451605`；[已合并 PR30 验证](validation/README.md#latest-evas-checkpoint)与本分支新检查分别登记。
 旧 IR 1–15 需要重新编译，更严格认证的具体边界见[迁移说明](#ir-v8-migration)。
 
 ## 构建与运行
@@ -41,10 +41,12 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 以下结果绑定已合并 IR15 检查点。IR16 的新能力与验证另见[连续动态说明](docs/CONTINUOUS.md)，不继承历史运行身份。
 
-最新 IR16 开发运行时 `071a813` 的[初始化 review 修复收据](../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
+PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
 保留恒等滤波初值的反例、统一 DC 求值后的组合回归及原矩阵新执行。
 原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；已随 PR30 合并到 main `bedf20f`。
 当前 0.11.0 的三项动态扩展独立登记于[分支收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，尚未合并。
+本分支 450 Python、116 Rust 与 Clippy/格式/数学/冻结身份检查通过；一项性能探针 ignored。
+原矩阵 62 次新执行，两档各 31/31，CSV、判定和数值设置与 PR30 一致；没有新 Spectre/性能测量。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 

@@ -75,7 +75,9 @@ RAW_MANIFEST SHA256：`956d566e2afbc280aafe4980c1ac916294fe3fe6d8ac10cb9012569ad
 内部/算子输入 ddt 采用质量关系；事件后的积分/复位保留全部调用点状态；
 受限多项式积分采用 Picard 管和区间 Taylor。数学、状态和组合边界见
 [连续动态章节](../../evas/docs/CONTINUOUS.md)，精确执行身份见[分支检查收据](results/dynamic-closure-checks.json)。
-原 31 条件和阈值保持不变；新增开发回归不增加分母。
+运行时 `71c6ceb` 的 450 Python、116 Rust 通过，另有一项旧性能探针 ignored；
+locked build、Clippy、格式、数学和冻结身份检查通过。原矩阵 62 次新执行两档各 31/31，
+CSV、判定和数值设置与 PR30 一致。27 个新动态开发方法不增加原条件分母。
 非线性代数 DAE、混合算子、非精确时刻非线性重启及事件后 guard 重定位仍缺。
 本批没有新 Spectre 或性能测量，完整 raw 仅本地保留，正式资格仍 I。
 

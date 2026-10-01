@@ -10,7 +10,11 @@ VABench 的实际应用任务由 [tasks/](../../tasks/README.md) 维护；这里
 7 张补充卡展开的 16 个条件。基础档与细化档各以 31 为分母；两档配置、开发测试方法数、
 数学样例和输出点数均不增加独立条件数。
 
-IR16 连续动态开发中的新契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
+<a id="latest-evas-checkpoint"></a>
+
+### 已合并 PR30 与动态扩展分支
+
+IR16 连续动态的契约与解析回归见[连续动态说明](../docs/CONTINUOUS.md)。
 PR30 已合并；回归单独计数，不改写原 31 条件或以下历史 IR15 身份。
 0.11.0 分支补充内部导数、联合事件/复位和多项式积分的独立答案，见
 [动态数学](../docs/CONTINUOUS.md)及[检查收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)；尚未合并。
@@ -24,12 +28,16 @@ DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间�
 绑定 `071a813`，保留同一 IR 请求的修复前后反例及新组合回归；原矩阵两档新执行仍各 31/31，
 62 份 CSV、判定和生效设置与首轮 IR16 一致。
 
-先看下面的已合并 EVAS 检查点；跨后端比较另见历史基线。实现的持续状态以
+0.11.0 本地分支运行时 `71c6ceb` 新执行原矩阵两档各 31/31；62 份 CSV、判定和数值设置
+与 PR30 一致，450 Python、116 Rust 通过（另有一项性能探针 ignored）。
+新增 27 个动态开发方法单独计数；没有新 Spectre 执行或性能测量。
+
+跨后端比较与 IR15 检查点见下面的历史记录。实现的持续状态以
 [能力与缺口总表](../docs/CAPABILITIES.md)为准，本页结果只绑定所列检查点。
 
-<a id="latest-evas-checkpoint"></a>
+<a id="ir15-checkpoint"></a>
 
-### EVAS：IR15 交付检查点（2026-10-01）
+### 历史 EVAS：IR15 交付检查点（2026-10-01）
 
 运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`，EVAS 0.9.0 / IR v15。
 普通 analog 条件、一阶滤波、相位与无状态多项式瞬态已联合验证，且保留受限事件与积分复位。
@@ -42,7 +50,7 @@ DC/瞬态阶段、恒等包装、内部 relay、直接通路、反馈、区间�
 | PR26 运行时 `edb004d` / IR11 | 24/31 | 24/31 | 历史已合并检查点，本轮复用结果 |
 | 联合功能 `39a4545` / IR15 | 31/31 | 31/31 | 历史 62 次本地执行 |
 | 优化 `ddfd379` / IR15 | 31/31 | 31/31 | 历史 62 次本地执行 |
-| 精度链 `d451605` / IR15 | **31/31** | **31/31** | 最新 62 次新本地执行 |
+| 精度链 `d451605` / IR15 | **31/31** | **31/31** | 该 IR15 检查点的 62 次新本地执行 |
 
 最新的 62 份 CSV、判定和生效设置与 `ddfd379` 一致；原 DUT、刺激、网格、目标、检查器和分母未改。
 372 Python、83 Rust 测试与 locked build、Clippy、格式检查通过；一项旧性能探针 ignored。
@@ -111,7 +119,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | [事件条件与采样复位契约](EVENT_CONDITIONS_CONTRACT.md) | 事件体 if/else、cross OR 与多事件写者；保留各阶段检查点的语义和证据 |
 | [判定与设置协议](METHOD_QUALIFICATION.md) | 共同事件历史、观察资格、校准与证据复用 |
 | [共同源码](cases/README.md) | 原 DUT、补充模型和标准数组修订 |
-| [IR15 最新验证](../../experiments/parallel-gap-integration/README.md#当前证据) | 联合原 31×2 矩阵、精度链与兼容性；完整 raw 仅本地保留 |
+| [IR15 历史验证](../../experiments/parallel-gap-integration/README.md#当前证据) | 联合原 31×2 矩阵、精度链与兼容性；完整 raw 仅本地保留 |
 | [PR26 历史 EVAS 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation) | 已合并运行时与 PR25 main 的原 31×2 对照、剩余拒绝及兼容性检查 |
 | [历史四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md) | 31×4×2 条配置的逐条件结论，含旧 EVAS 0.8.7 |
 | [执行与诊断](../../experiments/dvs2-four-backend-validation/README.md) | 补测、复用、失败分类、有效设置和证据索引 |
