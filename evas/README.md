@@ -57,6 +57,9 @@ PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experime
 [本轮检查](../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)绑定 `fd60d11`：
 482 Python、121 Rust 和原矩阵两档各 31/31；62 份 CSV 与 PR31 逐字节相同。
 24 个新增开发方法不增加原矩阵分母，前一轮 26/31 的失败归档保留；本轮没有新 Spectre/性能测量。
+独立审查后，`d3daff0` 修复显式零 reset 的事件采样与已有混合历史重启的 DC 误拒绝。
+[修复检查](../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)单独记录新内核、
+回归、原矩阵和未解决边界，不改写 `fd60d11` 的旧收据；同刻实际复位并采样同一积分仍有既存误拒绝。
 首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
 及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
 

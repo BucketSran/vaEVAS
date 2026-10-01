@@ -29,9 +29,9 @@
 | TRANSITION：延迟与边沿 | 固定延迟、显式正边沿、状态仿射输入；历史误差参与验收 | [算子说明](OPERATORS.md#transition)、历史 PR13 独立 Fraction 与 16/16 配置对照 | 动态参数、零/省略边沿、完整观察资格及更广组合尚缺 |
 | ABSDELAY：历史查询 | 固定非负延迟、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#absdelay)、历史 PR14 独立答案与 12/12 专项 | 内部节点/状态、可变延迟、跳变、嵌套和反馈尚缺 |
 | SLEW：限速与追赶 | 固定正/负限速、直接连续 PWL 仿射输入 | [算子说明](OPERATORS.md#slew)、历史 PR15 专项：EVAS 16/16，Spectre 10/16，步长诊断保留 | 内部节点、动态参数、更广组合尚缺；旧测量不替代当前版本执行 |
-| DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、上端点代表时刻的根盒采样/稳定条件与触发根等号认证、积分与 proper 滤波混合、无事件 index-one 多项式隐式 DAE、1–8 阶完整滤波、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式 DAE 与事件/复位/滤波/ddt 组合；非线性滤波 DC/直接通路、通用函数/ddt 混合、时间盒内部代表时刻、复位固定点环、跳变/高指标导数、缺省 IC、动态参数；其他算子的非精确历史采样未纳入本轮认证；不确定条件或超预算采样仍拒绝 |
-| COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；积分/滤波闭包经过算子和电压关系，支持受限多项式混合和隐式 DAE，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值 | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；非线性混合只含积分和 proper 滤波；非线性滤波 DC/直接通路、隐式 DAE 与事件/其他算子组合及事件后 guard 重定位仍缺 |
-| QUALIFICATION：独立验收 | 0.12.0 本地审查运行时重跑原 31 条件，两档各 31/31；新增 24 个开发方法，矩阵分母不变 | [本轮检查](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)、[本轮矩阵](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-matrix.json)、 [最终审查检查](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
+| DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、上端点代表时刻的根盒采样/稳定条件与触发根等号认证、积分与 proper 滤波混合及已知历史上的事件后多项式滤波反馈、无事件 index-one 多项式隐式 DAE、1–8 阶完整滤波、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式 DAE 与事件/复位/滤波/ddt 组合；首次启动的非线性滤波 DC、非线性直接通路、通用函数/ddt 混合、时间盒内部代表时刻、复位固定点环、跳变/高指标导数、缺省 IC、动态参数；其他算子的非精确历史采样未纳入本轮认证；不确定条件或超预算采样仍拒绝 |
+| COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；积分/滤波闭包经过算子和电压关系，支持受限多项式混合和隐式 DAE，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值；事件重启复用物理历史，仅实际复位积分写入 IC | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；非线性混合只含积分和 proper 滤波；首次启动的非线性滤波 DC、非线性直接通路、隐式 DAE 与事件/其他算子组合及事件后 guard 重定位仍缺 |
+| QUALIFICATION：独立验收 | 0.12.0 本地审查运行时重跑原 31 条件，两档各 31/31；本轮开发方法由 24 增至 26，矩阵分母不变 | [独立审查修复](../../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)、[修复前检查](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)、[修复前矩阵](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-matrix.json)、 [最终审查检查](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
 | PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 最新精度链未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
 
 ## 工作与证据身份
@@ -58,6 +58,11 @@
 62 份 CSV、判定、输入和除引擎版本外的生效设置与 PR31 完全一致。
 前一检查点 `cc68572` 的两档 26/31 保留在失败归档中：根盒条件需要额外保留实际触发 guard 的零集关系。
 本轮无新 Spectre/性能测量；不继承 PR31 的内核身份，也不把本地实现标为已合并。
+独立审查修复 `d3daff0` 的[新收据](../../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)
+保留两项原失败和新执行：reset 为零时仍保留 tau 采样；带已知物理历史的事件重启不重新做 DC 初始化。
+484 Python、121 Rust 通过；原矩阵两档各 31/31，62 份 CSV 与修复前及 PR31 一致。
+首次启动的非线性 DC、非线性直接通路仍拒绝；同刻实际复位并采样同一积分的既存误拒绝仍未修复。
+有限时间爆炸探针在 25 秒上限内未返回而被终止，保留为未判定；这不计为数值拒绝成功。
 
 历史已合并 IR15 运行时 `d451605` 的 **62 次新本地执行**均达标，CSV、判定和生效设置与 `ddfd379` 一致；
 372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
@@ -76,7 +81,7 @@
 
 | 方向 | 下一步需先固定的设计与独立验收 |
 | --- | --- |
-| 联合动态求解 | 本地已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、非线性滤波 DC/直接通路、时间盒内部代表时刻和未来事件稳定化传播 |
+| 联合动态求解 | 本地已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、首次启动的非线性滤波 DC、非线性直接通路、时间盒内部代表时刻和未来事件稳定化传播 |
 | 事件扩展 | 已补状态独立多项式/连续算子 guard；剩余事件后轨迹重定位、切线、隐式非线性电压 guard、动态 timer/混合 OR |
 | 语言和算子 | 已补受限内部/算子输入 ddt 和 1–8 阶滤波；剩余跳变/高指标导数、通用函数/过程控制/数组及更广初值/参数语义 |
 | 精度/资格 | 通用状态预算、前端折叠误差、一般连续时间误差、独立观察资格与未见确认集，保留拒绝及错误对照 |
