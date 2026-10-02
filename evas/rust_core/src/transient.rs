@@ -7,7 +7,7 @@ use crate::ir::{
 };
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
-use crate::schedule::{schedule, ScheduledEvent};
+use crate::schedule::{independent_schedule, schedule, ScheduledEvent};
 use crate::solver::Circuit;
 
 struct Frame {
@@ -45,6 +45,7 @@ impl Controller {
             &self.accepted,
             time,
             &crossings[self.event..end],
+            prediction_end(model, trajectory, crossings.get(end)),
         )?;
         next.operators
             .check_deadline_order(time, crossings.get(end).map(|e| e.bounds()))?;
@@ -62,6 +63,21 @@ struct EventMoment<'a> {
     representative: f64,
     observation: I,
     fired_roots: &'a [usize],
+    prediction_end: f64,
+}
+
+fn prediction_end(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    next: Option<&ScheduledEvent>,
+) -> f64 {
+    // Dynamic guard calendars still require the full immutable history.
+    // Event-mutated guard relocalization is a separate capability boundary.
+    if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
+        trajectory.config.stop
+    } else {
+        next.map_or(trajectory.config.stop, |event| event.time)
+    }
 }
 
 #[cfg(test)]
@@ -80,6 +96,7 @@ mod window_history_tests;
 #[path = "transient_lifecycle_tests.rs"]
 mod lifecycle_controller_tests;
 
+#[cfg(test)]
 fn prepare_event_with_bounds(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -96,6 +113,7 @@ fn prepare_event_with_bounds(
             representative: time,
             observation: time_bounds,
             fired_roots: &[],
+            prediction_end: trajectory.config.stop,
         },
         events,
     )
@@ -112,6 +130,7 @@ fn prepare_root_window(
         representative: time,
         observation: time_bounds,
         fired_roots: fired_leaves,
+        prediction_end,
     } = moment;
     let mut operators = accepted.operators.clone();
     // Every trial starts from accepted uncertainty, regardless of whether the
@@ -183,9 +202,21 @@ fn prepare_root_window(
         .copied()
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
-    let operators = frozen.advanced(time_bounds, &prepared.states, &prepared.bounds, &changed)?;
+    let operators = frozen.advanced_until(
+        time_bounds,
+        &prepared.states,
+        &prepared.bounds,
+        &changed,
+        prediction_end,
+    )?;
     let replay = settle(&observation.0, &observation.1)?;
-    let history_replay = frozen.advanced(time_bounds, &replay.states, &replay.bounds, &changed)?;
+    let history_replay = frozen.advanced_until(
+        time_bounds,
+        &replay.states,
+        &replay.bounds,
+        &changed,
+        prediction_end,
+    )?;
     if prepared.states != replay.states
         || prepared.bounds != replay.bounds
         || !history_replay.same_reset_history(&operators)
@@ -219,6 +250,7 @@ fn prepare_root_window(
     })
 }
 
+#[cfg(test)]
 fn prepare_event(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -247,6 +279,7 @@ fn prepare_batch(
     )
 }
 
+#[cfg(test)]
 fn prepare_batch_with_bounds(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -255,6 +288,28 @@ fn prepare_batch_with_bounds(
     event_bounds: I,
     ids: &[usize],
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
+    prepare_batch_until(
+        model,
+        trajectory,
+        accepted,
+        EventMoment {
+            representative: event_time,
+            observation: event_bounds,
+            fired_roots: ids,
+            prediction_end: trajectory.config.stop,
+        },
+    )
+}
+
+fn prepare_batch_until(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    moment: EventMoment<'_>,
+) -> Result<(Frame, Vec<EventRecord>), Error> {
+    let event_time = moment.representative;
+    let event_bounds = moment.observation;
+    let ids = moment.fired_roots;
     // Calendar IDs identify leaves; settlement IDs identify event bodies.
     // Same-root certification occurred before this deduplication.
     let blocks: Vec<_> = ids
@@ -263,17 +318,7 @@ fn prepare_batch_with_bounds(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
-    let next = prepare_root_window(
-        model,
-        trajectory,
-        accepted,
-        EventMoment {
-            representative: event_time,
-            observation: event_bounds,
-            fired_roots: ids,
-        },
-        &blocks,
-    )?;
+    let next = prepare_root_window(model, trajectory, accepted, moment, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
     let mut records = Vec::new();
     for id in blocks {
@@ -370,6 +415,7 @@ fn prepare_calendar_batch(
     accepted: &Frame,
     time: f64,
     scheduled: &[ScheduledEvent],
+    prediction_end: f64,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
     let bounds =
@@ -380,8 +426,17 @@ fn prepare_calendar_batch(
                 lo: sum.lo.min(bounds.lo),
                 hi: sum.hi.max(bounds.hi),
             });
-    let (next, mut records) =
-        prepare_batch_with_bounds(model, trajectory, accepted, time, bounds, &ids)?;
+    let (next, mut records) = prepare_batch_until(
+        model,
+        trajectory,
+        accepted,
+        EventMoment {
+            representative: time,
+            observation: bounds,
+            fired_roots: &ids,
+            prediction_end,
+        },
+    )?;
     for record in &mut records {
         for fired in &mut record.fired_triggers {
             let event = scheduled
@@ -443,8 +498,27 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
-    let operators = Operators::new(&model.program, &trajectory, &model.driven, &initial)?;
-    let crossings = schedule(&model, &trajectory, &operators)?;
+    let (operators, crossings) = if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
+        let operators = Operators::new_until(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &initial,
+            trajectory.config.stop,
+        )?;
+        let crossings = schedule(&model, &trajectory, &operators)?;
+        (operators, crossings)
+    } else {
+        let crossings = independent_schedule(&model, &trajectory)?;
+        let operators = Operators::new_until(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &initial,
+            prediction_end(&model, &trajectory, crossings.first()),
+        )?;
+        (operators, crossings)
+    };
     let circuit = model.circuit_with(&initial, &operators.values(0.0)?)?;
     let mut accepted = Frame {
         time: 0.0,
@@ -531,27 +605,31 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 "max_step cannot advance representable time",
             ));
         }
-        // A trial beyond an earlier scheduled event is discarded before any
-        // residual check: that event may change the future waveform/constraints.
-        let candidate = if model.program.operators.is_empty() {
-            None
-        } else {
-            Some(prepare_event(
-                &model,
-                &trajectory,
-                &controller.accepted,
-                time,
-                &[],
-            ))
-        };
+        // Discard an overshooting time proposal before evaluating history:
+        // the earlier event can change the future waveform and constraints.
         if controller.event < crossings.len() && crossings[controller.event].time <= time {
             if crossings[controller.event].time < time {
                 trace.discarded_trials += 1;
             }
             controller.accept_events(&model, &trajectory, &crossings)?;
         } else {
-            if let Some(candidate) = candidate {
-                let next = candidate?;
+            if !model.program.operators.is_empty() {
+                let next = prepare_root_window(
+                    &model,
+                    &trajectory,
+                    &controller.accepted,
+                    EventMoment {
+                        representative: time,
+                        observation: I::point(time),
+                        fired_roots: &[],
+                        prediction_end: prediction_end(
+                            &model,
+                            &trajectory,
+                            crossings.get(controller.event),
+                        ),
+                    },
+                    &[],
+                )?;
                 next.operators.check_deadline_order(
                     time,
                     crossings.get(controller.event).map(|e| e.bounds()),

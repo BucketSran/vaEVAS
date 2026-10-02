@@ -201,6 +201,24 @@ pub(crate) fn schedule(
     trajectory: &Trajectory,
     operators: &Operators,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(model, trajectory, Some(operators))
+}
+
+// Build the complete calendar first when every guard is independent of
+// continuous history. No provisional nonlinear future is needed for timers
+// or affine source guards.
+pub(crate) fn independent_schedule(
+    model: &EventModel,
+    trajectory: &Trajectory,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(model, trajectory, None)
+}
+
+fn schedule_with_history(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    operators: Option<&Operators>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     let mut events = Vec::new();
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
@@ -258,6 +276,12 @@ pub(crate) fn schedule(
         }
     }
     if model.dynamic_guards.iter().any(|&g| g) {
+        let operators = operators.ok_or_else(|| {
+            Error::new(
+                "unsupported_cross",
+                "history-dependent calendar requires a certified trajectory",
+            )
+        })?;
         let guards = crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?;
         for (index, leaf) in model.triggers.iter().enumerate() {
             if !model.dynamic_guards[index] {

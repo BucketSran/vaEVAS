@@ -155,7 +155,7 @@ fn multiply(a: &[I], b: &[I], order: usize) -> Jet {
         .collect()
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 struct DenseStep {
     start: f64,
     end: f64,
@@ -195,6 +195,7 @@ impl NonlinearContinuous {
         trajectory: &Trajectory,
         driven: &[String],
         states: &[f64],
+        horizon: f64,
     ) -> Result<Self, Error> {
         Self::build(
             Arc::new(Context {
@@ -205,6 +206,7 @@ impl NonlinearContinuous {
             states.iter().copied().map(I::point).collect(),
             0.0,
             None,
+            horizon,
         )
     }
 
@@ -213,9 +215,10 @@ impl NonlinearContinuous {
         parameters: Vec<I>,
         start: f64,
         restart: Option<Vec<I>>,
+        horizon: f64,
     ) -> Result<Self, Error> {
         let mut result = Self::initialized(context, parameters, start, restart)?;
-        result.propagate()?;
+        result.propagate_until(horizon)?;
         Ok(result)
     }
 
@@ -544,11 +547,37 @@ impl NonlinearContinuous {
         None
     }
 
-    fn propagate(&mut self) -> Result<(), Error> {
+    pub(super) fn certified_end(&self) -> f64 {
+        self.steps.last().map_or(self.start, |step| step.end)
+    }
+
+    // Extend only a disposable candidate; retained dense steps and their
+    // endpoint enclosures stay unchanged when an event leaves the mode intact.
+    fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
         let trajectory = &self.context.trajectory;
-        let mut state = self.initial.clone();
-        let mut knots = vec![self.start];
-        knots.extend(trajectory.knots.iter().copied().filter(|t| *t > self.start));
+        if !horizon.is_finite() || horizon < self.start || horizon > trajectory.config.stop {
+            return Err(Error::new(
+                "event_resolution",
+                "invalid nonlinear prediction horizon",
+            ));
+        }
+        let start = self.certified_end();
+        if horizon <= start {
+            return Ok(());
+        }
+        let mut state = self.steps.last().map_or_else(
+            || self.initial.clone(),
+            |step| step.range(I::point(step.end)),
+        );
+        let mut knots = vec![start];
+        knots.extend(
+            trajectory
+                .knots
+                .iter()
+                .copied()
+                .filter(|t| *t > start && *t < horizon),
+        );
+        knots.push(horizon);
         for segment in knots.windows(2) {
             let (a, b) = (segment[0], segment[1]);
             let slopes: Vec<_> = trajectory
@@ -606,8 +635,10 @@ impl NonlinearContinuous {
     }
     pub(super) fn same_history(&self, other: &Self) -> bool {
         self.start == other.start
+            && self.certified_end() == other.certified_end()
             && self.initial == other.initial
             && self.parameters == other.parameters
+            && self.steps == other.steps
     }
     pub(super) fn next_breakpoint(&self, time: f64) -> Option<f64> {
         self.context
@@ -620,7 +651,7 @@ impl NonlinearContinuous {
     fn state_bounds(&self, time: I) -> Result<Vec<I>, Error> {
         if !time.finite()
             || time.lo < self.start
-            || time.hi > self.context.trajectory.config.stop
+            || time.hi > self.certified_end()
             || time.lo > time.hi
         {
             return Err(Error::new(
@@ -727,9 +758,16 @@ impl NonlinearContinuous {
         }
     }
 
-    pub(super) fn restarted(&self, time: f64, window: I, parameters: &[I]) -> Result<Self, Error> {
+    pub(super) fn restarted(
+        &self,
+        time: f64,
+        window: I,
+        parameters: &[I],
+        horizon: f64,
+    ) -> Result<Self, Error> {
         let mut next = self.mapped_event(time, window, parameters)?;
         if !self.event_dependent || self.parameters == parameters {
+            next.propagate_until(horizon)?;
             return Ok(next);
         }
         if window.lo != window.hi {
@@ -747,7 +785,7 @@ impl NonlinearContinuous {
                 })?;
             next.initial = image;
         }
-        next.propagate()?;
+        next.propagate_until(horizon)?;
         Ok(next)
     }
 
@@ -845,6 +883,46 @@ mod tests {
     }
 
     #[test]
+    fn candidate_horizon_extension_preserves_prefix_and_rejected_retry() {
+        let mut accepted = scalar(-1.0);
+        accepted.propagate_until(0.0625).unwrap();
+        let prefix = accepted.range_bounds(I::point(0.0625)).unwrap();
+        assert_eq!(
+            accepted.range_bounds(I::point(0.125)).err().unwrap().kind,
+            "event_resolution"
+        );
+        let mut failed = accepted.clone();
+        assert_eq!(
+            failed.propagate_until(0.25).err().unwrap().kind,
+            "event_resolution"
+        );
+        assert_eq!(accepted.certified_end(), 0.0625);
+        assert_eq!(accepted.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        let mut discarded = accepted.clone();
+        discarded.propagate_until(0.125).unwrap();
+        let future = discarded.range_bounds(I::point(0.125)).unwrap();
+        assert_eq!(discarded.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        assert!(!accepted.same_history(&discarded));
+        drop(discarded);
+        let mut retry = accepted.clone();
+        retry.propagate_until(0.125).unwrap();
+        assert_eq!(retry.range_bounds(I::point(0.125)).unwrap(), future);
+        let mut uninterrupted = scalar(-1.0);
+        uninterrupted.propagate_until(0.125).unwrap();
+        // Equal modes and end times do not identify dense history once
+        // horizons can split a certified step into different prefixes.
+        assert!(!uninterrupted.same_history(&retry));
+        // y(1/8)=8/9. Exact products establish containment without
+        // blessing the floating-point division as an exact oracle.
+        assert!(
+            crate::interval::sum_products_sign(&[(future[0].lo, 9.0), (-8.0, 1.0)]).unwrap() <= 0
+        );
+        assert!(
+            crate::interval::sum_products_sign(&[(future[0].hi, 9.0), (-8.0, 1.0)]).unwrap() >= 0
+        );
+    }
+
+    #[test]
     fn taylor_remainder_encloses_exact_rational_decay_without_query_mutation() {
         let flow = scalar(-1.0);
         let step = flow.trial(0.0, 1.0 / 32.0, &[I::ONE], &[], &[]).unwrap();
@@ -904,7 +982,14 @@ mod tests {
             1,
         )
         .unwrap();
-        let base = NonlinearContinuous::new(&program, &trajectory, &["u".into()], &[0.0]).unwrap();
+        let base = NonlinearContinuous::new(
+            &program,
+            &trajectory,
+            &["u".into()],
+            &[0.0],
+            trajectory.config.stop,
+        )
+        .unwrap();
         let original = base.range_bounds(I::point(0.75)).unwrap();
         let window = I {
             lo: 0.5 - 1.0 / 1024.0,
@@ -912,12 +997,14 @@ mod tests {
         };
         // Interior representatives still require a separate timing contract.
         let failure = base
-            .restarted(window.lo, window, &[I::point(2.0)])
+            .restarted(window.lo, window, &[I::point(2.0)], trajectory.config.stop)
             .err()
             .unwrap();
         assert_eq!(failure.kind, "event_resolution");
         assert_eq!(base.range_bounds(I::point(0.75)).unwrap(), original);
-        let candidate = base.restarted(window.hi, window, &[I::point(2.0)]).unwrap();
+        let candidate = base
+            .restarted(window.hi, window, &[I::point(2.0)], trajectory.config.stop)
+            .unwrap();
         let at_start = candidate.range_bounds(I::point(window.hi)).unwrap()[0];
         // q switches from 0 to 2 at any tau in the window, u is a triangle.
         // At tau=lo, integral(tau..hi) 2*u^2 is exactly numerator/denominator.
@@ -933,7 +1020,9 @@ mod tests {
         let future = candidate.range_bounds(I::point(0.75)).unwrap();
         assert_eq!(base.range_bounds(I::point(0.75)).unwrap(), original);
         drop(candidate);
-        let retry = base.restarted(window.hi, window, &[I::point(2.0)]).unwrap();
+        let retry = base
+            .restarted(window.hi, window, &[I::point(2.0)], trajectory.config.stop)
+            .unwrap();
         assert_eq!(retry.range_bounds(I::point(0.75)).unwrap(), future);
     }
 }

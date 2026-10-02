@@ -278,3 +278,25 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 直接积分释放与已激活 transition 斜坡各有解析采样控制；缺少区间观察的 absdelay/slew/idtmod
 在非点事件上明确拒绝，并配套精确 timer 的通过控制。测试位于
 [test_lifecycle_closure.py](../tests/test_lifecycle_closure.py)，不改变原 31 条件分母或阈值。
+
+<a id="known-event-horizon-contract"></a>
+
+### 已知事件截止点的独立义务
+
+0.12.2 仅将固定 timer / 仿射源 cross 日程用于限定非线性历史认证；
+数学与未支持组合见[截止点说明](../docs/CONTINUOUS.md#known-event-horizons)。
+答案来自分段初值问题，不以另一份 EVAS 输出作为 oracle。
+
+| 义务 | 独立答案或完整性检查 |
+| --- | --- |
+| 未来事件使关系失效 | `y'=q*y²,y(0)=1`，q 在 .5 从 1 切成 -1：事件前 `1/(1-t)`，事件后 `1/t`；到 t=2 应为 .5 |
+| 初始事件与无变化事件 | timer(0) 切成 q=-1 后为 `1/(1+t)`；.25 写同一 q 值只延长认证前缀，不能重新初始化 |
+| 周期事件与独立事件 | q 每 .25 翻转时 `1/y=1-integral(q)`，以 Fraction 求面积；断开的计数器事件不改变 `y'=-y²` 的物理轨迹 |
+| 非点根的误差保留 | `cross(3u-1),u=t`，tau=1/3；事件后 `y=1/(t+1/3)`，观测盒必须包含精确有理根 |
+| 组合与观察不变性 | 独立 ramp 低通保持 `t-1+exp(-t)`；加密输出、改变 max_step 不改变共同采样值和事件记录 |
+| 认证域与原子提交 | 未认证未来查询拒绝；追加历史不改前缀；真实 Controller 的严格预算失败不改变接受帧/游标/记录，丢弃后重试与干净运行一致 |
+
+公共检查位于 [test_event_horizons.py](../tests/test_event_horizons.py)，两个 Rust 私有检查分别位于
+[nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs) 和
+[transient_lifecycle_tests.rs](../rust_core/src/transient_lifecycle_tests.rs)。
+该开发回归不增加原 31 条件分母；未新增跨后端或性能结论。

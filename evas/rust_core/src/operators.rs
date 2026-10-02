@@ -627,6 +627,7 @@ pub(crate) struct Operators {
     changes_on_advance: Vec<bool>,
     direct: Vec<Option<DirectInput>>,
     continuous: Option<Arc<Continuous>>,
+    horizon: f64,
 }
 
 // Borrows one immutable history base at one time. Every advanced trial clones
@@ -713,6 +714,7 @@ impl Evaluation<'_> {
     // Install only future history. Event observations are obtained separately
     // from observed_after; querying a newly installed transition over an old
     // root window would mix the two lifecycle phases.
+    #[cfg(test)]
     pub(crate) fn advanced(
         &self,
         time_bounds: I,
@@ -720,7 +722,19 @@ impl Evaluation<'_> {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<Operators, Error> {
+        self.advanced_until(time_bounds, states, bounds, changed, self.base.horizon)
+    }
+
+    pub(crate) fn advanced_until(
+        &self,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        horizon: f64,
+    ) -> Result<Operators, Error> {
         let mut candidate = self.base.clone();
+        candidate.horizon = horizon;
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
         Ok(candidate)
     }
@@ -777,11 +791,22 @@ impl Operators {
         Ok(bounds)
     }
 
+    #[cfg(test)]
     pub(crate) fn new(
         program: &Program,
         trajectory: &Trajectory,
         driven: &[String],
         states: &[f64],
+    ) -> Result<Self, Error> {
+        Self::new_until(program, trajectory, driven, states, trajectory.config.stop)
+    }
+
+    pub(crate) fn new_until(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
     ) -> Result<Self, Error> {
         let mut identities = BTreeSet::new();
         for spec in &program.operators {
@@ -827,7 +852,8 @@ impl Operators {
                 affine(input, program, &origin.instance)?;
             }
         }
-        let continuous = Continuous::new(program, trajectory, driven, states)?.map(Arc::new);
+        let continuous =
+            Continuous::new_until(program, trajectory, driven, states, horizon)?.map(Arc::new);
         let mut entries = Vec::new();
         let mut direct = Vec::new();
         for (index, spec) in program.operators.iter().enumerate() {
@@ -1027,6 +1053,7 @@ impl Operators {
             changes_on_advance,
             direct,
             continuous,
+            horizon,
         })
     }
 
@@ -1289,10 +1316,14 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
-        if !changed.is_empty() {
-            if let Some(continuous) = &self.continuous {
-                self.continuous =
-                    Some(Arc::new(continuous.restarted(time, time_bounds, bounds)?));
+        if let Some(continuous) = &self.continuous {
+            if !changed.is_empty() || continuous.needs_extension(self.horizon) {
+                self.continuous = Some(Arc::new(continuous.restarted(
+                    time,
+                    time_bounds,
+                    bounds,
+                    self.horizon,
+                )?));
             }
         }
         for entry in &mut self.entries {
@@ -1326,6 +1357,9 @@ impl Operators {
     }
 
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
+        if self.horizon != other.horizon {
+            return false;
+        }
         match (&self.continuous, &other.continuous) {
             (Some(a), Some(b)) if !a.same_history(b) => return false,
             _ => {}

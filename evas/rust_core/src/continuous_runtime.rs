@@ -8,14 +8,25 @@ pub(crate) enum Continuous {
 }
 
 impl Continuous {
+    #[cfg(test)]
     pub(crate) fn new(
         program: &Program,
         trajectory: &Trajectory,
         driven: &[String],
         states: &[f64],
     ) -> Result<Option<Self>, Error> {
+        Self::new_until(program, trajectory, driven, states, trajectory.config.stop)
+    }
+
+    pub(crate) fn new_until(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+    ) -> Result<Option<Self>, Error> {
         if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } if affine_bounds::affine(input, program).is_err())) {
-            return nonlinear::NonlinearContinuous::new(program, trajectory, driven, states).map(|v| Some(Self::Nonlinear(Box::new(v))));
+            return nonlinear::NonlinearContinuous::new(program, trajectory, driven, states, horizon).map(|v| Some(Self::Nonlinear(Box::new(v))));
         }
         LinearContinuous::new(program, trajectory, driven, states)
             .map(|v| v.map(|v| Self::Linear(Box::new(v))))
@@ -103,13 +114,25 @@ impl Continuous {
             _ => false,
         }
     }
-    pub(crate) fn restarted(&self, time: f64, bounds: I, states: &[I]) -> Result<Self, Error> {
+    pub(crate) fn needs_extension(&self, horizon: f64) -> bool {
+        match self {
+            Self::Linear(_) => false,
+            Self::Nonlinear(v) => v.certified_end() < horizon,
+        }
+    }
+    pub(crate) fn restarted(
+        &self,
+        time: f64,
+        bounds: I,
+        states: &[I],
+        horizon: f64,
+    ) -> Result<Self, Error> {
         match self {
             Self::Linear(v) => v
                 .restarted(time, bounds, states)
                 .map(|v| Self::Linear(Box::new(v))),
             Self::Nonlinear(v) => v
-                .restarted(time, bounds, states)
+                .restarted(time, bounds, states, horizon)
                 .map(|v| Self::Nonlinear(Box::new(v))),
         }
     }
