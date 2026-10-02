@@ -418,7 +418,7 @@ fn initialize(
     };
     // The common Picard/Taylor engine validates the rational reduced field;
     // F_v inversion is mandatory even when the resulting derivative is zero.
-    flow.propagate()?;
+    flow.propagate_until(trajectory.config.stop)?;
     Ok((flow, coordinates))
 }
 
