@@ -1,16 +1,37 @@
-# 独立验证条件的共同 DUT
+# 共同 Verilog-A 测试模型
 
-本目录同时保存历史起步模型、原 31 条件的共同源码及单独登记的补充编码。
-当前检查点、剩余缺口和证据入口见[验证集说明](../README.md#latest-evas-checkpoint)；
-卡数、源文件数、运行配置数均不能当作独立条件数。
+本目录保存独立验证使用的 DUT。模型从明确的电压关系与状态转移构造，
+同一条件的各后端使用相同源码；参数、刺激、实例连接和观察要求在案例卡及输入构建器中固定。
+**一个源文件可以参与多个条件，一个条件也可以包含多个模块。**
 
-## 历史起步试点：15 个条件
+当前结果与判定边界见[验证集入口](../README.md)。只运行 `dut.va` 本身不能复现一个条件，
+还需要对应的刺激、参数、连接和检查器。
 
-八个 `dut.va` 对应 [CASE_CARDS.md](../CASE_CARDS.md) 中的八张契约，
-由本项目按关系重新编写，未复制第三方示例源码，也未从既有 400 家族挑选。
-各文件中的归一化参数已恢复电压和时间单位；四个后端运行相同的 DUT 字节。
+## 原 31 条件的模型
 
-**历史编码问题：** 冻结的 `d2_v6_01/dut.va` 系数数组缺少 LRM 2.4 要求的前导撇号，不可作为该规范下的有效能力计分项。此处保留原字节以复核历史试点；[标准语法诊断修订](../../../experiments/dvs2-starter-pilot/diagnostics/v6-lrm24.va)和[归因报告](../../../experiments/dvs2-starter-pilot/DIAGNOSIS.md)单独保存。后续原 31 条件已采用下面的 `d2_v6_01_standard` 并绑定新执行身份，未覆盖 v1。
+原矩阵由 14 个未改动的 v1 条件、1 个标准低通修订和 16 个补充条件组成。
+[起步案例卡](../CASE_CARDS.md)与[补充案例卡](../NEXT_CASE_CARDS.md)定义独立答案；
+[run_suite.py](../../../experiments/dvs2-spectre-validation/run_suite.py)生成冻结输入与网表外壳。
+
+以下源码补充或修订了历史起步模型：
+
+| 源码 | 对应条件 | 说明 |
+| --- | --- | --- |
+| [d2_v6_01_standard](d2_v6_01_standard/dut.va) | v6-standard、C2 滤波级 | 标准数组修订；不改冻结 v1 |
+| [n_v3_02](n_v3_02/dut.va) | E1 的 3 条件 | 分别观察上穿、下穿计数 |
+| [n_v4_02](n_v4_02/dut.va) | E2 的 3 条件、C1 的 3 条件、C2 采样级 | 显式初始化、复位优先的参数化采样器；状态属于各实例 |
+| [n_v6_02](n_v6_02/dut.va) | D1 的 2 条件 | 非零初值积分、持续复位与释放 |
+| [n_v6_03](n_v6_03/dut.va) | D2 的 2 条件 | 累积相位、包裹相位及正弦输出 |
+| [n_v1_02](n_v1_02/dut.va) | S1 的 2 条件 | 两个输入与三个贡献相加 |
+
+C1 使用两个采样器实例，C2 使用低通与采样器两个模块；构建器按 `source_cards` 打包完整源码。
+新版 EVAS 的验证与历史四后端对照分开记录，分别由[当前证据](../README.md#latest-evas-checkpoint)
+和[历史矩阵](../../../experiments/dvs2-four-backend-validation/results/MATRIX.md)进入。
+
+## 历史起步模型
+
+八个原始 `dut.va` 对应 v1 的八张案例卡、15 个条件；各文件的参数已恢复电压和时间单位。
+刺激与参数展开由 [suite.py](../../../experiments/dvs2-starter-pilot/suite.py)生成。
 
 | 目录 | 行为 | 试点条件数 |
 | --- | --- | ---: |
@@ -23,43 +44,18 @@
 | [d2_v7_01](d2_v7_01/dut.va) | 两实例的唯一线性隐式关系 | 3 |
 | [d2_v7_02](d2_v7_02/dut.va) | 单调三次隐式关系，两组参数 | 2 |
 
-刺激、参数、网表外壳和独立参考在
-[suite.py](../../../experiments/dvs2-starter-pilot/suite.py) 中生成。
-运行协议和实际结果分别见
-[README](../../../experiments/dvs2-starter-pilot/README.md) 与
-[RESULTS](../../../experiments/dvs2-starter-pilot/RESULTS.md)。
+**低通的历史编码问题：** `d2_v6_01/dut.va` 的数组缺少 LRM 2.4 要求的前导撇号。
+该文件保留原字节以核对 v1 历史；[语法诊断修订](../../../experiments/dvs2-starter-pilot/diagnostics/v6-lrm24.va)
+和[归因报告](../../../experiments/dvs2-starter-pilot/DIAGNOSIS.md)单独保存。
+原 31 条件采用 `d2_v6_01_standard`，没有覆盖旧输入。
 
-每个 DUT 在 Spectre 的两档配置中均成功执行；这不等于全语言合法性认证，
-也不保证其他前端接受同一编码。原始拒绝与错误已保留，不以改写后的模型覆盖失败。
-15 个条件只覆盖历史起步卡；当时正式 DVS-2 分母未冻结，不是后续原 31 条件的完整清单。
+历史试点的协议与结果见[试点入口](../../../experiments/dvs2-starter-pilot/README.md)。
+后端成功执行不等于语言合法性认证，改写后的模型也不能替代旧失败记录。
 
-## 原 31 条件：2026-09-28 扩展验证
+## 贡献顺序变体
 
-新一批输入由 [run_suite.py](../../../experiments/dvs2-spectre-validation/run_suite.py)
-固定为 31 个当前条件、两档设置。源码与历史 v1 分开保存：
+[n_v1_02_reordered/dut.va](n_v1_02_reordered/dut.va) 只反转 S1 三条贡献的顺序，
+用于检查贡献相加是否与独立语句的顺序无关。它单独登记为 `s1-default-reordered`；
+输入与默认条件相同，数学答案和错误对照见 [S1 审阅卡](../NEXT_CASE_CARDS.md#s1-review)。
 
-| 源码 | 对应条件 | 说明 |
-| --- | --- | --- |
-| [d2_v6_01_standard](d2_v6_01_standard/dut.va) | v6-standard、C2 滤波级 | 标准数组修订；不改冻结 v1 |
-| [n_v3_02](n_v3_02/dut.va) | E1 的 3 条件 | 分别观察上穿、下穿计数 |
-| [n_v4_02](n_v4_02/dut.va) | E2 的 3 条件、C1 的 3 条件、C2 采样级 | 显式初始化、复位优先的参数化采样器；状态属于各实例 |
-| [n_v6_02](n_v6_02/dut.va) | D1 的 2 条件 | 非零初值积分、持续复位与释放 |
-| [n_v6_03](n_v6_03/dut.va) | D2 的 2 条件 | 累积相位、包裹相位及正弦输出 |
-| [n_v1_02](n_v1_02/dut.va) | S1 的 2 条件 | 两个输入与三个贡献相加 |
-
-C1 由两个采样器实例构成，C2 由低通与采样器两个模块构成；构建器按
-`source_cards` 打包源文件并保存完整网表。卡数、源文件数和条件数不是同一计数。
-执行证据和判定边界见 [本轮实验](../../../experiments/dvs2-spectre-validation/README.md)。
-
-随后已用相同 DUT 字节完成 [四后端补测](../../../experiments/dvs2-four-backend-validation/README.md)，
-形成 [31 条件完整对照表](../../../experiments/dvs2-four-backend-validation/results/MATRIX.md)。
-这是历史四后端基线；新版 EVAS 的已合并检查点另从验证集说明进入。
-Gnucap 的外壳采用预先固定的具名零伏参考与 `short=1e-9`，全部 31 条件按此设置重跑；
-编译和执行失败仍计入对应条件，完整观察资格未因此取得。
-
-## S1 审阅补充
-
-[n_v1_02_reordered/dut.va](n_v1_02_reordered/dut.va)仅反转 S1 三条贡献的顺序。
-它对应单独登记的 `s1-default-reordered`；其他输入与默认条件一致。
-[审阅卡](../NEXT_CASE_CARDS.md#s1-review)给出独立答案、错误对照与运行入口。
-本地检查器校准不等于后端通过；此条件尚未仿真，不进入原 31 条矩阵。
+该条件尚未执行后端，不进入原 31 条矩阵。增加源码或检查器校准，也不能直接继承原条件的通过结果。

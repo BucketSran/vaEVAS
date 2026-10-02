@@ -1,13 +1,11 @@
-# 当前 31 条件的四后端补测
+# 原 31 条件的四后端对照
 
-2026-09-28。已在 **thu-sui** 完成补测，当前 **31 条件 × 四后端 × 两档 = 248 条配置**
-均有可追溯结论。原始运行编号为 `dvs2-four-backend-20260928-01`。
-完整逐条件表见 [MATRIX.md](results/MATRIX.md)，可导出 [CSV](results/matrix.csv)，
-判据细节见 [matrix.json](results/matrix.json)。
+本目录记录 2026-09-28 在 thu-sui 完成的历史基线，运行编号
+`dvs2-four-backend-20260928-01`。原 31 条件在四个固定后端、两档设置下形成
+**248 条配置记录**，用于发现支持、数值和事件语义差异。
+这里的 EVAS 是旧版 0.8.7；新版内核的验证另见[当前证据](../parallel-gap-integration/README.md#当前证据)。
 
-后续已完成 [31 条件故障归因](DIAGNOSIS.md)：追加 15 个独立诊断探针，
-区分 EVAS 的事件、贡献累加、隐式关系和调用形式缺口，以及其他编译链路的事件/复位问题；
-诊断变体没有替换下表成绩，也未修改仿真器。
+## 结果概要
 
 | 固定后端 | 基础档达标 | 细化档达标 | 两档均达标 |
 | --- | ---: | ---: | ---: |
@@ -16,38 +14,30 @@
 | OpenVAF-R＋ngspice 46 | 16/31 | 16/31 | 16/31 |
 | Gnucap＋modelgen 2026.07.29 | 17/31 | 16/31 | 16/31 |
 
-这里的“达标”只表示固定有限观测判据满足；事件历史还分别检查了零观察误差假设和
-候选 0.25 mV 误差预算。完整连续时间观察资格仍为 **I**，不据此宣称整个仿真器通过、
-普遍收敛或获得正式论文达标率。所有判定使用共同的独立答案，没有用 Spectre 波形替代答案。
+逐条件结果见 [MATRIX](results/MATRIX.md)，数据见 [CSV](results/matrix.csv)
+和 [JSON](results/matrix.json)。达标表示满足固定有限观测判据；
+完整连续时间观察资格仍为 **I（未决）**，不能据此排名整个仿真器或声称普遍收敛。
+答案来自共同的独立数学关系，不以 Spectre 波形作黄金答案。
 
-## 本轮执行与复用
+## 哪些是新执行，哪些是复用
 
-- EVAS 与 OpenVAF-R＋ngspice：各补 17 条件、两档共 34 配置。
-- Gnucap＋modelgen：统一采用具名零伏参考与 `short=1e-9`，重跑全部 31 条件、两档共 62 配置。
-- 本轮共 130 配置；复用 Spectre 62 条，以及 EVAS/OpenVAF 各 28 条旧执行，完整矩阵共 248 条。
+本轮增加 130 条配置：EVAS 与 OpenVAF-R 各 34 条，Gnucap 62 条。
+另外复用 Spectre 的 62 条，以及 EVAS/OpenVAF 各 28 条旧执行，共 118 条。
+复用项按本轮判据重判，没有直接继承旧标签。
 
-| 本轮后端 | 配置记录 | 生成波形 | 编译失败 | 执行失败 |
-| --- | ---: | ---: | ---: | ---: |
-| EVAS | 34 | 26 | 0 | 8 |
-| OpenVAF-R＋ngspice | 34 | 20 | 14 | 0 |
-| Gnucap＋modelgen | 62 | 58 | 4 | 0 |
-| 合计 | 130 | 104 | 18 | 8 |
+130 条新增配置中，104 条生成波形、18 条编译失败、8 条执行失败；
+实际启动 112 次仿真和 34 个编译阶段。旧 `v5-main` 两档超时继续保留。
+完整执行预算与复用条件见 [PROTOCOL](PROTOCOL.md)，身份和计数见
+[RECEIPT](results/RECEIPT.json)。
 
-实际启动 **112 次仿真、34 个编译阶段**，编译结果按相同 DUT 字节复用；本批没有超时或自动重试。
-复用的旧 OpenVAF/ngspice `v5-main` 两档超时仍保留在完整矩阵中。
-本轮编译和仿真阶段累计约 250 秒，含容器启动，不作后端性能比较。
+## 工具与归因
 
-当前 31 条件由 14 个不变的 v1 条件、`v6-standard` 修订和 16 个新增条件构成。
-旧 `v6-main` 仍保留于 v1 历史快照，不作为第 32 个当前条件。
+[build_inputs.py](build_inputs.py) 固定输入，[remote.py](remote.py) 在既有环境串行执行，
+[matrix.py](matrix.py) 统一分析，[audit.py](audit.py) 核对执行后的元数据与归档。
+[audit.py](audit.py) 不参与数值判定。
 
-模型、刺激与判定器沿用已完成的[Spectre 实测](../dvs2-spectre-validation/README.md)。
-Gnucap 全局设置修订依据[诊断证据](../dvs2-starter-pilot/DIAGNOSIS.md)及
-[方法协议](../../evas/validation/METHOD_QUALIFICATION.md)，统一应用于全部条件，不逐例择优。
-
-执行前冻结的[协议](PROTOCOL.md)说明资源预算、物理输入等价、判定和证据复用。
-[构建器](build_inputs.py)、[串行运行器](remote.py)、[矩阵分析器](matrix.py)均随输入归档。
-网表适配的三项[校准方法](test_adapters.py)覆盖两档全部刺激、多模块连接、参数绑定、
-变化参考保留和配置预算。原始运行保存在 Git 忽略目录，公共报告只保留可复核摘要。
+[DIAGNOSIS](DIAGNOSIS.md) 记录追加的 15 个诊断探针，区分贡献、事件、调用形式、
+复位和编译链路问题；诊断变体不替换原矩阵条件。主要失败仍保留如下：
 
 ## 未达标结果
 
@@ -78,26 +68,6 @@ Gnucap 全局设置修订依据[诊断证据](../dvs2-starter-pilot/DIAGNOSIS.md
 Gnucap 的零参考观察也全部满足阈值。因此没有被“观察不合格”替代的数值失败。
 旧 EVAS/OpenVAF 的 56 条配置也按当前固定判据重判，不继承旧成绩标签。
 
-## 设置与证据
-
-[设置回读审计](results/settings-audit.json)检查了 EVAS 26、ngspice 20、Gnucap 58 份运行日志。
-ngspice 采用 `tran` 之后的最后一组 `option` 回显；之前的回显可能还是默认值。
-Gnucap 日志确认 `short=1e-9`、`method=trap`、输出精度及两档容差。
-EVAS 的日志确认请求值回显，不把这些值解释为已实现 SPICE 误差控制。
-步长请求与实际导出间隔分别留在输入与分析结果中，不假定各后端设置含义等价。
-
-OpenVAF 包由固定镜像和 `v24.0.2mob` 工件路径标识，但自身 `--version` 输出为
-`OpenVAF-reloaded unknown`；EVAS 的 build revision 也为 `unknown`。
-完整镜像身份、版本回显、源文件哈希和证据复用计数见 [RECEIPT.json](results/RECEIPT.json)。
-
-- 本轮私有原始归档：`runs/dvs2-four-backend-20260928-01.tar.gz`，45,953,489 字节。
-- 归档 SHA-256：`24d66162e7120e22a4b0ae4a863b747e7b97a3a64e2ca5cf7388f2ead4d0a09a`。
-- 文件清单 SHA-256：`28d7ddbf9afb8d1dfc0952fa3904352eb6f74bf4a2d8bf02504da73092cdb82d`。
-- 已逐文件校验本轮 1,662 个文件、旧试点 1,894 个文件和 Spectre 批次 1,216 个文件。
-
-固定输入后，没有改变共享判定器、DUT、阈值或已完成的 v1/Spectre 归档；
-[audit.py](audit.py) 是运行后元数据检查程序，不参与数值判定。
-
 ## 复核
 
 复核适配器（当前校准读取本地已归档的 Spectre 输入，需保留该私有证据副本）：
@@ -121,3 +91,28 @@ python3 -B experiments/dvs2-four-backend-validation/audit.py \
 ```
 
 本轮完成的是缺失基线补测。完整观察资格及依据这些结果修复 EVAS 属于后续工作。
+
+<details>
+<summary>实际设置、工具身份与原始归档</summary>
+
+## 设置与证据
+
+[设置回读审计](results/settings-audit.json)检查了 EVAS 26、ngspice 20、Gnucap 58 份运行日志。
+ngspice 采用 `tran` 之后的最后一组 `option` 回显；之前的回显可能还是默认值。
+Gnucap 日志确认 `short=1e-9`、`method=trap`、输出精度及两档容差。
+EVAS 的日志确认请求值回显，不把这些值解释为已实现 SPICE 误差控制。
+步长请求与实际导出间隔分别留在输入与分析结果中，不假定各后端设置含义等价。
+
+OpenVAF 包由固定镜像和 `v24.0.2mob` 工件路径标识，但自身 `--version` 输出为
+`OpenVAF-reloaded unknown`；EVAS 的 build revision 也为 `unknown`。
+完整镜像身份、版本回显、源文件哈希和证据复用计数见 [RECEIPT.json](results/RECEIPT.json)。
+
+- 本轮私有原始归档：`runs/dvs2-four-backend-20260928-01.tar.gz`，45,953,489 字节。
+- 归档 SHA-256：`24d66162e7120e22a4b0ae4a863b747e7b97a3a64e2ca5cf7388f2ead4d0a09a`。
+- 文件清单 SHA-256：`28d7ddbf9afb8d1dfc0952fa3904352eb6f74bf4a2d8bf02504da73092cdb82d`。
+- 已逐文件校验本轮 1,662 个文件、旧试点 1,894 个文件和 Spectre 批次 1,216 个文件。
+
+固定输入后，没有改变共享判定器、DUT、阈值或已完成的 v1/Spectre 归档；
+[audit.py](audit.py) 是运行后元数据检查程序，不参与数值判定。
+
+</details>

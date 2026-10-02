@@ -1,38 +1,53 @@
-# PR14 / PR15 合并前验证
+# 波形算子与历史检查点验证
 
-本目录保留原 PR14/15 协议，并在同一原条件矩阵下收纳后续新 EVAS 检查点。
-本目录记录历史 analog/Spectre 对照、PR23 与 PR26，不作为当前 main 的能力清单。
-当前 IR16 验证见[当前交付证据](../parallel-gap-integration/README.md#当前证据)，
-IR15 精度链见[历史执行](../parallel-gap-integration/README.md#ir15-precision-chain)；
-[PR26 复位对照](RESULTS.md#idt-reset-merge-validation)及[收据](results/idt-reset-merge-validation.json)保留原身份。
-大历史 JSON 采用无损 gzip，原路径/哈希与固定历史入口见[归档清单](../parallel-gap-integration/results/historical-receipts.json)。
-`analog_matrix_compare.py` 可直接读取归档后的 analog 收据，`reused_receipt_sha256` 仍针对原解压字节。
-它继续检查冻结运行时，不允许用当前源码代替历史 `9c5d6c5` 做原执行重判。
+本目录最初验证 `absdelay` 与 `slew` 的数学行为和 Spectre 对照，
+随后保存了事件写者、普通 analog 条件、采样与积分复位等历史检查点。
+目录名来自原 PR14/15，**不是当前 main 的能力列表**。
+当前 IR16 结果请看[联合验证](../parallel-gap-integration/README.md#当前证据)。
 
-## analog 缺口对照入口
+## 原 absdelay / slew 专项
 
-原 31 矩阵的冻结和 Spectre 执行继续用 `../dvs2-spectre-validation/run_suite.py`
-与其 `remote.py`，EVAS 编译/执行继续用 `matrix.py`。本轮只新增分析入口和六个有理数
-诊断；原 DUT、输入、两档设置与 checker 未改。逐项结果见[矩阵](results/analog-gap-comparison.md)。
+专项固定 6 个 absdelay、8 个 slew 场景，各运行两档。
+答案来自精确有理数折线，覆盖初始历史、延迟、仿射多源、独立调用点、
+限速追赶、反向、拐点重合及尺度变化。
+EVAS 与 Spectre 分别检查全部导出点，另检查共同 `U/16` 网格；
+电压目标为 `1 mV`，输入误差上限为 `0.1 μV`。
 
-以下命令从仓库根目录执行，使用新的目录；Spectre 命令在已配置的主机执行。
+同时重新尝试原 31 条件 × 四后端 × 两档，共 248 个单元。
+候选与实际执行身份、专项失败及步长诊断见 [RESULTS](RESULTS.md)。
+失败和明确拒绝仍在分母内，不改 DUT 或阈值来提高成绩。
+
+## 结果与工具入口
+
+| 问题 | 结果 | 执行或分析入口 |
+| --- | --- | --- |
+| absdelay、slew 与原矩阵 | [专项与矩阵](RESULTS.md) | [operators.py](operators.py)：`build/evas/spectre/check`；[matrix.py](matrix.py)：`build/evas/analyze` |
+| 普通 analog 条件与 Spectre 的差异 | [对照](results/analog-gap-comparison.md)、[历史报告](RESULTS.md#analog-gap-spectre-comparison) | [analog_boundaries.py](analog_boundaries.py)、[analog_matrix_compare.py](analog_matrix_compare.py) |
+| 积分复位与此前 main 的兼容性 | [PR26 复位对照](RESULTS.md#idt-reset-merge-validation)、[收据](results/idt-reset-merge-validation.json) | 对应报告中的固定输入与命令 |
+| 事件条件、OR、多事件写者 | [历次结果](RESULTS.md) | `results/` 内分别保存原收据 |
+
+原矩阵输入由 [run_suite.py](../dvs2-spectre-validation/run_suite.py)生成；
+Spectre 调用使用其 [remote.py](../dvs2-spectre-validation/remote.py)。
+各历史实验需要对应冻结输入与后端环境，不能用当前源码冒充原被测提交。
+
+## 复核与资产
+
+从仓库根目录运行数学/适配校准：
 
 ```sh
-python3 -B experiments/pr14-pr15-validation/analog_boundaries.py build runs/NEW-BOUNDARIES
-python3 -B experiments/pr14-pr15-validation/analog_boundaries.py evas runs/NEW-BOUNDARIES --kernel evas/rust_core/target/debug/evas-kernel
-python3 -B experiments/pr14-pr15-validation/analog_boundaries.py spectre runs/NEW-BOUNDARIES --spectre-profile /PRIVATE/profile.json
-python3 -B experiments/pr14-pr15-validation/analog_boundaries.py check runs/NEW-BOUNDARIES --remote runs/DOWNLOADED-SPECTRE-BOUNDARIES --output runs/NEW-BOUNDARY-ANALYSIS.json
-python3 -B -m unittest discover -s experiments/pr14-pr15-validation -p 'test_analog_boundaries.py' -v
+python3 -B -m unittest discover -s experiments/pr14-pr15-validation -p 'test_*.py' -v
 ```
 
-只发送冻结 `INPUT_MANIFEST.json` 所列输入及清单到新远端目录；不要发送本地 EVAS 产物
-或私有 profile。远端结果归档包含全部 manifest 所列文件，下载后再分析。
+`analog_matrix_compare.py` 校验原运行时、输入与旧清单，也可以读取压缩后的 analog 收据。
+`reused_receipt_sha256` 对应解压后的原字节；大 JSON 的原路径、哈希与固定历史入口见
+[归档清单](../parallel-gap-integration/results/historical-receipts.json)。
 
-`analog_matrix_compare.py matrix ROOT OUTPUT --old-root OLD_ACCEPTANCE_ROOT` 对本轮的
-`ROOT/spectre-remote` 与最近验收 raw 工件配对，显式验证复用的源码、内核、输入和旧清单。
-`analog_matrix_compare.py features ROOT OUTPUT` 分析 `ROOT/feature-affected` 三分支专项，
-与同一 Spectre 矩阵核对共同输入。收据保存既定目录结构及原始身份；目前这些 raw 工件
-仅本地/thu-sui 可取得，外部读者应另建新执行身份，不能将缺失归档当成复用成功。
+协议、脚本、数学答案、精简结果和收据在仓库内。完整波形、日志、私有 profile 与
+独立 PR14 全栈包装脚本仅本地/thu-sui 保留，外部读者目前不能下载完整原材料。
+重新执行需要新目录与新身份；原收据中“合并前”的描述保留执行当时的状态。
+
+<details>
+<summary>原 PR14 / PR15 执行协议</summary>
 
 ## 原 PR14 / PR15 验证协议（历史）
 
@@ -68,3 +83,5 @@ python3 -B -m unittest discover -s experiments/pr14-pr15-validation -p 'test_*.p
 本目录的脚本、数学答案、整理后的结果和收据随仓库发布；原始波形、日志和独立 PR14
 全栈回放包装脚本仍仅本地/thu-sui 保留。外部读者可以检查协议与摘要、重新执行，
 但目前不能下载本轮完整原始材料；不宣称完整公开复现。
+
+</details>

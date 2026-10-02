@@ -10,7 +10,7 @@
 ## 历史精度链：d451605
 
 点输入根盒及无条件 PWL/采样误差传播的算法见[数值手册](../../evas/docs/NUMERICS.md#精度链的已修复反例与边界)。
-[执行摘要](README.md#ir15-precision-chain)、[检查收据](results/precision-chain-checks.json)及
+[执行摘要](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#ir15-precision-chain)、[检查收据](results/precision-chain-checks.json)及
 [逐配置矩阵](results/precision-chain-matrix.json)绑定当轮源码、内核、失败与检查。
 [原 review](https://github.com/BucketSran/vaEVAS/blob/b4921ca9cfa0b25bc515ffa47c2b397151937d50/experiments/parallel-gap-integration/REVIEW.md#precision-chain)保留完整推导和当时未支持的组合。
 

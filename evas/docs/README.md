@@ -1,25 +1,42 @@
-# EVAS technical handbook
+# EVAS 技术手册
 
-本手册说明电压域行为如何被编译、求解和验证，供使用者与贡献者复核。当前 IR16 开发范围、
-历史检查点及其证据分别记录在[能力与缺口总表](CAPABILITIES.md)，不通过 PR 编号推断支持范围。
-构建、API 和 CLI 从 [EVAS 入口](../README.md) 开始。
+本手册解释 EVAS 如何把电压域模型变成方程，以及如何推进事件、保存历史和控制误差。
+使用与构建先读 [EVAS README](../README.md)；判断某个模型是否在支持范围内，先查
+[能力表](CAPABILITIES.md)，再读对应章节。
 
-## 阅读入口
+## 按问题阅读
 
-| 需要了解什么 | 唯一维护入口 |
+| 想了解的问题 | 文档 |
 | --- | --- |
-| 当前能力、分支实现、已知差异和后续工作 | [CAPABILITIES](CAPABILITIES.md) |
-| 电压方程、稠密/稀疏线性代数、Newton、精度 | [NUMERICS](NUMERICS.md) |
-| cross、timer、同刻事件与提交/回退 | [EVENTS](EVENTS.md) |
-| transition、absdelay、slew、idt，以及一阶滤波/受限相位的数学与实现 | [OPERATORS](OPERATORS.md) |
-| 仿射积分反馈、高阶滤波、ddt、连续动态 guard | [CONTINUOUS](CONTINUOUS.md) |
-| 独立需求、模型及观察判据 | [验证集](../validation/README.md)、[观察资格协议](../validation/METHOD_QUALIFICATION.md) |
-| 执行身份、复现实验及公开资产 | [实验入口](../../experiments/README.md) |
-| 分支、责任归属、发布与清理 | [CONTRIBUTING](../../CONTRIBUTING.md)；agent 快速入口为 [AGENTS.md](../../AGENTS.md) |
+| 现在支持什么，还缺什么？ | [能力与缺口总表](CAPABILITIES.md) |
+| 电压关系如何联立求解？稠密/稀疏与 Newton 怎么用？ | [数值方法与精度](NUMERICS.md) |
+| `cross`、`timer` 如何定位？同刻赋值如何处理？ | [事件与状态](EVENTS.md) |
+| `transition`、延迟、限速、积分和相位的数学含义是什么？ | [算子](OPERATORS.md) |
+| 积分反馈、滤波、`ddt`、DAE 和动态事件怎样组合？ | [连续动态](CONTINUOUS.md) |
+| 正确答案从哪里来？怎样独立判断输出？ | [验证集](../validation/README.md)、[观察资格协议](../validation/METHOD_QUALIFICATION.md) |
+| 实際跑了什么，哪些材料可以复核？ | [实验索引](../../experiments/README.md) |
 
-数据路径为：源码 → 语法/绑定 → 有版本的 IR → 支路方程 → 电压求解。
-瞬态入口在此基础上推进输入、事件和历史，验收后才接受候选状态；静态样本不推进物理历史。
-模块/API 的唯一清单仍在 [EVAS README](../README.md#模块与接口)，这里不复制。
+## 理解实现的主线
+
+源码经过语法解析和实例绑定，生成有版本的 IR；内核把贡献汇总成支路方程，
+求出未知电压。瞬态还会维护输入、事件与算子历史，并对候选结果统一验收。
+模块划分和公开 API 在 [模块与接口](../README.md#模块与接口)。
+
+阅读每项动态能力时，可以依次检查它的方程与假设、历史归属、试算/提交规则、
+误差如何进入输出预算，以及不能支持的组合。一个方程残差很小的解，
+仍可能使用了不准确的历史；算子单独正确，也不能证明反馈或事件组合正确。
+
+## 参与讨论与改进
+
+Issue 可以围绕能力 ID 提出，附上版本、最小模型与刺激、数学/规范依据、
+期望结果和实际结果。不需要先修改内核：数学反例、规范解释、检查器问题和性能回退
+都可以独立讨论。协作与文档语言约定见 [CONTRIBUTING](../../CONTRIBUTING.md)。
+
+能力表维护实现和证据状态，手册解释方法，validation 保存独立契约，
+experiments 保存实际执行。历史记录继续绑定原版本；合并代码不会替旧实验更新结论。
+
+<details>
+<summary>贡献者：新增能力的文档要求</summary>
 
 ## Feature documentation contract
 
@@ -51,18 +68,4 @@
 0.12.1 的复位观察闭包、时间绑定及生产控制器提交/回退见[实施章节](CONTINUOUS.md#shared-lifecycle-closure)。
 先审查冷启动/续算、事件时间与采样阶段，再迁移控制流程；多个数值方法继续共享同一套语义与验收义务。
 
-## 状态与文档维护
-
-能力总表维护实现、证据、审阅/发布三类状态；Issue 保存具体待办，PR 保存迭代与 review。
-手册与相关代码在同一批可 review 的改动中更新。父分支或检查器变化后，只重新验证受影响的结论，
-旧记录继续绑定其原始身份。发布文档随 tag 保存，开发中的能力明确链接分支的固定提交。
-
-独立契约保存在 validation，手册解释实现如何满足它；实验结果保存在 experiments，手册引用结果。
-已公开参与开发的样例不是未见确认集。正文没有复制原始大波形，公开可复核性取决于真实可取得的归档。
-
-贡献者可以按能力 ID 提交 Issue：注明版本、最小模型/刺激、期望及依据、实际结果和复现命令。
-数学反例、检查器问题、规范解释和性能回退都可以独立提出，不要求先修改仿真器。
-
-文档组织参考 [ngspice 用户手册与内部实现说明](https://ngspice.sourceforge.io/docs.html)，
-以及 [Xyce 用户/参考指南、回归说明和数学表述](https://xyce.sandia.gov/documentation-tutorials/)。
-这属于文档组织参考，不是 EVAS 正确性或兼容性的证据。
+</details>

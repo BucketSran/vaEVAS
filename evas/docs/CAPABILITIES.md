@@ -42,10 +42,10 @@
 | 检查点 | 固定执行身份与历史入口 |
 | --- | --- |
 | PR33 / IR16：已知事件截止点 | 运行时 `8618339`，审查头 `18063c9`，main 合并点 `b4921ca`；[检查与审查收据](../../experiments/parallel-gap-integration/results/event-horizon-checks.json) |
-| PR32 / IR16：混合动态与共同生命周期 | 被测运行时 `1b99c33`，main 合并点 `431f335`；[三项开发](../../experiments/parallel-gap-integration/README.md#certified-mixed-dynamics)、[第一批对照](../../experiments/parallel-gap-integration/README.md#shared-lifecycle-review)、[共同闭包](../../experiments/parallel-gap-integration/README.md#lifecycle-closure-review)、[追加观察/依赖修复](../../experiments/parallel-gap-integration/README.md#lifecycle-observation-review-fixes) |
-| PR31 / IR16：非线性积分与联合事件 | 最终审查运行时 `d06e7f3`，main 合并点 `09b4222`；[首轮及根盒修复](../../experiments/parallel-gap-integration/README.md#dynamic-closure) |
-| PR30 / IR16：连续动态与旧 IR 重编译 | 首轮运行时 `ba5ab46`，初始化修复 `071a813`，main 合并点 `bedf20f`；[执行与初始化修复](../../experiments/parallel-gap-integration/README.md#continuous-dynamics) |
-| PR29 / IR15：原矩阵补齐及精度链 | 精度链运行时 `d451605`；[历史执行](../../experiments/parallel-gap-integration/README.md#ir15-precision-chain)，更早功能/计时见[无损历史资产](../../experiments/parallel-gap-integration/README.md#历史与资产) |
+| PR32 / IR16：混合动态与共同生命周期 | 被测运行时 `1b99c33`，main 合并点 `431f335`；[三项开发](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#certified-mixed-dynamics)、[第一批对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review)、[共同闭包](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#lifecycle-closure-review)、[追加观察/依赖修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#lifecycle-observation-review-fixes) |
+| PR31 / IR16：非线性积分与联合事件 | 最终审查运行时 `d06e7f3`，main 合并点 `09b4222`；[首轮及根盒修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#dynamic-closure) |
+| PR30 / IR16：连续动态与旧 IR 重编译 | 首轮运行时 `ba5ab46`，初始化修复 `071a813`，main 合并点 `bedf20f`；[执行与初始化修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#continuous-dynamics) |
+| PR29 / IR15：原矩阵补齐及精度链 | 精度链运行时 `d451605`；[历史执行](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#ir15-precision-chain)，更早功能/计时见[无损历史资产](../../experiments/parallel-gap-integration/README.md#历史与资产) |
 | PR26 / IR11 及旧 EVAS 0.8.7 | [PR26 原对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)、[旧四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md)；历史失败不改写为新版本成绩 |
 
 原矩阵已经参与开发诊断，正式 DVS 资格仍 I。完整 raw 和内核为仅本地保留；公开整理收据

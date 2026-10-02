@@ -1,60 +1,140 @@
-# EVAS
+# EVAS：电压域 Verilog-A 仿真器
 
-EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解节点电压。
-`solve` 对每个样本独立求静态工作点；`transient` 沿物理时间推进输入、事件、实例状态和算子历史。
-贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
+EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解节点电压。
+它适合描述理想电压域行为，例如增益、限幅、采样、事件计数和连续时间算子。
+它不包含晶体管器件模型、电流/电荷方程或完整 SPICE 网表求解。
 
-当前实现为 **EVAS 0.12.2 / IR v16**，已由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并，尚未发布版本 tag。支持范围和剩余缺口以
-[能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
-支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
-以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
-每项都有组合边界；运行时不会识别验证集/模型名称，也不会自动回退到旧 EVAS 0.8.7。
+前端使用 Python 解析、绑定并生成 IR，Rust 内核完成求解与时间推进。
+同一支路的多条贡献会相加；程序赋值则保留顺序语义。
+瞬态试算从已接受历史出发，电压、状态和误差检查通过后一起提交。
 
-瞬态的 PWL、采样状态和算子历史误差进入输出验收。多项式瞬态的点输入也要求根盒证明；
-不能证明电压预算时明确拒绝。[精度链审查](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)
-绑定历史运行时 `d451605`；[已合并验证](validation/README.md#latest-evas-checkpoint)与各次执行检查分别登记。
-旧 IR 1–15 需要重新编译，更严格认证的具体边界见[迁移说明](#ir-v8-migration)。
+## 可以做什么
 
-共同闭包的[观察与依赖修复](docs/CONTINUOUS.md#lifecycle-observation-review-fixes)统一非点历史观察、
-传播导数恢复的瞬时依赖，并分开同刻观察与未来安装接口；适用边界和新旧验证身份单独记录。
-已合并的非线性传播先认证到下一固定 timer / 仿射源 cross，避免提前认证已将失效的非线性关系；
-数学、回退义务和本地新执行分别见[截止点说明](docs/CONTINUOUS.md#known-event-horizons)与
-[检查收据](../experiments/parallel-gap-integration/results/event-horizon-checks.json)。
+| 功能 | 使用方式与边界 |
+| --- | --- |
+| 静态电压方程 | `solve` 独立求每个样本的工作点；支持仿射关系和受限多项式非线性 |
+| 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定 `timer`、事件体条件与顺序赋值 |
+| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd` 和 `ddt` |
+| 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
+| 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
+
+这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
+[能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
+[连续动态手册](docs/CONTINUOUS.md)说明反馈、DAE 和事件组合边界。
+当前实现为 **EVAS 0.12.2 / IR v16**，由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)
+合并，尚未发布版本 tag。
 
 ## 构建与运行
 
-需要 Python 3.10+ 和 Rust/Cargo。以下命令在仓库根目录运行：
+需要 Python 3.10+ 和 Rust/Cargo。以下命令从仓库根目录运行。
+先构建内核，再求解一个静态示例：
 
 ```sh
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
-PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
-PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json --kernel evas/rust_core/target/debug/evas-kernel
-PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_nonlinear.json --kernel evas/rust_core/target/debug/evas-kernel
-PYTHONPATH=evas/src python3 -m evas transient evas/examples/cross_counter.json --kernel evas/rust_core/target/debug/evas-kernel
-PYTHONPATH=evas/src python3 -m evas transient evas/examples/timer_counter.json --kernel evas/rust_core/target/debug/evas-kernel
-PYTHONPATH=evas/src python3 -m evas transient evas/examples/idt.json --kernel evas/rust_core/target/debug/evas-kernel
-PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
-cargo test --locked --manifest-path evas/rust_core/Cargo.toml
-PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/rust_core/target/debug/evas-kernel --output runs/evas-static-replay
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
+  --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
-回放命令要求新的输出目录，读取原 31 条件的 VA、输入和独立判据。
-回放工具按模型是否满足静态入口契约选择接受或明确拒绝；事件与历史算子需要瞬态入口。
-静态回放的历史检查数不能代替下面的新瞬态矩阵。
-两档对应 4,001／40,001 点的静态采样网格和电压/残差容差，不是瞬态仿真或 DVS 正式资格。
+结果以 JSON 输出，包含节点顺序和各样本电压。
+[static_sum.json](examples/static_sum.json) 的三个样本中，`out` 约为
+`0.225 V`、`1.825 V`、`-0.325 V`；`ref` 的变化也参与支路电压方程。
 
-## 回归证据
+只查看编译后的 IR，或运行带积分历史的瞬态示例：
 
-[当前执行证据](../experiments/parallel-gap-integration/README.md#当前证据)集中记录
-PR33 的原 31 条件两档矩阵、开发检查及精确源码/内核身份；
-[验证集入口](validation/README.md#latest-evas-checkpoint)解释条件数、有限观测和正式资格的区别。
-静态回放、开发 unittest 方法数和瞬态条件数分别报告，不以历史运行替代当前源码验证。
+```sh
+PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
+PYTHONPATH=evas/src python3 -m evas transient evas/examples/idt.json \
+  --kernel evas/rust_core/target/debug/evas-kernel
+```
 
-[连续动态手册](docs/CONTINUOUS.md)维护积分、滤波、DAE、事件窗口及截止点的数学和拒绝边界。
-PR30–32、IR15 精度链与旧四后端的执行和失败由[实验索引](../experiments/README.md#checkpoint-evidence)进入，
-保留其原始身份。完整 raw 仅本地保留，正式 DVS 资格仍 I；本次文档校准没有重新运行仿真。
+积分示例的五个观察点输出约为 `0.25`、`0.40`、`0.45`、`0.40`、`0.25 V`。
+输入从正值线性降至负值，输出先增加、再减少，停止时回到初值。
+
+manifest 声明源文件、实例参数和端口到全局网络的映射。
+静态入口提供驱动节点与样本；瞬态入口提供 PWL 源、观察时间和停止时间。
+`solve` 不推进历史；含状态、事件或历史算子的模型使用 `transient`。
+更多可运行输入在 [examples/](examples/)：
+
+| 示例 | 说明 |
+| --- | --- |
+| [static_nonlinear.json](examples/static_nonlinear.json) | 多项式电压关系的工作点 |
+| [cross_counter.json](examples/cross_counter.json) | 输入过阈值后更新计数状态 |
+| [timer_counter.json](examples/timer_counter.json) | 固定定时事件 |
+| [transition_pulse.json](examples/transition_pulse.json) | 有限上升/下降沿 |
+| [absdelay.json](examples/absdelay.json) | 延迟历史查询 |
+| [idt.json](examples/idt.json) | 连续输入积分 |
+
+## 精度与结果解释
+
+`solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
+与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
+不能直接解释为所有输出都具有同样的全时域精度。
+静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
+具体判据、保守拒绝和数值方法见[数值手册](docs/NUMERICS.md)。
+
+旧 IR 1–15 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
+批量工具和兼容性规则见[IR 版本与迁移](#ir-v8-migration)。
+
+## 验证与开发
+
+[独立验证集](validation/README.md)维护模型契约、数学答案和判据。
+[当前执行证据](../experiments/parallel-gap-integration/README.md#当前证据)记录原 31 条件
+两档回放及实际被测源码/内核身份。有限观测达标不等于完整 Verilog-A 合规、
+连续时间资格或性能领先；详细结果与历史失败分别保留。
+
+从仓库根目录运行开发检查：
+
+```sh
+PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
+cargo test --locked --manifest-path evas/rust_core/Cargo.toml
+```
+
+静态回放工具 [run_static_regression.py](tests/run_static_regression.py) 检查符合静态入口的
+原矩阵模型；两档的采样点与残差检查不能替代瞬态事件验证。
+新增能力需要同时说明数学含义、状态生命周期、组合边界和独立答案，要求见
+[技术手册](docs/README.md#feature-documentation-contract)。
+
+## 实现范围
+
+- 一个源文件一个 module，标量端口及内部 `electrical` 节点，显式方向声明。
+- 文件前部可使用标准 `constants.vams` / `disciplines.vams` include 拼写。
+  本切片把它们视为内建前导声明，不搜索外部文件；当前只识别有限常量 `` `M_PI``，不提供通用宏处理。
+- `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
+- 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
+- 表达式支持括号、单目正负、加减、乘法及非零常数分母。
+- `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
+  该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
+  数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
+- manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
+- 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
+
+动态算子的精确支持范围见[算子手册](docs/OPERATORS.md)；事件语义与同刻求解见
+[事件手册](docs/EVENTS.md)。未列明的合法 VA 写法也可能是当前能力缺口，
+不应把实现拒绝解释为语言标准禁止。
+仍拒绝超出范围的循环、层次实例、通用数组、命名支路、电流贡献、通用预处理等。
+不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
 
 ## 模块与接口
+
+Python 的公开接口：`compile_sources(sources, instances) -> Program`，
+`solve(program, driven, samples, kernel=...) -> result`，以及
+`transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
+`solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
+`reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
+保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
+当前实现 Python 前端与 Rust 内核使用 IR v16；版本迁移规则见[下文](#ir-v8-migration)。
+Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
+独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
+
+语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
+组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
+
+当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
+已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
+
+<details>
+<summary>源码模块职责表</summary>
 
 | 模块 | 当前文件 | 唯一职责 |
 | --- | --- | --- |
@@ -85,72 +165,10 @@ PR30–32、IR15 精度链与旧四后端的执行和失败由[实验索引](../
 | 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
 | 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
 
-Python 的公开接口：`compile_sources(sources, instances) -> Program`，
-`solve(program, driven, samples, kernel=...) -> result`，以及
-`transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
-`solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
-`reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
-保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-当前实现 Python 前端与 Rust 内核使用 IR v16；版本迁移规则见[下文](#ir-v8-migration)。
-Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
-独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
+</details>
 
-语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
-组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
-
-当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
-已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
-
-## 本地求解性能检查
-
-[static_solver.rs](rust_core/benches/static_solver.rs) 提供 Rust 库内构造解核对和局部计时：
-
-```sh
-cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
-EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
-```
-
-基准的准备/首次/重复求解边界、稠密/稀疏分流及局限统一见[数值手册](docs/NUMERICS.md#稀疏分支与性能边界)。
-旧 0.3.1/0.3.2 的重复求解比较保留在[固定历史记录](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#本地求解性能检查)，
-不代表当前版本、首次求解、瞬态或跨后端速度。
-
-## 实现范围
-
-- 一个源文件一个 module，标量端口及内部 `electrical` 节点，显式方向声明。
-- 文件前部可使用标准 `constants.vams` / `disciplines.vams` include 拼写。
-  本切片把它们视为内建前导声明，不搜索外部文件；当前只识别有限常量 `` `M_PI``，不提供通用宏处理。
-- `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
-- 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及下述限定事件块。
-- 表达式支持括号、单目正负、加减、乘法及非零常数分母。
-- `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
-  该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
-  数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
-- manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
-- 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
-
-瞬态贡献可使用 `idt(direct_affine_input, constant_ic)`，对连续 PWL 直接输入分段解析积分。
-另支持 `idt(direct_affine_input, constant_ic, state_reset)`；reset 限同实例状态的仿射表达式，
-须认证为零/非零，且不形成结构复位反馈环。每个调用点独立，历史误差参与电压验收。
-PR30 已交付仿射内部节点、线性嵌套和积分电压反馈；0.11.0 增加事件保持输入/联合 reset、
-多项式积分反馈及受限内部/算子输入 ddt。0.12.0 增加积分/proper 滤波混合、
-根盒采样与稳定条件认证，以及无事件 index-one 多项式隐式电压 DAE。
-非线性滤波 DC/直接通路、DAE 与事件/其他算子组合、事件后 guard 重定位仍缺。
-精确范围、质量关系、历史生命周期和误差证明见[连续动态说明](docs/CONTINUOUS.md)；
-数学与限制见[算子手册](docs/OPERATORS.md#idt)，历史复位对照见[验证记录](../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
-
-事件体条件的精度和支持边界见[事件手册](docs/EVENTS.md#event-conditions)。
-另支持无事件/初始化的顺序局部 `real` 赋值和输入驱动 `if/else`；瞬态限分段仿射叶子，
-详见[普通 analog 条件契约](validation/ANALOG_CONDITIONS_CONTRACT.md)。无条件局部算子别名捕获调用处表达式，每个调用保留独立身份。
-另支持直接连续 PWL 的一阶 `laplace_nd(u, '{b0}, '{d0,d1})`、显式正 modulus 的
-`idtmod`，以及直接仿射输入或单个早期算子仿射值的受限 `sin`；数学、误差和组合限制见
-[算子手册](docs/OPERATORS.md#laplace_nd)。无状态、无事件、无历史算子时可逐点解多项式瞬态，见
-[精度契约](validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
-仍拒绝超出所列范围的过程赋值、条件、循环、层次实例、通用数组、命名支路、电流贡献、
-其他数学函数、未列明的事件/动态算子、其他预处理指令、参数范围和未知语法。
-支持集按语法和语义决定，运行时代码不读取验证集，也不识别模型/条件名称。
-两个不同的本地贡献支路因端口连接而变成同一节点对时，本批显式拒绝，
-避免把未经验证的别名语义解释成相加。后续扩展需单独建立契约。
+<details>
+<summary>参数、贡献与 IR 的详细接口契约</summary>
 
 ## 参数绑定契约
 
@@ -238,31 +256,22 @@ trigger 支持 cross、固定 timer 和仅含 cross 叶子的 OR；格式、身�
 算子按实例/调用点引用，idt 的可空 reset 字段见[算子手册](docs/OPERATORS.md#idt)。
 静态入口拒绝含状态、事件或算子的程序；完整字段定义见[Python IR](src/evas/ir.py)与[Rust IR](rust_core/src/ir.rs)。
 
-## 求解和错误
+</details>
 
-方程、Newton 验收、精度控制、稠密/稀疏求解与失败分类统一维护在[数值手册](docs/NUMERICS.md)。
+<details>
+<summary>Rust 库内性能检查</summary>
 
-## PWL 与事件的执行契约
+## 本地求解性能检查
 
-PWL/cross、事件体条件、同块顺序赋值、同刻联立与提交/回退见[事件手册](docs/EVENTS.md)。
+[static_solver.rs](rust_core/benches/static_solver.rs) 提供 Rust 库内构造解核对和局部计时：
 
-### 固定 timer
+```sh
+cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+```
 
-参数、名义日程、边界顺序与定位认证见[固定 timer](docs/EVENTS.md#固定-timer)；示例为 [timer_counter.json](examples/timer_counter.json)。
+基准的准备/首次/重复求解边界、稠密/稀疏分流及局限统一见[数值手册](docs/NUMERICS.md#稀疏分支与性能边界)。
+旧 0.3.1/0.3.2 的重复求解比较保留在[固定历史记录](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#本地求解性能检查)，
+不代表当前版本、首次求解、瞬态或跨后端速度。
 
-## 固定 slew 执行契约
-
-限速、追赶交点、历史误差与拒绝边界见[slew](docs/OPERATORS.md#slew)。
-
-## 扩展与验证边界
-
-[独立验证集](validation/README.md)维护需求、答案和判据；完整观察资格与未见确认集仍待补。
-新能力先建立独立契约，再更新相应模块、手册和能力表。单算子通过不证明任意组合正确。
-
-### 固定 absdelay
-
-历史查询、局部延迟、误差传播与拒绝边界见[absdelay](docs/OPERATORS.md#absdelay)；示例为 [absdelay.json](examples/absdelay.json)。
-
-## transition 波形算子
-
-有限边沿、延迟队列、中断沿及同刻求解见[transition](docs/OPERATORS.md#transition)；示例为 [transition_pulse.json](examples/transition_pulse.json)。
+</details>

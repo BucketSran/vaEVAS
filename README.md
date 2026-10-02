@@ -1,58 +1,68 @@
 # vaEVAS
 
-面向 Verilog-A benchmark 与可信评测的研究工作区，在同一仓库维护任务、验收逻辑与
-EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真器验证与应用任务分开报告。
+vaEVAS 是面向 Verilog-A 建模与评测的研究项目，包含 **benchmark** 和 **EVAS 电压域仿真器**。
+benchmark 组织建模任务与验收要求，EVAS 为支持范围内的模型提供仿真能力，
+便于在同一工作区开展模型编写、仿真和结果检查。
 
-## 当前可用内容
+## Benchmark
 
-[独立验证集](evas/validation/README.md) 包含原 31 个条件。EVAS 的
-[最新 IR16 检查点](evas/validation/README.md#latest-evas-checkpoint)两档本地瞬态回放各 31/31 达标。
-IR16 的[连续动态说明](evas/docs/CONTINUOUS.md#checkpoint-evidence)记录积分反馈、动态 cross、
-ddt、高阶滤波与 manifest 重编译；混合动态与共同事件生命周期已由
-[PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成，已知事件截止点已由
-[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并。新检查不增加原矩阵的条件数。
-thu-sui 的[历史四后端 248 配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)
-另行保存，其中 EVAS 为旧版 0.8.7。结果仅证明所列有限观测，完整观察资格仍为 I。
-[验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
+benchmark 用于评估 Verilog-A 建模能力：给定模型规格，检查所编写的模型是否满足任务要求。
+建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
 
-[EVAS](evas/README.md) 提供限定语法前端、版本化 IR、Rust 静态线性/非线性方程求解，
-以及受限连续动态联合求解、`cross` / 固定 `timer` 事件、实例状态与波形算子。
-各项语言、精度及组合边界统一见[能力表](evas/docs/CAPABILITIES.md)。
-新内核的各阶段矩阵、专项和执行身份从[实验索引](experiments/README.md#checkpoint-evidence)进入。
-旧 vaBench 和 EVAS 是审查与迁移来源；
-本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
+**当前状态：**[benchmark/](benchmark/README.md) 已建立占位入口，任务格式已确定为 Harbor 原生格式。
+旧 vaBench 任务集尚未迁入。任务加入后放在 `benchmark/tasks/`，共享镜像构建文件放在 `benchmark/containers/`。
 
-## 工作区
+## EVAS 仿真器
 
-| 路径 | 职责 |
+EVAS 将 Verilog-A 中的电压贡献转为方程，由 Rust 内核联立求解节点电压。
+它面向以电压关系描述的行为模型，目前在限定范围内提供：
+
+- **静态求解**：线性关系、多项式非线性反馈及稠密/稀疏矩阵求解。
+- **瞬态与事件**：随时间推进输入和状态，处理 `cross`、固定 `timer`、采样与复位。
+- **动态算子**：`transition`、`absdelay`、`slew`，以及受限的积分、微分和滤波关系。
+
+输入由 `.va` 模型和 JSON manifest 组成；manifest 指定实例、节点连接和输入刺激。
+当前不支持电流贡献和器件级电路网表求解，各算子的参数与组合限制见[能力表](evas/docs/CAPABILITIES.md)。
+
+## 快速开始
+
+需要 Python 3.10+ 和 Rust/Cargo。从源码构建并运行一个电压贡献求和示例：
+
+```sh
+git clone https://github.com/BucketSran/vaEVAS.git
+cd vaEVAS
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
+  --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+[示例 manifest](evas/examples/static_sum.json)定义三组输入，所引用的
+[Verilog-A 模型](evas/validation/cases/n_v1_02/dut.va)将三条电压贡献相加。
+命令输出 JSON，`solutions` 中的电压按 `nodes` 顺序排列；三组输入的 `out` 电压约为
+`0.225 V`、`1.825 V` 和 `-0.325 V`。
+
+更多非线性与瞬态示例见 [EVAS 使用说明](evas/README.md#构建与运行)。
+benchmark 的运行入口将随任务集补齐，目前可先运行 EVAS 示例。
+
+## 验证与实验
+
+[独立验证集](evas/validation/README.md)使用共同模型和判据检查仿真器行为，
+开发回归另外覆盖解析答案、语义不变性、失败后重试及算子组合。
+它们与 benchmark 建模任务的评测成绩分别报告。
+
+[实验记录](experiments/README.md)提供当前 EVAS 的验证结果、Spectre 等后端的历史对照和复现入口。
+各轮结果绑定实际源码、输入和检查器；有限测试的通过范围与剩余验证限制在对应记录中说明。
+main 保留持续维护的工具与支撑公开结论的精简证据；已结束的审查和阶段报告从固定历史提交查阅。
+具体资产去向见[实验索引](experiments/README.md#现有目录如何处理)，保留规则见[贡献指南](CONTRIBUTING.md#main-branch-contents)。
+
+## 仓库导航
+
+| 目录 | 内容 |
 | --- | --- |
-| [tasks/](tasks/README.md) | 有实际建模用途的 Harbor 任务、参考解与验收材料 |
-| [evas/](evas/README.md) | 仿真器源码、构建与回归；`validation/` 保存独立跨后端契约 |
-| [containers/](containers/README.md) | 共用容器环境、构建与依赖版本 |
-| [experiments/](experiments/README.md) | 实验协议、分析与整理后的结果证据 |
-| [scripts/](scripts/README.md) | 仓库维护和验证工具 |
+| [benchmark/](benchmark/README.md) | Harbor 格式的任务、参考解、评分程序与运行环境入口 |
+| [evas/](evas/README.md) | 仿真器源码、示例与开发测试 |
+| [evas/docs/](evas/docs/README.md) | 数学原理、设计与支持边界 |
+| [evas/validation/](evas/validation/README.md) | 独立测试模型、契约与检查器 |
+| [experiments/](experiments/README.md) | 实验协议、执行收据与整理结果 |
 
-开发约定见 [AGENTS.md](AGENTS.md)。原始运行输出与临时材料存放在 Git 忽略的 `runs/`。
-EVAS 的数学与实现说明从[技术手册](evas/docs/README.md)进入；
-[能力与缺口总表](evas/docs/CAPABILITIES.md)统一关联 main 支持、开发 PR、实验身份和已知差异。
-正式结果绑定任务/源码版本、EVAS 构建及实际使用的镜像、Harbor/Agent 配置；修复影响判分时重跑受影响部分。
-题型、最终评分、完整支持范围、打包发布与应用基线仍需按实际工作确定。
-
-## 分支与文档维护
-
-`main` 为已审查共同基线，一批可 review 的代码、测试、数学和证据使用一个短期任务分支。
-仅实际依赖使用分层 PR；工作区与分支分别管理。完整生命周期和责任规则统一维护在
-[CONTRIBUTING.md](CONTRIBUTING.md#branch-lifecycle)，agent 的快速执行入口为 [AGENTS.md](AGENTS.md)。
-
-能力总表保存当前状态，Issue 保存具体剩余工作，PR/提交保存迭代历史；
-数学、接口和实验手册是长期项目资产。资产身份、公开可用性与执行收据见
-[实验管理](experiments/README.md#experiment-receipts)。发布/合并/清理遵循用户授权，当前开放 PR 不自动成为 main 支持。
-
-迁移应先核对来源、规格与实现；失败先区分任务、参考解、判定器、仿真器或环境责任。
-不通过放宽判据掩盖失败，保留未决及失败证据。
-
-## 参考
-
-[analog-design-bench](https://github.com/Arcadia-1/analog-design-bench) 提供组织方式参考，
-[Harbor](https://docs.harborframework.com/core-concepts/tasks/overview) 提供任务格式。
-当前尚未迁入参考仓库的代码或任务内容。
+开发与文档维护方法见[贡献指南](CONTRIBUTING.md)。

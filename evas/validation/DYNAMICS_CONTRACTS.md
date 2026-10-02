@@ -87,7 +87,7 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 纯数学校准：[check_lifecycle_math.py](check_lifecycle_math.py)；有限观测的正反校准与双后端生成器：
 [lifecycle_contract.py](../../experiments/parallel-gap-integration/lifecycle_contract.py)、
 [test_lifecycle_contract.py](../../experiments/parallel-gap-integration/test_lifecycle_contract.py)。
-它们不访问算子内部实现来生成答案。综合收据从[实验入口](../../experiments/parallel-gap-integration/README.md#shared-lifecycle-review)进入。
+它们不访问算子内部实现来生成答案。综合收据从[实验入口](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review)进入。
 本批有限观测采用明确的观察 allowance，尚没有物理误差上界；事件边界原始导出保留，
 平滑轨迹误差统计排除边界附近点。模型状态、时间见证和复位采样另行检查。
 这些实验不证明真实引擎的回退；已覆盖及仍缺的回退义务见本页后面的历史证据映射。
@@ -213,7 +213,7 @@ z(t_0+h)=z_0+\int_0^h(u_0+ms)\,ds=z_0+u_0h+\tfrac12mh^2.
 网络 `v=A z+b` 还需传播 `|A| Bz` 及求解误差，不能只检验代入近似 z 后的方程残差。
 误差预算应分别覆盖输出 U、状态 U 和时间 s；不得拿残差预算代替积分精度。
 
-独立观测误差 E、不确定度 B、目标 ε 的判据沿用[验证协议](README.md#精度方案候选指标不冻结统一阈值)：
+独立观测误差 E、不确定度 B、目标 ε 的判据沿用[验证协议](PROTOCOL.md#精度方案候选指标不冻结统一阈值)：
 `E+B≤ε` 才通过，`E−B>ε` 才失败，其余未决。纯数学校准使用精确有理数，B=0；
 未来执行必须说明 B 来源及有效设置。首版解析法没有一般步长收敛主张，有限观察也不构成连续时间资格。
 

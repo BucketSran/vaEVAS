@@ -333,11 +333,11 @@ PR25 在候选批次可证明至多一个实际选中块写同一状态时，受
 
 ## timer 与同刻兼容性
 
-[0.5.0 历史对照](../../experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
+[0.5.0 历史对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
 曾暴露旧电压采样和同刻根认证拒绝；
-[0.5.1 修复](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
+[0.5.1 修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
 采用联立求解并修复可表示根认证，限定的级联、反馈和同刻样例已相容。
-[0.5.2 加固](../../experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)
+[0.5.2 加固](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)
 增加前向误差认证，同时曾因 Spectre 对照差异保守禁止同块 integer 重复写。
 这些旧结果保留原身份，不能当作当前版本的新执行结果。
 
@@ -347,7 +347,7 @@ integer 和 real；缩小步长仍存在，插入中间值观测可使现象消�
 不复制该版本的异常输出。确切内部原因、新版本范围和厂商确认仍未知，见
 [Issue #16 的可复现输入及对照](https://github.com/BucketSran/vaEVAS/issues/16)。
 
-[0.5.3 回放](../../experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)
+[0.5.3 回放](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)
 区分语言语义与具体后端的一致性；未修改旧检查器、阈值或原条件分母。
 PR13–15 的后续整合和受影响回归见[能力登记表](CAPABILITIES.md)，旧结果不冒充当前分支执行。
 若未来允许 guard 依赖状态或算子，须在变化后重新定位根，不能沿用失效的预计算日程。
