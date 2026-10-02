@@ -1,7 +1,7 @@
 ---
 name: vaevas-prepare-pr
 description: >-
-  Prepare a vaEVAS change or EVAS checkpoint for a reviewable commit or PR,
+  Prepare EVAS, benchmark, documentation or maintenance changes for a vaEVAS commit or PR,
   including scope inspection, verification evidence, and title/body drafting.
   Commit, push, and create a PR only when authorized by the current task.
   Do not treat preparation as permission to merge or include unrelated work.
@@ -23,8 +23,9 @@ the diff reviewers should see. Preserve unrelated or concurrent changes; do not
 stash, switch branches, rebase, force-push, or merge as incidental cleanup.
 Follow the [branch lifecycle](../../../CONTRIBUTING.md#branch-lifecycle); reuse the task's
 existing PR for review fixes and related documentation/evidence. Record the
-affected capability IDs, current parent/base and exact checkpoint; do not create
-an extra branch solely for a review round, test report or commit.
+current parent/base and exact checkpoint; include capability IDs only for EVAS
+behavior or support/evidence changes. Do not create an extra branch solely for
+a review round, test report or commit.
 
 Include only work belonging to the request. If commits are authorized, stage
 explicit paths or hunks and inspect the staged diff. Do not split or commit
@@ -34,17 +35,22 @@ another contributor's in-progress work merely to tidy history.
 
 - Confirm that changed behavior and compatibility limits agree with the owning
   component documentation and PR checkpoint. Keep unsupported behavior explicit.
-- Use observed checks appropriate to the change. Follow
-  [EVAS commands](../../../evas/README.md) and the relevant validation protocol;
-  do not rerun a full backend matrix solely to prepare a PR.
+- Use observed checks for the owning component: the [EVAS check mapping](../evas-validate/SKILL.md#select-the-necessary-checks),
+  [benchmark/task contract](../../../benchmark/README.md), or document/link checks.
+  EVAS regressions do not establish benchmark grading correctness. Do not rerun
+  a full backend matrix solely to prepare a PR.
 - Keep curated summaries and provenance according to
-  [experiment ownership](../../../experiments/README.md). Exclude raw waveforms,
+  [main retention rules](../../../CONTRIBUTING.md#main-branch-contents) and the
+  [experiment index](../../../experiments/README.md). Exclude raw waveforms,
   build products, credentials, and machine-specific configuration. An ignored
   directory is not proof that the files selected for commit are appropriate.
-- Inspect the final diff and check formatting and links. Report checks not run
-  or failures honestly; never present an old result as verification of this diff.
-- Verify that affected [capability rows](../../../evas/docs/CAPABILITIES.md),
-  mathematical explanations and evidence links agree. Separate implementation,
+- Inspect the final diff and check formatting and links. Apply the
+  [review format and publication dependency checks](../../../CONTRIBUTING.md#reviewing-diffs).
+  Report checks not run or failures honestly; never present an old result as
+  verification of this diff.
+- For EVAS behavior or support/evidence changes, verify that affected
+  [capability rows](../../../evas/docs/CAPABILITIES.md), mathematical explanations
+  and evidence links agree. Separate implementation,
   verification and review/release status. Link existing Issues for deferred work;
   avoid duplicating the register in a new progress document.
 
@@ -53,7 +59,12 @@ behavior, meaningful design or compatibility decisions, actual checks and their
 outcomes, and remaining limits. Link the relevant contracts and evidence. Use the
 repository template if one exists; omit abandoned approaches and stale counts.
 
-Make the description answer the reviewer's concrete questions, scaled to the change:
+Describe the component's changed behavior and actual checks. Benchmark-only work
+and documentation edits that leave EVAS behavior, support and evidence claims
+unchanged do not require EVAS capability IDs or a mathematical chapter. If a
+documentation edit changes an EVAS support or evidence claim, update the affected
+capability entry and its evidence links; use valid evidence or identify the gap.
+For EVAS semantic/numerical changes, answer these questions as applicable:
 
 - What input or model failed or was unsupported, and what happens after the change?
 - Which equation, state transition or ordering rule explains the implementation?

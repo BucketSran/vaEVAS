@@ -3,7 +3,7 @@ name: vaevas-review-pr
 description: >-
   Review a vaEVAS GitHub PR or local diff for actionable correctness,
   compatibility, validation, and evidence problems. Use when asked to review
-  an EVAS checkpoint or assess whether a change is ready. Review is read-only
+  an EVAS checkpoint, benchmark change, or assess readiness. Review is read-only
   unless the user also requests fixes; it does not publish GitHub comments.
 ---
 
@@ -23,25 +23,27 @@ not review uncommitted work; an empty committed diff does not end a local review
 
 ## Assess the relevant contracts
 
-Use [workspace ownership](../../../README.md),
-[EVAS documentation](../../../evas/README.md), and the owning protocol for the changed
-area. Review against the user's acceptance criteria, rather than every possible
-future simulator feature.
+Use [workspace ownership](../../../README.md) and the affected component's contract:
+[EVAS documentation](../../../evas/README.md) for simulator work or
+[benchmark guidance](../../../benchmark/README.md) and the task contract for benchmark work.
+Read only the owning protocol/sections. Review against the user's acceptance
+criteria, rather than every possible future simulator feature.
 
-Resolve requirements from the task, PR/Issue and owning capability contract; no extra
+Resolve requirements from the task, PR/Issue and owning component/task contract; no extra
 specification file or issue-tracker setup is required. Assess three distinct questions:
 whether the mathematics and requested semantics are implemented, whether architecture
 and documented repository rules are respected, and whether independent evidence
 supports the claims. A pass in one question does not answer the others. Treat code
 smells as hypotheses requiring concrete impact, not automatic blockers.
 
-Resolve the affected [capability rows](../../../evas/docs/CAPABILITIES.md) and
+For EVAS behavior or support/evidence changes, resolve affected
+[capability rows](../../../evas/docs/CAPABILITIES.md) and
 [handbook explanation](../../../evas/docs/README.md#feature-documentation-contract).
 Check the three separate claims: what the reviewed commit implements, what the
 identified evidence demonstrates, and whether the change is merged/released.
 For stacked PRs, flag changed shared assumptions and evidence tied to an older
 parent; do not treat a temporary integration test as proof of `main` support.
-Use the [revalidation triggers](../evas-validate/SKILL.md#revalidation-triggers)
+For EVAS claims, use the [revalidation triggers](../evas-validate/SKILL.md#revalidation-triggers)
 to identify evidence invalidated by changed code, inputs, checkers or measurement conditions.
 
 - For parser or binding changes, check full token consumption, unsupported syntax,
@@ -51,8 +53,16 @@ to identify evidence invalidated by changed code, inputs, checkers or measuremen
 - For assembly and solving, check contribution accumulation, independent instance
   constraints, ground/driven-node handling, singular systems, non-finite results,
   and residual acceptance. A small residual alone is not a forward-error bound.
-- For stateful behavior, inspect initialization, event order, candidate-state
-  isolation, and commit/rollback whenever those paths are touched.
+- For EVAS stateful behavior, inspect the changed path and its consumers for
+  initialization, call-site ownership, event order and candidate isolation.
+  Check that reset/restart preserves other live histories, observation queries
+  do not mutate accepted state, and rejected trials can retry in the same engine.
+  Trace event-window/sample uncertainty into future history and voltage acceptance.
+  Use [composition triggers](../evas-validate/SKILL.md#composition-triggers) when a
+  shared mechanism changes; an operator-only pass does not verify feedback/reset.
+- For benchmark changes, check the affected task instructions, environment,
+  reference solution and grading contract. Require only assets that actually
+  exist at that stage; a placeholder does not demonstrate executable tasks.
 - For validation changes, compare case contracts, independent expected answers,
   checker calibration, fixed denominators, and requested versus effective
   settings. Use `evas/validation/METHOD_QUALIFICATION.md` when present and a
@@ -76,10 +86,10 @@ verification gap instead of claiming it passed.
 
 ## Deliver the review
 
-Lead with actionable findings, ordered by severity. Each finding should identify
-the location, concrete trigger, observed or reasoned impact, and a focused repair
-direction. Separate confirmed defects from open questions and missing evidence.
-Identify which review question each finding concerns while retaining severity order.
+Use the [diff review format](../../../CONTRIBUTING.md#reviewing-diffs), including its
+plain-language rules and publication dependency checks. Lead with actionable
+findings ordered by severity. Identify which review question each finding concerns;
+one passing category cannot hide a failure in another.
 Avoid speculative architecture preferences and unrelated pre-existing issues.
 
 If no actionable defects are found, say so and describe the review scope and

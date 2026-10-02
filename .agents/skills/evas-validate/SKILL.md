@@ -4,41 +4,55 @@ description: >-
   Select or run EVAS smoke checks, static regressions, independent semantic
   tests, checker calibration, or simulator-backend comparisons. Also use when
   reanalyzing archived evidence or reporting coverage and pass counts. Do not
-  automatically launch a full remote matrix or implement new simulator features.
+  automatically launch a full remote matrix, implement simulator features, or
+  apply EVAS capability requirements to benchmark-only work.
 ---
 
 # Validate EVAS
 
-Match the claim to the check. Start with [EVAS README](../../../evas/README.md)
-and [experiment ownership](../../../experiments/README.md), then read
-`evas/validation/README.md` and the relevant protocol or case cards if present.
+Match the claim to the check. For simulator behavior, use the relevant sections
+of [EVAS README](../../../evas/README.md) and [validation guidance](../../../evas/validation/README.md).
+For archived evidence or backend comparisons, use [experiment ownership](../../../experiments/README.md)
+and the owning protocol or case cards.
 The implementation and validation assets may live on development branches.
 Confirm which of the entry points below exist in the current checkout; report
 missing prerequisites without inventing commands or switching branches.
-Resolve the affected [capability IDs](../../../evas/docs/CAPABILITIES.md) and the
-claim being checked. Follow [asset ownership](../../../CONTRIBUTING.md#evidence-and-assets)
-and the [receipt fields](../../../experiments/README.md#experiment-receipts). Documentation
-changes only need relevant link/consistency/diff checks; this skill does not add
-a simulator execution requirement to every task.
+Resolve the claim being checked and, for EVAS behavior or support/evidence
+changes, the affected [capability IDs](../../../evas/docs/CAPABILITIES.md).
+Follow [asset ownership](../../../CONTRIBUTING.md#evidence-and-assets); use the
+[receipt fields](../../../CONTRIBUTING.md#execution-receipts) for experiment evidence.
+Documentation changes only need relevant link/consistency/diff checks.
 
 ## Select the necessary checks
 
 Run commands from the repository root. For simulator tests, first rebuild the debug
 kernel using the [build command](../../../evas/README.md#构建与运行); tests use that binary.
-Apply each row whose behavior/consumers change, and add the smallest regression that
-detects the fix independently. This is a starting set, not proof of complete coverage.
+Select rows by changed behavior and affected consumers, not just the edited file.
+Run their relevant modules, then add the smallest regression that detects the fix
+independently. For broad shared changes, run the listed module sets; a narrow fix
+may use focused test classes/methods with its scope stated. This mapping is a
+starting set, not proof of complete coverage or a requirement to run every row.
 
 | Changed area | Python test modules / check | Additional requirement |
 | --- | --- | --- |
 | Documentation or skills | `git diff --check`; local links/anchors; skill YAML frontmatter | No simulator run. Check staged diff before commit. |
 | Syntax or parameter/instance binding | `test_affine test_contracts` | Accepted and rejected syntax/binding regression; include affected event/operator consumers. |
 | Python/Rust IR or JSON transport | All Python tests, command below | Rust tests; version rejection, malformed input and public request/response coverage. |
-| Shared assembly or linear algebra | `test_affine test_reuse test_accuracy test_nonlinear test_events` | Rust tests; compare original relation residuals, not just solved values. |
-| Newton or polynomial evaluation | `test_nonlinear test_accuracy` | Rust tests; independent root, scaling, failure and tolerance checks. |
-| PWL, cross or time/state scheduling | `test_events test_event_accuracy` | Rust commit/rollback tests; affected history contracts under `evas/validation/`. Static replay is insufficient. |
-| Interval arithmetic | `test_interval test_event_accuracy` | Rust tests; exact-rational enclosure and uncertain/rejected cases. |
-| A branch-specific timed operator | Its test module from that checkout's README, plus `test_events test_event_accuracy` | Rust tests and operator/history contract; do not invent a module absent from the checkout. |
-| Checker or grading | Owning experiment's `test_*.py`, command below | Accept/reject calibration, then reanalysis of affected archived results. |
+| Shared assembly or voltage relations | `test_affine test_reuse test_accuracy test_nonlinear test_events` | Rust tests; original relation residuals and affected continuous/settlement consumers. |
+| Dense/sparse dispatch, factorization or reuse | `test_affine test_reuse test_accuracy test_sparse test_sparse_transient` | Rust tests; singular/scaled systems, changing sparsity and original relations. |
+| Newton or point polynomial evaluation | `test_nonlinear test_accuracy test_precision_chain` | Rust tests; independent roots, scaling, failure and forward voltage error. |
+| Continuous relations, feedback or derivative lowering | `test_continuous_dynamics test_dynamic_closure` | Rust tests; joint states, initialization, derivative/impulse boundaries and affected event/reset consumers. |
+| Implicit DAE continuation | `test_implicit_dynamics` | Initial root, algebraic branch/singularity, history accuracy and query-grid invariance. |
+| Nonlinear integral/filter composition | `test_dynamic_closure test_mixed_dynamics` | Preserve every live state, DC/direct terms and precision through event restarts. |
+| History ownership, initialization or commit/rollback | `test_lifecycle_closure test_semantic_invariants` | Rust lifecycle/rollback tests; same-engine rejected-trial retry and unaffected state preservation. |
+| PWL or cross localization | `test_events test_event_accuracy` | Add `test_dynamic_cross` for internal/operator trajectories and affected sampling consumers. |
+| Scheduling or prediction horizons | `test_timer test_event_horizons` | Known events must bound propagation; adding observations must not change physical history. |
+| Same-time settlement, event conditions, writers or OR | `test_settlement`; affected `test_event_conditions test_event_writers test_event_or` | Program order, selected writers, original relations and rejected ambiguous solutions. |
+| Event-window sampling or reset observation | `test_event_window_sampling test_lifecycle_closure` | Certify all possible root times and retain sample uncertainty in future history. |
+| Error propagation or voltage acceptance | `test_precision_chain`; affected operator accuracy tests | Check history/time error after amplification, not only equation residual. |
+| Interval arithmetic | `test_interval test_event_accuracy`; affected dynamic/sampling consumers | Rust tests; exact-rational enclosure, non-finite inputs and uncertain/rejected cases. |
+| An individual timed operator | Its semantic/accuracy modules in the checkout; affected `test_timed_composition` | Use its handbook/validation contract; select shared-path tests below when it changes history, feedback or events. |
+| EVAS checker or grading | Owning validation/experiment's `test_*.py`, command below | Accept/reject calibration, then reanalysis of affected archived results. Benchmark grading follows its own task contract. |
 | Frozen validation identity | `python3 -B scripts/verify_validation_version.py` | Hash verification is not simulation validation. |
 
 For a module set from the table, use this command with the listed module arguments:
@@ -71,6 +85,28 @@ with a fresh output directory. Backend comparisons use the owning
 [Spectre](../../../experiments/dvs2-spectre-validation/README.md) or
 [four-backend](../../../experiments/dvs2-four-backend-validation/README.md) protocol;
 this table does not require a new remote matrix for every edit.
+
+## Composition triggers
+
+Trace changed data through its consumers. Select only applicable obligations:
+
+- State construction or initialization: check call-site/instance isolation,
+  nonzero initial values and preservation of unrelated dynamic states.
+- Continuous relations or nonlinear evaluation: check the affected integral,
+  derivative, filter or DAE feedback path with an independent answer.
+- Scheduling, settlement or reset: check the event boundary, preserved history,
+  post-event closure and future propagation together.
+- Sampling or error bounds: check uncertainty over the root window, its storage
+  in sampled state and later voltage amplification. Include a justified rejection.
+- Query, interpolation or caching: check extra output samples and equivalent
+  encodings against the same physical history.
+- Candidate mutation or acceptance: inspect and run the relevant Rust lifecycle
+  checks for rejected-trial retry in the same engine. Restarting a process does
+  not establish rollback correctness.
+
+State which consumers and obligations selected the checks in the task/PR report;
+no separate checklist or new experiment is required. Keep unsupported combinations
+explicit rather than treating an operator-only pass as joint support.
 
 ## Revalidation triggers
 

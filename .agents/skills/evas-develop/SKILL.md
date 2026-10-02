@@ -1,9 +1,9 @@
 ---
 name: evas-develop
 description: >-
-  Implement, fix, or refactor EVAS simulator behavior, including Verilog-A
-  parsing, parameter binding, Python/Rust IR, equation assembly, and solving.
-  Use for source changes and semantic extensions, not validation-only runs,
+  Implement, fix, or refactor EVAS compiler and voltage-domain simulator
+  behavior, including continuous dynamics, histories, and events. Use for
+  behavioral source changes, not benchmark authoring, validation-only runs,
   PR review alone, or unrelated repository documentation.
 ---
 
@@ -15,8 +15,8 @@ roadmap stages.
 
 ## Establish the contract
 
-Start with [EVAS README](../../../evas/README.md), its current interface and
-build guidance, and the relevant PR checkpoint. Confirm that the checkout
+Use the relevant interface/build guidance in [EVAS README](../../../evas/README.md)
+and the task's existing PR checkpoint when present. Confirm that the checkout
 contains the intended implementation, then inspect affected code and callers.
 Separate current behavior from proposals and historical verification.
 
@@ -34,18 +34,32 @@ Resolve only material ambiguities; use existing contracts for routine choices.
 
 ## Change the owning layer
 
-- Parsing belongs in `syntax.py`; instance, parameter, and node binding belong
-  in `frontend.py`. Keep syntax independent of IR.
-- `src/evas/ir.py` and `rust_core/src/ir.rs` jointly define the transport contract.
-  Trace format changes through both producers and consumers, version checks,
-  malformed-input handling, runtime transport, and migration guidance.
-- Rust `assembly.rs` owns IR validation and contribution assembly; `solver.rs`
-  owns working-point solutions and residual acceptance; `linear.rs` owns the
-  numerical linear solve. Verify these paths against the implementation branch
-  and follow its documented ownership if the layout evolves.
-- Preserve the Python compilation and Rust execution path. Unsupported
-  semantics need an explicit diagnostic, not silent fallback, node assignment
-  in place of equations, or model-name/test-family special cases.
+Use the current [module/interface map](../../../evas/README.md#模块与接口), then the
+owning handbook chapter for code responsibilities: [voltage solving and sparse
+paths](../../../evas/docs/NUMERICS.md), [event settlement](../../../evas/docs/EVENTS.md),
+[operator histories](../../../evas/docs/OPERATORS.md), or [continuous dynamics,
+derivatives and DAE](../../../evas/docs/CONTINUOUS.md). Read only the affected
+sections and verify their entries against the checkout rather than copying a
+second code map into this skill.
+
+Preserve the Python compilation and Rust execution path. For IR changes, trace
+both producers and consumers, version checks, malformed-input handling, runtime
+transport, and migration guidance. Unsupported semantics need an explicit
+diagnostic, not silent fallback or model-name/test-family special cases.
+
+When the change touches these mechanisms, preserve their shared invariants:
+
+- Contributions accumulate in one equation system; program assignments retain
+  their statement order. Equivalent encodings preserve shared IR semantics.
+- Operator history belongs to the instantiated call site, not the receiving
+  variable. Initialization, feedback and reset must preserve other live states.
+- Each trial starts from accepted history. Keep candidate changes isolated;
+  commit state, error bounds, queues and event records only after acceptance.
+  Rejected trials leave accepted state intact; same-time input changes require
+  reevaluation. History queries and output sampling must not mutate it.
+- Check equation residual, history accuracy and event-time uncertainty at their
+  owning stages. Propagate applicable uncertainty through sampling, future
+  history and voltage amplification; a small residual alone is insufficient.
 
 Add files or abstractions when a concrete responsibility needs them. For stateful
 extensions, define initialization and accepted/candidate state with commit and
@@ -57,6 +71,9 @@ Use independent expected values and the smallest regression that detects the
 changed behavior, including a relevant rejection or compatibility case. Select
 checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
 or event correctness. Preserve the original validation cases and thresholds.
+When a shared mechanism changes, use the [composition triggers](../evas-validate/SKILL.md#composition-triggers)
+to select affected feedback, event/reset, sampling and retry regressions. An
+operator-only pass cannot establish those combinations.
 
 Update the owning component documentation when behavior or evidence changes;
 keep stage discussion and review history in the PR, preparing text locally when
