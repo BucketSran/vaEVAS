@@ -1,6 +1,6 @@
 # EVAS 联合交付与验证
 
-本页按执行身份保存各阶段的联合验证。当前 EVAS 0.12.1 / IR16 的集成记录为
+本页按执行身份保存各阶段的联合验证。已合并 EVAS 0.12.1 / IR16 的集成记录为
 [PR32](https://github.com/BucketSran/vaEVAS/pull/32)，被测运行时代码现提交为 `1b99c33`，
 与[追加修复收据](results/lifecycle-observation-review-fixes.json)的源码快照一致；版本 tag 尚未发布。
 数学、试算生命周期和拒绝范围分别由[能力表](../../evas/docs/CAPABILITIES.md)、
@@ -8,7 +8,9 @@
 
 ## 当前证据
 
-最新共同事件观察/依赖修复见[追加收据](results/lifecycle-observation-review-fixes.json)。
+0.12.2 / IR16 的[已知事件截止点检查](results/event-horizon-checks.json)基于 PR32 合并点 `431f335`，
+运行时 `8618339` 已完成本地审查，集成身份以 Git/PR 为准、未发布 tag；数学与支持边界见[连续动态](../../evas/docs/CONTINUOUS.md#known-event-horizons)。
+已合并的共同事件观察/依赖修复见[追加收据](results/lifecycle-observation-review-fixes.json)。
 下表是 EVAS 0.9.0 / IR15 运行时 `d451605` 的历史精度链证据，不描述新运行时。
 
 | 收据 | 实际执行与限制 |
