@@ -2,11 +2,12 @@
 
 本目录保留原 PR14/15 协议，并在同一原条件矩阵下收纳后续新 EVAS 检查点。
 本目录记录历史 analog/Spectre 对照、PR23 与 PR26，不作为当前 main 的能力清单。
-最新 IR15 联合验证见[当前交付证据](../parallel-gap-integration/README.md#当前证据)；
+当前 IR16 验证见[当前交付证据](../parallel-gap-integration/README.md#当前证据)，
+IR15 精度链见[历史执行](../parallel-gap-integration/README.md#ir15-precision-chain)；
 [PR26 复位对照](RESULTS.md#idt-reset-merge-validation)及[收据](results/idt-reset-merge-validation.json)保留原身份。
 大历史 JSON 采用无损 gzip，原路径/哈希与固定历史入口见[归档清单](../parallel-gap-integration/results/historical-receipts.json)。
 `analog_matrix_compare.py` 可直接读取归档后的 analog 收据，`reused_receipt_sha256` 仍针对原解压字节。
-它继续检查冻结运行时，不允许用当前 IR15 代替历史 `9c5d6c5` 的源码做原执行重判。
+它继续检查冻结运行时，不允许用当前源码代替历史 `9c5d6c5` 做原执行重判。
 
 ## analog 缺口对照入口
 

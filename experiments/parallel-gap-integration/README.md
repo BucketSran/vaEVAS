@@ -1,16 +1,30 @@
 # EVAS 联合交付与验证
 
-本页按执行身份保存各阶段的联合验证。已合并 EVAS 0.12.1 / IR16 的集成记录为
-[PR32](https://github.com/BucketSran/vaEVAS/pull/32)，被测运行时代码现提交为 `1b99c33`，
-与[追加修复收据](results/lifecycle-observation-review-fixes.json)的源码快照一致；版本 tag 尚未发布。
+本页按执行身份保存各阶段的联合验证。当前 EVAS 0.12.2 / IR16 已由
+[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并到 `main` `b4921ca`；版本 tag 尚未发布。
 数学、试算生命周期和拒绝范围分别由[能力表](../../evas/docs/CAPABILITIES.md)、
 [手册](../../evas/docs/README.md)维护。旧收据中的未提交/未合并状态描述执行当时的快照。
 
 ## 当前证据
 
-0.12.2 / IR16 的[已知事件截止点检查](results/event-horizon-checks.json)基于 PR32 合并点 `431f335`，
-运行时 `8618339` 已完成本地审查，集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准、未发布 tag；数学与支持边界见[连续动态](../../evas/docs/CONTINUOUS.md#known-event-horizons)。
-已合并的共同事件观察/依赖修复见[追加收据](results/lifecycle-observation-review-fixes.json)。
+运行时 `8618339` 和审查头 `18063c9` 已由 PR33 合并。以下是已执行并绑定该源码的证据，
+本次文档整理没有新执行；数学与支持边界见[事件截止点](../../evas/docs/CONTINUOUS.md#known-event-horizons)。
+
+| 收据 | 实际执行与限制 |
+| --- | --- |
+| [截止点开发检查及合并前审查](results/event-horizon-checks.json) | 506 Python、124 Rust 通过，1 个旧性能探针 ignored；locked build、Clippy、格式通过。9 个新增 Python 方法、2 个 Rust 私有测试及 3 组解析审查探针不增加原矩阵分母 |
+| 同收据的原 31×2 矩阵 | 两档各 31/31；62 份 CSV 与 PR32 基线逐字节一致，输入、检查器和数值设置不变，仅引擎版本元数据更新 |
+| [前一共同闭包的观察/依赖修复](results/lifecycle-observation-review-fixes.json) | PR32 被测运行时 `1b99c33`；与当时源码快照一致，执行时的状态字段保留 |
+
+最终内核 SHA256：`d66cb9b0622b744cc49f38e0fcc23d3f98ffc55c60fbc863a3f2f492beb0205e`。
+收据保存执行时快照与后续审查/集成记录；`status` 不是当前 PR 状态。
+固定 raw 清单、原始失败和补充探针均为 **仅本地保留**，工作区清理后通过本地归档路径映射取回。
+正式 DVS 资格仍 **I**；没有新 Spectre 执行、性能测量或一般连续时间资格声明。
+
+<a id="ir15-precision-chain"></a>
+
+## 历史 IR15 精度链
+
 下表是 EVAS 0.9.0 / IR15 运行时 `d451605` 的历史精度链证据，不描述新运行时。
 
 | 收据 | 实际执行与限制 |
@@ -20,7 +34,7 @@
 | [数学/兼容 review](REVIEW.md#precision-chain) | 点输入根误差证明，无条件 PWL/采样状态误差传播，实际接受帧的失败回退；无法证明预算时拒绝 |
 
 矩阵 JSON 保留全部原字段和逐配置值，格式改为每条记录一行；检查收据同时记录原格式与当前格式
-SHA256。这是排版整理，不是新执行或重判。最新修复没有新 Spectre 执行或性能测量。
+SHA256。这是排版整理，不是新执行或重判。该轮修复没有新 Spectre 执行或性能测量。
 
 执行内核 SHA256：`0d92e770471638182f05fec53c308c0b34d89935c25bbaf70d47f5c9c33f522f`。
 原始波形、日志、两版内核、输入与源码快照在 ignored 的
@@ -75,9 +89,11 @@ RAW_MANIFEST SHA256：`956d566e2afbc280aafe4980c1ac916294fe3fe6d8ac10cb9012569ad
 完整源码快照、内核、日志和波形仅本地保留；其目录及封存清单哈希见修复收据。
 首轮 IR16 和历史 IR15 的收据/归档保持原身份。
 
-## 动态补齐开发检查点
+<a id="dynamic-closure"></a>
 
-0.11.0 / IR16 动态补齐基于已合并 PR30，版本 tag 尚未发布；合并身份以 Git/PR 为准。
+## 历史动态补齐检查点
+
+0.11.0 / IR16 动态补齐基于 PR30，已随 PR31 合并；下述收据保留执行时身份。
 内部/算子输入 ddt 采用质量关系；事件后的积分/复位保留全部调用点状态；
 受限多项式积分采用 Picard 管和区间 Taylor。数学、状态和组合边界见
 [连续动态章节](../../evas/docs/CONTINUOUS.md)，精确执行身份见[分支检查收据](results/dynamic-closure-checks.json)。

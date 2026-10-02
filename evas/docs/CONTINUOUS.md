@@ -1,9 +1,8 @@
 # 连续动态联合求解与动态 cross
 
-此页描述 EVAS 0.12.2 / IR16 的限定连续动态能力；基于已合并 PR32 的 `main` `431f335`。
-已知事件截止点运行时 `8618339` 已完成本地审查，集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准、未发布 tag；[新收据](../../experiments/parallel-gap-integration/results/event-horizon-checks.json)绑定本地源码和内核。
-0.12.1 的集成记录见 [PR32](https://github.com/BucketSran/vaEVAS/pull/32)，其被测实现为 `1b99c33`，历史收据保留各自执行时的身份。
-IR16 的传输和已接受模型的数学含义未改变，本次扩展不要求 IR16 重新编译。
+此页描述已由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并的限定连续动态能力。
+当前版本与执行身份分别见[能力表](CAPABILITIES.md)和[实验入口](../../experiments/parallel-gap-integration/README.md#当前证据)。
+IR16 的传输和已接受模型的数学含义未改变，已知事件截止点扩展不要求 IR16 重新编译。
 能力 ID：DYNAMICS、CROSS、COMPOSE、LANG。旧 IR15 检查点和实验收据保留原身份。
 
 ## 行为与边界

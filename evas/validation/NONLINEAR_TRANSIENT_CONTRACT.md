@@ -1,8 +1,11 @@
 # Stateless nonlinear transient waveform-accuracy contract
 
 This note records the precision boundary for the stateless nonlinear transient
-entry in the IR v15 checkpoint. Its proof and independent answers define the
-contract; no preferred rounded output is frozen.
+entry introduced in the IR v15 checkpoint and retained in IR16. Its proof and
+independent answers define the contract; no preferred rounded output is frozen.
+Joint nonlinear integration and implicit DAE use the separate
+[continuous-dynamics contract](../docs/CONTINUOUS.md); the stateless restriction
+below applies to this entry, not every nonlinear solver path.
 
 ## Proof object
 

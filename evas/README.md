@@ -4,8 +4,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 `solve` 对每个样本独立求静态工作点；`transient` 沿物理时间推进输入、事件、实例状态和算子历史。
 贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
 
-当前实现为 **EVAS 0.12.2 / IR v16**，基于已合并 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 的 0.12.1 / `main` `431f335`。
-本批[已知事件限定非线性传播](docs/CONTINUOUS.md#known-event-horizons)已完成本地审查；集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准，尚未发布版本 tag。支持范围和剩余缺口以
+当前实现为 **EVAS 0.12.2 / IR v16**，已由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并，尚未发布版本 tag。支持范围和剩余缺口以
 [能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
 支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
 以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
@@ -16,9 +15,9 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 绑定历史运行时 `d451605`；[已合并验证](validation/README.md#latest-evas-checkpoint)与各次执行检查分别登记。
 旧 IR 1–15 需要重新编译，更严格认证的具体边界见[迁移说明](#ir-v8-migration)。
 
-本轮共同闭包审查的[追加修复](docs/CONTINUOUS.md#lifecycle-observation-review-fixes)统一非点历史观察、
+共同闭包的[观察与依赖修复](docs/CONTINUOUS.md#lifecycle-observation-review-fixes)统一非点历史观察、
 传播导数恢复的瞬时依赖，并分开同刻观察与未来安装接口；适用边界和新旧验证身份单独记录。
-新增候选先认证到下一固定 timer / 仿射源 cross，避免提前认证已将失效的非线性关系；
+已合并的非线性传播先认证到下一固定 timer / 仿射源 cross，避免提前认证已将失效的非线性关系；
 数学、回退义务和本地新执行分别见[截止点说明](docs/CONTINUOUS.md#known-event-horizons)与
 [检查收据](../experiments/parallel-gap-integration/results/event-horizon-checks.json)。
 
@@ -46,40 +45,14 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 
 ## 回归证据
 
-以下结果绑定已合并 IR15 检查点。IR16 的新能力与验证另见[连续动态说明](docs/CONTINUOUS.md)，不继承历史运行身份。
+[当前执行证据](../experiments/parallel-gap-integration/README.md#当前证据)集中记录
+PR33 的原 31 条件两档矩阵、开发检查及精确源码/内核身份；
+[验证集入口](validation/README.md#latest-evas-checkpoint)解释条件数、有限观测和正式资格的区别。
+静态回放、开发 unittest 方法数和瞬态条件数分别报告，不以历史运行替代当前源码验证。
 
-PR30 的 IR16 运行时 `071a813` 的[初始化 review 修复收据](../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
-保留恒等滤波初值的反例、统一 DC 求值后的组合回归及原矩阵新执行。
-原 31 条件两档均达标，CSV 与首轮 IR16 检查点一致；已随 PR30 合并到 main `bedf20f`。
-0.11.0 三项动态扩展的首轮执行独立登记于[检查收据](../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)。
-首轮运行时 `71c6ceb` 的 450 Python、116 Rust 与 Clippy/格式/数学/冻结身份检查通过；一项性能探针 ignored。
-原矩阵 62 次新执行，两档各 31/31，CSV、判定和数值设置与 PR30 一致；没有新 Spectre/性能测量。
-后续 `4642cd2` 的[事件窗口检查](../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)
-覆盖非线性根盒重启及其采样拒绝边界：456 Python、117 Rust、原矩阵两档各 31/31。
-合并前审查 `d06e7f3` 的[最终检查](../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)
-统一线性/非线性事件准入，并拒绝时间盒内部代表时刻的联合重启；458 Python、118 Rust 通过。
-这部分已随 PR31 合并到 main `09b4222`。0.12.0 开发检查点扩展混合积分/滤波、
-非精确事件采样/稳定条件认证和无事件 index-one 多项式隐式 DAE；
-数学、调用点历史和明确拒绝边界见 [CONTINUOUS](docs/CONTINUOUS.md)。
-[本轮检查](../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)绑定 `fd60d11`：
-482 Python、121 Rust 和原矩阵两档各 31/31；62 份 CSV 与 PR31 逐字节相同。
-24 个新增开发方法不增加原矩阵分母，前一轮 26/31 的失败归档保留；本轮没有新 Spectre/性能测量。
-独立审查后，`d3daff0` 修复显式零 reset 的事件采样与已有混合历史重启的 DC 误拒绝。
-[修复检查](../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)单独记录新内核、
-回归、原矩阵和当时未解决边界，不改写 `fd60d11` 的旧收据；该快照的实际复位/采样误拒绝已由后续共同闭包修复。
-首轮 `ba5ab46` 的[检查与迁移](../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)
-及[原矩阵](../experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json)保持原身份。
-
-被测运行时 `d451605` 的原 31 条件两档本地瞬态回放均 **31/31 有限观测达标**，
-62 份 CSV、判定与生效设置和优化检查点 `ddfd379` 一致。
-**372 Python、83 Rust** 测试及 locked build、Clippy、格式检查通过；一项旧性能探针 ignored。
-[矩阵与检查收据](../experiments/parallel-gap-integration/README.md#当前证据)记录精确源码、二进制与检查器身份。
-这轮没有新 Spectre 执行或新性能测量；完整原始材料仅本地保留。
-静态回放、开发 unittest 方法数和瞬态条件数分别报告；原条件已用于诊断，属于开发材料。
-正式 DVS 资格仍 **I**，不代表完整语言合规、未见确认集或全时域精度。
-
-历史执行与差异从[实验索引](../experiments/README.md#checkpoint-evidence)进入；
-原组件的逐轮测试记录保留在[固定提交](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#回归证据)。
+[连续动态手册](docs/CONTINUOUS.md)维护积分、滤波、DAE、事件窗口及截止点的数学和拒绝边界。
+PR30–32、IR15 精度链与旧四后端的执行和失败由[实验索引](../experiments/README.md#checkpoint-evidence)进入，
+保留其原始身份。完整 raw 仅本地保留，正式 DVS 资格仍 I；本次文档校准没有重新运行仿真。
 
 ## 模块与接口
 

@@ -31,6 +31,8 @@
 公开归档使用实际可下载地址及文件清单/哈希；未上传时写明缺口，不使用机器路径或哈希冒充下载入口。
 发布公开材料仍需任务授权；应保留共同模型、独立检查器和足以复核的最小结果，大波形可放发布附件/数据仓库。
 清理工作区前，先迁移需要保留的 ignored 原始材料；保存 Git 提交并不会保存这些文件。
+迁移归档时保留原收据字节和执行时路径，在本地归档清单中记录旧路径、新路径与校验结果。
+删除已合并分支不删除 main 中的提交或 PR 历史；分支名也不是原始材料的永久保存位置。
 
 案例数、后端配置数、事件历史数和 unittest 方法数分别报告。测试用于诊断后属于开发证据，
 有限观测不能替代连续时间误差界或独立确认集。已知差异与失败同成功结果一起保留。
@@ -39,20 +41,17 @@
 
 ## 已有实验入口
 
-最新已合并 IR15 检查点见[联合交付与精度链](parallel-gap-integration/README.md#当前证据)，
-被测运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`：原 31 条件两档均
-**31/31 有限观测达标**，62 份 CSV、判定及生效设置和前一优化检查点 `ddfd379` 一致。
-[检查收据](parallel-gap-integration/results/precision-chain-checks.json)与
-[逐配置矩阵](parallel-gap-integration/results/precision-chain-matrix.json)保留完整身份。
-372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
-最新修复没有新 Spectre 执行或新性能测量，正式资格仍 **I**，完整 raw 为 **仅本地保留**。
-当前能力和更广缺口以[能力总表](../evas/docs/CAPABILITIES.md)为准。
+当前已合并检查点为 [PR33](https://github.com/BucketSran/vaEVAS/pull/33) 的 EVAS 0.12.2 / IR16。
+[当前执行证据](parallel-gap-integration/README.md#当前证据)维护原矩阵、开发检查及源码/内核身份；
+[能力总表](../evas/docs/CAPABILITIES.md)维护支持和剩余边界。本次文档校准未重新运行仿真。
+原矩阵两档均为 **31/31 有限观测达标**，正式资格仍 **I**，完整 raw 为 **仅本地保留**；
+本检查点没有新 Spectre 或性能测量。
 
-IR16 本地开发检查点另见[连续动态执行与迁移](parallel-gap-integration/README.md#continuous-dynamics)：
-原矩阵两档均达标，CSV 与 IR15 基线一致；数学/组合扩展、精确身份和限制单独记录。
-首轮连续动态已随 PR30 合并；0.11.0 动态补齐的[最终审查执行](parallel-gap-integration/results/dynamic-closure-review-checks.json)
-绑定 `d06e7f3`，458 Python、118 Rust 与原矩阵两档各 31/31。
-这些是新本地 EVAS 执行，不计为新 Spectre 仿真或原矩阵的新条件；历史状态仍保留在原收据中。
+[IR15 精度链](parallel-gap-integration/README.md#ir15-precision-chain)、
+[首轮 IR16 与迁移](parallel-gap-integration/README.md#continuous-dynamics)、
+[后续动态补齐](parallel-gap-integration/README.md#dynamic-closure)及
+[共同闭包](parallel-gap-integration/README.md#lifecycle-closure-review)分别保存原执行。
+这些结果不计为新 Spectre 仿真或原矩阵的新条件；历史状态仍保留在原收据中。
 
 PR26 `edb004d` 的两档各 24/31 保留在[历史复位对照](pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
 功能补齐 `39a4545` 与优化 `ddfd379` 的原执行、初期失败和测量从

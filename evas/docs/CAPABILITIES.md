@@ -1,15 +1,12 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-10-02。当前源码为 **EVAS 0.12.2 / IR v16**，基于 `main` `431f335`；
-[已知事件截止点](CONTINUOUS.md#known-event-horizons)运行时 `8618339` 已完成本地审查；集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准，未发布 tag。
-已合并 0.12.1 的三个连续动态扩展及共同生命周期修复由 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成，基于
-[PR31](https://github.com/BucketSran/vaEVAS/pull/31) 的 `09b4222`。被测运行时代码现提交为 `1b99c33`，
-与追加修复收据的 56 份运行时源码哈希一致；新候选由[单独收据](../../experiments/parallel-gap-integration/results/event-horizon-checks.json)绑定。
-旧收据保留当时执行身份，合并记录不改写实验结果。
+核对日期：2026-10-02。当前源码为 **EVAS 0.12.2 / IR v16**，已由
+[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并到 main `b4921ca`，未发布 tag。
+[已知事件截止点](CONTINUOUS.md#known-event-horizons)被测运行时为 `8618339`；
+[当前证据](../../experiments/parallel-gap-integration/README.md#当前证据)保存执行、审查与集成身份。
+旧收据保留执行时的提交/分支状态，不由合并或清理改写。
 旧 IR 1–15 需要从原始 VA/manifest 重新编译；[批量入口](../README.md#ir-v8-migration)
 不会重写历史 IR 或收据。Python 与 Rust 必须使用同一 IR 版本。
-限定范围和独立验证见[连续动态](CONTINUOUS.md#checkpoint-evidence)；已合并实验身份从
-[当前证据](../../experiments/parallel-gap-integration/README.md#当前证据)进入。
 
 ## 状态约定
 
@@ -35,69 +32,26 @@
 | DYNAMICS：积分/滤波/相位 | 原直接 PWL idt/reset、idtmod/sin；新增仿射/多项式积分反馈、事件保持输入与联合 reset、共同复位后采样闭包、独立已知 timer/仿射源 cross 截止点的非线性传播、上端点代表时刻的根盒采样/稳定条件与触发根等号认证、积分与 proper 滤波混合及已知历史上的事件后多项式滤波反馈、无事件 index-one 多项式隐式 DAE、1–8 阶完整滤波、受限内部/算子输入 ddt | [基础算子](OPERATORS.md)、[联合数学与数值](CONTINUOUS.md)、[截止点回归](../tests/test_event_horizons.py)、[闭式与组合回归](../tests/test_dynamic_closure.py) | 隐式 DAE 与事件/复位/滤波/ddt 组合；首次启动的非线性滤波 DC、非线性直接通路、通用函数/ddt 混合、时间盒内部代表时刻、复位固定点环、直接项/导数暴露的事件反馈联合认证、跳变/高指标导数、缺省 IC、动态参数；动态 guard 网络仍要求整段预测；其他算子的非精确历史采样未纳入本轮认证；不确定条件或超预算采样仍拒绝 |
 | COMPOSE：实例与组合 | 平面实例隔离、限定采样/复位；积分/滤波闭包经过算子和电压关系，支持受限多项式混合和隐式 DAE，保留贡献求和；DC 与瞬态输入导数在整个网络内分别一致求值；事件重启复用物理历史，仅实际复位积分写入 IC；共同闭包后再按已知事件截止点安装非线性未来历史 | [联合数学](CONTINUOUS.md)、[初始化组合义务](CONTINUOUS.md#初始化组合的独立行为义务)、[基础组合回归](../tests/test_gap_integration.py)、[依赖图](../rust_core/src/reset_dependencies.rs) | 结构依赖不能由相消/零系数绕过；ddt 直接通路不进入连续 cross；非线性混合只含积分和 proper 滤波；非严格 proper 直接项事件反馈环保守拒绝；首次启动的非线性滤波 DC、非线性直接通路、隐式 DAE 与事件/其他算子组合及事件后 guard 重定位仍缺 |
 | QUALIFICATION：独立验收 | 共同闭包和已知事件截止点各自重跑原 31 条件，两档各 31/31；追加修复统一根盒观察与导数瞬时依赖，证据按快照区分，矩阵分母不变 | [本地截止点检查](../../experiments/parallel-gap-integration/results/event-horizon-checks.json)、[观察与依赖修复](../../experiments/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)、[共同闭包检查](../../experiments/parallel-gap-integration/results/lifecycle-closure-checks.json)、[独立审查修复](../../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)、[修复前检查](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)、[修复前矩阵](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-matrix.json)、 [最终审查检查](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)、[首轮检查](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)、[PR30 初始化收据](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)、[首轮 IR16 检查](../../experiments/parallel-gap-integration/results/continuous-dynamics-checks.json)、[历史 IR15 证据](../validation/README.md#ir15-checkpoint) | 正式 DVS 资格 I；原矩阵已参与开发，未见确认集、物理观察误差界与一般连续时间资格尚缺 |
-| PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 最新精度链未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
+| PERFORMANCE：效率证据 | 稀疏分流、同刻不可变查询复用、标量 R/m 根证明；固定工作负载历史计时 | [优化检查点](../../experiments/parallel-gap-integration/REVIEW.md#accuracy-optimization)、[计时收据](../../experiments/parallel-gap-integration/results/accuracy-optimization-profile.json) | 当前运行时未重测性能，无当前端到端/跨后端速度声明；更广复用与日程见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) |
 
 ## 工作与证据身份
 
-已合并 PR30 运行时 `071a813` 的[初始化 review 修复](../../experiments/parallel-gap-integration/results/continuous-initialization-review.json)
-统一整个连续网络的 DC 求值，补充组合不变性和连续 guard 边界；原矩阵新执行与首轮 IR16 波形一致。
-该实现已合并到 main `bedf20f`；测试与完整 raw 可用性分别见原收据。
+当前结果集中维护在[实验入口](../../experiments/parallel-gap-integration/README.md#当前证据)。
+下表只做身份导航；开发检查方法数、原矩阵、Spectre 执行与性能测量分别计数。
 
-本地开发运行时 `ba5ab46` 的 [IR16 新执行](../../experiments/parallel-gap-integration/README.md#continuous-dynamics)
-包括原矩阵两档、连续动态独立回归和仓库全部可运行 manifest 的重编译/执行。
-原矩阵的 CSV、判定和数值设置与下述 IR15 基线一致；仅引擎版本元数据变化。
-该检查点已随 PR30 合并；不计为新 Spectre 执行或性能测量。
-三项动态扩展的源码/内核与检查身份见[动态补齐收据](../../experiments/parallel-gap-integration/results/dynamic-closure-checks.json)，不继承基线验证。
-后续非线性根盒重启和采样边界修复绑定运行时 `4642cd2` 的[事件窗口检查](../../experiments/parallel-gap-integration/results/nonlinear-event-window-checks.json)。
-最终审查 `d06e7f3` 的[新执行](../../experiments/parallel-gap-integration/results/dynamic-closure-review-checks.json)
-统一两类路径的采样边界及重启代表时刻；458 Python、118 Rust 与原矩阵两档检查通过。
-该实现已随 PR31 合并到 main `09b4222`；其原收据保留执行时的本地分支状态。
+| 检查点 | 固定执行身份与历史入口 |
+| --- | --- |
+| PR33 / IR16：已知事件截止点 | 运行时 `8618339`，审查头 `18063c9`，main 合并点 `b4921ca`；[检查与审查收据](../../experiments/parallel-gap-integration/results/event-horizon-checks.json) |
+| PR32 / IR16：混合动态与共同生命周期 | 被测运行时 `1b99c33`，main 合并点 `431f335`；[三项开发](../../experiments/parallel-gap-integration/README.md#certified-mixed-dynamics)、[第一批对照](../../experiments/parallel-gap-integration/README.md#shared-lifecycle-review)、[共同闭包](../../experiments/parallel-gap-integration/README.md#lifecycle-closure-review)、[追加观察/依赖修复](../../experiments/parallel-gap-integration/README.md#lifecycle-observation-review-fixes) |
+| PR31 / IR16：非线性积分与联合事件 | 最终审查运行时 `d06e7f3`，main 合并点 `09b4222`；[首轮及根盒修复](../../experiments/parallel-gap-integration/README.md#dynamic-closure) |
+| PR30 / IR16：连续动态与旧 IR 重编译 | 首轮运行时 `ba5ab46`，初始化修复 `071a813`，main 合并点 `bedf20f`；[执行与初始化修复](../../experiments/parallel-gap-integration/README.md#continuous-dynamics) |
+| PR29 / IR15：原矩阵补齐及精度链 | 精度链运行时 `d451605`；[历史执行](../../experiments/parallel-gap-integration/README.md#ir15-precision-chain)，更早功能/计时见[无损历史资产](../../experiments/parallel-gap-integration/README.md#历史与资产) |
+| PR26 / IR11 及旧 EVAS 0.8.7 | [PR26 原对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)、[旧四后端矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md)；历史失败不改写为新版本成绩 |
 
-0.12.0 开发实现分为三批审查：
-[混合积分/滤波](../tests/test_mixed_dynamics.py)、[根盒采样/条件](../tests/test_event_window_sampling.py)、
-[index-one 隐式 DAE](../tests/test_implicit_dynamics.py)。数学和边界在 [CONTINUOUS](CONTINUOUS.md)，
-运行时 `fd60d11` 的[本轮新执行](../../experiments/parallel-gap-integration/results/certified-mixed-dynamics-checks.json)
-包括 482 Python、121 Rust（另有一项旧性能探针 ignored）及原矩阵两档各 31/31；
-62 份 CSV、判定、输入和除引擎版本外的生效设置与 PR31 完全一致。
-前一检查点 `cc68572` 的两档 26/31 保留在失败归档中：根盒条件需要额外保留实际触发 guard 的零集关系。
-该次执行无新 Spectre/性能测量，不继承 PR31 的内核身份；收据状态描述当时尚未集成的快照。
-独立审查修复 `d3daff0` 的[新收据](../../experiments/parallel-gap-integration/results/certified-mixed-review-fixes.json)
-保留两项原失败和新执行：reset 为零时仍保留 tau 采样；带已知物理历史的事件重启不重新做 DC 初始化。
-484 Python、121 Rust 通过；原矩阵两档各 31/31，62 份 CSV 与修复前及 PR31 一致。
-该 0.12.0 检查点的首次启动非线性 DC、非线性直接通路仍拒绝；同刻实际复位并采样同一积分当时仍误拒绝。
-有限时间爆炸探针在 25 秒上限内未返回而被终止，保留为未判定；这不计为数值拒绝成功。
-
-CROSS、EVENT-ORDER、DYNAMICS、COMPOSE 的[共同生命周期对照](../../experiments/parallel-gap-integration/README.md#shared-lifecycle-review)
-在相同运行时新增 10 类×两档 EVAS/Spectre 执行，没有修改内核或提升支持状态。
-六个实际复位/采样配置仍被 EVAS 误拒绝，不能笼统归为复位反馈环；Spectre 六个配置均为接近 IC 的复位后采样。
-非点 cross 条件的根时刻约定与 Spectre 晚触发读值不同，需共同 te 与历史认证迁移。
-Spectre 九个配置不满足本实验有限观测判据，失败和假定观察 allowance 均保留；不能据此作普遍精度排名。
-QUALIFICATION 仍为 I，原 31 矩阵本批没有新执行，PERFORMANCE 没有新测量。
-
-0.12.1 的[第二批共同闭包](CONTINUOUS.md#shared-lifecycle-closure)在相同分支实施；
-[新收据](../../experiments/parallel-gap-integration/results/lifecycle-closure-checks.json)以未提交的源码快照和内核哈希标识，
-没有冒用旧 commit 作为新运行时身份；未提交/未合并字段描述当时执行状态。原六个误拒绝配置同 IR 回放全部完成，
-共同观察使用 te=tau 的既有策略并显式输出区间；真实生产控制器验证失败/丢弃/重试。
-该实施快照的 490 Python、122 Rust 通过；原矩阵两档各 31/31，62 份 CSV 与 0.12.0 检查点逐字节一致。
-非严格 proper 滤波直接项的事件反馈环保守拒绝，不能用停住的观察迭代替代唯一性证明；
-普通局部顺序更新和经过严格 proper 状态的控制组仍支持。
-Spectre 复用第一批的 20 次导出，失败与严格条件差异保留；没有新远端执行、性能或资格声明。
-
-第二批后续审查修复以[追加收据](../../experiments/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)区分源码身份。
-不可变历史也使用完整根盒观察；依赖图传播值与导数，禁止 `ddt` 将瞬时环隐藏在积分/滤波后。
-同刻观察与未来安装使用独立返回接口；直接积分释放和已激活 transition 斜坡有解析回归。
-缺少非点观察认证的 absdelay/slew/idtmod 明确拒绝，精确 timer 控制保持通过。
-仍不声称一般事件固定点唯一性、所有算子非精确历史认证或连续时间资格。
-
-历史已合并 IR15 运行时 `d451605` 的 **62 次新本地执行**均达标，CSV、判定和生效设置与 `ddfd379` 一致；
-372 Python、83 Rust、locked build、Clippy 和格式检查通过，一项旧性能探针 ignored。
-原 DUT、刺激、容差、检查器和分母未改；最新修复没有新 Spectre 执行或性能测量。
-完整原始输入、波形、日志与二进制为 **仅本地保留**；公开整理收据不等于公开完整 raw。
-
-历史 PR26 / IR11 的两档各 24/31 仍绑定 `edb004d`，不改写成新版本成绩。
-旧联合 IR14、单项分支、功能补齐 `39a4545` 和优化 `ddfd379` 均保持原身份，见
-[历史入口与无损收据归档](../../experiments/parallel-gap-integration/README.md#历史与资产)。
-更早的交付表保留在[固定历史](https://github.com/BucketSran/vaEVAS/blob/78e914ff97d4902365b76d5c3c87be57c39c83e9/evas/docs/CAPABILITIES.md)。
+原矩阵已经参与开发诊断，正式 DVS 资格仍 I。完整 raw 和内核为仅本地保留；公开整理收据
+不等于公开全部原始资产。PR32 的早期根盒等号失败、复位采样误拒绝、有限时间爆炸探针超时
+和 Spectre 不一致都保留在对应历史段落中；后续修复不删除这些结果。
+合并后的分支可按保留规则清理，固定提交/PR 仍能追溯迭代；原始材料须另行归档。
 
 ## 后续工作
 
@@ -106,7 +60,7 @@ Spectre 复用第一批的 20 次导出，失败与严格条件差异保留；�
 
 | 方向 | 下一步需先固定的设计与独立验收 |
 | --- | --- |
-| 联合动态求解 | 已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、首次启动的非线性滤波 DC、非线性直接通路、时间盒内部代表时刻和未来事件稳定化传播 |
+| 联合动态求解 | 已补 index-one 多项式 DAE、积分/proper 滤波混合、根盒采样和稳定条件；剩余 DAE 的事件/复位/其他算子组合、首次启动的非线性滤波 DC、非线性直接通路、时间盒内部代表时刻及动态 guard 日程的分段传播/重新定位 |
 | 事件扩展 | 已补状态独立多项式/连续算子 guard；剩余事件后轨迹重定位、切线、隐式非线性电压 guard、动态 timer/混合 OR |
 | 语言和算子 | 已补受限内部/算子输入 ddt 和 1–8 阶滤波；剩余跳变/高指标导数、通用函数/过程控制/数组及更广初值/参数语义 |
 | 精度/资格 | 通用状态预算、前端折叠误差、一般连续时间误差、独立观察资格与未见确认集，保留拒绝及错误对照 |

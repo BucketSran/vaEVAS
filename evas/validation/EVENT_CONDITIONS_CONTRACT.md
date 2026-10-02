@@ -3,7 +3,7 @@
 状态：**main 已交付受限事件 if/else、cross OR 与多事件写者；正式资格仍为 I。**
 [PR23](https://github.com/BucketSran/vaEVAS/pull/23) 的 0.9.0 / IR v9 检查点完成原 8 条件两档有限观测验证，
 [PR25](https://github.com/BucketSran/vaEVAS/pull/25) 另交付多事件写者；下文分别保留其历史身份。
-PR26 后 main 为 IR v11，最新完整矩阵从[验证集入口](README.md#latest-evas-checkpoint)查看，
+PR26 的历史检查点为 IR v11，当前完整矩阵从[验证集入口](README.md#latest-evas-checkpoint)查看，
 不能把本页的 IR v9 历史成绩当成新检查点结果。
 设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；实现在分支 `feat/evas-event-conditions`
 同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后推进，条件切片与 OR 检查点分别见 §9、§10。
@@ -142,6 +142,10 @@ F(v+, q+, H_e, u(e)) = 0
 `z>=3/4` 与 `rst>=1/2` 等价，但必须实际证明其无状态依赖及电压唯一性。
 
 ### 4.2 等号与不可判定
+
+本节保留第一阶段在代表时间 e 认证谓词的设计；IR16 共同观察显式绑定 te=tau，
+并另认证根盒与存储代表时刻。当前实现以[事件时间绑定](../docs/EVENTS.md#event-conditions)
+及[共同生命周期](../docs/CONTINUOUS.md#shared-lifecycle-closure)为准，不能混用两种时刻的结论。
 
 令差值的可靠包围为 P=[l,h]，比较阈值为 0：
 

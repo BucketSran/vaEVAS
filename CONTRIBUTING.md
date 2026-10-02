@@ -71,7 +71,7 @@ Before authorized branch deletion or worktree retirement:
 
 1. Check the task owner and running jobs; an active task/process using the checkout prevents retirement.
 2. Inspect status, unique commits and upstream differences. Preserve needed uncommitted/unpushed work in reachable commits or a recoverable snapshot; zero unpushed commits is not required for managed archival.
-3. List needed ignored runs/build inputs and move them to retained storage. Verify manifest/hash and retrieval path; Git snapshots do not preserve ignored files.
+3. List needed ignored runs/build inputs and move them to retained storage. Verify manifest/hash and retrieval path; keep historical receipts unchanged and record old-to-new paths in the archive inventory. Git snapshots do not preserve ignored files.
 4. Use the host's managed archive tool when available. A merged PR alone does not require archival; reuse free active worktrees. Delete a branch only after its needed history remains reachable.
 
 ## Migration

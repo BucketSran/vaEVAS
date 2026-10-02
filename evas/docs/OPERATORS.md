@@ -1,6 +1,7 @@
 # 有历史的波形算子
 
-适用范围：已合并 EVAS 0.9.0 / IR v15 的单项基础范围。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
+适用范围：IR16 中的直接输入基础算子路径，并保留各项历史交付身份。
+能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
 PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt，PR26 交付三参数复位。
 实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
 由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
@@ -18,7 +19,8 @@ IR15 保留受限 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin。
 idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组合与拒绝边界)重建并认证候选，不能直接套用输出不变假设。
 当前同样允许纯函数 `sin` 随其已许可的早期复位输入改变；函数链的许可逐项传播，
 随后仍从同一接受历史重放并核对整个算子值/区间及积分复位历史。
-`reset_dependencies.rs` 的结构图包含滤波/相位/正弦输入边，禁止经函数和电压采样返回 reset 的反馈环。
+`reset_dependencies.rs` 的结构图包含滤波/相位/正弦输入边，未认证的 reset 固定点反馈环保守拒绝；
+已经交付的受限复位采样闭包见[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
 
 查询优化 `ddfd379` 用临时 `Evaluation` 借用同一个历史基线并固定查询时间。
 同刻候选仍克隆该基线并推进历史；无复位 idt、idtmod、laplace、absdelay、slew
@@ -162,9 +164,9 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 ## idt
 
 能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 交付首版受限二参数积分；
-IR v11 首次扩展三参数 reset，当前沿用 IR15，检查点与交付状态见能力总表。
+IR v11 首次扩展三参数 reset，IR16 继续保留；检查点与交付状态见能力总表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
-显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本版只接受贡献表达式中的
+显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本节直接 PWL 解析路径只接受贡献表达式中的
 `idt(direct_affine_input, constant_ic)` 与受限的
 `idt(direct_affine_input, constant_ic, state_reset)`：输入为直接驱动、连续 PWL 的仿射组合，
 初值为显式有限实例常量，仿真起点为 0。reset 必须是同实例状态和常数的仿射表达式，
@@ -228,7 +230,9 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 缺省 IC、额外参数、静态 solve、reset 中的电压/算子依赖和未认证 reset 仍拒绝。
 结构依赖先于数值相消检查；事件修改历史的 guard 需要重定位，当前尚未接入。
 
-当前实现明确拒绝“积分器 → 电压网络 → 事件状态赋值 → 该积分器复位”的结构反馈环。
+没有获得共同闭包认证的“积分器 → 电压网络 → 事件状态赋值 → 该积分器复位”固定点环仍拒绝。
+受限的实际复位后采样已由 PR32 交付；其准入与拒绝见[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)，
+不能沿用首版的结构限制将所有复位/采样组合统称不支持。
 例如事件后 `q=y`、IC=0、未复位积分值为 1 时无自洽解；`q=1-y` 则有两组自洽解。
 数值试算稳定不能证明解存在或唯一。`reset_dependencies.rs` 复用组装后的未知节点连通组，
 构建节点、状态和算子之间的结构依赖；覆盖局部状态、内部节点、实例连接及其他算子的中转。
@@ -246,7 +250,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 IR v7 新增 `kind=idt,input,ic,origin`；IR v11 起在 idt 记录中加入可空 `reset` 表达式。
 调用引用仍为 `op=operator,operator=index`。
 Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
-错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。包版本为 0.9.0；包内版本号不代表已发布 tag。
+错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。原 IR15 检查点包版本为 0.9.0；包内版本号不代表已发布 tag。
 实现入口：[idt.rs](../rust_core/src/idt.rs)、[operators.rs](../rust_core/src/operators.rs)；
 独立有理数和组合回归：[test_idt.py](../tests/test_idt.py)、
 [test_idt_accuracy.py](../tests/test_idt_accuracy.py)。Rust 另检验查询无副作用及真实候选失败后完整性。

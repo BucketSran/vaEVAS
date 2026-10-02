@@ -8,15 +8,16 @@ EVAS 仿真器，支持联动修复。应用评测采用 Harbor，独立仿真�
 [独立验证集](evas/validation/README.md) 包含原 31 个条件。EVAS 的
 [最新 IR16 检查点](evas/validation/README.md#latest-evas-checkpoint)两档本地瞬态回放各 31/31 达标。
 IR16 的[连续动态说明](evas/docs/CONTINUOUS.md#checkpoint-evidence)记录积分反馈、动态 cross、
-ddt、高阶滤波与 manifest 重编译；0.12.1 的混合动态与共同事件生命周期集成见
-[PR32](https://github.com/BucketSran/vaEVAS/pull/32)，新检查不增加原矩阵的条件数。
+ddt、高阶滤波与 manifest 重编译；混合动态与共同事件生命周期已由
+[PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成，已知事件截止点已由
+[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并。新检查不增加原矩阵的条件数。
 thu-sui 的[历史四后端 248 配置矩阵](experiments/dvs2-four-backend-validation/results/MATRIX.md)
 另行保存，其中 EVAS 为旧版 0.8.7。结果仅证明所列有限观测，完整观察资格仍为 I。
 [验证集 v1](evas/validation/versions/v1/README.md) 以 `validation-v1` 标签冻结，后续修订保留原始证据。
 
 [EVAS](evas/README.md) 提供限定语法前端、版本化 IR、Rust 静态线性/非线性方程求解，
-以及连续 PWL/仿射网络上的 `cross` 与固定 `timer` 事件、实例状态、受限 `transition` / `absdelay` / `slew` 波形、显式初值的直接 PWL `idt` 积分与同刻原子提交。
-支持受限事件体 `if/else`、cross 的 OR 与输入误差认证；版本、范围和证据统一见[能力表](evas/docs/CAPABILITIES.md)。
+以及受限连续动态联合求解、`cross` / 固定 `timer` 事件、实例状态与波形算子。
+各项语言、精度及组合边界统一见[能力表](evas/docs/CAPABILITIES.md)。
 新内核的各阶段矩阵、专项和执行身份从[实验索引](experiments/README.md#checkpoint-evidence)进入。
 旧 vaBench 和 EVAS 是审查与迁移来源；
 本仓库尚未迁入 VABench 任务数据集和完整旧仿真器，旧成绩不自动成为新版本的质量证明。
@@ -46,12 +47,6 @@ EVAS 的数学与实现说明从[技术手册](evas/docs/README.md)进入；
 能力总表保存当前状态，Issue 保存具体剩余工作，PR/提交保存迭代历史；
 数学、接口和实验手册是长期项目资产。资产身份、公开可用性与执行收据见
 [实验管理](experiments/README.md#experiment-receipts)。发布/合并/清理遵循用户授权，当前开放 PR 不自动成为 main 支持。
-
-初始验证基线、静态仿射内核和仓库技能已分别通过
-[PR #1](https://github.com/BucketSran/vaEVAS/pull/1)、
-[PR #2](https://github.com/BucketSran/vaEVAS/pull/2) 和
-[PR #4](https://github.com/BucketSran/vaEVAS/pull/4) 合入 `main`。
-技能入口见 [AGENTS.md](AGENTS.md)；从包含这些提交的基线创建分支即可继承技能文件。
 
 迁移应先核对来源、规格与实现；失败先区分任务、参考解、判定器、仿真器或环境责任。
 不通过放宽判据掩盖失败，保留未决及失败证据。
