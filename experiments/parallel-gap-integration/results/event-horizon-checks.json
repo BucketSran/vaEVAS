@@ -1044,7 +1044,7 @@
   "new_spectre_executions": 0,
   "new_performance_experiments": 0,
   "availability": {
-    "code_tests_contracts_curated_receipt": "local reviewable checkout; not yet committed or published",
+    "code_tests_contracts_curated_receipt": "本批 Git 提交及 GitHub PR 内可取得代码、开发测试、数学契约和整理收据；完整 raw 未公开。",
     "raw": "仅本地保留",
     "raw_directory": "runs/event-horizons-20261002",
     "public_archive_url": null,
@@ -1269,5 +1269,10 @@
     "raw_directory": "runs/event-horizon-merge-review-20261002",
     "raw_manifest_sha256": "02726a8f70e166cc28e6fc5a471da0f18dfafcce46a1cddb2c6891d80ef647bb",
     "source_matched_checks": "506 Python / 124 Rust + 1 ignored / locked build / Clippy / fmt / original 31x2 unchanged; reused identified evidence because runtime/tests did not change during review"
+  },
+  "integration_record": {
+    "pull_request": "https://github.com/BucketSran/vaEVAS/pull/33",
+    "runtime_commit": "86183393dff71e96e87adc8231104fc4953a8f37",
+    "status_source": "GitHub PR and Git ancestry; status/status_role above preserve the execution-time snapshot"
   }
 }

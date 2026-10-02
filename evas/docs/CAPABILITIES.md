@@ -1,7 +1,7 @@
 # EVAS 能力与缺口总表
 
 核对日期：2026-10-02。当前源码为 **EVAS 0.12.2 / IR v16**，基于 `main` `431f335`；
-[已知事件截止点](CONTINUOUS.md#known-event-horizons)运行时 `8618339` 已完成本地审查；集成身份以 Git/PR 为准，未发布 tag。
+[已知事件截止点](CONTINUOUS.md#known-event-horizons)运行时 `8618339` 已完成本地审查；集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准，未发布 tag。
 已合并 0.12.1 的三个连续动态扩展及共同生命周期修复由 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 集成，基于
 [PR31](https://github.com/BucketSran/vaEVAS/pull/31) 的 `09b4222`。被测运行时代码现提交为 `1b99c33`，
 与追加修复收据的 56 份运行时源码哈希一致；新候选由[单独收据](../../experiments/parallel-gap-integration/results/event-horizon-checks.json)绑定。

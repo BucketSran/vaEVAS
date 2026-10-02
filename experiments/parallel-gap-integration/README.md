@@ -9,7 +9,7 @@
 ## 当前证据
 
 0.12.2 / IR16 的[已知事件截止点检查](results/event-horizon-checks.json)基于 PR32 合并点 `431f335`，
-运行时 `8618339` 已完成本地审查，集成身份以 Git/PR 为准、未发布 tag；数学与支持边界见[连续动态](../../evas/docs/CONTINUOUS.md#known-event-horizons)。
+运行时 `8618339` 已完成本地审查，集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准、未发布 tag；数学与支持边界见[连续动态](../../evas/docs/CONTINUOUS.md#known-event-horizons)。
 已合并的共同事件观察/依赖修复见[追加收据](results/lifecycle-observation-review-fixes.json)。
 下表是 EVAS 0.9.0 / IR15 运行时 `d451605` 的历史精度链证据，不描述新运行时。
 

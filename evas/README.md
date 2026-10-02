@@ -5,7 +5,7 @@ EVAS 将限定的 Verilog-A 电压贡献编译为方程，由 Rust 联立求解�
 贡献关系与程序顺序赋值分别处理，验收通过后才提交候选状态。
 
 当前实现为 **EVAS 0.12.2 / IR v16**，基于已合并 [PR32](https://github.com/BucketSran/vaEVAS/pull/32) 的 0.12.1 / `main` `431f335`。
-本批[已知事件限定非线性传播](docs/CONTINUOUS.md#known-event-horizons)已完成本地审查；集成身份以 Git/PR 为准，尚未发布版本 tag。支持范围和剩余缺口以
+本批[已知事件限定非线性传播](docs/CONTINUOUS.md#known-event-horizons)已完成本地审查；集成记录见 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)，合并身份以 Git/PR 为准，尚未发布版本 tag。支持范围和剩余缺口以
 [能力表](docs/CAPABILITIES.md)为准；数学与实现从[技术手册](docs/README.md)进入。
 支持受限事件体 if/else、cross OR、多事件写者、直接 PWL 积分及状态复位，
 以及普通 analog 局部赋值/输入条件、一阶 `laplace_nd`、`idtmod`/受限 `sin`、无状态多项式瞬态。
