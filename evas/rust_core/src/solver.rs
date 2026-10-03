@@ -173,6 +173,8 @@ impl Circuit {
         driven_names: &[String],
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("circuit.prepare");
+
         let AssembledCircuit {
             nodes,
             equations,
@@ -346,6 +348,8 @@ impl Circuit {
         solution: &Solution,
         input_bounds: &[I],
     ) -> Result<(), Error> {
+        let _timing = crate::diagnostics::span("voltage.waveform_certificate");
+
         if input_bounds.len() != self.driven.len() {
             return Err(Error::new(
                 "invalid_inputs",
@@ -566,6 +570,9 @@ impl Circuit {
         inputs: &[f64],
         initial_voltages: Option<&[f64]>,
     ) -> Result<Solution, Error> {
+        let _timing = crate::diagnostics::span("circuit.solve");
+        crate::diagnostics::counter("circuit_solve_calls", 1);
+
         if inputs.len() != self.driven.len() || inputs.iter().any(|x| !x.is_finite()) {
             return Err(Error::new(
                 "invalid_inputs",
@@ -712,6 +719,8 @@ impl Circuit {
     }
 
     fn check_affine_residuals(&self, values: &[f64]) -> Result<(f64, f64), Error> {
+        let _timing = crate::diagnostics::span("voltage.original_residual");
+
         let mut max_residual_v = 0.0_f64;
         let mut max_residual_ratio = 0.0_f64;
         for (eq, dense) in self.equations.iter().zip(&self.dense_residuals) {

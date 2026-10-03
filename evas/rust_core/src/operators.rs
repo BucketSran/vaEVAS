@@ -733,7 +733,13 @@ impl Evaluation<'_> {
         changed: &[usize],
         horizon: f64,
     ) -> Result<Operators, Error> {
+        let _timing = crate::diagnostics::span("history.advance_candidate");
+
+        let copying = crate::diagnostics::span("history.clone");
         let mut candidate = self.base.clone();
+        drop(copying);
+        crate::diagnostics::counter("history_clone_calls", 1);
+        crate::diagnostics::counter("history_clone_operator_slots", self.base.entries.len());
         candidate.horizon = horizon;
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
         Ok(candidate)
@@ -808,6 +814,8 @@ impl Operators {
         states: &[f64],
         horizon: f64,
     ) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("history.prepare");
+
         let mut identities = BTreeSet::new();
         for spec in &program.operators {
             let origin = spec.origin();
@@ -1130,6 +1138,8 @@ impl Operators {
     }
 
     pub(crate) fn values(&self, time: f64) -> Result<Vec<f64>, Error> {
+        let _timing = crate::diagnostics::span("history.nominal_query");
+
         self.values_reusing(time, None)
     }
 
@@ -1202,6 +1212,8 @@ impl Operators {
     }
 
     pub(crate) fn bounds(&self, time: f64) -> Result<Vec<I>, Error> {
+        let _timing = crate::diagnostics::span("history.bounds_query");
+
         self.bounds_reusing(time, None)
     }
 
@@ -1316,6 +1328,8 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
+        let _timing = crate::diagnostics::span("history.advance");
+
         if let Some(continuous) = &self.continuous {
             if !changed.is_empty() || continuous.needs_extension(self.horizon) {
                 self.continuous = Some(Arc::new(continuous.restarted(

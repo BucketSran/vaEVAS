@@ -16,9 +16,14 @@ pub(crate) enum Factorization {
 
 impl Factorization {
     pub(crate) fn new(rows: Vec<Row>, columns: usize) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("factor.total");
+        crate::diagnostics::counter("factorizations", 1);
+        crate::diagnostics::counter("matrix_rows", rows.len());
+        crate::diagnostics::counter("matrix_columns", columns);
         // A conservative crossover, not a guarantee for every sparsity pattern.
         // Keep the small-system path and avoid tree overhead on dense matrices.
         let nonzeros: usize = rows.iter().map(Row::len).sum();
+        crate::diagnostics::counter("matrix_input_nnz", nonzeros);
         if columns >= 32 && nonzeros as f64 <= 0.1 * rows.len() as f64 * columns as f64 {
             sparse::Factorization::new(rows, columns).map(Self::Sparse)
         } else {
@@ -37,6 +42,8 @@ impl Factorization {
     }
 
     pub(crate) fn solve(&self, rhs: Vec<f64>) -> Result<Vec<f64>, Error> {
+        let _timing = crate::diagnostics::span("factor.back_substitution");
+        crate::diagnostics::counter("linear_rhs_solves", 1);
         match self {
             Self::Dense(factor) => factor.solve(rhs),
             Self::Sparse(factor) => factor.solve(rhs),

@@ -164,6 +164,22 @@ fn main() {
         if !filter.is_empty() && filter != name {
             continue;
         }
+        if let Ok(directory) = std::env::var("EVAS_BENCH_REQUESTS") {
+            let request = evas_kernel::ir::Request {
+                program: program(kind, size),
+                driven: vec!["u".into()],
+                samples: (0..samples)
+                    .map(|i| vec![[0.125, -0.25, 0.5, 0.75][i % 4]])
+                    .collect(),
+                tolerances: Default::default(),
+                transient: None,
+            };
+            std::fs::write(
+                std::path::Path::new(&directory).join(format!("{name}.json")),
+                serde_json::to_vec(&request).unwrap(),
+            )
+            .unwrap();
+        }
         let model = circuit(kind, size);
         for input in [0.125, -0.25, 0.5, 0.75] {
             check(&model, kind, size, input);

@@ -459,6 +459,8 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
+        let _timing = crate::diagnostics::span("event.certificate");
+
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
@@ -479,6 +481,8 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
+        let _timing = crate::diagnostics::span("event.state_certificate");
+
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
