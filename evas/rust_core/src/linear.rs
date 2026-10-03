@@ -2,7 +2,9 @@
 use crate::ir::Error;
 mod columns;
 mod dense;
+mod refinement;
 mod sparse;
+pub(crate) use refinement::residual as refinement_residual;
 
 /// Internal rows have sorted unique in-range columns and finite nonzero values.
 pub(crate) type Row = Vec<(usize, f64)>;

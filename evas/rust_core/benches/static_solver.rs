@@ -4,7 +4,7 @@ use serde_json::{json, Value};
 use std::hint::black_box;
 use std::time::Instant;
 
-fn circuit(kind: &str, size: usize) -> Circuit {
+fn program(kind: &str, size: usize) -> evas_kernel::ir::Program {
     let mut nodes = vec!["0".to_string(), "u".to_string()];
     nodes.extend((0..size).map(|i| format!("v{i}")));
     let contributions: Vec<_> = (0..size)
@@ -43,6 +43,25 @@ fn circuit(kind: &str, size: usize) -> Circuit {
                             .map(|j| json!({"node": j + 2, "coefficient": 0.0625})),
                     );
                 }
+                "random" => {
+                    let mut seed = 20261003_u64.wrapping_add(i as u64);
+                    let mut total = 0.0;
+                    let mut coefficients = std::collections::BTreeMap::<usize, f64>::new();
+                    for _ in 0..4 {
+                        seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
+                        let j = ((seed >> 32) as usize) % size;
+                        let coefficient = if seed & 1 == 0 {
+                            1.0 / 64.0
+                        } else {
+                            -1.0 / 64.0
+                        };
+                        total += coefficient;
+                        *coefficients.entry(j + 2).or_default() += coefficient;
+                    }
+                    terms[0] = json!({"node":1, "coefficient":1.0-total});
+                    terms.extend(coefficients.into_iter().filter(|(_, value)| *value != 0.0)
+                        .map(|(node, coefficient)| json!({"node":node,"coefficient":coefficient})));
+                }
                 "dense" => {
                     terms.extend(
                         (0..size)
@@ -71,11 +90,14 @@ fn circuit(kind: &str, size: usize) -> Circuit {
             })
         })
         .collect();
-    let program = serde_json::from_value(json!({
+    serde_json::from_value(json!({
         "schema_version": SCHEMA_VERSION, "nodes": nodes, "contributions": contributions
     }))
-    .unwrap();
-    Circuit::new(program, &["u".into()], Default::default()).unwrap()
+    .unwrap()
+}
+
+fn circuit(kind: &str, size: usize) -> Circuit {
+    Circuit::new(program(kind, size), &["u".into()], Default::default()).unwrap()
 }
 
 fn check(circuit: &Circuit, kind: &str, size: usize, input: f64) {
@@ -85,7 +107,7 @@ fn check(circuit: &Circuit, kind: &str, size: usize, input: f64) {
         let expected = match kind {
             "chain" => input + 0.25 * previous,
             "dense" | "ring" | "star" => input / 0.75,
-            "grid" => input,
+            "grid" | "random" => input,
             "cubic" => {
                 let (mut low, mut high) = (-1.0_f64, 1.0_f64);
                 for _ in 0..60 {
@@ -111,6 +133,10 @@ fn main() {
         .map(|v| v.parse::<usize>().unwrap())
         .unwrap_or(512);
     assert!(samples > 0);
+    if filter == "batch" {
+        batch_benchmark(samples);
+        return;
+    }
     let mut records: Vec<Value> = Vec::new();
     for (kind, size) in [
         ("chain", 1),
@@ -124,6 +150,9 @@ fn main() {
         ("star", 128),
         ("star", 512),
         ("grid", 256),
+        ("random", 64),
+        ("random", 256),
+        ("random", 1024),
         ("dense", 64),
         ("dense", 128),
         ("cubic", 1),
@@ -165,5 +194,43 @@ fn main() {
     println!(
         "{}",
         json!({"engine_version": env!("CARGO_PKG_VERSION"), "records": records})
+    );
+}
+
+// Preparation/serialization are outside the timer; Circuit assembly and each
+// batch's first factorization are included equally for every worker count.
+fn batch_benchmark(samples: usize) {
+    use evas_kernel::{ir::Request, run_with_threads};
+    let mut records = Vec::new();
+    for size in [16, 64, 256] {
+        let program = program("random", size);
+        for workers in [1, 2, 4] {
+            let mut times = Vec::new();
+            for _ in 0..5 {
+                let request = Request {
+                    program: program.clone(),
+                    driven: vec!["u".into()],
+                    samples: (0..samples).map(|i| vec![(i % 16) as f64 / 8.0]).collect(),
+                    tolerances: Default::default(),
+                    transient: None,
+                };
+                let start = Instant::now();
+                let result = run_with_threads(request, workers).unwrap();
+                times.push(start.elapsed().as_secs_f64() * 1e6);
+                for (i, row) in result.solutions.iter().enumerate() {
+                    let expected = (i % 16) as f64 / 8.0;
+                    assert!(row.voltages[1..]
+                        .iter()
+                        .all(|v| (v - expected).abs() < 1e-9));
+                }
+                black_box(result);
+            }
+            records
+                .push(json!({"nodes":size,"samples":samples,"workers":workers,"batch_us":times}));
+        }
+    }
+    println!(
+        "{}",
+        json!({"engine_version":env!("CARGO_PKG_VERSION"),"seed":20261003,"records":records})
     );
 }

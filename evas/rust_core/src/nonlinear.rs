@@ -3,6 +3,7 @@ use crate::assembly::Equation;
 use crate::expression;
 use crate::ir::{Error, Solution, Tolerances};
 use crate::linear;
+mod continuation;
 
 struct Evaluation {
     residuals: Vec<f64>,
@@ -106,9 +107,40 @@ pub(crate) fn solve(
     equations: &[Equation],
     unknown: &[usize],
     unknown_columns: &[Option<usize>],
-    mut values: Vec<f64>,
+    values: Vec<f64>,
     tolerance: &Tolerances,
 ) -> Result<Solution, Error> {
+    match newton(
+        equations,
+        unknown,
+        unknown_columns,
+        values.clone(),
+        tolerance,
+        None,
+    ) {
+        Ok(solution) => Ok(solution),
+        Err(error) if matches!(error.kind, "nonconvergence" | "singular_jacobian") => {
+            continuation::solve(equations, unknown, unknown_columns, values, tolerance).ok_or(error)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+fn newton(
+    equations: &[Equation],
+    unknown: &[usize],
+    unknown_columns: &[Option<usize>],
+    mut values: Vec<f64>,
+    tolerance: &Tolerances,
+    path: Option<&continuation::Path<'_>>,
+) -> Result<Solution, Error> {
+    let evaluate = |values: &[f64]| -> Result<Evaluation, Error> {
+        let mut result = evaluate(equations, unknown_columns, values, tolerance)?;
+        if let Some(path) = path {
+            path.apply(&mut result, values, tolerance)?;
+        }
+        Ok(result)
+    };
     let context = || {
         equations
             .iter()
@@ -116,7 +148,7 @@ pub(crate) fn solve(
             .collect::<Vec<_>>()
             .join(", ")
     };
-    let mut current = evaluate(equations, unknown_columns, &values, tolerance)?;
+    let mut current = evaluate(&values)?;
     for iteration in 0..=80 {
         let ratio = merit(&current.residuals, &current.bounds);
         let scaled_ratio = scaled_merit(&current.residuals, &current.bounds, &current.row_scales);
@@ -202,7 +234,7 @@ pub(crate) fn solve(
                 ));
             }
             if trial.iter().all(|v| v.is_finite()) {
-                if let Ok(candidate) = evaluate(equations, unknown_columns, &trial, tolerance) {
+                if let Ok(candidate) = evaluate(&trial) {
                     // Freeze both row scales and bounds during line search;
                     // changing a trial's weights must not manufacture descent.
                     if scaled_merit(&candidate.residuals, &current.bounds, &current.row_scales)

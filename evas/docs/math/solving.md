@@ -28,6 +28,20 @@
 所有非驱动节点同时作为未知量；没有 SCC 优化或数值条件数保证。
 冗余方程在残差检查中保留；欠定或数值秩不足时明确失败。
 
+### 残差失败后的迭代精化
+
+仿射 LU 解若未通过原支路残差检查，最多重试两次：用原组装系数计算 `r=b-A*x`，
+复用同一个 LU 解 `A*delta=r`，再令 `x_new=x+delta`。
+残差累加用 TwoSum 和 FMA 的乘积低位补偿，减少相消；它仍是有限精度计算，不是前向误差证明。
+只保留残差无穷范数严格下降的候选，随后再次验收全部原电压关系。
+候选非有限、停滞或两次仍不达标时，返回原来的失败；矛盾的冗余约束不能通过重试被忽略。
+
+已通过的解直接返回，不承担额外残差遍历和校正求解。稠密与稀疏都使用此路径，
+Newton、区间证书和历史提交规则保持各自的验收要求。精化可改善一部分舍入误差造成的拒绝，
+不能修复奇异性、前端已丢失的信息或一般病态问题。
+独立回归 [test_refinement.py](../../tests/test_refinement.py) 用整数矩阵与精确二进制分数根，
+同时检查 8 维稠密和 80 维块稀疏系统，以及矛盾方程的拒绝。
+
 ### 非线性瞬态的根盒
 
 静态非线性求解每个样本从未知节点全零开始，驱动电压固定，不读取上一样本作为初猜。
@@ -80,6 +94,32 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
    `abs(delta_V_j) <= vabstol + reltol * abs(V_j)`，`V_j` 为当前对地节点电压。
    检查未经阻尼缩小的修正量，不能把极小步长误当成收敛。
 
+### 有界残差连续化重试
+
+原阻尼 Newton 在 `nonconvergence` 或 `singular_jacobian` 处失败时，
+小型方阵可尝试残差连续化。设初猜为 a，原关系为 `F_i(v)=0`，初始 Jacobian 行尺度为 `s_i`。
+每条支路须有一个未知端点 `v_j`、另一个为地或驱动端点，且这些目标节点一一对应。
+`sigma_i` 是原支路对该端点的方向，构造
+
+`H_i(v,lambda) = (1-lambda)*sigma_i*(v_j-a_j) + lambda*F_i(v)/s_i`。
+
+lambda=0 的解是 a；lambda=1 的零点与原方程相同。中间每一步用前一成功点作为初猜，
+仍使用解析 Jacobian 与阻尼 Newton。初始 lambda 步长 .125，成功后最大增长至 .25，
+失败则减半；最多 32 次尝试，步长小于 1/16384 时停止。当前最多 32 个未知量，
+冗余/非方阵、多个未知端点和非一一对应支路仍保留原失败。
+
+中间方程只生成初猜，其工作容差下限为 absolute=1e-12、relative=1e-10。
+到达 lambda=1 后必须重新求解和检查**原方程、用户原容差、原局部秩及完整 Newton 修正量**；
+成功路径才返回，重试失败则返回最初诊断。瞬态入口随后照常执行根盒和历史精度认证。
+没有增加 `allow_uncertified`，也没有用中间方程的收敛替代最终验收。
+
+例如 `x^3-2x+2=0` 在零初猜附近可能陷入线搜索停滞；它的唯一实根可由 [-2,-1] 的
+独立高精度二分确定。`x^3-1=0` 则在零点的初始 Jacobian 为零。
+两者的恢复、无实根方程拒绝、奇异根拒绝及过严瞬态证书拒绝由
+[test_nonlinear.py](../../tests/test_nonlinear.py) 检查。
+该方法是初猜搜索启发式，不证明沿途根分支连续或全局唯一，不保证一般非线性网络收敛。
+原本成功的 Newton 路径不执行这些额外阶段；失败请求的耗时可能增加。
+
 ### 容差与失败
 
 两项容差均须有限，`vabstol > 0`、`reltol >= 0`。默认值见 [EVAS README](../../README.md#精度与结果解释)；开发回归用独立
@@ -87,7 +127,7 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 这些判据是局部数值收敛要求，不是任意病态问题的前向误差上界，也不保证所有表达式
 改写的浮点结果相同。过严设置可能无法达到，返回失败，不自动放宽容差。
 当前算法不证明全局唯一性，也不保证从零初猜收敛到所有存在的根；多解分支选择、
-奇异根、延续法及通用非线性网络鲁棒性不在本阶段验收范围。
+奇异根及通用非线性网络鲁棒性仍不在本阶段验收范围；上面的有限重试只扩大部分可收敛输入。
 每个成功样本返回最大伏特残差及其相对容差比例。
 非线性样本另外返回 `max_scaled_residual_ratio`、`max_voltage_correction_v` 和
 `max_voltage_correction_ratio`；前者与最后一项均不超过 1。仿射样本不包含这些字段。
@@ -125,6 +165,19 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 其与事件或动态算子的组合尚未支持，不能把该路径边界推广为整个求解器的限制。
 
 ## 稀疏分支与性能边界
+
+### 独立静态样本并行
+
+Rust `run_with_threads(request,n)` 可使用 1–64 个工作线程；`run(request)` 保持单线程默认。
+命令行及其 Python 调用可通过 `EVAS_STATIC_THREADS=4` 选择并行。
+每个样本仍使用同一只读 Circuit，OnceLock 只初始化一次仿射分解，各样本的输入、解和 Newton 过程独立。
+结果按原下标拼接，多处失败仍报告最小样本下标；等待全部线程结束后才返回完整成功或错误。
+没有把前一静态样本作为下一样本的初猜，瞬态仍由串行控制器推进。
+
+线程创建与合并有成本，小批次可能变慢。因此默认不变，不自动按机器核数扩张。
+并行不改变精度预算，不能用来跳过每个样本的残差或瞬态认证。
+
+### 线性代数后端
 
 系数、梯度和 Jacobian 保存为按节点/列号排序的非零项。
 未知量 n≥32 且初始非零项数 `nnz≤0.1*m*n` 时选稀疏矩形 LU，其余仍选稠密 LU；
@@ -173,8 +226,24 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 `EVAS_BENCH_SAMPLES` 控制每轮重复 RHS 数，固定五轮。准备计时包括合成 IR 构造/解码和 `Circuit::new`；
 首次求解包括分解，重复求解包括 RHS、回代与残差（Newton 仍会重新分解）。
 各结构先核对递推、常量解或独立二分三次根；默认 `vabstol=1e-12`、`reltol=1e-10`，
-基准答案核对阈值为 `1e-9 V`。基准没有测 Python/JSON 进程端到端、瞬态或成熟 SPICE 的速度。
+基准答案核对阈值为 `1e-9 V`。该静态基准没有测 Python/JSON 进程端到端、瞬态或成熟 SPICE 的速度。
 内存应另报进程峰值及其边界；10,000 未知量链的测试精确核对 19,999 个因子项，不能把项数当作进程字节数。
+
+补充基准保持现有五轮 JSON 计时方式，没有增加另一套基准框架：
+
+```sh
+EVAS_BENCH_CASE=batch EVAS_BENCH_SAMPLES=4096 cargo bench --locked --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+EVAS_BENCH_CASE=random-1024 EVAS_BENCH_SAMPLES=8 cargo bench --locked --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+cargo bench --locked --manifest-path evas/rust_core/Cargo.toml --bench transient_solver
+```
+
+`random-64/256/1024` 使用固定种子、弱耦合稀疏网络，独立解是所有节点等于输入。
+规模基准分别计准备、首解、重复 RHS，包含实际消元成本；不把节点数或输入非零数当作填充量。
+`batch` 在计时内执行组装、首次分解、线程创建、所有样本及合并；请求构造在计时外。
+它比较同一个当前实现的 1/2/4 线程，不是旧版与新版的整体加速比。
+`transient_solver` 覆盖 PWL、直接积分、非线性积分、timer 和 cross，默认 129 个观察点；
+`EVAS_BENCH_OUTPUTS` 可改变输出数。数学答案在计时外检查，库内计时不含 Python、进程和 JSON 传输。
+大规模排序和稀疏数据结构的改换仍需真实任务、填充与内存测量，见 [#43](https://github.com/BucketSran/vaEVAS/issues/43) 与 [#9](https://github.com/BucketSran/vaEVAS/issues/9)。
 
 ## 实现与证据
 

@@ -83,7 +83,7 @@ class PolynomialContracts(unittest.TestCase):
 
     def test_nonconvergence_singular_jacobian_and_nonfinite(self):
         cases=[('V(y,r)<+V(y,r)-pow(V(y,r),2)-1;', 'singular_jacobian'),
-               ('V(y,r)<+V(y,r)-(pow(V(y,r),3)-2*V(y,r)+2);','nonconvergence'),
+               ('V(y,r)<+V(y,r)-(pow(V(y,r),4)-V(y,r)+1);','nonconvergence'),
                ('V(y,r)<+pow(V(u,r),3);','nonfinite_arithmetic')]
         for body,kind in cases:
             with self.subTest(kind=kind), self.assertRaises(KernelError) as error:
@@ -91,6 +91,54 @@ class PolynomialContracts(unittest.TestCase):
             self.assertEqual(error.exception.detail['kind'],kind)
             self.assertEqual(error.exception.detail['sample'],0)
             self.assertIn('test.va:',error.exception.detail['message'])
+
+    def test_residual_continuation_recovers_unique_roots_without_relaxing_tolerance(self):
+        # x^3-2x+2 has one real root in [-2,-1]. Decimal bisection is
+        # independent of Newton and of the artificial continuation equations.
+        from decimal import Decimal, localcontext
+        with localcontext() as context:
+            context.prec=70
+            lo,hi=Decimal(-2),Decimal(-1)
+            for _ in range(220):
+                mid=(lo+hi)/2
+                if mid**3-2*mid+2<0: lo=mid
+                else: hi=mid
+            expected=float((lo+hi)/2)
+        for expression,answer in [('pow(V(y,r),3)-2*V(y,r)+2',expected),
+                                   ('pow(V(y,r),3)-1',1.0)]:
+            program=compile_sources({'rescue.va':model('V(y,r)<+V(y,r)-('+expression+');')},[instance()])
+            result=solve(program,['u'],[[0],[1],[0]],kernel=KERNEL,vabstol=1e-12,reltol=0)
+            for row in result['solutions']:
+                self.assertAlmostEqual(row['voltages'][program.nodes.index('y')],answer,delta=1e-12)
+                self.assertLessEqual(row['max_residual_ratio'],1)
+                self.assertLessEqual(row['max_scaled_residual_ratio'],1)
+                self.assertLessEqual(row['max_voltage_correction_ratio'],1)
+            self.assertEqual(result['solutions'][0],result['solutions'][2])
+
+    def test_rescue_still_requires_transient_root_certificate(self):
+        from evas import transient
+        program=compile_sources({'rescue.va':model('V(y,r)<+V(y,r)-(pow(V(y,r),3)-1);')},[instance()])
+        result=transient(program,{'u':[[0,0],[1,0]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+        for row in result['solutions']:
+            self.assertAlmostEqual(row['voltages'][program.nodes.index('y')],1,delta=1e-10)
+        # A representable point root does not make the original expression's
+        # interval proof arbitrarily precise. The existing certificate decides.
+        with self.assertRaisesRegex(KernelError,'waveform_accuracy'):
+            transient(program,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,kernel=KERNEL,vabstol=1e-30,reltol=0)
+
+    def test_continuation_maps_branches_to_nodes_and_preserves_rank_checks(self):
+        source=model('V(y,r)<+V(y,r)-(pow(V(y,r),3)-target);','parameter real target=1;')
+        instances=[instance('a',connections=dict(u='u',y='z',r='0'),parameters=dict(target=8)),
+                   instance('b',connections=dict(u='u',y='a',r='0'))]
+        for order in [instances,instances[::-1]]:
+            program=compile_sources({'pair.va':source},order)
+            result=solve(program,['u'],[[0]],kernel=KERNEL)
+            row=dict(zip(program.nodes,result['solutions'][0]['voltages']))
+            self.assertAlmostEqual(row['z'],2,delta=1e-10)
+            self.assertAlmostEqual(row['a'],1,delta=1e-10)
+        # The singular root x=0 cannot satisfy the original local-rank check.
+        with self.assertRaisesRegex(KernelError,'singular_jacobian'):
+            execute(model('V(y,r)<+V(y,r)-pow(V(y,r),3);'))
 
     def test_all_driven_constraints_and_batch_failure(self):
         source=model('V(y,r)<+pow(V(u,r),3);')

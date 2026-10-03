@@ -650,6 +650,68 @@ impl Circuit {
         for (&node, value) in self.unknown.iter().zip(solved) {
             values[node] = value;
         }
+        match self.check_affine_residuals(&values) {
+            Ok((absolute, ratio)) => Ok(Self::affine_solution(values, absolute, ratio)),
+            Err(error) if error.kind == "residual_failure" => {
+                // A failed trial may use two corrections with the same LU.
+                // The original voltage equations still decide acceptance.
+                prepared
+                    .as_ref()
+                    .ok()
+                    .and_then(|factor| self.refine_affine(factor, values))
+                    .ok_or(error)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    fn affine_solution(values: Vec<f64>, absolute: f64, ratio: f64) -> Solution {
+        Solution {
+            voltages: values,
+            max_residual_v: absolute,
+            max_residual_ratio: ratio,
+            max_scaled_residual_ratio: None,
+            max_voltage_correction_v: None,
+            max_voltage_correction_ratio: None,
+        }
+    }
+
+    fn refine_affine(
+        &self,
+        factor: &linear::Factorization,
+        mut values: Vec<f64>,
+    ) -> Option<Solution> {
+        let residuals = |values: &[f64]| -> Option<Vec<f64>> {
+            self.equations
+                .iter()
+                .map(|eq| linear::refinement_residual(eq.rhs_constant, &eq.coefficients, values))
+                .collect()
+        };
+        let norm = |r: &[f64]| r.iter().fold(0.0_f64, |a, b| a.max(b.abs()));
+        let mut residual = residuals(&values)?;
+        for _ in 0..2 {
+            let correction = factor.solve(residual.clone()).ok()?;
+            let mut candidate = values.clone();
+            for (&node, delta) in self.unknown.iter().zip(correction) {
+                candidate[node] += delta;
+            }
+            if candidate.iter().any(|v| !v.is_finite()) || candidate == values {
+                return None;
+            }
+            let next = residuals(&candidate)?;
+            if norm(&next) >= norm(&residual) {
+                return None;
+            }
+            if let Ok((absolute, ratio)) = self.check_affine_residuals(&candidate) {
+                return Some(Self::affine_solution(candidate, absolute, ratio));
+            }
+            values = candidate;
+            residual = next;
+        }
+        None
+    }
+
+    fn check_affine_residuals(&self, values: &[f64]) -> Result<(f64, f64), Error> {
         let mut max_residual_v = 0.0_f64;
         let mut max_residual_ratio = 0.0_f64;
         for (eq, dense) in self.equations.iter().zip(&self.dense_residuals) {
@@ -657,7 +719,7 @@ impl Circuit {
             let lhs = values[eq.positive] - values[eq.negative];
             let rhs = eq.rhs_constant
                 + match dense {
-                    Some(row) => row.evaluate(&values),
+                    Some(row) => row.evaluate(values),
                     None => eq
                         .rhs_terms
                         .iter()
@@ -685,14 +747,7 @@ impl Circuit {
             max_residual_v = max_residual_v.max(residual);
             max_residual_ratio = max_residual_ratio.max(residual / bound);
         }
-        Ok(Solution {
-            voltages: values,
-            max_residual_v,
-            max_residual_ratio,
-            max_scaled_residual_ratio: None,
-            max_voltage_correction_v: None,
-            max_voltage_correction_ratio: None,
-        })
+        Ok((max_residual_v, max_residual_ratio))
     }
 }
 
