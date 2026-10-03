@@ -190,7 +190,7 @@ class TimerTrigger:
 
 @dataclass(frozen=True)
 class OrTrigger:
-    triggers: tuple[CrossTrigger, ...]
+    triggers: tuple[CrossTrigger | TimerTrigger, ...]
     kind: str = field(default="or", init=False)
 
 

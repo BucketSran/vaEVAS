@@ -476,13 +476,21 @@ fn prepare_batch_until(
                 }
                 fired.push(FiredTrigger {
                     trigger: leaf.index,
-                    guard_value: value,
+                    kind: "cross",
+                    guard_value: Some(value),
+                    time_bounds: None,
+                });
+            } else {
+                fired.push(FiredTrigger {
+                    trigger: leaf.index,
+                    kind: "timer",
+                    guard_value: None,
                     time_bounds: None,
                 });
             }
         }
         let (kind, guard_value) = match &model.program.events[id].trigger {
-            EventTrigger::Cross { .. } => ("cross", Some(fired[0].guard_value)),
+            EventTrigger::Cross { .. } => ("cross", fired[0].guard_value),
             EventTrigger::Timer { .. } => ("timer", None),
             EventTrigger::Or { .. } => ("or", None),
         };

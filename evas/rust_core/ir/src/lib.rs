@@ -368,14 +368,14 @@ pub enum EventTrigger {
 }
 
 impl EventTrigger {
-    /// OR groups share a body but retain independent cross call identities.
+    /// OR groups share a body but retain independent trigger call identities.
     pub fn leaves(&self) -> Result<Vec<&Self>, Error> {
         match self {
             Self::Or { triggers } => {
-                if triggers.len() < 2 || triggers.iter().any(|t| !matches!(t, Self::Cross { .. })) {
+                if triggers.len() < 2 || triggers.iter().any(|t| matches!(t, Self::Or { .. })) {
                     return Err(Error::new(
                         "invalid_ir",
-                        "event OR requires at least two cross leaves",
+                        "event OR requires at least two cross/timer leaves",
                     ));
                 }
                 Ok(triggers.iter().collect())
@@ -415,7 +415,9 @@ pub struct EventRecord {
 #[derive(Debug, Serialize)]
 pub struct FiredTrigger {
     pub trigger: usize,
-    pub guard_value: f64,
+    pub kind: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guard_value: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub time_bounds: Option<[f64; 2]>,
 }

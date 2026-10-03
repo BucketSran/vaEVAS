@@ -463,8 +463,6 @@ class Parser:
                             break
                         self.take("or")
                     self.take(")")
-                    if len(triggers) > 1 and any(t.kind != "cross" for t in triggers):
-                        self.fail("event OR supports only cross leaves", token)
                     events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
             analog.extend(self.statements(True, True))

@@ -17,16 +17,17 @@
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
 时间容差及表达式容差。依据与首版选择见[独立契约](../../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
-当前只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
+已合并版只接受 cross 叶子；本分支候选扩展为 cross/timer 叶子的并集。
+原始 IR 中的空/单叶/嵌套 OR 仍拒绝。
 
-IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
+IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存叶子列表。
 `EventModel` 为叶子保存 `(block, leaf)` 身份，写者与赋值路径仍按 block 管理。
 日程按叶子定位和认证；只有证明同根且共同代表时间满足每个叶子的容差后，
 候选批次才将 block 去重，并调用既有顺序赋值和电压联立求解。
 不同块或不同实例仍分别执行。不同根即使相距小于 ttol 也不能合并；无法认证排序时拒绝。
 事件预算统计所有叶子的根，去重不能绕过预算。
 
-一个 OR 块产生一条 `kind=or` 记录；`fired_triggers` 保存实际触发的叶子索引、guard 值及
+一个 OR 块产生一条 `kind=or` 记录；`fired_triggers` 保存实际触发的叶子索引、类型及
 原始根时间包围 `time_bounds`，不会只保留第一个触发源。日程、候选帧和记录都经过验收后
 才提交；失败候选丢弃，叶子游标与已接受算子历史均不改变。
 
@@ -49,7 +50,10 @@ C1 的第二实例及独立的无关输入断点探针实际复现了这种拒�
 独立回归在 `test_event_or.py`；实际已接受帧的失败/重试检查在
 `transient_condition_tests.rs`。数学/测试方法数与原 31 条件计数分别记录。
 
-timer OR 仍拒绝。动态 guard 的范围见下节，多块写同一状态的规则见
+cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留时间证书。
+同刻 timer/cross 须有精确同刻证明，计数器只更新一次；周期 timer 与不同 cross 根分别执行。
+旧合法 IR16 的布局不变；类型字段是响应扩展，原有 cross guard 字段仍保留。
+动态 guard 的范围见下节，多块写同一状态的规则见
 [写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
 ## 连续动态与多项式 guard

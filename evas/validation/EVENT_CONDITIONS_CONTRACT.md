@@ -411,3 +411,19 @@ Rust `transient_condition_tests.rs` 检查冲突失败后已接受 state、state
 独立答案来自 `check_event_conditions_math.py` 的有理数分段方程。
 `test_event_relocalization.py` 执行内核；`transient_lifecycle_tests.rs` 验证真实提交者的回退。
 这是开发验证，没有新 Spectre 执行，也不是未见确认集或一般连续时间资格。
+
+## 混合 OR 的分支候选
+
+沿用事件集合 `E_B=∪E_j` 的契约，将固定 timer 的名义发生集合纳入同一 OR 块。
+该解释依据 [LRM 2.4 §5.10](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的事件表达式；具体同根证明和观察约定属于 EVAS。
+对 `u=t`，`timer(.25,.25,tol) or cross(u−.5,+1)` 应在 .25、.5、.75、1
+各执行一次，.5 的记录包含两个实际叶子。禁用的 timer 不贡献发生集合。
+
+候选不改各定位器：timer 使用 `start+k*period` 的原时间包围，cross 使用原根包围。
+统一日程先证明先后/同刻，再按块去重；不能按 ttol 聚类，也不能把 timer 当作 guard=0。
+每个 OR 叶子记录 `kind`、索引和时间包围，只有 cross 含 guard 值。
+Python 响应校验核对叶子类型与原请求，拒绝虚构 timer guard、错误类型或越界索引。
+独立值、周期/禁用、顺序交换、同刻计数和原始 IR 拒绝见
+[test_event_or.py](../tests/test_event_or.py)，传输故障注入见
+[test_runtime_contracts.py](../tests/test_runtime_contracts.py)。候选尚未合并，没有新 Spectre 对照。
