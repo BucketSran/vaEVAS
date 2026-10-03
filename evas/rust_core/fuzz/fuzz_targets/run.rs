@@ -1,8 +1,18 @@
 #![no_main]
 use evas_kernel::ir::{parse_request, Expression, Term};
 use libfuzzer_sys::fuzz_target;
+use std::sync::Once;
+
+static SEED_CHECK: Once = Once::new();
 
 fuzz_target!(|data: &[u8]| {
+    // A malformed seed would restrict every mutation to early validation.
+    // Check its independent affine answer before trusting this harness.
+    SEED_CHECK.call_once(|| {
+        let request = parse_request(include_str!("../seeds/static.json")).unwrap();
+        let response = evas_kernel::run(request).unwrap();
+        assert_eq!(response.solutions[0].voltages, [0.0, 0.25, 0.25]);
+    });
     // Bounded structured mutations exercise the public in-memory API as well
     // as JSON. Raw float bits include NaN/Inf which JSON cannot represent.
     let mut bytes = [0_u8; 24];
