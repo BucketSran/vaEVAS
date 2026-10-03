@@ -12,6 +12,7 @@ pub(crate) struct Prepared {
     pub(crate) assigned: Vec<usize>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn prepare(
     model: &EventModel,
     events: &[usize],
@@ -20,6 +21,7 @@ pub(crate) fn prepare(
     operators: &[f64],
     before_bounds: &[I],
     operator_bounds: &[I],
+    previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -29,10 +31,12 @@ pub(crate) fn prepare(
         operators,
         before_bounds,
         operator_bounds,
+        previous,
         true,
     )
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn prepare_window(
     model: &EventModel,
     events_and_roots: (&[usize], &[usize]),
@@ -41,6 +45,7 @@ pub(crate) fn prepare_window(
     operators: &[f64],
     before_bounds: &[I],
     operator_bounds: &[I],
+    previous: Option<&Circuit>,
 ) -> Result<Prepared, Error> {
     prepare_impl(
         model,
@@ -50,6 +55,7 @@ pub(crate) fn prepare_window(
         operators,
         before_bounds,
         operator_bounds,
+        previous,
         false,
     )
 }
@@ -64,6 +70,7 @@ fn prepare_impl(
     operators: &[f64],
     before_bounds: &[I],
     operator_bounds: &[I],
+    previous: Option<&Circuit>,
     check_voltages: bool,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
@@ -74,13 +81,18 @@ fn prepare_impl(
     model.check_selection_writers(&selection)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
-    let candidate = model
-        .event_circuit(&selection, before, operators)?
-        .solve(inputs)?;
+    let mut joint = model.event_circuit(&selection, before, operators)?;
+    if let Some(previous) = previous {
+        joint.reuse_affine_factor_from(previous);
+    }
+    let candidate = joint.solve(inputs)?;
     let states = model.apply(&selection, &candidate.voltages, before)?;
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let circuit = model.circuit_with(&states, operators)?;
+    let mut circuit = model.circuit_with(&states, operators)?;
+    if let Some(previous) = previous {
+        circuit.reuse_affine_factor_from(previous);
+    }
     let solution = circuit.solve(inputs)?;
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.

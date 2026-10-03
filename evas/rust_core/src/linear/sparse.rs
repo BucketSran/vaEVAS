@@ -2,7 +2,7 @@
 //! Dynamic column ordering; only exact zeros are removed, never small entries.
 use super::{columns::Columns, Row};
 use crate::ir::Error;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{btree_map::Entry, BTreeMap, BTreeSet};
 
 pub(crate) struct Factorization {
     // Compact factors: lower by column for ordered RHS elimination, upper by row.
@@ -109,19 +109,35 @@ impl Factorization {
                     lower_column.push((id, multiplier));
                 }
                 for &(k, value) in &pivot_row {
-                    let updated = rows[id].get(&k).copied().unwrap_or(0.0) - multiplier * value;
+                    // Existing coefficients keep the same active membership.
+                    // Only new fill or exact cancellation changes the degree.
+                    let entry = rows[id].entry(k);
+                    let old = match &entry {
+                        Entry::Occupied(entry) => *entry.get(),
+                        Entry::Vacant(_) => 0.0,
+                    };
+                    let updated = old - multiplier * value;
                     if !updated.is_finite() {
                         return Err(Error::new(
                             "nonfinite_arithmetic",
                             "nonfinite elimination coefficient",
                         ));
                     }
-                    if updated == 0.0 {
-                        rows[id].remove(&k);
-                        active.remove(k, id);
-                    } else {
-                        rows[id].insert(k, updated);
-                        active.insert(k, id);
+                    match entry {
+                        Entry::Occupied(mut entry) => {
+                            if updated == 0.0 {
+                                entry.remove();
+                                active.remove(k, id);
+                            } else {
+                                *entry.get_mut() = updated;
+                            }
+                        }
+                        Entry::Vacant(entry) => {
+                            if updated != 0.0 {
+                                entry.insert(updated);
+                                active.insert(k, id);
+                            }
+                        }
                     }
                 }
             }

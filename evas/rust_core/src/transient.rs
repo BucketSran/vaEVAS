@@ -177,6 +177,7 @@ fn prepare_root_window(
                 values,
                 old_bounds,
                 bounds,
+                Some(&accepted.circuit),
             )
         } else {
             crate::settlement::prepare_window(
@@ -187,6 +188,7 @@ fn prepare_root_window(
                 values,
                 old_bounds,
                 bounds,
+                Some(&accepted.circuit),
             )
         }
     };
