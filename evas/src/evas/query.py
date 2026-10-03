@@ -20,7 +20,7 @@ def _references(value):
             nodes.update(n)
             states.update(s)
             operators.update(o)
-    elif isinstance(value, list):
+    elif isinstance(value, (list, tuple)):
         for child in value:
             n, s, o = _references(child)
             nodes.update(n)

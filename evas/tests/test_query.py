@@ -61,4 +61,5 @@ class StaticQueryTests(unittest.TestCase):
             index = static_index(program)
             dependencies = {program.nodes[n] for c in index['contributions'] for n in c['input_nodes']}
             self.assertEqual(dependencies, {'0', 'u'})
-            self.assertTrue(all(program.nodes[c['positive']]=='y' for c in index['contributions']))
+            self.assertTrue(all({program.nodes[c['positive']], program.nodes[c['negative']]}=={'0','y'}
+                                for c in index['contributions']))
