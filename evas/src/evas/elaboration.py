@@ -101,6 +101,10 @@ def inline_functions(model: Model) -> Model:
     return replace(model,
                    parameters={n: expand(e) for n,e in model.parameters.items()},
                    arrays={n: tuple(expand(e) for e in bounds) for n,bounds in model.arrays.items()},
+                   children=tuple(replace(child, parameters=(tuple(expand(e) for e in child.parameters)
+                                                           if isinstance(child.parameters,tuple)
+                                                           else {n:expand(e) for n,e in child.parameters.items()}))
+                                  for child in model.children),
                    analog=list(body(model.analog)), initial=list(body(model.initial)),
                    events=[replace(event, body=body(event.body), triggers=tuple(
                        replace(leaf, arguments=tuple(expand(arg) if arg is not None else None

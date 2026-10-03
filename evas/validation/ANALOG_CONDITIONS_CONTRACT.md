@@ -221,3 +221,25 @@ real/integer 变量可以有常量整数范围，范围可以递增、递减并�
 [test_variable_arrays.py](../tests/test_variable_arrays.py) 检查手算求和、参数范围、
 负/降序索引、实例隔离、事件顺序、越界和预算拒绝。数组在进入 Rust 前消失，
 不增加 IR 或运行时数组执行器；历史仍属于算子槽。本候选未合并，无新 Spectre 运行。
+
+
+<a id="hierarchy"></a>
+
+## 静态层次的分支候选
+
+依据 [LRM 2.4 §6.2.2–6.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的模块实例、端口连接和参数覆盖规则。候选接受多模块源文件、嵌套的静态实例、
+命名/位置端口与参数覆盖，以及一个声明中的多个实例。端口须完整连接到已声明的
+electrical 网络；未连接端口、实例数组、generate、层次变量访问和递归模块仍未开放。
+
+`hierarchy.py` 在创建全局电压索引前绑定实例树，参数使用与平面入口相同的
+`parameters.py`。子实例身份如 `dut/a/b`，内部网络如 `dut/a:z`；
+电压贡献、事件状态和算子 Origin 都使用该身份。顶层名字与生成路径碰撞时拒绝，
+不能静默覆盖实例。实例总数限 4096，层次深度限 64。
+
+层次不是依次运行多个仿真：若子块 `z=g*u`，父块 `y=z+1`，联合求 `y=g*u+1`。
+两个子块输出积分 `z₁=2+∫u dt`、`z₂=4+∫3u dt`，父块求和；
+当 u=t 时 `y=6+2t²`。所有历史与事件仍经过同一候选提交机制。
+[hierarchy](cases/hierarchy/dut.va) 与 [test_hierarchy.py](../tests/test_hierarchy.py)
+检查上述手算答案、参数传播、同刻事件、实例身份、连接错误与预算边界。
+此展开不增加 IR 或第二个运行时；候选未合并，无新 Spectre 对照。

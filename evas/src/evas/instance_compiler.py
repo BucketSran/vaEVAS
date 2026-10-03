@@ -10,7 +10,8 @@ from typing import TYPE_CHECKING
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
 from .lowering import lower, scale
-from .limits import MAX_PARAMETER_DEPTH, check_ir
+from .limits import check_ir
+from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays
 from .syntax import (CompileError, Model, contains_operator,
@@ -75,9 +76,7 @@ class InstanceCompiler:
                                              if direction in ("input", "inout")}
 
     def compile(self):
-        for expr in self.model.parameters.values():
-            self.validate_default(expr)
-        self.bind_parameters()
+        self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
         self.model = scalarize_arrays(self.model, self.parameter)
         self.local_variables = set(self.model.variables) if not self.model.initial and not self.model.events else set()
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
@@ -108,63 +107,10 @@ class InstanceCompiler:
             raise CompileError(f"{self.model.source}: every state requires one constant initial_step assignment")
         self.compilation.states.extend(State(self.instance.name, name, self.model.variables[name], self.initials[name]) for name in self.state_names)
 
-    def bind_parameters(self):
-        # Overrides remove dependency edges. Evaluate in topological order,
-        # so syntax depth and parameter depth do not multiply the Python stack.
-        dependencies = {}
-        for name, expr in self.model.parameters.items():
-            refs, pending = [], [] if name in self.instance.parameters else [expr]
-            while pending:
-                item = pending.pop()
-                if item.op == "parameter" and item.value not in refs:
-                    refs.append(item.value)
-                pending.extend(reversed(item.args))
-            dependencies[name] = refs
-        active, depths = set(), {}
-        for root in self.model.parameters:
-            pending = [(root, False)]
-            while pending:
-                name, exiting = pending.pop()
-                if name in self.cache:
-                    continue
-                if not exiting:
-                    if name in active:
-                        raise CompileError(f"{self.model.source}: cyclic parameter defaults involving {name!r}")
-                    active.add(name)
-                    pending.append((name, True))
-                    pending.extend((ref, False) for ref in reversed(dependencies[name]))
-                    continue
-                depth = 1 + max((depths[ref] for ref in dependencies[name]), default=0)
-                if depth > MAX_PARAMETER_DEPTH:
-                    token = self.model.parameters[name].token
-                    raise CompileError(f"{self.model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded")
-                if name in self.instance.parameters:
-                    value = self.instance.parameters[name]
-                    if isinstance(value, bool) or not isinstance(value, (int, float)):
-                        raise CompileError(f"{self.instance.name}: parameter {name!r} must be numeric")
-                    try:
-                        value = float(value)
-                    except OverflowError as exc:
-                        raise CompileError(f"{self.instance.name}: nonfinite parameter {name!r}") from exc
-                else:
-                    value = lower(self.model.parameters[name], self.parameter, {}, self.model.source).constant
-                if not math.isfinite(value):
-                    raise CompileError(f"{self.instance.name}: nonfinite parameter {name!r}")
-                self.cache[name] = value
-                depths[name] = depth
-                active.remove(name)
-
     def parameter(self, name):
         if name not in self.model.parameters:
             raise CompileError(f"{self.model.source}: unknown parameter {name!r}")
         return self.cache[name]
-
-    def validate_default(self, expr):
-        # Validate even overridden defaults, but evaluate only effective edges.
-        if expr.op in ("voltage", "array") or contains_operator(expr) or (expr.op == "parameter" and expr.value not in self.model.parameters):
-            raise CompileError(f"{self.model.source}:{expr.token.line}: invalid parameter default")
-        for arg in expr.args:
-            self.validate_default(arg)
 
     def symbol(self, name):
         if name in self.local_variables:

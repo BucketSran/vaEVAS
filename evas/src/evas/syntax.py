@@ -27,7 +27,7 @@ _TOKEN = re.compile(
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
     r"|(?P<macro>`M_PI)"
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@#.\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
@@ -141,6 +141,15 @@ class Function:
     token: Token
 
 
+@dataclass(frozen=True)
+class ChildInstance:
+    module: str
+    name: str
+    connections: tuple[str, ...] | dict[str, str]
+    parameters: dict[str, Expr] | tuple[Expr, ...]
+    token: Token
+
+
 @dataclass
 class Model:
     name: str
@@ -156,6 +165,7 @@ class Model:
     functions: dict[str, Function] = field(default_factory=dict)
     genvars: frozenset[str] = frozenset()
     arrays: dict[str, tuple[Expr, Expr]] = field(default_factory=dict)
+    children: tuple[ChildInstance, ...] = ()
 
 
 class Parser:
@@ -391,7 +401,117 @@ class Parser:
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
-    def parse(self) -> Model:
+    def analog_block(self):
+        self.take("analog")
+        self.take("begin")
+        analog, initial, events = [], [], []
+        while self.token.text != "end":
+            if self.token.text == "@":
+                token = self.take("@")
+                self.take("(")
+                if self.token.text == "initial_step":
+                    self.take("initial_step")
+                    self.take(")")
+                    initial.extend(self.statements())
+                else:
+                    triggers = []
+                    while True:
+                        leaf = self.take()
+                        kind = leaf.text
+                        if kind not in ("cross", "timer"):
+                            self.fail("only cross and timer events are supported", leaf)
+                        self.take("(")
+                        arguments = [self.expression()]
+                        while self.token.text == ",":
+                            self.take(",")
+                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
+                                arguments.append(None)  # LRM optional period argument
+                            else:
+                                arguments.append(self.expression())
+                        self.take(")")
+                        if len(arguments) > 4:
+                            self.fail(f"{kind} accepts at most four supported arguments", leaf)
+                        if kind == "timer" and len(arguments) < 3:
+                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
+                        triggers.append(Trigger(kind, tuple(arguments), leaf))
+                        if self.token.text != "or":
+                            break
+                        self.take("or")
+                    self.take(")")
+                    events.append(Event(tuple(triggers), self.statements(True), token))
+                continue
+            analog.extend(self.statements(True, True))
+        self.take("end")
+        return analog, initial, events
+
+    def child_instances(self):
+        token = self.token
+        module = self.name()
+        parameters = {}
+        if self.token.text == '#':
+            self.take('#')
+            self.take('(')
+            named = self.token.text == '.'
+            parameters = {} if named else []
+            while self.token.text != ')':
+                if named:
+                    self.take('.')
+                    parameter = self.name()
+                    if parameter in parameters:
+                        self.fail('duplicate child parameter override', token)
+                    self.take('(')
+                    parameters[parameter] = self.expression()
+                    self.take(')')
+                else:
+                    parameters.append(self.expression())
+                if self.token.text != ',':
+                    break
+                self.take(',')
+                if self.token.text == ')':
+                    self.fail('empty child parameter override is unsupported')
+            self.take(')')
+            if not named:
+                parameters = tuple(parameters)
+        result = []
+        while True:
+            name = self.name()
+            self.take('(')
+            named = self.token.text == '.'
+            connections = {} if named else []
+            while self.token.text != ')':
+                if named:
+                    self.take('.')
+                    port = self.name()
+                    if port in connections:
+                        self.fail('duplicate child port connection', token)
+                    self.take('(')
+                net = self.take().text if self.token.text == '0' else self.name()
+                if named:
+                    self.take(')')
+                    connections[port] = net
+                else:
+                    connections.append(net)
+                if self.token.text != ',':
+                    break
+                self.take(',')
+                if self.token.text == ')':
+                    self.fail('empty child port connection is unsupported')
+            self.take(')')
+            result.append(ChildInstance(module, name, connections if named else tuple(connections), parameters, token))
+            if self.token.text != ',':
+                break
+            self.take(',')
+        self.take(';')
+        return tuple(result)
+
+    def parse_all(self):
+        result = []
+        while self.token.kind != 'eof':
+            result.append(self.parse(eof=False))
+        self.take('<eof>')
+        return tuple(result)
+
+    def parse(self, *, eof=True) -> Model:
         while self.token.kind == "include":
             self.take()
         self.take("module")
@@ -460,48 +580,18 @@ class Parser:
             self.take(";")
         if set(directions) != set(ports) or not set(ports) <= nodes:
             self.fail("every port must have a direction and an electrical declaration")
-        self.take("analog")
-        self.take("begin")
-        analog, initial, events = [], [], []
-        while self.token.text != "end":
-            if self.token.text == "@":
-                token = self.take("@")
-                self.take("(")
-                if self.token.text == "initial_step":
-                    self.take("initial_step")
-                    self.take(")")
-                    initial.extend(self.statements())
-                else:
-                    triggers = []
-                    while True:
-                        leaf = self.take()
-                        kind = leaf.text
-                        if kind not in ("cross", "timer"):
-                            self.fail("only cross and timer events are supported", leaf)
-                        self.take("(")
-                        arguments = [self.expression()]
-                        while self.token.text == ",":
-                            self.take(",")
-                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
-                                arguments.append(None)  # LRM optional period argument
-                            else:
-                                arguments.append(self.expression())
-                        self.take(")")
-                        if len(arguments) > 4:
-                            self.fail(f"{kind} accepts at most four supported arguments", leaf)
-                        if kind == "timer" and len(arguments) < 3:
-                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
-                        triggers.append(Trigger(kind, tuple(arguments), leaf))
-                        if self.token.text != "or":
-                            break
-                        self.take("or")
-                    self.take(")")
-                    events.append(Event(tuple(triggers), self.statements(True), token))
-                continue
-            analog.extend(self.statements(True, True))
-        self.take("end")
+        children = []
+        while self.token.kind == 'name' and self.token.text not in _RESERVED:
+            for child in self.child_instances():
+                if child.name in {c.name for c in children} or child.name in (nodes | parameters.keys() | variables.keys() | functions.keys() | genvars):
+                    self.fail('duplicate child instance/module identifier', child.token)
+                children.append(child)
+        if self.token.text != 'analog' and not children:
+            self.fail('module requires an analog block or child instances')
+        analog, initial, events = self.analog_block() if self.token.text == 'analog' else ([], [], [])
         self.take("endmodule")
-        self.take("<eof>")
+        if eof:
+            self.take("<eof>")
         pending = list(analog)
         contributed = False
         while pending:
@@ -511,8 +601,8 @@ class Parser:
                 pending.extend(statement.body)
             elif isinstance(statement, Conditional):
                 pending.extend((*statement.then_body, *statement.else_body))
-        if not contributed:
+        if not contributed and (not children or initial or events):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays)
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children))

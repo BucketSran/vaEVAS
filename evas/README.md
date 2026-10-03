@@ -109,7 +109,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 ## 实现范围
 
-- 一个源文件一个 module，标量端口及内部 `electrical` 节点，显式方向声明。
+- 本分支候选允许一个源文件多个 module；标量端口及内部 `electrical` 节点需显式方向声明。
 - 文件前部可使用标准 `constants.vams` / `disciplines.vams` include 拼写。
   本切片把它们视为内建前导声明，不搜索外部文件；当前只识别有限常量 `` `M_PI``，不提供通用宏处理。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
@@ -118,7 +118,8 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 - `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
   该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
   数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
-- manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
+- manifest 指定顶层实例和端口到全局网络的映射；候选可展开模块内层次实例。
+  命名/位置端口及参数覆盖进入同一关系 IR；内部节点与动态身份按完整实例路径隔离。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 - 本分支候选新增 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
   函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
@@ -133,7 +134,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
 [事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，
 不应把实现拒绝解释为语言标准禁止。
-仍拒绝超出范围的循环、层次实例、通用数组、命名支路、电流贡献、通用预处理等。
+仍拒绝超出范围的循环、generate/实例数组、通用数组、命名支路、电流贡献、通用预处理等。
 不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
 
 <a id="frontend-boundaries"></a>
