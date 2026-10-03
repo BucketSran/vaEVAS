@@ -2,6 +2,7 @@ mod absdelay;
 mod affine_bounds;
 mod analog;
 mod assembly;
+mod batch;
 mod continuous;
 mod dynamic_roots;
 mod event_accuracy;
@@ -35,6 +36,18 @@ use ir::{Error, Request, Response, SCHEMA_VERSION};
 use solver::Circuit;
 
 pub fn run(request: Request) -> Result<Response, Error> {
+    run_with_threads(request, 1)
+}
+
+/// Independent static samples may run concurrently. Results and errors retain
+/// input order; transient state always advances on the serial controller.
+pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Response, Error> {
+    if !(1..=64).contains(&static_threads) {
+        return Err(Error::new(
+            "invalid_config",
+            "static thread count must be between 1 and 64",
+        ));
+    }
     if request.transient.is_some() {
         return transient::run(request);
     }
@@ -54,17 +67,7 @@ pub fn run(request: Request) -> Result<Response, Error> {
         ));
     }
     let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
-    let solutions = request
-        .samples
-        .iter()
-        .enumerate()
-        .map(|(index, inputs)| {
-            circuit.solve(inputs).map_err(|mut error| {
-                error.sample = Some(index);
-                error
-            })
-        })
-        .collect::<Result<_, _>>()?;
+    let solutions = batch::solve(&circuit, &request.samples, static_threads)?;
     Ok(Response {
         engine: concat!("evas-static-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,

@@ -1,7 +1,7 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-10-03。当前源码为 **EVAS 0.12.2 / IR v16**，已由
-[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 合并到 main `b4921ca`，未发布 tag。
+核对日期：2026-10-03。当前源码为 **EVAS 0.12.3 / IR v16**，未发布 tag。
+改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
 矩阵同时展示下表的证据入口，收据各自绑定历史执行，不能自动证明当前代码。
 执行身份与历史检查点见[实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)。
@@ -22,8 +22,8 @@
 | ID / 能力 | 限定支持（摘要） | 数学入口 | 剩余边界（摘要） | 证据入口 |
 | --- | --- | --- | --- | --- |
 | LANG | 标量/参数、有限常量数组、局部顺序赋值与输入 if/else、事件条件与 cross OR | [语法/API](../README.md#实现范围)、[普通条件契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | 受[前端资源预算](../README.md#frontend-boundaries)限制；条件瞬态限分段仿射；普通条件与事件/历史组合、循环、通用数组、用户函数、通用预处理和层次尚缺 | [普通条件历史检查](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz) |
-| LIN | 贡献累加、参考节点、稠密/稀疏求解与分解复用 | [求解](math/solving.md) | 病态系统与区间保守性；冗余约束须在误差参数域成立 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
-| NONLINEAR | 静态阻尼 Newton；无状态多项式瞬态根盒证明 | [求解与精度链](math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | 瞬态认证限方阵；静态 solve 只保证局部收敛；多解全局选择、更广函数尚缺 | [精度链检查点](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
+| LIN | 贡献累加、参考节点、稠密/稀疏求解、分解复用与残差失败后的有限精化 | [求解](math/solving.md) | 病态系统与区间保守性；冗余约束须在误差参数域成立 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
+| NONLINEAR | 静态阻尼 Newton 与受限连续化重试；无状态多项式瞬态根盒证明 | [求解与精度链](math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | 瞬态认证限方阵；静态 solve 只保证局部收敛；多解全局选择、更广函数尚缺 | [精度链检查点](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
 | SPARSE | n≥32 且 nnz≤0.1mn 时稀疏 LU | [稀疏分支](math/solving.md#稀疏分支与性能边界) | 认证仍稠密；排序/复用见 [Issue9](https://github.com/BucketSran/vaEVAS/issues/9) | [历史实现与测量 PR8](https://github.com/BucketSran/vaEVAS/pull/8) |
 | CROSS | PWL/仿射/状态独立多项式/连续积分/滤波/受限 sin guard，逐叶认证 | [事件数学](math/events.md)、[根证明](math/continuous.md#非线性-guard-的根证明) | 状态/事件修改轨迹、隐式非线性 guard、切线/平台认证、更新后重定位及 cross/timer 混合 OR 尚缺 | [动态根与组合检查点](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json) |
 | TIMER | 固定 start/period/time_tol/enable，有限日程 | [定时](math/events.md#固定-timer) | 动态参数与 enable 尚缺 | [固定 timer 历史检查](../../experiments/backends/dvs2-spectre-validation/results/timer-0.5.3.json) |
@@ -34,7 +34,7 @@
 | DYNAMICS | idt/idtmod/sin、积分反馈、联合 reset、1–8 阶滤波、受限 ddt、index-one 多项式 DAE | [算子](math/operators.md)、[联合数学](math/continuous.md) | DAE 与事件/复位/滤波/ddt 组合、非线性滤波 DC、通用函数混合等尚缺 | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | COMPOSE | 平面实例隔离、积分/滤波闭包、DC 与瞬态导数一致求值、事件重启复用物理历史 | [联合数学](math/continuous.md) | 结构依赖不可绕过；非线性混合限积分+proper 滤波 | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
 | QUALIFICATION | 原矩阵两档各 31/31（IR16 检查点） | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；未见确认集、独立观察误差与一般连续时间资格尚缺 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
-| PERFORMANCE | 稀疏分流、查询复用、标量根证明；固定工作负载历史计时 | [优化检查点](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization) | 当前运行时未重测；见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) | [固定工作负载历史计时](../../experiments/runs/parallel-gap-integration/results/accuracy-optimization-profile.json) |
+| PERFORMANCE | 稀疏分流、查询复用、标量根证明；可选独立静态批量并行 | [优化检查点](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization) | 库内规模/批量/瞬态基准入口见[求解手册](math/solving.md#稀疏分支与性能边界)；端到端尚未测，见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) | [固定工作负载历史计时](../../experiments/runs/parallel-gap-integration/results/accuracy-optimization-profile.json) |
 
 ## 检查点身份
 

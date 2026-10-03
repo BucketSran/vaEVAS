@@ -46,12 +46,12 @@ class SparseTransientContracts(unittest.TestCase):
                 baseline = chosen
             else:
                 self.assertEqual(chosen, baseline)
-        # At this tighter budget the original-relation residual gate rejects
-        # before history certification; do not mislabel it as a history test.
+        # Iterative refinement can now satisfy the point residual, but cannot
+        # erase the original integral/history uncertainty at this budget.
         with self.assertRaises(KernelError) as caught:
             transient(program, {'u': [[0,-1],[1,-1],[3,3]]}, [0,2.1,3], stop=3,
                       max_step=3, vabstol=1e-20, reltol=0, kernel=KERNEL)
-        self.assertEqual(caught.exception.detail['kind'], 'residual_failure')
+        self.assertEqual(caught.exception.detail['kind'], 'waveform_accuracy')
 
     def test_internal_cross_chain_preserves_root_and_original_relations(self):
         count = 40

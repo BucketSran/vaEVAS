@@ -619,8 +619,27 @@ class NonlinearTransientContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail["kind"], "unsupported_transient")
         self.assertIn("polynomial transient equations", error.exception.detail["message"])
 
+    def test_recovered_cubic_roots_pass_the_existing_transient_certificate(self):
+        lo,hi=-2.0,-1.0
+        for _ in range(80):
+            mid=(lo+hi)/2
+            if mid**3-2*mid+2 < 0: lo=mid
+            else: hi=mid
+        root=(lo+hi)/2
+        for rhs,source_values,expected in [
+            ('2',[[0,0],[1,0]],[root,root]),
+            ('2*V(u,r)',[[0,0],[1,1]],[0,root]),
+        ]:
+            source=model('V(y,r)<+V(y,r)-(pow(V(y,r),3)-2*V(y,r)+'+rhs+');')
+            program=compile_sources({'recovered.va':source},[instance()])
+            result=transient(program,{'u':source_values},[0,1],stop=1,max_step=1,kernel=KERNEL)
+            for solution,answer in zip(result['solutions'],expected):
+                self.assertAlmostEqual(solution['voltages'][program.nodes.index('y')],answer,delta=1e-10)
+                self.assertLessEqual(solution['max_voltage_correction_ratio'],1)
+
     def test_nonconvergence_reports_output_index_without_committing_later_points(self):
-        source = model("V(y,r)<+V(y,r)-(pow(V(y,r),3)-2*V(y,r)+2);")
+        # y^4-y+1 has a strictly positive global minimum, hence no real root.
+        source = model("V(y,r)<+V(y,r)-(pow(V(y,r),4)-V(y,r)+1);")
         program = compile_sources({"bad_transient.va": source}, [instance()])
         with self.assertRaises(KernelError) as error:
             transient(
@@ -635,11 +654,10 @@ class NonlinearTransientContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail["sample"], 0)
 
     def test_nonconvergence_after_success_reports_later_output_index(self):
-        # F=y^3-2*y+2*u has a regular certified root y=0 when u=0.
-        # At u=1 the same bounded Newton solve fails from that prior seed.
-        # Unlike the former parallel-source probe, this is a square system;
-        # rectangular polynomial systems now refuse certification at sample 0.
-        source = model("V(y,r)<+V(y,r)-(pow(V(y,r),3)-2*V(y,r)+2*V(u,r));")
+        # F=y^4-y+u has a regular certified root y=0 at u=0.
+        # At u=1 its global minimum is positive. This checks a real failure,
+        # independently of a particular initial guess or rescue algorithm.
+        source = model("V(y,r)<+V(y,r)-(pow(V(y,r),4)-V(y,r)+V(u,r));")
         program = compile_sources(
             {"late_bad_transient.va": source},
             [instance()],

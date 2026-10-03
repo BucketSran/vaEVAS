@@ -21,8 +21,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.12.2 / IR v16**，由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)
-合并，尚未发布版本 tag。
+当前实现为 **EVAS 0.12.3 / IR v16**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
 
 ## 构建与运行
 
@@ -164,12 +163,17 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
+静态批量求解默认串行。设置 `EVAS_STATIC_THREADS=4` 可让内核并行处理独立样本，
+合法线程数为 1–64；结果顺序和首个失败的样本下标不变。Rust 调用方可用
+`run_with_threads(request, 4)`。瞬态仍按时间顺序推进；线程启动有开销，小批量未必更快。
+
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
 内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
-已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
+性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
+这些计时不含 Python/JSON 进程接口，不能直接代表端到端吞吐量或跨后端速度。
 
 <a id="review-map"></a>
 
@@ -309,6 +313,9 @@ trigger 支持 cross、固定 timer 和仅含 cross 叶子的 OR；格式、身�
 ```sh
 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
 EVAS_BENCH_CASE=chain-64 EVAS_BENCH_SAMPLES=1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+EVAS_BENCH_CASE=random-1024 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+EVAS_BENCH_CASE=batch EVAS_BENCH_SAMPLES=4096 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
+cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench transient_solver
 ```
 
 基准的准备/首次/重复求解边界、稠密/稀疏分流及局限统一见[数值手册](docs/math/solving.md#稀疏分支与性能边界)。

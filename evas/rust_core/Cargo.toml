@@ -1,6 +1,6 @@
 [package]
 name = "evas-kernel"
-version = "0.12.2"
+version = "0.12.3"
 edition = "2021"
 
 [dependencies]
@@ -9,6 +9,10 @@ serde_json = { version = "=1.0.150", features = ["float_roundtrip"] }
 
 [[bench]]
 name = "static_solver"
+harness = false
+
+[[bench]]
+name = "transient_solver"
 harness = false
 
 [dev-dependencies]
