@@ -81,6 +81,21 @@ class EventRelocalization(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run(source)
 
+    def test_relocalization_with_unrelated_history_preserves_joint_frames(self):
+        from test_continuous_dynamics import compile_model, run as run_history, values
+        for guard, root in (('V(u,r)-q', .5), ('pow(V(u,r),2)-q', 2**-.5)):
+            program=compile_model('''@(initial_step) begin q=.75; n=0; end
+              @(timer(.25,0,1e-12)) q=.5;
+              @(cross('''+guard+''',1,1e-9,1e-8)) n=n+1;
+              V(y,r)<+n; V(z,r)<+idt(-pow(V(z,r),2),1);''',
+              'real q; integer n;',ports='u,y,z,r',directions='input u; output y,z; inout r;')
+            times=[0,.25,.5,.75,1]
+            r=run_history(program,{'u':[[0,0],[1,1]]},times,stop=1,vabstol=1e-9,reltol=0)
+            self.assertEqual(len(r['transient']['events']),2)
+            self.assertAlmostEqual(r['transient']['events'][1]['time'],root,delta=1e-9)
+            for t,z in zip(times,values(r,'z')):
+                self.assertAlmostEqual(z,1/(1+t),delta=1e-9)
+
     def test_polynomial_held_threshold_uses_the_same_epoch_and_commit_rule(self):
         source=DUT.replace('V(u,r)-threshold', 'pow(V(u,r),2)-threshold')
         a=run(source,times=[0,1])

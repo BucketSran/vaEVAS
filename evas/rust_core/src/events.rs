@@ -393,9 +393,6 @@ impl EventModel {
                                 return Err(Error::new("unsupported_timer", "dynamic timer parameters require held-state affine expressions"));
                             }
                         }
-                        if !program.operators.is_empty() {
-                            return Err(Error::new("unsupported_timer", "dynamic timer prediction horizons with operator histories require joint closure"));
-                        }
                         dynamic_guards.push(false);
                         None
                     }
@@ -747,9 +744,6 @@ impl EventModel {
                 }
                 let held = nodes.iter().any(|node| event_affected[*node])
                     || !crate::guard_trajectory::state_dependencies(guard).is_empty();
-                if held && !self.program.operators.is_empty() {
-                    return Err(Error::new("unsupported_cross", "event-mutated guards currently require relations without history operators"));
-                }
                 self.relocalized_guards.push(held);
                 self.dynamic_guards[index] |=
                     !operators.is_empty() || (!held && nodes.iter().any(|node| affected[*node]));
@@ -759,6 +753,14 @@ impl EventModel {
                     .push(matches!(leaf.trigger, EventTrigger::HeldTimer { .. }));
                 self.guard_operators.push(BTreeSet::new());
             }
+        }
+        if self.relocalized_guards.iter().any(|&held| held)
+            && self.guard_operators.iter().any(|ops| !ops.is_empty())
+        {
+            return Err(Error::new(
+                "unsupported_cross",
+                "held calendar changes with history-driven guards require joint root prediction",
+            ));
         }
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(

@@ -90,6 +90,147 @@ fn failed_dynamic_timer_ordering_preserves_the_complete_frame_then_retries() {
     check_failed_future_guard_ordering(timer_relocalization_fixture);
 }
 
+fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let (base, trajectory, _, _) = timer_relocalization_fixture();
+    let mut program = base.program;
+    program.operators = serde_json::from_value(json!([{"kind":"idt","ic":0,
+        "input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+        "origin":{"source":"relocalization.va","line":2,"column":1,"instance":"dut"}}]))
+    .unwrap();
+    program.contributions[0].rhs = serde_json::from_value(json!({"op":"add",
+        "left":{"op":"state","state":0},"right":{"op":"operator","operator":0}}))
+    .unwrap();
+    let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+    let states = model.initial();
+    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    let calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
+    let operators = Operators::new_until(
+        &model.program,
+        &trajectory,
+        &model.driven,
+        &states,
+        prediction_end(&model, &trajectory, calendar.first()),
+    )
+    .unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time: 0.,
+        solution: circuit.solve(&[0.]).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    (
+        model,
+        trajectory,
+        Controller {
+            accepted,
+            event: 0,
+            records: vec![],
+        },
+        calendar,
+    )
+}
+
+#[test]
+fn held_timer_with_history_ordering_failure_and_retry_preserves_history() {
+    check_failed_future_guard_ordering(timer_history_fixture);
+}
+
+#[test]
+fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean() {
+    let (base, trajectory, _, _) = timer_relocalization_fixture();
+    let mut program = serde_json::to_value(base.program).unwrap();
+    program["nodes"].as_array_mut().unwrap().push(json!("z"));
+    program["events"].as_array_mut().unwrap().pop(); // No independent .5 deadline.
+    program["operators"] = json!([{"kind":"idt","ic":1,
+        "input":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,
+            "terms":[{"node":3,"coefficient":1}]}},
+        "origin":{"source":"relocalization.va","line":2,"column":1,"instance":"dut"}}]);
+    program["contributions"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({
+        "branch":{"instance":"dut","local_positive":"a","local_negative":"r","kind":"voltage"},
+        "positive":3,"negative":0,"rhs":{"op":"operator","operator":0},
+        "origin":{"source":"relocalization.va","line":2,"column":1,"instance":"dut"}}));
+    let model = EventModel::new(
+        serde_json::from_value(program.clone()).unwrap(),
+        base.driven.clone(),
+        base.tolerances.clone(),
+    )
+    .unwrap();
+    let states = model.initial();
+    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    let mut calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
+    let operators =
+        Operators::new_until(&model.program, &trajectory, &model.driven, &states, 0.25).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time: 0.,
+        solution: circuit.solve(&[0.]).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    let history = accepted.operators.clone();
+    let before: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.time, e.event, e.bounds()))
+        .collect();
+    let mut controller = Controller {
+        accepted,
+        event: 0,
+        records: vec![],
+    };
+    // y'=y^2 blows up at 1. Predicting all the way to the newly requested
+    // timer(1) must fail after the new calendar succeeds, without committing it.
+    program["events"][0]["body"][0]["rhs"]["constant"] = json!(1.);
+    let bad = EventModel::new(
+        serde_json::from_value(program).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    let error = controller
+        .accept_relocalized(&bad, &trajectory, &mut calendar)
+        .unwrap_err();
+    assert_eq!(error.kind, "waveform_accuracy");
+    assert_eq!(controller.accepted.time, 0.);
+    assert_eq!(controller.accepted.states, [0.75]);
+    assert!(controller.records.is_empty());
+    assert_eq!(controller.event, 0);
+    assert!(controller.accepted.operators.same_reset_history(&history));
+    assert_eq!(
+        before,
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+    let (expected, records, end) = controller
+        .prepare_events_until(&model, &trajectory, &calendar, Some(0.25))
+        .unwrap();
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, expected.states);
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(records).unwrap()
+    );
+    assert_eq!(end, 1);
+    assert_eq!(calendar[0].time, 0.5);
+    let bound = controller.accepted.operators.bounds(0.5).unwrap()[0];
+    assert!(bound.lo <= 2. && bound.hi >= 2.);
+}
+
 fn check_failed_future_guard_ordering(
     fixture: fn() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>),
 ) {
@@ -99,6 +240,7 @@ fn check_failed_future_guard_ordering(
         .map(|e| (e.time, e.event, e.bounds()))
         .collect();
     let voltages = controller.accepted.solution.voltages.clone();
+    let history = controller.accepted.operators.clone();
     let mut program = model.program.clone();
     // q = (binary64 1/3)*u + (binary64 5/12). At u=.25 its
     // enclosure overlaps the independent exact .5 root. Do not invent a tie.
@@ -116,6 +258,7 @@ fn check_failed_future_guard_ordering(
     assert_eq!(controller.accepted.states, vec![0.75]);
     assert_eq!(controller.accepted.state_bounds, vec![I::point(0.75)]);
     assert_eq!(controller.accepted.solution.voltages, voltages);
+    assert!(controller.accepted.operators.same_reset_history(&history));
     assert_eq!(controller.event, 0);
     assert!(controller.records.is_empty());
     assert_eq!(
@@ -133,6 +276,10 @@ fn check_failed_future_guard_ordering(
         .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
         .unwrap();
     assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert!(controller
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
     assert_eq!(
         controller.accepted.state_bounds,
         clean.accepted.state_bounds

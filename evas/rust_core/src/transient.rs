@@ -47,6 +47,21 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &[ScheduledEvent],
     ) -> Result<(Frame, Vec<EventRecord>, usize), Error> {
+        let result = self.prepare_events_until(model, trajectory, crossings, None)?;
+        result
+            .0
+            .operators
+            .check_deadline_order(result.0.time, crossings.get(result.2).map(|e| e.bounds()))?;
+        Ok(result)
+    }
+
+    fn prepare_events_until(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        crossings: &[ScheduledEvent],
+        horizon: Option<f64>,
+    ) -> Result<(Frame, Vec<EventRecord>, usize), Error> {
         let time = crossings[self.event].time;
         let mut end = self.event;
         while end < crossings.len() && crossings[end].time == time {
@@ -61,11 +76,9 @@ impl Controller {
                 &self.accepted,
                 time,
                 &crossings[self.event..end],
-                prediction_end(model, trajectory, crossings.get(end)),
+                horizon.unwrap_or_else(|| prediction_end(model, trajectory, crossings.get(end))),
             ),
         )?;
-        next.operators
-            .check_deadline_order(time, crossings.get(end).map(|e| e.bounds()))?;
         Ok((next, records, end))
     }
 
@@ -75,7 +88,12 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &mut Vec<ScheduledEvent>,
     ) -> Result<(), Error> {
-        let (next, records, end) = self.prepare_events(model, trajectory, crossings)?;
+        // Close observation/reset at the event before predicting new flow.
+        // The changed held calendar, not its stale predecessor, owns the next
+        // prediction horizon. No fallible phase mutates the accepted frame.
+        let time = crossings[self.event].time;
+        let (mut next, records, end) =
+            self.prepare_events_until(model, trajectory, crossings, Some(time))?;
         let window = records.iter().fold(I::point(next.time), |t, r| {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
             t.hull(I { lo, hi })
@@ -167,6 +185,15 @@ impl Controller {
             &changed,
             &crossings[end..],
         )?;
+        next.operators = next.operators.evaluation(next.time)?.advanced_until(
+            I::point(next.time),
+            &next.states,
+            &next.state_bounds,
+            &[],
+            prediction_end(model, trajectory, future.first()),
+        )?;
+        next.operators
+            .check_deadline_order(next.time, future.first().map(|e| e.bounds()))?;
         // Build and validate the future first; calendar replacement and state
         // acceptance have no remaining fallible operation between them.
         self.commit_events(next, records, 0);
@@ -208,7 +235,11 @@ fn prediction_end(
 ) -> f64 {
     // Dynamic guard calendars still require the full immutable history.
     // Event-mutated guard relocalization is a separate capability boundary.
-    if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
+    if model
+        .guard_operators
+        .iter()
+        .any(|operators| !operators.is_empty())
+    {
         trajectory.config.stop
     } else {
         next.map_or(trajectory.config.stop, |event| event.time)
@@ -660,15 +691,15 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let initial = model.initial();
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let (operators, mut crossings) = if relocalize {
+        let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
+        let crossings = schedule_held(&model, &trajectory, &bounds)?;
         let operators = Operators::new_until(
             &model.program,
             &trajectory,
             &model.driven,
             &initial,
-            trajectory.config.stop,
+            prediction_end(&model, &trajectory, crossings.first()),
         )?;
-        let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
-        let crossings = schedule_held(&model, &trajectory, &bounds)?;
         (operators, crossings)
     } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
         let operators = Operators::new_until(

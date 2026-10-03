@@ -83,16 +83,38 @@ class DynamicTimer(unittest.TestCase):
             self.assertEqual(result.stdout,'')
             self.assertEqual(json.loads(result.stderr)['kind'],kind)
 
-    def test_continuous_voltage_parameters_and_history_stay_explicit(self):
+    def test_continuous_voltage_parameters_stay_explicit(self):
         for setting in ('V(u,r)', 'idt(V(u,r),0)'):
             source=model('@(initial_step) n=0; @(timer('+setting+',0,1e-12)) n=n+1; V(y,r)<+n;', 'integer n;')
             with self.assertRaises((CompileError,KernelError)):
                 run_timer(source,stop=1,times=[0,1])
+    def test_dynamic_timer_preserves_independent_integral_history(self):
         source=model('''@(initial_step) next=.25;
           @(timer(next,0,1e-12)) next=next+.25;
           V(y,r)<+idt(V(u,r),0);''','real next;')
-        with self.assertRaisesRegex(KernelError,'unsupported_timer'):
-            run_timer(source,stop=1,times=[0,1])
+        result=run_timer(source,stop=1,times=[0,.25,.5,.75,1])
+        self.assertEqual([e['time'] for e in result['transient']['events']],[.25,.5,.75,1])
+        for t,row in zip([0,.25,.5,.75,1],result['solutions']):
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],.5*t*t,delta=1e-9)
+
+    def test_new_dynamic_deadline_bounds_nonlinear_flow_before_blowup(self):
+        from test_continuous_dynamics import compile_model, run, values
+        # Initially y'=y^2. The first timer moves from .75 to .5 at .25;
+        # it then changes q to -1. Prediction beyond the old .75 deadline
+        # using the old growing field would be wrong, and could blow up.
+        source='''@(initial_step) begin next=.75; q=1; end
+          @(timer(.25,0,1e-12)) next=.5;
+          @(timer(next,0,1e-12)) q=-1;
+          V(y,r)<+idt(q*pow(V(y,r),2),1);'''
+        program=compile_model(source,'real next; integer q;')
+        common=[0,.25,.5,.75,1,2]
+        a=run(program,times=common,stop=2,max_step=2,vabstol=1e-9,reltol=0)
+        dense=[i/16 for i in range(33)]
+        b=run(program,times=dense,stop=2,max_step=.0625,vabstol=1e-9,reltol=0)
+        self.assertEqual(a['transient']['events'],b['transient']['events'])
+        self.assertEqual(values(a),[values(b)[dense.index(t)] for t in common])
+        for t,value in zip(common,values(a)):
+            self.assertAlmostEqual(value,1/(1-t) if t<=.5 else 1/t,delta=1e-9)
 
 
 if __name__ == '__main__': unittest.main()

@@ -217,4 +217,5 @@ enable 在 .375 打开后，事件为 .5、.75、1，不能补发之前的周期
 未改写或改为过去的单次时间不重触发；OR 中精确同刻的动态 timer 与 cross 只执行一次。
 原算术参数包围进入时间容差，过严容差、raw IR 的越界状态和零系数电压依赖仍拒绝。
 新测试见 [test_dynamic_timer.py](../tests/test_dynamic_timer.py)，失败回退见
-[Controller 测试](../rust_core/src/transient_lifecycle_tests.rs)。连续电压控制/算子历史组合未开放，候选尚未合并。
+[Controller 测试](../rust_core/src/transient_lifecycle_tests.rs)。保持状态控制的日程可与积分/滤波/复位历史组合，新日程确定后才推进未来轨迹。
+连续电压参数和历史驱动 guard 的联合根预测未开放，候选尚未合并。
