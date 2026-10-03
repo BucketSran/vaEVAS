@@ -1,0 +1,17 @@
+{
+  "id": "capabilities-confirmation-20261004",
+  "denominator": 7,
+  "voltage_target": "1e-8",
+  "vabstol": 1e-9,
+  "reltol": 0,
+  "variants": ["sparse", "dense"],
+  "cases": [
+    {"id":"language","models":["language.va","gain.vams"],"ports":["u","y","r"],"stop":1,"sources":{"u":[[0,0],[1,1]]},"times":[0,0.125,0.375,0.625,0.875,1],"events":[]},
+    {"id":"histories","models":["histories.va"],"ports":["u","y","r"],"stop":1,"sources":{"u":[[0,1],[1,2]]},"times":[0,0.125,0.375,0.625,0.875,1],"events":[]},
+    {"id":"calendar","models":["calendar.va"],"ports":["u","y","r"],"stop":1.5,"sources":{"u":[[0,0],[1.5,0]]},"times":[0,0.125,0.375,0.625,1,1.5],"events":[[0,"1/8"],[1,"3/8"]]},
+    {"id":"projected","models":["projected.va"],"ports":["u","y","d","r"],"stop":3.5,"sources":{"u":[[0,1],[0.75,3],[1.25,3],[2,-1],[3.5,-1]]},"times":[0,0.125,0.375,0.75,0.875,1.25,1.5,2,2.5,3,3.5],"events":[]},
+    {"id":"roots","models":["roots.va"],"ports":["u","y","r"],"stop":1,"sources":{"u":[[0,0],[1,1]]},"times":[0,0.125,0.25,0.375,0.625,0.75,0.875,1],"events":[[0,"3/16"],[1,"1/2"],[1,"3/4"]]},
+    {"id":"implicit","models":["implicit.va"],"ports":["u","y","r"],"stop":1,"sources":{"u":[[0,1],[1,0]]},"times":[0,0.125,0.375,0.625,0.875,1],"events":[]},
+    {"id":"reset_filter","models":["reset_filter.va"],"ports":["u","y","f","r"],"stop":1,"sources":{"u":[[0,0],[1,1]]},"times":[0,0.125,0.375,0.5,0.625,0.875,1],"events":[[0,"3/8"],[1,"5/8"]]}
+  ]
+}

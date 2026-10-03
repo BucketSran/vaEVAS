@@ -1,0 +1,8 @@
+module projected(u,y,d,r);
+input u; output y,d; inout r; electrical u,y,d,r,z;
+analog begin
+V(z,r)<+.625*V(u,r)+.25*V(z,r);
+V(d,r)<+absdelay(V(z,r),.125);
+V(y,r)<+slew(V(z,r),2,-1.5);
+end
+endmodule

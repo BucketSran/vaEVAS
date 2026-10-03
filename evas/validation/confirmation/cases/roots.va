@@ -1,0 +1,10 @@
+module roots(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+real q; integer n;
+analog begin
+@(initial_step) begin q=.5625; n=0; end
+@(timer(.1875,0,1e-12)) q=.25;
+@(cross(pow(V(u,r),2)-q,1,1e-10,1e-9) or timer(.75,0,1e-12)) n=n+1;
+V(y,r)<+n;
+end
+endmodule

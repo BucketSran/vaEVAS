@@ -1,0 +1,11 @@
+module reset_filter(u,y,f,r);
+input u; output y,f; inout r; electrical u,y,f,r;
+integer rst;
+analog begin
+@(initial_step) rst=0;
+@(timer(.375,0,1e-12)) rst=1;
+@(timer(.625,0,1e-12)) rst=0;
+V(y,r)<+idt(1,.125,rst);
+V(f,r)<+laplace_nd(V(u,r),'{1},'{1,1});
+end
+endmodule
