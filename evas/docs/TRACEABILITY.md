@@ -1,7 +1,7 @@
 # 追溯矩阵（自动生成，勿手编）
 
 由 `scripts/traceability.py` 读取测试 `GUARDS`、能力表及 DUT 目录生成。
-流程与标签语义见 [PROCESS.md](PROCESS.md)。共 40 个测试文件。
+流程与标签语义见 [PROCESS.md](PROCESS.md)。共 43 个测试文件。
 标签是人工审查的文件级关联，不证明完整覆盖、测试通过或先红后绿。
 证据链接沿用能力表中的检查点，不自动认证当前代码；实现入口见数学章节的代码地图。
 
@@ -9,7 +9,7 @@
 
 | 契约/能力 ID | 契约或数学入口 | 已声明的守护测试 | 证据入口 |
 | --- | --- | --- | --- |
-| LANG | [契约/数学](../README.md#实现范围) | [test_affine](../tests/test_affine.py) [test_contracts](../tests/test_contracts.py) | [普通条件历史检查](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz) |
+| LANG | [契约/数学](../README.md#实现范围) | [test_affine](../tests/test_affine.py) [test_contracts](../tests/test_contracts.py) [test_frontend_limits](../tests/test_frontend_limits.py) [test_manifest](../tests/test_manifest.py) [test_runtime_contracts](../tests/test_runtime_contracts.py) | [普通条件历史检查](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz) |
 | LIN | [契约/数学](math/solving.md) | [test_accuracy](../tests/test_accuracy.py) [test_affine](../tests/test_affine.py) [test_contracts](../tests/test_contracts.py) [test_reuse](../tests/test_reuse.py) | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | NONLINEAR | [求解与精度链](math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | [test_nonlinear](../tests/test_nonlinear.py) [test_nonlinear_transient](../tests/test_nonlinear_transient.py) | [精度链检查点](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
 | SPARSE | [契约/数学](math/solving.md#稀疏分支与性能边界) | [test_reuse](../tests/test_reuse.py) [test_sparse](../tests/test_sparse.py) [test_sparse_transient](../tests/test_sparse_transient.py) | [历史实现与测量 PR8](https://github.com/BucketSran/vaEVAS/pull/8) |
@@ -20,7 +20,7 @@
 | ABSDELAY | [算子](math/operators.md#absdelay) | [test_absdelay](../tests/test_absdelay.py) [test_absdelay_accuracy](../tests/test_absdelay_accuracy.py) | [算子专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json) |
 | SLEW | [算子](math/operators.md#slew) | [test_slew](../tests/test_slew.py) [test_slew_accuracy](../tests/test_slew_accuracy.py) | [算子专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json) |
 | DYNAMICS | [契约/数学](../validation/DYNAMICS_CONTRACTS.md) | [test_continuous_dynamics](../tests/test_continuous_dynamics.py) [test_dynamic_closure](../tests/test_dynamic_closure.py) [test_dynamic_cross](../tests/test_dynamic_cross.py) [test_event_horizons](../tests/test_event_horizons.py) [test_event_window_sampling](../tests/test_event_window_sampling.py) [test_gap_integration](../tests/test_gap_integration.py) [test_idt](../tests/test_idt.py) [test_idt_accuracy](../tests/test_idt_accuracy.py) [test_implicit_dynamics](../tests/test_implicit_dynamics.py) [test_laplace](../tests/test_laplace.py) [test_lifecycle_closure](../tests/test_lifecycle_closure.py) [test_mixed_dynamics](../tests/test_mixed_dynamics.py) [test_phase](../tests/test_phase.py) | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
-| COMPOSE | [契约/数学](math/continuous.md) | [test_affine](../tests/test_affine.py) [test_gap_integration](../tests/test_gap_integration.py) [test_mixed_dynamics](../tests/test_mixed_dynamics.py) [test_semantic_invariants](../tests/test_semantic_invariants.py) | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
+| COMPOSE | [契约/数学](math/continuous.md) | [test_affine](../tests/test_affine.py) [test_frontend_limits](../tests/test_frontend_limits.py) [test_gap_integration](../tests/test_gap_integration.py) [test_mixed_dynamics](../tests/test_mixed_dynamics.py) [test_semantic_invariants](../tests/test_semantic_invariants.py) | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
 | QUALIFICATION | [契约/数学](../validation/README.md) | 以执行证据为准 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | PERFORMANCE | [优化检查点](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization) | 以执行证据为准 | [固定工作负载历史计时](../../experiments/runs/parallel-gap-integration/results/accuracy-optimization-profile.json) |
 | ANALOG | [契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | [test_analog_conditions](../tests/test_analog_conditions.py) | 按所属能力查阅；此行不绑定执行 |
@@ -57,7 +57,9 @@
 | --- | --- |
 | DEV:cross-language-arithmetic | [test_interval](../tests/test_interval.py) |
 | DEV:ir-migration | [test_migrate](../tests/test_migrate.py) |
+| DEV:manifest-input | [test_manifest](../tests/test_manifest.py) |
 | DEV:precision-chain | [test_accuracy](../tests/test_accuracy.py) [test_precision_chain](../tests/test_precision_chain.py) |
+| DEV:runtime-protocol | [test_runtime_contracts](../tests/test_runtime_contracts.py) |
 | DEV:sparse-reuse | [test_reuse](../tests/test_reuse.py) [test_sparse](../tests/test_sparse.py) [test_sparse_transient](../tests/test_sparse_transient.py) |
 
 ## 关联缺口
