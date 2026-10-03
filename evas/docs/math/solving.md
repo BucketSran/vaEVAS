@@ -243,6 +243,21 @@ cargo bench --locked --manifest-path evas/rust_core/Cargo.toml --bench transient
 它比较同一个当前实现的 1/2/4 线程，不是旧版与新版的整体加速比。
 `transient_solver` 覆盖 PWL、直接积分、非线性积分、timer 和 cross，默认 129 个观察点；
 `EVAS_BENCH_OUTPUTS` 可改变输出数。数学答案在计时外检查，库内计时不含 Python、进程和 JSON 传输。
+
+2026-10-03 的 [0.12.3 局部计时收据](../../../experiments/runs/solver-performance.json)
+绑定提交 `d1b6cc45`，环境为 Apple M5 / Rust 1.95.0。下表为每批 4096 个样本、五轮中位数，单位 ms：
+
+| 未知节点 | 1 线程 | 2 线程 | 4 线程 |
+| --- | ---: | ---: | ---: |
+| 16 | 4.179 | 3.881 | 2.066 |
+| 64 | 14.372 | 10.128 | 5.244 |
+| 256 | 137.715 | 100.643 | 109.635 |
+
+这些批次有加速，但 256 节点时四线程慢于两线程，不能按线程数预测收益。
+同一固定种子网络的 1024 节点首解中位数为 2.686 s，复用分解后每个 RHS 为 0.257 ms；
+首解包含分解，说明规模增大时这一成本需要继续测量。它不证明哪一种排序最优，也未与 KLU/ngspice 比速度。
+收据还保存五类瞬态的全部计时；主机未隔离系统后台负载，未测峰值内存。
+这些是限定工作负载的开发基准，不是原 31 条件资格或端到端性能结论。
 大规模排序和稀疏数据结构的改换仍需真实任务、填充与内存测量，见 [#43](https://github.com/BucketSran/vaEVAS/issues/43) 与 [#9](https://github.com/BucketSran/vaEVAS/issues/9)。
 
 ## 实现与证据

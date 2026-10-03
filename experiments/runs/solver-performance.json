@@ -1,0 +1,415 @@
+{
+  "source_commit": "d1b6cc453bd31710939cb1c5f00e78f1ad8e0dca",
+  "source_tree": "d4ee14f247c4d960a2e01ebe4bfc4147e19fdf0e",
+  "recorded_utc": "2026-10-03T14:20:09.265768+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "25.3.0",
+    "machine": "arm64",
+    "cpu": "Apple M5",
+    "logical_cpus": "10",
+    "memory_bytes": "25769803776"
+  },
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2",
+  "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+  "profile": "bench (optimized), Cargo defaults",
+  "executions": [
+    {
+      "name": "random-64",
+      "command": [
+        "cargo",
+        "bench",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--bench",
+        "static_solver"
+      ],
+      "environment": {
+        "EVAS_BENCH_CASE": "random-64",
+        "EVAS_BENCH_SAMPLES": "8"
+      },
+      "benchmark_source_sha256": "5b75907d5b352cf1bec49793c1f7dbbb0c22a154503cdd486067892552358a14",
+      "binary_sha256": "4742a308940e2c4e7c86ee49e3afca9659a15ce184c7f4674b0fe26e4eb7f3df",
+      "stdout_sha256": "7bf4c76964661f85c280da454719e23b412875fc6955c7e994715dd4d77483c5",
+      "stderr_sha256": "9944d378748af756dd2c5a87d7f2835a63736da7f8e71d6ab4c0427b7641bff6",
+      "result": {
+        "engine_version": "0.12.3",
+        "records": [
+          {
+            "case": "random-64",
+            "first_solve_us": [
+              538.666,
+              497.16599999999994,
+              447.167,
+              433.833,
+              420.70799999999997
+            ],
+            "prepare_us": [
+              825.375,
+              750.667,
+              751.9169999999999,
+              740.167,
+              701.833
+            ],
+            "samples_per_trial": 8,
+            "solve_us_per_sample": [
+              2.885375,
+              2.609375,
+              2.52075,
+              2.567625,
+              2.515625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "random-256",
+      "command": [
+        "cargo",
+        "bench",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--bench",
+        "static_solver"
+      ],
+      "environment": {
+        "EVAS_BENCH_CASE": "random-256",
+        "EVAS_BENCH_SAMPLES": "8"
+      },
+      "benchmark_source_sha256": "5b75907d5b352cf1bec49793c1f7dbbb0c22a154503cdd486067892552358a14",
+      "binary_sha256": "4742a308940e2c4e7c86ee49e3afca9659a15ce184c7f4674b0fe26e4eb7f3df",
+      "stdout_sha256": "f41b68ea8e097e8dac0152a116d353fa62d4c579e234e0c0d855b30eb8bb4bca",
+      "stderr_sha256": "98c90974678369f617a0ab40c625a8dabb722c38a1537a4909a0b33833adfc50",
+      "result": {
+        "engine_version": "0.12.3",
+        "records": [
+          {
+            "case": "random-256",
+            "first_solve_us": [
+              23323.291999999998,
+              21118.167,
+              20948.125,
+              20940.25,
+              21246.667
+            ],
+            "prepare_us": [
+              4028.375,
+              2611.792,
+              2720.25,
+              2702.5,
+              2667.666
+            ],
+            "samples_per_trial": 8,
+            "solve_us_per_sample": [
+              16.192625,
+              16.916625,
+              16.47925,
+              17.026,
+              16.65625
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "random-1024",
+      "command": [
+        "cargo",
+        "bench",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--bench",
+        "static_solver"
+      ],
+      "environment": {
+        "EVAS_BENCH_CASE": "random-1024",
+        "EVAS_BENCH_SAMPLES": "8"
+      },
+      "benchmark_source_sha256": "5b75907d5b352cf1bec49793c1f7dbbb0c22a154503cdd486067892552358a14",
+      "binary_sha256": "4742a308940e2c4e7c86ee49e3afca9659a15ce184c7f4674b0fe26e4eb7f3df",
+      "stdout_sha256": "1266335818d2c9baf8a4fbecd761f425776fa56c7db675a0ca6a45cc7d493bb4",
+      "stderr_sha256": "98c90974678369f617a0ab40c625a8dabb722c38a1537a4909a0b33833adfc50",
+      "result": {
+        "engine_version": "0.12.3",
+        "records": [
+          {
+            "case": "random-1024",
+            "first_solve_us": [
+              2686240.2090000003,
+              2038514.4999999998,
+              2224055.041,
+              2792670.75,
+              3017390.459
+            ],
+            "prepare_us": [
+              18855.917,
+              11446.417000000001,
+              12467.542,
+              13732.5,
+              21082.083000000002
+            ],
+            "samples_per_trial": 8,
+            "solve_us_per_sample": [
+              244.42712500000002,
+              256.974,
+              224.31775000000002,
+              579.083375,
+              276.932375
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "batch",
+      "command": [
+        "cargo",
+        "bench",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--bench",
+        "static_solver"
+      ],
+      "environment": {
+        "EVAS_BENCH_CASE": "batch",
+        "EVAS_BENCH_SAMPLES": "4096"
+      },
+      "benchmark_source_sha256": "5b75907d5b352cf1bec49793c1f7dbbb0c22a154503cdd486067892552358a14",
+      "binary_sha256": "4742a308940e2c4e7c86ee49e3afca9659a15ce184c7f4674b0fe26e4eb7f3df",
+      "stdout_sha256": "869c22c7bd3c67cc424e950d52048831dd980e0d0179aae7871a370f19a526a8",
+      "stderr_sha256": "a38feae511becfc10b622867aa8f94452deab478b028313de6f50b14a152b161",
+      "result": {
+        "engine_version": "0.12.3",
+        "records": [
+          {
+            "batch_us": [
+              4515.75,
+              4178.875,
+              4069.4169999999995,
+              4077.417,
+              4185.0
+            ],
+            "nodes": 16,
+            "samples": 4096,
+            "workers": 1
+          },
+          {
+            "batch_us": [
+              4182.75,
+              3881.25,
+              3838.209,
+              3883.4579999999996,
+              3577.458
+            ],
+            "nodes": 16,
+            "samples": 4096,
+            "workers": 2
+          },
+          {
+            "batch_us": [
+              1991.292,
+              2065.833,
+              2141.25,
+              1928.875,
+              2096.0
+            ],
+            "nodes": 16,
+            "samples": 4096,
+            "workers": 4
+          },
+          {
+            "batch_us": [
+              14852.209,
+              14357.25,
+              14484.167,
+              14174.541000000001,
+              14371.833
+            ],
+            "nodes": 64,
+            "samples": 4096,
+            "workers": 1
+          },
+          {
+            "batch_us": [
+              9678.25,
+              10075.125,
+              10704.75,
+              10308.75,
+              10127.957999999999
+            ],
+            "nodes": 64,
+            "samples": 4096,
+            "workers": 2
+          },
+          {
+            "batch_us": [
+              6146.5419999999995,
+              5079.625,
+              5244.3330000000005,
+              5110.375,
+              5746.958
+            ],
+            "nodes": 64,
+            "samples": 4096,
+            "workers": 4
+          },
+          {
+            "batch_us": [
+              136995.541,
+              137714.834,
+              136347.25,
+              171374.33299999998,
+              151865.625
+            ],
+            "nodes": 256,
+            "samples": 4096,
+            "workers": 1
+          },
+          {
+            "batch_us": [
+              517833.167,
+              288960.95900000003,
+              97512.292,
+              100642.875,
+              99413.834
+            ],
+            "nodes": 256,
+            "samples": 4096,
+            "workers": 2
+          },
+          {
+            "batch_us": [
+              94823.75,
+              109634.834,
+              184347.541,
+              140364.333,
+              87066.583
+            ],
+            "nodes": 256,
+            "samples": 4096,
+            "workers": 4
+          }
+        ],
+        "seed": 20261003
+      }
+    },
+    {
+      "name": "transient",
+      "command": [
+        "cargo",
+        "bench",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--bench",
+        "transient_solver"
+      ],
+      "environment": {
+        "EVAS_BENCH_OUTPUTS": "129"
+      },
+      "benchmark_source_sha256": "4f6c2b55a958b94940c483bc3e78aa3b078fca8b40529017c0e78ab1c0084ee2",
+      "binary_sha256": "3525688b14d75be3d4911f90dcc4f583ec39c00a6f19b14701f8319822b8f744",
+      "stdout_sha256": "a918f168b4a63949d40ccae4091d2b1d27a5a88b2126df568f0bb1f561b6cbe5",
+      "stderr_sha256": "56fbe32d7207724ebc0620c79130e92c68bc0d14891603103187bc5867443fdd",
+      "result": {
+        "engine_version": "0.12.3",
+        "records": [
+          {
+            "case": "pwl",
+            "observations": 129,
+            "run_us": [
+              1422.084,
+              220.334,
+              184.5,
+              189.625,
+              193.334
+            ]
+          },
+          {
+            "case": "idt",
+            "observations": 129,
+            "run_us": [
+              3056.042,
+              2694.708,
+              3083.125,
+              2706.375,
+              2819.458
+            ]
+          },
+          {
+            "case": "nonlinear_idt",
+            "observations": 129,
+            "run_us": [
+              12463.75,
+              12313.75,
+              11900.707999999999,
+              11876.375,
+              12340.542
+            ]
+          },
+          {
+            "case": "timer",
+            "observations": 129,
+            "run_us": [
+              585.875,
+              418.0,
+              374.584,
+              388.54200000000003,
+              371.25
+            ]
+          },
+          {
+            "case": "cross",
+            "observations": 129,
+            "run_us": [
+              324.79200000000003,
+              287.875,
+              304.125,
+              361.166,
+              353.41700000000003
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "measurement_note": "All five Cargo commands exited 0; an ambiguous executable glob stopped the original receipt writer after execution. This receipt was reconstructed from unchanged source and actual Running paths in Cargo stderr, without rerunning timings.",
+  "output_last_modified_utc": {
+    "random-1024.json": "2026-10-03T14:18:57.727525+00:00",
+    "random-256.json": "2026-10-03T14:18:42.135809+00:00",
+    "transient.json": "2026-10-03T14:19:01.919738+00:00",
+    "batch.json": "2026-10-03T14:19:00.681164+00:00",
+    "random-64.json": "2026-10-03T14:18:41.868158+00:00"
+  },
+  "limits": [
+    "Rust library only; excludes process startup and JSON/Python transport.",
+    "Five sequential trials per configuration; host was not isolated from operating-system activity.",
+    "Batch worker counts compare one implementation, not an old/new simulator speedup.",
+    "No ngspice/Spectre performance comparison, peak-memory measurement or full qualification.",
+    "Known mathematical answers checked outside timed regions; failed executions are not timed results."
+  ],
+  "artifacts": {
+    "public": "This compact receipt embeds every successful timing trial; generators and answer checks are in the identified source commit.",
+    "local_only": "Executable and command stderr logs are retained with the local task archive; their hashes are not a public download."
+  },
+  "settings": {
+    "schema_version": 16,
+    "vabstol": 1e-12,
+    "reltol": 1e-10,
+    "answer_check_v": 1e-09,
+    "trials_per_configuration": 5,
+    "random_generator_seed": 20261003,
+    "rustflags": null,
+    "cargo_profile_overrides": {}
+  }
+}
