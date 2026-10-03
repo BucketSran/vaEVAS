@@ -65,7 +65,7 @@ proptest! {
     #[test]
     fn exact_product_equality_and_sum_sign(values in prop::array::uniform8(finite())) {
         let mut sum=exact(0.0);
-        let terms:Vec<_>=values.chunks_exact(2).map(|pair|(pair[0],pair[1])).collect();
+        let terms:Vec<_>=values.as_chunks::<2>().0.iter().map(|pair|(pair[0],pair[1])).collect();
         for &(a,b) in &terms { sum += exact(a)*exact(b); }
         let sign=match sum.cmp(&exact(0.0)) {std::cmp::Ordering::Less=>-1,std::cmp::Ordering::Equal=>0,std::cmp::Ordering::Greater=>1};
         prop_assert_eq!(sum_products_sign(&terms), Some(sign));
