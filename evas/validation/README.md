@@ -42,17 +42,21 @@
 
 ### 当前已合并 EVAS 检查点
 
-[PR33](https://github.com/BucketSran/vaEVAS/pull/33) 将 EVAS 0.12.2 / IR16 合并到 main `b4921ca`。
-原矩阵两档各 **31/31**，62 份 CSV 与 PR32 基线逐字节一致。
-[执行证据](../../experiments/runs/parallel-gap-integration/README.md#当前证据)绑定被测运行时
-`8618339`、内核和检查器；数学与组合回归另外计数。
+本轮重新构建并执行 main `a7a42e17`（[PR50](https://github.com/BucketSran/vaEVAS/pull/50)，
+EVAS 0.12.3 / IR16）：原矩阵两档各 **31/31**，62 份 CSV 与 PR33 收据中的哈希一致。
+模型、条件与设置也逐文件匹配历史收据。检查器保留原判断公式和阈值；
+目录迁移后的当前文件身份单独记录。源码、内核、逐配置判定及限制见
+[本轮收据](../../experiments/runs/parallel-gap-integration/results/main-0.12.3-matrix.json)。
+
+PR33 / 0.12.2 的历史结果仍见[原收据](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json)，
+不改写为新版本成绩。开发回归、ngspice 共同子集与原矩阵分别计数。
 
 <a id="精度方案候选指标不冻结统一阈值"></a>
 
 达标表示满足所列有限观测判据。误差预算与判定依据见
 [精度方案](PROTOCOL.md#精度方案候选指标不冻结统一阈值)。完整观察不确定度与连续时间资格尚未完成，
 **正式 DVS 资格仍为 I（未决）**。这些条件已用于开发，不能再称为未见确认集。
-本次 README 整理没有重新运行仿真或更新这些成绩。
+本轮只有新的本地 EVAS 执行，没有新运行 Spectre，也没有重判旧 Spectre 波形。
 
 <a id="historical-four-backend-baseline"></a>
 

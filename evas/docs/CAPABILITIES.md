@@ -1,6 +1,6 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-10-03。当前源码为 **EVAS 0.12.3 / IR v16**，未发布 tag。
+核对日期：2026-10-04。当前源码为 **EVAS 0.12.3 / IR v16**，未发布 tag。
 改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
 矩阵同时展示下表的证据入口，收据各自绑定历史执行，不能自动证明当前代码。
@@ -33,13 +33,14 @@
 | SLEW | 固定正/负限速、直接连续 PWL 仿射输入 | [算子](math/operators.md#slew) | 内部节点、动态参数、更广组合尚缺 | [算子专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json) |
 | DYNAMICS | idt/idtmod/sin、积分反馈、联合 reset、1–8 阶滤波、受限 ddt、index-one 多项式 DAE | [算子](math/operators.md)、[联合数学](math/continuous.md) | DAE 与事件/复位/滤波/ddt 组合、非线性滤波 DC、通用函数混合等尚缺 | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | COMPOSE | 平面实例隔离、积分/滤波闭包、DC 与瞬态导数一致求值、事件重启复用物理历史 | [联合数学](math/continuous.md) | 结构依赖不可绕过；非线性混合限积分+proper 滤波 | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
-| QUALIFICATION | 原矩阵两档各 31/31（IR16 检查点） | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；未见确认集、独立观察误差与一般连续时间资格尚缺 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
-| PERFORMANCE | 稀疏分流、查询复用、标量根证明；可选独立静态批量并行 | [优化检查点](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization) | 库内规模/批量/瞬态基准入口见[求解手册](math/solving.md#稀疏分支与性能边界)；端到端尚未测，见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) | [固定工作负载历史计时](../../experiments/runs/parallel-gap-integration/results/accuracy-optimization-profile.json) |
+| QUALIFICATION | 原矩阵两档各 31/31（0.12.3 / IR16，新执行） | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；未见确认集、独立观察误差与一般连续时间资格尚缺 | [0.12.3 矩阵收据](../../experiments/runs/parallel-gap-integration/results/main-0.12.3-matrix.json) |
+| PERFORMANCE | 稀疏分流、查询复用、标量根证明；可选独立静态批量并行 | [优化检查点](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization) | 库内规模/批量/瞬态基准入口见[求解手册](math/solving.md#稀疏分支与性能边界)；端到端尚未测，见 [Issue24](https://github.com/BucketSran/vaEVAS/issues/24) | [0.12.3 固定工作负载计时](../../experiments/runs/solver-performance.json) |
 
 ## 检查点身份
 
 | 检查点 | 固定执行身份 |
 | --- | --- |
+| PR50 / 0.12.3 / IR16：当前矩阵重跑 | 被测 main `a7a42e17`；运行时、内核及新执行见本轮收据 |
 | PR33 / IR16：事件截止点 | 运行时 `8618339`，合并点 `b4921ca` |
 | PR32 / IR16：混合动态与生命周期 | 运行时 `1b99c33`，合并点 `431f335` |
 | PR31 / IR16：非线性积分与联合事件 | 运行时 `d06e7f3`，合并点 `09b4222` |

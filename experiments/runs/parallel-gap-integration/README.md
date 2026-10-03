@@ -4,15 +4,31 @@
 它保存原 31 条件回放、精度链、连续动态及共同生命周期的结果，也保留开发中的反例与失败。
 数学和支持边界分别由[技术手册](../../../evas/docs/README.md)及[能力表](../../../evas/docs/CAPABILITIES.md)维护。
 
-当前 EVAS 0.12.2 / IR16 由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)
-合并到 main `b4921ca`，尚未发布版本 tag。
+当前 EVAS 0.12.3 / IR16 由 [PR50](https://github.com/BucketSran/vaEVAS/pull/50)
+合并到 main `a7a42e17`，尚未发布版本 tag。
 README 给出当前证据和使用入口；各阶段完整记录见[固定历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md)，
 数学与兼容性审查在 [REVIEW](REVIEW.md)。
 
 ## 当前证据
 
+本轮从 main `a7a42e17` 重新构建并执行原 31 条件的两档配置。
+[0.12.3 收据](results/main-0.12.3-matrix.json)记录源码、构建、输入、检查器和每项结果：
+
+- 基础档 31/31、细化档 31/31 满足原有限观测判据；共 62 次新 EVAS 执行。
+- 62 组 DUT、条件和设置与历史收据逐文件匹配；62 份新 CSV 与 PR33 收据中的哈希一致。
+- 本轮使用现有输入生成器重新生成并冻结输入；包含当前分析路径的新清单具有新的哈希。
+  检查器的判断公式和阈值保留，目录及历史身份查找迁移的差异另存于执行归档。
+- 540 Python、129 Rust 测试通过，1 个 Rust 性能探针 ignored；Clippy、格式、追溯矩阵、
+  冻结身份、独立数学检查和 71 项检查器校准通过。测试方法数不增加原矩阵分母。
+- 没有新 Spectre 执行、历史 Spectre 重分析或性能测量。原矩阵已经用于开发，正式 DVS 资格仍 **I**。
+
+精简收据在仓库内；完整输入、波形、日志、二进制和清单仅本地保留。
+原始材料的哈希用于核验，不能当作公开下载地址；本轮不声明完整公开原始数据集。
+
+### PR33 的历史证据
+
 运行时 `8618339` 和审查头 `18063c9` 已由 PR33 合并。以下是已执行并绑定该源码的证据，
-本次文档整理没有新执行；数学与支持边界见[事件截止点](../../../evas/docs/math/continuous.md#known-event-horizons)。
+下表保留当时的执行身份；数学与支持边界见[事件截止点](../../../evas/docs/math/continuous.md#known-event-horizons)。
 
 | 收据 | 实际执行与限制 |
 | --- | --- |
@@ -43,11 +59,14 @@ README 给出当前证据和使用入口；各阶段完整记录见[固定历史
 ## 复现入口
 
 普通使用与开发回归见[构建/API](../../../evas/README.md#构建与运行)。
-重跑原矩阵需要记录中指明的冻结输入归档（仅本地保留）；分析程序验证输入、执行源码、内核、
-波形和清单，再调用未修改的[原独立检查器](../../backends/dvs2-spectre-validation/check_results.py)。
+可用记录中指明的冻结输入归档（仅本地保留），或用仓库内生成器重新生成输入，
+并按收据中的 `input_sha256` 核对模型、条件与设置。新清单必须使用新的执行身份。
+分析程序验证输入、执行源码、内核、波形和清单，再调用[独立检查器](../../backends/dvs2-spectre-validation/check_results.py)。
 以下命令在仓库根目录运行，输出使用新目录；占位路径须替换为实际输入和身份：
 
 ```sh
+# 没有原始输入归档时，先生成并核对输入；目录必须不存在。
+python3 -B experiments/backends/dvs2-spectre-validation/run_suite.py runs/FROZEN-INPUTS
 python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas \
   --source runs/FROZEN-INPUTS --root runs/NEW-MATRIX \
   --kernel evas/rust_core/target/debug/evas-kernel
