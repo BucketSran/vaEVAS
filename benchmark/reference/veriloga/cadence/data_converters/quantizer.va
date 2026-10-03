@@ -1,0 +1,81 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:08 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// quantizer
+//
+// -  quantizes input with unity gain
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    nlevel    = number of levels to quantize to. []
+//    round     = if 1 - goto nearest q-level, else goto nearest q-level
+//                below. []
+//    sigout_high = max input/output (val)
+//    sigout_low  = min input/output (val)
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+
+module quantizer(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter integer nlevel = 2 from [2:inf);
+parameter integer round=1;
+parameter real sigout_high = 1 ;
+parameter real sigout_low = -1;
+parameter real tdel = 0 from [0:inf);
+parameter real trise = 20n from (0:inf);
+parameter real tfall = 20n from (0:inf);
+
+   real sigout_val; 
+  
+   integer level;      // the q-level being outputed (0 .. nlevel-1)
+   real sigout_step;   // voltage between two quantized output levels
+   real frac_of_fs;    // fraction of full scale output range
+   real vadj;          // addition to input voltage to facilite rounding
+	
+   analog begin
+
+      @ ( initial_step ) begin
+	 sigout_step = (sigout_high-sigout_low)/(nlevel-1);
+	
+	 vadj = (round==1) ? 0 : -(sigout_step / 2);
+      end
+
+      //
+      // calc portion of full scale to be outputted
+      //
+      frac_of_fs = (V(sigin) - sigout_low + vadj )
+                      / (sigout_high - sigout_low);
+      if (frac_of_fs > 1 ) frac_of_fs = 1;
+      if (frac_of_fs < 0 ) frac_of_fs = 0;
+
+      //
+      // calc output
+      //
+      level = frac_of_fs * (nlevel-1);
+      sigout_val = level * sigout_step + sigout_low;
+      V(sigout) <+ transition(sigout_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+

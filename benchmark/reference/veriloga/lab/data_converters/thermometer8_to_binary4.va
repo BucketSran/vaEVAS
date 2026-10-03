@@ -1,0 +1,41 @@
+// VerilogA for 3G_Pipe, tb_therm8_to_bin4, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module tb_therm8_to_bin4(input [7:0] THERM_IN,output [3:0] BIN_OUT);
+
+electrical [7:0] THERM_IN;
+electrical [3:0] BIN_OUT;
+
+parameter real vth = 0.45;
+integer therm_count;  
+real bin_out_real[3:0]; 
+
+analog begin
+	therm_count = 0;
+	if (V(THERM_IN[7]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[6]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[5]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[4]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[3]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[2]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[1]) > vth) therm_count = therm_count + 1;
+	if (V(THERM_IN[0]) > vth) therm_count = therm_count + 1;
+	if (therm_count == 8) begin
+		bin_out_real[3] = 1.0;
+		bin_out_real[2] = 0.0;
+		bin_out_real[1] = 0.0;
+		bin_out_real[0] = 0.0;
+	end else begin
+		bin_out_real[3] = 0.0;
+		bin_out_real[2] = (therm_count >> 2) & 1;
+		bin_out_real[1] = (therm_count >> 1) & 1;
+		bin_out_real[0] = (therm_count >> 0) & 1;
+	end
+    V(BIN_OUT[3]) <+ transition(bin_out_real[3], 0, 10p);
+    V(BIN_OUT[2]) <+ transition(bin_out_real[2], 0, 10p);
+    V(BIN_OUT[1]) <+ transition(bin_out_real[1], 0, 10p);
+    V(BIN_OUT[0]) <+ transition(bin_out_real[0], 0, 10p);
+end
+endmodule

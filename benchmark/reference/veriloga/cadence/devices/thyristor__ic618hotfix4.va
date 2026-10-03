@@ -1,0 +1,61 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:04 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define ON 1
+`define OFF 0
+
+//--------------------
+// thyristor
+//
+// -  Thyristor
+//
+// vanode:	Anode [V,A]
+// vcathode:	Cathode [V,A]
+// vgate:	Gate [V,A]
+//
+// INSTANCE parameters
+//    iturn_on = thyristor gate triggering current [A]
+//    ihold    = thyristor hold current [A]
+//    von      = thyristor on voltage [V]
+//
+// MODEL parameters
+//    {none}
+//
+(* instrument_module *)
+module thyristor(vanode, vcathode, vgate);
+input vgate;
+inout vanode, vcathode;
+electrical vanode, vcathode, vgate;
+parameter real iturn_on = 1m from [0:inf);
+parameter real ihold = 10m from [0.0:inf);
+parameter real von = 1.3 from (0:inf);
+   integer thyr_state;
+
+   analog begin
+      V(vgate,vcathode) <+ 0.0;
+
+      if ((I(vgate,vcathode) > iturn_on)
+          && (thyr_state == `OFF) && (V(vanode,vcathode) > von))begin
+       	 thyr_state = `ON;
+      end else if( (I(vanode,vcathode) < ihold) && (thyr_state == `ON)
+          && (I(vgate,vcathode) < iturn_on) )begin
+         thyr_state = `OFF;
+      end
+
+      if (thyr_state == `OFF) begin
+      	 I(vanode,vcathode) <+ 0.0;
+      end
+      else begin
+      	 V(vanode,vcathode) <+ von ;
+      end
+   end
+endmodule
+

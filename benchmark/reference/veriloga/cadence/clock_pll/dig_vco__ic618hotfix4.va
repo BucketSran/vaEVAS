@@ -1,0 +1,84 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:05 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+ 
+
+//--------------------
+// dig_vco
+//
+// -  Voltage controlled digital oscillator
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    center_freq = centre frequency of oscillation freq when 'vin' = 0 [Hz]
+//    vco_gain    = oscillator conversion gain [Hz/volt]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// The output is a square wave with instanteous freqency;
+// 'center_freq' + 'vco_gain' * vin
+//  
+(* instrument_module *)
+module dig_vco(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real center_freq=2.5K;
+parameter real vco_gain = 1;
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0;
+parameter real tdel = 0 from [0:inf);
+parameter real trise = 1n from (0:inf);
+parameter real tfall = 1n from (0:inf);
+
+   real freq;
+
+   real vout_val;
+
+   real triangle;
+   real integ_dir;
+
+   analog begin
+
+      @ ( initial_step ) begin
+         integ_dir = 1.0;
+      end
+
+      // triangle wave
+      //
+      triangle = idt(integ_dir*(center_freq + vco_gain*V(vin)), 0);
+
+      freq = center_freq + vco_gain*V(vin);
+
+      // catch rising transition.
+      //
+      @ (cross(triangle - 0.5, +1)) begin
+         integ_dir = -1;
+         vout_val = vlogic_low;
+      end
+
+      // catch falling transition.
+      //
+      @ (cross(triangle, -1)) begin
+         integ_dir = 1;
+         vout_val = vlogic_high;
+      end
+
+      V(vout) <+ transition(vout_val, tdel, trise, tfall);
+   end
+endmodule
+

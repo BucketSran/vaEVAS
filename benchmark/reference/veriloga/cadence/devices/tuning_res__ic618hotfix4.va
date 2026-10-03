@@ -1,0 +1,244 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 1997/08/28 05:45:37 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// tuning_res
+//
+// -  self tuning resistor
+//
+// vp,vn:	terminals [V,A]
+// vtune:	The voltage that is being tuned [V,A]
+// verr:	The error in vtune [V,A]
+//
+// INSTANCE parameters
+//    rmax       = maximum resistance that tuning res can have [Ohms]
+//    rmin       = minimum resistance that tuning res can have [Ohms]
+//    rinit      = initial resistance [Ohms]
+//    rgain      = gain of integral tuning action [Ohms/(Vs)]
+//    vtune_set  = value that vtune must be tuned to [V]
+//    tsettle    = amount of time to wait before tuning begins [s]
+//    tdir_check = amount of time to spend checking each tuning direction [s]
+//     
+//    
+// MODEL parameters
+//    {none}
+//
+// This element operates in four distinct phases
+//
+// 1)	It waits for 'tsettle' seconds with the resistance between 'vp' and
+//      'vn' set to 'rinit'.
+//
+// 2)   For 'tdir_check' seconds, it attempts to tune the error away by
+//      increasing the resistance in proportion to the size of the error.
+//
+// 3)	It waits for 'tsettle' seconds with the resistance between 'vp' and
+//      'vn' set to 'rinit'
+//
+// 4)   For 'tdir_check' seconds it attempts to tune the error away by
+//      decreasing the resistance in proportion to the error.
+//
+// 5)   Based on the results of (2) and (4), it selects which direction is
+//      better to tune in and tunes as best it can using integral action.
+//      For certain systems this may lead to unstable behaviour.
+//
+// NOTE
+//    Select the tsettle to be greater than the largest system time constant
+//    Select 'rgain' so that the positive feedback isn't excessive during the
+//    the direction sensing phases.
+//    Select 'tdir_check' so that system has enough time to react but not so
+//    big that the resistance drifts to far from 'rinit'.
+//    It is better if it can be arranged that 'verr' does not change sign
+//    during tuning.
+//
+(* instrument_module *)
+module tuning_res(vp,vn,vtune,verr);
+electrical vp,vn,vtune,verr;
+parameter real rmax      = 1K from  [0:inf);
+parameter real rmin      = 100 from (0:inf);
+parameter real rinit     = 500 from (0:inf);
+parameter real rgain     = 10M;
+parameter real vtune_set = 1K from  [0:inf);
+parameter real tsettle    = 100u from (0:inf);
+parameter real tdir_check = 10u from (0:inf);
+
+   real r; // instantaneous resistance
+
+   integer phase_num;    // the phase of operation in
+
+   real tstart_phase2;
+   real tstart_phase3;
+   real tstart_phase4;
+   real tstart_phase5;
+ 
+   real verr_p_start, verr_p_diff; // verr characteristics
+   real verr_n_start, verr_n_diff; // used to select the tuning direction
+
+   integer direction; // Tuning direction
+   integer verr_n_start_threshold;	// a flag, set when thesh reached
+   integer verr_p_start_threshold;	// a flag, set when thesh reached
+
+   real verr_val;
+
+
+   //
+   // the system is implemented as a finite state machine consisting
+   // of the 5 phases of operation
+   //
+   analog begin
+
+
+      @ ( initial_step ) begin
+         tstart_phase2 = tsettle;
+         tstart_phase3 = (tsettle + tdir_check);
+         tstart_phase4 = (2*tsettle + tdir_check);
+         tstart_phase5 = (2*tsettle + 2 * tdir_check);
+      
+         if (rmax <= rmin) begin
+            $display("Range specification error.  rmax = (%E) less than rmin = (%E).", rmax, rmin);
+            $finish;
+         end
+
+         // initial state
+         phase_num = 1;
+         direction = 0;
+         r = rinit;
+      end
+
+      verr_val = V(vtune) - vtune_set;
+
+      verr_n_start_threshold = 0;
+      @ (cross(verr_n_start * verr_val,-1,1.0, vtune.potential.abstol)) 
+          verr_n_start_threshold = 1;
+
+      verr_p_start_threshold = 0;
+      @ (cross(verr_p_start * verr_val,-1,1.0, vtune.potential.abstol)) 
+          verr_p_start_threshold = 1;
+
+      //
+      // State Machine
+      //
+      case (phase_num)
+
+         1: begin
+               @ (timer(tstart_phase2)) begin
+                  phase_num = 2;
+                  direction = 1;
+                  verr_p_start = verr_val;
+               end
+	    end		// case 1
+
+         2: begin
+            //
+            // SPECIAL 2->5 transition check
+            // check that error doesn't change direction when direction sensing
+            // If so jump directly to phase5 and tune in current direction
+            //
+	       if ( verr_p_start_threshold ) begin
+                  direction = 1;
+                  phase_num = 5;
+               end
+
+            //
+            // NORMAL 2->3 transition check
+            //
+       	       @ (timer(tstart_phase3)) begin
+                  verr_p_diff = verr_p_start - verr_val;
+                  direction = 0;
+                  phase_num = 3;
+               end
+
+            end		// case 2
+
+         3: begin
+               @ (timer(tstart_phase4)) begin
+                  phase_num = 4;  
+                  direction = -1;
+                  verr_n_start = verr_val;
+               end
+            end		// case 3
+
+         4: begin
+            //
+            // SPECIAL 4->5 transition check
+            // check that error doesn't change direction when direction sensing
+            // If so jump directly to phase5 and tune in current direction
+            //
+               if ( verr_n_start_threshold ) begin
+                  direction = -1;
+                  phase_num =5;
+               end
+
+            //
+            // NORMAL 4->5 transition check
+            //
+               @ (timer(tstart_phase5)) begin
+                  verr_n_diff = verr_n_start - verr_val;
+                  phase_num = 5;
+
+                  //
+                  // decide which direction to tune in
+                  //
+                  if ((verr_n_diff * verr_p_diff) >  0) begin // have same signs
+                     $display("Cannot resolve tuning direction for %M");
+	             $finish; 
+                  end else if ( (verr_n_start > 0)&&(verr_n_diff > verr_p_diff)) begin
+                     direction = -1;
+                  end else if ( (verr_n_start > 0)&&(verr_n_diff < verr_p_diff)) begin
+                     direction = 1;
+                  end else if ( (verr_n_start < 0)&&(verr_n_diff > verr_p_diff)) begin
+                     direction = 1;
+                  end else if ( (verr_n_start < 0)&&(verr_n_diff < verr_p_diff)) begin
+                     direction = -1;
+                  end else begin
+                     $display("Cannot resolve tuning direction for %M");
+		     $finish;
+                  end
+               end
+
+            end		// case 4
+
+         5:
+            ; // not possible to leave phase 5
+
+         default: begin
+               $display("Unknown state encountered in %M\n");
+	       $finish;
+	    end		// default case
+
+      endcase		// end of entire case statement
+
+
+      r = rinit + rgain * idt(direction * verr_val,0);
+
+      if ( r > rmax ) begin
+         r = rmax;
+         direction = 0; // stop tuning
+      end
+
+      if ( r < rmin ) begin
+         r = rmin;
+         direction = 0; // stop tuning
+      end
+
+      V(vp, vn) <+ r*I(vp, vn);
+      V(verr) <+ verr_val;
+   end
+endmodule
+
+
+
+
+
+
+

@@ -1,0 +1,59 @@
+// VerilogA for 2023_CT_Pipe_HYX, VA_calib_foreground_stage2to4, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module VA_calib_foreground_rdac(CK, D, DC, VREFP, VREFN, CVINP, CVINN, EN, ENB);
+
+input CK, D, VREFP, VREFN;
+output CVINP, CVINN, EN, ENB;
+output [6:0] DC;
+electrical CK, D, VREFP, VREFN, CVINP, CVINN, EN, ENB;
+electrical [6:0] DC;
+
+parameter real Vdd = 1.0;
+
+integer sign = 1, state = 1;
+integer iter, flag_calib = 1;
+integer d[6:0] = {1,0,0,0,0,0,0};
+real vrefp, vrefn;
+
+analog begin
+	
+	@(initial_step)begin
+		vrefp = V(VREFP);
+		vrefn = V(VREFN);
+		iter = 6;
+	end
+	
+	@(cross(V(CK)-0.5*Vdd, 1))begin
+		if(iter > 0)begin
+			sign = V(D) < 0.5 * Vdd;
+			if(sign == 1) begin
+				d[iter-1] = 1;
+			end else begin
+				d[iter] = 0;
+				d[iter-1] = 1;
+			end
+			iter = iter - 1;
+		end else begin
+			flag_calib = 0;
+		end
+	end
+	
+	
+	V(CVINP) <+ vrefp;
+	V(CVINN) <+ vrefn;
+	V(EN) <+ transition(flag_calib, 0, 20p, 20p);
+	V(ENB) <+ transition(1-flag_calib, 0, 20p, 20p);
+	V(DC[6]) <+ d[6];
+	V(DC[5]) <+ d[5];
+	V(DC[4]) <+ d[4];	
+	V(DC[3]) <+ d[3];
+	V(DC[2]) <+ d[2];
+	V(DC[1]) <+ d[1];
+	V(DC[0]) <+ d[0];
+	
+end
+
+endmodule

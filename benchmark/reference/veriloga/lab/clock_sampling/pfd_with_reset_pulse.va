@@ -1,0 +1,62 @@
+// VerilogA for zy_test, test, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module PFD_Tdomain(IN1,IN2,UP,DN,VDD,GND);
+input IN1,IN2;
+output UP,DN;
+inout VDD,GND;
+electrical IN1,IN2,UP,DN,VDD,GND;
+
+
+//parameter real vh=1.1;
+//parameter real vl=0;
+//parameter real vth=0.55;
+parameter real ttol=5f from [0:inf);
+parameter real td=0 from [0:inf);
+parameter real tt=10f from (0:inf);
+parameter real ton=50p from[0:inf); // delay time when IN1 and IN2 are both equals to 1
+integer state, hide_state;
+real Toff, vh, vl, vth;
+
+analog begin
+
+vh = V(VDD);
+vl = V(GND);
+vth = (V(VDD) - V(GND)) / 2;
+
+@ (initial_step) begin
+state=0;
+hide_state=0 ;
+Toff=0;
+end
+
+@ (cross(V(IN1)-vth, 1, ttol)) begin
+if (state==-1) begin
+hide_state=1;
+Toff=ton+$realtime;
+end
+else state=1;
+end
+
+@ (cross(V(IN2)-vth, 1, ttol)) begin
+if (state==1) begin
+hide_state=1;
+Toff=ton+$realtime;
+end
+else state=-1;
+end
+
+@ (timer(Toff)) begin
+if (hide_state==1) begin
+state=0;
+hide_state=0;
+end
+
+
+end
+V(UP)<+ transition((state==1)||(hide_state==1) ? vh:vl, td, tt);
+V(DN)<+ transition((state==-1)||(hide_state==1) ? vh:vl, td, tt);
+end
+endmodule

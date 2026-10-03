@@ -1,0 +1,25 @@
+
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 10p
+
+module _va_offset (input electrical CLK, input electrical DCMPP, output electrical VINP, output electrical VINN);
+
+parameter vdd = 0.9;
+real vin = 0;
+real step = 100m;
+integer sign = 1;
+ 
+analog begin
+
+	@ (cross(V(CLK)-0.5*vdd,-1)) begin
+		sign = V(DCMPP) > 0.5 * vdd;
+		vin = vin - (2*sign - 1) * step;
+		step = step / 2.0;
+	end
+
+	V(VINP) <+ (0.5 * vdd + 0.5 * vin);
+	V(VINN) <+ (0.5 * vdd - 0.5 * vin);
+end
+
+endmodule

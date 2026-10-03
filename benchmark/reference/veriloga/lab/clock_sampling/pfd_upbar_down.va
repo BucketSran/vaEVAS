@@ -1,0 +1,49 @@
+// VerilogA for PLL_project, L2_PFD, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module L2_PFD(D, UB, GND, VDD, A, B);
+output D;
+electrical D;
+output UB;
+electrical UB;
+inout GND;
+electrical GND;
+inout VDD;
+electrical VDD;
+input A;
+electrical A;
+input B;
+electrical B;
+
+integer up, down;
+real trst;
+
+
+analog begin
+	@(initial_step) begin
+		up = 0;
+		down = 0;
+		trst = -1;
+	end
+	@ cross(V(A) - 0.5, +1) begin
+		up = 1;
+		if(down == 1) trst = $abstime + 10p;
+	end
+	@ cross(V(B) - 0.5, +1) begin
+		down = 1;
+		if(up == 1) trst = $abstime + 10p;
+	end
+	@ timer(trst) begin
+		up = 0;
+		down = 0;
+		trst = -1;
+	end
+
+	V(UB) <+ transition(1-up, 0, 10p);
+	V(D) <+ transition(down, 0, 10p);
+end
+
+endmodule
+

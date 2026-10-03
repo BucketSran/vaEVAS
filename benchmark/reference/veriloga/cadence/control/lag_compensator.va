@@ -1,0 +1,65 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:47:56 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// lag_compensator
+//
+// -  lag compensator
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    gain  = compensator gain []
+//    tau   = compensator zero at -(1/tau) [s]
+//    alpha = compensator pole at -(1/(alpha*tau)); alpha > 1 []
+//
+// MODEL parameters
+//    {none}
+//
+//                         1      +         'tau' * S
+// TF:  'gain'* 'alpha' * ----------------------------
+//                         1      + alpha * 'tau' * S
+//
+// NOTE
+//    Defining larger values of 'abstol' and 'huge' for the quantities
+//    associated with sigin and sigout can help overcome convergence and
+//    clipping problems.
+//
+
+module lag_compensator(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real gain  = 1 from (0:inf);
+parameter real tau   = 1 from [0:inf);
+parameter real alpha = 2 from (1:inf);
+
+   real integ_gain;
+   real sigin_gain;
+
+   analog begin
+
+      @ ( initial_step or initial_step( "dc" ) or initial_step( "ac" )) begin
+         integ_gain = 1/alpha/tau;
+         sigin_gain = gain*alpha;
+      end
+      V(sigout) <+ integ_gain * idt(sigin_gain*V(sigin) - V(sigout),0)
+                     + gain * V(sigin);
+   end
+endmodule
+
+
+
+
+

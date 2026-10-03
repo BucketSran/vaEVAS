@@ -1,0 +1,82 @@
+// VerilogA for PIPE_ADC1, ideal_TIME_DIFF_DETECTOR, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ideal_TIME_DIFF_DETECTOR (
+    input  electrical clk,      // 
+    input  electrical vinp,     //  P
+    input  electrical vinn,     //  N
+    output electrical vout      // 
+);
+    // =====  =====
+    parameter real vdd = 0.9;                 // 
+    parameter real vth_clk = 0.9/2;           // clk
+    parameter real vth_in  = 0.9/2;           // 
+    parameter real td = 0;                    // 
+    parameter real tr = 1p;                   // /
+    parameter real scale = 1e9;               //  (1ns -> 1V)
+
+    // =====  =====
+    real t_clk_fall;        // clk 
+    real t_vinp_rise;       // vinp 
+    real t_vinn_rise;       // vinn 
+    real delta_t;           // 
+    real vout_val;          // 
+    integer detect_enable_p;  // 
+    integer detected_p;       // 
+    integer detect_enable_n;  // 
+    integer detected_n;       // 
+    analog begin
+        // 
+        @(initial_step) begin
+            detect_enable_p = 0;
+            detect_enable_n = 0;
+            detected_p = 0;
+            detected_n = 0;
+            delta_t = 0;
+            vout_val = 0;
+        end
+
+        // =====  clk  =====
+        @(cross(V(clk) - vth_clk, +1)) begin
+            //  clk 
+            vout_val = (t_vinp_rise-t_vinn_rise) * scale;
+
+            //  vdd 
+            if (vout_val >  vdd) vout_val =  vdd;
+            if (vout_val < -vdd) vout_val = -vdd;
+
+            // 
+            t_clk_fall = $abstime;
+            detect_enable_p = 1;
+            detect_enable_n = 1;
+            detected_p = 0;
+            detected_n = 0;
+            t_vinp_rise = 0;
+            t_vinn_rise = 0;
+        end
+
+        // =====  vinp  =====
+        @(cross(V(vinp) - vth_in, +1)) begin
+            if (detect_enable_p && !detected_p) begin
+                t_vinp_rise = $abstime;
+                delta_t =  (t_vinp_rise - t_clk_fall); // P  
+                detected_p = 1;
+            end
+        end
+
+        // =====  vinn  =====
+        @(cross(V(vinn) - vth_in, +1)) begin
+            if (detect_enable_n && !detected_n) begin
+                t_vinn_rise = $abstime;
+                delta_t = -(t_vinn_rise - t_clk_fall); // N  
+                detected_n = 1;
+            end
+        end
+
+        // =====  =====
+        V(vout) <+ transition(vout_val, td, tr);
+    end
+endmodule
+

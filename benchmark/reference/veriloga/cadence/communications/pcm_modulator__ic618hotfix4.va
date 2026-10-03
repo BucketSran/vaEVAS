@@ -1,0 +1,133 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+//
+// useful `def's
+
+`define NUM_OF_BITS 8
+
+//--------------------
+// pcm_modulator
+//
+// -  an 8 bit PCM modulator
+//
+// vin:		input signal     [V,A]
+// vout:	modulated signal [V,A]
+//
+// INSTANCE parameters
+//    sample_freq = sample frequency [Hz]
+//    tstart      = when to start sampling [s]
+//    vin_min     = minimum input voltage [V]
+//    vin_max     = maximum input voltage [V]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// The PCM modulator samples 'vin' at a 'sample_freq' [Hz] starting at
+// 'tstart'. Once a sample has been obtained, it is converted to a
+// linear 8 bit binary code with 0 representing 'vin_min' and 255
+// representing 'vin_max'. 
+//
+// The bits are in the code and sequentially outputed through 'vout' at
+// a rate 8 times the sample_freq which 'vlogic_high' signifying a '1'
+// and 'vlogic_low' signifying a '0'. The first bit transmitted is the LSB,
+// bit 0, the last bit transmitted is the MSB, bit 7.
+//
+// Clipping occurs for when the input is outside 'vin_min' and 'vin_max'
+//
+(* instrument_module *)
+module pcm_modulator(vin, vout);
+electrical  vin, vout;
+parameter real sample_freq = 1M from (0:inf);
+parameter real tstart  = 1u from (0:inf);
+parameter real vin_min = -5;
+parameter real vin_max = 5;
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+
+
+   real tsample;		// time between input samples
+   real tbit_stream;      // period of output bit stream
+   real tsample_next;
+   real tbit_next;
+   integer code;
+   integer bit[0:7];
+   integer bit_num;
+   integer i;
+   integer mask;
+   real vout_val;
+
+   analog function integer quantizer8bit;
+   input vin, vmax, vmin;
+   real vin, vmax, vmin;
+
+      real v_normal;  // normalized input voltage;
+
+   begin
+      v_normal = (vin - vmin)/(vmax-vmin);
+      v_normal = min(1,max(v_normal,0));
+
+      quantizer8bit = (v_normal * (pow(2,`NUM_OF_BITS) - 1)) - 0.5;
+   end
+   endfunction
+
+   analog begin
+
+      @ ( initial_step ) begin
+         tsample = 1/sample_freq;
+         tsample_next = tstart;
+         tbit_next = tstart;
+         tbit_stream = tsample/`NUM_OF_BITS;
+         for (i=0; i < `NUM_OF_BITS; i=i+1) begin
+            bit[i] = 0;
+         end
+      end
+
+      $bound_step(tbit_stream/2);
+
+      @ (timer(tsample_next)) begin
+         code = quantizer8bit(V(vin),vin_max,vin_min);
+         mask = 1;
+         for (i=0; i < `NUM_OF_BITS; i=i+1) begin
+            bit[i] = ((code & mask) > 0);
+            mask = mask * 2;
+         end
+         bit_num = 0;
+         tsample_next = tsample_next + tsample;
+      end
+
+      @ (timer(tbit_next)) begin
+	 if( bit_num > (`NUM_OF_BITS-1)) begin
+           vout_val = -3;
+         end else begin
+           vout_val = bit[bit_num] ? vlogic_high : vlogic_low;
+         end
+         bit_num = bit_num+1;
+         tbit_next = tbit_next + tbit_stream;
+      end
+
+      V(vout) <+ transition(vout_val,tdel,trise,tfall);
+   end  
+endmodule
+
+
+
+
+
+

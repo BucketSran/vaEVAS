@@ -1,0 +1,72 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:46 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// voltage_dba
+//
+// -  voltage dead band amplifier
+//
+// vin_p,vin_n:	differential input voltage terminals [V,A]
+// vout:	output voltage terminal [V,A]
+//
+// INSTANCE parameters
+//    vdead_low  = lower range of dead band [V]
+//    vdead_high = upper range of dead band [V]
+//    vleak      = offset voltage; only output in deadband [V]
+//    gain_low   = differential voltage gain in lower region []
+//    gain_high  = differential voltage gain in upper region []
+// 
+// MODEL parameters
+//    {none}
+//
+// Outputs 'vleak' when differential input voltage (vin_p-vin_n) is between
+// 'vdead_low' and 'vdead_high'. When outside the deadband, the output voltage
+// is an amplified version of the differential input voltage plus 'vleak'.
+//
+
+module voltage_dba(vin_p, vin_n, vout);
+input vin_p, vin_n;
+output vout;
+electrical vin_p, vin_n, vout;
+parameter real vdead_low = -10;
+parameter real vdead_high = 10;
+parameter real vleak = 0;
+parameter real gain_low = 1;
+parameter real gain_high = 1;
+   real vout_val, vin_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (vdead_high <= vdead_low) begin
+	    $display("Range specification error.  vdead_high = (%E) less than vdead_low = (%E).\n", vdead_high, vdead_low );
+	    $finish;
+	 end
+      end
+
+      vout_val = vleak;
+      vin_val = V(vin_p, vin_n);
+
+      if (vin_val >= vdead_high) begin
+         vout_val = gain_high * (vin_val - vdead_high) + vleak;
+      end else if (vin_val <= vdead_low) begin
+         vout_val = gain_low * (vin_val - vdead_low) + vleak;
+      end
+      V(vout) <+ vout_val;
+   end
+endmodule
+
+
+
+
+

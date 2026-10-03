@@ -1,0 +1,51 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:26 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// power_sink
+//
+// -  constant power sink
+//
+// vp,vn:	terminals [V,A]
+//
+// INSTANCE parameters
+//    power      = power sunk [Watts]
+//    vabsmin    = absolute value of minimum input voltage [V]
+//
+// MODEL parameters
+//    {none}
+//
+// Normally 'power' watts of power is sunk.
+// If the absolute value of 'vp' - 'vn' is above 'vabsmin' then
+// a faction of the 'power' is sunk. The fraction is the ratio
+// of 'vp' - 'vn' to 'vabsmin'.
+//
+
+module power_sink (vp,vn);
+inout vp,vn;
+electrical vp,vn;
+parameter real power = 1 from (0:inf);
+parameter real vabsmin = 0.1 from (0:inf);
+
+   real denom;
+
+   analog begin
+
+      if ( abs(V(vp,vn)) > vabsmin ) begin
+         I(vp,vn) <+ power / V(vp,vn);
+      end else begin
+         denom = V(vp,vn) >= 0.0 ? vabsmin : - vabsmin;
+         I(vp,vn) <+ power / denom;
+      end
+   end
+endmodule

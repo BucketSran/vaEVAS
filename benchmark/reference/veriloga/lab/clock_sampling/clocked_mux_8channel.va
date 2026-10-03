@@ -1,0 +1,26 @@
+// VerilogA for TB_SAR1, IDEAL_CLKMUX, veriloga
+`default_transition 5p
+`include "constants.vams"
+`include "disciplines.vams"
+
+`define NUM_ADC_BITS 4
+`define CHANNEL 8
+
+module IDEAL_CLKMUX(out, clk, in0, in1, in2, in3, in4, in5, in6, in7, count_x);
+input clk;
+input in0, in1, in2, in3, in4, in5, in6, in7;
+output out;
+output count_x;
+electrical clk, in0, in1, in2, in3, in4, in5, in6, in7, out, count_x;
+integer count; 
+analog begin
+	@(initial_step) begin
+		count = 0;
+	end
+	@(cross(V(clk) - 0.5, +1)) begin
+		count = (count + 1) % 8;
+	end
+	V(out) <+ transition( (count == 0) ? V(in0) : (count == 1) ? V(in1) : (count == 2) ? V(in2) : (count == 3) ? V(in3) : (count == 4) ? V(in4) : (count == 5) ? V(in5) : (count == 6) ? V(in6) : V(in7));
+	V(count_x) <+ transition(count);
+end
+endmodule

@@ -1,0 +1,73 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:29 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define PI	 3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// qpsk_modulator
+//
+// -  QPSK (quadrature phase shift key) modulator
+//
+// vin_i, vin_q:	quadature inputs [V,A]
+// vout:		modulator output [V,A]
+//
+// INSTANCE parameters
+//    freq   = modulation frequency [Hz]
+//    amp    = modulator amplitude [V]
+//    vtrans = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// This takes a two sampled quadrature inputs and does QPSK modulation
+// on them.
+//
+
+module qpsk_modulator (vin_i, vin_q, vout);
+input vin_i, vin_q;
+output vout;
+electrical vout, vin_i, vin_q;
+parameter real freq = 1 from (0:inf);
+parameter real ampl = 1;
+parameter real vtrans = 0.5;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+   real omega;
+   real quad_ampl;
+
+   integer i_bit, q_bit;
+
+   real vout_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+          omega  = 2 * `PI * freq;
+          quad_ampl = ampl * sqrt(2)/2;
+      end
+      i_bit = transition((V(vin_i) > vtrans),tdel,trise,tfall);
+      q_bit = transition((V(vin_q) > vtrans),tdel,trise,tfall);
+       
+      vout_val =   quad_ampl * i_bit * cos(omega * $abstime)
+                 + quad_ampl * q_bit * sin(omega * $abstime);
+
+      V(vout) <+ vout_val;
+   end
+endmodule
+
+
+
+

@@ -1,0 +1,68 @@
+`include "discipline.h"
+`include "constants.h"
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+ 
+
+//--------------------
+// serial_reg_8
+//
+// -  8-bit serial register
+//
+// vin_d:	input data lines [V,A]
+// vout_d:	output data lines [V,A]
+// vclk:	enable line [V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// Input occurs on the rising edge of vclk.
+//
+
+
+module serial_reg_8(vin_d,vout_d,vclk);
+electrical vin_d,vout_d,vclk;
+ 
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans = 2.5;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+
+`define BITS_IN_REG 8
+
+   integer d[0:`BITS_IN_REG-1];
+
+   integer bit_num;
+
+
+   analog begin
+
+      //
+      // roll the register and load the new input bit
+      //
+      @ (cross( V(vclk) - vtrans, +1, 1.0, vclk.potential.abstol) ) begin
+         for (bit_num = (`BITS_IN_REG-1); bit_num > 0; bit_num = bit_num-1) 
+             d[bit_num] = d[bit_num-1];
+         d[0] = V(vin_d) > vtrans;
+      end
+
+      V(vout_d) <+ transition((d[`BITS_IN_REG-1] ? vlogic_high : vlogic_low),
+                               tdel,trise,tfall);
+    end
+
+`undef BITS_IN_REG
+endmodule
+
+
+
+
+
+

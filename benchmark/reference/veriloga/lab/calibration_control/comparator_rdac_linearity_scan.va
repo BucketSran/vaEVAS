@@ -1,0 +1,82 @@
+// VerilogA for 2023_CT_Pipe_HYX, VA_comparator_offset, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module VA_comparator_offset_calib_linearity_rdac(CK,VINP,VINN,VREFP,VREFN,D,DC);
+
+input CK, D;
+output VINP, VINN, VREFP, VREFN;
+output [6:0] DC;
+electrical CK,VINP,VINN,VREFP,VREFN,D;
+electrical [6:0] DC;
+
+parameter real Vcm = 0.6;
+parameter real Vppd = 1.0;
+parameter real Vdd = 1.0;
+parameter real Nlvl = 17.0;
+parameter iter_num = 40;
+
+real vin, vref;
+real step = 40m;
+real lsb;
+integer sign = 1, state = 1;
+integer index = 0, iter = 0, flag_calib = 0;
+integer d[6:0] = '{1,1,1,1,1,1,1};
+integer ddex = 127;
+integer i, temp;
+
+analog begin
+
+	@(initial_step)begin
+		lsb = Vppd / (Nlvl - 1);
+		vref = (1.0 - Nlvl / 2) * lsb ;
+		vin = vref;	
+	end
+	
+	@(cross(V(CK) - 0.5 * Vdd, 1)) begin
+		if(flag_calib == 0) begin 
+			sign = V(D) < 0.5 * Vdd;
+			if((state != sign) && (step > 0)) step = step / 2; 
+			state = sign;
+			vin = vin + (2 * state - 1) * step;
+			iter = iter + 1;
+			if(iter == iter_num) begin
+				flag_calib = 1;
+			end		
+		end else begin
+			if(ddex != 0) begin
+				ddex = ddex - 1;
+				for(i = 0;i < 7;i = i + 1)begin
+					temp = pow(2,i);
+					d[i] = (ddex & temp) >> i; 
+				end
+			end else begin
+				ddex = 127;
+				for( i = 0;i < 7;i = i + 1)begin
+					temp = pow(2,i);
+					d[i] = (ddex & temp) >> i; 
+				end
+				vref = vref + lsb;
+			end
+			flag_calib = 0;
+			iter = 0;
+			step = 40m;
+			vin = vref;
+		end 
+	end	
+	V(VINP) <+ (Vcm + 0.5 * vin);
+	V(VINN) <+ (Vcm - 0.5 * vin);
+	V(VREFP) <+ (Vcm + 0.5 * vref);
+	V(VREFN) <+ (Vcm - 0.5 * vref);
+	V(DC[6]) <+ d[6];
+	V(DC[5]) <+ d[5];
+	V(DC[4]) <+ d[4];	
+	V(DC[3]) <+ d[3];
+	V(DC[2]) <+ d[2];
+	V(DC[1]) <+ d[1];
+	V(DC[0]) <+ d[0];
+
+end
+
+endmodule

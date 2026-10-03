@@ -1,0 +1,47 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:56 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define PI  	3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// flow2val
+//
+// -  flow to val converter
+//
+// sigin_p,sigin_n:	[V,A]
+// sigout_p,sigout_n:	[V,A]
+//
+// INSTANCE parameters
+//    gain = flow to val gain
+//
+// MODEL parameters
+//    {none}
+//
+// val(sigout_p,sigout_n) = flow(sigin_p,sigin_n)
+//
+
+module flow2val(sigin_p,sigin_n,sigout_p,sigout_n);
+input sigin_p,sigin_n;
+output sigout_p,sigout_n;
+electrical sigin_p,sigin_n,sigout_p,sigout_n;
+parameter real gain = 1;
+
+   analog 
+      V(sigout_p,sigout_n) <+ gain * I(sigin_p,sigin_n);
+
+endmodule
+
+
+
+
+

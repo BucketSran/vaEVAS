@@ -1,0 +1,67 @@
+// VerilogA for coursedesign_cyclicADC, cyclic_decoder, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module cyclic_decoder(d0,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,clks,dout);
+input d0,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,clks;
+output dout;
+electrical d0,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,clks,dout;
+
+parameter real Vlo=0, Vhi=1.1;
+parameter real Vth = 0.55;
+parameter integer Nbit = 12;
+
+real dval[0:11];
+real sum;
+integer i;
+analog begin
+
+     @(initial_step) begin
+        dval[0] = 0 ;  
+	dval[1] = 0;
+	dval[2] = 0;    
+	dval[3] = 0 ;    
+	dval[4] = 0 ;    
+	dval[5] = 0;    
+	dval[6] = 0 ;    
+	dval[7] = 0 ; 
+	dval[8] = 0 ;    
+	dval[9] = 0 ;     
+	dval[10] = 0 ;  
+	dval[11] = 0 ;
+	sum = 0;
+      end
+    
+      @(cross(V(clks)-Vth,1)) begin
+        dval[0] = (V(d0)>Vth) ;  
+	dval[1] = (V(d1)>Vth) ;
+	dval[2] = (V(d2)>Vth) ;    
+	dval[3] = (V(d3)>Vth) ;    
+	dval[4] = (V(d4)>Vth) ;    
+	dval[5] = (V(d5)>Vth) ;    
+	dval[6] = (V(d6)>Vth) ;    
+	dval[7] = (V(d7)>Vth) ; 
+	dval[8] = (V(d8)>Vth) ;    
+	dval[9] = (V(d9)>Vth) ;     
+	dval[10] = (V(d10)>Vth) ;  
+	dval[11] = (V(d11)>Vth) ;    
+        sum = 0; 
+	sum = sum + dval[0]*pow(2,0);
+sum = sum + dval[1]*pow(2,1);
+sum = sum + dval[2]*pow(2,2);
+sum = sum + dval[3]*pow(2,3);
+sum = sum + dval[4]*pow(2,4);
+sum = sum + dval[5]*pow(2,5);
+sum = sum + dval[6]*pow(2,6);
+sum = sum + dval[7]*pow(2,7);
+sum = sum + dval[8]*pow(2,8);
+sum = sum + dval[9]*pow(2,9);
+sum = sum + dval[10]*pow(2,10);
+sum = sum + dval[11]*pow(2,11);
+sum = sum/(pow(2,12)-1)-0.5;
+      end
+  V(dout) <+ transition(sum, 1p, 1p, 1p);
+
+end
+endmodule

@@ -1,0 +1,48 @@
+// VerilogA for DAC, bin2ther_2b, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module bin2ther_2b(VDD, GND, B_IN[1:0], T_OUT[2:0]);
+
+input VDD;
+electrical VDD;
+input GND;
+electrical GND;
+input B_IN[1:0];
+electrical B_IN[1:0];
+output T_OUT[2:0];
+electrical T_OUT[2:0];
+
+real vh, vl, vtrans;
+integer t_out[2:0];
+genvar k;
+
+analog begin
+    vh = V(VDD);
+    vl = V(GND);
+    vtrans = 0.5* (V(VDD) + V(GND));
+    
+    if(V(B_IN[1]) > vtrans) begin
+        t_out[0] = 1;
+        t_out[1] = 1;
+    end
+    else begin
+        t_out[0] = 0;
+        t_out[1] = 0;
+    end
+
+    if(V(B_IN[0]) > vtrans) begin
+        t_out[2] = 1;
+    end
+    else begin
+        t_out[2] = 0;
+    end
+
+    for(k=0; k<3; k=k+1) begin
+        V(T_OUT[k]) <+ transition(t_out[k] ? vh : vl , 0, 20p);
+    end
+end
+    
+
+endmodule

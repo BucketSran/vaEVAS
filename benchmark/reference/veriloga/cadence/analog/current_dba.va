@@ -1,0 +1,68 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:44:57 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// current_dba
+//
+// -  current dead band amplifier
+//
+// iin_p,iin_n:		differential input current terminals [V,A]
+// iout:		output current terminal [V,A]
+//
+// INSTANCE parameters
+//    idead_low  = lower range of dead band [A]
+//    idead_high = upper range of dead band [A]
+//    ileak      = offset current; only output in deadband [A]
+//    gain_low   = differential current gain in lower region []
+//    gain_high  = differential current gain in lower region []
+// 
+// MODEL parameters
+//    {none}
+//
+// Outputs 'ileak' when differential input current (iin_p - iin_n) between
+// 'idead_low' and 'idead_high'. When outside the deadband, the output current
+// is an amplified version of the differential input current plus 'ileak'.
+//
+
+module current_dba(iin_p, iin_n, iout);
+input iin_p, iin_n;
+output iout;
+electrical iin_p, iin_n, iout;
+parameter real idead_low = -1e-3;
+parameter real idead_high = 1e-3;
+parameter real ileak = 0;
+parameter real gain_low = 1;
+parameter real gain_high = 1;
+
+   real iout_val, iin_val;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (idead_high <= idead_low) begin
+	    $display("Range specification error.  idead_high = (%E) less than idead_low = (%E).\n", idead_high, idead_low );
+	    $finish;
+	 end
+      end
+
+      iout_val = ileak;
+      iin_val = I(iin_p, iin_n);
+      if (iin_val >= idead_high) begin
+         iout_val = gain_high * (iin_val - idead_high) + ileak;
+      end else if (iin_val <= idead_low) begin
+         iout_val = gain_low * (iin_val - idead_low) + ileak;
+      end
+      I(iout) <+ -iout_val;
+   end
+endmodule

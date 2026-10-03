@@ -1,0 +1,294 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:37 $
+// $Revision: 1.1 $
+
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+//
+
+`define NO 0
+`define YES 1
+
+`define arg   0
+`define rise  1
+`define fall  2
+`define cross 3
+`define at    10
+`define when  11 
+
+//--------------------
+// stat_probe
+//
+// -  signal statistics probe
+//
+// out_pos, out_neg:		signal to measure []
+// start_pos, start_neg:	signal that controls start of measurement []
+// stop_pos, stop_neg: 		signal that controls end of measurement [] 
+//
+// INSTANCE parameters
+//    start_arg                   = argument value that starts measurements;
+//    stop_arg                    = argument value that stops measurements;
+//    start_td, stop_td       = signal delays [s]
+//    start_val, stop_val     = signal value that starts/end measurement []
+//    start_count, stop_count = num signal values that starts/end measurement
+//    start_mode              = one of starting/stopping modes []
+//                                 arg - argument value (simulation time)
+//		                   rise - crossing of the signal value on rise
+//		                   fall - crossing of the signal value on fall
+//		                   cross - any crossing of the signal value
+//    stop_mode               = one of starting/stopping modes []
+//                                 arg - argument value (simulation time)
+//		                   rise - crossing of the signal value on rise
+//		                   fall - crossing of the signal value on fall
+//		                   cross - any crossing of the signal value
+//
+// MODEL parameters
+//    {none}
+//
+// This probe signal signals such as minimum, maximum, average, peak-to-peak,
+// root mean square, standard deviation of the output and start signals
+// within a measuring window. It also gives a correlation coefficient between 
+// output and start signals.
+//
+(* instrument_module *)
+module stat_probe (out_pos, out_neg, start_pos, start_neg, stop_pos, stop_neg);
+inout out_pos, out_neg, start_pos, start_neg, stop_pos, stop_neg;
+electrical out_pos, out_neg, start_pos, start_neg, stop_pos, stop_neg;
+parameter real start_arg = -1M;
+parameter real stop_arg = 0; 
+parameter real start_val = 0;
+parameter real  start_td = 0;
+parameter integer start_count = 1;
+parameter real stop_val = 0;
+parameter real stop_td = 0;
+parameter integer stop_count = 1;
+parameter integer start_mode = 1;
+parameter real  stop_mode = 1;
+
+
+	integer startDirection, stopDirection;
+	real window, delta;
+	real outCur, startCur, argCur, argstartCur, argstopCur;
+
+	integer doMeasure, lastMeasure;
+	real startWindow, stopWindow;
+	integer startCnt, stopCnt;
+	real outCurHold, startCurHold;
+	real argstartPrev, argstopPrev;
+	real outArea, outAreaS, startArea, startAreaS, prodArea;
+	real outAvg, startAvg, corr;
+	real outMaxValue, outMinValue;
+	real outPP, outRMS, outSigma;
+	real startMaxValue, startMinValue;
+	real startPP, startRMS, startSigma;
+
+	// avoid assignments to parameters
+	real loc_start_mode, loc_stop_mode;
+
+   	real lc_startDirection, lc_stopDirection;
+   	integer crossStartDirection;
+   	integer crossStopDirection;
+
+        analog function integer direction;
+	input mode;
+	integer mode;
+
+        if (mode == `rise) direction = 1;
+        else if (mode == `fall) direction = -1;
+        else if (mode == `cross) direction = 0;
+        endfunction
+
+	analog begin
+
+	@ ( initial_step ) begin
+	    doMeasure = `NO;
+	    lastMeasure =  `NO;
+	    startWindow = -1M;
+	    outMaxValue = -1M;
+	    outMinValue = 1M;
+	    startMaxValue = -1M;
+	    startMinValue = 1M;
+	    loc_start_mode = start_mode;
+	    loc_stop_mode = stop_mode;
+	    outAvg = 0;
+	    startAvg = 0;
+	    outRMS  = 0;
+	    startRMS = 0;
+	    outArea = 0;
+	    outAreaS = 0;
+	    startArea = 0;
+	    startAreaS = 0;
+	    prodArea = 0;
+
+	    if (analysis("tran")) begin
+		if (start_arg >= 0) begin
+		    loc_start_mode = `arg;
+		    startWindow = start_arg;
+		end else begin
+		    startDirection = direction(loc_start_mode);
+		end
+
+		if (stop_arg > 0) begin 
+		    loc_stop_mode = `arg;
+		    stopWindow = stop_arg;
+		end else begin 
+		    stopDirection = direction(loc_stop_mode);
+		end
+		doMeasure = `NO;
+	    end
+	end
+
+	    if (analysis("tran")) begin
+
+         	lc_startDirection = last_crossing(V(start_pos, start_neg) -
+                                           start_val, startDirection);
+	         lc_stopDirection = last_crossing(V(stop_pos, stop_neg) - 
+	         stop_val, stopDirection);
+
+		 crossStartDirection = 0;
+		 crossStopDirection = 0;
+
+		 argstartCur = 0.0;
+		 argstopCur = 0.0;
+
+	         @ (cross(V(start_pos, start_neg) - start_val, 
+				startDirection)) begin
+			crossStartDirection = 1;
+		 end
+
+	         @ (cross(V(stop_pos, stop_neg) - stop_val, 
+			    stopDirection)) begin
+			crossStopDirection = 1;
+		 end
+
+		argCur = $abstime;
+		outCur = V(out_pos, out_neg);
+		startCur = V(start_pos, start_neg);
+
+		if (loc_start_mode == `arg) begin
+			@ ( timer(startWindow) )begin
+				outMinValue = outCur;
+				outMaxValue = outCur;
+				startMinValue = startCur;
+				startMaxValue = startCur;
+				doMeasure = `YES;
+			end
+		 end else if (loc_start_mode > `arg) begin
+		    if (startWindow == -1M) begin
+			    argstartCur = lc_startDirection;
+
+			if ($abstime - start_td >= 0) begin
+			    if (startCnt+1 == start_count) begin
+				if ( crossStartDirection ) begin
+				    startWindow = $abstime;
+				    doMeasure = `YES;
+				end
+			    end
+
+			    if ( argstartCur != argstartPrev) 
+                                startCnt = startCnt + 1;
+			end
+		    end
+		end
+
+		if (loc_stop_mode == `arg) begin
+			@ ( timer( stopWindow )) begin
+				argCur = stopWindow;
+				lastMeasure = `YES;
+			end
+		end else if (loc_stop_mode > `arg) begin
+		    if (stopWindow == 0) begin
+			argstopCur = lc_stopDirection;
+
+			if ($abstime - stop_td >= 0) begin
+			    if (stopCnt+1 == stop_count) begin
+				if ( crossStopDirection ) begin
+				    stopWindow = $abstime;
+				    lastMeasure = `YES;
+				end
+			    end
+
+			    if ( argstopCur != argstopPrev) 
+                               stopCnt = stopCnt + 1;
+			end
+		    end
+		end
+
+		if (doMeasure) begin
+		    if (outMinValue > outCur) outMinValue = outCur;
+		    if (outMaxValue < outCur) outMaxValue = outCur;
+		    if (startMinValue > startCur) startMinValue = startCur;
+		    if (startMaxValue < startCur) startMaxValue = startCur;
+
+		    outCurHold = 0.0;
+		    startCurHold = 0.0;
+
+		    if (lastMeasure) begin
+			doMeasure = `NO;
+		    end
+		end else begin
+			outCurHold = outCur;
+			startCurHold = startCur;
+		end
+
+                outArea = idt(outCur - outCurHold, 0.0);			
+                startArea = idt(startCur - startCurHold, 0.0);			
+                outAreaS = idt(outCur*outCur - outCurHold*outCurHold, 0.0);
+                startAreaS = idt(startCur*startCur - startCurHold*startCurHold, 0.0);
+                prodArea = idt(outCur*startCur - outCurHold*startCurHold, 0.0);
+			
+
+		argstartPrev = argstartCur;
+		argstopPrev = argstopCur;
+	    end
+
+	    @ ( final_step ) begin
+	       if (analysis("tran")) begin
+		   $strobe("\nModule instance: %M\n");
+		   if (startWindow >= stopWindow) begin
+		       $strobe("Start of the measuring window = %g exceeds the end = %g.\n", startWindow, stopWindow);
+		   end else begin
+		       window = stopWindow - startWindow;
+		       outAvg = outArea/window;
+		       startAvg = startArea/window;
+		       outPP = outMaxValue - outMinValue;
+		       startPP = startMaxValue - startMinValue;
+		       outRMS = sqrt(outAreaS/window);
+		       startRMS = sqrt(startAreaS/window);
+		       outSigma = sqrt((outAreaS/window) - outAvg*outAvg);
+		       startSigma = sqrt((startAreaS/window) - startAvg*startAvg);
+		       corr = (prodArea/window - outAvg*startAvg) /
+			   (outSigma*startSigma);
+		       $strobe("    Measuring interval: [ %12.10g %12.10g ]\n",
+			   startWindow, stopWindow);
+		       $strobe("    Output signal:\n");
+		       $strobe("        min = %e\n", outMinValue);
+		       $strobe("        max = %e\n", outMaxValue);
+		       $strobe("        peak to peak = %e\n", outPP);
+		       $strobe("        average = %e\n", outAvg);
+		       $strobe("        rms = %e\n", outRMS);
+		       $strobe("        standard deviation = %e\n", outSigma);
+		       $strobe("    start signal :\n");
+		       $strobe("        min = %e\n", startMinValue);
+		       $strobe("        max = %e\n", startMaxValue);
+		       $strobe("        peak to peak = %e\n", startPP);
+		       $strobe("        average = %e\n", startAvg);
+		       $strobe("        rms = %e\n", startRMS);
+		       $strobe("        standard deviation = %e\n", startSigma);
+		       $strobe("    Correlation coefficient = %e\n", corr);
+		       $strobe("\n");
+		   end
+	       end
+	   end
+
+	end
+
+endmodule
+
+
+
+

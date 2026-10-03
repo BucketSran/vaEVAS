@@ -1,0 +1,60 @@
+// VerilogA for PLL_study_va, DAC_5V, veriloga
+//DIN[0] is MSB
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module DAC_5V(CLKS,DIN,VOUTP,VOUTN);
+input CLKS;
+input [0:5] DIN;
+inout VOUTP,VOUTN;
+electrical CLKS,VOUTP,VOUTN;
+electrical [0:5] DIN;
+parameter real Vlo=0;
+parameter real Vhi=1.5;
+parameter real Vth = 0.75;
+parameter real Vcm = 0.75;
+parameter real tt = 200p from [1p:inf); //digital r/f time
+parameter real delay = 1n from [1p:inf); //digital r/f time
+parameter real refp = 925m;
+parameter real refn = 575m;
+real dacoutvalp,dacoutvaln,sump,sumn;
+integer dacreg[0:5];
+real dacweight[0:5];
+genvar i;
+analog begin
+
+    @(initial_step) begin
+	dacoutvalp = refp;
+        dacoutvaln = refn;
+        for(i = 0;i < 6 ; i=i+1)
+	begin
+	 dacreg[i] = 0;
+	end
+
+        for(i = 0;i < 6 ; i=i+1)
+	begin
+	 dacweight[i] = 1/pow(2,i+1);
+	end
+    end
+ 
+    @(cross(V(CLKS)-Vth,1)) begin
+     for(i = 0;i < 6 ; i=i+1)
+	begin
+	 dacreg[i] = V(DIN[i]) > Vth;
+	end
+     sump = 0;
+     sumn = 0;
+     for(i = 0;i < 6 ; i=i+1)
+	begin
+	 sump = sump + dacreg[i]*refp*dacweight[i] + (1-dacreg[i])*refn*dacweight[i];
+	 sumn = sumn + dacreg[i]*refn*dacweight[i] + (1-dacreg[i])*refp*dacweight[i];
+	end
+     dacoutvalp = sump + 1*Vcm*dacweight[5];
+     dacoutvaln = sumn + 1*Vcm*dacweight[5];
+    end
+  
+V(VOUTP)<+ transition(dacoutvalp,delay,tt);
+V(VOUTN)<+ transition(dacoutvaln,delay,tt);
+end
+endmodule

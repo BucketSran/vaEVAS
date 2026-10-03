@@ -1,0 +1,57 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:33 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define MAXINT  2_147_483_647.0
+
+//--------------------
+// trans_channel
+//
+// -  Transmission channel
+//
+// vin:		am input signal     [V,A]
+// vout:	rectified am signal [V,A]
+//
+// INSTANCE parameters
+//    attenuation = 20log10 attenuation [dB]
+//    noise_amp   = amplitude of noise added to 'vin' BEFORE attenuation [V]
+//
+// MODEL parameters
+//    {none}
+//
+// 'vin' has of 'noise_amp' noise added to it and the resultant is
+// attenuated by 'attenuation' [dB]
+//
+
+module trans_channel(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real attenuation = 0;
+parameter real noise_amp = 0 from [0:inf];
+
+   real gain;
+   integer iseed;
+
+   analog begin
+      @ ( initial_step ) begin
+          gain = 1 / pow (10, (attenuation/20) );
+	  iseed = 312;
+      end
+      V(vout) <+ gain * ( V(vin) + noise_amp * $random(iseed)/`MAXINT );
+   end
+   
+endmodule
+
+
+
+
+
+

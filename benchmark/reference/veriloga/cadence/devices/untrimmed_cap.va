@@ -1,0 +1,87 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:39 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define PI  	3.14159265358979323846264338327950288419716939937511
+`define MAXINT  2_147_483_647.0
+
+
+//--------------------
+// untrimmed_cap
+//
+// -  untrimmed capacitor
+//
+// vp,vn:	terminals [V,A]
+//
+// INSTANCE parameters
+//    c_mean   = mean capacitance [Ohms]
+//    c_dev    = std deviation of capacitance [Ohms]
+//    seed1    = first seed value for randomly generating capacitance vals []
+//    seed2    = second seed value for randomly generating capacitance vals []
+//    show_val = option to print the value of capacitance to stdout
+//
+// MODEL parameters
+//    {none}
+//
+// Each instance has a randomly generated value of capacitance which is
+// is calculated at initialization. The distribution of these random
+// values is gaussian (i.e. normal) with a 'c_mean' and a standard deviation
+// of 'c_std'.
+//
+// Two seeds are needed to generate the Gaussian distribution.
+//
+
+module untrimmed_cap(vp, vn);
+inout vp, vn;
+electrical vp, vn;
+parameter real c_mean = 10K from (0:inf);
+parameter real c_dev = 1K from (0:inf);
+parameter integer seed1 = 0 from [0:inf);
+parameter integer seed2 = 13 from [0:inf);
+parameter integer show_val = 0;
+
+   real c,v1,v2;
+   integer iseed1, iseed2;
+
+   //
+   // Box Muller transformation to get Gaussian distribution
+   // mean=0.0, std dev = 1.0
+   //
+   analog function real gasdev;
+   input v1,v2;
+   real  v1,v2;
+
+      gasdev = sqrt(-2.0*log(v1))*cos(2*`PI*v2);
+   endfunction
+ 
+   analog begin
+
+      @ ( initial_step ) begin 
+	 iseed1 = seed1;
+	 iseed2 = seed2;
+	 v1 = abs($random(iseed1)/`MAXINT);
+	 v2 = abs($random(iseed2)/`MAXINT);
+
+	 c = c_mean + c_dev * gasdev(v1, v2);
+
+	 if (show_val == 1) $strobe("capacitance of %M = %e \n",c);
+
+      end
+
+      I(vp, vn) <+ ddt(c*V(vp, vn));
+   end
+endmodule
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:13 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define MAXINT  2_147_483_647.0
+
+//--------------------
+// noise_src
+//
+// -  Noise source
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    amp = amplitude of the output signal about 0 [V]
+//
+// MODEL parameters
+//    {none}
+//
+// This is an approximate white noise source.
+//
+// NOTE
+// It is NOT a true white source because it output changes every time_step
+// and the time step is dependent on the behaviour of the circuit
+//
+
+module noise_src(vout);
+output vout;
+electrical vout;
+parameter real amp = 1 from [0:inf);
+
+   integer iseed;
+   analog begin
+      @ ( initial_step ) begin
+	 iseed = 866;
+      end
+      V(vout) <+ amp * $random(iseed)/`MAXINT ;
+   end
+endmodule
+
+
+
+
+
+

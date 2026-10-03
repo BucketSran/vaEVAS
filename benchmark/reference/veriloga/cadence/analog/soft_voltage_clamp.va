@@ -1,0 +1,99 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:35 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// Soft voltage_clamp
+//
+// -  Soft voltage clamp
+//
+// vin:		input terminal  [V,A]
+// vout:	output terminal [V,A]
+// vgnd:	gnd terminal    [V,A]
+//
+// INSTANCE parameters
+//    vclamp_upper = upper clamping voltage [A]
+//    vclamp_lower = lower clamping voltage [A]
+//    exp_frac     = fraction of vclamp range from 'vclamp_upper' and
+//                   'vclamp_lower' at which exponential clamping starts to
+//                   have an effect. [] 
+//
+// MODEL parameters
+//    {none}
+//
+// 'vout'- 'vgnd' clamped/limited to between 'vclamp_upper' and
+// 'vclamp_lower' of 'vin' - 'vgnd'.
+//
+// The limiting starts working once the input voltage gets near 'vclamp_lower'
+// or 'vclamp_upper'. The clamping acts exponentially to ensure smoothness.
+// 
+// The fraction of the range ('vclamp_lower','vclamp_upper') over which the
+// the exponential clamping action occurs is 'exp_frac'.
+//
+
+module soft_voltage_clamp(vin, vout, vgnd);
+input vin;
+output vout;
+inout vgnd;
+electrical vin, vout, vgnd;
+parameter real vclamp_upper = 1;
+parameter real vclamp_lower = -1;
+parameter real exp_frac = 0.4;
+   real vclamp_range;
+   real exp_ampl;
+
+   real exp_upper; // up start of exp clamp
+   real exp_lower; // low start of exp clamp
+   real exp_decay; // decay factor of exponential clamping
+
+   real vin_val;
+   real vout_val;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+         vclamp_range = (vclamp_upper - vclamp_lower);
+         exp_ampl     = ( exp_frac ) * vclamp_range / 2;
+
+         exp_upper = (vclamp_upper - exp_ampl); // up start of exp clamp
+         exp_lower = (vclamp_lower + exp_ampl); // low start of exp clamp
+         exp_decay = exp_ampl; // decay factor of exponential clamping
+
+	 if (vclamp_upper <= vclamp_lower) begin
+	    $display("Range specification error.  vclamp_upper = (%E) less than vclamp_lower = (%E).\n", vclamp_upper, vclamp_lower );
+	    $finish;
+	 end
+      end
+
+      vin_val = V(vin,vgnd);
+
+      if (vin_val > exp_upper)      begin	
+      	 vout_val = exp_upper
+                    + exp_ampl * (1 - exp(-(vin_val-exp_upper)/exp_decay));
+      end else if (vin_val < exp_lower) begin
+      	 vout_val = exp_lower
+                    - exp_ampl * (1 - exp((vin_val-exp_lower)/exp_decay));
+      end else begin
+         vout_val = vin_val;
+      end
+
+      V(vout,vgnd) <+ vout_val;
+   end
+endmodule
+
+
+
+
+
+
+

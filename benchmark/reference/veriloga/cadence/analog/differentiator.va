@@ -1,0 +1,43 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:55 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// differentiator
+//
+// -  differentiator
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    gain = []
+//
+// MODEL parameters
+//    {none}
+//
+
+module differentiator(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real gain = 1;
+
+   analog 
+      V(sigout) <+ gain * ddt(V(sigin));
+
+endmodule
+
+
+
+
+

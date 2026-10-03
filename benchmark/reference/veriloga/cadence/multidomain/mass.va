@@ -1,0 +1,51 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:09 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define GRAV_CONST 9.81
+`define yes 1
+`define no 0
+
+ 
+
+//--------------------
+// mass
+//
+// -  mechanical mass
+//
+// posin:	terminal [m,N]
+//
+// INSTANCE parameters
+//    m = mass [kg]
+//    gravity = whether gravity acting on the direction of movement of mass []
+//
+// MODEL parameters
+//    {none}
+//
+
+module mass (posin);
+inout posin;
+kinematic posin;
+parameter real m = 1000; // mass given in kgs
+parameter integer gravity = `yes;
+
+   kinematic vel;
+   analog begin
+      Pos(vel) <+ ddt(Pos(posin));
+      F(posin) <+ m*ddt(Pos(vel));  // acceleration
+      if (gravity == `yes) begin
+ 	 F(posin) <+ `GRAV_CONST * m;  // if gravity acting
+      end
+   end
+endmodule
+
+
+
+

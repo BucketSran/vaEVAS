@@ -1,0 +1,27 @@
+// VerilogA for $exchange, DEC_6bit, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module DEC_6bit (vd1, vd2, vd3, vd4, vd5, vd6, vout);
+electrical vd6, vd5, vd4, vd3, vd2, vd1, vout;
+parameter real vref  = 1 from [0:inf);
+parameter real trise = 0 from [0:inf);
+parameter real tfall = 0 from [0:inf);
+parameter real tdel  = 0 from [0:inf);
+parameter real vtrans  = 0.5;
+
+    real out_scaled; // output scaled as fraction of 1024
+
+    analog begin
+		out_scaled = 0;
+		out_scaled = out_scaled + ((V(vd1) > vtrans) ? 32 : 0);
+		out_scaled = out_scaled + ((V(vd2) > vtrans) ? 16 : 0);
+		out_scaled = out_scaled + ((V(vd3) > vtrans) ? 8 : 0);
+		out_scaled = out_scaled + ((V(vd4) > vtrans) ? 4 : 0);
+		out_scaled = out_scaled + ((V(vd5) > vtrans) ? 2 : 0);
+		out_scaled = out_scaled + ((V(vd6) > vtrans) ? 1 : 0);
+		V(vout) <+ transition( vref*out_scaled/32, tdel, trise, tfall );
+    end
+endmodule
+

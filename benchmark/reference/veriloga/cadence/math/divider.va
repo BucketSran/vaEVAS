@@ -1,0 +1,58 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:26 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// divider
+//
+// -  divider
+//
+// signumer:	numerator (val,flow)
+// sigdenom:	denominator (val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    gain         = divider gain []
+//    min_sigdenom = minimum denominator (val)
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is gain multiplied by 'signumer' divided by 'sigdenom' unless
+// the absolute value of sigdenom is less than 'min_sigdenom'. Then 'signumer'
+// is divided by 'min_sigdenom' instead and multiplied by the sign of the
+// 'sigdenom'.
+//
+
+module divider(signumer, sigdenom, sigout);
+input signumer, sigdenom;
+output sigout;
+electrical signumer, sigdenom, sigout;
+parameter real gain = 1;
+parameter real min_sigdenom = 1.0e-9 from (0:inf);
+
+   real denominator;
+   
+   analog begin
+      denominator = V(sigdenom);
+      if (abs(denominator) < min_sigdenom)
+         denominator = (denominator > 0.0) ? min_sigdenom : -min_sigdenom;
+
+      V(sigout) <+ gain*V(signumer)/denominator;
+
+   end
+endmodule
+
+
+
+
+

@@ -1,0 +1,105 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:31 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// soft_current_clamp
+//
+// -  Soft current clamp
+//
+// vin:		input terminal  [V,A]
+// vout:	output terminal [V,A]
+// vgnd:	gnd terminal    [V,A]
+//
+// INSTANCE parameters
+//    iclamp_upper = upper clamping current [A]
+//    iclamp_lower = lower clamping current [A]
+//    exp_frac     = fraction of iclamp range from 'iclamp_upper' and
+//                   'iclamp_lower' at which exponential clamping starts to
+//                   have an effect. [] 
+//
+// MODEL parameters
+//    {none}
+//
+// Limits output current to between 'iclamp_upper' and 'iclamp_lower' of the
+// input current.
+//
+// The limiting starts working once the input current gets near 'iclamp_lower'
+// or 'iclamp_upper'. The clamping acts exponentially to ensure smoothness.
+// 
+// The fraction of the range ('iclamp_lower','iclamp_upper') over which the
+// the exponential clamping action occurs is 'exp_frac'.
+//
+// Excess current coming from 'vin' is routed to 'vgnd'
+//
+
+module soft_current_clamp(vin, vout, vgnd);
+input vin;
+output vout;
+inout vgnd;
+electrical vin, vout, vgnd;
+parameter real iclamp_upper = 1;
+parameter real iclamp_lower = -1;
+parameter real exp_frac = 0.4;
+   real iclamp_range;
+   real exp_ampl;
+
+   real exp_upper;
+   real exp_lower;
+   real exp_decay;
+
+   real iin_val;
+   real iout_val;
+
+   analog begin
+
+
+      @ ( initial_step ) begin
+         iclamp_range = (iclamp_upper - iclamp_lower);
+         exp_ampl     = ( exp_frac ) * iclamp_range / 2;
+
+         exp_upper = (iclamp_upper - exp_ampl); // up start of exp clamp
+         exp_lower = (iclamp_lower + exp_ampl); // low start of exp clamp
+         exp_decay = exp_ampl; // decay factor of exponential clamping
+
+	 if (iclamp_upper <= iclamp_lower) begin
+	    $display("Range specification error.  iclamp_upper = (%E) less than iclamp_lower = (%E).\n", iclamp_upper, iclamp_lower );
+	    $finish;
+	 end
+      end
+
+`ifdef __VAMS_ENABLE__
+      iin_val = I(<vin>);
+`else
+      iin_val = I(vin, vin);
+`endif
+      if (iin_val > exp_upper)      begin	
+      	 iout_val = exp_upper
+                    + exp_ampl * (1 - exp(-(iin_val-exp_upper)/exp_decay));
+      end else if (iin_val < exp_lower) begin
+      	 iout_val = exp_lower
+                    - exp_ampl * (1 - exp((iin_val-exp_lower)/exp_decay));
+      end else begin
+         iout_val = iin_val;
+      end
+
+      I(vin,vgnd) <+ iin_val - iout_val;
+      V(vin,vout) <+ 0;
+   end
+endmodule
+
+
+
+
+
+
+

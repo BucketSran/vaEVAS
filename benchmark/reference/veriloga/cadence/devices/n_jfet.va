@@ -1,0 +1,133 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:47:02 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// n_jfet
+//
+// -  JFET transistor
+//
+// vdrain:	drain voltage [V,A]
+// vgate:	gate voltage [V,A]
+// vsource:	source voltage [V,A]
+//
+// INSTANCE parameters
+//    area = area []
+//    vto    = threshold voltage [V]
+//    beta   = gain []
+//    lambda = output conductance factor []
+//    is     = saturation current []
+//    gmin   = minimal conductance []
+//    cjs    = gate-source junction capacitance [F]
+//    cgd    = gate-drain junction capacitance [F]
+//    m      = emission coefficient []
+//    phi    = gate junction barrier potential []
+//    fc     = forward bias capacitance factor []
+//
+// A model of an n-channel, junction field effect transistor
+//
+
+module n_jfet(vdrain, vgate, vsource);
+inout vdrain, vgate, vsource;
+electrical vdrain, vgate, vsource;
+parameter real area=1 from (0:inf);
+parameter real vto=-2;
+parameter real beta=0.1m from (0:inf);  // A/V^2
+parameter real lambda=0;
+parameter real is=1e-16 from [0:inf);
+parameter real gmin=1p from (0:inf);
+parameter real cjs=0 from [0:inf);
+parameter real cgd=0 from [0:inf);
+parameter real m=0.5 from (0:1);
+parameter real phi=1 from (0:inf);
+parameter real fc=0.5 from (0:1);
+
+   real Vgs, Vgd, Vds;
+   real Id, Igs, Igd;
+   real Qgs, Qgd;
+
+   real f1, f2, f3, fcp;
+
+   analog begin
+
+      @ ( initial_step or initial_step("static") ) begin
+	 f1 = (phi/(1 - m))*(1 - pow((1 - fc), m));
+	 f2 = pow((1 - fc), (1 + m));
+	 f3 = 1 - fc*(1 + m);
+	 fcp = fc*phi;
+      end
+
+      Vgs = V(vgate, vsource);
+      Vgd = V(vgate, vdrain);
+      Vds = V(vdrain, vsource);
+
+      if (Vds >= 0) begin
+
+         //
+         // forward active.
+         //
+         if (Vgs - vto <= 0) begin
+            Id = 0;
+         end else if (Vgs - vto <= Vds) begin
+            Id = beta*(1 + lambda*Vds)*pow((Vgs - vto), 2);
+         end else begin
+            Id = beta*Vds*(1 + lambda*Vds)*(2*(Vgs - vto) - Vds);
+         end
+
+      end else begin
+
+         // 
+         // reverse active.
+         //
+         if (Vgd - vto <= 0) begin
+            Id = 0;
+         end else if (Vgd - vto <= -Vds) begin
+            Id = -beta*(1 - lambda*Vds)*pow((Vgd - vto), 2);
+         end else begin
+            Id = beta*Vds*(1 - lambda*Vds)*(2*(Vgd - vto) + Vds);
+         end
+      end
+
+      //
+      // parasitic diodes.
+      //
+      Igs = is*(exp(Vgs/$vt) - 1) + Vgs*gmin;
+      Igd = is*(exp(Vgd/$vt) - 1) + Vgd*gmin;
+
+      //
+      // charge storage.
+      //
+      if (Vgs < fcp) begin
+         Qgs = area*2*phi*cjs*(1 - sqrt(1 - Vgs/phi));
+      end else begin
+         Qgs = area*cjs*(f1 + (1/f2)*(f3*(Vgs - fcp) + (Vgs*Vgs - fcp*fcp)/
+            (4*phi)));
+      end
+      if (Vgd < fcp) begin
+         Qgd = area*2*phi*cgd*(1 - sqrt(1 - Vgd/phi));
+      end else begin
+         Qgd = area*cgd*(f1 + (1/f2)*(f3*(Vgd - fcp) + (Vgd*Vgd - fcp*fcp)/
+            (4*phi)));
+      end
+
+      I(vdrain, vsource) <+ Id;
+      I(vgate, vsource) <+ Igs + ddt( Qgs );
+      I(vgate, vdrain) <+ Igd + ddt( Qgd );
+   end
+endmodule
+
+
+
+
+
+
+

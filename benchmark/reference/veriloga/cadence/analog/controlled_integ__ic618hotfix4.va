@@ -1,0 +1,67 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:47 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// controlled_integ
+//
+// -  controlled integrator
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+// sigctrl:	(val,flow)
+//
+// INSTANCE parameters
+//    sigout0            = initial sigout value (val)
+//    gain               = gain []
+//    sigctrl_trans	 = if sigcntl is above this, integration occurs (val)
+//    
+// MODEL parameters
+//    {none}
+//
+// Integration occurs while 'sigctrl' is above 'sigctrl_trans'.
+//
+(* instrument_module *)
+module controlled_integ(sigin, sigout, sigctrl);
+input sigin, sigctrl;
+output sigout;
+electrical sigin, sigout, sigctrl;
+parameter real sigout0 = 0;
+parameter real gain = 1;
+parameter real sigctrl_trans=0;
+   real sigout_val;
+   real idtral;
+   real input_expr;
+
+   analog begin
+	@ ( initial_step or initial_step( "dc" ) )
+            sigout_val = sigout0;
+
+	if ( (V(sigctrl) > sigctrl_trans) )
+		input_expr = V(sigin);
+	else
+		input_expr = 0.0;
+
+	idtral = idt(input_expr, 0 );
+
+        if (V(sigctrl) > sigctrl_trans) begin
+	      sigout_val = gain*(idtral) + sigout0;
+        end
+	V(sigout) <+ sigout_val;
+   end
+endmodule
+
+
+
+
+
+

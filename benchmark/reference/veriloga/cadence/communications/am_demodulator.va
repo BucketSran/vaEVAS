@@ -1,0 +1,72 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 1997/08/28 05:55:49 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// am_demodulator
+//
+// -  AM demodulator
+//
+// vin:		am rf input signal [V,A]
+// vout:	demodulated signal [V,A]
+//
+// INSTANCE parameters
+//    rf_gain      = gain of RF (radio frequency) stage []
+//    af_wn        = location of both AF (audio frequency) filter poles [rad/s]
+//    af_gain      = gain of the audio amplifier []
+//    af_lev_shift = added to AF signal after amplification and filtering [V]
+//
+// MODEL parameters
+//    {none}
+//
+// Demodulates the signal in 'vin' and outputs it as 'vout'
+//
+// Consists of 4 stages in series;
+//    1: RF amp amplifier
+//    2: Detector stage (full wave rectifier)
+//    3: AF filters stage is a low pass filter that extracts the AF signal
+//       - has gain of one, and two poles at 'af_wn' [rad/s]
+//    4: AF amp stage amplifies by af_gain and adds 'af_lev_shift'   
+//
+
+module am_demodulator(vin, vout);
+electrical  vin, vout;
+parameter real rf_gain = 1;
+parameter real af_wn   = 1K;
+parameter real af_gain = 1;
+parameter real af_lev_shift = 0;
+
+
+   electrical demod_gnd, vdetect, vaf;
+
+   svcvs #(.gain(1),.poles({-af_wn,0,-af_wn,0})) 
+               af_filter (vaf,demod_gnd,vdetect,demod_gnd);
+
+   real vrf;
+
+   analog begin
+      V(demod_gnd) <+ 0.0;
+
+      vrf = rf_gain * V(vin);
+
+      V(vdetect) <+ abs(vrf);
+
+      V(vout) <+ af_gain*V(vaf) + af_lev_shift;
+   end
+endmodule
+
+
+
+
+
+

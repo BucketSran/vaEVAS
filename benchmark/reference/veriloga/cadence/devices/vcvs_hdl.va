@@ -1,0 +1,45 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:46:31 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// vcvs_hdl
+//
+// -  voltage controlled voltage source
+//
+// vout_p,vout_n:	controlled voltage terminals  [V,A]
+// vin_p,vin_n:		controlling voltate terminals [V,A]
+//
+// INSTANCE parameters
+//    gain = voltage gain []
+//
+// MODEL parameters
+//    {none}
+//
+
+module vcvs_hdl(vout_p, vout_n, vin_p, vin_n);
+input vin_p, vin_n;
+output vout_p, vout_n;
+electrical vout_p, vout_n, vin_p, vin_n;
+parameter real gain = 0;
+
+   analog
+      V(vout_p, vout_n) <+ gain*V(vin_p, vin_n);
+
+endmodule
+
+
+
+
+
+
+

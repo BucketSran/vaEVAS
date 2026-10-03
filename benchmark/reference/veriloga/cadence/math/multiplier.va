@@ -1,0 +1,46 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:29 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// multiplier
+//
+// -  multiplier
+//
+// sigin1,sigin2:	inputs (val,flow)
+// sigout:		terminals (val,flow)
+//
+// INSTANCE parameters
+//    gain = gain of multiplier []
+//
+// MODEL parameters
+//    {none}
+//
+// sigout = gain * sigin1 * signin2
+//
+
+module multiplier(sigin1, sigin2, sigout);
+input sigin1, sigin2;
+output sigout;
+electrical sigin1, sigin2, sigout;
+parameter real gain = 1;
+
+   analog
+      V(sigout) <+ gain * V(sigin1)*V(sigin2);
+
+endmodule
+
+
+
+
+
+

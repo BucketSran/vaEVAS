@@ -1,0 +1,48 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:40 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// square_root
+//
+// -  square root
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    {none}
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is the square root of 'sigin'
+//
+
+module square_root (sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+
+   real sigin_val;
+
+   analog begin
+      sigin_val = V(sigin);
+
+      if ( sigin_val < 0.0 ) begin
+	 $display("Cannot take square root of a negative number\n");
+	 $finish;
+      end else begin
+	 V(sigout) <+ sqrt(sigin_val);
+      end
+   end
+endmodule

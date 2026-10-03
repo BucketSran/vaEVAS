@@ -1,0 +1,127 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:10 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define behind 0
+`define same 1
+`define ahead 2 
+
+//--------------------
+// freq_ph_detector
+//
+// -  freqency-phase detector
+//
+// vin_if:	signal whose phase is being detected [V,A]
+// vin_lo:	signal from local ocillator [V,A]
+// sigout_inc:	logic signal to control charge pump [V,A]
+// sigout_dec:  logic signal to control charge pump [V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// The freq_ph_detector can have 3 states; 'behind', 'ahead', 'same'. The
+// specific state is determined by the positive going transitions of the
+// signals 'vin_if' and 'vin_lo'.
+//
+// Positive transitions on 'vin_if' causes the state to become the next
+// higher state unless the state is already 'ahead'.
+//
+// Positive transitions on 'vin_lo' causes the state to become the next
+// lower state unless the state is already 'behind'.
+//
+// The output depends on the state the detector is in;
+//    'ahead'  =>  'sigout_inc' = high, 'sigout_dec' = low;
+//    'same'   =>  'sigout_inc' = high, 'sigout_dec' = high;
+//    'behind' =>  'sigout_inc' = low,  'sigout_dec' = high;
+//
+// The output signals are expected to be used by a charge_pump.
+//
+(* instrument_module *)
+module freq_ph_detector(vin_if, vin_lo, sigout_inc, sigout_dec);
+input vin_if, vin_lo;
+output sigout_inc, sigout_dec;
+electrical vin_if, vin_lo, sigout_inc, sigout_dec;
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0;
+parameter real vtrans = 2.5;
+parameter real tdel = 0 from [0:inf);
+parameter real trise = 1n from (0:inf);
+parameter real tfall = 1n from (0:inf);
+
+   integer tpos_on_if, tpos_on_lo;  // flags for transitions on the inputs
+
+   real sigout_inc_val, sigout_dec_val;
+
+   //
+   // Note: 'ahead' means that 'vin_if' is ahead of 'vin_lo'
+   //
+   integer state;
+   
+
+   analog begin
+      @ ( initial_step ) begin
+	 sigout_inc_val = 0;
+	 sigout_dec_val = 0;
+	 state = `same;
+      end
+
+      tpos_on_if = 0;
+      @ ( cross(V(vin_if) - vtrans, +1) )
+          tpos_on_if = 1;
+
+      tpos_on_lo = 0;
+      @ ( cross(V(vin_lo) - vtrans, +1) )
+          tpos_on_lo = 1;
+
+      //      
+      // Reset the state on relevant transitions.
+      //
+      if (tpos_on_if && tpos_on_lo) begin
+         state = `same;
+      end else if (tpos_on_if) begin
+         if (state == `behind) begin
+            state = `same;
+         end else if (state == `same) begin
+            state = `ahead;
+         end
+      end else if (tpos_on_lo) begin
+         if (state == `ahead) begin
+            state = `same;
+         end else if (state == `same) begin
+            state = `behind;
+         end
+      end
+
+      //
+      // Reset the output value if there were any transitions.
+      //
+      if (tpos_on_if || tpos_on_lo) begin
+         if (state == `ahead) begin
+            sigout_inc_val = vlogic_high;
+            sigout_dec_val = vlogic_low;
+         end else if (state == `same) begin
+            sigout_inc_val = vlogic_low;
+            sigout_dec_val = vlogic_low;
+         end else if (state == `behind) begin
+            sigout_inc_val = vlogic_low;
+            sigout_dec_val = vlogic_high;
+         end
+      end
+
+      V(sigout_inc) <+ transition(sigout_inc_val, tdel, trise, tfall);
+      V(sigout_dec) <+ transition(sigout_dec_val, tdel, trise, tfall);
+   end
+endmodule

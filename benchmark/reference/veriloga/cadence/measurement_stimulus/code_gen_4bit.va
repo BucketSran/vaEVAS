@@ -1,0 +1,90 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:59 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// code_gen_4bit
+//
+// -  Random 4 bit code generator
+//
+// vout_b0-3:	output bits [V,A]
+//
+// INSTANCE parameters
+//    tperiod     = period of the code generation [s]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// This model outputs a different, randomly generated, 4 bit code every
+// 'tperiod' seconds.
+//
+(* instrument_module *)
+module code_gen_4bit(vout_b0, vout_b1, vout_b2, vout_b3);
+output vout_b0, vout_b1, vout_b2, vout_b3;
+electrical vout_b0, vout_b1, vout_b2, vout_b3;
+parameter real tperiod = 1 from (0:inf);
+parameter real vlogic_high = 5.0;
+parameter real vlogic_low = 0;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+ 
+   real tnext;
+
+   integer bit_reg;
+   integer bit3;
+   integer bit2;
+   integer bit1;
+   integer bit0;
+
+   real vout_b3_val;
+   real vout_b2_val;
+   real vout_b1_val;
+   real vout_b0_val;
+
+   real code;
+   integer iseed;
+ 
+   analog begin
+
+      @ ( initial_step ) begin
+	tnext = tperiod;
+	iseed = 82;
+      end
+
+      bit_reg = $random(iseed);
+      @ ( timer(tnext)) begin
+
+         bit0 = (bit_reg & 01);
+         bit1 = (bit_reg >> 1) & 01;
+         bit2 = (bit_reg >> 2) & 01;
+         bit3 = (bit_reg >> 3) & 01;
+
+         vout_b3_val = (vlogic_high - vlogic_low) * bit3 + vlogic_low;
+         vout_b2_val = (vlogic_high - vlogic_low) * bit2 + vlogic_low;
+         vout_b1_val = (vlogic_high - vlogic_low) * bit1 + vlogic_low;
+         vout_b0_val = (vlogic_high - vlogic_low) * bit0 + vlogic_low;
+
+         tnext = tnext + tperiod;
+      end
+
+      V(vout_b3) <+ transition(vout_b3_val,tdel,trise,tfall);
+      V(vout_b2) <+ transition(vout_b2_val,tdel,trise,tfall);
+      V(vout_b1) <+ transition(vout_b1_val,tdel,trise,tfall);
+      V(vout_b0) <+ transition(vout_b0_val,tdel,trise,tfall);
+
+      code = 8*bit3 + 4*bit2 + 2*bit1 + bit0;
+   end
+endmodule

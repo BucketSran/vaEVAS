@@ -1,11 +1,23 @@
-# 历史基准参考（v1 / v4）
+# Verilog-A 资料与历史基准参考
 
-本目录存放 vaBench（behavioral-veriloga-eval）的历史发布包，作为**只读参考**：
-供后续按本项目要求重新整理 benchmark 任务时查阅来源、清单与认证记录。
+本目录保存原始 Verilog-A 模型资料，以及 vaBench（behavioral-veriloga-eval）的历史发布包。
+**资料仅供课题组内部研究，不对外分发。** 原始源码与历史包保持内容不变，功能索引和来源说明随整理更新。
 这里的内容不是当前可运行的 Harbor 任务集（见[上级 README](../README.md)），
 不参与评分，不随本仓库的验证资格声明。
 
-## 来源与身份
+## 原始 Verilog-A 资料
+
+入口：[veriloga/README.md](veriloga/README.md)。先按来源分为
+[课题组工程资料](veriloga/lab/README.md)与
+[Cadence 官方安装资料](veriloga/cadence/README.md)，各自内部按功能分类。
+每个文件的功能、原始接口和使用提示写在分类页；历史路径与 v3 关联统一记录在
+[SOURCES.md](veriloga/SOURCES.md)。
+
+本次整理 106 个课题组源文件、213 个 Cadence 源文件版本（171 个 module 名），
+以及 6 个公共头文件。同一官方源码在课题组工程中的副本统一归入 Cadence，并保留工程来源记录。
+尚有 45 个历史来源路径未定位；未运行编译或仿真。
+
+## 历史发布包的来源与身份
 
 | 项 | 值 |
 | --- | --- |
@@ -36,7 +48,8 @@
 
 ## 使用约定
 
-- 本目录内容保持原字节，不做本地修改；引用时注明来源 commit。
-- 正式整理 benchmark 任务时，从这里的 manifest/任务定义出发按 Harbor 格式
-  重建到 `benchmark/tasks/`，不直接改造本目录。
-- v3（`benchmark-vabench-release-v3`）未迁入；如需补充，按同样方式登记来源。
+- `v1/`、`v4/` 保持原字节；引用历史包时注明来源 commit。
+- `veriloga/` 按功能整理文件名和路径，源码内容不变；来源统一记入 `SOURCES.md`。
+- 后续开发 benchmark 任务时，在 `benchmark/tasks/` 中创建派生任务，引用所用原始资料；
+  原始资产整理本身不要求创建题目、参考解或 checker。
+- v3（`benchmark-vabench-release-v3`）完整发布包未迁入；本次仅用其历史导入记录追溯原始模型来源。

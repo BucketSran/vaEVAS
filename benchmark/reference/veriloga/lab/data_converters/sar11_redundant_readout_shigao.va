@@ -1,0 +1,31 @@
+// VerilogA for 2023_Pipeline, V_SUM, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module V_SAR_sum (DIN, VOUT);
+input [10:0] DIN;
+output VOUT;
+electrical [10:0] DIN;
+electrical VOUT;
+
+parameter real vth = 0.45;
+real vout;
+
+analog begin
+	vout = 	448 * (V(DIN[10]) > vth) +
+			256 * (V(DIN[9]) > vth) +
+			128 * (V(DIN[8]) > vth) +
+			 80 * (V(DIN[7]) > vth) +
+			 48 * (V(DIN[6]) > vth) +
+			 32 * (V(DIN[5]) > vth) +
+			 16 * (V(DIN[4]) > vth) + 
+			  8 * (V(DIN[3]) > vth) +
+			  4 * (V(DIN[2]) > vth) +
+			  2 * (V(DIN[1]) > vth) +
+			  1 * (V(DIN[0]) > vth);
+	V(VOUT) <+ vout / 512 - 1;
+end
+	
+
+endmodule

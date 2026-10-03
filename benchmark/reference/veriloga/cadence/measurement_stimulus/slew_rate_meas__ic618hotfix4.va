@@ -1,0 +1,106 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:36 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+
+//--------------------
+// slew_rate_meas
+//
+// -  slew rate measurer
+//
+// vamp_out:		output voltage of opamp being measured [V,A]
+// vamp_p:		positive terminal of opamp being measured [V,A]
+// vamp_n:		negative terminal of opamp being measured [V,A]
+// vamp_spply_p:	positive supply of opamp being measured [V,A]
+// vamp_spply_n:	negative supply of opamp being measured [V,A]
+//
+// INSTANCE parameters
+//    vspply_p = positive supply voltage required by opamp [V]
+//    vspply_n = negative supply voltage required by opamp [V]
+//    twait    = time to wait before applying pulse to opamp input [V]
+//    vstart   = voltage at which to record the first measurement point [V]
+//    vend     = voltage at which to record the other measurement point [V]
+//    tmin     = minimum time allowed between both measurements before an
+//               error is reported [s]
+//
+// MODEL parameters
+//    {none}
+//
+// Monitors the input and records the times at which it equals 'vstart' and
+// 'vend. The slew is then given to be 'vstart' - 'vend' divided by the
+// time difference.
+//
+// The result is printed to the screen.
+//
+(* instrument_module *)
+module slew_rate_meas (vamp_out,vamp_p,vamp_n,vamp_spply_p,vamp_spply_n);
+output vamp_spply_p,vamp_spply_n;
+inout vamp_out,vamp_p,vamp_n;
+electrical vamp_out,vamp_p,vamp_n,vamp_spply_p,vamp_spply_n;
+parameter real vspply_p = 5.0;
+parameter real vspply_n = -5.0;
+parameter real twait = 1m;
+parameter real vpulse = 1;
+parameter real vstart = 0.1;
+parameter real vend   = 0.9;
+parameter real tmin   = 1e-9;
+
+   real vamp_p_val;
+   real t_vstart;
+   real slew_rate;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (vstart >= vend) begin
+	    $display("Range specification error.  vstart = (%E) greater than vend = (%E).\n", vstart, vend );
+	    $finish;
+	 end
+
+	 if (vspply_n >= vspply_p) begin
+	    $display("Range specification error.  vspply_n = (%f) greater than vspply_p = (%f).\n", vspply_n, vspply_p );
+	    $finish;
+	 end
+
+      end
+
+      @ (cross(V(vamp_out) - vstart,1,1.0, vamp_out.potential.abstol)) begin
+          t_vstart = $abstime;
+      end
+
+      @ (cross(V(vamp_out) - vend,1,1.0, vamp_out.potential.abstol)) begin
+         if( ($abstime - t_vstart) < tmin ) begin
+            $display("Slew rate unmeasurable by %M, input voltage changing too fast");
+            $finish;
+         end else begin
+            slew_rate = (vend - vstart)/($abstime - t_vstart);
+            $strobe("measured slew rate %e",slew_rate);
+         end
+      end
+
+      if ($abstime < twait) begin
+         vamp_p_val = 0;
+      end else begin
+         vamp_p_val = vpulse;
+      end
+
+      V(vamp_spply_p) <+ vspply_p;
+      V(vamp_spply_n) <+ vspply_n;
+
+      V(vamp_n,vamp_out) <+ 0.0;
+
+      V(vamp_p) <+ vamp_p_val;
+
+   end
+endmodule
+

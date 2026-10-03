@@ -1,0 +1,69 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:06 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// multiplexer
+//
+// -  multiplexer
+//
+//
+// sigin1,sigin2,sigin3:	signals to be multiplexed (val,flow)
+// cntrlp,cntrlm:		differential controlling signal (val,flow)
+// sigout:			(val,flow)
+//
+// INSTANCE parameters
+//    sigth_high = high threshold value (val)
+//    sigth_low  = low threshold value (val)
+//
+// MODEL parameters
+//    {none}
+//
+// If the differential controlling signal is below sigth_high 'sigout'
+// is 'sigin1'. If the differential controlling signal is above 'sigth_low',
+// 'sigout' is 'sigin3'. In between these two thresholds, 'sigout' = 'sigin2'
+//
+(* instrument_module *)
+module multiplexer(sigin1, sigin2, sigin3, cntrlp, cntrlm, sigout);
+input sigin1, sigin2, sigin3, cntrlp, cntrlm;
+output sigout;
+electrical sigin1, sigin2, sigin3, cntrlp, cntrlm, sigout;
+parameter real sigth_high = 1;
+parameter real sigth_low = -1;
+
+   real sigout_val;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (sigth_high <= sigth_low) begin
+	    $display("Range specification error.  sigth_high = (%E) <= sigth_low = (%E).\n", sigth_high, sigth_low );
+	    $finish;
+	 end
+      end
+
+      if (V(cntrlp, cntrlm) < sigth_low) begin
+         sigout_val = V(sigin1);
+      end else if (sigth_low <= V(cntrlp, cntrlm) && V(cntrlp, cntrlm) <= sigth_high) begin
+         sigout_val = V(sigin2);
+      end else if (V(cntrlp, cntrlm) > sigth_high) begin
+         sigout_val = V(sigin3);
+      end
+      V(sigout) <+ slew( sigout_val );
+   end
+endmodule
+
+
+
+
+

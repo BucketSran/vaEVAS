@@ -1,0 +1,34 @@
+// VerilogA for PIPE_SAR_1P3G_2022, FLASH_SUM8_DELAY, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module FLASH_SUM8_DELAY(DIN,DOUT,CLKS);
+input [7:0] DIN;
+output DOUT;
+input CLKS;
+electrical [7:0] DIN;
+electrical DOUT;
+electrical CLKS;
+parameter real Vth = 0.45;
+real dreg;
+real dregval;
+genvar i;
+analog begin
+
+  @(initial_step) begin
+	 dreg = 0;
+	dregval = 0;
+  end
+
+   @(cross(V(CLKS)-Vth,+1)) begin
+		dregval = 0;
+        for(i = 0;i < 8 ; i=i+1)
+		begin
+		 dregval= dregval + (V(DIN[i]) > Vth);
+		end
+		dreg = dregval/8;
+   end
+V(DOUT) <+ transition(dreg,1p,1p);
+end
+endmodule

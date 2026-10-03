@@ -1,0 +1,51 @@
+// VerilogA for zy_test, DFF_ideal, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ADC_31LEVEL(VIN, DOUT, CLK);
+input VIN, CLK;
+output [29:0] DOUT;
+electrical [29:0] DOUT;
+electrical VIN, CLK;
+
+
+parameter real ttol=0 from [0:inf);
+parameter real td=0 from [0:inf);
+parameter real tt=0 from (0:inf);
+
+parameter real vrefp=0.125;
+parameter real vrefn=-0.125;
+parameter real vl=0;
+parameter real vh=0.9;
+parameter real vth=0.45;
+
+real vin, vout[29:0];
+genvar i;  // for loop use
+
+analog begin
+
+vin = V(VIN);
+
+@ (cross(V(CLK)-vth, 1, ttol)) begin
+
+for (i = 0; i <= 29; i=i+1) begin
+
+
+if (vin > vrefn + (i+1) * (vrefp-vrefn)/31.0) 
+vout[i] = 1;
+else
+vout[i] = 0;
+
+end
+
+end
+
+generate i (0,29) begin
+	V(DOUT[i]) <+ transition((vout[i] == 1) ? vh:vl, td, tt);
+end
+
+end
+
+
+endmodule

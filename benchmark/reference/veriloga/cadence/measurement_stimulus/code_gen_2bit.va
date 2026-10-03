@@ -1,0 +1,75 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:58 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+//--------------------
+// code_gen_2bit
+//
+// -  2 bit code generator
+//
+// vout0, vout1:	output bits [V,A]
+//
+// INSTANCE parameters
+//    seed        = random seed
+//    tperiod     = period of output code [s]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// Generates a pair of random binary signals.
+//
+(* instrument_module *)
+module code_gen_2bit (vout1, vout0);
+output vout1, vout0;
+electrical vout1, vout0;
+parameter integer seed = 92;
+parameter real tperiod = 1 from (0:inf);
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0 ;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+   real next;
+
+   integer b1, b0, bit_reg;
+
+   real vout0_val, vout1_val;
+   integer iseed;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 iseed = seed;
+	 next = $abstime + tperiod;
+	 vout0_val = vlogic_low;
+	 vout1_val = vlogic_low;
+      end
+
+      bit_reg = $random(iseed);
+      @ ( timer( next )) begin
+         b0 = (bit_reg & 01);
+         b1 = (bit_reg >> 1) & 01;
+         vout0_val = (vlogic_high-vlogic_low)*b0 + vlogic_low;
+         vout1_val = (vlogic_high-vlogic_low)*b1 + vlogic_low;
+         next = next + tperiod;
+      end
+
+      V(vout0) <+ transition(vout0_val,tdel,trise,tfall);
+      V(vout1) <+ transition(vout1_val,tdel,trise,tfall);
+    end
+endmodule
+
+

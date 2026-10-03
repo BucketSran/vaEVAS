@@ -1,0 +1,56 @@
+// VerilogA for PLL_study_va, DAC_5V, veriloga
+//DIN[0] is MSB
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module DAC_5V(CLKS,DIN,VOUT);
+input CLKS;
+input [0:6] DIN;
+inout VOUT;
+electrical CLKS,VOUT;
+electrical [0:6] DIN;
+parameter real Vlo=0;
+parameter real Vhi=1.5;
+parameter real Vth = 0.75;
+parameter real tt = 200p from [1p:inf); //digital r/f time
+parameter real delay = 1n from [1p:inf); //digital r/f time
+parameter real refp = 5;
+parameter real refn = 1;
+real dacoutval,sum;
+integer dacreg[0:6];
+real dacweight[0:6];
+genvar i;
+analog begin
+
+    @(initial_step) begin
+	dacoutval = 1;
+        for(i = 0;i < 7 ; i=i+1)
+	begin
+	 dacreg[i] = 0;
+	end
+
+        for(i = 0;i < 7 ; i=i+1)
+	begin
+	 dacweight[i] = 1/pow(2,i+1);
+	end
+    end
+ 
+    @(cross(V(CLKS)-Vth,1)) begin
+     for(i = 0;i < 7 ; i=i+1)
+	begin
+	 dacreg[i] = V(DIN[i]) > Vth;
+	end
+     sum = 0;
+     for(i = 0;i < 7 ; i=i+1)
+	begin
+	 sum = sum + dacreg[i]*refp*dacweight[i] + (1-dacreg[i])*refn*dacweight[i];
+	end
+     sum = sum + 1*refn*dacweight[6];
+     dacoutval = sum;
+    end
+  
+V(VOUT)<+ transition(dacoutval,delay,tt);
+
+end
+endmodule

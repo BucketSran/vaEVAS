@@ -1,0 +1,100 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// full_subtractor
+//
+// -  full subtractor
+//
+// vin1, vin2:	inputs	[V,A]
+// vin_borrow:	borrow in	[V,A]
+// vout_diff:	difference out	[V,A]
+// vout_borrow:	borrow out	[V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = logic high value [V]
+//    vlogic_low  = logic low value [V]
+//    vtrans      = threshold for inputs to be high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// Truth Table:
+//
+//	in1	in2	bin	bout	diff
+//	------------------------------------
+//	0	0	0	0	0
+//	0	0	1	1	1
+//	0	1	0	1	1
+//	0	1	1	1	0
+//	1	0	0	0	1
+//	1	0	1	0	0
+//	1	1	0	0	0
+//	1	1	1	1	1
+//
+
+module full_subtractor(vin1, vin2, vin_borrow, vout_diff, vout_borrow);
+input vin1, vin2, vin_borrow;
+output vout_diff, vout_borrow;
+electrical vin1, vin2, vin_borrow, vout_diff, vout_borrow;
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans = 1.4;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+   integer a, b, c;
+   real vout_diff_val;
+   real vout_borrow_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (vlogic_high < vlogic_low) begin
+	    $display("Range specification error.  vlogic_high = (%E) less than vlogic_low = (%E).\n", vlogic_high, vlogic_low );
+	    $finish;
+	 end
+	 if (vtrans > vlogic_high || vtrans < vlogic_low) begin
+	    $display("Inconsistent $threshold specification w/logic family.\n");
+	 end
+      end
+
+      a = V(vin1) > vtrans;
+      b = V(vin2) > vtrans;
+      c = V(vin_borrow) > vtrans;
+
+      @ (cross(V(vin1) - vtrans, 1))  a = 1;
+      @ (cross(V(vin1) - vtrans, -1)) a = 0;
+
+      @ (cross(V(vin2) - vtrans, 1))  b = 1;
+      @ (cross(V(vin2) - vtrans, -1)) b = 0;
+
+      @ (cross(V(vin_borrow) - vtrans, 1))  c = 1;
+      @ (cross(V(vin_borrow) - vtrans, -1)) c = 0;
+
+      vout_diff_val =  ( a && ((!b && !c) || (b &&  c)) ||
+                   !a && ((!b &&  c) || (b && !c))    )
+                 ? vlogic_high : vlogic_low;
+
+      vout_borrow_val = ((b && c) || (!a && b) || (!a && c)) 
+                 ? vlogic_high : vlogic_low;
+
+      V(vout_diff) <+ transition( vout_diff_val, tdel, trise, tfall);
+      V(vout_borrow) <+ transition( vout_borrow_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+
+

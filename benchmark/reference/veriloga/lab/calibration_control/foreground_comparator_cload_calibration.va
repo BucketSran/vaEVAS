@@ -1,0 +1,62 @@
+// VerilogA for 2023_CT_Pipe_HYX, VA_calib_foreground_stage1, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module VA_calib_foreground_cload(CK, D, DCP, DCN, VREFP, VREFN, CVINP, CVINN, EN, ENB);
+
+input CK, D, VREFP, VREFN;
+output CVINP, CVINN, EN, ENB;
+output [4:0] DCP, DCN;
+electrical CK, D, VREFP, VREFN, CVINP, CVINN, EN, ENB;
+electrical [4:0] DCP, DCN;
+
+parameter real Vdd = 1.0;
+
+integer sign = 1, state = 1;
+integer iter = 4, flag_calib = 1;
+integer dp[4:0], dn[4:0];
+real vrefp, vrefn;
+
+analog begin
+	
+	@(initial_step)begin
+		vrefp = V(VREFP);
+		vrefn = V(VREFN);
+	end
+	
+	@(cross(V(CK)-0.5*Vdd, 1))begin
+		if(iter > -1)begin
+			sign = V(D) < 0.5 * Vdd;
+			if(sign == 1)begin
+				dp[iter] = 1;
+				dn[iter] = 0;
+			end else begin
+				dp[iter] = 0;
+				dn[iter] = 1;
+			end
+			iter = iter - 1;
+		end else begin
+			flag_calib = 0;
+		end
+	end
+	
+	
+	V(CVINP) <+ vrefp;
+	V(CVINN) <+ vrefn;
+	V(EN) <+ transition(flag_calib, 0, 20p, 20p);
+	V(ENB) <+ transition(1-flag_calib, 0, 20p, 20p);
+	V(DCP[4]) <+ dp[4];	
+	V(DCP[3]) <+ dp[3];
+	V(DCP[2]) <+ dp[2];
+	V(DCP[1]) <+ dp[1];
+	V(DCP[0]) <+ dp[0];
+	V(DCN[4]) <+ dn[4];	
+	V(DCN[3]) <+ dn[3];
+	V(DCN[2]) <+ dn[2];
+	V(DCN[1]) <+ dn[1];
+	V(DCN[0]) <+ dn[0];
+	
+end
+
+endmodule

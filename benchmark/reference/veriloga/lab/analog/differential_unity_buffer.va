@@ -1,0 +1,21 @@
+// VerilogA for Z_Pipeline_SMIC, TOOL_buffer, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module TOOL_buffer(VINP,VINN,VOUTP,VOUTN);
+input VINP,VINN;
+output VOUTP,VOUTN;
+electrical VINP,VINN,VOUTP,VOUTN;
+real vinp,vinn,voutp,voutn;
+analog begin
+
+vinp=V(VINP);
+vinn=V(VINN);
+voutp=vinp;
+voutn=vinn;
+V(VOUTP)<+voutp;
+V(VOUTN)<+voutn;
+
+end
+endmodule

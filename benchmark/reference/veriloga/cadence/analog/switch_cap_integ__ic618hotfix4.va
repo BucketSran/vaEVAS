@@ -1,0 +1,60 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:43 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// switch_cap_integ
+//
+// -  Switched capacitor integrator
+//
+// vout_p, vout_n:	output terminals [V,A]
+// vin_p, vin_n:	input terminals  [V,A]
+// vphi:		switching signal [V,A]
+//
+// INSTANCE parameters
+//    cap_in     = input capacitor value
+//    cap_fb     = feedback capacitor value
+//    vphi_trans = transition voltage of vphi
+//
+// MODEL parameters
+//    {none}
+//
+(* instrument_module *)
+module switch_cap_integ(vout_p, vout_n, vin_p, vin_n, vphi);
+input vin_p, vin_n, vphi;
+output vout_p, vout_n;
+electrical vout_p, vout_n, vin_p, vin_n, vphi;
+parameter real cap_in = 1u from (0:inf);
+parameter real cap_fb = 1m from (0:inf);
+parameter real vphi_trans = 0.5;
+`define VPHI_TRANS_ABSTOL 0.1
+
+   real sc_state;
+   real vout;
+   integer crossed;
+
+   analog begin
+
+      crossed = 0;
+      @ (cross( V(vphi)- vphi_trans,1, 1.0,`VPHI_TRANS_ABSTOL )) 
+         crossed = 1;
+
+      if ( crossed )
+         sc_state = (cap_in*V(vin_p,vin_n) + cap_fb*vout)/(cap_in + cap_fb);
+      else 
+         vout = sc_state;
+
+      V(vout_p,vout_n) <+ vout;
+   end
+
+endmodule
+

@@ -1,0 +1,91 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:03 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+`define ON 1
+`define OFF 0
+
+//--------------------
+// halfwave_rectifier_2p
+//
+// -  Two-phase halfwave rectifier
+//
+// vin_top:	Input [V,A]
+// tfire:	Delay after +ive zero crossing of each phase before phase
+//              rectifier fires [s,A]
+// vout:	Rectified output voltage [V,A]
+//
+// INSTANCE parameters
+//    ihold         = holding current (minimum current for rect to work) [A]
+//    switch_time   = max amount of time to spending attempting switch-on [s]
+//    vdrop_rect    = total rectification voltage drop [V].
+//
+// MODEL parameters
+//    {none}
+//
+(* instrument_module *)
+module halfwave_rectifier_2p(vin_p, vin_n, tfire, vout_p, vout_n);
+input vin_p, vin_n;
+input tfire;
+output vout_p, vout_n;
+electrical tfire;
+electrical vin_p, vout_p, vin_n, vout_n;
+parameter real ihold = 10m from (0:inf);
+parameter real switch_time = 1m from (0:inf);
+parameter real vdrop_rect = 1.3 from (0:inf);
+
+   integer rect_dir_p;
+   real tfire_dir_p;     // time at which start to rectify positive
+
+   real switch_p_until;  // keep trying to switch on pos. rect. until ...
+
+   integer switching_p;  // boolean: true if trying to switch on pos. dir.
+
+   analog begin
+
+      @ ( initial_step ) begin
+         rect_dir_p = `OFF;
+         tfire_dir_p = 1M;
+         switch_p_until = 1M;
+         switching_p = 0;
+      end
+
+      // figure out when to fire
+      @ (cross(V(vin_p,vin_n),1,1.0,vin_p.potential.abstol)) begin
+         tfire_dir_p = $abstime + V(tfire);
+      end
+
+      @ ( timer(tfire_dir_p)) begin
+       	 rect_dir_p = `ON;
+         switching_p = 1;
+         switch_p_until = $abstime + switch_time;
+      end
+
+      // when to stop rectifying positive direction
+      if ( (-I(vout_p,vout_n) < ihold)&&(rect_dir_p == `ON)&&(!switching_p)) begin
+          rect_dir_p = `OFF;
+      end
+
+      // no longer trying to switch on positive direction
+      @ ( timer(switch_p_until)) begin
+         switching_p = 0;
+      end
+
+      // OUTPUT DRIVING
+
+      if (rect_dir_p == `OFF) begin
+      	  V(vout_p,vout_n) <+ 0.0;
+      end else begin
+         V(vout_p,vout_n) <+  max( ( V(vin_p,vin_n) - vdrop_rect), 0);
+      end
+   end
+endmodule

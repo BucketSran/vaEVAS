@@ -1,0 +1,66 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:42 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// single_shot
+//
+// -  Single shot
+//
+// vin:		input terminal [V,A]
+// vout:	output terminal [V,A]
+//
+// INSTANCE parameters
+//    pulse_width = pulse width [s]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// This model outputs a logic high pulse of duration 'pulse_width' if a
+// positive transition is detected on the input.
+//
+(* instrument_module *)
+module single_shot(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real pulse_width = 10n from (0:inf);
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0 ;
+parameter real vtrans = 2.5;
+parameter real tdel=1n from (0:inf);
+parameter real trise=1p;
+parameter real tfall=1p;
+
+   real vout_val, turn_off;
+
+
+   analog begin
+      @ ( initial_step ) begin
+	 vout_val = 0;
+	 turn_off = -1M;
+      end
+
+      @ (cross(V(vin) - vtrans, +1)) begin
+         vout_val = vlogic_high;
+         turn_off = $abstime + pulse_width + trise;
+      end
+
+      @ ( timer(turn_off)) vout_val = vlogic_low;
+
+      V(vout) <+ transition(vout_val, tdel, trise, tfall);
+   end
+endmodule

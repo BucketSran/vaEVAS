@@ -1,0 +1,45 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module IDEAL_DAC_V(Digital, Vop, Von, Vcm, CLK);
+
+	inout Digital, Vop, Von, Vcm, CLK;
+	electrical Digital, Vop, Von, Vcm, CLK;
+	parameter real Trise = 0 from [0:inf);
+	parameter real Tfall = 0 from [0:inf);
+	parameter real Tdel = 0 from [0:inf);
+	parameter real Vref = 1.0 from (0:inf);
+	parameter real Vtrans_clk = 0.5 from (0:inf);
+	parameter integer LVL = 16 from (0:inf);
+   	
+   	real LSB;
+	real H_LSB;
+   	real Vod;
+	integer Vd;
+
+   	analog begin
+
+      	@ ( initial_step ) begin
+          	
+			LSB = 2 * Vref / LVL;
+			H_LSB = LSB / 2;
+      	
+		end
+
+      	@ (cross(V(CLK) - Vtrans_clk, -1)) begin
+
+         	Vd = V(Digital);
+	     	Vod = Vd * LSB - Vref + H_LSB;
+
+      	end
+
+      //
+      // assign the outputs
+      //
+
+	V(Vop) <+ transition(V(Vcm) + Vod / 2, Tdel, Trise, Tfall);
+	V(Von) <+ transition(V(Vcm) - Vod / 2, Tdel, Trise, Tfall);
+   	
+	end
+
+endmodule

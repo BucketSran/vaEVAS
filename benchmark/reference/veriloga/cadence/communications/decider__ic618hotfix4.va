@@ -1,0 +1,107 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:01 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// decider
+//
+// -  Decider
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    tperiod     = period of binary data being extracted [s]
+//    tsample     = sampling period [s]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tstart      = time at which to start samling [s]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// This model samples this input signal a number of times and outputs the
+// most likely value of the binary data contained in the signal.
+//
+// A decision on what the data is contained in the input is made each
+// 'tperiod'. During each decision period, a sample of the input is taken
+// each 'tsample'. A count of the number of samples with values of greater
+// than ('vlogic_high' + 'vlogic_low')/2 is kept. If at the end of
+// the period this count is greater than half the number of samples
+// taken, a logic '1' is outputted. If it is less than half the number
+// of samples, a 'vlogic_low' is outputted. Otherwise the output is
+// ('vlogic_high' + 'vlogic_low')/2.
+//
+// The sampling starts at 'tstart'
+//
+(* instrument_module *)
+module decider (vin,vout);
+input vin;
+output vout;
+electrical vout, vin;
+parameter real tperiod = 1 from (0:inf);
+parameter real tsample = 1 from (0:inf);
+parameter real tstart = 0 from [0:inf);
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0 ;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+   integer sum;
+
+   real rsum;
+
+   real tnext_sample, tnext_decision;
+
+   real vlogic_mid;
+
+   real vout_val;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 vlogic_mid = (vlogic_high + vlogic_low)/2;
+	 vout_val = vlogic_mid;
+	 tnext_sample   = tstart;
+	 tnext_decision = tstart + tperiod;
+	 sum = 0;
+      end
+
+      @ ( timer( tnext_sample )) begin
+         if (V(vin) > vlogic_mid) begin
+            sum = sum + 1;
+         end else if (V(vin) < vlogic_mid) begin
+            sum = sum - 1;
+         end
+         tnext_sample = tnext_sample + tsample;
+      end
+
+      @ ( timer( tnext_decision )) begin
+         if (sum > 0) begin
+            vout_val = vlogic_high;
+         end else if (sum < 0) begin
+            vout_val = vlogic_low;
+         end else begin
+           vout_val = vlogic_mid;
+         end
+         sum = 0;
+         tnext_decision = tnext_decision + tperiod;
+      end
+      rsum = sum;
+
+      V(vout) <+ transition(vout_val,tdel,trise,tfall);
+   end
+endmodule
+
+

@@ -1,0 +1,56 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:09 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// repeater
+//
+// -  repeater
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    period = period of repeated waveform (val)
+//
+// MODEL parameters
+//    {none}
+//
+// From 0 to 'period', 'sigout' = 'sigin'. After this the 'sigout' is a
+// periodic repetition of what 'sigin' was between 0 and 'period'.
+//
+module repeater(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real period = 1n;
+
+electrical gnd, delayout, delayin; 
+ground gnd;
+\delay #(.td(period)) delay1(delayout, gnd, delayin, gnd);
+   analog begin
+     if ($abstime <= period) begin
+        V(sigout) <+ V(sigin);
+        V(delayin) <+ V(sigin);
+     end else begin
+        V(delayin) <+ V(sigout);
+        V(sigout) <+ V(delayout);
+     end
+   end
+endmodule
+
+
+
+
+
+
+

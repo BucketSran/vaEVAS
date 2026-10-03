@@ -1,0 +1,1152 @@
+{
+  "run_root": "/Users/bucketsran/Documents/TsingProject/vaEVAS-main/runs/va-screen/pilot-20261003-221547",
+  "protocol": {
+    "protocol": "one-shot-no-tools-no-feedback",
+    "models": [
+      "glm-5.3",
+      "gpt-6.1-sol"
+    ],
+    "effort": "xhigh",
+    "harbor": "0.23.0",
+    "attempts_per_task": 1,
+    "task_count": 6,
+    "model_calls_max": 12,
+    "model_retry": 0,
+    "git_head": "2446668f9063da479d61f12f4737a23cb2a2d657",
+    "input_manifest_sha256": "87713d5b4384e1ccedb0508176b847c60ba5179792d6645323fa487759f782cd"
+  },
+  "frozen_inputs_unchanged": true,
+  "analysis_script_sha256": "f6cdf450c4698cad4a0928398df74eefb3dd6b7e84e829e1dfa6d29014d57cef",
+  "channel_amendment": {
+    "reason": "Homebrew Codex CLI 0.154.0 rejected gpt-6.1-sol before producing any candidate.",
+    "resolution": "Use the existing Codex desktop bundled CLI 0.159.0-alpha.12.1 through a run-local PATH symlink; same adapter, same model, same instructions/checkers.",
+    "initial_trials": [
+      {
+        "trial": "va04-gain-calibration__rPZUQGz",
+        "exception": "RuntimeError",
+        "candidate_exists": false
+      },
+      {
+        "trial": "va05-dynamic-vco__z89Lmvu",
+        "exception": "RuntimeError",
+        "candidate_exists": false
+      },
+      {
+        "trial": "va06-loaded-opamp__hov3H82",
+        "exception": "RuntimeError",
+        "candidate_exists": false
+      }
+    ],
+    "scored_codex_jobs": [
+      "codex-native-preflight",
+      "codex-native"
+    ],
+    "scored_glm_jobs": [
+      "glm"
+    ],
+    "task_or_checker_changed": false,
+    "diagnostic_repair_counts_as_submission": false
+  },
+  "submission_identity_and_no_tool_audit": true,
+  "expected_submissions": 12,
+  "graded_submissions": 12,
+  "records": [
+    {
+      "task": "va01-and2",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 70.20117758295964,
+      "usage": {
+        "input_tokens": 1184,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 3379,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 1184,
+          "outputTokens": 3379,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.09039499999999999,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "7859eb8e42e73f2f254db69085f8f402d5ec17ba7f761f08874f1492aa699485",
+      "candidate_sha256": "505e1489e59737c1748827d0ab484c5f0035dc83be9c324be9c727715949ce73",
+      "cases_sha256": "1a06c76426bd32d1261809e3bf2c1e2a27cd45912811e0f5b310c8f27e830d4c",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "levels-delay-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "8581a7af1a637a1773ae6c6f867b8b053c87ce25b6360461802d93b3cc204f5e"
+        },
+        {
+          "name": "levels-delay-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "39b9e58add87dba1fad3c3666ab9c513790a2892b7645b87d929826e7ec6fdba"
+        }
+      ],
+      "trial": "glm/va01-and2__zvzy4ZZ",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va01-and2-7ee41d8a882a"
+    },
+    {
+      "task": "va02-sar-handshake",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 429.2597593329847,
+      "usage": {
+        "input_tokens": 1417,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 22099,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 1417,
+          "outputTokens": 22099,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.5595600000000001,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "29549eca7d8ffd12b608a1fd22d79433b326072e6775514b7a4dabcb6324438e",
+      "candidate_sha256": "05499e0e90bdd3f52a62cf494b072921b4e645b9f5408ca72ec1996d115b3f7d",
+      "cases_sha256": "09639a1d538230bfae43f573eaea9f82361e4ff33026e463923850c8598d652f",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "handshake-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "67bee040496c9724ccf7ba0eb9e4268751ffc4cc804acf4f600b7c58b941acd8"
+        },
+        {
+          "name": "handshake-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "40906ab9f0bdfd9cd4dbed4e66ee525d2ad71525fd16a6619e9303618ea7938a"
+        }
+      ],
+      "trial": "glm/va02-sar-handshake__r9dE8ya",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va02-sar-handshake-23917477bddc"
+    },
+    {
+      "task": "va03-zoom-timing",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 0,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 0,
+      "elapsed_generation_s": 842.0345785410609,
+      "usage": {
+        "input_tokens": 1780,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 1728,
+        "output_tokens": 61189,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 1780,
+          "outputTokens": 61189,
+          "cacheReadInputTokens": 1728,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 1.5394889999999999,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "4d42a3c6296b504696f67940a65a3f4589782159ba0d33f5ee47d46ab1187298",
+      "candidate_sha256": "f2b389b0d7373965cf19fc10be69b4ae88cec2d06ebd162be64529b255de4aac",
+      "cases_sha256": "7c9ba601c1a7bdb58caf0b5d2f0c48ecf70bf50c384f323639cb2658d5beb844",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "calendar-0",
+          "status": "graded",
+          "passed": false,
+          "bad_samples": 586,
+          "bad_edge_checks": 9,
+          "failures": [
+            {
+              "kind": "sample",
+              "node": "RST",
+              "t": 9.750000000000001e-09,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "RST",
+              "t": 3.20975e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 4e-08,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 8.4e-07,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 1.6399999999999998e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 2.4399999999999995e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 3.2399999999999995e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 4.04e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 4.839999999999999e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 5.64e-06,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 8.750000000000001e-08,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 8.875e-07,
+              "value": 1.1,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RST",
+              "expected": 4,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "S",
+              "expected": 16,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "SAR",
+              "expected": 16,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RES",
+              "expected": 128,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "INT",
+              "expected": 128,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "CLK_SAR",
+              "expected": 112,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "ZOOM",
+              "expected": 128,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "CLK_ZOOM",
+              "expected": 512,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RST_ZOOM",
+              "expected": 128,
+              "observed": 0
+            }
+          ],
+          "waveform_sha256": "9b8d41d596380280a5978d4ea7aded989ec48fdb1bf3138fd49d96f2066d909d"
+        },
+        {
+          "name": "calendar-1",
+          "status": "graded",
+          "passed": false,
+          "bad_samples": 114,
+          "bad_edge_checks": 9,
+          "failures": [
+            {
+              "kind": "sample",
+              "node": "RST",
+              "t": 1.575e-08,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "RST",
+              "t": 1.11575e-06,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 3.95e-08,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 5.395e-07,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 1.1394999999999998e-06,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "S",
+              "t": 1.6394999999999997e-06,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 7.95e-08,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 5.794999999999999e-07,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 1.1794999999999999e-06,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "SAR",
+              "t": 1.6794999999999998e-06,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "RES",
+              "t": 1.26e-07,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "sample",
+              "node": "RES",
+              "t": 2.0600000000000002e-07,
+              "value": 1.5,
+              "atol": 0.015,
+              "observed": 0.0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RST",
+              "expected": 4,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "S",
+              "expected": 8,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "SAR",
+              "expected": 8,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RES",
+              "expected": 24,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "INT",
+              "expected": 24,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "CLK_SAR",
+              "expected": 40,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "ZOOM",
+              "expected": 24,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "CLK_ZOOM",
+              "expected": 72,
+              "observed": 0
+            },
+            {
+              "kind": "edge_count",
+              "node": "RST_ZOOM",
+              "expected": 24,
+              "observed": 0
+            }
+          ],
+          "waveform_sha256": "b585535be43446c8b1634bc74d9a32429f675bb23724a17adc6d99659572ec53"
+        }
+      ],
+      "trial": "glm/va03-zoom-timing__XfT94nB",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va03-zoom-timing-ce92c9495990"
+    },
+    {
+      "task": "va04-gain-calibration",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 0,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 0,
+      "elapsed_generation_s": 156.1042375410907,
+      "usage": {
+        "input_tokens": 1388,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 11945,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 1388,
+          "outputTokens": 11945,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.30556500000000003,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "3e9581bb56bf134e11ad3d658dbee809aedfa80bdceedc635b8473684a26a825",
+      "candidate_sha256": "52dbb6afc1bbbb8fca65a02a743b37daf0e11443fd4af61b10df8b80a2a7fc0c",
+      "cases_sha256": "b465a0bba52e9da5c6395669bcb61cceb7ff4811a30d95c8e7f1b48f4bd1d7bd",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "updates-clamps-0",
+          "status": "compile_or_simulation_failure",
+          "passed": false
+        },
+        {
+          "name": "updates-clamps-1",
+          "status": "compile_or_simulation_failure",
+          "passed": false
+        }
+      ],
+      "trial": "glm/va04-gain-calibration__2uAJPNF",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va04-gain-calibration-46c791983587"
+    },
+    {
+      "task": "va05-dynamic-vco",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 0,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 0,
+      "elapsed_generation_s": 190.5862708329223,
+      "usage": {
+        "input_tokens": 1268,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 8031,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 1268,
+          "outputTokens": 8031,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.20711500000000002,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "650a1d639dde69b24889651ee00b95343fc870227a91f60eabee63a1a19729b9",
+      "candidate_sha256": "b67df2920e88fd336956301f64b14b0758953d9bf5da1ae80618916304998cdd",
+      "cases_sha256": "ed980f5c8ef866074fe56959fc35ad2b515f21e6317051380f42a3ced7b42964",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "phase-integral-0",
+          "status": "compile_or_simulation_failure",
+          "passed": false
+        },
+        {
+          "name": "phase-integral-1",
+          "status": "compile_or_simulation_failure",
+          "passed": false
+        }
+      ],
+      "trial": "glm/va05-dynamic-vco__vypYCjZ",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va05-dynamic-vco-c5f1f446dc96"
+    },
+    {
+      "task": "va06-loaded-opamp",
+      "channel": "glm",
+      "model": "glm-5.3",
+      "cli_version": "2.1.170 (Claude Code)",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 3,
+      "passed_conditions": 3,
+      "elapsed_generation_s": 734.9297370000277,
+      "usage": {
+        "input_tokens": 3130,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 53977,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "model_usage": {
+        "glm-5.3": {
+          "inputTokens": 3130,
+          "outputTokens": 53977,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 1.365075,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "num_turns": 1,
+      "tool_events": null,
+      "instruction_sha256": "e0ce6e6931bc91d8c45f6ce54ee7025205ed42f39f88bcc58ecafe480cecaeec",
+      "candidate_sha256": "140f7a1f1e28800a6967a46ea17e90579154171325cab6f39e056921a769a442",
+      "cases_sha256": "8eb66fc3b64e1668671a21e0624de9e3ce0a31892f98bce70f635a528d88021b",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "loaded-ode-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "71731ee4c61f817f2ac94dd30995c888a222e851e2caf83652bd63158d7e407a"
+        },
+        {
+          "name": "loaded-ode-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "5e4f568c2e42511adcfc696008ec52d0f8049f393c83fae6d388d776ed223497"
+        },
+        {
+          "name": "loaded-ode-2",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "38785f7bdfd851197d8fc33c3749f7aed8665440d613b43c219981eb5c6aa225"
+        }
+      ],
+      "trial": "glm/va06-loaded-opamp__Nyb5xdJ",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va06-loaded-opamp-1584314bc2c4"
+    },
+    {
+      "task": "va05-dynamic-vco",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 81.52123995800503,
+      "usage": {
+        "input_tokens": 9684,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1417,
+        "reasoning_output_tokens": 1135
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "650a1d639dde69b24889651ee00b95343fc870227a91f60eabee63a1a19729b9",
+      "candidate_sha256": "46566b6370e236cfb904177ca25e9e4bf75dfde35028ed76730c86e6a289f5cd",
+      "cases_sha256": "ed980f5c8ef866074fe56959fc35ad2b515f21e6317051380f42a3ced7b42964",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "phase-integral-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "e7ab9d1e0a674c04c38a3c1047e215648c1fa06ff7acdb7111dd5786ec6b8373"
+        },
+        {
+          "name": "phase-integral-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "1e8207513e974460b395b5fdf08cd61689579bd27ee46fa723c4ddbd430f16b4"
+        }
+      ],
+      "trial": "codex-native-preflight/va05-dynamic-vco__oU59ccM",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va05-dynamic-vco-016528cc2c0d"
+    },
+    {
+      "task": "va01-and2",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 36.79301233403385,
+      "usage": {
+        "input_tokens": 9601,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 641,
+        "reasoning_output_tokens": 443
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "7859eb8e42e73f2f254db69085f8f402d5ec17ba7f761f08874f1492aa699485",
+      "candidate_sha256": "141b531831dd5d53e941546dbb9edcd557dc1d9130b8c7b78209f4875e9833ca",
+      "cases_sha256": "1a06c76426bd32d1261809e3bf2c1e2a27cd45912811e0f5b310c8f27e830d4c",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "levels-delay-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "d9e45eaeab540a2d4a9f5b906df0a89af4179e19b3246f22c1cbc5e80046deb1"
+        },
+        {
+          "name": "levels-delay-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "4b200a937b7b61d4a6ffa4498fa3755c76cdfec466394cf0ca7848d184a41681"
+        }
+      ],
+      "trial": "codex-native/va01-and2__c8eyoHn",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va01-and2-f207120fbbe5"
+    },
+    {
+      "task": "va02-sar-handshake",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 120.2908562090015,
+      "usage": {
+        "input_tokens": 9828,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2361,
+        "reasoning_output_tokens": 1552
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "29549eca7d8ffd12b608a1fd22d79433b326072e6775514b7a4dabcb6324438e",
+      "candidate_sha256": "f8e1953f99a95980962c9d0ae4ed81f0a6477f94dd7564c45788a08c2292678a",
+      "cases_sha256": "09639a1d538230bfae43f573eaea9f82361e4ff33026e463923850c8598d652f",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "handshake-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "111f84ae96ed88b892b298c80b7f1b314d9f6fe328d17dcf7e93a81a2d79d669"
+        },
+        {
+          "name": "handshake-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "b8c9fb0ffbcab26c85a68c82f79e83a32ec19482f3a9e207228d264a207ce219"
+        }
+      ],
+      "trial": "codex-native/va02-sar-handshake__nHShxWE",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va02-sar-handshake-e292541caa19"
+    },
+    {
+      "task": "va03-zoom-timing",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 234.90476112498436,
+      "usage": {
+        "input_tokens": 10138,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4724,
+        "reasoning_output_tokens": 2953
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "4d42a3c6296b504696f67940a65a3f4589782159ba0d33f5ee47d46ab1187298",
+      "candidate_sha256": "2ea4203b1ca52aad2c66fd795638c44d22d5977bb2ca0bb1f6b349eb6c044602",
+      "cases_sha256": "7c9ba601c1a7bdb58caf0b5d2f0c48ecf70bf50c384f323639cb2658d5beb844",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "calendar-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "0f8765ccd222e9f575ba02997106b4675648a78741761b2c8ba996c1c93833a4"
+        },
+        {
+          "name": "calendar-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "bc1edfcb36459d654bb6236e0c45de56317b0c6c3763c379f148bc02f31002a4"
+        }
+      ],
+      "trial": "codex-native/va03-zoom-timing__rpbdH3M",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va03-zoom-timing-6883a1661968"
+    },
+    {
+      "task": "va04-gain-calibration",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "elapsed_generation_s": 91.61682262492832,
+      "usage": {
+        "input_tokens": 9806,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1930,
+        "reasoning_output_tokens": 1036
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "3e9581bb56bf134e11ad3d658dbee809aedfa80bdceedc635b8473684a26a825",
+      "candidate_sha256": "25b3ff8674f9e9c435dae05ac04786ea338ccdc0ffd58335819693c52aceb5b5",
+      "cases_sha256": "b465a0bba52e9da5c6395669bcb61cceb7ff4811a30d95c8e7f1b48f4bd1d7bd",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "updates-clamps-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "7e837067985320fb1c3289b79fd1fc49a5ab8bc4d1b66a572722bdeb0f55d69b"
+        },
+        {
+          "name": "updates-clamps-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "5a2a33af5f43faa61c9bcdd70aef088eddfee4bd0d41961cf34a9a606116289d"
+        }
+      ],
+      "trial": "codex-native/va04-gain-calibration__u6mYUTk",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va04-gain-calibration-da402cc89c43"
+    },
+    {
+      "task": "va06-loaded-opamp",
+      "channel": "codex",
+      "model": "gpt-6.1-sol",
+      "cli_version": "codex-cli 0.159.0-alpha.12.1",
+      "reward": 1,
+      "status": "completed",
+      "conditions": 3,
+      "passed_conditions": 3,
+      "elapsed_generation_s": 78.20343487500213,
+      "usage": {
+        "input_tokens": 9965,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1648,
+        "reasoning_output_tokens": 1034
+      },
+      "model_usage": null,
+      "num_turns": null,
+      "tool_events": 0,
+      "instruction_sha256": "e0ce6e6931bc91d8c45f6ce54ee7025205ed42f39f88bcc58ecafe480cecaeec",
+      "candidate_sha256": "75b69177c45f2622a01b73f24407033cf053d7a236809ea6cff18a4dd96b27fc",
+      "cases_sha256": "8eb66fc3b64e1668671a21e0624de9e3ce0a31892f98bce70f635a528d88021b",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "spectre_version": "",
+      "cases": [
+        {
+          "name": "loaded-ode-0",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "4986fd32f3c7707e01cadd0bba86d00ded6f9fc2d77f0f2c24fd3ad58df524bf"
+        },
+        {
+          "name": "loaded-ode-1",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "71fa58340b3eb30fe581514de68cc4043528818041fe8ed056cc488f2fdf9fbb"
+        },
+        {
+          "name": "loaded-ode-2",
+          "status": "graded",
+          "passed": true,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "failures": [],
+          "waveform_sha256": "4a3dc074a163b9283daba9855a2d331d27b6b9dcf0e141ab6176a291df406cb0"
+        }
+      ],
+      "trial": "codex-native/va06-loaded-opamp__LWjqwwU",
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va06-loaded-opamp-546da5e54823"
+    }
+  ],
+  "infrastructure_events": [
+    {
+      "channel": "codex-old-cli",
+      "trial": "codex/va05-dynamic-vco__z89Lmvu",
+      "exception": {
+        "exception_type": "RuntimeError",
+        "exception_message": "codex generation failed; inspect isolated agent logs",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 418, in run\n    await self._run()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 41, in _run\n    await self._run_agent()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 77, in _run_agent\n    await self._run_agent_phase(\n    ...<5 lines>...\n    )\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 554, in _run_agent_phase\n    await asyncio.wait_for(\n    ...<6 lines>...\n    )\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/tasks.py\", line 488, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 98, in run\n    metadata=await asyncio.to_thread(generate,instruction,self.model_name,self.logs_dir)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/threads.py\", line 25, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 66, in generate\n    raise RuntimeError(f'{kind} generation failed; inspect isolated agent logs')\nRuntimeError: codex generation failed; inspect isolated agent logs\n",
+        "occurred_at": "2026-10-03T14:16:01.015725Z"
+      }
+    },
+    {
+      "channel": "codex-old-cli",
+      "trial": "codex/va06-loaded-opamp__hov3H82",
+      "exception": {
+        "exception_type": "RuntimeError",
+        "exception_message": "codex generation failed; inspect isolated agent logs",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 418, in run\n    await self._run()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 41, in _run\n    await self._run_agent()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 77, in _run_agent\n    await self._run_agent_phase(\n    ...<5 lines>...\n    )\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 554, in _run_agent_phase\n    await asyncio.wait_for(\n    ...<6 lines>...\n    )\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/tasks.py\", line 488, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 98, in run\n    metadata=await asyncio.to_thread(generate,instruction,self.model_name,self.logs_dir)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/threads.py\", line 25, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 66, in generate\n    raise RuntimeError(f'{kind} generation failed; inspect isolated agent logs')\nRuntimeError: codex generation failed; inspect isolated agent logs\n",
+        "occurred_at": "2026-10-03T14:16:21.994127Z"
+      }
+    },
+    {
+      "channel": "codex-old-cli",
+      "trial": "codex/va04-gain-calibration__rPZUQGz",
+      "exception": {
+        "exception_type": "RuntimeError",
+        "exception_message": "codex generation failed; inspect isolated agent logs",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 418, in run\n    await self._run()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 41, in _run\n    await self._run_agent()\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 77, in _run_agent\n    await self._run_agent_phase(\n    ...<5 lines>...\n    )\n  File \"/Users/bucketsran/.cache/uv/archive-v0/K-4guBdnWuaPfAPJCnvcZ/lib/python3.14/site-packages/harbor/trial/trial.py\", line 554, in _run_agent_phase\n    await asyncio.wait_for(\n    ...<6 lines>...\n    )\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/tasks.py\", line 488, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 98, in run\n    metadata=await asyncio.to_thread(generate,instruction,self.model_name,self.logs_dir)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/asyncio/threads.py\", line 25, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/Users/bucketsran/.local/share/uv/python/cpython-3.14.4-macos-aarch64-none/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/Users/bucketsran/Documents/TsingProject/vaEVAS-main/experiments/va_screen/harbor_adapters.py\", line 66, in generate\n    raise RuntimeError(f'{kind} generation failed; inspect isolated agent logs')\nRuntimeError: codex generation failed; inspect isolated agent logs\n",
+        "occurred_at": "2026-10-03T14:16:42.180465Z"
+      }
+    }
+  ],
+  "human_authored_diagnostics": [
+    {
+      "name": "glm-calibration-genvar",
+      "patch": {
+        "kind": "human-authored diagnostic; not a model attempt or leaderboard score",
+        "original": "runs/va-screen/pilot-20261003-221547/glm/va04-gain-calibration__2uAJPNF/agent/dut.va",
+        "original_sha256": "52dbb6afc1bbbb8fca65a02a743b37daf0e11443fd4af61b10df8b80a2a7fc0c",
+        "change": "integer k -> genvar k; no other edits"
+      },
+      "counts_as_model_success": false,
+      "reward": 1,
+      "candidate_sha256": "30b91c3d731b7f9232fd89451f0687923c8dcbb3575bb0104bdcdac76ebffc39",
+      "cases_sha256": "b465a0bba52e9da5c6395669bcb61cceb7ff4811a30d95c8e7f1b48f4bd1d7bd",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va04-gain-calibration-4f0e47a0c749"
+    },
+    {
+      "name": "glm-timing-argument-order",
+      "patch": {
+        "kind": "human-authored diagnostic; not a model attempt or leaderboard score",
+        "original": "runs/va-screen/pilot-20261003-221547/glm/va03-zoom-timing__XfT94nB/agent/dut.va",
+        "original_sha256": "f2b389b0d7373965cf19fc10be69b4ae88cec2d06ebd162be64529b255de4aac",
+        "change": "Reorder formal arguments of clk_hi and clk_nx to match all existing calls; no other edits"
+      },
+      "counts_as_model_success": false,
+      "reward": 1,
+      "candidate_sha256": "f1e4efa559657968af06a0d08c268f813c584d322c20d8a6e3072d960f01b528",
+      "cases_sha256": "7c9ba601c1a7bdb58caf0b5d2f0c48ecf70bf50c384f323639cb2658d5beb844",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va03-zoom-timing-365308a617e9"
+    },
+    {
+      "name": "glm-vco-bound-step",
+      "patch": {
+        "kind": "human-authored diagnostic; not a model attempt or leaderboard score",
+        "original": "runs/va-screen/pilot-20261003-221547/glm/va05-dynamic-vco__vypYCjZ/agent/dut.va",
+        "original_sha256": "b67df2920e88fd336956301f64b14b0758953d9bf5da1ae80618916304998cdd",
+        "change": "bound_step -> $bound_step; no other edits"
+      },
+      "counts_as_model_success": false,
+      "reward": 1,
+      "candidate_sha256": "cd2fad46884ebd2e38dbdd50946c5b548305e87666d1f0c7f319b823f73f535c",
+      "cases_sha256": "ed980f5c8ef866074fe56959fc35ad2b515f21e6317051380f42a3ced7b42964",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "conditions": 2,
+      "passed_conditions": 2,
+      "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va05-dynamic-vco-b3b651e1934e"
+    }
+  ]
+}

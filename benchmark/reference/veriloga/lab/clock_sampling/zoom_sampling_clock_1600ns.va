@@ -1,0 +1,146 @@
+// VerilogA for verilogAMS, TIMING, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Mingjie Liu, Xiyuan Tang
+// Timing generation for ADC.
+// version 4: RST - SAMPLE - NC -SAR- AMP - ZOOM - INT - AMP - ZOOM (1600n)
+
+
+module CLOCK_VA_SAMPLE_1600n(RST, S, NC, RES, CONV);
+
+output RST;
+voltage RST;
+
+output S, NC;
+voltage S, NC;
+
+
+output RES, CONV;
+voltage RES, CONV;
+
+
+
+
+
+parameter real vdd=1.1; // VDD voltage
+
+parameter real init_delay=0n; //initial delay before RST pulse
+
+parameter real trise=0.1n; //rise time
+parameter real tfall=0.1n; //fall time
+
+parameter real RST_period=1600n; // RST period
+parameter real RST_width=9.5n; // width of RST pulse
+
+parameter real S_delay=10n; // S delay from RST posedge
+parameter real S_interval=800n; // delay interval between S pulses
+parameter real S_width=50n; // S pulse width
+parameter integer S_num=2; // number of S in RST period
+
+parameter real NC_delay=62n; // NC delay from RST posedge
+parameter real NC_interval=800n; // delay interval between NC pulses
+parameter real NC_width=5n; // NC pulse width
+parameter integer NC_num=2; // number of NC in RST period
+
+parameter real SAR_delay=70n; // SAR delay from RST posedge
+parameter real SAR_width=2.5n; // SAR pulse width
+parameter real SAR_interval=5n; // SAR interval
+parameter integer SAR_num=7; // number of SAR in S period
+
+parameter real RES_delay=110n; // RES delay from RST posedge
+parameter real RES_width=20n; // RES pulse width
+parameter real RES_interval=80n; // RES interval
+parameter integer RES_num=8; // number of RES in S period
+
+parameter real INT_delay=165n; // INT delay from RST posedge
+parameter real INT_width=20n; // INT pulse width
+parameter real INT_interval=80n; // INT interval
+parameter integer INT_num=8; // number of INT in S period
+
+parameter real ZOOM_delay=135n; // ZOOM delay from RST posedge
+parameter real ZOOM_width=2.5n; // ZOOM pulse width
+parameter real ZOOM_interval=5n; // ZOOM interval
+parameter integer ZOOM_num=5; // number of ZOOM in INT period.
+
+
+parameter real EXPO_delay=960n; // EXPO delay from RST posedge
+parameter real EXPO_width=585n; // EXPO pulse width
+
+parameter real INTA_delay = 965n;
+parameter real INTA_width = 20n;
+parameter real INTA_interval= 160n;
+parameter integer INTA_num=4;
+
+
+parameter real INTB_delay = 1045n;
+parameter real INTB_width = 20n;
+parameter real INTB_interval= 160n;
+parameter integer INTB_num=4;
+
+parameter real CONV_delay = 70n;
+parameter real CONV_width = 675n;
+parameter real CONV_interval= 800n;
+parameter integer CONV_num=2;
+
+
+real rst, s, sar, res, int, zoom, phi_sar,phi_zoom,rst_zoom, expo, inta, intb, nc, conv;
+genvar i, j, k;
+
+analog begin
+	// initialize everything to 0
+	@(initial_step) begin
+		V(RST) <+ 0;
+		V(S) <+ 0;
+		V(NC) <+ 0;
+		V(RES) <+ 0;
+	end
+
+	// timing for RST
+	@(timer(init_delay,RST_period)) rst=vdd;
+	@(timer(init_delay+RST_width,RST_period)) rst=0;
+	V(RST) <+ transition(rst, 0, trise, tfall);
+
+	// timing for S
+	for(i=0;i<S_num;i=i+1) begin
+		@(timer(init_delay+S_delay+i*S_interval,RST_period)) s=vdd;
+		@(timer(init_delay+S_delay+i*S_interval+S_width,RST_period)) s=0;
+	end
+	V(S) <+ transition(s, 0, trise, tfall);
+
+
+
+	// timing for NC
+	for(i=0;i<NC_num;i=i+1) begin
+		@(timer(init_delay+NC_delay+i*NC_interval,RST_period)) nc=vdd;
+		@(timer(init_delay+NC_delay+i*NC_interval+NC_width,RST_period)) nc=0;
+	end
+	V(NC) <+ transition(nc, 0, trise, tfall);
+
+
+
+
+	// timing for RES
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<RES_num;j=j+1) begin
+			@(timer(init_delay+RES_delay+i*S_interval+j*RES_interval,RST_period)) res=vdd;
+			@(timer(init_delay+RES_delay+i*S_interval+j*RES_interval+RES_width,RST_period)) res=0;
+		end
+	end
+	V(RES) <+ transition(res, 0, trise, tfall);
+
+
+
+
+	// timing for CONV
+	for(i=0;i<CONV_num;i=i+1) begin
+		@(timer(init_delay+CONV_delay+i*CONV_interval,RST_period)) conv=vdd;
+		@(timer(init_delay+CONV_delay+i*CONV_interval+CONV_width,RST_period)) conv=0;
+	end
+	V(CONV) <+ transition(conv, 0, trise, tfall);
+
+
+end
+
+endmodule

@@ -1,0 +1,158 @@
+// VerilogA for verilogAMS, TIMING, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Mingjie Liu, Xiyuan Tang
+// Timing generation for ADC.
+
+
+module CLOCK_VA(RST, S, SAR, RES, INT,CLK_SAR,ZOOM,CLK_ZOOM, RST_ZOOM);
+
+output RST;
+voltage RST;
+
+output S;
+voltage S;
+
+output SAR,CLK_SAR;
+voltage SAR,CLK_SAR;
+
+output RES,INT;
+voltage RES,INT;
+
+output ZOOM,CLK_ZOOM, RST_ZOOM;
+voltage ZOOM,CLK_ZOOM, RST_ZOOM;
+
+parameter real vdd=1.1; // VDD voltage
+
+parameter real init_delay=5n; //initial delay before RST pulse
+
+parameter real trise=0.1n; //rise time
+parameter real tfall=0.1n; //fall time
+
+parameter real RST_period=3200n; // RST period
+parameter real RST_width=9.5n; // width of RST pulse
+
+parameter real S_delay=10n; // S delay from RST posedge
+parameter real S_interval=800n; // delay interval between S pulses
+parameter real S_width=50n; // S pulse width
+parameter integer S_num=4; // number of S in RST period
+
+parameter real SAR_delay=65n; // SAR delay from RST posedge
+parameter real SAR_width=2.5n; // SAR pulse width
+parameter real SAR_interval=5n; // SAR interval
+parameter integer SAR_num=7; // number of SAR in S period
+
+parameter real RES_delay=105n; // RES delay from RST posedge
+parameter real RES_width=20n; // RES pulse width
+parameter real RES_interval=80n; // RES interval
+parameter integer RES_num=8; // number of RES in S period
+
+parameter real INT_delay=130n; // INT delay from RST posedge
+parameter real INT_width=25n; // INT pulse width
+parameter real INT_interval=80n; // INT interval
+parameter integer INT_num=8; // number of INT in S period
+
+parameter real ZOOM_delay=160n; // ZOOM delay from RST posedge
+parameter real ZOOM_width=2.5n; // ZOOM pulse width
+parameter real ZOOM_interval=5n; // ZOOM interval
+parameter integer ZOOM_num=4; // number of ZOOM in INT period.
+
+
+real rst, s, sar, res, int, zoom, phi_sar,phi_zoom,rst_zoom;
+genvar i, j, k;
+
+analog begin
+	// initialize everything to 0
+	@(initial_step) begin
+		V(RST) <+ 0;
+		V(S) <+ 0;
+		V(SAR) <+ 0;
+		V(RES) <+ 0;
+		V(INT) <+ 0;
+		V(ZOOM) <+ 0;
+		V(CLK_SAR) <+ 0;
+		V(CLK_ZOOM) <+ 0;
+		V(RST_ZOOM) <+ 0;
+
+	end
+
+	// timing for RST
+	@(timer(init_delay,RST_period)) rst=vdd;
+	@(timer(init_delay+RST_width,RST_period)) rst=0;
+	V(RST) <+ transition(rst, 0, trise, tfall);
+
+	// timing for S
+	for(i=0;i<S_num;i=i+1) begin
+		@(timer(init_delay+S_delay+i*S_interval,RST_period)) s=vdd;
+		@(timer(init_delay+S_delay+i*S_interval+S_width,RST_period)) s=0;
+	end
+	V(S) <+ transition(s, 0, trise, tfall);
+
+	// timing for CLK_SAR
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<SAR_num;j=j+1) begin
+			@(timer(init_delay+SAR_delay+i*S_interval+j*SAR_interval,RST_period)) sar=vdd;
+			@(timer(init_delay+SAR_delay+i*S_interval+j*SAR_interval+SAR_width,RST_period)) sar=0;
+		end
+	end
+	V(CLK_SAR) <+ transition(sar, 0, trise, tfall);
+
+	// timing for Phi_SAR
+	for(i=0;i<S_num;i=i+1) begin
+		@(timer(init_delay+SAR_delay+i*S_interval,RST_period)) phi_sar=vdd;
+		@(timer(init_delay+SAR_delay+i*S_interval+SAR_num*SAR_interval,RST_period)) phi_sar=0;
+	end
+	V(SAR) <+ transition(phi_sar, 0, trise, tfall);
+
+	// timing for RES
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<RES_num;j=j+1) begin
+			@(timer(init_delay+RES_delay+i*S_interval+j*RES_interval,RST_period)) res=vdd;
+			@(timer(init_delay+RES_delay+i*S_interval+j*RES_interval+RES_width,RST_period)) res=0;
+		end
+	end
+	V(RES) <+ transition(res, 0, trise, tfall);
+
+	// timing for INT
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<INT_num;j=j+1) begin
+			@(timer(init_delay+INT_delay+i*S_interval+j*INT_interval,RST_period)) int=vdd;
+			@(timer(init_delay+INT_delay+i*S_interval+j*INT_interval+INT_width,RST_period)) int=0;
+		end
+	end
+	V(INT) <+ transition(int, 0, trise, tfall);
+
+	// timing for CLK_ZOOM
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<INT_num;j=j+1) begin
+			for(k=0;k<ZOOM_num;k=k+1) begin
+				@(timer(init_delay+ZOOM_delay+i*S_interval+j*INT_interval+k*ZOOM_interval,RST_period)) zoom=vdd;
+				@(timer(init_delay+ZOOM_delay+i*S_interval+j*INT_interval+k*ZOOM_interval+ZOOM_width,RST_period)) zoom=0;
+			end
+		end
+	end
+	V(CLK_ZOOM) <+ transition(zoom, 0, trise, tfall);
+
+	// timing for PHI_ZOOM
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<INT_num;j=j+1) begin
+			@(timer(init_delay+ZOOM_delay+i*S_interval+j*INT_interval,RST_period)) phi_zoom=vdd;
+			@(timer(init_delay+ZOOM_delay+i*S_interval+j*INT_interval+ZOOM_num*ZOOM_interval,RST_period)) phi_zoom=0;			
+		end
+	end
+	V(ZOOM) <+ transition(phi_zoom, 0, trise, tfall);
+
+	// timing for RST_ZOOM
+	for(i=0;i<S_num;i=i+1) begin
+		for(j=0;j<INT_num;j=j+1) begin
+			@(timer(init_delay+INT_delay+i*S_interval+j*INT_interval+INT_width+0.5n,RST_period)) rst_zoom=vdd;
+			@(timer(init_delay+INT_delay+i*S_interval+j*INT_interval+INT_width+4.5n,RST_period)) rst_zoom=0;			
+		end
+	end
+	V(RST_ZOOM) <+ transition(rst_zoom, 0, trise, tfall);
+
+end
+
+endmodule

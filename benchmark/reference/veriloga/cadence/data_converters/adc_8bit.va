@@ -1,0 +1,116 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:30 $
+// $Revision: 1.1 $
+//
+//
+
+
+
+//--------------------
+// adc_8bit
+//
+// -  8 bit analog to digital converter
+//
+// vin:		[V,A]
+// vclk:	[V,A]
+// vd0..vd7:	data output terminals	[V,A]
+//
+// INSTANCE parameters
+//    mismatch_fact = maximum mismatch as a percentage of the average value []
+//    vlogic_high   = [V]
+//    vlogic_low    = [V]
+//    vtrans_clk    = clk high to low transition voltage [V]
+//    vref          = voltage that voltage is done with respect to [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+// 
+// This ADC comprises 8 comparators. An input voltage is compared to
+// half the reference voltage. If the input exceeds it, bit 7 is set and half
+// the reference voltage is subtracted. If not, bit 7 is assigned zero
+// and no voltage is subtracted from the input. Bit 6 is found by doing an
+// equivalent operation comparing double the adjusted input voltage coming
+// from the first comparator with half the reference voltage. Similarly
+// all the other bits are found.
+//
+// Mismatch effects in the comparator reference voltages can be modeled
+// setting 'mismatch' to a non-zero value. The maximum mismatch on a 
+// comparator's reference voltage is then +/-'mismatch' percent of
+// that voltage's nominal value.
+//
+
+
+
+module adc_8bit(vd7,vd6,vd5,vd4,vd3,vd2,vd1,vd0,vin,vclk);
+electrical vd7, vd6, vd5, vd4, vd3, vd2, vd1, vd0, vin, vclk;
+parameter real trise = 0 from [0:inf);
+parameter real tfall = 0 from [0:inf);
+parameter real tdel = 0 from [0:inf);
+parameter real mismatch_fact=0 from [0:inf);
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0;
+parameter real vtrans_clk     = 2.5;
+parameter real vref        = 1.0;
+
+
+`define NUM_ADC_BITS	8
+`define MAXINT  2_147_483_647.0
+
+
+// macro to calculate the fractional mismatches in bits
+`define FRAC_MM(I) (1.0 + mismatch_fact*(dist_range*abs($random(I)/`MAXINT) - \
+                    half_dist_range))
+
+   real dist_range, half_dist_range;
+   real comp_var[0:`NUM_ADC_BITS-1];  // Fractional comparator mismatches
+   real unconverted;
+   real halfref;
+   real comp_vref;
+   real vd[0:`NUM_ADC_BITS-1];
+   integer i;
+   integer iseed;
+
+   analog begin
+      @ ( initial_step ) begin
+         dist_range = 0.02;
+         half_dist_range = 0.01;
+	 generate j ( 0, `NUM_ADC_BITS-1 ) begin
+	   iseed = j;
+	   comp_var[j] = `FRAC_MM(iseed);
+	 end
+         halfref = vref / 2;
+      end
+
+      @ (cross(V(vclk) - vtrans_clk, 1, 1.0, vclk.potential.abstol)) begin
+         unconverted = V(vin);
+         for (i = `NUM_ADC_BITS-1; i >= 0 ; i = i - 1) begin
+            vd[i] = 0;
+            comp_vref = halfref * comp_var[i];
+            if (unconverted > comp_vref) begin
+               vd[i] = vlogic_high; 
+               unconverted = unconverted - comp_vref;
+            end else begin
+               vd[i] = vlogic_low;
+            end
+            unconverted = unconverted * 2;
+         end
+      end
+
+      //
+      // assign the outputs
+      //
+      V(vd7) <+ transition( vd[7], tdel, trise, tfall );
+      V(vd6) <+ transition( vd[6], tdel, trise, tfall );
+      V(vd5) <+ transition( vd[5], tdel, trise, tfall );
+      V(vd4) <+ transition( vd[4], tdel, trise, tfall );
+      V(vd3) <+ transition( vd[3], tdel, trise, tfall );
+      V(vd2) <+ transition( vd[2], tdel, trise, tfall );
+      V(vd1) <+ transition( vd[1], tdel, trise, tfall );
+      V(vd0) <+ transition( vd[0], tdel, trise, tfall );
+
+`undef NUM_ADC_BITS
+   end
+endmodule
