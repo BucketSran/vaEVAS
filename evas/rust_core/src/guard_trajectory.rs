@@ -1,4 +1,4 @@
-//! Polynomial guards on certified continuous, event-independent trajectories.
+//! Polynomial guards on certified continuous trajectories within a held epoch.
 use crate::events::{affine, EventModel};
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program};
@@ -43,6 +43,7 @@ pub(crate) fn evaluate(
     expr: &Expression,
     nodes: &[I],
     operators: &[I],
+    states: &[I],
     node_derivatives: &[I],
     operator_derivatives: &[I],
 ) -> Result<(I, I), Error> {
@@ -60,11 +61,13 @@ pub(crate) fn evaluate(
         Expression::Operator { operator } => {
             (operators[*operator], operator_derivatives[*operator])
         }
+        Expression::State { state } => (states[*state], I::ZERO),
         Expression::Add { left, right } => {
             let (a, da) = evaluate(
                 left,
                 nodes,
                 operators,
+                states,
                 node_derivatives,
                 operator_derivatives,
             )?;
@@ -72,6 +75,7 @@ pub(crate) fn evaluate(
                 right,
                 nodes,
                 operators,
+                states,
                 node_derivatives,
                 operator_derivatives,
             )?;
@@ -82,6 +86,7 @@ pub(crate) fn evaluate(
                 left,
                 nodes,
                 operators,
+                states,
                 node_derivatives,
                 operator_derivatives,
             )?;
@@ -89,6 +94,7 @@ pub(crate) fn evaluate(
                 right,
                 nodes,
                 operators,
+                states,
                 node_derivatives,
                 operator_derivatives,
             )?;
@@ -99,6 +105,7 @@ pub(crate) fn evaluate(
                 base,
                 nodes,
                 operators,
+                states,
                 node_derivatives,
                 operator_derivatives,
             )?;
@@ -127,7 +134,8 @@ pub(crate) fn evaluate(
 pub(crate) struct GuardTrajectory<'a> {
     model: &'a EventModel,
     trajectory: &'a Trajectory,
-    operators: &'a Operators,
+    operators: Option<&'a Operators>,
+    states: Option<&'a [I]>,
     nodes: Vec<Vec<I>>,
 }
 
@@ -137,17 +145,51 @@ impl<'a> GuardTrajectory<'a> {
         trajectory: &'a Trajectory,
         operators: &'a Operators,
     ) -> Result<Self, Error> {
+        Self::new_held(model, trajectory, Some(operators), None)
+    }
+    pub(crate) fn new_held(
+        model: &'a EventModel,
+        trajectory: &'a Trajectory,
+        operators: Option<&'a Operators>,
+        states: Option<&'a [I]>,
+    ) -> Result<Self, Error> {
         // A numerically cancelled relay cannot erase a structural dependency
         // on a discontinuous or event-mutated operator history.
         for index in model.guard_operators.iter().flat_map(|ops| ops.iter()) {
-            operators.range(*index, I::ZERO)?;
+            operators
+                .ok_or_else(|| Error::new("unsupported_cross", "guard requires operator history"))?
+                .range(*index, I::ZERO)?;
         }
         Ok(Self {
             model,
             trajectory,
             operators,
+            states,
             nodes: crate::affine_bounds::node_map(&model.program, &model.driven)?,
         })
+    }
+
+    pub(crate) fn changed_by(
+        &self,
+        expression: &Expression,
+        owner: &str,
+        before: &[I],
+        after: &[I],
+    ) -> Result<bool, Error> {
+        let mut states = state_dependencies(expression);
+        let (nodes, _) = dependencies(expression, &self.model.program, owner)?;
+        let start = self.model.driven.len();
+        for node in nodes {
+            for (index, c) in self.nodes[node][start..start + before.len()]
+                .iter()
+                .enumerate()
+            {
+                if !c.zero() {
+                    states.insert(index);
+                }
+            }
+        }
+        Ok(states.iter().any(|&index| before[index] != after[index]))
     }
     pub(crate) fn range(
         &self,
@@ -162,9 +204,10 @@ impl<'a> GuardTrajectory<'a> {
         let state_start = self.model.driven.len();
         let operator_start = state_start + p.states.len();
         for node in node_deps {
-            if self.nodes[node][state_start..operator_start]
-                .iter()
-                .any(|v| !v.zero())
+            if self.states.is_none()
+                && self.nodes[node][state_start..operator_start]
+                    .iter()
+                    .any(|v| !v.zero())
             {
                 return Err(Error::new(
                     "unsupported_cross",
@@ -181,13 +224,17 @@ impl<'a> GuardTrajectory<'a> {
             }
         }
         let (mut values, mut derivatives) = self.trajectory.range(time)?;
-        values.extend(p.states.iter().map(|s| I::point(s.initial)));
+        let initial: Vec<_> = p.states.iter().map(|s| I::point(s.initial)).collect();
+        let states = self.states.unwrap_or(&initial);
+        values.extend(states);
         derivatives.extend(vec![I::ZERO; p.states.len()]);
         let mut operator_values = vec![I::ZERO; p.operators.len()];
         let mut operator_derivatives = operator_values.clone();
         for index in operator_deps {
-            (operator_values[index], operator_derivatives[index]) =
-                self.operators.range(index, time)?;
+            (operator_values[index], operator_derivatives[index]) = self
+                .operators
+                .ok_or_else(|| Error::new("unsupported_cross", "guard requires operator history"))?
+                .range(index, time)?;
         }
         values.extend(&operator_values);
         values.push(I::ONE);
@@ -213,8 +260,23 @@ impl<'a> GuardTrajectory<'a> {
             expression,
             &node_values,
             &operator_values,
+            states,
             &node_derivatives,
             &operator_derivatives,
         )
+    }
+}
+
+pub(crate) fn state_dependencies(expression: &Expression) -> BTreeSet<usize> {
+    match expression {
+        Expression::State { state } => BTreeSet::from([*state]),
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            state_dependencies(left)
+                .union(&state_dependencies(right))
+                .copied()
+                .collect()
+        }
+        Expression::Power { base, .. } => state_dependencies(base),
+        _ => BTreeSet::new(),
     }
 }

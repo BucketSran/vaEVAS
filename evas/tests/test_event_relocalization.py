@@ -81,6 +81,31 @@ class EventRelocalization(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run(source)
 
+    def test_polynomial_held_threshold_uses_the_same_epoch_and_commit_rule(self):
+        source=DUT.replace('V(u,r)-threshold', 'pow(V(u,r),2)-threshold')
+        a=run(source,times=[0,1])
+        b=run(source,times=[0,.125,.25,.5,.75,1],step=.0625)
+        self.assertEqual(a['transient']['events'],b['transient']['events'])
+        events=a['transient']['events']
+        self.assertEqual(len(events),2)
+        self.assertEqual(events[0]['time'],.25)
+        self.assertAlmostEqual(events[1]['time'],2**-.5,delta=1e-9)
+        self.assertEqual(a['transient']['states'][-1][-1],1)
+
+    def test_polynomial_relocalization_follows_internal_voltage_projection(self):
+        source=model('''@(initial_step) begin q=.75; n=0; end
+          @(timer(.125,0,1e-12)) q=.5;
+          @(cross(pow(V(z,r),2)-1,1,1e-9,1e-8)) n=n+1;
+          V(z,r)<+V(u,r)+q; V(y,r)<+n;''', 'real q; integer n; electrical z;')
+        # u+q reaches 1 at .25 in the initial epoch; q changes at .125,
+        # where both guard values remain negative. The new root is .5.
+        result=run(source,module='m')
+        events=result['transient']['events']
+        self.assertEqual(len(events),2)
+        self.assertEqual(events[0]['time'],.125)
+        self.assertGreaterEqual(events[1]['time'],.5)
+        self.assertLessEqual(events[1]['time']-.5,1e-9)
+
 
 if __name__ == '__main__':
     unittest.main()

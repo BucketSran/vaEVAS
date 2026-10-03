@@ -427,3 +427,14 @@ Python 响应校验核对叶子类型与原请求，拒绝虚构 timer guard、�
 独立值、周期/禁用、顺序交换、同刻计数和原始 IR 拒绝见
 [test_event_or.py](../tests/test_event_or.py)，传输故障注入见
 [test_runtime_contracts.py](../tests/test_runtime_contracts.py)。候选尚未合并，没有新 Spectre 对照。
+
+## 多项式保持状态 guard 的分支候选
+
+在无历史、联合仿射电压网络中，允许直接或内部节点返回的保持状态进入多项式 guard。
+各事件间状态固定；事件后按新状态重定位，不能读取初始化快照或沿用失效根。
+`u=t`、q 在 .25 从 .75 改为 .5 时，`u²−q` 的唯一 cross 应为 `sqrt(.5)`；
+内部 `z=u+q`、`z²−1`，q 在 .125 从 .75 改为 .5 时，新根为 .5，旧 .25 根作废。
+认证仍检查时间/表达式误差、观察窗口旧/新同号、日程先后和候选原子提交。
+输出网格和 max_step 不改变事件历史；同刻跳变、历史改变与隐式非线性电压网络仍拒绝。
+见 [test_event_relocalization.py](../tests/test_event_relocalization.py) 与
+[Rust 生命周期检查](../rust_core/src/transient_lifecycle_tests.rs)。

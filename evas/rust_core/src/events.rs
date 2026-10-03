@@ -723,11 +723,9 @@ impl EventModel {
                     operators.extend(&operator_influence[*node]);
                 }
                 let held = nodes.iter().any(|node| event_affected[*node])
-                    || self.guards[index]
-                        .as_ref()
-                        .is_some_and(|g| !g.state_dependencies.is_empty());
-                if held && (self.guards[index].is_none() || !self.program.operators.is_empty()) {
-                    return Err(Error::new("unsupported_cross", "event-mutated guards currently require affine relations without history operators"));
+                    || !crate::guard_trajectory::state_dependencies(guard).is_empty();
+                if held && !self.program.operators.is_empty() {
+                    return Err(Error::new("unsupported_cross", "event-mutated guards currently require relations without history operators"));
                 }
                 self.relocalized_guards.push(held);
                 self.dynamic_guards[index] |=
@@ -737,11 +735,6 @@ impl EventModel {
                 self.relocalized_guards.push(false);
                 self.guard_operators.push(BTreeSet::new());
             }
-        }
-        if self.relocalized_guards.iter().any(|&held| held)
-            && self.dynamic_guards.iter().any(|&dynamic| dynamic)
-        {
-            return Err(Error::new("unsupported_cross", "event-mutated affine guards cannot yet share a calendar with history/polynomial guards"));
         }
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(

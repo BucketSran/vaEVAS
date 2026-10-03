@@ -351,15 +351,30 @@ fn schedule_with_history(
         }
     }
     if model.dynamic_guards.iter().any(|&g| g) {
-        let operators = operators.ok_or_else(|| {
-            Error::new(
-                "unsupported_cross",
-                "history-dependent calendar requires a certified trajectory",
-            )
-        })?;
-        let guards = crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?;
+        let guards = if let Some(h) = &held {
+            crate::guard_trajectory::GuardTrajectory::new_held(
+                model,
+                trajectory,
+                operators,
+                Some(h.states),
+            )?
+        } else {
+            let operators = operators.ok_or_else(|| {
+                Error::new(
+                    "unsupported_cross",
+                    "history-dependent calendar requires a certified trajectory",
+                )
+            })?;
+            crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?
+        };
         for (index, leaf) in model.triggers.iter().enumerate() {
             if !model.dynamic_guards[index] {
+                continue;
+            }
+            if held
+                .as_ref()
+                .is_some_and(|h| h.after.is_some() && !h.changed[index])
+            {
                 continue;
             }
             let EventTrigger::Cross {
@@ -372,7 +387,12 @@ fn schedule_with_history(
                 unreachable!()
             };
             let origin = &model.program.events[leaf.event].origin;
-            for segment in trajectory.knots.windows(2) {
+            let mut knots = trajectory.knots.clone();
+            if let Some(after) = held.as_ref().and_then(|h| h.after) {
+                knots.retain(|t| *t > after);
+                knots.insert(0, after);
+            }
+            for segment in knots.windows(2) {
                 let roots = crate::dynamic_roots::isolate(
                     segment[0],
                     segment[1],

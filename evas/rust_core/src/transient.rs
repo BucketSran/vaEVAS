@@ -87,7 +87,7 @@ impl Controller {
             &model.dynamic_guards,
             &self.accepted.state_bounds,
         )?;
-        let changed = projection.changed_by(&self.accepted.state_bounds, &next.state_bounds);
+        let mut changed = projection.changed_by(&self.accepted.state_bounds, &next.state_bounds);
         let before = projection.values(&inputs);
         let after = crate::event_accuracy::GuardBounds::held(
             &model.program,
@@ -96,12 +96,44 @@ impl Controller {
             &next.state_bounds,
         )?
         .values(&inputs);
+        let old_trajectory = crate::guard_trajectory::GuardTrajectory::new_held(
+            model,
+            trajectory,
+            None,
+            Some(&self.accepted.state_bounds),
+        )?;
+        let new_trajectory = crate::guard_trajectory::GuardTrajectory::new_held(
+            model,
+            trajectory,
+            None,
+            Some(&next.state_bounds),
+        )?;
         for (index, held) in model.relocalized_guards.iter().enumerate() {
+            let (a, b) = if *held && model.dynamic_guards[index] {
+                let EventTrigger::Cross { guard, .. } = &model.triggers[index].trigger else {
+                    unreachable!()
+                };
+                let owner = &model.program.events[model.triggers[index].event]
+                    .origin
+                    .instance;
+                changed[index] = old_trajectory.changed_by(
+                    guard,
+                    owner,
+                    &self.accepted.state_bounds,
+                    &next.state_bounds,
+                )?;
+                (
+                    old_trajectory.range(guard, window, owner)?.0,
+                    new_trajectory.range(guard, window, owner)?.0,
+                )
+            } else {
+                (before[index], after[index])
+            };
             if !held || !changed[index] {
                 continue;
             }
-            let a = before[index].sign();
-            let b = after[index].sign();
+            let a = a.sign();
+            let b = b.sign();
             if a.is_none() || b.is_none() || a != b {
                 return Err(Error::new(
                     "unsupported_cross",
@@ -456,6 +488,12 @@ fn prepare_batch_until(
                         guard,
                         &nodes,
                         &operators,
+                        &next
+                            .states
+                            .iter()
+                            .copied()
+                            .map(I::point)
+                            .collect::<Vec<_>>(),
                         &vec![I::ZERO; nodes.len()],
                         &vec![I::ZERO; operators.len()],
                     )?

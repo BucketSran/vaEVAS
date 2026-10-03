@@ -133,6 +133,64 @@ fn failed_future_guard_ordering_rolls_back_then_retries_in_the_same_controller()
     assert_eq!(calendar[1].time, 0.5);
 }
 
+#[test]
+fn held_polynomial_jump_rejects_without_consuming_calendar_then_retries() {
+    let (base, trajectory, mut controller, _) = relocalization_fixture();
+    let mut program = serde_json::to_value(&base.program).unwrap();
+    program["events"][1]["trigger"]["guard"]["left"] = json!({"op":"power","exponent":2,
+        "base":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}});
+    let model = EventModel::new(
+        serde_json::from_value(program.clone()).unwrap(),
+        base.driven.clone(),
+        base.tolerances.clone(),
+    )
+    .unwrap();
+    let mut calendar =
+        schedule_held(&model, &trajectory, &controller.accepted.state_bounds).unwrap();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.time, e.event, e.bounds()))
+        .collect();
+    program["events"][0]["body"][0]["rhs"]["constant"] = json!(0.01);
+    let jumping = EventModel::new(
+        serde_json::from_value(program).unwrap(),
+        base.driven.clone(),
+        base.tolerances.clone(),
+    )
+    .unwrap();
+    for _ in 0..2 {
+        assert_eq!(
+            controller
+                .accept_relocalized(&jumping, &trajectory, &mut calendar)
+                .unwrap_err()
+                .kind,
+            "unsupported_cross"
+        );
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.accepted.states, vec![0.75]);
+        assert_eq!(controller.accepted.state_bounds, vec![I::point(0.75)]);
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty());
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, vec![0.5]);
+    assert_eq!(controller.records.len(), 1);
+    assert_eq!(calendar.len(), 2);
+    assert_eq!(calendar[0].time, 0.5);
+    assert!(
+        calendar[1].bounds().lo <= 2f64.sqrt() / 2. && calendar[1].bounds().hi >= 2f64.sqrt() / 2.
+    );
+}
+
 fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"lifecycle.va","line":1,"column":1,"instance":"dut"});
     let mut filter_origin = origin.clone();
