@@ -4464,7 +4464,11 @@
   "formal_dvs_qualification": "I",
   "evidence_use": "62 new EVAS transient executions; unchanged original DUTs/settings/checker; no new Spectre run; original matrix is development evidence",
   "checker_sha256": {
-    "experiments/backends/dvs2-spectre-validation/check_results.py": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd"
+    "experiments/backends/dvs2-spectre-validation/check_results.py": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py": "338613601938a6ec519bcf3fbfe19ba321c9251220c4c0bf48ac2253eb61cef3",
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/archive/dvs2-history-validation/recheck.py": "e3b61b913d917f4bc11871d8ef6d4a11acad0d693ea090eb506906b2bd286f70"
   },
   "raw_artifacts": {
     "availability": "local-only",

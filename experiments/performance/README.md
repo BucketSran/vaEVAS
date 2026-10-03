@@ -21,7 +21,7 @@
 
 积分候选与回放现在可共享接受帧的只读 LU。节点、驱动/未知量顺序、行数及全部系数的 binary64 位必须相同。每次仍计算当前 RHS、验收原关系与历史误差；非线性 Jacobian 不使用这个缓存。
 
-阶段包含子阶段，不能相加。输出点、候选次数与积分器内部步数分开记录。历史复制只统计调用次数与逻辑算子槽数，尚无分配/复制字节计数。短请求受进程启动和计时波动影响；诊断有额外成本。这些结果仅适用于固定合成工作负载。
+阶段包含子阶段，不能相加。输出点、候选次数与积分器内部步数分开记录。矩阵行/列/nnz 和 LU 项数按分解累加，不是峰值。历史复制只统计调用次数与逻辑算子槽数，尚无分配/复制字节计数。短请求受进程启动和计时波动影响；诊断有额外成本。这些结果仅适用于固定合成工作负载。
 
 ## 重跑
 
@@ -40,7 +40,7 @@ python3 -B experiments/performance/measure_build.py --output runs/performance/bu
 
 完整边界为 Python 序列化 → 启动进程 → 内核读/解析/求解/编码 → Python 解析。不包含 VA 编译、磁盘归档、答案检查或诊断 sidecar 解析。macOS 用 `time -l` 测内核子进程峰值 RSS；Python highwater 是整个测量进程截至该次的峰值，含先前用例。两者不能相加当作同时峰值。其他平台缺少指标时为 null。
 
-原始请求/stdout/日志/sidecar 保存在本地 ignored 归档。GitHub 保存摘要与重跑工具；哈希不代替可下载的原始材料。收据区分基准提交与实际源码哈希，不把未提交树称为该提交。
+原始请求/stdout/日志/sidecar 保存在本地 ignored 归档。GitHub 保存摘要与重跑工具；哈希不代替可下载的原始材料。收据绑定固定 Git 源码、实际源码哈希与内核身份。
 
 ## 只拆 IR crate
 
@@ -58,7 +58,16 @@ flowchart LR
 
 内核仍有 `affine_bounds ↔ event_accuracy`、`operators ↔ continuous`、`events ↔ event_conditions` 和 `events ↔ guard_trajectory` 依赖。现在强拆会扩大公开接口或复制语义。因此数值运行时保留一个 crate，进一步拆分先消除这些具体依赖。类型归 IR；数学误差与数值算法归内核；历史归算子调用点；接受 Frame、事件游标及一次提交归统一 Controller。诊断只观察。
 
-构建在临时源码副本及独立 target 中测 clean、warm、改单个 solver/operator 文件的 check/build/test。test 用 `--no-run`，不是测试执行时间。两次重复只支持局部 check/build 改进；clean test 波动较大，不承诺全部构建变快。
+构建在临时源码副本及独立 target 中测 clean、warm、改单个 solver/operator 文件的 check/build/test。test 用 `--no-run`，不是测试执行时间。固定提交各重复两次，结果如下。样本少，warm 检查及极短更新受波动影响；不承诺其他主机或全部构建都变快。
+
+| 构建边界（秒，中位数） | main 6994ada4 | IR b20ff5ec |
+| --- | ---: | ---: |
+| check / clean | 8.703 | 6.352 |
+| build / clean | 10.527 | 9.255 |
+| test / clean | 18.662 | 16.102 |
+| check / solver | 0.377 | 0.305 |
+| build / operators | 1.050 | 0.774 |
+| test / operators | 1.337 | 1.181 |
 
 ## 输出协议与后续范围
 

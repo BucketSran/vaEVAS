@@ -37,6 +37,8 @@ Rust 调用者可使用 `evas_kernel::diagnostics::capture(Options, || run(reque
 活动集合/列度维护包含在 elimination 项中。`history_clone_operator_slots` 是复制对象中
 的算子槽位数，**不是复制字节数或深拷贝内存量**。
 收集器属于调用线程，静态并行工作线程内部不会被计数；`coverage` 明确写出该边界。
+`matrix_rows`、`matrix_columns`、`matrix_input_nnz` 及 `sparse_lu_entries` 按每次分解累加，
+是本次运行的工作量；只有一次分解时才分别等于该矩阵的尺寸/存储项，不能作为峰值维数或内存。
 
 轨迹默认最多 2048 条、1 MiB 记录字节。`EVAS_DIAGNOSTICS_RECORDS` 和
 `EVAS_DIAGNOSTICS_BYTES` 可设置预算；有效上限分别为 65536 条和 8 MiB；非法预算返回 `invalid_config`。
