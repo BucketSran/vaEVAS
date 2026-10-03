@@ -1,0 +1,78 @@
+{
+  "family_id": "267",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "e5acec66296542ce60d043697da5d8716ba042c25ad527cf1c7d35255e8e0c32",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5dcc496093b6ea120e5a56e83657b819005f119bfa29cb45c8208e47383f2c67",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "04c8429a8c9abc0f1a26dc233e795125596e58c59b16011b93987a00e1341b70",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "ac9edc51ba0553df16e0cdace5d28313daf736dc7a811c3c6a640a48da1266bb",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_READY_COUNT_AND_ALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "692dc94e9ddf2a9784960c18f04459116c2fefd70c0489ddd70076d9781dd9da",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8683849124bfdd591354339b79a3bb5fa7bafd68d37b43c04b65cd9effa811ec",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "dda304fd4e1ece7b157318073a47d61d3dfabb37f386c4be9ce163ef3afe54bf",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "fcfa0d8b0cf5df31199034bdd9882dd6c13c8f4de7b054fdabf9dc72079d8953",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_READY_COUNT_AND_ALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "142b279ae80a1a1c1763693acfe2d812d64c67c09d6f424a1715eb418d381be0",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "08785cc3f6e9e35be8f0a37f01bc92f5ea07c59fb1e3ef02a9986553544ea53d",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "267",
+    "hashes": {
+      "mutation_catalog_sha256": "1dc16904232729085f07236e532b1849cf37b8ccd17346def7d364ad45d39714",
+      "score_deck_sha256": "15741eae338dcfc7d075925eb08a9a721ed50a3223bb6ae3d70fd3d6b9e90929",
+      "task_certification_sha256": "f2011047d4a072f327a1155808d0f2cc32800f02e4d8f7481459e660ff8131ad",
+      "task_record_sha256": "43cf46d536731595a29403dcc5ca797e0a84ec855544e3ab8dc42d0b3adfac61"
+    },
+    "release_dir": "267-clocked-power-ready-sampler"
+  }
+}

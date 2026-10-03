@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "074",
+  "checker_task_id": "v4_074_sampled_true_rms_to_dc_converter",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "f49c4f908984fb2a4f580199568bcf525f79fbfd6cac7882d3ea3b7f6884f3a8",
+    "checker_profile.json": "2eef5a2929930b2f0d34df7975e6ca50ea0cacc6013c67096597b1e6b86d1aea",
+    "derivation_manifest.json": "ca56bbe2afd4a9289ed715370cf9f678f3bf80b0ea8e0cb9ed8725bf0dfeea06",
+    "family_spec.json": "03eac1fabd0442946406eb36713e7771942a4dbcbbade8d98ce436a1b69dd9ef",
+    "harness_spec.json": "26b2e008a0fa94d83de16c769f2a6aa7e3999ec4046bd0d9764f840ec9800223",
+    "mutation_catalog.json": "b3cec37cc6664c8ee24d8d10eaa69167f33b50deb645706031d301fb537dde6c",
+    "profiles/feedback.json": "295c46f36035f0b4e8a7103fb8552198efa6d28a3d7f64d6957c5658f4305a24",
+    "profiles/score.json": "b4ac303bfb265a5da7a142842a51e601e41d40c374dd0352e753c9a421ece5c6",
+    "score_tb.scs": "d1fd261424aff317ecc95d9c7c894411ae61c5f88cd882dcc8d4b95470603af0",
+    "solution_tree": "45abd1917098ec28292502cb8f1358c03c0cb672098f5cd2b39d82edf1c1c716",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d1fd261424aff317ecc95d9c7c894411ae61c5f88cd882dcc8d4b95470603af0",
+    "instruction.md": "71fc9fbe21101fb072de245ab893ba135d14120f61e1072ad78eb3e4741e3771",
+    "public_contract.json": "cffc652e4ffd39939b6c85da891c2a2ed100a4661af6a7bb6badaad32c977671"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "f49c4f908984fb2a4f580199568bcf525f79fbfd6cac7882d3ea3b7f6884f3a8"
+  },
+  "release_dir": "074-sampled-true-rms-to-dc-converter",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "074-sampled-true-rms-to-dc-converter",
+  "support_root": "",
+  "target_artifacts": [
+    "sampled_true_rms_to_dc.va"
+  ]
+}

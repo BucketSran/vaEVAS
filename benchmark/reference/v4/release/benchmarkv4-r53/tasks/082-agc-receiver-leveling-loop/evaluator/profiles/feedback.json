@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "2b2e053f04368bc4b8e3a6cd1be2f9e1964fe1bca24dc5f03bf2417166520e93",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_RESET_STATE",
+    "P_CLOCKED_GAIN_LOOP",
+    "P_OUTPUT_ENVELOPE",
+    "P_GAIN_DIRECTION_AND_BOUNDS",
+    "P_DEADBAND_HOLD",
+    "P_SETTLING_METRIC"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

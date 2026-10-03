@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "code_dependent_dac_buffer_top.va",
+    "ideal_code_dac.va",
+    "settling_buffer_state.va"
+  ],
+  "canonical_dut_source_slug": "320-code-dependent-dac-buffer-settling",
+  "checker_task_id": "v4_320_code_dependent_dac_buffer_settling",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ec1d115f4f1bd754ea198185d67fdf817633a1215e1ac1ce47717d9425cd4f61",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fa48086f0d2d8b4dc653f22db2a4cb41f8bf9e994be468d40b80ce8a9f0eaa15",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "91c9631ff2a85b0a552dec315a11930a2ab54a6743780c9125cac24401d0fe0f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "320",
+  "family_spec_sha256": "fa05e3a81f9ac287e2858a489dba34bff08af535896812f87b935bf35f8f17d0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "29c3d3d2fc31c080310ffa119ac03f45c6ead5e41332ad528baae282622f4c21",
+  "public_contract": "tasks/1320-code-dependent-dac-buffer-settling-bugfix/public_contract.json",
+  "public_contract_sha256": "a2eaec242ea1837b34c1e3a298b55f1211b7706a427bacac165f9d4b1368f4cc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1320-code-dependent-dac-buffer-settling-bugfix",
+  "task_id": "v4-1320"
+}

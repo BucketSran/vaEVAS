@@ -1,0 +1,28 @@
+{
+  "checked_families": [
+    "121",
+    "122",
+    "123",
+    "124",
+    "125",
+    "126",
+    "127",
+    "128",
+    "129",
+    "130"
+  ],
+  "checks": [
+    "profile_semantic_parity",
+    "observable_alignment",
+    "trace_coverage",
+    "structured_redacted_diagnostics",
+    "task_record_hashes",
+    "score_denominator_manifest_hashes"
+  ],
+  "evidence_kind": "static_repair_gate",
+  "failure_count": 0,
+  "failures": [],
+  "runtime_evidence_claimed": false,
+  "schema_version": "v4-repair-gate-validation-v1",
+  "status": "PASS"
+}

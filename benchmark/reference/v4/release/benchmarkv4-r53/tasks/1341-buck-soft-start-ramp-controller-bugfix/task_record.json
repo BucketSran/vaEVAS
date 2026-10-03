@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "buck_soft_start_ramp_controller.va"
+  ],
+  "canonical_dut_source_slug": "341-buck-soft-start-ramp-controller",
+  "checker_task_id": "v4_341_buck_soft_start_ramp_controller",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "68ebc8144ca37feeeef86a270d60825115cd84dc08fd8374d730178b1edeecaa",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "cd3435e519eb1ee65faf28b0749b156d13217854432036d13fb15e38c4573282",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "92e511070cb8b1bda35d7844d58c690089aba910ba774db8b7067b74502fccba",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "341",
+  "family_spec_sha256": "812b7ac824fe8845bd81da0cf18dfbdb0f25a90a495885d21ae20ca354ba125b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "35b3016a403c4de445fade17adda24dfe906854d1bef1f1c96a7bb4c3805b3c7",
+  "public_contract": "tasks/1341-buck-soft-start-ramp-controller-bugfix/public_contract.json",
+  "public_contract_sha256": "053e5caf878715fb496b4a93d513e9c9f5ef5d398b046d71f63ebb898f7b5191",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1341-buck-soft-start-ramp-controller-bugfix",
+  "task_id": "v4-1341"
+}

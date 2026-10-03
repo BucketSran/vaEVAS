@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "249-pfd-active-low-reset",
+  "checker_task_id": "v4_249_pfd_active_low_reset",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e59b532aec29d7a418a17e0b56faa049516b0d4577ce287147f2ab5bc644bb25",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d666d3cd6d680fe357173fc037550a798bdc862a6287aeb6941e4487a22ae237",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e59b532aec29d7a418a17e0b56faa049516b0d4577ce287147f2ab5bc644bb25",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c8a514c51db0b725aa1683005753d5a70f9ff9175e644e80d84f1cda4061f5ae",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "3c266ebf2c71695aa6353312ded76fbb2104139c68797575cda2fa1ab4f4210c"
+  },
+  "family_id": "249",
+  "family_spec_sha256": "1129f0892cbdf88b24b306744e3acf71918b65eb613ada62c3e0d41baa185af7",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e72ee15efccdbd43281d0b135958be6fe5f46b8035f26077ee6d22d85a0a3466",
+  "public_contract": "tasks/749-pfd-active-low-reset-testbench/public_contract.json",
+  "public_contract_sha256": "75acc1a4c605ea6a06bed461c86e314726b9e9f0313fd7b0d161419ce74980bc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/749-pfd-active-low-reset-testbench",
+  "task_id": "v4-749"
+}

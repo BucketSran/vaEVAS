@@ -1,0 +1,79 @@
+{
+  "family_id": "307",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_overlap_cycle_accepted/certification.json",
+        "certification_sha256": "874cb03fb93b6dbdfc9b7849f3446c834196c5fc0cf3119f8715eb47d2bcdf5b",
+        "fault_class": "overlap_cycle_accepted",
+        "mutation_bundle_sha256": "9aa1f44168f14bd1c129587b2a78be3e7e721102244e9e77982034d598a709e3",
+        "mutation_id": "neg_002_overlap_cycle_accepted",
+        "source_catalog_certification_path": "negative_variants/neg_002_overlap_cycle_accepted/certification.json",
+        "trigger_condition": "overlap_cycle_accepted",
+        "violated_property_ids": [
+          "P_ON_A_RISING_PHI1_CROSSING_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_valid_stuck_high/certification.json",
+        "certification_sha256": "8a199ccf7ccaad044df6b71c69a07f4a3a836a8e1881ad6b62236b61f44f4924",
+        "fault_class": "valid_stuck_high",
+        "mutation_bundle_sha256": "95fe19c80a1d3deb84f059f5e3112f9777440dbc3f0daa669b1b998b9aaea935",
+        "mutation_id": "neg_004_valid_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_004_valid_stuck_high/certification.json",
+        "trigger_condition": "valid_stuck_high",
+        "violated_property_ids": [
+          "P_REJECT_OVERLAPPING_PHI1_AND_PHI2_UPDATES",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_enable_reset_ignored/certification.json",
+        "certification_sha256": "a623b51cf15c3a7f0f41207717845e76bd5739537824e17b3efce025e494870f",
+        "fault_class": "enable_reset_ignored",
+        "mutation_bundle_sha256": "9285abcff2de6bc1df6714b1ceb65ce263a9911ed307571974dd1562bdcbb9cc",
+        "mutation_id": "neg_003_enable_reset_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_003_enable_reset_ignored/certification.json",
+        "trigger_condition": "enable_reset_ignored",
+        "violated_property_ids": [
+          "P_ON_THE_FOLLOWING_RISING_PHI2_CROSSING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_state_not_integrated/certification.json",
+        "certification_sha256": "67eb40a320b2f9bfda096fac3c7e8e785fc54b8e39d629ae2df40db02bec7b2a",
+        "fault_class": "state_not_integrated",
+        "mutation_bundle_sha256": "4d8dce260ece78f5a5864a1149c401f05ba74c6882b7fdd487ee6ff56d000142",
+        "mutation_id": "neg_005_state_not_integrated",
+        "source_catalog_certification_path": "negative_variants/neg_005_state_not_integrated/certification.json",
+        "trigger_condition": "state_not_integrated",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_MOST_RECENT_ACCEPTED_PHASE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_integration_sign_inverted/certification.json",
+        "certification_sha256": "fd9e7c394379eea5b7818145039421ba358e84f1b804c2e725e004c0c18e3444",
+        "fault_class": "integration_sign_inverted",
+        "mutation_bundle_sha256": "f26ef1d22a03ac6983a9ff81760748d728e14978a41aa61f7250eee20f2db771",
+        "mutation_id": "neg_001_integration_sign_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_integration_sign_inverted/certification.json",
+        "trigger_condition": "integration_sign_inverted",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_overlap_cycle_accepted",
+    "canonical_dut_id": "307",
+    "hashes": {
+      "mutation_catalog_sha256": "edda7cc96cb5c14bf2e099d68318b9069aef4ad8f260abeaa2b554f327958564",
+      "score_deck_sha256": "b7a4044b24d8a38522ccce9aadb527c0f77660f5c3d19b8623639b9e33940dc5",
+      "task_certification_sha256": "419ef2fa4b4cecc4609b38963172f4234beab1a7175b533d047169d9a0b9fbe6",
+      "task_record_sha256": "971ba552c72bd69017a48c5a5c81ee3c6d4f01aa676fb1e53294142285822828"
+    },
+    "release_dir": "307-switched-capacitor-integrator-phase-pair"
+  }
+}

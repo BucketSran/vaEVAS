@@ -1,0 +1,79 @@
+{
+  "family_id": "356",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_data_inverted/certification.json",
+        "certification_sha256": "b5d10716f68939c9992247315160e59cf254b4940a817cb8b2e29c47c940d089",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "6bc215b69ab12faa55e6155a013b6d2a58140c9b0e1eb9ac505911fdd0433db1",
+        "mutation_id": "neg_001_data_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_data_inverted/certification.json",
+        "trigger_condition": "enabled rising edge samples data",
+        "violated_property_ids": [
+          "P_CLOCKED_DATA",
+          "P_DATA_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swing_gain_low/certification.json",
+        "certification_sha256": "83042f65b8f7af8727ea0bde813c386f3e30d27a9975695c323229d03e6a9792",
+        "fault_class": "gain_error",
+        "mutation_bundle_sha256": "ba0c4e085da15a30bf7dc3284e84446dd2ceace6181c017ff9c2336362e774a7",
+        "mutation_id": "neg_003_swing_gain_low",
+        "source_catalog_certification_path": "negative_variants/neg_003_swing_gain_low/certification.json",
+        "trigger_condition": "nonzero trim code is applied",
+        "violated_property_ids": [
+          "P_SWING_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_disable_drives_high/certification.json",
+        "certification_sha256": "910c0dd34ed39e195185936f75d489f79e460a3e8dc1ad9b2685aee5e8c13f1e",
+        "fault_class": "missing_clear",
+        "mutation_bundle_sha256": "9a9d7074e9b95486e166cb36068856c88f176dd26d747f829bdccafc4f029ad9",
+        "mutation_id": "neg_004_disable_drives_high",
+        "source_catalog_certification_path": "negative_variants/neg_004_disable_drives_high/certification.json",
+        "trigger_condition": "enable is low after active operation",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_trim_metric_divisor/certification.json",
+        "certification_sha256": "8cf5fa36b7b3e353e4527c61916472ad44fc0d957a7daab456420649a2839592",
+        "fault_class": "metric_error",
+        "mutation_bundle_sha256": "1645dadfb9b1807c31dd3dd1c1c85e2b78ab096793ed22768ca18cb664ce558d",
+        "mutation_id": "neg_005_trim_metric_divisor",
+        "source_catalog_certification_path": "negative_variants/neg_005_trim_metric_divisor/certification.json",
+        "trigger_condition": "trim code 7 is applied",
+        "violated_property_ids": [
+          "P_TRIM_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_trim_reversed/certification.json",
+        "certification_sha256": "9b85988b6ebfb1827af58ebe274605f2a0f93c587332726ce0618fc320150278",
+        "fault_class": "mapping_error",
+        "mutation_bundle_sha256": "e94c8c4995f7e87983b6ab0057e002e7a76210d9c69d093f685b4548cba8cd0e",
+        "mutation_id": "neg_002_trim_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_trim_reversed/certification.json",
+        "trigger_condition": "more than one trim code is applied",
+        "violated_property_ids": [
+          "P_SWING_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_data_inverted",
+    "canonical_dut_id": "356",
+    "hashes": {
+      "mutation_catalog_sha256": "99fd2ce86221de527264752acc4029e6470ccdefd3fb0a8c5b17ab676fc88c78",
+      "score_deck_sha256": "dfb1ace325f0de447e30a48e55f2ef217a52ac3325a25b61ad9e23252ce989c3",
+      "task_certification_sha256": "1695f271809fbe34936f9fabcf520ea2af9a156609be4844a458078a69052f65",
+      "task_record_sha256": "26c6b62bc06d3d4ecd1c79dc6220c04d74608bcc99388e0d507c581f4d591c3d"
+    },
+    "release_dir": "356-sst-driver-impedance-macro"
+  }
+}

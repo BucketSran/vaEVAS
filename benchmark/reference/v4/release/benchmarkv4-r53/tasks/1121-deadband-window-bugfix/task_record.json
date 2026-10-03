@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deadband_window.va"
+  ],
+  "canonical_dut_source_slug": "121-deadband-window",
+  "checker_task_id": "v4_121_deadband_window",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8769c6eaf826021ac95b36bc558f395e2d187996450e9b1e3b048cd39aacf567",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "252270c9ccce30e73a3edd3c72bee42e38eb86852b6ab4fec7c945c7cf530e2e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9ef1f3fe0ac1ccc3e66f25c76b248384f909d114532b560d911ddce303c1e6ea",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "121",
+  "family_spec_sha256": "ad6810c59a513ebb8eb42c06cd9034688fa26ac84c4fb9a9ba6d2cb1048a51de",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "01d0aa51cc98a5039e63dbdcf840f6ea0fc2f1dc6099c73cb10adf1a499089bf",
+  "public_contract": "tasks/1121-deadband-window-bugfix/public_contract.json",
+  "public_contract_sha256": "a3e93e6f96ed978772f9618c37d007f7c61006a73c89d441583ce4c28e65e43d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1121-deadband-window-bugfix",
+  "task_id": "v4-1121"
+}

@@ -1,0 +1,86 @@
+{
+  "family_id": "099",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "b631ac774733fbe679ca403e6765863d66270d6e4f9f5bbb71765231545245be",
+        "fault_class": "threshold_boundary_error",
+        "mutation_bundle_sha256": "e7cb1c9e638b2c5313a8529f6440504965bc6c1accdf7508a8a4d010f5363afa",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "boundary stimulus crosses the public threshold conditions for Reference Startup Enable Flow",
+        "violated_property_ids": [
+          "P_ENABLED_SETTLING",
+          "P_RESET_OR_BROWNOUT",
+          "P_STARTUP_VALIDITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "3dd6fba0dd85187c9265f0c10ae29b5c358dc00bb0b15909153a61ee1ba1359f",
+        "fault_class": "reset_semantics_error",
+        "mutation_bundle_sha256": "92d6e79c54d4205e909c0473c8cb0ed7b2e3930490380cb6f82ac6e7952a66b4",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "reset/recovery stimulus exercises Reference Startup Enable Flow state override behavior",
+        "violated_property_ids": [
+          "P_BROWNOUT_RECOVERY",
+          "P_DISABLED_REFERENCE",
+          "P_RESET_OR_BROWNOUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "b0b36ae69b28a30abba072b642943b3154b244566c6bcde4dbbfceb96e485b9f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "57b6d7b8fc51e04d5e2c04da7a6e1b48f2c8bf5365b56d352dd5ff5c80562f94",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable Reference Startup Enable Flow outputs",
+        "violated_property_ids": [
+          "P_RESET_OR_BROWNOUT",
+          "P_SUPPLY_AND_ENABLE_MONITORS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "834adc430e020c048629cc0d92bcad0255a1180c13f1c896e42f028f97255924",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "aa5c52714d144bb810646a4a165f96cf10275124d21459ad676e29ee043c0f4f",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for Reference Startup Enable Flow",
+        "violated_property_ids": [
+          "P_DISABLED_REFERENCE",
+          "P_RESET_OR_BROWNOUT",
+          "P_STARTUP_VALIDITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "462e7dd038ae919712036eff1cc4787a7592d39a4fcb9e491c02616b95dff25d",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "a77800d65869ff6cf8d5ba0863f87ca1231168df109642e3f5ed4b670f825bd3",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Reference Startup Enable Flow",
+        "violated_property_ids": [
+          "P_RESET_OR_BROWNOUT",
+          "P_SUPPLY_AND_ENABLE_MONITORS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_threshold_shifted",
+    "canonical_dut_id": "099",
+    "hashes": {
+      "mutation_catalog_sha256": "642e0cbc28b8372804089a19e3b9e69cf945f82e0be36c7c623520e2783f4a00",
+      "score_deck_sha256": "eab68179d0e8d6870f8c7e5842ff3e803e226b5e948bee4bb4c9661d0b0b5372",
+      "task_certification_sha256": "d5370142b5d394024c437d572cefd124c14409f11f9fabe5f602dff928f8017d",
+      "task_record_sha256": "39768f38af7a367b9a617edf72e019102ffcec12c73d5a34c5bad95c11fd62a9"
+    },
+    "release_dir": "099-reference-startup-enable-flow"
+  }
+}

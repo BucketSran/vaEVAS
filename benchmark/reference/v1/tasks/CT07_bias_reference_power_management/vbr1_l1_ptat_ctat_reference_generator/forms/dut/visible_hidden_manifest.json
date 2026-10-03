@@ -1,0 +1,50 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_ptat_ctat_reference_generator/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_ptat_ctat_reference_generator.scs"
+    ],
+    "gold_va": [
+      "ptat_ctat_reference_generator.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_ptat_ctat_reference_generator/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_ptat_ctat_reference_generator",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "clk": "input",
+      "metric": "output",
+      "out": "output",
+      "rst": "input",
+      "vin": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "clk",
+      "rst",
+      "vin",
+      "out",
+      "metric"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "ptat_ctat_reference_generator.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_ptat_ctat_reference_generator/forms/dut/visible"
+}

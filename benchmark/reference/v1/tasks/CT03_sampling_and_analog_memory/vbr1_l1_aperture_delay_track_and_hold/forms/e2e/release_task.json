@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_aperture_delay_track_and_hold:e2e",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_aperture_delay_track_and_hold",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Sampling and Analog Memory",
+  "base_function": "Aperture-delay track-and-hold",
+  "family": "end-to-end",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e/gold/sample_hold_aperture_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e/gold/tb_sample_hold_aperture_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/e2e/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "track_hold_aperture",
+    "source_task_id": "vbr1_l1_aperture_delay_track_and_hold_e2e",
+    "historical_source_task_id": "vbm1_track_hold_aperture_e2e",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_aperture_delay_track_and_hold/forms/e2e"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

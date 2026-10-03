@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_HYSTERESIS_STATE_UPDATE satisfy the public contract; fault class passes_interface_and_broad_waveform_checks_but_f is rejected",
+    "observed": "EVAS: v4_043 checked=117 mismatch_count=57 coverage=clock_rises=30 regions=['high', 'low'] memory=['high', 'low']; P_RESET_NEUTRAL checked=4 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_HYSTERESIS_STATE_UPDATE checked=29 mismatch_count=26 expected=state_metric=0.61+/-0.08 observed=state_metric=0.45 sample_time=1.102e-08 metric_gap=0.16; P_GAINED_LIMITER_TRANSFER checked=28 mismatch_count=5 expected=held_out=0.298+/-0.08 observed=held_out=0.378 sample_time=5.852e-08 metric_gap=0.08; P_OUTPUT_LIMITS checked=28 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_STATE_METRIC checked=28 mismatch_count=26 expected=metric=0.61+/-0.08 observed=metric=0.45 sample_time=1.102e-08 metric_gap=0.16",
+    "violated_property_ids": [
+      "P_HYSTERESIS_STATE_UPDATE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_043_soft_hysteretic_limiter",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 794
+  },
+  "family_id": "043",
+  "inputs": {
+    "checker_profile_sha256": "18a093ebf026bc4e1db5e49729c40cd7fa5bb86b13906d54cbd9e2ae4a2d7a5f",
+    "harness_spec_sha256": "53b795c72adf44b3050fddc6120c49cf9e3dfffc5df67b449db01d1da1019be3",
+    "mutation_bundle_sha256": "4f763651730d5b616317f330399a8b2db6f2e109faf7d823273488a14c78b982",
+    "profile_sha256": "f0c3647cd714a13a62e29c1884c1b18edc2b7dce490f46c281519354c51bb60a"
+  },
+  "mutation_id": "neg_002",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

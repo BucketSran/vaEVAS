@@ -1,0 +1,18 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/chopper_stabilized_differential_amplifier.va"
+ahdl_include "./dut/chopper_gain_core.va"
+ahdl_include "./dut/synchronous_lp_state.va"
+
+Vinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]
+Vinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]
+Vchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p
+Vrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]
+Ven (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]
+Vhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]
+
+IDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier
+
+tran tran stop=70n maxstep=20p errpreset=conservative
+save vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual

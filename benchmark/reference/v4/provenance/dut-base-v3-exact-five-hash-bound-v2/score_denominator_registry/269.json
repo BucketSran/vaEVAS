@@ -1,0 +1,79 @@
+{
+  "family_id": "269",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_passthrough_no_limit/certification.json",
+        "certification_sha256": "129a017de958a57025ad428af5a09eb8980cdb8cddefe157a3b172d15ffb1be4",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "d1063346f2822248fb915dc2c00621c6e1499dd6f1dbd4b374fb9eaf95f99c6c",
+        "mutation_id": "neg_001_passthrough_no_limit",
+        "source_catalog_certification_path": "negative_variants/neg_001_passthrough_no_limit/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_passthrough_no_limit",
+        "violated_property_ids": [
+          "P_CLAMP_THE_ENABLED_INPUT_BETWEEN_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_recovery_metric/certification.json",
+        "certification_sha256": "8e52dbfd2e7816714ad47a79465611414d488857cae0888040ef0c989ba0c325",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "2548439f0afb8f4d7df19d4b9c0b260677c842f0023e61e529310ed6b57f8874",
+        "mutation_id": "neg_005_wrong_recovery_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_recovery_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_recovery_metric",
+        "violated_property_ids": [
+          "P_DRIVE_SAT_VHI_WHEN_ENABLED_AND",
+          "P_DRIVE_THE_RECOVERY_METRIC_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_enable/certification.json",
+        "certification_sha256": "19ec322a5d7cdbe496bea3f2232753f99a1ded5b5be9ad5702a0b9768f4a43e7",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "d619fe97535f9f43815679df6b76b1802ce984e9ffc356460f0be5b8e4d1e10d",
+        "mutation_id": "neg_003_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_ignore_enable",
+        "violated_property_ids": [
+          "P_CLEAR_OUTPUT_FLAG_AND_RECOVERY_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_saturation_flag_high_only/certification.json",
+        "certification_sha256": "7da80ffb02c6b83571b002e061112a529fa16c2b68aca56e8ddacebbfdb1e543",
+        "fault_class": "saturation_flag_high_only",
+        "mutation_bundle_sha256": "f91210adb4b43376fb9c4542bbaa4263cdecb6c9a1e57cd96abacd9329b5ae62",
+        "mutation_id": "neg_004_saturation_flag_high_only",
+        "source_catalog_certification_path": "negative_variants/neg_004_saturation_flag_high_only/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_saturation_flag_high_only",
+        "violated_property_ids": [
+          "P_COMPUTE_LIMITED_CLAMP_V_VIN_VLO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_high_only_limit/certification.json",
+        "certification_sha256": "47f4c2ed1ad0e0a8fb5fe3469a6ff08f0fb2242719149b728fa620bfd6686a7c",
+        "fault_class": "high_only_limit",
+        "mutation_bundle_sha256": "da1a8a3a4ead6e1e07b9de62d407c06d547558d680449b40368d7e9a96bf096b",
+        "mutation_id": "neg_002_high_only_limit",
+        "source_catalog_certification_path": "negative_variants/neg_002_high_only_limit/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_high_only_limit",
+        "violated_property_ids": [
+          "P_DRIVE_A_SATURATION_FLAG_WHEN_EITHER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_passthrough_no_limit",
+    "canonical_dut_id": "269",
+    "hashes": {
+      "mutation_catalog_sha256": "da38025dec992562d5d5ba34a871e1c6301884feff71bc5410b7b3089277ec24",
+      "score_deck_sha256": "85fb7e40d4334a947d073db9f5e4acf4fe6069a6c81b3aae4890b569f86f39fb",
+      "task_certification_sha256": "39c06d40c9f205849094d6073717cb60e4d6c1f3875d7a356409dbfbf7ef5265",
+      "task_record_sha256": "bd02940fe004f455b2046b8e08cfe4e2a8bbdbd9c9592ed80b02808a3ce805b8"
+    },
+    "release_dir": "269-saturation-recovery-limiter"
+  }
+}

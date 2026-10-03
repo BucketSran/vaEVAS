@@ -1,0 +1,13 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "precision_rectifier_envelope_detector.va"
+
+V_clk (clk 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_rst (rst 0) vsource type=pulse val0=0.9 val1=0 period=20n delay=1n rise=50p fall=50p width=18n
+V_vin (vin 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+
+XDUT (clk rst vin rect env metric) precision_rectifier_envelope_detector
+
+tran tran stop=5n maxstep=100p
+save clk rst vin

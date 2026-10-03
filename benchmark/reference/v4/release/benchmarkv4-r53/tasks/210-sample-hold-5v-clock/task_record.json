@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sample_hold_5v_clock.va"
+  ],
+  "canonical_dut_source_slug": "210-sample-hold-5v-clock",
+  "checker_task_id": "v4_210_sample_hold_5v_clock",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9bcab54572dc55b4cb66d8af47c09181bdc734650d4e8beb2844328174f2142c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d235b3ff1d6f99b9128f8fb0bbb9c6958b1b04e6295f604bcc5da0eec662144d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "51fbaff29911b429f8c15d0015462c68c03d651b62aea664f9653d39752a0104",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "210",
+  "family_spec_sha256": "484cbcef68817e92c5b2c51c4b18af1e933cf90369068c7677084bf7e90f04df",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ddc6a892dbaea3faeb30801376f8178766d91e24a9a5d698c752c3b751d73bd0",
+  "public_contract": "tasks/210-sample-hold-5v-clock/public_contract.json",
+  "public_contract_sha256": "7e5a12c0b12538b1dac3c2409208dec3a808900e07b055484733e440c216751d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/210-sample-hold-5v-clock",
+  "task_id": "v4-210"
+}

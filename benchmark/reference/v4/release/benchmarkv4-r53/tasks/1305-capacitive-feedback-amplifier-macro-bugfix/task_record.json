@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "capacitive_feedback_amplifier_macro.va"
+  ],
+  "canonical_dut_source_slug": "305-capacitive-feedback-amplifier-macro",
+  "checker_task_id": "v4_305_capacitive_feedback_amplifier_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "1a5cf42d563b4e527e7a373a77b3bbd14995aa7513c0c1bb7c825ccac64354e6",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "704cf648f2560ed5dbe3128251039590d3aab674ad4655c8c54e89d08df96fe4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0851106731d5d56b120b29ca7bd4d2aaa4c5e940f58a5c49f529020074bddc01",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "305",
+  "family_spec_sha256": "b2955bc7070de09edcc5c46c76a24b2a511d717b669be2e28584e29ec399fc4f",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "846e30674bc3346667ab288abf5d5eb801de4181b524d362d9fe479bf2769778",
+  "public_contract": "tasks/1305-capacitive-feedback-amplifier-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "09fdc440ac4c36a02c4ba0e489946924cabaafb2531358be670d3827300bf7d8",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1305-capacitive-feedback-amplifier-macro-bugfix",
+  "task_id": "v4-1305"
+}

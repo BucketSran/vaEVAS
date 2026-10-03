@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "169-linear-pfd-gain",
+  "checker_task_id": "v4_169_linear_pfd_gain",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9a721081cb75261bb970b4342e82209e8664711d27aa09287bb320e8cc89f59f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "caa0740be5d382ab107a70efb4e7dca3e22a03995abdadd58315015b6cc2dd89",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9a721081cb75261bb970b4342e82209e8664711d27aa09287bb320e8cc89f59f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "b8bd97396cec45757500529d979b602d1536e86841f33e2fc3abd00e613a3df1",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "95fb6131b10a3d822cea79b9ecff862455e9a2982bf44d3108858635673174e5"
+  },
+  "family_id": "169",
+  "family_spec_sha256": "a35a3352fcbedc984d344fe0bcd1903b24aec234ab88c4f4b25bca894be6ea6f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cc2a3d600d9e74b47b3321a7abf5a6534a71c39cbec6e5eea81755a67b6c22d5",
+  "public_contract": "tasks/669-linear-pfd-gain-testbench/public_contract.json",
+  "public_contract_sha256": "62ee894a6b76e63343bc22bae954602aeb39ae6e8f06f235cbd93a7b4b7f11c9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/669-linear-pfd-gain-testbench",
+  "task_id": "v4-669"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "level_shifter_enable_rail_tracking.va"
+  ],
+  "canonical_dut_source_slug": "384-level-shifter-enable-rail-tracking",
+  "checker_task_id": "v4_384_level_shifter_enable_rail_tracking",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3b94871960372cfe333321e4271bb65721049a4a060ef06bd7cb644740aac8d4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e630b5e50c3df567ba8a78b73ba4849bbfdede02f74597625825f25e16b880dd",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9890e1104e55c8ae7a566a1f1865c50cc7b0910040cfc0d55a328bbe459387da",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "384",
+  "family_spec_sha256": "289d2c26ccd11b99b43e7fe44ad5b16c6444c1fab6548b64717c22d8633f623e",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7849e58aa54a4129754e8aa2a6580a0254cb43795957c6ce9a561d1a6d39f61d",
+  "public_contract": "tasks/1384-level-shifter-enable-rail-tracking-bugfix/public_contract.json",
+  "public_contract_sha256": "f573f6bbec85ec7b7d0ac6910f3cc7869f9b5085f24e5653249353fe40e4898f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1384-level-shifter-enable-rail-tracking-bugfix",
+  "task_id": "v4-1384"
+}

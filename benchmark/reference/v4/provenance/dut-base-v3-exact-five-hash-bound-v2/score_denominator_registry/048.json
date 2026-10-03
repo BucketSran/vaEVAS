@@ -1,0 +1,79 @@
+{
+  "family_id": "048",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_off_by_one_count/certification.json",
+        "certification_sha256": "75012735a56013c9e692f42722cb06e4509645a9a2c035f2e0b5ff11e7d9bf45",
+        "fault_class": "off_by_one_count",
+        "mutation_bundle_sha256": "9f79753dd1698d272272b31b2140e47e9a593cd6da78d4112739ae65b898c798",
+        "mutation_id": "neg_001_off_by_one_count",
+        "source_catalog_certification_path": "negative_variants/neg_001_off_by_one_count/certification.json",
+        "trigger_condition": "Drives code+1 outputs high when enabled.",
+        "violated_property_ids": [
+          "P_ENDPOINT_CODES",
+          "P_PREFIX_THERMOMETER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reversed_thermometer_bus/certification.json",
+        "certification_sha256": "b358256c42b2286aa5279c0444e9ae44ff0bc2776d75ee78b25549eb336ae0bf",
+        "fault_class": "reversed_thermometer_bus",
+        "mutation_bundle_sha256": "fc22354ac21cec0874f85b555838be6de58b9d2d267811fe8c85b8457d6c8916",
+        "mutation_id": "neg_002_reversed_thermometer_bus",
+        "source_catalog_certification_path": "negative_variants/neg_002_reversed_thermometer_bus/certification.json",
+        "trigger_condition": "Drives a cumulative count from th255 downward instead of from th0 upward.",
+        "violated_property_ids": [
+          "P_PREFIX_THERMOMETER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_enable_ignored/certification.json",
+        "certification_sha256": "8a483360e5a74a81769e6ca8cb823c5da9362ceedece280755253a36a1c8f7ea",
+        "fault_class": "enable_ignored",
+        "mutation_bundle_sha256": "d832d89ee9bc4146aac9fe5752b8e561e39a881d78d32fd5c44b01655b99e5f1",
+        "mutation_id": "neg_003_enable_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_003_enable_ignored/certification.json",
+        "trigger_condition": "Decodes the code even when en is low.",
+        "violated_property_ids": [
+          "P_DISABLED_ALL_LOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reversed_bit_order/certification.json",
+        "certification_sha256": "671d3600b81f5abc1689aeef6eff7ce4fed3ba145e434d6ce5568e07a6891749",
+        "fault_class": "reversed_bit_order",
+        "mutation_bundle_sha256": "58bd4c8cc012c9fa3d7405c64593c807fbcd779528bdaaf367a89921653b9570",
+        "mutation_id": "neg_005_reversed_bit_order",
+        "source_catalog_certification_path": "negative_variants/neg_005_reversed_bit_order/certification.json",
+        "trigger_condition": "Treats b0 as the most significant bit and b7 as the least significant bit.",
+        "violated_property_ids": [
+          "P_UNSIGNED_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_weak_high_level/certification.json",
+        "certification_sha256": "e1b41b58d9bf605948fbdd8154b3ff034da37deff049a154a547ea5829033fa0",
+        "fault_class": "weak_high_output_level",
+        "mutation_bundle_sha256": "38e85e42b55d2e84a1718136379c69706c8f3bf3c418d5f6ba8ab78d66a9f9ea",
+        "mutation_id": "neg_006_weak_high_level",
+        "source_catalog_certification_path": "negative_variants/neg_006_weak_high_level/certification.json",
+        "trigger_condition": "Drives asserted thermometer elements to 0.3 V instead of the declared vdd level.",
+        "violated_property_ids": [
+          "P_LOGIC_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_off_by_one_count",
+    "canonical_dut_id": "048",
+    "hashes": {
+      "mutation_catalog_sha256": "9bcfa85c327e8d17c8202215599ce4ca5a2384e5bf91345e9cbec17cb3b91d1e",
+      "score_deck_sha256": "25f7848515a01dda897a2ec4547b623165131747d574b705c86d26f62eb40fc3",
+      "task_certification_sha256": "c7e384eb98c0ec218cb751509ca27a0874aa8a18f99386aa8518431b3947be69",
+      "task_record_sha256": "c7d2b9cb7e151aaa9e5b24c1696fb42d044673be97d0e8f374e816cda2939cfc"
+    },
+    "release_dir": "048-bin-to-thermometer-decoder-8b"
+  }
+}

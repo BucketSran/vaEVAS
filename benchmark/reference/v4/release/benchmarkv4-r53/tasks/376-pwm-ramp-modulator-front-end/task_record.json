@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pwm_ramp_modulator.va"
+  ],
+  "canonical_dut_source_slug": "376-pwm-ramp-modulator-front-end",
+  "checker_task_id": "v4_376_pwm_ramp_modulator_front_end",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "bd477c4c5ad33b9227243cec047e9630f51879ec900b88232bc1e9a508a6b649",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "59ba41070ede2901879f2a51f5ad55dddcc508fb62d0e4731c2f85f3a481522a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6ab72e88c5e4f67820bf0bc1858d84d45628a1caeeabc9ba858dceefef8de425",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "376",
+  "family_spec_sha256": "cc1bdce2ad6c21361744a1948d501e3c445ba7dc7da9344f7ceb90ec4e55c2ec",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7813d96bfdc2e5735560887a861a7dc5ef786f54d7fe3cadba30f3cef3f9d12f",
+  "public_contract": "tasks/376-pwm-ramp-modulator-front-end/public_contract.json",
+  "public_contract_sha256": "ecd647e631a22fb4ddea34c697a5a36f2d81ae1ad5d4d0a83cc91e6cf012491b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/376-pwm-ramp-modulator-front-end",
+  "task_id": "v4-376"
+}

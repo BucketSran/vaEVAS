@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "176-weighted-decoder-7b5",
+  "checker_task_id": "v4_176_weighted_decoder_7b5",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "6b63962a0e36111042f588a2f5e293ab28be57a425d82dd9a6b02474947d74e1",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "66e9f0a0b1b40d6f614e43e6b0e8731e1e624db84f28eefb375d498a1066ffef",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "6b63962a0e36111042f588a2f5e293ab28be57a425d82dd9a6b02474947d74e1",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "cc754ba5f58ca9e4fdaa9fda5e0781bb5e21ed99dfc0e1291659907c3b388f29",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "66772ab1c6da5e8b9310b78f33ab95602d09b8037cdbf5826cd91f3aadcd9e84"
+  },
+  "family_id": "176",
+  "family_spec_sha256": "9f12dffffcd5a8760bbfab45382bb15165792d0381a8f735d4fbf45bd6237d68",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "eddbcaa6c327d4cf0981bd0c2d7841f21dc7d1cc23dad3c43ed08503eccd32cf",
+  "public_contract": "tasks/676-weighted-decoder-7b5-testbench/public_contract.json",
+  "public_contract_sha256": "f6bbd17a78e74b79e46f60005f066e95b3874a108e91f5b3314cf60ba2d81193",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/676-weighted-decoder-7b5-testbench",
+  "task_id": "v4-676"
+}

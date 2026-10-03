@@ -1,0 +1,78 @@
+{
+  "family_id": "143",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_initial_value/certification.json",
+        "certification_sha256": "c9ca58fc94a8b57ea3642477fe2be105c850a834abb70b615df1aaee144653bf",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "0bcc31417190d0930be11fd1665d170e55537090e77e8b0557ca533b14c215fb",
+        "mutation_id": "neg_004_wrong_initial_value",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_initial_value/certification.json",
+        "trigger_condition": "Uses wrong initial output before samples are available.",
+        "violated_property_ids": [
+          "P_INITIAL_OUTPUT_VALUE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_one_period_delay/certification.json",
+        "certification_sha256": "8752bfce00a0de88964d41789eff647038b427e9b3b832b37572252a114144f4",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "e0d4f9f3f15f3be01c6e8b85877ec3ae018c943f588af8dd366a5fdcdf010694",
+        "mutation_id": "neg_002_one_period_delay",
+        "source_catalog_certification_path": "negative_variants/neg_002_one_period_delay/certification.json",
+        "trigger_condition": "Outputs the current sample with only one-period delay.",
+        "violated_property_ids": [
+          "P_TWO_PERIOD_DELAY_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "b69a8367c04169d81d54e0492b5732509d54abf9732dfd187942ba7fa256a45c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "a9f43524d378092ffa0f71743358838aba88666cbe409e6b7072aff37ea84507",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_half_output_gain/certification.json",
+        "certification_sha256": "e7c09a3a10dd3723b9f6579d6f46720edb5aa5530c47b164928f76574fad636a",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "fce7b45defebebcae468da6b14f10c299a8952394f29a491cadd5d4e85c348e0",
+        "mutation_id": "neg_003_half_output_gain",
+        "source_catalog_certification_path": "negative_variants/neg_003_half_output_gain/certification.json",
+        "trigger_condition": "Applies half gain to the delayed output.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "53adcdef830fa33878303b4177fa1868c70e5e00089ee546ee570bc98a5a7447",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "25f42d73cb937ecb6db1c556efc90f99a5e6a579914a16ea396b7b9b5e56a3c1",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Two Period Sample Delay: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_initial_value",
+    "canonical_dut_id": "143",
+    "hashes": {
+      "mutation_catalog_sha256": "b5517fdc68127bb8adc204b5fd5ec6b57fa036b4dbabbcd13d92cba0de092cd5",
+      "score_deck_sha256": "f7f2f3cd7c0b60dd1cc43fd08f3fb2e0bc9a1d57232c90dd2598be93191377bb",
+      "task_certification_sha256": "c2fae067603c18ff9222421b134b3c2543064fe7b625691c0924ddef9c48fb55",
+      "task_record_sha256": "4dcf9552f5526402ba82b59d705251f04db771b5ff2e8dad0bf09ee42e338d3b"
+    },
+    "release_dir": "143-two-period-sample-delay"
+  }
+}

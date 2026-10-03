@@ -1,0 +1,37 @@
+{
+  "candidate_artifacts": [
+    "dwa_ptr_gen.va",
+    "v2b_4b.va"
+  ],
+  "canonical_dut_source_slug": "027-dwa-dem-encoder",
+  "checker_task_id": "v4_027_dwa_dem_encoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ca6708310b40333167553fb9ca70d1108f209cac4bc7e74ca148a47cfe83bbaa",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "743c53db38d3b4370ef24368e510ef7a7ee69175be5fa9dcb88990da694524ec",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "63f4ec528de342c31a335ee3f835db745a753a01918d26fe5402a9c942d86c41",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "027",
+  "family_spec_sha256": "0deb18b2ae541cb3267fef8a9510bbcf73456a5287796acca034eddad3e54d7d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6e8a9a357cd79c9d9262cc688665b85d25362dc3c582c541f538cf00590a7a94",
+  "public_contract": "tasks/027-dwa-dem-encoder/public_contract.json",
+  "public_contract_sha256": "b8f6e6651f51ab6975f7c403d4f24143788c59a58ec338fa0e3696b333b81e29",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/027-dwa-dem-encoder",
+  "task_id": "v4-027"
+}

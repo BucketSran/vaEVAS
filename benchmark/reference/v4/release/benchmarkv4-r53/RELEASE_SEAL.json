@@ -1,0 +1,38 @@
+{
+  "artifact_sha256": {
+    "AUDIT_REPORT.json": "2015ee250f923045481570d7f0e58e61876f39e49f53b339ffda5e67b95b3778",
+    "MANIFEST.json": "ef390362d7d503134f0b8723b4d6d6753e158127abbb22d4e9ca4cbc507132c6",
+    "RUNTIME_INGESTION_EVIDENCE.json": "d12f678b1681ba6e4381b9cd318ac9315c227fb228f1430a9bf3998201f25f35",
+    "TASK_INDEX.json": "49db192cfdddb44d646f2888ae49c35ab9b9f2361510ed62f677ac88ab5010bf",
+    "prompt_modes/manifest.json": "094de5421ab39db916e05da6be4dc6f75ff3c3c0bf7ab214c4e804f8c4984fdc",
+    "prompt_modes/modes.json": "3d5a0a8452ae998d85566d3bc85ae227dd9df33e003b0a03750ac67470423218",
+    "skills/SNAPSHOT_MANIFEST.json": "bd835a5437be984a200a2ec83d52e920912cdcdd318b0037f276b89a08fb63f8"
+  },
+  "certification_reuse": {
+    "evaluators": [
+      "rust_evas2"
+    ],
+    "policy": "source_transitive_input_hash_bound",
+    "simulation_rerun_required_for_materialization": false,
+    "source_dut_gold_certification_count": 400,
+    "source_dut_gold_certification_total": 400,
+    "source_negative_certification_count": 2000,
+    "source_negative_certification_total": 2000,
+    "stale_certification_family_ids": [],
+    "stale_gold_family_ids": [],
+    "stale_negative_case_ids": []
+  },
+  "evidence_sha256": {},
+  "immutable": true,
+  "release_revision": "r53",
+  "release_status": "r53_immutable_source_certification_reused",
+  "runtime_requirements": {
+    "evas_package": "evas-sim",
+    "evas_version": "0.8.7",
+    "experiment_policy": "EXPERIMENT_POLICY.json",
+    "experiment_policy_sha256": "b6c478b0a7ecbf855ac801ed1d1dcf08417f1fcdecd84bc80b136a10bf6b9a31"
+  },
+  "schema_version": "v4-benchmarkv4-release-seal-v1",
+  "simulation_claim": "canonical source certification reused by hash; the EVAS 0.8.7 deployment is qualified by pushed-image and Vela smoke",
+  "source_score_denominator_registry_sha256": "52c43d7ec272cd80e861cfaa98e080ba2b37580bc603836fdd8b5da77ec908a2"
+}

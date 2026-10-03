@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "151-flash-8level-sum-delay",
+  "checker_task_id": "v4_151_flash_8level_sum_delay",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "757eeb158ca6a574b50dc954ac7ec44a3e40a3b30f9acd8a3262b2c4c2e17340",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "1fe85ce0d73a775e85c6e7ee4687108357d37faa80c38e05fae2d2e7b1cef999",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "757eeb158ca6a574b50dc954ac7ec44a3e40a3b30f9acd8a3262b2c4c2e17340",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ed164ba292ef195b7b70b42bce74b206e5e4ccccc45b513d40055afc74b1be39",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7a434ef8320c4c6bd8a7a3455c58a47e9d01a2e724683fa7a34f1ebc4a81840f"
+  },
+  "family_id": "151",
+  "family_spec_sha256": "c31d3294b89c2196daf05000f01039da0ce395b88eca4596cda1adaf1e3f6e98",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "28ea1f56bd0ad7ae0b421d468072e0d0dd598eceb3e496e53fc549f31613ea41",
+  "public_contract": "tasks/651-flash-8level-sum-delay-testbench/public_contract.json",
+  "public_contract_sha256": "2904814237a6f0653fcfec5475fd0967f0e8889d3f9c7a7477b96f9783539cf9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/651-flash-8level-sum-delay-testbench",
+  "task_id": "v4-651"
+}

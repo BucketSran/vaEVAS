@@ -1,0 +1,50 @@
+{
+  "id": "vbr1_l1_bias_voltage_generator_with_enable_trim:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_bias_voltage_generator_with_enable_trim",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D1",
+  "category": "Bias Reference and Power Management",
+  "base_function": "Bias voltage generator with enable/trim",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut/gold/bias_voltage_generator_with_enable_trim.va",
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut/gold/tb_bias_voltage_generator_with_enable_trim.scs"
+    ],
+    "public_inputs": [
+      "prompt.md"
+    ],
+    "submission_artifacts": [
+      "bias_voltage_generator_with_enable_trim.va"
+    ],
+    "private_reference_artifacts": []
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_bias_voltage_generator_with_enable_trim/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "bias_voltage_generator_with_enable_trim",
+    "source_task_id": "",
+    "historical_source_task_id": "",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

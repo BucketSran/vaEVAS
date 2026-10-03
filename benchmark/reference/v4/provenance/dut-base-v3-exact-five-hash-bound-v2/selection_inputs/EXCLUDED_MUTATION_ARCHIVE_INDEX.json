@@ -1,0 +1,689 @@
+{
+  "excluded_mutation_count": 51,
+  "families": [
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "edge_polarity_omission",
+          "id": "neg_002_ignore_falling_data_edges",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "falling data edge establishes phase direction",
+          "violated_property_ids": [
+            "P_DIRECTION"
+          ]
+        }
+      ],
+      "family_id": "001",
+      "source_catalog": "tasks/001-bang-bang-phase-detector/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "calibration_gain_error",
+          "id": "neg_004_calibration_scale_16",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "nonzero calibration code is clocked",
+          "violated_property_ids": [
+            "P_CALIBRATION_WEIGHT"
+          ]
+        }
+      ],
+      "family_id": "002",
+      "source_catalog": "tasks/002-capacitive-sar-feedback-dac/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "residue_feedback_sign",
+          "id": "neg_003_residue_feedback_sign_swapped",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "sampled VIN is in an outer decision region",
+          "violated_property_ids": [
+            "P_RESIDUE_MAPPING"
+          ]
+        },
+        {
+          "fault_class": "residue_gain_error",
+          "id": "neg_005_residue_gain_low",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "any non-midscale VIN is sampled",
+          "violated_property_ids": [
+            "P_RESIDUE_MAPPING"
+          ]
+        }
+      ],
+      "family_id": "003",
+      "source_catalog": "tasks/003-pipeline-adc-stage/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "step_magnitude_error",
+          "id": "neg_003_wrong_step_size",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a nonzero error is clocked",
+          "violated_property_ids": [
+            "P_CLOCKED_STEP"
+          ]
+        }
+      ],
+      "family_id": "004",
+      "source_catalog": "tasks/004-trim-calibration-controller/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "reset_gating_omission",
+          "id": "neg_003_arms_while_reset_low",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "sig rises while rst_n is low",
+          "violated_property_ids": [
+            "P_ACTIVE_LOW_RESET"
+          ]
+        },
+        {
+          "fault_class": "unauthorized_timer_event",
+          "id": "neg_006_spurious_timer_glitch",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "an internal timer fires without a legal public event",
+          "violated_property_ids": [
+            "P_EVENT_HOLD"
+          ]
+        }
+      ],
+      "family_id": "005",
+      "source_catalog": "tasks/005-debounce-latch/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "state_stride_error",
+          "id": "neg_002_skip_every_other_state",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "successive valid rising clock edges occur",
+          "violated_property_ids": [
+            "P_PERMUTATION"
+          ]
+        },
+        {
+          "fault_class": "forced_state",
+          "id": "neg_004_forces_state_three",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "any valid rising clock edge occurs",
+          "violated_property_ids": [
+            "P_PERMUTATION"
+          ]
+        }
+      ],
+      "family_id": "006",
+      "source_catalog": "tasks/006-element-shuffler/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "unadvertised_output_clamp",
+          "id": "neg_004_output_clamped",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "the expected response crosses the imposed clamp",
+          "violated_property_ids": [
+            "P_LOW_PASS_RESPONSE"
+          ]
+        },
+        {
+          "fault_class": "update_period_error",
+          "id": "neg_007_wrong_update_period",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "successive periodic updates occur",
+          "violated_property_ids": [
+            "P_PERIODIC_UPDATE"
+          ]
+        }
+      ],
+      "family_id": "007",
+      "source_catalog": "tasks/007-first-order-lowpass/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "step_magnitude_error",
+          "id": "neg_003_wrong_step_size",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a measurement error outside deadband is clocked",
+          "violated_property_ids": [
+            "P_ERROR_DIRECTION"
+          ]
+        }
+      ],
+      "family_id": "008",
+      "source_catalog": "tasks/008-gain-trim-controller/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "weak_high_rail",
+          "id": "neg_005_weak_high",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a latched high decision is driven",
+          "violated_property_ids": [
+            "P_RAIL_REFERENCE"
+          ]
+        }
+      ],
+      "family_id": "010",
+      "source_catalog": "tasks/010-offset-comparator/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "dn_channel_missing",
+          "id": "neg_004_dn_channel_missing",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "dIV leads REF and should assert DN before the mutual-clear edge arrives.",
+          "violated_property_ids": [
+            "P_DIV_SETS_DN"
+          ]
+        }
+      ],
+      "family_id": "011",
+      "source_catalog": "tasks/011-pfd-up-dn-logic/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "ratio_bit_order_reversed",
+          "id": "neg_003_ratio_bit_order_reversed",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "an asymmetric code distinguishes div_code_0 as the LSB from div_code_7 as the MSB",
+          "violated_property_ids": [
+            "P_RATIO_DECODE"
+          ]
+        }
+      ],
+      "family_id": "012",
+      "source_catalog": "tasks/012-clock-divider/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "output_scale_error",
+          "id": "neg_005_output_half_scale",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "the accumulated state is observed after a positive integration interval",
+          "violated_property_ids": [
+            "P_TIMER_INTEGRATION"
+          ]
+        }
+      ],
+      "family_id": "013",
+      "source_catalog": "tasks/013-resettable-integrator/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "slew_rate_magnitude_error",
+          "id": "neg_004_step_too_small",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a sustained high or low vin level requires the configured step response",
+          "violated_property_ids": [
+            "P_EVENTUAL_TRACKING"
+          ]
+        },
+        {
+          "fault_class": "falling_slew_omission",
+          "id": "neg_005_missing_fall_branch",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "vin falls below the current output by more than step",
+          "violated_property_ids": [
+            "P_BIDIRECTIONAL_STEP_LIMIT",
+            "P_EVENTUAL_TRACKING"
+          ]
+        }
+      ],
+      "family_id": "016",
+      "source_catalog": "tasks/017-slew-rate-limiter/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "control_direction_inversion",
+          "id": "neg_006_control_direction_inverted",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "vctrl steps from the low to the high public stimulus region",
+          "violated_property_ids": [
+            "P_CONTROLLED_EDGE_RATE",
+            "P_WRAPPED_PHASE_RANGE"
+          ]
+        }
+      ],
+      "family_id": "019",
+      "source_catalog": "tasks/021-vco-phase-integrator/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "positive_limiting_slope_error",
+          "id": "neg_002_positive_limit_slope",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a sampled input lies above the positive limiting boundary",
+          "violated_property_ids": [
+            "P_POSITIVE_LIMITING"
+          ]
+        },
+        {
+          "fault_class": "negative_limiting_slope_error",
+          "id": "neg_003_negative_limit_slope",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a sampled input lies below the negative limiting boundary",
+          "violated_property_ids": [
+            "P_NEGATIVE_LIMITING"
+          ]
+        }
+      ],
+      "family_id": "031",
+      "source_catalog": "tasks/033-limiting-amplifier-frontend/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "positive_compression_bypass",
+          "id": "neg_002_positive_compression_bypass",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a rising clock samples vin such that the linear prediction is above 0.76 V but below the final 0.86 V clamp",
+          "violated_property_ids": [
+            "P_POSITIVE_COMPRESSION"
+          ]
+        },
+        {
+          "fault_class": "negative_compression_bypass",
+          "id": "neg_003_negative_compression_bypass",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a rising clock samples vin such that the linear prediction is below 0.14 V but above the final 0.04 V clamp",
+          "violated_property_ids": [
+            "P_NEGATIVE_COMPRESSION"
+          ]
+        }
+      ],
+      "family_id": "032",
+      "source_catalog": "tasks/034-lna-gain-compression-macro/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "linear_gain_error",
+          "id": "neg_001_wrong_gain",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a rising clock samples a moderate positive or negative vin displacement while reset is inactive",
+          "violated_property_ids": [
+            "P_LINEAR_REGION"
+          ]
+        },
+        {
+          "fault_class": "compression_metric_omission",
+          "id": "neg_005_metric_stuck_linear",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a rising clock samples vin that enters either high-side or low-side compression",
+          "violated_property_ids": [
+            "P_LINEAR_REGION",
+            "P_SYMMETRIC_COMPRESSION"
+          ]
+        }
+      ],
+      "family_id": "035",
+      "source_catalog": "tasks/037-pa-compression-macro/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "sampled_gain_zero",
+          "id": "neg_001_zero_gain",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "a rising clock samples either gain_sel state while reset is inactive",
+          "violated_property_ids": [
+            "P_COMMON_MODE_GAIN",
+            "P_SAMPLED_GAIN_SELECT"
+          ]
+        },
+        {
+          "fault_class": "gain_state_stuck_high",
+          "id": "neg_004_fixed_high_gain",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "gain_sel is low at an active rising clock edge",
+          "violated_property_ids": [
+            "P_COMMON_MODE_GAIN",
+            "P_SAMPLED_GAIN_SELECT"
+          ]
+        }
+      ],
+      "family_id": "038",
+      "source_catalog": "tasks/040-programmable-gain-amplifier/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "reversed_thermometer_bus",
+          "id": "neg_002_reversed_thermometer_bus",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Drives a cumulative count from th255 downward instead of from th0 upward.",
+          "violated_property_ids": [
+            "P_PREFIX_THERMOMETER"
+          ]
+        }
+      ],
+      "family_id": "048",
+      "source_catalog": "tasks/050-bin-to-thermometer-decoder-8b/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "starts_count_at_one",
+          "id": "neg_005_off_by_one",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "a rising gate crossing must initialize the count to zero",
+          "violated_property_ids": [
+            "P_WINDOW_OPEN"
+          ]
+        }
+      ],
+      "family_id": "061",
+      "source_catalog": "tasks/061-event-counter-windowed-16b/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "asserts_immediately_in_window",
+          "id": "neg_002_no_hold",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "stimulus exercises asserts immediately in window against the public observable contract",
+          "violated_property_ids": [
+            "P_ENTRY_AND_HOLD"
+          ]
+        }
+      ],
+      "family_id": "063",
+      "source_catalog": "tasks/063-settling-window-detector/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "forgets_retained_max_error",
+          "id": "neg_002_instantaneous_error_only",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "maxerr must retain the maximum sampled absolute code error after later smaller errors",
+          "violated_property_ids": [
+            "P_MAX_RETENTION"
+          ]
+        },
+        {
+          "fault_class": "uses_seven_bins_for_ideal_code",
+          "id": "neg_005_wrong_code_span",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "vin must be quantized over the full eight-code ideal span before error calculation",
+          "violated_property_ids": [
+            "P_IDEAL_CODE"
+          ]
+        }
+      ],
+      "family_id": "067",
+      "source_catalog": "tasks/067-adc-static-linearity-monitor/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "one_cycle_pulses_only",
+          "id": "neg_002_ignore_width",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "each pulse must remain high for the captured width in clock samples",
+          "violated_property_ids": [
+            "P_WIDTH_AND_PERIOD"
+          ]
+        },
+        {
+          "fault_class": "pulse_and_done_high_levels_are_too_low",
+          "id": "neg_007_output_levels_low",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "logical pulse and done highs must reach the declared output rail",
+          "violated_property_ids": [
+            "P_OUTPUT_LEVELS"
+          ]
+        }
+      ],
+      "family_id": "069",
+      "source_catalog": "tasks/069-configurable-pulse-train-generator/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "ignores_jitter_enable",
+          "id": "neg_002_no_jitter",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "jitter_en high must enable seed-dependent edge modulation instead of a constant period",
+          "violated_property_ids": [
+            "P_EDGE_MODULATION"
+          ]
+        },
+        {
+          "fault_class": "wrong_nominal_half_period",
+          "id": "neg_003_too_slow",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "the nominal half-period must remain 10 ns in both disabled and jittered modes",
+          "violated_property_ids": [
+            "P_NOMINAL_CLOCK"
+          ]
+        }
+      ],
+      "family_id": "070",
+      "source_catalog": "tasks/070-jittered-clock-source-deterministic/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "input_enable_threshold_too_high_rejects_valid_low_trim",
+          "id": "neg_002_threshold_shifted",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Raises the vin enable threshold from 0.25 V to 0.45 V, rejecting the public low-trim operating point while preserving reset and output scaling.",
+          "violated_property_ids": [
+            "P_TRIM_TARGET"
+          ]
+        }
+      ],
+      "family_id": "073",
+      "source_catalog": "tasks/073-bias-voltage-generator-with-enable-trim/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "peak_accept_threshold_too_high_misses_valid_public_peak",
+          "id": "neg_002_threshold_shifted",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Requires vin to exceed 0.60 V before updating the held peak, missing a valid 0.55 V public peak while retaining reset behavior.",
+          "violated_property_ids": [
+            "P_SAMPLED_MEASUREMENT"
+          ]
+        },
+        {
+          "fault_class": "tracks_latest_sample_instead_of_retaining_peak",
+          "id": "neg_005_metric_scale_low",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "Tracks each periodic input sample instead of retaining the maximum value observed since reset.",
+          "violated_property_ids": [
+            "P_MAX_RETENTION"
+          ]
+        }
+      ],
+      "family_id": "075",
+      "source_catalog": "tasks/075-peak-detector/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "passes_all_non_reset_clock_cycles_without_quiet_remainder",
+          "id": "neg_002_pass_all_cycles",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Preserves active-low reset but passes every non-reset CLK high phase instead of suppressing frame cycles 2..7.",
+          "violated_property_ids": [
+            "P_QUIET_REMAINDER"
+          ]
+        },
+        {
+          "fault_class": "passes_only_the_first_clock_in_each_frame_instead_of_the_first_two",
+          "id": "neg_003_one_cycle_burst",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "stimulus exercises Passes only the first clock in each frame instead of the first two. against the public observable contract",
+          "violated_property_ids": [
+            "P_TWO_CYCLE_BURST"
+          ]
+        }
+      ],
+      "family_id": "076",
+      "source_catalog": "tasks/076-burst-clock-source/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "serial_out_driven_from_state0_instead_of_state6",
+          "id": "neg_004_wrong_serial_bit",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "Drives serial_out from state_0 instead of the public state_6 bit.",
+          "violated_property_ids": [
+            "P_SERIAL_OUTPUT"
+          ]
+        }
+      ],
+      "family_id": "078",
+      "source_catalog": "tasks/078-lfsr-prbs-generator/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "fault_002_short_pulse",
+          "id": "neg_002_short_pulse",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Uses a pulse width that is too short.",
+          "violated_property_ids": [
+            "P_NO_FALLING_TRIGGER"
+          ]
+        }
+      ],
+      "family_id": "105",
+      "source_catalog": "tasks/115-single-shot-pulse/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "fault_002_rising_only",
+          "id": "neg_002_rising_only",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Triggers only on rising crossings, missing falling crossings.",
+          "violated_property_ids": [
+            "P_FALLING_CROSS_PULSE"
+          ]
+        }
+      ],
+      "family_id": "108",
+      "source_catalog": "tasks/119-crossing-pulse-detector/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "polarity_or_direction_error",
+          "id": "neg_003_inverted_compare",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "Inverts the latched comparison.",
+          "violated_property_ids": [
+            "P_WHENEVER_CLK_RISES_THROUGH_VDD_2"
+          ]
+        }
+      ],
+      "family_id": "218",
+      "source_catalog": "tasks/263-clocked-comparator-dual-output/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "residue_gain_error",
+          "id": "neg_002_residue_gain_low",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "vin is away from a coarse boundary",
+          "violated_property_ids": [
+            "P_PIPE_ALIGNED_CODE",
+            "P_PIPE_RESIDUE"
+          ]
+        }
+      ],
+      "family_id": "343",
+      "source_catalog": "tasks/902-pipeline-adc-two-stage/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "latch_off_by_one",
+          "id": "neg_002_stop_off_by_one",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "stop arrives after one or more clocks",
+          "violated_property_ids": [
+            "P_TDC_INTERVAL_COUNT"
+          ]
+        },
+        {
+          "fault_class": "encoder_bit_mapping",
+          "id": "neg_005_encoder_lsb_swapped",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "latched count has differing low bits",
+          "violated_property_ids": [
+            "P_TDC_INTERVAL_COUNT"
+          ]
+        }
+      ],
+      "family_id": "346",
+      "source_catalog": "tasks/905-tdc-measurement-system/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "carrier_inverted",
+          "id": "neg_005_carrier_inverted",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "carrier_inverted",
+          "violated_property_ids": [
+            "P_WHEN_ENABLED_TREAT_CARRIER_IN_AND"
+          ]
+        }
+      ],
+      "family_id": "380",
+      "source_catalog": "tasks/939-am-modulator-source-macro/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "phase_metric_stuck",
+          "id": "neg_003_phase_metric_stuck",
+          "legacy_certification_profile": "score",
+          "trigger_condition": "phase_metric_stuck",
+          "violated_property_ids": [
+            "P_AS_ENVELOPE_EXCEEDS_THE_COMPRESSION_THRESHOLD"
+          ]
+        }
+      ],
+      "family_id": "386",
+      "source_catalog": "tasks/945-pa-gain-compression-ampm-macro/negative_variants/manifest.json"
+    },
+    {
+      "excluded_mutations": [
+        {
+          "fault_class": "no_slew_limit",
+          "id": "neg_002_no_slew_limit",
+          "legacy_certification_profile": "feedback",
+          "trigger_condition": "no_slew_limit",
+          "violated_property_ids": [
+            "P_MOVE_VOUT_TOWARD_THE_CLAMPED_TARGET"
+          ]
+        }
+      ],
+      "family_id": "398",
+      "source_catalog": "tasks/957-two-stage-opamp-slew-macromodel/negative_variants/manifest.json"
+    }
+  ],
+  "policy": "Retain source lineage and evidence outside the scored release; do not export these mutations as active DUT, Testbench, or Bugfix cases.",
+  "schema_version": "v4-tri-form-excluded-mutation-archive-v1",
+  "status": "provenance_only_not_in_formal_release"
+}

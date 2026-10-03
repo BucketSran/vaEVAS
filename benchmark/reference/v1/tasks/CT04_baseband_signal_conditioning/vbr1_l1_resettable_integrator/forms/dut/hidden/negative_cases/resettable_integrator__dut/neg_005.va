@@ -1,0 +1,7 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module resettable_integrator(vin, rst, vout);
+    input vin, rst; output vout; electrical vin, rst, vout; parameter real tr=500p; real acc;
+    analog begin @(initial_step) acc=0.0; @(timer(0,1n)) acc=0.0; V(vout)<+transition(acc,0,tr,tr); end
+endmodule

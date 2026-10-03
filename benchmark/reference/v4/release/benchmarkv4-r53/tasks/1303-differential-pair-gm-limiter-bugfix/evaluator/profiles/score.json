@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "a02267a5dacf50e93154b8030770d4ce19426f2de1c706ef659c813beccc7128",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_WHEN_DISABLED_DRIVE_BOTH_OUTPUTS_TO",
+    "P_WHEN_ENABLED_CONVERT_THE_SAMPLED_DIFFERENTIAL",
+    "P_SCALE_SMALL_SIGNAL_OUTPUT_SEPARATION_BY",
+    "P_DRIVE_GM_METRIC_AS_A_VOLTAGE",
+    "P_ASSERT_LIMIT_FLAG_ONLY_WHEN_COMPRESSION",
+    "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

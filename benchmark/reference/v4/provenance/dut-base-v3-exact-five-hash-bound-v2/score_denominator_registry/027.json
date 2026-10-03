@@ -1,0 +1,79 @@
+{
+  "family_id": "027",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "89ee70799592f668cb8ac5a52dcc90398f63ebc58be5e52fe95d88b8a20b6817",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "d916b95e3e5ea51fa426ccea92ce22cd37019a402d5ebfaa36680ba3e6e3371f",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_SYSTEM_CODE_BINDING",
+          "P_V2B_ROUND_AND_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "5fda47fe1a5d9b4867966c7285975e3ba2fcb7e04084c1de24af9ab1de765b6a",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "ca9372bc3436d0a466af9eef272b9d4e66417b24ec30e2dc5b2c418a0d0428d4",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_ROTATING_POINTER_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "6ee465c15f7ba0db5657001c782fb95d4eef5ba2a3cc534c23c367de194e6ef6",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "08bb794114603495716d3144bead1bac8caa06129c7f8ae603cb0568df19d45c",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_POINTER_ONE_HOT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "d6b14771c5dbe539763cfbbb3d50bdfae9986209089913abefd0a92dde885e9e",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "08fe2211124679e8a4b66949280c8e181bc4791668bf33d169f61db57333ab1e",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_DWA_SELECTED_MASK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "5ecde5c8821e337d902918d776e8cd9213e5bb570a72bbe82203fe6fd1210c09",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "7a0aa291ad0b015898252134aafc1773109eaea248b9e3deb8a2fc5d4ad0119b",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_ACTIVE_LOW_RESET_POINTER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "027",
+    "hashes": {
+      "mutation_catalog_sha256": "e4dbdc5fdd8b934a6fad82a0c17355fe4aa94958508c69b23d42208eaecafaff",
+      "score_deck_sha256": "0e1e3bdbf62fdff234a67fd41874be56b85e3564593ef6082f578f2a4ffe2d2e",
+      "task_certification_sha256": "9fb53b12bf3d22002c1cc0e3ad33623392d4ffa129c5c8e04142cc3c9b2371ac",
+      "task_record_sha256": "7ac5bda012241dc117a5373c42872164b001a6916f1846c76c0ff7ab8890cf54"
+    },
+    "release_dir": "027-dwa-dem-encoder"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "2b4e10f6cdae1ba028bda7f96611e8b3b861df5220aff50a0668454f76823480",
+  "parameters": {
+    "maxstep": "200p",
+    "stop_time": "92n"
+  },
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_ENABLE_IS",
+    "P_TREAT_VIN_PROXY_AS_A_VOLTAGE",
+    "P_APPLY_GAIN_TO_THE_DEVIATION_FROM",
+    "P_ASSERT_LIMIT_FLAG_WHEN_THE_UNCLAMPED",
+    "P_ON_EACH_RISING_CLK_EDGE_DRIVE",
+    "P_ASSERT_VALID_WHEN_AMP_METRIC_IS"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

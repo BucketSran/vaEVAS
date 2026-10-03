@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "091-chopper-stabilized-differential-amplifier",
+  "checker_task_id": "v4_091_chopper_stabilized_differential_amplifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5721b1434c489db12e4e6f9ec10baae0ebb316572396dd444a3bcd853c46b702",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d292098ad11b6e3e4f7769e872da31b7151a52ad342304635a8008f0fcef0782",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5721b1434c489db12e4e6f9ec10baae0ebb316572396dd444a3bcd853c46b702",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4adb3e48a9da4bda92b91560901adf91e5e38a085ac052a8a8adbc831085027d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "0820939368e0b8493612d88953a999d97b679e7ccee7f2e161e8feb8b34dabea"
+  },
+  "family_id": "091",
+  "family_spec_sha256": "3ceaf909e36f588a3afb82c73ea054e7bbbd8626f531d45bb9ae6c48337bc452",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ad3f99fdfbc03eae98695b82490f37e210c594f063871887d257814970914d98",
+  "public_contract": "tasks/591-chopper-stabilized-differential-amplifier-testbench/public_contract.json",
+  "public_contract_sha256": "011d511c07ba8b0047e4d7df54b95440dfe34e5fc1305a3dbe464cfa0c8dd9c3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/591-chopper-stabilized-differential-amplifier-testbench",
+  "task_id": "v4-591"
+}

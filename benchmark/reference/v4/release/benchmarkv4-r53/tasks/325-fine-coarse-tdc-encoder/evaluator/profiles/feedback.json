@@ -1,0 +1,24 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "69d90313da26dc41cef0ced7b51a761ebae9a8561a00aff187e2bcdbe6490a46",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_A_RISING_START_EDGE_ARMS_A",
+    "P_COUNT_RISING_REF_CLK_EDGES_UNTIL",
+    "P_LATCH_THE_COARSE_COUNT_INTO_COARSE",
+    "P_ASSERT_VALID_ONLY_AFTER_THE_STOP"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

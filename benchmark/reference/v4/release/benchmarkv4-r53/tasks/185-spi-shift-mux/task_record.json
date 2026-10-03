@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "spi_shift_mux.va"
+  ],
+  "canonical_dut_source_slug": "185-spi-shift-mux",
+  "checker_task_id": "v4_185_spi_shift_mux",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2c0c800f3f524c09bfb3b0d16a51d67d16a54dfbdbd366c97b864863776767a2",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "01f932b08e427909ad913012f1e958b7257601ccc414609136226b22f5cebdfa",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8c4ec88e4b4a63752269585681dc0672a99faf74cd417b275ca7ad3304afb714",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "185",
+  "family_spec_sha256": "d799411e6138ac220107ff2c112de00a41a39c5d94f7a179088855f6bb14f31e",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2128f3c6389573298ec011a2130b6732e6fdc1cfc76d285cfe644b37ba889b52",
+  "public_contract": "tasks/185-spi-shift-mux/public_contract.json",
+  "public_contract_sha256": "268eea50ee079fdf99d38ad461d22df08a89b6b9019de347bb447ccb2a0d5a70",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/185-spi-shift-mux",
+  "task_id": "v4-185"
+}

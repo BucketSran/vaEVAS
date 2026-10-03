@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "375-nonoverlap-clock-generator",
+  "checker_task_id": "v4_375_nonoverlap_clock_generator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "d0ad1af719d2cfd3f2d5dbf1af1cbfd288a86b397682e83f4b3e8cbf374d808b",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "60cd10362b5f9ca4e7493414c093710234250eccbf6d0c98c6868a6042eda9c6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "d0ad1af719d2cfd3f2d5dbf1af1cbfd288a86b397682e83f4b3e8cbf374d808b",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f4f6e54413454a62aa433da09cda429ce11842dfdb6d8adec13f84fe647271c6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "16527d600a1f81e6b3411412f4b00d6fcef9c1dd7ea468fedbd53bacc566e03a"
+  },
+  "family_id": "375",
+  "family_spec_sha256": "81e0b531a07b110d1db9fe0d729baf22401efa8208262c78896a5a203c730131",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cd1c12f59c45227e389e679dfac4a03e5e1151824c5a58115ea6621f35928042",
+  "public_contract": "tasks/875-nonoverlap-clock-generator-testbench/public_contract.json",
+  "public_contract_sha256": "44d6af776f544e2f846aada7bc438a849dcd17d28af6818dd3d5f78edefbef00",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/875-nonoverlap-clock-generator-testbench",
+  "task_id": "v4-875"
+}

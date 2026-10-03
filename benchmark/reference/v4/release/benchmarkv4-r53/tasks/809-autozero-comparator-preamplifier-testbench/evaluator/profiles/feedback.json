@@ -1,0 +1,28 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "7836ecef376f08633f3f2750578e74a176c027c3d969354dbfed41fd96864234",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_ON_RESET_CLEAR_STORED_OFFSET_DECISION",
+    "P_DURING_AN_AUTO_ZERO_CLOCK_UPDATE",
+    "P_DURING_AN_EVALUATION_CLOCK_UPDATE_WITH",
+    "P_DRIVE_DECISION_HIGH_FOR_CORRECTED_NONNEGATIVE",
+    "P_EXPOSE_STORED_OFFSET_ON_OFFSET_STORE",
+    "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

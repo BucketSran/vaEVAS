@@ -1,0 +1,41 @@
+{
+  "release_entry_id": "vbr1_l1_crossing_metric_writer",
+  "task_id": "vbr1_l1_crossing_metric_writer:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Measurement Instrumentation Flows",
+    "base_function": "Crossing metric writer"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/file_metric_writer.va",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/metric.out",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/tb_file_metric_writer_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "$fopen",
+      "$fwrite",
+      "@(cross(",
+      "@(initial_step",
+      "ahdl_include",
+      "save",
+      "tran",
+      "transition("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

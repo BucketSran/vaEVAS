@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "130-differential-gain-driver",
+  "checker_task_id": "v4_130_differential_gain_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f1d0826990639819d34c434f989fd70e073ec454bc05af1511e27cbdbcb5bf39",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "eadc3d7eb7f5d912010f4b6eb0b1d71531713e200e731c432f9866c4e5333b71",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f1d0826990639819d34c434f989fd70e073ec454bc05af1511e27cbdbcb5bf39",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "7ad4be478f5f95da266a25a51772b5a001c44d995fed960ea1c8a76fe6a6e2b6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2ca6f9b0e3254fc1972d21e8dffe079c6173b33bcbcefae14a51459d58ce87b9"
+  },
+  "family_id": "130",
+  "family_spec_sha256": "6614a9321605b86198067739a0cd7f92bd4c090716df008ff9687e32edaa9be0",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "851541cd2205e623863eccd325387d774bc294a314d8b15f2e25b014016e00f9",
+  "public_contract": "tasks/630-differential-gain-driver-testbench/public_contract.json",
+  "public_contract_sha256": "fd470205367681691acad686e615b131f51e9102ad60c781fcdd27ec406ab3ab",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/630-differential-gain-driver-testbench",
+  "task_id": "v4-630"
+}

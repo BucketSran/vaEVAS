@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "noise_gen_ref.va"
+  ],
+  "canonical_dut_source_slug": "077-dither-noise-like-deterministic-source",
+  "checker_task_id": "v4_077_dither_noise_like_deterministic_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "92a353247fbe23e4c3fac9d2108e16975343f1f488e8214bbc623ebd27fefcdb",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7290a87de4ffb339960aa2d78b2c99901b9dd8a6f393f890fe677ea26b33bf53",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0774c630c0a6eb22704064b845ffbff35160b83593e48f17716136e616b2b7b9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "077",
+  "family_spec_sha256": "b0fd2a7fdeca299e2820fd66d35e107b6cd1e9fa1272b7b3e8b8b82d8346b660",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "05a7b455a1b6baff893cac5ff894ac154e355f8ecff1e4be8841aebda83f108d",
+  "public_contract": "tasks/1077-dither-noise-like-deterministic-source-bugfix/public_contract.json",
+  "public_contract_sha256": "9dc24d005687a18ad26e65e1655852955cc758f30cddfe18df5e75d86ff576ab",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1077-dither-noise-like-deterministic-source-bugfix",
+  "task_id": "v4-1077"
+}

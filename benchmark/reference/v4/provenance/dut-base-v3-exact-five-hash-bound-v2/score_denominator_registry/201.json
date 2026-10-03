@@ -1,0 +1,78 @@
+{
+  "family_id": "201",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_msb_weight/certification.json",
+        "certification_sha256": "bf2ed0c722150775b8b7a39338c1fccb346882eff655ef7f6271e95eec7c81ca",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "1c0842dde8f9e5367c540ce192f546d47d0c1d3c21ccd73dfc39bcdd2a9ad657",
+        "mutation_id": "neg_002_wrong_msb_weight",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_msb_weight/certification.json",
+        "trigger_condition": "Uses a quarter-scale dctrl5 addition instead of half-scale.",
+        "violated_property_ids": [
+          "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_sign/certification.json",
+        "certification_sha256": "c74c7cfa5245bcb5a3e3ce996842a758802ec47539c60f2ea96ced1a6072da61",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "faa36df1a8b36e783f90e113963d115164573b70d8e5620b609a5780a629fe88",
+        "mutation_id": "neg_003_wrong_sign",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_sign/certification.json",
+        "trigger_condition": "Subtracts the dctrl4 residue step instead of adding it.",
+        "violated_property_ids": [
+          "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "efbe14e01343722dd04b435a41c8b1fc6ea1611a33f5c28bf850170b99ea77a3",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "189c486b470f5d5b7d6880f022baded197e8c6115106cf1ac6b1986e8acef63a",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output/certification.json",
+        "certification_sha256": "ec0c41cb0ef734c2fe9f81a4783ef758a70427b31eeb16a2d98b0fa00ef1c577",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "3beb7e45033b51bf81a45be9392cd915e382fb3c4f1e462eba1770ef07698ac7",
+        "mutation_id": "neg_004_half_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output/certification.json",
+        "trigger_condition": "Drives the residue output at half amplitude.",
+        "violated_property_ids": [
+          "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "80a6fbbeb48662aee6d0e0ada917b7011f070f5b56a7b1d7c86f90f34f8414e9",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "93ff86c43f462d57c4c3cfd1145e3a85659fa7a1d1d8e0932f6cbd4a3ea65cb0",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "CDAC 6b Stage1 Up: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_msb_weight",
+    "canonical_dut_id": "201",
+    "hashes": {
+      "mutation_catalog_sha256": "71ff7032a516ff03d53b57074af03cf0013e5571d2f0419d951098d216030e7d",
+      "score_deck_sha256": "0cad6bc43a79395fd33f419a8690e8dce8e3d48cb40ce8175e2d2444d6eb124e",
+      "task_certification_sha256": "afc5e2f85e16d33c7bc167205a64c3871191869d10d526e88439634a31e7b51e",
+      "task_record_sha256": "2e8558ad0e8282a1cb8f867f7350a266f0f5f85c235b37d7abdeb00d9829b840"
+    },
+    "release_dir": "201-cdac-6b-stage1-up"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "family_id": "375",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "f5912ef9091f253de18a4c52fac49783237702eab98004565269ea17348f2f0a",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "da83556f9e0974ca647272d13b8b0487d4c28d86665e8a572366c07afb8f1945",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_PHI1_AND_PHI2_MUST_NEVER_BE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "d79dd348adc63d6c7307574353690cdbdfcc58917a285e205c145cfdd5ced705",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "ee2f39374d1d066108521b4e0a9ed7f4180dc6fc64c7eacc610395991faf4130",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_A_RISING_CLK_IN_REQUEST_EVENTUALLY",
+          "P_VALID_BECOMES_HIGH_AFTER_THE_FIRST"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "e327fa180fcb90a9a840fd7448ca5ff0259b0cc9799e5a9e516ae0925238854d",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "7501fedad2b9552bfd39fc8930dc604b2f0911c16e532636435a751be112619a",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_OR_A_LOW_ENABLE_CLEARS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "339939ba0b13f283da7c30eb2a97b31043896a02ace33ee6fcefd420af58fd46",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "0abf463a19beec9c2abc2ec5510d09e9280f0791fb97ad0f922b3091ddb2f9c0",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "semantic delay_edge mutation from gold",
+        "violated_property_ids": [
+          "P_DEADTIME_METRIC_IS_HIGH_ONLY_WHILE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "f059740c7034a65edb687d1f295a6e4aea2355eab435be95dfb84a26b29744fe",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "149adda673959a263dd6375ad24752fe7b07e21dd59259704b720e0f317eeba3",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_DURING_EACH_HANDOFF_BOTH_PHI1_AND"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "375",
+    "hashes": {
+      "mutation_catalog_sha256": "e3aeeb7d212c0c705e8d0f9473c03d01749c00f3bbf55c5bc9a921feed1a8fb4",
+      "score_deck_sha256": "231763dd22d0485942a8d9cfdedf00e5328cc96b5819feaffdf5f155d98277d4",
+      "task_certification_sha256": "25af00b4373ac01eb904a5f86026b624db948baefc31b87471e6f36c333fcd5d",
+      "task_record_sha256": "2a79076b62a9321f101729b0ed80b703dee8accd702aea8a51e6c39f6ac43d3a"
+    },
+    "release_dir": "375-nonoverlap-clock-generator"
+  }
+}

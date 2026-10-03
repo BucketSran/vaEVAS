@@ -1,0 +1,28 @@
+{
+  "checked_families": [
+    "131",
+    "132",
+    "133",
+    "134",
+    "135",
+    "136",
+    "137",
+    "138",
+    "139",
+    "140"
+  ],
+  "checks": [
+    "profile_semantic_parity",
+    "observable_alignment",
+    "trace_coverage",
+    "structured_redacted_diagnostics",
+    "task_record_hashes",
+    "score_denominator_manifest_hashes"
+  ],
+  "evidence_kind": "static_repair_gate",
+  "failure_count": 0,
+  "failures": [],
+  "runtime_evidence_claimed": false,
+  "schema_version": "v4-repair-gate-validation-v1",
+  "status": "PASS"
+}

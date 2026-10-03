@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "transition("
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "phase_accumulator_timer_wrap"
+  public_observables:
+    - "clk_out"
+    - "phase_out"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Fresh EVAS/Spectre dual validation is required after strengthening this testbench checker contract."

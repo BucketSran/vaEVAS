@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "398",
+  "checker_task_id": "v4_398_two_stage_opamp_slew_macromodel",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "41acdc3b20a18a286c8e0832b6db80ec76861094eed97aa5382749689bcccdee",
+    "checker_profile.json": "9635079f94ca1ba079f921854eee82bfba440ecdc013f24e3a6c048f4d074f30",
+    "derivation_manifest.json": "3d32c44862ca817aac20f75848c2cf263341f727e232f6c62f8cff4c61b31130",
+    "family_spec.json": "4814ffa8f2c4ad144b1b3b52389c12cef5f6b346d34c7fbcefe853b76e33129c",
+    "harness_spec.json": "cd0a3e94a48e505a13f66eb6896996516a766283d0c3b0d1fb26cb465425c598",
+    "mutation_catalog.json": "efb19287f920443e26325769491750711eb7a026342cebdc9458f98dfaead047",
+    "profiles/feedback.json": "7f1bb44bca6ec059e829c1f55d0fdc5a396ef6d5c9c7bc21bc1adb6b1d0474f4",
+    "profiles/score.json": "061695732be19f44fd4ece4309fa95776ff2ad1988d58e25a1684c8c7ee399a5",
+    "score_tb.scs": "39d8ee53344d2b409b798bc1d907ef0d8f312bc1a2399d1adf576e217d40beb7",
+    "solution_tree": "d6733046c22c985659926c7ff42088fe43846848cb7bc5faf662c00ea240968c",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8edb8e0fc044422589ca4d115e8d6c17c6999d549a64073b0ccc02dad07bed0d",
+    "instruction.md": "ec82fb447331cba992a9476942d7a90ac1d376eaec7afae288196b8893dfc4b3",
+    "public_contract.json": "cb59066e970a1c533a5b85b3950e6c965bccb9ba2e2a677cb42c879a6df7bf0e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "41acdc3b20a18a286c8e0832b6db80ec76861094eed97aa5382749689bcccdee"
+  },
+  "release_dir": "398-two-stage-opamp-slew-macromodel",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "957-two-stage-opamp-slew-macromodel",
+  "support_root": "",
+  "target_artifacts": [
+    "two_stage_opamp_slew_macromodel.va"
+  ]
+}

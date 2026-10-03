@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_RESULT_HOLD_AND_ORDER satisfy the public contract; fault class starts_immediately is rejected",
+    "observed": "EVAS: property_id=P_READY_COMPLETION category=semantic_mismatch expected=latency=2,done=high observed=latency=3,done=0.900 event=clk_rise[5]@4.350000e-08s property_id=P_READY_COMPLETION category=semantic_mismatch expected=latency=3,done=high observed=latency=6,done=0.900 event=clk_rise[13]@1.235000e-07s",
+    "violated_property_ids": [
+      "P_RESULT_HOLD_AND_ORDER"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_062_latency_counter_ready_valid_12b",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1689
+  },
+  "family_id": "062",
+  "inputs": {
+    "checker_profile_sha256": "c9891bec6c33695348fa9ba926b2d7241d7b613256893cf41790a99b7fdb39bf",
+    "harness_spec_sha256": "3f56449bda0b274da7fc231b10abad477d4199ea9f826afb6ca76e5c60ac0cad",
+    "mutation_bundle_sha256": "2fa63e6c8f17e73dbbfa8d4815074097f280dfdc127117748c3fbd392cde2759",
+    "profile_sha256": "402dffb3dd6b0b8a9913ca62f75709b38bb3f07a856faf9e70b7ba65605e9b90"
+  },
+  "mutation_id": "neg_005_ignore_valid",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

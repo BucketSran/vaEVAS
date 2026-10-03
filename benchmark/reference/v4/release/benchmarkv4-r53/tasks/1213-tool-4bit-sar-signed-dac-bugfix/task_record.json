@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "tool_4bit_sar_signed_dac.va"
+  ],
+  "canonical_dut_source_slug": "213-tool-4bit-sar-signed-dac",
+  "checker_task_id": "v4_213_tool_4bit_sar_signed_dac",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "33602a2565a29d2485366f48a50a296ac36429c0984ff8f5ce15e9d7299a9196",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1ccc3bd050ded22cfb6aec0a33d57488faf6b2a7bfe060b9d9f224072e08d2c3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "bf95fd7de8c2213bc209fd6932753616dbcdb81af39c3f1b8000a2b03628fa70",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "213",
+  "family_spec_sha256": "5e9573ccd93d1c21c8ab2e3f055359c810d46cc1129892917c43b08ec75ac941",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "75f9b6f97ead24536265a1f0b5abc40fe7e01b4a922b661bd9855909e7cd2edd",
+  "public_contract": "tasks/1213-tool-4bit-sar-signed-dac-bugfix/public_contract.json",
+  "public_contract_sha256": "0c9bddd34c8803d30b182faf014fe4fd49b163ca1554a7d904405370c3570f50",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1213-tool-4bit-sar-signed-dac-bugfix",
+  "task_id": "v4-1213"
+}

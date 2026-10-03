@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bias_voltage_generator_with_enable_trim.va"
+  ],
+  "canonical_dut_source_slug": "073-bias-voltage-generator-with-enable-trim",
+  "checker_task_id": "v4_073_bias_voltage_generator_with_enable_trim",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "668c7f036d9207a94f2c8b26f19fcf794a89c23262f0bf08d6638a5f045229bb",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "2ccd971bb497d47d82495326a2a05758b552801f3a142cce2b91f14ee1b3d838",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "32da791be08c7cb531a7ac04cb3932696578ea9febf504643bca6a622cb10de2",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "073",
+  "family_spec_sha256": "90d54d0c495e7076dff22333fa2a40d2d0e526d484c2652c4922b89f1f37239a",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2e629ff4562e4b23b1f979c990b2f61d5e42c50a29ac121ae0d29f2756fef8bf",
+  "public_contract": "tasks/1073-bias-voltage-generator-with-enable-trim-bugfix/public_contract.json",
+  "public_contract_sha256": "6d74501d5ec89f9e5aaeb177f40f9316cd1563cdf12c1908d86af4e8fde2ece2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1073-bias-voltage-generator-with-enable-trim-bugfix",
+  "task_id": "v4-1073"
+}

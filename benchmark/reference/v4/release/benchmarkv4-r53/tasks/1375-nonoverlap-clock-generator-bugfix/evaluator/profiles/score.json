@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "6aa5f2b18f80eba2b4580c4f5577403d0dcb7c116d4b78b596ea09d0b744e07f",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "76n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_OR_A_LOW_ENABLE_CLEARS",
+    "P_A_RISING_CLK_IN_REQUEST_EVENTUALLY",
+    "P_DURING_EACH_HANDOFF_BOTH_PHI1_AND",
+    "P_PHI1_AND_PHI2_MUST_NEVER_BE",
+    "P_DEADTIME_METRIC_IS_HIGH_ONLY_WHILE",
+    "P_VALID_BECOMES_HIGH_AFTER_THE_FIRST"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l1_log_rssi_power_detector",
+  "task_id": "vbr1_l1_log_rssi_power_detector:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "Log/RSSI power detector"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_log_rssi_power_detector/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_log_rssi_power_detector/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_log_rssi_power_detector/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_log_rssi_power_detector/forms/dut/gold/log_rssi_power_detector.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_log_rssi_power_detector/forms/dut/gold/tb_log_rssi_power_detector.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

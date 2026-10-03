@@ -1,0 +1,79 @@
+{
+  "family_id": "301",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_drive_metric_mid/certification.json",
+        "certification_sha256": "683570caf03a114698f8bd4278f902274f925a09601264add9b26a52a21810bc",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "07b87494116bb67d49c1be1465b0a8e06ebea451636b6541183698f039619e94",
+        "mutation_id": "neg_002_drive_metric_mid",
+        "source_catalog_certification_path": "negative_variants/neg_002_drive_metric_mid/certification.json",
+        "trigger_condition": "Charge Pump PFD State Machine: keeps the vctrl ramp but reports the detector-state metric stuck at mid so the polarity check fails.",
+        "violated_property_ids": [
+          "P_DRIVE_METRIC_AS_A_VOLTAGE_CODED",
+          "P_ON_EACH_RISING_CROSSING_OF_V"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_dead_zone_state/certification.json",
+        "certification_sha256": "92f3fa90e0e57c7848e06113f6eefd4bd387631d67bd6666633ab9c72c1e3710",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "efb983a19d4d842c0054691056941f2904eab6a923eef61c1df905eb67394a92",
+        "mutation_id": "neg_003_dead_zone_state",
+        "source_catalog_certification_path": "negative_variants/neg_003_dead_zone_state/certification.json",
+        "trigger_condition": "Charge Pump PFD State Machine: clamps the detector state to zero so edge crossings never move the control voltage and vctrl never reaches the rail.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_V_2"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_gain_sign_flipped/certification.json",
+        "certification_sha256": "4bf301923d8b2336c6f80c640bc8b96c736c3ca71ca44cf1bc65e93866e711c6",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "28ce1f6a57c7d4f3c77b8897a112584342422f5fb6ef50d0ff22da8a4cfdb7fd",
+        "mutation_id": "neg_004_gain_sign_flipped",
+        "source_catalog_certification_path": "negative_variants/neg_004_gain_sign_flipped/certification.json",
+        "trigger_condition": "Charge Pump PFD State Machine: integrates the control voltage with the wrong sign so it ramps opposite to the lead/lag relation.",
+        "violated_property_ids": [
+          "P_MAINTAIN_A_CONTROL_VOLTAGE_VCTRL_Q"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_vctrl_unclamped/certification.json",
+        "certification_sha256": "8ceb010739fc7b014d6478381e5920511f26bd61a269f99588d65e04106a496c",
+        "fault_class": "vctrl_unclamped",
+        "mutation_bundle_sha256": "69c174822e711f4f67117d103357750940332763383adc466917b2169028491d",
+        "mutation_id": "neg_005_vctrl_unclamped",
+        "source_catalog_certification_path": "negative_variants/neg_005_vctrl_unclamped/certification.json",
+        "trigger_condition": "Charge Pump PFD State Machine: drops the control-voltage clamps so vctrl rails past the supply bounds under a consistent lead.",
+        "violated_property_ids": [
+          "P_DRIVE_VCTRL_TRANSITION_VCTRL_Q_0"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_drive_vctrl_mid/certification.json",
+        "certification_sha256": "7756ba7b4be69994a28c03cf19fc98431385fd6a9db5211601f4961405823495",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "e06354b870e1a1c949b663889bf3aae7c3080af7c0c97340078023d589fa80c2",
+        "mutation_id": "neg_001_drive_vctrl_mid",
+        "source_catalog_certification_path": "negative_variants/neg_001_drive_vctrl_mid/certification.json",
+        "trigger_condition": "Charge Pump PFD State Machine: holds vctrl at the initial mid value so it never ramps toward the lead polarity and the late-window rail check fails.",
+        "violated_property_ids": [
+          "P_AN_INTEGER_STATE_Q_HELD_IN"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_drive_metric_mid",
+    "canonical_dut_id": "301",
+    "hashes": {
+      "mutation_catalog_sha256": "7315d29f37d913290945f73aaa68f25b07a6c4df6e284ae761e1fe9eb695b5e3",
+      "score_deck_sha256": "e3548aadbebb00c32c88ac8776988f7891d73aa8296a3d423df96765ed616d21",
+      "task_certification_sha256": "d49d832fd62eec55e209161a856a02b9b77a7ece463cbedbab357414a8b8ff96",
+      "task_record_sha256": "c37eb7ba2dff044e1838286e39826ee6496c0fd1c85dc743b765146f95c2c4e3"
+    },
+    "release_dir": "301-charge-pump-pfd-state-machine"
+  }
+}

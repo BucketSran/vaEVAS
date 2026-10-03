@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "iterative_decay_estimator.va"
+  ],
+  "canonical_dut_source_slug": "289-iterative-decay-estimator",
+  "checker_task_id": "v4_289_iterative_decay_estimator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7ddfe37a761f2010448ef0f2d24c8a3ef971c728c616658abf92a0c12c4b3834",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b003ee7ce01e0784082d36fda141f6870dc057cabe117874d4a79c19319b7b8f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "63f3485cfbddbc921838c19a41726146b416d84390adde5cbaefdb1618f2260b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "289",
+  "family_spec_sha256": "fe69e82f542bc8cb511c58c88e5fce52817a64ed6b0e36a7e3dff54bd9e0e844",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "82aa2d51c99e3e61538467d31acd8f8c9c380eb159050f1d507093020d44e37a",
+  "public_contract": "tasks/1289-iterative-decay-estimator-bugfix/public_contract.json",
+  "public_contract_sha256": "266af732cbeab3b5d887bf4e19eac3b36893df2878b5c7f2414234e4a3f2fe45",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1289-iterative-decay-estimator-bugfix",
+  "task_id": "v4-1289"
+}

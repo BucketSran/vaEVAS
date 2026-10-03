@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "iterative_isar_dac.va"
+  ],
+  "canonical_dut_source_slug": "174-iterative-isar-dac",
+  "checker_task_id": "v4_174_iterative_isar_dac",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e848afeffb94931bc32dbe91bec887442e9e5787ffcc762555b7961f1475738e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "96811239a404a1330cf1dc2c97caed376cb177c9ee2c1e47794a11c8d9ef1f8f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fa40d4415819dfa15314c88875b71260bb9cfe314184af3443ecec695330d5b2",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "174",
+  "family_spec_sha256": "c822b9fcce80ebccfed937d4e0eda5a12bccac903076d1afa434ad0288482942",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0a51fb69855e523bf3e2105e2d01764cf241247b4efd5a0ba26080a083030956",
+  "public_contract": "tasks/174-iterative-isar-dac/public_contract.json",
+  "public_contract_sha256": "a1c57bd1f91763f671e94f61903d0d42d6fbee2fb9e8ad61c086beb679313fe0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/174-iterative-isar-dac",
+  "task_id": "v4-174"
+}

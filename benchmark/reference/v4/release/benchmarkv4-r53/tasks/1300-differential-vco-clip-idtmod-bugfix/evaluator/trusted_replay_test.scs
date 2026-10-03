@@ -1,0 +1,13 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "../submission/differential_vco_clip_idtmod.va"
+
+// Feedback testbench for differential_vco_clip_idtmod.
+// Differential input visits lower-clamp, nominal, and upper-clamp frequency regions.
+Vinp (vinp 0) vsource type=pwl wave=[0 0.25 450n 0.25 450.1n 0.65 950n 0.65 950.1n 0.85 1.6u 0.85]
+Vinm (vinm 0) vsource type=pwl wave=[0 0.55 450n 0.55 450.1n 0.35 950n 0.35 950.1n 0.35 1.6u 0.35]
+XDUT (vinp vinm outp outm metric) differential_vco_clip_idtmod
+
+tran tran stop=1.6u maxstep=4n
+save vinp vinm outp outm metric

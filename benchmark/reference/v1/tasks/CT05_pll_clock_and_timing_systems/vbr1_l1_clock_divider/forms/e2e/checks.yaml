@@ -1,0 +1,30 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "ratio_code_decodes_to_5"
+    - "output_period_matches_five_input_edges"
+    - "lock_asserts_after_first_complete_output_period"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."
+    - "Measure edge intervals after startup; ignore the legacy auxiliary `clk_divider.va` file."
+semantic_review:
+  risk: "The staged directory contains a legacy auxiliary source that is not instantiated by the public testbench."
+  release_decision: "Release the normal divider task against `clk_divider_ref`; do not treat legacy `clk_divider.va` as a badcase."
+  checker_boundary: "Measure divider ratio, output period, and lock after startup; ignore the unused auxiliary source."

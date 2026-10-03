@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "edge_delay_line_deglitch.va"
+  ],
+  "canonical_dut_source_slug": "064-edge-delay-line-with-deglitch",
+  "checker_task_id": "v4_064_edge_delay_line_with_deglitch",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a719c46c549c81cbc482bc32005c6d5b56f4640c67e4d92fa26c1daa46de1b04",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "448523c1cba1ed65162faf3af7787d85eb08ee6a1bf7d3ee7da8649b1fb3587a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "b4cf62ad084c4e404a811f5b08599553eb2a28eb1cd6cc9e09b30c7169eb3af1",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "064",
+  "family_spec_sha256": "e26cc7151c64a35664783ee026e3332d3e8a63bba26b1b4e8fc8f8a7c243631b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5da044fdf886963d474396637a22f43c5b2e18f7802245b41f8da29291701c66",
+  "public_contract": "tasks/1064-edge-delay-line-with-deglitch-bugfix/public_contract.json",
+  "public_contract_sha256": "817e330bc9fba36dbcee658d10796bccbd131ce221f668fd0971a86522822402",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1064-edge-delay-line-with-deglitch-bugfix",
+  "task_id": "v4-1064"
+}

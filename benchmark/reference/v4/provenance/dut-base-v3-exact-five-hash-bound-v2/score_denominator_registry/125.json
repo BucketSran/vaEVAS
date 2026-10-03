@@ -1,0 +1,79 @@
+{
+  "family_id": "125",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignores_rail_offsets/certification.json",
+        "certification_sha256": "8a200f5eef6dbeb50416df9040a6a4135ac3c2f680ee90fbc62e6e8c437b17bd",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "4e31da924ebdb9ab1d5e2f03e1cb23edf4cf817bb26662f912a933432859a1e4",
+        "mutation_id": "neg_002_ignores_rail_offsets",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignores_rail_offsets/certification.json",
+        "trigger_condition": "Clamps directly to vdd and vss rather than using vmax/vmin offsets.",
+        "violated_property_ids": [
+          "P_RAIL_DERIVED_LIMITS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "e1ab25a434d4138af1d241a0734740c735d30661f45a329173e707043da7a5aa",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "dfe08be121b6228de24f9995401bb327cbe8e99897d6d5356bb7e3e18d16332d",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the upper-clamped output too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_LIMIT_ABOVE_UPPER",
+          "P_LIMIT_BELOW_LOWER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "a2a1133d6f136902c2e1e1b7bdf477a2a5701b9a51e20c70b0ad430d9bce5de9",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "45ad3942ae048795b276deda7d8504b5402d3907dca6ac3557b91b35b414cf52",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_PASS_WITHIN_LIMITS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_lower_limit/certification.json",
+        "certification_sha256": "cd8bcdab4fbfbaaa21a2e6c0350ee602b2c28f9393d75320261041cc25ef8b21",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "6f37c6a92443337c955fdd785d740ca41b3a6d92a91d4f9d69373b345296aeeb",
+        "mutation_id": "neg_004_no_lower_limit",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_lower_limit/certification.json",
+        "trigger_condition": "Omits the lower limiting branch.",
+        "violated_property_ids": [
+          "P_LIMIT_BELOW_LOWER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swapped_offsets/certification.json",
+        "certification_sha256": "e5fae9fff533aeae58754c17ef652903436ddad4ed843749d6f3bfd41c58e3be",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "c5ffb7bba60e9659018997c0ffe6de6748804b80cffa9a04480deb8fdbc5e11a",
+        "mutation_id": "neg_003_swapped_offsets",
+        "source_catalog_certification_path": "negative_variants/neg_003_swapped_offsets/certification.json",
+        "trigger_condition": "Uses vmin for the upper headroom and vmax for the lower headroom.",
+        "violated_property_ids": [
+          "P_RAIL_DERIVED_LIMITS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ignores_rail_offsets",
+    "canonical_dut_id": "125",
+    "hashes": {
+      "mutation_catalog_sha256": "cc07d18e7d6c33d4849ab51e340d57e6029c941b0a35a30ff42d59f09aeb378d",
+      "score_deck_sha256": "7ff8d9d2e17dee7929c4901e598bc6ce9b717c3ac0d9bc3af3a3eb5cb801c59e",
+      "task_certification_sha256": "33ed7496760cdb841e7fe72cfdef52f5c6258291c096c5d5426372cb345dd169",
+      "task_record_sha256": "2c30d8769e01c747dea4a42bc9ecc44a9975c2a4c836f4a967722841f4e046a0"
+    },
+    "release_dir": "125-limiter-rails"
+  }
+}

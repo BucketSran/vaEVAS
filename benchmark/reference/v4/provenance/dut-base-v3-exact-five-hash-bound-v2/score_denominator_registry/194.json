@@ -1,0 +1,79 @@
+{
+  "family_id": "194",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_target_diff/certification.json",
+        "certification_sha256": "c297710a77ff9f45dc97bc2a9b5c33d3a8e818130b9d156a6da337681b9c6897",
+        "fault_class": "adaptation_target_error",
+        "mutation_bundle_sha256": "1b9600d0e158d95ea16b0b872a0b06d9e075fc8ccdb040e365ce4620cd0225fc",
+        "mutation_id": "neg_002_wrong_target_diff",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_target_diff/certification.json",
+        "trigger_condition": "Uses target difference 32 instead of 64 for gain correction.",
+        "violated_property_ids": [
+          "P_TARGET_DIFFERENCE_GAIN_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "fad6aeca667c09234b861798ea795aade74a7b955bb8ba163209c38479cd7a96",
+        "fault_class": "scalar_monitor_scale_error",
+        "mutation_bundle_sha256": "805ac366964b551d3364362eee4bc05071a2db711c6fda9142ca3b7624f98425",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Pipe ADC Gain Control Loop: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_ALTERNATING_TEST_DAC_PHASES",
+          "P_GAIN_CONTROL_INITIAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_gain_outputs/certification.json",
+        "certification_sha256": "b9aaa52d9366e36d9d71fd3845e4761ba46c87947b2ab013584a080e5f2089c2",
+        "fault_class": "gain_code_rail_error",
+        "mutation_bundle_sha256": "3d947e8bdd211bc875b37557ef80ab22cf99e0eda3bb3ff7b20b602be5c5361a",
+        "mutation_id": "neg_004_half_gain_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_gain_outputs/certification.json",
+        "trigger_condition": "Drives gainctrl6 at half logic level.",
+        "violated_property_ids": [
+          "P_GAIN_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_gain_update/certification.json",
+        "certification_sha256": "36e531709fe18d7a55d8a7be6ccbe541dd546a3e0bc18a3cf06ae31cde1b30be",
+        "fault_class": "adaptation_update_disabled",
+        "mutation_bundle_sha256": "5f7bfc5fe1ec1cac5c8f8ed937903290add06a2462324191018fb27af681c33f",
+        "mutation_id": "neg_003_no_gain_update",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_gain_update/certification.json",
+        "trigger_condition": "Leaves gainctrlcode unchanged during closed-loop correction.",
+        "violated_property_ids": [
+          "P_TARGET_DIFFERENCE_GAIN_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "567e64becd97b25fde4b3aeea8eb3ac05e5117797c61cce42b0ba0a3089dcb37",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "aab8e7aa1090b0e65fbccd9c8a92507189501b7251031ed22371d53fed38abf9",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_GAIN_OUTPUT_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_target_diff",
+    "canonical_dut_id": "194",
+    "hashes": {
+      "mutation_catalog_sha256": "31d55fdd285ae3f4b0781270d42bb796005f6b36154d47bf339fd3b2b4c1dbea",
+      "score_deck_sha256": "279907a7a491471c20ac9e7cf96b8aa53c6394748b501561563014a756013fd9",
+      "task_certification_sha256": "b7cc1fc2e4e41b00c324d9970cca95da1d2dda8ab3bec03b0119f82cce8cd96f",
+      "task_record_sha256": "ea52f1d05840a9637676b9636127d658198635850cf2a63d4567e5ae00638a3f"
+    },
+    "release_dir": "194-pipe-adc-gain-control-loop"
+  }
+}

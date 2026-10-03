@@ -1,0 +1,78 @@
+{
+  "family_id": "056",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_enable_ignored/certification.json",
+        "certification_sha256": "4cd85c9718e244762e33c49682c39da51a07215248f72f28aa500a88687a471b",
+        "fault_class": "enable_ignored",
+        "mutation_bundle_sha256": "c4b151df2fa933c7540c9b4b91e48821e17cd340a4fd62d3eba99aa640466910",
+        "mutation_id": "neg_001_enable_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_001_enable_ignored/certification.json",
+        "trigger_condition": "enable ignored",
+        "violated_property_ids": [
+          "P_ENABLED_PASS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reversed_bus/certification.json",
+        "certification_sha256": "05853381877f02ac1744390ee96a1fdf908783c61cd8f0e260fbf177f5c6c8af",
+        "fault_class": "reversed_bus",
+        "mutation_bundle_sha256": "c462929bb7496a2fa86695493556a4061803de71c5935543ba5286e17da1877c",
+        "mutation_id": "neg_002_reversed_bus",
+        "source_catalog_certification_path": "negative_variants/neg_002_reversed_bus/certification.json",
+        "trigger_condition": "bus reversed",
+        "violated_property_ids": [
+          "P_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_all_zero/certification.json",
+        "certification_sha256": "5372b8e3f8a90aa368c6677473a1f1c656d17a47b5e0e17e35359c8863dbaee5",
+        "fault_class": "all_zero",
+        "mutation_bundle_sha256": "ec3e71ec6fe37a402b52f53422c44fb0317fbada71aced5bc153d2416f103e2d",
+        "mutation_id": "neg_004_all_zero",
+        "source_catalog_certification_path": "negative_variants/neg_004_all_zero/certification.json",
+        "trigger_condition": "all outputs low",
+        "violated_property_ids": [
+          "P_BIT_ALIGNMENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_shifted_bus/certification.json",
+        "certification_sha256": "9957df97bd2634e1d0d432a295e56f74c6dbfae663b2650744f29efea49b887e",
+        "fault_class": "shifted_bus",
+        "mutation_bundle_sha256": "69a9ed7b7ddd93c13189d1d9d808fda66bf004b1231afcaf444454cdfeefd662",
+        "mutation_id": "neg_005_shifted_bus",
+        "source_catalog_certification_path": "negative_variants/neg_005_shifted_bus/certification.json",
+        "trigger_condition": "bus shifted",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_outputs/certification.json",
+        "certification_sha256": "a1f591033ee468ef17e06959160382b1d882e0f458f6911208fd543550f145c2",
+        "fault_class": "inverted_outputs",
+        "mutation_bundle_sha256": "68238d137555489868f463dcad2a77ec2d813a8940fe0b29c6c9487c90450499",
+        "mutation_id": "neg_003_inverted_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_outputs/certification.json",
+        "trigger_condition": "outputs inverted",
+        "violated_property_ids": [
+          "P_STATIC_ENABLE_BEHAVIOR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_enable_ignored",
+    "canonical_dut_id": "056",
+    "hashes": {
+      "mutation_catalog_sha256": "3edc71ac00a4ff293dcb25ddb0f6bb31501faf8e238c3bda2018ace7d995f5f4",
+      "score_deck_sha256": "286450ea1cd063c405b1bb7e2e2676a60d83896a055ad2dd52ade4fad79b0687",
+      "task_certification_sha256": "0782974d41950fb3b3d39df6b326ac18e3c5e7c62fdbea794366e062f9994fbe",
+      "task_record_sha256": "3763f71fd34fd1b51e53878d49ffd627a6b5beff2dec2ad01efddb70a845d8d5"
+    },
+    "release_dir": "056-config-latch-32b-clocked"
+  }
+}

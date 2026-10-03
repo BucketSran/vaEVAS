@@ -1,0 +1,78 @@
+{
+  "family_id": "029",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_absolute_rail_outputs/certification.json",
+        "certification_sha256": "174348072faa7f518ad1e81d1c7a7704b8e5f00687356a6c0f3fbcd03113ea3c",
+        "fault_class": "local_rail_reference_omission",
+        "mutation_bundle_sha256": "d537cb20ceb34245df535316423f0262e6e6cda0d9dc7676b7e75f81ed60a53f",
+        "mutation_id": "neg_005_absolute_rail_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_005_absolute_rail_outputs/certification.json",
+        "trigger_condition": "VSS is nonzero while the comparator drives either complementary output state.",
+        "violated_property_ids": [
+          "P_COMPLEMENTARY_RAIL_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_initial_state_inverted/certification.json",
+        "certification_sha256": "7f01d2f983f22857a8a08d57f9b5a40d252050d66e8f037f80a73ce135697df0",
+        "fault_class": "initial_decision_polarity_error",
+        "mutation_bundle_sha256": "d185774d007589fdf9be6a435a1481774d33d4a7cf5ee933aaec7c23c39fd80e",
+        "mutation_id": "neg_001_initial_state_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_initial_state_inverted/certification.json",
+        "trigger_condition": "The initial differential is below positive vhys over two before any threshold crossing.",
+        "violated_property_ids": [
+          "P_INITIAL_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_positive_threshold_too_high/certification.json",
+        "certification_sha256": "ba177246d34ff14034022008c6cf89dff76c25abc80393f55b0745875490a3ea",
+        "fault_class": "positive_threshold_scale_error",
+        "mutation_bundle_sha256": "1fb481bc6366fd6302dcb165373efd8e0633faa24cc7021c6c79cbfa0180f85b",
+        "mutation_id": "neg_002_positive_threshold_too_high",
+        "source_catalog_certification_path": "negative_variants/neg_002_positive_threshold_too_high/certification.json",
+        "trigger_condition": "The rising differential enters the interval from positive vhys over two to positive vhys.",
+        "violated_property_ids": [
+          "P_POSITIVE_SWITCH_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_negative_threshold_at_zero/certification.json",
+        "certification_sha256": "fe6bd1b086788ad617b0a2082b29dc1286065e3ec6c6ceffaf6171224cfca9df",
+        "fault_class": "negative_threshold_offset_error",
+        "mutation_bundle_sha256": "a87a73f243762b63cec20c1608d60bd7cf7d4f543c9c769374ff54c1a007e90d",
+        "mutation_id": "neg_003_negative_threshold_at_zero",
+        "source_catalog_certification_path": "negative_variants/neg_003_negative_threshold_at_zero/certification.json",
+        "trigger_condition": "A previously high decision falls through zero but not through negative vhys over two.",
+        "violated_property_ids": [
+          "P_NEGATIVE_SWITCH_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_hysteresis_hold/certification.json",
+        "certification_sha256": "c00af2c706c5eb51ec7b5de15340fdbc50dbf5a3d3cebe94d2547c2889f4f182",
+        "fault_class": "hysteresis_state_hold_omission",
+        "mutation_bundle_sha256": "90525650f08f8d962f701cf03292d23eb5e704621a5163b2f9a2b2c6faf1845d",
+        "mutation_id": "neg_004_no_hysteresis_hold",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_hysteresis_hold/certification.json",
+        "trigger_condition": "The differential reverses inside the documented hysteresis band after a legal positive trip.",
+        "violated_property_ids": [
+          "P_HYSTERESIS_HOLD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_absolute_rail_outputs",
+    "canonical_dut_id": "029",
+    "hashes": {
+      "mutation_catalog_sha256": "1f98d419fa875ebe6d554e38a376ab409e432d9dd1adadb530146f4d8c311c43",
+      "score_deck_sha256": "1bebd7be80b220fcb8c6e23657c4c521783070c6a11e0f379d242c5bf2eed46f",
+      "task_certification_sha256": "594e3e9aba18d30c1dda9948e9dc6e7f4376ed395d59401cddbbb900b979a00e",
+      "task_record_sha256": "57e912b9321bb42e7874e33e1602cadb234eba4f9b95f46b0cb5080dae92e9d0"
+    },
+    "release_dir": "029-hysteresis-comparator"
+  }
+}

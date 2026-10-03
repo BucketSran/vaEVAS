@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module chopper_stabilized_differential_amplifier(
+    vinp, vinn, chop_clk, rst, enable, hold,
+    voutp, voutn, settled, offset_residual
+);
+input vinp, vinn, chop_clk, rst, enable, hold;
+output voutp, voutn, settled, offset_residual;
+electrical vinp, vinn, chop_clk, rst, enable, hold;
+electrical voutp, voutn, settled, offset_residual;
+electrical demod_sample_i, baseband_ref_i, event_strobe_i;
+
+parameter real vdd=0.9, vss=0.0, vcm=0.45, vth=0.45;
+parameter real gain=3.0, vos_amp=20m, lp_alpha=0.25;
+parameter real settle_tol=20m, tr=100p;
+parameter integer settle_cycles=3;
+
+chopper_gain_core #(.vdd(vdd), .vss(vss), .vth(vth), .gain(gain), .vos_amp(vos_amp), .tr(tr))
+    ICHOP (vinp, vinn, chop_clk, rst, enable, hold, demod_sample_i, baseband_ref_i, event_strobe_i);
+synchronous_lp_state #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .gain(gain), .lp_alpha(1.0), .settle_tol(settle_tol), .settle_cycles(settle_cycles), .tr(tr))
+    ILP (demod_sample_i, baseband_ref_i, event_strobe_i, rst, enable, hold, voutp, voutn, settled, offset_residual);
+endmodule

@@ -1,0 +1,20 @@
+{
+  "task_id": "vbr1_l1_dither_or_noise_like_deterministic_source:tb",
+  "release_entry_id": "vbr1_l1_dither_or_noise_like_deterministic_source",
+  "source_task_id": "vbr1_l1_dither_or_noise_like_deterministic_source_tb",
+  "backend": "spectre",
+  "status": "PASS",
+  "scores": {
+    "rerun_backend_pass": true,
+    "rerun_expected_result_met": true,
+    "raw_status": "PASS",
+    "behavior_score": 1.0
+  },
+  "artifacts": [
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_dither_or_noise_like_deterministic_source/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/tb/evidence.json"
+  ],
+  "notes": [
+    "Imported from fresh vaBench release EVAS/Spectre dual rerun summary."
+  ]
+}

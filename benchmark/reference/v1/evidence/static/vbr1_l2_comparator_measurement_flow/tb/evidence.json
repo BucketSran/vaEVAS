@@ -1,0 +1,36 @@
+{
+  "release_entry_id": "vbr1_l2_comparator_measurement_flow",
+  "task_id": "vbr1_l2_comparator_measurement_flow:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Comparator and Decision Circuits",
+    "base_function": "Single-ramp comparator offset measurement flow"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l2_comparator_measurement_flow/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l2_comparator_measurement_flow/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l2_comparator_measurement_flow/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l2_comparator_measurement_flow/forms/tb/gold/comparator_offset_search_ref.va",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l2_comparator_measurement_flow/forms/tb/gold/tb_comparator_offset_search_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "ahdl_include",
+      "comparator_offset_search_ref.va",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

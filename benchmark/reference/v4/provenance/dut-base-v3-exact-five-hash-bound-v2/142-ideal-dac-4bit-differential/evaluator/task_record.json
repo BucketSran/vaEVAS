@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "142",
+  "checker_task_id": "v4_142_ideal_dac_4bit_differential",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b3a612c6315455d23fc223e435fe25ef5b2e23845f7a1b03230a4745fd10d799",
+    "checker_profile.json": "468ea344d4a199a62f53e76f523349e4117812770031be83140faac198523f68",
+    "derivation_manifest.json": "314becb7da86742477ca1f3d39a7d098bcaf159a0c3daad0a0b8c286a51bf6c0",
+    "family_spec.json": "007c8d708e9d8a124f34bdbff09d39822945f3183be2532b1a39798d405c0b4d",
+    "harness_spec.json": "0d3271662a565fe47e5f6402466d82afe469fbad4d6d857991eb0fcc1a7c9aa6",
+    "mutation_catalog.json": "48a8d5e6b3e8e929c05309e8d8748f2a5ba9e90af17ec7dc450a59a0a2176096",
+    "profiles/feedback.json": "e8ca71fc578c2dead0bc33aa89bbfc99b9d6edffc658216491cb18777c19b0a4",
+    "profiles/score.json": "ab6bd5d3d0df4f01b681547cc4c8ef7eb7f5aa4e9eaef21cf6427491bf59a05c",
+    "score_tb.scs": "892df7d2ad17d0e693c5b8c8e9d0a12ba1339cddd4244f737d8498e7064be17c",
+    "solution_tree": "2bd66967c66c792919ce15ff1eec4fd59a8c423d10d349683fa493f1fa4af1e9",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "c559583912d9e9714fc5a926cbfe761edb8d07a45cf285a467e243ae79975672",
+    "instruction.md": "c3a68a6dd592c71f90a29a62594ce6207c885aaa2e07af51922f0b8f9c10d36a",
+    "public_contract.json": "8573a2b8a75a163399c385df9cd501af881360b18cafcfd79e8542e88a2c68d4"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b3a612c6315455d23fc223e435fe25ef5b2e23845f7a1b03230a4745fd10d799"
+  },
+  "release_dir": "142-ideal-dac-4bit-differential",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "168-ideal-dac-4bit-differential",
+  "support_root": "",
+  "target_artifacts": [
+    "ideal_dac_4bit_differential.va"
+  ]
+}

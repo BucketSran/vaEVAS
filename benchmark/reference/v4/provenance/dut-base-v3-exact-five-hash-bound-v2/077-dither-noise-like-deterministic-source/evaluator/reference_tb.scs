@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/noise_gen_ref.va"
+
+// Exercise both the public defaults and one legal parameter override.
+Vvin (vin_i 0) vsource type=pwl wave=[0 0.62 4n 0.62 4.05n 0.81 8n 0.81 8.05n 0.54 12n 0.54 12.05n 0.73 16n 0.73 16.05n 0.66 20n 0.66]
+IDUT_DEFAULT (vin_i vout_default) noise_gen
+IDUT_OVERRIDE (vin_i vout_override) noise_gen sigma=0.037 dt=0.8n
+
+simulatorOptions options evas_profile=balanced
+
+tran tran stop=20n maxstep=0.05n
+save vin_i vout_default vout_override

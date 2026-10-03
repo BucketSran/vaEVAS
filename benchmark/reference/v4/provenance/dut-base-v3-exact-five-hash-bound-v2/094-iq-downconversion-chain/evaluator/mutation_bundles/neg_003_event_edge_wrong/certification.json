@@ -1,0 +1,50 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_BASEBAND_UPDATES, P_LO_MONITORS, P_MIXER_MONITORS, P_PHASE_MONITOR, P_QUADRATURE_SEQUENCE satisfy the public contract; fault class event_edge_polarity_error is rejected",
+    "observed": "EVAS: v4_094 checked=258 mismatch_count=164 coverage=clock_rises=33 reset_edges=1 phases=[0, 1, 2, 3] vin_regions=['high', 'mid']; P_RESET_COMMON_MODE checked=8 mismatch_count=6 expected=out=0.45+/-0.08 observed=out=0.189 sample_time=2.65e-10 metric_gap=0.261; P_QUADRATURE_SEQUENCE checked=32 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_LO_MONITORS checked=62 mismatch_count=47 expected=lo_i=0.85+/-0.08 observed=lo_i=0.357 sample_time=4.265e-09 metric_gap=0.493; P_MIXER_MONITORS checked=62 mismatch_count=50 expected=mix_i=0.45+/-0.08 observed=mix_i=0.189 sample_time=4.265e-09 metric_gap=0.261; P_BASEBAND_UPDATES checked=63 mismatch_count=61 expected=i_state=0.45+/-0.08 observed=i_state=0.189 sample_time=4.265e-09 metric_gap=0.261; P_PHASE_MONITOR checked=31 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0",
+    "violated_property_ids": [
+      "P_BASEBAND_UPDATES",
+      "P_LO_MONITORS",
+      "P_MIXER_MONITORS",
+      "P_PHASE_MONITOR",
+      "P_QUADRATURE_SEQUENCE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_094_iq_downconversion_chain",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 429
+  },
+  "family_id": "094",
+  "inputs": {
+    "checker_profile_sha256": "ee1bda4a25c313833d94cd54253094ff79789ed9cecd0749285977bcda5f57fd",
+    "harness_spec_sha256": "f759f8a8cd3f1b492cf146e9fb2400aeb6208ac99190c9c0e6e847792e8e3077",
+    "mutation_bundle_sha256": "989ad38ff146d1d469ed70f32497193310327f3e4f0274db30f0308814e9ed72",
+    "profile_sha256": "2d1cb7c2faa3b89ca4224bafa351b70085c92f7f1384431518e2aa8b15afd873"
+  },
+  "mutation_id": "neg_003_event_edge_wrong",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

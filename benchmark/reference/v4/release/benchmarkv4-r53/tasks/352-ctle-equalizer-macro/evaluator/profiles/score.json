@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "4434311c93ac0bc9a9c87aac52ea64c56ca2ded4d80c366136c6785b339497ce",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_INITIALIZES_THE_EQUALIZED_OUTPUT_TO",
+    "P_ON_EACH_RISING_CLK_SAMPLE_THE",
+    "P_DRIVE_VOUT_FROM_THE_CURRENT_INPUT",
+    "P_CLAMP_VOUT_TO_THE_VSS_TO",
+    "P_EDGE_METRIC_REPORTS_THE_ABSOLUTE_BOOSTED",
+    "P_SAT_FLAG_IS_HIGH_WHEN_THE"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

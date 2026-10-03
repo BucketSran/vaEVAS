@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "341",
+  "checker_task_id": "v4_341_buck_soft_start_ramp_controller",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "dffa40b2e056da187a5d3f541d6ecb1aa7c06601ac63b94c827c8d296526dd66",
+    "checker_profile.json": "731f6caa52cac05bf54704738292e18e49da1649aacdb041b78e9d114afe153b",
+    "derivation_manifest.json": "f376aeccd49e53fd6cde61e1366755ac559ee37aba5d3b60168fb20b00d53d5a",
+    "family_spec.json": "812b7ac824fe8845bd81da0cf18dfbdb0f25a90a495885d21ae20ca354ba125b",
+    "harness_spec.json": "45215d83e64f07291185a7b043c881f26f6018168fef515b40f97879322b3f0d",
+    "mutation_catalog.json": "c8eef159424cfd086da4633c1757311fc285c9d25b3846be0db13268fb5ac4e0",
+    "profiles/feedback.json": "6b2d86dad5aa7974fc357216701b0f161b6edf691d373e69f4751a9b4367642b",
+    "profiles/score.json": "e34918b72cc8dbe3b036563da1e17c16e94170c4cb34959faaf3ded350d121ba",
+    "score_tb.scs": "8ffbbcd3f7665ed51b17c4e05e3dbac5a09821403336379ef86e5ccc2beb77c0",
+    "solution_tree": "a2298476dd54a2e30eced9d0eee7c1eb7024c983dbe0cfa7e18c10290b5ece4e",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "ac4c718a8e225ed2255229d40d3568fc6a99f5ac255e534a7542366b07e33118",
+    "instruction.md": "d61393a9209808da6a861b49bd2b8ebc63912f4c4a5538d78dc4aa2b9ea65fc8",
+    "public_contract.json": "7baa4a997081617849a9cad29ef7d6da8a184344b792be2d731d7ed8f62698af"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "dffa40b2e056da187a5d3f541d6ecb1aa7c06601ac63b94c827c8d296526dd66"
+  },
+  "release_dir": "341-buck-soft-start-ramp-controller",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1039-buck-soft-start-ramp-controller",
+  "support_root": "",
+  "target_artifacts": [
+    "buck_soft_start_ramp_controller.va"
+  ]
+}

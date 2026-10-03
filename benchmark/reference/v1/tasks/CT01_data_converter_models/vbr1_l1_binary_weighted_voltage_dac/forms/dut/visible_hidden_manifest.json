@@ -1,0 +1,54 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_simple_binary_voltage_dac_4b_ref.scs"
+    ],
+    "gold_va": [
+      "simple_binary_voltage_dac_4b.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_binary_weighted_voltage_dac",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "aout": "output",
+      "code_0": "input",
+      "code_1": "input",
+      "code_2": "input",
+      "code_3": "input",
+      "vref": "input",
+      "vss": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "code_0",
+      "code_1",
+      "code_2",
+      "code_3",
+      "vref",
+      "vss",
+      "aout"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "simple_binary_voltage_dac_4b.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/dut/visible"
+}

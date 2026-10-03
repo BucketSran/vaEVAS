@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "sar_bit_trial_sequence_visible"
+    - "trial_dac_matches_trial_code_monitor"
+    - "comparator_decision_matches_sample_and_trial"
+    - "sar_adc_code_range_sufficient"
+    - "sar_adc_unique_code_count"
+    - "sar_code_matches_sampled_input"
+    - "dac_output_matches_weighted_code"
+    - "code_monotonic_with_sampled_input"
+    - "dac_output_in_range"
+
+parity:
+  required: true
+  spectre_result_path: "behavioral-veriloga-eval/results/gold-dual-suite-final/sar_adc_dac_weighted_8b_smoke/spectre/tran_spectre.csv"
+  tolerance_notes: "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

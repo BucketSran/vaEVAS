@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l2_agc_receiver_leveling_loop",
+  "task_id": "vbr1_l2_agc_receiver_leveling_loop:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "AGC receiver leveling loop"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/agc_receiver_leveling_loop.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/tb_agc_receiver_leveling_loop.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

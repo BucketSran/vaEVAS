@@ -1,0 +1,82 @@
+{
+  "family_id": "288",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "ccd98d15b2f5a200e6fde18cb74d911fd63843a74bb2f3ff041e2e7a8bda3a6c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "668903dad96288d5a79b1d6b1c7b3a5b9c317e15b7c69bc445f127f46e26e1dc",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "42be1c6f3dc20764de54431cd8ea0b17d9f43761384935e0f5d360bb3c377aef",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "fa6a931c299ee3420d311690584805e07cec9d735f5878615e9772dfe8c01cd0",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_USE_THE_TWO_CONTROL_LEVELS_AS",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "d69e1392995a2b5d4280b7088664e37a191429dc71ac93fa0405809a1389500e",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ad81f4361885ddbb8e25f47af37bfc4072b7a7cc9978455c20ea02ae08b26317",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "125e39f256b66bb3f7efcd1577477e2d9a4694d0d6a13bcb61c9915f692d8e2d",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "5994fcf28fc447394c7cde1d812bfa11039f25e8c2631fa6ea15fa73d46d7754",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_SPAN_MIN_0_62_V_SPAN",
+          "P_USE_THE_TWO_CONTROL_LEVELS_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "b547b21e2798cbf0071f40bcad1a6b9b95967a59ff4b0ad39fc0c4f5aa9f88b0",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a8e0b6c0bcc5e3ac9b26ff938c9f4ec40d5f58de26eae4907d89825d4467128f",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "288",
+    "hashes": {
+      "mutation_catalog_sha256": "c19534ff158cdf9813589c0a2070cf65b74e3ada1c6f4fcea6bc150ed1c90dfc",
+      "score_deck_sha256": "7df70b6c383afd792dd09e27232396290ee27f9248f9ed873910581eca377512",
+      "task_certification_sha256": "9475f199418b53bd76f46cbee2d9ce6f795ec663d7aecd70a86c6e624ed2473d",
+      "task_record_sha256": "10336b079cd91c9913b3d63dc56bff2985a8e76c3ea22bef5a9aef5586d9ef88"
+    },
+    "release_dir": "288-calibration-quadrant-mapper"
+  }
+}

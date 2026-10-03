@@ -1,0 +1,83 @@
+{
+  "family_id": "295",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_supply_scaling/certification.json",
+        "certification_sha256": "77a3ddcc6297402e6a08f5abfce4f01047dee50d2d7a3151569b302febc93247",
+        "fault_class": "supply_scaling_omitted",
+        "mutation_bundle_sha256": "0262fb2e12f1ce1e715c554e1aa77d83b18721c2a273c6c5a659e1a5affe6dc5",
+        "mutation_id": "neg_002_ignore_supply_scaling",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_supply_scaling/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_supply_scaling",
+        "violated_property_ids": [
+          "P_DRIVE_ISUP_METRIC_AS_A_VOLTAGE",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_powerdown/certification.json",
+        "certification_sha256": "9c0ff11dd41d7f69ff6fefdab9fd382920cfa662e3c0000f9a6857f31579440f",
+        "fault_class": "powerdown_qualification_ignored",
+        "mutation_bundle_sha256": "e937bef09a46f34c488f361ca3a16e6c7bcb8fe0ce9053e43e63831b1c7a3d1a",
+        "mutation_id": "neg_003_ignore_powerdown",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_powerdown/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_ignore_powerdown",
+        "violated_property_ids": [
+          "P_DRIVE_ISUP_METRIC_AS_A_VOLTAGE",
+          "P_VHI_0_9_V_FULL_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_mode/certification.json",
+        "certification_sha256": "4f1472a4254a90a22c818199b00ffcdd17a14a982817463a137e63fda8cc8999",
+        "fault_class": "mode_dependency_ignored",
+        "mutation_bundle_sha256": "a624089fec8cad14008141a9ed2663d512e7c429138be9d8ac293ee2343fd544",
+        "mutation_id": "neg_004_ignore_mode",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_mode/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_mode",
+        "violated_property_ids": [
+          "P_DRIVE_ISUP_METRIC_AS_A_VOLTAGE",
+          "P_VNOM_0_9_V_NOMINAL_SUPPLY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_ignore_load/certification.json",
+        "certification_sha256": "38c13954e79de04e124082fab3d089d24957be55318dbe046b9bf0043a00b93b",
+        "fault_class": "load_dependency_ignored",
+        "mutation_bundle_sha256": "270d7b0921afae66cee0e59ffff04dd254836e90ae91672c9e22d24c0051a503",
+        "mutation_id": "neg_005_ignore_load",
+        "source_catalog_certification_path": "negative_variants/neg_005_ignore_load/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_ignore_load",
+        "violated_property_ids": [
+          "P_DRIVE_ISUP_METRIC_AS_A_VOLTAGE",
+          "P_IQ0_0_08_IQ1_0_14"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_constant_metric/certification.json",
+        "certification_sha256": "67bf49d393e81b8d19b56f996b3d5d2cea85a1d801314052da54b3362e67f334",
+        "fault_class": "supply_metric_stuck_constant",
+        "mutation_bundle_sha256": "032edf4eec3fffadfe599c71dac84a8ef05b3c3fdc1518e533145ccb687eec27",
+        "mutation_id": "neg_001_constant_metric",
+        "source_catalog_certification_path": "negative_variants/neg_001_constant_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_constant_metric",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_BIAS_REFERENCE",
+          "P_DRIVE_ISUP_METRIC_AS_A_VOLTAGE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ignore_supply_scaling",
+    "canonical_dut_id": "295",
+    "hashes": {
+      "mutation_catalog_sha256": "9f702ce068287f3b57a7da367d0a62a91ca68ec0849738058d97597c046c07ed",
+      "score_deck_sha256": "aeb05703d0cc77a898f1aeb744749e800f50a3cef22b37235226b6f2f569c861",
+      "task_certification_sha256": "dc855f3d15c44cce7b25927a1e60569eafa3d7ef8bd1423745ef0d486a516202",
+      "task_record_sha256": "92c4ec2151c4fc7b5a48d3668c6f5771ba0b90429e54bb1991b79b6701fe2d5e"
+    },
+    "release_dir": "295-power-mode-supply-current-metric"
+  }
+}

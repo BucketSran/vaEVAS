@@ -1,0 +1,15 @@
+{
+  "candidate_artifacts": [
+    "instrumentation_amp_offset_trim_top.va",
+    "diff_gain_core.va",
+    "offset_trim_controller.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "1ced65153b55aec173bb67e7aa41c1c7f6d0dfd2004224ce58ab2b169ef2e8d7",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "9c4516b4a2a59fcfcb16833522c93d8a57d25b5536b5c06e163f798911716b0f",
+  "gold_solution_tree_sha256": "d51477b02d345026f4a1531b488207dbd3fe0b97258ce9d2b0999a7dd2be0c66",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "schema_version": "v4-dut-score-policy-v1",
+  "task_id": "v4-306"
+}

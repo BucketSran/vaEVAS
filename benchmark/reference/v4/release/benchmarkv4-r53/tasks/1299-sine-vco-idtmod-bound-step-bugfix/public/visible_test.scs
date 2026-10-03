@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "../submission/sine_vco_idtmod_bound_step.va"
+
+// Feedback testbench for sine_vco_idtmod_bound_step.
+// Piecewise vin exercises center_freq + vco_gain*vin instead of a single 28 MHz case.
+Vvin (vin 0) vsource type=pwl wave=[0 0.05 350n 0.05 350.1n 0.20 850n 0.20 850.1n 0.55 1.6u 0.55]
+XDUT (vin out metric) sine_vco_idtmod_bound_step
+
+tran tran stop=1.6u maxstep=5n
+save vin out metric

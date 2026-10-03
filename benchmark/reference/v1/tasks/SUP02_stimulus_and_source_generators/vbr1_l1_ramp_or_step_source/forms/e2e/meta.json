@@ -1,0 +1,57 @@
+{
+  "id": "bound_step_period_guard_smoke",
+  "task_id": "bound_step_period_guard_smoke",
+  "release_entry_id": "vbr1_l1_ramp_or_step_source",
+  "asset_type": "vabench_task",
+  "task_name": "Periodic Phase-Ramp Guard Source Smoke Test",
+  "family": "end-to-end",
+  "category": "stimulus-and-sources",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "source": {
+    "type": "parity-audit",
+    "path": "vaEvas/refine-logs/EXPERIMENT_PLAN.md"
+  },
+  "tier": "verified",
+  "verification_status": "passed",
+  "owner": "codex",
+  "created_at": "2026-04-20",
+  "must_include": [
+    "@(initial_step)",
+    "@(timer(",
+    "$bound_step(",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "bound_step_period_guard_ref.va",
+    "tb_bound_step_period_guard_ref.scs",
+    "tran.csv"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "checks": {
+    "dut_compile": "required",
+    "tb_compile": "required",
+    "tran_generated": "required",
+    "sim_correct": "required",
+    "parity_required": true
+  },
+  "evidence": {
+    "result_path": "behavioral-veriloga-eval/results/gold-dual-r021-2026-04-20/bound_step_period_guard_smoke",
+    "pr_link": "[TODO]",
+    "notes": "Added on 2026-04-20 as R021. The benchmark-facing contract is a periodic phase-ramp source with a guard pulse: check repeated phase wraps, guard pulse count/width fraction, and waveform observability. $bound_step support remains an implementation aid rather than the top-level circuit function claim."
+  }
+}

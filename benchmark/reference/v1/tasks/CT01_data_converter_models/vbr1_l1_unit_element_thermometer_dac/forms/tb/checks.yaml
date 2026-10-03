@@ -1,0 +1,18 @@
+syntax:
+  must_include:
+    - "thermometer_dac_15seg.va"
+    - "seg14"
+    - "save"
+    - "tran"
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "safe_time_output_levels_match_15_segment_thermometer_count"
+    - "full_scale_counts_all_15_segments"
+    - "output_is_monotonic_across_programmed_segment_counts"
+parity:
+  required: true
+  tolerance_notes: "DAC levels use safe-time samples away from PWL segment transitions with 20 mV absolute tolerance."

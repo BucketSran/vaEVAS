@@ -1,0 +1,36 @@
+{
+  "release_entry_id": "vbr1_l1_unit_element_thermometer_dac",
+  "task_id": "vbr1_l1_unit_element_thermometer_dac:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Unit-element thermometer DAC"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_unit_element_thermometer_dac/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_unit_element_thermometer_dac/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_unit_element_thermometer_dac/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_unit_element_thermometer_dac/forms/dut/gold/tb_thermometer_dac_15seg_ref.scs",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_unit_element_thermometer_dac/forms/dut/gold/thermometer_dac_15seg.va"
+  ],
+  "checks": {
+    "must_include": [
+      "seg14",
+      "transition(",
+      "vref",
+      "vss"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

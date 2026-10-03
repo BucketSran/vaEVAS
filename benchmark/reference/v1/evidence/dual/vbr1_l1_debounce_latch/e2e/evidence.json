@@ -1,0 +1,103 @@
+{
+  "release_entry_id": "vbr1_l1_debounce_latch",
+  "task_id": "vbr1_l1_debounce_latch:e2e",
+  "source_task_id": "vbm1_debounce_latch_e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Comparator and Decision Circuits",
+    "base_function": "Comparator debounce latch"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_debounce_latch/e2e/gold",
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_debounce_latch/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_debounce_latch/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_debounce_latch/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/e2e/gold/debounce_latch.va",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/e2e/gold/tb_debounce_latch_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rest-20260526_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_debounce_latch/e2e/gold",
+    "result_root": "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_debounce_latch/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        1.4e-07
+      ],
+      "signals_compared": 3,
+      "samples": 1200,
+      "max_rmse_v": 0.0,
+      "max_abs_v": 0.0,
+      "mean_relative_rms_error": 0.0,
+      "max_relative_rms_error": 0.0,
+      "mean_nrmse": 0.0,
+      "max_nrmse": 0.0,
+      "per_signal": {
+        "out": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "rst_n": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "sig": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/e2e/gold/debounce_latch.va",
+      "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/e2e/gold/tb_debounce_latch_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

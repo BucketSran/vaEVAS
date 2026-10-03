@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "tdc_ideal_edge_delta.va"
+  ],
+  "canonical_dut_source_slug": "179-tdc-ideal-edge-delta",
+  "checker_task_id": "v4_179_tdc_ideal_edge_delta",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "714ea984f459746bbe6c01870c4a57580a47ab285a29b98e7ddd61968de33872",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "832a1b9e964124b4b601fcd6101e88cde490ace60efc47bb69fe9457277eb22c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e273476c6a9e6d2250b0de722f44fba723d5a65897971bc948e31433a0bada44",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "179",
+  "family_spec_sha256": "4a489ba23af77f83eb11e6e79b58466807bb58fc2f606343eb6ff4b1b222490a",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ea6e7d6a2e654c3e1484371e5819acabb535d28ce1c1d7a59ffae62d8e3490e2",
+  "public_contract": "tasks/179-tdc-ideal-edge-delta/public_contract.json",
+  "public_contract_sha256": "6e9a38fedf23b7e6ef1f34cb6d79178d5a7fa4e68cde11d6fe85790e9ba177b7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/179-tdc-ideal-edge-delta",
+  "task_id": "v4-179"
+}

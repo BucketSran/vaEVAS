@@ -1,0 +1,78 @@
+{
+  "family_id": "069",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "76a9e5276301d942cd17d8de48850666136d610aa4bae52c88fe8a1bb01dbff9",
+        "fault_class": "no_pulse_train",
+        "mutation_bundle_sha256": "d93fdc2a6c00f2a76dc79e5af7ab89355fff1356c95ab42d301eb1b14eb5414e",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "an accepted start command must produce the requested pulse train",
+        "violated_property_ids": [
+          "P_IDLE_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_period/certification.json",
+        "certification_sha256": "14a7c10fb11a0a8390b0e022fbdca0399fa92837f5590655dffd2ab752c60e7a",
+        "fault_class": "uses_period_plus_one",
+        "mutation_bundle_sha256": "34b24f5d37c0053a05a4913d11f5163b07d7634426d7185f2698f79441ef835e",
+        "mutation_id": "neg_003_wrong_period",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_period/certification.json",
+        "trigger_condition": "pulse starts must be separated by the captured period in clock samples",
+        "violated_property_ids": [
+          "P_WIDTH_AND_PERIOD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_done/certification.json",
+        "certification_sha256": "9623b64b8e7990e44d64e166bd185d036707ad599cd437e7177ea70dee9499ed",
+        "fault_class": "never_asserts_done",
+        "mutation_bundle_sha256": "4a11574a3611f3741c036d1237c6e5de7ddc7cf6dfb3e903b1120eb03ef71f58",
+        "mutation_id": "neg_004_no_done",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_done/certification.json",
+        "trigger_condition": "after the final pulse completes, done must assert while pulse is low",
+        "violated_property_ids": [
+          "P_COMPLETION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_extra_pulse/certification.json",
+        "certification_sha256": "60df287b7187dbc060723612e548ad2e14f595e57ba803cbefaeb4104c5bfd6c",
+        "fault_class": "emits_one_extra_pulse",
+        "mutation_bundle_sha256": "be0d69d3e8d31d8d889963c446c991d69ae1b9002405464a883924c7b53fd32c",
+        "mutation_id": "neg_005_extra_pulse",
+        "source_catalog_certification_path": "negative_variants/neg_005_extra_pulse/certification.json",
+        "trigger_condition": "each accepted command must emit exactly the captured count number of pulses",
+        "violated_property_ids": [
+          "P_PULSE_COUNT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_zero_code_width_not_minimum/certification.json",
+        "certification_sha256": "bc1e9b78de1976e62f8c95384149c96ae8371b6e2543978624486874e3ff9be6",
+        "fault_class": "zero_width_code_produces_no_minimum_pulse",
+        "mutation_bundle_sha256": "f32932a54f5a74af5c622d7b1f1f580ba38b444910a5a5a5f6435fa922afb7de",
+        "mutation_id": "neg_006_zero_code_width_not_minimum",
+        "source_catalog_certification_path": "negative_variants/neg_006_zero_code_width_not_minimum/certification.json",
+        "trigger_condition": "zero-coded period, width, and count must each clamp to one clock sample",
+        "violated_property_ids": [
+          "P_ZERO_CODE_MINIMUM"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "069",
+    "hashes": {
+      "mutation_catalog_sha256": "00d671e419b27c292ee275cb5cc3e8a6df3ca2ee1feb3c62883a85943c2cbb06",
+      "score_deck_sha256": "2836831be437319131f669e19de600d0cebd865f5026fa4ed1b89d878506d6a4",
+      "task_certification_sha256": "e10e50dfbdb2d2f04af3f7fbe725c63b056d810e969c69f57b0ec3cd71b0e63f",
+      "task_record_sha256": "4333b51a9507ef44ef29dcff8a48bbe8a0eb41117f97239679ab601a865217a4"
+    },
+    "release_dir": "069-configurable-pulse-train-generator"
+  }
+}

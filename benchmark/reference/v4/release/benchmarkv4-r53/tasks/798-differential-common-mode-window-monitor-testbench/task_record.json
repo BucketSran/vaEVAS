@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "298-differential-common-mode-window-monitor",
+  "checker_task_id": "v4_298_differential_common_mode_window_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "80c363c663b321253d22e459449923f53404267ba2663668303ce7005df15249",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3acc08220b600edff0e52b5fef9d182fc704de214c7306577245f850a9a1ab73",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "80c363c663b321253d22e459449923f53404267ba2663668303ce7005df15249",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "46140a975ab9be0f1610d2b668cee9021f1e21525265c286fefca4ecd92649e6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "081d3a591e2572049bcd6b36c21f9ce6c53c72228a562fda22d404299ac3e8c0"
+  },
+  "family_id": "298",
+  "family_spec_sha256": "4b38185230f4ff48537c4c407796ce6ca06872c3a42928895f6ffc239f391eb1",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0edfbcf358fa6fabab17f24f16f57d100592ddd97d1cd850a0c40a5cea9f31ba",
+  "public_contract": "tasks/798-differential-common-mode-window-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "3d7c10b50acc56477726834d8cacd81abf1ed150c3dc4dc7a746a9740a464e98",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/798-differential-common-mode-window-monitor-testbench",
+  "task_id": "v4-798"
+}

@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "power_reset_seq_top.va",
+    "por_detector.va",
+    "reset_synchronizer.va",
+    "enable_sequencer.va",
+    "ready_flag.va"
+  ],
+  "canonical_dut_source_slug": "347-power-reset-sequencer-system",
+  "checker_task_id": "v4_347_power_reset_sequencer_system",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "42b345deb0089cb10007ded6ada33e2f55a048ea27cc3632ec52087accf56723",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "293316507b31393b0283952bafc927aeaf9bdc562c317c4e962afe7bc3440045",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "a780e9d0ee709e992a2b4962b5a079c8bdacfac300f8eb690aa664772dfe63cc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "347",
+  "family_spec_sha256": "53f53541156402704f92c484744f4c56a086e8ca283c13cb3b633f0a85f4a920",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "11a78cc3ffc1484968ba60e2783aef4cf9171c0eb4a180cd35a601335454356b",
+  "public_contract": "tasks/1347-power-reset-sequencer-system-bugfix/public_contract.json",
+  "public_contract_sha256": "51a7ae3bb7ce026ace859dbd1360bcaba78333221f1d2d2b0535809678f2a07f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1347-power-reset-sequencer-system-bugfix",
+  "task_id": "v4-1347"
+}

@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "pll_timing_monitor_top.va",
+    "phase_detector.va",
+    "divider.va",
+    "lock_detector.va",
+    "reacquire_timer.va"
+  ],
+  "canonical_dut_source_slug": "351-pll-timing-monitor-system",
+  "checker_task_id": "v4_351_pll_timing_monitor_system",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8c0bdfcae3949c4c47d24fd637d9fad8bf68690510f46782d8a53775524484e7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7e91e6d09e89454ee22ec4b10b16f0ecb9a6f93c202628909a3bb819c277d6b4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1b022db64911fe96ec90f47a3b188f7113a7f71012779cbfefb7ea5d9c0a69ef",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "351",
+  "family_spec_sha256": "ef0c80f7ac0211a174c187b5825cebdc71a40744c0c48373cd5765f35dd65948",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a7542180ca1f5da0de34ff7c545a484355057a239d0135e923898d85edb69623",
+  "public_contract": "tasks/351-pll-timing-monitor-system/public_contract.json",
+  "public_contract_sha256": "084724b05b6238faa777a0ec8fa173135ef598fb3147128afc2e338d68cda1fa",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/351-pll-timing-monitor-system",
+  "task_id": "v4-351"
+}

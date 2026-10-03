@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "379",
+  "checker_task_id": "v4_379_periodic_sampler_aperture_metric",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "2a5132be67cb4ac9740d1a2e42dc50670fcc591fedc7b45540b2b8c56361d8e7",
+    "checker_profile.json": "70fd0a0199f9384f4c52993e4c7dd2017ae1e98c6fceb5109df4d058cd51bd6e",
+    "derivation_manifest.json": "2a462aca7180b3efb95bee5482281abf82b0982f8d11d716426293714b0e1c1c",
+    "family_spec.json": "0825ff8a997b659120122472e67c77f70df8418e3053bab9e13d5efad8e4665a",
+    "harness_spec.json": "7f2b8e89b504bca23e5f0a148cd8f296f06f790396014e9e4a5792f5ccc2068d",
+    "mutation_catalog.json": "e425b1837fae710c00ca5d78f0cc0db8b3195350e224be39e204fc1dd04c0e91",
+    "profiles/feedback.json": "b64f055c6d81e665f0b8d3b10fd4121cebaa7afc837fe92115d36a568ba60bd8",
+    "profiles/score.json": "4876dfa3a97cbbfe08dfa1030727afd5d9f161cd6ed7e0ef7db229555d86398e",
+    "score_tb.scs": "50cd935efe6145bb0f42df3a60f429d71cb19e431f66e0de4dc6c950551d760f",
+    "solution_tree": "2c335498f6af31be0813708d3d641bf71748dd11bc93988fd6cbd17f8da423d3",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0fbdab09cec97ee71bc1d220ca148ca8bd90efea9d1783049cf829ff07da06bc",
+    "instruction.md": "34e49503b5acbeb25789cb4b7413cd065f23b3f6bb34d8d1af5f4095a0912651",
+    "public_contract.json": "1fb6460deb40a24565bf93be7d514dfec9e0234bf93f0d9093528ef1a18d6502"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "2a5132be67cb4ac9740d1a2e42dc50670fcc591fedc7b45540b2b8c56361d8e7"
+  },
+  "release_dir": "379-periodic-sampler-aperture-metric",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "938-periodic-sampler-aperture-metric",
+  "support_root": "",
+  "target_artifacts": [
+    "periodic_sampler_aperture_metric.va"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "family_id": "057",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_wrong_shift/certification.json",
+        "certification_sha256": "5c42a66c69c722258d8c657ff22aecf21e5b665ca0839a791fd95075c9ad9a89",
+        "fault_class": "active_low_reset_ignored",
+        "mutation_bundle_sha256": "8d6c78a20d8b17a3e2befce6dd28af210e644d2afc29be568551cfeb49b70773",
+        "mutation_id": "neg_001_wrong_shift",
+        "source_catalog_certification_path": "negative_variants/neg_001_wrong_shift/certification.json",
+        "trigger_condition": "a rising clock crossing with rst_n low must clear every q bit",
+        "violated_property_ids": [
+          "P_ACTIVE_LOW_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_shift/certification.json",
+        "certification_sha256": "5cb6b494ba6861bb9a65b2082dfd42936056b3bb791eff70cd59e93ddbaee998",
+        "fault_class": "double_shift_per_edge",
+        "mutation_bundle_sha256": "37d05bc7dfe0f0e5ce576f5b443bb0d82715b200e41d544f962d3d8f22ee7c41",
+        "mutation_id": "neg_003_wrong_shift",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_shift/certification.json",
+        "trigger_condition": "each rising clock crossing must advance the serial pattern by exactly one stage",
+        "violated_property_ids": [
+          "P_ONE_SHIFT_PER_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_shift/certification.json",
+        "certification_sha256": "9483181c20b962cb8b51572b46880f035dc7f52bba466b97df8b9479c2d37ccb",
+        "fault_class": "transparent_serial_update_between_edges",
+        "mutation_bundle_sha256": "26fcb24befca6bbc2141a6bb7bc9485bd5eb1c0bce2f20d5ee50dde996e0c9a2",
+        "mutation_id": "neg_004_wrong_shift",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_shift/certification.json",
+        "trigger_condition": "q must hold its captured state when serial_in changes between rising clock crossings",
+        "violated_property_ids": [
+          "P_HOLD_BETWEEN_EDGES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_shift/certification.json",
+        "certification_sha256": "557414dcaf31124edab5ddac4fc027d241fa73c6cfe23baa80d7c8055b1cc450",
+        "fault_class": "weak_logic_high_level",
+        "mutation_bundle_sha256": "2356edadeb02b7c29b2a2d6dbcd8445048e97fd0c2159706018e71a6a748fc01",
+        "mutation_id": "neg_005_wrong_shift",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_shift/certification.json",
+        "trigger_condition": "every asserted q bit must reach the public vdd-coded high rail",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_shift/certification.json",
+        "certification_sha256": "8cdd544edbb986702e53de9e367aa49fe4982282d5ce6a6bf184b903c30a3e94",
+        "fault_class": "reversed_shift_direction",
+        "mutation_bundle_sha256": "8ce347eef10822f316c403605f631ef582c6c0749caa9e4ae184a43a017cf965",
+        "mutation_id": "neg_002_wrong_shift",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_shift/certification.json",
+        "trigger_condition": "serial_in must enter q0 and propagate toward q63",
+        "violated_property_ids": [
+          "P_SERIAL_SHIFT_DIRECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_wrong_shift",
+    "canonical_dut_id": "057",
+    "hashes": {
+      "mutation_catalog_sha256": "f94153a940b27d8a19db1e067bc45092401f5cdccedd0f50cf5538fb1cb423ff",
+      "score_deck_sha256": "107d76b6ac5cfa2f56c43a79088d4bc77c342e017768137523dc29cde569fb60",
+      "task_certification_sha256": "01eefe4c4f9f32dd86305d9654039167720191e7e44d4e341814ca9befce2e55",
+      "task_record_sha256": "f97de34f7e549340b32a9600338bc9e773061222d99e2da22011a16922c43c47"
+    },
+    "release_dir": "057-config-shift-register-64b"
+  }
+}

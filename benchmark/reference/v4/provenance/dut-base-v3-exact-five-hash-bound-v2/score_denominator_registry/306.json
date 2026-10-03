@@ -1,0 +1,79 @@
+{
+  "family_id": "306",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ready_asserts_without_three_updates/certification.json",
+        "certification_sha256": "291adf029ed8bd8db5b7ad6cfd024f5ea18e1c9a894978bff9cba31aee309da2",
+        "fault_class": "ready_asserts_without_three_updates",
+        "mutation_bundle_sha256": "23213bed962e97eb1ed2a1376b821b1cedbebbb075395239cee00433c1b3d35b",
+        "mutation_id": "neg_002_ready_asserts_without_three_updates",
+        "source_catalog_certification_path": "negative_variants/neg_002_ready_asserts_without_three_updates/certification.json",
+        "trigger_condition": "ready_asserts_without_three_updates",
+        "violated_property_ids": [
+          "P_DECODE_TRIM_2_TRIM_0_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_trim_direction_inverted/certification.json",
+        "certification_sha256": "d574cad06a98a7a0f9620a889439ac74f300f33a874573208232b117d1736cb9",
+        "fault_class": "trim_direction_inverted",
+        "mutation_bundle_sha256": "49aef305e266aebb59f057e779f41125c75ccaa71aff9c0ee546469106b00281",
+        "mutation_id": "neg_001_trim_direction_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_trim_direction_inverted/certification.json",
+        "trigger_condition": "trim_direction_inverted",
+        "violated_property_ids": [
+          "P_ON_RESET_CLEAR_THE_TRIM_STATE",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_trim_code_ignored/certification.json",
+        "certification_sha256": "9786ab7bfab3ab8fa5d4e12f8df6f68423b0f51f074c3d30bdbc96cc974ff7d1",
+        "fault_class": "trim_code_ignored",
+        "mutation_bundle_sha256": "e3c843db98cfa4db870d2c384bbead5aeada3ceca9af1ae6d4397dd58b3c82c0",
+        "mutation_id": "neg_003_trim_code_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_003_trim_code_ignored/certification.json",
+        "trigger_condition": "trim_code_ignored",
+        "violated_property_ids": [
+          "P_WHILE_CAL_EN_IS_HIGH_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_gain_polarity_inverted/certification.json",
+        "certification_sha256": "d820af26b25957e4394328c08352da0f2c73b80fa219f5976bdf8993900002b7",
+        "fault_class": "gain_polarity_inverted",
+        "mutation_bundle_sha256": "31be3ba64abda025dd768d1551f2c2eaf045004f85ad098117df2b8fe14596c5",
+        "mutation_id": "neg_004_gain_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_004_gain_polarity_inverted/certification.json",
+        "trigger_condition": "gain_polarity_inverted",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_FROM_THE_CORRECTED_DIFFERENTIAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_does_not_clear_state/certification.json",
+        "certification_sha256": "84c98353cd5c50a53ed1d0d2ba1a719b66b8a24be90fadd14960d9e59dd0ae0d",
+        "fault_class": "reset_does_not_clear_state",
+        "mutation_bundle_sha256": "1c8265b156b528d58a187ac7d9d35268dc850f68d1a849b5b51436d3022b8f88",
+        "mutation_id": "neg_005_reset_does_not_clear_state",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_does_not_clear_state/certification.json",
+        "trigger_condition": "reset_does_not_clear_state",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_ACTIVE_CORRECTION_ON_OFFSET"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ready_asserts_without_three_updates",
+    "canonical_dut_id": "306",
+    "hashes": {
+      "mutation_catalog_sha256": "5c59d26665deb8fb193e34b03580acf2797c78c3896438b82142427ecd6700c8",
+      "score_deck_sha256": "8781200894f716bdc56d4388215f8f98d5f06d4ef8771435b0cf47889b04879a",
+      "task_certification_sha256": "9c4516b4a2a59fcfcb16833522c93d8a57d25b5536b5c06e163f798911716b0f",
+      "task_record_sha256": "1cb6e5d621b56be20a01f6bb4ec89d2d64863a1f87ad4bef4f1f840007072989"
+    },
+    "release_dir": "306-instrumentation-amplifier-offset-trim"
+  }
+}

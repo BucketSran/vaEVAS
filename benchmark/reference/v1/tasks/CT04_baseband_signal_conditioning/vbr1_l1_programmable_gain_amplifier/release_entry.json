@@ -1,0 +1,216 @@
+{
+  "id": "vbr1_l1_programmable_gain_amplifier",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_programmable_gain_amplifier",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Baseband Signal Conditioning",
+  "base_function": "Programmable gain amplifier",
+  "package_status": "selected_l1_addition",
+  "score_surface": "model-capability",
+  "source_base_id": "programmable_gain_amplifier",
+  "canonical_kernel": "sampled_gain_code_with_clamps",
+  "source_registry_status": "release_designed",
+  "source_evidence_status": "fresh_dual_rerun_required",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "tb",
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "bugfix",
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "e2e",
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/gold/programmable_gain_amplifier.va",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/gold/tb_programmable_gain_amplifier.scs"
+      ],
+      "public_inputs": [
+        "prompt.md"
+      ],
+      "submission_artifacts": [
+        "programmable_gain_amplifier.va"
+      ],
+      "private_reference_artifacts": [],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "fresh_dual_rerun_required": true,
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "release_source_task_id": "vbr1_l1_programmable_gain_amplifier_dut",
+      "historical_source_task_id": "vbr1_l1_programmable_gain_amplifier_dut",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/dut/result.json",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/dut/spectre_result.json"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb/gold/programmable_gain_amplifier.va",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/tb/gold/tb_programmable_gain_amplifier.scs"
+      ],
+      "public_inputs": [
+        "prompt.md",
+        "gold/programmable_gain_amplifier.va"
+      ],
+      "submission_artifacts": [
+        "tb_programmable_gain_amplifier.scs"
+      ],
+      "private_reference_artifacts": [],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "fresh_dual_rerun_required": true,
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "release_source_task_id": "vbr1_l1_programmable_gain_amplifier_tb",
+      "historical_source_task_id": "vbr1_l1_programmable_gain_amplifier_tb",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/tb/result.json",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/tb/spectre_result.json"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/gold/tb_programmable_gain_amplifier.scs",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/bugfix/gold/tb_programmable_gain_amplifier_buggy.scs"
+      ],
+      "public_inputs": [
+        "prompt.md",
+        "gold/dut_buggy.va"
+      ],
+      "submission_artifacts": [
+        "dut_fixed.va"
+      ],
+      "private_reference_artifacts": [
+        "gold/dut_fixed.va"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "fresh_dual_rerun_required": true,
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "release_source_task_id": "vbr1_l1_programmable_gain_amplifier_bugfix",
+      "historical_source_task_id": "vbr1_l1_programmable_gain_amplifier_bugfix",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/bugfix/result.json",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/bugfix/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/bugfix/spectre_result.json"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e/gold/programmable_gain_amplifier.va",
+        "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/e2e/gold/tb_programmable_gain_amplifier.scs"
+      ],
+      "public_inputs": [
+        "prompt.md"
+      ],
+      "submission_artifacts": [
+        "programmable_gain_amplifier.va",
+        "tb_programmable_gain_amplifier.scs"
+      ],
+      "private_reference_artifacts": [],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "fresh_dual_rerun_required": true,
+      "source_path": "designed_release_spec:vbr1_l1_programmable_gain_amplifier",
+      "release_source_task_id": "vbr1_l1_programmable_gain_amplifier_e2e",
+      "historical_source_task_id": "vbr1_l1_programmable_gain_amplifier_e2e",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_programmable_gain_amplifier/e2e/result.json",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/e2e/spectre_result.json"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pa_ampm_memory_tap_macro.va"
+  ],
+  "canonical_dut_source_slug": "339-pa-ampm-memory-tap-macro",
+  "checker_task_id": "v4_339_pa_ampm_memory_tap_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "731d94c541928f7a65a5f3dffa55b4778ced60b69daddd54b64f71ba558d3bb5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e670619f46aa17910b67cacbe729fc679ac7959f0844c4b9e065b2650715fafe",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "7e6194f3a5e16a4f02d3b52a01efd172c2c0e7a41981b8836a97f43652e7d5b3",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "339",
+  "family_spec_sha256": "4f6c0e346bf8f69294a4bb09ea64c50c9bbe861413011a817b9c8a3c14aaa06a",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cf1a410e8b2d17d148148e01e7f83ad6c77e1e5948f7affbf9c3e969914966df",
+  "public_contract": "tasks/339-pa-ampm-memory-tap-macro/public_contract.json",
+  "public_contract_sha256": "e1ec7c56c0b8b5918e6d7f5ab731c0276e095951096c84237831726d795c6811",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/339-pa-ampm-memory-tap-macro",
+  "task_id": "v4-339"
+}

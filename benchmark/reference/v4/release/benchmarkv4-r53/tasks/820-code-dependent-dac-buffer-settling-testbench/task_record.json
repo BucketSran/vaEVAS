@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "320-code-dependent-dac-buffer-settling",
+  "checker_task_id": "v4_320_code_dependent_dac_buffer_settling",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "fb33fe77f5c781bfa9891f8280e8c555dcb154c4bbf863432062e7915b0d8a9a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "0f43dabb4ba732cc43d29ea039dd0f3fa8d2c4bafaa5aef3c56fed136cc3470a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "fb33fe77f5c781bfa9891f8280e8c555dcb154c4bbf863432062e7915b0d8a9a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "7db55b389ad858a754a93873bfa9102de0a652a28bb5647dd3726bfc20c34328",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "21ae0f34a7f620aa5cbab78a01bb6a0887e816cccb5e31b3c40c4115e8e769fb"
+  },
+  "family_id": "320",
+  "family_spec_sha256": "fa05e3a81f9ac287e2858a489dba34bff08af535896812f87b935bf35f8f17d0",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7c35a78de9c9c390ca99762b5f121f0491ce70fd4fb7a5f02b099209917b760c",
+  "public_contract": "tasks/820-code-dependent-dac-buffer-settling-testbench/public_contract.json",
+  "public_contract_sha256": "7c753a6610b1b0073309d8e143fbee514ab686712412262bb5c91b6a0352392f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/820-code-dependent-dac-buffer-settling-testbench",
+  "task_id": "v4-820"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cmp_hysteresis.va"
+  ],
+  "canonical_dut_source_slug": "029-hysteresis-comparator",
+  "checker_task_id": "v4_029_hysteresis_comparator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4bfeaf723ac1788703e70247c1035603f35db5497359779ca694438a6cb81b85",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "27dd7f949f0f6c9ccc3fc7f3b4a2529846faf794152458d32daec4d2d0e5fb16",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f24f5a76ecc3af358fcd5ebebf964feb3899c712c05d805b16cac42189c80a69",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "029",
+  "family_spec_sha256": "60f87f0d13d172df40ef8ebd07ef219e1de9632b6652706c47736ea5bdf16871",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "aeeec365a5e36a7ac1298352851744c6a1fe1953e0052d51abce7d94661b2d82",
+  "public_contract": "tasks/1029-hysteresis-comparator-bugfix/public_contract.json",
+  "public_contract_sha256": "534125d4214e9597c6f7e29ee021c03e967676a2f00424af55decd7dc85621bf",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1029-hysteresis-comparator-bugfix",
+  "task_id": "v4-1029"
+}

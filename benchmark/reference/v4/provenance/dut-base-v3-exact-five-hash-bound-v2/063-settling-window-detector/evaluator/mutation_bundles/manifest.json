@@ -1,0 +1,157 @@
+{
+  "family_id": "063",
+  "gold_bundle_sha256": "a54871555b63d612335a8bc6675156eaa02d57bfe1783ca0a72143e978a3c23a",
+  "mutations": [
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "7baf36c849c7212cf4622687de9bbb490d0dd0b4753bcc0acdb9ab0ac1773235"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_ENTRY_AND_HOLD"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_001_zero/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "never_settles",
+      "id": "neg_001_zero",
+      "trigger_condition": "stimulus exercises never settles against the public observable contract",
+      "violated_property_ids": [
+        "P_ENTRY_AND_HOLD"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "0202a3feecde590253757828bad223e16c5099187cd9258f361d96b68ab81cf8"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_ENTRY_AND_HOLD"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_002_no_hold/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "asserts_immediately_in_window",
+      "id": "neg_002_no_hold",
+      "trigger_condition": "stimulus exercises asserts immediately in window against the public observable contract",
+      "violated_property_ids": [
+        "P_ENTRY_AND_HOLD"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "de4f2d0f3fa2d0253e30f77e60848a19cd37b6d6ad133d6505263ec15ec872fe"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_WINDOW_DEFINITION"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_003_wide_tol/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "uses_double_tolerance",
+      "id": "neg_003_wide_tol",
+      "trigger_condition": "stimulus exercises uses double tolerance against the public observable contract",
+      "violated_property_ids": [
+        "P_WINDOW_DEFINITION"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "4980871fb7667c5a7eefc6f372c4d4d152786ea82ba5e50726f13f0ad2f95726"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_EXIT_RESETS_QUALIFICATION"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_004_no_reset/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "does_not_clear_outside_window",
+      "id": "neg_004_no_reset",
+      "trigger_condition": "stimulus exercises does not clear outside window against the public observable contract",
+      "violated_property_ids": [
+        "P_EXIT_RESETS_QUALIFICATION"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "c03bea267e95612c55d9d0d72f096c849e778e6142d3f51c000a4c3ac339f9e5"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_ENTRY_TIME_CODE"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_005_wrong_code/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "reports_settle_time_instead_of_entry_time",
+      "id": "neg_005_wrong_code",
+      "trigger_condition": "stimulus exercises reports settle time instead of entry time against the public observable contract",
+      "violated_property_ids": [
+        "P_ENTRY_TIME_CODE"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "settling_window_detector.va": "61d7c6cdfc4cf393520df15e2c61533410ac2010960bc42e54da5c401feff927"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_BIT_ORDER_AND_LEVELS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_006_reversed_code_bits/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "settling_window_detector.va"
+      ],
+      "fault_class": "reversed_time_code_bit_order",
+      "id": "neg_006_reversed_code_bits",
+      "trigger_condition": "stimulus exercises reversed t_code bit significance against the public observable contract",
+      "violated_property_ids": [
+        "P_BIT_ORDER_AND_LEVELS"
+      ]
+    }
+  ],
+  "schema_version": "v4-mutation-catalog-v1"
+}

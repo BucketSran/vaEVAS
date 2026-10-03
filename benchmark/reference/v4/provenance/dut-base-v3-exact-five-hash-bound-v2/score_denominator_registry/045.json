@@ -1,0 +1,78 @@
+{
+  "family_id": "045",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001/certification.json",
+        "certification_sha256": "958d6b1a0ad1ae4b241ca2d5acba3cdedef382a2464ada4699ede254bf09778e",
+        "fault_class": "inverts_the_static_differential_decision_polarit",
+        "mutation_bundle_sha256": "fb5eb19d9921ce45062ad0d2ea0f57d0d515c3336a7c41a75a280a801dcf1c1b",
+        "mutation_id": "neg_001",
+        "source_catalog_certification_path": "negative_variants/neg_001/certification.json",
+        "trigger_condition": "Inverts the static differential decision polarity.",
+        "violated_property_ids": [
+          "P_INITIAL_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003/certification.json",
+        "certification_sha256": "a47392dd8076500239cec174c12da343ff5d65a860ade07b05e8dbe9db4a9a83",
+        "fault_class": "misses_one_transition_direction_across_the_compa",
+        "mutation_bundle_sha256": "0dd1143210cba8269bc7045a303f4cf920f8731ac80de8b1b7c0135784404d56",
+        "mutation_id": "neg_003",
+        "source_catalog_certification_path": "negative_variants/neg_003/certification.json",
+        "trigger_condition": "Misses one transition direction across the comparator threshold.",
+        "violated_property_ids": [
+          "P_FALLING_DIFFERENTIAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004/certification.json",
+        "certification_sha256": "7488257625051ae6a41a11933276ede951dfd83f00b7e3e215f644da524117ed",
+        "fault_class": "produces_a_stuck_or_one_sided_output_instead_of_",
+        "mutation_bundle_sha256": "1346b5c7f331a0767ad59d5cc7d278e7f8847983d227379b2af91fc674099e65",
+        "mutation_id": "neg_004",
+        "source_catalog_certification_path": "negative_variants/neg_004/certification.json",
+        "trigger_condition": "Produces a stuck or one-sided output instead of rail-referenced decisions.",
+        "violated_property_ids": [
+          "P_BIDIRECTIONAL_RESPONSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005/certification.json",
+        "certification_sha256": "3261303806f3d675a5bcd6687dde7600f27d4e330d2daf73b63124776b6b44c3",
+        "fault_class": "fails_to_respond_to_the_falling_differential_cro",
+        "mutation_bundle_sha256": "525f036b1fefc5394078244d9221c26656e44691d6adff0b81927b704df9ab51",
+        "mutation_id": "neg_005",
+        "source_catalog_certification_path": "negative_variants/neg_005/certification.json",
+        "trigger_condition": "Fails to respond to the falling differential crossing.",
+        "violated_property_ids": [
+          "P_RAIL_SMOOTHING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002/certification.json",
+        "certification_sha256": "0c484bcc5bafe53798e48b14843528a8280e84111bd2479210a1b1d50720ccc1",
+        "fault_class": "shifts_the_effective_threshold_away_from_the_zer",
+        "mutation_bundle_sha256": "e3e02a6520f8c46aa7e58eeb75337ebf7ab7166ad2f52cc6ab0b978837918d33",
+        "mutation_id": "neg_002",
+        "source_catalog_certification_path": "negative_variants/neg_002/certification.json",
+        "trigger_condition": "Shifts the effective threshold away from the zero-differential crossing.",
+        "violated_property_ids": [
+          "P_RISING_DIFFERENTIAL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001",
+    "canonical_dut_id": "045",
+    "hashes": {
+      "mutation_catalog_sha256": "aa1f93b5264bcf7e16a0693299f3b653ab7c9ab01f0e13c5a9cd22bba1a9f842",
+      "score_deck_sha256": "33bdb4a7614ce01bc2255158c9e0c403475b72cd65290d1c6305aa9c5907e4b9",
+      "task_certification_sha256": "6df2275f5d2624875ba4c5ee19542efd90fe3810671d7db71c51e282e88dac17",
+      "task_record_sha256": "3d0886b2011c5b86c7d0d9341cc2e07fefa267b55364a91d613f6cefcf88d477"
+    },
+    "release_dir": "045-threshold-comparator"
+  }
+}

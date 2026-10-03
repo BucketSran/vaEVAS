@@ -1,0 +1,74 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_cdac_cal_ref.scs"
+    ],
+    "gold_va": [
+      "cdac_cal.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "CAL0": "input",
+      "CAL1": "input",
+      "CLK": "input",
+      "D0": "input",
+      "D1": "input",
+      "D2": "input",
+      "D3": "input",
+      "D4": "input",
+      "D5": "input",
+      "D6": "input",
+      "D7": "input",
+      "D8": "input",
+      "D9": "input",
+      "VDAC_N": "output",
+      "VDAC_P": "output",
+      "VDD": "inout",
+      "VSS": "inout"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "VDD",
+      "VSS",
+      "CLK",
+      "D9",
+      "D8",
+      "D7",
+      "D6",
+      "D5",
+      "D4",
+      "D3",
+      "D2",
+      "D1",
+      "D0",
+      "CAL0",
+      "CAL1",
+      "VDAC_P",
+      "VDAC_N"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "cdac_cal.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/visible"
+}

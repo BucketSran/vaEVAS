@@ -1,0 +1,29 @@
+[
+  {
+    "id": "neg_001_zero",
+    "intent": "zero output source",
+    "target": "vin_src.va"
+  },
+  {
+    "id": "neg_002_static_common_mode",
+    "intent": "no sampled input signal",
+    "target": "vin_src.va"
+  },
+  {
+    "id": "neg_003_common_mode_sine",
+    "intent": "wrong common-mode-only output with no differential input",
+    "target": "vin_src.va"
+  },
+  {
+    "id": "neg_004_reset_stuck",
+    "intent": "source never updates after reset release",
+    "target": "vin_src.va"
+  },
+  {
+    "files": [
+      "neg_006_seed_parameter_ignored/vin_src.va"
+    ],
+    "id": "neg_006_seed_parameter_ignored",
+    "why_wrong": "The perturbation stream is initialized from a fixed constant, so the public SEED parameter does not select the sequence."
+  }
+]

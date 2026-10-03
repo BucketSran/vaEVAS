@@ -1,0 +1,76 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "cmp_strongarm.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=5n maxstep=5p"
+    ],
+    "body_lines": [
+      "V_CLK (clk 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=0.42n rise=20p fall=20p width=460p",
+      "V_VINP (vinp 0) vsource type=pwl wave=[0 0.451 0.74n 0.451 0.76n 0.449 1.74n 0.449 1.76n 0.451 3.08n 0.451 3.10n 0.449 4.08n 0.449 4.10n 0.45 5n 0.45]",
+      "V_VINN (vinn 0) vsource type=pwl wave=[0 0.449 0.74n 0.449 0.76n 0.451 1.74n 0.451 1.76n 0.449 3.08n 0.449 3.10n 0.451 4.08n 0.451 4.10n 0.45 5n 0.45]",
+      "V_VSS (vss 0) vsource dc=0",
+      "V_VDD (vdd 0) vsource dc=0.9",
+      "XDUT (clk vinn vinp out_n out_p lp lm vss vdd) cmp_strongarm"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "clk",
+      "vinp",
+      "vinn",
+      "out_p",
+      "out_n",
+      "lp",
+      "lm",
+      "vss",
+      "vdd"
+    ]
+  },
+  "family_id": "017",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "3f2041a269a56c9221395b65aa2c38f88ed039e021c77860d1b71209326c6d86",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "0decf9025e37089cf3168e7bb70ed2c8df928b64db3b0365c6088271ba8f587e",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_INITIAL_AND_FALLING_RESET",
+    "P_POSITIVE_DECISION",
+    "P_NEGATIVE_DECISION",
+    "P_ZERO_DIFFERENTIAL",
+    "P_LATCH_HOLD"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "fb6e62cd5e8aada06eeb18b5984fa877335aa00fa64f44c036804b5d79457815",
+    "family_spec_sha256": "056ee35dc8c98d903fe9252842a893071fb75b62bb24a179b034e840d2b0d481"
+  },
+  "task_id": "v4-017"
+}

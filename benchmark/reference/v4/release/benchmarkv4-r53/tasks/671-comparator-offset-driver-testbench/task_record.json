@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "171-comparator-offset-driver",
+  "checker_task_id": "v4_171_comparator_offset_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a251302bc55053a88d63952173c38386428a6a976d5221fec977f60b171871ba",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "c3b1c99bb27610ee244d58191673e66e80f2e7b7318ea1d7309a0debe37b502a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a251302bc55053a88d63952173c38386428a6a976d5221fec977f60b171871ba",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a218ab6fc7dfd3f313aeb6800208cbde53357a0eadc0191a1796367fccbfc999",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c27c33449505bbc06ebba9497ae0f369afd7f4b1224901a017d64677f9cdd8e0"
+  },
+  "family_id": "171",
+  "family_spec_sha256": "9d726454f74a126e29a06003d4b3a0ed7b637e2acc292f716b704afe01573e97",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "eb4e626efb5b2e6f6380ac49b4d6a6702e5bde21bf19addce4880723073f0194",
+  "public_contract": "tasks/671-comparator-offset-driver-testbench/public_contract.json",
+  "public_contract_sha256": "758aec823db4ccd4bda69fe6ece28577a78f4baf2926aa4f5cb290e81f85b371",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/671-comparator-offset-driver-testbench",
+  "task_id": "v4-671"
+}

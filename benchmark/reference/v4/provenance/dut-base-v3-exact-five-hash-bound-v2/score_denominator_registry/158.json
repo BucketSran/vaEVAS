@@ -1,0 +1,78 @@
+{
+  "family_id": "158",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_count_normalization/certification.json",
+        "certification_sha256": "eb81b92cb701c637ba077d061a0975c53aee3d9d1fa5672055712d9aa3e38f7b",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "fb9eaafeee78326fd551749beb0562e4f646c1b49276ef9dba536400f40625ed",
+        "mutation_id": "neg_002_wrong_count_normalization",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_count_normalization/certification.json",
+        "trigger_condition": "Normalizes flash count by four instead of eight.",
+        "violated_property_ids": [
+          "P_OUTPUT_NORMALIZATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_uncentered_residue/certification.json",
+        "certification_sha256": "d575e4ab23134a7cd9d9fa7b99913160d97b4bdd599c2d0285f2d7214636127d",
+        "fault_class": "uncentered_residue",
+        "mutation_bundle_sha256": "f6f53ef0f33ce9a3e1b857db4df3853c1485927fe99b8879ed4a2184d1f06959",
+        "mutation_id": "neg_003_uncentered_residue",
+        "source_catalog_certification_path": "negative_variants/neg_003_uncentered_residue/certification.json",
+        "trigger_condition": "Computes residue without subtracting mid-code four.",
+        "violated_property_ids": [
+          "P_RESIDUE_CENTERING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2afac8bd11752e9d18a4150b8204b539243dec8f06d06bc5b9b2916956fbd9f2",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "4788cc144ea22a78ae8a90aa1e3def1618ec368641ee8a69a5ad2ba9aeef09d7",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Ref Flash 8level Decoder: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_NORMALIZATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "f9470d52ae26ec3ddab64a7e0546195b9dcdcc38444eab1be705e607909b5268",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "12cf2f77254edf0fbcc025524f3d39a08ff731ac77c8cbcd716a314a0cab61ec",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_NORMALIZATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_upper_taps/certification.json",
+        "certification_sha256": "ae081f6aaeab50fdc512a98f6274d61277f58c0584a446b4d24af30d80917936",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "7a534df3063ee53565064ebe3b0b06c46463dc4e64d6e5d23eeaa951bd95c1f4",
+        "mutation_id": "neg_004_ignore_upper_taps",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_upper_taps/certification.json",
+        "trigger_condition": "Ignores upper four thermometer taps.",
+        "violated_property_ids": [
+          "P_CLOCKED_EIGHT_TAP_COUNT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_count_normalization",
+    "canonical_dut_id": "158",
+    "hashes": {
+      "mutation_catalog_sha256": "689c49910b11710f67f5192748ab55f40200633f290acf7db6734207f544a0f5",
+      "score_deck_sha256": "67e280f718429e36f893e8a062838484d6bc0dec75c3bd1f248704af34fd6079",
+      "task_certification_sha256": "805fb518337d098cd71fcb181edb548d014b33b0d7c9ac360bab06cf13245e17",
+      "task_record_sha256": "54075e895151242ed2d1666367819c22bafb442025ad85bf182fdbe377c9b4b3"
+    },
+    "release_dir": "158-ref-flash-8level-decoder"
+  }
+}

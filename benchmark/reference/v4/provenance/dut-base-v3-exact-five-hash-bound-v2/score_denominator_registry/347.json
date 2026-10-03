@@ -1,0 +1,78 @@
+{
+  "family_id": "347",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_por_one_edge/certification.json",
+        "certification_sha256": "8612919edc5ebe5a9e2191c4aa6d25b970ff837038104fc861d66f903704c4e0",
+        "fault_class": "por_debounce_error",
+        "mutation_bundle_sha256": "01c4a2b4637e938f407b65d215aa4fdc62133072ad2acadef93eff672460156b",
+        "mutation_id": "neg_001_por_one_edge",
+        "source_catalog_certification_path": "negative_variants/neg_001_por_one_edge/certification.json",
+        "trigger_condition": "power first becomes good",
+        "violated_property_ids": [
+          "P_PWR_POR_DEBOUNCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_enables_same_cycle/certification.json",
+        "certification_sha256": "c6dc08a7f0d10e43c59f6f62b878130ce4e363c1a4a8689900702156d2beffd2",
+        "fault_class": "sequence_timing_error",
+        "mutation_bundle_sha256": "cbe50823688e1054603b8ec7d861acbaa27bb0fc7e166856cf706b9304bf999c",
+        "mutation_id": "neg_003_enables_same_cycle",
+        "source_catalog_certification_path": "negative_variants/neg_003_enables_same_cycle/certification.json",
+        "trigger_condition": "core reset is released",
+        "violated_property_ids": [
+          "P_PWR_SEQUENCE_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ready_without_extra_edge/certification.json",
+        "certification_sha256": "1fd5ec5f523f01af87d2a9758c7f3724e36a8c3b30b4fb5f3ab9eb30aaf3dc68",
+        "fault_class": "ready_timing_error",
+        "mutation_bundle_sha256": "072f2aec3b2838e7377e14af359edb8b05bf84ea2f54c88489e69cb1cbb7404a",
+        "mutation_id": "neg_004_ready_without_extra_edge",
+        "source_catalog_certification_path": "negative_variants/neg_004_ready_without_extra_edge/certification.json",
+        "trigger_condition": "both enables become high",
+        "violated_property_ids": [
+          "P_PWR_READY_DELAY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_brownout_output_ungated/certification.json",
+        "certification_sha256": "a7a2343f0597ed01abc634ab686cd5dd1b8a9bb4e5267e72a4106d4283acf000",
+        "fault_class": "missing_brownout_clear",
+        "mutation_bundle_sha256": "bd5ce4c3cd7dd16f0c155f2d1d3e207cb62b4293d89335916548560edaea0d31",
+        "mutation_id": "neg_005_brownout_output_ungated",
+        "source_catalog_certification_path": "negative_variants/neg_005_brownout_output_ungated/certification.json",
+        "trigger_condition": "vdd_sense falls after startup",
+        "violated_property_ids": [
+          "P_PWR_ASYNC_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_enable_request_ignored/certification.json",
+        "certification_sha256": "2bd22e9f9dbcb57ecbc1ba9ff656b2b84b22aba689f88cf6356074b50e5d5cd7",
+        "fault_class": "enable_gating_error",
+        "mutation_bundle_sha256": "c91cc0cb67154c2bac18692c2a998520c61d50cd0cd24792fb908144a3b8ba47",
+        "mutation_id": "neg_002_enable_request_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_002_enable_request_ignored/certification.json",
+        "trigger_condition": "por_n is high while enable_req is low",
+        "violated_property_ids": [
+          "P_PWR_SEQUENCE_ORDER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_por_one_edge",
+    "canonical_dut_id": "347",
+    "hashes": {
+      "mutation_catalog_sha256": "6d034ec7d715f3de27958ed20c2f2b4ea91da07f7a73c8613e52e65260694c46",
+      "score_deck_sha256": "f6a93c90866696b70ec9c784b7e1c794490a267462f84fc6776bc0d76e227c69",
+      "task_certification_sha256": "797a75c6f1600c422b011b1d2b7a3d8e6d6e962a9643b858a7e940aa80c10e93",
+      "task_record_sha256": "94534f0453e43080480e9a1a74e88203bd0ef81332f29fedfa4c20217b6c152e"
+    },
+    "release_dir": "347-power-reset-sequencer-system"
+  }
+}

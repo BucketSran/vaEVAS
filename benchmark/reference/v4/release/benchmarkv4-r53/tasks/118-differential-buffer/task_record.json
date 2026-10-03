@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_buffer.va"
+  ],
+  "canonical_dut_source_slug": "118-differential-buffer",
+  "checker_task_id": "v4_118_differential_buffer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0ab3872249817313c757d7f4bdb00177a62b0cbeb5b8c147408ff095d7c7b20c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b3c0747d3d287c8f1418974b3d98a8f187a1fcaf59b3727d0ad9c29ff0cdaf00",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f8946f2fdda07e6bc4c513e3594834e3153a4991c93ed550c7cd7ff7135afe43",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "118",
+  "family_spec_sha256": "aac140e52ffe85b525a5fbf347156073cff5a37e80b7472b51fff95c2485ea5c",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3599c151b2b7225bd09115f2091f271d83d742a6604fed28106477296f1155c7",
+  "public_contract": "tasks/118-differential-buffer/public_contract.json",
+  "public_contract_sha256": "d36211990b497091f0f96ab4f7be7fe1046c09ceef2bd42b204eb86b61adc514",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/118-differential-buffer",
+  "task_id": "v4-118"
+}

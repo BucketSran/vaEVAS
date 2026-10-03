@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cdac_cal.va"
+  ],
+  "canonical_dut_source_slug": "002-capacitive-sar-feedback-dac",
+  "checker_task_id": "v4_002_capacitive_weighted_sar_feedback_dac",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "c84af3077b5b62d8a0ef1a78140bde68b360905ab8415c9930f19df7eb32814a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7b9b0e16c2c27687a261099ca70d6f93274919d019b9802bd6808af4aee964a4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0710a3e4a464185ead96accd5322068695f9483c32269ada1000b8373f34657f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "002",
+  "family_spec_sha256": "6e0b2955719b62ed92c44542bc4f6328d510489e7cd1c11a8721c1029445d4cc",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "377861beadbe0a2699a637d657bc628edd586a0a4fc9af7cc404fff2ea9c890c",
+  "public_contract": "tasks/1002-capacitive-sar-feedback-dac-bugfix/public_contract.json",
+  "public_contract_sha256": "c085094591ee9fea2adab34132030fe44dcb8d584d45b31ff499bd4bfa88b1ab",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1002-capacitive-sar-feedback-dac-bugfix",
+  "task_id": "v4-1002"
+}

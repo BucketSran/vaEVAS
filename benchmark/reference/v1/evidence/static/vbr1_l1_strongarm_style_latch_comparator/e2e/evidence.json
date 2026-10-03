@@ -1,0 +1,34 @@
+{
+  "release_entry_id": "vbr1_l1_strongarm_style_latch_comparator",
+  "task_id": "vbr1_l1_strongarm_style_latch_comparator:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Comparator and Decision Circuits",
+    "base_function": "StrongARM-style latch comparator"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/gold/cmp_strongarm.va",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/gold/tb_cmp_strongarm_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(cross(",
+      "transition(",
+      "ahdl_include"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

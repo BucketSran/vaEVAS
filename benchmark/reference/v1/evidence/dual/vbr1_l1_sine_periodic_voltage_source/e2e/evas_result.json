@@ -1,0 +1,20 @@
+{
+  "task_id": "vbr1_l1_sine_periodic_voltage_source:e2e",
+  "release_entry_id": "vbr1_l1_sine_periodic_voltage_source",
+  "source_task_id": "vbr1_l1_sine_periodic_voltage_source_e2e",
+  "backend": "evas",
+  "status": "PASS",
+  "scores": {
+    "rerun_backend_pass": true,
+    "rerun_expected_result_met": true,
+    "raw_status": "PASS",
+    "behavior_score": null
+  },
+  "artifacts": [
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_sine_periodic_voltage_source/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sine_periodic_voltage_source/e2e/evidence.json"
+  ],
+  "notes": [
+    "Imported from fresh vaBench release EVAS/Spectre dual rerun summary."
+  ]
+}

@@ -1,0 +1,29 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "flash_adc_all_8_codes_present"
+    - "flash_adc_monotonic_with_ramp"
+  public_observables:
+    - "vin"
+    - "clk"
+    - "dout2"
+    - "dout1"
+    - "dout0"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

@@ -1,0 +1,26 @@
+{
+  "candidate": {"artifact_paths": ["chopper_stabilized_differential_amplifier.va", "chopper_gain_core.va", "synchronous_lp_state.va"], "source_root": "./dut"},
+  "deck": {
+    "analyses": ["tran tran stop=70n maxstep=20p errpreset=conservative"],
+    "body_lines": [
+      "Vinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]",
+      "Vinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]",
+      "Vchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p",
+      "Vrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]",
+      "Ven (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]",
+      "Vhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]",
+      "IDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier"
+    ],
+    "header": ["simulator lang=spectre", "global 0"],
+    "include_templates": ["ahdl_include \"{candidate_source_root}/{artifact_path}\""],
+    "save_signals": ["vinp", "vinn", "chop_clk", "rst", "enable", "hold", "voutp", "voutn", "settled", "offset_residual"]
+  },
+  "family_id": "091",
+  "generator": {"name": "render_v4_harness.py", "version": "v4-harness-renderer-v1"},
+  "migration": {"legacy_feedback_deck": "replaced_file_output_task", "legacy_score_deck": "replaced_file_output_task", "notes": ["Family 091 was replaced by a file-I/O-free L2 chopper amplifier.", "Feedback and final scoring use the same public stimulus and analysis semantics."]},
+  "profile_defaults": {"feedback": {"parameters": {"gain": 3, "lp_alpha": 0.25, "settle_cycles": 3, "settle_tol": 0.02, "vos_amp": 0.02}, "simulatorOptions": {"evas_profile": "balanced"}}, "score": {"parameters": {"gain": 3, "lp_alpha": 0.25, "settle_cycles": 3, "settle_tol": 0.02, "vos_amp": 0.02}}},
+  "property_ids": ["P_CHOP_DEMOD_BASEBAND_GAIN", "P_INTERNAL_OFFSET_SUPPRESSION", "P_EVENT_DRIVEN_LOWPASS", "P_RESET_ENABLE_CLEAR", "P_HOLD_PRESERVES_STATE", "P_SETTLED_QUALIFICATION"],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {"checker_profile_sha256": "88c8bc22987ca9047c9083209e0fdd7dcf9d77af53d800350d3b8aaae48dea6e", "family_spec_sha256": "3ceaf909e36f588a3afb82c73ea054e7bbbd8626f531d45bb9ae6c48337bc452"},
+  "task_id": "v4-091"
+}

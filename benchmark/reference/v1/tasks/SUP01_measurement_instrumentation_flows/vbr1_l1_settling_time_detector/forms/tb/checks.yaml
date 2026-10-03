@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "vout_rises_monotonically_toward_step"
+    - "done_low_before_boundary"
+    - "done_high_in_late_settled_window"
+parity:
+  required: true
+  tolerance_notes: "Use late settled windows after 120 ns; exact boundary semantics live in the conformance set."
+semantic_review:
+  risk: "The `done` threshold can be over-interpreted as exact-boundary simulator conformance or repair evidence."
+  release_decision: "Release as normal measurement-helper behavior; keep strict boundary behavior in EVAS/Spectre conformance."
+  checker_boundary: "Use safe pre-boundary and late settled windows, not the exact 120 ns row."

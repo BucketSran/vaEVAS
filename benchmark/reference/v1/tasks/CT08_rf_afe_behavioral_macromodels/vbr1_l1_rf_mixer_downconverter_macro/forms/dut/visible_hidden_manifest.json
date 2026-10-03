@@ -1,0 +1,50 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_rf_mixer_downconverter_macro/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_rf_mixer_downconverter_macro.scs"
+    ],
+    "gold_va": [
+      "rf_mixer_downconverter_macro.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_rf_mixer_downconverter_macro/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_rf_mixer_downconverter_macro",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "clk": "input",
+      "metric": "output",
+      "out": "output",
+      "rst": "input",
+      "vin": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "clk",
+      "rst",
+      "vin",
+      "out",
+      "metric"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "rf_mixer_downconverter_macro.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_rf_mixer_downconverter_macro/forms/dut/visible"
+}

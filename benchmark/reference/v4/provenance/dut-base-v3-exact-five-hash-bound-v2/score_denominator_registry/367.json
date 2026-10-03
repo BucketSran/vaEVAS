@@ -1,0 +1,79 @@
+{
+  "family_id": "367",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_level_metric_signed/certification.json",
+        "certification_sha256": "adf9f733aaf35a08e66a5a6fc3b975ae617dec875f1e70b58b0c83be020ac03c",
+        "fault_class": "level_measurement_error",
+        "mutation_bundle_sha256": "c2a2652ba848b7e9277d614186a92e22025d7f9e74fe4bc278a787f0668c5e54",
+        "mutation_id": "neg_001_level_metric_signed",
+        "source_catalog_certification_path": "negative_variants/neg_001_level_metric_signed/certification.json",
+        "trigger_condition": "vin is below vcm at a sampling edge.",
+        "violated_property_ids": [
+          "P_LEVEL_GAIN_CONTROL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_filter_no_smoothing/certification.json",
+        "certification_sha256": "cdb5d7561dd9c149ca1749934a59f80fd0ce41e4f81309e8528a4bd9f9b3f980",
+        "fault_class": "filter_response_error",
+        "mutation_bundle_sha256": "e597ee827f6f5327a88847f9b18f0624743837c7d49c3c1fefd94d9644209d1f",
+        "mutation_id": "neg_003_filter_no_smoothing",
+        "source_catalog_certification_path": "negative_variants/neg_003_filter_no_smoothing/certification.json",
+        "trigger_condition": "The VGA output steps away from the current filter state.",
+        "violated_property_ids": [
+          "P_VGA_FILTER_RESPONSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_clip_flag_stuck_low/certification.json",
+        "certification_sha256": "c2dd7aef028d3e996af599e22adea1745b9e7e184a876886cf2ccf2ffbb2d600",
+        "fault_class": "clip_status_error",
+        "mutation_bundle_sha256": "06e18834a14b7c6465fd6b99cd332153154aabf5518ac95f7bc698f58ccd95cf",
+        "mutation_id": "neg_004_clip_flag_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_004_clip_flag_stuck_low/certification.json",
+        "trigger_condition": "The unclamped filtered output exceeds a supply rail.",
+        "violated_property_ids": [
+          "P_CLIP_AND_SETTLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_gain_not_cleared/certification.json",
+        "certification_sha256": "7bb47806047b868bc364fec4efd328157cb3ad67c6071a21ecad2edbe99b9590",
+        "fault_class": "reset_disable_clear_error",
+        "mutation_bundle_sha256": "7cf34a0fa52bb9406e48d2abdfdff9521f2473364dfa605efddb7a5209a46f2b",
+        "mutation_id": "neg_005_reset_gain_not_cleared",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_gain_not_cleared/certification.json",
+        "trigger_condition": "Reset is asserted or enable is deasserted after the gain code has moved.",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_gain_direction_reversed/certification.json",
+        "certification_sha256": "73dae9f29319e2956684ebf49981b02f4caac9c8ecbc5f216ba3537224c6dcb1",
+        "fault_class": "gain_control_polarity_error",
+        "mutation_bundle_sha256": "dede2a426054be668d1986b7bf49f06d773a1a57c62b826dcfadb4ad4971e5a8",
+        "mutation_id": "neg_002_gain_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_gain_direction_reversed/certification.json",
+        "trigger_condition": "The measured level is below the target deadband.",
+        "violated_property_ids": [
+          "P_LEVEL_GAIN_CONTROL",
+          "P_VGA_FILTER_RESPONSE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_level_metric_signed",
+    "canonical_dut_id": "367",
+    "hashes": {
+      "mutation_catalog_sha256": "d9272f52533abd2ef0f50eb1552d28fea8d71cc12197b90d5250c0b1676473fa",
+      "score_deck_sha256": "96794019a24126d575ccb1ba27a217e5db96da042269150eab1b9b1115d6c0db",
+      "task_certification_sha256": "9a2a6f2aeff1fc527363e96f984fc8d847630183649a00463566bf0b02dcff48",
+      "task_record_sha256": "9849752391bb09007e67b4801ba8b1c3f8e662d9f9acddfc25e4d7e8be89f372"
+    },
+    "release_dir": "367-baseband-agc-filter-chain"
+  }
+}

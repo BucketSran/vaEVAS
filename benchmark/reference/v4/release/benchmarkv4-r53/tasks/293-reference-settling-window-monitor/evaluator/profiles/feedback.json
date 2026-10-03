@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "85f9f27fdf8ee8856b38e5faadfba215ae95aadace6de03b07c26e8c5dafe8df",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_ON_EACH_RISING_CROSSING_OF_CLK",
+    "P_BUILD_A_MEASUREMENT_STYLE_BIAS_REFERENCE",
+    "P_VTH_0_45_V_LOGIC_THRESHOLD",
+    "P_VHI_0_9_V_HIGH_LEVEL",
+    "P_TOL_0_035_V_ALLOWED_ABSOLUTE",
+    "P_ERR_SCALE_0_20_V_ERROR"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

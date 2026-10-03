@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "025-dac-mismatch-unit-weighting-model",
+  "checker_task_id": "v4_025_dac_mismatch_unit_weighting_model",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "32915a57819cdb6dd10a43d859d42bb14e713e959c34d46eaf46e6d0a9c7ed24",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "adeeb8954411aca1d6a30706fff294373c72093798191c63c27b9a2f7d652bb6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "32915a57819cdb6dd10a43d859d42bb14e713e959c34d46eaf46e6d0a9c7ed24",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2f34736e7d0ea68323a72faae320b0275806f135a6220f1697a4daa1e22be302",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ae44a3dd6fc0b99a89005214253bccc7534b3132ca35020392f8bd9ff890f245"
+  },
+  "family_id": "025",
+  "family_spec_sha256": "1acdd25464a0149d401d5d678772da49ab86763afebd8c9867bbb9767643b3d5",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fd823c3e9e479e125e11cb5890023063237e9fa3b9f7788dcb1ac01faccad2e3",
+  "public_contract": "tasks/525-dac-mismatch-unit-weighting-model-testbench/public_contract.json",
+  "public_contract_sha256": "99bd043071b360a067ea0bce8035c70eaf44be5d32a0c18bd7aa507f3991c79b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/525-dac-mismatch-unit-weighting-model-testbench",
+  "task_id": "v4-525"
+}

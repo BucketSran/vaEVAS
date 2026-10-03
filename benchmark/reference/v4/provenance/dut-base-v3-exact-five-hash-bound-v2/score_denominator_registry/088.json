@@ -1,0 +1,87 @@
+{
+  "family_id": "088",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_lock_stuck_high/certification.json",
+        "certification_sha256": "9237b86c85266a87737b018eeaae2ec870ad0b3e852856c5fa3da6f01e57814a",
+        "fault_class": "lock_qualification_error",
+        "mutation_bundle_sha256": "f59891f467c2824804ed3b9d091638a15380bbbc3aea3e851f8abc27b95f0bd2",
+        "mutation_id": "neg_002_lock_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_002_lock_stuck_high/certification.json",
+        "trigger_condition": "tracking disturbance stimulus exercises lock qualification and reacquisition",
+        "violated_property_ids": [
+          "P_DISTURBANCE_UNLOCK",
+          "P_INITIAL_LOCK_ACQUISITION",
+          "P_LATE_REACQUISITION",
+          "P_REFERENCE_PERIOD_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_feedback_divider/certification.json",
+        "certification_sha256": "2b60023520566406bcc491ce36fdfc7605982f7d3afc6be714a86223d350e0ea",
+        "fault_class": "divider_ratio_error",
+        "mutation_bundle_sha256": "8c3a5ff78ce6e47a297a79210d6e9bc48d3c03fd702fcd2356e993bcfff234ea",
+        "mutation_id": "neg_003_wrong_feedback_divider",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_feedback_divider/certification.json",
+        "trigger_condition": "multi-cycle timing stimulus observes the declared divider/ratio behavior",
+        "violated_property_ids": [
+          "P_BOUNDED_TRACKING_CONTROL",
+          "P_FEEDBACK_DIVISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_loop_correction/certification.json",
+        "certification_sha256": "4663ab8b098a999c52d38b1913855ce0ee3d32339c8bc22f7831e99ebdba63af",
+        "fault_class": "feedback_correction_omission",
+        "mutation_bundle_sha256": "8f703a7c22755159414025d7ac8941c12ab0bb283e757c921b17257fb6fcb552",
+        "mutation_id": "neg_004_no_loop_correction",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_loop_correction/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for CPPLL Tracking Reacquire Timer",
+        "violated_property_ids": [
+          "P_DCO_FREQUENCY_CONTROL",
+          "P_REFERENCE_PERIOD_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "0c21e782022c62006f59c4df06d7181c832798e11087524db043d18f34f5e4ef",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "878cecdfb54f3d8f1301ac09ac9dfe0e9ac44457c79700717a782a2f398c34a6",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable CPPLL Tracking Reacquire Timer outputs",
+        "violated_property_ids": [
+          "P_DISTURBANCE_UNLOCK",
+          "P_INITIAL_LOCK_ACQUISITION",
+          "P_REFERENCE_PERIOD_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_vctrl_monitor_out_of_range/certification.json",
+        "certification_sha256": "8bfad89b2c6f51b965daea96d79e6bc002b9a16f9db4678ad8ad02fa5c5faf58",
+        "fault_class": "lock_qualification_error",
+        "mutation_bundle_sha256": "4c46269278d12b5070c0c072d60579ab425fe237b8b6a6241058f1adc883864d",
+        "mutation_id": "neg_005_vctrl_monitor_out_of_range",
+        "source_catalog_certification_path": "negative_variants/neg_005_vctrl_monitor_out_of_range/certification.json",
+        "trigger_condition": "tracking disturbance stimulus exercises lock qualification and reacquisition",
+        "violated_property_ids": [
+          "P_DISTURBANCE_UNLOCK",
+          "P_INITIAL_LOCK_ACQUISITION",
+          "P_REFERENCE_PERIOD_STEP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_lock_stuck_high",
+    "canonical_dut_id": "088",
+    "hashes": {
+      "mutation_catalog_sha256": "8f90b40118cb593999c718dac3b54742b431fd6fbcd0dad2c6acb70f9b13a12d",
+      "score_deck_sha256": "8b748960c2adcfdcaf96338dd8ef3784069c17ad8f0cebd15a6fd6d285a1499a",
+      "task_certification_sha256": "1e2554f9cf4250514d74722708057b64bc50b2644a0b2211df31dbcde0b4742d",
+      "task_record_sha256": "17eaa249cf672e51218f85822fc3154e4e7aa272db1af211883bbec0bcda34d9"
+    },
+    "release_dir": "088-cppll-tracking-reacquire-timer"
+  }
+}

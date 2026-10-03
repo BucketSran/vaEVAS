@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "unary_dac_glitch_energy_metric.va"
+  ],
+  "canonical_dut_source_slug": "319-unary-dac-glitch-energy-metric",
+  "checker_task_id": "v4_319_unary_dac_glitch_energy_metric",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "07ace04f5870f8b42cdb6f584e4a9503ac4ed8df002d61602dfced4a2ff37f56",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "123d40a43773fd215ba3891b2c98223c6016648d318005afbd417930b0682b63",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ad1d257dd2c5e1c0e9890f38ee83a279d2ea4dcd3d7290c4e3cfd7ab29ad866a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "319",
+  "family_spec_sha256": "b0ee317b8eecb09fd8f94314ea10a14981c84209b232d9bc54d4ba2338d727c1",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d4020ac8c6c0948ca755c0d674d1745d42524eab74728073d0e104410065b825",
+  "public_contract": "tasks/1319-unary-dac-glitch-energy-metric-bugfix/public_contract.json",
+  "public_contract_sha256": "6e942344d713f00e7effac0a7abcf5df775ab299b8bd87c21805b16a7ed961a5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1319-unary-dac-glitch-energy-metric-bugfix",
+  "task_id": "v4-1319"
+}

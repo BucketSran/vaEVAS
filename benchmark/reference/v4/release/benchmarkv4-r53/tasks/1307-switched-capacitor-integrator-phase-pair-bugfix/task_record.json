@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "switched_cap_integrator_phase_pair_top.va",
+    "sample_phase_cell.va",
+    "integrator_state_cell.va"
+  ],
+  "canonical_dut_source_slug": "307-switched-capacitor-integrator-phase-pair",
+  "checker_task_id": "v4_307_switched_capacitor_integrator_phase_pair",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3f9e4a3131150e65222ef91a434f0f98fa4f5b6ffa2220011e93fc81e02ad181",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "44e8be717b273eab6a0ae9faab305cd961ea2bf341eff14c774fd9d09227b40e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c4689e7ad300c97c3b88aa8b09e4fdb21ece16ce0deb756981810e25a365271d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "307",
+  "family_spec_sha256": "4ab51f60d890c1d178f6047977d8f3b5cf9ea362c48c4b20c1b15b3c9d4d4ac0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "62ce556e06881722e6e27b988a527135b984a983b416956e0e07d31a83725af1",
+  "public_contract": "tasks/1307-switched-capacitor-integrator-phase-pair-bugfix/public_contract.json",
+  "public_contract_sha256": "93c1e4d4d034d84dc7bbb76e7d5fbc77f25f867b8d6198174aa49d28a11ef2f9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1307-switched-capacitor-integrator-phase-pair-bugfix",
+  "task_id": "v4-1307"
+}

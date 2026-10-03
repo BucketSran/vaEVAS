@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "reference_startup_enable_flow.va"
+  ],
+  "canonical_dut_source_slug": "099-reference-startup-enable-flow",
+  "checker_task_id": "v4_099_reference_startup_enable_flow",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e7aa64c9460a70d95e5498933dbb84166c82d03c09987965bb601074b4d329f8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "bc2b22a29196c092ac6ebbfe36c1eae42656cb70045d3b885aee5a1703baa716",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "2371a608c46b50b1cd623e70ca672823dc8505c53060d21c0576e11a7741a424",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "099",
+  "family_spec_sha256": "fe844945a0460dd22430069c2f6141657ba81855d809562081b459c90485deb3",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2c7149c13bb5248a66584b52028f4eedc4452ee282bed594d41ec0f5cd2ac645",
+  "public_contract": "tasks/1099-reference-startup-enable-flow-bugfix/public_contract.json",
+  "public_contract_sha256": "56319db471d07af164d33c707c0335fcb3ec41942b67d699cd1fad8ad29b689c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1099-reference-startup-enable-flow-bugfix",
+  "task_id": "v4-1099"
+}

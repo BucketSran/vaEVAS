@@ -1,0 +1,47 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_DO_NOT_CONTINUOUSLY_TRACK_VIN_BETWEEN, P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT satisfy the public contract; fault class track_input is rejected",
+    "observed": "EVAS: edges=3 max_sample_err=0.000 hold_windows=2 hold_failures=2 nontransparent_windows=0",
+    "violated_property_ids": [
+      "P_DO_NOT_CONTINUOUSLY_TRACK_VIN_BETWEEN",
+      "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_221_samplehold_rising_edge",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 761
+  },
+  "family_id": "221",
+  "inputs": {
+    "checker_profile_sha256": "3043a030522ccc409ba15e70acfcea85e3b462f768583ef10e5b5831c0645565",
+    "harness_spec_sha256": "608787219f439beb157f37f529e59c866e871e0fd37d4266334d73493523b910",
+    "mutation_bundle_sha256": "48da6506628a572193373166f2484cb7641df28ba5f242b8dbb6577ac6f4662c",
+    "profile_sha256": "69dfb922035b0c2b90631ee9f155d7f47cebe44338b3793dc17525aa6f6354d3"
+  },
+  "mutation_id": "neg_003_track_input",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

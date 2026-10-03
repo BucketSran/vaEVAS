@@ -1,0 +1,36 @@
+{
+  "release_entry_id": "vbr1_l1_segmented_dac",
+  "task_id": "vbr1_l1_segmented_dac:bugfix",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Segmented DAC"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/gold/dut_fixed.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/gold/tb_segmented_dac_buggy.scs",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_segmented_dac/forms/bugfix/gold/tb_segmented_dac_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "vref",
+      "vss"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

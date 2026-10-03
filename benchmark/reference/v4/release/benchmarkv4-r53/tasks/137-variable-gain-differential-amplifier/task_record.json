@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "variable_gain_differential_amplifier.va"
+  ],
+  "canonical_dut_source_slug": "137-variable-gain-differential-amplifier",
+  "checker_task_id": "v4_137_variable_gain_differential_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "95a8d0b4f2a5ba66351308b042a91cfbe7246cb289b73526df0707d8bc3580b8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "2af3910050f1dd3a88bae39eb7716736e8a4bdd98c984b388aed3dc61d99d511",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "af61b15894b680121a42c317b5f79a8b64269785573c7458485b94eb5d46a769",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "137",
+  "family_spec_sha256": "99e22b16ceea6fd6db2d03748f4cd91375a301b81ffe9913b5a274e6b3f153aa",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b9d25e522b6de33e5d07e95198513d23d0073f7533a8ebe23c61cbcb9c592b80",
+  "public_contract": "tasks/137-variable-gain-differential-amplifier/public_contract.json",
+  "public_contract_sha256": "09ce753b4b161e88ad54692be7231b4ff313be8175ae52df8b1847b73e6e51af",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/137-variable-gain-differential-amplifier",
+  "task_id": "v4-137"
+}

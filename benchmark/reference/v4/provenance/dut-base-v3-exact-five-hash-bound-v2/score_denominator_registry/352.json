@@ -1,0 +1,79 @@
+{
+  "family_id": "352",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "fa0b1a508d8f07fd6795851bf1710124947813c4e5746a8e621bbfe00d1ce05e",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "27e1329e590a2b109fef249391c1fa45702c064231052d573ea5ed925ba0cd87",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_CLAMP_VOUT_TO_THE_VSS_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "5e18f93f52fed2f46bf05462ebd78f8a8a736a5508045a87324adc05a541a558",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "3578523fbf7f74b29179b344b7adfa3b72c33b8c8e36173e35acf3ec848b45d8",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_SAMPLE_THE",
+          "P_SAT_FLAG_IS_HIGH_WHEN_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8d7e2d099656eadfe8def35a22b08162153ec02f96668bed6d124a867dbcdf84",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "7ea7049b5354717148c418558c69955336e36a32793edb42e987f5c00ca4b308",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_INITIALIZES_THE_EQUALIZED_OUTPUT_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "30eafdeb1b46e75da49272afaaf52305d572f0566b8bcae6326bb3cf2aa258c6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "6ead038010e06b1fcf3dc80f953c2db640038607eeac851029b81ca8452e7bd8",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "semantic delay_edge mutation from gold",
+        "violated_property_ids": [
+          "P_EDGE_METRIC_REPORTS_THE_ABSOLUTE_BOOSTED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "ddda1987df6c0b2ab813cf62639695a4e31a0e88d3289f6b91c8d2ae760b176e",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "692a4c214a6b78d628ae1ddf2060e2d8be50ff7fc34dffd63ad08e9d18920b7c",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_FROM_THE_CURRENT_INPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "352",
+    "hashes": {
+      "mutation_catalog_sha256": "80f1fcc63d017c201a7490d42e7cc08c323f406c7833b7c1be435164585e02e0",
+      "score_deck_sha256": "0203988f737c7637665fa9eee09099c5cfa4756c2beb3c2ffd70db22857994e1",
+      "task_certification_sha256": "96d08de676729da1fd8427ea2363a61a132c281733f8cd7e3600d203404e5cc9",
+      "task_record_sha256": "69e3dcbaf1d744d450ea8a0c868e9ada53b283add830b59a08f1e1a6edd0a50f"
+    },
+    "release_dir": "352-ctle-equalizer-macro"
+  }
+}

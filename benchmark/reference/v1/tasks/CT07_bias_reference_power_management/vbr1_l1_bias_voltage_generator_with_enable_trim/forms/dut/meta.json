@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_bias_voltage_generator_with_enable_trim_dut",
+  "task_id": "vbr1_l1_bias_voltage_generator_with_enable_trim_dut",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_bias_voltage_generator_with_enable_trim",
+  "family": "spec-to-va",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "bias_voltage_generator_with_enable_trim.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "disable_forces_bias_low",
+    "trim_code_moves_bias_voltage",
+    "metric_marks_enabled_bias"
+  ],
+  "designed_source": true
+}

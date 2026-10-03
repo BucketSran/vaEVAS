@@ -1,0 +1,46 @@
+{
+  "id": "vbr1_l1_gain_estimator_tb",
+  "task_id": "vbr1_l1_gain_estimator_tb",
+  "release_entry_id": "vbr1_l1_gain_estimator",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "measurement",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_gain_estimator_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": {
+    "type": "designed_release_spec",
+    "path": "vbr1_l1_gain_estimator"
+  },
+  "task_name": "Waveform Gain Estimator Testbench",
+  "tier": "release",
+  "verification_status": "pending_dual_refresh",
+  "must_include": [
+    "tran",
+    "save"
+  ],
+  "must_not_include": [],
+  "checks": {
+    "dut_compile": "required",
+    "tb_compile": "required",
+    "tran_generated": "required",
+    "sim_correct": "required",
+    "parity_required": true
+  },
+  "evidence": {
+    "result_path": "[pending fresh dual refresh]",
+    "notes": "Designed CT07 L1 gain-estimator measurement helper; replaces duplicated gain_extraction_smoke source."
+  }
+}

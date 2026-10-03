@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ON_EACH_ENABLED_RISING_CLK_EDGE satisfy the public contract; fault class kickback_increases_with_overdrive is rejected",
+    "observed": "EVAS: v4_313 checked=10 reset_clear=True late_reset_clear=True late_reset_violation=False disabled_clear=True high=True low=True small=True large=True monotonic_metric=False decision_errors=0 metric_errors=4 valid_errors=0 premature_valid=False; P_ON_RESET_OR_WHEN_DISABLED_CLEAR mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=0; P_DRIVE_KICKBACK_METRIC_AS_A_VOLTAGE mismatch_count=3; P_SMALL_OVERDRIVE_MUST_PRODUCE_A_LARGER mismatch_count=1; P_ASSERT_VALID_AFTER_EACH_COMPLETED_DECISION mismatch_count=0; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0; diagnostic_schema=v4-checker-diagnostic-v1 status=fail category=behavior_mismatch event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace",
+    "violated_property_ids": [
+      "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r52-selective-186-270-274-284-285-286-287-291-304-305-311-313-317-323-326",
+    "checker_id": "v4_313_dynamic_comparator_kickback_metric",
+    "report_path": "evidence/canonical-source/R52_TARGET_CONTRACT_RECERTIFICATION.json",
+    "report_sha256": "6ed5663673de6c3ee1b7ce62bc28cff103f3b6b91870c870c13c3cb8111de0b0",
+    "trace_row_count": 1112
+  },
+  "family_id": "313",
+  "inputs": {
+    "checker_profile_sha256": "8303a9eb7d1c2c2c636f0eb2956a9aed536e36dc325555b502c2bddf4ccd857c",
+    "harness_spec_sha256": "83970a6cd3e2f34842e3c0494a8422ddde9e3832d5e30f0d7f69fa849837432a",
+    "mutation_bundle_sha256": "2d736e5f95655e118a47513a3b97396978c9da96fe97ccc2883a92141b8d3955",
+    "profile_sha256": "698fd358764728431596c6e6ecde4aa7090365106b6f8c9d0acc383fa08283b7"
+  },
+  "mutation_id": "neg_002_kickback_increases_with_overdrive",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "8117bfca6fefa7e015f9bb8e4edcf2e5e1e0a6e2",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.5"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

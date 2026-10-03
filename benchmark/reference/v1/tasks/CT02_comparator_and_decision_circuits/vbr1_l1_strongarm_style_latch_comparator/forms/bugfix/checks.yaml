@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+    - "rst"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "reset_window_forces_outp_outn_low"
+    - "post_reset_high_and_low_input_polarity_windows_are_correct"
+parity:
+  required: true
+  tolerance_notes: "Reset and decision polarity are exact; low-window numeric drift is tolerated only within P2 policy."

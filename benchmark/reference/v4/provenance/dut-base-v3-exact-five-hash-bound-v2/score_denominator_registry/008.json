@@ -1,0 +1,78 @@
+{
+  "family_id": "008",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_direction/certification.json",
+        "certification_sha256": "eb56ad08c0d2931752d3af08490098e092024f86eab79c157d208e005edd3637",
+        "fault_class": "step_direction_inversion",
+        "mutation_bundle_sha256": "5da12f0ddc2f5752e5922f8f1d3023b9ea81513b29b7a94a3590c1174e0e425d",
+        "mutation_id": "neg_002_inverted_direction",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_direction/certification.json",
+        "trigger_condition": "a measurement error outside deadband is clocked",
+        "violated_property_ids": [
+          "P_ERROR_DIRECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_missing_deadband_hold/certification.json",
+        "certification_sha256": "6fd6c5060e2b3a62e8ca8a7cae37ffcc45f3facbf444ce460c6ffb993b4d8f2b",
+        "fault_class": "deadband_hold_omission",
+        "mutation_bundle_sha256": "392e6bd66b1eb2cd1c74528565b6a804ccbb50cbacd99cd353a362fedfcfebb5",
+        "mutation_id": "neg_005_missing_deadband_hold",
+        "source_catalog_certification_path": "negative_variants/neg_005_missing_deadband_hold/certification.json",
+        "trigger_condition": "the measurement error lies inside the deadband",
+        "violated_property_ids": [
+          "P_DEADBAND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_reset_level/certification.json",
+        "certification_sha256": "c7ca54dcbaadedc62f90b437e1e0168bc85a97640730a777964b9092d044162c",
+        "fault_class": "reset_level_error",
+        "mutation_bundle_sha256": "f138b77ab83151bd29e4ea2287c0781871b70378433f441c4a206fb640f8c2a9",
+        "mutation_id": "neg_004_wrong_reset_level",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_reset_level/certification.json",
+        "trigger_condition": "reset is asserted",
+        "violated_property_ids": [
+          "P_INITIAL_AND_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_missing_control_clamp/certification.json",
+        "certification_sha256": "384a4ba96fa4cab4d53ee5186b8b6a092edaa8081b8a188d478ac235a26571bf",
+        "fault_class": "missing_control_clamp",
+        "mutation_bundle_sha256": "a2f070f6e2ddc77ea4f26d014a152be4a4309f1d19df749f94385b2fb2a36179",
+        "mutation_id": "neg_006_missing_control_clamp",
+        "source_catalog_certification_path": "negative_variants/neg_006_missing_control_clamp/certification.json",
+        "trigger_condition": "repeated same-direction updates reach a control rail",
+        "violated_property_ids": [
+          "P_CONTROL_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_stuck_midscale/certification.json",
+        "certification_sha256": "8b95625eb717d0467bce819c0067f2e05f6524ea219ac247951b1ed94d23c027",
+        "fault_class": "stuck_control",
+        "mutation_bundle_sha256": "8b09a0b25b8e11832afa760751e10480e691a8f3e6db1428c29d756c0a1c8265",
+        "mutation_id": "neg_001_stuck_midscale",
+        "source_catalog_certification_path": "negative_variants/neg_001_stuck_midscale/certification.json",
+        "trigger_condition": "a measurement error outside deadband is clocked",
+        "violated_property_ids": [
+          "P_ERROR_DIRECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_inverted_direction",
+    "canonical_dut_id": "008",
+    "hashes": {
+      "mutation_catalog_sha256": "f9ab54cde0cd533124dbc2fe459e8421644ae6d49920a200c63c7f7706a58795",
+      "score_deck_sha256": "78f970d070def0da8e425f32aee5c8d7cc9960bf4a9f71e05e044a1793044d66",
+      "task_certification_sha256": "3521ad91af71a84fd2644458421ddb2fd4e3ef7e9cfe812803811df880145e24",
+      "task_record_sha256": "54333d0e2cfec3f35052a7a7b91ad600985eb4f9640788ca02c08bc9d0bea84f"
+    },
+    "release_dir": "008-gain-trim-controller"
+  }
+}

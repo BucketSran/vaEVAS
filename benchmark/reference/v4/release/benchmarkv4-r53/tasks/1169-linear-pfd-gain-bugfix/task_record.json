@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "linear_pfd_gain.va"
+  ],
+  "canonical_dut_source_slug": "169-linear-pfd-gain",
+  "checker_task_id": "v4_169_linear_pfd_gain",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "27307cda8f1103866ead094eced75049bd864c74e044834d17aa3f8c3944d35a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ebdd395a893f41d20b6dcb6be065c2aaf9cd9255a3ce5176e4e2050dfe77f736",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c253ffab426b807ecdc00549bc2d6c21df017a57b0baaec8fdfe77d0ae4e5a63",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "169",
+  "family_spec_sha256": "a35a3352fcbedc984d344fe0bcd1903b24aec234ab88c4f4b25bca894be6ea6f",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "90c23af4be4430d1cb24a82356f6fbd5a5396f6ee8b28cfc81ffa9e510f7b8c9",
+  "public_contract": "tasks/1169-linear-pfd-gain-bugfix/public_contract.json",
+  "public_contract_sha256": "6d35413ed28549f61a1bb430732b1c75244999ce1427daae10cd86c5fbd8667d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1169-linear-pfd-gain-bugfix",
+  "task_id": "v4-1169"
+}

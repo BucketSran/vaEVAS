@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_MONOTONIC_HOLD satisfy the public contract; fault class retained_peak_contains_a_transient_downward_notch is rejected",
+    "observed": "EVAS: property_id=P_MONOTONIC_HOLD category=value_mismatch expected=nondecreasing_vout observed=vout:0.550->0.500 event=non_reset_segment",
+    "violated_property_ids": [
+      "P_MONOTONIC_HOLD"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_075_peak_detector",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 469
+  },
+  "family_id": "075",
+  "inputs": {
+    "checker_profile_sha256": "bf33dfdba185d75424b7b882ce5abd7de7685fb236798787c3a1c081926a4bcb",
+    "harness_spec_sha256": "7d829466363ba214a914c4767a391fc9c0dbb6c6971ed45cfaf601989ab00d94",
+    "mutation_bundle_sha256": "b896af697488c106833590a52f446df841ec8cdac1458486d69d2b7b95bb3268",
+    "profile_sha256": "fef1e45f22f2363016765048ab5504579bddd6b5fc3d386d068e68e66ad6ae22"
+  },
+  "mutation_id": "neg_006_monotonic_notch",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

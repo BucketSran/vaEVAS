@@ -1,0 +1,97 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "thermometer_dac_15seg.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=175n maxstep=200p"
+    ],
+    "body_lines": [
+      "V_seg0 (seg0 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg1 (seg1 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0.9 84.8n 0.9 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg2 (seg2 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg3 (seg3 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg4 (seg4 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg5 (seg5 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0 114.8n 0 115n 0 144.8n 0 145n 0.9 175n 0.9]",
+      "V_seg6 (seg6 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg7 (seg7 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0.9 39.8n 0.9 40n 0 54.8n 0 55n 0 84.8n 0 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg8 (seg8 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg9 (seg9 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg10 (seg10 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg11 (seg11 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg12 (seg12 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0 84.8n 0 85n 0.9 114.8n 0.9 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg13 (seg13 0) vsource type=pwl wave=[0 0 24.8n 0 25n 0 54.8n 0 55n 0.9 84.8n 0.9 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_seg14 (seg14 0) vsource type=pwl wave=[0 0 39.8n 0 40n 0.9 54.8n 0.9 55n 0 84.8n 0 85n 0 114.8n 0 115n 0.9 144.8n 0.9 145n 0.9 175n 0.9]",
+      "V_vref (vref 0) vsource dc=0.9",
+      "V_vss (vss 0) vsource dc=0",
+      "XDUT (seg0 seg1 seg2 seg3 seg4 seg5 seg6 seg7 seg8 seg9 seg10 seg11 seg12 seg13 seg14 vref vss aout) thermometer_dac_15seg"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "seg0",
+      "seg1",
+      "seg2",
+      "seg3",
+      "seg4",
+      "seg5",
+      "seg6",
+      "seg7",
+      "seg8",
+      "seg9",
+      "seg10",
+      "seg11",
+      "seg12",
+      "seg13",
+      "seg14",
+      "vref",
+      "vss",
+      "aout"
+    ]
+  },
+  "family_id": "018",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "006467a7e9b64665365b2664390633e6a3be6e588d525082442f9e3c20f43f63",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "92599dd2158f915d1332ff4c28238ee9a647de7f399868e3c23523bbe159ec04",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_ZERO_SCALE",
+    "P_FULL_SCALE",
+    "P_UNIT_ELEMENT_WEIGHT",
+    "P_PERMUTATION_INVARIANCE",
+    "P_COUNT_MONOTONICITY"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "d629a7efd213864a1f35d89de205e142eaaf1446b7c6f106019708ad8d8fc75c",
+    "family_spec_sha256": "d10b15af580b2a2efb69ad70f16e51bca3f2a3c2d8e6f75b7425dd337377a631"
+  },
+  "task_id": "v4-018"
+}

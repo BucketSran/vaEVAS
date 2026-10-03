@@ -1,0 +1,78 @@
+{
+  "family_id": "332",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_q_channel_sample_held_at_vcm/certification.json",
+        "certification_sha256": "2fc33df68c88b8af59b15b3d4bd36e70a80ac9dfef3994138e95c9db1dec6d42",
+        "fault_class": "q_channel_sample_held_at_common_mode",
+        "mutation_bundle_sha256": "8f7702aa02d381d2999526c4d891976cfd952220f251fa3b5802ad03c3a20658",
+        "mutation_id": "neg_002_q_channel_sample_held_at_vcm",
+        "source_catalog_certification_path": "negative_variants/neg_002_q_channel_sample_held_at_vcm/certification.json",
+        "trigger_condition": "an enabled rising clock edge samples a Q input away from vcm",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_normalizer_omits_bounded_scaling/certification.json",
+        "certification_sha256": "8a8803be084941eb190e602861ebae0ab6b29f5f70029f0f8d2c22143db8266d",
+        "fault_class": "bounded_normalization_replaced_by_unclamped_gain",
+        "mutation_bundle_sha256": "7120c7a2dd535652b4d6ee4c41cf09847d685c046d70e4e9781f3e882785d206",
+        "mutation_id": "neg_003_normalizer_omits_bounded_scaling",
+        "source_catalog_certification_path": "negative_variants/neg_003_normalizer_omits_bounded_scaling/certification.json",
+        "trigger_condition": "the sampled I or Q deviation requires amplitude limiting",
+        "violated_property_ids": [
+          "P_DRIVE_CORRECTED_I_Q_OUTPUTS_WITH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_amp_metric_sums_magnitudes/certification.json",
+        "certification_sha256": "f286e6644dc1dc7b7a75e049b0a0fdb172d74946da283654b89e9897173b5838",
+        "fault_class": "amplitude_error_metric_sums_instead_of_differences",
+        "mutation_bundle_sha256": "5727be0d2ba74355dbddfc1180510d53b3b41cede94fbef6e81d0a9be143ef0c",
+        "mutation_id": "neg_004_amp_metric_sums_magnitudes",
+        "source_catalog_certification_path": "negative_variants/neg_004_amp_metric_sums_magnitudes/certification.json",
+        "trigger_condition": "sampled I and Q deviations are both nonzero",
+        "violated_property_ids": [
+          "P_EXPOSE_AMPLITUDE_AND_PHASE_ERROR_PROXIES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_balance_accepts_one_metric/certification.json",
+        "certification_sha256": "c7a88c3b596635e0174e30bf5bc9cadbdc57213303ce4c225e6ef908fac543c7",
+        "fault_class": "balance_metric_conjunction_replaced_by_disjunction",
+        "mutation_bundle_sha256": "1d5c13928f203d12c09db737851d3ad8c70d076fb6bbc38d89f5a65e039ef3ca",
+        "mutation_id": "neg_005_balance_accepts_one_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_balance_accepts_one_metric/certification.json",
+        "trigger_condition": "only one of amplitude balance or phase balance is within tolerance",
+        "violated_property_ids": [
+          "P_ASSERT_BALANCED_ONLY_WHEN_BOTH_METRICS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_clear_drives_ground_not_vcm/certification.json",
+        "certification_sha256": "c969bfcb03a486a434728a6fc494d84277e00fa1df91c8c168041743d1f721d6",
+        "fault_class": "clear_level_ground_instead_of_common_mode",
+        "mutation_bundle_sha256": "4d2d8265ebacd1039abb1ef234e15504efe5872659f967495d18d49c5749b25f",
+        "mutation_id": "neg_001_clear_drives_ground_not_vcm",
+        "source_catalog_certification_path": "negative_variants/neg_001_clear_drives_ground_not_vcm/certification.json",
+        "trigger_condition": "reset is asserted or enable is low",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_q_channel_sample_held_at_vcm",
+    "canonical_dut_id": "332",
+    "hashes": {
+      "mutation_catalog_sha256": "d416eb704586f786f2a3a66531782702f415b9a6795119debed1d2bd646a4938",
+      "score_deck_sha256": "7da6f0edd236866b87e139c52d108adc97813bbfe9485a20d5bae3f90544baf8",
+      "task_certification_sha256": "32ad650a00f5e8f6e1fbc55b9706dbe7a49c1845e3306d0fc76bf227646e9bf5",
+      "task_record_sha256": "ad9d8a4daf53d9f6303283dd23f91e245b367b022e524b671fb52d6f39c5a615"
+    },
+    "release_dir": "332-polyphase-iq-balance-monitor"
+  }
+}

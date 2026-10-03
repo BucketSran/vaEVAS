@@ -1,0 +1,80 @@
+{
+  "family_id": "354",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_slicer_polarity/certification.json",
+        "certification_sha256": "4a32dfb684fac39b9bdc07479ed7b92babe3195186c3043649d65a3e351ca7aa",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "f52c4f3cc5d7c7023fade34478692cdacc75e7e27b9dbd1619f2570a2cdd20b7",
+        "mutation_id": "neg_001_slicer_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_001_slicer_polarity/certification.json",
+        "trigger_condition": "corrected input crosses VCM",
+        "violated_property_ids": [
+          "P_CLOCKED_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_preserves_history/certification.json",
+        "certification_sha256": "386d7a1c6e968d56df8a1f1087417f10ad47f18696e790676eb6c609ed89d6d3",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "81a03a2cd9f3a51774fa785efe3b37f460fb0e98d8e52c53a4c5f6353523b880",
+        "mutation_id": "neg_005_reset_preserves_history",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_preserves_history/certification.json",
+        "trigger_condition": "reset is asserted after decisions",
+        "violated_property_ids": [
+          "P_HISTORY_ORDER",
+          "P_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_second_tap_ignored/certification.json",
+        "certification_sha256": "53967471427fe33881cb557fe33d862c652f490d52802b40a9f3f56328a3eba2",
+        "fault_class": "missing_tap",
+        "mutation_bundle_sha256": "66b5b2a5bacb80dfed1f7aa4052d5666b9873547675804450645e9bd50a40f2c",
+        "mutation_id": "neg_003_second_tap_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_003_second_tap_ignored/certification.json",
+        "trigger_condition": "tap2 code and second history bit are nonzero",
+        "violated_property_ids": [
+          "P_TWO_TAP_FEEDBACK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_clock_edge/certification.json",
+        "certification_sha256": "07e46d7bb3ecb877ded688f13cd5d16afc5495d9b8f82333cdf3613d3bcfcc19",
+        "fault_class": "wrong_edge",
+        "mutation_bundle_sha256": "f4238c114e4ec1db19d756eeb052c581fe7d5997c1673bd29a5f26f899ac0f18",
+        "mutation_id": "neg_004_wrong_clock_edge",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_clock_edge/certification.json",
+        "trigger_condition": "clock toggles with changing VIN",
+        "violated_property_ids": [
+          "P_CLOCKED_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_feedback_sign/certification.json",
+        "certification_sha256": "fc7ed9517dcea0812342e7a591c2d0352a2e5792e75796dc36243cc43c7d9658",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "0c81a6d14a8bf11a1189a9fb10875e2dc470237f9fd2e01d9ea0528ce56a4170",
+        "mutation_id": "neg_002_feedback_sign",
+        "source_catalog_certification_path": "negative_variants/neg_002_feedback_sign/certification.json",
+        "trigger_condition": "nonzero decision history and tap code",
+        "violated_property_ids": [
+          "P_CORRECTED_INPUT",
+          "P_TWO_TAP_FEEDBACK"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_slicer_polarity",
+    "canonical_dut_id": "354",
+    "hashes": {
+      "mutation_catalog_sha256": "21b06b1d9786f5e8e292d02c98ebbeb81af6f9b6d28d68d323bd3996926e44a6",
+      "score_deck_sha256": "c68fd06994a49f38757b7ff2aa0b5a6b7102c1794e6417a55c692b2083d20140",
+      "task_certification_sha256": "020689c1c5136fbbbc972777484ca77e1b98576ed439a2d0009621bdfba86520",
+      "task_record_sha256": "9bb544095fac4ae3175184a1a583ec369497a1d99a8b33bab16c2d39160f21ef"
+    },
+    "release_dir": "354-dfe-receiver-2tap"
+  }
+}

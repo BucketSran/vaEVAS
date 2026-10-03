@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bootstrapped_sampler_charge_metric.va"
+  ],
+  "canonical_dut_source_slug": "310-bootstrapped-sampler-charge-metric",
+  "checker_task_id": "v4_310_bootstrapped_sampler_charge_metric",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8cf7fe7c5a3a8cb347528cc1016a3c49c83a7aeb0f8635ca4fba3b1fd6ea3c6b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0cd636d7d08b6d176c6c8d5ff34f7274b58b8d321979bd518064a5e77cebf7ba",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1035734aa1f5249e1115b847e42585850f1b7c1e0e31c25832fc54edf1386c9c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "310",
+  "family_spec_sha256": "acb324de5f0aeb56637d48711dcf330e13583cad4d6d5cdce4f7bbd0cd0410df",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b8a0338a967822b00cbc35c108ce774851837a65ea11988b2f635ac57790467c",
+  "public_contract": "tasks/1310-bootstrapped-sampler-charge-metric-bugfix/public_contract.json",
+  "public_contract_sha256": "c1d17c77d91b78b9440874d13b4f9c953dc7b2a3db8e210a7a3ebe831baa8c7d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1310-bootstrapped-sampler-charge-metric-bugfix",
+  "task_id": "v4-1310"
+}

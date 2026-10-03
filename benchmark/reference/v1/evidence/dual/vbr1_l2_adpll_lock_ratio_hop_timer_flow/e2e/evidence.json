@@ -1,0 +1,79 @@
+{
+  "release_entry_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow",
+  "task_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow:e2e",
+  "source_task_id": "adpll_ratio_hop_smoke",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "ADPLL lock/ratio-hop/timer flow"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/gold",
+    "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/adpll_ratio_hop_ref.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/tb_adpll_ratio_hop_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/gold",
+    "result_root": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l2_adpll_lock_ratio_hop_timer_flow/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "mode": "pll_task_aware",
+      "task_family": "adpll_timer",
+      "metrics": {
+        "evas": {
+          "late_edge_ratio": 1.0,
+          "late_fb_freq_hz": 50000000.00000001,
+          "lock_time_s": 8.02e-08,
+          "late_vctrl_mean_v": 0.0,
+          "late_vctrl_min_v": 0.0,
+          "late_vctrl_max_v": 0.0
+        },
+        "spectre": {
+          "late_edge_ratio": 1.0,
+          "late_fb_freq_hz": 49999999.99999205,
+          "lock_time_s": 8.02e-08,
+          "late_vctrl_mean_v": 0.0,
+          "late_vctrl_min_v": 0.0,
+          "late_vctrl_max_v": 0.0
+        },
+        "late_edge_ratio_delta": 0.0,
+        "late_fb_freq_rel_delta": 1.5914440155029293e-13,
+        "lock_time_delta_s": 0.0
+      },
+      "notes": [
+        "vctrl_monitor_informational=evas:0.000000,spectre:0.000000"
+      ],
+      "failures": []
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/adpll_ratio_hop_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/tb_adpll_ratio_hop_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_VOLTAGE_CODED_LEVELS satisfy the public contract; fault class metric_or_measurement_error is rejected",
+    "observed": "EVAS: property_id=P_RELEASE_STATUS category=behavior_mismatch expected=out:0.00,metric:0.90 observed=out:0.900,metric:0.000,vin:0.750,rst:0.000,count:4 event=clock[10]@1.402500e-08s",
+    "violated_property_ids": [
+      "P_VOLTAGE_CODED_LEVELS"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_036_power_on_reset_detector",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 379
+  },
+  "family_id": "036",
+  "inputs": {
+    "checker_profile_sha256": "3e086a0e28ceade80741406510aa74d5dd2454895ff17e1a2639f74cd09db21c",
+    "harness_spec_sha256": "ecce32eb895cc80c41795fc8c8b5b11253b88930ac2d84bad98c7157d5511ce6",
+    "mutation_bundle_sha256": "6ae8bdbbed7c4e526e8539d226cd977141e7ef5f71f15530e7dba517cd6c2228",
+    "profile_sha256": "74bea1367514cd7bcdab51087285d8b32e0bb04d310ec074832d8a4d8796b220"
+  },
+  "mutation_id": "neg_005_metric_writeout",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

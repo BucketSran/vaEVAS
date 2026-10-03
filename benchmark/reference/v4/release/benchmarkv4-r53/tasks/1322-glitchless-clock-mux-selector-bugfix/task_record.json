@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "glitchless_clock_mux_selector.va"
+  ],
+  "canonical_dut_source_slug": "322-glitchless-clock-mux-selector",
+  "checker_task_id": "v4_322_glitchless_clock_mux_selector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2d32e10f014256b8496c1a32bbb5a087598770c573879ebf13fb2a157eb41a4f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c7ab5b83ee0ceee8bc56dca9a73d310858288fde4a9a41e6844c21e6f2a0f2b2",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fd535d0221b93df4b4cc39010e7de4690a88312291519e61cf677e752389239d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "322",
+  "family_spec_sha256": "bc9d8555ebfb2acec4e0e0b21694eb69894861e101571fdb2733ce50261fa688",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3558c2585adbadf49dcca5dd326c12c4bff51b483a8e7853253b90f20024f6f1",
+  "public_contract": "tasks/1322-glitchless-clock-mux-selector-bugfix/public_contract.json",
+  "public_contract_sha256": "3bb356f0cce023ebef6700b81cdb3949272c5cffc9826177505f5c1169a0d847",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1322-glitchless-clock-mux-selector-bugfix",
+  "task_id": "v4-1322"
+}

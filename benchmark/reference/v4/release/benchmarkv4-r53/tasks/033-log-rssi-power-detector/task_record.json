@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "log_rssi_power_detector.va"
+  ],
+  "canonical_dut_source_slug": "033-log-rssi-power-detector",
+  "checker_task_id": "v4_033_log_rssi_power_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e97bf540f8ac54ec14bf494e650b18cfc97c44e49bdd1b4e448fa4e6a75df6b3",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a3b3f7a797b8295f2c59084d95c0e238b2ad567b3e86fcaef7b0a6c86fc842f4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3dd21f3f945dba500cc2054e0239a1ab0b1fccf5bc534078a05a839fd1763fbc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "033",
+  "family_spec_sha256": "4cd51398b1ea98c37db1667f0da7fa63d4e4f6d0de513dbaecedc774227756ba",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f68b1e6289a5888c8a0a7f4684401e6e1574f56ecf10ed9e4e08fdbfe38c31c5",
+  "public_contract": "tasks/033-log-rssi-power-detector/public_contract.json",
+  "public_contract_sha256": "405fe8315bd2067ebc3e0fe2ec9504e38cf4049c987959c1a876a99feaf47e7a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/033-log-rssi-power-detector",
+  "task_id": "v4-033"
+}

@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "f6940e5426c77ea7b940455425d47cab6389e23abfe77dd469667e1290f9a250",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_USE_REF_CLK_AS_THE_REFERENCE",
+    "P_GENERATE_A_BEHAVIORAL_DCO_CLOCK_ON",
+    "P_GENERATE_FB_CLK_BY_TOGGLING_IT",
+    "P_UPDATE_A_BOUNDED_CONTROL_VOLTAGE_MONITOR",
+    "P_DRIVE_LOCK_HIGH_AFTER_STABLE_TRACKING"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

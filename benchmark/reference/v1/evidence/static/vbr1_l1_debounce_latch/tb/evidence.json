@@ -1,0 +1,36 @@
+{
+  "release_entry_id": "vbr1_l1_debounce_latch",
+  "task_id": "vbr1_l1_debounce_latch:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Comparator and Decision Circuits",
+    "base_function": "Comparator debounce latch"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/tb/gold/debounce_latch.va",
+    "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_debounce_latch/forms/tb/gold/tb_debounce_latch_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "ahdl_include",
+      "debounce_latch.va",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

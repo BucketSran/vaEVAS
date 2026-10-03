@@ -1,0 +1,179 @@
+{
+  "id": "vbr1_l1_lfsr_prbs_generator",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_lfsr_prbs_generator",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Stimulus and Source Generators",
+  "base_function": "PRBS stimulus/dither generator",
+  "package_status": "selected_l1_addition",
+  "score_surface": "model-capability",
+  "source_base_id": "lfsr_prbs_generator",
+  "canonical_kernel": "prbs_voltage_sequence_source",
+  "source_registry_status": "selected_from_existing_task",
+  "source_evidence_status": "selected_source_pending_dual",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/digital-logic/prbs7",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "tb",
+      "source_path": "tb_companion_from_e2e:lfsr_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "bugfix",
+      "source_path": "bugfix_companion_from_dut:prbs7_ref.va",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/lfsr_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7_ref.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/tb_prbs7_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/spec-to-va/voltage/digital-logic/prbs7",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/dut/spectre_result.json",
+      "release_source_task_id": "prbs7",
+      "historical_source_task_id": "prbs7"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb/gold/lfsr.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/tb/gold/tb_lfsr_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tb_companion_from_e2e:lfsr_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/tb/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_lfsr_prbs_generator_tb",
+      "historical_source_task_id": "vbr1_l1_lfsr_prbs_generator_tb"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/bugfix/gold/tb_prbs7_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "bugfix_companion_from_dut:prbs7_ref.va",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/bugfix/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/bugfix/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/bugfix/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_lfsr_prbs_generator_bugfix",
+      "historical_source_task_id": "vbr1_l1_lfsr_prbs_generator_bugfix"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e/gold/lfsr.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/e2e/gold/tb_lfsr_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/end-to-end/voltage/lfsr_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_lfsr_prbs_generator/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/e2e/spectre_result.json",
+      "release_source_task_id": "lfsr_smoke",
+      "historical_source_task_id": "lfsr_smoke"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

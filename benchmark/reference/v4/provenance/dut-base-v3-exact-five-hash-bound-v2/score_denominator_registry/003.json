@@ -1,0 +1,79 @@
+{
+  "family_id": "003",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_middle_code_wrong/certification.json",
+        "certification_sha256": "4347fc30302ee404c7defe857c4fcd16f24cb490153f617f6c013a7db9fab37b",
+        "fault_class": "middle_code_lsb_stuck_low",
+        "mutation_bundle_sha256": "368a0d996c2fec7de134a560d37db0fe6c944512a1021c07f03a4dee620a007e",
+        "mutation_id": "neg_004_middle_code_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_middle_code_wrong/certification.json",
+        "trigger_condition": "sampled VIN is in the middle region",
+        "violated_property_ids": [
+          "P_SUBADC_REGIONS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_threshold_too_wide/certification.json",
+        "certification_sha256": "2250ce7bcab9b71f24c5561f23def734dd4039953fda2d7833ab86c23e765b5b",
+        "fault_class": "decision_threshold_error",
+        "mutation_bundle_sha256": "e348e5ca95d62d4b8679e5f0b1a02d8b761d64abcb9f8eaa807ea65299218e39",
+        "mutation_id": "neg_001_threshold_too_wide",
+        "source_catalog_certification_path": "negative_variants/neg_001_threshold_too_wide/certification.json",
+        "trigger_condition": "sampled VIN lies between the quarter- and third-reference thresholds",
+        "violated_property_ids": [
+          "P_RESIDUE_MAPPING",
+          "P_SUBADC_REGIONS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_live_vin_on_phi2/certification.json",
+        "certification_sha256": "cf925cc7f492f3beb14be6eeaefaf1b750b46872cee60e562821efcc741c59d5",
+        "fault_class": "sample_hold_bypass",
+        "mutation_bundle_sha256": "45d1d8f642efa13713aabd3601c3274dbc3ddadef6449936708e00e2c68a3af2",
+        "mutation_id": "neg_006_live_vin_on_phi2",
+        "source_catalog_certification_path": "negative_variants/neg_006_live_vin_on_phi2/certification.json",
+        "trigger_condition": "VIN changes after PHI1 and before PHI2",
+        "violated_property_ids": [
+          "P_TWO_PHASE_SAMPLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_007_missing_residue_clamp/certification.json",
+        "certification_sha256": "fdc0c7d715dfce2d527ad5409222267c18fea64628930b264ac05cfe1696f1de",
+        "fault_class": "missing_supply_clamp",
+        "mutation_bundle_sha256": "98c04643e2674dc23e9436621f04def8565ba62c7049b24cc8f184a950365c67",
+        "mutation_id": "neg_007_missing_residue_clamp",
+        "source_catalog_certification_path": "negative_variants/neg_007_missing_residue_clamp/certification.json",
+        "trigger_condition": "unclamped residue exceeds VDD or falls below VSS",
+        "violated_property_ids": [
+          "P_RESIDUE_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_residue_feedback_sign_swapped/certification.json",
+        "certification_sha256": "7953d902271d2e177961c1f4f6218fdc0bb3ee349f1c7ddf540a78d8b76a7aa3",
+        "fault_class": "residue_feedback_sign",
+        "mutation_bundle_sha256": "597b76af4a0b1322901b043040824cae963ba4a3473a99e9c8c0b5347e4b800f",
+        "mutation_id": "neg_003_residue_feedback_sign_swapped",
+        "source_catalog_certification_path": "negative_variants/neg_003_residue_feedback_sign_swapped/certification.json",
+        "trigger_condition": "sampled VIN is in an outer decision region",
+        "violated_property_ids": [
+          "P_RESIDUE_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_middle_code_wrong",
+    "canonical_dut_id": "003",
+    "hashes": {
+      "mutation_catalog_sha256": "64202a5aa1060857f08c05d85a89b1d8e2901b4b260d5c8c09054ac02e8ab1b2",
+      "score_deck_sha256": "867ab654a840a85d28d4ea360e3c1df2e96161439fbd0c442d587660031d376c",
+      "task_certification_sha256": "69537b82c790e35e7b3a8ae058c23dc60b1a5486971ffe183076b1f3fc770938",
+      "task_record_sha256": "44eb73e89e94750636f229e92296c2f6c09d7028d690d7277823a89a37735661"
+    },
+    "release_dir": "003-pipeline-adc-stage"
+  }
+}

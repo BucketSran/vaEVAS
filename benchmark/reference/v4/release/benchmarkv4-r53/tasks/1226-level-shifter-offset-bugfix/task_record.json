@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "level_shifter_offset.va"
+  ],
+  "canonical_dut_source_slug": "226-level-shifter-offset",
+  "checker_task_id": "v4_226_level_shifter_offset",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "978156a892eaef63cea756aa7166b6049da1763a2456a892f394a9764b79e2ec",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ee59311cabfd148ae280ff216403aed4e3705da899bb699c7bfe88ecad5e215c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "98ed42521a793b208e02c323bc5a05d603cf6e71e9b3bedc3e9ac29b49580104",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "226",
+  "family_spec_sha256": "47624e41abddb35f89a1c1e342272e40aadf385818e915d77bcb82544ccd2348",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3c36c4ab693f616c5ce1c0f094e320460607de70807918e4d3d732f464b9f845",
+  "public_contract": "tasks/1226-level-shifter-offset-bugfix/public_contract.json",
+  "public_contract_sha256": "1c2ee437ce516c638d6dbb1de1b1bd07c64c3ec8a11b915329aec5939f9e193c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1226-level-shifter-offset-bugfix",
+  "task_id": "v4-1226"
+}

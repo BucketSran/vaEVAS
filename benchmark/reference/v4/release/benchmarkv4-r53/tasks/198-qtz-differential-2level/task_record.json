@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "qtz_differential_2level.va"
+  ],
+  "canonical_dut_source_slug": "198-qtz-differential-2level",
+  "checker_task_id": "v4_198_qtz_differential_2level",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "c1513b9d6decab555f040c65639c0aea98bea1dcea35c05d88f85682296a7cf4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "969cc0bce25edb58357a2ec3804c63c582a03b570f1b94353ddef80df550e45a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6db379f865d327561eef3ce772525fa0a0c5e760107a4c2bd61a591df2a7fd36",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "198",
+  "family_spec_sha256": "d291eae157a9fd2a77166727658290ec5a36a4933bf46ad0c4293d850eded32f",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2af5499852c40ca622d96d40efe99ef0f94aeddfd67345431f0290d962e55970",
+  "public_contract": "tasks/198-qtz-differential-2level/public_contract.json",
+  "public_contract_sha256": "c59090ea083b4b9d8f34751eefd478373993b26bb2d6863fa37b82c33bc1c3cb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/198-qtz-differential-2level",
+  "task_id": "v4-198"
+}

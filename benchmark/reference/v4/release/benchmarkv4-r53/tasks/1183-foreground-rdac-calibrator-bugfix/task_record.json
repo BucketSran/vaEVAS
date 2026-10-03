@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "foreground_rdac_calibrator.va"
+  ],
+  "canonical_dut_source_slug": "183-foreground-rdac-calibrator",
+  "checker_task_id": "v4_183_foreground_rdac_calibrator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d0ebb0d68fcca7478c182d2d7b1ef567e8501dcd690e7eb75111255b26a098d7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "db4e202812aa3ebdc4a089a28b950d859ebb4ea9bc00516600299186c2f1c398",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "74b0f26258841d90250de29563cfaa00fe937db149729a1761fb404bcae7e5fd",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "183",
+  "family_spec_sha256": "ee168792c0a08fb56b729917e7ada5d9d3272c01185f41efc9e2278fdba35082",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4cee37e7bae337ca1a3b29d51ca0d00f0aa11688882c54d385d2785e7053b2dd",
+  "public_contract": "tasks/1183-foreground-rdac-calibrator-bugfix/public_contract.json",
+  "public_contract_sha256": "77d464311c29481f1362ef4d98585de1ad0deee3e5cb7fbe320904739216bf76",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1183-foreground-rdac-calibrator-bugfix",
+  "task_id": "v4-1183"
+}

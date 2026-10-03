@@ -1,0 +1,20 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "sampled_values_match_aperture_delayed_input"
+    - "held_output_remains_between_samples"
+parity:
+  required: true
+  tolerance_notes: "Use post-aperture settled sample windows."

@@ -1,0 +1,25 @@
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 50p
+
+module pipeline_stage(VDD, VSS, PHI1, PHI2, VIN, VREF, VRES, D1, D0);
+
+inout VDD, VSS;
+input PHI1, PHI2;
+input VIN, VREF;
+output VRES;
+output D1, D0;
+
+electrical VDD, VSS;
+electrical PHI1, PHI2;
+electrical VIN, VREF;
+electrical VRES;
+electrical D1, D0;
+
+parameter real vth = 0.45;
+parameter real vdd = 0.9;
+parameter real tedge = 200p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

@@ -1,0 +1,79 @@
+{
+  "family_id": "030",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "4af1c45efe40edf3ecc5c03c1ec5a3a89cff9055b1a2f7f4a2a80cb6a0830efb",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "caf25730082f3baf963ce7418a1ce2dc2049b495c4c109e11a624c3e810e49f1",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_CLOCKED_HOLD",
+          "P_INITIAL_AND_RESET_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "6b0a012a67a8459eedc87730ec1cd6a544228b2484839d803dfc9f82e0e72339",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "3d9325cc6e662ef1169f8f2f9477628f0a5ad9c081be7afdac7bbff5a54924f8",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_FIRST_ORDER_REGULATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "90244345180c074749dc257fe5af6d4bbeb0287454c8d47629ab8b262a991930",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "ded76163a290daec62d08e027b36cb67f4104617c3fc3335dec860984d793fc9",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_REGULATED_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "f4aa5d83ac43e3e2a99950163cd116ee974cfe054e5a4d921c1704492a89e324",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "0a5055ecf5cfa290d381a8e03063df193526097eb7407eaa104c92e766e4a6d7",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_ERROR_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "7788f658da8d479c8dfe2a0f3dec23802f748887ccd8c434763d76bbb17e52ae",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "4bd9799b54eb37ce3259cef866a3431c5fa7a87877fc088ed28812681bb5958f",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_LOAD_TARGET"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "030",
+    "hashes": {
+      "mutation_catalog_sha256": "f6b843682b232dbd65f062977ff7dc895f9ba9275631ca1b006e2c63c95f8475",
+      "score_deck_sha256": "ece924da9f489ac06ab6aeafb15c0da82e6604afb96a23948a0e3b68b394b39b",
+      "task_certification_sha256": "751643757d4e7f6f7c85aeadc266f632c2ec07e240add0c9418aa45dd6234773",
+      "task_record_sha256": "b45d327f94fe5b6710c3d200e2604aac997ab75459781277fb1693a95adf7fe7"
+    },
+    "release_dir": "030-ldo-regulator-macro-model"
+  }
+}

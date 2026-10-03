@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "baseband_offset_gain_trim_macro.va"
+  ],
+  "canonical_dut_source_slug": "397-baseband-offset-gain-trim-macro",
+  "checker_task_id": "v4_397_baseband_offset_gain_trim_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ae19ced75b8801eb8ca81289436206a096cc0d3e99d1e831acf7efb0cc7a19c3",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e22c243dd3af504a96b466e3e84ccafa6b9fa3c754a31421e7526f8b41b23f08",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "cbf9ecce0b3be426a3bbb8b1256b4f5c4960a7ef97c61836416cf001a12260db",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "397",
+  "family_spec_sha256": "3fd94ab8ea9306d3129d191787941cfd859865d5fa86c21d2466f344a3deb801",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2a88bd7b8388d12f33f5273415afa1469ac56be669e1d19fa07e6ddf3e30f3ce",
+  "public_contract": "tasks/1397-baseband-offset-gain-trim-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "30a9c221cbe68c88e8cdc6540170c8a0b949e2afe7bbff5e94fe94f86adfeb8f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1397-baseband-offset-gain-trim-macro-bugfix",
+  "task_id": "v4-1397"
+}

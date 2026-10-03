@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "bandgap_trim_top.va",
+    "startup_detector.va",
+    "ptat_ctat_core.va",
+    "trim_controller.va"
+  ],
+  "canonical_dut_source_slug": "371-bandgap-startup-trim-system",
+  "checker_task_id": "v4_371_bandgap_startup_trim_system",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d69431cd62d216718ba23e5ec94fb4ddc3d1e67edc74005dd69360a154c5fe1d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0a809ce42a439e2a2e5f1d439e73b1bc0e8023414e6586f111afc27b254add91",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "aa2c38927e33ba3b9215bc052f1bb715a8e78fc80388e4579748b97dd2d221d0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "371",
+  "family_spec_sha256": "82e9da49caaff3fbc0b8298dfee0da669e5ace4bd1f2f84437716c8dc23feaa5",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e9e90d82f73a653ed5881aa1f63a965885d4558feb4a7bad79f42e2759fc17b0",
+  "public_contract": "tasks/1371-bandgap-startup-trim-system-bugfix/public_contract.json",
+  "public_contract_sha256": "1b43748157ab7e8a05f851de87471ed7e73768e5af21f841712c4948269a1e7d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1371-bandgap-startup-trim-system-bugfix",
+  "task_id": "v4-1371"
+}

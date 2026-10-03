@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "360-digitally-controlled-delay-cell",
+  "checker_task_id": "v4_360_digitally_controlled_delay_cell",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "1c4a39f4e39fc2a120f1f0c451e0adbb5873204a08f9590a5a2587746ea761f6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "6ac5f9a889fbb2d777a2c35e8ccddddf244ae44cf2aaf925dd11db57d15c8521",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "1c4a39f4e39fc2a120f1f0c451e0adbb5873204a08f9590a5a2587746ea761f6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a5421cca36fabb1a58522d21389a8314311ba3190818274702f72ca11e00dc99",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2baf9b47f3e0949f7dd4c4c9e8fefa92ffc5a0b1a62650c8a418f2017a7eed0d"
+  },
+  "family_id": "360",
+  "family_spec_sha256": "ca78744f78268e2a317e0fc7ebf3682ad76cf4e1d9ff877861291bb369d113d7",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7e80220cbcc25e5a9201e3273b451417d34fb38649b758db7199603ac777bc4e",
+  "public_contract": "tasks/860-digitally-controlled-delay-cell-testbench/public_contract.json",
+  "public_contract_sha256": "93febc15429a3123c504c26665b75a74ddaa2f537c2c9f5959aba0a4b940a9e1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/860-digitally-controlled-delay-cell-testbench",
+  "task_id": "v4-860"
+}

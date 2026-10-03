@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module window_comparator_ref (
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical vin,
+    output electrical out
+);
+parameter real vlow = 0.3;
+parameter real vhigh = 0.6;
+parameter real tedge = 200p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ACTIVE_LOW_RESET satisfy the public contract; fault class active_low_reset_ignored is rejected",
+    "observed": "EVAS: shift_reset observed=q2:0.900 expected=0 window=53.950ns edge=5 shift_reset observed=q3:0.900 expected=0 window=53.950ns edge=5 shift_reset observed=q5:0.900 expected=0 window=53.950ns edge=5",
+    "violated_property_ids": [
+      "P_ACTIVE_LOW_RESET"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_057_config_shift_register_64b",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1251
+  },
+  "family_id": "057",
+  "inputs": {
+    "checker_profile_sha256": "cd2de226ac908020bc382825b34c68fd02d9fbeda9443975a84217904a595100",
+    "harness_spec_sha256": "1bf50ec3c62ebd5f4ed8054ed1b18badfbad8c2dfb379474eb4a88a49ac5d306",
+    "mutation_bundle_sha256": "1d87adad85391f6abb96bbdce5666aed3a2aeeb25583125c012aab9d0ca4750f",
+    "profile_sha256": "ab8d535ef47e5543e1e9c1555bdcdf66ec9dd35e0e6d473dd679150af85e353a"
+  },
+  "mutation_id": "neg_001_wrong_shift",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

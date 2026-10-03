@@ -1,0 +1,29 @@
+{
+  "canonical_semantics_sha256": "56abd810677df53075f0bdc866f0baae283bfbe5b5c67a36d7463fadf065d448",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_THERMOMETER_COUNT",
+    "P_FOUR_STAGE_ALIGNMENT",
+    "P_BINARY_OUTPUT_ORDER",
+    "P_EVENT_HELD_OUTPUTS"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "162",
+    "feedback_semantics_sha256": "56abd810677df53075f0bdc866f0baae283bfbe5b5c67a36d7463fadf065d448",
+    "harness_spec_sha256": "158476c4a079db4fdadb18b1d6e14fcab69df9cfa4dd86d1db1532ffce87f36b",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "56abd810677df53075f0bdc866f0baae283bfbe5b5c67a36d7463fadf065d448",
+    "task_id": "v4-162"
+  },
+  "test_deck_sha256": "76663e637bce5289f718c11c1965e0aba7b9dd6d177470f9239b0edf032fe57c"
+}

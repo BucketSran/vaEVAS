@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "pointer_advances_by_sampled_input_code"
+    - "cell_enable_window_matches_effective_code_plus_lsb_boundary"
+    - "pointer_output_is_one_hot"
+    - "wraparound_and_multi_code_coverage"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Requires fresh EVAS/Spectre dual validation after CT06 content repair."

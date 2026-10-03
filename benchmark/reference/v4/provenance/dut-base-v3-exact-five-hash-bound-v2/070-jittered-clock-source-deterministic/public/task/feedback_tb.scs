@@ -1,0 +1,36 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/deterministic_jittered_clock.va"
+
+Vvdd_ref_default (vdd_ref_default 0) vsource dc=0.9 type=dc
+Vvth_ref_default (vth_ref_default 0) vsource dc=0.45 type=dc
+Vtr_ps_ref_default (tr_ps_ref_default 0) vsource dc=20 type=dc
+Vseed0_default (seed0_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]
+Vseed1_default (seed1_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]
+Vseed2_default (seed2_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vseed3_default (seed3_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]
+Vseed4_default (seed4_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]
+Vseed5_default (seed5_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vseed6_default (seed6_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]
+Vseed7_default (seed7_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vjitter_en_default (jitter_en_default 0) vsource type=pwl wave=[0 0.9 118n 0.9 118.1n 0 170n 0 170.1n 0.9 220n 0.9]
+Xdefault (jitter_en_default seed0_default seed1_default seed2_default seed3_default seed4_default seed5_default seed6_default seed7_default clk_out_default) deterministic_jittered_clock
+
+Vvdd_ref_override (vdd_ref_override 0) vsource dc=0.7 type=dc
+Vvth_ref_override (vth_ref_override 0) vsource dc=0.35 type=dc
+Vtr_ps_ref_override (tr_ps_ref_override 0) vsource dc=80 type=dc
+Vseed0_override (seed0_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]
+Vseed1_override (seed1_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]
+Vseed2_override (seed2_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vseed3_override (seed3_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]
+Vseed4_override (seed4_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]
+Vseed5_override (seed5_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vseed6_override (seed6_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]
+Vseed7_override (seed7_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]
+Vjitter_en_override (jitter_en_override 0) vsource type=pwl wave=[0 0.42 118n 0.42 118.1n 0 170n 0 170.1n 0.42 220n 0.42]
+Xoverride (jitter_en_override seed0_override seed1_override seed2_override seed3_override seed4_override seed5_override seed6_override seed7_override clk_out_override) deterministic_jittered_clock vdd=0.7 vth=0.35 tr=80p
+
+tran tran stop=220n maxstep=40p
+save vdd_ref_default vth_ref_default tr_ps_ref_default jitter_en_default seed0_default seed1_default seed2_default seed3_default seed4_default seed5_default seed6_default seed7_default clk_out_default
+save vdd_ref_override vth_ref_override tr_ps_ref_override jitter_en_override seed0_override seed1_override seed2_override seed3_override seed4_override seed5_override seed6_override seed7_override clk_out_override

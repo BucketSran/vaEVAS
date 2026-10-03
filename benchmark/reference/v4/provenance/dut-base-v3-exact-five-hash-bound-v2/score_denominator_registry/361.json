@@ -1,0 +1,79 @@
+{
+  "family_id": "361",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_delay_line/certification.json",
+        "certification_sha256": "07b378505f5cf97a7563c8851f1586547f253f930c6d5367d2723e2d1b7ef52e",
+        "fault_class": "delay_mapping_error",
+        "mutation_bundle_sha256": "7fe52f6bc5e97aed2f94b05513552dc32579e44ee661324ce35692e5dd2e7b30",
+        "mutation_id": "neg_001_zero_delay_line",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_delay_line/certification.json",
+        "trigger_condition": "The reset delay_center code is active while enabled.",
+        "violated_property_ids": [
+          "P_DELAY_LINE_DERIVATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_lock_after_one/certification.json",
+        "certification_sha256": "1ba4ea60b58026737fe86a0aeb2362c25733e6f0390ca5b3a40e4a8d037b8eb8",
+        "fault_class": "lock_qualification_error",
+        "mutation_bundle_sha256": "ecf5a213efd8a0257d6754c722aadbedb11e043b6f63a70f0da87f4f47e73894",
+        "mutation_id": "neg_003_lock_after_one",
+        "source_catalog_certification_path": "negative_variants/neg_003_lock_after_one/certification.json",
+        "trigger_condition": "The first in-window comparison completes.",
+        "violated_property_ids": [
+          "P_LOCK_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_code_zero/certification.json",
+        "certification_sha256": "11b1ad01475d75cc319abccdbd7d55588a82dac4bca6f3afc8de59e45c40bfae",
+        "fault_class": "reset_state_error",
+        "mutation_bundle_sha256": "8458bb65e07fc1d7fc0eb233d262366469d28dc3e5a1ec0dc1449bca0277b38a",
+        "mutation_id": "neg_004_reset_code_zero",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_code_zero/certification.json",
+        "trigger_condition": "Reset or disabled operation is observed.",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_delayed_clock_stuck_low/certification.json",
+        "certification_sha256": "fa9749c0361dd35e67cb855de8a74224b1a99e5acd274a1b9632418a49dcaff5",
+        "fault_class": "clock_output_stuck",
+        "mutation_bundle_sha256": "ebdb3966145feb9433a9d9956610ee834b1d08a11bffa25cddc581a1ef78ba3c",
+        "mutation_id": "neg_005_delayed_clock_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_delayed_clock_stuck_low/certification.json",
+        "trigger_condition": "Enabled input-clock rising edges occur.",
+        "violated_property_ids": [
+          "P_DELAY_LINE_DERIVATION",
+          "P_PHASE_CORRECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_phase_direction_swapped/certification.json",
+        "certification_sha256": "6853e5bb9dad6d51756084fa75884a9fa436e001f5246951298a125479c085f5",
+        "fault_class": "correction_polarity_error",
+        "mutation_bundle_sha256": "5dd09e076f9a73d9d0259e0b77b43f2fb5303b42162bbf5f4239ef4eddf0d12f",
+        "mutation_id": "neg_002_phase_direction_swapped",
+        "source_catalog_certification_path": "negative_variants/neg_002_phase_direction_swapped/certification.json",
+        "trigger_condition": "The delayed edge and reference edge are separated beyond the coincidence band.",
+        "violated_property_ids": [
+          "P_PHASE_CORRECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero_delay_line",
+    "canonical_dut_id": "361",
+    "hashes": {
+      "mutation_catalog_sha256": "0996c5989cc0f868b493efb2f364de5961bb07ae9c5d6a9588a000fe5ade8333",
+      "score_deck_sha256": "250b265b3d6bf909b03744b30720988eafc3dcf839037cdd4f5d408cf85e5040",
+      "task_certification_sha256": "c36528611535b01e157677537ecd1ed8f4c70f0c05c8758a832e49bbc26b013a",
+      "task_record_sha256": "97763320a75690bccc3205347ae413f55a1c5b2410c8ade2f7571e09ca1b7f98"
+    },
+    "release_dir": "361-dll-delay-line-lock"
+  }
+}

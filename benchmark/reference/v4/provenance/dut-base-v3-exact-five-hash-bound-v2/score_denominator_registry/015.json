@@ -1,0 +1,83 @@
+{
+  "family_id": "015",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "16c8e80f06176235c7653385a0eac3d0a353c2c738de2207382ae301b80e5ca2",
+        "fault_class": "full_scale_divisor_error",
+        "mutation_bundle_sha256": "b1b9008a3b8749498d23dee050d14022d27d31655df99c00bd946bc0b9c23d76",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "code fifteen is sampled after settling",
+        "violated_property_ids": [
+          "P_BINARY_WEIGHTS",
+          "P_ENDPOINTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "5a73bb0a10e2ffa896ecaffa703313fd7b0785fe3322ef8d52d062d2b243267c",
+        "fault_class": "reversed_bit_significance",
+        "mutation_bundle_sha256": "240d67fac68dd9056b199da46c9d9b75bf8dd89fb35f20d5b2975041a0289d20",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "the code sequence distinguishes the four binary bit weights",
+        "violated_property_ids": [
+          "P_LINEAR_MONOTONIC_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "f4b44756de5487e1403a46401e4e264b3f1d86880801c30c351156f3da139eec",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "e028c7cae3034ea60905c40a63cfc924b4baccba82f1cf7902ed3dd33ef36270",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "the output is sampled after a public code transition",
+        "violated_property_ids": [
+          "P_CONTINUOUS_UPDATE",
+          "P_ENDPOINTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "188804550335004c5901b7027e66475b780592204b2fdc3993dc97b24f81927d",
+        "fault_class": "zero_code_offset_error",
+        "mutation_bundle_sha256": "3293a16f642a587d8ebb2c7c0aed4b94721201d705552b702b68dbff3e83dd56",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "code zero and code fifteen are sampled",
+        "violated_property_ids": [
+          "P_ENDPOINTS",
+          "P_LINEAR_MONOTONIC_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "4e1a067024aa627d7e3f53ad34c0b4f2b93da36c3bbef4b629012882b0138e68",
+        "fault_class": "high_code_clipping",
+        "mutation_bundle_sha256": "83f2d937a551c0a51cf9dd7671408c74b3236f9df8528cb28be387bf81c34031",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "the public stimulus traverses codes above eight",
+        "violated_property_ids": [
+          "P_BINARY_WEIGHTS",
+          "P_ENDPOINTS",
+          "P_LINEAR_MONOTONIC_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "015",
+    "hashes": {
+      "mutation_catalog_sha256": "54494820bcb8a443ad1154c0b18111769a84b97db94d9dab78fa649be80253e5",
+      "score_deck_sha256": "5db1a9aed97e039baa8be77276e81d7b8c6877d4759d7e17f7ee7dc217887e42",
+      "task_certification_sha256": "94cd3a5d09f2f8f8f76e28b83576e52a18939cbf075723763fa12a84198cdac4",
+      "task_record_sha256": "f4803e9b1cc13e8cce5b31ceb0096c529f20321ed4b2a81fd17b2c95ead35d09"
+    },
+    "release_dir": "015-binary-weighted-voltage-dac"
+  }
+}

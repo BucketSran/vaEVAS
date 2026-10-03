@@ -1,0 +1,85 @@
+{
+  "family_id": "096",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "03b041a9db43352100ed8ed0b89f1a968764d88def221ecc2cfc61aa0694d5b3",
+        "fault_class": "threshold_boundary_error",
+        "mutation_bundle_sha256": "ff8a9ae2752cadf74fe5fe23315ca8c05587823abd151c3b937927260722767d",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "boundary stimulus crosses the public threshold conditions for Pipeline ADC Chain 4b",
+        "violated_property_ids": [
+          "P_CLOCKED_SAMPLE_HOLD",
+          "P_STAGE1_DECISION",
+          "P_STAGE2_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "8e999319e809dc8f424aaacf9c3e2ac6ad741798485b8a7bbc7a7e352abd6341",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "7aecf8915bbf7e4f43d2537f3f9e57825833693d5d8e3dc4d08f5a865a3fe371",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Pipeline ADC Chain 4b",
+        "violated_property_ids": [
+          "P_CLOCKED_SAMPLE_HOLD",
+          "P_STAGE1_RESIDUE",
+          "P_STAGE2_RESIDUE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "027318e2fc65f4ab5be21141e957769cafcfba131528f03685502569208ab075",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "490e27f2192cae64232003501e5ffc8a82bb989d44ff9e220cd4f6a0176bc30e",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for Pipeline ADC Chain 4b",
+        "violated_property_ids": [
+          "P_CLOCKED_SAMPLE_HOLD",
+          "P_FINAL_CODE_CONCATENATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "042b5a85236d6c9dc2920204b329e52f7cdb24478f3d3056474d6ea3e274663c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "40a0b2b319ba3691429cae5404c33f7690d14d66f8df67c475142a155a8fc745",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable Pipeline ADC Chain 4b outputs",
+        "violated_property_ids": [
+          "P_CLOCKED_SAMPLE_HOLD",
+          "P_STAGE1_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "e2cc92e29c33de412b5cd58802b17fe42e0041ef9bc0fda9d540c88d63763575",
+        "fault_class": "reset_semantics_error",
+        "mutation_bundle_sha256": "21189d6cc764630925b01a18c463fdbde9fb0b8977988e64816d6e38c481d912",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "reset/recovery stimulus exercises Pipeline ADC Chain 4b state override behavior",
+        "violated_property_ids": [
+          "P_CLOCKED_SAMPLE_HOLD",
+          "P_STAGE1_DECISION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_threshold_shifted",
+    "canonical_dut_id": "096",
+    "hashes": {
+      "mutation_catalog_sha256": "e495e3b0470f8055d75459843ce4cd3bfefea44f40d38b07e2af046c54487159",
+      "score_deck_sha256": "1ce9a8c6750e2c54e6dfeec98001351aafaf6785b654790df3827eb98cb71e9a",
+      "task_certification_sha256": "d4dd72d012fd52f688e19b4e5a903a77cb57538a67a5015162365ec00df2ca7a",
+      "task_record_sha256": "161c64219cf7988b17bd7f362acf38f5bad36b40656051290d17eaac31e5a4e1"
+    },
+    "release_dir": "096-pipeline-adc-chain-4b"
+  }
+}

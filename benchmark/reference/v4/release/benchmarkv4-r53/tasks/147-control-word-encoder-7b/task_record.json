@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "control_word_encoder_7b.va"
+  ],
+  "canonical_dut_source_slug": "147-control-word-encoder-7b",
+  "checker_task_id": "v4_147_control_word_encoder_7b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "16e92aa95be234f0dd3d4778f5ba0c350b63a222c3b44026dc1e09ef3d537afa",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "3f2aa868d1b01c210e04b2e8b13f5548042a34ac41c247ee4bdc37275936d336",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "22dc3af6f14b652a151c7b31424b44ce16e34a305e53110ba6fd451968ec4eef",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "147",
+  "family_spec_sha256": "5614cb5fcc7d38a0b758f1d29cb6f127c7269940e0cd2713c7bf0db8337991d1",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f828f37e13e25aa4838a48c50fa189661395e499a31b302863cbcf3b930dacd0",
+  "public_contract": "tasks/147-control-word-encoder-7b/public_contract.json",
+  "public_contract_sha256": "1bae4c5541360e4e6cea552a9673c1fca576042609f56aa051f80a1152b1004a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/147-control-word-encoder-7b",
+  "task_id": "v4-147"
+}

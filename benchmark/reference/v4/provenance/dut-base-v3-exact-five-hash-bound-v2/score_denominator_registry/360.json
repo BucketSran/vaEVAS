@@ -1,0 +1,78 @@
+{
+  "family_id": "360",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_ignore_code_msb/certification.json",
+        "certification_sha256": "b0c0709db5343e6388a18c5de9e9cf27e89856f2f71cff57cc75496ce05e8df4",
+        "fault_class": "code_decode_error",
+        "mutation_bundle_sha256": "47f85e3b79da06ddb1d7be6de52f059dcc851c42ebb769fbb11f3a381af434ff",
+        "mutation_id": "neg_001_ignore_code_msb",
+        "source_catalog_certification_path": "negative_variants/neg_001_ignore_code_msb/certification.json",
+        "trigger_condition": "A loaded code with bit 5 high is decoded as a lower code.",
+        "violated_property_ids": [
+          "P_CODE_CAPTURE_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_valid_stuck_low/certification.json",
+        "certification_sha256": "1c7172611348c3f4cd999e799f40bc313855548c3073c52447008aa171c470c2",
+        "fault_class": "status_stuck",
+        "mutation_bundle_sha256": "67b8d4a8ab740e51395a3d2d7699b18877169f2e0e4c6556f95adbee535e2d66",
+        "mutation_id": "neg_004_valid_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_004_valid_stuck_low/certification.json",
+        "trigger_condition": "A loaded code produces a delayed rising output edge.",
+        "violated_property_ids": [
+          "P_PULSE_INTEGRITY_VALID"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_metric_not_cleared/certification.json",
+        "certification_sha256": "8f22081f875274fb83ed7a6669858ff4a0c7d0e23b3d5194493ec1a9fdee2f9b",
+        "fault_class": "reset_clear_error",
+        "mutation_bundle_sha256": "24c04ff0a6db08a26339cfe006170a9dad984af71576e72d5ccfedcc34bbdb7a",
+        "mutation_id": "neg_005_reset_metric_not_cleared",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_metric_not_cleared/certification.json",
+        "trigger_condition": "Reset is asserted while delay_metric must clear to vss.",
+        "violated_property_ids": [
+          "P_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_fixed_minimum_delay/certification.json",
+        "certification_sha256": "d174a390409443ecdf8101f44a9c8a56e48f1d70277210d64b728f1ad06c222b",
+        "fault_class": "delay_mapping_error",
+        "mutation_bundle_sha256": "1c47e3a0a46debed61c39255bcc9ef04627822175ec0b1cb720f903b1e0ebecc",
+        "mutation_id": "neg_002_fixed_minimum_delay",
+        "source_catalog_certification_path": "negative_variants/neg_002_fixed_minimum_delay/certification.json",
+        "trigger_condition": "Any nonzero loaded code requests a delay larger than delay_min.",
+        "violated_property_ids": [
+          "P_EDGE_DELAY_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_metric_stuck_low/certification.json",
+        "certification_sha256": "cc016a3d3b22768ca7cc8ef953b5d1a41bfbaebec077f451bff5c1ea5cc75383",
+        "fault_class": "metric_stuck",
+        "mutation_bundle_sha256": "2d464c69288032a42dcc62011861469db684283a15e8922e11fe37e7da48074f",
+        "mutation_id": "neg_003_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_003_metric_stuck_low/certification.json",
+        "trigger_condition": "A nonzero code is loaded.",
+        "violated_property_ids": [
+          "P_CODE_CAPTURE_METRIC"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_ignore_code_msb",
+    "canonical_dut_id": "360",
+    "hashes": {
+      "mutation_catalog_sha256": "227b348d807ad1a8af170965132dc321a5f95d84419424e05a76dadc9575d162",
+      "score_deck_sha256": "9fe797d15d76d3c65ab971f7cb3e7fc178aba8abf826906b607252c933037a0e",
+      "task_certification_sha256": "2cf15391fa4255684c0199d9ca65377a278519c6f732e5b1aac4d213b9903657",
+      "task_record_sha256": "3fa0bdf0adc5d0f1a024d744c9aee69d5caeef9e79fd2be28dcc2f16135af82c"
+    },
+    "release_dir": "360-digitally-controlled-delay-cell"
+  }
+}

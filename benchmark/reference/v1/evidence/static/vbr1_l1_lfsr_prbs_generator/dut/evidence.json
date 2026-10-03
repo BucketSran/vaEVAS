@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_lfsr_prbs_generator",
+  "task_id": "vbr1_l1_lfsr_prbs_generator:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Stimulus and Source Generators",
+    "base_function": "PRBS stimulus/dither generator"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7_ref.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/tb_prbs7_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "electrical",
+      "@(cross(",
+      "transition(",
+      "serial_out",
+      "state_0"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

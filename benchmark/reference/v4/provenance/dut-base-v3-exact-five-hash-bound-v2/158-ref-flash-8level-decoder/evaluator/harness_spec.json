@@ -1,0 +1,82 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "ref_flash_8level_decoder.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=42n maxstep=20p"
+    ],
+    "body_lines": [
+      "Vclks (clks 0) vsource type=pwl wave=[0 0 1n 0 1.05n 0.9 1.50n 0.9 1.55n 0 6n 0 6.05n 0.9 6.50n 0.9 6.55n 0 11n 0 11.05n 0.9 11.50n 0.9 11.55n 0 16n 0 16.05n 0.9 16.50n 0.9 16.55n 0 21n 0 21.05n 0.9 21.50n 0.9 21.55n 0 26n 0 26.05n 0.9 26.50n 0.9 26.55n 0 31n 0 31.05n 0.9 31.50n 0.9 31.55n 0 36n 0 36.05n 0.9 36.50n 0.9 36.55n 0]",
+      "Vvin (vin 0) vsource type=pwl wave=[0 0.10 5.80n 0.10 5.85n 0.20 10.80n 0.20 10.85n -0.10 15.80n -0.10 15.85n 0.30 20.80n 0.30 20.85n 0.00 25.80n 0.00 25.85n 0.15 30.80n 0.15 30.85n -0.05 35.80n -0.05 35.85n 0.25]",
+      "Vdt0 (dt0 0) vsource type=pwl wave=[0 0 0.80n 0 0.85n 0.9 1.50n 0.9 1.55n 0]",
+      "Vdt1 (dt1 0) vsource type=pwl wave=[0 0 5.80n 0 5.85n 0.9 6.50n 0.9 6.55n 0]",
+      "Vdt2 (dt2 0) vsource type=pwl wave=[0 0 10.80n 0 10.85n 0.9 11.50n 0.9 11.55n 0]",
+      "Vdt3 (dt3 0) vsource type=pwl wave=[0 0 15.80n 0 15.85n 0.9 16.50n 0.9 16.55n 0]",
+      "Vdt4 (dt4 0) vsource type=pwl wave=[0 0 20.80n 0 20.85n 0.9 21.50n 0.9 21.55n 0]",
+      "Vdt5 (dt5 0) vsource type=pwl wave=[0 0 25.80n 0 25.85n 0.9 26.50n 0.9 26.55n 0]",
+      "Vdt6 (dt6 0) vsource type=pwl wave=[0 0 30.80n 0 30.85n 0.9 31.50n 0.9 31.55n 0]",
+      "Vdt7 (dt7 0) vsource type=pwl wave=[0 0 35.80n 0 35.85n 0.9 36.50n 0.9 36.55n 0]",
+      "XDUT (vin dt0 dt1 dt2 dt3 dt4 dt5 dt6 dt7 clks dout vres) ref_flash_8level_decoder"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "clks",
+      "dout",
+      "dt0",
+      "dt1",
+      "dt2",
+      "dt3",
+      "dt4",
+      "dt5",
+      "dt6",
+      "dt7",
+      "vin",
+      "vres"
+    ]
+  },
+  "family_id": "158",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "a4596fe15aee04b3eef65cd6b09e0e52aa1e4a960e474ea77053ba7bcbe93b6b",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "ce13a749731a8577a9e88663a5622a264b9227ffd7aa77931e25e10b80f9599a",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_CLOCKED_EIGHT_TAP_COUNT",
+    "P_RESIDUE_CENTERING",
+    "P_OUTPUT_NORMALIZATION"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "e18a3546a15664dbeccfb2aae8f01c5fbfd08b0c2c07253d2c24216bc2edf3f7",
+    "family_spec_sha256": "70ba1121ee3a843d31b9eaa76467eb365c1d0a5a53aa18be658d901ae42bd48b"
+  },
+  "task_id": "v4-158"
+}

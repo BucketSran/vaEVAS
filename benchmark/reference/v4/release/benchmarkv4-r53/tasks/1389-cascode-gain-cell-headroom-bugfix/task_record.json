@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cascode_gain_cell_headroom.va"
+  ],
+  "canonical_dut_source_slug": "389-cascode-gain-cell-headroom",
+  "checker_task_id": "v4_389_cascode_gain_cell_headroom",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9a6b4f190833a7ddcc5788e1a459acd9b803e0a1d4e7bd3e2e70f06358bb998b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "59c6a322b5040f71a0a57a510d7d5fa30300d2217f4a346d31634487c1fc7385",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "46fb0723020c968d1f5d8537b8a9987bf4746cd09121ffdeb9f67dfef45f74ae",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "389",
+  "family_spec_sha256": "6ef2e32af8ab0cabfb32d0eae3f138115565eba8ff7dbc992e39e5dee96fe3d1",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "21c83861c9fb58676642df1b8ad9fdd56a0594e04cb23aa4756e8453ee634af9",
+  "public_contract": "tasks/1389-cascode-gain-cell-headroom-bugfix/public_contract.json",
+  "public_contract_sha256": "09adb77024169348f5eea6fcfb2a3a039564eaf7e0b922c0b90cc78cd3bed624",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1389-cascode-gain-cell-headroom-bugfix",
+  "task_id": "v4-1389"
+}

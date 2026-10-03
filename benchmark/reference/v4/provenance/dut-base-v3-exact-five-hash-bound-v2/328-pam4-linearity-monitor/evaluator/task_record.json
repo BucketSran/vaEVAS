@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "328",
+  "checker_task_id": "v4_328_pam4_linearity_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "8847f7f50e9f94f448171e4016c982bf74ed4aef43bdff7c22f95bd266d3bb0b",
+    "checker_profile.json": "17c307a35d51f5c61a89560d4e0aa24d09a585af5f05d0a4e43cf89878178586",
+    "derivation_manifest.json": "8ade21cd45b9ee25a5c4c6173bc0e0f6aae8c04feb314b5ba4143e2fed7e82b4",
+    "family_spec.json": "1b476a5e5d2ff87f2e8d7e0c136c145d7d0873c6825972777fd03355a7d78943",
+    "harness_spec.json": "11edf085822ed37fe336922dc35df5b8e688534f8a3b70ca7fe31d20c958670d",
+    "mutation_catalog.json": "664350c13e34915433aca62dbbcba34796e324fb3f34389bedfe1ea3217e7ee8",
+    "profiles/feedback.json": "3560eb74a91cd8532b5f8e9b6f589c4ed7a54b98125e0ca30305ececb42fadf0",
+    "profiles/score.json": "e1948724e9b5d7359638bc9d920b4957b64e7c5d9d2c9ee40fc5b2438f7a1978",
+    "score_tb.scs": "c888edeca298f16039a0fcef3d61144983ca4c977900e27526e391bd6bf2fe2f",
+    "solution_tree": "3a9ed519a7e381014c2334fee74daa7a052cfee696120d271b353d4594060d30",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "ddf78c345f3abd5960655593b83d7b961b7638ddfdf6bdd1ae27a1944ce43208",
+    "instruction.md": "895a082384c9919f03ffc1074c6038ef61b2603a30444fadc616e4c7a484db65",
+    "public_contract.json": "6922cefd5f8202e5f9d6d63a7d147aa115ad3ae61b91b3e1fd01fbb48f65b19e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "8847f7f50e9f94f448171e4016c982bf74ed4aef43bdff7c22f95bd266d3bb0b"
+  },
+  "release_dir": "328-pam4-linearity-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1026-pam4-linearity-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "pam4_linearity_monitor.va"
+  ]
+}

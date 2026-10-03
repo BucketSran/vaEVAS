@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "pipeline_adc_top.va",
+    "stage1_quantizer.va",
+    "residue_amp.va",
+    "stage2_quantizer.va",
+    "code_aligner.va"
+  ],
+  "canonical_dut_source_slug": "343-pipeline-adc-two-stage",
+  "checker_task_id": "v4_343_pipeline_adc_two_stage",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7865722c3e4c6ac063acf0ef2c7b2f58682bf0616cc9b21dc4f191e241b02aaf",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "62acb7715968da906319a8155d99192a59b46bce014d14272ca7663587aeeef3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f10abb95b0023cef1d7c0bf22b031b1bf2951e3d709c2c5e26c89e0f35a64892",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "343",
+  "family_spec_sha256": "0178e9fcfb5dd6a8b4e3ed7a39972a061f2cf642a549c196371d9171bff4eb14",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "95817d3d76506b0e0646e32c8e4281e93c51f85a8aea1a446dd8094982e6ff1d",
+  "public_contract": "tasks/343-pipeline-adc-two-stage/public_contract.json",
+  "public_contract_sha256": "f57022981a02202bcef4f5243afdca0b8226a964fe338877b9eb860eaf1c30a7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/343-pipeline-adc-two-stage",
+  "task_id": "v4-343"
+}

@@ -1,0 +1,94 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_dwa_dem_encoder/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_dwa_ptr_gen_ref.scs"
+    ],
+    "gold_va": [
+      "dwa_ptr_gen.va",
+      "v2b_4b.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_dwa_dem_encoder/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_dwa_dem_encoder",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "cell_en_o": "output",
+      "clk_i": "input",
+      "code_msb_i": "input",
+      "ptr_o": "output",
+      "rst_ni": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "clk_i",
+      "rst_ni",
+      "code_msb_i",
+      "cell_en_o",
+      "ptr_o"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "dwa_ptr_gen.va"
+    ],
+    "vectors": {
+      "cell_en_o": [
+        15,
+        14,
+        13,
+        12,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "code_msb_i": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "ptr_o": [
+        15,
+        14,
+        13,
+        12,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_dwa_dem_encoder/forms/dut/visible"
+}

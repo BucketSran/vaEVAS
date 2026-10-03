@@ -1,0 +1,78 @@
+{
+  "family_id": "329",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_edge_metric_sample_delayed_two_cycles/certification.json",
+        "certification_sha256": "5b0e4b6f24f103355a1cca9e1ce39841a7e0177bed1b7d6b2265c5571b40d07d",
+        "fault_class": "edge_metric_sample_delayed_two_cycles",
+        "mutation_bundle_sha256": "33168b9d3f3321e88964128826dd62900cb4879b2a9c9d0b3dbe89354cd66219",
+        "mutation_id": "neg_002_edge_metric_sample_delayed_two_cycles",
+        "source_catalog_certification_path": "negative_variants/neg_002_edge_metric_sample_delayed_two_cycles/certification.json",
+        "trigger_condition": "an enabled rising clk edge compares a two-cycle stale edge metric instead of the current input",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_boost_direction_reversed/certification.json",
+        "certification_sha256": "d5bcbafe332cb03d8f014572a93280202032301b9786bf8d4d29c96007aa41b8",
+        "fault_class": "boost_update_direction_reversed",
+        "mutation_bundle_sha256": "37391455779d241af85eec7771e772ca674bfd37d935376e792df442b0bfd94f",
+        "mutation_id": "neg_003_boost_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_003_boost_direction_reversed/certification.json",
+        "trigger_condition": "edge_metric_in is outside the target tolerance on an enabled rising clk edge",
+        "violated_property_ids": [
+          "P_INCREASE_BOOST_CODE_WHEN_EDGE_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_boost_output_polarity_inverted/certification.json",
+        "certification_sha256": "0f743186328f9ee7ad7f6636a457ef5b90d7d856b6b6361483f4aae38ff5362d",
+        "fault_class": "boost_output_polarity_inverted",
+        "mutation_bundle_sha256": "819ffe319f61e80a2ac24f8877f8b49e356917cc84858740b8fa49707956c35a",
+        "mutation_id": "neg_004_boost_output_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_004_boost_output_polarity_inverted/certification.json",
+        "trigger_condition": "the active boost path drives the opposite polarity of vin minus vcm",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_AS_A_BOOSTED_VERSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_lock_after_one_update/certification.json",
+        "certification_sha256": "9db55a935b437037af482ac8cf20b2f94231037acc7759902f93f1db1ff9d6ec",
+        "fault_class": "adaptation_lock_qualification_too_short",
+        "mutation_bundle_sha256": "9e6bff8fbd3977b7c857c75baed0e16ce390e3be79c1f8e6a4deb198f721f714",
+        "mutation_id": "neg_005_lock_after_one_update",
+        "source_catalog_certification_path": "negative_variants/neg_005_lock_after_one_update/certification.json",
+        "trigger_condition": "the first qualifying CTLE adaptation update completes",
+        "violated_property_ids": [
+          "P_ASSERT_LOCKED_AFTER_THREE_CONSECUTIVE_UPDATES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_vout_not_cleared_on_disable/certification.json",
+        "certification_sha256": "5da3a8df6cd46a64b435c4279e1596eb6e138583c7640059186d784cf3eb32c6",
+        "fault_class": "output_disable_clear_forced_high",
+        "mutation_bundle_sha256": "621d8e911547098525e7ac5793c20883484edc255835e27c9b6f27d6b806e07f",
+        "mutation_id": "neg_001_vout_not_cleared_on_disable",
+        "source_catalog_certification_path": "negative_variants/neg_001_vout_not_cleared_on_disable/certification.json",
+        "trigger_condition": "enable is low while reset is deasserted",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_edge_metric_sample_delayed_two_cycles",
+    "canonical_dut_id": "329",
+    "hashes": {
+      "mutation_catalog_sha256": "e4269a2d1add85c47d1ca2e1255475b006ed262ad6c8605cdeb9f9a62ede7710",
+      "score_deck_sha256": "f2e3c404727384edf6e09c6c626d0f45443d2d8336d6526737962d4e0a1eddcc",
+      "task_certification_sha256": "15b6dea8f4ffc0bcdc3fb5e8b3cc66c7119ba6fc2160955462e87791712d2e13",
+      "task_record_sha256": "fd47d4c51386b684b4957cd33605619f04532af2144427f60c15fbfc95572d9c"
+    },
+    "release_dir": "329-ctle-adaptation-loop"
+  }
+}

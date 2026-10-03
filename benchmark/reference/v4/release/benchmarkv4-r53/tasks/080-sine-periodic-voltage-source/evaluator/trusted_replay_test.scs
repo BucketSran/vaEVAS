@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "../submission/multitone.va"
+
+XDUT (0 OUT) multitone
+
+tran tran stop=500n maxstep=500p
+save OUT

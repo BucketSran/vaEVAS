@@ -1,0 +1,32 @@
+{
+  "id": "vbr1_l2_ldo_load_step_recovery_flow_tb",
+  "task_id": "vbr1_l2_ldo_load_step_recovery_flow_tb",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_ldo_load_step_recovery_flow",
+  "family": "tb-generation",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_ldo_load_step_recovery_flow.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "load_step_transient_droop_visible",
+    "closed_loop_recovery_after_step",
+    "metric_marks_recovered_regulation",
+    "load_monitor_tracks_step",
+    "control_monitor_responds_to_droop"
+  ],
+  "designed_source": true
+}

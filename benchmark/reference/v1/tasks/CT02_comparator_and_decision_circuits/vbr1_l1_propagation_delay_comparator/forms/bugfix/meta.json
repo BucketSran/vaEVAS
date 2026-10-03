@@ -1,0 +1,34 @@
+{
+  "id": "vbr1_l1_propagation_delay_comparator_bugfix",
+  "task_id": "vbr1_l1_propagation_delay_comparator_bugfix",
+  "release_entry_id": "vbr1_l1_propagation_delay_comparator",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Comparator and Decision Circuits",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_cmp_delay_ref.scs",
+    "edge_interval_timer.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "comparator_polarity_matches_input_difference",
+    "small_input_difference_has_larger_delay",
+    "delay_is_clamped_between_min_and_max"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

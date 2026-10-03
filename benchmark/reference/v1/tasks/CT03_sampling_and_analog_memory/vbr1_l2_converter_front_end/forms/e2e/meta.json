@@ -1,0 +1,58 @@
+{
+  "id": "vbr1_l2_converter_front_end_e2e",
+  "task_id": "vbr1_l2_converter_front_end_e2e",
+  "release_entry_id": "vbr1_l2_converter_front_end",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "task_name": "Converter Front-End Chain",
+  "family": "end-to-end",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "source": {
+    "type": "benchmark-gold",
+    "path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l2_converter_front_end/forms/e2e/gold"
+  },
+  "tier": "verified",
+  "verification_status": "passed",
+  "owner": "team",
+  "created_at": "2026-04-19",
+  "must_include": [
+    "@(cross(",
+    "@(timer(",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "sample_hold_droop_ref.va",
+    "tb_sample_hold_droop_ref.scs",
+    "tran.csv"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "parity_policy": "default",
+  "checks": {
+    "dut_compile": "required",
+    "tb_compile": "required",
+    "tran_generated": "required",
+    "sim_correct": "required",
+    "parity_required": true
+  },
+  "evidence": {
+    "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_converter_front_end/e2e/evidence.json",
+    "rerun_summary": "results/vabench-release-v1-dual-rerun-ct03-enhance-20260523/summary.json",
+    "notes": "Strengthened on 2026-05-23 as an L2 front-end chain with aperture-delayed sampling, bounded droop, coarse decision, and valid pulse checks."
+  }
+}

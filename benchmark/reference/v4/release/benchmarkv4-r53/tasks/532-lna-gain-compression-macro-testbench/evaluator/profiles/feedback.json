@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "b12503c38a843fb3db1ac51dd50dc3a216da75b90cbf97efb277b5170dafa599",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_INITIAL_AND_RESET_COMMON_MODE",
+    "P_SMALL_SIGNAL_GAIN",
+    "P_POSITIVE_COMPRESSION",
+    "P_NEGATIVE_COMPRESSION",
+    "P_FINAL_OUTPUT_CLAMP",
+    "P_CLOCKED_HOLD"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

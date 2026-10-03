@@ -1,0 +1,115 @@
+{
+  "release_entry_id": "vbr1_l1_ptat_ctat_reference_generator",
+  "task_id": "vbr1_l1_ptat_ctat_reference_generator:dut",
+  "source_task_id": "vbr1_l1_ptat_ctat_reference_generator_dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Bias Reference and Power Management",
+    "base_function": "PTAT/CTAT reference generator"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_ptat_ctat_reference_generator/dut/gold",
+    "results/vabench-release-v1-dual-rerun/vbr1_l1_ptat_ctat_reference_generator/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_ptat_ctat_reference_generator/dut/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_ptat_ctat_reference_generator/dut/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_ptat_ctat_reference_generator/forms/dut/gold/ptat_ctat_reference_generator.va"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rerun/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_ptat_ctat_reference_generator/dut/gold",
+    "result_root": "results/vabench-release-v1-dual-rerun/vbr1_l1_ptat_ctat_reference_generator/dut/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 3.150299874191612e-06,
+      "max_abs_v": 7.354267029091588e-05,
+      "mean_relative_rms_error": 2.047166928035827e-06,
+      "max_relative_rms_error": 6.969689987149583e-06,
+      "mean_nrmse": 2.047166928035827e-06,
+      "max_nrmse": 6.969689987149583e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 3.150299874191612e-06,
+          "max_abs_v": 2.8874582869375942e-05,
+          "span_v": 0.452,
+          "nrmse": 6.969689987149583e-06,
+          "kind": "analog"
+        },
+        "out": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.02999999999999997,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 2.122994024469209e-06,
+          "max_abs_v": 7.354267029091588e-05,
+          "span_v": 0.65,
+          "nrmse": 3.266144653029552e-06,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_ptat_ctat_reference_generator/forms/dut/gold/ptat_ctat_reference_generator.va"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "4caea52a34726a16394344545be6cb36017c2711864ee7c6d80c26581d2a9a3b",
+  "parameters": {
+    "maxstep": "200p",
+    "stop_time": "92n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_ENABLE_IS",
+    "P_INCREASE_A_BEHAVIORAL_AMPLITUDE_STATE_BY",
+    "P_CLAMP_THE_AMPLITUDE_AT_AMP_TARGET",
+    "P_TOGGLE_OSC_OUT_FROM_CLK_REF",
+    "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+    "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

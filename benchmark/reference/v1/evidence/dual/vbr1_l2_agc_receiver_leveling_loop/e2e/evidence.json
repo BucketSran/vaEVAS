@@ -1,0 +1,114 @@
+{
+  "release_entry_id": "vbr1_l2_agc_receiver_leveling_loop",
+  "task_id": "vbr1_l2_agc_receiver_leveling_loop:e2e",
+  "source_task_id": "vbr1_l2_agc_receiver_leveling_loop_e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "AGC receiver leveling loop"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_agc_receiver_leveling_loop/e2e/gold",
+    "results/vabench-release-v1-dual-rerun/vbr1_l2_agc_receiver_leveling_loop/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_agc_receiver_leveling_loop/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_agc_receiver_leveling_loop/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/agc_receiver_leveling_loop.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/tb_agc_receiver_leveling_loop.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rerun/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_agc_receiver_leveling_loop/e2e/gold",
+    "result_root": "results/vabench-release-v1-dual-rerun/vbr1_l2_agc_receiver_leveling_loop/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 4.7102949181661565e-06,
+      "max_abs_v": 0.00010650023669189768,
+      "mean_relative_rms_error": 1.7427246626878659e-06,
+      "max_relative_rms_error": 5.528515162166848e-06,
+      "mean_nrmse": 1.7427246626878659e-06,
+      "max_nrmse": 5.528515162166848e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 4.7102949181661565e-06,
+          "max_abs_v": 0.00010650023669189768,
+          "span_v": 0.8520000000000004,
+          "nrmse": 5.528515162166848e-06,
+          "kind": "analog"
+        },
+        "out": {
+          "rmse_v": 1.3636196559065984e-06,
+          "max_abs_v": 3.275007278547015e-05,
+          "span_v": 0.43,
+          "nrmse": 3.1712085021083685e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 4.586884224157508e-09,
+          "max_abs_v": 4.5062884146407356e-08,
+          "span_v": 0.33,
+          "nrmse": 1.389964916411366e-08,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/agc_receiver_leveling_loop.va",
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_agc_receiver_leveling_loop/forms/e2e/gold/tb_agc_receiver_leveling_loop.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

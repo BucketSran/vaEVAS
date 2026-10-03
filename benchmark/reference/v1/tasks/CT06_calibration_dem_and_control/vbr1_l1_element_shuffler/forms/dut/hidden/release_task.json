@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_element_shuffler:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_element_shuffler",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Calibration, DEM, and Control",
+  "base_function": "Element shuffler",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut/gold/element_shuffler.va",
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut/gold/tb_element_shuffler_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_element_shuffler/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "element_shuffler",
+    "source_task_id": "vbm1_element_shuffler_dut",
+    "historical_source_task_id": "vbm1_element_shuffler_dut",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_element_shuffler/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

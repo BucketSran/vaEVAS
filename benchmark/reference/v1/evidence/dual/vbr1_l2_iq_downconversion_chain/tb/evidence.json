@@ -1,0 +1,149 @@
+{
+  "release_entry_id": "vbr1_l2_iq_downconversion_chain",
+  "task_id": "vbr1_l2_iq_downconversion_chain:tb",
+  "source_task_id": "vbr1_l2_iq_downconversion_chain_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "I/Q downconversion chain"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb",
+    "results/l2_observability_targeted_dual_20260601_r2/vbr1_l2_iq_downconversion_chain/tb/vbr1_l2_iq_downconversion_chain_tb",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_iq_downconversion_chain/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_iq_downconversion_chain/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/iq_downconversion_chain.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/tb_iq_downconversion_chain.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "benchmark-vabench-release-v1/reports/l2_observability_targeted_dual_20260601_r2_import_summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb",
+    "result_root": "results/l2_observability_targeted_dual_20260601_r2/vbr1_l2_iq_downconversion_chain/tb/vbr1_l2_iq_downconversion_chain_tb",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 10,
+      "samples": 1200,
+      "max_rmse_v": 1.6124821234969317e-05,
+      "max_abs_v": 0.00014062531258546285,
+      "mean_relative_rms_error": 1.0203549868129818e-05,
+      "max_relative_rms_error": 1.7916468038854797e-05,
+      "mean_nrmse": 1.0203549868129818e-05,
+      "max_nrmse": 1.7916468038854797e-05,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "lo_i": {
+          "rmse_v": 1.2236715420885532e-05,
+          "max_abs_v": 6.250323705914163e-05,
+          "span_v": 0.8,
+          "nrmse": 1.5295894276106914e-05,
+          "kind": "analog"
+        },
+        "lo_q": {
+          "rmse_v": 1.2102974076276194e-05,
+          "max_abs_v": 6.25032370590306e-05,
+          "span_v": 0.8,
+          "nrmse": 1.5128717595345241e-05,
+          "kind": "analog"
+        },
+        "metric": {
+          "rmse_v": 7.640356927208922e-06,
+          "max_abs_v": 5.051444957104856e-05,
+          "span_v": 0.5674373471882641,
+          "nrmse": 1.3464670531589117e-05,
+          "kind": "analog"
+        },
+        "mix_i": {
+          "rmse_v": 9.043640855069918e-06,
+          "max_abs_v": 5.273449221965265e-05,
+          "span_v": 0.6749999999999999,
+          "nrmse": 1.3397986451955435e-05,
+          "kind": "analog"
+        },
+        "mix_q": {
+          "rmse_v": 9.11369713973623e-06,
+          "max_abs_v": 5.274239696251293e-05,
+          "span_v": 0.6749999999999999,
+          "nrmse": 1.3501773540349972e-05,
+          "kind": "analog"
+        },
+        "out": {
+          "rmse_v": 7.563933167316563e-06,
+          "max_abs_v": 5.0513667678053764e-05,
+          "span_v": 0.5674373471882641,
+          "nrmse": 1.332998824415941e-05,
+          "kind": "analog"
+        },
+        "phase_mon": {
+          "rmse_v": 1.6124821234969317e-05,
+          "max_abs_v": 0.00014062531258546285,
+          "span_v": 0.9,
+          "nrmse": 1.7916468038854797e-05,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 1.3805332397277114e-15,
+          "max_abs_v": 2.6478819137309983e-14,
+          "span_v": 0.47,
+          "nrmse": 2.9373047653781095e-15,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/iq_downconversion_chain.va",
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/tb_iq_downconversion_chain.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

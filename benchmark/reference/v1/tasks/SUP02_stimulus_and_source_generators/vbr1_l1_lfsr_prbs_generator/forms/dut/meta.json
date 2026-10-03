@@ -1,0 +1,37 @@
+{
+  "id": "prbs7",
+  "family": "spec-to-va",
+  "category": "Stimulus and Source Generators",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "must_include": [
+    "electrical"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "candidate.out"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_eval_id": 15,
+  "source_name": "eval-prbs7",
+  "expected_output_summary": "A .va file with 7-bit LFSR shift register, XOR feedback, serial and parallel outputs, clock-edge-driven.",
+  "source_files": [
+    "gold/prbs7_ref.va",
+    "gold/tb_prbs7_ref.scs"
+  ],
+  "task_id": "prbs7",
+  "release_entry_id": "vbr1_l1_lfsr_prbs_generator",
+  "asset_type": "vabench_task"
+}

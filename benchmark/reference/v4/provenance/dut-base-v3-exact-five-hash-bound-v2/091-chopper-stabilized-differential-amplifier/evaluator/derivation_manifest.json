@@ -1,0 +1,16 @@
+{
+  "family_id": "091",
+  "mutation_catalog_sha256": "ec11fb8268a4d3523e17b172624cf91300adabfd81ad4c59c05d693ee975f90f",
+  "mutation_partition": {
+    "amplifier_core_faults": [
+      "neg_001_no_synchronous_demod",
+      "neg_002_offset_omitted",
+      "neg_004_gain_wrong"
+    ],
+    "lowpass_state_faults": [
+      "neg_003_lowpass_bypassed",
+      "neg_005_hold_ignored"
+    ]
+  },
+  "schema_version": "v4-derivation-manifest-v1"
+}

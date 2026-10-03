@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_gain_estimator:e2e",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_gain_estimator",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Gain estimator",
+  "family": "end-to-end",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/gain_estimator.va",
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/tb_gain_estimator_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_gain_estimator/e2e/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "gain_estimator",
+    "source_task_id": "vbr1_l1_gain_estimator_e2e",
+    "historical_source_task_id": "vbr1_l1_gain_estimator_e2e",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

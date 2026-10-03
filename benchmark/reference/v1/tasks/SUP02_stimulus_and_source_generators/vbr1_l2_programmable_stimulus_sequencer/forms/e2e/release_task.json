@@ -1,0 +1,51 @@
+{
+  "id": "vbr1_l2_programmable_stimulus_sequencer:e2e",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_programmable_stimulus_sequencer",
+  "level": "L2",
+  "track": "support",
+  "difficulty": "D3",
+  "category": "Stimulus and Source Generators",
+  "base_function": "Programmable stimulus sequencer",
+  "family": "end-to-end",
+  "domain": "voltage",
+  "score_surface": "benchmark-e2e",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/gold/programmable_stimulus_sequencer.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/gold/tb_programmable_stimulus_sequencer.scs"
+    ],
+    "public_inputs": [
+      "prompt.md"
+    ],
+    "submission_artifacts": [
+      "programmable_stimulus_sequencer.va",
+      "tb_programmable_stimulus_sequencer.scs"
+    ],
+    "private_reference_artifacts": []
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_programmable_stimulus_sequencer/e2e/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "programmable_stimulus_sequencer",
+    "source_task_id": "",
+    "historical_source_task_id": "",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

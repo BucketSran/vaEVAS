@@ -1,0 +1,29 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "$bound_step("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "periodic_phase_ramp_wraps"
+    - "guard_pulse_repeats_each_period"
+    - "guard_pulse_width_fraction"
+  public_observables:
+    - "time"
+    - "guard_out"
+    - "phase_out"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "analog_multiplier_gain.va"
+  ],
+  "canonical_dut_source_slug": "132-analog-multiplier",
+  "checker_task_id": "v4_132_analog_multiplier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2f44f354b72687efdd88886902e09be8a11f4cb2d2b076dfc733585036bbb63c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a34791d15443b59716c5db576742ae0c719d202786d0f29300dd42a8e001b7a6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ee989b4267625a848b686c0c55eae2821655902de3644330ba6f895db6bf2e0f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "132",
+  "family_spec_sha256": "443c39992e293cfb3335ccc9be32fbaa7ac2e644a82bed9bf13a523146a28f07",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ec167a77373571e4eab863649cf64bf11611c1a4e81605da7141efde95ef9e19",
+  "public_contract": "tasks/1132-analog-multiplier-bugfix/public_contract.json",
+  "public_contract_sha256": "4b47dd7dc04e13ea50d0b3bd7dbdc0f005324b77e47cb068a4d8462f2d765abb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1132-analog-multiplier-bugfix",
+  "task_id": "v4-1132"
+}

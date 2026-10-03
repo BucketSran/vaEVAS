@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bias_trim_affine_mapper.va"
+  ],
+  "canonical_dut_source_slug": "254-bias-trim-affine-mapper",
+  "checker_task_id": "v4_254_bias_trim_affine_mapper",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2b42a3976c1a5a22f333a86a535e065601882dee536325d4bf8f63a4d5a36dc7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d385b21bbd80a3ef67f22fd8269456a3246dfa075ca6462111a0fcd51f148bc9",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6ba6cae561ecace373aa5b1288e50f22d8f483c5c1188aa28deff598285e5c1e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "254",
+  "family_spec_sha256": "64b0e78148a65eff92d4008e39222eb3e11085fdd59f0979359f327d2bb03a4f",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fae7b61f2034317b65ea3b0c86f83207ccb0b17f24cf009ceae7f918f8fd8db6",
+  "public_contract": "tasks/1254-bias-trim-affine-mapper-bugfix/public_contract.json",
+  "public_contract_sha256": "5873229e8f3bed95ea5a861fa2ce7f378aaf6108f9ce04d2e5b43c8040fb8ab6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1254-bias-trim-affine-mapper-bugfix",
+  "task_id": "v4-1254"
+}

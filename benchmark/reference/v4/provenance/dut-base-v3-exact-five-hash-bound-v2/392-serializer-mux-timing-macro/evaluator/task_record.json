@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "392",
+  "checker_task_id": "v4_392_serializer_mux_timing_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9d1322e98f0afc2d2921351abf7276c30553d060225ec1543b5ea22ea049c380",
+    "checker_profile.json": "ac72c0192c2a1e6ae71a9f6529cb45f88ad5c8dfc4a41f5bb84ce27fe12b4952",
+    "derivation_manifest.json": "ec4b6dbe77e5b1feb55f6349cea46cdb5b81c6b317ab7c597596d4791b879057",
+    "family_spec.json": "32cb12634b0662240d54e467117ab266dfbfb73498c0ac30b6de93fa1c6cc649",
+    "harness_spec.json": "571b314d0c919041865cf107245e222b5ec4eaa99c02727757f0ceca591bf98c",
+    "mutation_catalog.json": "3bcdb048b79e570211e7c8f6e44a2ffcfe170c439bdd0208b2fbc7da9849d9b8",
+    "profiles/feedback.json": "32d2dadc042f485ab1c338b4c4162079bac194017e2b2cb3ef3674dda8ad86bf",
+    "profiles/score.json": "f1f41e983b8f559b70f54054c1556bdbeda129f16527e3f640681f0bfebc5b66",
+    "score_tb.scs": "643031a073b145df11436e2fc2d90e84ab06b65dd2068b8503b4a73991b06aa8",
+    "solution_tree": "8c65b15f7de1bac72efaa37f480ef5c56ae0c6027b4235ca915fa049ed36f287",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "4b915cc3e2a0b190425c5f2f62abf69bc158a1944de4b6d956e56332daccdf04",
+    "instruction.md": "8ad7d71a5fbffe6b59f5d2c13ef2b12fb9f13a7ee0f83e4cbfcee6cc57392097",
+    "public_contract.json": "6b940e7a9c23b8eb36415ed8a6b4dd7bd73f60110985ed152f1c02e6ee4f5ddd"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9d1322e98f0afc2d2921351abf7276c30553d060225ec1543b5ea22ea049c380"
+  },
+  "release_dir": "392-serializer-mux-timing-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "951-serializer-mux-timing-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "serializer_mux_timing_macro.va"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "slew_rate_limiter.va"
+  ],
+  "canonical_dut_source_slug": "016-slew-rate-limiter",
+  "checker_task_id": "v4_016_slew_rate_limiter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b8e5666564e32a4f141e22d562d40ee170de3ec8dfe2683f1b29db9d4462ecd9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "90612371340c3e9cdfc483d18e020024c0c33128e1d746e4cbf9c954832e6fcb",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ed0b21480d3886c8416d5c0d5d5432560d2717c849aef09f355c804815fef83a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "016",
+  "family_spec_sha256": "7205a7092111d215f0ca592aecee6d312ea1cd4e7b300c733e9748c685154f79",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f23c47a732d1d7e645de883cd7466fe062a18f71ac681e7ac77823683a5a117d",
+  "public_contract": "tasks/016-slew-rate-limiter/public_contract.json",
+  "public_contract_sha256": "d96b4b8a1e762a208f62ef69e71eb71b8016cce11e8c2dd42acfb6fd92b13bc0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/016-slew-rate-limiter",
+  "task_id": "v4-016"
+}

@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_sine_periodic_voltage_source:tb",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_sine_periodic_voltage_source",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D1",
+  "category": "Stimulus and Source Generators",
+  "base_function": "Sine/periodic voltage source",
+  "family": "tb-generation",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/multitone.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/tb_multitone_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sine_periodic_voltage_source/tb/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "sine_periodic_voltage_source",
+    "source_task_id": "vbr1_l1_sine_periodic_voltage_source_tb",
+    "historical_source_task_id": "vbr1_l1_sine_periodic_voltage_source_tb",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

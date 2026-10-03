@@ -1,0 +1,79 @@
+{
+  "family_id": "373",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_missing_vout_reset/certification.json",
+        "certification_sha256": "6879cd3e2886594511099941c7ff47ea19e0e6d66d446315f1f04cb272817c3e",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "5ece14b04cc101ae1949a06a103972f193f89dade4778b1801f0523609987ec9",
+        "mutation_id": "neg_001_missing_vout_reset",
+        "source_catalog_certification_path": "negative_variants/neg_001_missing_vout_reset/certification.json",
+        "trigger_condition": "reset is asserted after vout has accumulated charge",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_pump_polarity/certification.json",
+        "certification_sha256": "a882a1b590cbd787f7f7d66d9303b880e702d17a5b1b6ab90805c8e6beb172fb",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "03aa93be73df7a886b37c5510785da7df5b7699baea526f702477eaaece2cba5",
+        "mutation_id": "neg_003_wrong_pump_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_pump_polarity/certification.json",
+        "trigger_condition": "vout is below target",
+        "violated_property_ids": [
+          "P_ERROR_REPORTING",
+          "P_PUMP_REGULATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_ready_asserts_early/certification.json",
+        "certification_sha256": "cd95b98ed76288e706d8e8978a1e0dc5e6a46075d1c9c0e01c286d0158126a8e",
+        "fault_class": "qualification_count_error",
+        "mutation_bundle_sha256": "123cccd33872127ed921b2a101533e7c48ece469620a08ac48fd51337771b27f",
+        "mutation_id": "neg_005_ready_asserts_early",
+        "source_catalog_certification_path": "negative_variants/neg_005_ready_asserts_early/certification.json",
+        "trigger_condition": "the first in-tolerance update occurs",
+        "violated_property_ids": [
+          "P_READY_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_overlapping_phases/certification.json",
+        "certification_sha256": "f3dff318ffdfafa889339544a88250835d620d1d0fc33fbd4952b0c8edc2e55c",
+        "fault_class": "phase_overlap",
+        "mutation_bundle_sha256": "5cbf2db4963f168ec540dbab055593c44d98bdc5a3cf016cd05aa48a5bbfa468",
+        "mutation_id": "neg_002_overlapping_phases",
+        "source_catalog_certification_path": "negative_variants/neg_002_overlapping_phases/certification.json",
+        "trigger_condition": "the enabled phase generator updates",
+        "violated_property_ids": [
+          "P_NONOVERLAP_PHASES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_pump_step/certification.json",
+        "certification_sha256": "2d353f08bc47bcfac462905daead896f2299a648863c381cdf7e9f90fa1995fa",
+        "fault_class": "wrong_gain",
+        "mutation_bundle_sha256": "d297d6fbc865eb39cc55ac37902db75d4fc54cc41a79d7b83935f8fa00a9c579",
+        "mutation_id": "neg_004_half_pump_step",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_pump_step/certification.json",
+        "trigger_condition": "pump_en and one phase are high at a clock update",
+        "violated_property_ids": [
+          "P_PUMP_REGULATION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_missing_vout_reset",
+    "canonical_dut_id": "373",
+    "hashes": {
+      "mutation_catalog_sha256": "abcf6b6eacd075c895f6bf8df59eb0489661279391a1d13ddaaa67dd18e43919",
+      "score_deck_sha256": "3f5fdba04e0d14d9c4c3c491ce048b33d51ccc3a1dd3a618998254d6ab538369",
+      "task_certification_sha256": "e0f89b43a24e4d4b065a6d624433a2a5394f9420675339ce93d827182ac9c268",
+      "task_record_sha256": "e4161cc2ed97a6b25ef852a60cbbaa0fa9f4e14cf16a7ac56988d64cf96266a9"
+    },
+    "release_dir": "373-charge-pump-voltage-multiplier-controller"
+  }
+}

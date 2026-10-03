@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe);
+input vinp,vinn,chop_clk,rst,enable,hold; output demod_sample,baseband_ref,event_strobe;
+electrical vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe;
+parameter real vdd=0.9,vss=0.0,vth=0.45,gain=3.0,vos_amp=20m,tr=100p;
+real sample_q,ref_q,strobe_q,input_diff,chopped,amplified; integer polarity;
+analog begin
+ @(initial_step) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end
+ @(cross(V(chop_clk)-vth,+1) or cross(V(chop_clk)-vth,-1)) begin
+  if((V(rst)>vth)||(V(enable)<=vth)) sample_q=0.0;
+  else if(V(hold)<=vth) begin polarity=(V(chop_clk)>vth)?1:-1; input_diff=V(vinp)-V(vinn); chopped=polarity*input_diff; amplified=gain*(chopped+vos_amp); sample_q=polarity*amplified; ref_q=gain*input_diff; strobe_q=(strobe_q>vth)?vss:vdd; end
+ end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end
+ V(demod_sample)<+transition(sample_q,0,tr,tr); V(baseband_ref)<+transition(ref_q,0,tr,tr); V(event_strobe)<+transition(strobe_q,2.0*tr,tr,tr);
+end
+endmodule

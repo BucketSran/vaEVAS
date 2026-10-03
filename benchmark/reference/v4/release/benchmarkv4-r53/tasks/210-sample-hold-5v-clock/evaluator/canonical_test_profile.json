@@ -1,0 +1,26 @@
+{
+  "canonical_semantics_sha256": "9bcab54572dc55b4cb66d8af47c09181bdc734650d4e8beb2844328174f2142c",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "210",
+    "feedback_semantics_sha256": "9bcab54572dc55b4cb66d8af47c09181bdc734650d4e8beb2844328174f2142c",
+    "harness_spec_sha256": "bd7e897de22514a3ad333f3c57392919ab5035d5a05cf8544fed50b7af489fd3",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "9bcab54572dc55b4cb66d8af47c09181bdc734650d4e8beb2844328174f2142c",
+    "task_id": "v4-210"
+  },
+  "test_deck_sha256": "51fbaff29911b429f8c15d0015462c68c03d651b62aea664f9653d39752a0104"
+}

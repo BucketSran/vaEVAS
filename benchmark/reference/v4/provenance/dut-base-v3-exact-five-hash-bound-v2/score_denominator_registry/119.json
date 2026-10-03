@@ -1,0 +1,79 @@
+{
+  "family_id": "119",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "28898bbc50e59227386489ca016ca59e16a7e98a8b04f2a4f6f53b5dc3e4905c",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "25175a08114c035cc27ce8909ce4fe4b1d44aa8f975dac01de6d59c5b499b789",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero outputs and therefore fails the stable-sample semantic contract.",
+        "violated_property_ids": [
+          "P_INPUT_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "44d2e9927370d28ccf9769c1ea0fa278ef3c70b9ddd5e58d4a93e8ad4608f419",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "9814deb968dc6d319456a92d63b6025ba3ff2c6c18746104dd558ae98de88be2",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "SAR CDAC Residue: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_ACCUMULATED_STATE",
+          "P_OUTPUT_TRANSITION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_weight_scale/certification.json",
+        "certification_sha256": "a4b0f841ac66820476355072f35f5ef11e17fd08274fd3fb1ee167fb3bcaadc0",
+        "fault_class": "fault_003_wrong_weight_scale",
+        "mutation_bundle_sha256": "a6b747b03a9945591e6fb08180c6880f2cec47ac70b646b13e5f10faacc7d596",
+        "mutation_id": "neg_003_wrong_weight_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_weight_scale/certification.json",
+        "trigger_condition": "Uses doubled binary residue weights.",
+        "violated_property_ids": [
+          "P_BINARY_SUBTRACTIONS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_lsb_step/certification.json",
+        "certification_sha256": "a84b309d6ad508f0629d354355e03e6ab1f5d508f980b6b356e31ce6f96498b8",
+        "fault_class": "fault_004_missing_lsb_step",
+        "mutation_bundle_sha256": "8de8d1d340aadbd2792e9d4649441a4a4a74caed4a8cb162c9f50df8ede75d95",
+        "mutation_id": "neg_004_missing_lsb_step",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_lsb_step/certification.json",
+        "trigger_condition": "Omits the S1 least-significant residue step.",
+        "violated_property_ids": [
+          "P_EDGE_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_s6_edge/certification.json",
+        "certification_sha256": "ab0ede9f9d56b546daee7e2c09401ab0d4fc103fa7e5d6b154fb27d650602535",
+        "fault_class": "fault_002_wrong_s6_edge",
+        "mutation_bundle_sha256": "416dab14bb5885a09d27845387737176ff2c63ad7672bcc348983c66eaafc5cb",
+        "mutation_id": "neg_002_wrong_s6_edge",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_s6_edge/certification.json",
+        "trigger_condition": "Applies the S6 residue step on rising instead of falling edge.",
+        "violated_property_ids": [
+          "P_S6_HALF_ADD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "119",
+    "hashes": {
+      "mutation_catalog_sha256": "e0d673913a9a4613fedeaecfa818594c733f52eb102e50c981448165ad7b18df",
+      "score_deck_sha256": "bbcd8088dac16a0e9f98e32a124654154bb4f8dfa0e50a4eae77db5a6eda7559",
+      "task_certification_sha256": "1c9282275bf4d4cbdbf536cd950aa1e950d3c897ab44ee94ba328da456615306",
+      "task_record_sha256": "9168007cdb86a71d67607e80beae19988467d72fbd82f094766c1633df947a1a"
+    },
+    "release_dir": "119-sar-cdac-residue"
+  }
+}

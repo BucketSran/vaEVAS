@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "clocked_comparator_dual_output.va"
+  ],
+  "canonical_dut_source_slug": "218-clocked-comparator-dual-output",
+  "checker_task_id": "v4_218_clocked_comparator_dual_output",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "6569e60bd26db87bf0f0c6e2475242aa35525d6b1c5d38f78d8d71d2d426b5ce",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ae20e9bd98999422a82c3a336120b9f29f1a8d5ad72dfe517e2ece25f31523c6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c9c104f0a05b6428b1af6f940977e0f7f1656beb309cda7980057dfec155e163",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "218",
+  "family_spec_sha256": "d10c523bd6e93e0d75df47dc7baf5c130a020023027a5a531fcb99bab206683b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d9eacda14d918f19d7944d1ba1f55f12372f8182f4da0e64e176537aa881289c",
+  "public_contract": "tasks/1218-clocked-comparator-dual-output-bugfix/public_contract.json",
+  "public_contract_sha256": "a1646ce70a443f2ea2cd8acc9d899619cd9444ae507b7037b1da3c374408be0d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1218-clocked-comparator-dual-output-bugfix",
+  "task_id": "v4-1218"
+}

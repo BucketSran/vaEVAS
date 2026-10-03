@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deterministic_energy_accumulator.va"
+  ],
+  "canonical_dut_source_slug": "275-deterministic-energy-accumulator",
+  "checker_task_id": "v4_275_deterministic_energy_accumulator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ef0b89413758043739275d8497611ad48964c6ee82a6c3e23872a4b5ac6b4d08",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "08e34c7ca15d779878dd3a47c0ea9c6b80cb2e6513a1e603ffc1ca86d3d5301c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "275",
+  "family_spec_sha256": "94ec1f188fb6e2bfbfb72d6b7f9d44f1db9954f0a36e4393cdb411c955984923",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "77f2ea1c76f6d9ffe90b3f15dc1493e29bcb9b28a3f402d5bb25470e094e1a64",
+  "public_contract": "tasks/275-deterministic-energy-accumulator/public_contract.json",
+  "public_contract_sha256": "deb4579df8ef3337bc0b57d63a2b43813e45f75ad60c0ded85f9f91676069a2b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/275-deterministic-energy-accumulator",
+  "task_id": "v4-275"
+}

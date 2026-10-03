@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "363",
+  "checker_task_id": "v4_363_fractional_n_synthesizer_mini_loop",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "5c78dd0c7e4dcd3283d65dc59ee1ddb2e729ebea21eafff7c94d64e06f3c11dd",
+    "checker_profile.json": "bef0800a63117bbad7356bf347979073f8e2afb0a5d27a88f05dd010ad299ec2",
+    "derivation_manifest.json": "d68e4907dd4903ef6f4338162e52ac68242841af69f0153003a9a676cfe55b75",
+    "family_spec.json": "9049b85075df6f56169fb9d3adec2281d050c98934c738242885e6a56fb83c3a",
+    "harness_spec.json": "bdd1727e7d24df1a7fddd53bc4a4286a0135ad94abed1c6252cd6e07ae594de7",
+    "mutation_catalog.json": "60570bcc175c1064839a9551dfde654e4bd949c725e3274afb5e413e7bc8e111",
+    "profiles/feedback.json": "f58ac08016a8f341e3adf60deda4101216c3f281be78ed926a1abf0c5b876259",
+    "profiles/score.json": "4621362809ea0beecaa3f6c14886100a99acc7007d0c917dc6e4bdbe84755f77",
+    "score_tb.scs": "3228cc5e8b88e0b43a65b16a31dcdb69240427cca180ac9e10ffeac514105e1f",
+    "solution_tree": "6ac6691fb745ebbd155f179af35a61c502b463a351a9a228372ac5f050c18cfd",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "e3406b2c87ab6a9cad51ca41449a3ed91b24febe60ae0c8a0046bca289b1ae73",
+    "instruction.md": "ce0cb36cfe9e3c199cde6a32ec11795a06c3622b3b299b01c636900f96eaab36",
+    "public_contract.json": "c41be01693757f9dd4d683b0d2e0a2945c82dd7f9f02ea676d95e920f622b4e8"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "5c78dd0c7e4dcd3283d65dc59ee1ddb2e729ebea21eafff7c94d64e06f3c11dd"
+  },
+  "release_dir": "363-fractional-n-synthesizer-mini-loop",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "922-fractional-n-synthesizer-mini-loop",
+  "support_root": "",
+  "target_artifacts": [
+    "fracn_synth_top.va",
+    "accumulator.va",
+    "multi_modulus_divider.va",
+    "ratio_monitor.va"
+  ]
+}

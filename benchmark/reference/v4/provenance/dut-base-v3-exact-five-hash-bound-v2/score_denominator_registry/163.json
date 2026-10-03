@@ -1,0 +1,80 @@
+{
+  "family_id": "163",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_denominator/certification.json",
+        "certification_sha256": "8de7004c088cc8d80bfaf348012ec6197e6323d9675ab3a4d55175a9787c2dcd",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "354bb9748760e32ec38da9ed12501261e0773ae1cc76ee29808b7191435c2c9c",
+        "mutation_id": "neg_002_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_denominator/certification.json",
+        "trigger_condition": "Halves the decoded amplitude before applying the midscale offset.",
+        "violated_property_ids": [
+          "P_NORMALIZED_MIDSCALE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "c1d5a0651d73f51ed33351255225e28c59203cb018a13344bc9e649932f483a2",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "f8256babf93cec6297c64feb38980aa848915403866537ce711fff29157e0ad9",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CLOCKED_PUBLICATION_HOLD",
+          "P_NORMALIZED_MIDSCALE_OUTPUT",
+          "P_READY_SERIAL_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_omit_dn_half_weight/certification.json",
+        "certification_sha256": "6eb9370f7430560d225583a5fccb20478529d025b6a5ec110152471694881f43",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "b039e660896748be2627bdfe4b13165af212db7b367f557e65eed52cda3305de",
+        "mutation_id": "neg_003_omit_dn_half_weight",
+        "source_catalog_certification_path": "negative_variants/neg_003_omit_dn_half_weight/certification.json",
+        "trigger_condition": "Ignores the dn half-weight contribution for ternary-ready codes.",
+        "violated_property_ids": [
+          "P_TERNARY_WEIGHTING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2ed4f3710f45c16a69a11a1884129f139ea7245b233489e369b45dc7cbd48903",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "eb2f49239177beceff258d08dbfcefb2dbdecaebf12972f130bcefce3522d3d6",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Cyclic Decoder 10b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_NORMALIZED_MIDSCALE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_midscale_offset/certification.json",
+        "certification_sha256": "f0f72696e7ea4e2d0469e49b17651478d5834c1d85b90f6e32b3a543feafdfb9",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "9dfc1f1d2984b619d9afdced5899554e9d0dced49deda52e5a9136e7150722ce",
+        "mutation_id": "neg_004_missing_midscale_offset",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_midscale_offset/certification.json",
+        "trigger_condition": "Omits the required minus-0.5 output centering.",
+        "violated_property_ids": [
+          "P_NORMALIZED_MIDSCALE_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_denominator",
+    "canonical_dut_id": "163",
+    "hashes": {
+      "mutation_catalog_sha256": "c4d7718e6a22cff7f6020aa556b9fea2a78527b794c5d54c5b9bca7bfd3e055d",
+      "score_deck_sha256": "cd271114e71ea5219866688be5a1adefce6a5881a22038a4400e85fd8800ed5c",
+      "task_certification_sha256": "d5790304ba48d03a5a452bbf419e012d0d280b6923e08c30de5b85f3f6711d7d",
+      "task_record_sha256": "8941030399024c00169a5d90aecbd9b3f0121b66f5b60bf05561d2d92d1baf2b"
+    },
+    "release_dir": "163-cyclic-decoder-10b"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deterministic_energy_accumulator.va"
+  ],
+  "canonical_dut_source_slug": "275-deterministic-energy-accumulator",
+  "checker_task_id": "v4_275_deterministic_energy_accumulator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ef0b89413758043739275d8497611ad48964c6ee82a6c3e23872a4b5ac6b4d08",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "08e34c7ca15d779878dd3a47c0ea9c6b80cb2e6513a1e603ffc1ca86d3d5301c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "af40aff6391fda1948c036c3d847fb4f8cdf36fca5dea7b652cd050d4cab5566",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "275",
+  "family_spec_sha256": "94ec1f188fb6e2bfbfb72d6b7f9d44f1db9954f0a36e4393cdb411c955984923",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "25edb4e574268f3ad010c2ce01de3811304445feb6a9b92e9c06c3bb7754cbc2",
+  "public_contract": "tasks/1275-deterministic-energy-accumulator-bugfix/public_contract.json",
+  "public_contract_sha256": "a5cbfcd91e805a3f03fd895e57da5175a503ee1bf1d9c65c0b5145ee27f2ba31",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1275-deterministic-energy-accumulator-bugfix",
+  "task_id": "v4-1275"
+}

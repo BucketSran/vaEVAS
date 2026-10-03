@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "235",
+  "checker_task_id": "v4_235_pfd_timer_reset",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "d1b721fe7fa217781f3d6c66eaa9589cd9c8014f3b66dd1d01c7f5c11415eff1",
+    "checker_profile.json": "bc37fd985d0a61375b300066a50605f8c2f47111634cee327d710750f71e66e2",
+    "derivation_manifest.json": "a59931c41abe4de7a3a061f88b2730211f20d381c5c60a4e6ad276e1c01f4457",
+    "family_spec.json": "344b0cd253b7b09c6f6d45eb142b25079985ec3b65aefc001494476610b6a044",
+    "harness_spec.json": "e2f8fb73c7d7f9cf0d4936290ce6214dd50fb1509314d0117794fb0852bc69b7",
+    "mutation_catalog.json": "cf3fabff215aeb309468d446bf4e472c1ae3eff5e246cc3b31482448d6b9a794",
+    "profiles/feedback.json": "c7313da230868035ada096bdc4f7e9493083f769a75c7a8ac101633673d55d5b",
+    "profiles/score.json": "93a25b425e69466152437abe82cb6ff15809f0a664665edef20cf642e83183cd",
+    "score_tb.scs": "e9abf5aca50cba198ba444e23e48b12c51b4ac9cf18b3ead3f0b23d8d342001c",
+    "solution_tree": "112d32c37914b64558c9dfd1c6ac3012cf3a5d9dd4269bd8b8d50163cb31ad31",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "5ed641f624113c395f534734b1ae401151b57186f6a9b6ffb9f22659482d35e4",
+    "instruction.md": "077ed1a01a47b090e45a8f70424a44f03d1419c8079fedfe12a26d7bfad9258b",
+    "public_contract.json": "df20879f505b7723bc453f5c654773986896381248f0f6b03502e33a1047dcd4"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "d1b721fe7fa217781f3d6c66eaa9589cd9c8014f3b66dd1d01c7f5c11415eff1"
+  },
+  "release_dir": "235-pfd-timer-reset",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "282-pfd-timer-reset",
+  "support_root": "",
+  "target_artifacts": [
+    "pfd_timer_reset.va"
+  ]
+}

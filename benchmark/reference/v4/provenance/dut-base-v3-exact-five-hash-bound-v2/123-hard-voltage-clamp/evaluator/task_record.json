@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "123",
+  "checker_task_id": "v4_123_hard_voltage_clamp",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "1d17647183528dc58e7653413c2e2866df3d0793231549f9862364d082597250",
+    "checker_profile.json": "75de03e8e6f9bc9b6bc37b2fccc35a72e308866e60409db82224d2c6c6c23415",
+    "derivation_manifest.json": "1b4ce80de2b77fea9ed6d52ca978eebdb55171bd1fd138c8b3535780bad4ac6f",
+    "family_spec.json": "e48194b24a7d904f6169e63aa3eb558d31c770c23b5641556cc4d144f5abe311",
+    "harness_spec.json": "b669ceddfb6c7a6e3cb3a19a1b0bf902cfbd4addbc8746558e5da8874664af9e",
+    "mutation_catalog.json": "fed74b80d83d1c3124c13261f9b3eb519dcd34458aacf197864ea4744e1d6008",
+    "profiles/feedback.json": "2735844512f1fff3ca4638d5dcaf5119e44e6f39ed77bcf0dbca905dc0c581ee",
+    "profiles/score.json": "d74e4f8e8a059083a1420ac25708351848d89580bf2c4ea653b21937c19b6ca8",
+    "score_tb.scs": "90f4f27a8842db82831237c70eafff7eff97baae7b217d8f61cbe92217800a48",
+    "solution_tree": "e78c96b3babb70161439ee102774a02edcc2b838281137edeeba28477a45dd34",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "5f0596b63c19a716416ee940887387afe60d17243798ac11fadc3076575c56c0",
+    "instruction.md": "d3b0a5a4b7aac3bb2976522cb0ac7a2068c8883544c859b0010054322342b200",
+    "public_contract.json": "f7a18dfa0cb9157050540e911a60a3741e968e57510dfb82bd3cc610be3602ce"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "1d17647183528dc58e7653413c2e2866df3d0793231549f9862364d082597250"
+  },
+  "release_dir": "123-hard-voltage-clamp",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "145-hard-voltage-clamp",
+  "support_root": "",
+  "target_artifacts": [
+    "hard_voltage_clamp_behavior.va"
+  ]
+}

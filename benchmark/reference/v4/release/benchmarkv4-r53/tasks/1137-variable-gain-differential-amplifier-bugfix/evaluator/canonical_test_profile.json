@@ -1,0 +1,28 @@
+{
+  "canonical_semantics_sha256": "95a8d0b4f2a5ba66351308b042a91cfbe7246cb289b73526df0707d8bc3580b8",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_DIFFERENTIAL_SIGNAL_AND_CONTROL",
+    "P_VARIABLE_GAIN_MIDPOINT",
+    "P_OUTPUT_CLAMP"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "137",
+    "feedback_semantics_sha256": "95a8d0b4f2a5ba66351308b042a91cfbe7246cb289b73526df0707d8bc3580b8",
+    "harness_spec_sha256": "93c0d32ed02c560fba286b72bdb9ae86cd11914489356ddf60baf7235df28126",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "95a8d0b4f2a5ba66351308b042a91cfbe7246cb289b73526df0707d8bc3580b8",
+    "task_id": "v4-137"
+  },
+  "test_deck_sha256": "af61b15894b680121a42c317b5f79a8b64269785573c7458485b94eb5d46a769"
+}

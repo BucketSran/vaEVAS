@@ -1,0 +1,78 @@
+{
+  "family_id": "214",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_falling_reset/certification.json",
+        "certification_sha256": "8baf22632e977aeb2f4d40c96c5e86948305bbf6a17ec0ad57dbff37ee381bb3",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "547881222fb7d009537ed400f0f831677baa577468d292992c309df6ef2c7ec5",
+        "mutation_id": "neg_002_no_falling_reset",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_falling_reset/certification.json",
+        "trigger_condition": "Keeps the latched comparison through clock falling edges instead of resetting both outputs low.",
+        "violated_property_ids": [
+          "P_INITIALIZE_BOTH_DECISION_OUTPUTS_LOW_WHENEVER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "07c1b04d59d675a0628007a5493da27459d2110fab46164fcf09c0e2e7dcca88",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "1c7f0a627f1cc3ac37b2debaea06f7744342ee7069e7a9566de450ea6d29ee87",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_INITIALIZE_BOTH_DECISION_OUTPUTS_LOW_WHENEVER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "530e16c697b4cedbf9b9ce952c6073a2fd18fc6ba1ba54b3e544463436bba769",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "dca30291acbd5cba37ebc1690d694c3730152d119b239c11aff1bf6e22295f28",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Comparator Reset Low 1p8: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_INITIALIZE_BOTH_DECISION_OUTPUTS_LOW_WHENEVER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_swapped_outputs/certification.json",
+        "certification_sha256": "bcde4b107e8f8a0220c9dfe930f1a3f8cd60e3068c3ef87a0d8473954ee4e375",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "792c5d8cf0611fb05c26a1b404ea3a274fbcf4c6d99fa279cbbed1da57348ecf",
+        "mutation_id": "neg_004_swapped_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_004_swapped_outputs/certification.json",
+        "trigger_condition": "Drives DCM/P and DCM/N from the opposite latched states.",
+        "violated_property_ids": [
+          "P_INITIALIZE_BOTH_DECISION_OUTPUTS_LOW_WHENEVER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_compare/certification.json",
+        "certification_sha256": "89932fffe84546482f3769c4b24c7df928456a169e9155c60fbc0d54a25529a3",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4e7e34300a8631b3d85a23a3163e8475dd53971fe0c5d87fa229e1a50774aed3",
+        "mutation_id": "neg_003_inverted_compare",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_compare/certification.json",
+        "trigger_condition": "Inverts the VINP/VINN comparison polarity.",
+        "violated_property_ids": [
+          "P_INITIALIZE_BOTH_DECISION_OUTPUTS_LOW_WHENEVER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_falling_reset",
+    "canonical_dut_id": "214",
+    "hashes": {
+      "mutation_catalog_sha256": "4a543b384acd5e3499f1f4eed9cbf25da62389ae594d2df16feb1350635de4aa",
+      "score_deck_sha256": "3e11334cc3579a85742e9402c907b0071265944390af8d57b52f36f7220522d2",
+      "task_certification_sha256": "bceb04b6f602597f15d7f030d97c9c4f70d9642708db78d2ff28cd91e7748d1d",
+      "task_record_sha256": "333e4982e5cc0fb746455d7deb6937f761b229b5feb394c163b5a9dfbd567469"
+    },
+    "release_dir": "214-comparator-reset-low-1p8"
+  }
+}

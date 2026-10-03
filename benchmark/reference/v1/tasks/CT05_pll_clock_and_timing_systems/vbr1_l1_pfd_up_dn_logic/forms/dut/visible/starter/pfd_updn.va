@@ -1,0 +1,20 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 10p
+
+module pfd_updn(
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical REF,
+    input  electrical DIV,
+    output electrical UP,
+    output electrical DN
+);
+
+parameter real vth   = 0.45;
+parameter real tedge = 20p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

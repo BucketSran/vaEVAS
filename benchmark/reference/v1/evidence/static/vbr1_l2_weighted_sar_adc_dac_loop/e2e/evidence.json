@@ -1,0 +1,32 @@
+{
+  "release_entry_id": "vbr1_l2_weighted_sar_adc_dac_loop",
+  "task_id": "vbr1_l2_weighted_sar_adc_dac_loop:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Data Converter Models",
+    "base_function": "Weighted SAR ADC/DAC loop"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/gold/dac_weighted_8b.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/gold/sar_adc_weighted_8b.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/gold/sh_ideal.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_weighted_sar_adc_dac_loop/forms/e2e/gold/tb_sar_adc_dac_weighted_8b_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(cross(",
+      "transition("
+    ],
+    "must_not_include": [],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

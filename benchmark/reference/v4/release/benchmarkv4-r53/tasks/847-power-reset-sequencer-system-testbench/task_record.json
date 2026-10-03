@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "347-power-reset-sequencer-system",
+  "checker_task_id": "v4_347_power_reset_sequencer_system",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "068e69978ef06695616d05779adf9103be3d1f05df535a8c7e25997bdd0e50b0",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "02bcb1b92e1a5ec6fcaecad9304c4d6357d724dcc29bb2e5f12354933ae25262",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "068e69978ef06695616d05779adf9103be3d1f05df535a8c7e25997bdd0e50b0",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2bfc4ddcea1afd454928bb05fd74427ff4c7622da14e23ae35428a8c90411ab4",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "255889c684b648abafd0843480afc3a397eea67a8386f9c32e1c38f8af7949de"
+  },
+  "family_id": "347",
+  "family_spec_sha256": "53f53541156402704f92c484744f4c56a086e8ca283c13cb3b633f0a85f4a920",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5968df120a63db00b03cbc964361cc56e8deda80b06f33264199100cbc7e524f",
+  "public_contract": "tasks/847-power-reset-sequencer-system-testbench/public_contract.json",
+  "public_contract_sha256": "660bfe8ea7245bb257565b8cf4f9dc042a96237a6913a91cfab60808c3add004",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/847-power-reset-sequencer-system-testbench",
+  "task_id": "v4-847"
+}

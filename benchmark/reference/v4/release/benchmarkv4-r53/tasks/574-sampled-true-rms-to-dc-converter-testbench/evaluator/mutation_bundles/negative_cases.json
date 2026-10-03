@@ -1,0 +1,7 @@
+[
+  {"id": "neg_001_zero", "files": ["neg_001_zero/sampled_true_rms_to_dc.va"], "why_wrong": "Always drives zero and never completes a window."},
+  {"id": "neg_002_threshold_shifted", "files": ["neg_002_threshold_shifted/sampled_true_rms_to_dc.va"], "why_wrong": "Computes mean absolute value instead of true RMS."},
+  {"id": "neg_003_event_edge_wrong", "files": ["neg_003_event_edge_wrong/sampled_true_rms_to_dc.va"], "why_wrong": "Samples on falling rather than rising clock edges."},
+  {"id": "neg_004_reset_polarity_wrong", "files": ["neg_004_reset_polarity_wrong/sampled_true_rms_to_dc.va"], "why_wrong": "Implements reset as active low."},
+  {"id": "neg_005_metric_scale_low", "files": ["neg_005_metric_scale_low/sampled_true_rms_to_dc.va"], "why_wrong": "Divides four-sample square sum by eight, scaling RMS low."}
+]

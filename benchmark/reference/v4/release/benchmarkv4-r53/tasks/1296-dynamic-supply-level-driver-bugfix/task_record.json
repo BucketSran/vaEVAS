@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dynamic_supply_level_driver.va"
+  ],
+  "canonical_dut_source_slug": "296-dynamic-supply-level-driver",
+  "checker_task_id": "v4_296_dynamic_supply_level_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3dc979af8aaede28bfb5893f67f877df0d8a07918a0df61472f90c0e17aaee22",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1b34ee80fb2e2fbb409ee9341f1d16e217cb04cf92f944685d195f91c3e11533",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "bf6932ca732fb134dfaa16047fc86a2044b44ab12c22fa2f380d3ae404a47715",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "296",
+  "family_spec_sha256": "d6b7e73f98d914fd52ebc658449dd0fc1d31eb7dc7cddc0e16cb7b0ae8b75090",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "02e2751f8b56acccbf9366b9f14a007bb7c143e8840dd91350163b56fbb78bb7",
+  "public_contract": "tasks/1296-dynamic-supply-level-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "0135f0792689c1704c6c5322e6a4c16ea2561fd35fb2f835ca106dec13ae1076",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1296-dynamic-supply-level-driver-bugfix",
+  "task_id": "v4-1296"
+}

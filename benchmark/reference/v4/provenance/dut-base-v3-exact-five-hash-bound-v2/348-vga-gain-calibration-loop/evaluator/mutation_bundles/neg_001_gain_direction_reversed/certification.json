@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_VGA_GAIN_DIRECTION satisfy the public contract; fault class gain_control_polarity is rejected",
+    "observed": "EVAS: v4_348 checked=45 mismatch_count=42 directions=['down', 'up'] codes=[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] locked_seen=True mismatch_detail=P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=7.55e-09 expected=5 observed=3 metric_gap=2; P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=1.255e-08 expected=6 observed=2 metric_gap=4; P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=1.755e-08 expected=7 observed=1 metric_gap=6; P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=2.255e-08 expected=8 observed=0 metric_gap=8; P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=2.76e-08 expected=9 observed=15 metric_gap=6; P_VGA_GAIN_DIRECTION mismatch_count=1 sample_time=3.255e-08 expected=10 observed=14 metric_gap=4",
+    "violated_property_ids": [
+      "P_VGA_GAIN_DIRECTION"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_348_vga_gain_calibration_loop",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 2383
+  },
+  "family_id": "348",
+  "inputs": {
+    "checker_profile_sha256": "ae3998a541b5ed6f58303317dce6172c180824d5c3cbd61914904280068d6a6c",
+    "harness_spec_sha256": "6f62498989e2bb85f25914ef5e73e2b3520ab0672c58b9afd4c120cc37d43c6c",
+    "mutation_bundle_sha256": "854e152252caa647ba38f1f16b629aedb505e8f74813de1939221c3964bd096e",
+    "profile_sha256": "f68a753cf78b7cc8dfce0c7e83b5d1df1db061a8b47c8761652b669cb217762d"
+  },
+  "mutation_id": "neg_001_gain_direction_reversed",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

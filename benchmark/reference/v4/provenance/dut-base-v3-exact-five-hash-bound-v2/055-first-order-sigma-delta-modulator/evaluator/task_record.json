@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "055",
+  "checker_task_id": "v4_055_first_order_sigma_delta_modulator",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "eb5ecd97bb502bdfb6a1e84b255ea496fc287de488d1af56655d5c4de23eb1ac",
+    "checker_profile.json": "ab1e3bdb9e4b584d3e9171810dcc771098f9a839d43d7aa673bee12476829929",
+    "derivation_manifest.json": "c3fc6bfde486af53d3c58cc20ab816e6dfdc5e420bc725a8414c835ea1cf1ee5",
+    "family_spec.json": "43aab179babd997455024e3a389931216c6ce89e82c00873af4515937b4ac403",
+    "harness_spec.json": "fc671804354bf71dc8df20a3090625aab94e93c0d8be5647aad4e51cb0eff8cb",
+    "mutation_catalog.json": "13a6eec865d069559871252601ec5016edd226cc4c33732c9ea0331290407327",
+    "profiles/feedback.json": "de8c5d59c9762a2524edee82b76655d4620e4e1748a640fbffbf62ffdf81c5d0",
+    "profiles/score.json": "67bd3e907455915cc66c1c78bdbdf9d22ae9d7cde8f745bee17f709f83fc08d4",
+    "score_tb.scs": "9cad43568e5e9a65c841f3df95a50b8eb60fd203cafbb863940e9ac7e5b31ac1",
+    "solution_tree": "187de0935203280da9161f0e9d336cad2811f697bd1bbf39767ae22555263b32",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8ab7444b28a60d5ccf1845d5be06617876b181596f41390561164891a6a26576",
+    "instruction.md": "88bfbec2e6d9af1118ab11a364fec18fb5bc2e5b2da76e9e33531a94fe5fcdfd",
+    "public_contract.json": "0aa16dcb065b6cef50f91bc750bd68660f65991cd366d13d7f4251372abda7d9"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "eb5ecd97bb502bdfb6a1e84b255ea496fc287de488d1af56655d5c4de23eb1ac"
+  },
+  "release_dir": "055-first-order-sigma-delta-modulator",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "057-first-order-sigma-delta-modulator",
+  "support_root": "",
+  "target_artifacts": [
+    "first_order_sigma_delta_modulator.va"
+  ]
+}

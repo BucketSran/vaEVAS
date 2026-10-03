@@ -1,0 +1,24 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "5ff56687edc7ccfc20afcf6c7f16ccc0d4f610be8e7b443be5a0bdf71d048b19",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "135n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_DEM_RESET_CLEAR",
+    "P_DEM_DAC_TRANSFER",
+    "P_DEM_ROTATED_MASK",
+    "P_DEM_POINTER_ADVANCE"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

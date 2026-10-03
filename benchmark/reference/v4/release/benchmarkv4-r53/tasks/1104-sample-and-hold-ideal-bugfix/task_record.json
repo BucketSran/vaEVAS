@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "source_sample_hold.va"
+  ],
+  "canonical_dut_source_slug": "104-sample-and-hold-ideal",
+  "checker_task_id": "v4_104_sample_and_hold_ideal",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "01b8b1960d26472bec60c51254d08bf316234fa14ccc6de3278a7a0217b02889",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "41c2e50b00c55ccfad683cb1e630eae952248b8546f65426e5dd965415d9e730",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0e9bdd5a6cb2b7e69b9fe923c48d85b5a6c5d915ede64101dcb25a883289d16c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "104",
+  "family_spec_sha256": "72eea8fa03055ea9db5a2ec5b907f8d8eb94607fac62087158e299415a93acc2",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1032f217da110b87eaf92166513fe9418702d32a0600046e4e82e1a3b554c3bb",
+  "public_contract": "tasks/1104-sample-and-hold-ideal-bugfix/public_contract.json",
+  "public_contract_sha256": "2c9b9006b71e06384254ac0fa6b33c0bb30f2a84ebee1f89803a4bef103747e2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1104-sample-and-hold-ideal-bugfix",
+  "task_id": "v4-1104"
+}

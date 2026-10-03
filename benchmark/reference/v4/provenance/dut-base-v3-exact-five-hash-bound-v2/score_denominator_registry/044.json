@@ -1,0 +1,78 @@
+{
+  "family_id": "044",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001/certification.json",
+        "certification_sha256": "b8486724b615850221e54adb32298e1ff6a8ae93c13621ab1bde19474f65f03f",
+        "fault_class": "passes_nominal_smoke_cases_but_fails_an_endpoint",
+        "mutation_bundle_sha256": "f73fedc8b7b7faede6305fcc100abe8e0153f8d4ba660c83e90293446ee3aa0a",
+        "mutation_id": "neg_001",
+        "source_catalog_certification_path": "negative_variants/neg_001/certification.json",
+        "trigger_condition": "Passes nominal/smoke cases but fails an endpoint, threshold, saturation, or settling boundary.",
+        "violated_property_ids": [
+          "P_RESET_SEARCH_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003/certification.json",
+        "certification_sha256": "b3fe4746682fd62ad20812d2dd6674717f7545656f8bbbc741af38cbc8ae26ee",
+        "fault_class": "passes_positive_or_nominal_path_but_fails_sign_f",
+        "mutation_bundle_sha256": "34cbedf96fcd787c163f9e03b64d5439528ae6a0c8b0bc8a36711b1510803466",
+        "mutation_id": "neg_003",
+        "source_catalog_certification_path": "negative_variants/neg_003/certification.json",
+        "trigger_condition": "Passes positive or nominal path but fails sign, feedback direction, I/Q polarity, or trim direction.",
+        "violated_property_ids": [
+          "P_SUCCESSIVE_STEP_HALVING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004/certification.json",
+        "certification_sha256": "26250b87b7409ab3b96f10991fb11e05381643a9a888998e6008ed6a30f07c94",
+        "fault_class": "passes_steady_state_behavior_but_fails_reset_ena",
+        "mutation_bundle_sha256": "f0dd6607aeecb82561e2eb941c6333f71c7bc34b7490275fe8d5d028eb1449bb",
+        "mutation_id": "neg_004",
+        "source_catalog_certification_path": "negative_variants/neg_004/certification.json",
+        "trigger_condition": "Passes steady-state behavior but fails reset, enable, initial condition, or done/ready assertion.",
+        "violated_property_ids": [
+          "P_FOUR_STEP_DONE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005/certification.json",
+        "certification_sha256": "c2b9e24836f081e71fea4f821220a0309726cac1d0f5f8cd25298289807c4de7",
+        "fault_class": "produces_plausible_behavior_but_fails_a_metric_w",
+        "mutation_bundle_sha256": "7089a5be8ed16cb4bfc238d7c91c4d3f7cf8f781344dd678874f4b11a25a6ced",
+        "mutation_id": "neg_005",
+        "source_catalog_certification_path": "negative_variants/neg_005/certification.json",
+        "trigger_condition": "Produces plausible behavior but fails a metric writer, latency, count, or measurement output.",
+        "violated_property_ids": [
+          "P_TRIM_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002/certification.json",
+        "certification_sha256": "5600f5f2a52381567654e68b4232c040f8a729603aad0fc48acc3c442fc16f84",
+        "fault_class": "passes_interface_and_broad_waveform_checks_but_f",
+        "mutation_bundle_sha256": "8f8a69ec036aea96c1693c034dd6618dea7c39db8a80dd0b0087b9b7199712a4",
+        "mutation_id": "neg_002",
+        "source_catalog_certification_path": "negative_variants/neg_002/certification.json",
+        "trigger_condition": "Passes interface and broad waveform checks but fails one edge, timer, sample, lock, or reacquire window.",
+        "violated_property_ids": [
+          "P_SIGNED_TRIAL_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001",
+    "canonical_dut_id": "044",
+    "hashes": {
+      "mutation_catalog_sha256": "592f3789038597b21114022d9987b41b99e25154cf567d8adcd34dbbd5602892",
+      "score_deck_sha256": "f617f5e76bd6eda3afded60069dfa3c03375ca92bc75c3ca36f14657838fd4fb",
+      "task_certification_sha256": "95453c7534aa16ea4a367de31d661d87aa85856e7d702f7e45baaf6dc3c0845e",
+      "task_record_sha256": "75b65999888685f09447fea9c3eb7d7037399644dee866e205ebaf3957f3607d"
+    },
+    "release_dir": "044-successive-approximation-calibration-search-fsm"
+  }
+}

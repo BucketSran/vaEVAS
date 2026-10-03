@@ -1,0 +1,197 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+`define NUM_BITS 8
+`default_transition 30p
+
+// 8-bit SAR ADC with configurable binary weights.
+//
+// Default weights (MSB→LSB): 128, 64, 32, 16, 8, 4, 2, 1
+// total_sum = 255.  Input [0, vdd] → code [0, 255].
+//
+// Algorithm: start one conversion on a falling CLKS edge, then resolve one SAR
+// trial bit on each following rising CLKS edge.  The public monitor outputs show
+// the currently active bit, trial code, trial DAC voltage, comparator decision,
+// sampled input, and conversion-done state.
+//
+// Sampling phase: explicitly sample VIN on CLKS falling edge when idle.
+// Conversion: one MSB-to-LSB trial per rising CLKS edge.
+// RST_N: active-low synchronous reset — clears all output bits.
+//
+// Output mapping: DOUT[7] = MSB (weight 128), DOUT[0] = LSB (weight 1).
+// Matches dac_weighted_8b pin-for-pin for a zero-error round-trip.
+
+module sar_adc_weighted_8b(
+    input  electrical               VIN,
+    input  electrical               CLKS,
+    input  electrical               RST_N,
+    output electrical [`NUM_BITS-1:0] DOUT,
+    output electrical               BIT_INDEX,
+    output electrical               TRIAL_CODE_MON,
+    output electrical               TRIAL_VDAC,
+    output electrical               CMP_DECISION,
+    output electrical               CONV_DONE,
+    output electrical               VIN_SAMPLE
+);
+
+parameter real vdd = 0.9;
+parameter real vth = 0.45;
+
+real weight[`NUM_BITS:1];   // weight[8]=MSB, weight[1]=LSB
+real total_sum;
+real vsampled, vdac_partial, trial_vdac_state;
+real bit_index_v, trial_code_v, cmp_decision_v, conv_done_v;
+integer dout_bits[`NUM_BITS:1];
+integer trial_bits[`NUM_BITS:1];
+integer bit_idx;
+integer busy;
+integer final_code;
+integer trial_code_int;
+
+analog begin
+    @(initial_step) begin
+        weight[8] = 128; weight[7] = 64; weight[6] = 32; weight[5] = 16;
+        weight[4] = 8;   weight[3] = 4;  weight[2] = 2;  weight[1] = 1;
+
+        total_sum = 255;
+
+        dout_bits[8] = 0; dout_bits[7] = 0; dout_bits[6] = 0; dout_bits[5] = 0;
+        dout_bits[4] = 0; dout_bits[3] = 0; dout_bits[2] = 0; dout_bits[1] = 0;
+        trial_bits[8] = 0; trial_bits[7] = 0; trial_bits[6] = 0; trial_bits[5] = 0;
+        trial_bits[4] = 0; trial_bits[3] = 0; trial_bits[2] = 0; trial_bits[1] = 0;
+        vdac_partial = 0.0;
+        trial_vdac_state = 0.0;
+        vsampled = 0.0;
+        bit_idx = 0;
+        busy = 0;
+        final_code = 0;
+        trial_code_int = 0;
+        bit_index_v = 0.0;
+        trial_code_v = 0.0;
+        cmp_decision_v = 0.0;
+        conv_done_v = 0.0;
+
+        $strobe("[sar_adc_weighted_8b] INIT | vdd=%.3gV | total_sum=%g", vdd, total_sum);
+    end
+
+    // Start a conversion by sampling the held input when the ADC is idle.
+    @(cross(V(CLKS) - vth, -1)) begin
+        if (V(RST_N) >= vth && busy == 0) begin
+            vsampled = V(VIN);
+            vdac_partial = 0.0;
+            bit_idx = 8;
+            busy = 1;
+            conv_done_v = 0.0;
+            final_code = 0;
+
+            dout_bits[8] = 0; dout_bits[7] = 0; dout_bits[6] = 0; dout_bits[5] = 0;
+            dout_bits[4] = 0; dout_bits[3] = 0; dout_bits[2] = 0; dout_bits[1] = 0;
+            trial_bits[8] = 1; trial_bits[7] = 0; trial_bits[6] = 0; trial_bits[5] = 0;
+            trial_bits[4] = 0; trial_bits[3] = 0; trial_bits[2] = 0; trial_bits[1] = 0;
+            trial_code_int = 128;
+            trial_vdac_state = trial_code_int / total_sum * vdd;
+            cmp_decision_v = (vsampled >= trial_vdac_state) ? vdd : 0.0;
+            bit_index_v = bit_idx / 8.0 * vdd;
+            trial_code_v = trial_code_int / total_sum * vdd;
+        end
+    end
+
+    // Resolve exactly one SAR trial bit on each rising clock edge.
+    @(cross(V(CLKS) - vth, +1)) begin
+        if (V(RST_N) < vth) begin
+            dout_bits[8] = 0; dout_bits[7] = 0; dout_bits[6] = 0; dout_bits[5] = 0;
+            dout_bits[4] = 0; dout_bits[3] = 0; dout_bits[2] = 0; dout_bits[1] = 0;
+            trial_bits[8] = 0; trial_bits[7] = 0; trial_bits[6] = 0; trial_bits[5] = 0;
+            trial_bits[4] = 0; trial_bits[3] = 0; trial_bits[2] = 0; trial_bits[1] = 0;
+            vdac_partial = 0.0;
+            trial_vdac_state = 0.0;
+            bit_idx = 0;
+            busy = 0;
+            final_code = 0;
+            trial_code_int = 0;
+            bit_index_v = 0.0;
+            trial_code_v = 0.0;
+            cmp_decision_v = 0.0;
+            conv_done_v = 0.0;
+        end else begin
+            if (busy == 1 && bit_idx > 0) begin
+                if (cmp_decision_v > vth) begin
+                    if (bit_idx == 8) dout_bits[8] = 1;
+                    else if (bit_idx == 7) dout_bits[7] = 1;
+                    else if (bit_idx == 6) dout_bits[6] = 1;
+                    else if (bit_idx == 5) dout_bits[5] = 1;
+                    else if (bit_idx == 4) dout_bits[4] = 1;
+                    else if (bit_idx == 3) dout_bits[3] = 1;
+                    else if (bit_idx == 2) dout_bits[2] = 1;
+                    else if (bit_idx == 1) dout_bits[1] = 1;
+                    if (bit_idx == 8) vdac_partial = vdac_partial + 128;
+                    else if (bit_idx == 7) vdac_partial = vdac_partial + 64;
+                    else if (bit_idx == 6) vdac_partial = vdac_partial + 32;
+                    else if (bit_idx == 5) vdac_partial = vdac_partial + 16;
+                    else if (bit_idx == 4) vdac_partial = vdac_partial + 8;
+                    else if (bit_idx == 3) vdac_partial = vdac_partial + 4;
+                    else if (bit_idx == 2) vdac_partial = vdac_partial + 2;
+                    else if (bit_idx == 1) vdac_partial = vdac_partial + 1;
+                end
+
+                bit_idx = bit_idx - 1;
+                if (bit_idx > 0) begin
+                    trial_bits[8] = dout_bits[8]; trial_bits[7] = dout_bits[7];
+                    trial_bits[6] = dout_bits[6]; trial_bits[5] = dout_bits[5];
+                    trial_bits[4] = dout_bits[4]; trial_bits[3] = dout_bits[3];
+                    trial_bits[2] = dout_bits[2]; trial_bits[1] = dout_bits[1];
+                    if (bit_idx == 8) trial_bits[8] = 1;
+                    else if (bit_idx == 7) trial_bits[7] = 1;
+                    else if (bit_idx == 6) trial_bits[6] = 1;
+                    else if (bit_idx == 5) trial_bits[5] = 1;
+                    else if (bit_idx == 4) trial_bits[4] = 1;
+                    else if (bit_idx == 3) trial_bits[3] = 1;
+                    else if (bit_idx == 2) trial_bits[2] = 1;
+                    else if (bit_idx == 1) trial_bits[1] = 1;
+
+                    trial_code_int = trial_bits[8] * 128 + trial_bits[7] * 64
+                                   + trial_bits[6] * 32 + trial_bits[5] * 16
+                                   + trial_bits[4] * 8 + trial_bits[3] * 4
+                                   + trial_bits[2] * 2 + trial_bits[1];
+                    trial_vdac_state = trial_code_int / total_sum * vdd;
+                    cmp_decision_v = (vsampled >= trial_vdac_state) ? vdd : 0.0;
+                    bit_index_v = bit_idx / 8.0 * vdd;
+                    trial_code_v = trial_code_int / total_sum * vdd;
+                    conv_done_v = 0.0;
+                end else begin
+                    final_code = dout_bits[8] * 128 + dout_bits[7] * 64
+                               + dout_bits[6] * 32 + dout_bits[5] * 16
+                               + dout_bits[4] * 8 + dout_bits[3] * 4
+                               + dout_bits[2] * 2 + dout_bits[1];
+                    trial_code_int = final_code;
+                    trial_vdac_state = final_code / total_sum * vdd;
+                    trial_code_v = trial_vdac_state;
+                    bit_index_v = 0.0;
+                    cmp_decision_v = (vsampled >= trial_vdac_state) ? vdd : 0.0;
+                    conv_done_v = vdd;
+                    busy = 0;
+                    $strobe("[sar_adc_weighted_8b] t=%.3f ns | vin=%.5gV | final_code=%d",
+                            $abstime*1e9, vsampled, final_code);
+                end
+            end
+        end
+    end
+
+    // DOUT[7]=MSB (weight[8]=128), DOUT[0]=LSB (weight[1]=1)
+    V(DOUT[7]) <+ transition(dout_bits[8] ? vdd : 0, 0);
+    V(DOUT[6]) <+ transition(dout_bits[7] ? vdd : 0, 0);
+    V(DOUT[5]) <+ transition(dout_bits[6] ? vdd : 0, 0);
+    V(DOUT[4]) <+ transition(dout_bits[5] ? vdd : 0, 0);
+    V(DOUT[3]) <+ transition(dout_bits[4] ? vdd : 0, 0);
+    V(DOUT[2]) <+ transition(dout_bits[3] ? vdd : 0, 0);
+    V(DOUT[1]) <+ transition(dout_bits[2] ? vdd : 0, 0);
+    V(DOUT[0]) <+ transition(dout_bits[1] ? vdd : 0, 0);
+    V(BIT_INDEX) <+ transition(bit_index_v, 0);
+    V(TRIAL_CODE_MON) <+ transition(trial_code_v, 0);
+    V(TRIAL_VDAC) <+ transition(trial_vdac_state, 0);
+    V(CMP_DECISION) <+ transition(cmp_decision_v, 0);
+    V(CONV_DONE) <+ transition(conv_done_v, 0);
+    V(VIN_SAMPLE) <+ transition(vsampled, 0);
+end
+
+endmodule

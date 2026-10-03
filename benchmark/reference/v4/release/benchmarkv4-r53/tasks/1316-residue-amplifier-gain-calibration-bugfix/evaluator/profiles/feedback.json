@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "53b732ded6255408d6286a50bc0d3aa1712d061727e35dfbfff0687684b95b16",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_ON_RESET_CLEAR_GAIN_CODE_OUTPUT",
+    "P_WHILE_CAL_EN_IS_HIGH_COMPARE",
+    "P_INCREMENT_OR_DECREMENT_THE_GAIN_CODE",
+    "P_DRIVE_VOUT_AS_A_CLAMPED_RESIDUE",
+    "P_ASSERT_LOCKED_AFTER_THREE_CONSECUTIVE_UPDATES",
+    "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

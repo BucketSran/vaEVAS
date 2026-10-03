@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "ffe_tap_adaptation_monitor_top.va",
+    "tap_update_controller.va",
+    "cursor_metric_core.va"
+  ],
+  "canonical_dut_source_slug": "330-ffe-tap-adaptation-monitor",
+  "checker_task_id": "v4_330_ffe_tap_adaptation_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f1b0e0c3068a20a3d5d3a1fcf87e56bb1d790a592fb9cff42e0adf5b5d71d2b4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "3698b20112fb8158cf482d0711cb6ec3dad07a955d368750f3811e0f3413b883",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "18416d7c95985f0b62321232f17a4261bf466897e1c044f84a5969a7139d27c7",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "330",
+  "family_spec_sha256": "f61aa1f30bda5968e5ca3d1c3e581f5c505a190fff2b31769b6b8a9498a9587e",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "67f61ebdbac28280cbfde0816039920229659cf13011c33edd7a040df7382fbe",
+  "public_contract": "tasks/1330-ffe-tap-adaptation-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "1bbf702e9934041fcce5fb91d09faf5971df85a5870aac4dac7232b0bdc2d019",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1330-ffe-tap-adaptation-monitor-bugfix",
+  "task_id": "v4-1330"
+}

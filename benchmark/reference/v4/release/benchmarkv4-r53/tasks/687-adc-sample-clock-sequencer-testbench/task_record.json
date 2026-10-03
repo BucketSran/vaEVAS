@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "187-adc-sample-clock-sequencer",
+  "checker_task_id": "v4_187_adc_sample_clock_sequencer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "6cf188b07ce11724fac805e4dfeaf904720c40a45ae521109e0eaea4d0a09369",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "6cee230ac50f5f52192747ca74cf5434824e980648a410508707992828fa1ae7",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "6cf188b07ce11724fac805e4dfeaf904720c40a45ae521109e0eaea4d0a09369",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c810604330cae44438205502d71b1a2cd074473343464a993d7e05b4a3f897d3",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2688031eb27fb852a42c066b9b73e50db69f28c19d4c746f35ec47f12c96e3ba"
+  },
+  "family_id": "187",
+  "family_spec_sha256": "d998dc8a5f893ab1ebc913f9855d3fd64044bb71b4379c49a482e51643ba2aec",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7c30acbcb1ad616f546e29f7ff202e9c1f502f4a4e49212a364f3ab4ad8d1e23",
+  "public_contract": "tasks/687-adc-sample-clock-sequencer-testbench/public_contract.json",
+  "public_contract_sha256": "4cc27e2056207f7d2d2ebfc194fe418768dae71e77653953d79387c12688ada4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/687-adc-sample-clock-sequencer-testbench",
+  "task_id": "v4-687"
+}

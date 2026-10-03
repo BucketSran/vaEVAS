@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "358",
+  "checker_task_id": "v4_358_quadrature_phase_interpolator",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "6c749c5040b57ca757d6c9d0e4c21563aaba60e8706b40a4aca680d0a7ecbf08",
+    "checker_profile.json": "35f7c22336eb4f3615e31845ab1ce18c0a8ef6fd2fbb7b92d2cb3f3db766cd02",
+    "derivation_manifest.json": "d8b1ab6e6131b6be4953893b2ecae79c6ef492c4026d27c47832d944bc628feb",
+    "family_spec.json": "4f3348c1878040f9ec850823b712b36c254e3a03af5a9206abb609f939da422f",
+    "harness_spec.json": "6d9cb3be67103e086c98daa0c21633254c824b0bf32c361568e4050481460ee0",
+    "mutation_catalog.json": "cc538f0eb11803d8b987bdc31cea178107a4026f576bf672d27496040975b1b5",
+    "profiles/feedback.json": "7f005f888a6f6d2fe8653be7f64803917dc77ad0177319d955b47229b934a091",
+    "profiles/score.json": "d3af61635566a72f021c0cd36d851da79f2120fa22d1458dd0929037f6eb1baf",
+    "score_tb.scs": "9e338e398d093d4ecc345bf2b75dbe23c9e24f36e869c6e3e22672b0aa757443",
+    "solution_tree": "73c23ec270254d448932d15b472e7ed05d7027a75d547054f4a74e4e10b7f5cf",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8950a235609e7342148d2bb68d76718c493ebf28c23d3dd93b164096c8910241",
+    "instruction.md": "c0f3c82cf9180b5167359f5dc548a1836d03f899e641ee3a151c21853c9a0ebd",
+    "public_contract.json": "a04188daff874a62a5502ba98d0bb4317c5c2efc153e31ecb2abd356d5068b8c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "6c749c5040b57ca757d6c9d0e4c21563aaba60e8706b40a4aca680d0a7ecbf08"
+  },
+  "release_dir": "358-quadrature-phase-interpolator",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "917-quadrature-phase-interpolator",
+  "support_root": "",
+  "target_artifacts": [
+    "quadrature_phase_interpolator.va"
+  ]
+}

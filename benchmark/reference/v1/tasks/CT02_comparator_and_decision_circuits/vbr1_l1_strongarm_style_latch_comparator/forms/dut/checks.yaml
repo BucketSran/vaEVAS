@@ -1,0 +1,22 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "outputs_toggle_nontrivially"
+    - "rising_clk_edge_latches_positive_decision"
+    - "rising_clk_edge_latches_negative_decision"
+    - "falling_clk_resets_both_outputs_low"
+    - "latched_decision_holds_through_input_swap"
+parity:
+  required: true
+  status: "pending"
+  tolerance_notes: "Fresh dual evidence required after latch-hold/reset stimulus and checker tightening."

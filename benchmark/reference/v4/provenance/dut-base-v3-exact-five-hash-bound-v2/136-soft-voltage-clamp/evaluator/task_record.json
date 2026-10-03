@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "136",
+  "checker_task_id": "v4_136_soft_voltage_clamp",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "46c9c9e9079d5585426e3de8e6c01369472bfcb0cb3fb17d69777581a554db6b",
+    "checker_profile.json": "498290dd8d65c1b54201e5d93959ffb966ff8407c88e7aac7de8ff815edc463e",
+    "derivation_manifest.json": "0fb486cf3545d40b1d2a5df9016f8b7e317221cbccfbf32c137ef18fac53b8aa",
+    "family_spec.json": "18b6b25e8003f6cf90102b35c724b2b7da8a088e267099364001d84da64ccf2b",
+    "harness_spec.json": "92d5cc4ef365702c16106d7c2f2807c07d2cb9f99552a6bc89291bd3e632e785",
+    "mutation_catalog.json": "d397942fa61081e36c6c2e3cb2ee2a8dbf1a8cc4ba174109cdc81e4333bbf9b5",
+    "profiles/feedback.json": "e39a0152f1d95b6aa785552b35c7d629e26bab946d33032224a80c5000428a09",
+    "profiles/score.json": "875b9372a55950588ab3e4152c4a55b4d8f650284b626898eee5849fb57bea7f",
+    "score_tb.scs": "cb7297fb2a614dfa1704c238ee8471ecf1d518950a0e2df65b7f6e011254d9ca",
+    "solution_tree": "1d408816553b5a240910c679c6995bc5021125e4c7d0f5f002b687a3bc67afaa",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "9cc5bfe5f8b820fcd2728e1d0cfd7096b64cb4496244f908a16870291f1185e5",
+    "instruction.md": "03b39bd7373aad2d542d14dfa8657180257c5880274e359e2f2718e51d24b80b",
+    "public_contract.json": "0c3d3494b7c1213dbe87838c31355765c9d2432053a7127a948efa47023045c6"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "46c9c9e9079d5585426e3de8e6c01369472bfcb0cb3fb17d69777581a554db6b"
+  },
+  "release_dir": "136-soft-voltage-clamp",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "158-soft-voltage-clamp",
+  "support_root": "",
+  "target_artifacts": [
+    "soft_voltage_clamp_behavior.va"
+  ]
+}

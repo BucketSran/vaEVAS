@@ -1,0 +1,31 @@
+{
+  "canonical_semantics_sha256": "2dc71b46c6752dfe7629bcc5ce5c7559ba3a9a460b8323b52d3ed96e653f6d8b",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_COMPARE_THE_ANALOG_VOLTAGE_DIFFERENCE_DIRECTLY",
+    "P_MATCH_TOL_0_05_V_FROM",
+    "P_VH_0_9_V_MATCH_OUTPUT",
+    "P_TR_20_PS_FROM_0_INF",
+    "P_MATCH_TOL_0_05_V_FROM_2",
+    "P_USE_DETERMINISTIC_VOLTAGE_DOMAIN_VERILOG_A"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "247",
+    "feedback_semantics_sha256": "2dc71b46c6752dfe7629bcc5ce5c7559ba3a9a460b8323b52d3ed96e653f6d8b",
+    "harness_spec_sha256": "e86d5df76fd01061ad7bf83306141b6966dd4f87097c8e7b8ffc9b53715a298b",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "2dc71b46c6752dfe7629bcc5ce5c7559ba3a9a460b8323b52d3ed96e653f6d8b",
+    "task_id": "v4-247"
+  },
+  "test_deck_sha256": "8ed07ba639e1a4b882919b6c57128c030f1a6c38526e1af4063e567d2c0e1384"
+}

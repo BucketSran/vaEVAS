@@ -1,0 +1,25 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 10p
+
+module flash_adc_3b(
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical VIN,
+    input  electrical CLK,
+    output electrical DOUT2,
+    output electrical DOUT1,
+    output electrical DOUT0
+);
+
+parameter real vrefp  = 0.9;
+parameter real vrefn  = 0.0;
+parameter real vth    = 0.45;
+parameter real tedge  = 100p;
+
+// piecewise-constant output bits
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

@@ -1,0 +1,78 @@
+{
+  "family_id": "150",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_midscale_offset/certification.json",
+        "certification_sha256": "34cb1efcc5256df11927c10811bb8be31d0f9d121c5ff9268ce2ced24f40f80c",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "a4412b8843318e4e6377ad80af4d66e3e855d778496f1a927d8a74ac24ba215c",
+        "mutation_id": "neg_004_missing_midscale_offset",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_midscale_offset/certification.json",
+        "trigger_condition": "Omits the -0.5 midscale offset.",
+        "violated_property_ids": [
+          "P_CENTERED_OUTPUT_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reversed_bit_weights/certification.json",
+        "certification_sha256": "c22b806e6e408c2904d38edcbf572fd180b0ad5de84107174891d95e5260e029",
+        "fault_class": "reversed_bit_weights",
+        "mutation_bundle_sha256": "fb27feebfce02add0a57d8a9baea79d1affbf9f3b00f50fc253c4601a230122a",
+        "mutation_id": "neg_003_reversed_bit_weights",
+        "source_catalog_certification_path": "negative_variants/neg_003_reversed_bit_weights/certification.json",
+        "trigger_condition": "Reverses LSB/MSB bit weights.",
+        "violated_property_ids": [
+          "P_BIT_WEIGHT_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "2c286007a1b4fac00cfc7eb89185f57dd9c8dcda531a169c6ceeb5f71102d811",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "c0334d7c2339ef187d6a54a546d2476ddf3777ce2716292d921748537ed90566",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_RISING_EDGE_12BIT_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_output_scale/certification.json",
+        "certification_sha256": "062a60dc4d4ff57ab612526a88f1374c149739f175e2ddaefdbcc59d762cd763",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5c43293ac3a1805df6994df34b0891bbbe5ba3796ee1c8781b7791a0d063bb73",
+        "mutation_id": "neg_002_half_output_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_output_scale/certification.json",
+        "trigger_condition": "Compresses the decoded output by half.",
+        "violated_property_ids": [
+          "P_CENTERED_OUTPUT_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "3825a8bc40a65cf985804408480b16d9e0c8c3954e9a76e59402516e25d15d3f",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5380720d168e92fd58730d716542a73aaafb9cf0d88b3ee9aa3c525aced406a7",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Cyclic Decoder 12bit: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CENTERED_OUTPUT_SCALE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_missing_midscale_offset",
+    "canonical_dut_id": "150",
+    "hashes": {
+      "mutation_catalog_sha256": "c3059ce0644784eabe7dc0d507eab911abd911994ec88e4061012b487da34792",
+      "score_deck_sha256": "5f581b22b2df22eb130cf8d8dbde91ea8ca837c6ccc7bb547fdf47c60c2aab89",
+      "task_certification_sha256": "6df287137b95c52a2fca45c5c36002cd1951410f632d0d48db96af0406320f00",
+      "task_record_sha256": "76c075f07da3e843aab9d099afc69f2054442db8bd353d4df5bddff3c405614c"
+    },
+    "release_dir": "150-cyclic-decoder-12bit"
+  }
+}

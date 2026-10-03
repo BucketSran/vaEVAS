@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "rdy_low_high_low_sequence"
+    - "dac_code_1010_at_conversion_done_window"
+parity:
+  required: true
+  tolerance_notes: "Judge state at conversion windows, not transient trial-bit rows."

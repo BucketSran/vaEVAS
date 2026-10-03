@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "flash_adc_3b.va"
+
+V_VDD (VDD 0) vsource dc=0.9
+V_VSS (VSS 0) vsource dc=0
+V_VIN (VIN 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_CLK (CLK 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+
+XDUT (VDD VSS VIN CLK DOUT2 DOUT1 DOUT0) flash_adc_3b
+
+tran tran stop=5n maxstep=100p
+save VDD VSS VIN CLK

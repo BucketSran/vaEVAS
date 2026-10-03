@@ -1,0 +1,31 @@
+{
+  "release_entry_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow",
+  "task_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "ADPLL lock/ratio-hop/timer flow"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/adpll_ratio_hop_ref.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/e2e/gold/tb_adpll_ratio_hop_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(cross(",
+      "@(timer(",
+      "transition("
+    ],
+    "must_not_include": [],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

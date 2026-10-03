@@ -1,0 +1,104 @@
+{
+  "release_entry_id": "vbr1_l1_resettable_integrator",
+  "task_id": "vbr1_l1_resettable_integrator:bugfix",
+  "source_task_id": "vbm1_resettable_integrator_bugfix_fixed",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Resettable integrator"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_resettable_integrator/bugfix/fixed",
+    "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_resettable_integrator/bugfix/fixed",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_resettable_integrator/bugfix/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_resettable_integrator/bugfix/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/dut_fixed.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/tb_resettable_integrator_buggy.scs",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/tb_resettable_integrator_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct04-dual-20260525_222500/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_resettable_integrator/bugfix/fixed",
+    "result_root": "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_resettable_integrator/bugfix/fixed",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        3.2e-07
+      ],
+      "signals_compared": 3,
+      "samples": 1200,
+      "max_rmse_v": 0.020071393584261167,
+      "max_abs_v": 0.388,
+      "mean_relative_rms_error": 0.01715503725150526,
+      "max_relative_rms_error": 0.05146511175451578,
+      "mean_nrmse": 0.01715503725150526,
+      "max_nrmse": 0.05146511175451578,
+      "per_signal": {
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.0,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vout": {
+          "rmse_v": 0.020071393584261167,
+          "max_abs_v": 0.388,
+          "span_v": 0.3900000000000003,
+          "nrmse": 0.05146511175451578,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/tb_resettable_integrator_buggy.scs",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_resettable_integrator/forms/bugfix/gold/tb_resettable_integrator_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

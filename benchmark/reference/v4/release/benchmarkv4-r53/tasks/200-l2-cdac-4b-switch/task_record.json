@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "l2_cdac_4b_switch.va"
+  ],
+  "canonical_dut_source_slug": "200-l2-cdac-4b-switch",
+  "checker_task_id": "v4_200_l2_cdac_4b_switch",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "860fca69a05c62fd9023b9396c67b45043d44e8e8e6c3c4d38b6b04cd0943303",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "dc1d01b374fc8a4e932d048b4601541814293972b79cd1e8709d9f1ce5dbd789",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "eab8211cb17a27f57e28c6a1702db8dbc21ded7ecf1ff4c4e6b11e714f7b92be",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "200",
+  "family_spec_sha256": "edabb7f416acf7ccb448edd0b448fc706c5c933db7365cf7bae9e9f915aceefa",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5d9bfb4995d61b7e2299dc7c2513355a0ece59a682bd0b9e40e076c54ab606f9",
+  "public_contract": "tasks/200-l2-cdac-4b-switch/public_contract.json",
+  "public_contract_sha256": "a6b77de5217d7a16749a31bcc87a446f522b7c49be44594c8bf307e8bd2b203e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/200-l2-cdac-4b-switch",
+  "task_id": "v4-200"
+}

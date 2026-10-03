@@ -1,0 +1,78 @@
+{
+  "family_id": "205",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_step_halving/certification.json",
+        "certification_sha256": "6e343c70fe163eca9cc276fa423a78be00cdd07892692dd155e6aa82fc13d795",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "2618a14a2a483ae90b5c58a8f3589528601e4cfa81eb7d027079751af5ebe208",
+        "mutation_id": "neg_002_no_step_halving",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_step_halving/certification.json",
+        "trigger_condition": "Keeps the offset search step fixed after each clock.",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DIFFERENTIAL_TRIM_RESIDUE_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "faca80a2532cdcfdb91f30c5aa42ecceca4cc5a93d902ee33e89e11752e5f497",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "914daaf06c4ff69793f92e62bd3a2e11703622c1b580ea2c78b72446daa426bf",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DIFFERENTIAL_TRIM_RESIDUE_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_full_diff_scale/certification.json",
+        "certification_sha256": "6012956fefb550b88cd85ea4f8b7a53e71808c95408613b83e6cf94b9d37a82c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "f0d7b0a0c36fb67cd059c7989eb629d616c7fb242c77fa9badbec9c51218d835",
+        "mutation_id": "neg_004_full_diff_scale",
+        "source_catalog_certification_path": "negative_variants/neg_004_full_diff_scale/certification.json",
+        "trigger_condition": "Uses full differential vin instead of half-scale around common mode.",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DIFFERENTIAL_TRIM_RESIDUE_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_update/certification.json",
+        "certification_sha256": "060d603b9af3d4500b634bab021c5e16690f0e37a16feac517d2f01fd59ccfec",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "164ea2d96223156ba273ffe22f99205197ae8ab5a892c6f3e5ff9324b2a5d126",
+        "mutation_id": "neg_003_inverted_update",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_update/certification.json",
+        "trigger_condition": "Moves vin in the opposite direction for each comparator decision.",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DIFFERENTIAL_TRIM_RESIDUE_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "489516064ddb83fd3683109af5f2433c177332d9591fe603e1b97bd3f281c57e",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "ed8cd0e0f3f9dff21688e3ba3e95414d43e0e16d64a2c67d9b34acdb1b190acf",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Offset Halving Search: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DIFFERENTIAL_TRIM_RESIDUE_TO"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_step_halving",
+    "canonical_dut_id": "205",
+    "hashes": {
+      "mutation_catalog_sha256": "d6846bc651eb5895e28b90ab09d00bce071d3336d48e412d1c567b503d7aea99",
+      "score_deck_sha256": "38d789af1fe7d6737f4251a6a77cb3b44b7a13930b9e593233a735edc72d79ab",
+      "task_certification_sha256": "13d7177c9b411eeef199ef848e78320897b808cf5f51a9379ef5c93b1bd24634",
+      "task_record_sha256": "e810902f712e8bd3b4a4bdf4108fe025e73c8ca15d03caeaf703fea7096b17eb"
+    },
+    "release_dir": "205-offset-halving-search"
+  }
+}

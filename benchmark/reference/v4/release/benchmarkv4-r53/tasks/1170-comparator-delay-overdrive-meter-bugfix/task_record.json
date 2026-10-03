@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator_delay_overdrive_meter.va"
+  ],
+  "canonical_dut_source_slug": "170-comparator-delay-overdrive-meter",
+  "checker_task_id": "v4_170_comparator_delay_overdrive_meter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "fcf196318d09f28a576fa2f9a9811292cd78d24fbb084bba08491fce68822173",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "5e566a617b017bdf037915766dc91a8ae33e98473758e353e1adb9f83048b2d3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "670f5ece09aa33ea5456ba1983fc198985aca4014bdda4ff7caea5b54b712a5c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "170",
+  "family_spec_sha256": "abb5917a53f25324af7238fb060a9e3907baa8ceccb459e76c61ddc4667f9f76",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d1ca552b4b847d4981702a4cc51d0939ed3dde891e7cdfc2f66f919bcd1aa68f",
+  "public_contract": "tasks/1170-comparator-delay-overdrive-meter-bugfix/public_contract.json",
+  "public_contract_sha256": "09873dbec2449f2c539bfe98c35cea286c2cccb266c7599b6cfd6ea553c46258",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1170-comparator-delay-overdrive-meter-bugfix",
+  "task_id": "v4-1170"
+}

@@ -1,0 +1,71 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "differential_vco_clip_idtmod.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=1.6u maxstep=4n"
+    ],
+    "body_lines": [
+      "// Feedback testbench for differential_vco_clip_idtmod.",
+      "// Differential input visits lower-clamp, nominal, and upper-clamp frequency regions.",
+      "Vinp (vinp 0) vsource type=pwl wave=[0 0.25 450n 0.25 450.1n 0.65 950n 0.65 950.1n 0.85 1.6u 0.85]",
+      "Vinm (vinm 0) vsource type=pwl wave=[0 0.55 450n 0.55 450.1n 0.35 950n 0.35 950.1n 0.35 1.6u 0.35]",
+      "XDUT (vinp vinm outp outm metric) differential_vco_clip_idtmod"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "vinp",
+      "vinm",
+      "outp",
+      "outm",
+      "metric"
+    ]
+  },
+  "family_id": "300",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "579e49b0b4e6ae86dafe6e3c240e438b58c06e10a32396df45a6d4f454440d9f",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "de94f0d98eadf24aa59f4b6ba901c08f30693f84c003f90f0289c4a482c88f0d",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_FREQ_Q_CLIP_FNOM_DFDV_V",
+    "P_PHASE_Q_IDTMOD_FREQ_Q_0",
+    "P_OUTP_VCM_VAC_SIN_M_TWO",
+    "P_OUTM_VCM_VAC_SIN_M_TWO",
+    "P_METRIC_0_9_PHASE_Q_VOLTAGE"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "a119b2b4b586ab902a27a7e5a40d35e3620d58a4be78199aa0b8886326c9fcb2",
+    "family_spec_sha256": "5f35b1e83a22e20b6bd28afcf134a3d61e55e9bd16f1fb9c32d2b12079c11d1c"
+  },
+  "task_id": "v4-300"
+}

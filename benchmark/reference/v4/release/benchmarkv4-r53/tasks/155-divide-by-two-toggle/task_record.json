@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "divide_by_two_toggle.va"
+  ],
+  "canonical_dut_source_slug": "155-divide-by-two-toggle",
+  "checker_task_id": "v4_155_divide_by_two_toggle",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9a7cff8ddf51f17fd4ea17811a6b7f500e2f543ff8b3a4ea1197effa966ab5b9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9c8db7dbc963421ac5a6fdf60475df98dda5e3235d487fd6b6c5b0915f4d77c8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9306ec886919f6ca26110dc8844fd04ceda105b6348f1594226eb731fb7eedcc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "155",
+  "family_spec_sha256": "ed799899d9b98cec20202f88839083dd7d023019741ee75d6881c173be70c68d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3e0856a0e443a8e93311ff6984ec3b78f3d3330f2f36408c97e1b2faaf514d87",
+  "public_contract": "tasks/155-divide-by-two-toggle/public_contract.json",
+  "public_contract_sha256": "fcb827800d75533da491feb55a691fefd8593ec1176eb74f638fe297a9047194",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/155-divide-by-two-toggle",
+  "task_id": "v4-155"
+}

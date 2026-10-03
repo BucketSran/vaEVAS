@@ -1,0 +1,78 @@
+{
+  "family_id": "395",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_rising_only_data_restart/certification.json",
+        "certification_sha256": "d3ed943f5de76963afbba5ae16cd5b0fa198e5610674354aed42eb079101d515",
+        "fault_class": "missing_edge_polarity",
+        "mutation_bundle_sha256": "a4bba2e6b6f5ad2f268db689698af9e494d9bcd72d22b245e059caedfac2e274",
+        "mutation_id": "neg_001_rising_only_data_restart",
+        "source_catalog_certification_path": "negative_variants/neg_001_rising_only_data_restart/certification.json",
+        "trigger_condition": "a falling data edge occurs",
+        "violated_property_ids": [
+          "P_DATA_EDGE_RESTART"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_age_not_incremented/certification.json",
+        "certification_sha256": "7f5cf96cef70cc57cc12cf4aa483a9c3c6c83304783da81e00c0f181cb66f23d",
+        "fault_class": "stuck_counter",
+        "mutation_bundle_sha256": "bdb81125ca2595916774b8c545bdfef073b9341a79c88def166f6ae528860240",
+        "mutation_id": "neg_003_age_not_incremented",
+        "source_catalog_certification_path": "negative_variants/neg_003_age_not_incremented/certification.json",
+        "trigger_condition": "multiple clock edges follow a data edge",
+        "violated_property_ids": [
+          "P_CLOCKED_AGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_age_metric/certification.json",
+        "certification_sha256": "1ade07fd196f4d49bc7fe6908c3aeddcfe2e0c9c2cdb20016cf6ee0eab739c49",
+        "fault_class": "metric_polarity_error",
+        "mutation_bundle_sha256": "c12a1f7d9bdc3f97f9f1effacb6e8f7ba830419f55716e37e36730505b37a332",
+        "mutation_id": "neg_004_inverted_age_metric",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_age_metric/certification.json",
+        "trigger_condition": "a recent data edge is aged by clocks",
+        "violated_property_ids": [
+          "P_REGISTERED_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_enable_does_not_clear/certification.json",
+        "certification_sha256": "0d1d90784b71a6789e930cd03a60a309211ab32a7c63e31e96452980c1aedef0",
+        "fault_class": "missing_disable_clear",
+        "mutation_bundle_sha256": "17a497135f7cde042d6ac7b28e569ad8be62ec9135f2f68ecc9f024407a86953",
+        "mutation_id": "neg_005_enable_does_not_clear",
+        "source_catalog_certification_path": "negative_variants/neg_005_enable_does_not_clear/certification.json",
+        "trigger_condition": "enable is deasserted after qualification",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_exclusive_age_limit/certification.json",
+        "certification_sha256": "b4db5982ec2f187d4517d198e1e6f6529a6fa5766fa1f51266ca3a870609be83",
+        "fault_class": "off_by_one_window",
+        "mutation_bundle_sha256": "96a84f6bfdf20030f6606c6904eeca4fb5254fbbf8211631b01735dd3d9db02c",
+        "mutation_id": "neg_002_exclusive_age_limit",
+        "source_catalog_certification_path": "negative_variants/neg_002_exclusive_age_limit/certification.json",
+        "trigger_condition": "age equals max_age_cycles",
+        "violated_property_ids": [
+          "P_INCLUSIVE_WINDOW"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_rising_only_data_restart",
+    "canonical_dut_id": "395",
+    "hashes": {
+      "mutation_catalog_sha256": "6d018443fe667685d8e3681dc28e06cdc3910df7a98837101a5d46b830199d13",
+      "score_deck_sha256": "1dd3aa8d13d313ff3d84975a1a97f145c858611362df44f969c0bcc5459bfe8f",
+      "task_certification_sha256": "377185f8f794de2e83b823e4672fbbc73a7aca135693347ce27ec9976eee340c",
+      "task_record_sha256": "0b9df71bcd70d3444d9144928f08c7281d29d433aa52c68f0661b67892ddda4d"
+    },
+    "release_dir": "395-clock-data-valid-qualifier"
+  }
+}

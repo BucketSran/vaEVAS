@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "202",
+  "checker_task_id": "v4_202_adc_zoom_timing_sequencer",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b123957330260a489bf3d0de2b0b4fd30129281aa530d4728dfa168b06464f6a",
+    "checker_profile.json": "f3f85a22e4a208302282c15fec20a79e846707c409bf5985ccfd44519bcbb35d",
+    "derivation_manifest.json": "7cdc333ab23b916e63fb1eccb8700e0b4c203da3b0e4a98f4691d3a83ae72789",
+    "family_spec.json": "3091409e1058e7b28b7ffd90b77e69536ea3faae06e6876f7826bb15ae084b7f",
+    "harness_spec.json": "c76f9d5b2f50c1005e9b6620b52609dac4173e877a8f7e212e96c2e76719081c",
+    "mutation_catalog.json": "01e8ea6337ec3ac868ac1ad6f33d46849c80181bf225240a106e9bdade049f13",
+    "profiles/feedback.json": "824c2077b87117467178981b9d8d086e7732102650dd5e949a7627f81f70e022",
+    "profiles/score.json": "a0337657bc76e764a565a60d9b6b2afed14e095a492ce22c48a1ea9b9182de2d",
+    "score_tb.scs": "4c43bcadfa1df5e0d1e8fbd00fe1a1c40611ffd5aba927ab3890b8b3f3e844a1",
+    "solution_tree": "632acfc4b6db090e9ccd6b8526fdffdef25641dff2b16e9e2f8f83bc51f1553c",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "408e658a44a5276b9d88ed12de71e727ace289ffae3868e1d1c05f12a1c8cf52",
+    "instruction.md": "334b1b1a8f860f422b282492934466b559d854a44312b3380881a40bfd88301a",
+    "public_contract.json": "c654b6205540bd046606dfae9413bb85c5600588fa447102d2b7a65cfc01a5db"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b123957330260a489bf3d0de2b0b4fd30129281aa530d4728dfa168b06464f6a"
+  },
+  "release_dir": "202-adc-zoom-timing-sequencer",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "242-adc-zoom-timing-sequencer",
+  "support_root": "",
+  "target_artifacts": [
+    "adc_zoom_timing_sequencer.va"
+  ]
+}

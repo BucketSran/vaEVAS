@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module cdac_cal(
+    VDD, VSS, CLK,
+    D9, D8, D7, D6, D5, D4, D3, D2, D1, D0,
+    CAL0, CAL1,
+    VDAC_P, VDAC_N
+);
+    inout VDD, VSS;
+    input CLK, D9, D8, D7, D6, D5, D4, D3, D2, D1, D0, CAL0, CAL1;
+    output VDAC_P, VDAC_N;
+    electrical VDD, VSS, CLK, D9, D8, D7, D6, D5, D4, D3, D2, D1, D0, CAL0, CAL1, VDAC_P, VDAC_N;
+
+    parameter real vcm = 0.45;
+    parameter real swing = 0.6;
+    parameter real tt = 20p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

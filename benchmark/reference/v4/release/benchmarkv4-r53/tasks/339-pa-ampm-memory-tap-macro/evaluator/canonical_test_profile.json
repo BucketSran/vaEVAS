@@ -1,0 +1,33 @@
+{
+  "canonical_semantics_sha256": "731d94c541928f7a65a5f3dffa55b4778ced60b69daddd54b64f71ba558d3bb5",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {
+    "maxstep": "200p",
+    "stop_time": "92n"
+  },
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_DRIVE",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_APPLY_AN_AM_GAIN_COMPRESSION_PROXY",
+    "P_APPLY_A_ONE_SAMPLE_MEMORY_TERM",
+    "P_EXPOSE_AM_AND_PM_PROXIES_SEPARATELY"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "339",
+    "feedback_semantics_sha256": "731d94c541928f7a65a5f3dffa55b4778ced60b69daddd54b64f71ba558d3bb5",
+    "harness_spec_sha256": "210fbc0bdbff799b5cbc65c01fe167c54ce80bee17b7263f93994722fc4618de",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "731d94c541928f7a65a5f3dffa55b4778ced60b69daddd54b64f71ba558d3bb5",
+    "task_id": "v4-339"
+  },
+  "test_deck_sha256": "7e6194f3a5e16a4f02d3b52a01efd172c2c0e7a41981b8836a97f43652e7d5b3"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "135-logarithmic-amplifier",
+  "checker_task_id": "v4_135_logarithmic_amplifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "6db8a76ec598cac129f42203983c6747ba2a63befa4dd2ec725c2cf00421144f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "19feeba6ef420f7a4b5b017e1527eb03d5a6bbb8fad3e933ec8ab7019b74b011",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "6db8a76ec598cac129f42203983c6747ba2a63befa4dd2ec725c2cf00421144f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a6d376b5b472a38e5b6196cd3be1c2c87bafd1e97353e9930ef543534ddd2874",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "8879a1b7988fd77080b41d98a9db9c8c58ea92123a9bb40e410a284ede7d5d67"
+  },
+  "family_id": "135",
+  "family_spec_sha256": "5167db504b93186000791fdbc91d719d97dd1e2f454f6b0c41c43f795a4f7159",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "83d65b37bcd28a5aaa1f492fefd87682ca154e0455f4a110c30535b215c90316",
+  "public_contract": "tasks/635-logarithmic-amplifier-testbench/public_contract.json",
+  "public_contract_sha256": "5354ee0b0462ed45785687373fa9093ea32dfa81917f7c8a4c4d7c728050ce91",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/635-logarithmic-amplifier-testbench",
+  "task_id": "v4-635"
+}

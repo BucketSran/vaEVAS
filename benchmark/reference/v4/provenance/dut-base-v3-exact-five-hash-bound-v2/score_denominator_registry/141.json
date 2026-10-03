@@ -1,0 +1,78 @@
+{
+  "family_id": "141",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_lsb/certification.json",
+        "certification_sha256": "cd2e7f9349ce6a27d2fba41ab1c8c4f6733023257432e7a2517326a98b07b222",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "c3a6ad4733b83d5d7a89097e243ab51db6337a06d9b87430d95ae272b0975e6c",
+        "mutation_id": "neg_004_wrong_lsb",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_lsb/certification.json",
+        "trigger_condition": "Uses the wrong ADC LSB size.",
+        "violated_property_ids": [
+          "P_CODE_SCALE_AND_LSB"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_unipolar_range/certification.json",
+        "certification_sha256": "4d2213042160cc07a7f1cae76b93179e8ce8add37bd89c2ea40dad363b3b62e8",
+        "fault_class": "unipolar_range",
+        "mutation_bundle_sha256": "e87423549d956101cf5ec2d4e334a264aac1f3cdb5407bf884db470d4b8fdf3d",
+        "mutation_id": "neg_003_unipolar_range",
+        "source_catalog_certification_path": "negative_variants/neg_003_unipolar_range/certification.json",
+        "trigger_condition": "Quantizes over 0..vref instead of -vref..+vref.",
+        "violated_property_ids": [
+          "P_SYMMETRIC_INPUT_RANGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8fe542a3d993f0c61c82b74e2ceed0236f3ea1c545d70574ab022a0f2f87a890",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "31f64f7d6b3b1a28a65c1fa8444a50811b73e8997b4760b741aa556668c75dad",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CLOCKED_DIFFERENTIAL_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale_code/certification.json",
+        "certification_sha256": "901b2b1a654d811d71bb9034cb412e389aa55e1e2ce7b4d5320fd3ebd7e4d831",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "9e2887d724ac0f291988d6e7a87fd7f47661a5e08ab8d28a1566c8374d1c5bd2",
+        "mutation_id": "neg_002_half_scale_code",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale_code/certification.json",
+        "trigger_condition": "Uses half-scale output codes.",
+        "violated_property_ids": [
+          "P_CODE_SCALE_AND_LSB"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "7a009e6d21d7cbf24cfc7030bcbd1ff2884d3081de380cf633464c98c39694bf",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a567a8200327fd790a3ce7fa9db1d5355e24a7701a0b527dd5330fd912edca4e",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Ideal ADC 4bit Quantizer: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CODE_SCALE_AND_LSB"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_lsb",
+    "canonical_dut_id": "141",
+    "hashes": {
+      "mutation_catalog_sha256": "da131fec3436f665079c9e934db5af841908c426056188926160b55cc6f168ec",
+      "score_deck_sha256": "521cc00e1d54410c8af7a5442af96e3cb62f6881508c54556297a34234a95d66",
+      "task_certification_sha256": "4607f23d7ead1b2325a3b9b425228e0eb6b4f662ca5d9b5206c20cc6d49e7eb6",
+      "task_record_sha256": "1085a3fd6195114b6a2ab18b0e6589a2aa793091ed7b32eb26d7c5bd81fbcb2a"
+    },
+    "release_dir": "141-ideal-adc-4bit-quantizer"
+  }
+}

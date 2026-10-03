@@ -1,0 +1,78 @@
+{
+  "family_id": "325",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_start_edge_does_not_arm/certification.json",
+        "certification_sha256": "e3cfe80ff6c56acaa89b8bd702d9de0ca9c47c467da75813e952a54678f07b8e",
+        "fault_class": "start_arm_missing",
+        "mutation_bundle_sha256": "9379f078b94e17d66d73159e70da289a7dc8b77cd9e9bac705ddbc58352617cf",
+        "mutation_id": "neg_002_start_edge_does_not_arm",
+        "source_catalog_certification_path": "negative_variants/neg_002_start_edge_does_not_arm/certification.json",
+        "trigger_condition": "an enabled rising start edge begins a new measurement",
+        "violated_property_ids": [
+          "P_A_RISING_START_EDGE_ARMS_A"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ref_clk_edges_double_counted/certification.json",
+        "certification_sha256": "27a10a4177adf2be824473bf0baa528378701fe0a6ec318f892f75fe3e67db1e",
+        "fault_class": "reference_edge_double_count",
+        "mutation_bundle_sha256": "df21e134b88c625402b8234272a5f3ec57f9dae57a73def0929afd75e78b317b",
+        "mutation_id": "neg_003_ref_clk_edges_double_counted",
+        "source_catalog_certification_path": "negative_variants/neg_003_ref_clk_edges_double_counted/certification.json",
+        "trigger_condition": "an armed rising ref_clk edge occurs before the first rising stop edge",
+        "violated_property_ids": [
+          "P_COUNT_RISING_REF_CLK_EDGES_UNTIL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_fine_residual_inverted/certification.json",
+        "certification_sha256": "78e5be3e56d8be3cd24b3b4b1ae68f81c051aa93dfa0131b7679795c82ce4c76",
+        "fault_class": "fine_residual_polarity_inverted",
+        "mutation_bundle_sha256": "91e8b3016305c106570b17645aa157ddda8a4ff8c6d0f7df87e0dfe40105d562",
+        "mutation_id": "neg_004_fine_residual_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_004_fine_residual_inverted/certification.json",
+        "trigger_condition": "a rising stop edge completes an armed measurement after reference edges have established the period",
+        "violated_property_ids": [
+          "P_LATCH_THE_COARSE_COUNT_INTO_COARSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_valid_asserted_at_start/certification.json",
+        "certification_sha256": "444e378ee47e775e9d48ebfb5be3d5a4622af63b3accd3a89035ec582c546bab",
+        "fault_class": "valid_asserted_before_stop",
+        "mutation_bundle_sha256": "672e4c27ebc559bdeac15cf99f530dfd51f653e24034f30a1cb6bc96e3afdb5e",
+        "mutation_id": "neg_005_valid_asserted_at_start",
+        "source_catalog_certification_path": "negative_variants/neg_005_valid_asserted_at_start/certification.json",
+        "trigger_condition": "a start edge arms a measurement before any stop edge",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_ONLY_AFTER_THE_STOP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_coarse_code_not_cleared_on_disable/certification.json",
+        "certification_sha256": "766d0664d4bd501315a638555467faae6995eeb969ab92823d322351dbc5f121",
+        "fault_class": "coarse_code_clear_omitted_on_disable",
+        "mutation_bundle_sha256": "bc1cd2a58e017f11697fab3953550e20634c203d7699c3df78ddda0c0e441b75",
+        "mutation_id": "neg_001_coarse_code_not_cleared_on_disable",
+        "source_catalog_certification_path": "negative_variants/neg_001_coarse_code_not_cleared_on_disable/certification.json",
+        "trigger_condition": "enable falls after a completed measurement has latched a nonzero coarse code",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_start_edge_does_not_arm",
+    "canonical_dut_id": "325",
+    "hashes": {
+      "mutation_catalog_sha256": "ff9170b6407b77c0d5961e62ff73c6c138a841ceeb4f565b49429f55a5656946",
+      "score_deck_sha256": "7cf6cf03f8dfe096d36aa0d573a1b8c1a6d442f19b658d213d259b494470c87d",
+      "task_certification_sha256": "05e92429e73fda5ea86dcac1d20d3513f5d6b73c09e3f2d373c29f29ff88ad97",
+      "task_record_sha256": "82d85d27b2b90f859754e5b6c8003dbb3124ae4ca5d85feb5ac87b3d95c4afac"
+    },
+    "release_dir": "325-fine-coarse-tdc-encoder"
+  }
+}

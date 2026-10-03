@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "355",
+  "checker_task_id": "v4_355_pam4_tx_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "795619f05c89ab76f35864f9a81da27e3c9e2286b81b491f9afba0fd82560cdc",
+    "checker_profile.json": "bb495dd098a480ced4cf18d35dc88663e815a636a97d6877815e3c957d0c5e52",
+    "derivation_manifest.json": "56a551995aca5998c0d8d10f3e1754d386e1b531eb3ca6709f88ca8792a3a5f1",
+    "family_spec.json": "0da82fac2756b44f8b1036107a4a06ddae152fb592cccecf812805f291f61af3",
+    "harness_spec.json": "4f452d96c8fe53b7dc2f0ffb50c259a4efb72671d85590d96350f6aa4b5ebec6",
+    "mutation_catalog.json": "7df4692b24d0aaa0695a95598223d41c13cd5109e5ce933456d8522bb93fc7ab",
+    "profiles/feedback.json": "6049696c2b2808b77e874ebe365970372101cf2e9628bdb36edde22dde1319be",
+    "profiles/score.json": "526021bf7b89e54ae5edd659431184186d87f8cf0e1db97702572ac15be877ee",
+    "score_tb.scs": "d1b7c1ac570a52297eb1e39ec52ccb59d9fe566ad69bdfbfbdc12107b6de9d66",
+    "solution_tree": "e0c93a72e503fad3bca536dcf87b8ef6641f6edba40155330556c0530881f41d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "13554f0547d0e64448614b2a270b5270c7b62f157435f21d91278493bf495280",
+    "instruction.md": "aea0ade300a8fa641b5077b590baf6eb9efe67b0e5673c3c53e45bb2f7db2da7",
+    "public_contract.json": "484f3aab855250d589fa1ad9f13e94fa8f19e4bdb738e244b07a6b0a8169261b"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "795619f05c89ab76f35864f9a81da27e3c9e2286b81b491f9afba0fd82560cdc"
+  },
+  "release_dir": "355-pam4-tx-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "914-pam4-tx-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "pam4_tx_top.va",
+    "gray_mapper.va",
+    "level_dac.va",
+    "preemphasis_driver.va"
+  ]
+}

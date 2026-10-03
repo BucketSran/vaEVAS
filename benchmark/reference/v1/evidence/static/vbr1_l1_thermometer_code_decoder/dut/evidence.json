@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l1_thermometer_code_decoder",
+  "task_id": "vbr1_l1_thermometer_code_decoder:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Thermometer-code decoder"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_thermometer_code_decoder/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_thermometer_code_decoder/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_thermometer_code_decoder/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_thermometer_code_decoder/forms/dut/gold/tb_thermometer_decoder_guarded_ref.scs",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_thermometer_code_decoder/forms/dut/gold/thermometer_decoder_guarded.va"
+  ],
+  "checks": {
+    "must_include": [
+      "transition("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

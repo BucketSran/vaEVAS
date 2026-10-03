@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ref_step_clk.va"
+  ],
+  "canonical_dut_source_slug": "098-reference-step-clock",
+  "checker_task_id": "v4_098_reference_step_clock",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e98ab0f05496b3a502674d6717c46a87b40c913d4c975a4515ad4d0ac29aa787",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0c8224cd1462404a869683fa8995040a74578bccf0c5d6bda8af76e761e1fc5d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9bf6542fbecf67f0f2ace0c20571ca879420d994eae13301deec3e8b80b18502",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "098",
+  "family_spec_sha256": "aca76c923fdb167ce229163f6d2c819f9b7d52c87b5ff009f8304bbf21c35aef",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "536d23c972527ba98b5f785d9a7d24fe8fffbba1336797ea6c934cb474cf56b8",
+  "public_contract": "tasks/1098-reference-step-clock-bugfix/public_contract.json",
+  "public_contract_sha256": "aa555de4bb864acdaa03d545fbbebf2e5041a6be8b8818b03d77b692c1ef7ed9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1098-reference-step-clock-bugfix",
+  "task_id": "v4-1098"
+}

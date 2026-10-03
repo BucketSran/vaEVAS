@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ideal_differential_opamp.va"
+  ],
+  "canonical_dut_source_slug": "139-ideal-differential-opamp",
+  "checker_task_id": "v4_139_ideal_differential_opamp",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "46c4cca27b96c6ef65d1e55edeab80e118ced30a66d0413de14681aca5d218db",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "5c5294032fe911d9321f1a7695f9b359dcc73e1193dd91cf21202ccf3cf591be",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "cee9ef47fb5f9de1d425773462afa17516393006ae7aefdf6a5e48239f7a02e3",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "139",
+  "family_spec_sha256": "3e0ae6723624073637ca8aba5263a6cb8c2ff8512bb983c27b311f282e00270d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a84eaf2317861b8d6a97a29a22ab266a3b3e5bd45d665625dd90b1bcebe85cba",
+  "public_contract": "tasks/139-ideal-differential-opamp/public_contract.json",
+  "public_contract_sha256": "1daa084d8069d7417fedb2fc99b2a5efdb22d1f746e31360e8def6b26bea4043",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/139-ideal-differential-opamp",
+  "task_id": "v4-139"
+}

@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_peak_detector:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_peak_detector",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Peak detector",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut/gold/peak_detector.va",
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut/gold/tb_peak_detector_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_peak_detector/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "peak_detector",
+    "source_task_id": "vbm1_peak_detector_dut",
+    "historical_source_task_id": "vbm1_peak_detector_dut",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_peak_detector/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

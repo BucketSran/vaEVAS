@@ -1,0 +1,16 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "simple_binary_voltage_dac_4b.va"
+
+V_code_0 (code_0 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_code_1 (code_1 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_code_2 (code_2 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_code_3 (code_3 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+V_vref (vref 0) vsource dc=0.9
+V_vss (vss 0) vsource dc=0
+
+XDUT (code_0 code_1 code_2 code_3 vref vss aout) simple_binary_voltage_dac_4b
+
+tran tran stop=5n maxstep=100p
+save code_0 code_1 code_2 code_3 vref vss

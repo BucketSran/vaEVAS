@@ -1,0 +1,70 @@
+{
+  "release_entry_id": "vbr1_l1_gain_estimator",
+  "task_id": "vbr1_l1_gain_estimator:e2e",
+  "source_task_id": "vbr1_l1_gain_estimator_e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Measurement Instrumentation Flows",
+    "base_function": "Gain estimator"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_gain_estimator/e2e/gold",
+    "results/vabench-release-v1-dual-rerun/vbr1_l1_gain_estimator/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_gain_estimator/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_gain_estimator/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/gain_estimator.va",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/tb_gain_estimator_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rerun/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_gain_estimator/e2e/gold",
+    "result_root": "results/vabench-release-v1-dual-rerun/vbr1_l1_gain_estimator/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": "gain_extraction_metric_parity_v1",
+      "basis": "Gain extraction uses dither/noise-like stimulus, so functional gain metric parity is the acceptance gate instead of raw pointwise waveform parity.",
+      "evas": {
+        "status": "ok",
+        "std_in": 0.02128724235209299,
+        "std_out": 0.12772347965696013,
+        "diff_gain": 6.000001199986441,
+        "output_pair": "voutp/voutn"
+      },
+      "spectre": {
+        "status": "ok",
+        "std_in": 0.02106045508025497,
+        "std_out": 0.12636273048152985,
+        "diff_gain": 6.000000000000001,
+        "output_pair": "voutp/voutn"
+      },
+      "relative_gain_delta": 1.9999773999875475e-07,
+      "gain_gate": "evas_gain>4 and spectre_gain>4 and relative_gain_delta<=0.25"
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/gain_estimator.va",
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_gain_estimator/forms/e2e/gold/tb_gain_estimator_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

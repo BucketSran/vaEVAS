@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "dfe_error_proxy_loop_top.va",
+    "decision_history.va",
+    "feedback_correction_core.va"
+  ],
+  "canonical_dut_source_slug": "331-dfe-error-proxy-loop",
+  "checker_task_id": "v4_331_dfe_error_proxy_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a1e005fa23a31db7335e60bebcef2fafae262ab8c7985f3940cb3b60e2812924",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "242d06bb59c92907724febf367fe152db6f8989930b79def6023b33bbaaf3667",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "eb30d8f2f84701189191cf58be5d8861e57e44124f8c003aa6c63b88040bd389",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "331",
+  "family_spec_sha256": "acff9921226d6d19244892b04af3ad7102071a7deb6ed0b486a340ad2004d7d8",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a8fe6ce55abf86e817b2cf33ec40095fb21f4163daa26e4fc63929e7e9412105",
+  "public_contract": "tasks/331-dfe-error-proxy-loop/public_contract.json",
+  "public_contract_sha256": "9f190b50e8e01999e326d1c9d7b8b5edc576cce41bc52682348a2544c0f43d3e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/331-dfe-error-proxy-loop",
+  "task_id": "v4-331"
+}

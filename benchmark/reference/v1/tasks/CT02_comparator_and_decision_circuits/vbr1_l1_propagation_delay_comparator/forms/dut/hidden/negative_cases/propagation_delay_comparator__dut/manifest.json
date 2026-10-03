@@ -1,0 +1,179 @@
+{
+  "negative_count": 5,
+  "negatives": [
+    {
+      "derived_from": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/gold/cmp_delay.va",
+      "expected": "FAIL_FULL_CHECKER",
+      "full_failures": [
+        "boundary_near_miss"
+      ],
+      "id": "neg_001",
+      "kind": "boundary_near_miss",
+      "note": "Passes nominal/smoke cases but fails an endpoint, threshold, saturation, or settling boundary.",
+      "partial_pass_requirement": "Must pass interface/smoke or a nominal shallow case and fail at least one full correctness/parity check.",
+      "sha256": "a783ee15f91edec765deda90035cd20724887ad6f32635fd1cc4b39eb8276677",
+      "shallow_passes": [
+        "artifact_exists",
+        "interface_or_testbench_shape_preserved",
+        "nominal_or_smoke_path_intended_to_pass"
+      ],
+      "shallow_static_failures": [],
+      "shallow_static_passes": [
+        "non_empty_candidate",
+        "differs_from_reference",
+        "veriloga_module_signature_present",
+        "veriloga_interface_preserved",
+        "analog_block_or_keyword_present"
+      ],
+      "source": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/negative_cases/propagation_delay_comparator__dut/neg_001.va",
+      "source_kind": "hidden_behavior_negative",
+      "validation_evidence": {
+        "static_shallow_shape": "pass",
+        "simulator_shallow_lane": "evas_compile_and_sim_pass",
+        "full_checker_lane": "evas_behavior_rejected",
+        "publication_status": "simulator_certified_behavior_rejected",
+        "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+      }
+    },
+    {
+      "derived_from": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/gold/cmp_delay.va",
+      "expected": "FAIL_FULL_CHECKER",
+      "full_failures": [
+        "timing_window_near_miss"
+      ],
+      "id": "neg_002",
+      "kind": "timing_window_near_miss",
+      "note": "Passes interface and broad waveform checks but fails one edge, timer, sample, lock, or reacquire window.",
+      "partial_pass_requirement": "Must pass interface/smoke or a nominal shallow case and fail at least one full correctness/parity check.",
+      "sha256": "f1f1389b0269c26cbe6709bc97ed9b372f550f194f7b1201561e4e0a3032348c",
+      "shallow_passes": [
+        "artifact_exists",
+        "interface_or_testbench_shape_preserved",
+        "nominal_or_smoke_path_intended_to_pass"
+      ],
+      "shallow_static_failures": [],
+      "shallow_static_passes": [
+        "non_empty_candidate",
+        "differs_from_reference",
+        "veriloga_module_signature_present",
+        "veriloga_interface_preserved",
+        "analog_block_or_keyword_present"
+      ],
+      "source": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/negative_cases/propagation_delay_comparator__dut/neg_002.va",
+      "source_kind": "hidden_behavior_negative",
+      "validation_evidence": {
+        "static_shallow_shape": "pass",
+        "simulator_shallow_lane": "evas_compile_and_sim_pass",
+        "full_checker_lane": "evas_behavior_rejected",
+        "publication_status": "simulator_certified_behavior_rejected",
+        "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+      }
+    },
+    {
+      "derived_from": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/gold/cmp_delay.va",
+      "expected": "FAIL_FULL_CHECKER",
+      "full_failures": [
+        "polarity_direction_near_miss"
+      ],
+      "id": "neg_003",
+      "kind": "polarity_direction_near_miss",
+      "note": "Passes positive or nominal path but fails sign, feedback direction, I/Q polarity, or trim direction.",
+      "partial_pass_requirement": "Must pass interface/smoke or a nominal shallow case and fail at least one full correctness/parity check.",
+      "sha256": "55f67147d8573ccc301dcc8542dc6c4a41d512a1f81779a40e3099c1b02fd092",
+      "shallow_passes": [
+        "artifact_exists",
+        "interface_or_testbench_shape_preserved",
+        "nominal_or_smoke_path_intended_to_pass"
+      ],
+      "shallow_static_failures": [],
+      "shallow_static_passes": [
+        "non_empty_candidate",
+        "differs_from_reference",
+        "veriloga_module_signature_present",
+        "veriloga_interface_preserved",
+        "analog_block_or_keyword_present"
+      ],
+      "source": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/negative_cases/propagation_delay_comparator__dut/neg_003.va",
+      "source_kind": "hidden_behavior_negative",
+      "validation_evidence": {
+        "static_shallow_shape": "pass",
+        "simulator_shallow_lane": "evas_compile_and_sim_pass",
+        "full_checker_lane": "evas_behavior_rejected",
+        "publication_status": "simulator_certified_behavior_rejected",
+        "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+      }
+    },
+    {
+      "derived_from": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/gold/cmp_delay.va",
+      "expected": "FAIL_FULL_CHECKER",
+      "full_failures": [
+        "state_reset_near_miss"
+      ],
+      "id": "neg_004",
+      "kind": "state_reset_near_miss",
+      "note": "Passes steady-state behavior but fails reset, enable, initial condition, or done/ready assertion.",
+      "partial_pass_requirement": "Must pass interface/smoke or a nominal shallow case and fail at least one full correctness/parity check.",
+      "sha256": "31dc0d16fbe51e2e48d6ff30b71f71bb83ec1fa74e6b43309613ce564fd4b30d",
+      "shallow_passes": [
+        "artifact_exists",
+        "interface_or_testbench_shape_preserved",
+        "nominal_or_smoke_path_intended_to_pass"
+      ],
+      "shallow_static_failures": [],
+      "shallow_static_passes": [
+        "non_empty_candidate",
+        "differs_from_reference",
+        "veriloga_module_signature_present",
+        "veriloga_interface_preserved",
+        "analog_block_or_keyword_present"
+      ],
+      "source": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/negative_cases/propagation_delay_comparator__dut/neg_004.va",
+      "source_kind": "hidden_behavior_negative",
+      "validation_evidence": {
+        "static_shallow_shape": "pass",
+        "simulator_shallow_lane": "evas_compile_and_sim_pass",
+        "full_checker_lane": "evas_behavior_rejected",
+        "publication_status": "simulator_certified_behavior_rejected",
+        "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+      }
+    },
+    {
+      "derived_from": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/gold/cmp_delay.va",
+      "expected": "FAIL_FULL_CHECKER",
+      "full_failures": [
+        "metric_writeout_near_miss"
+      ],
+      "id": "neg_005",
+      "kind": "metric_writeout_near_miss",
+      "note": "Produces plausible behavior but fails a metric writer, latency, count, or measurement output.",
+      "partial_pass_requirement": "Must pass interface/smoke or a nominal shallow case and fail at least one full correctness/parity check.",
+      "sha256": "7bfc6a9a58d4e2a5610c50aafc17b5874582a1492a3d2d54f0b1930f00958b1a",
+      "shallow_passes": [
+        "artifact_exists",
+        "interface_or_testbench_shape_preserved",
+        "nominal_or_smoke_path_intended_to_pass"
+      ],
+      "shallow_static_failures": [],
+      "shallow_static_passes": [
+        "non_empty_candidate",
+        "differs_from_reference",
+        "veriloga_module_signature_present",
+        "veriloga_interface_preserved",
+        "analog_block_or_keyword_present"
+      ],
+      "source": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_propagation_delay_comparator/forms/dut/hidden/negative_cases/propagation_delay_comparator__dut/neg_005.va",
+      "source_kind": "hidden_behavior_negative",
+      "validation_evidence": {
+        "static_shallow_shape": "pass",
+        "simulator_shallow_lane": "evas_compile_and_sim_pass",
+        "full_checker_lane": "evas_behavior_rejected",
+        "publication_status": "simulator_certified_behavior_rejected",
+        "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+      }
+    }
+  ],
+  "policy": "five_partial_pass_near_miss_negatives_per_task",
+  "task_id": "propagation_delay_comparator:dut",
+  "certification_status": "simulator_certified_behavior_rejected",
+  "certification_report": "evidence:dut49_hidden_negative_certification_after_ct08_final_20260624"
+}

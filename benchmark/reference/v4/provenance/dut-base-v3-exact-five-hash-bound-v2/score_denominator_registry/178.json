@@ -1,0 +1,80 @@
+{
+  "family_id": "178",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_sum/certification.json",
+        "certification_sha256": "a6ead24b8b35d686427835ecae3321f53971b89c14e617a82caa8a409fbf6a2d",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "c7bdb0d9123ffafb32665c1a2894bd4d8875b1d8d95e7a40c9e0c4878110119f",
+        "mutation_id": "neg_003_wrong_sum",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_sum/certification.json",
+        "trigger_condition": "Reports one less than the active progress count.",
+        "violated_property_ids": [
+          "P_SUM_COUNT_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5a4c05b63f70dacca4a95dc16091148257fd189ae32c348745a056d76a3a9ba8",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "a6eccc4641f78717de99b142a771405eaaa8dfbeac101dcdb8f41a57577ff009",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_PROGRESS_INITIAL_STATE",
+          "P_SEQUENTIAL_ONEHOT_ASSERTION",
+          "P_SUM_COUNT_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_clear_previous_bits/certification.json",
+        "certification_sha256": "9d201869efa77887b7d2b036d3b8da1508008accb7c11ce19254dd00b86b56f6",
+        "fault_class": "clear_previous_bits",
+        "mutation_bundle_sha256": "0fbd771c0e0e351137f6fab0533b7541f7e782f4bec92b6717bcaa308ff3b587",
+        "mutation_id": "neg_004_clear_previous_bits",
+        "source_catalog_certification_path": "negative_variants/neg_004_clear_previous_bits/certification.json",
+        "trigger_condition": "Clears the previous one-hot/progress bits before setting the next bit.",
+        "violated_property_ids": [
+          "P_ACCUMULATING_PROGRESS_BITS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_start_at_one/certification.json",
+        "certification_sha256": "2e2b9205ca5636291ef3d06cacf3cc8848415eade934374f9fd410a2c0c67afc",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "6a63e78902d4228e9948794240b9ac4f0a25e33b6bcd0158f6974687e9818a13",
+        "mutation_id": "neg_002_start_at_one",
+        "source_catalog_certification_path": "negative_variants/neg_002_start_at_one/certification.json",
+        "trigger_condition": "Starts progress at index 1, skipping d0 on the first clock.",
+        "violated_property_ids": [
+          "P_SEQUENTIAL_ONEHOT_ASSERTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "c185ea910924b1a3aca59b6f1aad405d583f54c882f9efa20b0ff4999106b1d7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5dc6a9c6a6ea4dedc73f678d70d1a656e112fbc355066da3f11a1b55c9d20d49",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Onehot Progress Encoder: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_SUM_COUNT_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_sum",
+    "canonical_dut_id": "178",
+    "hashes": {
+      "mutation_catalog_sha256": "8a1a2c441455b26a3af4b886bfadf3070766bd7de57f2d27059ab2f5ee02a1cf",
+      "score_deck_sha256": "a156bc41b5ba2baf7f10765ec5dc1fed07ca8d541918ac240ab34de2c7372583",
+      "task_certification_sha256": "ae36c88bb4aa03adeb439fd85ec4d75a635f30c5d95352790713c10ceb92fe1d",
+      "task_record_sha256": "de0048e24e88133f2d44015cb4fe9021f87ccd63c10c564de48c9c6289a92271"
+    },
+    "release_dir": "178-onehot-progress-encoder"
+  }
+}

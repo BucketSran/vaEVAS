@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "190-linearity-rdac-offset-sweep",
+  "checker_task_id": "v4_190_linearity_rdac_offset_sweep",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f3002368812af2c29101d7aa245dc7f904dd8b34646af26e03ffc6532550557e",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "90d3b380fda9a030f2f72741f09f9b2f0d6003d7160e4bba74ffbea172f5e420",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f3002368812af2c29101d7aa245dc7f904dd8b34646af26e03ffc6532550557e",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "759a1acde08ac54cae6bfaec3a79d5706a363ff895f0f8644a2436fcceafc0f0",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "391fe4880495b1508111888772b6cf34bd369f14e952d0bd92511b111dd583e7"
+  },
+  "family_id": "190",
+  "family_spec_sha256": "53804768aef762e26cb45c57b668c05c897970dfac8972e049ea863d98a4c9b6",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7e32b07a17670cdef2bc1b60e462de64f4d4bce863ee83ac1504a467d497d425",
+  "public_contract": "tasks/690-linearity-rdac-offset-sweep-testbench/public_contract.json",
+  "public_contract_sha256": "c483b344e6f3edbd7f50e0ab8d045214d741e24917d5e15deda12af708e58206",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/690-linearity-rdac-offset-sweep-testbench",
+  "task_id": "v4-690"
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "038",
+  "checker_task_id": "v4_038_programmable_gain_amplifier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "56de204d1896e50bbb1a476c504bfd3667934daaf4aa2e686d52482bd10e0cc5",
+    "checker_profile.json": "01dcebec1d4a5e0faac61f49d2e8e683d16f30b1f599ee69c8c7e9c61a9cb1a4",
+    "derivation_manifest.json": "81bd96d0d164b43ae21827ae34c8b5e298bee50c3b61f08f09546589aa8556f7",
+    "family_spec.json": "92867b2063aa3caab38f38af3085ab6fb3a594a755a3d36237a274338399ce0c",
+    "harness_spec.json": "50727760219c8f6c760f26345010bc0c2d89d95009d1b2b43625e5d721e8bf1b",
+    "mutation_catalog.json": "62ac1f400c3882f7916c05d3fbaba9600452e53dd41b41dec46e2bf10518f1b2",
+    "profiles/feedback.json": "304580f2e552d97384855125eacec6df85c9c87dea40d45e3051f56f18c086f8",
+    "profiles/score.json": "99e55468512737e7c2c383bf0000dd34532298b950feddb6d9897ee9e0367b06",
+    "score_tb.scs": "e33ca664e43cb945f0af1e5f21d66fd5f10127417f2d3a945739e8ae7a9c8622",
+    "solution_tree": "fc67c0dac0444f586c82263034e83f42559c7eb39a0473a28ffa407fcf50fd5e",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d495972cd97c3ced9c2f08de0ff16836ccf1074799103f8420a301a14faffee0",
+    "instruction.md": "08658a3684389017f5fd0710a235986b55e27b94dc81c54719850cf644c49015",
+    "public_contract.json": "1cc0988f14917f7d4445b1ec393fa33690dcfbbc24c9172af491c0d3599bf7b6"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "56de204d1896e50bbb1a476c504bfd3667934daaf4aa2e686d52482bd10e0cc5"
+  },
+  "release_dir": "038-programmable-gain-amplifier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "040-programmable-gain-amplifier",
+  "support_root": "",
+  "target_artifacts": [
+    "programmable_gain_amplifier.va"
+  ]
+}

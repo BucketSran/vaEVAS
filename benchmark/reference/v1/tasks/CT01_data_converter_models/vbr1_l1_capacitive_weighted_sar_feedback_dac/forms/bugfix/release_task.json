@@ -1,0 +1,44 @@
+{
+  "id": "vbr1_l1_capacitive_weighted_sar_feedback_dac:bugfix",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Data Converter Models",
+  "base_function": "Capacitive/weighted SAR feedback DAC",
+  "family": "bugfix",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/tb_cdac_cal_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "capacitive_weighted_sar_feedback_dac",
+    "source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix",
+    "historical_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

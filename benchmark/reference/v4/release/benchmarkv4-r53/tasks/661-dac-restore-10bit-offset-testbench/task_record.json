@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "161-dac-restore-10bit-offset",
+  "checker_task_id": "v4_161_dac_restore_10bit_offset",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5465b4cd9db48a96f9e255a2fa8fb61570dd1c8b2b974a54fbdb51565a3499c8",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "b9353fa869e577487e41b2b94e2ac9733c54c09093c688c3d6d2ac070226404d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5465b4cd9db48a96f9e255a2fa8fb61570dd1c8b2b974a54fbdb51565a3499c8",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "0042b70e8026dbac99ed0f1152ec99d81510d2feb7997defe90b71e3d3896b44",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "fafa7bc19c9c42b5d0c139c9fefa12161a5d5c2454cb4ffa8ddde6c115dab30f"
+  },
+  "family_id": "161",
+  "family_spec_sha256": "6ca0061e4ba76f5cc3e2cd154dd4c514debcd81e61e5d258cc90e9a59c2b4ed1",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8b9786ebb429dd7d4663a260ecd42069fbecc4ca0c9397a77e08786ef1ad7ca2",
+  "public_contract": "tasks/661-dac-restore-10bit-offset-testbench/public_contract.json",
+  "public_contract_sha256": "a9de94178e19bbcda04cae3896e91e49fb08e30f8d1667a869ac752ff0260e3d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/661-dac-restore-10bit-offset-testbench",
+  "task_id": "v4-661"
+}

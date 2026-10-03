@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sar_logic_4b(VDD, VSS, CLKS, DCOMP, DP_DAC_3, DP_DAC_2, DP_DAC_1, DP_DAC_0, RDY);
+    inout VDD, VSS;
+    input CLKS, DCOMP;
+    output DP_DAC_3, DP_DAC_2, DP_DAC_1, DP_DAC_0, RDY;
+    electrical VDD, VSS, CLKS, DCOMP, DP_DAC_3, DP_DAC_2, DP_DAC_1, DP_DAC_0, RDY;
+
+    parameter real vth = 0.45;
+    parameter real tedge = 1n;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

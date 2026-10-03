@@ -1,0 +1,80 @@
+{
+  "family_id": "149",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_low_marker_count/certification.json",
+        "certification_sha256": "f3fb1916226ecdb67506fb9b7ae188d513f8a2f422864cde360870789ead3d90",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "127cd175d43cd1fee7a42f1e68763dd365ad05136f82a87678280cdad16ccd24",
+        "mutation_id": "neg_004_wrong_low_marker_count",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_low_marker_count/certification.json",
+        "trigger_condition": "Drops the output low at count 7 instead of count 8.",
+        "violated_property_ids": [
+          "P_OUTPUT_LOW_MARKER_AND_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_always_divide_by_16/certification.json",
+        "certification_sha256": "302c4de9845e906876e365bbc844aec4f157bf17f2a91ab85160f681fc0b1142",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "6c983ada8aeb605239f784a26971a54c61a8b193fcc4d860f8de4c8898859b27",
+        "mutation_id": "neg_002_always_divide_by_16",
+        "source_catalog_certification_path": "negative_variants/neg_002_always_divide_by_16/certification.json",
+        "trigger_condition": "Ignores mc and always resets at divide-by-16.",
+        "violated_property_ids": [
+          "P_DIVIDE_COUNT_TIMING",
+          "P_MC_SELECTS_MODULUS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "c048c7bc6ec4b50bab58e9953ebbd5b3f9448e7b991fb5dd74ba4df3722e27c6",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "2cc0ae1c1200f9a0cfa38389b9d07503cd2fac66063143c8def163a8107276ca",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Dual Modulus Divider 16 17: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_LOW_MARKER_AND_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8057b32f6e2c99b099811d13ee952428be8bf8acd6c9ece799ae1ddf4d5fba24",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ae84650765abff6c619a060a37444267a168c7c738a5ca31061205cf6ef3a043",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_LOW_MARKER_AND_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_always_divide_by_17/certification.json",
+        "certification_sha256": "1d02bdc0c72f1f6080627628c1e1183e6c63c8e39658bb1d9e9c7648630cad97",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "03a4bcf314bef04d4bfa382635dc5d376e67a783e2b2f699a4af5376809bcdcf",
+        "mutation_id": "neg_003_always_divide_by_17",
+        "source_catalog_certification_path": "negative_variants/neg_003_always_divide_by_17/certification.json",
+        "trigger_condition": "Ignores mc and always extends to divide-by-17.",
+        "violated_property_ids": [
+          "P_DIVIDE_COUNT_TIMING",
+          "P_MC_SELECTS_MODULUS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_low_marker_count",
+    "canonical_dut_id": "149",
+    "hashes": {
+      "mutation_catalog_sha256": "b9e8e52d74a5153e030347c5f915f8be4e5d15126b3d194ebc6d7834871945ed",
+      "score_deck_sha256": "8b17a83c3be1a5360b608aa829c8b7003c8a8668de6b1a8eb8e0b1137f1f9a32",
+      "task_certification_sha256": "e524160ee2e5715d73726cc7a067d2a9662c266cffe5823ebd7a81adfbe9856f",
+      "task_record_sha256": "58bb52ef1f28a8719ede678d8eee5b8ab983b00bfe8c09f590fc4ea9ea9d6638"
+    },
+    "release_dir": "149-dual-modulus-divider-16-17"
+  }
+}

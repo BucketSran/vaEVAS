@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l2_programmable_stimulus_sequencer",
+  "task_id": "vbr1_l2_programmable_stimulus_sequencer:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Stimulus and Source Generators",
+    "base_function": "Programmable stimulus sequencer"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/gold/programmable_stimulus_sequencer.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/e2e/gold/tb_programmable_stimulus_sequencer.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

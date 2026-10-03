@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "valid_asserts_after_observation_window"
+    - "waveform_gain_is_about_six"
+    - "gain_out_matches_waveform_derived_gain"
+
+parity:
+  reference: "spectre"
+  status: "pending"
+  notes:
+    - "Fresh EVAS/Spectre validation is required after replacing the old gain_extraction_smoke duplicate."

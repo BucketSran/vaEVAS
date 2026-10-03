@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "083-amplifier-filter-chain",
+  "checker_task_id": "v4_083_amplifier_filter_chain",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "db44cc8787e04beae60230c24331470f8ab35f4ced462aac869a74a2ef2640a9",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "1a30e706f9f469ea3f612ca37c933de09f7bf969bfdc7f93207fce0df80bd117",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "db44cc8787e04beae60230c24331470f8ab35f4ced462aac869a74a2ef2640a9",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9faaec978ca67d834abc471cfe57f66319da5ef1f07f086d9d8f1c8f992ffef3",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "3ab5c572b9672e19e295290216de97c333a25deca268e401491d73194de57ad7"
+  },
+  "family_id": "083",
+  "family_spec_sha256": "fd70e77c9b67228ff0168cb5c86badc26d284af6c7d4dc692330c48320f21339",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4f08660fa936b118318892435783a6380a5ad2504bdbe107733eb6bf5b2d4765",
+  "public_contract": "tasks/583-amplifier-filter-chain-testbench/public_contract.json",
+  "public_contract_sha256": "ff1ae207cf302ddeb16e88a8d25bc575c49feb93c2ac1da821999720548728cf",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/583-amplifier-filter-chain-testbench",
+  "task_id": "v4-583"
+}

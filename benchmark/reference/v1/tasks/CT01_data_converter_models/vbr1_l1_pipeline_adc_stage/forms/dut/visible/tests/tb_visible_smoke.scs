@@ -1,0 +1,16 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "pipeline_stage.va"
+
+V_VDD (VDD 0) vsource dc=0.9
+V_VSS (VSS 0) vsource dc=0
+V_PHI1 (PHI1 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_PHI2 (PHI2 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_VIN (VIN 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=400p rise=50p fall=50p width=1.4n
+V_VREF (VREF 0) vsource dc=0.9
+
+XDUT (VDD VSS PHI1 PHI2 VIN VREF VRES D1 D0) pipeline_stage
+
+tran tran stop=5n maxstep=100p
+save VDD VSS PHI1 PHI2 VIN VREF

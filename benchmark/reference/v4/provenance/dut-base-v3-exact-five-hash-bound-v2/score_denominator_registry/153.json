@@ -1,0 +1,78 @@
+{
+  "family_id": "153",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_msb_weight/certification.json",
+        "certification_sha256": "0767a478c38c0442064bd8376180f9def6cf5b05f767e00a84ec03c331e47d2a",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "661e4b5025210dd1ac0aa693122d3dc9f6d71ef804fb6af44fb5a0b6ef4e7302",
+        "mutation_id": "neg_003_wrong_msb_weight",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_msb_weight/certification.json",
+        "trigger_condition": "Uses quarter weight for din0 instead of half.",
+        "violated_property_ids": [
+          "P_CLOCKED_SIX_BIT_WEIGHTED_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "240b7a0c58d2027153c058c9cdb404b29e339537d4fca7b0fdb04960bbed085e",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "440a5c2d7c4687fd213e9e055c88e8a052b6c1d5ab1ba106d1feab93ab8b04d1",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_SWING_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_differential_outputs/certification.json",
+        "certification_sha256": "ac6558c83158ca78448a8e2868dea9442b8c68bf37c2a1deb35e3246d5b1c7e9",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "47fe5792a3c47f57252218749b30e22a59d033a2c617fade68954e4babe001e8",
+        "mutation_id": "neg_002_inverted_differential_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_differential_outputs/certification.json",
+        "trigger_condition": "Swaps positive and negative DAC output calculations.",
+        "violated_property_ids": [
+          "P_COMPLEMENTARY_DIFFERENTIAL_OUTPUTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "73b5b5bff9071233587e15edea78dde5c8e4dec3c723667533b4eac516cbae53",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "7a46dbf561f7d323d6b9fbc484956aa2ccae8c34cd68b88ac7d3e3f625c9c353",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Differential DAC Calc 6b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_SWING_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output_swing/certification.json",
+        "certification_sha256": "f987ad85491964a4d7ca665b3b246eeb527a643d5ad217dd90e411d641f67a6b",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "b1c6ef6234432cb60f87a0efc3e61360d9dd98cbd8c915dad7148ea96b536737",
+        "mutation_id": "neg_004_half_output_swing",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output_swing/certification.json",
+        "trigger_condition": "Drives half of the computed DAC output swing.",
+        "violated_property_ids": [
+          "P_OUTPUT_SWING_SCALE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_msb_weight",
+    "canonical_dut_id": "153",
+    "hashes": {
+      "mutation_catalog_sha256": "69382d259b3f3d66ed5a753dce1463be77a267efbbb9a6bf318380ba5aa33222",
+      "score_deck_sha256": "a9e57024449c90bbca8ac2df0c9093d50e03d518431f1bea67eadd6e63a4a9ef",
+      "task_certification_sha256": "a022a3e19dc8f39a73da19d72d688f6c48fee7abfda0b6608af145694990715f",
+      "task_record_sha256": "23f5597536b059a93b22ddebebfdf3314670319a50ca24ed60c56af7fb0dfb33"
+    },
+    "release_dir": "153-differential-dac-calc-6b"
+  }
+}

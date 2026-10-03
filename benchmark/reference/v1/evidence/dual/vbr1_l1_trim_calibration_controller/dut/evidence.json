@@ -1,0 +1,110 @@
+{
+  "release_entry_id": "vbr1_l1_trim_calibration_controller",
+  "task_id": "vbr1_l1_trim_calibration_controller:dut",
+  "source_task_id": "vbm1_cdac_calibration_dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Calibration, DEM, and Control",
+    "base_function": "Trim-voltage generator"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_trim_calibration_controller/dut/gold",
+    "results/vabench-release-v1-ct06-dual-20260526_ci_r3/vbr1_l1_trim_calibration_controller/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_trim_calibration_controller/dut/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_trim_calibration_controller/dut/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/dut/gold/cdac_calibration.va",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/dut/gold/tb_cdac_calibration_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct06-dual-20260526_ci_r3/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_trim_calibration_controller/dut/gold",
+    "result_root": "results/vabench-release-v1-ct06-dual-20260526_ci_r3/vbr1_l1_trim_calibration_controller/dut/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        2.2e-07
+      ],
+      "signals_compared": 4,
+      "samples": 1200,
+      "max_rmse_v": 7.742072889442228e-07,
+      "max_abs_v": 6.000013338058885e-06,
+      "mean_relative_rms_error": 8.064659259835649e-07,
+      "max_relative_rms_error": 3.2258637039342596e-06,
+      "mean_nrmse": 8.064659259835649e-07,
+      "max_nrmse": 3.2258637039342596e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "err": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "trim": {
+          "rmse_v": 7.742072889442228e-07,
+          "max_abs_v": 6.000013338058885e-06,
+          "span_v": 0.24000000000000016,
+          "nrmse": 3.2258637039342596e-06,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/dut/gold/cdac_calibration.va",
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/dut/gold/tb_cdac_calibration_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

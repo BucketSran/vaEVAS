@@ -1,0 +1,41 @@
+{
+  "id": "vbr1_l1_pa_compression_macro_bugfix",
+  "task_id": "vbr1_l1_pa_compression_macro_bugfix",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_pa_compression_macro",
+  "family": "bugfix",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "pa_gain_above_unity",
+    "pa_large_signal_compression",
+    "pa_output_limit_metric"
+  ],
+  "designed_source": true,
+  "public_inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "submission_artifacts": [
+    "dut_fixed.va"
+  ],
+  "private_reference_artifacts": [
+    "gold/dut_fixed.va"
+  ]
+}

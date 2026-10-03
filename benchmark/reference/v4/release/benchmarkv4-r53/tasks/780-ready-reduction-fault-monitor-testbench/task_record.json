@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "280-ready-reduction-fault-monitor",
+  "checker_task_id": "v4_280_ready_reduction_fault_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "4c982742eebab773096dc6de7073e38d7eaa36b83d9be11280ff6df219f93f71",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "fd1ccda3a8a71c79e6363c2e2372a367b3bf8729633e3e77cd502311216eb73e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "4c982742eebab773096dc6de7073e38d7eaa36b83d9be11280ff6df219f93f71",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "31e056ada98f025c4cdfde31784e3ae921763adbce762f3ce5e597bf94e1cdcc",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "66ca48652ca39e56a1cf7783216d8bcc8a35627b34dc7c37823974b70278ea04"
+  },
+  "family_id": "280",
+  "family_spec_sha256": "261a5f79ad650f7e6e03ec4bc183a95756f25f54806949256a35cce4c336972b",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "70c0c0784e192d6538d7fb721a0fcdff522230dbc01bdb14485dded3f2a0e79a",
+  "public_contract": "tasks/780-ready-reduction-fault-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "bcb237b1b9424b6536d5433ac8f72b23e08f68e0b1de7db83f05c62185714749",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/780-ready-reduction-fault-monitor-testbench",
+  "task_id": "v4-780"
+}

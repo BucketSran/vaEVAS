@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "dac_mismatch_unit_weighting_model.va"
+
+V_b0 (b0 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_b1 (b1 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_b2 (b2 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_b3 (b3 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+
+XDUT (b0 b1 b2 b3 out) dac_mismatch_unit_weighting_model
+
+tran tran stop=5n maxstep=100p
+save b0 b1 b2 b3

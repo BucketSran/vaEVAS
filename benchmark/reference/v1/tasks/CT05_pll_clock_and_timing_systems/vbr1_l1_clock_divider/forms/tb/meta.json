@@ -1,0 +1,53 @@
+{
+  "id": "vbm1_resettable_counter_divider_tb",
+  "task_id": "vbm1_resettable_counter_divider_tb",
+  "release_entry_id": "vbr1_l1_clock_divider",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "tb-generation",
+  "category": "digital-logic",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_resettable_counter_divider_tb",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "ahdl_include",
+    "tran",
+    "save"
+  ],
+  "must_not_include": [],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_clk_divider_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/clk_divider.va",
+    "gold/clk_divider_ref.va",
+    "gold/tb_clk_divider_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_resettable_counter_divider_tb/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_resettable_counter_divider_tb/spectre_result.json"
+  },
+  "notes": "Semantic review: Release the normal divider task against `clk_divider_ref`; do not treat legacy `clk_divider.va` as a badcase. Risk: The staged directory contains a legacy auxiliary source that is not instantiated by the public testbench. Checker boundary: Measure divider ratio, output period, and lock after startup; ignore the unused auxiliary source.",
+  "semantic_review": {
+    "risk": "The staged directory contains a legacy auxiliary source that is not instantiated by the public testbench.",
+    "release_decision": "Release the normal divider task against `clk_divider_ref`; do not treat legacy `clk_divider.va` as a badcase.",
+    "checker_boundary": "Measure divider ratio, output period, and lock after startup; ignore the unused auxiliary source."
+  }
+}

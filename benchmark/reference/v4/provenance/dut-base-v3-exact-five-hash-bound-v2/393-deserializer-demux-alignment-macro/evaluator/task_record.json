@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "393",
+  "checker_task_id": "v4_393_deserializer_demux_alignment_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "7e5da38fa3f2d9bdc326596c7ef7904dee9d35a7ae27234bb3c13e70b0f0a356",
+    "checker_profile.json": "55c07987f63d493f152a7b9e30a4db021520e965951f16f76f62dd4da6f8356f",
+    "derivation_manifest.json": "b5a2f5d3bb9053106c0ddf5e21e1c849ac6940cb85917efd4cdd3104da1f38ff",
+    "family_spec.json": "2b3f498f27a1f73c2f67c79ce2d9d77d089cc799abfe852286df34b3d74958b6",
+    "harness_spec.json": "fa022dffd2f2d7709b6ff7879da50098832c4f7a1db2bfd51d253f15a6589996",
+    "mutation_catalog.json": "7e02263113423216d71ed598ed953a57c86d9bfc3a4fd2dd4a42b521e3439d4b",
+    "profiles/feedback.json": "6dd6fe9ecfdb3fe905eb5392b709842b210975db0f66024adf4f8802a08fc5c5",
+    "profiles/score.json": "c8be9f245081f5628a041d5aa071429773f04dafe3634f4cd79d922563e9b1ed",
+    "score_tb.scs": "2ca1f332d701be1aec415242d27a5c87240a15f69a8ca36e13b70194d3fc3ae7",
+    "solution_tree": "b14b21efa4238dee6f5b1e656c36cb9a7ab9cb5d47d0c191b843962b33baab99",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "08d794f44d0fd23ee581cc2ca2b5e93c8e09c1633afbcc6e6405a5a3697f1917",
+    "instruction.md": "08ab7f5dff1a2405e27b92c5a7d30c658657f557ee41991a86cd5225d1fbccc0",
+    "public_contract.json": "22a5503e77485a01d8dafa771707c523935e799a0acca8f1e564c247fb71a642"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "7e5da38fa3f2d9bdc326596c7ef7904dee9d35a7ae27234bb3c13e70b0f0a356"
+  },
+  "release_dir": "393-deserializer-demux-alignment-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "952-deserializer-demux-alignment-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "deserializer_demux_alignment_macro.va"
+  ]
+}

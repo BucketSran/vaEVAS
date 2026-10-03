@@ -1,0 +1,26 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/cross_interval_163p333_ref.va"
+
+Vvth_ref_default (vth_ref_default 0) vsource dc=0.45 type=dc
+Vscale_ps_ref_default (scale_ps_ref_default 0) vsource dc=200 type=dc
+Vtedge_ps_ref_default (tedge_ps_ref_default 0) vsource dc=20 type=dc
+Vvdd_default (vdd_default 0) vsource dc=1.0 type=dc
+Vvss_default (vss_default 0) vsource dc=0.0 type=dc
+Va_default (a_default 0) vsource type=pwl wave=[0 0 9.95n 0 10.05n 0.9 19.8n 0.9 19.9n 0 19.95n 0 20.05n 0.9 26n 0.9]
+Vb_default (b_default 0) vsource type=pwl wave=[0 0 10.113333n 0 10.213333n 0.9 12.0n 0.9 12.1n 0 12.15n 0 12.25n 0.9 19.8n 0.9 19.9n 0 20.070n 0 20.170n 0.9 26n 0.9]
+Idefault (vdd_default vss_default a_default b_default delay_out_default seen_out_default) cross_interval_163p333_ref
+
+Vvth_ref_override (vth_ref_override 0) vsource dc=0.6 type=dc
+Vscale_ps_ref_override (scale_ps_ref_override 0) vsource dc=100 type=dc
+Vtedge_ps_ref_override (tedge_ps_ref_override 0) vsource dc=80 type=dc
+Vvdd_override (vdd_override 0) vsource dc=1.0 type=dc
+Vvss_override (vss_override 0) vsource dc=0.0 type=dc
+Va_override (a_override 0) vsource type=pwl wave=[0 0 9.90n 0 9.95n 0.52 10.00n 0.52 10.03n 0 10.05n 0 10.10n 0.7 19.80n 0.7 19.86n 0 19.90n 0 19.95n 0.52 20.00n 0.52 20.03n 0 20.05n 0 20.10n 0.7 26n 0.7]
+Vb_override (b_override 0) vsource type=pwl wave=[0 0 10.120n 0 10.125n 0.52 10.135n 0.52 10.140n 0 10.185n 0 10.235n 0.7 12.0n 0.7 12.1n 0 12.150n 0 12.155n 0.52 12.165n 0.52 12.170n 0 19.80n 0 19.86n 0 20.120n 0 20.125n 0.52 20.135n 0.52 20.140n 0 20.195n 0 20.245n 0.7 26n 0.7]
+Ioverride (vdd_override vss_override a_override b_override delay_out_override seen_out_override) cross_interval_163p333_ref vth=0.6 scale_ps=100.0 tedge=80p
+
+tran tran stop=26n maxstep=5p errpreset=conservative
+save vth_ref_default scale_ps_ref_default tedge_ps_ref_default vdd_default vss_default a_default b_default delay_out_default seen_out_default
+save vth_ref_override scale_ps_ref_override tedge_ps_ref_override vdd_override vss_override a_override b_override delay_out_override seen_out_override

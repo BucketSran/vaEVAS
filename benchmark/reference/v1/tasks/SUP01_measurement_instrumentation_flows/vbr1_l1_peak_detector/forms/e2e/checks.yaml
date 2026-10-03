@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "first_peak_is_held"
+    - "reset_clears_peak"
+    - "second_peak_updates_to_larger_value"
+parity:
+  required: true
+  tolerance_notes: "Use broad windows around peaks; do not depend on exact timer alignment."

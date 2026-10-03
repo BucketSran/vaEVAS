@@ -1,0 +1,78 @@
+{
+  "family_id": "155",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_initial_state/certification.json",
+        "certification_sha256": "82978c3665d70f3d765a901437cd05de747443edcaf4de6838662096b42b0fc9",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "886af8679f505e815588ecf315378b0fcd0d0a50d32043488efff1b6a77bccb5",
+        "mutation_id": "neg_003_wrong_initial_state",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_initial_state/certification.json",
+        "trigger_condition": "Starts high instead of low.",
+        "violated_property_ids": [
+          "P_INITIAL_LOW_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_set_high_only/certification.json",
+        "certification_sha256": "602df814b4d3ef46069243798fc1474255be5e1beeee6e3142818259488f9c56",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "2ff7f82d37aa1771a8b2126962fa0a2abaa263774d2419701ebe15a0a814e57f",
+        "mutation_id": "neg_002_set_high_only",
+        "source_catalog_certification_path": "negative_variants/neg_002_set_high_only/certification.json",
+        "trigger_condition": "Sets output high on every edge instead of toggling.",
+        "violated_property_ids": [
+          "P_RISING_EDGE_TOGGLE_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_high_level/certification.json",
+        "certification_sha256": "0f7cb16310ea359e37dcac890be1fe8d97012d95b0810ddaaf8804ecb4f9b57e",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "3f68a99a564a47f565b525c0ac9e5e336a78f78e9da48edea7ed1de4e8386aba",
+        "mutation_id": "neg_004_half_high_level",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_high_level/certification.json",
+        "trigger_condition": "Uses half high level for output high.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "ef4189c2d2e24feff729d2366ec2787fc33b3fe237afeaee765fe519e4ce156c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6ee17240e0e8815fb3f26999b6afd9c2ff616ad1b4cd85ee0a1bccaeb14e99bf",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Divide By Two Toggle: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8bb86c8db5f7c52a566baf823cc0ad18f03b4731b3d9b37e4d0bfac3d634781f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "f4decfada9f978bd5b2082b3967b24150bcdabfff038e0a5e5e6110b57a36819",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_initial_state",
+    "canonical_dut_id": "155",
+    "hashes": {
+      "mutation_catalog_sha256": "869071f743067f2867b36cf6ae1645107ff9001d31b3641df941072d15a9fd4b",
+      "score_deck_sha256": "96d0598096a835c59ea18ba0a3a220a1845c3fcea2e5ec31e54065874e631144",
+      "task_certification_sha256": "1017b601256a971caaf6d029fe771ef894731f126477ec5f00c7591077cd4130",
+      "task_record_sha256": "e47bbd1818296270aeaf73f487cbc5bdd9c6449b881c697eee4002e674e66bba"
+    },
+    "release_dir": "155-divide-by-two-toggle"
+  }
+}

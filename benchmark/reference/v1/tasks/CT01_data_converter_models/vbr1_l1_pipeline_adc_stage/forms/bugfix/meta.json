@@ -1,0 +1,51 @@
+{
+  "id": "vbr1_l1_pipeline_adc_stage_bugfix",
+  "task_id": "vbr1_l1_pipeline_adc_stage_bugfix",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "checker_task_id": "pipeline_stage",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "adc",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "release_form": "bugfix",
+  "provenance_status": "release_addition_pending_dual",
+  "counts": {
+    "model_capability": false,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "transition(",
+    "@(cross("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/pipeline_stage.va",
+    "gold/tb_pipeline_stage_ref.scs"
+  ],
+  "evidence": {
+    "notes": "Bugfix companion targets the missing sub-DAC residue correction in upper/lower MDAC regions; fresh dual evidence pending."
+  }
+}

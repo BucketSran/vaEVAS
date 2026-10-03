@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_gain_trim_controller",
+  "task_id": "vbr1_l1_gain_trim_controller:bugfix",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Calibration, DEM, and Control",
+    "base_function": "Gain trim controller"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/gold/dut_fixed.va",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/gold/tb_gain_trim_controller_buggy.scs",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/bugfix/gold/tb_gain_trim_controller_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(cross(",
+      "transition(",
+      "target"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

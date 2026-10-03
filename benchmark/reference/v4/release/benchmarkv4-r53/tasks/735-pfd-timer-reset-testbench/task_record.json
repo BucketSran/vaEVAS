@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "235-pfd-timer-reset",
+  "checker_task_id": "v4_235_pfd_timer_reset",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "468aa419ba01ebf2483dad2a90bca27a78e20c63b6477b0703c6bc6206bfa36f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2cb6d03588a4bc21511eea46bfc754268c9745df7cf9ad900a014bc7e11a64b4",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "468aa419ba01ebf2483dad2a90bca27a78e20c63b6477b0703c6bc6206bfa36f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ced17e97cf2769743273237f780f5d3f4411fdeba06fa5ff09ce1cf62a6a5306",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "193ae9469fa606d6399af0a9ec1e8f80d5c83e562479ccdaf2abd4f965eb817c"
+  },
+  "family_id": "235",
+  "family_spec_sha256": "344b0cd253b7b09c6f6d45eb142b25079985ec3b65aefc001494476610b6a044",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d5392b72d5e7a936f47de279db568ec839d1dc4b450b0157500a3aeadc51bf11",
+  "public_contract": "tasks/735-pfd-timer-reset-testbench/public_contract.json",
+  "public_contract_sha256": "a1700b99c3f207be7f323f0f66c1e5bcb9267b1ca530008499a5871f3a773234",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/735-pfd-timer-reset-testbench",
+  "task_id": "v4-735"
+}

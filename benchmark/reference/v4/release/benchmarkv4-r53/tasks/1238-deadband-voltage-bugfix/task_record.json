@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deadband_voltage.va"
+  ],
+  "canonical_dut_source_slug": "238-deadband-voltage",
+  "checker_task_id": "v4_238_deadband_voltage",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "185a49ce083178a86e27791edebaf8e9cf724c76c8b3caf1646f6b93beff009d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "2d58b9a8ad20f21250110e00588f0d7fdd2553029e97d90765f515494f743c50",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "64004ea7c676c4e0bd91d34da09fbe81cafc29911d64f708cc7a003c6173b81d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "238",
+  "family_spec_sha256": "2cb188906ecbc367639ba574f05aecc15da0c6fe0adc6bd4c194dc182231272a",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d8991a4bf8cde6a9f1101d5a1f7a37e7b9527804ee245877efe0a8fa24410a3d",
+  "public_contract": "tasks/1238-deadband-voltage-bugfix/public_contract.json",
+  "public_contract_sha256": "3169435e6a351eb4fdc5f75606e8ddcb1d98ea57e235129259b7c6044f58cb17",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1238-deadband-voltage-bugfix",
+  "task_id": "v4-1238"
+}

@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "clk_divider.va"
+
+V_CLK_IN (CLK_IN 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_RST_N (RST_N 0) vsource type=pulse val0=0.9 val1=0 period=20n delay=1n rise=50p fall=50p width=18n
+
+XDUT (CLK_IN RST_N CLK_OUT LOCK) clk_divider
+
+tran tran stop=5n maxstep=100p
+save CLK_IN RST_N

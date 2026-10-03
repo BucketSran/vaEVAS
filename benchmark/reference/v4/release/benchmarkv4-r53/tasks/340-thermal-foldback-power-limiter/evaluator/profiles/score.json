@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "be172dfbb6177bf9c6a324d21d5000a5f55c3cf4a823caa8bf634b6bfdb7e0d1",
+  "parameters": {
+    "maxstep": "120p",
+    "stop_time": "80n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_PASS_POWER_CMD_THROUGH_WHILE_TEMPERATURE",
+    "P_REDUCE_LIMITED_CMD_AS_TEMPERATURE_RISES",
+    "P_ASSERT_THERMAL_OK_ONLY_WHEN_NO"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

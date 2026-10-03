@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_NORMALIZED_OUTPUT satisfy the public contract; fault class timing_or_state_update_fault is rejected",
+    "observed": "EVAS: checked=4 max_sum_error=0.50750 max_delay_error=0.29000",
+    "violated_property_ids": [
+      "P_NORMALIZED_OUTPUT"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_151_flash_8level_sum_delay",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1817
+  },
+  "family_id": "151",
+  "inputs": {
+    "checker_profile_sha256": "896913fd8ce4d45473b29e2c092f83ff8a892e1f05452c1b05957ffc1bdf240f",
+    "harness_spec_sha256": "808f49185b9c2a60b8eced569694776e6f9ab40bfeab851c194972d06c3e19db",
+    "mutation_bundle_sha256": "22b2b69d997ee92f70c14ec71b67614133e6dd4db15ba460755b1be1f8b1adbb",
+    "profile_sha256": "c450409d678efdf1e6b5a0dc5dd186708369a1215b30c47d784ac33906cbd604"
+  },
+  "mutation_id": "neg_005_metric_scale_low",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

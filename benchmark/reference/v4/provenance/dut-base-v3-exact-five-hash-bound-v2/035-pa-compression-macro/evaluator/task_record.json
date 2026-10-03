@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "035",
+  "checker_task_id": "v4_035_pa_compression",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9b68132987f2e4936ca07dac23347ee9ea0a8f4d5868d261414dc87885e65ea8",
+    "checker_profile.json": "db6dd533ecbacffda5f1a6272a5cff53d2b11b4793ca06dd3659ef0ab33f3171",
+    "derivation_manifest.json": "4632a286425ecc6e88197d744ceda453523f6183cce1b5519d7a4ce326d4f17f",
+    "family_spec.json": "2632f9b862bf26e8d3e1ac708b444acea8af07144c5c9740d472c7dd46569ec9",
+    "harness_spec.json": "e6ff61a11e5710d8b25c4dea39759a80a31f22891b4c586c1908ae37e4ec3b70",
+    "mutation_catalog.json": "77af37b8e80b0ac0155eb582cd26debde022f90edf640fdf1cd381106df347f2",
+    "profiles/feedback.json": "17a402f28fb7433cd5424b2cf8fa4be6e65e1dddaa4c5c4be83d5ce0fb12fdef",
+    "profiles/score.json": "eb77441bd9263dc66bcde0a5ea05175baf9167837c4b86a10d1580c8f9aae6b4",
+    "score_tb.scs": "3329446f23fad64642b67012c308dd0e9b2ea95d2ed095fb4983b4f054374bef",
+    "solution_tree": "1238e69beccab70041d4f7f936773ec2003c738b78191c147c846a27bfac6b2d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "456db1d04e2598b3a43ffc54003aff8359c90b543d4264fa2929bbec8f39df86",
+    "instruction.md": "b9def4159df3620607ef6cf6ce8e9c09a189936e4fae0c9f5f962c58646b4d62",
+    "public_contract.json": "258f7890e623d4bad0b2054c1d6def8d044b8deeb27a943f51e871cbfa5612a9"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9b68132987f2e4936ca07dac23347ee9ea0a8f4d5868d261414dc87885e65ea8"
+  },
+  "release_dir": "035-pa-compression-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "037-pa-compression-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "pa_compression_macro.va"
+  ]
+}

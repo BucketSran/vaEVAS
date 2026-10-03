@@ -1,0 +1,25 @@
+{
+  "id": "vbr1_l1_sine_periodic_voltage_source_tb",
+  "task_id": "vbr1_l1_sine_periodic_voltage_source_tb",
+  "release_entry_id": "vbr1_l1_sine_periodic_voltage_source",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Stimulus and Source Generators",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "multitone.va",
+    "tb_multitone_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_dut"
+}

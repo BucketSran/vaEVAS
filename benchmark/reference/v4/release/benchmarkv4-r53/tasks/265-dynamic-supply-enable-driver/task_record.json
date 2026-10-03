@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dynamic_supply_enable_driver.va"
+  ],
+  "canonical_dut_source_slug": "265-dynamic-supply-enable-driver",
+  "checker_task_id": "v4_265_dynamic_supply_enable_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "991848f300e5a7f5c006bf05730ca097e9c532ca6b29c582152a2d40ddb4efe1",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e3513bc6645d2ddb12a69a44929d671966217748729da9a887797f4f802a5fcb",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "39c21f493b0bfbd87e851c9e65182527bd6a413e49b0609ff315769039b3a2a5",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "265",
+  "family_spec_sha256": "9fbddca3f0dfeae842de1992205ae0b5755d68decfb577735384cf6d968b1547",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "863c1e158c08142329dfc1657b71d74836f18c9967f305f200140ae2d54f40a1",
+  "public_contract": "tasks/265-dynamic-supply-enable-driver/public_contract.json",
+  "public_contract_sha256": "a521212da84646ee60642f3c8930f6ed87cba8bc22b2bdd0b602dd7002eb7006",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/265-dynamic-supply-enable-driver",
+  "task_id": "v4-265"
+}

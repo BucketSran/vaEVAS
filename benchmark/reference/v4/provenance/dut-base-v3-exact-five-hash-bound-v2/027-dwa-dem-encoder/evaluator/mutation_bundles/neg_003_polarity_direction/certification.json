@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ROTATING_POINTER_UPDATE satisfy the public contract; fault class polarity_or_direction_error is rejected",
+    "observed": "EVAS: v4_027_dwa_dem_encoder checked=64 mismatch_count=24 coverage=rising_edges=12 reset_edges=1 post_reset_edges=11 helper_codes=10 wraps=5; P_V2B_ROUND_AND_CLAMP checked=13 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_ACTIVE_LOW_RESET_POINTER checked=2 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_ROTATING_POINTER_UPDATE checked=12 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_POINTER_ONE_HOT checked=12 mismatch_count=0 expected=contract_satisfied observed=contract_satisfied sample_time=0 metric_gap=0; P_DWA_SELECTED_MASK checked=13 mismatch_count=12 expected=cells=[0] observed=cells=[] sample_time=2.6e-09 metric_gap=1; P_SYSTEM_CODE_BINDING checked=12 mismatch_count=12 expected=helper=6,effective=0,pointer=0 observed=helper=6,pointer_bits=[0],cell_count=0 sample_time=2.6e-09 metric_gap=1",
+    "violated_property_ids": [
+      "P_ROTATING_POINTER_UPDATE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_027_dwa_dem_encoder",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 570
+  },
+  "family_id": "027",
+  "inputs": {
+    "checker_profile_sha256": "c6df2de32cc3cf9e9c0176d800f7a9cdb957d3d52022ae297135438114723b5d",
+    "harness_spec_sha256": "701581b0a885400645c315a80405d287e3ff529dab86f7f7ca8a9b86856d46b2",
+    "mutation_bundle_sha256": "100437dd532348ee63753abc259f5a2b2c603924d8cf5e9d61c8f1409bc2a8db",
+    "profile_sha256": "bffcd6ac0d5a5607da2a20d85f001bdb4dc1e5c7afb99a9ddaa3ff2e7892b60a"
+  },
+  "mutation_id": "neg_003_polarity_direction",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "clock_data_valid_qualifier.va"
+  ],
+  "canonical_dut_source_slug": "395-clock-data-valid-qualifier",
+  "checker_task_id": "v4_395_clock_data_valid_qualifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a323e438332e08abb7d1f7b76c323512b5320591a04ac485b0a8e1f00a2d3bc4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f5f15523df3d02e2be26b580a8c48927c2df1eb4f81804668cdc6c73c8d536f9",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "58170e2b23c39ac5bd838c118a493ed6e87bc0e909cd594176ebc47f2e8fc913",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "395",
+  "family_spec_sha256": "94cedf96fce3adc7cf82d38b9c1c1aaad7552d66b1b7246705569ff1cf5c1a72",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3b63a98680414f6d3671b8512737a48bfed0afbe2c1c99df4d28efbc14dc881f",
+  "public_contract": "tasks/395-clock-data-valid-qualifier/public_contract.json",
+  "public_contract_sha256": "8dc3344a602278ccf21e544c66bd6f4fca54d8c66bf0b1f38e79d4cb3a12088e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/395-clock-data-valid-qualifier",
+  "task_id": "v4-395"
+}

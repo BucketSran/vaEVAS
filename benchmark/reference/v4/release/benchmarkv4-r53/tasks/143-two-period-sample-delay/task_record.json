@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "two_period_sample_delay.va"
+  ],
+  "canonical_dut_source_slug": "143-two-period-sample-delay",
+  "checker_task_id": "v4_143_two_period_sample_delay",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "75307b0dbef69dd7fcfc147b0a9bc0b1cd582cb7d05f3e85d51394175750bfc1",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ed4cf1b61beb655495cda38e669fcf2cff31acc3b33cdea610d2b82d58857053",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "97ead164c2dfa7436bca036ac9e0a7150c8b5033d2e19d650256047d666c2c2b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "143",
+  "family_spec_sha256": "2d31ef6045cdd88661274e7fc1d96be951b317ebe01b5b179246844b83ba9017",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e97f81448d01f2ac1b2d96ac0a7996abcc57c9ff94a812eeb3950db70d3a3c52",
+  "public_contract": "tasks/143-two-period-sample-delay/public_contract.json",
+  "public_contract_sha256": "c0d840609809fb0bdc149cb105a8538ecf8e9a4477e3ea5c0291956c07da0388",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/143-two-period-sample-delay",
+  "task_id": "v4-143"
+}

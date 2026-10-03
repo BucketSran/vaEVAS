@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "amplifier_filter_chain.va"
+  ],
+  "canonical_dut_source_slug": "083-amplifier-filter-chain",
+  "checker_task_id": "v4_083_amplifier_filter_chain",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ae50e7da8aae578edf50af4176628ac70811b87ac3e46d2605b94202f2131877",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "01feb5d2221ea243b59c174ff5cb2501c8781e11307f649a6be83c422163e1b8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ff60439578ac1ea3c8b7f13c91df29aa965feb46563ab848118991459d86aea8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "083",
+  "family_spec_sha256": "fd70e77c9b67228ff0168cb5c86badc26d284af6c7d4dc692330c48320f21339",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "000831fbf4e4ef708840a29f00b22e627891676ffb8355bb247558aa08faf68f",
+  "public_contract": "tasks/083-amplifier-filter-chain/public_contract.json",
+  "public_contract_sha256": "ea67c425072c27ece6977b6fdd9d4b417de37dfdbdf90ae72fd64837566801aa",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/083-amplifier-filter-chain",
+  "task_id": "v4-083"
+}

@@ -1,0 +1,22 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module thermometer_dac_15seg(
+    seg0, seg1, seg2, seg3, seg4, seg5, seg6, seg7,
+    seg8, seg9, seg10, seg11, seg12, seg13, seg14,
+    vref, vss, aout
+);
+    input seg0, seg1, seg2, seg3, seg4, seg5, seg6, seg7;
+    input seg8, seg9, seg10, seg11, seg12, seg13, seg14;
+    input vref, vss;
+    output aout;
+    electrical seg0, seg1, seg2, seg3, seg4, seg5, seg6, seg7;
+    electrical seg8, seg9, seg10, seg11, seg12, seg13, seg14;
+    electrical vref, vss, aout;
+
+    parameter real vth = 0.45;
+    parameter real tr = 500p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

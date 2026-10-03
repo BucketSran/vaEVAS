@@ -1,0 +1,81 @@
+{
+  "family_id": "019",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_missing_phase_increment/certification.json",
+        "certification_sha256": "6e7fa57bae1217453fc33d17349e42bcf0c9a65bfeb8cedb513db5e238cc1b31",
+        "fault_class": "missing_phase_increment",
+        "mutation_bundle_sha256": "1eeef0566a5be4c1c135fea1768776e3f206a6723a5c2273934e07f66d90a3a9",
+        "mutation_id": "neg_001_missing_phase_increment",
+        "source_catalog_certification_path": "negative_variants/neg_001_missing_phase_increment/certification.json",
+        "trigger_condition": "the first periodic 1 ns update occurs",
+        "violated_property_ids": [
+          "P_PERIODIC_PHASE_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_phase_wrap/certification.json",
+        "certification_sha256": "6bf1fa7a0d5e465f55472982f2fd6da62c955d8a8c2389561d7dba566afe4733",
+        "fault_class": "phase_wrap_omission",
+        "mutation_bundle_sha256": "27fc626dc1d2a238eb4e0dbad5580a724422680a7fc1cc8c2470aac4e43fd169",
+        "mutation_id": "neg_004_missing_phase_wrap",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_phase_wrap/certification.json",
+        "trigger_condition": "the accumulated phase reaches one normalized cycle",
+        "violated_property_ids": [
+          "P_WRAPPED_PHASE_RANGE",
+          "P_WRAP_TOGGLES_CLOCK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_phase_increment_too_small/certification.json",
+        "certification_sha256": "0261ac064a50bb1dd23c7baece511a8fda00a9cf7545ce1f103d4d04c379602b",
+        "fault_class": "phase_increment_gain_error",
+        "mutation_bundle_sha256": "8ab66ad01d3c6d53f7229325fff1b14466f62c1f6da68d8fa98769a7246028de",
+        "mutation_id": "neg_002_phase_increment_too_small",
+        "source_catalog_certification_path": "negative_variants/neg_002_phase_increment_too_small/certification.json",
+        "trigger_condition": "a nonzero vctrl is sampled by successive periodic updates",
+        "violated_property_ids": [
+          "P_CONTROLLED_EDGE_RATE",
+          "P_PERIODIC_PHASE_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_control_direction_inverted/certification.json",
+        "certification_sha256": "b95c3bc145ce78afe9b1752f3b986787ea744c764cd6cc23776fddff44a313d8",
+        "fault_class": "control_direction_inversion",
+        "mutation_bundle_sha256": "93409b258d3b2d5ba12c407cdbd806736b1180d6cadafb7ffb7cc8f1587d07bc",
+        "mutation_id": "neg_006_control_direction_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_006_control_direction_inverted/certification.json",
+        "trigger_condition": "vctrl steps from the low to the high public stimulus region",
+        "violated_property_ids": [
+          "P_CONTROLLED_EDGE_RATE",
+          "P_WRAPPED_PHASE_RANGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrap_does_not_toggle_clock/certification.json",
+        "certification_sha256": "e95b6c40f35185bc333c7e27b752c4d2fce6681617b8f01592d1f43e4b16d55a",
+        "fault_class": "wrap_clock_toggle_omission",
+        "mutation_bundle_sha256": "15a7e14ae1ae23d5b7919460452c1e3577c492cd517007ef7c51e320e481ed3c",
+        "mutation_id": "neg_005_wrap_does_not_toggle_clock",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrap_does_not_toggle_clock/certification.json",
+        "trigger_condition": "the accumulated phase wraps by one cycle",
+        "violated_property_ids": [
+          "P_WRAP_TOGGLES_CLOCK"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_missing_phase_increment",
+    "canonical_dut_id": "019",
+    "hashes": {
+      "mutation_catalog_sha256": "b81dda62b828b9ac3ff71eeda6a3d930a99c91b61f576552ef761f257e702cc2",
+      "score_deck_sha256": "b9e172133fef75a94d08b56f26fe6768b0c16e27e08e6759b3432741723c5a16",
+      "task_certification_sha256": "3f38d5ad20ca68560fac3e68cc03610b518e19decef527a2eaf44b949ed41161",
+      "task_record_sha256": "04bb573d6e277f24e29cf0f478b6bc4d5c4ecdfce41675b3fafc27ab56dc1f22"
+    },
+    "release_dir": "019-vco-phase-integrator"
+  }
+}

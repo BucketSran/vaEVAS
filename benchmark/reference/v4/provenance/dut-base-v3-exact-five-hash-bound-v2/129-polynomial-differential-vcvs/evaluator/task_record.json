@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "129",
+  "checker_task_id": "v4_129_polynomial_differential_vcvs",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "65172927bd2ca2a3a04648c3c3a70303bb5614302686fce54101c14986e34872",
+    "checker_profile.json": "6a65a110e355b1f15892eb47c5c6e4f65d4f057911b5f6dbae56d6927e3a473a",
+    "derivation_manifest.json": "41a751dd578e33b44bc4377f17bf7ee5eb281e50c836d8f9080574c2734fe683",
+    "family_spec.json": "e869096763f4bcafeaec1af6e349c4e312e0a4dbe104aeea2a47b52a5c0bad59",
+    "harness_spec.json": "05e7740cf14e212d00ce64c848ddf9281af3d17278a79c0ace16384df475a9a5",
+    "mutation_catalog.json": "de660fcd9a9bc9078a93da3fa914e4801285c23fdfadc84ba66b4f712a1c42a1",
+    "profiles/feedback.json": "b8e8dc982cc699dff4329268a972ef58393aca075b499fde853d6a291585eaa8",
+    "profiles/score.json": "9158c53edc3bcbf129db631fbc02128db1d13546c0c707b0e853b058140f3382",
+    "score_tb.scs": "1258974348c6df6ea806a9f6d5156ea4153a1174ad4d39448e7792b7b05a9ddf",
+    "solution_tree": "a259707456e7d3e5c58b0d854b74454d85a9b45a0817162507c42b08e2a7f138",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "401f3aa274b9ade463bb672c66e74003ae9465c0f23c5f1e3567b1db0383f051",
+    "instruction.md": "0a0a81fad4fc2a5c4f73e4d561136de7b291efee1f0aae17fcadde9da53a6ca0",
+    "public_contract.json": "bd3ad11c7f8436c32e2cb10f440f0b657e1e124f92bd454204ad1b1b80d7e91f"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "65172927bd2ca2a3a04648c3c3a70303bb5614302686fce54101c14986e34872"
+  },
+  "release_dir": "129-polynomial-differential-vcvs",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "151-polynomial-differential-vcvs",
+  "support_root": "",
+  "target_artifacts": [
+    "polynomial_differential_vcvs.va"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "active_negative_count": 5,
+    "active_negatives": "all_killed_behaviorally",
+    "diagnostic": "present",
+    "gold_behavior": "pass",
+    "insufficient_excitation": "rejected",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "component_fingerprints": {
+    "task_inputs": {
+      "checker_profile_sha256": "4136693fe2fb0a1316f14489977dda36317b5c652aa481355b0e6e8b04bc37df",
+      "family_spec_sha256": "0978bee71fe2d6754746b922e169cc62418931b622a96af249816f5da636d536",
+      "feedback_deck_sha256": "23be2bfb26ef46ecaa71381ba7ede4018e7512be1ea441034c5c1ae809efe96a",
+      "feedback_profile_sha256": "182f54037cd4871cbbbac01dd00ff8c5becfe098114f10af5a3e754009983a4b",
+      "gold_bundle_sha256": "4f7b6b3dbc4d7c91a05841cbeb0a92c81a521b17a3fc616d75207eef6e9c2514",
+      "harness_spec_sha256": "cf672585cbb8f357080a13bf330ad8201653cefb1d215cd44980bd7dc6e2c36c",
+      "score_deck_sha256": "860d297ce841d8401537ef2c3bdd564bb297ad365b6ff07a71dd5b295261ab5a",
+      "score_profile_sha256": "01e6e4ac47d9fc1520e6bdbae36fb9d9a2f06fdce1103182ae56366aa835316a"
+    }
+  },
+  "evaluators": {
+    "evas2": {
+      "evas_backend": "evas-rust",
+      "evas_engine": "evas2",
+      "evas_engine_used": "evas2",
+      "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+      "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+      "evas_source_tree": "clean",
+      "evas_version": "0.8.3",
+      "status": "pass"
+    }
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_159_ref_flash_15level_decoder",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 2028
+  },
+  "family_id": "159",
+  "input_hashes": {
+    "checker_profile": "4136693fe2fb0a1316f14489977dda36317b5c652aa481355b0e6e8b04bc37df",
+    "family_spec": "0978bee71fe2d6754746b922e169cc62418931b622a96af249816f5da636d536",
+    "feedback_profile": "182f54037cd4871cbbbac01dd00ff8c5becfe098114f10af5a3e754009983a4b",
+    "gold_bundle": "4f7b6b3dbc4d7c91a05841cbeb0a92c81a521b17a3fc616d75207eef6e9c2514",
+    "harness_spec": "cf672585cbb8f357080a13bf330ad8201653cefb1d215cd44980bd7dc6e2c36c",
+    "score_profile": "01e6e4ac47d9fc1520e6bdbae36fb9d9a2f06fdce1103182ae56366aa835316a"
+  },
+  "schema_version": "v4-task-certification-rust-evas2-v1",
+  "status": "gate2_pass"
+}

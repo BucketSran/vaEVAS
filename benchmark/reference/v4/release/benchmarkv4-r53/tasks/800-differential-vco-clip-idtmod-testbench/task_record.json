@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "300-differential-vco-clip-idtmod",
+  "checker_task_id": "v4_300_differential_vco_clip_idtmod",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5ccf08af33125f11e0a91b5ebb395eee55200d578f0ab0602836c0805138c912",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d7275c45d5bfbc39b915d57ca6bec59716eaf5ff91147321d9d038cc1e5837d6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5ccf08af33125f11e0a91b5ebb395eee55200d578f0ab0602836c0805138c912",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4d04230fab37f1fb507bc7c90a79f0a69b7d37f69179ba234ad72ae97c6381f3",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c8fe21bc4287c4465a0081b89133b42d364b8d1abc5396fbd95a24553ff1497b"
+  },
+  "family_id": "300",
+  "family_spec_sha256": "5f35b1e83a22e20b6bd28afcf134a3d61e55e9bd16f1fb9c32d2b12079c11d1c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6a68b3845bdc603fce9548d411646439d4a2e8f45b145f58ea02a2bd158f7f23",
+  "public_contract": "tasks/800-differential-vco-clip-idtmod-testbench/public_contract.json",
+  "public_contract_sha256": "155cba34e7764eb59c535163eea8227d520fe491f2ea004deff3fd0f16f6c0e4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/800-differential-vco-clip-idtmod-testbench",
+  "task_id": "v4-800"
+}

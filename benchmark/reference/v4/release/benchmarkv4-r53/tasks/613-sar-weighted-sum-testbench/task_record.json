@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "113-sar-weighted-sum",
+  "checker_task_id": "v4_113_sar_weighted_sum",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "798fcbfcc6e3ad73765cb60c131d5185b6fae52ab3b2b2d31837644f7f4c2114",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8d14c0d816adeb1e5a73b6344dbe77d1d7977ff912027c66e3c4f0b34a888cd2",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "798fcbfcc6e3ad73765cb60c131d5185b6fae52ab3b2b2d31837644f7f4c2114",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "1c6fe4617416c23491a318910885bce843e3dec2c1d4e167f475d85f98353a01",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "a78be8a567c1940a544050644bfd5e14b62b9a17388acf880d9111f214c57243"
+  },
+  "family_id": "113",
+  "family_spec_sha256": "dbaee61d7f60aec5dbc64802f61334858fb4c49c9b7286a387c821825fe64365",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "305a50e7c640b7c2cdcaa654c89513ce9b863f52c9907a360698757df2a9946e",
+  "public_contract": "tasks/613-sar-weighted-sum-testbench/public_contract.json",
+  "public_contract_sha256": "02e367073e282a76dea9d4369eab2f652e8239ce247cfe39872d19c7cb3e7de5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/613-sar-weighted-sum-testbench",
+  "task_id": "v4-613"
+}

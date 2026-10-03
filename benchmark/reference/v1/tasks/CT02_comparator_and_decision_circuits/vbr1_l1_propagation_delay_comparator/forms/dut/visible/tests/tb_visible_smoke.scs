@@ -1,0 +1,15 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "cmp_delay.va"
+
+V_CLK (CLK 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_VINN (VINN 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_VINP (VINP 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_VSS (VSS 0) vsource dc=0
+V_VDD (VDD 0) vsource dc=0.9
+
+XDUT (CLK VINN VINP DCMPN DCMPP LP LM VSS VDD) cmp_delay
+
+tran tran stop=5n maxstep=100p
+save CLK VINN VINP VSS VDD

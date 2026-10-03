@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "295-power-mode-supply-current-metric",
+  "checker_task_id": "v4_295_power_mode_supply_current_metric",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "fd1e778de77c66902c5e855d2889ff53114f45d7780210a392f30d1c7b97e08a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "f509daada12421a9f5b1411ef14072b186eb421600dfed59a6e5e227acca1493",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "fd1e778de77c66902c5e855d2889ff53114f45d7780210a392f30d1c7b97e08a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "67853fbdc3b5fadddd200aa52be5e8ea012d6940a71832bd0c6e7300d45b978d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "9b8c38bee59feacc503c98f83277df787952e360f99dff20883d2a8991fe94a3"
+  },
+  "family_id": "295",
+  "family_spec_sha256": "6ee2aacfa8863ca63b0768dcbce4d33aaa5cf4d0d4a1c2a4cb591b02ebf116d4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "bccb2784ba0c492ccfa4df10ebcfb4624aed8468221f1884e7b127a844e7c82f",
+  "public_contract": "tasks/795-power-mode-supply-current-metric-testbench/public_contract.json",
+  "public_contract_sha256": "d302a0ff9587835689b5afda9aea523949bde3de1987304de4c05f38584e6164",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/795-power-mode-supply-current-metric-testbench",
+  "task_id": "v4-795"
+}

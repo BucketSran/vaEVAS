@@ -1,0 +1,89 @@
+{
+  "family_id": "358",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "5d68a827065869b0004dd955fe4cf14fafdaeebcac7638f9fe61d82b30235719",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "6fa2539a43a13a3ec90741e619c534f1f3421aa88dd62873dbfa86c04d20b357",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_DECODE_CODE_4_CODE_0_AS",
+          "P_GENERATE_CLK_OUT_EDGES_DELAYED_FROM",
+          "P_OBSERVE_THE_RISING_EDGES_OF_CLK",
+          "P_ON_RESET_CLEAR_CLK_OUT_QUADRANT",
+          "P_PHASE_METRIC_MUST_EXPOSE_THE_DECODED",
+          "P_QUADRANT_1_QUADRANT_0_MUST_EXPOSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d80dcd7cbdfdc0ad25f236e4e01196b8f38220801bbc6bf536fb6a0fb23da692",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "e4c3e16bea30d4a263c1c2a250c0aa047e5ea0cddacc49020ef403b886b6c95b",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_GENERATE_CLK_OUT_EDGES_DELAYED_FROM",
+          "P_PHASE_METRIC_MUST_EXPOSE_THE_DECODED",
+          "P_QUADRANT_1_QUADRANT_0_MUST_EXPOSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "a9da0306b00255f703e43fcf6fdf8995c55e45748aa827ea9cde592216165a1c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "9acf47933c66dc9c5c62aec35a219b6e5b3d96a126dd47cb249bb0114da20a20",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_GENERATE_CLK_OUT_EDGES_DELAYED_FROM",
+          "P_PHASE_METRIC_MUST_EXPOSE_THE_DECODED",
+          "P_QUADRANT_1_QUADRANT_0_MUST_EXPOSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "badf266519aff217edbfc03104b5c3871b867deb0378128df505e559f19a5a04",
+        "fault_class": "quadrant_encoding_swapped",
+        "mutation_bundle_sha256": "32a27a9e5017a3437b18cddf3342b7eaed9bedc4cae8b2957fe86ed19d3599ad",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "quadrant status bits encode the opposite bit order",
+        "violated_property_ids": [
+          "P_QUADRANT_1_QUADRANT_0_MUST_EXPOSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "20d3566c74fa6b2e2652f86afc9485af3478e1ed92eb17c1565fac8011ce56f5",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "ac7e580bf404ad778e0ac4f2ecfe5a25548c7c15639d89d8eafe83af4c64d96b",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_GENERATE_CLK_OUT_EDGES_DELAYED_FROM",
+          "P_PHASE_METRIC_MUST_EXPOSE_THE_DECODED",
+          "P_QUADRANT_1_QUADRANT_0_MUST_EXPOSE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "358",
+    "hashes": {
+      "mutation_catalog_sha256": "cc538f0eb11803d8b987bdc31cea178107a4026f576bf672d27496040975b1b5",
+      "score_deck_sha256": "9e338e398d093d4ecc345bf2b75dbe23c9e24f36e869c6e3e22672b0aa757443",
+      "task_certification_sha256": "6c749c5040b57ca757d6c9d0e4c21563aaba60e8706b40a4aca680d0a7ecbf08",
+      "task_record_sha256": "d876db0b92b95874ffa40dc43e2d3990f3cea7ead2f5909123a2794501295eab"
+    },
+    "release_dir": "358-quadrature-phase-interpolator"
+  }
+}

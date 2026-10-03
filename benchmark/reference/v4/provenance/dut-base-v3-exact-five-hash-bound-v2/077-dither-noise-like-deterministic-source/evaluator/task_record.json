@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "077",
+  "checker_task_id": "v4_077_dither_noise_like_deterministic_source",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "dbe006c1bb960b639087b98fd7ad2a698701619a04f095af5d7d2904851050f0",
+    "checker_profile.json": "9b60e91ee0cefab7b855c7ec54d3635f228f9dac0d450417b50bc1e802e72b67",
+    "derivation_manifest.json": "389aab997c193296db3e9962ad5f7ab67dfb58b03a87fd7ba6c49bf3c65f56ae",
+    "family_spec.json": "b0fd2a7fdeca299e2820fd66d35e107b6cd1e9fa1272b7b3e8b8b82d8346b660",
+    "harness_spec.json": "acb4bb7fdf5233587b1f35615c7aa8e5f6e0dc1a5dee12eb1722be096cb6f2ec",
+    "mutation_catalog.json": "dd2f0aca151b249dffbf81a6d7ddad1b48c92f683331aa632c32ba3b8a10be1d",
+    "profiles/feedback.json": "25882ed7ecfb192af060d201fce59c9da6bef38b3aef4d3f1cee3a3965b67b72",
+    "profiles/score.json": "019910633bf1dc4f7b7a1c306dae84e071492846b9ceb1902388cf0a38399a60",
+    "score_tb.scs": "af5ff3cdd14d9f3b5799f2befbb98ed86b4b27707986dae858fdd137b84c337d",
+    "solution_tree": "56be28a1816835c266331196c09868a28ce4fc8cef043f7e6fbc461844cac4c7",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8b3ed7f362ace0db50cc5bd37b5c48b60919d325dfbb8174437e6d26181ce632",
+    "instruction.md": "0c4795d1226bde55a46d39c7f115f0d1c409491a4c2ecbfe94aa91faef8dddb2",
+    "public_contract.json": "d87e8569a81e1f14aee3f8845df57ccdecb2ace84b41ad93072e11a037cdc772"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "dbe006c1bb960b639087b98fd7ad2a698701619a04f095af5d7d2904851050f0"
+  },
+  "release_dir": "077-dither-noise-like-deterministic-source",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "077-dither-noise-like-deterministic-source",
+  "support_root": "",
+  "target_artifacts": [
+    "noise_gen_ref.va"
+  ]
+}

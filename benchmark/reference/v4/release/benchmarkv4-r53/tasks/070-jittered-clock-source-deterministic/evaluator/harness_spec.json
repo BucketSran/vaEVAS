@@ -1,0 +1,114 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "deterministic_jittered_clock.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=220n maxstep=40p"
+    ],
+    "body_lines": [
+      "Vvdd_ref_default (vdd_ref_default 0) vsource dc=0.9 type=dc",
+      "Vvth_ref_default (vth_ref_default 0) vsource dc=0.45 type=dc",
+      "Vtr_ps_ref_default (tr_ps_ref_default 0) vsource dc=20 type=dc",
+      "Vseed0_default (seed0_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]",
+      "Vseed1_default (seed1_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]",
+      "Vseed2_default (seed2_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vseed3_default (seed3_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]",
+      "Vseed4_default (seed4_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]",
+      "Vseed5_default (seed5_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vseed6_default (seed6_default 0) vsource type=pwl wave=[0 0.9 9.5n 0.9 10n 0.9]",
+      "Vseed7_default (seed7_default 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vjitter_en_default (jitter_en_default 0) vsource type=pwl wave=[0 0.9 118n 0.9 118.1n 0 170n 0 170.1n 0.9 220n 0.9]",
+      "Xdefault (jitter_en_default seed0_default seed1_default seed2_default seed3_default seed4_default seed5_default seed6_default seed7_default clk_out_default) deterministic_jittered_clock",
+      "Vvdd_ref_override (vdd_ref_override 0) vsource dc=0.7 type=dc",
+      "Vvth_ref_override (vth_ref_override 0) vsource dc=0.35 type=dc",
+      "Vtr_ps_ref_override (tr_ps_ref_override 0) vsource dc=80 type=dc",
+      "Vseed0_override (seed0_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]",
+      "Vseed1_override (seed1_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]",
+      "Vseed2_override (seed2_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vseed3_override (seed3_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]",
+      "Vseed4_override (seed4_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]",
+      "Vseed5_override (seed5_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vseed6_override (seed6_override 0) vsource type=pwl wave=[0 0.42 9.5n 0.42 10n 0.42]",
+      "Vseed7_override (seed7_override 0) vsource type=pwl wave=[0 0 9.5n 0 10n 0]",
+      "Vjitter_en_override (jitter_en_override 0) vsource type=pwl wave=[0 0.42 118n 0.42 118.1n 0 170n 0 170.1n 0.42 220n 0.42]",
+      "Xoverride (jitter_en_override seed0_override seed1_override seed2_override seed3_override seed4_override seed5_override seed6_override seed7_override clk_out_override) deterministic_jittered_clock vdd=0.7 vth=0.35 tr=80p"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/deterministic_jittered_clock.va\""
+    ],
+    "save_signals": [
+      "vdd_ref_default",
+      "vth_ref_default",
+      "tr_ps_ref_default",
+      "jitter_en_default",
+      "seed0_default",
+      "seed1_default",
+      "seed2_default",
+      "seed3_default",
+      "seed4_default",
+      "seed5_default",
+      "seed6_default",
+      "seed7_default",
+      "clk_out_default",
+      "vdd_ref_override",
+      "vth_ref_override",
+      "tr_ps_ref_override",
+      "jitter_en_override",
+      "seed0_override",
+      "seed1_override",
+      "seed2_override",
+      "seed3_override",
+      "seed4_override",
+      "seed5_override",
+      "seed6_override",
+      "seed7_override",
+      "clk_out_override"
+    ]
+  },
+  "family_id": "070",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "1a869d7182ca43162a7e60c25af76a4ba85336db9036f11c4e3a3d376d30130a",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "1a869d7182ca43162a7e60c25af76a4ba85336db9036f11c4e3a3d376d30130a",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_NOMINAL_CLOCK",
+    "P_SEED_DECODE",
+    "P_EDGE_MODULATION",
+    "P_REPEATABILITY",
+    "P_TIMING_BOUNDS",
+    "P_OUTPUT_LEVELS"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "9116fae71f04f39b8b2c8e3ee00cb10ef67f0abcc95768834bbc334015671c4a",
+    "family_spec_sha256": "2715ac259ec5ad41dd4af756e1a8ceae575fcf37854940011583c8774d235fc4"
+  },
+  "task_id": "v4-070"
+}

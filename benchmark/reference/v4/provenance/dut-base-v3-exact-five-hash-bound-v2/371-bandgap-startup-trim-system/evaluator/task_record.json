@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "371",
+  "checker_task_id": "v4_371_bandgap_startup_trim_system",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "4208ee9a9d16105da5735d5a579d6e24cd5fe59b9ed268935cfe77abffc6ca91",
+    "checker_profile.json": "e182fd5ae962be306fe6c8eb6c1222522294d8f1d5ec508de83e082e453bb210",
+    "derivation_manifest.json": "d78462d87c2865b1df25b0ab12d114dabe5a0d6ca961fab8ec0682b4c76fa4df",
+    "family_spec.json": "82e9da49caaff3fbc0b8298dfee0da669e5ace4bd1f2f84437716c8dc23feaa5",
+    "harness_spec.json": "dae28406eee397b197c10d434b309e6af92e7e46202a63a7a05b83b324a2bfb6",
+    "mutation_catalog.json": "fdf50b9fc6d155219150a1ae9beeb1e37bbbb8ad607d91b8426e4d93073ad7ab",
+    "profiles/feedback.json": "880d88792a59d68b6550c75bb638dd4aca0803dfa05bf41e0893ac09e6a84448",
+    "profiles/score.json": "231b0f0211c0bdc754396513d6910b4415a307fbe44b5f41221b8a9f56ab60a5",
+    "score_tb.scs": "df62f0b645615df92a5e9d2ffb9bd4f61a2747f61bb38c7c87cf74b51ccb3e8a",
+    "solution_tree": "364290886ad45dd191106e94bb08bb300306f0f5fff9250e2c5d5d2831985e1f",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "faf1535ecfd37e553e7b140120457a69fdb98637c9f9df2373d3b040a2e84235",
+    "instruction.md": "53c68573c366d3af399168e7fe0f158f819caca77012b4da93ba9a52e1de4371",
+    "public_contract.json": "353c6663688ca9533ec3ef6e0e611952deb9428153605003cd0665373c92b7cf"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "4208ee9a9d16105da5735d5a579d6e24cd5fe59b9ed268935cfe77abffc6ca91"
+  },
+  "release_dir": "371-bandgap-startup-trim-system",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "930-bandgap-startup-trim-system",
+  "support_root": "",
+  "target_artifacts": [
+    "bandgap_trim_top.va",
+    "startup_detector.va",
+    "ptat_ctat_core.va",
+    "trim_controller.va"
+  ]
+}

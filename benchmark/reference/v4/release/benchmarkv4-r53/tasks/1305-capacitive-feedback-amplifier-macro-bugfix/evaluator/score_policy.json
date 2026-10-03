@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_002_gain_code_decode_missing",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "fbc62fc2b7eb083db49159d55947ee9b1dfe24b8811e53ea618c996010cc609f",
+  "candidate_artifacts": [
+    "capacitive_feedback_amplifier_macro.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "capacitive_feedback_amplifier_macro.va"
+  ],
+  "checker_profile_sha256": "a4e6ec1cf3f2f8e3b6928fe5af9b557c09fee2c74ab496beabfb9c40194e815e",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "ed51c1d057b2b21f5a97948be62fbb3e863e0014edd1bd1c427d23c4e370b19b",
+  "gold_solution_tree_sha256": "559963d4b0d00c4aaa75be579515102a2a99d5f7f382d85b08bfdd1b20d2c05c",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "e0e89bbc0d9fb831d42e3d235644e155e6580720e4021a81f30ce45229fba51c",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1305"
+}

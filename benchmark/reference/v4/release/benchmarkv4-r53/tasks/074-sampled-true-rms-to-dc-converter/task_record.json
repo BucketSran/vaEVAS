@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sampled_true_rms_to_dc.va"
+  ],
+  "canonical_dut_source_slug": "074-sampled-true-rms-to-dc-converter",
+  "checker_task_id": "v4_074_sampled_true_rms_to_dc_converter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5b85cb7bf95946f471ce926f1caf94fa6dc1b1932dec5138c4b9a680dc484aae",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "6c3254105e68496696bc21309e690c93ad442c73efbaba991d121a7460b20e22",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9fa90b3d6cbeb9e8213a976a44a91e58130d3a81e850eb3a97fce946d7894f7f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "074",
+  "family_spec_sha256": "03eac1fabd0442946406eb36713e7771942a4dbcbbade8d98ce436a1b69dd9ef",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6b840ee45a03f41b49466197a155f9aed5b1cb3ef962ca399a4978a43717fef1",
+  "public_contract": "tasks/074-sampled-true-rms-to-dc-converter/public_contract.json",
+  "public_contract_sha256": "d340b5a6b5b2a2a81f370a173a9ebbb526923c5acb1b282e1ee1cead50c6f64f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/074-sampled-true-rms-to-dc-converter",
+  "task_id": "v4-074"
+}

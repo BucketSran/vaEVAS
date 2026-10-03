@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "374",
+  "checker_task_id": "v4_374_crystal_oscillator_startup_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "356247fc5456ceed0fff44193f27334378025b5505fb44775a523cc2d458d20e",
+    "checker_profile.json": "58a746250c8fe208cd2347fd71899d3ae0e4aa9a9a71d7e45ca0cd454cb77983",
+    "derivation_manifest.json": "fa2269d3b5d0d54ba31236f4b24c362e8dde00bd4aa674bae2b457b8cc124518",
+    "family_spec.json": "cef84789ae7759a1b5d6cba78b14cecff1a02bf6b2d7018ea9ab32fe18915222",
+    "harness_spec.json": "4caea52a34726a16394344545be6cb36017c2711864ee7c6d80c26581d2a9a3b",
+    "mutation_catalog.json": "aab68759221e76f158b53dae9ce66528b80a6c268381778b367f190a52c0259a",
+    "profiles/feedback.json": "9ddea8db448666d57d5a4938d277e28cc35925e2532f41ab86cbbc63a4dfeedc",
+    "profiles/score.json": "25732bc1001c997a6980f2f0aa075ff05ff3558f1b9722f5ff551328a4f7c63c",
+    "score_tb.scs": "2c7e61f11437d52745d52f880808d48be66bd7fda787f037c2229ca06d3fa4e8",
+    "solution_tree": "2fd117b7e304efbfbd9f228b742e11ee3fe0b3038f6ccec5e6f73a61fcb52d14",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "59bd27d8deeeee22e9175faffb77c9b866651c6d82ce3b99a258377d8f5eb5f5",
+    "instruction.md": "08290e05bba872a179c9b80ecdd499aae1627aedd18dc5daa54a39706ab1d186",
+    "public_contract.json": "e10f243a5f4ac26242557610ac7ab4e812ce15a1f00565c2f25384e5eaa05c40"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "356247fc5456ceed0fff44193f27334378025b5505fb44775a523cc2d458d20e"
+  },
+  "release_dir": "374-crystal-oscillator-startup-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "933-crystal-oscillator-startup-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "crystal_oscillator_startup_monitor.va"
+  ]
+}

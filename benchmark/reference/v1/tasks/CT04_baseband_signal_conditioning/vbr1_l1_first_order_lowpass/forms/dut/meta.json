@@ -1,0 +1,49 @@
+{
+  "id": "vbm1_first_order_lowpass_dut",
+  "task_id": "vbm1_first_order_lowpass_dut",
+  "release_entry_id": "vbr1_l1_first_order_lowpass",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "spec-to-va",
+  "category": "amplifier-filter",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_first_order_lowpass_dut",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "@(timer(",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "first_order_lowpass.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/first_order_lowpass.va",
+    "gold/tb_first_order_lowpass_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_first_order_lowpass_dut/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_first_order_lowpass_dut/spectre_result.json"
+  }
+}

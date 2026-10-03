@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "036-power-on-reset-detector",
+  "checker_task_id": "v4_036_power_on_reset_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9732307d2b463f1013e3388f5cbd2109d7fd536c7a609fb00741a906ac06ecc2",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "121ad2a0be7313c35716fec1d5883977983ac8654b8898b04da7adfa3d7f74ce",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9732307d2b463f1013e3388f5cbd2109d7fd536c7a609fb00741a906ac06ecc2",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "db7fb55d274328a91af8c6afd5ca6e75e47262d937e1399f8cf1b5a190936a93",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "a8d4022eaa516ce976a4c1f131f4108c1a65d6941adacbc8b01d8026844a1fbe"
+  },
+  "family_id": "036",
+  "family_spec_sha256": "49a0b8829819969f5a855af95e8c7336948996e6c31570daef8cbe37f3ccf9f4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d3ff611dd9359893a12b38944c6b5e309230bebece8f5b41715dbc495478c292",
+  "public_contract": "tasks/536-power-on-reset-detector-testbench/public_contract.json",
+  "public_contract_sha256": "6046da1ce694c76f1c7552d9647ae1da08cbf72ae70ba6bd2cded966e296ce58",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/536-power-on-reset-detector-testbench",
+  "task_id": "v4-536"
+}

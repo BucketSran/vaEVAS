@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "phase_generator.va",
+    "pump_stage_model.va",
+    "regulation_comparator.va",
+    "voltage_multiplier_top.va"
+  ],
+  "canonical_dut_source_slug": "373-charge-pump-voltage-multiplier-controller",
+  "checker_task_id": "v4_373_charge_pump_voltage_multiplier_controller",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "759abbb4e4fd31ceb9ff5468b8390979f2fbb30aaaae478665e33fa26a91186f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "114467c9d71bbbe4f98fecda6d1cd3fa9f6819ae74ac6f649fb25fc4a1f7470e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e5f8316a2f8b51f79a167da6dcccae38619e7e406c41f2d40be52967b99bf7fc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "373",
+  "family_spec_sha256": "82e79300bcd4aa2fe320ad6999dc474e0bb9d787fbc83d7666f9c929821cab63",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2271b1919d5ac5c4fc374089dacfdc841024e7827733f2f251986fed967e32b6",
+  "public_contract": "tasks/373-charge-pump-voltage-multiplier-controller/public_contract.json",
+  "public_contract_sha256": "30cfddb6e6372f8844796f4dd406e3e4f967ba3827a1c19d95ad8bc0ffcf2dda",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/373-charge-pump-voltage-multiplier-controller",
+  "task_id": "v4-373"
+}

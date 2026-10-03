@@ -1,0 +1,91 @@
+# Configurable Startup Policy Testbench
+
+## Task Contract
+
+Write one top-level Spectre testbench that verifies the public contract of the
+supplied read-only `Configurable Startup Policy` DUT. The evaluator runs the same submitted bytes
+against the correct DUT and five anonymous semantic negative DUTs. Your
+testbench must accept the correct DUT and expose all five behavioral faults.
+
+## Public Verilog-A Interface
+
+- Artifact `configurable_startup_policy.va`:
+  - Module `configurable_startup_policy` (entry)
+    - position 0: `in0` (input, electrical)
+    - position 1: `in1` (input, electrical)
+    - position 2: `in2` (input, electrical)
+    - position 3: `in3` (input, electrical)
+    - position 4: `ctrl0` (input, electrical)
+    - position 5: `ctrl1` (input, electrical)
+    - position 6: `vdd` (input, electrical)
+    - position 7: `vss` (input, electrical)
+    - position 8: `en` (input, electrical)
+    - position 9: `out` (output, electrical)
+    - position 10: `flag` (output, electrical)
+    - position 11: `metric` (output, electrical)
+
+Stable public Spectre binding:
+
+The submitted `testbench.scs` must use the supplied DUT through this public binding:
+
+- Include path: `./dut/configurable_startup_policy.va`
+- DUT instance: `XDUT (in0 in1 in2 in3 ctrl0 ctrl1 vdd vss en out flag metric) configurable_startup_policy`
+- Required saved public traces: `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`
+- Use one bounded transient analysis with a finite positive stop time.
+
+You must design the stimulus yourself. Save traces as bare public signal names
+(for example `clk`, not suffixed or hierarchical forms such as `clk:V` or
+`XDUT.clk`). Do not redefine the DUT, drive DUT output nets, save
+hierarchical/private nodes, or use checker/gold/internal files.
+
+## Public Parameter Contract
+
+- `configurable_startup_policy.vth` defaults to `0.45`; valid range: finite; overrides vth.
+- `configurable_startup_policy.vhi` defaults to `0.9`; valid range: finite; overrides vhi.
+- `configurable_startup_policy.span_min` defaults to `0.62`; valid range: finite; overrides span_min.
+- `configurable_startup_policy.span_max` defaults to `1.28`; valid range: finite; overrides span_max.
+- `configurable_startup_policy.tr` defaults to `50p`; valid range: finite; overrides tr.
+
+
+## Required Behavior
+
+Create stimulus and save traces sufficient for the fixed evaluator oracle to check:
+
+- `P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE`: exercise and make observable: Let span=V(vdd,vss) and x0=clip01((V(in0)-V(vss))/max(span,0.05)). Invalid enable/span clears all outputs. Otherwise out=vhi*x0, flag=vhi exactly for 0.24<=x0<=0.72 and clip01(V(ctrl0)/vhi)>0.35, and metric=vhi*clip01(abs(x0-0.48)/0.48). in1..in3 and ctrl1 have no effect. Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+- `P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED`: exercise and make observable: Build a voltage-domain analog/mixed-signal helper or monitor. Parameter-style startup policy selector replacing unsupported preprocessor variants with runtime-observable behavior. Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+- `P_VTH_0_45_V_LOGIC_THRESHOLD`: exercise and make observable: `vth = 0.45 V`: logic threshold for voltage-coded controls. Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+- `P_VHI_0_9_V_HIGH_LEVEL`: exercise and make observable: `vhi = 0.9 V`: high level for output observables. Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+- `P_SPAN_MIN_0_62_V_SPAN`: exercise and make observable: `span_min = 0.62 V`, `span_max = 1.28 V`: legal local supply span measured as Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+- `P_TR_50P_OUTPUT_TRANSITION_SMOOTHING_TIME`: exercise and make observable: `tr = 50p`: output transition smoothing time. Required traces: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+
+Use any deterministic stimulus layout that makes every required public behavior
+observable. Exact event counts, absolute event times, sample density, and
+reference-deck ordering are not part of the contract unless stated explicitly
+above.
+
+
+The following canonical public behavior is normative for this derived form:
+
+Let `span = V(vdd, vss)` and `x0 = clip01((V(in0) - V(vss)) / max(span, 0.05))`.
+The row is valid exactly when `V(en) > vth` and
+`span_min <= span <= span_max`; otherwise drive all outputs to `0 V`.
+When valid, drive `out = vhi * x0`, assert `flag = vhi` exactly when
+`0.24 <= x0 <= 0.72` and `clip01(V(ctrl0) / vhi) > 0.35`, and drive
+`metric = vhi * clip01(abs(x0 - 0.48) / 0.48)`. Inputs `in1..in3` and
+`ctrl1` do not affect these observables.
+
+
+The required trace names are: `time`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `vdd`, `vss`.
+
+## Modeling Constraints
+
+- Submit one self-contained top-level transient `.scs` file.
+- Use only the declared `./dut/...` source paths and public DUT interfaces.
+- Do not redefine the DUT, drive declared DUT outputs, inspect private internals,
+  access undeclared files, or emit a self-reported result.
+- Missing traces, setup errors, and invalid runs do not count as behavioral kills.
+
+## Output Contract
+
+Return exactly one artifact named `testbench.scs`. Do not return a DUT,
+checker, script, data file, waveform, or auxiliary deck.

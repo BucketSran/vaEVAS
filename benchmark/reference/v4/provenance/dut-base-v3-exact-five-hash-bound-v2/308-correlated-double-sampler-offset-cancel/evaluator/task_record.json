@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "308",
+  "checker_task_id": "v4_308_correlated_double_sampler_offset_cancel",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "ac7e50a2f5c9f6a00c57f1c56638282d603188d34073ffe7bd8cd1c45b8f07c0",
+    "checker_profile.json": "184d4399732947c86ceab9731864e8f749f72517c5382542a1df0c51518a3d90",
+    "derivation_manifest.json": "e652a9d16ead4d355b565797ee24af8a3e489892ab419cb6de97b505a4822fef",
+    "family_spec.json": "14a68835afe8051115536ea3645cb80e90b219c4e802a1d56980f89d9bfcaae1",
+    "harness_spec.json": "ad8df9ee0cabab7cec92f03f1aeacf496ec68c40675ab073908fed7a6b61d15d",
+    "mutation_catalog.json": "db2072f9044436d118d272de8007a9a259959f74f457a365d786de69aac8dc67",
+    "profiles/feedback.json": "87e5a92ea43bf69d442992373e22d70259d98184bc3f0ad4021487a9ec5b0922",
+    "profiles/score.json": "bf5af49ca73a1eea1c09324b1582f1def87fbab00977dfeb12e62ba329746cf0",
+    "score_tb.scs": "48fb62baf42277dcc7ab78133166d08171c7d5788191d9a421eebf90a50854af",
+    "solution_tree": "e0d2d0d8fae3ba39b9ed973772d0bd94d1c1c1bb16393cfb95c43a1cc062a481",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "9a9face05a662808f45ea720cba80d9e8ffdb8274b18f710423f643420d40d75",
+    "instruction.md": "a3705d86faf7ec22b628212d19bcf85cb01a2e10d64eab2dce3086c6e7a72549",
+    "public_contract.json": "59a4fe09cd7b38c7491a0812d0860ee87ce5ecbdcbb6741f1dd078a28a5b11ac"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "ac7e50a2f5c9f6a00c57f1c56638282d603188d34073ffe7bd8cd1c45b8f07c0"
+  },
+  "release_dir": "308-correlated-double-sampler-offset-cancel",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1006-correlated-double-sampler-offset-cancel",
+  "support_root": "",
+  "target_artifacts": [
+    "correlated_double_sampler_top.va",
+    "reset_sample_latch.va",
+    "signal_sample_latch.va"
+  ]
+}

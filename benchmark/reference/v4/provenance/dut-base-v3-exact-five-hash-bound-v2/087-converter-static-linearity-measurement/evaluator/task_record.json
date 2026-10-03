@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "087",
+  "checker_task_id": "v4_087_converter_static_linearity_measurement",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b37eea21220ff849a53d65db21838573dbb923df911aa7877ac46c0d452a4fae",
+    "checker_profile.json": "8a14938be31b7020c9c5cdd9db3512da04044e35b756392794ba4520d7f4083f",
+    "derivation_manifest.json": "ba4a7d1f06cdf4df50e76ac62438521eafcdb5226747b04d73cedb64e5013443",
+    "family_spec.json": "7a8450ac3a5cbbb87999b2e5421ae1b3f0f4fd5ae033cfa1dfe8fae566ddb7f1",
+    "harness_spec.json": "b0dede6425c4c55ff30858679c99e29c5c63f56f9d1628bc9db4ae6aab1024d2",
+    "mutation_catalog.json": "792f42b0646913a30d397bf4541fb1661b1b21cd6d202efc4f80b128144df9d1",
+    "profiles/feedback.json": "72eb002fca21f1f3933824db37c066ae9e4a8a2c2a222ebd5a12f665e5591541",
+    "profiles/score.json": "0dacf4708439eec7fcb63ea8291c006630b045e6b63688410f8b18b7bde658af",
+    "score_tb.scs": "6d3d703d44464093d4123ba8f323f9622d8bd4c735f1f37101e11778458c7222",
+    "solution_tree": "7fee00041eaf43d566f9fbb87a5f48bb7ccad77c79e638f177f519baa31abfff",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "ec727cdf2f8cca67fce4e0130ab27ec7d94aada9ecda0dacf08b8c88b73641cf",
+    "instruction.md": "c432bc4c450f3be3813c163bcc1d93bfe13755c6931f27d7a5cd6a4dd1701f0c",
+    "public_contract.json": "ddc23e34293cdf6eae7297acc3e054501c2818c361ab7db96621c58daec95dee"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b37eea21220ff849a53d65db21838573dbb923df911aa7877ac46c0d452a4fae"
+  },
+  "release_dir": "087-converter-static-linearity-measurement",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "096-converter-static-linearity-measurement",
+  "support_root": "",
+  "target_artifacts": [
+    "converter_static_linearity_measurement_flow.va"
+  ]
+}

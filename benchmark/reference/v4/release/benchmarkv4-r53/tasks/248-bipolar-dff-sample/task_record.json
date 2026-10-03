@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bipolar_dff_sample.va"
+  ],
+  "canonical_dut_source_slug": "248-bipolar-dff-sample",
+  "checker_task_id": "v4_248_bipolar_dff_sample",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d9e6017dd9a8ab3a54cf0007cffcd9f5e831f31ca69fb455bc37173be41348a4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "faf010af701acc4b27722d7d2dcc60282fc4eeaf3be9dfbc3ed1f9816131ad62",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "51fa93a67d1202db7c12c5dd405416f9c072f8a6247d70359bb11e1d11470b32",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "248",
+  "family_spec_sha256": "d4f6a91ab92b996dbd17b7730c65dfebe03c5f5feaac769217c54272b4d998ab",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "72ad4ed29547b31303b1a1beb867e3761e071c6bcc9ed6ede4110991597da26a",
+  "public_contract": "tasks/248-bipolar-dff-sample/public_contract.json",
+  "public_contract_sha256": "a887abbc1cdb6547868e9d9ba8ba120aa770dc21d21ab10cec470352c74e47a4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/248-bipolar-dff-sample",
+  "task_id": "v4-248"
+}

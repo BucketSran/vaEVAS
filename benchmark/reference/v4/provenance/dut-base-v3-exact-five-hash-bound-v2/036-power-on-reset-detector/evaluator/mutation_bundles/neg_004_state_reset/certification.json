@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_FAULT_REASSERTION satisfy the public contract; fault class state_reset_or_enable_error is rejected",
+    "observed": "EVAS: property_id=P_FAULT_REASSERTION category=behavior_mismatch expected=out:0.90,metric:0.00 observed=out:0.900,metric:0.200,vin:0.200,rst:0.000,count:0 event=clock[4]@4.025000e-09s",
+    "violated_property_ids": [
+      "P_FAULT_REASSERTION"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_036_power_on_reset_detector",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 373
+  },
+  "family_id": "036",
+  "inputs": {
+    "checker_profile_sha256": "3e086a0e28ceade80741406510aa74d5dd2454895ff17e1a2639f74cd09db21c",
+    "harness_spec_sha256": "ecce32eb895cc80c41795fc8c8b5b11253b88930ac2d84bad98c7157d5511ce6",
+    "mutation_bundle_sha256": "90cf9e686a0324a22844f824d634d4f6071f976e6d68103ca27be9d239da3974",
+    "profile_sha256": "74bea1367514cd7bcdab51087285d8b32e0bb04d310ec074832d8a4d8796b220"
+  },
+  "mutation_id": "neg_004_state_reset",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

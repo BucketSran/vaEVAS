@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "274",
+  "checker_task_id": "v4_274_rail_normalized_metric_mapper",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "dd142381ebe4bb201815ec66b7a63bfa9561390421e83f8a00ca4bfa397fc162",
+    "checker_profile.json": "ca2353bbe35a0c061b2863d2acac24dfe57227fbb933f605831f1833d4a043fb",
+    "derivation_manifest.json": "c47b576b51a42e2925bf7949b16001586354621392b39a972b056a9d62fac0b3",
+    "family_spec.json": "e1bb153295221455f568c502f9dc7e55d2f7aac420585b5d136b28005b2ced84",
+    "harness_spec.json": "1c241d337c84c9a7ab1d91c2612f617efbc7ae4198c59c0f68a7073f17c34649",
+    "mutation_catalog.json": "7cac4b6fcd3d0aaaebe89a4ffc45fa76b00429161049c55c51813775d3e1ab50",
+    "profiles/feedback.json": "bab33b60547bb8f2745394319788de99aa800ade74af84bf59107d4a2393ef54",
+    "profiles/score.json": "d4af89c0d16e0de6ca2b4536ef1528a159c896e268c681f63e67217baa5374b5",
+    "score_tb.scs": "db2e56260b0d9714c32c959f8ebc72606990b50b3cc7b82f98963234e07d63da",
+    "solution_tree": "b023189dde5f32afd8754e3b6d19f88da2c8259599c108ad6035fe21864efdc4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d1285f2a3534acac4966bf0cbdfea1f8de69fbccb06b1d0bf594b4bab29b56db",
+    "instruction.md": "3ae9b522d4125f08c45a9f60af6ec9362d524290a1471c03ed1031f1a0610438",
+    "public_contract.json": "9ff43bcee4c6b81dc66ebd828fdc697aefc90c07173603b094a342687371b36b"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "dd142381ebe4bb201815ec66b7a63bfa9561390421e83f8a00ca4bfa397fc162"
+  },
+  "release_dir": "274-rail-normalized-metric-mapper",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "378-rail-normalized-metric-mapper",
+  "support_root": "",
+  "target_artifacts": [
+    "rail_normalized_metric_mapper.va"
+  ]
+}

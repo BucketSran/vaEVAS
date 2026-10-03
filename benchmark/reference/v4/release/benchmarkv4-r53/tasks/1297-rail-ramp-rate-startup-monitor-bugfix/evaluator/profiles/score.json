@@ -1,0 +1,27 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "db782632c657fe763bfd5e4dffb74a895081fdf96f3616b32e4414bc2c02ec1b",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_RAIL_OK_ENFORCES_ENABLE_AND_SUPPLY_WINDOW",
+    "P_RAMP_OK_QUALIFIES_STARTUP_AND_SETTLING_SLEW",
+    "P_STARTUP_READY_REQUIRES_CONSECUTIVE_SETTLED_SAMPLES",
+    "P_SLEW_METRIC_REPORTS_BOUNDED_DELTA",
+    "P_ON_EACH_RISING_CROSSING_OF_CLK",
+    "P_BUILD_A_VOLTAGE_DOMAIN_STARTUP_MONITOR",
+    "P_VTH_0_45_V_LOGIC_THRESHOLD",
+    "P_VHI_0_9_V_HIGH_LEVEL",
+    "P_VDD_MIN_0_72_V_VDD",
+    "P_VREADY_0_86_V_SAMPLED_RAIL"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

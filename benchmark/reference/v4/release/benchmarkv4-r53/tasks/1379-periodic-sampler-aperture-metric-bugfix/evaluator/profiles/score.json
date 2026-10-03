@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "7f2b8e89b504bca23e5f0a148cd8f296f06f790396014e9e4a5792f5ccc2068d",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "72n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_CLEARS_THE_HELD_VALUE_APERTURE",
+    "P_ON_EACH_RISING_CLK_EDGE_WITH",
+    "P_THE_APERTURE_METRIC_AFTER_A_CAPTURE",
+    "P_HOLD_VHOLD_AND_THE_LAST_METRIC",
+    "P_VALID_IS_HIGH_AFTER_THE_FIRST"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

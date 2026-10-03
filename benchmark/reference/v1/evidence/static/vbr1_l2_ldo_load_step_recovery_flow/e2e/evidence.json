@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l2_ldo_load_step_recovery_flow",
+  "task_id": "vbr1_l2_ldo_load_step_recovery_flow:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Bias Reference and Power Management",
+    "base_function": "LDO load-step recovery flow"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_ldo_load_step_recovery_flow/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_ldo_load_step_recovery_flow/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_ldo_load_step_recovery_flow/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_ldo_load_step_recovery_flow/forms/e2e/gold/ldo_load_step_recovery_flow.va",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_ldo_load_step_recovery_flow/forms/e2e/gold/tb_ldo_load_step_recovery_flow.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

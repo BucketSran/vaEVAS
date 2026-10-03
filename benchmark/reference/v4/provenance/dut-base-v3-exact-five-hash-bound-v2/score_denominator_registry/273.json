@@ -1,0 +1,78 @@
+{
+  "family_id": "273",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_fixed_threshold/certification.json",
+        "certification_sha256": "3f1c5557b81a7d8ef6dde81c17d3dc0d457c45fa15374ccf3fcfc2e6ac7e1a5c",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "9e8d3259189a01ed82dd5a5e2d8badb0ec63b75bdb8752d79bc680a8e374c38d",
+        "mutation_id": "neg_001_fixed_threshold",
+        "source_catalog_certification_path": "negative_variants/neg_001_fixed_threshold/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_fixed_threshold",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_STORED_THRESHOLD_TO_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_reset/certification.json",
+        "certification_sha256": "732cf3eead279c23106ca0b1ea28b3bf715d3e9b52f7db786dabda6590e7b76f",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "36828e5fb992380620ee713365eae617f3427f0b4d824ab2bdb937608e4e7eb1",
+        "mutation_id": "neg_003_ignore_reset",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_ignore_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_STORED_THRESHOLD_TO_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_margin_metric/certification.json",
+        "certification_sha256": "33892a7dc70c3d7c65c49a571e8a681d158dc7cae06ae0d0ded7d7845fbaae1c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "78025506f7c6b9aee94fc6fa13849a6da60859eb7a69a07bf5a267b37782178a",
+        "mutation_id": "neg_005_wrong_margin_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_margin_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_margin_metric",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_STORED_THRESHOLD_TO_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_follows_input/certification.json",
+        "certification_sha256": "afe7f0e98f27c9d52060063b0b28f7aef423e1bd63f61f2b0a161b9566bf5832",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "e9011cdd7fa5e079e02252bac95fbb478ab46829ffc513562c74941096dcf606",
+        "mutation_id": "neg_002_threshold_follows_input",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_follows_input/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_threshold_follows_input",
+        "violated_property_ids": [
+          "P_WHEN_ADAPT_VTH_UPDATE_THE_STORED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_threshold_clip/certification.json",
+        "certification_sha256": "b42f8dbad15bf561b4d29690a4e0e1c31c4140cafa74ac58503efd20c9061fa5",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "03e86793476735b81d285319001082144b6d72668a7b760fdd27ea233c9e833c",
+        "mutation_id": "neg_004_no_threshold_clip",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_threshold_clip/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_no_threshold_clip",
+        "violated_property_ids": [
+          "P_WHEN_ADAPT_VTH_UPDATE_THE_STORED"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_fixed_threshold",
+    "canonical_dut_id": "273",
+    "hashes": {
+      "mutation_catalog_sha256": "cd6ccac618a065420446d8d1f70e71af20067e6069a2e1d0c115f5fd5fbd5364",
+      "score_deck_sha256": "d96df94a5e6e10ea94b7dee5cec9fedaea9df509f3191c35359bff6c3ce82a07",
+      "task_certification_sha256": "5d6f973fca26a770bab6a43f6f9a5188eb7c01c9ee802b3d18da22a3507f1136",
+      "task_record_sha256": "ba540b51b075fba887bca5e18a67156091f12698102e33fab71037c4e86aa755"
+    },
+    "release_dir": "273-adaptive-threshold-tracker"
+  }
+}

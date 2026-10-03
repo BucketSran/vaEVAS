@@ -1,0 +1,79 @@
+{
+  "family_id": "400",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_i_lo_sign_inverted/certification.json",
+        "certification_sha256": "f0eb886f52375bd640b212c8d1c27b1096f9af9cb4a80e38d1d473d88cac5e56",
+        "fault_class": "wrong_output_polarity",
+        "mutation_bundle_sha256": "09c2acd3ee3bcc19e6e76c7f3021fa74f87426f83c1469c98ad113e7c308d801",
+        "mutation_id": "neg_001_i_lo_sign_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_i_lo_sign_inverted/certification.json",
+        "trigger_condition": "rf deviation and I LO polarity are nonzero",
+        "violated_property_ids": [
+          "P_IQ_CONVERSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_disable_not_centered/certification.json",
+        "certification_sha256": "1be018e148f34625d38978252c7f147c11e2879dfacc2a4bb168c9f41c415ba1",
+        "fault_class": "missing_reset_disable_center",
+        "mutation_bundle_sha256": "4330eadfba27ce5b463c24a3fbf823a0c7394bcb7d53855e40f7d09da8e67754",
+        "mutation_id": "neg_005_reset_disable_not_centered",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_disable_not_centered/certification.json",
+        "trigger_condition": "reset is asserted or enable is deasserted while RF is away from common mode",
+        "violated_property_ids": [
+          "P_LO_POLARITY_METRICS",
+          "P_RESET_DISABLE_CENTER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_output_clamp/certification.json",
+        "certification_sha256": "f9eb3bcc0b817c55be86a50c7405917b372a863c3ffdbc28f776b76620b4f440",
+        "fault_class": "missing_clamp",
+        "mutation_bundle_sha256": "c0b7e259a1efee54aeeadac396693ed5f88ca7f1c03b62915e5947af4fe3ad34",
+        "mutation_id": "neg_003_no_output_clamp",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_output_clamp/certification.json",
+        "trigger_condition": "large RF excursion drives unclamped output beyond a rail",
+        "violated_property_ids": [
+          "P_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_polarity_ok_after_i_only/certification.json",
+        "certification_sha256": "908a6b90b30b3e18af3c453941af2bd1d606d20ad80d2ebf277899d26cf7bc8b",
+        "fault_class": "incomplete_qualification",
+        "mutation_bundle_sha256": "0bd10b167b26743bdcbbdefcc7a31d9c3dfe2684e01b2c1b9ddc73098013484c",
+        "mutation_id": "neg_004_polarity_ok_after_i_only",
+        "source_catalog_certification_path": "negative_variants/neg_004_polarity_ok_after_i_only/certification.json",
+        "trigger_condition": "I LO toggles before Q LO",
+        "violated_property_ids": [
+          "P_POLARITY_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_conversion_gain/certification.json",
+        "certification_sha256": "d454bd6b1bfe15ea031025adf546a249a7e39ac114c65aaeee8302a4a4b4b2c5",
+        "fault_class": "wrong_gain",
+        "mutation_bundle_sha256": "dfa20d4bc9e7f0da3666d8e348bb92d4752265298f79ce351992d3a3a47fd505",
+        "mutation_id": "neg_002_half_conversion_gain",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_conversion_gain/certification.json",
+        "trigger_condition": "rf input differs from vcm",
+        "violated_property_ids": [
+          "P_IQ_CONVERSION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_i_lo_sign_inverted",
+    "canonical_dut_id": "400",
+    "hashes": {
+      "mutation_catalog_sha256": "fa9a4b09f1496e2ec0d154a82d42ea4dac47025c25b07c92389428ec8f45e23c",
+      "score_deck_sha256": "85584a435feabc7d16970cffdd1c96c802e735843190118672b5cc85e05339b9",
+      "task_certification_sha256": "e67322477a811a6a06bb2adf852a817950c13b99462fca80e3c47d5b5911bf3e",
+      "task_record_sha256": "991e07ed860586080435e585d3898946b868649ed6af381021ca252147f3703f"
+    },
+    "release_dir": "400-downconversion-mixer-lo-polarity"
+  }
+}

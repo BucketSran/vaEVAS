@@ -1,0 +1,122 @@
+{
+  "release_entry_id": "vbr1_l2_programmable_stimulus_sequencer",
+  "task_id": "vbr1_l2_programmable_stimulus_sequencer:tb",
+  "source_task_id": "vbr1_l2_programmable_stimulus_sequencer_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Stimulus and Source Generators",
+    "base_function": "Programmable stimulus sequencer"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_programmable_stimulus_sequencer/tb/gold",
+    "results/vabench-release-v1-dual-targeted-20260526_fix3/vbr1_l2_programmable_stimulus_sequencer/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_programmable_stimulus_sequencer/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_programmable_stimulus_sequencer/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/tb/gold/tb_programmable_stimulus_sequencer.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-targeted-20260526_fix3/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_programmable_stimulus_sequencer/tb/gold",
+    "result_root": "results/vabench-release-v1-dual-targeted-20260526_fix3/vbr1_l2_programmable_stimulus_sequencer/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        9e-08
+      ],
+      "signals_compared": 6,
+      "samples": 1200,
+      "max_rmse_v": 0.014663550306805507,
+      "max_abs_v": 0.30446516777099986,
+      "mean_relative_rms_error": 0.0062018666400528505,
+      "max_relative_rms_error": 0.033326250697285245,
+      "mean_nrmse": 0.0062018666400528505,
+      "max_nrmse": 0.033326250697285245,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "gate": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 0.0031079588706348533,
+          "max_abs_v": 0.058104957581448735,
+          "span_v": 0.8,
+          "nrmse": 0.0038849485882935667,
+          "kind": "analog"
+        },
+        "mode": {
+          "rmse_v": 4.992644589812108e-10,
+          "max_abs_v": 1.729502818736961e-08,
+          "span_v": 0.9,
+          "nrmse": 5.547382877569009e-10,
+          "kind": "analog"
+        },
+        "out": {
+          "rmse_v": 0.014663550306805507,
+          "max_abs_v": 0.30446516777099986,
+          "span_v": 0.44,
+          "nrmse": 0.033326250697285245,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l2_programmable_stimulus_sequencer/forms/tb/gold/tb_programmable_stimulus_sequencer.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

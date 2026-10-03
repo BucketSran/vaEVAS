@@ -1,0 +1,18 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "save"
+    - "tran"
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "fixed_time_active_output_sequence_at_20_40_60_80_100_120ns"
+    - "expected_permutation_sequence_2_0_3_1_2_0"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Requires fresh EVAS/Spectre dual validation after CT06 content repair."

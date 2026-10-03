@@ -1,0 +1,27 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "$abstime"
+    - "taperture"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "rising_clk_arms_delayed_aperture_sample"
+    - "vout_matches_vin_after_aperture_not_at_clock_edge"
+    - "held_output_sequence_changes_only_after_safe_aperture_windows"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: buggy source samples immediately at clk edge instead of after taperture."
+parity:
+  required: true
+  tolerance_notes: "Aperture behavior is checked one nanosecond after clock edges against vin at edge+taperture."

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_common_mode_window_monitor.va"
+  ],
+  "canonical_dut_source_slug": "298-differential-common-mode-window-monitor",
+  "checker_task_id": "v4_298_differential_common_mode_window_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "04e25a109f125af9faa859d40635f181b5e7b4cfb2da375904f27281d7ce418a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b6d1d300365cd9904b3975a82169e9552c16eaa132c50c60d3752df20561ed14",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c0232c5f0350ab5320c60c6a88e587af9e480f2560fcb4d9a46014dcdb973ab7",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "298",
+  "family_spec_sha256": "4b38185230f4ff48537c4c407796ce6ca06872c3a42928895f6ffc239f391eb1",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "955629fcf8b9e812e294d0372fdc889a842d06ff386f54e14e34bb338a992a8b",
+  "public_contract": "tasks/1298-differential-common-mode-window-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "b16f866149ab33872bcbfb997e876fd936a2b4eb597685f113d027305e601680",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1298-differential-common-mode-window-monitor-bugfix",
+  "task_id": "v4-1298"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "rf_mixer_downconverter_macro.va"
+  ],
+  "canonical_dut_source_slug": "041-rf-mixer-downconverter-macro",
+  "checker_task_id": "v4_041_rf_mixer_downconverter_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "85f7822eb0b484885b3fd11017142826146c2acef9797f216d911ec9a373e8ad",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1538e2d1053e679c7fd5edf9c9aa303030514f85cb16eae1f31001db271f4293",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "55ea1dd0b0dd76f84a8a571af8e9861ff33e3b624064fa55a9afa8c01fd29546",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "041",
+  "family_spec_sha256": "f769143dd99ad5eeaa76c83e8694e71b4bd72efba405f0809f51f9c8a711ed93",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "753af4841566cc098303d9ccb184febcaaa5701e8e2492e378589f52dcfb2d45",
+  "public_contract": "tasks/1041-rf-mixer-downconverter-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "a5b7ab8220c5823225e2c8677598189e910e682018aa4d90d633d401965652c1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1041-rf-mixer-downconverter-macro-bugfix",
+  "task_id": "v4-1041"
+}

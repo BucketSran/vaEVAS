@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "004-trim-calibration-controller",
+  "checker_task_id": "v4_004_trim_calibration_controller",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "6f8dfc6effcf69d48f404bf41582cadc8d2e39e2ed9fc12d0686541e46923678",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d9cc90c86d37925d88b7672f28ffde53e9faa246a8cb4242d816549ef800cb1c",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "6f8dfc6effcf69d48f404bf41582cadc8d2e39e2ed9fc12d0686541e46923678",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "53a9ba0202bf4b003776a733433957cc0bcf1ca2e81586821b9e9943c4a548f9",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "37f0add3ef9373fe7147311bb0a05b28335400f6f2a76d401cdf2dcace66becb"
+  },
+  "family_id": "004",
+  "family_spec_sha256": "fd38ec40548d730a456db488979ec6ebf6430566eff455370934297d435fd1c4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fbc2b799419c6b325f08421f6233800d3933a8375bd5772185f793330db010ee",
+  "public_contract": "tasks/504-trim-calibration-controller-testbench/public_contract.json",
+  "public_contract_sha256": "87542ae88ca4c97a4f0ce8aaf947b7f6811ebe461dc427cbacabc17ccc69b308",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/504-trim-calibration-controller-testbench",
+  "task_id": "v4-504"
+}

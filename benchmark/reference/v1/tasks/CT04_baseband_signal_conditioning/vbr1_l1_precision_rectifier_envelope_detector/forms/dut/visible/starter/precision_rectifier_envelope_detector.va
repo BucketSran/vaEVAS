@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module precision_rectifier_envelope_detector(clk, rst, vin, rect, env, metric);
+    input clk, rst, vin;
+    output rect, env, metric;
+    electrical clk, rst, vin, rect, env, metric;
+
+    parameter real vth = 0.45;
+    parameter real vcm = 0.45;
+    parameter real decay = 0.018 from [0:inf);
+    parameter real tr = 150p from (0:inf);
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

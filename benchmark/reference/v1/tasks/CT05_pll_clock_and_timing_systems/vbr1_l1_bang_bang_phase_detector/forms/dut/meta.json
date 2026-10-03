@@ -1,0 +1,38 @@
+{
+  "id": "bbpd",
+  "family": "spec-to-va",
+  "category": "pll-clock",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "must_include": [
+    "@(cross(",
+    "electrical"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "candidate.out"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_eval_id": 9,
+  "source_name": "eval-bbpd",
+  "expected_output_summary": "A .va file with Alexander-type BBPD, cross() on DATA edges, early/late detection, UP/DOWN pulse generation.",
+  "source_files": [
+    "gold/bbpd_ref.va",
+    "gold/tb_bbpd_ref.scs"
+  ],
+  "task_id": "bbpd",
+  "release_entry_id": "vbr1_l1_bang_bang_phase_detector",
+  "asset_type": "vabench_task"
+}

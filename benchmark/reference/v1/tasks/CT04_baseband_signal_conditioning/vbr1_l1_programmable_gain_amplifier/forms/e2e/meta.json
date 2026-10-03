@@ -1,0 +1,39 @@
+{
+  "id": "vbr1_l1_programmable_gain_amplifier_e2e",
+  "task_id": "vbr1_l1_programmable_gain_amplifier_e2e",
+  "release_entry_id": "vbr1_l1_programmable_gain_amplifier",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "end-to-end",
+  "category": "Baseband Signal Conditioning",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "provenance_status": "release_designed_pending_dual",
+  "designed_source": true,
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "programmable_gain_amplifier.va",
+    "tb_programmable_gain_amplifier.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "gain_select_changes_slope",
+    "sampled_gain_holds_between_clock_edges",
+    "common_mode_is_preserved",
+    "rail_clamps_with_clip_metric",
+    "reset_returns_to_unity_gain"
+  ]
+}

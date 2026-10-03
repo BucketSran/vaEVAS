@@ -1,0 +1,90 @@
+{
+  "family_id": "381",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "7a6808f6a86608ff002868a040acc300b46f4a592cd76cedc62245c5856fb999",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "6e8089195e8a64f2aef834df04c7457b0491edb926b33b436b5f954d01b0ed07",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+          "P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS",
+          "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "c2f183db9ab722084dc7871723e7104b3e1ffdd8c03f87ed12b0751d09c6d162",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "30809064e285cba71127e99180409f9e5cf9c678c9400a5e9d93736c333e91e2",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+          "P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS",
+          "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE",
+          "P_WHEN_ENABLED_GENERATE_A_DETERMINISTIC_BEHAVIOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "eeb66e5195a6f7690c622b2148d570253da200b39c53818f94e25cba246ebd28",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b0a628a43cf5a652bcb80fc9c68e1f09ce7de117b448babde2d362ac2e7e3583",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+          "P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS",
+          "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE",
+          "P_WHEN_ENABLED_GENERATE_A_DETERMINISTIC_BEHAVIOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "42c0cbb6a02a14a74b29532d2e0bc36364383f72a99def77bfb8f6807682687b",
+        "fault_class": "phase_marker_on_falling_half_cycle",
+        "mutation_bundle_sha256": "36b51031889296e79e24a03ada9973a5d7c37694261ede3f0955c9db989c5af3",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "phase marker toggles on falling oscillator half-cycles",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+          "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "5c7dcd4918bcb7ca775cc7c172bea266e9ed9764d786b27a1fa3e4fe219d0170",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4ef8a73eea9f1480e9ac9791996451eb7ebc9adf3cd03a1df84c75ecc7c41712",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+          "P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS",
+          "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE",
+          "P_WHEN_ENABLED_GENERATE_A_DETERMINISTIC_BEHAVIOR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "381",
+    "hashes": {
+      "mutation_catalog_sha256": "6c445dafea8984bcc3da7cc833d8b75128a61a07984c36144fb95ebc7477a833",
+      "score_deck_sha256": "fc553eed4b56bd0f5c0a95702929968b0732af1a6a4d4d25c2a8cc0962aede0a",
+      "task_certification_sha256": "9791ead3d66e79e55cb6266ba797cd27a098e6d707c61941e5256f3336779053",
+      "task_record_sha256": "67e58e3f69c2973e82f52120d7d7cf1a5ac200af8e7931f90d9fc2849f8c036d"
+    },
+    "release_dir": "381-fm-vco-modulation-source"
+  }
+}

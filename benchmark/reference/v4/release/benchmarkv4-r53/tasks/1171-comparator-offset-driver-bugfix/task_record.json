@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator_offset_binary_driver.va"
+  ],
+  "canonical_dut_source_slug": "171-comparator-offset-driver",
+  "checker_task_id": "v4_171_comparator_offset_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8727482a0ad1f9cc6b639dcdc9ba3b364c5e1c46dcbb27c6176617b1bb25e2c5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "397610c905acb3539e70e9529536c1c89e782feaa9f8ff28f781d9dd17c9ba43",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fa4d75150020cfb84fca38b516dcc02a0c805ea0d5228e946f0d2faced07f501",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "171",
+  "family_spec_sha256": "9d726454f74a126e29a06003d4b3a0ed7b637e2acc292f716b704afe01573e97",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "20fe7019d22f04153b3159dd57f4937180adf47ba06f1017d3a9113339512f37",
+  "public_contract": "tasks/1171-comparator-offset-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "e442aab5c78787cf83978836969992cf992951ecd598a88183f3d2919dd47723",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1171-comparator-offset-driver-bugfix",
+  "task_id": "v4-1171"
+}

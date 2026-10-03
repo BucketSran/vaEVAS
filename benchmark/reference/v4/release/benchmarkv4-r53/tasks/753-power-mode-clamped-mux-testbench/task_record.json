@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "253-power-mode-clamped-mux",
+  "checker_task_id": "v4_253_power_mode_clamped_mux",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "313fc8def2f67bf5911e22319025f4a9eca5c3a35bf4a88d9cc8cd784455f0db",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d9063e6da00a3fde4cc14040e8a90e93cea1a7c7b14a2b6e173c386bb50afc25",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "313fc8def2f67bf5911e22319025f4a9eca5c3a35bf4a88d9cc8cd784455f0db",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f7f8879d1ec1c0e4b85fcf35fb871065e2ece978202bab20eaf394d2ceb223eb",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "acbf18b8ae2bddb4abd4417d5e391dec132604c4399454840d20413eafbd0428"
+  },
+  "family_id": "253",
+  "family_spec_sha256": "9f39e60427cabea339f974b898f49eb91d182d8f8ee6112019ea0cbff0524b45",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "058c83431eb09529e4e2f942e343a022f015b724428fc8d8d0709c90408a2676",
+  "public_contract": "tasks/753-power-mode-clamped-mux-testbench/public_contract.json",
+  "public_contract_sha256": "829cb7a974b5b678847e43357933c5ba79a55f5b3893432015853a0a57347041",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/753-power-mode-clamped-mux-testbench",
+  "task_id": "v4-753"
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "262",
+  "checker_task_id": "v4_262_resettable_phase_toggle_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "04321dedeeab747b8141d2ac3893326a481673bf21fea3db642d150ac47dface",
+    "checker_profile.json": "0957b31952c578f28ef6bae4359ab81913dba5faf79ec593f43edc14760c11b9",
+    "derivation_manifest.json": "a2ac3e76b144a4f2c36f5a5f8a58c85372abf4120c7deb78d4a0c05e5cc3f64c",
+    "family_spec.json": "58c7f5145462f2f379c8772e080c86fb79aaeeff1bc41f927309dad10fde7f4f",
+    "harness_spec.json": "cfc828fadd6c39821ea94a9e8e3a09353b5c85b6fe29e04c3c49326eff43d8a7",
+    "mutation_catalog.json": "aa8b9b42601182f25f83f49305013155d786c7f910d193f69dfc289a9958fa79",
+    "profiles/feedback.json": "20595446725a552710564e527b9ddd301d353fa58e16100448512eb610327c9f",
+    "profiles/score.json": "054a7bd56106bf2ba1e649dd4cc133ad382fa5f1ac17f1b6309b5774e0fae9a1",
+    "score_tb.scs": "afa6005f453d772522766a4c776558d1ff7c73f937a29ad46fbcf0fe44d81740",
+    "solution_tree": "2b50e9bf814121e3a1501091cabeb71f067120a60d7c1700a6559400588a4c56",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "6cd6b02c637a5f31c0f8e5c0fc38125042b800bd1078397bba72e074b3c2e6ab",
+    "instruction.md": "3e73efe38795feee688abdb54d057ecef328c579175f78d9316b98e9a5370ed3",
+    "public_contract.json": "cb395753e016c1f74889fe9c52cee14005e8db5c17442e08f00c2fb3827b624e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "04321dedeeab747b8141d2ac3893326a481673bf21fea3db642d150ac47dface"
+  },
+  "release_dir": "262-resettable-phase-toggle-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "353-resettable-phase-toggle-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "resettable_phase_toggle_monitor.va"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_CLOCKED_STEP satisfy the public contract; fault class step_direction_inversion is rejected",
+    "observed": "EVAS: clock_edges=27 initial=0.45 edge_mismatches=25 hold_intervals=26 hold_violations=0 async_hold_failures=0 range=(0.050,0.850) coverage={'reset': 2, 'increment': 11, 'decrement': 14, 'upper_clamp': 3, 'lower_clamp': 1} mismatch_detail=clk@21.050ns_observed=0.390_expected=0.510;clk@29.100ns_observed=0.330_expected=0.570;clk@37.100ns_observed=0.270_expected=0.630;clk@45.100ns_observed=0.210_expected=0.690;clk@53.050ns_observed=0.150_expected=0.750",
+    "violated_property_ids": [
+      "P_CLOCKED_STEP"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_004_trim_calibration_controller",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1301
+  },
+  "family_id": "004",
+  "inputs": {
+    "checker_profile_sha256": "9eed146927f43708248f693b182693f6eddb6591d5b050170e68d4acad803001",
+    "harness_spec_sha256": "5edabe0cd2f89750bbb18e80ba864907dafe804afab7a89fa88b92415af1533a",
+    "mutation_bundle_sha256": "91856402f21507c518757582dbb433e52bbe8be113ef3b8ce800a97fdd9958b4",
+    "profile_sha256": "d0d4a4da77dccdebb993218f490f575dd0ebcc27ef707ae538e6fdf25f7278ba"
+  },
+  "mutation_id": "neg_002_inverted_error_direction",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

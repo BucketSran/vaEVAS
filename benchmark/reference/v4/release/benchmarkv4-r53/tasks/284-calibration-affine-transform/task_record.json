@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "calibration_affine_transform.va"
+  ],
+  "canonical_dut_source_slug": "284-calibration-affine-transform",
+  "checker_task_id": "v4_284_calibration_affine_transform",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d20cfe972c0d6f70886c75bde70db2c552bdb87fe984a7e5436cf8871466e2a9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "24953915bead1db31ca9feab1bb9590f36f070e586cab52a7148bded11e25cec",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4cbc6b0baec9d76ebe9761f41df1c6ef28ec99bc11d10d84c8a14b0941f8d250",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "284",
+  "family_spec_sha256": "00031208e74062ed723c3f1bebed77b479ac14cfbad676c1f67bb888730afd87",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0081b18e762d19c4da452b30c95a04ec18a1679ca6e87a00d4c7a4c2796c8236",
+  "public_contract": "tasks/284-calibration-affine-transform/public_contract.json",
+  "public_contract_sha256": "eb1e0e93d374a684e4e1d47e085639f3d4041fba14d05fdcaf6a3b8a1f3659ab",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/284-calibration-affine-transform",
+  "task_id": "v4-284"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "resettable_integrator.va"
+  ],
+  "canonical_dut_source_slug": "013-resettable-integrator",
+  "checker_task_id": "v4_013_resettable_integrator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "407d87a75a53e66b967f429a872a2e4e2871d6738ba9570089b4c3fae9d8aba5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9c0d0ae584e8ccd7ad57e9a71b7732205139a97e25d08f8d4c6f11b6b0902bf1",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "478ea291cbecfc9e4ca767fd6c3aef9530ca73e2e5c1e34a36779f00c342269a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "013",
+  "family_spec_sha256": "aa14c5bf21ca7e3ae3832755f96d422751a6244043d0f9c40247a362c76946cd",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "557283bb41eca17a00e95015bc743ea8894d8b8ec6cbd806dc43b12709eef855",
+  "public_contract": "tasks/013-resettable-integrator/public_contract.json",
+  "public_contract_sha256": "25c99d77330ff3ddea8ee8e7dc440db700bb0a200a8f7932e0be46f2ad584762",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/013-resettable-integrator",
+  "task_id": "v4-013"
+}

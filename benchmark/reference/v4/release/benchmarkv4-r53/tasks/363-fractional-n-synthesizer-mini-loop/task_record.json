@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "fracn_synth_top.va",
+    "accumulator.va",
+    "multi_modulus_divider.va",
+    "ratio_monitor.va"
+  ],
+  "canonical_dut_source_slug": "363-fractional-n-synthesizer-mini-loop",
+  "checker_task_id": "v4_363_fractional_n_synthesizer_mini_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "dfe8fc08c7f463a199e33a639aff1d7d1bbce77a4118141d7b016099cd9397af",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c35dae2883b2d389d7d550729beb2a2325392c08dfca71d9b9d308d7e67bb1a0",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8cd690be555276ddd3bc9c679e44b58c30305563ad91c6cc22f447da5cec68fe",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "363",
+  "family_spec_sha256": "9049b85075df6f56169fb9d3adec2281d050c98934c738242885e6a56fb83c3a",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "283042eaa5df18d035d0fe5f1822faf14a6517d10a262df8f97cda06e764ca4d",
+  "public_contract": "tasks/363-fractional-n-synthesizer-mini-loop/public_contract.json",
+  "public_contract_sha256": "4a694aa7d210dc33c128615b3224504ce77f44f8d6ecac9d73e8b3d32d81a969",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/363-fractional-n-synthesizer-mini-loop",
+  "task_id": "v4-363"
+}

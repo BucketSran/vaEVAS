@@ -1,0 +1,78 @@
+{
+  "family_id": "337",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_gain_response_wrong/certification.json",
+        "certification_sha256": "b0ac3bc4bff1c043d243918f06172bbdc7d426a90aa5be2dfa3d337cc3de476e",
+        "fault_class": "gain_response_wrong",
+        "mutation_bundle_sha256": "0b8a18b309f6969991ba49296aca94654a1060d1f7099f92fc1bad5a64642b6e",
+        "mutation_id": "neg_001_gain_response_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_gain_response_wrong/certification.json",
+        "trigger_condition": "gain_response_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_settled_too_early/certification.json",
+        "certification_sha256": "8be0ec17b372762585e5eb0b66e7c3756f687e16268e4d94f198da4005de81a4",
+        "fault_class": "settled_too_early",
+        "mutation_bundle_sha256": "9da1063c06ecae879e05d59aa2a4b861d00580359c7058289a2f898faefae345",
+        "mutation_id": "neg_003_settled_too_early",
+        "source_catalog_certification_path": "negative_variants/neg_003_settled_too_early/certification.json",
+        "trigger_condition": "settled_too_early",
+        "violated_property_ids": [
+          "P_APPLY_BOUNDED_SETTLING_WITH_A_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_gain_code_mapping_reversed/certification.json",
+        "certification_sha256": "2f173cc441a1190ea5d5666f0f34f3e4815e33668411c7f5bf93ba137e14417f",
+        "fault_class": "gain_code_mapping_reversed",
+        "mutation_bundle_sha256": "349003dc3927d8c22c98d09a86ef10b573ccb162b1718a304413e9a6dc508dde",
+        "mutation_id": "neg_005_gain_code_mapping_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_005_gain_code_mapping_reversed/certification.json",
+        "trigger_condition": "gain_code_mapping_reversed",
+        "violated_property_ids": [
+          "P_ASSERT_SETTLED_AFTER_TWO_CONSECUTIVE_UPDATES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_overshoot_metric_missing/certification.json",
+        "certification_sha256": "2ea8c62ece8519f0374375b3552d29bf64d60855cbefec0dd29f6a5a4b6be620",
+        "fault_class": "overshoot_metric_missing",
+        "mutation_bundle_sha256": "f4be681a1ac12a6bec8e1e0442f8f4ad445e190826dc12bebd4c0f833536058c",
+        "mutation_id": "neg_002_overshoot_metric_missing",
+        "source_catalog_certification_path": "negative_variants/neg_002_overshoot_metric_missing/certification.json",
+        "trigger_condition": "overshoot_metric_missing",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "30569b59860f761f57b826300db9b9b77fe17f3a7509ae475cd97a93e68c01de",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "58984c18b02a11dbf3bddb408f366c25f86fc65fee80f1de75dd628344dadf3e",
+        "mutation_id": "neg_004_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_gain_response_wrong",
+    "canonical_dut_id": "337",
+    "hashes": {
+      "mutation_catalog_sha256": "c2526ff5d8abf54510edc10f5c0198f9a8510651592e73751b68ec8ad5e7df5c",
+      "score_deck_sha256": "81867ca13eecac63fcc2fa645b4b98030812e65492a0894c16f9a208fc2d5331",
+      "task_certification_sha256": "43642314e4c380db86136c2824f5317d47e7c8a8910c8962807be4e7d4cf6a79",
+      "task_record_sha256": "fca19fa9c1c3e82366393b992252c822bd5befde67e7a798562889af62340dc1"
+    },
+    "release_dir": "337-vga-step-response-classifier"
+  }
+}

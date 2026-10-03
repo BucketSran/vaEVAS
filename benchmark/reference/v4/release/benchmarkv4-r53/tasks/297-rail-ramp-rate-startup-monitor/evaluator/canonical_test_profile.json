@@ -1,0 +1,35 @@
+{
+  "canonical_semantics_sha256": "63a38e93d3272d520eb0698801225f93f7ac44a7b0c1c0b9ad384a1a5670a496",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_RAIL_OK_ENFORCES_ENABLE_AND_SUPPLY_WINDOW",
+    "P_RAMP_OK_QUALIFIES_STARTUP_AND_SETTLING_SLEW",
+    "P_STARTUP_READY_REQUIRES_CONSECUTIVE_SETTLED_SAMPLES",
+    "P_SLEW_METRIC_REPORTS_BOUNDED_DELTA",
+    "P_ON_EACH_RISING_CROSSING_OF_CLK",
+    "P_BUILD_A_VOLTAGE_DOMAIN_STARTUP_MONITOR",
+    "P_VTH_0_45_V_LOGIC_THRESHOLD",
+    "P_VHI_0_9_V_HIGH_LEVEL",
+    "P_VDD_MIN_0_72_V_VDD",
+    "P_VREADY_0_86_V_SAMPLED_RAIL"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "297",
+    "feedback_semantics_sha256": "63a38e93d3272d520eb0698801225f93f7ac44a7b0c1c0b9ad384a1a5670a496",
+    "harness_spec_sha256": "db782632c657fe763bfd5e4dffb74a895081fdf96f3616b32e4414bc2c02ec1b",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "63a38e93d3272d520eb0698801225f93f7ac44a7b0c1c0b9ad384a1a5670a496",
+    "task_id": "v4-297"
+  },
+  "test_deck_sha256": "01c3e551f02bf0e6c3880a4b158eb44fbcbd71110a404f09411ff2c130d0b436"
+}

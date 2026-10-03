@@ -1,0 +1,79 @@
+{
+  "family_id": "007",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_too_slow_alpha/certification.json",
+        "certification_sha256": "dbed91d7ecc932160a855c44bcacb1146a45d06893371c8223658ce59d0ed65a",
+        "fault_class": "filter_coefficient_error",
+        "mutation_bundle_sha256": "b899d1cbe7056e0bfe755db3845a02aa7083ddfde56bf492ed86b0e13eb3ec7b",
+        "mutation_id": "neg_001_too_slow_alpha",
+        "source_catalog_certification_path": "negative_variants/neg_001_too_slow_alpha/certification.json",
+        "trigger_condition": "VIN steps away from the current output",
+        "violated_property_ids": [
+          "P_LOW_PASS_RESPONSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_input/certification.json",
+        "certification_sha256": "01e96d82cf0549a4a78dc4e6ba6c81e2456897653332d4e7d260dd8dae6ba29d",
+        "fault_class": "response_direction_inversion",
+        "mutation_bundle_sha256": "5ad28b8e8e5f1b851573341dc56a3d509f78fb6a80fc9387cf9c26c0fdafda79",
+        "mutation_id": "neg_003_inverted_input",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_input/certification.json",
+        "trigger_condition": "VIN steps positive or negative",
+        "violated_property_ids": [
+          "P_LOW_PASS_RESPONSE",
+          "P_STEP_MONOTONICITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_passthrough_timer/certification.json",
+        "certification_sha256": "a8330d30bcddeb7bbf315f01778f137bbca90d010730a53a5ed601d91a3e79b8",
+        "fault_class": "missing_filter_state",
+        "mutation_bundle_sha256": "a6db597ac40b9a754442a7d7f66cfc80ece127c6500a4a9ac2f0532523629df5",
+        "mutation_id": "neg_002_passthrough_timer",
+        "source_catalog_certification_path": "negative_variants/neg_002_passthrough_timer/certification.json",
+        "trigger_condition": "periodic update follows a VIN step",
+        "violated_property_ids": [
+          "P_LOW_PASS_RESPONSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_wrong_initial_state/certification.json",
+        "certification_sha256": "60a1c548d373f30dfa4feaab5044190cfc26b08ac726b587b3aea8f99c3bdeac",
+        "fault_class": "initial_state_error",
+        "mutation_bundle_sha256": "bca5b2c65254303ed092bb2685ab5633efd60aeb51aa324a06da75e154eec77a",
+        "mutation_id": "neg_006_wrong_initial_state",
+        "source_catalog_certification_path": "negative_variants/neg_006_wrong_initial_state/certification.json",
+        "trigger_condition": "simulation initialization",
+        "violated_property_ids": [
+          "P_INITIAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_007_wrong_update_period/certification.json",
+        "certification_sha256": "8c8169d890df0f2d2843fd9dce4439a0c7c7458c3ad1fd3515e953ff00d5d073",
+        "fault_class": "update_period_error",
+        "mutation_bundle_sha256": "3179789d74556533869bdeb401a6002e273bf260b07f86b2929f9742af30103c",
+        "mutation_id": "neg_007_wrong_update_period",
+        "source_catalog_certification_path": "negative_variants/neg_007_wrong_update_period/certification.json",
+        "trigger_condition": "successive periodic updates occur",
+        "violated_property_ids": [
+          "P_PERIODIC_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_too_slow_alpha",
+    "canonical_dut_id": "007",
+    "hashes": {
+      "mutation_catalog_sha256": "e35bb5f02c4e5a4fbbf811d9a756b23f08e8389669321ccaa127d24b1c68a445",
+      "score_deck_sha256": "30023dbf05329480ddd5171045f7bcb4318d8cb0533507bed282c4e7511f2337",
+      "task_certification_sha256": "9d809c8560dab151d9cc2687daa69757f728215d64e4a529d898a4e816d6075f",
+      "task_record_sha256": "f32dd727c5bb2e29ea0bb8f2a9da61fd4f0c2660f448054ff4b9a795619c11c8"
+    },
+    "release_dir": "007-first-order-lowpass"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "family_id": "186",
+  "gold_bundle_sha256": "d4a0bce29af9ea87a8443599a892a7b3b5fc593387e0e34cafc802b2bdd2cb12",
+  "mutations": [
+    {
+      "artifact_hashes": {
+        "sarfend_logic_4b.va": "39b380f065ecb8374f475396309449f5de12617e058cd1e5b56caab4b7aa2410"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_LOGIC_OUTPUT_LEVELS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_001_zero/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sarfend_logic_4b.va"
+      ],
+      "fault_class": "zero_stub_output",
+      "id": "neg_001_zero",
+      "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+      "violated_property_ids": [
+        "P_LOGIC_OUTPUT_LEVELS"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sarfend_logic_4b.va": "8af0de0a6a9a61556d4e1d418d44bc7a170f5882969e4a174c615058773885fd"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_SAMPLE_AND_COMPARATOR_DECISIONS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_002_inverted_comparator/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sarfend_logic_4b.va"
+      ],
+      "fault_class": "polarity_or_direction_error",
+      "id": "neg_002_inverted_comparator",
+      "trigger_condition": "Uses dcompb>dcomp as the SAR comparator decision.",
+      "violated_property_ids": [
+        "P_SAMPLE_AND_COMPARATOR_DECISIONS"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sarfend_logic_4b.va": "59c1492f3d1659f31e64344fce53d32261459f159c2e6d924b0b9678ee33db8b"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_LOGIC_OUTPUT_LEVELS",
+          "P_TEST_OVERRIDE_BEHAVIOR"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_003_no_test_override/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sarfend_logic_4b.va"
+      ],
+      "fault_class": "timing_or_state_update_fault",
+      "id": "neg_003_no_test_override",
+      "trigger_condition": "Drives the internal conversion clock output at half amplitude.",
+      "violated_property_ids": [
+        "P_LOGIC_OUTPUT_LEVELS",
+        "P_TEST_OVERRIDE_BEHAVIOR"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sarfend_logic_4b.va": "b49a6aa5fb8e3979e35c5c72b7fd346b5f770ee55545feaec9d0c4b3ee589c89"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_DOUT_BIT_MAPPING"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_004_wrong_dout_mapping/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sarfend_logic_4b.va"
+      ],
+      "fault_class": "omission_or_incomplete_behavior",
+      "id": "neg_004_wrong_dout_mapping",
+      "trigger_condition": "Maps the previous p state to dout in the wrong bit order.",
+      "violated_property_ids": [
+        "P_DOUT_BIT_MAPPING"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sarfend_logic_4b.va": "d3374b2ad81873603a9f8240090249a7cdf7bb836ecdba51194911e26bee9705"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_CONVERSION_RESET_AND_PREVIOUS_WORD"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sarfend_logic_4b.va"
+      ],
+      "fault_class": "metric_or_observable_fault",
+      "id": "neg_005_metric_scale_low",
+      "trigger_condition": "SARFEND Logic 4b: scales the metric output, preserving the main path while failing measurement checks.",
+      "violated_property_ids": [
+        "P_CONVERSION_RESET_AND_PREVIOUS_WORD"
+      ]
+    }
+  ],
+  "schema_version": "v4-mutation-catalog-v1"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l1_lfsr_prbs_generator_bugfix",
+  "task_id": "vbr1_l1_lfsr_prbs_generator_bugfix",
+  "release_entry_id": "vbr1_l1_lfsr_prbs_generator",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Stimulus and Source Generators",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_prbs7_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "reset_loads_nonzero_seed",
+    "enabled_clock_edges_advance_lfsr_state",
+    "feedback_uses_prbs7_taps"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

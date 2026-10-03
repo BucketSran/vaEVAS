@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sarfend_logic_4b.va"
+  ],
+  "canonical_dut_source_slug": "186-sarfend-logic-4b",
+  "checker_task_id": "v4_186_sarfend_logic_4b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "70e6d776f0bb25a88f5fc34be23290610c9d12ee5cc020d7fe4edb8ad44274ff",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c8fd6de7876a10c911f3dcf0b73b07fa644c02ee6e518b65c4ac11c5ae833ade",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "316939e65f921bf91ddf8826be2b8dcd8f01c6ae135f33fb7f73dfd6e9bd7f1c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "186",
+  "family_spec_sha256": "1a47ac8ff40b8242cddc58be61c508123a69d55b916f9749cc6e8c7e141cd228",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8171cc66048a725bd7cd77fb963457cc17cbf19c7b4fd0dfda12b30b96ea00a9",
+  "public_contract": "tasks/186-sarfend-logic-4b/public_contract.json",
+  "public_contract_sha256": "6bd842ee9afd9b1dba85a998d0959ed41547011c2b77faeadff949bf4e1c0d35",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/186-sarfend-logic-4b",
+  "task_id": "v4-186"
+}

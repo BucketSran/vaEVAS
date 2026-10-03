@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_002_hard_clamp",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "c3470d9f216095ebd92a3dff92fa8ddb593dddc9e19444cf621d1454eff87b79",
+  "candidate_artifacts": [
+    "soft_voltage_clamp_behavior.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "soft_voltage_clamp_behavior.va"
+  ],
+  "checker_profile_sha256": "498290dd8d65c1b54201e5d93959ffb966ff8407c88e7aac7de8ff815edc463e",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "46c9c9e9079d5585426e3de8e6c01369472bfcb0cb3fb17d69777581a554db6b",
+  "gold_solution_tree_sha256": "a3afddd3241fb81a575376dd12d48512c0328813ab09a6cbe547a04ca389aa0b",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "d397942fa61081e36c6c2e3cb2ee2a8dbf1a8cc4ba174109cdc81e4333bbf9b5",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1136"
+}

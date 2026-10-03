@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pfd_timer_reset.va"
+  ],
+  "canonical_dut_source_slug": "235-pfd-timer-reset",
+  "checker_task_id": "v4_235_pfd_timer_reset",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7b42f20654d1c15c87db25951f7c0888d34b0749d2a66661ee5d75c4cca4d90e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b6e316728c3478de459175ebaf3388cbb4e0d441cd294fc4d304766ce22cffbf",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0a766cb390e23392ac98bae1f28a047e1e6dc5d192a7b0c8e87fc14089216f82",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "235",
+  "family_spec_sha256": "344b0cd253b7b09c6f6d45eb142b25079985ec3b65aefc001494476610b6a044",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e153eb41e598904030d15b06cac27890345eec47bdc45ec807fe83c1a6674900",
+  "public_contract": "tasks/1235-pfd-timer-reset-bugfix/public_contract.json",
+  "public_contract_sha256": "ae757d906a2deb1c4227433a1686ae9355626dba0409ede4832f6a11bbd7b2ae",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1235-pfd-timer-reset-bugfix",
+  "task_id": "v4-1235"
+}

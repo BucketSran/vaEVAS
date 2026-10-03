@@ -1,0 +1,80 @@
+{
+  "family_id": "170",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_edge/certification.json",
+        "certification_sha256": "ed3815d7f24f751a9f64edec185849e1835e207bddd48258d95f208853626011",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "8e3f0dd1dd85a445a33c599a64e4cdafbf57253a556fbb22f04671b893f13b86",
+        "mutation_id": "neg_002_wrong_edge",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_edge/certification.json",
+        "trigger_condition": "Measures delay from the wrong clock edge.",
+        "violated_property_ids": [
+          "P_CLOCK_ARMED_MEASUREMENT",
+          "P_DECISION_DELAY_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "a6f473434ccafecc9c92b6e293ec50bf2e80724d7cb9fec49932ea0f995dcb75",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "6757c5035ed5d8680743a64a90ede9e92d7b553feeada91625033ddfc01f63dd",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Leaves all measurement outputs at zero.",
+        "violated_property_ids": [
+          "P_DECISION_DELAY_CAPTURE",
+          "P_POLARITY_AND_VALID_FLAG"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_overdrive_abs/certification.json",
+        "certification_sha256": "b7cb5efce0c3ce1f99d1db25d28b4c12bbcca92704b485a6565c5364a312c4e5",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "1641b1f7b092e7ec5966704d87d0bd8948bfe8e17219e169b77ef1e56f1886bf",
+        "mutation_id": "neg_003_no_overdrive_abs",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_overdrive_abs/certification.json",
+        "trigger_condition": "Reports signed overdrive instead of absolute overdrive.",
+        "violated_property_ids": [
+          "P_ABSOLUTE_OVERDRIVE_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "e0f8a3179679982620e18c3f49d338a1d8e895472dd72cd5fa158120ebf36da4",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "5ddfc03146e803656a5d585969ce684d63426e5aac677e3d835db5834b73527b",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the reported delay too low.",
+        "violated_property_ids": [
+          "P_DECISION_DELAY_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_polarity/certification.json",
+        "certification_sha256": "f23489db320ae383e33f32946198518815d5b7275624757e05a35ce21226eb12",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "7ab5f560d08b443a3f8593eeddd002023c69a87e123c54fd2aeb9eab7cc28cab",
+        "mutation_id": "neg_004_wrong_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_polarity/certification.json",
+        "trigger_condition": "Flips the reported decision polarity.",
+        "violated_property_ids": [
+          "P_POLARITY_AND_VALID_FLAG"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_edge",
+    "canonical_dut_id": "170",
+    "hashes": {
+      "mutation_catalog_sha256": "60bb5a4471a8bd5bdce8eb1c3a7d10b9b1bbc8a3a62c494e178bed9af12e8bcd",
+      "score_deck_sha256": "528991ac32da9307005e2479b3025ada9e190f727bad1d33fc91e85468db2d4e",
+      "task_certification_sha256": "e76fb96ebd530567339ce56e620ba8d139afa54a24d101b17f197220f4202ec4",
+      "task_record_sha256": "3c3c028cca2382c4e213c0c35a8006869f8cc3248b536bbd24edd948b0d5f114"
+    },
+    "release_dir": "170-comparator-delay-overdrive-meter"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ideal_dac_4bit_differential.va"
+  ],
+  "canonical_dut_source_slug": "142-ideal-dac-4bit-differential",
+  "checker_task_id": "v4_142_ideal_dac_4bit_differential",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2d5ba1813c7661630447f897b3c334842a57205b3c1c377cdf2a8aaeea026ddc",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "11d00217f226ef8d709dc2efdc6fbca518c81bcb7c0f77ec8e0cef85cca568e4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "47f520e6611fe97be50583568fd088f2424aa4a1d892d093a34b2afb419d2a8e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "142",
+  "family_spec_sha256": "007c8d708e9d8a124f34bdbff09d39822945f3183be2532b1a39798d405c0b4d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ce8cdb2b8955888fffb1ed23373e93ea38540eb5d0eeac517b2ab5927086da38",
+  "public_contract": "tasks/1142-ideal-dac-4bit-differential-bugfix/public_contract.json",
+  "public_contract_sha256": "444ea5b0f9f71755072effccf336589e2a0d1ccfa57ea8e8784b501620c778b4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1142-ideal-dac-4bit-differential-bugfix",
+  "task_id": "v4-1142"
+}

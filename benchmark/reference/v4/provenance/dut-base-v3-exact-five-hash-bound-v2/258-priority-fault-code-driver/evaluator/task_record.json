@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "258",
+  "checker_task_id": "v4_258_priority_fault_code_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "e3088930027c0c410d227edafa758d6901606554474773dd851e913f0ac30d70",
+    "checker_profile.json": "4a30ea7909ef89da7bbbb7dd71eb73ae607f3128b66957de9f7aaa80e46a5111",
+    "derivation_manifest.json": "855bb1b686228fa6b21fec353256b808e424ebc85785a7076488f214d44775b7",
+    "family_spec.json": "e94eae316bc5ce20c1dbf2817843992f205c618a23ed9be21c068333feebc4ff",
+    "harness_spec.json": "053998f4df624c27619629401789e056d4a43d1e68d179c34a01c2ec46cc73ce",
+    "mutation_catalog.json": "20df89c9c175e26202c1ee7d6775f71a34c123cd41278a55e77b224b438a6555",
+    "profiles/feedback.json": "fa1cf9939cb7069cb85a415dd5d103643f69b29bb5a051508f791c9adeb370d3",
+    "profiles/score.json": "8015838cd7b8565b66b769089872aafd8520b3900fc796e414b57085bf5e0814",
+    "score_tb.scs": "8c81970f46146ecee3e71b74f21163da92bf73f4de16952704afb69b36527684",
+    "solution_tree": "f10a077d82123a1740b60c6dd4863077eeddc9dd1f8a2abddb66e08ae0d13eb8",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "bbb7ff03a7f5042bc3e64ac457b27d680dac88e19abcf4e97fbf78a690de6a0e",
+    "instruction.md": "1963dfd767305a56814175d08cce6d15a252af1beceabf7dc523cbfa24802942",
+    "public_contract.json": "ecfe671a6e53b4043c3fd94bfaa728c05a963e456b96eae828a67ec8e2f1f02b"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "e3088930027c0c410d227edafa758d6901606554474773dd851e913f0ac30d70"
+  },
+  "release_dir": "258-priority-fault-code-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "349-priority-fault-code-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "priority_fault_code_driver.va"
+  ]
+}

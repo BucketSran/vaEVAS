@@ -1,0 +1,78 @@
+{
+  "family_id": "331",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_decision_sign_inverted/certification.json",
+        "certification_sha256": "72efd5e086399465f1a4938da2b7e91998a03507a51e5e5f577e06e4791d45d1",
+        "fault_class": "latched_decision_sign_inverted",
+        "mutation_bundle_sha256": "5f7c3504d8075c0c3263239a5784d1bfd0a8141300357794b17f45fd98a1c5f7",
+        "mutation_id": "neg_002_decision_sign_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_002_decision_sign_inverted/certification.json",
+        "trigger_condition": "an enabled decision-clock edge samples sample_in on either side of vcm",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_DECISION_CLOCK_LATCH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_corrected_output_adds_feedback/certification.json",
+        "certification_sha256": "afd135883ba054cf2444f4369106093d27e76e04204fbef44d9675e1675c4568",
+        "fault_class": "corrected_output_adds_instead_of_subtracts_two_tap_feedback",
+        "mutation_bundle_sha256": "824c03406fdb8e89269f7b1452dfe59aeddeddd830a19fbb5e0a011323fa1629",
+        "mutation_id": "neg_003_corrected_output_adds_feedback",
+        "source_catalog_certification_path": "negative_variants/neg_003_corrected_output_adds_feedback/certification.json",
+        "trigger_condition": "previous decision history and nonzero tap weights contribute to the correction",
+        "violated_property_ids": [
+          "P_USE_THE_PREVIOUS_DECISION_HISTORY_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_error_metric_complements_absolute/certification.json",
+        "certification_sha256": "0768f944367de75659aa1fc18652e2e0f7acb41ac820cd6b40d3d1aa1fad03fa",
+        "fault_class": "error_metric_complements_instead_of_reports_absolute_residual",
+        "mutation_bundle_sha256": "d42d3dc7eea84b75ad096c4ae3be746f2e33ef49b460fbb190923a0ae1247379",
+        "mutation_id": "neg_004_error_metric_complements_absolute",
+        "source_catalog_certification_path": "negative_variants/neg_004_error_metric_complements_absolute/certification.json",
+        "trigger_condition": "an enabled decision produces a finite nonzero residual",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_ABSOLUTE_RESIDUAL_ON_ERROR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_converged_after_one_sample/certification.json",
+        "certification_sha256": "de8d449ba73c8013fc037b81825a0e7a6003cf6bd2d182f4de647f0ef146728c",
+        "fault_class": "convergence_qualification_too_short",
+        "mutation_bundle_sha256": "f9dce79cd731da81bde5d945a7795750df8b12531d27c8dfe020d95a29643118",
+        "mutation_id": "neg_005_converged_after_one_sample",
+        "source_catalog_certification_path": "negative_variants/neg_005_converged_after_one_sample/certification.json",
+        "trigger_condition": "one residual sample falls inside the convergence window",
+        "violated_property_ids": [
+          "P_ASSERT_CONVERGED_WHEN_THE_RESIDUAL_REMAINS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_clear_retains_corrected_offset/certification.json",
+        "certification_sha256": "d30b2dc923dd02a6d790f6c466704bce7cc72e60dd8cca1032d611087d038006",
+        "fault_class": "clear_state_retains_corrected_output_offset",
+        "mutation_bundle_sha256": "ef383a0ae264361d3cf8dd4b19da05f6d239af40593956a20907be10c8847e65",
+        "mutation_id": "neg_001_clear_retains_corrected_offset",
+        "source_catalog_certification_path": "negative_variants/neg_001_clear_retains_corrected_offset/certification.json",
+        "trigger_condition": "reset is asserted or enable is low",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_decision_sign_inverted",
+    "canonical_dut_id": "331",
+    "hashes": {
+      "mutation_catalog_sha256": "d9977030112ac7f7bae24f6f809432f8aac969d8515d37ce3661e44ad48f33a9",
+      "score_deck_sha256": "344975ac79d8a3a42118bfa7c6409e9a0c2ea70ce65fe1af682d817cb7e4901c",
+      "task_certification_sha256": "58e01f9054279266c03c2573d4b0829188d3056ad94aab75fad8c085a1098e96",
+      "task_record_sha256": "6af8236e7bf75df440f861e3c8b4ff6bac7fe1bed2ec7bf2171a4642cdc0ff56"
+    },
+    "release_dir": "331-dfe-error-proxy-loop"
+  }
+}

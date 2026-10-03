@@ -1,0 +1,26 @@
+{
+  "artifact_mode": "system_bundle",
+  "bugfix_seed_mutation_id": "neg_002_post_tap_polarity_matches_pre",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "7a6644f8e7ee7ba9ddc805c7e34ce94a0a4f29faf8761eadf877519468e2741e",
+  "candidate_artifacts": [
+    "ffe_tap_adaptation_monitor_top.va",
+    "tap_update_controller.va",
+    "cursor_metric_core.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "cursor_metric_core.va",
+    "ffe_tap_adaptation_monitor_top.va",
+    "tap_update_controller.va"
+  ],
+  "checker_profile_sha256": "8b9e50f8ffc0c5b115ba1c7996bf5285137c30fc76b736931c31d7ad009b8439",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "e2f7de10d5ea5d9df7697eb56f9081fde243f70f39c9c0c0e6b5525d14d67561",
+  "gold_solution_tree_sha256": "b542bb141c388400e8050a5236e28b5e26b90dc97cb6f47ec87231ef0bf3f793",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "4fa39106d2f3d6223df27ff31dd77b8169603f191058dbff61f6e86fd4d612be",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1330"
+}

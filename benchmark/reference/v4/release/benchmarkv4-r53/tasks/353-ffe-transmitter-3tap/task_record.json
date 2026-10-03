@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ffe_tx_3tap.va"
+  ],
+  "canonical_dut_source_slug": "353-ffe-transmitter-3tap",
+  "checker_task_id": "v4_353_ffe_transmitter_3tap",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "83ab6ae8f4b2528b61eb9e189fa9f6f2dd1d9aba33fbda5adeece663e6c3d52a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "61893e0fc9fe1d53c7dd321641ed08289c7456c8976a926105cad8cf2af2854e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3630230aff338c903cec5fe246299c4be5ae0472d0f4745c9ee7f2837ccf3a00",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "353",
+  "family_spec_sha256": "48070b562efbe38ed280971493ce0b86418d0f9ef0fe0eaabaac5bd55acb7e91",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "54c74e5beb60a66143b8e21b36966b7023a0e8d79f3309720a4b3aac50917eca",
+  "public_contract": "tasks/353-ffe-transmitter-3tap/public_contract.json",
+  "public_contract_sha256": "ef48d69a0cf16543a0dc87137d7a16441de7c073259d18265d11accb0997f11d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/353-ffe-transmitter-3tap",
+  "task_id": "v4-353"
+}

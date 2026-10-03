@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "173-dac-serial-accumulator",
+  "checker_task_id": "v4_173_dac_serial_accumulator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "69c6be63b8c171a1df2ddb59db41c96d6a02712177376eb4cb21de2ddbaaa44d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "c7dcf766f17f711483df5f0018d1f6f53bc5f952210672984b76249b8f806506",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "69c6be63b8c171a1df2ddb59db41c96d6a02712177376eb4cb21de2ddbaaa44d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c5b337d1a76fd5f83a45a9dfc276a295f72fbd6b13143461a49e1b5a043ae3ff",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "113dd32d5ca208d02555bd41133b8cfd783fb47ceb617b395437000f4290f8b5"
+  },
+  "family_id": "173",
+  "family_spec_sha256": "0441566a39e148bbb29d333c780efd726223ddd2df1f71ef66fad938df9d34b4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d1b6710f04bbb4ee7bdeed46fffd8a283773526b174f550f6f6c63f8edd1dc54",
+  "public_contract": "tasks/673-dac-serial-accumulator-testbench/public_contract.json",
+  "public_contract_sha256": "71a6064ef9c3c7c57ac85749aed95c662bd38a1efe2166cc2c3b79b8ee57225e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/673-dac-serial-accumulator-testbench",
+  "task_id": "v4-673"
+}

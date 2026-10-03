@@ -1,0 +1,18 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "lock_low_before_three_good_edges"
+    - "lock_high_after_consecutive_aligned_edges"
+parity:
+  required: true
+  tolerance_notes: "Use reference-cycle windows; do not require exact analog event ordering at coincident rows."

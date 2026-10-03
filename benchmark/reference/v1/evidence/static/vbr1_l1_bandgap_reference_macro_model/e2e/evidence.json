@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l1_bandgap_reference_macro_model",
+  "task_id": "vbr1_l1_bandgap_reference_macro_model:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Bias Reference and Power Management",
+    "base_function": "Bandgap reference macro model"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/e2e/gold/bandgap_reference_macro_model.va",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/e2e/gold/tb_bandgap_reference_macro_model.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

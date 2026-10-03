@@ -1,0 +1,27 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "$abstime"
+    - "transition("
+    - "streak"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "lock_low_before_required_consecutive_count"
+    - "lock_high_after_third_aligned_reference_edge_with_need_3"
+    - "lock_remains_high_after_next_aligned_edge"
+    - "reset_clears_lock_and_streak"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: lock assertion uses streak > need, producing a one-reference-edge late lock."
+parity:
+  required: true
+  tolerance_notes: "Sample lock at 45ns, 85ns, 125ns, and 165ns, away from ref/fb edge transitions; use edge time or time-weighted lock duration, not row fraction."

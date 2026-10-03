@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sar_weighted_sum.va"
+  ],
+  "canonical_dut_source_slug": "113-sar-weighted-sum",
+  "checker_task_id": "v4_113_sar_weighted_sum",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "fe63dc91a5f65befaf89e85a72e870e9ea55be695c63882da7c41135b5950103",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8b47acfdaa953e7541b499ad8cafb8d1bdc8e89131037f24f6031edf83b40fa2",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5a0524beb4ef23a803e0413001166fb5cafc6cc949697b36e0d96f14a3660d31",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "113",
+  "family_spec_sha256": "dbaee61d7f60aec5dbc64802f61334858fb4c49c9b7286a387c821825fe64365",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "447203a467fa96686e321c975b7b10b6b4a800170fea2cb77932d88757230f5d",
+  "public_contract": "tasks/113-sar-weighted-sum/public_contract.json",
+  "public_contract_sha256": "8cbb7fe6913582f57478b3ae8128ed38c4f18474c4093c40e8e2a3ac5da826f4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/113-sar-weighted-sum",
+  "task_id": "v4-113"
+}

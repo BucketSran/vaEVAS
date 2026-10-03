@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "smooth_comparator_tanh.va"
+  ],
+  "canonical_dut_source_slug": "124-smooth-comparator-tanh",
+  "checker_task_id": "v4_124_smooth_comparator_tanh",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a11923c3a23a03e268925064cd068c2d22cfeae2a6c68922273a06f58ac95b58",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ea26d90b1c53d1d2d44775f9119fc9d27fcc43bd8d3bf8c49b0c50feabfa9ebf",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "362104e5c106ba433820eb94a9550c5137813f77c17f6f9a77c4d367f9a6b3bc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "124",
+  "family_spec_sha256": "b585b0e56e896ae761c013c365b94a5c1665582d730aeef42cfb97ba0e7a9ed8",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "733500eb2745c337182812f06f27cf9b399d16da56a1e4ee1d032abb5e81025b",
+  "public_contract": "tasks/1124-smooth-comparator-tanh-bugfix/public_contract.json",
+  "public_contract_sha256": "55a2c258de2611b77aa8e8240050525fd315d8fd30831e80f6505439c0ba16d7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1124-smooth-comparator-tanh-bugfix",
+  "task_id": "v4-1124"
+}

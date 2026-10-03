@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_dac_calc_6b.va"
+  ],
+  "canonical_dut_source_slug": "153-differential-dac-calc-6b",
+  "checker_task_id": "v4_153_differential_dac_calc_6b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "857965f76bca4151f975d757fa43642d250c4ea3cc6424f868223f57da99afe9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "83c06bd7318e4cca813430464cbc4191a21cbccce7754b711be924d5da593631",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0375f39b996fe2a9447deb04c5b725275534da798ac3b59e7a2c326cf54fc1aa",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "153",
+  "family_spec_sha256": "667cea62c6c5ee9d9a78e00c8538f1c9203261298d32d417cd15aeec9127770d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cd71c5ee4816ce81b3e4cb29a27b78ac98089cefbbbfb4d8a298bd6fd02c741a",
+  "public_contract": "tasks/1153-differential-dac-calc-6b-bugfix/public_contract.json",
+  "public_contract_sha256": "b856bbecbf9db966194289bd76f4553153c4e317b2cbbca0956d2df3eefe1862",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1153-differential-dac-calc-6b-bugfix",
+  "task_id": "v4-1153"
+}

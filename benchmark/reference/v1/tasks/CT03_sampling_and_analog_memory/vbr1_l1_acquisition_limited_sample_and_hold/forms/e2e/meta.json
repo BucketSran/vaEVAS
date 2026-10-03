@@ -1,0 +1,39 @@
+{
+  "id": "vbr1_l1_acquisition_limited_sample_and_hold_e2e",
+  "task_id": "vbr1_l1_acquisition_limited_sample_and_hold_e2e",
+  "release_entry_id": "vbr1_l1_acquisition_limited_sample_and_hold",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "end-to-end",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "provenance_status": "release_designed_pending_dual",
+  "designed_source": true,
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "acquisition_limited_sample_hold.va",
+    "tb_acquisition_limited_sample_hold.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "finite_acquisition_does_not_jump_to_vin",
+    "longer_sample_window_settles_closer_to_vin",
+    "falling_sample_edge_holds_last_acquired_value",
+    "reset_returns_to_initial_level",
+    "metric_marks_tracking_window"
+  ]
+}

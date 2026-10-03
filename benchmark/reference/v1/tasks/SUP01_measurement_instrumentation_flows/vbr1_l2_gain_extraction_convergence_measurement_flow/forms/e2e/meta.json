@@ -1,0 +1,56 @@
+{
+  "task_id": "gain_extraction_smoke",
+  "release_entry_id": "vbr1_l2_gain_extraction_convergence_measurement_flow",
+  "task_name": "Dithered Differential Gain Extraction Flow",
+  "family": "end-to-end",
+  "category": "measurement",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "source": {
+    "type": "example",
+    "path": "behavioral-veriloga-eval/examples/measurement/gain_extraction"
+  },
+  "tier": "raw",
+  "verification_status": "passed",
+  "owner": "team",
+  "created_at": "2026-04-05",
+  "must_include": [
+    "@(cross(",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dither_adder.va",
+    "gain_amp_fixed.va",
+    "gain_estimator.va",
+    "tb_gain_extraction.scs",
+    "tran.csv"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "checks": {
+    "dut_compile": "required",
+    "tb_compile": "required",
+    "tran_generated": "required",
+    "sim_correct": "required",
+    "parity_required": true
+  },
+  "evidence": {
+    "result_path": "[TODO]",
+    "pr_link": "[TODO]",
+    "notes": "Composed source, LFSR dither, dither adder, and fixed-gain amplifier flow; checker estimates gain from public waveforms."
+  },
+  "id": "gain_extraction_smoke",
+  "asset_type": "vabench_task"
+}

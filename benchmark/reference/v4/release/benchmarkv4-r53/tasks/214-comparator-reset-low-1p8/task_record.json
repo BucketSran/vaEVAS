@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator_reset_low_1p8.va"
+  ],
+  "canonical_dut_source_slug": "214-comparator-reset-low-1p8",
+  "checker_task_id": "v4_214_comparator_reset_low_1p8",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "81347b531da68750af39f080cd65b0d44c9274d34ee7b3a9b05fb95f73afb8bf",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "4db0cb7ce32d6a60cb979ae9ba5600a540eb5f85d7f77c03964d159762b5de06",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "7e350ed8df46b1092bf97da15a1c0ef944c7601788c39fe8548ab6e845b72b43",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "214",
+  "family_spec_sha256": "c27beadfe0d9c77f98ae9d7f114707c473efc661e6964cdd521f46c4aa341afe",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e0d9cd7a662c888a65b2ba1b1d64e4b8c00d2e3b6312b1d5c513bac8b9896e5a",
+  "public_contract": "tasks/214-comparator-reset-low-1p8/public_contract.json",
+  "public_contract_sha256": "d11ea6d4963b2a6626391e890c2aece0aabcb69d7f6a4964b98fa3934dae703d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/214-comparator-reset-low-1p8",
+  "task_id": "v4-214"
+}

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ON_EACH_RISING_RDY_CROSSING_SAMPLE satisfy the public contract; fault class zero_stub_output is rejected",
+    "observed": "EVAS: aout@0.5ns=0.0000 expected=-1.0000 aout@1.5ns=0.0000 expected=-0.1368 aout@2.5ns=0.0000 expected=0.0526 aout@3.5ns=0.0000 expected=0.3263 checked=4 tol=0.0200; P_ON_EACH_RISING_RDY_CROSSING_SAMPLE mismatch_count=4; P_TEXT_WEIGHTED_CODE_16_DIN5_8 mismatch_count=3; P_EACH_DIN_TERM_IS_1_WHEN mismatch_count=1",
+    "violated_property_ids": [
+      "P_ON_EACH_RISING_RDY_CROSSING_SAMPLE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_204_va_dac_6b_se",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 381
+  },
+  "family_id": "204",
+  "inputs": {
+    "checker_profile_sha256": "4172360a391f00d00b4ce16f0b631ddad441cc926d264ede49a8fc0e1ef66652",
+    "harness_spec_sha256": "2506ae81687fb82843b6f3ced61d8e8e70fcbd7ff487ce4c757ef9402fbfc9ca",
+    "mutation_bundle_sha256": "bf7c54f365155e75b5888029d164824a9d6e9dec59e3b508d1a748eeeef18ae3",
+    "profile_sha256": "77cf750ab36f126fbea07cd154131b6d42a79788c1f3881a3ecc2b4f48e52795"
+  },
+  "mutation_id": "neg_001_zero",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

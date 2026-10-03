@@ -1,0 +1,27 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 17,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "9327d914156c95c1e1e8a8de28acd1043764cd51ae9c86d675aa4dab8f08205d",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "240n"
+  },
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_RESET_CLEAR",
+    "P_SUM_DIFF_MAPPING",
+    "P_TRIM_RESPONSE",
+    "P_DIRECTIONAL_METRICS",
+    "P_BALANCE_QUALIFICATION"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

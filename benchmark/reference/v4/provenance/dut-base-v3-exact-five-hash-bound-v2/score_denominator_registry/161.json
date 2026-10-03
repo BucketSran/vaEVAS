@@ -1,0 +1,80 @@
+{
+  "family_id": "161",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_code_offset/certification.json",
+        "certification_sha256": "68899baa70151865dfc661a47a827af9b490f5aeb6ded63fb17456147282d3bc",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "f803c4f02d63fe1389c8349f78258246f7a57c8a30f8408540b8b88e79309e11",
+        "mutation_id": "neg_002_missing_code_offset",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_code_offset/certification.json",
+        "trigger_condition": "Omits the -32 code offset.",
+        "violated_property_ids": [
+          "P_CLOCKED_CODE_SAMPLING",
+          "P_OFFSET_MIDRISE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_missing_duplicate_d6/certification.json",
+        "certification_sha256": "45f90104e9f73a913ee343b9e453ee296bcfb1d0bbc94a674f89d9ebee241789",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "06294b9e59cbf6f25aa42eb57f280d954d797b8b72717ea2bcd63402eeb08686",
+        "mutation_id": "neg_003_missing_duplicate_d6",
+        "source_catalog_certification_path": "negative_variants/neg_003_missing_duplicate_d6/certification.json",
+        "trigger_condition": "Omits the duplicated D6 64-LSB contribution.",
+        "violated_property_ids": [
+          "P_WEIGHTED_REDUNDANT_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "efd631a7b355c10ebaf101166faaddd60fec88c8e79ab8d9f9f0ea3d67f8089b",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "3d47184db9f1ddc84b7e7e36307c65878576468a88eddd2bca3ef1f8de4a7145",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OFFSET_MIDRISE_OUTPUT",
+          "P_OUTPUT_SMOOTH_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_lsb/certification.json",
+        "certification_sha256": "c8e12e7920a70f357517508cfad220cb78430c6b56a80c0907f003bab2bb6921",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "6a832533c68127c013c34d16a95de7c0f203090f6b27a217de41cd62ac881b08",
+        "mutation_id": "neg_004_wrong_lsb",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_lsb/certification.json",
+        "trigger_condition": "Uses twice the intended LSB size.",
+        "violated_property_ids": [
+          "P_OFFSET_MIDRISE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "09ca527e398185a80daa8b2d77624ada40b5e91ecd9e4fbb8069e7c3d5fc9fed",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "f9e6dd0d6f53575989b549fe247282dfbf35e6ecb83e94630d45f3cdf6040a24",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "DAC Restore 10bit Offset: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OFFSET_MIDRISE_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_missing_code_offset",
+    "canonical_dut_id": "161",
+    "hashes": {
+      "mutation_catalog_sha256": "4f61e355d9b1d49fd68b8e623cc1ba9088fc16ea4df9210a17123168a5c19457",
+      "score_deck_sha256": "1cb497cc8b8d6cee10a9e8bedac830deb7a2666f0f3a32f1cc825afe9ff975c4",
+      "task_certification_sha256": "0bd5e475b0e1dea5a308e94a2c02d881fd3d73be398cb20fdc2cef00d9bd152b",
+      "task_record_sha256": "1fc9001f48e94b72ac755d6d35d8ac3ae19e5a9005068e20c2600b8092c4dade"
+    },
+    "release_dir": "161-dac-restore-10bit-offset"
+  }
+}

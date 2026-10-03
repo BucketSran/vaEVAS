@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "rail_normalized_metric_mapper.va"
+  ],
+  "canonical_dut_source_slug": "274-rail-normalized-metric-mapper",
+  "checker_task_id": "v4_274_rail_normalized_metric_mapper",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "75c8b2e87a2c572b0093fe9fbc0bb9cf05835cce56eeac4525303397127bd908",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b9a770bbaa01f0408fb178b4b2d854b44e389640705bb403e1222cf6bc316ec9",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "862055177ef3369593a6750a1131a3af434f54c59d70ee97f9f1fdca1702910a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "274",
+  "family_spec_sha256": "e1bb153295221455f568c502f9dc7e55d2f7aac420585b5d136b28005b2ced84",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e1654ea04640b8dc76513f650aa476098bd6296609dd366e14d314f41aaa07b0",
+  "public_contract": "tasks/1274-rail-normalized-metric-mapper-bugfix/public_contract.json",
+  "public_contract_sha256": "543daf2ff92600b90645937bd5e86fb6aef44d798022f8c5f530a6fa3a0e57e3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1274-rail-normalized-metric-mapper-bugfix",
+  "task_id": "v4-1274"
+}

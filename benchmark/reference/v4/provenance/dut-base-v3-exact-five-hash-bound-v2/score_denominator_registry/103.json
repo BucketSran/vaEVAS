@@ -1,0 +1,79 @@
+{
+  "family_id": "103",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "125cb73cc98341f31460e94b9b0f7ef7234f0ce5a1bea4102231402ccccf1ab2",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "c5f9faf99372d70097d3c2773720e55c0f2435a23e33e4c47c69cb42c1c11c19",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Existing concrete negative.",
+        "violated_property_ids": [
+          "P_INITIAL_PRECHARGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swapped_decision/certification.json",
+        "certification_sha256": "e792f53268b7176d15b515fe74251f609fa0b589bb7da353f7e3ac7b581e8c37",
+        "fault_class": "fault_003_swapped_decision",
+        "mutation_bundle_sha256": "c1742ae74094ec10e36f6e6575705e3a3296e235f11437fb8e69d6cb4e782ea1",
+        "mutation_id": "neg_003_swapped_decision",
+        "source_catalog_certification_path": "negative_variants/neg_003_swapped_decision/certification.json",
+        "trigger_condition": "Swaps positive and negative comparator decisions.",
+        "violated_property_ids": [
+          "P_LATCHED_HOLD_AND_TIMING",
+          "P_POSITIVE_DIFFERENTIAL_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_equal_both_high/certification.json",
+        "certification_sha256": "31907e30bcc83c2d29a54b8b1cb750bf9c85136c7bd6bf03c37bc927ad05561d",
+        "fault_class": "fault_004_no_equal_both_high",
+        "mutation_bundle_sha256": "513ff32df09f941ae9d0c8a43f9382b093a97d74b4ae975aa761095e6398e760",
+        "mutation_id": "neg_004_no_equal_both_high",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_equal_both_high/certification.json",
+        "trigger_condition": "Drives comparator outputs at half amplitude, violating voltage-coded high levels.",
+        "violated_property_ids": [
+          "P_NEGATIVE_DIFFERENTIAL_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "1651372cc4c76a9410f65a7c546cb6e11b569ed896145d09b5bd2538a30b232e",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "fc3a42d71d933f56fac72d9c65b54d8b62a2619fa2b9249b901177e7a9cf7281",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Clocked SAR Comparator: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_EQUAL_INPUT_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_never_resets_high/certification.json",
+        "certification_sha256": "1c8cfaa440a9e732c2be7d46c8f6b73acba61e543c69472c035a557efb628c33",
+        "fault_class": "fault_002_never_resets_high",
+        "mutation_bundle_sha256": "e41378b64d00d3eefef81671b9bd5867e6991770b968bc73b06f7f62effc89ad",
+        "mutation_id": "neg_002_never_resets_high",
+        "source_catalog_certification_path": "negative_variants/neg_002_never_resets_high/certification.json",
+        "trigger_condition": "Reset phase incorrectly drives both outputs low instead of high.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_PRECHARGE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "103",
+    "hashes": {
+      "mutation_catalog_sha256": "47091fa344e085b51af5389a7ed5a9019a17939dbed0493641126fefc6578c8d",
+      "score_deck_sha256": "ba51585b4c51911f692c79eaa76dddf996e72ee720dfc73b3317ff5cd20eae4a",
+      "task_certification_sha256": "e248efd2d09172d80d090daa77330b99d2b655fe5f15c4d6d3da45540bc90f36",
+      "task_record_sha256": "7eb4271f83c04c2fe556acfe0f9b038ea49b709e19c243db4e7ce45f42e05c88"
+    },
+    "release_dir": "103-clocked-sar-comparator"
+  }
+}

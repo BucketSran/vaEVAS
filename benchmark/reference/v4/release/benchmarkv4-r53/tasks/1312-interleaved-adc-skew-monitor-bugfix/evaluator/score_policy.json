@@ -1,0 +1,26 @@
+{
+  "artifact_mode": "system_bundle",
+  "bugfix_seed_mutation_id": "neg_002_skew_metric_uses_average",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "12f87b5627ad181d048ba7f64537daeb11aa099b2a65708f0873ffea951d5592",
+  "candidate_artifacts": [
+    "interleaved_adc_skew_monitor_top.va",
+    "sample_pair_latch.va",
+    "skew_metric_core.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "interleaved_adc_skew_monitor_top.va",
+    "sample_pair_latch.va",
+    "skew_metric_core.va"
+  ],
+  "checker_profile_sha256": "f03ed9a172bfa167b4411c53bccb84336bae8bd9291cfd662fe4b2af2e8cd877",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "b968ee08c666ab27ed34c937abb3b29d07a06119091c327e9f80050635e7d206",
+  "gold_solution_tree_sha256": "3aadc268d909bd770082b04ef8806171d567121f7a46aa8946a23264f25318b4",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "ffa122ebcc59fe57ad1b948cb28d9b090c43383e8a178f0f8cbc9c0657d629a1",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1312"
+}

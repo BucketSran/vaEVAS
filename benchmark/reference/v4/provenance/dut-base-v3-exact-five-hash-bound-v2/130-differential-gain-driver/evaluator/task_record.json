@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "130",
+  "checker_task_id": "v4_130_differential_gain_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "1c217f52a8cca3f36679e77346316df3ba7efc8a9f4f826782d0a81d69b1c328",
+    "checker_profile.json": "cbb49bca6f08c346c06bb91a3968e3a595c646e20761fe75935f81ca14b22ff9",
+    "derivation_manifest.json": "73a1d5fcb0697fff0dc2c0ed96076a0d6b538372410c10db3dbd7bb959b16fca",
+    "family_spec.json": "6614a9321605b86198067739a0cd7f92bd4c090716df008ff9687e32edaa9be0",
+    "harness_spec.json": "9c19e44052ecc34588a6a5621d8d3f2108bf6355de71b3371ba9892a392239e0",
+    "mutation_catalog.json": "7281839e82cf3e05c5c7fe551410204edfbfd1ea5cfd03c11d718f4a3f6cc540",
+    "profiles/feedback.json": "1daf2090e573219d402e3f11f9376fd04dc5b15a60979ceece7ebff8f84ff748",
+    "profiles/score.json": "413e8586e8bd71ec2809e76915ad7555ef71f5aa906b8bc6cf7807839982855e",
+    "score_tb.scs": "d5a50ca73eec689494c9f99a218639bc86568aa183e55ed4a6e250e8dfbfc99f",
+    "solution_tree": "62d198bec8d4a7683c9eba73c1bfafc1906118a3262b724ab5b28c8c83cfc3f9",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "24f86bd5f6800c6c34b49a7ff51568301c93bc2b9256a860a7f795b8ddc35724",
+    "instruction.md": "c0f41259494f656a5a4123348f05c85b14117614127c0cbf4221bbd78a68d6b0",
+    "public_contract.json": "1a1ce44c95831c0f73554655a32e662d25a46270732bd57f4d14e8945a4de102"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "1c217f52a8cca3f36679e77346316df3ba7efc8a9f4f826782d0a81d69b1c328"
+  },
+  "release_dir": "130-differential-gain-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "152-differential-gain-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "differential_gain_driver.va"
+  ]
+}

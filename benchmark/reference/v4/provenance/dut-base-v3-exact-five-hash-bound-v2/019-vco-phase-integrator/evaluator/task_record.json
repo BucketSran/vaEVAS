@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "019",
+  "checker_task_id": "v4_019_vco_phase_integrator",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "3f38d5ad20ca68560fac3e68cc03610b518e19decef527a2eaf44b949ed41161",
+    "checker_profile.json": "92483d538df0b5fc053f81b43df18338737942ad9b3e5260ec399dba90a7d87a",
+    "derivation_manifest.json": "281e6b11097683b1eabab62ff00d0a433cb49a70a1fff4475fd0ec3336cf1f69",
+    "family_spec.json": "00a387a882e873655a5247a5cc5c4a91755c03ea5ee82f20c58bb7d4aec40fc4",
+    "harness_spec.json": "4a91dd13aeb725d260b572644a8de05fbf7adba3b76359da6f36e383ae670435",
+    "mutation_catalog.json": "b81dda62b828b9ac3ff71eeda6a3d930a99c91b61f576552ef761f257e702cc2",
+    "profiles/feedback.json": "e7f0bd381da394d477247d3f3655100e0968084aa328b2cfac7831c98d19e26d",
+    "profiles/score.json": "e1ca3aeaa51ab7b7469fa77bb57a91a6dfd18bbc5cd5ead23df4eb9410cbb17a",
+    "score_tb.scs": "b9e172133fef75a94d08b56f26fe6768b0c16e27e08e6759b3432741723c5a16",
+    "solution_tree": "e90e4b5fa70305275427555f82df3cf75aca18170451ef805fdf5ffb832195cb",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8d655ae4ee76f3daaccc44ecdaebfb0b97b032424ba622f8015134eab3a87609",
+    "instruction.md": "d3b4a4cc6e320c085c3349d96e7af803ed78a7420c9f5d8ec409de55cf6e2fe9",
+    "public_contract.json": "5abf11be1c89f8c597a0992c99e338c243da2f1e492c703594f4207e004d508a"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "3f38d5ad20ca68560fac3e68cc03610b518e19decef527a2eaf44b949ed41161"
+  },
+  "release_dir": "019-vco-phase-integrator",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "021-vco-phase-integrator",
+  "support_root": "",
+  "target_artifacts": [
+    "vco_phase_integrator.va"
+  ]
+}

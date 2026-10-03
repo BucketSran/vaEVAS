@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "283-mode-latch-calibration-gate",
+  "checker_task_id": "v4_283_mode_latch_calibration_gate",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "27d6ab3c329988ae271520c72588d3de2727eba97b37c1a69f26e80adc94fb31",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5db08061e7b63ee2195fadfd01953153d8ec7c9c276145764eb6d8c96ac27ac4",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "27d6ab3c329988ae271520c72588d3de2727eba97b37c1a69f26e80adc94fb31",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "da4e5aafa355a0bc791a7b486d52454123d7c7f7efc9aa693f8aebc9274f383b",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2c1411dfa08d543c17f785a32aea0ded7b3b6527c8926ea64a09a5ac809702ad"
+  },
+  "family_id": "283",
+  "family_spec_sha256": "824669462d8050fa5eb8534205e07b1e37c9b86b885d0f19ec8562fcb58dfda0",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "54a1dd2e6eb21b0b483ae2016ef90cb09fdba6893f276e4cb181b5c5933c3977",
+  "public_contract": "tasks/783-mode-latch-calibration-gate-testbench/public_contract.json",
+  "public_contract_sha256": "53a2c051d3889043ee287eaaf1286dcc1bd07b9d1052294ff5b9c1062b0d3753",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/783-mode-latch-calibration-gate-testbench",
+  "task_id": "v4-783"
+}

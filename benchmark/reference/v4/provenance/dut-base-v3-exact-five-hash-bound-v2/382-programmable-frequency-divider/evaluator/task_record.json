@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "382",
+  "checker_task_id": "v4_382_programmable_frequency_divider",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "f43c40a1aa559d1fd0ea899977ec9375e9d09a9b81b85aee4930f61784d9e1f2",
+    "checker_profile.json": "a8f2d211e2a6567240dcae3429e7cc04087ebefae082d4561f487b274b152c15",
+    "derivation_manifest.json": "001861dc38a660617fe72dab93460174a24358255f6db34fec77c840cf2c295f",
+    "family_spec.json": "3a29be845c02b9735c93f9bd12a33fdacd5bbb22b16de20136125da9d6bb2298",
+    "harness_spec.json": "a0321e7859c686d5d00c013fc81b7472e7ab07fa467a26d85a0c1fe014e50bdf",
+    "mutation_catalog.json": "3be2a9a431c8bd784a1377d4da26abc5de34e921ccbf047e809bbd00733131c2",
+    "profiles/feedback.json": "d6d59618070190c82dfb1a406da92405dfc09f50271e72100a861d44bf42ec63",
+    "profiles/score.json": "884d5ce82e2f20d9bd60920bb08e9ae9ab683295ee1e0e8c4817728aaa26ca5f",
+    "score_tb.scs": "1087f2ee1d4d0c6f059c285860ad3f7990d22c491b24d6a6adcbaf1d2cc89059",
+    "solution_tree": "e985c17a43cd5fcd3471f28af49cb026896fe50adc8f6bcaf9940635379c90a0",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "20c5af8447eb35beb556e6be0d8b8ef0cdf2c5c332e534c48923a7ed46688813",
+    "instruction.md": "9a45391ad5be360654e80a0b94307c24fda63681fe1a2fb016446a7508b5b733",
+    "public_contract.json": "ae39b5c6db3de515acddf49a6a3ec721b84405133f940fa65c8a0c3a6b2125cd"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "f43c40a1aa559d1fd0ea899977ec9375e9d09a9b81b85aee4930f61784d9e1f2"
+  },
+  "release_dir": "382-programmable-frequency-divider",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "941-programmable-frequency-divider",
+  "support_root": "",
+  "target_artifacts": [
+    "programmable_frequency_divider.va"
+  ]
+}

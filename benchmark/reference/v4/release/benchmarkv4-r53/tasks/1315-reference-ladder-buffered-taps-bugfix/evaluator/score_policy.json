@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_003_rail_clamp_missing",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "7e73a792d2c30a84ea5c16d4cd66f45ef17372f9133bc7e9c29458c9f601be7d",
+  "candidate_artifacts": [
+    "reference_ladder_buffered_taps.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "reference_ladder_buffered_taps.va"
+  ],
+  "checker_profile_sha256": "22b8792d1362999336eb4502f5cc3c3b70acb5533041936b3b904ab0ab8cba29",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "1e086ad3994d706ddfa3ab2e0a491afb8fdfff8c7a62c1bbd812a09ec4597100",
+  "gold_solution_tree_sha256": "046f9a772de6ae660609d5a3033f750d8f2e729df357364559c2b50140c90078",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "d5a67461f5b653ae04fb922779e69871811c0f60eeba43d5b963d5f229cbd2b0",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1315"
+}

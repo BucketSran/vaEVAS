@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "segmented_dac_dem_top.va",
+    "thermometer_decoder.va",
+    "binary_decoder.va",
+    "dwa_rotator.va",
+    "dac_driver.va"
+  ],
+  "canonical_dut_source_slug": "344-segmented-dac-dem-system",
+  "checker_task_id": "v4_344_segmented_dac_dem_system",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8ebf0036d6b6df2194c79fa85b9dccad23062b51a64ea7be137dc5200858d5c0",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d4781b69e039370aafbc03838fef32a72092660698beead89e81c2eb41f8e297",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8cac0829fca40e73d2e43fae0670fb7016fe1e06518d826b7456f3ba64e15168",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "344",
+  "family_spec_sha256": "d3d9a8a6771967e8ec6d4fa7ea04d7a2d66641760ab1372f8b37835dc2195b06",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "08c0e09c7211e665b4808621f23a725fce305b7ad547fb8b47ba74d4ce699b45",
+  "public_contract": "tasks/344-segmented-dac-dem-system/public_contract.json",
+  "public_contract_sha256": "60304c63a43c6d10ea068e350404cb3229fbe3f4ffe3751a3477c0c02c5b619d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/344-segmented-dac-dem-system",
+  "task_id": "v4-344"
+}

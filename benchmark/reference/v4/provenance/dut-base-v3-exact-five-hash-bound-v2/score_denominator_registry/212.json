@@ -1,0 +1,78 @@
+{
+  "family_id": "212",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_denominator/certification.json",
+        "certification_sha256": "6781c2b01c7ce067af53402c58fa5121add5fe55ccbb098557c8f9e6aa311791",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "7bd7747cc70d1b23090380b41b5a2028477c9f22e82eac63c5078511388474c1",
+        "mutation_id": "neg_003_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_denominator/certification.json",
+        "trigger_condition": "Normalizes by 15 instead of 16.",
+        "violated_property_ids": [
+          "P_CONTINUOUSLY_DECODE_D0_D3_AS_AN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reverse_weights/certification.json",
+        "certification_sha256": "32f4de39c0a4a13e2edda495d6896cc598c09141be05350e38144129ba7f20ef",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "6831b67e955ef277508c18dd80e45d4d612998397f81aecd8856d963de3bab0d",
+        "mutation_id": "neg_002_reverse_weights",
+        "source_catalog_certification_path": "negative_variants/neg_002_reverse_weights/certification.json",
+        "trigger_condition": "Swaps the d0 and d3 weights.",
+        "violated_property_ids": [
+          "P_CONTINUOUSLY_DECODE_D0_D3_AS_AN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output/certification.json",
+        "certification_sha256": "410eaecdd9c4466580f089043d7d545ef63e0c1b9c521c3d2543c7e27f6f78e1",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "db24c5d76087892c13c840d0de7c10cda89bde4261c80d703c262020a79cd8fa",
+        "mutation_id": "neg_004_half_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output/certification.json",
+        "trigger_condition": "Drives the readout output at half amplitude.",
+        "violated_property_ids": [
+          "P_CONTINUOUSLY_DECODE_D0_D3_AS_AN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "ef587afb5db844eaf599331c852c9c9199e3f0cb1d29dea6556d744e3d5914ff",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ebf9f37d4639a6b8f0512134e6d2d26d0a03cde7f9bf009e86b7c5e95529c7b8",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CONTINUOUSLY_DECODE_D0_D3_AS_AN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "0a797d2c1a622c847b51a58d2868ba3c67227143849db74c15595251968d0832",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "1a762aac89c6ee11e5dc0d71cf251961877ffe6329388e5438786d8c7115590a",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "LT Readout SAR4: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CONTINUOUSLY_DECODE_D0_D3_AS_AN"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_denominator",
+    "canonical_dut_id": "212",
+    "hashes": {
+      "mutation_catalog_sha256": "c59165ed14c24458f1e2150e5e164d09af1657a966382ececd682a8d70af5e42",
+      "score_deck_sha256": "f24c7b9ce8fca955f341028cdbfdf6c12760871193360f22a03a7b8dac286713",
+      "task_certification_sha256": "0a5d4ba5bdd05245930e702d04298e21f2eaa10ea72dffa5134db749b9b948ac",
+      "task_record_sha256": "49c6ad996cd3d24b54968d0d58d9fd9d382c3c99185f7985fa8f396fb192ac35"
+    },
+    "release_dir": "212-lt-readout-sar4"
+  }
+}

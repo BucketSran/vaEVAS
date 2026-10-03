@@ -1,0 +1,78 @@
+{
+  "family_id": "341",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_double_ramp_step/certification.json",
+        "certification_sha256": "2139eec0346c04b174933e41075f6aea46527d41cd1ef051792df1c4a17408ac",
+        "fault_class": "soft_reference_advances_by_double_ramp_step",
+        "mutation_bundle_sha256": "3e9e1aa48a5f5419dc4bf39466f6f0cfa7f788520eb7f1068ca068b400322727",
+        "mutation_id": "neg_002_double_ramp_step",
+        "source_catalog_certification_path": "negative_variants/neg_002_double_ramp_step/certification.json",
+        "trigger_condition": "an enabled rising clock edge occurs while target_ref is more than ramp_tol above soft_ref",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_target_drop_not_clamped/certification.json",
+        "certification_sha256": "1a4e8a7abe1ae47518beb76971a1e9066ada3202e1128479dcb357011068bf00",
+        "fault_class": "soft_reference_not_clamped_after_target_drop",
+        "mutation_bundle_sha256": "c3a8955af6d1ac42f1ca208956922b63354cffea3a4e836c07b22c9b2482eeff",
+        "mutation_id": "neg_003_target_drop_not_clamped",
+        "source_catalog_certification_path": "negative_variants/neg_003_target_drop_not_clamped/certification.json",
+        "trigger_condition": "target_ref drops below the accumulated soft_ref on an enabled rising clock edge",
+        "violated_property_ids": [
+          "P_NEVER_ALLOW_SOFT_REF_TO_EXCEED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ramp_metric_reports_progress/certification.json",
+        "certification_sha256": "18459c7806687970c23ab96bf8b91feda32aedff9686dc6cd64b9cd059446c24",
+        "fault_class": "ramp_metric_reports_accumulated_progress",
+        "mutation_bundle_sha256": "fa7c7c1662863edaca28c5caa1765a41d2a477cae4f2e97dd6580e7e33c9064e",
+        "mutation_id": "neg_004_ramp_metric_reports_progress",
+        "source_catalog_certification_path": "negative_variants/neg_004_ramp_metric_reports_progress/certification.json",
+        "trigger_condition": "soft_ref advances while target_ref remains above it",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_REMAINING_RAMP_DISTANCE_ON"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_done_asserted_before_target/certification.json",
+        "certification_sha256": "8a59afb14d9052c639db29d8b12c9862995c52f3b5d3784c832da83dc078ab56",
+        "fault_class": "soft_start_done_asserted_before_target",
+        "mutation_bundle_sha256": "1376de4866cf92cd38a3357bde116434458cdabdff20ad46e9ef6061155cfec9",
+        "mutation_id": "neg_005_done_asserted_before_target",
+        "source_catalog_certification_path": "negative_variants/neg_005_done_asserted_before_target/certification.json",
+        "trigger_condition": "the first enabled ramp update occurs before soft_ref reaches target_ref",
+        "violated_property_ids": [
+          "P_ASSERT_DONE_ONLY_AFTER_SOFT_REF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_disable_retains_soft_ref/certification.json",
+        "certification_sha256": "5ef325292a2901c7795e9118945499191fa1a8dbb3843d7c605297bfff185003",
+        "fault_class": "disable_clear_retains_soft_reference",
+        "mutation_bundle_sha256": "45cfb9cff5da73e0ef34d443cdeae9c0faeb7b2dc2ffa9c0b91c6efffee7aeeb",
+        "mutation_id": "neg_001_disable_retains_soft_ref",
+        "source_catalog_certification_path": "negative_variants/neg_001_disable_retains_soft_ref/certification.json",
+        "trigger_condition": "enable falls after the soft-start state has advanced above vss",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_double_ramp_step",
+    "canonical_dut_id": "341",
+    "hashes": {
+      "mutation_catalog_sha256": "c8eef159424cfd086da4633c1757311fc285c9d25b3846be0db13268fb5ac4e0",
+      "score_deck_sha256": "8ffbbcd3f7665ed51b17c4e05e3dbac5a09821403336379ef86e5ccc2beb77c0",
+      "task_certification_sha256": "dffa40b2e056da187a5d3f541d6ecb1aa7c06601ac63b94c827c8d296526dd66",
+      "task_record_sha256": "280f74b73509241fc469e3119aa191b60f97e05f4f2d268274baab4d2c516e28"
+    },
+    "release_dir": "341-buck-soft-start-ramp-controller"
+  }
+}

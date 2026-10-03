@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "306-instrumentation-amplifier-offset-trim",
+  "checker_task_id": "v4_306_instrumentation_amplifier_offset_trim",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "d51477b02d345026f4a1531b488207dbd3fe0b97258ce9d2b0999a7dd2be0c66",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "49ca100782f678a7bf708fe8374bc23c7a4bbbbbe92636d56d4d856766bc8aac",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "d51477b02d345026f4a1531b488207dbd3fe0b97258ce9d2b0999a7dd2be0c66",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f9bed977bb5e9d47a2c8d6071429f378f2dd63d17aa1fe8fc1680c154585fece",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c84fd08149785f9311b4221164a15a5542f6b46586bf5721a42682f4aa51f4fb"
+  },
+  "family_id": "306",
+  "family_spec_sha256": "25c5f8b5b55f63ad861996675ba20160f09dde0ad87bb635225f3e9e54136045",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2eb4181d3ea2b06ecf048f10bc8f80595d4ae71eb00eb4dfcf7394eff9809590",
+  "public_contract": "tasks/806-instrumentation-amplifier-offset-trim-testbench/public_contract.json",
+  "public_contract_sha256": "1f2815274389edb41438a0441a85025fff9ae4efde4e8ffac0e201eebb5fe09d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/806-instrumentation-amplifier-offset-trim-testbench",
+  "task_id": "v4-806"
+}

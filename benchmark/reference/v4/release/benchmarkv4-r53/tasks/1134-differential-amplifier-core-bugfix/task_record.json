@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_amplifier_core.va"
+  ],
+  "canonical_dut_source_slug": "134-differential-amplifier-core",
+  "checker_task_id": "v4_134_differential_amplifier_core",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d6d71f65388fa1b3b9ca909dfe8c97de85647dcac3a3cd3d9d12248693d36776",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1185d6204ca989e96a5cf8ac28b6c53f7de810ec4f2fb99b8e82e9fb79414362",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6500cbf43312fccf19b5f8b4c3b92693706da0433027b767f98deb655f31e02e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "134",
+  "family_spec_sha256": "f3cb58a47b0561c23f5edfe2bcc120964672afe102e665637232aa502b4eb797",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1da1c1b1c279a1a17b0584d8efefac287bafdfadf786a72df3b7d92c3883cce4",
+  "public_contract": "tasks/1134-differential-amplifier-core-bugfix/public_contract.json",
+  "public_contract_sha256": "a226163d0844fa7d3e30f2d63e261f486d9b75603a59d0bc8063aa1192568248",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1134-differential-amplifier-core-bugfix",
+  "task_id": "v4-1134"
+}

@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "sigma_delta_top.va",
+    "integrator_state.va",
+    "sd_comparator.va",
+    "feedback_dac.va",
+    "decimator_lite.va"
+  ],
+  "canonical_dut_source_slug": "350-sigma-delta-mini-loop",
+  "checker_task_id": "v4_350_sigma_delta_mini_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "04e494758ab0a62c80d41732e611c5b764a8226a4b5c7c7dcc9b4e0b75349bde",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e584e6f18b0aac38c38996ae504ea33a8e9c589766b65f9b49a185ddaffede01",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e0dee74ee170dede1cbcf1e61e70efb4f14daf73645d4e52f1b38367a291f305",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "350",
+  "family_spec_sha256": "1c7d2d9bc7687db08aa7a1b0252e82719d49a279d17875adf17e4d4f5381370a",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "67086a4fa469fe6f470b1537610b9d59f1e31bad0248c61173c2fe35ef759e1c",
+  "public_contract": "tasks/350-sigma-delta-mini-loop/public_contract.json",
+  "public_contract_sha256": "56b4f2d586dcbdf96b6574bb1e858725651d0185f75d732676c48a88a4c9500b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/350-sigma-delta-mini-loop",
+  "task_id": "v4-350"
+}

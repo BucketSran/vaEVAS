@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "supply_supervisor_brownout_por.va"
+  ],
+  "canonical_dut_source_slug": "399-supply-supervisor-brownout-por",
+  "checker_task_id": "v4_399_supply_supervisor_brownout_por",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "1a4fc717d915a8e0c74592161e2d941194b7a6d231084df1989a94b3dfe1e59f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "284b5972db74a90fc3fdcc33a0580489a2a2fa536746ce26bb77baeae2c1eb17",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "01ed2cbd0c15032b37a6b7d3327e62f0595b55661f577c1be66708a560b389af",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "399",
+  "family_spec_sha256": "580af84d460031e716a40619030de213e358ced1769c98a6971b26e1b1265956",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ffb997ead48c07a8d783e8eea7fe6be87af8a70dd5699b6935f245ac7bdfc34d",
+  "public_contract": "tasks/1399-supply-supervisor-brownout-por-bugfix/public_contract.json",
+  "public_contract_sha256": "32043074827d6a3f6ca6cf59bd09b866ed1b6fa690f5451ddc7548c1f6e0c989",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1399-supply-supervisor-brownout-por-bugfix",
+  "task_id": "v4-1399"
+}

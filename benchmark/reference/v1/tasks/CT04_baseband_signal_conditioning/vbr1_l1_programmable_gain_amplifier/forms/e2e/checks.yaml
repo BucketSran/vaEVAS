@@ -1,0 +1,33 @@
+syntax:
+  must_include:
+    - "transition("
+    - "@(cross("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "gain_select_changes_slope"
+    - "sampled_gain_holds_between_clock_edges"
+    - "common_mode_is_preserved"
+    - "rail_clamps_with_clip_metric"
+    - "reset_returns_to_unity_gain"
+  public_observables:
+    - "clk"
+    - "rst"
+    - "gain_sel"
+    - "vin"
+    - "out"
+    - "metric"
+parity:
+  reference: "spectre"
+  status: "pending"
+  notes:
+    - "Fresh EVAS/Spectre dual validation is required after adding this release entry."

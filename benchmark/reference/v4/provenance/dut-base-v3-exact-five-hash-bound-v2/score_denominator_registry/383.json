@@ -1,0 +1,87 @@
+{
+  "family_id": "383",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "4d75e2a26121b10da3ab9eb7dc082f425612fde79a04f85d857cc689c06f832b",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "75cc2f51bdf5491bbb1f2b39a045e7c78f3fcf182da1be81d6511ab4349788db",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_PERIOD_METRIC_MUST_EXPOSE_A_STABLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "74eefbe42f3b0c06aa83cb43d3f425f4ce756264fee0c13cf9aa28c60ba8743f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "25b43b3f62179bbc72024d402beaf7d74dde5dc64ea7ef6c2c16a078ef213e68",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETE",
+          "P_PERIOD_METRIC_MUST_EXPOSE_A_STABLE",
+          "P_RESET_OR_DISABLE_MUST_RESTART_THE",
+          "P_WHEN_ENABLED_GENERATE_A_PERIODIC_VOLTAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "e6b47307c50edf738f81f8ace6f3c4116871c52d9cb46d0fe442a72a698fb2c7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a2923a5bbbe3203ac82c622267a8bcc8a183a371c10cf57de08729a271fab0d3",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETE",
+          "P_PERIOD_METRIC_MUST_EXPOSE_A_STABLE",
+          "P_RESET_OR_DISABLE_MUST_RESTART_THE",
+          "P_WHEN_ENABLED_GENERATE_A_PERIODIC_VOLTAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "a5fc937f5d7a929b8939cacf29b641c54385acc5da4d623104f5d64417564c14",
+        "fault_class": "phase_state_not_reset",
+        "mutation_bundle_sha256": "8f6e9e59f948a667ae1d53d2ace6c00673a52f5fc6d36e60f91351a8ff506fe3",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "reset and disable preserve oscillator phase and cycle state",
+        "violated_property_ids": [
+          "P_RESET_OR_DISABLE_MUST_RESTART_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "365417f901634f4aa2a2ad0b42f009bc0d10415c3c10b4483b1eb7b7771ce4ba",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "94d0aaf932af6a484667477cd89158091020bd4003c1568c9f8eb26d8017dcde",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETE",
+          "P_PERIOD_METRIC_MUST_EXPOSE_A_STABLE",
+          "P_RESET_OR_DISABLE_MUST_RESTART_THE",
+          "P_WHEN_ENABLED_GENERATE_A_PERIODIC_VOLTAGE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "383",
+    "hashes": {
+      "mutation_catalog_sha256": "38c20dc4f0a5107b4e2554b07aea9e02db03e013e859b23c4851dbe8929894b9",
+      "score_deck_sha256": "34872f92fd6a6d6a402fe581f52973637fb8507a5a9eb8648ee9da7aedcb95dc",
+      "task_certification_sha256": "b8d7679ef5979c6071d83539c17762d27594761beb5b4aa535180d3b81795594",
+      "task_record_sha256": "ec6c0b176112aafce12ae6d626dca675e6d7981cd00312602e39930e50305131"
+    },
+    "release_dir": "383-fixed-frequency-oscillator-source"
+  }
+}

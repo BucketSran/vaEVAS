@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l1_vco_phase_integrator_bugfix",
+  "task_id": "vbr1_l1_vco_phase_integrator_bugfix",
+  "release_entry_id": "vbr1_l1_vco_phase_integrator",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_vco_phase_integrator_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "phase_increments_with_control_voltage",
+    "phase_wraps_modulo_one",
+    "clock_toggles_when_phase_wraps"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "295",
+  "checker_task_id": "v4_295_power_mode_supply_current_metric",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "dc855f3d15c44cce7b25927a1e60569eafa3d7ef8bd1423745ef0d486a516202",
+    "checker_profile.json": "8dbca6fb93d16b31cd24f9862f893cdef2a72a40b4ece7241cf1b812ecc51535",
+    "derivation_manifest.json": "6642c5e794db1ff7461c8ec91231d153d6374dd2ab528ba8bca1722675096e3a",
+    "family_spec.json": "6ee2aacfa8863ca63b0768dcbce4d33aaa5cf4d0d4a1c2a4cb591b02ebf116d4",
+    "harness_spec.json": "6ef7449c25a51093da67e50aa531032cf6de80720fa768113c14e8aec8759f6a",
+    "mutation_catalog.json": "9f702ce068287f3b57a7da367d0a62a91ca68ec0849738058d97597c046c07ed",
+    "profiles/feedback.json": "c1cb2fcb88ed4769d2a304d5fdf826e343c74426f92ea56636a4b16f1756748f",
+    "profiles/score.json": "454b889af86c447629be13a09ff0052caef561caf3826150eb1471ef7a0d5f9d",
+    "score_tb.scs": "aeb05703d0cc77a898f1aeb744749e800f50a3cef22b37235226b6f2f569c861",
+    "solution_tree": "30f57af27bc02554969cda6a56ecf92a568ae36153f8de144865276a094b5fd9",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "7c1d3637a099d0aeedffd0e532dd861242d0fb03f4f898070ea58974a147c374",
+    "instruction.md": "d606bd9b8940321427931bd3de4ab0c063b7f7722ced884fd6432c303b691bbe",
+    "public_contract.json": "59766d6c8ecc64db157e1933c5ba1a7008c3a9b6b410c158bd9663b235647f29"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "dc855f3d15c44cce7b25927a1e60569eafa3d7ef8bd1423745ef0d486a516202"
+  },
+  "release_dir": "295-power-mode-supply-current-metric",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "498-power-mode-supply-current-metric",
+  "support_root": "",
+  "target_artifacts": [
+    "power_mode_supply_current_metric.va"
+  ]
+}

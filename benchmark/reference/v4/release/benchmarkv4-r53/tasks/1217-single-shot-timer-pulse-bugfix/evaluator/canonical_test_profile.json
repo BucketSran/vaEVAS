@@ -1,0 +1,30 @@
+{
+  "canonical_semantics_sha256": "ed43a781d1bf4e638283cd0ca78f36975ef0e106381d7b2a980a27572ad82fc2",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_DETECT_RISING_VIN_CROSSINGS_AT_VTRANS",
+    "P_ON_EACH_QUALIFYING_RISING_EDGE_DRIVE",
+    "P_USE_A_TIMER_TO_SCHEDULE_THE",
+    "P_GENERATE_ONE_OUTPUT_PULSE_PER_INPUT",
+    "P_HOLD_THE_LOW_OUTPUT_LEVEL_BETWEEN"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "217",
+    "feedback_semantics_sha256": "ed43a781d1bf4e638283cd0ca78f36975ef0e106381d7b2a980a27572ad82fc2",
+    "harness_spec_sha256": "5381f344622bc18b3a6cf4bad925bb3dfd7796558acd06e5ff331796b670ef5e",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "ed43a781d1bf4e638283cd0ca78f36975ef0e106381d7b2a980a27572ad82fc2",
+    "task_id": "v4-217"
+  },
+  "test_deck_sha256": "a537476a28eb8b7211490b7c8dea12d9f0cfbf3ec5d680136f9dfbc938271e4c"
+}

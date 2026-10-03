@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "power_mode_supply_current_metric.va"
+  ],
+  "canonical_dut_source_slug": "295-power-mode-supply-current-metric",
+  "checker_task_id": "v4_295_power_mode_supply_current_metric",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9af5688ce648d978fab6e07f11c8d0c3e2180b188edc121cc51e7fcc4455e25c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "809b134a2b7beeaa6850d464e3145fbd1276170b7f9fc73f3e500bc3dbf26704",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6638c375d244a0f556e4cf8f1ee8b345d6ba60d2f82841bb36ec0daa9a7f1ad2",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "295",
+  "family_spec_sha256": "6ee2aacfa8863ca63b0768dcbce4d33aaa5cf4d0d4a1c2a4cb591b02ebf116d4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1e949a71a59c41dd1a1b50b7242cca4398bd491ee6a2e260b83a4014194125f0",
+  "public_contract": "tasks/295-power-mode-supply-current-metric/public_contract.json",
+  "public_contract_sha256": "f2e6c5ace8dae79e36c383b07750d37653dcd61d2259187ed8f2aa2677843f23",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/295-power-mode-supply-current-metric",
+  "task_id": "v4-295"
+}

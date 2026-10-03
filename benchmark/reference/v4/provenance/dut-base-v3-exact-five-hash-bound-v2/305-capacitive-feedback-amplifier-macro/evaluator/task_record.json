@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "305",
+  "checker_task_id": "v4_305_capacitive_feedback_amplifier_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "ed51c1d057b2b21f5a97948be62fbb3e863e0014edd1bd1c427d23c4e370b19b",
+    "checker_profile.json": "a4e6ec1cf3f2f8e3b6928fe5af9b557c09fee2c74ab496beabfb9c40194e815e",
+    "derivation_manifest.json": "216a30ff07bbc717afe4fe389891a13f0fc15d4223683c7b7e1de045c29c45d5",
+    "family_spec.json": "b2955bc7070de09edcc5c46c76a24b2a511d717b669be2e28584e29ec399fc4f",
+    "harness_spec.json": "450a942ccdaab9b7081376e778346036fac1842d1772d29fa393e5ade42816e2",
+    "mutation_catalog.json": "e0e89bbc0d9fb831d42e3d235644e155e6580720e4021a81f30ce45229fba51c",
+    "profiles/feedback.json": "2cad933d22e02693c0762aff067629f3370eedfe92973e9e88eef63f5b115b63",
+    "profiles/score.json": "2b48acbb8e14d393fb3539130ac0b6709ae828f13187304e7715fcd66a289573",
+    "score_tb.scs": "62eb98afc2e09c6f9b562f9c8a0a23547056294af3011b7a033275396a237372",
+    "solution_tree": "d9ace2078917f7ef62f5df0ee36bc6a8c2a42fd6e2f58ee7920dd3021b216ca1",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "ae5b4fd391a2463ebb3a7c8e329a45eb08a844ece0bd3f6ed1d4f4e6136cb701",
+    "instruction.md": "b7f1cec7719362fea2d9d631d1ca80f6ce0c793ba72a1da9fe2b053c963ef0dc",
+    "public_contract.json": "c97cff57144b0702a4d58ec88f6834638f3f08ab89931e2e5191bf0749c93ef7"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "ed51c1d057b2b21f5a97948be62fbb3e863e0014edd1bd1c427d23c4e370b19b"
+  },
+  "release_dir": "305-capacitive-feedback-amplifier-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1003-capacitive-feedback-amplifier-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "capacitive_feedback_amplifier_macro.va"
+  ]
+}

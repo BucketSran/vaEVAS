@@ -1,0 +1,44 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_INTEREDGE_HOLD, P_SEEDED_REPEATABILITY satisfy the public contract; fault class fault_005_metric_scale_low is rejected",
+    "observed": "EVAS: property_id=P_RESET_COMMON_MODE category=observable_mismatch expected=satisfy_observable_contract observed=active_edges event=stimulus_relative_trace",
+    "violated_property_ids": [
+      "P_INTEREDGE_HOLD",
+      "P_SEEDED_REPEATABILITY"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r50-full400",
+    "checker_id": "v4_102_clocked_sine_source",
+    "report_path": "evidence/r50/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "7a469d9df476d622593836fff172130eb8a9c1857824dacf60ebc123666188e8",
+    "trace_row_count": 1198
+  },
+  "family_id": "102",
+  "inputs": {
+    "checker_profile_sha256": "64d5252fcf0fac86d3093564cd74efb9312f05cf4be945567792201d029aef92",
+    "harness_spec_sha256": "c3cb916ab1e55c8c14cf994e006749f95b0aa504b340533eee84ff34bd87e597",
+    "mutation_bundle_sha256": "a420d469650376a156e7c106657e577d430ddc8ad530c52c12b29b46a15cb350",
+    "profile_sha256": "88af42f480a4fa57f2a4bd75978ad8b375f11789e2a076b81bb0bef0a9efea51"
+  },
+  "mutation_id": "neg_005_metric_scale_low",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

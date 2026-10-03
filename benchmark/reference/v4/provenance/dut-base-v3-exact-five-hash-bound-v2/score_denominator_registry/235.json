@@ -1,0 +1,79 @@
+{
+  "family_id": "235",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_delayed_reset/certification.json",
+        "certification_sha256": "92a528071c13df2c3dcfa5889ef623a6fb0dcf690a49a81671da4b6800ddc3f1",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "695a1135807a4247b9cb935d0d07662fd5a5232237f5b5143e5b599a0c1d1f49",
+        "mutation_id": "neg_002_no_delayed_reset",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_delayed_reset/certification.json",
+        "trigger_condition": "Never schedules the delayed reset when both PFD sides have occurred.",
+        "violated_property_ids": [
+          "P_DELAYED_MUTUAL_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "3122158da72ce0bf75a43400890e8f87e373e4280b97d31e90d1e93ad44980d1",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "e7f0ef948989cded8e077db96fd6295fe5a6ebcc3607cf36bd44af8cffb03623",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Keeps the output at its trivial zero behavior and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS_AND_TRANSITIONS",
+          "P_PFD_STATE_AND_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_active_high_up_output/certification.json",
+        "certification_sha256": "28478936754320be594f77793ef2974384aff3b8de5327b0698b11a0ea153f11",
+        "fault_class": "active_high_up_output",
+        "mutation_bundle_sha256": "68c3a3e6efeb350d03bde1f08ff410365280d734a41ab7960149ea998cfe8263",
+        "mutation_id": "neg_003_active_high_up_output",
+        "source_catalog_certification_path": "negative_variants/neg_003_active_high_up_output/certification.json",
+        "trigger_condition": "Drives UB active-high instead of active-low.",
+        "violated_property_ids": [
+          "P_PFD_STATE_AND_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_zero_reset_delay/certification.json",
+        "certification_sha256": "85d3553308497a19735fdd0c6f8ad7325fe2080e472bdc31fab8e9134f9b029f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "a51381a1632db2d0835b6c3834fc2720d97a49ecb926bc14773144855dd17e82",
+        "mutation_id": "neg_004_zero_reset_delay",
+        "source_catalog_certification_path": "negative_variants/neg_004_zero_reset_delay/certification.json",
+        "trigger_condition": "Resets immediately instead of after the 100 ps delay.",
+        "violated_property_ids": [
+          "P_DELAYED_MUTUAL_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "e190f434cb37b06ae7f1b66fd216f2347091060275ff5db01d93ece7495469bb",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "e856baab828923dc990df26a3ee992c38676a4beab9bb16279bfe8e9cdbb6cd4",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "PFD Timer Reset: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS_AND_TRANSITIONS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_delayed_reset",
+    "canonical_dut_id": "235",
+    "hashes": {
+      "mutation_catalog_sha256": "cf3fabff215aeb309468d446bf4e472c1ae3eff5e246cc3b31482448d6b9a794",
+      "score_deck_sha256": "e9abf5aca50cba198ba444e23e48b12c51b4ac9cf18b3ead3f0b23d8d342001c",
+      "task_certification_sha256": "d1b721fe7fa217781f3d6c66eaa9589cd9c8014f3b66dd1d01c7f5c11415eff1",
+      "task_record_sha256": "4ca0a4c84eb134bf7a9f17fdc9c1b24269b0c477a41c58a9281d134e957e0c9b"
+    },
+    "release_dir": "235-pfd-timer-reset"
+  }
+}

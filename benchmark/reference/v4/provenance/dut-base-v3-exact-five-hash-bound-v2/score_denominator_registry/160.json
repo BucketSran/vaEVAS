@@ -1,0 +1,78 @@
+{
+  "family_id": "160",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_duty/certification.json",
+        "certification_sha256": "56234a02eb8c5d23513af7179964388264f2ca8748b5f40dc39d2b7283db29c7",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "57275ab2b070d09142dd2dfb37b0c04eaed6161a520492a95bceab439b96609d",
+        "mutation_id": "neg_003_wrong_duty",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_duty/certification.json",
+        "trigger_condition": "Drives high for only two counts.",
+        "violated_property_ids": [
+          "P_DIVIDER_DUTY_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "7c1fcebb4edbec1e68f0e8c99b6496a2e15af3cef2cadf8015ec797e2c55ed97",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "18c5843c9a02ccfad277bd045756034bdfee48d13041a86c0cfab5ca6e70d638",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Divide By 8 9 Switch: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "76c7c6e2c1fcba83074613d8a3f35752bb295a15225da6b6f2e36294a37f4ffd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "7f0b22fd0298b99ef7fc86415c0f15551596ce6dc7a8fc424dc251d3d5089df1",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_restore_to_divide_by_8/certification.json",
+        "certification_sha256": "87f376d362b5fa9b2821bb3eefa7cdefe70e3949128cec7c97083dd04ecb6d6d",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "eca53d70746f2dfddaf4588426d7a42fb3cc90edd3608ed21c453a3fdd0588fb",
+        "mutation_id": "neg_004_no_restore_to_divide_by_8",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_restore_to_divide_by_8/certification.json",
+        "trigger_condition": "Does not switch back to divide-by-8 when mc falls.",
+        "violated_property_ids": [
+          "P_MODULUS_SWITCHING_ON_MC_EDGES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_high_level/certification.json",
+        "certification_sha256": "89291113ba760ba36bdda0a3fe9fa71d46e7013655d1150bff50e0b63eb4cd6e",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "e8c8f68bf6300326bc152148653f30914db2c45f0d847b3484f8e9f5c7c93a3e",
+        "mutation_id": "neg_002_half_high_level",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_high_level/certification.json",
+        "trigger_condition": "Uses half the output high level.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_duty",
+    "canonical_dut_id": "160",
+    "hashes": {
+      "mutation_catalog_sha256": "b5d117dd13a74fd31445aee32228eb434ef40eed7185b95af3d5b546090ecfdf",
+      "score_deck_sha256": "425a9d36630143de392a4544b4d355eb356961ebd2678863889f401ed4309719",
+      "task_certification_sha256": "82d3f56600420afb96cf3808372cd01bd46a73ffad1dbcc7f3fd5b64ff000950",
+      "task_record_sha256": "a8921cb9c68130ba02a39536e5f536d318480d04143f861fbb254b841d5b8d05"
+    },
+    "release_dir": "160-divide-by-8-9-switch"
+  }
+}

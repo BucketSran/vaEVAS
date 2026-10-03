@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "245",
+  "checker_task_id": "v4_245_cal4bit_modulo",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "5ca42ae0f33494ddba0a376689530dc30671d547238ca73da1198773c7851090",
+    "checker_profile.json": "fd67ac701f7fd246b111f7934a3c93497f05da8e4e653c2c19398cd5419410e8",
+    "derivation_manifest.json": "4a20dda26c249e6ea4aa4917ca96b473002fb2ab451604da48623db8ab2da8aa",
+    "family_spec.json": "d5f6f732b066902c4c7a4a66f6388fb84cf8698255418b65c009ae5d05c9d940",
+    "harness_spec.json": "710a575e4a502adfae8a9d84cd25dad396fbe91621df91f2e6355cb2d7d90294",
+    "mutation_catalog.json": "5bbfcec01f8dad4937abf3c1d0feea086aa1827ebd94ffc70e1ef296f2fa08ed",
+    "profiles/feedback.json": "d02daee5daf725c44f942418620e0bcd86658dc0fa9b68892fabfefa6f9ee96b",
+    "profiles/score.json": "9af708c209f4447a541c5a7e855c04f12f5c2fcb9645903104cf8f53d74575b2",
+    "score_tb.scs": "a4b6fe5f748237c9a147f7435b573c34a028d1e7d01357865531fbcb04567c05",
+    "solution_tree": "aaf93c387430982477734b8771d4652caa02b71d18a8bfd5ce513808a014da53",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "028384e24b5b3e44df3580ec4ebce2115a707f421bfd06e63f618614e4e17730",
+    "instruction.md": "260ac3f229387238999baf20b4497db5721fea399acbc2255b71ac792485bcca",
+    "public_contract.json": "9944e8271e04be49aec5f757b791b17b448282abc5bcfbcfc692fd30f529402c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "5ca42ae0f33494ddba0a376689530dc30671d547238ca73da1198773c7851090"
+  },
+  "release_dir": "245-cal4bit-modulo",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "296-cal4bit-modulo",
+  "support_root": "",
+  "target_artifacts": [
+    "cal4bit_modulo.va"
+  ]
+}

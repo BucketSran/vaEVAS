@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "offset_bisection_driver.va"
+  ],
+  "canonical_dut_source_slug": "175-offset-bisection-driver",
+  "checker_task_id": "v4_175_offset_bisection_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f5295b90fb38c7ae944f2189fd683da545a59ab9e90bc175348bdaaf1cff2b67",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "3ba0ed5a1b0aa876f10988813c0dc880a712285a5ec3c27116ba2599af2ef950",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1827968dd6ef58f1664e9b51c0f8d5824a222c3cf2f33885615fba373e68c987",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "175",
+  "family_spec_sha256": "f19770976980278d70d8c2e7ddfca2cb196dcdbf2fb3206b76fdfd64c9121697",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "dccddbf00138e59846a8c5af09a2d9d8cade0cb0d0d89450749a2035abe04b57",
+  "public_contract": "tasks/1175-offset-bisection-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "aef6da6f0f7c60920dd7afd5dffe9ffa61df73a2ae79368a711ec51a16ca14c6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1175-offset-bisection-driver-bugfix",
+  "task_id": "v4-1175"
+}

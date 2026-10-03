@@ -1,0 +1,35 @@
+syntax:
+  must_include:
+    - "transition("
+    - "@(cross("
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "ramp_code_coverage"
+    - "monotonic_reconstruction"
+    - "nonuniform_dnl_metric"
+    - "inl_metric_matches_reconstruction_error"
+    - "dnl_metric_matches_step_error"
+  public_observables:
+    - "clk"
+    - "rst"
+    - "vin"
+    - "code"
+    - "recon"
+    - "dnl"
+    - "inl"
+parity:
+  reference: "spectre"
+  status: "certified"
+  notes:
+    - "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

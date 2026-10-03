@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "073",
+  "checker_task_id": "v4_073_bias_voltage_generator_with_enable_trim",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "ec91042427d8c0c0f7cc6b49f42f30bcc656d4cb6c16eb15ea1eb43c2170eafd",
+    "checker_profile.json": "feda42009a829f4ce7ddbd62a9a5612049786182782f7aada85500292116ddc8",
+    "derivation_manifest.json": "6eca32160a3edcedfa888ddcea7edcb278d041859d4858970ecddd554e94a849",
+    "family_spec.json": "90d54d0c495e7076dff22333fa2a40d2d0e526d484c2652c4922b89f1f37239a",
+    "harness_spec.json": "5a1435799c3c940317f550fe2bb00a55101610ca6f4c7fcbe9d08d68f04072c9",
+    "mutation_catalog.json": "5f9b334266e2649e9c3ca3fbefffad8b020b7bf2bb021aef530061444fbfaae9",
+    "profiles/feedback.json": "ca7eb3a528ae29cca276a6ebf1d2c8cb82edc81140fd75c47f8905ea6d46a6c5",
+    "profiles/score.json": "7a2551a283c57a71cf89d90977a8b106cf207c26ea3b4839d654faf23b919d92",
+    "score_tb.scs": "e26be8e98fe137c4726cec898901a8e2878df107183ae9d22c388c8e292904b7",
+    "solution_tree": "b4b5abd22c67abc157ce0d91f15c9302a01d90a05be6fa2e17291b48342f71f5",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0071dc872a4e858c30713e0b34c726cfeaa1def84a4d44c82d4ef7eb9c1fe8b2",
+    "instruction.md": "9d8e36f64750e493cbf0705511bab44e6e30caa5858e3abb8de95ef89cf5e2ad",
+    "public_contract.json": "bb2183c05ce906e7fc45d4c531f7be0b3bed720a2deb64cfc2cbfb116b7091cf"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "ec91042427d8c0c0f7cc6b49f42f30bcc656d4cb6c16eb15ea1eb43c2170eafd"
+  },
+  "release_dir": "073-bias-voltage-generator-with-enable-trim",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "073-bias-voltage-generator-with-enable-trim",
+  "support_root": "",
+  "target_artifacts": [
+    "bias_voltage_generator_with_enable_trim.va"
+  ]
+}

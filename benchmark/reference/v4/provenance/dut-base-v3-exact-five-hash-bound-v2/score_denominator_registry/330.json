@@ -1,0 +1,78 @@
+{
+  "family_id": "330",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_post_tap_polarity_matches_pre/certification.json",
+        "certification_sha256": "5d765b7f1764d8bcfd8fa91cc46b9a0ad6a237ac578d070aa10a2c9af109f279",
+        "fault_class": "post_tap_update_polarity_matches_pre_tap",
+        "mutation_bundle_sha256": "bd29bcb9f17604f2b1987a937c27523dc0224d2fc2f91f0215f428f1e283b74a",
+        "mutation_id": "neg_002_post_tap_polarity_matches_pre",
+        "source_catalog_certification_path": "negative_variants/neg_002_post_tap_polarity_matches_pre/certification.json",
+        "trigger_condition": "an enabled rising clock edge samples err_in on either side of vcm",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_main_cursor_polarity_reversed/certification.json",
+        "certification_sha256": "f8834126ab834ded9009f3a45432053ced71e5490b13624f2955ac964b667a03",
+        "fault_class": "main_cursor_correction_polarity_reversed",
+        "mutation_bundle_sha256": "5aeae6ee1860929d652adfa27713f93c4e8b4203da6ee6b2cb6bdb5fbbd7bbe9",
+        "mutation_id": "neg_003_main_cursor_polarity_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_003_main_cursor_polarity_reversed/certification.json",
+        "trigger_condition": "the current tap state and err_in produce a nonzero cursor correction",
+        "violated_property_ids": [
+          "P_DRIVE_MAIN_OUT_AS_THE_CURRENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_adapt_metric_omits_post_tap/certification.json",
+        "certification_sha256": "6e9beb9a6208e37ac302ad9752afa1bbf225abba4bbe69be349b2ff67e907dc4",
+        "fault_class": "adapt_metric_omits_post_tap_magnitude",
+        "mutation_bundle_sha256": "9d596f9fddee2c040cb9b4036c7863c60ee8bfc63a05733b9d46c8af86414c53",
+        "mutation_id": "neg_004_adapt_metric_omits_post_tap",
+        "source_catalog_certification_path": "negative_variants/neg_004_adapt_metric_omits_post_tap/certification.json",
+        "trigger_condition": "the post-cursor tap magnitude is nonzero",
+        "violated_property_ids": [
+          "P_EXPOSE_AGGREGATE_TAP_MAGNITUDE_ON_ADAPT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_done_after_one_update/certification.json",
+        "certification_sha256": "5daee322b8e976dd3f37418b3be67a07ad4940f0ebceaf7b30f2f3924a0d2eca",
+        "fault_class": "adaptation_done_qualification_too_short",
+        "mutation_bundle_sha256": "f2e2615e6f0f18c384b35c22a70d2107651f26702aa4b8d2308e212a922ae5c3",
+        "mutation_id": "neg_005_done_after_one_update",
+        "source_catalog_certification_path": "negative_variants/neg_005_done_after_one_update/certification.json",
+        "trigger_condition": "the first enabled FFE adaptation update completes",
+        "violated_property_ids": [
+          "P_ASSERT_DONE_AFTER_SIX_ENABLED_ADAPTATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_clear_retains_pre_tap_offset/certification.json",
+        "certification_sha256": "8061e317bdd996539bb12745b31df9877a70ac3f2dc66634e3804f132f4723f6",
+        "fault_class": "clear_state_retains_pre_tap_offset",
+        "mutation_bundle_sha256": "f9185b4cbacb2ca3d3c785f2789c8fcea0674699eedd4688ee1355a0c0d92208",
+        "mutation_id": "neg_001_clear_retains_pre_tap_offset",
+        "source_catalog_certification_path": "negative_variants/neg_001_clear_retains_pre_tap_offset/certification.json",
+        "trigger_condition": "reset is asserted or enable is low",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_post_tap_polarity_matches_pre",
+    "canonical_dut_id": "330",
+    "hashes": {
+      "mutation_catalog_sha256": "4fa39106d2f3d6223df27ff31dd77b8169603f191058dbff61f6e86fd4d612be",
+      "score_deck_sha256": "56f01dd82a87d87b11041deaf86e5a1d95d382b936b3bc49a4341cb7ee89d73e",
+      "task_certification_sha256": "e2f7de10d5ea5d9df7697eb56f9081fde243f70f39c9c0c0e6b5525d14d67561",
+      "task_record_sha256": "6b40a8750d30123088e9139ab666ed2b9fa07ff9dccc5eaa6c89e60285c85169"
+    },
+    "release_dir": "330-ffe-tap-adaptation-monitor"
+  }
+}

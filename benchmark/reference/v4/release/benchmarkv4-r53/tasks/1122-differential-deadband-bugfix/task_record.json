@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_deadband.va"
+  ],
+  "canonical_dut_source_slug": "122-differential-deadband",
+  "checker_task_id": "v4_122_differential_deadband",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8850dcf149281f40feb68f1730422c57c7dfb74890e761d7db58410656775cf5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1b19c7095d5f93062a053a24d2a819cfa6a75aac67bb1cb90ad696a5d4a0dba3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "13f6b8e69a18c39649e66c99afdd5c13198955222c8cb8075e8f761c795947f9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "122",
+  "family_spec_sha256": "754381f1f80daa872bac16f3997b744400afb99ab316ed5bd7f45a18ff7b27ec",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a27bfc04dcad484f3fb7a84188a27330aa7a83c601b553f243586e367fa91561",
+  "public_contract": "tasks/1122-differential-deadband-bugfix/public_contract.json",
+  "public_contract_sha256": "e9c3b58936a229b78d777d452de17302dc0cc603983e6c1f4638a63825920c54",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1122-differential-deadband-bugfix",
+  "task_id": "v4-1122"
+}

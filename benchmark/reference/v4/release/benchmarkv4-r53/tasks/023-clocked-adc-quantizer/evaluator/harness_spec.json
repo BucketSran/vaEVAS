@@ -1,0 +1,73 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "flash_adc_3b.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=230n maxstep=200p"
+    ],
+    "body_lines": [
+      "V_VDD (vdd 0) vsource dc=0.9",
+      "V_VSS (vss 0) vsource dc=0",
+      "V_VIN (vin 0) vsource type=pwl wave=[0 0 220n 0.9]",
+      "V_CLK (clk 0) vsource type=pulse val0=0 val1=0.9 period=10n delay=100p rise=20p fall=20p width=5n",
+      "XDUT (vdd vss vin clk dout2 dout1 dout0) flash_adc_3b"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "vdd",
+      "vss",
+      "vin",
+      "clk",
+      "dout2",
+      "dout1",
+      "dout0"
+    ]
+  },
+  "family_id": "023",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "aebdce731c61aeabc842457d1ffb4327aad131334335efe627f1066676b7c384",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "f837eb0dd27272624ae6cbcb9899d3ebde247b4e719820af5da190dd59c5cd97",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_RISING_EDGE_QUANTIZATION",
+    "P_CODE_CLAMP",
+    "P_BINARY_RAIL_ENCODING",
+    "P_CODE_MONOTONICITY",
+    "P_SAMPLE_HOLD"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "2e3a0b366d65ec7f3e876580ac1e773a26a87d304a7bf8ef8f9c9ace91053934",
+    "family_spec_sha256": "4d47713ebf463474cd85f8f706805824495be8c3df1d063bf675ae0906de6e7e"
+  },
+  "task_id": "v4-023"
+}

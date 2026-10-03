@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "transition("
+    - "vref"
+    - "vss"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "safe_time_output_levels_match_expected_segmented_codes"
+    - "output_is_monotonic_across_programmed_codes"
+    - "thermometer_segment_weight_is_four_lsb_steps"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: thermometer segment bits have half weight."
+parity:
+  required: true
+  tolerance_notes: "DAC levels use safe-time samples away from PWL code transitions with 20 mV absolute tolerance."

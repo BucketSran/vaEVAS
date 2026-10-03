@@ -1,0 +1,110 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "vin_src.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=2u maxstep=8n"
+    ],
+    "body_lines": [
+      "// gain_extraction smoke testbench",
+      "// 50 MHz clock, ACTUAL_GAIN=8.64, DITHER_AMP=0.014063. Run 2us.",
+      "// Check: std(vamp_diff) / std(vin_diff) > 4.0.",
+      "parameters vdd=0.9 ACTUAL_GAIN=8.64 DITHER_AMP=0.014063 fs=50e6 fin=1e6 VIN_NOISE=0.01",
+      "Vvdd (vdd 0) vsource dc=vdd",
+      "Vvss (vss 0) vsource dc=0",
+      "// 50 MHz clock",
+      "Vclk (clk 0) vsource type=pulse val0=0 val1=vdd period=20n delay=5n rise=1n fall=1n width=9n",
+      "// Reset deasserts at 40ns",
+      "Vrst_n (rst_n 0) vsource type=pwl wave=[0 0  39.5n 0  40n vdd  2u vdd]",
+      "Ven    (en    0) vsource dc=vdd",
+      "// Public support modules are mounted read-only from the declared support contract.",
+      "// Clocked noisy sine input plus public parameter-contract probes.",
+      "// A/B must agree for the same seed, ALT must respond to a different seed,",
+      "// and SIGMA0 must reduce to the sampled sine without perturbation.",
+      "IVIN_SEED_A (clk rst_n vinp vinn) vin_src vdd=vdd vth=0.45 ampl=0.02 freq=fin sigma=VIN_NOISE SEED=17",
+      "IVIN_SEED_B (clk rst_n vinp_seed_b vinn_seed_b) vin_src vdd=vdd vth=0.45 ampl=0.02 freq=fin sigma=VIN_NOISE SEED=17",
+      "IVIN_SEED_ALT (clk rst_n vinp_seed_alt vinn_seed_alt) vin_src vdd=vdd vth=0.45 ampl=0.02 freq=fin sigma=VIN_NOISE SEED=29",
+      "IVIN_SIGMA0 (clk rst_n vinp_sigma0 vinn_sigma0) vin_src vdd=vdd vth=0.45 ampl=0.02 freq=fin sigma=0 SEED=17",
+      "// LFSR (drives dither)",
+      "ILFSR (dpn vdd vss clk en rst_n) lfsr seed=42",
+      "// Dither adder",
+      "IDITH (vinp vinn dpn vdin_p vdin_n) dither_adder vdd=vdd vth=0.45 DITHER_AMP=DITHER_AMP",
+      "// Fixed-gain amplifier",
+      "IAMP  (vdin_p vdin_n vamp_p vamp_n) gain_amp_fixed vdd=vdd ACTUAL_GAIN=ACTUAL_GAIN"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "clk",
+      "rst_n",
+      "vinp",
+      "vinn",
+      "vamp_p",
+      "vamp_n",
+      "vinp_seed_b",
+      "vinn_seed_b",
+      "vinp_seed_alt",
+      "vinn_seed_alt",
+      "vinp_sigma0",
+      "vinn_sigma0"
+    ],
+    "support_include_templates": [
+      "ahdl_include \"{support_source_root}/{support_artifact_path}\""
+    ]
+  },
+  "family_id": "102",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "d73e16ade8abf14c4e039bd77e9d647ea756881d130372041a4167455d2b14b5",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "b378e48a6e45a8e2b2097abdf91647bf6524614fcc811805165122875319933a",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_RESET_COMMON_MODE",
+    "P_RISING_EDGE_SAMPLE",
+    "P_SAMPLED_SINE",
+    "P_REFERENCE_SIDE_COMMON_MODE",
+    "P_INTEREDGE_HOLD",
+    "P_SEEDED_REPEATABILITY"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "b28c64c108cd4cbbc17f1462ce6cd59edc9e3fa8a7979036ebd7110375f02354",
+    "family_spec_sha256": "0597281586c6201a3efc1c0e0a5e8b46dfad7f89249fd733097e9732917bf7f6"
+  },
+  "support": {
+    "artifact_paths": [
+      "lfsr.va",
+      "dither_adder.va",
+      "gain_amp_fixed.va"
+    ],
+    "source_root": "./support"
+  },
+  "task_id": "v4-102"
+}

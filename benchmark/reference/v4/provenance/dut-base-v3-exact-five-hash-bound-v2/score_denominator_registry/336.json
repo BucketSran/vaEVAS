@@ -1,0 +1,79 @@
+{
+  "family_id": "336",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_magnitude_wrong/certification.json",
+        "certification_sha256": "d8c2e5615fa0649835db95de83ec1140797980316254182d5749c9ceab2480dd",
+        "fault_class": "magnitude_wrong",
+        "mutation_bundle_sha256": "5aa6aad99fd274c662328f3732e7dfb7994db8140161c5d13b6c2f4623d73c5d",
+        "mutation_id": "neg_001_magnitude_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_magnitude_wrong/certification.json",
+        "trigger_condition": "magnitude_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_release_too_fast/certification.json",
+        "certification_sha256": "f4daae3497cc2cccd7ffd68c43b73e4ddb4faa648c0b9bd856ad4e06c2977539",
+        "fault_class": "release_too_fast",
+        "mutation_bundle_sha256": "8904c04dfa16a9c51779eaa609d2d5dcf67ce38b7931e3411f43a33b379f7aea",
+        "mutation_id": "neg_005_release_too_fast",
+        "source_catalog_certification_path": "negative_variants/neg_005_release_too_fast/certification.json",
+        "trigger_condition": "release_too_fast",
+        "violated_property_ids": [
+          "P_DRIVE_ENVELOPE_WITH_THE_TRACKED_MAGNITUDE",
+          "P_USE_A_FASTER_ATTACK_STEP_WHEN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_valid_stuck_low/certification.json",
+        "certification_sha256": "4d6c274dc296527752ac0ef40c21c0ff065d6f51babc601830f00f8f3c71d326",
+        "fault_class": "valid_stuck_low",
+        "mutation_bundle_sha256": "2139b52f566fba9ad1710a6c11ff00fb943548b49d03b65aa41c50486cceb236",
+        "mutation_id": "neg_003_valid_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_003_valid_stuck_low/certification.json",
+        "trigger_condition": "valid_stuck_low",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_clear/certification.json",
+        "certification_sha256": "46181fb7b327101472daf10de770ef681c0a249f20e274ac326aac3f58258cc7",
+        "fault_class": "missing_clear",
+        "mutation_bundle_sha256": "7aa91a9fa13e1a7074ce81f971f43b31337ff18ee953852ab28500979d3ecd7c",
+        "mutation_id": "neg_004_missing_clear",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_clear/certification.json",
+        "trigger_condition": "missing_clear",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_attack_metric_stuck_low/certification.json",
+        "certification_sha256": "c71f3c5550fe5de3fcbc7909d7f59fa0aafb4871038f7ef560903021821cbd0a",
+        "fault_class": "attack_metric_stuck_low",
+        "mutation_bundle_sha256": "d47b93bdd44d10480e270fdc4fd06c1d30a2a532e58bba8da44268c4bf2ddd35",
+        "mutation_id": "neg_002_attack_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_002_attack_metric_stuck_low/certification.json",
+        "trigger_condition": "attack_metric_stuck_low",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_magnitude_wrong",
+    "canonical_dut_id": "336",
+    "hashes": {
+      "mutation_catalog_sha256": "1372e30c22c2cb5e366e69c503f7913637c871ab3ca18d55a62dde6540b3c130",
+      "score_deck_sha256": "546e8e144a15ed0fd45199b05b579bf3f074f08268306721e572166a99f50b88",
+      "task_certification_sha256": "b70402d817fede756a59ab339765399ca58befe041a033721a129cde3f4ee403",
+      "task_record_sha256": "0ef790e51db5338b85d69e01ab8cd420fc2e6966253d958af22c4847732ec0f3"
+    },
+    "release_dir": "336-rf-envelope-detector-attack-release"
+  }
+}

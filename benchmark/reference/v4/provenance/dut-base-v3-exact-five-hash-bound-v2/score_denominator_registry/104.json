@@ -1,0 +1,78 @@
+{
+  "family_id": "104",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "f44328a629ae73f413c5348b1c0bdbdd45403da10ba1ba75c6d81ce5795ea1a7",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "41ecf372486516c9b3d56009669ba501b475e6b24efdd2055e27ad50eeed011b",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Existing concrete negative.",
+        "violated_property_ids": [
+          "P_RISING_EDGE_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_falling_edge_sample/certification.json",
+        "certification_sha256": "90f5164f22a841955322068da738dad335a8bd9d91ebd695a5e265620208c7f0",
+        "fault_class": "fault_003_falling_edge_sample",
+        "mutation_bundle_sha256": "2b7619d33e756d54b506e5aea64fda9150d52065f1480a83e2b3eeeb0a42a51f",
+        "mutation_id": "neg_003_falling_edge_sample",
+        "source_catalog_certification_path": "negative_variants/neg_003_falling_edge_sample/certification.json",
+        "trigger_condition": "Samples on the falling clock edge.",
+        "violated_property_ids": [
+          "P_NO_FALLING_EDGE_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_gain_hold/certification.json",
+        "certification_sha256": "1355c7323cf0993c0cf3e15b111553b9c1297b3f07942af6e2c90bc412da29a2",
+        "fault_class": "fault_004_half_gain_hold",
+        "mutation_bundle_sha256": "20ee1a3f9bdd2d2256275ac44dbab21b07b49582b08e23a6e090e0ef9a9266bd",
+        "mutation_id": "neg_004_half_gain_hold",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_gain_hold/certification.json",
+        "trigger_condition": "Samples the right edge but stores half the input voltage.",
+        "violated_property_ids": [
+          "P_UNITY_SAMPLE_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "d7128331acf7d922a49383a16a9a219155c3120a15c4085494a2b6b8bbc6562c",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "d58cb8c8099eaabb9695c2212a8c89150058adc63d222b420aa18bc900e6e449",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Ideal Sample And Hold: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_PARAMETERIZED_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_transparent_track/certification.json",
+        "certification_sha256": "c413b5ca8aa0fb753779617f45a4644cdd37bb2c20f027c6da65253cecca24cd",
+        "fault_class": "fault_002_transparent_track",
+        "mutation_bundle_sha256": "3fef478ee55f3b03ac7ede54085da369f4a2198fbadf063e091dec4e193f04ad",
+        "mutation_id": "neg_002_transparent_track",
+        "source_catalog_certification_path": "negative_variants/neg_002_transparent_track/certification.json",
+        "trigger_condition": "Tracks input continuously instead of holding sampled values.",
+        "violated_property_ids": [
+          "P_INTEREDGE_HOLD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "104",
+    "hashes": {
+      "mutation_catalog_sha256": "2eaf56e24fd132eb0261d2560f4a1c83a6424d10b0851ce74c93fbcbc2d15769",
+      "score_deck_sha256": "0ec6ff394b132042b3f7e1b12fccc86a1faa176dea185b7a82ccce0d418d32de",
+      "task_certification_sha256": "4f27fc988a85f1a02cba62654a3e0226b3f37a05620055a6ded68414583161d5",
+      "task_record_sha256": "19ea6d25acc32da3c82328a3294770df3383dd07d5d6023047adbce7f2443087"
+    },
+    "release_dir": "104-sample-and-hold-ideal"
+  }
+}

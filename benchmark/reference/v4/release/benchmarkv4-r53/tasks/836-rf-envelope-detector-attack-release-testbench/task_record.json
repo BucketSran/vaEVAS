@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "336-rf-envelope-detector-attack-release",
+  "checker_task_id": "v4_336_rf_envelope_detector_attack_release",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "74ec117610ab69a241f41c123321fb1332c68e670846315b9a08f5f2b00b5a2e",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3391a629b29b889cc479b240d90aafc7cbcdaeef9026d26a9cfc2958e6c2e614",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "74ec117610ab69a241f41c123321fb1332c68e670846315b9a08f5f2b00b5a2e",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d09be22301399a07df4700f8d9602ddcad119e179e682d877e65e54734f299cf",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "12e48642dcb08d9529f1855754277a9f2958c4152679341ac16c72b324f66128"
+  },
+  "family_id": "336",
+  "family_spec_sha256": "8417f07420a9b4cc3195a641219dd0f233b6109971f5ec88a029d343092d8ad6",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3f2b178eeb5a0d9b7cabc8f22ca9111867ea04138d1002acf8ed64fe491a0980",
+  "public_contract": "tasks/836-rf-envelope-detector-attack-release-testbench/public_contract.json",
+  "public_contract_sha256": "2b12aea4961f93cf025d84121468e0e98221837d7a42561fc03b49627735d54f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/836-rf-envelope-detector-attack-release-testbench",
+  "task_id": "v4-836"
+}

@@ -1,0 +1,78 @@
+{
+  "family_id": "195",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_conv_level/certification.json",
+        "certification_sha256": "9cfd008195c0e8c48939ed893e25204247ba1a476236648daf654e55ba60a6a7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a08c84d74f1d186237391f6f7d0403ebc1c3902e8c4390c337ba8ee705bb62a8",
+        "mutation_id": "neg_002_half_conv_level",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_conv_level/certification.json",
+        "trigger_condition": "Drives conversion pulses at half amplitude.",
+        "violated_property_ids": [
+          "P_CONVERSION_OUTPUT_TIMING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swap_nc_res/certification.json",
+        "certification_sha256": "a4e05b06c533da617dfad8a528eda2f4c99a552aed3d793488c8a5050ef698f8",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "990ebdbc2b7d5081c3f49cc3b084c8a760e195ac9cd6e689546b606a37fe0aba",
+        "mutation_id": "neg_003_swap_nc_res",
+        "source_catalog_certification_path": "negative_variants/neg_003_swap_nc_res/certification.json",
+        "trigger_condition": "Swaps nc and res output routing.",
+        "violated_property_ids": [
+          "P_NONOVERLAP_AND_RESIDUE_WINDOWS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_second_sample/certification.json",
+        "certification_sha256": "69b3fb7b60ab726fa0f383b618e672e569127186e78b920cd401955db49c7b03",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "b97bad43c973c019752c37f6335ca4c26811c995b77cc065087654bd2287c811",
+        "mutation_id": "neg_004_missing_second_sample",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_second_sample/certification.json",
+        "trigger_condition": "Removes the second sample pulse from the 16 ns sequence.",
+        "violated_property_ids": [
+          "P_RESET_AND_SAMPLE_WINDOWS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "70396330725cb96d1b7f7eae4f041be9d3d6bf0e761fb70554c1e07123018853",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "7b4a45bb8f6612890d077f0d9991059dced9ac54a7a37fa15a88b6d2808d34a4",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Clock Sample 1600n Sequencer: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_PERIODIC_16NS_FRAME"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "6264a78abb79ed4cc9a73385134a687f3e630592f28315fb3890da0d714ddf58",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "61dd560d611b134c4f9815e749e6c712898ed25c8c5c8c8427756d1e4ef2cc37",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CONVERSION_OUTPUT_TIMING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_half_conv_level",
+    "canonical_dut_id": "195",
+    "hashes": {
+      "mutation_catalog_sha256": "5f4e6e646ce7e68881899b7cac266340d6d6a690d60e43ab659eaa9876424c4d",
+      "score_deck_sha256": "8e5a7088a16e19db50435d106b85372d8d74a463463bc44ca6eb93d0455e359e",
+      "task_certification_sha256": "382452e8aac892350b9ce7c238fce5cf3ba689da30d4e0cb16adbf9290578764",
+      "task_record_sha256": "76b2128567bd5d97867e0e37f749e613a7af6d1295dda19bc37b78d341352295"
+    },
+    "release_dir": "195-clock-sample-1600n-sequencer"
+  }
+}

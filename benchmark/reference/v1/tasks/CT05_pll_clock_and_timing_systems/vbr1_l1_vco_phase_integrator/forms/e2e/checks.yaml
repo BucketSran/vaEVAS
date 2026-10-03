@@ -1,0 +1,27 @@
+syntax:
+  must_include:
+    - "@(initial_step"
+    - "@(timer("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "phase_span_covers_nearly_full_wrap"
+    - "clock_toggles_on_phase_wrap"
+    - "late_edge_rate_exceeds_early_edge_rate"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."
+    - "Score phase-span and edge-rate behavior across stable control-voltage intervals."

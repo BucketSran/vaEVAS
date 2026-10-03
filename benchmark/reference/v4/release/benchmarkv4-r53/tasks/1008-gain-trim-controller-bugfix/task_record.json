@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "gain_trim_controller.va"
+  ],
+  "canonical_dut_source_slug": "008-gain-trim-controller",
+  "checker_task_id": "v4_008_gain_trim_controller",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "dbfa0dfaef34a1eccb46d390b04f0d8bd9402f569715e1633f5da5861e8b8b7e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "eb07bdc2a61b2f1971768bde066fb36e0f1ab5a70bfc1524a7cec3c3bef7ba27",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5a0cc96d17fdb25a1515e496e2d631a1628763caf95c0c20a017caa2f52ea365",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "008",
+  "family_spec_sha256": "aea6623ab44ad6de1c689c766cf5f825777c81dead35a187355ad2025890f299",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f7e979c11f7c691a96a1720daa4b088fe9d36f7bf512faa7096c92a6acae9193",
+  "public_contract": "tasks/1008-gain-trim-controller-bugfix/public_contract.json",
+  "public_contract_sha256": "8594b2b0b4ee81eb9f7af45ad621684e239c6850be21a76e76121367a3311bb3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1008-gain-trim-controller-bugfix",
+  "task_id": "v4-1008"
+}

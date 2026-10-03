@@ -1,0 +1,79 @@
+{
+  "family_id": "319",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_unary_transfer_scale_wrong/certification.json",
+        "certification_sha256": "b287be3893121a4487f3e21be4e65e42c2e1e31ff2f70acb8a1454d5c7909aee",
+        "fault_class": "unary_transfer_scale_wrong",
+        "mutation_bundle_sha256": "f64b1936dcfd25f721879e59785e4a25076ffded3399f3fb275caf550e839eb1",
+        "mutation_id": "neg_001_unary_transfer_scale_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_unary_transfer_scale_wrong/certification.json",
+        "trigger_condition": "unary_transfer_scale_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_glitch_metric_missing/certification.json",
+        "certification_sha256": "a4675f9de4a0f28dbd8d24e465b270b229ef00c85b03453bb27ab2781f92217b",
+        "fault_class": "glitch_metric_missing",
+        "mutation_bundle_sha256": "180564469675d2cbd89f4b8b9125b8510cd7b1b3225d54c34a7c643848bcc313",
+        "mutation_id": "neg_002_glitch_metric_missing",
+        "source_catalog_certification_path": "negative_variants/neg_002_glitch_metric_missing/certification.json",
+        "trigger_condition": "glitch_metric_missing",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "2558583db4db1c5615ef51257d9f2f8b013aa374ed8a7882e12d8542d7feaf4d",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "394f81fbc030faf1ce2524298922b6e3e13d2c02bcaec6a038634888abaa4d33",
+        "mutation_id": "neg_003_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_PROPORTIONAL_TO_THE_DECODED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_valid_flag_missing/certification.json",
+        "certification_sha256": "5dbdebadb25e501340a4ee4f386fcbe682f842b8e77858c956f49302b686d047",
+        "fault_class": "valid_flag_missing",
+        "mutation_bundle_sha256": "02c1aedcf8c8caae2e499404bca6cf95bb17004b4d6ba1cd328f6181761eedfc",
+        "mutation_id": "neg_004_valid_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_004_valid_flag_missing/certification.json",
+        "trigger_condition": "valid_flag_missing",
+        "violated_property_ids": [
+          "P_DRIVE_GLITCH_METRIC_PROPORTIONAL_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_code_mapping_reversed/certification.json",
+        "certification_sha256": "7f66aabbcbea4c3b5ba3ed99125500d0eb848c03becf893947983cf9b86ff414",
+        "fault_class": "code_mapping_reversed",
+        "mutation_bundle_sha256": "b7eb178883bf93465b1306b59ff92cd2a5c96853686c5d9c7bb5ddddd089322f",
+        "mutation_id": "neg_005_code_mapping_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_005_code_mapping_reversed/certification.json",
+        "trigger_condition": "code_mapping_reversed",
+        "violated_property_ids": [
+          "P_ASSERT_VALID_AFTER_THE_FIRST_ENABLED"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_unary_transfer_scale_wrong",
+    "canonical_dut_id": "319",
+    "hashes": {
+      "mutation_catalog_sha256": "400218ad054855993c0180a181324f874fe424a1c2818d5a43ce2cc4ee1d09db",
+      "score_deck_sha256": "7d5ec9f790ca71ed36f6bcb89f6befb5b20f24195117cfd4f5a9c3652e210934",
+      "task_certification_sha256": "a06a8aa8c668da101b81db72393a28b2eba38cbae70a7c657ea54daafd336289",
+      "task_record_sha256": "c980c9ab82e409b2b30be1b2f180d2000552e64b433e21ccf9aa611b5872540a"
+    },
+    "release_dir": "319-unary-dac-glitch-energy-metric"
+  }
+}

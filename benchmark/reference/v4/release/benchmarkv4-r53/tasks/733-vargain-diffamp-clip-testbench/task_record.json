@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "233-vargain-diffamp-clip",
+  "checker_task_id": "v4_233_vargain_diffamp_clip",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "89d47ff6b5b9b2e5af1992c750b892b56cb37129bad2ffbe5228555c551bfe7a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "f6557171a2a7ab57b69e3e610d865912d5c6e0bb25cf1d45798908a00faf4eef",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "89d47ff6b5b9b2e5af1992c750b892b56cb37129bad2ffbe5228555c551bfe7a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "5cca5e3f1ef674b5809366edebf7eef8a835ebd0964c4eb57c7826fac99b213b",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7c8893fe80c921acc9e23b4b31bc410b71f9a4812b297616b6f64a0b59cdddb7"
+  },
+  "family_id": "233",
+  "family_spec_sha256": "947bd0b1fdaec3993c8c8144533822ec3505089428d7d76cdac87a119915b5e5",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8c0979172e739cc000cdc864813dc2132eb7ef3a562e21788f4064b0b64c6891",
+  "public_contract": "tasks/733-vargain-diffamp-clip-testbench/public_contract.json",
+  "public_contract_sha256": "71b9b04682add1c5546abb12ee445f5a1a562e5c8aed38b8797a084d6730b878",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/733-vargain-diffamp-clip-testbench",
+  "task_id": "v4-733"
+}

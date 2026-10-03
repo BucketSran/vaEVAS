@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "fixed_frequency_oscillator_source.va"
+  ],
+  "canonical_dut_source_slug": "383-fixed-frequency-oscillator-source",
+  "checker_task_id": "v4_383_fixed_frequency_oscillator_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d7f4c47aa2d8c488bacdd190e15b5de80e33222fa25d419b7cee52fc6b59f0f3",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "96a26509ddaca18dcd893f3d5182db36fd07075f936366c3c237e87ba6b91fb1",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "30becf5b585b2df9f48406247f1c9ca31e6077c10469424782a0f9a3fc27ef80",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "383",
+  "family_spec_sha256": "1469ed97771bc37e05a88b7460ae54cb22f6885714e7c2f5b8a6a37b24896f5d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f87d79a4ab5718017023842dfd5f250d4a96deb818bed770294c47f57c4fead2",
+  "public_contract": "tasks/383-fixed-frequency-oscillator-source/public_contract.json",
+  "public_contract_sha256": "d9df08854ce7129617a388c07080a22402dc0ac1cd3964cacdc0ff27ad4b63fe",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/383-fixed-frequency-oscillator-source",
+  "task_id": "v4-383"
+}

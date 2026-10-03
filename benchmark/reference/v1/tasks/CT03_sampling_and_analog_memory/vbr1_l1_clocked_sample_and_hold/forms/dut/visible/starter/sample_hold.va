@@ -1,0 +1,19 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 10p
+
+module sample_hold(
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical IN,
+    input  electrical CLK,
+    output electrical OUT
+);
+
+parameter real vth  = 0.45;   // logic threshold (V)
+parameter real tedge = 100p;  // output transition time (s)
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

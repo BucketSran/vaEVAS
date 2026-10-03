@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "270-sampled-error-update-monitor",
+  "checker_task_id": "v4_270_sampled_error_update_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "14fcbbfd3b96f193ee863b469be62a3f26474e69d73dc0902be827378ca0da2d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3374ecda61224564bfc1fdb85352d6b477948456c1ac4c0e3ca0824f12d5a513",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "14fcbbfd3b96f193ee863b469be62a3f26474e69d73dc0902be827378ca0da2d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "69d8ede4cd0a8f9846e34232ddf26be935c1acc7436aff92a088ec486bd09584",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7876658fd53867add281d1fe1e38789b6d079f02242731b12c9903a0204e85e9"
+  },
+  "family_id": "270",
+  "family_spec_sha256": "9d72cb69ca79eba6f0d314e2015e4c2d88706c3e2d0c6797bfafb3efd45cddbd",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "56dd4972c98332bc3c2ee27e54f02bc57d68713422aada83a9bd08062a198f0b",
+  "public_contract": "tasks/770-sampled-error-update-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "5e8e211a7447ee00b72358812cbcb1b767b0448976243d91a91e665c5e0d1ba7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/770-sampled-error-update-monitor-testbench",
+  "task_id": "v4-770"
+}

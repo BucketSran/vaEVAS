@@ -1,0 +1,25 @@
+{
+  "id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow_tb",
+  "task_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow_tb",
+  "release_entry_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "adpll_ratio_hop_ref.va",
+    "tb_adpll_ratio_hop_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e"
+}

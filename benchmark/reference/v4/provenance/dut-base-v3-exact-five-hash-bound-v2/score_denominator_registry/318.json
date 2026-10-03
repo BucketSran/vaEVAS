@@ -1,0 +1,79 @@
+{
+  "family_id": "318",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_step_metric_wrong/certification.json",
+        "certification_sha256": "1f064992502febfed26326fc826cf7ec53b559edcab5805e2a19f6e13ce0b186",
+        "fault_class": "step_metric_wrong",
+        "mutation_bundle_sha256": "b2d7090807eaf05f3ea15b1062fa47ff3f88e71639c210c2befd7d4b90230a79",
+        "mutation_id": "neg_002_step_metric_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_002_step_metric_wrong/certification.json",
+        "trigger_condition": "step_metric_wrong",
+        "violated_property_ids": [
+          "P_DECODE_CODE_2_CODE_0_AS",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ladder_gain_wrong/certification.json",
+        "certification_sha256": "c8f176c8d114e85e6fa5f640fb96dd5e765910cd0a27b804a440576edf422313",
+        "fault_class": "ladder_gain_wrong",
+        "mutation_bundle_sha256": "e787d834071fc8fff16e090ce846f1f2f44e788b7ac0ddf32794c2cc376bdb6e",
+        "mutation_id": "neg_003_ladder_gain_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_ladder_gain_wrong/certification.json",
+        "trigger_condition": "ladder_gain_wrong",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_TO_THE_CORRESPONDING_EVENLY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_enable_reset_ignored/certification.json",
+        "certification_sha256": "3db9f3600060b1f59c735a0e57fc21ce4bec0d66f697c0816403def9787788ab",
+        "fault_class": "enable_reset_ignored",
+        "mutation_bundle_sha256": "9e04f62c548494c52d167f96a8a1f40737efc144ec6de990c6cc87e40bd3849e",
+        "mutation_id": "neg_004_enable_reset_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_004_enable_reset_ignored/certification.json",
+        "trigger_condition": "enable_reset_ignored",
+        "violated_property_ids": [
+          "P_EXPOSE_ONE_LSB_STEP_ON_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_monotonic_flag_wrong/certification.json",
+        "certification_sha256": "d4ec11415cf37c679ba768adf0ab653952efa21fd7c6c876a076bd8d29d174d2",
+        "fault_class": "monotonic_flag_wrong",
+        "mutation_bundle_sha256": "b5a2ec0f19eccd4a2193f80840a61d4918d8c209911cdc5bc2f9bd51ca09eba9",
+        "mutation_id": "neg_005_monotonic_flag_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_monotonic_flag_wrong/certification.json",
+        "trigger_condition": "monotonic_flag_wrong",
+        "violated_property_ids": [
+          "P_ASSERT_MONOTONIC_OK_WHEN_THE_ACTIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_code_mapping_reversed/certification.json",
+        "certification_sha256": "e17bd5d7dbbae590b4a8600e3a079c9cf38eaac7cdab1ba588468e59fa0ccc4e",
+        "fault_class": "code_mapping_reversed",
+        "mutation_bundle_sha256": "93a50b4f6356d8c4ff0e8f12552c5280e4bf140a0f74453f7f15c282bd2af8dd",
+        "mutation_id": "neg_001_code_mapping_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_001_code_mapping_reversed/certification.json",
+        "trigger_condition": "code_mapping_reversed",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_step_metric_wrong",
+    "canonical_dut_id": "318",
+    "hashes": {
+      "mutation_catalog_sha256": "d566ca8eb57a18e16f37aa8234ae51c8e7227863003176ed38b8dfde86c641d7",
+      "score_deck_sha256": "a88062411dda052f957d84b1eb473284450487d7ad4a8fb71f2b0a2790684e59",
+      "task_certification_sha256": "7fe6a455edfd7aadff93784904860d171a585c7421bf6613d41b8c3b893e2715",
+      "task_record_sha256": "f0d0e2515acce65979abaf2ef8944a97ffd7e7320ff33342c77b195e3de37990"
+    },
+    "release_dir": "318-resistor-ladder-monotonic-decoder"
+  }
+}

@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module vco_phase_integrator(vctrl,phase,clk);
+    input vctrl; output phase,clk; electrical vctrl,phase,clk; parameter real tr=200p; real ph; integer c;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

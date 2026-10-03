@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "316-residue-amplifier-gain-calibration",
+  "checker_task_id": "v4_316_residue_amplifier_gain_calibration",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a5c3aca3d38bf7bf562807c7ce37b34051f44526dec34c79e02feb67f67abd31",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "c99c6cda29bd0375296439e7757b5e93fd860f4ac9d46f0bce1398c4831e949d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a5c3aca3d38bf7bf562807c7ce37b34051f44526dec34c79e02feb67f67abd31",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d0d30a97b1d65abaa1b7c87d02ccb63ad541af6eed77eeb6d8bb1238eb4ef7a6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "979da0d39ddd96fb7e0bcabf5c2d215e751ae92a3656a255f7347566f90a4f2d"
+  },
+  "family_id": "316",
+  "family_spec_sha256": "e9d63ba269e34af42ec027761615e65bf49e85781f768886afdf8134c2bd742d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "063d0db2f4998f47314c9a45c5c79446790917cc82d51c64eb3812e8cbf93c89",
+  "public_contract": "tasks/816-residue-amplifier-gain-calibration-testbench/public_contract.json",
+  "public_contract_sha256": "235001cac323a3ed8f2dc49cd2bf7c4dc7116996ef4304b88694ed3db5b70421",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/816-residue-amplifier-gain-calibration-testbench",
+  "task_id": "v4-816"
+}

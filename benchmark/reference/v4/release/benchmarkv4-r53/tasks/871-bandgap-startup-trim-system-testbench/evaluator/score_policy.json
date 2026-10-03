@@ -1,0 +1,28 @@
+{
+  "bugfix_seed_mutation_id": "neg_005_reset_does_not_clear_outputs",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "e182fd5ae962be306fe6c8eb6c1222522294d8f1d5ec508de83e082e453bb210",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "fdf50b9fc6d155219150a1ae9beeb1e37bbbb8ad607d91b8426e4d93073ad7ab",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_002_trim_direction_reversed",
+    "neg_003_ready_asserts_too_early",
+    "neg_004_core_reference_wrong",
+    "neg_005_reset_does_not_clear_outputs",
+    "neg_001_startup_enables_immediately"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "df62f0b645615df92a5e9d2ffb9bd4f61a2747f61bb38c7c87cf74b51ccb3e8a",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-871"
+}

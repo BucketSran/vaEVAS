@@ -1,0 +1,79 @@
+{
+  "family_id": "238",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_deadband/certification.json",
+        "certification_sha256": "46e246f58f6d3ccc85912d41d03d3f7d930b8db1a94f235d38825d2bae2126e0",
+        "fault_class": "deadband_omission",
+        "mutation_bundle_sha256": "b3ae99d10fe1e39a5ddd277de1a159f6517d709403ab8ab4fca3a14aee0b2cbe",
+        "mutation_id": "neg_002_no_deadband",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_deadband/certification.json",
+        "trigger_condition": "Passes the input through and ignores the deadband.",
+        "violated_property_ids": [
+          "P_DEADBAND_ZERO_REGION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_thresholds/certification.json",
+        "certification_sha256": "0ecb154a6b04363d2bdc892de56f820782fe32a262d0c05cde7c4a67b2b4e54a",
+        "fault_class": "deadband_threshold_error",
+        "mutation_bundle_sha256": "5a10403320a4752dfd4ed030e5ca322f505298dba7d9e0399dbe796b688c064f",
+        "mutation_id": "neg_003_wrong_thresholds",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_thresholds/certification.json",
+        "trigger_condition": "Uses too-wide deadband thresholds.",
+        "violated_property_ids": [
+          "P_DEADBAND_EDGE_CONTINUITY",
+          "P_DEADBAND_ZERO_REGION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_rectifies_below_deadband/certification.json",
+        "certification_sha256": "4a215e99c429a1ff855f14ab48e44e35893d2f235543b4b8f7219e625a98312f",
+        "fault_class": "lower_residue_polarity_error",
+        "mutation_bundle_sha256": "1ce798e204fdd793864a5fbb02dce3ddd376c4689aa9ed1e49322a5fde14e5de",
+        "mutation_id": "neg_004_rectifies_below_deadband",
+        "source_catalog_certification_path": "negative_variants/neg_004_rectifies_below_deadband/certification.json",
+        "trigger_condition": "Uses the wrong sign for the lower-side residue.",
+        "violated_property_ids": [
+          "P_SIGNED_RESIDUE_OUTSIDE_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "b4c53df0ef4368f84af1ebf7aac36da0df6074ef37a83abcfb25e69cb6a46e1d",
+        "fault_class": "output_scale_error",
+        "mutation_bundle_sha256": "2d0e4f3ee9f139cc60fe80dc4c2c7eb137c01d7ec5a31c2a0531bd3d4f597b22",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Deadband Voltage: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_SIGNED_RESIDUE_OUTSIDE_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "ac75acb957db4b80f85b0b6cc67b1b968ebb79e00a51818904768af14513a237",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "809c87b09da998f7ca7855274e1c0beea2d6e6c75fca08fcbad213f234e63bbf",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Keeps the output at its trivial zero behavior and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_SIGNED_RESIDUE_OUTSIDE_WINDOW"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_deadband",
+    "canonical_dut_id": "238",
+    "hashes": {
+      "mutation_catalog_sha256": "e708aeb9bc912348103d97c94e84090263bc196a53346c8d6630dd92932a57cc",
+      "score_deck_sha256": "492a80565f4821bb0e1ba0164bf725f8dee170dde9a3284afa84dde05df8c804",
+      "task_certification_sha256": "13f8cfb282560dc354088c55bfab285f4830b8c200b76641638634e22167c588",
+      "task_record_sha256": "3b82af51ab64b3a9591d1ac64166d3dd34bccdd2c2307f3c1150134bbb484919"
+    },
+    "release_dir": "238-deadband-voltage"
+  }
+}

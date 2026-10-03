@@ -1,0 +1,90 @@
+{
+  "release_entry_id": "vbr1_l1_first_order_lowpass",
+  "task_id": "vbr1_l1_first_order_lowpass:tb",
+  "source_task_id": "vbm1_first_order_lowpass_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "First-order lowpass"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_first_order_lowpass/tb/gold",
+    "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_first_order_lowpass/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_first_order_lowpass/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_first_order_lowpass/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/tb/gold/first_order_lowpass.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/tb/gold/tb_first_order_lowpass_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct04-dual-20260525_222500/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_first_order_lowpass/tb/gold",
+    "result_root": "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_first_order_lowpass/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        1.6e-07
+      ],
+      "signals_compared": 2,
+      "samples": 1200,
+      "max_rmse_v": 2.5528900761970432e-08,
+      "max_abs_v": 4.9938556401230016e-08,
+      "mean_relative_rms_error": 1.596940211056927e-08,
+      "max_relative_rms_error": 3.193880422113854e-08,
+      "mean_nrmse": 1.596940211056927e-08,
+      "max_nrmse": 3.193880422113854e-08,
+      "per_signal": {
+        "vin": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.8,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vout": {
+          "rmse_v": 2.5528900761970432e-08,
+          "max_abs_v": 4.9938556401230016e-08,
+          "span_v": 0.7993067174717285,
+          "nrmse": 3.193880422113854e-08,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/tb/gold/first_order_lowpass.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/tb/gold/tb_first_order_lowpass_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,47 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_GENERATE_AN_OUTPUT_DEVIATION_AROUND_VCM, P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE satisfy the public contract; fault class bias_dependence_missing is rejected",
+    "observed": "EVAS: v4_304 checked_events=135 hold_probes=312 high_bias=True low_bias=True overload=True disable_seen=True inactive_checked=21 inactive_errors=0 polarity_errors=0 gain_errors=11 metric_errors=44 overload_errors=9; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_TREAT_VIN_PROXY_AS_A_VOLTAGE mismatch_count=0; P_GENERATE_AN_OUTPUT_DEVIATION_AROUND_VCM mismatch_count=11; P_REDUCE_EFFECTIVE_GAIN_WHEN_BIAS_FALLS mismatch_count=0; P_ASSERT_OVERLOAD_WHEN_THE_UNCLAMPED_OUTPUT mismatch_count=9; P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE mismatch_count=0",
+    "violated_property_ids": [
+      "P_GENERATE_AN_OUTPUT_DEVIATION_AROUND_VCM",
+      "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r52-selective-186-270-274-284-285-286-287-291-304-305-311-313-317-323-326",
+    "checker_id": "v4_304_common_gate_tia_front_end",
+    "report_path": "evidence/canonical-source/R52_TARGET_CONTRACT_RECERTIFICATION.json",
+    "report_sha256": "6ed5663673de6c3ee1b7ce62bc28cff103f3b6b91870c870c13c3cb8111de0b0",
+    "trace_row_count": 1248
+  },
+  "family_id": "304",
+  "inputs": {
+    "checker_profile_sha256": "21d6d029d5ed7f0d9bba0890c24260cb1e96c819b8cffbd285242bad783446c8",
+    "harness_spec_sha256": "521f2b04e7a5219795489e69586a7503565360726d7a4d3241aa8823f96859f4",
+    "mutation_bundle_sha256": "c294e75e46e6d599ff9a52f6550613ed6ebdb5aebf0bfcbcec6f91fef6946fcb",
+    "profile_sha256": "f23af477be67eda982c291878f766107f9064ea0910b55385f1d03bf18989487"
+  },
+  "mutation_id": "neg_003_bias_dependence_missing",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "8117bfca6fefa7e015f9bb8e4edcf2e5e1e0a6e2",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.5"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

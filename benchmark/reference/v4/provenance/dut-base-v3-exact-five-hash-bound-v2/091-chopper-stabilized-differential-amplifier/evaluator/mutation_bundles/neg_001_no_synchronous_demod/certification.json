@@ -1,0 +1,47 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_CHOP_DEMOD_BASEBAND_GAIN, P_INTERNAL_OFFSET_SUPPRESSION satisfy the public contract; fault class missing_synchronous_demodulation is rejected",
+    "observed": "EVAS: checked=110 active=0 hold_edges=0 clears=2 polarity=+0/-0 settled_rows=0 errors=5 first=voutp@3.440ns=0.47250 expected=0.45000",
+    "violated_property_ids": [
+      "P_CHOP_DEMOD_BASEBAND_GAIN",
+      "P_INTERNAL_OFFSET_SUPPRESSION"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 3669
+  },
+  "family_id": "091",
+  "inputs": {
+    "checker_profile_sha256": "88c8bc22987ca9047c9083209e0fdd7dcf9d77af53d800350d3b8aaae48dea6e",
+    "harness_spec_sha256": "918372dd6f4adb8e28c9ed2bb713b9aa1cadd829ccfb51acb667dfcdda7f7a89",
+    "mutation_bundle_sha256": "1d7d491d8bb278eb3efe75b1a74dfe457210149d6e50b47259243131a16f9ba5",
+    "profile_sha256": "76ab6704f54d1c7e70066f38179527edb60cc5d09a65817ece38f86094a5c4a8"
+  },
+  "mutation_id": "neg_001_no_synchronous_demod",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

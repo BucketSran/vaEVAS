@@ -1,0 +1,81 @@
+{
+  "family_id": "126",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_identity/certification.json",
+        "certification_sha256": "9f64d68223be8a72e6d4244ef56f917a190c294224e65b0b2513ffc8fff69a54",
+        "fault_class": "identity",
+        "mutation_bundle_sha256": "8fa161352c2d121610c916c65a70fdc14027be567329a903382079b6f06e0e8b",
+        "mutation_id": "neg_002_identity",
+        "source_catalog_certification_path": "negative_variants/neg_002_identity/certification.json",
+        "trigger_condition": "Passes the signed input instead of the absolute value.",
+        "violated_property_ids": [
+          "P_NEGATIVE_INPUT_REFLECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_abs/certification.json",
+        "certification_sha256": "69432108a6e36d05949bedc4cd149812e1c1c5b498ee337d6c773908d0ff28c0",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "f7837db57aff14bfe00937d57519a1f6f5c7ea85730f1b18754964425222c406",
+        "mutation_id": "neg_004_half_abs",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_abs/certification.json",
+        "trigger_condition": "Uses half of the absolute value.",
+        "violated_property_ids": [
+          "P_MEMORYLESS_ABSOLUTE_VALUE",
+          "P_NEGATIVE_INPUT_REFLECTION",
+          "P_POSITIVE_INPUT_PASSTHROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_negative_abs/certification.json",
+        "certification_sha256": "1ff600c76240d394f6d2bd48d520a463b7fa159fc75d9e79984c456aa493020e",
+        "fault_class": "negative_abs",
+        "mutation_bundle_sha256": "cbfc8894574770408e45ee860829b752bf9896507aadc77ccb71e254bbb78b6b",
+        "mutation_id": "neg_003_negative_abs",
+        "source_catalog_certification_path": "negative_variants/neg_003_negative_abs/certification.json",
+        "trigger_condition": "Drives the negative absolute value.",
+        "violated_property_ids": [
+          "P_NEGATIVE_INPUT_REFLECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "6591318ef8f964ce7861836656e98452015e96965d654e65a446f5ee9224a91d",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a14004154d886e0757295875b12e094a788e3d6f4ccbac26a0408deb78854fd8",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Absolute Value: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_NEGATIVE_INPUT_REFLECTION",
+          "P_POSITIVE_INPUT_PASSTHROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "07b3b70ad19b73244029484645f21fc8b625c3d6d4440d0cc918b759a90e062c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "689e6886a44a0ff91ec45030a22f39b33257c66831eb16ceba77a7c24647d0a6",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_POSITIVE_INPUT_PASSTHROUGH"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_identity",
+    "canonical_dut_id": "126",
+    "hashes": {
+      "mutation_catalog_sha256": "3455db3d0beb6d735060b5fbf888fcdabbdc4c4a973cf3506cdbfdc696041741",
+      "score_deck_sha256": "80bf7ff46a3fc73167ce248e4a90765404bfef57393343e532e87aea0a4e3091",
+      "task_certification_sha256": "f55b9c4ce74fc4022057f664ad429b37d1db4ddc4bee7c8ba454121e2e1de5b0",
+      "task_record_sha256": "e413e66e747ea10c26e0aadad4b451966ba3fc8267f8b74752023f61c5cf4e84"
+    },
+    "release_dir": "126-absolute-value"
+  }
+}

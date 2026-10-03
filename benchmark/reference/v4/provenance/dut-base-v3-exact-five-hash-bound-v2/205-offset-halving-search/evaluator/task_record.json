@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "205",
+  "checker_task_id": "v4_205_offset_halving_search",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "13d7177c9b411eeef199ef848e78320897b808cf5f51a9379ef5c93b1bd24634",
+    "checker_profile.json": "fd8e894eee062c55ec3b48a4340d1b976583a163969c0c9c122668b50cf8a6c6",
+    "derivation_manifest.json": "ab1efb0208b06bdc38b846c78ddfd20f256738ce6c1cf59ef0b0ad6e84b9da2b",
+    "family_spec.json": "1b185feb9e582636429eb662263552a4eb9271b4a410f68c3222cbdfcb691a75",
+    "harness_spec.json": "399f9f3ae35d9ee75b621fae897377894e15df9bb68112768fe799b542efbb73",
+    "mutation_catalog.json": "d6846bc651eb5895e28b90ab09d00bce071d3336d48e412d1c567b503d7aea99",
+    "profiles/feedback.json": "fb1c17cd16fc262af5d63125fdda90a8d109ecd449e9559b80be94de2c407b7f",
+    "profiles/score.json": "125451f09c34fe94ddb53558b60285cf1a80e49ffedce0213ac9554e9d39f3ff",
+    "score_tb.scs": "38d789af1fe7d6737f4251a6a77cb3b44b7a13930b9e593233a735edc72d79ab",
+    "solution_tree": "c8591b91fa8ea24ebfaa7c72bd3757cca13187d0e393ce6164304ad98b91169f",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "dc5d49021db009055c09283ba19d81c14ba54351f7a20b34e3ada2f61f9dd2ac",
+    "instruction.md": "dd897111f66815507fbead5781e67639524b04f2122a5ea71b3c0e65fdd8c732",
+    "public_contract.json": "21d08ee3e5e692e7d8eaab0e94d0564053f1f3dddef21552021d9314b682cfb6"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "13d7177c9b411eeef199ef848e78320897b808cf5f51a9379ef5c93b1bd24634"
+  },
+  "release_dir": "205-offset-halving-search",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "247-offset-halving-search",
+  "support_root": "",
+  "target_artifacts": [
+    "offset_halving_search.va"
+  ]
+}

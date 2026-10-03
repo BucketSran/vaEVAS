@@ -1,0 +1,20 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "up_and_dn_pulses_exist"
+    - "overlap_window_is_bounded"
+    - "outputs_clear_after_race"
+parity:
+  required: true
+  tolerance_notes: "Bound overlap and pulse windows instead of requiring a single raw event ordering."

@@ -1,0 +1,31 @@
+{
+  "canonical_semantics_sha256": "d51323573e202bf94b6c715fb15305042a2d53615a2575b115fe9d0594e7adbe",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+    "P_INITIALIZE_THE_BOUNDED_ACCUMULATOR_STATE_AND",
+    "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+    "P_VTH_0_45_V_LOGIC_THRESHOLD",
+    "P_VHI_0_9_V_HIGH_LEVEL",
+    "P_SPAN_MIN_0_62_V_SPAN"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "290",
+    "feedback_semantics_sha256": "d51323573e202bf94b6c715fb15305042a2d53615a2575b115fe9d0594e7adbe",
+    "harness_spec_sha256": "77c58ab0242d4ee7fbe13e0dd3d1d2545870ae394f5a5d533a7ab65a5bc2588d",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "d51323573e202bf94b6c715fb15305042a2d53615a2575b115fe9d0594e7adbe",
+    "task_id": "v4-290"
+  },
+  "test_deck_sha256": "fd8192ef9557b2390360902c095193654aab0fca4d6c2afbbbdf9a2366d87524"
+}

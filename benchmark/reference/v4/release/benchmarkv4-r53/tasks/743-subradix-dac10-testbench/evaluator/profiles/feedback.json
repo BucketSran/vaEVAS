@@ -1,0 +1,24 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "120581558b04bced495d44a4fe55d5e151b70d80024d6e3698f3dd4606f9d44b",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_TREAT_EACH_INPUT_AS_LOGIC_ONE",
+    "P_VTH_0_45_V_DECISION_THRESHOLD",
+    "P_VREF_1_0_V_OUTPUT_FULL",
+    "P_VTH_0_45_V_DECISION_THRESHOLD_2",
+    "P_USE_DETERMINISTIC_VOLTAGE_DOMAIN_VERILOG_A"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

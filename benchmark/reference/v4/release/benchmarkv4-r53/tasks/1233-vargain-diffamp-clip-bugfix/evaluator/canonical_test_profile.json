@@ -1,0 +1,31 @@
+{
+  "canonical_semantics_sha256": "7cd9e95f37e47ec9079867808547cc022297ec438443ea8d38eab5e367f9c2d3",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_COMPUTE_THE_DIFFERENTIAL_SIGNAL_AS_V",
+    "P_COMPUTE_THE_DIFFERENTIAL_CONTROL_AS_V",
+    "P_SUBTRACT_SIGIN_OFFSET_FROM_THE_DIFFERENTIAL",
+    "P_MULTIPLY_THE_OFFSET_CORRECTED_SIGNAL_BY",
+    "P_CLAMP_THE_RESULT_TO_THE_PUBLIC",
+    "P_DRIVE_SIGOUT_WITH_THE_CLIPPED_TARGET"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "233",
+    "feedback_semantics_sha256": "7cd9e95f37e47ec9079867808547cc022297ec438443ea8d38eab5e367f9c2d3",
+    "harness_spec_sha256": "e897146aa0ae496d658d03053930a476c079d1091ef4470e0ab8b246d34d4235",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "7cd9e95f37e47ec9079867808547cc022297ec438443ea8d38eab5e367f9c2d3",
+    "task_id": "v4-233"
+  },
+  "test_deck_sha256": "a4b67838ff1918233d5b749e64b88e8be2487286af875092ef82b4012bd55999"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "complete_calibration_loop.va"
+  ],
+  "canonical_dut_source_slug": "086-complete-calibration-loop",
+  "checker_task_id": "v4_086_complete_calibration_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "aba6c25b49c6a39f6134bf16005515178fcaffd18da57b56b1149383376cf59d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "bc9784f1b2861b13cb8e7c307b15392803580f979b1a5b30c1bd3513b3319f0c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "94f55054305902ee1bbd56744937dbeb7cbe307245e95f066b43cde337a33983",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "086",
+  "family_spec_sha256": "9ccc76dae3ce35797874a141923b07ed607ac783785390a5321e0ae02888804a",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4b2f7e0a82e109d168912f634c937cec4a6e304d8ecff7b8f72fd647b9e86c89",
+  "public_contract": "tasks/1086-complete-calibration-loop-bugfix/public_contract.json",
+  "public_contract_sha256": "8bd2abca17e9845e0bf9181394838ee86dd08a15360a12c37ec40d4365a9d8d5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1086-complete-calibration-loop-bugfix",
+  "task_id": "v4-1086"
+}

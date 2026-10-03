@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "downconversion_mixer_lo_polarity.va"
+  ],
+  "canonical_dut_source_slug": "400-downconversion-mixer-lo-polarity",
+  "checker_task_id": "v4_400_downconversion_mixer_lo_polarity",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "039cf6e2e7bedb2361c1f46f18e9e2d62e71d0175de9ad26d883b6815fc074a5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "41f12503b483d81ced34944bce1d175e3b7b81c5c337d426605f8d4db7bd06a3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "74426c6d3782df963a7fe7e38bb3c94bb53c2e1996c7db99601b27c5b9f60e00",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "400",
+  "family_spec_sha256": "2c9bc08a196d8bb035868bfb6cd3f510ae1b7f44f14034d5a6ffb8226b38ca7b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d46dffe071a45edb59cb5820f4870674869d398d20f2b913a533c99f0e00e52d",
+  "public_contract": "tasks/1400-downconversion-mixer-lo-polarity-bugfix/public_contract.json",
+  "public_contract_sha256": "ddfbd928f9619db55ab84a641a892f3ce9418f86d7424023c918ce7514a7e847",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1400-downconversion-mixer-lo-polarity-bugfix",
+  "task_id": "v4-1400"
+}

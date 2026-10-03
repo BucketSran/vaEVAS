@@ -1,0 +1,78 @@
+{
+  "family_id": "157",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_denominator/certification.json",
+        "certification_sha256": "a9ae7e5dc025be84c6061fc2d57c3bef494c4d1c668464c1291d4abc0ccc3c2e",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "1bfb6f0a5a70bd3426adb875a39d49b9d60243b9c9a647e97a915a0b1b02aa1e",
+        "mutation_id": "neg_003_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_denominator/certification.json",
+        "trigger_condition": "Divides by 8 instead of 16.",
+        "violated_property_ids": [
+          "P_OUTPUT_SCALE_DENOMINATOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "57cd1627b05060b8a7bdfd3c138342a5528eeeaa1f383b5f0f40a2d47bc9e19d",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "27cc9f3a5643125127207a07f927fdc8a61e35629903a9a032adbc177b0beeb2",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_VOLTAGE_CODED_SUBCODE_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_msb_fold/certification.json",
+        "certification_sha256": "a9ec4b75193aa18964512536df95c83367598140555d4902186ae073c2526359",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "eadac644d6ae6b1f7171ff9f379bfddb99fe22fd6e99a89a1c64adb9c5d4a8a2",
+        "mutation_id": "neg_004_inverted_msb_fold",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_msb_fold/certification.json",
+        "trigger_condition": "Uses the opposite fold branch for vd4.",
+        "violated_property_ids": [
+          "P_FOLD_MIRROR_TRANSFER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "aa91a0bd7c2ee9a1090439e13810941bdd0cab1692a1519dd1dcabfbe1928b79",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "24a02d25ec5a43d675d1766f27ecabbc056efa94a6d2c1af55ba517ddf23c338",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Folded Flash DAC 4b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_SCALE_DENOMINATOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_fold_mirror/certification.json",
+        "certification_sha256": "a7e351e7d603c2fed80e061d3d8e4d5903531fcb1d2ad8edd5677d11f9a67390",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "6a48a1bbfe4dddee414e60a40e0abda46f10c7d9a23ef18ab77f065002f72ad9",
+        "mutation_id": "neg_002_no_fold_mirror",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_fold_mirror/certification.json",
+        "trigger_condition": "Uses direct unsigned code without folding.",
+        "violated_property_ids": [
+          "P_FOLD_MIRROR_TRANSFER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_denominator",
+    "canonical_dut_id": "157",
+    "hashes": {
+      "mutation_catalog_sha256": "b6a96f86ad19afa5a2345361506c706b6be042c23125a5ebd905b73cf93f8bdb",
+      "score_deck_sha256": "6fc1b10b668d29abb3fd103de41307e22515c3b8cc3363c22e3468d229521d0a",
+      "task_certification_sha256": "a68fbd0f4cff360783bcc3e84ac193d7ccec276ceafcf86e4084cd2204882f11",
+      "task_record_sha256": "c7d8ea800b1f235f701a9024bc8c0fa0f48f57eef93a119ce1c00c37eb2bae33"
+    },
+    "release_dir": "157-folded-flash-dac-4b"
+  }
+}

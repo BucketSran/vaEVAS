@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "068",
+  "checker_task_id": "v4_068_multiphase_clock_generator_4ph",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "3cdc709f25b05129d4b8bdc648f68bd5c7e616850d4732640debec6a0e6f001d",
+    "checker_profile.json": "f6c5e07b26c09e01f30d15745cec2c179106c00fc16cd2ab60517f8231773572",
+    "derivation_manifest.json": "ea88e2bc61b6254f1485235309952409ca9daaec41d186cfa439793f277c3495",
+    "family_spec.json": "75b86ba63b010056ec23087ae5e251b59196aff7f4941c10b27a2a422bbc89f4",
+    "harness_spec.json": "ee344c35bfd784c0694f29b7b164d12e5291228b53dafaf4dbf19bf61f03b23e",
+    "mutation_catalog.json": "a481264bb37cf3217549b9872449bd87eddaea053f789ec55e43ca24b5f2ca99",
+    "profiles/feedback.json": "3375909f4764baeb9117d81d670ab6dc4ae6c15ef200742dbc106c1733ae2afa",
+    "profiles/score.json": "8f76fe5aa41f84d67bfba563cabc5a4c19615e7bb6f4aec87103fc1207fa8b8c",
+    "score_tb.scs": "a9a0fbdc013614f4a4d0a0f80aff235adb01851156d413096fe818d91909bc1f",
+    "solution_tree": "e08b133fa0dd3a03ec8d69832deae4bfa861b69cbb6fda05554947ae7c760352",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "a08bafe622a81003aa22bbfabd067b576f298b1760e4b7f18f7b549dd7e03ab9",
+    "instruction.md": "ffa16b24b7d0a2e01afbdffbc2b5326a9e0fc3a216969ab8c2b4714576eef8aa",
+    "public_contract.json": "cd3127f29c866a95214aef7a5a04cc17424daeb79a50803f70b8c31d2f236f0e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "3cdc709f25b05129d4b8bdc648f68bd5c7e616850d4732640debec6a0e6f001d"
+  },
+  "release_dir": "068-multiphase-clock-generator-4ph",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "068-multiphase-clock-generator-4ph",
+  "support_root": "",
+  "target_artifacts": [
+    "multiphase_clock_generator_4ph.va"
+  ]
+}

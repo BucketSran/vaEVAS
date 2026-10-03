@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "022-charge-pump-abstraction",
+  "checker_task_id": "v4_022_charge_pump_abstraction",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2226107fa83a8be71e023a8140fc5781c9aadda44dcb6b6a41913182ba608797",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "017c75e3350f4e9cb64882c7ddaab6815098758979e519a6adcfdf1b65d7748d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2226107fa83a8be71e023a8140fc5781c9aadda44dcb6b6a41913182ba608797",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "854db8d0577361bdfc85e4470459e0c3f00b983d578c5f63d76e91139c0c46f6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "571d6faa6f78de2597593d871203ae2181d016de34c2f9271edb058ffbf028f5"
+  },
+  "family_id": "022",
+  "family_spec_sha256": "9ed96adc98a753f67b0269eed7ce6d7dec18d73e7183e543c15f783bedaa9822",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "da9013eafd2c9b8c9865ac381e1021f2a0f19b2b61e452d58b9a988669cf2417",
+  "public_contract": "tasks/522-charge-pump-abstraction-testbench/public_contract.json",
+  "public_contract_sha256": "83f062ddbc1c6e265e47e676381bfb1eeb09c422fe8d39fd3708ccd808b4c924",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/522-charge-pump-abstraction-testbench",
+  "task_id": "v4-522"
+}

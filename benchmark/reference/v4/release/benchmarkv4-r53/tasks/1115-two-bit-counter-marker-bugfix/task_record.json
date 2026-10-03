@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "two_bit_counter_marker.va"
+  ],
+  "canonical_dut_source_slug": "115-two-bit-counter-marker",
+  "checker_task_id": "v4_115_two_bit_counter_marker",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f778d9a329b1e6b5ed779efed2048e1cef02a6ceb38966e954769f1b2e14b3fc",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "4acf6069379a5ca460e377f44a25a61609cc7fbfaed5f965f99099355caa048a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "37d9e549b3033c9728d20c5ef562be3eb34df9cb4c061c4e1f4496fc16317bdb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "115",
+  "family_spec_sha256": "60a9e3676fce060b3aeb9093a25655e6cda6af64ba895d46df2e0b9a6650b358",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8f1d79975d66dcff91f6ad6adc4202edeb6dab6a896b13e7a7232e3333dd548d",
+  "public_contract": "tasks/1115-two-bit-counter-marker-bugfix/public_contract.json",
+  "public_contract_sha256": "006115f5873589ade6576288c38c42e9fe6b3b25119d2b02996888f9ff00a222",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1115-two-bit-counter-marker-bugfix",
+  "task_id": "v4-1115"
+}

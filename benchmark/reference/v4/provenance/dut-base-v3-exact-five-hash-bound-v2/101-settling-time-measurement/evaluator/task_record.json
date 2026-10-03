@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "101",
+  "checker_task_id": "v4_101_settling_time_measurement",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b03ca94c873a9c0a623e8fdb9b3f36cccc9e1afd719d81ae52f199d4baab720f",
+    "checker_profile.json": "ba4d7a8cc00168c56945d7c6fea54c405094344b1d2a984aa475bad85e8c32dc",
+    "derivation_manifest.json": "dde6f2a4791150642444f46d4cac6e0159f3822093725f74dca25607a5d9011c",
+    "family_spec.json": "eefb23fc7add6d41f3c48ce132af632df56500c06056afc2c916ccda217afab6",
+    "harness_spec.json": "8a73e0e38c8eaa5ca0d2d82675e8157a3d0888f9fc795fff52f30744bce954cd",
+    "mutation_catalog.json": "91a42a27b22ee5ce81385aa44a3a4e4943a8a8aa2ff186067108ef46a0bef9aa",
+    "profiles/feedback.json": "8c11df98deff167ba7750cb04b90b1bce767269cb240eff579d79a08025a9ba7",
+    "profiles/score.json": "6c5207b1f24bd0c2ebe05b43b7902a2cdaea7a7031f9f32cf995a3378e37ec85",
+    "score_tb.scs": "61210e700ee5dc09a49e50a77f5d16112eb75fe65af8cbaad7df473f7c1c11c3",
+    "solution_tree": "35a61e0885cbae8f29f9d2a438c963d3d3abcf36b6039adc906295de8f34e945",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "20db82d730853d185882034281edcebaa9212554a49196cc981163af33aaa01e",
+    "instruction.md": "7f6cca4d7f5d05ce9c668b15e3764bcbb4720c19edeef4e933a9a10e573a4d0e",
+    "public_contract.json": "57e920d3483083ca1b691b2e033ec3df45daa459f64742aabdf416d5dfe0799a"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b03ca94c873a9c0a623e8fdb9b3f36cccc9e1afd719d81ae52f199d4baab720f"
+  },
+  "release_dir": "101-settling-time-measurement",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "110-settling-time-measurement",
+  "support_root": "",
+  "target_artifacts": [
+    "settling_time_measurement_tb.va"
+  ]
+}

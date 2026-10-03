@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "../submission/fixed_frequency_oscillator_source.va"
+
+Venable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 54n 0.9 54.2n 0 64n 0 64.2n 0.9 150n 0.9 150.2n 0 160n 0 160.2n 0.9 195n 0.9]
+Vrst (rst 0) vsource type=pwl wave=[0 0.9 3n 0.9 3.2n 0 112n 0 112.2n 0.9 118n 0.9 118.2n 0 195n 0]
+XDUT (enable rst osc_out period_metric valid) fixed_frequency_oscillator_source
+
+
+tran tran stop=195n maxstep=200p
+save enable rst osc_out period_metric valid

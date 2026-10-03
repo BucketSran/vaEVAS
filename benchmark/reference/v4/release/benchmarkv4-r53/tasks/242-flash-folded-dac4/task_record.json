@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "flash_folded_dac4.va"
+  ],
+  "canonical_dut_source_slug": "242-flash-folded-dac4",
+  "checker_task_id": "v4_242_flash_folded_dac4",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "041695898e0a6052ccf827a94d98a663353efa51bb8f7fe9ba9f13e9bbfa02e7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "31518a935a39af775771c59e849648259f58fd25871bd59d9d54310e785f7ec5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d11ef5cb97222a67727b8dc8ed09b3209e46972bc91056c5c7d4f95f710b148c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "242",
+  "family_spec_sha256": "8c0e4e942f4c1fdbc497136010039b18e692e8d809ee6fc4b73ac47ffcc9f1c3",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5b890223c90ba89597f65a2d2166025fd036a021546bdddd7df3cb1cf7f49de9",
+  "public_contract": "tasks/242-flash-folded-dac4/public_contract.json",
+  "public_contract_sha256": "8c6df42e7ec2c68d7827a84b34c5b2b3ee559ad2729c2d042b73a20ec4c673ef",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/242-flash-folded-dac4",
+  "task_id": "v4-242"
+}

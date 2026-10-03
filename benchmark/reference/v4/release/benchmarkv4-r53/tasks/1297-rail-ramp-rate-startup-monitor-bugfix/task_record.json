@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "rail_ramp_rate_startup_monitor.va"
+  ],
+  "canonical_dut_source_slug": "297-rail-ramp-rate-startup-monitor",
+  "checker_task_id": "v4_297_rail_ramp_rate_startup_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "63a38e93d3272d520eb0698801225f93f7ac44a7b0c1c0b9ad384a1a5670a496",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b88a3e817ef3328ea6eee33fc56111d6f1041650d4addbd5b7e869849b43927c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "01c3e551f02bf0e6c3880a4b158eb44fbcbd71110a404f09411ff2c130d0b436",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "297",
+  "family_spec_sha256": "292130ad04bc4ce59b643070005c279f7435183da759b9fcfd84388ca947bef1",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2e1cf9eeee5f9051e7635a76b0d8533614d5813d5dfef5a9ee3aa8a9d83bdc8b",
+  "public_contract": "tasks/1297-rail-ramp-rate-startup-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "6fca7c44f4d5251f7e8ed4afcfab4d9ad71734586e412900e5f1bcdbf8a3fb0a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1297-rail-ramp-rate-startup-monitor-bugfix",
+  "task_id": "v4-1297"
+}

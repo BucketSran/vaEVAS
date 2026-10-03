@@ -1,0 +1,188 @@
+{
+  "schema_version": "v4-r51-spectre-checker-repair-recertification-v1",
+  "status": "pass",
+  "scope": {
+    "policy": "Fresh Cadence Spectre AX correct-plus-five rerun for the ten r51 tasks that exposed deterministic reference, coverage, or mutation-executability failures after EVAS closure.",
+    "execution_revision": "474b324375ae8e1e3940d779091602ada6609718",
+    "task_ids": [
+      "v4-577",
+      "v4-591",
+      "v4-686",
+      "v4-695",
+      "v4-720",
+      "v4-749",
+      "v4-803",
+      "v4-804",
+      "v4-812",
+      "v4-881"
+    ]
+  },
+  "run": {
+    "finished_at": "2026-07-23T06:34:05+08:00",
+    "spectre_backend": "sui-direct",
+    "spectre_mode": "ax",
+    "route": "thu-jin -> thu-wei",
+    "group_reports": [
+      {
+        "group": "a",
+        "task_ids": [
+          "v4-577",
+          "v4-591",
+          "v4-686"
+        ],
+        "case_count": 18,
+        "pass_count": 18,
+        "summary_sha256": "c39e3d772421190514ecd86734b275dc4c5936893e6c977f9bd1e5407ba3f21d"
+      },
+      {
+        "group": "b",
+        "task_ids": [
+          "v4-695",
+          "v4-720",
+          "v4-749"
+        ],
+        "case_count": 18,
+        "pass_count": 18,
+        "summary_sha256": "27409e81dec6538abc9888ede307e5cddfa214cb4769f4863f3d185af45233c7"
+      },
+      {
+        "group": "c",
+        "task_ids": [
+          "v4-803",
+          "v4-804",
+          "v4-812",
+          "v4-881"
+        ],
+        "case_count": 24,
+        "pass_count": 24,
+        "summary_sha256": "425930d0a76a70da216fac2bc27361283438c73125bab1ae7b4f8547e7ca3658"
+      }
+    ]
+  },
+  "joint_validation": {
+    "evas_case_count": 60,
+    "evas_expected_classification_count": 60,
+    "evas_summary_sha256": "af2f5d24565914000bdc9ff158c96ea0da40d3f929a437e3e2c4ab45823875e7",
+    "spectre_case_count": 60,
+    "spectre_simulation_success_count": 60,
+    "spectre_expected_classification_count": 60,
+    "correct_pass_count": 10,
+    "mutation_kill_count": 50,
+    "mutation_count": 50,
+    "runner_warning_count": 0,
+    "raw_spectre_warning_occurrence_count": 126,
+    "raw_spectre_warning_codes": {
+      "VACOMP-2435": 60,
+      "SPECTRE-592": 60,
+      "SFE-105": 6
+    },
+    "untriaged_warning_count": 0,
+    "invalid_run_count": 0
+  },
+  "tasks": [
+    {
+      "task_id": "v4-577",
+      "checker_id": "v4_077_dither_noise_like_deterministic_source",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "default_intervals=40, override_intervals=25, all_property_mismatch_counts=0"
+    },
+    {
+      "task_id": "v4-591",
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "checked=692, settled_rows=61, errors=0"
+    },
+    {
+      "task_id": "v4-686",
+      "checker_id": "v4_186_sarfend_logic_4b",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "all formerly invalid mutation runs completed simulation and were judged behaviorally"
+    },
+    {
+      "task_id": "v4-695",
+      "checker_id": "v4_195_clock_sample_1600n_sequencer",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "checked_windows=10, frame_period_ns=16, all_property_mismatch_counts=0"
+    },
+    {
+      "task_id": "v4-720",
+      "checker_id": "v4_220_pfd_up_down_state",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "up=true, down=true, zero=true, coverage_errors=0"
+    },
+    {
+      "task_id": "v4-749",
+      "checker_id": "v4_249_pfd_active_low_reset",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "external reset coverage is executable for all cases; invalid_run_count=0"
+    },
+    {
+      "task_id": "v4-803",
+      "checker_id": "v4_303_differential_pair_gm_limiter",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "polarity_errors=0, gain_errors=0, metric_errors=0, flag_errors=0"
+    },
+    {
+      "task_id": "v4-804",
+      "checker_id": "v4_304_common_gate_tia_front_end",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "inactive_errors=0, polarity_errors=0, gain_errors=0, metric_errors=0, overload_errors=0"
+    },
+    {
+      "task_id": "v4-812",
+      "checker_id": "v4_312_interleaved_adc_skew_monitor",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "neg_003_alarm_after_one_violation is killed; correct skew, magnitude, and alarm errors are zero"
+    },
+    {
+      "task_id": "v4-881",
+      "checker_id": "v4_381_fm_vco_modulation_source",
+      "status": "pass",
+      "correct": "pass",
+      "mutations_killed": "5/5",
+      "spectre_simulations": "6/6",
+      "confirmation": "frequency transfer, timing, period, phase marker, and valid properties all have mismatch_count=0"
+    }
+  ],
+  "latest_checker_revision_coverage": {
+    "execution_revision": "46a3ccaf2de5b9fd9e97fe622b24dd8431b6b512",
+    "superseding_artifact": "SPECTRE_AFFINE_CHECKER_RECERTIFICATION.json",
+    "superseded_task_ids": [
+      "v4-803",
+      "v4-804",
+      "v4-812"
+    ],
+    "case_count": 18,
+    "correct_pass_count": 3,
+    "mutation_kill_count": 15,
+    "mutation_count": 15
+  },
+  "claim_boundary": "This artifact establishes fresh EVAS/Spectre verdict parity for the ten exposed tasks at correct-plus-five scope. SPECTRE_AFFINE_CHECKER_RECERTIFICATION.json supersedes the v4-803, v4-804, and v4-812 Spectre rows after their checker timing changes. It does not claim waveform identity, alias-wide EVAS reruns, full 400-family Spectre recertification, or inclusion of supplemental Spectre evidence in the formal release seal."
+}

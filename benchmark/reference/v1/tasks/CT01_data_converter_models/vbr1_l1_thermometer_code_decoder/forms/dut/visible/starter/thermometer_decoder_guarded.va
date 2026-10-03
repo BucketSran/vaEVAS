@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module thermometer_decoder_guarded(b0,b1,en,th0,th1,th2,th3);
+    input b0,b1,en; output th0,th1,th2,th3; electrical b0,b1,en,th0,th1,th2,th3;
+    parameter real vth=0.45; parameter real vdd=0.9; parameter real tr=300p; integer code;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

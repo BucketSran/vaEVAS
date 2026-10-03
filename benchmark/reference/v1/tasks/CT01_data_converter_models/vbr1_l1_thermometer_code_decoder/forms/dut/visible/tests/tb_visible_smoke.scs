@@ -1,0 +1,13 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "thermometer_decoder_guarded.va"
+
+V_b0 (b0 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_b1 (b1 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_en (en 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+
+XDUT (b0 b1 en th0 th1 th2 th3) thermometer_decoder_guarded
+
+tran tran stop=5n maxstep=100p
+save b0 b1 en

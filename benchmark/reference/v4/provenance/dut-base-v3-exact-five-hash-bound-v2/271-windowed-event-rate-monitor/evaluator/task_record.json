@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "271",
+  "checker_task_id": "v4_271_windowed_event_rate_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "8013ee915914cd59364062f1bd34e941d108fe8d4d90f9eb127600e10db4a448",
+    "checker_profile.json": "67ca2696a2da5ba2bf135ae812d740d5ad2335523ca63f343a3e8ea5b1ffe026",
+    "derivation_manifest.json": "9171be68c2a1afb3e4f0a49c332096ffe0c22a392f51f5b81f15645cd82686b3",
+    "family_spec.json": "759f61a88b370ff0676e35df04a53cc09913a78a7dd9fe234dc3d80d7b38152a",
+    "harness_spec.json": "ef0428510100bd09729d089953bd4cf1daacb42b323ca3bc164e4d5ec2be456f",
+    "mutation_catalog.json": "0713536c70d67965aa34e6935e34445fd14e3b903a6c4b4bb2fd368068e27d8f",
+    "profiles/feedback.json": "10455a215f22deaff225abdf8e3b2f6f5ddaab195e86f049af4f51030b8ea157",
+    "profiles/score.json": "70890ef04dc2b1bf636efdecc58be8d8f87bd7ea30bd10f9befc327b52f58f87",
+    "score_tb.scs": "cf8013df9aac96c7624586df28a3694b93ab84cf73249a9e25364c5596cda23b",
+    "solution_tree": "cca9d4c70d861321d5f3929df059bbec6fd347cde60848d18e46d22e1583ddb4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d326209ccab5796af1c67489b7d5f8a51ef2da08b8dd25f1e07213d08c8b17b4",
+    "instruction.md": "609e9d6f1456138c2045c5b22f8ba553b40ca2e9789a2c7e1ef995a69be61728",
+    "public_contract.json": "8056ed5138a806b703d14c75c5eed46d3ebf28a058a536218cf7c5c5374a1543"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "8013ee915914cd59364062f1bd34e941d108fe8d4d90f9eb127600e10db4a448"
+  },
+  "release_dir": "271-windowed-event-rate-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "375-windowed-event-rate-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "windowed_event_rate_monitor.va"
+  ]
+}

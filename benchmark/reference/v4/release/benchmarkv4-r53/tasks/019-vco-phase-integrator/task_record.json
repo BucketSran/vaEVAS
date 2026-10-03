@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "vco_phase_integrator.va"
+  ],
+  "canonical_dut_source_slug": "019-vco-phase-integrator",
+  "checker_task_id": "v4_019_vco_phase_integrator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0fd6d2f6df79b52931d5e989b717d46e331b641ada3db4972f663f58c58caa1b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9335c2f9eddf3c47d9de9f6a5f0e7b00dfecd9269ed4acc62a540cd6606c8942",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "a68a950b13d95ee0508f00a57cd96008b0a6d23004c37734a42cc53945ded594",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "019",
+  "family_spec_sha256": "00a387a882e873655a5247a5cc5c4a91755c03ea5ee82f20c58bb7d4aec40fc4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ae0b12ef537a4b2b855560ccb1c7506905fc4e4ba3d769cf3c1b27dacb8c150b",
+  "public_contract": "tasks/019-vco-phase-integrator/public_contract.json",
+  "public_contract_sha256": "716d497befdaaba6b6810bbfa4d5382f7cb84d98d072f88bef0b79fd40d24bec",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/019-vco-phase-integrator",
+  "task_id": "v4-019"
+}

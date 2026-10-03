@@ -1,0 +1,46 @@
+{
+  "id": "vbr1_l1_binary_weighted_voltage_dac:bugfix",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_binary_weighted_voltage_dac",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D1",
+  "category": "Data Converter Models",
+  "base_function": "Simple 4-bit binary-coded DAC",
+  "family": "bugfix",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/gold/simple_binary_voltage_dac_4b.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/gold/tb_simple_binary_voltage_dac_4b_buggy.scs",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix/gold/tb_simple_binary_voltage_dac_4b_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_binary_weighted_voltage_dac/bugfix/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "simple_binary_voltage_dac_4b",
+    "source_task_id": "vbm1_simple_binary_voltage_dac_4b_bugfix",
+    "historical_source_task_id": "vbm1_thermometer_dac_bugfix",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/bugfix"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "cdr_top.va",
+    "bbpd.va",
+    "loop_filter_code.va",
+    "phase_rotator.va"
+  ],
+  "canonical_dut_source_slug": "357-bangbang-cdr-loop",
+  "checker_task_id": "v4_357_bangbang_cdr_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7cfca836ef2f6384175c0fdcd095d088af3a2c4e193ddba30e95dbdd2a781fc0",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f432a5016f0cf41afc87b7858603497f027fd2cb00f3e70c287f1f77bca72d92",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ef640e8403dd7fb707f8da3509364aa5cec014949f14789708117d49bfd20983",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "357",
+  "family_spec_sha256": "cb6dae2da7da3c072cb3f91c02c5594bd4e8e93a4ec126e153186ba374cf3eec",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0254bed7e48489b4492dcec061557434ed84dacdd49d51aa11794ce1669610df",
+  "public_contract": "tasks/357-bangbang-cdr-loop/public_contract.json",
+  "public_contract_sha256": "23c2de426a6dfbe341958851869b294b9b7acb02697e2c7025893e3b628db16d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/357-bangbang-cdr-loop",
+  "task_id": "v4-357"
+}

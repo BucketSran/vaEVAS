@@ -1,0 +1,31 @@
+{
+  "id": "vbr1_l1_calibration_deadband_controller_e2e",
+  "task_id": "vbr1_l1_calibration_deadband_controller_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_calibration_deadband_controller",
+  "family": "end-to-end",
+  "category": "Calibration, DEM, and Control",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "calibration_deadband_controller.va",
+    "tb_calibration_deadband_controller.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "trim_holds_inside_deadband",
+    "trim_moves_for_large_error",
+    "trim_clamped_to_range"
+  ],
+  "designed_source": true
+}

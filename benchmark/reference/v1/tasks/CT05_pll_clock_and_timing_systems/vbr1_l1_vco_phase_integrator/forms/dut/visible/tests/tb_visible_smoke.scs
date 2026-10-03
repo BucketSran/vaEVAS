@@ -1,0 +1,11 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "vco_phase_integrator.va"
+
+V_vctrl (vctrl 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+
+XDUT (vctrl phase clk) vco_phase_integrator
+
+tran tran stop=5n maxstep=100p
+save vctrl

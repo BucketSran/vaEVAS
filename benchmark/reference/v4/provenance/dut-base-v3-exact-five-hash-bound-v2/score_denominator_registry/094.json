@@ -1,0 +1,85 @@
+{
+  "family_id": "094",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "468c6341226fae8e8c792001338b12fd128182dd0b4ea174a6d01a7cd5f56b04",
+        "fault_class": "threshold_boundary_error",
+        "mutation_bundle_sha256": "2fe00b223e185e9791f4d86d5271eb7c8717388363fa031b81e9e1a0efedb951",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "boundary stimulus crosses the public threshold conditions for IQ Downconversion Chain",
+        "violated_property_ids": [
+          "P_BASEBAND_UPDATES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "9311aa7c1c3182799669e8d1dee6b571ca522a02f8dbb4796032e8ae6edc670d",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "6c2cda18e5babac80ab977a53407b27d5be1224756300b706eb2bb64b1d946af",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for IQ Downconversion Chain",
+        "violated_property_ids": [
+          "P_BASEBAND_UPDATES",
+          "P_LO_MONITORS",
+          "P_MIXER_MONITORS",
+          "P_PHASE_MONITOR",
+          "P_QUADRATURE_SEQUENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "88ec1138111a9ee1967be2cbdca7fe39a7ee26875c6cae5324b5d950e70c6cce",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "89c4aa28de4ff82c1a51db32c49921168628bf77927ecf01f43bde786261201c",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable IQ Downconversion Chain outputs",
+        "violated_property_ids": [
+          "P_QUADRATURE_SEQUENCE",
+          "P_RESET_COMMON_MODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "7b9896a76a6ce46caf4993419292cec7c6da88e0829ceb530bdb74a8b6931106",
+        "fault_class": "reset_semantics_error",
+        "mutation_bundle_sha256": "c0527f47b5127dc5418ae7fe9b860d2fbe684d46a3439ba4c0c6b1665f17d299",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "reset/recovery stimulus exercises IQ Downconversion Chain state override behavior",
+        "violated_property_ids": [
+          "P_QUADRATURE_SEQUENCE",
+          "P_RESET_COMMON_MODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "3b475157f2d98fa20f57bf19213c9d8b488c9ed89642e139fdb6255d3b69f9ef",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "49551734bae0fb1116577acef516a7fb700300eecf0c24f57dd005c30edf4f4d",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for IQ Downconversion Chain",
+        "violated_property_ids": [
+          "P_BASEBAND_UPDATES",
+          "P_RESET_COMMON_MODE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_threshold_shifted",
+    "canonical_dut_id": "094",
+    "hashes": {
+      "mutation_catalog_sha256": "6674edfac98ee0093c08820fdaae5c16801a3ec565bbe3ebbfd4f50de952037a",
+      "score_deck_sha256": "22482296baeefd60cf09a9bb01af4a54ee4fefb791ec5463ef0c29620cee7a1b",
+      "task_certification_sha256": "1e216f796622e7ef59040efbab709358ca5a89842025d8992dc604a8d37c9c2f",
+      "task_record_sha256": "354d8d72dfa70bfc6651e0f706374dec9bb944ddd6e920392cf67e570a96ab9e"
+    },
+    "release_dir": "094-iq-downconversion-chain"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "candidate": "submission/testbench.scs",
+  "candidate_command": "rm -rf /tmp/vabench-visible/reference /tmp/vabench-visible/evas-output/reference && mkdir -p /tmp/vabench-visible/reference && cp submission/testbench.scs /tmp/vabench-visible/reference/testbench.scs && ln -sfn \"$(pwd)/task/supplied_dut\" /tmp/vabench-visible/reference/dut && evas simulate /tmp/vabench-visible/reference/testbench.scs -o /tmp/vabench-visible/evas-output/reference --spectre-strict",
+  "candidate_dut_binding": "./dut",
+  "feedback_scope": "reference_dut_only",
+  "reference_dut_root": "task/supplied_dut",
+  "reference_dut_tree_sha256": "9a721081cb75261bb970b4342e82209e8664711d27aa09287bb320e8cc89f59f",
+  "schema_version": "r53-direct-evas-testbench-reference-v1",
+  "working_directory": "public_root"
+}

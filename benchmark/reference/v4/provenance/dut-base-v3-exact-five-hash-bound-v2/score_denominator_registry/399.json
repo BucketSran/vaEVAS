@@ -1,0 +1,79 @@
+{
+  "family_id": "399",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_uvlo_hysteresis/certification.json",
+        "certification_sha256": "63b75a53e41c952ea642be9249ad978936014f7c29528a474a376c39bad77f49",
+        "fault_class": "wrong_threshold",
+        "mutation_bundle_sha256": "02f2771cbd410ce3ce54caf2f2e81e426c05c97b65c6a25ed0e7827e048ed1da",
+        "mutation_id": "neg_001_no_uvlo_hysteresis",
+        "source_catalog_certification_path": "negative_variants/neg_001_no_uvlo_hysteresis/certification.json",
+        "trigger_condition": "supply lies between falling and rising thresholds",
+        "violated_property_ids": [
+          "P_STATE_METRICS",
+          "P_UVLO_HYSTERESIS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_supply_dip_keeps_counter/certification.json",
+        "certification_sha256": "eff3e8ce1ec663b3963034349d0e0c2e698383d87b8901888d86e8f42552c15f",
+        "fault_class": "missing_fault_reset",
+        "mutation_bundle_sha256": "d2800f8ecac47071a5fc4cfd908c8d4e2fec18c3327e078d5d2e8ed5ecaae269",
+        "mutation_id": "neg_004_supply_dip_keeps_counter",
+        "source_catalog_certification_path": "negative_variants/neg_004_supply_dip_keeps_counter/certification.json",
+        "trigger_condition": "supply crosses below uvlo_fall after partial or full release",
+        "violated_property_ids": [
+          "P_DIP_RESTART"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_disable_outputs_not_safe/certification.json",
+        "certification_sha256": "2f03573aa3904520f861e3f9251fe4ecec0252bd5712a95fe317498544cbe60f",
+        "fault_class": "unsafe_reset_disable_outputs",
+        "mutation_bundle_sha256": "42fcba8c33722162ad0e45bc5169e0940931e24953195c4e27fd6b678d15e162",
+        "mutation_id": "neg_005_reset_disable_outputs_not_safe",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_disable_outputs_not_safe/certification.json",
+        "trigger_condition": "reset is asserted or enable is deasserted",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_SAFE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_release_one_cycle_early/certification.json",
+        "certification_sha256": "f1b64a3ecd71d6216663e4a477df7fde2acd6ecf590b7f7af0085d2139959f5e",
+        "fault_class": "off_by_one_delay",
+        "mutation_bundle_sha256": "d2e62e64e7ce234765b78c391d2e6ddb50d0f4dec76b4bb4442b020936b52c75",
+        "mutation_id": "neg_002_release_one_cycle_early",
+        "source_catalog_certification_path": "negative_variants/neg_002_release_one_cycle_early/certification.json",
+        "trigger_condition": "release count is one less than release_cycles",
+        "violated_property_ids": [
+          "P_RELEASE_DELAY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_brownout_polarity_inverted/certification.json",
+        "certification_sha256": "761e3659e25853e53511346686a7bfbe70d650b1f3ba72262307b464c8cb13d5",
+        "fault_class": "wrong_status_polarity",
+        "mutation_bundle_sha256": "8a9ede91eaa757d7e1b767a5afd70bf51684662464596450b1982413e5a12e53",
+        "mutation_id": "neg_003_brownout_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_003_brownout_polarity_inverted/certification.json",
+        "trigger_condition": "an enabled brownout interval is active",
+        "violated_property_ids": [
+          "P_UVLO_HYSTERESIS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_no_uvlo_hysteresis",
+    "canonical_dut_id": "399",
+    "hashes": {
+      "mutation_catalog_sha256": "49edda7fabc40bcb00aa11387b5cf16b71a67ed42571df4b1e33cc08fbcc3a44",
+      "score_deck_sha256": "bd1c6a57e9b1f09938f4e24754eb8cc027dd909e5edfbe6b6e382bbbea64b168",
+      "task_certification_sha256": "4519cda6abd41a74230598226d1192e9d076fa933023ae0f379790d5fe290928",
+      "task_record_sha256": "ed3a06af4aae400689b23dc5b77de1a8551dedbd9c401c8c02c67dde4c9a057d"
+    },
+    "release_dir": "399-supply-supervisor-brownout-por"
+  }
+}

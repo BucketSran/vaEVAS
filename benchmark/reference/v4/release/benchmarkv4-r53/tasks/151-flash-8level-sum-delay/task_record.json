@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "flash_8level_sum_delay.va"
+  ],
+  "canonical_dut_source_slug": "151-flash-8level-sum-delay",
+  "checker_task_id": "v4_151_flash_8level_sum_delay",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8b08c4de46d71bf6b59f6af9c10602c77a3da080c36499baeb74698b1c30484d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ff612eb665e3abbd1981a113cf7c4c2ba6327efd202df200ecea5d161362a3ac",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d655a0043465ef9f91aa137daf3093e9aab9a04ee1d21973f4b71fd727ebc3eb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "151",
+  "family_spec_sha256": "c31d3294b89c2196daf05000f01039da0ce395b88eca4596cda1adaf1e3f6e98",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2c893d94ba2dcbdf0ed5608ece5034d0238c4d80b379559323c3b1d227a8b997",
+  "public_contract": "tasks/151-flash-8level-sum-delay/public_contract.json",
+  "public_contract_sha256": "3893811a6fcfd72627ed33bbe70e0499249d46e0c0d4bee619adacfcb19b0553",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/151-flash-8level-sum-delay",
+  "task_id": "v4-151"
+}

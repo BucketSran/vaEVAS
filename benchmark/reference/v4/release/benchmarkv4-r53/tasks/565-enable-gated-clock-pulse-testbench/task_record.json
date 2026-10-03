@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "065-enable-gated-clock-pulse",
+  "checker_task_id": "v4_065_enable_gated_clock_pulse",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "b464e06a7535ee0d1a2ea36cd38e043e2a8dc13e0ebdc87277c6d94252bc89db",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "51c2f92ae9ad5328c25ad7cbee8d17e5aa03c4b3f9835b056c986696e048118e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "b464e06a7535ee0d1a2ea36cd38e043e2a8dc13e0ebdc87277c6d94252bc89db",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c506b45cdf95dc60f21a9fbcef86298ba8a9ae2e392eecb404b2271ee05a6a02",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "586379d29a20fcf32e5bbfc785770dfd7e5e8c96427b869933f3a0b66b164374"
+  },
+  "family_id": "065",
+  "family_spec_sha256": "f38b3ae98309b96112db628e720f5088788729de00317bfde5a65d6da891c36e",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4592278b3a326cf1dd88d7e2c08c3d68904f0364a6e163c445e2a42f3445fc63",
+  "public_contract": "tasks/565-enable-gated-clock-pulse-testbench/public_contract.json",
+  "public_contract_sha256": "3eccef81e6ab9fec5e8866295d2d7e839593a351a0a121c12b5ef1398a99baff",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/565-enable-gated-clock-pulse-testbench",
+  "task_id": "v4-565"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "265-dynamic-supply-enable-driver",
+  "checker_task_id": "v4_265_dynamic_supply_enable_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "38e737c9dd4722cb2cd71785098a4655f3bb70b28e2a80cbc5a37c76782d920a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "7467d826fd62aec08d238c728869bde94b2aaaa2b8a71374eeb71bfcf9bde162",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "38e737c9dd4722cb2cd71785098a4655f3bb70b28e2a80cbc5a37c76782d920a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "44a5c8f871c4b6ccfe6c5ffa9c00ec54331825763c6123a95561e27e299a9484",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "d3b27e020463a8c944dedde10ba97ca9d6530346739d844f60ff019034550bf9"
+  },
+  "family_id": "265",
+  "family_spec_sha256": "9fbddca3f0dfeae842de1992205ae0b5755d68decfb577735384cf6d968b1547",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ed1e167f177f275df262a65989a4eb558c8241aab0f81c77993c0b3055e38552",
+  "public_contract": "tasks/765-dynamic-supply-enable-driver-testbench/public_contract.json",
+  "public_contract_sha256": "54a43a693531b8abd134481176c88f81f081f6a6a3695356f029aa17b35d7c24",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/765-dynamic-supply-enable-driver-testbench",
+  "task_id": "v4-765"
+}

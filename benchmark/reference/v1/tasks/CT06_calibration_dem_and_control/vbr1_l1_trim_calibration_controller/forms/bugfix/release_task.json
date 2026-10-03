@@ -1,0 +1,45 @@
+{
+  "id": "vbr1_l1_trim_calibration_controller:bugfix",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_trim_calibration_controller",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Calibration, DEM, and Control",
+  "base_function": "Trim-voltage generator",
+  "family": "bugfix",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/gold/tb_cdac_calibration_buggy.scs",
+      "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix/gold/tb_cdac_calibration_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_trim_calibration_controller/bugfix/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "cdac_calibration",
+    "source_task_id": "vbm1_cdac_calibration_bugfix",
+    "historical_source_task_id": "vbm1_cdac_calibration_bugfix",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_trim_calibration_controller/forms/bugfix"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

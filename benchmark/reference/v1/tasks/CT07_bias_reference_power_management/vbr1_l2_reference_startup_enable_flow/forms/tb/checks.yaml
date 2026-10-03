@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "supply_good_and_enable_monitors_are_visible"
+    - "pre_enable_reference_is_held_low"
+    - "enabled_reference_startup_settles"
+    - "startup_progress_and_state_transition_visible"
+    - "supply_dip_resets_valid_status"
+    - "state_and_valid_status_recover_after_supply_return"
+parity:
+  reference: "spectre"
+  status: "certified"
+  notes:
+    - "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

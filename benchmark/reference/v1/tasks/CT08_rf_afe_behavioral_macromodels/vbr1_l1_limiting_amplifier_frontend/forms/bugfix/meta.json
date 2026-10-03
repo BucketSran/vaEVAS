@@ -1,0 +1,41 @@
+{
+  "id": "vbr1_l1_limiting_amplifier_frontend_bugfix",
+  "task_id": "vbr1_l1_limiting_amplifier_frontend_bugfix",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_limiting_amplifier_frontend",
+  "family": "bugfix",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "small_input_gain_preserved",
+    "large_input_limited_high_low",
+    "limiting_metric_asserted"
+  ],
+  "designed_source": true,
+  "public_inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "submission_artifacts": [
+    "dut_fixed.va"
+  ],
+  "private_reference_artifacts": [
+    "gold/dut_fixed.va"
+  ]
+}

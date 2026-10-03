@@ -1,0 +1,29 @@
+{
+  "checked_families": [
+    "241",
+    "242",
+    "243",
+    "244",
+    "245",
+    "246",
+    "247",
+    "248",
+    "249",
+    "250"
+  ],
+  "checks": [
+    "profile_semantic_parity",
+    "observable_alignment",
+    "trace_coverage",
+    "structured_redacted_diagnostics",
+    "task_record_hashes",
+    "score_denominator_manifest_hashes"
+  ],
+  "evas_engine_used": "evas2",
+  "failure_count": 0,
+  "failures": [],
+  "python_fallback_evidence_claimed": false,
+  "schema_version": "v4-repair-gate-validation-v1",
+  "source": "benchmark-vabench-release-v4/provenance/dut-base-v3-exact-five-hash-bound-v2",
+  "status": "PASS"
+}

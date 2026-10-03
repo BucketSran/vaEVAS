@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "355-pam4-tx-driver",
+  "checker_task_id": "v4_355_pam4_tx_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a806dfd1bc02860c7dcd5a6e6db1cc979b6e7351834b4370d4ffadd8372c75f3",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "438c78629b4c212aad6d807ed07c520cbbf5984414252de2acee8b8df6387d43",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a806dfd1bc02860c7dcd5a6e6db1cc979b6e7351834b4370d4ffadd8372c75f3",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "85277428802f508ae43b23d9f79b40db5a0dd29d8eb085410edc1691b9880517",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "9d500e1377b13d4941f238b85dcaeb08a1a2218dab9a23374a22b0e3881987a8"
+  },
+  "family_id": "355",
+  "family_spec_sha256": "0da82fac2756b44f8b1036107a4a06ddae152fb592cccecf812805f291f61af3",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "72ab9e50eb622aac12d9820528c5a834491776b6ab5cc74238b77d3da164e1d9",
+  "public_contract": "tasks/855-pam4-tx-driver-testbench/public_contract.json",
+  "public_contract_sha256": "a4d6175b6711973683c0c2794b087aca5a6dd3a2cfbb5d76a97fd41beb8881e1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/855-pam4-tx-driver-testbench",
+  "task_id": "v4-855"
+}

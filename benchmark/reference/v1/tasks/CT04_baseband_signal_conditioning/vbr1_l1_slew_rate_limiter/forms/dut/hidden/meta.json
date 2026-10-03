@@ -1,0 +1,49 @@
+{
+  "id": "vbm1_slew_rate_limiter_dut",
+  "task_id": "vbm1_slew_rate_limiter_dut",
+  "release_entry_id": "vbr1_l1_slew_rate_limiter",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "spec-to-va",
+  "category": "signal-source",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_slew_rate_limiter_dut",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "@(timer(",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "slew_rate_limiter.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/slew_rate_limiter.va",
+    "gold/tb_slew_rate_limiter_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_slew_rate_limiter_dut/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_slew_rate_limiter_dut/spectre_result.json"
+  }
+}

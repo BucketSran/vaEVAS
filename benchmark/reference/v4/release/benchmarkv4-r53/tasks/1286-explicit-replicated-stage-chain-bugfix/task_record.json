@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "explicit_replicated_stage_chain.va"
+  ],
+  "canonical_dut_source_slug": "286-explicit-replicated-stage-chain",
+  "checker_task_id": "v4_286_explicit_replicated_stage_chain",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a9d41a521b2c620b122e89aa9e4b3855ae7af6c876f4d6a222084733cca1cb99",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d8bd550e7bdde1509b4a63159ea04357fe05c4ae95c13f5a5fad40f09909250b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "82c9fdfdaf31abb6be053e0ebc4c4f5e607e9e60f6c072ed01b39631dfdf24d4",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "286",
+  "family_spec_sha256": "c1b2bc17776d2f6933dd4db21599999ab26c9bcd04776be6374845caa9488b93",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a09d7996591af1f6f61b0ae41f0c82e3015d61e2884fa8b9b237b9216b364dfb",
+  "public_contract": "tasks/1286-explicit-replicated-stage-chain-bugfix/public_contract.json",
+  "public_contract_sha256": "6d9d2ad1b1d9f03165148cace218f2ba3cce8f0a83033044a324db55a425bfd1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1286-explicit-replicated-stage-chain-bugfix",
+  "task_id": "v4-1286"
+}

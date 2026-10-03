@@ -1,0 +1,16 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/sampled_true_rms_to_dc.va"
+
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1n period=4n width=1.8n rise=100p fall=100p
+Vreset (reset 0) vsource type=pwl wave=[0 0.9 3n 0.9 3.2n 0 46n 0 46.2n 0.9 50n 0.9 50.2n 0 90n 0]
+Venable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 25n 0.9 25.2n 0 33n 0 33.2n 0.9 90n 0.9]
+Vinp (vinp 0) vsource type=sine sinedc=0.45 ampl=0.28 freq=37Meg
+Vinn (vinn 0) vsource type=sine sinedc=0.45 ampl=0.07 freq=19Meg
+XDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc
+
+simulatorOptions options evas_profile=balanced
+
+tran tran stop=90n maxstep=50p
+save vinp vinn clk reset enable rms_out valid

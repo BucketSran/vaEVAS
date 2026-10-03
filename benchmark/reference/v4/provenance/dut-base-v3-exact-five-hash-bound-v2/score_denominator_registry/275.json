@@ -1,0 +1,78 @@
+{
+  "family_id": "275",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "17f9a398891a3368ec4e8abd026bd236e86925d77f14befd636152afdce639bc",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "61f33e89f80d7f1f484990c2719593380ca55da940f713e0d03bad1ac067bb8f",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "11d0aaf0929763ef2f378fff1d4b65e97e284a21cca590e53f7ebf7280eef86a",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "d9918f047fca58abe9069ba108e1e2a347c02adb021e5385db6a86ea69e4cdd6",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "f4ef678b8cb1d34bf51bc7e61c9f1b2fb5c591ffa622bf592a6c58931dbcc3a3",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "142ead77cdbd82d4917b5ca6a534f6ad954154782b99566b42b4177d80b69d4e",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "31f948893f76ef43eb8468e68b47b1b643cabcc49081f2cc69410c175ec27ed9",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "9be40a504c367d47273532340e67fe9de5f6fd5473fb83ab444cd8125e2e91cb",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_ACCUMULATOR_STATE_AND_ALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "15e552a7fdf660ec71c31778874ad286c73344382bbb552d47a64e02900c3120",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "51e377c0f1a179591fcf6b34ce1872cde3c81b1a3c90e4c2f7d5b88a35dd125e",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "275",
+    "hashes": {
+      "mutation_catalog_sha256": "d44de554964d8a0640cd7c7d57bbd957a90274265e348309b0e5c8b13f6fb5b0",
+      "score_deck_sha256": "a0d899cc5e4da4bcf9d526696a8c6ccc88c0d8376c71b52a58c365217b0fb68b",
+      "task_certification_sha256": "89e513c6de4f1d6928b4c35a2c103e24f800ad6b09836f1704861bc242be7e07",
+      "task_record_sha256": "91d427f522faaaf9f963ee382d8a1a6ce1396f7e996c85a407cf11707c1da6a0"
+    },
+    "release_dir": "275-deterministic-energy-accumulator"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "iq_downconversion_chain.va"
+  ],
+  "canonical_dut_source_slug": "094-iq-downconversion-chain",
+  "checker_task_id": "v4_094_iq_downconversion_chain",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "49a5dbd4d8ae5da81ff0670b2635cd99188bf9be6a7fd91ad191ad2616655ee4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a71e4d87c12c8f289f4c8566bf6cfeeaab1b3268859bde06add29d2af16b1322",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "762f6c934bb056870a12ac6a5885cb59c91028a2f668e6dd452f9da17414bd0b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "094",
+  "family_spec_sha256": "841e97dcb331a20eb0b027b13bccfe0bbcf1fc41677c868946d4a30e6e9e6231",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3f879e076f96f8749500060a9e02f6c53373a1f5985887aba473e637b953d36b",
+  "public_contract": "tasks/094-iq-downconversion-chain/public_contract.json",
+  "public_contract_sha256": "62745b52f72e7cd61134a8c63b7d9e95104c2e1597f9ff1eda68ad37d69de3bd",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/094-iq-downconversion-chain",
+  "task_id": "v4-094"
+}

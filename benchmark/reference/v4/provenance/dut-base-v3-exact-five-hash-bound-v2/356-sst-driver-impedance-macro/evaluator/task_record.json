@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "356",
+  "checker_task_id": "v4_356_sst_driver_impedance_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "1695f271809fbe34936f9fabcf520ea2af9a156609be4844a458078a69052f65",
+    "checker_profile.json": "3adf2b5d7e2234551e4508289d81bc4eef0bf65761d6e1d9f0fce59976260d8d",
+    "derivation_manifest.json": "b8005a1902560c2f99a5a60b098fc1dde1bf1a41ee4dceb7fa036478dbfce6de",
+    "family_spec.json": "d1156ed1f19f774807d8266755f9ccafae9ff8781a816f4310181ea76afe3247",
+    "harness_spec.json": "1d1a28566d3573ad49dd04fa44c6829551cad974781fdd46ffb277905b09836c",
+    "mutation_catalog.json": "99fd2ce86221de527264752acc4029e6470ccdefd3fb0a8c5b17ab676fc88c78",
+    "profiles/feedback.json": "e462d550ea2cd3603f4dac748475bc2f637fc130ef648b8eb0bff7c704bd7310",
+    "profiles/score.json": "5f73c1e976c48cdacc56cd3c0c36988b759cec1209dfcd8ffb5e90d0e16012f7",
+    "score_tb.scs": "dfb1ace325f0de447e30a48e55f2ef217a52ac3325a25b61ad9e23252ce989c3",
+    "solution_tree": "1d5c2bf6db4ea6f4be039a8e15683666eb6930c5c3b94cf934be8591e4d771a4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "cbe4ee324dc44026c6b23619ba5f45cb1f51b860b634f8a614362ebbab78bb69",
+    "instruction.md": "fb9683abb3ecac7ae9f121a3275b53c17fd96a45721659604bd4bcf1a8305d26",
+    "public_contract.json": "51532b635e521d35bb3f4c5c18db23b9077ea50782e4b38605ad4eea461bfdc7"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "1695f271809fbe34936f9fabcf520ea2af9a156609be4844a458078a69052f65"
+  },
+  "release_dir": "356-sst-driver-impedance-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "915-sst-driver-impedance-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "sst_driver_macro.va"
+  ]
+}

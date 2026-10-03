@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "192-sar-logic-4b-self-timed",
+  "checker_task_id": "v4_192_sar_logic_4b_self_timed",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5a184ba7c7142baf05d64c53c01330989d219bb15437d907ab3cdf8744bf26bc",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "17424b8b5e95c663de7580a2ef1f42cf196a16677e41872fb07e3f66948a4456",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5a184ba7c7142baf05d64c53c01330989d219bb15437d907ab3cdf8744bf26bc",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c49e7daa63375c12be3a16d1811f78013015e7dec26c82cc43685eb84dd279b5",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ebb03b2ad139f78992a8e9a73f0416cd401b3a8f37917b3112fb7376d6d6e4ab"
+  },
+  "family_id": "192",
+  "family_spec_sha256": "5f936d8d2426b956bf10102b56dcd2e9732cf5cf7c75cc00275a90964a70e5f4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7b9e8e15e91e513a567e16805d105000e0e8279694bacb9e732b6bcd7d604f20",
+  "public_contract": "tasks/692-sar-logic-4b-self-timed-testbench/public_contract.json",
+  "public_contract_sha256": "cfe9030f356bb4dd16971e80b7770ebf89d96be21b918359dc89beaa419e2b0e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/692-sar-logic-4b-self-timed-testbench",
+  "task_id": "v4-692"
+}

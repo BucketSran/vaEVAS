@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "361-dll-delay-line-lock",
+  "checker_task_id": "v4_361_dll_delay_line_lock",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "812d3fd65f22e76ba6e269a8622813c5b91eafd67df22436d6797cba38649b88",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "e91f97a3d706c16e3a6e36be088bd6b342c72a49b007712865a3c6e0d5160e2a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "812d3fd65f22e76ba6e269a8622813c5b91eafd67df22436d6797cba38649b88",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ba65eed4c678d6a18739bc3b8a70897120eb8395516af95d0c2c3e855244dcee",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "6df41f9ea1c5740f0179e7a49bafb3fe6791851fb66727818a5c91abbd6a63e1"
+  },
+  "family_id": "361",
+  "family_spec_sha256": "1971990c49c5f2e1590d0d57655a1d3269b175c6545106a3ac7557e0d9c37d27",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5e58b8d76bf7460c3b0f70d2158fa0dde4820da2141740798e3046df61822bfa",
+  "public_contract": "tasks/861-dll-delay-line-lock-testbench/public_contract.json",
+  "public_contract_sha256": "7da3f3f76e555647195143b7c1f044b0a798944c06c28aac0a39a172ec34282b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/861-dll-delay-line-lock-testbench",
+  "task_id": "v4-861"
+}

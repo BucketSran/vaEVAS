@@ -1,0 +1,54 @@
+{
+  "id": "vbr1_l1_power_on_reset_detector:bugfix",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_power_on_reset_detector",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Bias Reference and Power Management",
+  "base_function": "Power-on-reset detector",
+  "family": "bugfix",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix/gold/tb_power_on_reset_detector.scs"
+    ],
+    "public_inputs": [
+      "prompt.md",
+      "gold/dut_buggy.va"
+    ],
+    "submission_artifacts": [
+      "dut_fixed.va"
+    ],
+    "private_reference_artifacts": [
+      "gold/dut_fixed.va"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_power_on_reset_detector/bugfix/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "power_on_reset_detector",
+    "source_task_id": "",
+    "historical_source_task_id": "",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_power_on_reset_detector/forms/bugfix"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

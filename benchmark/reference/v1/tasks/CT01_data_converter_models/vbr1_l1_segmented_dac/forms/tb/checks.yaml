@@ -1,0 +1,16 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "save"
+    - "tran"
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "safe_time_output_levels_match_expected_segmented_codes"
+    - "output_is_monotonic_across_programmed_codes"
+parity:
+  required: true
+  tolerance_notes: "DAC levels use safe-time samples away from PWL code transitions with 20 mV absolute tolerance."

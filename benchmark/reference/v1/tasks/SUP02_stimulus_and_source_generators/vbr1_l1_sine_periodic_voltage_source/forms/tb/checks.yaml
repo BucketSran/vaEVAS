@@ -1,0 +1,17 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include: []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "multitone_waveform_matches_public_samples"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

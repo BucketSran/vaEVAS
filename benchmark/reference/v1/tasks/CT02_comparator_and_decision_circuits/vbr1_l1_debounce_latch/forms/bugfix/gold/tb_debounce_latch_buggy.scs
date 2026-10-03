@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "dut_buggy.va"
+
+Vsig (sig 0) vsource type=pwl wave=[0 0 30n 0 31n 0.9 35n 0.9 36n 0 70n 0 71n 0.9 130n 0.9]
+Vrst (rst_n 0) vsource type=pwl wave=[0 0 15n 0 16n 0.9 140n 0.9]
+
+XDUT (sig rst_n out) debounce_latch
+
+tran tran stop=140n maxstep=500p
+save sig rst_n out

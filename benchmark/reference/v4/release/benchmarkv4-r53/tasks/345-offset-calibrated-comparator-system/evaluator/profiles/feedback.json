@@ -1,0 +1,27 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "1fc7dad132697a35128c27c5d4ab67790de487c6d4d20bd847444c48a8a23379",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "355n"
+  },
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_CAL_RESET_CLEAR",
+    "P_CAL_CODE_UPDATE",
+    "P_CAL_OFFSET_DAC",
+    "P_CAL_READY_QUALIFICATION",
+    "P_CAL_COMPARATOR_DECISION"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

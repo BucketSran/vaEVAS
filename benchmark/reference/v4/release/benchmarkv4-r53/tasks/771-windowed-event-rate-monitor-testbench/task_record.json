@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "271-windowed-event-rate-monitor",
+  "checker_task_id": "v4_271_windowed_event_rate_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "cf6618a6cc462d0b67c18bd9f025e17802160da6e48c2f58308ce45512bda9a7",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "03aadd7dce6eba1e36efe20c548e9f6302cb4daabd4658830dad4a145ba715b6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "cf6618a6cc462d0b67c18bd9f025e17802160da6e48c2f58308ce45512bda9a7",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4b33e8c1456291f9501398db2b4c8e64d339125bcb04d1eef2ec6bf81e1e2e4d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "24c1899eb6fabd051dff3c6df26c0b6132493fc6ea37da9a935b6e3b934ddc03"
+  },
+  "family_id": "271",
+  "family_spec_sha256": "759f61a88b370ff0676e35df04a53cc09913a78a7dd9fe234dc3d80d7b38152a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0704d8eea9ea300888c052e33fd9f47b0bdedf4523acd220a145680642375d9e",
+  "public_contract": "tasks/771-windowed-event-rate-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "045ad79d55cdac1c88976cb431b77df22a8413219c9b0fd1803a9efc1e96770f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/771-windowed-event-rate-monitor-testbench",
+  "task_id": "v4-771"
+}

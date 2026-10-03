@@ -1,0 +1,31 @@
+{
+  "canonical_semantics_sha256": "3dc979af8aaede28bfb5893f67f877df0d8a07918a0df61472f90c0e17aaee22",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_MODEL_A_DYNAMIC_SUPPLY_ELECTRICAL_LEVEL",
+    "P_BUILD_A_DYNAMIC_SUPPLY_VOLTAGE_DOMAIN",
+    "P_VSUP_MIN_0_55_V_MINIMUM",
+    "P_VTH_FRAC_0_5_INPUT_THRESHOLD",
+    "P_VLO_FRAC_0_0_VHI_FRAC",
+    "P_TR_40P_OUTPUT_TRANSITION_SMOOTHING_TIME"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "296",
+    "feedback_semantics_sha256": "3dc979af8aaede28bfb5893f67f877df0d8a07918a0df61472f90c0e17aaee22",
+    "harness_spec_sha256": "907eee94a8d947f4e273b9e6be987390b8ef5a4b52a7e1da09c029acd3192a1c",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "3dc979af8aaede28bfb5893f67f877df0d8a07918a0df61472f90c0e17aaee22",
+    "task_id": "v4-296"
+  },
+  "test_deck_sha256": "bf6932ca732fb134dfaa16047fc86a2044b44ab12c22fa2f380d3ae404a47715"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "030-ldo-regulator-macro-model",
+  "checker_task_id": "v4_030_ldo_regulator_macro_model",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "fd4ccd4c6cf987195a3bd3a188c9e5b0687eeb99628de82846b7f8e508d0f81c",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2756fa3b3e0723135e5896fc6780be93dadb053e33713bef8e90827a3b43c8bb",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "fd4ccd4c6cf987195a3bd3a188c9e5b0687eeb99628de82846b7f8e508d0f81c",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "e21d3d4c928bab94c1efdeae470c374bbe9a989f80b45abe5f0c223647b5c2dc",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "a7e94ce6432f4503ec8796f9a932ee4f37951cfd8dfd72afebae067c7f50bec8"
+  },
+  "family_id": "030",
+  "family_spec_sha256": "6e87710d02e2d35422c32058229519b2817bfd95fbf7af29a66794ee25c5f3af",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cc5dc9d90885c2c66d8a57222224bfc15f15cda6e375ade85566539efdae0d42",
+  "public_contract": "tasks/530-ldo-regulator-macro-model-testbench/public_contract.json",
+  "public_contract_sha256": "64ff7de34cf885ec2bfe75c7127cf08949681b1d41dd3a4fc9a4c65bcff2f636",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/530-ldo-regulator-macro-model-testbench",
+  "task_id": "v4-530"
+}

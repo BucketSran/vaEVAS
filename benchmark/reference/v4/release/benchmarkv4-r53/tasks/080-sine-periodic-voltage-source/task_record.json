@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "multitone.va"
+  ],
+  "canonical_dut_source_slug": "080-sine-periodic-voltage-source",
+  "checker_task_id": "v4_080_sine_periodic_voltage_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0e3fc451e0cf30d9f65b2dcbaa8a8a7fe830c2182a16989dd400d092940b833a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d3f05775a1da7e929ef959b761e79ed862dcb4588fdb4a8a43cac24e63c15e89",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0ae5f4311c09f0bfd57034af689de83c15127365089c9bf97b040ab607c4169d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "080",
+  "family_spec_sha256": "fff541e9299fa2a25e9d24fe350ec1884bf90b083c3d2e39e7cb1cc4f55c8421",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b90f21469a8712bc3f55800ffaa1ab9b8bf1f093d55fcf37ed3716aa82bdb797",
+  "public_contract": "tasks/080-sine-periodic-voltage-source/public_contract.json",
+  "public_contract_sha256": "0a0a26d5c85bfd3cb084b7c3f8b972d69b1fe1b7df3ff2a4fdcb86ca95161729",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/080-sine-periodic-voltage-source",
+  "task_id": "v4-080"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "vbr1_l2_converter_static_linearity_measurement_flow_e2e",
+  "task_id": "vbr1_l2_converter_static_linearity_measurement_flow_e2e",
+  "release_entry_id": "vbr1_l2_converter_static_linearity_measurement_flow",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "end-to-end",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "converter_static_linearity_measurement_flow.va",
+    "tb_converter_static_linearity_measurement_flow.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "ramp_code_coverage",
+    "monotonic_reconstruction",
+    "nonuniform_dnl_metric",
+    "inl_metric_matches_reconstruction_error",
+    "dnl_metric_matches_step_error"
+  ],
+  "designed_source": true,
+  "public_inputs": [
+    "prompt.md"
+  ],
+  "submission_artifacts": [
+    "converter_static_linearity_measurement_flow.va",
+    "tb_converter_static_linearity_measurement_flow.scs"
+  ],
+  "private_reference_artifacts": []
+}

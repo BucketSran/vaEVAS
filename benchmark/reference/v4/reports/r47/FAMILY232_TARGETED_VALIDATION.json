@@ -1,0 +1,55 @@
+{
+  "certification_scope": "targeted_pre_release_validation_only",
+  "certification_status": "superseded_by_r47_full400",
+  "family_id": "232",
+  "release_revision": "r47",
+  "schema_version": "v4-family-targeted-validation-v1",
+  "source_bindings": {
+    "gold_dut_sha256": "1c644565c073902c3dbac496673e458aec2cdd66ae72a7a281696317adb315cd",
+    "neg_002_dut_sha256": "fb4cfc4d63516ee64303d83c9d4c28d133c8b19b9fe08e0fab05764fc2ab5cee",
+    "score_deck_sha256": "2f75709a0d04745a11f9d9d18a5909e99f1b0f7ce697e96ed4fc1d99fbd382e5"
+  },
+  "targeted_evas": {
+    "case_count": 6,
+    "command": "VAEVAS_EVAS_REPO=/home/zhangtuoken/EVAS EVAS_ENGINE=evas2 VAEVAS_DEFAULT_EVAS_ENGINE=evas2 python3 benchmark-vabench-release-v4/scripts/validate_v4_checker_batch.py --family-range 232-232 --output <output.json> --work-root <work-root> --workers 6 --timeout-s 120 --timing-scale 1.25 --timing-shift-s 2e-10 --force",
+    "diagnostic": "safe_divider_error@1.560ns denom=0.0160 observed=40.0000 expected=4.0000 max_err=36.0000",
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_version": "0.8.3",
+    "gold_pass_count": 1,
+    "insufficient_excitation_rejection_count": 1,
+    "mutation_kill_count": 5,
+    "neg_002_outcome": "compile_pass_behavior_fail",
+    "raw_report_sha256": "cd00d50f068ff238062553ad30b6f08b7e357386a817f8864df2a3fa0e4af0f0",
+    "status": "pass",
+    "timing_invariant_count": 6
+  },
+  "targeted_spectre": {
+    "backend": "sui-direct",
+    "command": "python3 benchmark-vabench-release-v4/operations/tri_form_derivation_prep/audit_tri_form_reference_spectre.py --release <materialized-r47> --task-id v4-732 --output <output.json> --work-root <work-root> --include-mutations --timeout-s 180",
+    "mode": "ax",
+    "raw_attempt_sha256": "ab9f67ffd06acdc296f4101e016fad0ac1110ee8af5022c3e78dd26da358c404",
+    "reason": "user explicitly waived Spectre for this r47 release; no Spectre PASS is claimed",
+    "status": "user_waived_not_run",
+    "historical_attempt": {
+      "reason": "remote_workdir_create_failed rc=255; thu-sui DNS unavailable",
+      "status": "infrastructure_blocked"
+    },
+    "validation_claim": "none"
+  },
+  "r47_full400_evas": {
+    "case_count": 2400,
+    "evidence_path": "evidence/r47/RUST_EVAS2_CERTIFICATION.json",
+    "evidence_sha256": "ee98cda9142155cc94ae47cb5e48080146374d73a5b2620f9b1a4a3d27f96871",
+    "family_count": 400,
+    "gold_pass_count": 400,
+    "mutation_kill_count": 2000,
+    "raw_report_sha256": "bc36371d8776c317b85a4fbcc5ab6e15b26ae9dc54a811257ca6bb4b4d1e95ba",
+    "status": "pass"
+  },
+  "validation_notes": [
+    "This targeted report is superseded by the hash-bound r47 full400 EVAS evidence.",
+    "The previous r44/EVAS 0.8.2 evidence predates the bounded mutation and is revoked for family232 gold and neg_002.",
+    "Spectre was not run to completion and is not a release gate for this user-authorized r47 campaign; no Spectre PASS is claimed."
+  ]
+}

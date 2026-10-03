@@ -1,0 +1,22 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "taperture"
+    - "valid"
+    - "coarse"
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "aperture_delayed_sample_tracks_vin"
+    - "hold_windows_show_bounded_droop"
+    - "coarse_decision_matches_held_sample"
+    - "valid_pulses_mark_completed_samples"
+
+parity:
+  required: true
+  tolerance_notes: "L2 chain checks sample aperture, bounded droop, coarse decision, and valid pulse timing."

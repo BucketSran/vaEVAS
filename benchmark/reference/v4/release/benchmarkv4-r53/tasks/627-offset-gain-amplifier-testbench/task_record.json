@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "127-offset-gain-amplifier",
+  "checker_task_id": "v4_127_offset_gain_amplifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "4f13dc7b7f9221c8169ffa202f50643ccda682c71a3e61c7080b4a80df1a0fe9",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3b2e65d85da212052804ff8111bf58430dc5226f9bc402e5778ce7340a4d61ad",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "4f13dc7b7f9221c8169ffa202f50643ccda682c71a3e61c7080b4a80df1a0fe9",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "fe161c717b857d12f6ac86eac7aa3b06282f0e1dce7432621b1e6b7929a512e8",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2bf608e021bdfd005c7979db8321fbe68a9e573c91385e19c59c9e11fdf21acc"
+  },
+  "family_id": "127",
+  "family_spec_sha256": "eee986a7d0b55578bb70b0bfd6d88d6300239495a1b91fa45ad599f4e2b6572c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2b54a82843d875b69333bca92db77dbdbd1cf7112e73e133a9e2725d60b2839a",
+  "public_contract": "tasks/627-offset-gain-amplifier-testbench/public_contract.json",
+  "public_contract_sha256": "ce49126282df2835a0dcf1d621371e7560e957a41b09173547793cc07df599f9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/627-offset-gain-amplifier-testbench",
+  "task_id": "v4-627"
+}

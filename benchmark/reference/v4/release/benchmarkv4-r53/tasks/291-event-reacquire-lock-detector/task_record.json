@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "event_reacquire_lock_detector.va"
+  ],
+  "canonical_dut_source_slug": "291-event-reacquire-lock-detector",
+  "checker_task_id": "v4_291_event_reacquire_lock_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4e91ae4ce0208c8af892261035640623b9e1fa4ff84fb991546102e03f0c6224",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "704f1f4b59ae5b88548428a6b16fb1d0aae83a6e9abc94b9632917692896951a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "08e59f04385c75ca845b856970c48498e9cfecc55c12cd9cb9a7bf18bcadbd2e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "291",
+  "family_spec_sha256": "17b5f51f2ccaa3404aeeaa7d91e2643e82bb0f762e72a84f77f1cb54abed93f5",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8a01e97a0695119ece1d63e38d392ddcc30eed7f71fe74201bb5def752383b0b",
+  "public_contract": "tasks/291-event-reacquire-lock-detector/public_contract.json",
+  "public_contract_sha256": "867beaf3915991df860b31080394fcd8703cd61a33209554b5c1f3b8daabcc9d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/291-event-reacquire-lock-detector",
+  "task_id": "v4-291"
+}

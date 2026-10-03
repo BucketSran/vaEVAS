@@ -1,0 +1,78 @@
+{
+  "family_id": "207",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_denominator/certification.json",
+        "certification_sha256": "0ffae64c582adac6ec76d18c272d3de0c1acdf82c27fa39d9b3c32b39f44e418",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "497d04a264e5445981a85309cdb1a7c9dec3d01a53824539a47f6f26292f89f4",
+        "mutation_id": "neg_003_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_denominator/certification.json",
+        "trigger_condition": "Normalizes by 15 instead of 16.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_CROSSING_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_omit_half_lsb/certification.json",
+        "certification_sha256": "d5b8775e64ea5fba8850b206cdb6185921ac7298e7a6c2e4a5bbc95d3ec4adf3",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "a020ec004918e186e4782206cbb5602c686008957be0c8a9bb152328c28f7123",
+        "mutation_id": "neg_002_omit_half_lsb",
+        "source_catalog_certification_path": "negative_variants/neg_002_omit_half_lsb/certification.json",
+        "trigger_condition": "Omits the 0.5 restore offset before scaling.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_CROSSING_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "3a301e004cce99abc5a5a12fb02fae88797d74a6bcc1956d203c25c06b3a5120",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "bd829bbe348e07f9e360d2be622dfd2b5f9310d947bee997440e1a75a43eee13",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "DAC Restore 4bit Clocked: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_CROSSING_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d5a17b440082b96d482b61cfe382e205d9d0e873314efb56c078bdb881e891df",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "4edac22b2149ae8d25628b5a2136fb7cae889f457dd8fedc9642f2a974d66633",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_CROSSING_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_output/certification.json",
+        "certification_sha256": "1b546563fa91786450db16eab5191bcd51e4b188b1f99e536893e19e0b153366",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "e632832d13ef5fb614530dc93f2ff257a279818237a2de395ae9c8fbd892208a",
+        "mutation_id": "neg_004_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_output/certification.json",
+        "trigger_condition": "Omits the bipolar -0.9 offset.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_CROSSING_DECODE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_denominator",
+    "canonical_dut_id": "207",
+    "hashes": {
+      "mutation_catalog_sha256": "8337764f3bd60eff1f2877829d11c7a6216b7ba33e5ea4417b31645746640fdc",
+      "score_deck_sha256": "2de6b985d3614cd07421c75c5e4e36402164b3a369234910ddc63163f21bd118",
+      "task_certification_sha256": "51810a4443c215329679ca7c571cfed091768aa514c32dfb9526e8ed64053f0a",
+      "task_record_sha256": "7631d702a02973edfaca4072449c24f305d0a2dec5b6483b6ed0bc8b18d06d1c"
+    },
+    "release_dir": "207-dac-restore-4bit-clocked"
+  }
+}

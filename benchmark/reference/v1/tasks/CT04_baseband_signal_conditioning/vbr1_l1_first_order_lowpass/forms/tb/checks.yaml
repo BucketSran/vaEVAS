@@ -1,0 +1,28 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "input_step_exercised"
+    - "monotone_first_order_step_response"
+    - "lagged_response_not_passthrough"
+    - "vout_reaches_expected_late_level"
+    - "bounded_without_overshoot"
+  public_observables:
+    - "vin"
+    - "vout"
+parity:
+  required: true
+  tolerance_notes: "Use safe-time level windows to avoid judging the exact discrete update row."

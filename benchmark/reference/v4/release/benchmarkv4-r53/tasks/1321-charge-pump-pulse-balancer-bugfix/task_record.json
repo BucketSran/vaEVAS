@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "charge_pump_pulse_balancer.va"
+  ],
+  "canonical_dut_source_slug": "321-charge-pump-pulse-balancer",
+  "checker_task_id": "v4_321_charge_pump_pulse_balancer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b4ce59809d68b4fc3a167f66269f4ef36788b63696fd7dcc20279ea27fb8eac6",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ff6debbd1a98e8ca843dca57cbb9cc4960e38b20e6775a18e2afb6b2fb8a3227",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9785137a3b820299428b7d17bad16bcfa06ccc8275efa6dea9d78f06b72b30f0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "321",
+  "family_spec_sha256": "9f330b32082ec5615fff82ff27e7dbc983fdd07fb2e648ca1987b8cfae344f1f",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1b96ece87153bd7874a605b7d93c40a63bee7b44a06db25069d16313543af40f",
+  "public_contract": "tasks/1321-charge-pump-pulse-balancer-bugfix/public_contract.json",
+  "public_contract_sha256": "2ac8cc8fbfb68b5fc2f24371e37545a477673d4f71c117b8e098a4111ec0be8b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1321-charge-pump-pulse-balancer-bugfix",
+  "task_id": "v4-1321"
+}

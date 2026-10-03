@@ -1,0 +1,78 @@
+{
+  "family_id": "302",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_integer_divider/certification.json",
+        "certification_sha256": "89c9ec44f859c9a16e1e212ab2d6130d130757f1314f7ce85d928320019811f3",
+        "fault_class": "divider_ratio_off_by_one",
+        "mutation_bundle_sha256": "33605f764014c930baae8ddcfe31561e622f4a74bc13b355e7e12a12bf371a8b",
+        "mutation_id": "neg_003_wrong_integer_divider",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_integer_divider/certification.json",
+        "trigger_condition": "Fractional-N Divider Accumulator Flow: uses the wrong base integer divider so the late-window feedback cadence cannot track the reference.",
+        "violated_property_ids": [
+          "P_GENERATE_FB_CLK_BY_TOGGLING_IT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_lock_stuck_high/certification.json",
+        "certification_sha256": "b71b721a678949568b711524b091f88919ff5b90078b077fea9d9865cc5421b4",
+        "fault_class": "lock_qualification_bypass",
+        "mutation_bundle_sha256": "1de206bc6549cf664e8b5d54c4fe1284dfe94be90d7f028c4db1b8020e2021e5",
+        "mutation_id": "neg_002_lock_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_002_lock_stuck_high/certification.json",
+        "trigger_condition": "Fractional-N Divider Accumulator Flow: generates the clocks but drives lock high continuously so the disturbance and reacquire behavior is missing.",
+        "violated_property_ids": [
+          "P_GENERATE_A_BEHAVIORAL_DCO_CLOCK_ON"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_loop_correction/certification.json",
+        "certification_sha256": "f5110f5960dca0747e92ca5e38150b09691b2a73fbd6f1189175292a081c6704",
+        "fault_class": "loop_correction_disabled",
+        "mutation_bundle_sha256": "e47e714c13e914905ae4d1eceb2c134b1cbc0fe19aab6d421ee16f4c0f19ef87",
+        "mutation_id": "neg_004_no_loop_correction",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_loop_correction/certification.json",
+        "trigger_condition": "Fractional-N Divider Accumulator Flow: keeps the control voltage fixed instead of correcting after the reference frequency step.",
+        "violated_property_ids": [
+          "P_UPDATE_A_BOUNDED_CONTROL_VOLTAGE_MONITOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_vctrl_out_of_range/certification.json",
+        "certification_sha256": "8d3b13636f22455845736dc605d2e7feb73a06b522d970a2b43df104a4d5d216",
+        "fault_class": "monitor_rail_violation",
+        "mutation_bundle_sha256": "af151ef7b88aa4b741d4cacec155efdb7ce38e4b28134fe4b136f270e94b2c9a",
+        "mutation_id": "neg_005_vctrl_out_of_range",
+        "source_catalog_certification_path": "negative_variants/neg_005_vctrl_out_of_range/certification.json",
+        "trigger_condition": "Fractional-N Divider Accumulator Flow: reports a control-voltage monitor outside the supply rails while otherwise preserving most clock behavior.",
+        "violated_property_ids": [
+          "P_DRIVE_LOCK_HIGH_AFTER_STABLE_TRACKING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "cc7435432109fa665fe040dd20f476e62366f25bbaa9427c344973782a63c31e",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "f91563920cf1200fdc4ae259479cc668a3c64196a78271107274d9735b744559",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Fractional-N Divider Accumulator Flow: keeps all outputs at the low rail so there is no DCO, feedback, lock, or control behavior.",
+        "violated_property_ids": [
+          "P_USE_REF_CLK_AS_THE_REFERENCE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_integer_divider",
+    "canonical_dut_id": "302",
+    "hashes": {
+      "mutation_catalog_sha256": "73c9880bb45c574c66582b94d4a091514d5bba3f40c7705270bdce289470d5ab",
+      "score_deck_sha256": "0a826822bbc8688db46e435be9ab5f38d228023dc7d1d8c4056edb649e0c4683",
+      "task_certification_sha256": "f06bea652368a10be2af43a8da2b1c3c5f2a1dde1a91ec75d511286b9df80667",
+      "task_record_sha256": "b91d17ff628e13fbd0deffaea3e421f156db242f58c96cf1b14c151f0a0b3558"
+    },
+    "release_dir": "302-fractional-n-divider-accumulator-flow"
+  }
+}

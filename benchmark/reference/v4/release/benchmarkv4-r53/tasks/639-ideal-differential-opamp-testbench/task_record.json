@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "139-ideal-differential-opamp",
+  "checker_task_id": "v4_139_ideal_differential_opamp",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a751516fe4f26cd86c48018053563c9c6af2fd24b5843367a0e919d564353f95",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "441da1862ce40c790b98384a1c5bbead3744db6476c368a2bd5365b4ff36ee6c",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a751516fe4f26cd86c48018053563c9c6af2fd24b5843367a0e919d564353f95",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "b0d15955d0be73fe103ceebc166f4da8ed8f38d6802e9871335d8df6d934d357",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "e3005318f32a219f4262f1945182873489050388a018ccc7598d868f9b07dce7"
+  },
+  "family_id": "139",
+  "family_spec_sha256": "3e0ae6723624073637ca8aba5263a6cb8c2ff8512bb983c27b311f282e00270d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e54c2325676b130d0f3dbb16814a260c1c3134068205f67bc3869975161dd420",
+  "public_contract": "tasks/639-ideal-differential-opamp-testbench/public_contract.json",
+  "public_contract_sha256": "4b5b9ec3fb7dc69579f556d102a5a30972efba66edf1694adb7c8b967b03a769",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/639-ideal-differential-opamp-testbench",
+  "task_id": "v4-639"
+}

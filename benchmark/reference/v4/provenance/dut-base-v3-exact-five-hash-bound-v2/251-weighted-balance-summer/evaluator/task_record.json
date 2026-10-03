@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "251",
+  "checker_task_id": "v4_251_weighted_balance_summer",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "d269a0151fa849f09b44a21d0168363c472fa461021aa8d67c9337a0b420065e",
+    "checker_profile.json": "50764feb382f4c0b393caf8f44be126d86e756db1d3d7fe1b6db71de5a0d996b",
+    "derivation_manifest.json": "8ef94dd899c123317e9f6f3433e66f9845fd4449e652d2499ad7afe05dce5e0e",
+    "family_spec.json": "24ce2b007dc62d36adf6ea04b881b6e8380a64555fd7f7b3626daa152fec3109",
+    "harness_spec.json": "b516c19253b5647a76406a446e2f2185022ec4599e8dc56ccca6bd9fbc7aa269",
+    "mutation_catalog.json": "1958edef54c0388d74f48d9da179fcf2eebabf4ebb8f8d5e8c1dd2bc2c05f20e",
+    "profiles/feedback.json": "b47de07abce65a91b8f3f44e5573a6965d8f35a14d8ec13413287c55e0291059",
+    "profiles/score.json": "bef153c1e023ee68719a3d10b1d83cdfb7e1a2bc2990d425a546201f66401402",
+    "score_tb.scs": "1206b2b42d243e7f17c69cb257ecb4268c4744a5c8a5138e729fd2175c1daa5c",
+    "solution_tree": "2ab3f1d7eb88af4e1818a7b0336ac7e83a5e05e0f7412a8dc3a14179b3e5ae54",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "7c0f9aa3bd449bf202e8847c8d3d445f76d499a4d972c7e4a2dd8836254d552e",
+    "instruction.md": "01e1685079b28c45ad8e3089ae22ce3a236e151ad673601215a77e58d9d9df1b",
+    "public_contract.json": "f5a763b18dbcc9efd28a981617638c9613006e02ff810c8afab275325da34fc0"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "d269a0151fa849f09b44a21d0168363c472fa461021aa8d67c9337a0b420065e"
+  },
+  "release_dir": "251-weighted-balance-summer",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "342-weighted-balance-summer",
+  "support_root": "",
+  "target_artifacts": [
+    "weighted_balance_summer.va"
+  ]
+}

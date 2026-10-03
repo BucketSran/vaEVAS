@@ -1,0 +1,111 @@
+{
+  "id": "vbr1_l2_gain_extraction_convergence_measurement_flow",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_gain_extraction_convergence_measurement_flow",
+  "level": "L2",
+  "track": "support",
+  "difficulty": "D3",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Dithered differential gain extraction flow",
+  "package_status": "selected_l2_target",
+  "score_surface": "benchmark-e2e",
+  "source_base_id": "gain_extraction_convergence_measurement_flow",
+  "canonical_kernel": "dithered_differential_gain_extraction_flow",
+  "source_registry_status": "selected_from_existing_task",
+  "source_evidence_status": "release_dual_certified",
+  "source_tasks": [
+    {
+      "form": "tb",
+      "source_path": "tb_companion_from_e2e:gain_extraction_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/gain_extraction_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/gold/dither_adder.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/gold/gain_amp_fixed.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/gold/lfsr.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/gold/tb_gain_extraction_ref.scs",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/tb/gold/vin_src.va"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tb_companion_from_e2e:gain_extraction_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_gain_extraction_convergence_measurement_flow/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_gain_extraction_convergence_measurement_flow/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/tb/spectre_result.json",
+      "release_source_task_id": "vbr1_l2_gain_extraction_convergence_measurement_flow_tb",
+      "historical_source_task_id": "vbr1_l2_gain_extraction_convergence_measurement_flow_tb"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/gold/dither_adder.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/gold/gain_amp_fixed.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/gold/lfsr.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/gold/tb_gain_extraction_ref.scs",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_gain_extraction_convergence_measurement_flow/forms/e2e/gold/vin_src.va"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/end-to-end/voltage/gain_extraction_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_gain_extraction_convergence_measurement_flow/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_gain_extraction_convergence_measurement_flow/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_gain_extraction_convergence_measurement_flow/e2e/spectre_result.json",
+      "release_source_task_id": "gain_extraction_smoke",
+      "historical_source_task_id": "gain_extraction_smoke"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

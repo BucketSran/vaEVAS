@@ -1,0 +1,23 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "92202bf9f4d68f4f396fe3acffea2eaae49072d429af23d42eab53bcb061c316",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_CLOCK_ARMED_MEASUREMENT",
+    "P_DECISION_DELAY_CAPTURE",
+    "P_ABSOLUTE_OVERDRIVE_METRIC",
+    "P_POLARITY_AND_VALID_FLAG"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

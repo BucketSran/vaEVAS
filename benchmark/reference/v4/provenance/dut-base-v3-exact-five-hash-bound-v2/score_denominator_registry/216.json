@@ -1,0 +1,79 @@
+{
+  "family_id": "216",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_initial_counter/certification.json",
+        "certification_sha256": "cccb2c6dfff4ba4edbdbdc9788f2555e62c1b581f3e662def98f666bbd0ce71f",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "fbec048b50f64924105ae3ed775715c4a3a0d97b845f93f763767cc90ddec908",
+        "mutation_id": "neg_003_wrong_initial_counter",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_initial_counter/certification.json",
+        "trigger_condition": "Starts accumulation at bit 11 instead of bit 12.",
+        "violated_property_ids": [
+          "P_AFTER_PUBLISHING_RESET_THE_ACCUMULATOR_HIGH",
+          "P_INCREMENT_DNUM_FOR_EACH_HIGH_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_counts_low_decisions/certification.json",
+        "certification_sha256": "14967c57f67f9ee1d4c2a8059699ca92cd907e52be8769e80115cacae73e72a5",
+        "fault_class": "counts_low_decisions",
+        "mutation_bundle_sha256": "e07975d77826ed432a40e5342214a62b5d393d3fd4ad482c648dff6434658df7",
+        "mutation_id": "neg_002_counts_low_decisions",
+        "source_catalog_certification_path": "negative_variants/neg_002_counts_low_decisions/certification.json",
+        "trigger_condition": "Accumulates bit weights when DIN is low instead of high.",
+        "violated_property_ids": [
+          "P_ADD_THE_CORRESPONDING_BINARY_WEIGHT_WHEN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_result/certification.json",
+        "certification_sha256": "49676c175bdb79365dd3ffbaa2b83ae307b4c49e8ffcdabc2352f9fdf8d31dc3",
+        "fault_class": "unipolar_result",
+        "mutation_bundle_sha256": "02d45fdc8ffaa7d74af57b344c9e052d6dc9dca8d8885beb246d8d2c3d8d0253",
+        "mutation_id": "neg_004_unipolar_result",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_result/certification.json",
+        "trigger_condition": "Publishes a unipolar normalized result rather than subtracting 0.5.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLKS_CROSSING_PUBLISH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "a9bc69376e811fead7bb4bac08fef688ba580f1b0086f2988c6e0f27816abd30",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "bc948d6bf3ab06c9825b1ad92a7b9fd2e134cbc9698713105daa2ff1093a0d34",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "SAR 13bit Serial Decoder: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_MAP_AN_ALL_LOW_FRAME_TO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d35a524be8e5307b87e497aa6fc68fa06fa9eaf36d559ee1a9255a771b407eb0",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "4c3c82e4c5460955c33108e766853fb1ecea52bbbac09fb1221f07fe33c76b30",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CONSUME_ONE_MSB_FIRST_BIT_ON"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_initial_counter",
+    "canonical_dut_id": "216",
+    "hashes": {
+      "mutation_catalog_sha256": "2692c1cc5c656dcc9e38f0e5a02ca2f1e26cfe8ecd12fd2fa7467f4511235c93",
+      "score_deck_sha256": "1c91b40c9547d0ae9f76fcfb2f5d391e5e5a6ebe2c75659be40c7b09280bf10d",
+      "task_certification_sha256": "04deeeae1b40d4cdb388ca706a1b28327730c051b3346d2e64e853992ff9a5a0",
+      "task_record_sha256": "a1f0493dd3ac28ab988c5d6db896786661a72deaf84aa048f706ea3a3067f969"
+    },
+    "release_dir": "216-sar-13bit-serial-decoder"
+  }
+}

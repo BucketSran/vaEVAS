@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "peak_detector.va"
+  ],
+  "canonical_dut_source_slug": "075-peak-detector",
+  "checker_task_id": "v4_075_peak_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a81e6085a896c83069500000e56a0b761a416e265138032f733c57c934bc9660",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "80b1612cecd004f3d1f0d886e46c368a2dc0b3b81dacc9dbd348467ed6a9fede",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "542bc20becf0c55d91bc3ae5760a2e6b48978089a4f0e5eedaca7dc4d06c0bac",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "075",
+  "family_spec_sha256": "23194842a80ba3a3fdfb829b78156803d77ec92c803ddd011c0afeee1124fa5d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "10e16cddfeb2d7751e3e476b285d4be08a9ec1843b3c79cae0ea68aa0662880c",
+  "public_contract": "tasks/075-peak-detector/public_contract.json",
+  "public_contract_sha256": "551651de089a2296691aea3491d302bd5611324760e6b97da318c21d459756be",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/075-peak-detector",
+  "task_id": "v4-075"
+}

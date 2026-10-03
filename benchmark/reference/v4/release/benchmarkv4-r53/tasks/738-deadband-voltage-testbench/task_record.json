@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "238-deadband-voltage",
+  "checker_task_id": "v4_238_deadband_voltage",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "7c2252fb22847e9883f6ef9c828fa5b5cbec0288fa336125682031fdca29e5f4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8adb35175cc3acd95e5e3a9455b094f2140eb97c2ecbc292f45f5be583e582b9",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "7c2252fb22847e9883f6ef9c828fa5b5cbec0288fa336125682031fdca29e5f4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "1233190e150bb8b94f15e8a1c78e4294f1f162b819b7f75a14a8ec4d3a34994a",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "d6e4db3338af1e087ff8622834c245b3a5f9402882306d621419928d5297b120"
+  },
+  "family_id": "238",
+  "family_spec_sha256": "2cb188906ecbc367639ba574f05aecc15da0c6fe0adc6bd4c194dc182231272a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "71f6e776bcd2ebe058a029a44ab640c294d8c5c6d279d8a788abbc4f201dbac8",
+  "public_contract": "tasks/738-deadband-voltage-testbench/public_contract.json",
+  "public_contract_sha256": "cb162bc73e723a1a7f31da0370dabd15833a5b755b929ac022d0169cdd5ab75d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/738-deadband-voltage-testbench",
+  "task_id": "v4-738"
+}

@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "vga_cal_loop_top.va",
+    "peak_detector.va",
+    "gain_controller.va",
+    "vga_model.va",
+    "lock_detector.va"
+  ],
+  "canonical_dut_source_slug": "348-vga-gain-calibration-loop",
+  "checker_task_id": "v4_348_vga_gain_calibration_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a3f3a25f1f55154141dccc23003aa3da1b118fd19a63d69f10ecbb1bcfcbc279",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c2cf4b485267607ce8685332ffda921d27938ef721fb1334fff5f9be1dd768a5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "81957c522419a4bc9cd88855917c52d3a23022550b16f1d2c523e7d0ba754870",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "348",
+  "family_spec_sha256": "661d3b16bd2234a7b00e85d30b57df124c9e308dd14b56908509635257207959",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e02afff64d409e609478cc95ab5710f7c0dd58aae71f1c80d240d600995fc422",
+  "public_contract": "tasks/1348-vga-gain-calibration-loop-bugfix/public_contract.json",
+  "public_contract_sha256": "f3d98f533b42dfe00f38374e4c191acd3f3560a65e5bcbf9945a2c7df930d2f0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1348-vga-gain-calibration-loop-bugfix",
+  "task_id": "v4-1348"
+}

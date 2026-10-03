@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "102",
+  "checker_task_id": "v4_102_clocked_sine_source",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "c047f8a7c6f5a3c30511e89e9d70aca6924774c590b30176ea14080e4929ae51",
+    "checker_profile.json": "b28c64c108cd4cbbc17f1462ce6cd59edc9e3fa8a7979036ebd7110375f02354",
+    "derivation_manifest.json": "c3c9b67a7c026df32e8edfaeb936f3aa52f1f3750161761c4572a07b567176a3",
+    "family_spec.json": "0597281586c6201a3efc1c0e0a5e8b46dfad7f89249fd733097e9732917bf7f6",
+    "harness_spec.json": "771602d8303d66c4c84d1f2dd8ef853418f201f328339a861be18724afa3edbc",
+    "mutation_catalog.json": "506455a3ff84f72237c0971d5729369c24edcd7c3eb9fcf6cb4b0a6124b204d1",
+    "profiles/feedback.json": "d43401ecc4e95108ed061c3f8a270e2c247b74fe6c269ef0edb7a4d02332f8a8",
+    "profiles/score.json": "e4913c9eee4f3a34e545512722ccfb3c060211cdef674460c99bea4b0f3f41ec",
+    "score_tb.scs": "ecd9cf3217ad5512824c71753beaec74c28fc3e624e4ae6a661325fc83663eac",
+    "solution_tree": "334d804815bfc1091022f7f27135d75276867997a33f3a9c4c923431d8f1402a",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d1862885ef56441a48588a21ab12e0a47a87369364ba08ba4a3fc48ce032237e",
+    "instruction.md": "d5ef249344dc3d903a8ee165448732f5a75699093371b06d194a426177326685",
+    "public_contract.json": "11cd39bc95770e488a8434644f5bed0bfd425407335d6e13ba158199405e8f10",
+    "public_support/dither_adder.va": "c37a73ae0c82d5312d3baf7415bce5e160f307ae4f0a232586d2a152343b6744",
+    "public_support/gain_amp_fixed.va": "c69f0dbf46d0d4a7f7f4f06168b8cde05bb864fceaf21adabe1440334f57c8e9",
+    "public_support/lfsr.va": "36c973266e9acf0473a836ff51f0c350c990f0f85787ac5b83a1d51687d418b5"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "c047f8a7c6f5a3c30511e89e9d70aca6924774c590b30176ea14080e4929ae51"
+  },
+  "release_dir": "102-clocked-sine-source",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "111-clocked-sine-source",
+  "support_root": "public_support",
+  "target_artifacts": [
+    "vin_src.va"
+  ]
+}

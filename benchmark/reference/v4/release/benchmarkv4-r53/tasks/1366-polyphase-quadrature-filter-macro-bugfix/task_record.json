@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "polyphase_quadrature_filter.va"
+  ],
+  "canonical_dut_source_slug": "366-polyphase-quadrature-filter-macro",
+  "checker_task_id": "v4_366_polyphase_quadrature_filter_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "75522132f4c137c3231a5e39b576fc38309b394c320489eaf0e835c49ee0d8e8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7031067bdabd16b325dae5584f88299e6bdb0d25d595c4a7da4c04f114dde507",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "7766078fb2803cc01c1a47835defcda974577f0a0c6f9a35fc87ab51c8595a4d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "366",
+  "family_spec_sha256": "44e105505409bbaaada97d9f01a60057247e5ada72b4eb36f09ddf93277c576c",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "050af69d528dbb7927eb2cca23171bda350528bb2c2de2d14be181621b4f4a81",
+  "public_contract": "tasks/1366-polyphase-quadrature-filter-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "72c7af1fc434dc7a1aa58a2872e4f29571412c813ce704cee53df77eb42abb44",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1366-polyphase-quadrature-filter-macro-bugfix",
+  "task_id": "v4-1366"
+}

@@ -1,0 +1,68 @@
+{
+  "date": "2026-05-17",
+  "suite": "evas-spectre",
+  "conformance_case_count": 4,
+  "model_capability_count": 0,
+  "benchmark_coverage_count": 0,
+  "bugfix_claim_count": 0,
+  "broad_parity_denominator_count": 0,
+  "runner_hook_required_count": 4,
+  "cases": [
+    {
+      "id": "cross_event_post_side_read",
+      "suite": "evas-spectre",
+      "conformance_axis": "event-sampling",
+      "expected_relation": "waveform_equivalent",
+      "source_path": "conformance/evas-spectre/cross_event_post_side_read",
+      "package_path": "benchmark-vabench-release-v1/conformance/evas-spectre/cross_event_post_side_read",
+      "model_capability": "false",
+      "benchmark_coverage": "false",
+      "bugfix_claim": "false",
+      "broad_parity_denominator": "false",
+      "runner_hook_required": "true"
+    },
+    {
+      "id": "file_metric_writer_io_timing",
+      "suite": "evas-spectre",
+      "conformance_axis": "checker-semantics",
+      "expected_relation": "binary_outcome_equal",
+      "source_path": "conformance/evas-spectre/file_metric_writer_io_timing",
+      "package_path": "benchmark-vabench-release-v1/conformance/evas-spectre/file_metric_writer_io_timing",
+      "model_capability": "false",
+      "benchmark_coverage": "false",
+      "bugfix_claim": "false",
+      "broad_parity_denominator": "false",
+      "runner_hook_required": "true"
+    },
+    {
+      "id": "settling_done_boundary",
+      "suite": "evas-spectre",
+      "conformance_axis": "solver-time-sampling",
+      "expected_relation": "binary_outcome_equal",
+      "source_path": "conformance/evas-spectre/settling_done_boundary",
+      "package_path": "benchmark-vabench-release-v1/conformance/evas-spectre/settling_done_boundary",
+      "model_capability": "false",
+      "benchmark_coverage": "false",
+      "bugfix_claim": "false",
+      "broad_parity_denominator": "false",
+      "runner_hook_required": "true"
+    },
+    {
+      "id": "vco_timer0_startup",
+      "suite": "evas-spectre",
+      "conformance_axis": "event-ordering",
+      "expected_relation": "waveform_equivalent",
+      "source_path": "conformance/evas-spectre/vco_timer0_startup",
+      "package_path": "benchmark-vabench-release-v1/conformance/evas-spectre/vco_timer0_startup",
+      "model_capability": "false",
+      "benchmark_coverage": "false",
+      "bugfix_claim": "false",
+      "broad_parity_denominator": "false",
+      "runner_hook_required": "true"
+    }
+  ],
+  "notes": [
+    "L0 conformance cases are copied into the release package as simulator diagnostics.",
+    "They are excluded from L1/L2 benchmark coverage, model capability, bugfix, and broad parity denominators."
+  ]
+}

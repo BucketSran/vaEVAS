@@ -1,0 +1,78 @@
+{
+  "family_id": "140",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_hold/certification.json",
+        "certification_sha256": "02a5946042a930bdaa1f9415fc774e4a302c4e4481b9abba87f760c51e29b299",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "24962d69215827676f45eee404a8a0bfa8e5103dc2ae378a1cda5e4a68506873",
+        "mutation_id": "neg_002_no_hold",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_hold/certification.json",
+        "trigger_condition": "Drops Q low whenever set is not asserted.",
+        "violated_property_ids": [
+          "P_HOLD_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swapped_set_reset/certification.json",
+        "certification_sha256": "5e911aced1c16865b026c7c74ca198d006382aac8aa8de504e274ff6966e81bc",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "2ec4af89f19402cc460db2f68455825701c253bcc0fccb3964ec237c50690cbd",
+        "mutation_id": "neg_003_swapped_set_reset",
+        "source_catalog_certification_path": "negative_variants/neg_003_swapped_set_reset/certification.json",
+        "trigger_condition": "Treats reset as set and set as reset.",
+        "violated_property_ids": [
+          "P_SET_RESET_PRIORITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_qbar_not_complement/certification.json",
+        "certification_sha256": "acb38f1448c60f261990b0acc1e29d64fe6bc12c41d664203ad899346490a2d5",
+        "fault_class": "qbar_not_complement",
+        "mutation_bundle_sha256": "dfdbca37d2e0dd8cf9449a9e6c3000799b535f6b8cd345e5c8830982ab187064",
+        "mutation_id": "neg_004_qbar_not_complement",
+        "source_catalog_certification_path": "negative_variants/neg_004_qbar_not_complement/certification.json",
+        "trigger_condition": "Drives qbar equal to q.",
+        "violated_property_ids": [
+          "P_QBAR_COMPLEMENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2653c08afeef022b66838aad9af80177a0d7ed1bfebb1919dd412f75935a9c8a",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "32e41adb15aa15d13634a90ea67fe4c417671df831d3fce3f23b922764145987",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "RS Latch Voltage: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_LOGIC_THRESHOLDS_OUTPUT_AMPLITUDE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d3b75dc49ae331d229df2e8285867a0924207f28fd540f2e40404e9105da5650",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "103568fec2e5386a129679c6746ff97eacc22174f5407a65f1bbd1d10106e300",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero outputs and therefore fails the arithmetic/state contract.",
+        "violated_property_ids": [
+          "P_SET_RESET_PRIORITY"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_hold",
+    "canonical_dut_id": "140",
+    "hashes": {
+      "mutation_catalog_sha256": "744f287c200cd84c8d42aeda0449c96e5a8627c2c48fb28e9135c3bf4a1dd0d3",
+      "score_deck_sha256": "8354d2b4f209a5284292ee718b1a2294a9e112cfe3da62fd5ca20a8232481d04",
+      "task_certification_sha256": "910a391c1f4df4264c1ce876278f7df18404571d1b23d7c7320450c37a323d76",
+      "task_record_sha256": "e46d5220e2fde3774116abd476daa4e78e09f6b0f2682d8672fa286efa7b57c7"
+    },
+    "release_dir": "140-rs-latch-voltage"
+  }
+}

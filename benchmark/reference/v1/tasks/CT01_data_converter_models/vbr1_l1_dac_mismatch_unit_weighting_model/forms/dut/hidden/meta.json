@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_dac_mismatch_unit_weighting_model_dut",
+  "task_id": "vbr1_l1_dac_mismatch_unit_weighting_model_dut",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_dac_mismatch_unit_weighting_model",
+  "family": "spec-to-va",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dac_mismatch_unit_weighting_model.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "weighted_code_response",
+    "explicit_mismatch_terms",
+    "bounded_reconstruction_voltage"
+  ],
+  "designed_source": true
+}

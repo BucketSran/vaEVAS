@@ -1,0 +1,67 @@
+{
+  "id": "vbr1_l1_aperture_delay_track_and_hold_bugfix",
+  "task_id": "vbr1_l1_aperture_delay_track_and_hold_bugfix",
+  "release_entry_id": "vbr1_l1_aperture_delay_track_and_hold",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_track_hold_aperture_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(cross(",
+    "@(timer(",
+    "$abstime",
+    "taperture",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_sample_hold_aperture_buggy.scs",
+    "gold/tb_sample_hold_aperture_ref.scs"
+  ],
+  "bugfix": {
+    "buggy_source": "gold/dut_buggy.va",
+    "fixed_source": "gold/dut_fixed.va",
+    "buggy_testbench": "gold/tb_sample_hold_aperture_buggy.scs",
+    "fixed_testbench": "gold/tb_sample_hold_aperture_ref.scs",
+    "defect": "The buggy implementation samples vin immediately on the clock edge instead of after the configured aperture delay.",
+    "repair": "Arm a timer at $abstime + taperture on each rising clock edge and capture vin from that delayed timer event."
+  },
+  "evidence": {
+    "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/bugfix/evidence.json",
+    "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/bugfix/evas_result.json",
+    "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/bugfix/spectre_result.json",
+    "buggy_expected": "FAIL_SIM_CORRECTNESS",
+    "fixed_expected": "PASS"
+  }
+}

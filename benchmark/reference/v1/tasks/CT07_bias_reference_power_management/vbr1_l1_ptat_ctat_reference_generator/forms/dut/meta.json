@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_ptat_ctat_reference_generator_dut",
+  "task_id": "vbr1_l1_ptat_ctat_reference_generator_dut",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_ptat_ctat_reference_generator",
+  "family": "spec-to-va",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "ptat_ctat_reference_generator.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "ptat_branch_monotonic_with_temperature",
+    "ctat_compensation_flattens_reference",
+    "reference_common_mode_bounded"
+  ],
+  "designed_source": true
+}

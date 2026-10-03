@@ -1,0 +1,23 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "4999ef92efe36cb952717e63f9cfc2e70be2e2dbe73ae17ad9a045c2e32156e1",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_CONSUME_ONE_MSB_FIRST_BIT_ON",
+    "P_ADD_THE_CORRESPONDING_BINARY_WEIGHT_WHEN",
+    "P_INCREMENT_DNUM_FOR_EACH_HIGH_DECISION",
+    "P_ON_EACH_RISING_CLKS_CROSSING_PUBLISH",
+    "P_MAP_AN_ALL_LOW_FRAME_TO",
+    "P_AFTER_PUBLISHING_RESET_THE_ACCUMULATOR_HIGH"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

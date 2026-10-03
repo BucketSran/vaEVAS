@@ -1,0 +1,79 @@
+{
+  "family_id": "127",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_offset/certification.json",
+        "certification_sha256": "5c03787d4c2386630d01cd2af12e70e2a7de336240ef9ec94dd2740dde700f66",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "b4621513c235abf6e2a72342c2f6ae895fe825b2e0c2a7ab36588c8f9f1c0227",
+        "mutation_id": "neg_002_missing_offset",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_offset/certification.json",
+        "trigger_condition": "Uses gain without subtracting the input offset.",
+        "violated_property_ids": [
+          "P_INPUT_OFFSET_SUBTRACTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "92d0ac4e91883459e724045b0a4fe4489afd015012ff60480a6e4014733fe77c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "c3913fffb5a733224be2de0f1a4f41280b496e651e096db819b8d401e8ec0172",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_DIRECT_MEMORYLESS_OUTPUT",
+          "P_FIXED_GAIN_THREE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_gain/certification.json",
+        "certification_sha256": "77a261ed0768f45a14f6f1ad902240f3aae0bd14368a6e8b0d97cd72b09a6b8c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "1cd2f40b72e0ed3cae6b8f29a21baa18409ee48a486e0c5ec5243a1b4e70aced",
+        "mutation_id": "neg_003_wrong_gain",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_gain/certification.json",
+        "trigger_condition": "Uses the wrong gain factor.",
+        "violated_property_ids": [
+          "P_FIXED_GAIN_THREE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_adds_offset/certification.json",
+        "certification_sha256": "92fbcbad083d28cd599a8fa266a0152bd7f85d1c0be5674573bf4fb35a42b54b",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "b158ec917bf2ef76c61d2a44bad818315a8747c704595c86db15db6b8d0de4b5",
+        "mutation_id": "neg_004_adds_offset",
+        "source_catalog_certification_path": "negative_variants/neg_004_adds_offset/certification.json",
+        "trigger_condition": "Adds the offset instead of subtracting it.",
+        "violated_property_ids": [
+          "P_INPUT_OFFSET_SUBTRACTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9cf67985066141bd4cf9a0d947587c09aa10c0da2bf7e4395f7333845dbb52b1",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "c742edf947fac40701bd79ce4b8a869bb2bf0756aad50ca291d413b4487aa5ea",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the amplified output too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_FIXED_GAIN_THREE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_missing_offset",
+    "canonical_dut_id": "127",
+    "hashes": {
+      "mutation_catalog_sha256": "027ff3f0161fe14c335f2e6bf058530ba28140f7d9c645516ddae1a68924c91f",
+      "score_deck_sha256": "7e6586eeb3b917d0c94f0a71f24b7cc594241072fab755637fe2f12f7d55e741",
+      "task_certification_sha256": "a950467a06c8fc158c584a1a27ab8f8a42afd6c28e9a858b0cfda51555a27f94",
+      "task_record_sha256": "b38c2a3feaa097c6c5db58802243885f9862e4346f369e83c0bbe978ceea870c"
+    },
+    "release_dir": "127-offset-gain-amplifier"
+  }
+}

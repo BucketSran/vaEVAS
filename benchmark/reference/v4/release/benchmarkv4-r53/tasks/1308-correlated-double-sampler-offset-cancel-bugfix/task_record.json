@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "correlated_double_sampler_top.va",
+    "reset_sample_latch.va",
+    "signal_sample_latch.va"
+  ],
+  "canonical_dut_source_slug": "308-correlated-double-sampler-offset-cancel",
+  "checker_task_id": "v4_308_correlated_double_sampler_offset_cancel",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8c2c35e15d8e30ae92a75cc0b20671ce0a7c8ebfdeba27436647fbb6acaebebc",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0a4b72b3f5ea4adcf50e30d9169893bba943931ddbf01a09d4b69385dbaccc5c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "36279b0948c4ffc4f1b965292f7354c5b32ae1d51abed1554a72ef0b6df4c189",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "308",
+  "family_spec_sha256": "14a68835afe8051115536ea3645cb80e90b219c4e802a1d56980f89d9bfcaae1",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0a1f603340d55ecefed81d9ed0595711ef063a99cc745356c7064f7ff7e8e2c1",
+  "public_contract": "tasks/1308-correlated-double-sampler-offset-cancel-bugfix/public_contract.json",
+  "public_contract_sha256": "d3b1f0bd41f39c6a82636c226e264c04ed8e2d40896f10dee8586f62bc4626d9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1308-correlated-double-sampler-offset-cancel-bugfix",
+  "task_id": "v4-1308"
+}

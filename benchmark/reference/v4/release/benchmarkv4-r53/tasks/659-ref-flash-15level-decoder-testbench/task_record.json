@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "159-ref-flash-15level-decoder",
+  "checker_task_id": "v4_159_ref_flash_15level_decoder",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "8c287c8cdabdb7a76ef634a40689330ed3d4a7779c720183a3b01f672bae323a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "aa7c34f77522ed45455eb1a2519c66756c2c93efe165fd426d2879d46dc17776",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "8c287c8cdabdb7a76ef634a40689330ed3d4a7779c720183a3b01f672bae323a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "14690c06d923d3fec04d259ec3d7cecd048afd712b6fda2a9fcb00c1b557f2b2",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "803cc6fb0663c6485ad9d2a96678fbe1a51a23a7f0880c399896de1f81eac410"
+  },
+  "family_id": "159",
+  "family_spec_sha256": "0978bee71fe2d6754746b922e169cc62418931b622a96af249816f5da636d536",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d9794808094ce2f6657a7a3b1e733d932ed99ae2bc4b32afa55027e7823274c8",
+  "public_contract": "tasks/659-ref-flash-15level-decoder-testbench/public_contract.json",
+  "public_contract_sha256": "cbb144deeecf860c5d8a6ea3ca91d77faa714ed7f7f4e2f0d49bc31bfff81c28",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/659-ref-flash-15level-decoder-testbench",
+  "task_id": "v4-659"
+}

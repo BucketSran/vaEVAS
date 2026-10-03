@@ -1,0 +1,90 @@
+{
+  "family_id": "374",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "5ce376801f96f39d70e0b34d1ff828b9e39845b62ca398469155667a0ef13d8c",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "ecb152abe9c086595087c4bece9bc15b4c41b4c05bfb74aaeb3a5e4938ff2af7",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+          "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED",
+          "P_TOGGLE_OSC_OUT_FROM_CLK_REF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "96fdc16280cdb42406ccd9d5f1d75a24bf6e5393269d6ed0a8355e04e2596537",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8564a33705ec3238113b6b515cef91c6a0978a6ba94fddcdac2c52a462d8ebba",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+          "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED",
+          "P_INCREASE_A_BEHAVIORAL_AMPLITUDE_STATE_BY",
+          "P_TOGGLE_OSC_OUT_FROM_CLK_REF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "ed35c9c01c0c713035f4cce032eff1981921228ca3f6e482cc667ca106f375a7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "232d35973ce98fa274498f1bdb2313c42ab6ada08ad61b192c73c8cd67da92dc",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+          "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED",
+          "P_INCREASE_A_BEHAVIORAL_AMPLITUDE_STATE_BY",
+          "P_TOGGLE_OSC_OUT_FROM_CLK_REF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "5fa5012ef6800a2fe2c7a5383260e8cedf4d8710aeff2ec0144db7a10fa1159c",
+        "fault_class": "startup_done_asserts_early",
+        "mutation_bundle_sha256": "e25653cd28f0396d457d701c89210a24809258bd4457be4c65285652433b0e09",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "startup_done asserts one amplitude step before the target",
+        "violated_property_ids": [
+          "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+          "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "bc8a2cb9eb788597c294dde5cfbca3357e0cc91e1f9888b6a5232d5ea9e2cff6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "dcd6eac318563d6cfd4eb11d222551619aed823e9d4442dd102af2fa8a625447",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_ASSERT_STARTUP_DONE_WHEN_AMP_METRIC",
+          "P_ASSERT_VALID_AFTER_TWO_CONSECUTIVE_SLICED",
+          "P_INCREASE_A_BEHAVIORAL_AMPLITUDE_STATE_BY",
+          "P_TOGGLE_OSC_OUT_FROM_CLK_REF"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "374",
+    "hashes": {
+      "mutation_catalog_sha256": "aab68759221e76f158b53dae9ce66528b80a6c268381778b367f190a52c0259a",
+      "score_deck_sha256": "2c7e61f11437d52745d52f880808d48be66bd7fda787f037c2229ca06d3fa4e8",
+      "task_certification_sha256": "356247fc5456ceed0fff44193f27334378025b5505fb44775a523cc2d458d20e",
+      "task_record_sha256": "1db2afa7fc5ff7bebfe80d72c95e1e5966f803bd8aba548912c705b37bac282a"
+    },
+    "release_dir": "374-crystal-oscillator-startup-monitor"
+  }
+}

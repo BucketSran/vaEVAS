@@ -1,0 +1,78 @@
+{
+  "family_id": "209",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_denominator/certification.json",
+        "certification_sha256": "20f1786f1ed72802784174b4935357f993f7102281df33e0454044a48ab96a84",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "85176fac2205120d6c1cd5b1ac8dead6962f7a68cc9cea029494981d1e147994",
+        "mutation_id": "neg_003_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_denominator/certification.json",
+        "trigger_condition": "Normalizes by 63 instead of 64.",
+        "violated_property_ids": [
+          "P_THE_ALL_ZERO_CODE_THEREFORE_PRODUCES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_output/certification.json",
+        "certification_sha256": "a3c2ba827f451a219ea3edf256833212cd4afb6c1a7133dcfc114e43388da7ea",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "b81282b51a9b5fce5cc245036a22c6d932bc87d031c0b6cee6cd3d22f6994b0d",
+        "mutation_id": "neg_004_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_output/certification.json",
+        "trigger_condition": "Omits the bipolar -1.8 offset.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9f85ea4bdc39ce0e95ad1a6ea6be56b0197d5c2418dac4994bc678a0c229d137",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "877637aca475bfebb8d9458b0204948d2142a9f998740fbd88b7d65407f48ed3",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "DAC Restore 6bit 1p8: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_TEXT_VOUT_CODE_0_5_3"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "0100e1b4a65e14c5b36cdbb47e18a43f7bcf10063025abe13a3f79b936e654a1",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "860a5e22c65bce36fb3590f724d11008dfead0f1b30d426bc9569e08f39fb730",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_omit_msb/certification.json",
+        "certification_sha256": "dab6776285f57a9afef8eac78b88d38997d0d231a4c89fef45bc375728687b84",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "4f602892966b03477d8db1103e5922e033b5b1c7f40cacf572e9f0d704b9007b",
+        "mutation_id": "neg_002_omit_msb",
+        "source_catalog_certification_path": "negative_variants/neg_002_omit_msb/certification.json",
+        "trigger_condition": "Drops the d1 MSB contribution.",
+        "violated_property_ids": [
+          "P_TEXT_VOUT_CODE_0_5_3"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_denominator",
+    "canonical_dut_id": "209",
+    "hashes": {
+      "mutation_catalog_sha256": "be2239989a2c49402acc5318af8c06e6111b72727fbe6075ae7ed600359852e7",
+      "score_deck_sha256": "bb49d0affc772b9acfaee7486a461c6749d217eb5f0a878a4541d3576b86630b",
+      "task_certification_sha256": "6a9ccf65566e75e1f34684d50a4de91b2c6e0cbb9b3811aab2197212d866cbeb",
+      "task_record_sha256": "815a57685142d242434db7684bd6253199b375c4ed42be61075c72215cd99178"
+    },
+    "release_dir": "209-dac-restore-6bit-1p8"
+  }
+}

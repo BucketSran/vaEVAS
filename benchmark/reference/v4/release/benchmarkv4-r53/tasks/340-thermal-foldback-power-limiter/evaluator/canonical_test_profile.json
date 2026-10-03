@@ -1,0 +1,33 @@
+{
+  "canonical_semantics_sha256": "1788b471def37aa48c2d4eea68fcd294860f99a401ce6e483d29e954a2bc1a91",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {
+    "maxstep": "120p",
+    "stop_time": "80n"
+  },
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_PASS_POWER_CMD_THROUGH_WHILE_TEMPERATURE",
+    "P_REDUCE_LIMITED_CMD_AS_TEMPERATURE_RISES",
+    "P_ASSERT_THERMAL_OK_ONLY_WHEN_NO"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "340",
+    "feedback_semantics_sha256": "1788b471def37aa48c2d4eea68fcd294860f99a401ce6e483d29e954a2bc1a91",
+    "harness_spec_sha256": "be172dfbb6177bf9c6a324d21d5000a5f55c3cf4a823caa8bf634b6bfdb7e0d1",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "1788b471def37aa48c2d4eea68fcd294860f99a401ce6e483d29e954a2bc1a91",
+    "task_id": "v4-340"
+  },
+  "test_deck_sha256": "3b67388e69fcabca398f37c5df56c5a9d006dcd488253f71f741ae38b815cf60"
+}

@@ -1,0 +1,11 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "first_order_lowpass.va"
+
+V_vin (vin 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+
+XDUT (vin vout) first_order_lowpass
+
+tran tran stop=5n maxstep=100p
+save vin

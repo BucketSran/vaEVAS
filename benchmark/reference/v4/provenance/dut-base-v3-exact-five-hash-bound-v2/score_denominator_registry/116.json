@@ -1,0 +1,78 @@
+{
+  "family_id": "116",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d0b019c08ae72181b66cb99b61f603c02b76ae2393e04d47b31484fdbbdb314d",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "93a9cf3543e7068a2c75c007438d82839a58ad5effc96590e56c6ceb57c39b30",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero outputs and therefore fails the semantic contract.",
+        "violated_property_ids": [
+          "P_INITIAL_INPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_min_detector/certification.json",
+        "certification_sha256": "71b7aadc74d52e91bcabe588ef2b471318c3a1227c2c3fc76779b2b3b160e3bf",
+        "fault_class": "fault_003_min_detector",
+        "mutation_bundle_sha256": "f2907bf8842e969754ef88e6857a380ba17596982003f9c9e69fc28f45202aa0",
+        "mutation_id": "neg_003_min_detector",
+        "source_catalog_certification_path": "negative_variants/neg_003_min_detector/certification.json",
+        "trigger_condition": "Holds the minimum instead of the maximum.",
+        "violated_property_ids": [
+          "P_HOLD_ON_FALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_initial_only/certification.json",
+        "certification_sha256": "8623e3cda521d850e008c55e89eee45792cbfabc7da5c0ed94ca7be5d10e7495",
+        "fault_class": "fault_004_initial_only",
+        "mutation_bundle_sha256": "d5da7bdb973f62fbcf02d0c24452cb89cbf7bd31d0d003a276882c5198afe54a",
+        "mutation_id": "neg_004_initial_only",
+        "source_catalog_certification_path": "negative_variants/neg_004_initial_only/certification.json",
+        "trigger_condition": "Never updates after initial sampling.",
+        "violated_property_ids": [
+          "P_MONOTONE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "3a066a912cfbc8bc635fd654166ef3aaeff341debc8d7bf45751ffb7ef77d424",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "230b256984585e7b79edc83fa606117eb7b98e4b3413e42d762814bc4a9583f4",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Max Detector Hold: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_RUNNING_MAX"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_tracks_input/certification.json",
+        "certification_sha256": "475c2ea9ce9151e4172d51217d1c1ffcc77e8ec67664ea57b06bc2974b6cc965",
+        "fault_class": "fault_002_tracks_input",
+        "mutation_bundle_sha256": "54c78b0fc86564aca119894177d35caf11e25b45e15b1e3c59832b358992ffa4",
+        "mutation_id": "neg_002_tracks_input",
+        "source_catalog_certification_path": "negative_variants/neg_002_tracks_input/certification.json",
+        "trigger_condition": "Tracks input directly instead of holding the maximum.",
+        "violated_property_ids": [
+          "P_CAPTURE_NEW_MAX"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "116",
+    "hashes": {
+      "mutation_catalog_sha256": "ba8b3d1351bd41f30287a675041066cb272198508afdfd842ae4967203287054",
+      "score_deck_sha256": "650ad94d1b7b6d0eb9d0c4e1fae2152824ce6b4a7632e235ffebe63834920ccc",
+      "task_certification_sha256": "926c3a9428ca38c3a82a80770099400a677a21fb1eb47d19ace9c5df9e94ae26",
+      "task_record_sha256": "3217555b86a54b0761a045ef4ca6f2976d10e8e4ba84746a893b638efa76f27e"
+    },
+    "release_dir": "116-max-detector-hold"
+  }
+}

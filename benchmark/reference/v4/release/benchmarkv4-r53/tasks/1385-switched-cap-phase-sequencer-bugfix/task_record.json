@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "hold_flagger.va",
+    "nonoverlap_phase_gen.va",
+    "sample_switch_scheduler.va",
+    "switched_cap_phase_seq_top.va"
+  ],
+  "canonical_dut_source_slug": "385-switched-cap-phase-sequencer",
+  "checker_task_id": "v4_385_switched_cap_phase_sequencer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "024eb91854d76f19aa5a7e98b630441678ae3ed9f565499f6dcf27d27745cec7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a039c2e9375bb40b3c66c124a36068f5f6cd29653ee5adf4c4c7af9809602a85",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "88c6048f680c2e912379c9d533b54d49b9f372c240bbc3843304d9ff2a4b0b41",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "385",
+  "family_spec_sha256": "c37af2ac59bf5316017650955b81268d3575105accd893a417273a485b3db5db",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fe2f410564a3e824e310053ca72fb4609e4946711d6719d2206a2fc6c9965994",
+  "public_contract": "tasks/1385-switched-cap-phase-sequencer-bugfix/public_contract.json",
+  "public_contract_sha256": "06defbbc04f30f3817c56b139d0cbdd6b2ced7dad97f2e64cb53ef3d9292e4f3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1385-switched-cap-phase-sequencer-bugfix",
+  "task_id": "v4-1385"
+}

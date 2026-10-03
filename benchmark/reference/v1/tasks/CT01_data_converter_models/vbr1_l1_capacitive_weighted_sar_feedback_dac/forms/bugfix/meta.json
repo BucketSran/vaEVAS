@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix",
+  "task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix",
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_cdac_cal_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "binary_code_sets_nominal_dac_level",
+    "calibration_bits_shift_feedback_level",
+    "differential_outputs_move_complementarily"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

@@ -1,0 +1,78 @@
+{
+  "family_id": "036",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "9e6606396770c672e635fe72dbd4a498e4f91a236b993dbffe6aecc4e7d7b793",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "52119c74e5c4f72c65998e2e7f6c149cd3cc4f8bff1a79a370019abb4216f739",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_RESET_ASSERTED_UNSAFE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "d9fe6890dfa7519959501ad0b4f1673c4c02781095abf246b63686d2a99dd693",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "244ed0c744b4a3e90166e40f54e0e862ea2817caaf1dc0db6127148227297e4a",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_RELEASE_STATUS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "f7a6741a79d010539cad52b64b0403ca058f34fec9b4242fd1c373e41027ff04",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "2a214021d278fe09c74035581c26ec4926e7c207e24ab104398f4bcb2bf69c9e",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_FAULT_REASSERTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "583547a28499633d26690455224b156d6d98a01ccbe0573fcae24f47308b1713",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "dbd7b6de4526a403866f919cc7f99f129b14d1ad9625ab1f522d69ee4c72681c",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_VOLTAGE_CODED_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "1eca25d132729581893f05dbfb7a2cc27916f53631f669e54ae15ddb06f614d5",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "18f6d168c2e47eba202bd4c39c7680db4eec8d7b37e8f2dd9c818fa2bfd947dd",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_DELAYED_RELEASE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "036",
+    "hashes": {
+      "mutation_catalog_sha256": "cdf124eddb4036aaf57f4e07ee624ffa4a40ca071c6f85a6545949b37d517378",
+      "score_deck_sha256": "6442128aa3087933beecc4300ce545c81c9ad4dba84081a7a5bb231a073bf734",
+      "task_certification_sha256": "50c066bd7e9c916e51db171d39f5946e17ce5734fcd3497449a97c56faa7179a",
+      "task_record_sha256": "09b3f9483dc0786b89ae95e8545e8f3e7044ef1036a24f0626e5e326cca94244"
+    },
+    "release_dir": "036-power-on-reset-detector"
+  }
+}

@@ -1,0 +1,16 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "dwa_ptr_gen.va"
+
+V_clk_i (clk_i 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p rise=20p fall=20p width=450p
+V_rst_ni (rst_ni 0) vsource type=pulse val0=0.9 val1=0 period=20n delay=1n rise=50p fall=50p width=18n
+V_code_msb_i_3 (code_msb_i_3 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_code_msb_i_2 (code_msb_i_2 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+V_code_msb_i_1 (code_msb_i_1 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=400p rise=50p fall=50p width=1.4n
+V_code_msb_i_0 (code_msb_i_0 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+
+XDUT (clk_i rst_ni code_msb_i_3 code_msb_i_2 code_msb_i_1 code_msb_i_0 cell_en_o_15 cell_en_o_14 cell_en_o_13 cell_en_o_12 cell_en_o_11 cell_en_o_10 cell_en_o_9 cell_en_o_8 cell_en_o_7 cell_en_o_6 cell_en_o_5 cell_en_o_4 cell_en_o_3 cell_en_o_2 cell_en_o_1 cell_en_o_0 ptr_o_15 ptr_o_14 ptr_o_13 ptr_o_12 ptr_o_11 ptr_o_10 ptr_o_9 ptr_o_8 ptr_o_7 ptr_o_6 ptr_o_5 ptr_o_4 ptr_o_3 ptr_o_2 ptr_o_1 ptr_o_0) dwa_ptr_gen
+
+tran tran stop=5n maxstep=100p
+save clk_i rst_ni code_msb_i_3 code_msb_i_2 code_msb_i_1 code_msb_i_0

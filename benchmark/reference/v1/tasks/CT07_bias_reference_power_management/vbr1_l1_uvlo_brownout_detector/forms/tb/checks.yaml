@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "power_good_has_hysteresis"
+    - "brownout_clears_power_good"
+    - "recovery_requires_upper_threshold"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Designed release source; no imported historical EVAS/Spectre dual evidence yet."

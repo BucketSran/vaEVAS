@@ -1,0 +1,161 @@
+{
+  "release_entry_id": "vbr1_l2_reference_startup_enable_flow",
+  "task_id": "vbr1_l2_reference_startup_enable_flow:tb",
+  "source_task_id": "vbr1_l2_reference_startup_enable_flow_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Bias Reference and Power Management",
+    "base_function": "Reference startup/enable flow"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb",
+    "results/l2_observability_targeted_dual_20260601_r2/vbr1_l2_reference_startup_enable_flow/tb/vbr1_l2_reference_startup_enable_flow_tb",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_reference_startup_enable_flow/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_reference_startup_enable_flow/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb/gold/reference_startup_enable_flow.va",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb/gold/tb_reference_startup_enable_flow.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "benchmark-vabench-release-v1/reports/l2_observability_targeted_dual_20260601_r2_import_summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb",
+    "result_root": "results/l2_observability_targeted_dual_20260601_r2/vbr1_l2_reference_startup_enable_flow/tb/vbr1_l2_reference_startup_enable_flow_tb",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 10,
+      "samples": 1200,
+      "max_rmse_v": 6.2963682545180596e-06,
+      "max_abs_v": 0.00011250025000429653,
+      "mean_relative_rms_error": 2.5011685234408617e-06,
+      "max_relative_rms_error": 6.995964727242288e-06,
+      "mean_nrmse": 2.5011685234408617e-06,
+      "max_nrmse": 6.995964727242288e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "en": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "enable_mon": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 6.2963682545180596e-06,
+          "max_abs_v": 0.00011250025000429653,
+          "span_v": 0.9,
+          "nrmse": 6.995964727242288e-06,
+          "kind": "analog"
+        },
+        "out": {
+          "rmse_v": 3.158392144431123e-06,
+          "max_abs_v": 6.857696693890469e-05,
+          "span_v": 0.5484632483258061,
+          "nrmse": 5.758621300647166e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "startup_mon": {
+          "rmse_v": 5.004455908257357e-06,
+          "max_abs_v": 0.00011250025000429653,
+          "span_v": 0.9,
+          "nrmse": 5.5605065647303966e-06,
+          "kind": "analog"
+        },
+        "state_mon": {
+          "rmse_v": 6.026933377609893e-06,
+          "max_abs_v": 0.00011250025000429653,
+          "span_v": 0.9,
+          "nrmse": 6.696592641788769e-06,
+          "kind": "analog"
+        },
+        "supply_ok": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vdd_in": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.5499999999999999,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb/gold/reference_startup_enable_flow.va",
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l2_reference_startup_enable_flow/forms/tb/gold/tb_reference_startup_enable_flow.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

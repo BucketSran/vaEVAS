@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "277ce3241f9bbd28841ef9701f6aae89efd3457a2e36a336b76db0fc0eadd154",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_RESET_REGULATION_STATE",
+    "P_BOUNDED_LOAD_AND_TARGET",
+    "P_CONTROL_MONITOR",
+    "P_HEAVY_LOAD_DROOP",
+    "P_LIGHT_LOAD_KICK",
+    "P_RECOVERY_AND_SETTLING"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

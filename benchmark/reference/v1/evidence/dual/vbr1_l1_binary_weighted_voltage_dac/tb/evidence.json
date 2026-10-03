@@ -1,0 +1,120 @@
+{
+  "release_entry_id": "vbr1_l1_binary_weighted_voltage_dac",
+  "task_id": "vbr1_l1_binary_weighted_voltage_dac:tb",
+  "source_task_id": "vbm1_simple_binary_voltage_dac_4b_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Simple 4-bit binary-coded DAC"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_binary_weighted_voltage_dac/tb/gold",
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_binary_weighted_voltage_dac/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_binary_weighted_voltage_dac/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_binary_weighted_voltage_dac/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/tb/gold/simple_binary_voltage_dac_4b.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/tb/gold/tb_simple_binary_voltage_dac_4b_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rest-20260526_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_binary_weighted_voltage_dac/tb/gold",
+    "result_root": "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_binary_weighted_voltage_dac/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        1.65e-07
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 0.0045140545361082975,
+      "max_abs_v": 0.026745638685761075,
+      "mean_relative_rms_error": 0.0010031232302462885,
+      "max_relative_rms_error": 0.005015616151231442,
+      "mean_nrmse": 0.0010031232302462885,
+      "max_nrmse": 0.005015616151231442,
+      "per_signal": {
+        "aout": {
+          "rmse_v": 0.0045140545361082975,
+          "max_abs_v": 0.026745638685761075,
+          "span_v": 0.9,
+          "nrmse": 0.005015616151231442,
+          "kind": "analog"
+        },
+        "code_0": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "code_1": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "code_2": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "code_3": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/tb/gold/simple_binary_voltage_dac_4b.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_binary_weighted_voltage_dac/forms/tb/gold/tb_simple_binary_voltage_dac_4b_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "307",
+  "checker_task_id": "v4_307_switched_capacitor_integrator_phase_pair",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "419ef2fa4b4cecc4609b38963172f4234beab1a7175b533d047169d9a0b9fbe6",
+    "checker_profile.json": "696602af322b94f3c42f373f24f75e76aa2e87ef29213eb2ad16b58b6fe155bd",
+    "derivation_manifest.json": "676a38b96e4b91c3236c7f5426a0e48cb899bb1649486161b91bf4b3c161f9c3",
+    "family_spec.json": "4ab51f60d890c1d178f6047977d8f3b5cf9ea362c48c4b20c1b15b3c9d4d4ac0",
+    "harness_spec.json": "db7e2ad485b81a90d63a1e513806d7eeda42568a44f093530498aa686ea3df53",
+    "mutation_catalog.json": "edda7cc96cb5c14bf2e099d68318b9069aef4ad8f260abeaa2b554f327958564",
+    "profiles/feedback.json": "b19782a37ebad06c8686d7c947cca207f430bc4b1205aa3e659495c9d5711973",
+    "profiles/score.json": "0d0ebdc03d163845ab9b6886b4a77d1e8667a0a6f09e83f86bbf347531d9bdc4",
+    "score_tb.scs": "b7a4044b24d8a38522ccce9aadb527c0f77660f5c3d19b8623639b9e33940dc5",
+    "solution_tree": "6f571e13c7977d115ad43774f13ae9971e176024a8c8907db98fb1616cc08ceb",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0d4e52482441176c5eb7179867dcbfb2eb0ff2569390eeb7ee4bad60ff66d8c1",
+    "instruction.md": "73b5a2d1bfe631165d3d503fe110972a99e1345a942075d12f3c2c83d4a9122b",
+    "public_contract.json": "788958b37d29aa45e30f880c1c6d3f10667f9fb3a87d36154ccea34aca9929a3"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "419ef2fa4b4cecc4609b38963172f4234beab1a7175b533d047169d9a0b9fbe6"
+  },
+  "release_dir": "307-switched-capacitor-integrator-phase-pair",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1005-switched-capacitor-integrator-phase-pair",
+  "support_root": "",
+  "target_artifacts": [
+    "switched_cap_integrator_phase_pair_top.va",
+    "sample_phase_cell.va",
+    "integrator_state_cell.va"
+  ]
+}

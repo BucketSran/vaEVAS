@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "005-debounce-latch",
+  "checker_task_id": "v4_005_debounce_latch",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "1137caa6224e908820f4ef91bdd166ffcc2b4143f00365de1f995483208630e1",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3d493ec6100245f07d746c5e1891036c024f41ea4c6b6bf404e2d0a23118f1f8",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "1137caa6224e908820f4ef91bdd166ffcc2b4143f00365de1f995483208630e1",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "e370b7af1e9ba58be0785a48e089151006f7d26bef8c0279add85dff154f5abf",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ffab901ebf83a9fdd79973028bc4fa50c8bd31891384fce15ad8808ce248c50f"
+  },
+  "family_id": "005",
+  "family_spec_sha256": "6a4eff93bfc7d4619ed1a5514716da42179825fa46a6f9599f075430f9baed45",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9dcb415dd42299e5ded6005db1c253ea16f0912ae7c22f4fbb077f8d6053b18f",
+  "public_contract": "tasks/505-debounce-latch-testbench/public_contract.json",
+  "public_contract_sha256": "f29556415214fecbce011ef9181b0815b631c87e5e176daea22019c33319ab0f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/505-debounce-latch-testbench",
+  "task_id": "v4-505"
+}

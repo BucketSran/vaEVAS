@@ -1,0 +1,78 @@
+{
+  "family_id": "320",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_clock_edge/certification.json",
+        "certification_sha256": "12b593d1116075c7467edae57dc77c261c8555b40079b2fcd7f6ec7fc2985a4c",
+        "fault_class": "wrong_clock_edge",
+        "mutation_bundle_sha256": "fed53b60e59c8df428a501e19d222a96f808309c86b451681076614e691b2259",
+        "mutation_id": "neg_002_wrong_clock_edge",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_clock_edge/certification.json",
+        "trigger_condition": "enabled rising and falling clock phases are both exercised",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_msb_weight/certification.json",
+        "certification_sha256": "610b99ef83601aa4f1daab7fd9d895d48302a51a406f0e7bd2b71b98d7dc9b1f",
+        "fault_class": "wrong_msb_weight",
+        "mutation_bundle_sha256": "42a7eacf32c3d16ad09c7c5a431954b0dfc4c639406b6907abdf329578ef6e92",
+        "mutation_id": "neg_003_wrong_msb_weight",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_msb_weight/certification.json",
+        "trigger_condition": "stimulus exercises codes with code_3 asserted",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_CURRENT_TARGET_ON_TARGET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unbounded_settling_jump/certification.json",
+        "certification_sha256": "6fac93b079770572f2c3806bf02cec88380e4a8797d4fb409c375440fe0cb6dd",
+        "fault_class": "unbounded_settling_jump",
+        "mutation_bundle_sha256": "a3dc75131514e3461c359062cb7a41e525738151761088361f61e1cf5fbaff9e",
+        "mutation_id": "neg_004_unbounded_settling_jump",
+        "source_catalog_certification_path": "negative_variants/neg_004_unbounded_settling_jump/certification.json",
+        "trigger_condition": "large code jumps require multiple bounded updates",
+        "violated_property_ids": [
+          "P_APPLY_A_CODE_DEPENDENT_SETTLING_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_single_update_settled/certification.json",
+        "certification_sha256": "1c0ca42e1979beda4bcb01a353fbe53f83fc8c821d578ef739d47c854188356b",
+        "fault_class": "single_update_settled",
+        "mutation_bundle_sha256": "288eeaa632e1598c907b0a9e0ae04d1f815facaf9b411a7e6ef9e68de7f3bb89",
+        "mutation_id": "neg_005_single_update_settled",
+        "source_catalog_certification_path": "negative_variants/neg_005_single_update_settled/certification.json",
+        "trigger_condition": "the final constant-code interval contains two low-error updates",
+        "violated_property_ids": [
+          "P_ASSERT_SETTLED_AFTER_THE_REMAINING_ERROR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_wrong_clear_level/certification.json",
+        "certification_sha256": "babad136679af92b5042dcf590edf3216df7f12ad7cfdfa8cb0557cd2f31587d",
+        "fault_class": "wrong_clear_level",
+        "mutation_bundle_sha256": "02a8f69c38dd724fe7a65f57bed069c22307924d2bcf25a5e9f7818bd1853a84",
+        "mutation_id": "neg_001_wrong_clear_level",
+        "source_catalog_certification_path": "negative_variants/neg_001_wrong_clear_level/certification.json",
+        "trigger_condition": "reset or disabled interval must return vout to vcm",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_clock_edge",
+    "canonical_dut_id": "320",
+    "hashes": {
+      "mutation_catalog_sha256": "2a099e98ec2de17e5691c9afe273ed42926b33c0b91af2ef15c46b1c700dd191",
+      "score_deck_sha256": "091b7870f85d232c97e5b9b9cc42570a012ff72850f110fe2c0f4193359e01f8",
+      "task_certification_sha256": "b81c2d10450c297606f0a9f4c06cdc566b5f0db45ec8353c1b72adabdb2db802",
+      "task_record_sha256": "5ff3286ae4625ba0f213e8bb7536e200f4fc59c51a5bc9692cb84efad4c785ff"
+    },
+    "release_dir": "320-code-dependent-dac-buffer-settling"
+  }
+}

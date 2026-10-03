@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "voltage_match_window.va"
+  ],
+  "canonical_dut_source_slug": "247-voltage-match-window",
+  "checker_task_id": "v4_247_voltage_match_window",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2dc71b46c6752dfe7629bcc5ce5c7559ba3a9a460b8323b52d3ed96e653f6d8b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "eee952a2d0922fb53243158d23ab2d94e280a8ea7ca777a63c1cc7350be399cd",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8ed07ba639e1a4b882919b6c57128c030f1a6c38526e1af4063e567d2c0e1384",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "247",
+  "family_spec_sha256": "1acd01f3bfffab52be6b8225841958f4f813c49cdbd8ee104f436d37dcb28866",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ca182e63480cda5c3a888a9c87ab35820e5719860be27898754fad7a92374143",
+  "public_contract": "tasks/1247-voltage-match-window-bugfix/public_contract.json",
+  "public_contract_sha256": "358fd77c457bdad5426535990c93cbdca7d211e074baa0d1c208349524e2d1f2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1247-voltage-match-window-bugfix",
+  "task_id": "v4-1247"
+}

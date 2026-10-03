@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module lock_detector(ref_clk, fb_clk, rst_n, lock);
+    input ref_clk, fb_clk, rst_n;
+    output lock;
+    electrical ref_clk, fb_clk, rst_n, lock;
+    parameter real vth = 0.45;
+    parameter real vdd = 0.9;
+    parameter real tol = 2n;
+    parameter integer need = 3;
+    parameter real tr = 500p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

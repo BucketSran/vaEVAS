@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "coarse_qtz_3bit_residue.va"
+  ],
+  "canonical_dut_source_slug": "224-coarse-qtz-3bit-residue",
+  "checker_task_id": "v4_224_coarse_qtz_3bit_residue",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "583a0c9df93b80a59c999c1e74cff96cf7253624f02fadd614e862f0d2f0f46e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c2e6ee318da1b8a4b6155e44f4a3343ff63dcda249ebc5b4edc10f8c1cddadf3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9b8d33cb313ea1cac14f849fe6bc7b8ecd451a2384e12ca41b99ee5accfb4174",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "224",
+  "family_spec_sha256": "d04cf078028bc9fee86321139737bc38e42e909bac75ef5652efa57b211cdfe4",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "59af00ea069fba86bc9155edb2d76de783ff7fdc5e3531e5ecfaba5e6da04238",
+  "public_contract": "tasks/1224-coarse-qtz-3bit-residue-bugfix/public_contract.json",
+  "public_contract_sha256": "e9dd258df424592719a7114dedeb917bafc45c39c73c1e0e00849bc1e946df74",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1224-coarse-qtz-3bit-residue-bugfix",
+  "task_id": "v4-1224"
+}

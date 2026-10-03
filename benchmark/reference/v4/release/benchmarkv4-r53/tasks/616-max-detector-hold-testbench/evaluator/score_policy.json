@@ -1,0 +1,28 @@
+{
+  "bugfix_seed_mutation_id": "neg_002_tracks_input",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "c7b909529089469cd8a52f40df855a22c8e1ab35d49d8c9dcff992e662d26ba7",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "ba8b3d1351bd41f30287a675041066cb272198508afdfd842ae4967203287054",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_001_zero",
+    "neg_003_min_detector",
+    "neg_004_initial_only",
+    "neg_005_metric_scale_low",
+    "neg_002_tracks_input"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "650ad94d1b7b6d0eb9d0c4e1fae2152824ce6b4a7632e235ffebe63834920ccc",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-616"
+}

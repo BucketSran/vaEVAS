@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "adc_static_linearity_monitor.va"
+  ],
+  "canonical_dut_source_slug": "067-adc-static-linearity-monitor",
+  "checker_task_id": "v4_067_adc_static_linearity_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2728ab1740b0b0ced29e1eeebdace801f50bd7cfe8aa46563c1a9a6cba5618a6",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c6ea5af63888e2ff879e30341e3fe1974a07c8a364a87abd745fdee0a1188eb2",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0086418cfe4ac1aa383b69579483085381abb5e699db378ecfe5c3b3d2e356fb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "067",
+  "family_spec_sha256": "d64c2848083e828a00735584905ebd7e28f5d5dbb1a4940bacedd17268d45749",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "335eb52f679830e56d32cdad77972e380c2dc0096516ee0980d48487bcb8fe19",
+  "public_contract": "tasks/1067-adc-static-linearity-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "71a513ca8b22e9cf71053bdd6630a852f35967913e5ac0cdbec7dd878a0be00b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1067-adc-static-linearity-monitor-bugfix",
+  "task_id": "v4-1067"
+}

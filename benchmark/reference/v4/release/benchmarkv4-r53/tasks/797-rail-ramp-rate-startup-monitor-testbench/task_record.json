@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "297-rail-ramp-rate-startup-monitor",
+  "checker_task_id": "v4_297_rail_ramp_rate_startup_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "db4075305d3c2ee0a1f9fdc48673d63776fa22f7d4d9b03660cac48ddef875ba",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "973f829ed3d0ebd6ef2207f7c8701e14e8227639b3ad6e9a2239927c4226d7ed",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "db4075305d3c2ee0a1f9fdc48673d63776fa22f7d4d9b03660cac48ddef875ba",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a1a8f4ee77a3494044aa67d09d5367ecd6a1fdf60fba61ca4f935c26ad51fbc4",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "09bafcceaa261a3aae6f7462a1981abc701feba3b545be05efc0b6f4ebab903c"
+  },
+  "family_id": "297",
+  "family_spec_sha256": "292130ad04bc4ce59b643070005c279f7435183da759b9fcfd84388ca947bef1",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ff6f0fb4fbea1e919b58e7da9dacdf647537a57fb488807db6b7f25cc3d4d7b9",
+  "public_contract": "tasks/797-rail-ramp-rate-startup-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "32400e2e42a5c9f6443dca3ebbfb92f687cbf644105f0f3c2fee734a3ac62c63",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/797-rail-ramp-rate-startup-monitor-testbench",
+  "task_id": "v4-797"
+}

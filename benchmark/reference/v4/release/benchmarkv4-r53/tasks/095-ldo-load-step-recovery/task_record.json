@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ldo_load_step_recovery_flow.va"
+  ],
+  "canonical_dut_source_slug": "095-ldo-load-step-recovery",
+  "checker_task_id": "v4_095_ldo_load_step_recovery",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e36e7701a401da0fed37d3e1a57b06cbce065a109ecedb563fee13142af41deb",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e6f98e29684177b3bb2b395ecfca5d171a888fc2a920aa838e932d2302919954",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "322d6e5b3812389898db66002fe0176e4781bd1c679275f875699f1824a7852a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "095",
+  "family_spec_sha256": "7362212daea43e322cc9f9a6eaf4837b3852431ad750a540603a6d5ae32f494d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "cda1b066ec68bab1ac6a2ad427d8af7be9f88d248f6912ccc68c4bcf373581ab",
+  "public_contract": "tasks/095-ldo-load-step-recovery/public_contract.json",
+  "public_contract_sha256": "cc434d3b3ab658a83c523ec88c2babecec19e6212ac1ea6e7878dbe6d466b5ca",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/095-ldo-load-step-recovery",
+  "task_id": "v4-095"
+}

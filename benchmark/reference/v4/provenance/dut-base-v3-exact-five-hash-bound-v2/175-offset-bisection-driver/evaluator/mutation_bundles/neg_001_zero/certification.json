@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_VCM_CENTERED_DIFFERENTIAL_DRIVE satisfy the public contract; fault class zero_stub_output is rejected",
+    "observed": "EVAS: property_id=P_BISECTION_INITIAL_STATE category=observable_mismatch expected=satisfy_observable_contract observed=diff event=stimulus_relative_trace; checked_property_ids=P_BISECTION_INITIAL_STATE,P_FALLING_CLOCK_DECISION_UPDATE,P_SIGN_CHANGE_STEP_HALVING,P_VCM_CENTERED_DIFFERENTIAL_DRIVE",
+    "violated_property_ids": [
+      "P_VCM_CENTERED_DIFFERENTIAL_DRIVE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_175_offset_bisection_driver",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 716
+  },
+  "family_id": "175",
+  "inputs": {
+    "checker_profile_sha256": "36b08e68e83eb73fd117ef594c160c2fcfff72f3fc7284e0a900fd4b27a6e59a",
+    "harness_spec_sha256": "e6a46b2cd1003742204c2372b7a03541e838fea2201347880f6519e69dbc69b6",
+    "mutation_bundle_sha256": "22dbf9342eb77065b098167a57ca999b520050637c254cd49e539bc5711518fb",
+    "profile_sha256": "cf1a56b058f0d72b63ea20a3f1691d48ba39d273ddd8f9c14ef0dcd55d8369cf"
+  },
+  "mutation_id": "neg_001_zero",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

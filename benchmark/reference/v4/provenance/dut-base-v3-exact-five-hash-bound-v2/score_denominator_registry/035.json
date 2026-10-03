@@ -1,0 +1,81 @@
+{
+  "family_id": "035",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_drive/certification.json",
+        "certification_sha256": "0334bd456adf2112dae87dd902be940b177cb7013a28f061ef33b55a58c8cea0",
+        "fault_class": "drive_polarity_error",
+        "mutation_bundle_sha256": "3962722c368d6ec02d0d3f0b4feef04ab654e9a74cb8686e9c113b7df8f1d870",
+        "mutation_id": "neg_003_inverted_drive",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_drive/certification.json",
+        "trigger_condition": "a rising clock samples non-common-mode vin on either side of 0.45 V while reset is inactive",
+        "violated_property_ids": [
+          "P_LINEAR_REGION",
+          "P_SYMMETRIC_COMPRESSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_output_clamp_bypass/certification.json",
+        "certification_sha256": "791a23355a64b6c3c250d404d1c84f963dbcc29b8147329ccd5e87edabf08a3d",
+        "fault_class": "output_clamp_omission",
+        "mutation_bundle_sha256": "45b5dc49a6b6922f9b4b6c0b77f7273bea3d41e59efe02581f2e9c809b91b76a",
+        "mutation_id": "neg_006_output_clamp_bypass",
+        "source_catalog_certification_path": "negative_variants/neg_006_output_clamp_bypass/certification.json",
+        "trigger_condition": "a rising clock samples a drive strong enough that the compressed target lies outside 0.02 V through 0.88 V",
+        "violated_property_ids": [
+          "P_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_ignored/certification.json",
+        "certification_sha256": "2a07e52d8507806f2d8f851ba37614fe26d1cdf7c35c8959b05221f552fea4b2",
+        "fault_class": "reset_override_omission",
+        "mutation_bundle_sha256": "38ea32fc70b915af1662cec1b1dd25ab04122e15432cf8ebb73df45a19c7c193",
+        "mutation_id": "neg_004_reset_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_ignored/certification.json",
+        "trigger_condition": "a reset event leaves the sampled amplifier latched at common mode instead of returning to normal post-reset operation",
+        "violated_property_ids": [
+          "P_LINEAR_REGION",
+          "P_RESET_COMMON_MODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_007_asynchronous_tracking/certification.json",
+        "certification_sha256": "704f12bb952943f6c92a34dc55af0cf41c073a29bb655e8513aab69bfe3a8a02",
+        "fault_class": "clocked_hold_omission",
+        "mutation_bundle_sha256": "cd0a9ca22b4359b1d58b98f31183dabe4f4d1a54db94ef989e94a674f8bd354b",
+        "mutation_id": "neg_007_asynchronous_tracking",
+        "source_catalog_certification_path": "negative_variants/neg_007_asynchronous_tracking/certification.json",
+        "trigger_condition": "vin changes while reset is inactive and no rising clk crossing occurs",
+        "violated_property_ids": [
+          "P_CLOCKED_UPDATE",
+          "P_LINEAR_REGION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_compression_bypass/certification.json",
+        "certification_sha256": "a06bc8ec6f9bb6e3e8576e8016b3a3007701a0a0f33f9381b8070ff0d1ce9572",
+        "fault_class": "compression_transfer_omission",
+        "mutation_bundle_sha256": "53d06bd0db6095edc070f190452504aa0ec4386b09a5ca0818c56a656a47ba4e",
+        "mutation_id": "neg_002_compression_bypass",
+        "source_catalog_certification_path": "negative_variants/neg_002_compression_bypass/certification.json",
+        "trigger_condition": "a rising clock samples a vin that makes the unconstrained target exceed either compression boundary",
+        "violated_property_ids": [
+          "P_SYMMETRIC_COMPRESSION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_inverted_drive",
+    "canonical_dut_id": "035",
+    "hashes": {
+      "mutation_catalog_sha256": "77af37b8e80b0ac0155eb582cd26debde022f90edf640fdf1cd381106df347f2",
+      "score_deck_sha256": "3329446f23fad64642b67012c308dd0e9b2ea95d2ed095fb4983b4f054374bef",
+      "task_certification_sha256": "9b68132987f2e4936ca07dac23347ee9ea0a8f4d5868d261414dc87885e65ea8",
+      "task_record_sha256": "d26c0910eb26ceb78d3f10a27b820907b1c28ad8c9736d6b5eb8510d3e32f10e"
+    },
+    "release_dir": "035-pa-compression-macro"
+  }
+}

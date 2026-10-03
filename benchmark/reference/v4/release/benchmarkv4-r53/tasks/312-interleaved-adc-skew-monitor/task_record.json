@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "interleaved_adc_skew_monitor_top.va",
+    "sample_pair_latch.va",
+    "skew_metric_core.va"
+  ],
+  "canonical_dut_source_slug": "312-interleaved-adc-skew-monitor",
+  "checker_task_id": "v4_312_interleaved_adc_skew_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5d23fb46d9cc1e22d1d4e9a07f4f00e90fbfbface2b3008f5fe7bf5abbae541a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "aec089c48d4b31f8b76a7d1e3df61c3b6e7667435530d365d068aac27e32788a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3f36fabc8630e60923719e2dd28c84663f11058d98345c21aeea1a9df2577a94",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "312",
+  "family_spec_sha256": "adc1ca91951b79e07206a33731f7511a7b19ccde698b7af13f7a9f18d4f061a5",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d8c7a3caf63d429da9be6c6f9cc0ea3a8aca1ac1d880e46e1a34df0617ddabe5",
+  "public_contract": "tasks/312-interleaved-adc-skew-monitor/public_contract.json",
+  "public_contract_sha256": "aa2001a7410157ba88f19784f256ba4995d8228b676a90c94940c4b247aa21df",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/312-interleaved-adc-skew-monitor",
+  "task_id": "v4-312"
+}

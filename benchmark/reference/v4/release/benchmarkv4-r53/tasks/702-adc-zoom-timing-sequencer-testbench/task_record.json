@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "202-adc-zoom-timing-sequencer",
+  "checker_task_id": "v4_202_adc_zoom_timing_sequencer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "495f7415e64d622b3a193c28aeccf1c1437ea3f80c0917ec73de9a0bbf57004b",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2ce0da48d1a85e990b70cbb094b73dad6929a1795bc9f111e23728293f25947b",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "495f7415e64d622b3a193c28aeccf1c1437ea3f80c0917ec73de9a0bbf57004b",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2787a6b0afca88c5ca00593866ec6099526ad37e6afb0cf5d07c5a03a4119479",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7f55356b85d901b3f0231e6fff86d3034f58523858df2b835964f654c0f8c465"
+  },
+  "family_id": "202",
+  "family_spec_sha256": "3091409e1058e7b28b7ffd90b77e69536ea3faae06e6876f7826bb15ae084b7f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f942c4a5487566e140ff004e465b3777af76d92789e93ed2c3826cdfde5d363f",
+  "public_contract": "tasks/702-adc-zoom-timing-sequencer-testbench/public_contract.json",
+  "public_contract_sha256": "fded936081fbccfc10c022d5cc67ed9621a348afd7f26eb1d34721ce61536604",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/702-adc-zoom-timing-sequencer-testbench",
+  "task_id": "v4-702"
+}

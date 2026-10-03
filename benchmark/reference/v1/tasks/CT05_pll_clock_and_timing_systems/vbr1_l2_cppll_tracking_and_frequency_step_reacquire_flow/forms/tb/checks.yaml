@@ -1,0 +1,29 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "cppll_reacquires_after_reference_step"
+    - "late_window_tracks_new_reference"
+    - "vctrl_stays_bounded"
+  public_observables:
+    - "ref_clk"
+    - "fb_clk"
+    - "dco_clk"
+    - "vctrl_mon"
+    - "lock"
+parity:
+  reference: "spectre"
+  status: "certified"
+  notes:
+    - "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "safe_voltage_divider.va"
+  ],
+  "canonical_dut_source_slug": "128-safe-voltage-divider",
+  "checker_task_id": "v4_128_safe_voltage_divider",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0d903242d1786050a52628d5c49260e33d9ec542c9287bc5e95e279c3fbb2c73",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ec450212ab1574da3e9b74f9cc646243b3011f4937bf99d124dc523743b7492f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d1e4533e4e397cebe594bd1de8c6a877a567542948275bef97687aae7da07b2d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "128",
+  "family_spec_sha256": "c28e9e11be6fdf475be0082d5b1f9f795bcd3ddc1c4420636bf4ac57403b9d13",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0ed3d468b5b75f4a3036c5f270016db12d8f7c959befc00224e9e65e7d6ce202",
+  "public_contract": "tasks/1128-safe-voltage-divider-bugfix/public_contract.json",
+  "public_contract_sha256": "df7be4238bd07fb8c35820d4986fba2c1e3676780260b3c7806cb4d59d9cf681",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1128-safe-voltage-divider-bugfix",
+  "task_id": "v4-1128"
+}

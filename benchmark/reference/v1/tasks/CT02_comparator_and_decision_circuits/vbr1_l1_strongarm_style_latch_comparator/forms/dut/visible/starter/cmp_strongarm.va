@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module cmp_strongarm (
+    input  electrical CLK,
+    input  electrical VINN,
+    input  electrical VINP,
+    output electrical DCMPN,
+    output electrical DCMPP,
+    output electrical LP,
+    output electrical LM,
+    inout  electrical VSS,
+    inout  electrical VDD
+);
+
+parameter real td_cmp = 0.0;
+parameter real voffset = 0.0;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

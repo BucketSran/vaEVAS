@@ -1,0 +1,78 @@
+{
+  "family_id": "365",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_gain_direction_reversed/certification.json",
+        "certification_sha256": "49f7398b05bde089cffcaef200b8ccb5090e196d4e9b493c241295a6e393cf7d",
+        "fault_class": "gain_trim_polarity_error",
+        "mutation_bundle_sha256": "c398885bcca8a9ff2e3bf3a1e3ea9f8cb9ad84df2f6cff6730606f437f64c1c5",
+        "mutation_id": "neg_001_gain_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_001_gain_direction_reversed/certification.json",
+        "trigger_condition": "I and Q amplitudes have a persistent imbalance.",
+        "violated_property_ids": [
+          "P_TRIM_DIRECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_corrector_ignores_codes/certification.json",
+        "certification_sha256": "f4777933e937d6508f7e431a33b672ca283e91a092be3ad0c332aa7b3f4e3f2d",
+        "fault_class": "correction_application_error",
+        "mutation_bundle_sha256": "023685b5f952b5ca6c94e11ce543ebbf7d39e64d8a69b31ccf0203a1d4d43dab",
+        "mutation_id": "neg_003_corrector_ignores_codes",
+        "source_catalog_certification_path": "negative_variants/neg_003_corrector_ignores_codes/certification.json",
+        "trigger_condition": "At least one trim code becomes nonzero.",
+        "violated_property_ids": [
+          "P_CORRECTION_APPLICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_lock_after_one/certification.json",
+        "certification_sha256": "2f74ef761aa77f33b5642430f6764cefc848a014d2c1b073e02819abbda60f28",
+        "fault_class": "lock_qualification_error",
+        "mutation_bundle_sha256": "5791e6a4b63f854d75736622d5c42cf9284b0c2d834d3ae1e2f4531bba3df0d6",
+        "mutation_id": "neg_004_lock_after_one",
+        "source_catalog_certification_path": "negative_variants/neg_004_lock_after_one/certification.json",
+        "trigger_condition": "The first in-tolerance calibration update occurs.",
+        "violated_property_ids": [
+          "P_LOCK_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_outputs_not_cleared/certification.json",
+        "certification_sha256": "be726d74501bfcdee0f5031284a524b5ff093a515d232d26c61ce5dd88d1a946",
+        "fault_class": "reset_clear_error",
+        "mutation_bundle_sha256": "552d1498748335c845c0dccdee471aa2c9bf2e753b1adcc916f3ce9fb66cd866",
+        "mutation_id": "neg_005_reset_outputs_not_cleared",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_outputs_not_cleared/certification.json",
+        "trigger_condition": "Reset is asserted after nonzero calibration activity.",
+        "violated_property_ids": [
+          "P_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_phase_direction_reversed/certification.json",
+        "certification_sha256": "8cfa61edf2a04cff1430d781793b7e5b1a6cbab78e039add01700c92c7e9b638",
+        "fault_class": "phase_trim_polarity_error",
+        "mutation_bundle_sha256": "3a58ef2377a3342d920031066bd24151592a5a57446c7b6ced27cd6952a589fa",
+        "mutation_id": "neg_002_phase_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_phase_direction_reversed/certification.json",
+        "trigger_condition": "The public quadrature error exceeds the positive tolerance.",
+        "violated_property_ids": [
+          "P_TRIM_DIRECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_gain_direction_reversed",
+    "canonical_dut_id": "365",
+    "hashes": {
+      "mutation_catalog_sha256": "0170d97687807e2dcb1e7bc983d7c751ff2d9b406bb042d5cac1e0d53634c744",
+      "score_deck_sha256": "742edea88202000e3bda420dc44dcf9961afea55e77835af3d8aed41b0f6f8df",
+      "task_certification_sha256": "2d03b1eb36ce538b4ac38b905fc19240fe888bbe25c23caa2a08bcbb42030332",
+      "task_record_sha256": "e1567965fb504710b7f6d8d2436cd68a8e9cf52079a9fcd222e0d09d2c1ed831"
+    },
+    "release_dir": "365-quadrature-correction-loop"
+  }
+}

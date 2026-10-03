@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "up_pulses_dominate_in_lead_window"
+    - "dn_pulses_dominate_in_lag_window"
+    - "up_dn_overlap_fraction_low"
+
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."
+    - "Checker requires lead-window UP dominance, lag-window DN dominance, and low UP/DN overlap."

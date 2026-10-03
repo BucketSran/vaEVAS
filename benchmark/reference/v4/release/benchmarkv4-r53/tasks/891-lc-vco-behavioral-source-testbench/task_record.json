@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "391-lc-vco-behavioral-source",
+  "checker_task_id": "v4_391_lc_vco_behavioral_source",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a2289d30cef94886be1e8025fd3187f4cd059bca0e0e2f3789f41814c4703ddf",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "71f25d04327845dd5b9d0bc1db42eb2ba84598d0b14159249825ac226886ff77",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a2289d30cef94886be1e8025fd3187f4cd059bca0e0e2f3789f41814c4703ddf",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "34445a75b6ef77df3284d73b778c93f5b1f7797f7ea622f5c393c3574b1d26ad",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "8c103e0aede10ae912954f7f844c03b39eb20daa93a815aaba654eb6a01e7a4a"
+  },
+  "family_id": "391",
+  "family_spec_sha256": "4dcab63bb07face7b826a474e3bc303babee08460acf8015925d2eec417ff22d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "998ad22bb2dab8f27729d9ffdb1123ac459a37f305990e9538011699a4eb9525",
+  "public_contract": "tasks/891-lc-vco-behavioral-source-testbench/public_contract.json",
+  "public_contract_sha256": "f26d555b2aac76057e52acc0cb40a0e293613133e71c650b523836ff840fdd0c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/891-lc-vco-behavioral-source-testbench",
+  "task_id": "v4-891"
+}

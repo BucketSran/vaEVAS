@@ -1,0 +1,171 @@
+{
+  "mode_skill_matrix": {
+    "G0": [],
+    "G1": [
+      "veriloga"
+    ],
+    "G2": [],
+    "G3": [
+      "veriloga"
+    ],
+    "G4": [
+      "vabench-feedback"
+    ],
+    "G5": [
+      "veriloga",
+      "vabench-feedback"
+    ]
+  },
+  "schema_version": "v4-real-skill-snapshot-manifest-v1",
+  "skills": {
+    "vabench-feedback": {
+      "files": [
+        {
+          "bytes": 5515,
+          "path": "SKILL.md",
+          "sha256": "32f6249ff8b48c0470e94d70d87076dfcaa2c2fda65b1f474b9d5e9508112e3b",
+          "source_path": "skills/vabench-feedback/SKILL.md"
+        },
+        {
+          "bytes": 266,
+          "path": "agents/openai.yaml",
+          "sha256": "d4bedda9e469940ad09838d0cdd8fab465058f0360ace17ce4423f3778b87767",
+          "source_path": "skills/vabench-feedback/agents/openai.yaml"
+        },
+        {
+          "bytes": 2287,
+          "path": "references/diagnosis.md",
+          "sha256": "8d780ed34fa530895db2380e0436d982a820be45eeda35a4126bfec0be348837",
+          "source_path": "skills/vabench-feedback/references/diagnosis.md"
+        },
+        {
+          "bytes": 1980,
+          "path": "references/form-workflows.md",
+          "sha256": "c785a2f3f45581bdbe76e1703671257e6b53417def6414912e8a97fbc49c671e",
+          "source_path": "skills/vabench-feedback/references/form-workflows.md"
+        },
+        {
+          "bytes": 2742,
+          "path": "references/runtime-contract.md",
+          "sha256": "d0249f1fc2aeef1d259041877fe1cb3ce0663a8330fc603dc04348a53b0c8453",
+          "source_path": "skills/vabench-feedback/references/runtime-contract.md"
+        }
+      ],
+      "id": "vabench-feedback",
+      "license": {
+        "spdx": null,
+        "status": "not_declared_in_source_repository"
+      },
+      "path": "skills/vabench-feedback",
+      "skill_file": "skills/vabench-feedback/SKILL.md",
+      "source": {
+        "path": "skills/vabench-feedback",
+        "type": "in_repository"
+      },
+      "tree_sha256": "ac22677395737018bf404507cc67b42ae3e0089551507184ed0c241328370168"
+    },
+    "veriloga": {
+      "files": [
+        {
+          "bytes": 3791,
+          "path": "SKILL.md",
+          "sha256": "fbf0440c107422b7a711c464214b4c835b5288974b8a5a34688415df3cb1c1c8",
+          "source_path": "skills/veriloga/SKILL.md"
+        },
+        {
+          "bytes": 239,
+          "path": "agents/openai.yaml",
+          "sha256": "7228b9545ad6f3a832a639e5b1a1932dcfe5456f0f068ae16483925555c6df00",
+          "source_path": "skills/veriloga/agents/openai.yaml"
+        },
+        {
+          "bytes": 330,
+          "path": "assets/examples/branch_access_probe.va",
+          "sha256": "5e4bc4f6a5b2346ed6371633d6d841942c625a120d6f4f93974ccbfb5005dd88",
+          "source_path": "skills/veriloga/assets/examples/branch_access_probe.va"
+        },
+        {
+          "bytes": 386,
+          "path": "assets/examples/cross_logging_probe.va",
+          "sha256": "e10c4b778cd0d0bdc0e2f37c875f7df0d172e4aedf30065f337a1437e3b36dcb",
+          "source_path": "skills/veriloga/assets/examples/cross_logging_probe.va"
+        },
+        {
+          "bytes": 315,
+          "path": "assets/examples/declaration_parameter_probe.va",
+          "sha256": "75cc46c60261ea0b98eb973996da415e4ff3bd8503b2f0efc5ec59bb7cc4926d",
+          "source_path": "skills/veriloga/assets/examples/declaration_parameter_probe.va"
+        },
+        {
+          "bytes": 170,
+          "path": "assets/examples/minimal_zero_probe.va",
+          "sha256": "ee5cad810379e8eb4e5d134cc1bb4a7ad9f59d442fb947d84ebf976593dce629",
+          "source_path": "skills/veriloga/assets/examples/minimal_zero_probe.va"
+        },
+        {
+          "bytes": 372,
+          "path": "assets/examples/transition_syntax_probe.va",
+          "sha256": "33b748ecdeeb29ec6035e07c7989567712806d5e7a0dd434afc9bae1c89dc803",
+          "source_path": "skills/veriloga/assets/examples/transition_syntax_probe.va"
+        },
+        {
+          "bytes": 242,
+          "path": "assets/examples/vector_genvar_zero_probe.va",
+          "sha256": "f98a80860a4baf8ee9013e9114f77ac674e7e4e411a794ab8f0049e200db5120",
+          "source_path": "skills/veriloga/assets/examples/vector_genvar_zero_probe.va"
+        },
+        {
+          "bytes": 170,
+          "path": "assets/template.va",
+          "sha256": "ee5cad810379e8eb4e5d134cc1bb4a7ad9f59d442fb947d84ebf976593dce629",
+          "source_path": "skills/veriloga/assets/template.va"
+        },
+        {
+          "bytes": 1641,
+          "path": "references/analog-contributions.md",
+          "sha256": "872e50c65d521b8c56c276ad23bc468a840fc534f513642a35012cbd21973bf5",
+          "source_path": "skills/veriloga/references/analog-contributions.md"
+        },
+        {
+          "bytes": 1661,
+          "path": "references/events-state-control.md",
+          "sha256": "d379f57902e4ddf2f40bd90d31317dc4524e11c21ec8bffb844cbb59b184f45c",
+          "source_path": "skills/veriloga/references/events-state-control.md"
+        },
+        {
+          "bytes": 1629,
+          "path": "references/modules-ports-disciplines.md",
+          "sha256": "725306a29523cb598ae2816be020591e846b02e33f79839c125c8564bab07543",
+          "source_path": "skills/veriloga/references/modules-ports-disciplines.md"
+        },
+        {
+          "bytes": 1426,
+          "path": "references/operators-system-tasks.md",
+          "sha256": "ba5d6ddde47e82c439cde8e7dd41fa73ef6a8de44763898ca0a316b18011d232",
+          "source_path": "skills/veriloga/references/operators-system-tasks.md"
+        }
+      ],
+      "id": "veriloga",
+      "license": {
+        "spdx": null,
+        "status": "not_declared_in_source_repository"
+      },
+      "path": "skills/veriloga",
+      "skill_file": "skills/veriloga/SKILL.md",
+      "source": {
+        "included_paths": [
+          "SKILL.md",
+          "agents/**",
+          "assets/**",
+          "references/**"
+        ],
+        "path": "skills/veriloga",
+        "type": "vendored_runtime_subset",
+        "upstream_commit": "bf3ee9f5c20bbefccc36f1cd58af9a48032a6ca5",
+        "upstream_pull_request": "https://github.com/Arcadia-1/veriloga-skills/pull/17",
+        "upstream_repository": "https://github.com/Arcadia-1/veriloga-skills"
+      },
+      "tree_sha256": "9c8e71339ad6871f49a39739eb6fc95e2f165560c7de638e594e23f929e82dc5"
+    }
+  }
+}

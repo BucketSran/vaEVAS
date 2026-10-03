@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "058-masked-config-update-32b",
+  "checker_task_id": "v4_058_masked_config_update_32b",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2cdc96d8d9fd45c154c4036d9dea2194cf0769899115b9b9e2c5e20b4baea0e2",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "47c91419a3ae7e82623e4ed7553b479ae413d7e97ac86c099fd0541154288ef7",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2cdc96d8d9fd45c154c4036d9dea2194cf0769899115b9b9e2c5e20b4baea0e2",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "932291280e326d22144b5522da88f8572f8eb42c08c8b74f0b9af45ef77f6634",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "833520911a31dfa4ac4de88c4c54c910d6033ab441b1e31191d7dd5b9e1a800a"
+  },
+  "family_id": "058",
+  "family_spec_sha256": "6cbbb5c39e310f4c92135fcacee8097df06f355c64f4c914316428702c2d7cf4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "20babecace6fcfa0df397fa162b0fda4eea49374dd8c2a990eefc5e74294c810",
+  "public_contract": "tasks/558-masked-config-update-32b-testbench/public_contract.json",
+  "public_contract_sha256": "7c9034506ae3d50195750c5840aa95a86d735b0441f6f8354b05bd8ae4dc9038",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/558-masked-config-update-32b-testbench",
+  "task_id": "v4-558"
+}

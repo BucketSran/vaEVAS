@@ -1,0 +1,25 @@
+{
+  "id": "vbr1_l1_bang_bang_phase_detector_tb",
+  "task_id": "vbr1_l1_bang_bang_phase_detector_tb",
+  "release_entry_id": "vbr1_l1_bang_bang_phase_detector",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "bbpd_data_edge_alignment_ref.va",
+    "tb_bbpd_data_edge_alignment_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e"
+}

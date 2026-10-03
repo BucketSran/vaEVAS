@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l2_agc_receiver_leveling_loop_e2e",
+  "task_id": "vbr1_l2_agc_receiver_leveling_loop_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_agc_receiver_leveling_loop",
+  "family": "end-to-end",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "agc_receiver_leveling_loop.va",
+    "tb_agc_receiver_leveling_loop.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "agc_reduces_gain_on_large_input",
+    "leveled_output_amplitude",
+    "lock_metric_after_settling",
+    "rssi_monitor_rises_on_overload",
+    "gain_monitor_decreases_after_high_rssi"
+  ],
+  "designed_source": true
+}

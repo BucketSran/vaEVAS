@@ -1,0 +1,24 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "940906316c7fd9756b2f66c16c6ec3e919cb4b314405b311c3d3e223d550ac65",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_RESET_DISABLE_CLEAR",
+    "P_SOFT_START_TRACKING",
+    "P_DUTY_DIRECTION_BOUNDS",
+    "P_PWM_ENCODING",
+    "P_POWER_GOOD_QUALIFICATION"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

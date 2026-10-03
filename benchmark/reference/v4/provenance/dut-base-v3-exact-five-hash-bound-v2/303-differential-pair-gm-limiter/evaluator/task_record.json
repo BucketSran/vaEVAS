@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "303",
+  "checker_task_id": "v4_303_differential_pair_gm_limiter",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "6825e2e0c9eba260ddbe2cb5a8f2ad4349ecd0f8a7c121a08fdbb372e2db43ce",
+    "checker_profile.json": "6deb4ad22858d9d6f03f2be7c144d6d00bfa5d5397bc99aa8e8b7227b4fc1569",
+    "derivation_manifest.json": "be5ad4d7e688b610e422787fe97dd47a36a530ae6d5644755adcef5ce4e3fc8b",
+    "family_spec.json": "e2f379c40a3a85cc21c0a0ec169c193799a178f536acb8da23c7084fcf4eae86",
+    "harness_spec.json": "a02267a5dacf50e93154b8030770d4ce19426f2de1c706ef659c813beccc7128",
+    "mutation_catalog.json": "f4e002cf99598c64ad37c145db99d99e00c0c389842f95cdfe22724ba5b479a0",
+    "profiles/feedback.json": "c606ffff0c33968e69a9884010c6da6184f5b5827c4f54d9043a1399e9c1e98c",
+    "profiles/score.json": "4a83cc2c297dcf0d3c49ea12a7e26500667f77034bf63571c880b5ea09ade0a7",
+    "score_tb.scs": "43feb4ea01642746abd0583c23c581334d9a2ec059f836512b76adb794e71e34",
+    "solution_tree": "9f54223b7971cd8e1d6b070f64835f405d888e3277c15e3ffa616b03fee33023",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0936a261b93d3f2cdf2dc052a442a2dd85470dad9eaef118b1b2cf986cc999b3",
+    "instruction.md": "073e452b3b3f636febb281d49c07a5e1794ed766627ad0fddc063058b250f515",
+    "public_contract.json": "0b7d306bd507ee33cd567dc267340ee90b47e0c098ea8130233afa3084bc5aa0"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "6825e2e0c9eba260ddbe2cb5a8f2ad4349ecd0f8a7c121a08fdbb372e2db43ce"
+  },
+  "release_dir": "303-differential-pair-gm-limiter",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1001-differential-pair-gm-limiter",
+  "support_root": "",
+  "target_artifacts": [
+    "differential_pair_gm_limiter.va"
+  ]
+}

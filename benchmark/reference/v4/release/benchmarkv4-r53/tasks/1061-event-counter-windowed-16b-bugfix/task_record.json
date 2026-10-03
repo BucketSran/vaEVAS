@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "event_counter_windowed_16b.va"
+  ],
+  "canonical_dut_source_slug": "061-event-counter-windowed-16b",
+  "checker_task_id": "v4_061_event_counter_windowed_16b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b871647a57fe41d460e56b24e5c598d92e8918d3ae88f616ef66d50a310d3c0c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7f598ac6dc551494a145aa8d8249c763a39d6ddbf766e5fce90537b4a4a3b1d8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4d6912626a262614e822837faa858f34b0db89624d3ad8754c8efc1df4e49f0c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "061",
+  "family_spec_sha256": "17f2547d7798873eaf27bb5f8a00954823173f85d655160fa85d7166de522417",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "844719a2ec23455b4e891cffcc25d31adf7d719092aca67947bd67662e02145b",
+  "public_contract": "tasks/1061-event-counter-windowed-16b-bugfix/public_contract.json",
+  "public_contract_sha256": "96f2b1b5691e32205f462e2c7d66a3bed44bd6a8aea79fc455c74b4844974fa6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1061-event-counter-windowed-16b-bugfix",
+  "task_id": "v4-1061"
+}

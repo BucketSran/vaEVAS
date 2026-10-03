@@ -1,0 +1,55 @@
+{
+  "id": "vbr1_l1_sample_and_hold_with_droop_leakage_e2e",
+  "task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_e2e",
+  "release_entry_id": "vbr1_l1_sample_and_hold_with_droop_leakage",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "end-to-end",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_leaky_hold_e2e",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "@(cross(",
+    "@(timer(",
+    "ahdl_include",
+    "save",
+    "tran",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "leaky_hold.va",
+    "tb_leaky_hold_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/leaky_hold.va",
+    "gold/tb_leaky_hold_ref.scs"
+  ],
+  "evidence": {
+    "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/evidence.json",
+    "local_dual_rerun": "2026-05-23: EVAS PASS and Spectre PASS after vin-sampled prompt/gold/checker upgrade.",
+    "rerun_summary": "results/vabench-release-v1-dual-rerun-ct03-enhance-20260523/summary.json"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bound_step_period_guard_ref.va"
+  ],
+  "canonical_dut_source_slug": "079-ramp-step-source",
+  "checker_task_id": "v4_079_ramp_step_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "976ed0e6b6292524870d184d4e7a03f6ccce62fd8f9a89b41355a9ea8c81be16",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8da559d797071e5baa84f55fef4b47f038e551e08148e53aaa605756c09505a6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "440a6cb343eeecd62fa0babe109bfb30bfcdc33c2bc2d950613f07d86e74716a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "079",
+  "family_spec_sha256": "63832b2178ad20ca4e4f64d68673be02bd3535ca6c1e8dbf470c1b97699dc4a0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1c207f891d04c9d3dbef3356dc7227f31f3818bb26a94af5254b220a4d7197ca",
+  "public_contract": "tasks/1079-ramp-step-source-bugfix/public_contract.json",
+  "public_contract_sha256": "831c709417a22f73af9fedebe7c74c093bcb231b3c40d3078ba59228dd1be120",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1079-ramp-step-source-bugfix",
+  "task_id": "v4-1079"
+}

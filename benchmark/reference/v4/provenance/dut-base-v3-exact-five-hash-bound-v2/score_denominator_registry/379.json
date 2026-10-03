@@ -1,0 +1,78 @@
+{
+  "family_id": "379",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "915d9029ce607f99c29694ff1d5b608b87b2873b0d7a315d0bc248e18dd6d57c",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "f20ab5920f224c1dbed0209de366fc600f5d66a8a65a903af8f349ea1fea698d",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_THE_APERTURE_METRIC_AFTER_A_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5dc196bf38e1c54c61b5b9522e631c65e8eb2c7d24bac22d2989a3b3ec923aa8",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "7d8d4d35916c8eb85571698484d7f264b039a33e115ca2c4892c5c244f5e9069",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_CLEARS_THE_HELD_VALUE_APERTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "1633fcd18a6c18efe54655efd66a42c3804210cd78fcfe83152cf0d262aee759",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "04c55127dd49c3a40ea8cd2365b74c493261a69eab16ef1baefb004621297980",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_EDGE_WITH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "70610cb0ce3d62a6e70c8f48ca4e44cda486a1a34a29e54b69cf7620ce03ae2b",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "b83b1537c45d445c10c95acce5bb498807208c1172e24cb98279d2d250ca74b2",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "semantic delay_edge mutation from gold",
+        "violated_property_ids": [
+          "P_VALID_IS_HIGH_AFTER_THE_FIRST"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "6950a27d875b70e043aea144dfbc918db4a9234d98161a5e336d04f82fe5b5a3",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "aa1fff95dd0f768c5da8b703dcebee6065f145dd351a9d6aaee992af75ce3c9f",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_THE_APERTURE_METRIC_AFTER_A_CAPTURE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "379",
+    "hashes": {
+      "mutation_catalog_sha256": "e425b1837fae710c00ca5d78f0cc0db8b3195350e224be39e204fc1dd04c0e91",
+      "score_deck_sha256": "50cd935efe6145bb0f42df3a60f429d71cb19e431f66e0de4dc6c950551d760f",
+      "task_certification_sha256": "2a5132be67cb4ac9740d1a2e42dc50670fcc591fedc7b45540b2b8c56361d8e7",
+      "task_record_sha256": "675152fadc15836d6a288f35475edc6195a6cb385a0cf673113f2b5ad6192d1d"
+    },
+    "release_dir": "379-periodic-sampler-aperture-metric"
+  }
+}

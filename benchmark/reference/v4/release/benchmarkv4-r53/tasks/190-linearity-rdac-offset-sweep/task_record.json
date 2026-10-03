@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "linearity_rdac_offset_sweep.va"
+  ],
+  "canonical_dut_source_slug": "190-linearity-rdac-offset-sweep",
+  "checker_task_id": "v4_190_linearity_rdac_offset_sweep",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4dea489f4dd5989678f8efb84f1d49d7e146b0bd1ea7ace5bf3f317873c561a9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "376a1887ba7c860f5a6cf233a784354bd419d11e69d9659951726d31a3cc3e51",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1a4d4cbd2fd41b5b22b985ebe3dbcd36cb0230698d28f3e72f4f2807ee2f9f75",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "190",
+  "family_spec_sha256": "53804768aef762e26cb45c57b668c05c897970dfac8972e049ea863d98a4c9b6",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ef8618f3a99ae9a72f430db60de3fd9e12160fc833ae95fe7751a0bda606dd10",
+  "public_contract": "tasks/190-linearity-rdac-offset-sweep/public_contract.json",
+  "public_contract_sha256": "46525552f19a630f481ab109231563cdeba5b0f4f2242569b689e83cc2a5b325",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/190-linearity-rdac-offset-sweep",
+  "task_id": "v4-190"
+}

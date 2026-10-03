@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module gain_trim_controller(clk,rst,meas,target,gain_ctrl);
+    input clk,rst,meas,target; output gain_ctrl; electrical clk,rst,meas,target,gain_ctrl;
+    parameter real vth=0.45; parameter real tr=500p; real ctrl;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

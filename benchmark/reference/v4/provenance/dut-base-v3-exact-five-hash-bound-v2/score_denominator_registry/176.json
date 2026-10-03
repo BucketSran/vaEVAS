@@ -1,0 +1,80 @@
+{
+  "family_id": "176",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_denominator/certification.json",
+        "certification_sha256": "d69f77cce7d8082044e7dcd3a0f62fc7fb57261a43eb368c25289a5e9af47ecb",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "4049aee5c66cf8fbbed92bbf238c5aea4841b5ccaeaface5932593d1b0dc2076",
+        "mutation_id": "neg_002_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_denominator/certification.json",
+        "trigger_condition": "Normalizes all weighted outputs by 256 instead of 272.",
+        "violated_property_ids": [
+          "P_SHARED_272_DENOMINATOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "0273bfb8fabd4bb85b58e1e64704de8fee94521918c26210e34670bc8b911235",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "cd51dbecd0d2390dbb8e13f7310509357ef56ffe21847c648eaf65c6133567c1",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_EIGHT_BIT_OUTPUT",
+          "P_SEVEN_BIT_OUTPUT",
+          "P_SEVEN_HALF_BIT_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_omit_half_bit/certification.json",
+        "certification_sha256": "7ca47c0005d4a3cdd6afc8477e84c12b95d5b1d29d9d397efed2a663c3331f07",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "f649680eed19e0d38fa2ad398419ba61f12824da62331fb0c1f6311f2f8ece8c",
+        "mutation_id": "neg_003_omit_half_bit",
+        "source_catalog_certification_path": "negative_variants/neg_003_omit_half_bit/certification.json",
+        "trigger_condition": "Drives the 8-bit weighted output at half amplitude.",
+        "violated_property_ids": [
+          "P_EIGHT_BIT_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_lsb_vote/certification.json",
+        "certification_sha256": "234fe0740c74a9c053da19f1fd8f508c5e488668a586a4412590b361ff5fdb71",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "692ae93ba6249c4ccb10a1f022092285066703830eafad127c531cf1642a14fe",
+        "mutation_id": "neg_004_wrong_lsb_vote",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_lsb_vote/certification.json",
+        "trigger_condition": "Inverts the 7.5-bit weighted output polarity.",
+        "violated_property_ids": [
+          "P_SEVEN_HALF_BIT_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9112a37f63b5a05545e5529967210059c14a1c5fe3173d5c1f54e0459bba20bb",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "8e74b5f8cd181cca1aa7050f3bbf7abef40cd191b0bb34fa5c100cc276bd5301",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Weighted Decoder 7b5: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_EIGHT_BIT_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_denominator",
+    "canonical_dut_id": "176",
+    "hashes": {
+      "mutation_catalog_sha256": "ce3a4d6ff2a85ca607ef5885ef6ea8680435f65fb8c7442106bbd2a84fa1948d",
+      "score_deck_sha256": "8d41923b99dbc02c719654c36527d1259f2c0a7309b70e2328f0250ba85fbdcf",
+      "task_certification_sha256": "f6f74cf018963703eb0eed3bfa545d8797788b82fe54d5dbd180a7dbeb1c0992",
+      "task_record_sha256": "dba96ac45b76f29de91ca514d38717a2163baa2618b4f142389c279999fb7bd3"
+    },
+    "release_dir": "176-weighted-decoder-7b5"
+  }
+}

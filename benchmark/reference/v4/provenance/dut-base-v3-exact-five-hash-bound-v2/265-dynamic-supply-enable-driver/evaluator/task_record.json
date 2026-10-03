@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "265",
+  "checker_task_id": "v4_265_dynamic_supply_enable_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "501af455f06c0b2884953ce92a5fd3dab3791eda03060d64b8f9064eccefcf19",
+    "checker_profile.json": "49ab8f24591cff85663bfc91f444532c7773c4d5ef119cec530f6ae1796866d9",
+    "derivation_manifest.json": "69d17779f080a97d88d824e98f94c755acfa1aaa1ae8d41b804a6d34c0823438",
+    "family_spec.json": "9fbddca3f0dfeae842de1992205ae0b5755d68decfb577735384cf6d968b1547",
+    "harness_spec.json": "bd55b33e78436aca17aebf680f11ecff23291515464b712b8f21effff09fbf1a",
+    "mutation_catalog.json": "c6086746411ad673f29dcac8554cf25bebaf29e4d5e8f7ef4b27d66b9405a80b",
+    "profiles/feedback.json": "1de6a0ab14cb7fd225304dc704f67d62d5f8e26d6c0555e1cb3646854392a853",
+    "profiles/score.json": "cbcc532e8e0a672ba1974876219a895b6c20526780a02af57014ca57ca3987eb",
+    "score_tb.scs": "9978e2241a147dfadcd25925aea3b059d2cc224b7abd0599795cb603032feb60",
+    "solution_tree": "1a1fa5e30fa305f97c6ca651dd0e5391d306f7701a99fca80148c71dc57c3a66",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "fcb9f992dbce56d1592673ff38d060d8151319fd1d75285f2b2e2720eece953b",
+    "instruction.md": "4df7feb57a4ef63f36b159e2fab86ac3ca17e40caf8327011fed672131e757a7",
+    "public_contract.json": "b59902294fddc4722c439b3a21fee050465a656ebcbb8235b23818dbf7a8af14"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "501af455f06c0b2884953ce92a5fd3dab3791eda03060d64b8f9064eccefcf19"
+  },
+  "release_dir": "265-dynamic-supply-enable-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "356-dynamic-supply-enable-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "dynamic_supply_enable_driver.va"
+  ]
+}

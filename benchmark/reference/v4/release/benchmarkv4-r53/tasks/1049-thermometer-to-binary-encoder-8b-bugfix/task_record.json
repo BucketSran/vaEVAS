@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "therm_to_bin_8b.va"
+  ],
+  "canonical_dut_source_slug": "049-thermometer-to-binary-encoder-8b",
+  "checker_task_id": "v4_049_thermometer_to_binary_encoder_8b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e6102aaf34600b664b81975cff802ea6f4e1bef598225b88696ee11a87db4250",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "79e5e962ecb06c2c697354a09779c261cd5694ae638b699b0342f6eba73e748b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "bdb2024ba79112a10b18dbae07feee21d7520ef82d4d6d4c50088485c55b4507",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "049",
+  "family_spec_sha256": "caa7e4ca393c14127000932bcaf42786ad28977ee02565b6f72cd8545f546b03",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "05877e31ad539ad054e106f63d3208892b76cfd757315e18d5b3437a2d4f9d4a",
+  "public_contract": "tasks/1049-thermometer-to-binary-encoder-8b-bugfix/public_contract.json",
+  "public_contract_sha256": "a398260c7ffeb14e0399837ec59161f569cc5c052b6634f28e4254c0ba56268a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1049-thermometer-to-binary-encoder-8b-bugfix",
+  "task_id": "v4-1049"
+}

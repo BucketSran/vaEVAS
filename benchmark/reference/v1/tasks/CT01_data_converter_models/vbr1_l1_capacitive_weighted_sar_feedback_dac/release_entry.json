@@ -1,0 +1,178 @@
+{
+  "id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Data Converter Models",
+  "base_function": "Capacitive/weighted SAR feedback DAC",
+  "package_status": "selected_l1_addition",
+  "score_surface": "model-capability",
+  "source_base_id": "capacitive_weighted_sar_feedback_dac",
+  "canonical_kernel": "",
+  "source_registry_status": "selected_from_existing_task",
+  "source_evidence_status": "selected_source_pending_dual",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/dac/cdac_cal",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "tb",
+      "source_path": "tb_companion_from_dut:cdac_cal",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "bugfix",
+      "source_path": "bugfix_companion_from_dut:cdac_cal.va",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "e2e",
+      "source_path": "e2e_companion_from_dut:cdac_cal",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/gold/cdac_cal.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/dut/gold/tb_cdac_cal_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/spec-to-va/voltage/dac/cdac_cal",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/dut/spectre_result.json",
+      "release_source_task_id": "cdac_cal",
+      "historical_source_task_id": "cdac_cal"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/cdac_cal.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/tb_cdac_cal_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tb_companion_from_dut:cdac_cal",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_tb",
+      "historical_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_tb"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/bugfix/gold/tb_cdac_cal_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "bugfix_companion_from_dut:cdac_cal.va",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/bugfix/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix",
+      "historical_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_bugfix"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e/gold/cdac_cal.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/e2e/gold/tb_cdac_cal_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "e2e_companion_from_dut:cdac_cal",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_capacitive_weighted_sar_feedback_dac/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/e2e/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_e2e",
+      "historical_source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_e2e"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

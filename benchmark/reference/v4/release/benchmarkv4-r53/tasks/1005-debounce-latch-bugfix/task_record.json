@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "debounce_latch.va"
+  ],
+  "canonical_dut_source_slug": "005-debounce-latch",
+  "checker_task_id": "v4_005_debounce_latch",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "43e64562328a627a937e5b661dcbfb0696a2f6ac31e22f12c6a11c57f87cd0d4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "6d7f75a71a83ce0b7ee329cf069d23e336084b8baf1365da0eea02a699f660c8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e9c064422fa3243d623bb12a7b0e58ecdaed4de572814c85900574dbbe741017",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "005",
+  "family_spec_sha256": "6a4eff93bfc7d4619ed1a5514716da42179825fa46a6f9599f075430f9baed45",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "112475d97d9bab347e3fd154c17e2ea282cde0dc80b101c943fc471b52326073",
+  "public_contract": "tasks/1005-debounce-latch-bugfix/public_contract.json",
+  "public_contract_sha256": "daa39e1062b9a5360e10592e20293e0ad8e14c4169725b7b490faa879db53ec1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1005-debounce-latch-bugfix",
+  "task_id": "v4-1005"
+}

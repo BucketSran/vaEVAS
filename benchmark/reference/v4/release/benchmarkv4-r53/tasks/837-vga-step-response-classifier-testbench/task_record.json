@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "337-vga-step-response-classifier",
+  "checker_task_id": "v4_337_vga_step_response_classifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "930f9a68a8ce240ecd2b5633df215fe8b82c85210e7c8f02fe4aba41c127af63",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "352c3483c31a6d7cfb408afad1494d34b01c1f77ebea167cb6f400f728002a32",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "930f9a68a8ce240ecd2b5633df215fe8b82c85210e7c8f02fe4aba41c127af63",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ab429ae1b183ea0b59e4c312e1766afb7ae7b663dbdcda1fd991aa4719a26eec",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "64fb5bc718e246a9e5f3d03c22c5e7f648149adec91d345b9c7f44668fe164cc"
+  },
+  "family_id": "337",
+  "family_spec_sha256": "5d4512ace185c2a6c5f373d876ab5732a995e76f0f1e92233ff66ab31289b8d1",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f894757c043c5279442944d10afed5dc855dc93f46f7f4b1794a3246c458719f",
+  "public_contract": "tasks/837-vga-step-response-classifier-testbench/public_contract.json",
+  "public_contract_sha256": "0a0c44de281b4acacbcf2e82a18cf2e4842ebab7d83ed06c15e260a546064574",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/837-vga-step-response-classifier-testbench",
+  "task_id": "v4-837"
+}

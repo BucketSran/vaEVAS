@@ -1,0 +1,79 @@
+{
+  "family_id": "034",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "aec2c4c276d6ad53b7ead27dc4387747bd5838131b4044e10ea0f823290c3c0b",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "f2124212899a8a6a1804c4fe8610177129c2869711125ca0897096afb75ca5ab",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_PROPORTIONAL_CLAMP",
+          "P_RESET_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "a9d526104298864e8c2f2f45784419d34dc95b6c54e3cc65136e27cf482a86e4",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "8f5e00947e58a929c376e7812c00b2df0b577bc1caff34f7ee1548166f08f089",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_SIGNED_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "55ccb72763708f0f425d55f50172c25979ea53f5d6e7909df965fe95cf3945a9",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "df0e8250afaa1a9537e47cd42a2c74eaebf2fed9080ca9779b565746f2fa2ed1",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_STEP_HALVING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "b22720db797651edecea00de33f62b39662718e0f3768686a0bbd717d53b2600",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "50a7363b8fe8dc815399719807e279272bbbc0694796eb466dd4ffb8598ca089",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_LOCK_COUNT_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "5ebcfd7bbfca2e677befdee41cf42e9efc622140e0a762b23f920458e1b5ff27",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "6f8732e1d97815b553a16e6d610bb642de19bc8c6a15409a5e26c876e23ce4b1",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_DEADBAND_HOLD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "034",
+    "hashes": {
+      "mutation_catalog_sha256": "6b5c07da2431ca75223b2978c95dbea9cd06dde644b736af01d08b1f4df25853",
+      "score_deck_sha256": "30fb62b3a78573b5839709c2ba59b353787b780a4e1885f452b544b4e3e4d635",
+      "task_certification_sha256": "1329de18eb564e93dba65e043173077cb5a3e18659cafe465b8fc443c82ae028",
+      "task_record_sha256": "85b2d1cd0abc628dc8d5df2c6de8b373b3eb15f8987b512edf17f0bb35c586bc"
+    },
+    "release_dir": "034-loop-filter-abstraction"
+  }
+}

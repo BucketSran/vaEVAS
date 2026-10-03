@@ -1,0 +1,376 @@
+{
+  "artifact_contract": {
+    "files": [
+      {
+        "modules": [
+          {
+            "depends_on": [
+              "chopper_gain_core",
+              "synchronous_lp_state"
+            ],
+            "name": "chopper_stabilized_differential_amplifier",
+            "parameters": [
+              {
+                "default": 0.9,
+                "name": "vdd",
+                "override_behavior": "logic-high and upper output rail",
+                "type": "real",
+                "units": "V",
+                "valid_range": "vdd > vss"
+              },
+              {
+                "default": 0.0,
+                "name": "vss",
+                "override_behavior": "logic-low and lower output rail",
+                "type": "real",
+                "units": "V",
+                "valid_range": "vss < vdd"
+              },
+              {
+                "default": 0.45,
+                "name": "vcm",
+                "override_behavior": "differential output common mode",
+                "type": "real",
+                "units": "V",
+                "valid_range": "vss <= vcm <= vdd"
+              },
+              {
+                "default": 0.45,
+                "name": "vth",
+                "override_behavior": "control threshold",
+                "type": "real",
+                "units": "V",
+                "valid_range": "finite real"
+              },
+              {
+                "default": 3.0,
+                "name": "gain",
+                "override_behavior": "baseband differential gain",
+                "type": "real",
+                "units": "V/V",
+                "valid_range": "gain > 0"
+              },
+              {
+                "default": 0.02,
+                "name": "vos_amp",
+                "override_behavior": "internal post-chopper amplifier offset",
+                "type": "real",
+                "units": "V",
+                "valid_range": "finite real"
+              },
+              {
+                "default": 0.25,
+                "name": "lp_alpha",
+                "override_behavior": "event-driven low-pass update fraction",
+                "type": "real",
+                "units": "1",
+                "valid_range": "0 < lp_alpha <= 1"
+              },
+              {
+                "default": 0.02,
+                "name": "settle_tol",
+                "override_behavior": "residual convergence tolerance",
+                "type": "real",
+                "units": "V",
+                "valid_range": "settle_tol >= 0"
+              },
+              {
+                "default": 3,
+                "name": "settle_cycles",
+                "override_behavior": "consecutive qualified update count",
+                "type": "integer",
+                "units": "edges",
+                "valid_range": "settle_cycles >= 1"
+              },
+              {
+                "default": 1e-10,
+                "name": "tr",
+                "override_behavior": "output smoothing",
+                "type": "real",
+                "units": "s",
+                "valid_range": "tr > 0"
+              }
+            ],
+            "ports": [
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "vinp",
+                "position": 0
+              },
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "vinn",
+                "position": 1
+              },
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "chop_clk",
+                "position": 2
+              },
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "rst",
+                "position": 3
+              },
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "enable",
+                "position": 4
+              },
+              {
+                "direction": "input",
+                "discipline": "electrical",
+                "name": "hold",
+                "position": 5
+              },
+              {
+                "direction": "output",
+                "discipline": "electrical",
+                "name": "voutp",
+                "position": 6
+              },
+              {
+                "direction": "output",
+                "discipline": "electrical",
+                "name": "voutn",
+                "position": 7
+              },
+              {
+                "direction": "output",
+                "discipline": "electrical",
+                "name": "settled",
+                "position": 8
+              },
+              {
+                "direction": "output",
+                "discipline": "electrical",
+                "name": "offset_residual",
+                "position": 9
+              }
+            ],
+            "role": "entry"
+          }
+        ],
+        "path": "chopper_stabilized_differential_amplifier.va"
+      },
+      {
+        "modules": [
+          {
+            "depends_on": [],
+            "name": "chopper_gain_core",
+            "parameters": [],
+            "ports": [],
+            "role": "support"
+          }
+        ],
+        "path": "chopper_gain_core.va"
+      },
+      {
+        "modules": [
+          {
+            "depends_on": [],
+            "name": "synchronous_lp_state",
+            "parameters": [],
+            "ports": [],
+            "role": "support"
+          }
+        ],
+        "path": "synchronous_lp_state.va"
+      }
+    ],
+    "mode": "multi_file"
+  },
+  "buggy_input_artifacts": [
+    "buggy_bundle/chopper_stabilized_differential_amplifier.va",
+    "buggy_bundle/chopper_gain_core.va",
+    "buggy_bundle/synchronous_lp_state.va"
+  ],
+  "editable_scope": "complete_declared_verilog_a_bundle",
+  "evas": {
+    "available_in_modes": [
+      "G2",
+      "G3",
+      "G4",
+      "G5"
+    ],
+    "command": "evas simulate public/task/visible_test.scs -o /tmp/vabench-visible/evas-output --spectre-strict",
+    "visible_and_final_test": "identical"
+  },
+  "family_id": "091",
+  "form": "bugfix",
+  "identity": {
+    "category": "precision_amplifiers_and_offset_mitigation",
+    "difficulty": "D4",
+    "level": "L2",
+    "supported_scope": "voltage-domain event-driven chopper amplifier signal flow",
+    "title": "Chopper-Stabilized Differential Amplifier"
+  },
+  "modeling_constraints": [
+    "Both chopper polarities must update a retained low-pass state.",
+    "The amplifier offset is inserted between chopping and synchronous demodulation.",
+    "Reset and disable clear asynchronously; hold preserves retained state.",
+    "No file I/O, final_step, current contributions, auto-zero storage, or trim servo."
+  ],
+  "problem_statement": "the supplied system violates the public contract",
+  "properties": [
+    {
+      "id": "P_CHOP_DEMOD_BASEBAND_GAIN",
+      "observable_contract": "Synchronous chopping and demodulation preserve gain times the differential input at baseband.",
+      "required_signals": [
+        "time",
+        "vinp",
+        "vinn",
+        "chop_clk",
+        "voutp",
+        "voutn"
+      ]
+    },
+    {
+      "id": "P_INTERNAL_OFFSET_SUPPRESSION",
+      "observable_contract": "The post-chopper amplifier offset alternates after demodulation and is attenuated by the retained low-pass state.",
+      "required_signals": [
+        "time",
+        "vinp",
+        "vinn",
+        "chop_clk",
+        "offset_residual"
+      ]
+    },
+    {
+      "id": "P_EVENT_DRIVEN_LOWPASS",
+      "observable_contract": "Outputs update toward each demodulated sample only on either chopper edge and remain retained between events.",
+      "required_signals": [
+        "time",
+        "chop_clk",
+        "voutp",
+        "voutn",
+        "offset_residual"
+      ]
+    },
+    {
+      "id": "P_RESET_ENABLE_CLEAR",
+      "observable_contract": "Active reset or disabled operation clears state, residual, and settled asynchronously.",
+      "required_signals": [
+        "time",
+        "rst",
+        "enable",
+        "voutp",
+        "voutn",
+        "settled",
+        "offset_residual"
+      ]
+    },
+    {
+      "id": "P_HOLD_PRESERVES_STATE",
+      "observable_contract": "Hold preserves every retained output across chopper edges.",
+      "required_signals": [
+        "time",
+        "chop_clk",
+        "hold",
+        "voutp",
+        "voutn",
+        "settled",
+        "offset_residual"
+      ]
+    },
+    {
+      "id": "P_SETTLED_QUALIFICATION",
+      "observable_contract": "Settled asserts only after the configured consecutive residual-qualified active updates.",
+      "required_signals": [
+        "time",
+        "chop_clk",
+        "settled",
+        "offset_residual"
+      ]
+    }
+  ],
+  "schema_version": "v4-benchmarkv4-public-contract-v1",
+  "target_artifacts": [
+    "chopper_stabilized_differential_amplifier.va",
+    "chopper_gain_core.va",
+    "synchronous_lp_state.va"
+  ],
+  "task_id": "v4-1091",
+  "testbench_binding": {
+    "dut_source_root": "dut",
+    "instances": [
+      {
+        "connections": [
+          {
+            "net": "vinp",
+            "port_ref": "vinp",
+            "position": 0
+          },
+          {
+            "net": "vinn",
+            "port_ref": "vinn",
+            "position": 1
+          },
+          {
+            "net": "chop_clk",
+            "port_ref": "chop_clk",
+            "position": 2
+          },
+          {
+            "net": "rst",
+            "port_ref": "rst",
+            "position": 3
+          },
+          {
+            "net": "enable",
+            "port_ref": "enable",
+            "position": 4
+          },
+          {
+            "net": "hold",
+            "port_ref": "hold",
+            "position": 5
+          },
+          {
+            "net": "voutp",
+            "port_ref": "voutp",
+            "position": 6
+          },
+          {
+            "net": "voutn",
+            "port_ref": "voutn",
+            "position": 7
+          },
+          {
+            "net": "settled",
+            "port_ref": "settled",
+            "position": 8
+          },
+          {
+            "net": "offset_residual",
+            "port_ref": "offset_residual",
+            "position": 9
+          }
+        ],
+        "module_ref": "chopper_stabilized_differential_amplifier",
+        "name": "IDUT"
+      }
+    ],
+    "source_path_template": "./dut/{artifact_path}"
+  },
+  "trace_contract": {
+    "required_signals": [
+      "time",
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ]
+  }
+}

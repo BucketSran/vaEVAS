@@ -1,0 +1,82 @@
+{
+  "family_id": "250",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "c478b5d97c0cb252f1fddbb3e77ec8545eaa0db4a5bea5ad2a616ea6226f7703",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "d494121c32651426a078be0ac6c766e8efa3da378d6bf8e52c27917481049a8a",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "f1ecd20f9a945872d7f5e5a0ace31a501d8b5b2ccf41737bcab86ed2c1656e80",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "67bf21fc396e04abed1f114966f7deca37f84007ea541184c7881916552e5f97",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_RAIL_REFERENCED_BUFFER_VALUE",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "ab52376863189736e5afe5af2b12e2ed31aa8dc48f201d2332329bda8a4acee6",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "1634f483f243f888fad16f8062a7eb1d9e6c122b80175a6419227535fe571a46",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "f08bfa46e19a9a05fe85830c22e349c8abe133a5117e7b661d21734a550561a4",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "4a7227a0528a0f4e8d1a9503245345ce0d5c041006080c6de3982d60be314f02",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_RAIL_REFERENCED_BUFFER_VALUE",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "f916ed1eb78dd69304a3bd54fb0963a4ee1a8e3d3e4a2bc1454a4f96d6169038",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "37831ad0b6b85eb8a2809bd754ce87191695a3a5bc53bc2d79c1a34d79965951",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_flag_metric",
+    "canonical_dut_id": "250",
+    "hashes": {
+      "mutation_catalog_sha256": "baa1e1643d6f9f28c275f6d84154ceb02218feabf4df7cbf4b63f62613175efa",
+      "score_deck_sha256": "92e5ae93462f24df3d09e1c54868fb3a7adec018b53be0ea095310d8049375dc",
+      "task_certification_sha256": "5fff62815c28d9049ea28266b540c74e4b3f756f404bde45d5ae10210a765da0",
+      "task_record_sha256": "0e38a46bbc82664494d9850d1729f0afbbfcd48ee446c0d7e35aeb36bf66bd13"
+    },
+    "release_dir": "250-rail-referenced-gain-buffer"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "288",
+  "checker_task_id": "v4_288_calibration_quadrant_mapper",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9475f199418b53bd76f46cbee2d9ce6f795ec663d7aecd70a86c6e624ed2473d",
+    "checker_profile.json": "b71f35e1a46cd5bdb19d7983e309528f84b3d053e2bfc0c259ad78ffb34f0192",
+    "derivation_manifest.json": "02892f4daa0b759f10f2edd08ed5030e509e301d1c5f405648b5ca38741a790a",
+    "family_spec.json": "6ba90dbd73ccaab5779427a3f715022aa350a95141fe0304e5a132db4f7bb3f5",
+    "harness_spec.json": "714d6b02dcedbae28edb43922e928e9729fb64242a674cd1cfb70a1f1f54afb0",
+    "mutation_catalog.json": "c19534ff158cdf9813589c0a2070cf65b74e3ada1c6f4fcea6bc150ed1c90dfc",
+    "profiles/feedback.json": "5648540f5ed0fbe1967821ed5a11c4b41ae4e69cf96bb25041311180f9a50530",
+    "profiles/score.json": "3df7864fe50a3efa3775225a84b6d5c23921e175b80c7ea78f3c6150c469e150",
+    "score_tb.scs": "7df70b6c383afd792dd09e27232396290ee27f9248f9ed873910581eca377512",
+    "solution_tree": "b57fe1346deaa9913413b4c77552cb33ab9748c66d4c4ba1af630ce0ee2046bd",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "9c6ee676580bce744202bab538ad5fee329334ab24b24f30382779d3d633276b",
+    "instruction.md": "89f43094489777cbf8392eea99f017b25f174924719a270ced62debe0f68c267",
+    "public_contract.json": "8ecd40aff0cab345f889a7c9a63ce1dea833e8ec2ef6a078f2ab99739ad6f40e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9475f199418b53bd76f46cbee2d9ce6f795ec663d7aecd70a86c6e624ed2473d"
+  },
+  "release_dir": "288-calibration-quadrant-mapper",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "454-calibration-quadrant-mapper",
+  "support_root": "",
+  "target_artifacts": [
+    "calibration_quadrant_mapper.va"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "family_id": "245",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "1a25221436a44688919dbb1abddda52f995aa5571035338711cd1f297bdc32b0",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b884d9e364ac03474b5923d3ffd2d1b7caa38392470e9f7ef3bc7f42b990b60b",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "CAL4bit Modulo: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_FLOOR_V_AIN_TO_AN_INTEGER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "47d60ee84a9c547ff75451a810b0b3634359fabef8990784f0c0d89d256b7fc6",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8bcea319388f376c5735b498da039d726dad95b4fb4588d75171b448392ba932",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Keeps the output at its trivial zero behavior and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_FLOOR_V_AIN_TO_AN_INTEGER",
+          "P_PROVIDE_OVERRIDEABLE_PUBLIC_PARAMETER_VH_0"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_rounds_instead_of_floor/certification.json",
+        "certification_sha256": "61ac3c31d721a04b9598c9c16edef50dd9d55837592165578c3fd33d34bb0456",
+        "fault_class": "rounds_instead_of_floor",
+        "mutation_bundle_sha256": "1f0d19f95aec7de2a110fcc5aeb06b861d2d9f77f56c0fe1d194877b15767088",
+        "mutation_id": "neg_002_rounds_instead_of_floor",
+        "source_catalog_certification_path": "negative_variants/neg_002_rounds_instead_of_floor/certification.json",
+        "trigger_condition": "Rounds the analog input before encoding instead of flooring it.",
+        "violated_property_ids": [
+          "P_FLOOR_V_AIN_TO_AN_INTEGER",
+          "P_USE_DETERMINISTIC_VOLTAGE_DOMAIN_VERILOG_A"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reverse_bit_order/certification.json",
+        "certification_sha256": "483f76c873382c3dfd51c3526a5a240fb84817ae0658a5623db5704c80fe37de",
+        "fault_class": "reverse_bit_order",
+        "mutation_bundle_sha256": "77056ed500ddb179ec42e21a382b16307568cace33e041530079a9bdd3a7eed2",
+        "mutation_id": "neg_003_reverse_bit_order",
+        "source_catalog_certification_path": "negative_variants/neg_003_reverse_bit_order/certification.json",
+        "trigger_condition": "Drives the four encoded bits in reverse order.",
+        "violated_property_ids": [
+          "P_FLOOR_V_AIN_TO_AN_INTEGER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wraps_instead_of_clamping/certification.json",
+        "certification_sha256": "8fcacb1b3ae6503bf27c42697ef1ae39b3198a4082d10c6bc6f94325d7cd1cc9",
+        "fault_class": "wraps_instead_of_clamping",
+        "mutation_bundle_sha256": "34ccea56bbcffdf54e9f873e79402a65ebb029342d0cc386adc2d80da91df5df",
+        "mutation_id": "neg_004_wraps_instead_of_clamping",
+        "source_catalog_certification_path": "negative_variants/neg_004_wraps_instead_of_clamping/certification.json",
+        "trigger_condition": "Wraps large input values modulo 16 instead of clamping to 15.",
+        "violated_property_ids": [
+          "P_FLOOR_V_AIN_TO_AN_INTEGER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_metric_scale_low",
+    "canonical_dut_id": "245",
+    "hashes": {
+      "mutation_catalog_sha256": "5bbfcec01f8dad4937abf3c1d0feea086aa1827ebd94ffc70e1ef296f2fa08ed",
+      "score_deck_sha256": "a4b6fe5f748237c9a147f7435b573c34a028d1e7d01357865531fbcb04567c05",
+      "task_certification_sha256": "5ca42ae0f33494ddba0a376689530dc30671d547238ca73da1198773c7851090",
+      "task_record_sha256": "d033fc8dc589a89e4a937cf63ff71af993f3bd84cd1210cba278956a5be40886"
+    },
+    "release_dir": "245-cal4bit-modulo"
+  }
+}

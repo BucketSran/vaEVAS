@@ -1,0 +1,82 @@
+{
+  "family_id": "251",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "01296a662bbd13329402384f7346d8f157113e452cfeb34d52474943775a7f5c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "d59edc4407cc76659198c405dbdcd5559ede2db98415fc4cc8e158e0afd876c1",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "4c06cfc0106440eae7449a66899f84a5d586e533d017dd6ea0b76a7cbdde2aa2",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "16b6f4b73c4463b38940413b144f0312ab461b587bde1667817476da14166478",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_WEIGHTED_BALANCE_SUM_AS",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "c638422dc4806f4317a967dfa3517593a3f1b85d4d10811f24ba350db4089690",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "532cd060d989fbb974c25ea4668d2da198724011de0443dccdbb376741bb8cd8",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "1f65a333d958552306566ff42bb2c762039f8763070da26fc5e298f08ca9c5e0",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "754ca1e427d52e0f7fd013a119b3abb3a428b245aef444c14bc92dedab09cb58",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_WEIGHTED_BALANCE_SUM_AS",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "080c235803ad86e0668f74f1724e124400849b1b64a2c0ba589d564be9c22a16",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "41142c9e55ecc0faf2b5adcc264a0badad96652d2b24c2d7655f4b77ecd43766",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_flag_metric",
+    "canonical_dut_id": "251",
+    "hashes": {
+      "mutation_catalog_sha256": "1958edef54c0388d74f48d9da179fcf2eebabf4ebb8f8d5e8c1dd2bc2c05f20e",
+      "score_deck_sha256": "1206b2b42d243e7f17c69cb257ecb4268c4744a5c8a5138e729fd2175c1daa5c",
+      "task_certification_sha256": "d269a0151fa849f09b44a21d0168363c472fa461021aa8d67c9337a0b420065e",
+      "task_record_sha256": "1458f9b756c9b61fd2c71cb16145a29784cc2b385d6578bd23632576b4d1651a"
+    },
+    "release_dir": "251-weighted-balance-summer"
+  }
+}

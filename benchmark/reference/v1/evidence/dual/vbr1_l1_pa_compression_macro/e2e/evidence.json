@@ -1,0 +1,117 @@
+{
+  "release_entry_id": "vbr1_l1_pa_compression_macro",
+  "task_id": "vbr1_l1_pa_compression_macro:e2e",
+  "source_task_id": "vbr1_l1_pa_compression_macro_e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "PA compression macro"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_pa_compression_macro/e2e/gold",
+    "results/vabench-release-v1-dual-rerun/vbr1_l1_pa_compression_macro/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pa_compression_macro/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pa_compression_macro/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_pa_compression_macro/forms/e2e/gold/pa_compression_macro.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_pa_compression_macro/forms/e2e/gold/tb_pa_compression_macro.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rerun/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_pa_compression_macro/e2e/gold",
+    "result_root": "results/vabench-release-v1-dual-rerun/vbr1_l1_pa_compression_macro/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 5.735516034041263e-06,
+      "max_abs_v": 0.00010277316195439479,
+      "mean_relative_rms_error": 1.3955026854338716e-06,
+      "max_relative_rms_error": 6.977513423407863e-06,
+      "mean_nrmse": 1.3955026854338716e-06,
+      "max_nrmse": 6.977513423407863e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.8500000000000001,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "out": {
+          "rmse_v": 5.735516034041263e-06,
+          "max_abs_v": 0.00010277316195439479,
+          "span_v": 0.822,
+          "nrmse": 6.977513423407863e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 1.9559772480763374e-15,
+          "max_abs_v": 4.7628567756419216e-14,
+          "span_v": 0.52,
+          "nrmse": 3.761494707839111e-15,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_pa_compression_macro/forms/e2e/gold/pa_compression_macro.va",
+      "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l1_pa_compression_macro/forms/e2e/gold/tb_pa_compression_macro.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,24 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "1de4c939690f173fe2424abe769c2dbe9f2c1f983be0918d332f148eeb47e769",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_RECORD_REFERENCE_CLOCK_RISING_EDGE_TIME",
+    "P_REQUIRE_CONSECUTIVE_IN_WINDOW_FEEDBACK_EDGE",
+    "P_CLEAR_LOCK_STATE_AND_PROGRESS_WHEN",
+    "P_EXPOSE_PHASE_METRIC_AND_STATE_MON",
+    "P_USE_EVENT_BODY_STATE_UPDATES_PLUS"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

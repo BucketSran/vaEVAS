@@ -1,0 +1,34 @@
+{
+  "release_entry_id": "vbr1_l1_sine_periodic_voltage_source",
+  "task_id": "vbr1_l1_sine_periodic_voltage_source:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Stimulus and Source Generators",
+    "base_function": "Sine/periodic voltage source"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/e2e/gold/multitone.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/e2e/gold/tb_multitone_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "module",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

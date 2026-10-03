@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pam4_slicer_gray_decoder.va"
+  ],
+  "canonical_dut_source_slug": "394-pam4-slicer-gray-decoder",
+  "checker_task_id": "v4_394_pam4_slicer_gray_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "c36d2701285825b3ed8ae355fc2f7a44c7bb3ea7072cec0fc9419ddd1b7ad329",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "634ce490365919a072131ef604187418a7e8f9179dc6cb917d3dfb750b4fda69",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5c56bfc482218c7a1201f439c908ea340d9c32adf14cf44a97f6b94ddf9ecd9f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "394",
+  "family_spec_sha256": "92ae6d2754f9f5764ef7414705245ca70e7772c2259ad65d853bb2a79b39a7c5",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ec222d1267974a27d0dd9931af7f074f5aef4d0e2edf592fd9d90e2de43d9da5",
+  "public_contract": "tasks/1394-pam4-slicer-gray-decoder-bugfix/public_contract.json",
+  "public_contract_sha256": "d2aadfd28c7a9c5592895de7ded6b090c2035aed56a71f596a1ba2ad5800aacc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1394-pam4-slicer-gray-decoder-bugfix",
+  "task_id": "v4-1394"
+}

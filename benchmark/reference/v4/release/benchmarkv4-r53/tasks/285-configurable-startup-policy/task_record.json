@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "configurable_startup_policy.va"
+  ],
+  "canonical_dut_source_slug": "285-configurable-startup-policy",
+  "checker_task_id": "v4_285_configurable_startup_policy",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b9701e1d2181344a139de18e77595ab7ebb1c055343cd16c913ff805865d51b0",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8813e42e408b6c5fe83ffa0fc47d5f799dcec3f66a77f419e28ddba3ea72e988",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4646da75eb0abb178a3ce2ad4b2baebaacf98a386d7acf979cbb79c0072006a3",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "285",
+  "family_spec_sha256": "e2eabbb22b9892b0a38cb5827753d80c75e1a627e181aa7f930cb19d569ffb1d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "83fd074ce96eccc26c0fe50215ba3db63d6f895d67e0570b08b2d8443f93bd7a",
+  "public_contract": "tasks/285-configurable-startup-policy/public_contract.json",
+  "public_contract_sha256": "b1763157a24c9b59a8fd46fd3ede85eea7d5b48644d9d3e34f82332af50f01c1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/285-configurable-startup-policy",
+  "task_id": "v4-285"
+}

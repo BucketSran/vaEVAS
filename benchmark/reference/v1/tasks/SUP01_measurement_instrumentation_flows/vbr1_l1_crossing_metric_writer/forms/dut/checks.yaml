@@ -1,0 +1,27 @@
+syntax:
+  must_include:
+    - "@(initial_step"
+    - "@(cross("
+    - "$fopen"
+    - "$fwrite"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "done_low_before_crossing"
+    - "done_high_after_first_crossing"
+    - "metric_file_records_first_crossing_time"
+parity:
+  required: true
+  tolerance_notes: "Waveform checks are primary; file contents are checked as bounded side-effect evidence."
+semantic_review:
+  risk: "File I/O can be mistaken for repair evidence or for a broad simulator capability claim."
+  release_decision: "Release as normal measurement behavior only; keep file-output timing as conformance coverage."
+  checker_boundary: "Validate `done` waveform and first-crossing file content without counting the historical bugfix row."

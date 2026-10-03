@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "321-charge-pump-pulse-balancer",
+  "checker_task_id": "v4_321_charge_pump_pulse_balancer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "4c50a053a63fdb83354dff016aca18d7c52e9261bf5089df7625533722ef2057",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "784a323ae963b5c76cd732f1482e401a15450d9380946f2a35b7599ac72a8b81",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "4c50a053a63fdb83354dff016aca18d7c52e9261bf5089df7625533722ef2057",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "df6ac1a194354a171800ba5c36f8fd8e097e384b6b5ceacd454ab6a6bb840763",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "02216124aad2b0e26763f54c7717cb07685d89f4994ada820f6aac0598d7d04c"
+  },
+  "family_id": "321",
+  "family_spec_sha256": "9f330b32082ec5615fff82ff27e7dbc983fdd07fb2e648ca1987b8cfae344f1f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f66362e562cf5f2f1a8861fb6c3cb324357b88d5fa4c7fbdbb87a062fbfabaa3",
+  "public_contract": "tasks/821-charge-pump-pulse-balancer-testbench/public_contract.json",
+  "public_contract_sha256": "41147ea932ec722431ffaaf1c7dd3c49bc416ad306910e4fe9c5be8b654a96d0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/821-charge-pump-pulse-balancer-testbench",
+  "task_id": "v4-821"
+}

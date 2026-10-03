@@ -1,0 +1,10 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "../submission/multiphase_clock_generator_4ph.va"
+
+Vvss (vss 0) vsource dc=0.2
+XDUT (vss clk0 clk90 clk180 clk270) multiphase_clock_generator_4ph
+
+tran tran stop=100n maxstep=50p
+save vss clk0 clk90 clk180 clk270

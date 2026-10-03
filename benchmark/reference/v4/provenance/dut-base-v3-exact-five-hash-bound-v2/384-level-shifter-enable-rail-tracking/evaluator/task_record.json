@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "384",
+  "checker_task_id": "v4_384_level_shifter_enable_rail_tracking",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b01b54466bcd39f4a793a8952c4b26f752ccc8c4fc8d79d1d03e8587ff629448",
+    "checker_profile.json": "c87757d605951aaecec55692fc6898f898bccd52d10068edb47ebfee46ba53e0",
+    "derivation_manifest.json": "76d2068692f0544ef9a49067a775a04885815ce6a235b0eb0b6882d6b032def0",
+    "family_spec.json": "289d2c26ccd11b99b43e7fe44ad5b16c6444c1fab6548b64717c22d8633f623e",
+    "harness_spec.json": "ea1780a553ac44cba9579c2f30f0d4ad016744559220d463c411e5866fec27e8",
+    "mutation_catalog.json": "56a0dd27777717df74be4c3953231c21a5c77aa356fe367448996eebb1f454dd",
+    "profiles/feedback.json": "dd3059def1b8461ef4709f57fe12a629bfb2f3364041df8950140ccfa9c67af5",
+    "profiles/score.json": "a80b4d9f68231ee8dd53ad034ef79f0cfc6f9205438c5c731b2e1f9df8bf03ad",
+    "score_tb.scs": "8c7581a435837a4e8b1a2e63f1c1333722bafc9d29eb032c4464119bdc8a9c9b",
+    "solution_tree": "6df06ed6a84d7864dc3e8004b2940a7b853e2c7a01eba7c04ef7d68f758f3b40",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "e77b0cd4ca9d8a636730b57be2853a60cdcf4a51c68d7d83bc542fa7b94464af",
+    "instruction.md": "2ed6b3b94f723a1faed205206452a82b0a119540d2167ed0ae179696b574b0f2",
+    "public_contract.json": "76e562cdb9e407ec26cac638d6bb21e6979032cd40fbcd2ce9ec47f738291965"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b01b54466bcd39f4a793a8952c4b26f752ccc8c4fc8d79d1d03e8587ff629448"
+  },
+  "release_dir": "384-level-shifter-enable-rail-tracking",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "943-level-shifter-enable-rail-tracking",
+  "support_root": "",
+  "target_artifacts": [
+    "level_shifter_enable_rail_tracking.va"
+  ]
+}

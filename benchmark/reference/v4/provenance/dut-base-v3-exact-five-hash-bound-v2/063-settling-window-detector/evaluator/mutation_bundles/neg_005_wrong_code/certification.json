@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ENTRY_TIME_CODE satisfy the public contract; fault class reports_settle_time_instead_of_entry_time is rejected",
+    "observed": "EVAS: property_id=P_ENTRY_TIME_CODE category=semantic_mismatch expected=entry_code=55 observed=entry_code=76 event=settling_entry[1]@5.506364e-08s property_id=P_ENTRY_TIME_CODE category=semantic_mismatch expected=entry_code=115 observed=entry_code=136 event=settling_entry[2]@1.150714e-07s",
+    "violated_property_ids": [
+      "P_ENTRY_TIME_CODE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_063_settling_window_detector",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1511
+  },
+  "family_id": "063",
+  "inputs": {
+    "checker_profile_sha256": "11f032aa367bab6b73b50344eb2ebaf613b506bb795ca99058b72d7d7b0ccb20",
+    "harness_spec_sha256": "3c99d111545111e3532bd63699a262b5a582ccfcce14400f0836d12e3f4179e8",
+    "mutation_bundle_sha256": "7998b103eefc92d4ea77cb072c8f6061fa49b8e4d3c3589a9c9143f93daa3238",
+    "profile_sha256": "8109503d799ee7d21f0af827614a83b089a1b68276b8d986df290cc4584a5505"
+  },
+  "mutation_id": "neg_005_wrong_code",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

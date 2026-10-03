@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "calibration_deadband_controller.va"
+  ],
+  "canonical_dut_source_slug": "021-calibration-deadband-controller",
+  "checker_task_id": "v4_021_calibration_deadband_controller",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a4e4a4e66b53ff44d798e2709d38e6c1f6b06c5a34478da2c1cd769d7c2fd6b2",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8c3f4204b70c6d1a208855964cef8adbbfa053bd46499d6a20a855baf56f4315",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "bf259989776410d90a6f005e8fcc9b4a5c60386587821c46316fcf1f0689aa7a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "021",
+  "family_spec_sha256": "0b1188e866020a83eef502f77fe0075617537fc5ab5a237d75236ee54cccb3ce",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "98d7c936fc839cd8568c5c29dfed175ed72ab9dbd3cb66890f98d220d528b582",
+  "public_contract": "tasks/1021-calibration-deadband-controller-bugfix/public_contract.json",
+  "public_contract_sha256": "4e9d105f8c94a3f90563eef49c8c31e921d290aabe7dc5dc5653c64cb878fdaa",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1021-calibration-deadband-controller-bugfix",
+  "task_id": "v4-1021"
+}

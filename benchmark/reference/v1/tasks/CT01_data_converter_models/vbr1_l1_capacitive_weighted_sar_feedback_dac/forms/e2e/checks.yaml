@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "module"
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "behavioral_module_present"
+    - "transient_analysis_present"
+    - "public_observables_saved"
+    - "sparse_10bit_code_stimulus_exercised"
+    - "binary_code_sets_nominal_dac_level"
+    - "calibration_bits_shift_feedback_level"
+    - "differential_outputs_move_complementarily"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

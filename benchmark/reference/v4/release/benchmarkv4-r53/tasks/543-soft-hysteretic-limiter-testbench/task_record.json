@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "043-soft-hysteretic-limiter",
+  "checker_task_id": "v4_043_soft_hysteretic_limiter",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f4c3641fbc15dcb8fe878167de19815212926945c2b18bf1498e59c6e533a3b2",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "924e3639281718ad39f57323abaf0483e8dc1870c7589aba710d79ba936cfdd8",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f4c3641fbc15dcb8fe878167de19815212926945c2b18bf1498e59c6e533a3b2",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "06372fa6e9db4cd9bb6a19d7118ca90a49d4070429dbe0b6a98e7bcd0a3223de",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "b032a5c48857da6f7d1f850ca10868736795ecbc218a6352f48771ecf47068a0"
+  },
+  "family_id": "043",
+  "family_spec_sha256": "0344839bc70c44c24d599fd53c9002220a60986b5ce87509f35bc7e95da61141",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "720a5ad5dd25596314428edfaba65130fbb043db6f780ec0fe26fff76e4393c7",
+  "public_contract": "tasks/543-soft-hysteretic-limiter-testbench/public_contract.json",
+  "public_contract_sha256": "f1a7489d6f1f36d32b9b9f43403c3a603a1e20e0df4d9b144e3456ab8c163981",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/543-soft-hysteretic-limiter-testbench",
+  "task_id": "v4-543"
+}

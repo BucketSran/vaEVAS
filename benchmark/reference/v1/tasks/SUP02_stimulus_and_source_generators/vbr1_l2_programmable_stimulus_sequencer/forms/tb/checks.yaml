@@ -1,0 +1,22 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "ramp_segment_monotonic"
+    - "swept_chirp_segment_frequency_increases"
+    - "burst_prbs_gate_schedule"
+    - "mode_switch_continuity"
+parity:
+  reference: "spectre"
+  status: "certified"
+  notes:
+    - "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_AT_INITIALIZATION_AND_ON_EACH_FALLING satisfy the public contract; fault class zero_stub_output is rejected",
+    "observed": "EVAS: v4_201 checked=10 mismatch_count=9 coverage=events=8 sample_events=2 controls=['dctrl0', 'dctrl1', 'dctrl2', 'dctrl3', 'dctrl4', 'dctrl5']; P_AT_INITIALIZATION_AND_ON_EACH_FALLING checked=10 mismatch_count=9 expected=initial_vres=0.2+/-0.03 observed=initial_vres=0 sample_time=8e-11 metric_gap=0.2",
+    "violated_property_ids": [
+      "P_AT_INITIALIZATION_AND_ON_EACH_FALLING"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_201_cdac_6b_stage1_up",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 701
+  },
+  "family_id": "201",
+  "inputs": {
+    "checker_profile_sha256": "26f1c76099515f2749d6de0b38c27abbec32d79c1286f19279029006b06536f1",
+    "harness_spec_sha256": "ec627ab6275d1e68b9888b4d7442847eca411c45f689717e7d47de88e70290b2",
+    "mutation_bundle_sha256": "af24491bff54837253d96d64842738ba907ebd186f1afc2ad4500d2b9d25d06d",
+    "profile_sha256": "614fa5e4139efa44ddc28774d54c261c548c1961b2543b56d4b62abf0df0187c"
+  },
+  "mutation_id": "neg_001_zero",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

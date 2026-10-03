@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "task_id": "vbr1_l1_pipeline_adc_stage:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Pipeline ADC MDAC stage"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/gold/pipeline_stage.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/gold/tb_pipeline_stage_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "electrical",
+      "@(cross(",
+      "transition(",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

@@ -1,0 +1,35 @@
+{
+  "id": "vbr1_l1_dwa_dem_encoder_bugfix",
+  "task_id": "vbr1_l1_dwa_dem_encoder_bugfix",
+  "release_entry_id": "vbr1_l1_dwa_dem_encoder",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Calibration, DEM, and Control",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_dwa_ptr_gen_ref.scs",
+    "v2b_4b.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "pointer_advances_by_sampled_input_code",
+    "cell_enable_window_matches_effective_code_plus_lsb_boundary",
+    "pointer_output_is_one_hot",
+    "wraparound_and_multi_code_coverage"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

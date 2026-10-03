@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "373",
+  "checker_task_id": "v4_373_charge_pump_voltage_multiplier_controller",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "e0f89b43a24e4d4b065a6d624433a2a5394f9420675339ce93d827182ac9c268",
+    "checker_profile.json": "10f505cc363400730f7a320451da94d344cc9322e054686a56188b110938b574",
+    "derivation_manifest.json": "e185d36e5cbde9451fd7b88ed9b1841f9b5d8c03b51380e12530738b94f4a4ae",
+    "family_spec.json": "82e79300bcd4aa2fe320ad6999dc474e0bb9d787fbc83d7666f9c929821cab63",
+    "harness_spec.json": "fbc341c51910108c927dcd496b668fe5a99df7e2f579dec54d19aebf00739a05",
+    "mutation_catalog.json": "abcf6b6eacd075c895f6bf8df59eb0489661279391a1d13ddaaa67dd18e43919",
+    "profiles/feedback.json": "74e4996c279b9b1e0c73e7904a6362730576f4cefd7585d1b3d20c287f956790",
+    "profiles/score.json": "6224f12e16b653fc9a6475743961db5700f2841b1adc5d25d50eca92d1a2d6de",
+    "score_tb.scs": "3f5fdba04e0d14d9c4c3c491ce048b33d51ccc3a1dd3a618998254d6ab538369",
+    "solution_tree": "4e2a674660d90d3cd398c8ab2c011dbffe53c46d6aa0f9e6412d5b9caa18f268",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "ddc8ee2b8a6382e90aa6f78cb7bce312762a0845f3549d3893171519d88449f5",
+    "instruction.md": "d7704dda8d4aae8716d28b2f9f7bcbd463d19d51d08cf0ac0b4c9142352e32a9",
+    "public_contract.json": "edc09c6a79819627eb30fa3397ca2e733bc74a14c1a44a329a22f6cfc489d9cd"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "e0f89b43a24e4d4b065a6d624433a2a5394f9420675339ce93d827182ac9c268"
+  },
+  "release_dir": "373-charge-pump-voltage-multiplier-controller",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "932-charge-pump-voltage-multiplier-controller",
+  "support_root": "",
+  "target_artifacts": [
+    "phase_generator.va",
+    "pump_stage_model.va",
+    "regulation_comparator.va",
+    "voltage_multiplier_top.va"
+  ]
+}

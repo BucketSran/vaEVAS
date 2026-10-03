@@ -1,0 +1,31 @@
+{
+  "id": "vbr1_l1_higher_order_filter_e2e",
+  "task_id": "vbr1_l1_higher_order_filter_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_higher_order_filter",
+  "family": "end-to-end",
+  "category": "Baseband Signal Conditioning",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "higher_order_filter.va",
+    "tb_higher_order_filter.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "two_filter_states",
+    "step_response_is_smoothed",
+    "reset_clears_states"
+  ],
+  "designed_source": true
+}

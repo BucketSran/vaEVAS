@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "digitally_controlled_delay_cell.va"
+  ],
+  "canonical_dut_source_slug": "360-digitally-controlled-delay-cell",
+  "checker_task_id": "v4_360_digitally_controlled_delay_cell",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "260e2926f9fdcf4371f2a183076f69361ed1c443bc9d44f0941aa1aac0f7c136",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "873a2ded928e81091cd05efe537455dc065fda73d16da80e51d6c6a2d3656146",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1bcdb68f04241d3b4dcf968e68dfb932b8f75d0b9788d621812be6982b19a970",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "360",
+  "family_spec_sha256": "ca78744f78268e2a317e0fc7ebf3682ad76cf4e1d9ff877861291bb369d113d7",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f5cbc2c39107ef4c4ff5c9691b4329194bbae9a8b9a4e10f7abd8242130b828d",
+  "public_contract": "tasks/360-digitally-controlled-delay-cell/public_contract.json",
+  "public_contract_sha256": "f8254382c2c6d8529ec4fb29c810b2802abb66cf25819c038851aae40d03ca08",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/360-digitally-controlled-delay-cell",
+  "task_id": "v4-360"
+}

@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module minimal_zero_probe (
+    output electrical out
+);
+    analog begin
+        V(out) <+ 0.0;
+    end
+endmodule

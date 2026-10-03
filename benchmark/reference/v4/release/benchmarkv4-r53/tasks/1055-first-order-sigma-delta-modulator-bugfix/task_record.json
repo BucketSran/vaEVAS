@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "first_order_sigma_delta_modulator.va"
+  ],
+  "canonical_dut_source_slug": "055-first-order-sigma-delta-modulator",
+  "checker_task_id": "v4_055_first_order_sigma_delta_modulator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ec84c571e2edf48141d49dc9fd5c5a5828a620316bf77aaf909fe8d4e57408c9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8ae5a59a916d5661208a314a3e4259976b9fad98a7eb57bb0e933cb8fb937d0f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "474f706bd7e2573b9a77a6454a3adecda44091a4cf37e8594334f0d564676a8f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "055",
+  "family_spec_sha256": "43aab179babd997455024e3a389931216c6ce89e82c00873af4515937b4ac403",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0046debdd4dbcb50fd756720ca608aa0239c3d42aa81d58fc2f58625825d57f1",
+  "public_contract": "tasks/1055-first-order-sigma-delta-modulator-bugfix/public_contract.json",
+  "public_contract_sha256": "90c58177e88c44914cf47cd5ad4d5aae3e6fe30c0f8d462eaabc31a00dfa8725",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1055-first-order-sigma-delta-modulator-bugfix",
+  "task_id": "v4-1055"
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "146",
+  "checker_task_id": "v4_146_flash_thermometer_centered_sum",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "0b8bbba4f03e239b5adb7a1c6ae6c2891013f7ee6f889fc1657736d989eab79e",
+    "checker_profile.json": "49de9858d9ba4e5da36595e55fab8c50b3fd9c1fcf331f8274856d388a62b815",
+    "derivation_manifest.json": "a6f5a75e6bf33f14e642fd6017b5bc231ef48d1aba7f0e783e77827596c23ae9",
+    "family_spec.json": "760c4352437eab416022b040ff623fcdfdd40a41cf08b90acc88361255389683",
+    "harness_spec.json": "0e23ae2802b712e92200ae07c06b886e7d435e161f228c23c5b0537b7ae7dc51",
+    "mutation_catalog.json": "2f72278cb9a5dbb0c56427d095d25fa9754ce2de4a0a30a1bb5a049a0fe1d9f6",
+    "profiles/feedback.json": "0287f771e44efd724cb6b167239ebadf494d6554a64b8322a67c322fbbd7d44b",
+    "profiles/score.json": "071bcbec6dcf84e43b7dadd9ffee935adac582df057eacf9a39cbc7e10085443",
+    "score_tb.scs": "4b71dd41e18ac931e2430636c840f28bff3f82a0babb289bb78fc3601c285e87",
+    "solution_tree": "4320cc6aa73c9c33d8cc5f51bc6e54877afbf8abbb43e2b4ab465bbda0605a80",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "e762bf971ad90a957bfd4f74ab3d0a64d8f807a711122a14278ad17a842cd39b",
+    "instruction.md": "bb1fb3c62427297b11825ec86bab6a69b247bd901cc3a696a0e164010f4a721e",
+    "public_contract.json": "9147810e1b52e18daa01dbee3053de14bdc4db90030434a3abc1f3e6e89f5fcf"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "0b8bbba4f03e239b5adb7a1c6ae6c2891013f7ee6f889fc1657736d989eab79e"
+  },
+  "release_dir": "146-flash-thermometer-centered-sum",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "172-flash-thermometer-centered-sum",
+  "support_root": "",
+  "target_artifacts": [
+    "flash_thermometer_centered_sum.va"
+  ]
+}

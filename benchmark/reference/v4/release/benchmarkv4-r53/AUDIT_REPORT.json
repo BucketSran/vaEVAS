@@ -1,0 +1,43 @@
+{
+  "certification_problems": [],
+  "certification_reuse": {
+    "evaluators": [
+      "rust_evas2"
+    ],
+    "policy": "source_transitive_input_hash_bound",
+    "simulation_rerun_required_for_materialization": false,
+    "source_dut_gold_certification_count": 400,
+    "source_dut_gold_certification_total": 400,
+    "source_negative_certification_count": 2000,
+    "source_negative_certification_total": 2000,
+    "stale_certification_family_ids": [],
+    "stale_gold_family_ids": [],
+    "stale_negative_case_ids": []
+  },
+  "certification_status": "source_certification_reused",
+  "family_count": 400,
+  "input_hashes": {
+    "TASK_INDEX.json": "49db192cfdddb44d646f2888ae49c35ab9b9f2361510ed62f677ac88ab5010bf",
+    "manifest_sha256": "ef390362d7d503134f0b8723b4d6d6753e158127abbb22d4e9ca4cbc507132c6",
+    "prompt_modes/manifest.json": "094de5421ab39db916e05da6be4dc6f75ff3c3c0bf7ab214c4e804f8c4984fdc",
+    "prompt_modes/modes.json": "3d5a0a8452ae998d85566d3bc85ae227dd9df33e003b0a03750ac67470423218",
+    "r53_evidence_sha256": {},
+    "skills/SNAPSHOT_MANIFEST.json": "bd835a5437be984a200a2ec83d52e920912cdcdd318b0037f276b89a08fb63f8",
+    "source_score_denominator_registry_sha256": "52c43d7ec272cd80e861cfaa98e080ba2b37580bc603836fdd8b5da77ec908a2"
+  },
+  "problems": [],
+  "prompt_record_count": 7200,
+  "release_revision": "r53",
+  "schema_version": "v4-benchmarkv4-release-audit-v1",
+  "status": "pass",
+  "task_count": 1200,
+  "task_counts": {
+    "bugfix": 400,
+    "dut": 400,
+    "testbench": 400
+  },
+  "testbench_reference_source_counts": {
+    "independent_reference_tb": 49,
+    "legacy_score_tb_fallback": 351
+  }
+}

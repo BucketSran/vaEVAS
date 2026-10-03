@@ -1,0 +1,78 @@
+{
+  "family_id": "130",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_single_ended_gain/certification.json",
+        "certification_sha256": "25be927a260732628be456870a784658f638fa4a97ca29b3fe7d7def2a4cf819",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "967062387bc5eec42768242df7352c241e2c3636df42c54e70afe7257eea61e4",
+        "mutation_id": "neg_002_single_ended_gain",
+        "source_catalog_certification_path": "negative_variants/neg_002_single_ended_gain/certification.json",
+        "trigger_condition": "Drives only the positive output and leaves the negative output at the reference.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_INPUT_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_polarity/certification.json",
+        "certification_sha256": "09eb24493dec1e5f199101307ab02f4efbc2d99056be2511e2ac4733a0247603",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "b0a86b56c222cbc6edd5392d0590c99842244146b9c42f3524e7f1e1bf8a7cde",
+        "mutation_id": "neg_004_inverted_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_polarity/certification.json",
+        "trigger_condition": "Inverts the differential output polarity.",
+        "violated_property_ids": [
+          "P_OUTPUT_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "34da2597dab6623633ebd9844d49c647d2982f1d38acac49f0c0a7398d5f4b48",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "38e0367e38070124cb4b596ebc3a7cc6bfd69bdc10e4868e8b0fcd112163d2f3",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_INPUT_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_missing_half_split/certification.json",
+        "certification_sha256": "01ae0311efaf7ab6e25976a055e0c842d673949d78e6b67e51e3c12442159a35",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "d66a5df9191a3d3561621bd0cdf2ca5cd47ded0431e86d1f7b016dbf5afa3d7f",
+        "mutation_id": "neg_003_missing_half_split",
+        "source_catalog_certification_path": "negative_variants/neg_003_missing_half_split/certification.json",
+        "trigger_condition": "Applies full gain to both output halves.",
+        "violated_property_ids": [
+          "P_BALANCED_HALF_SPLIT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "007940ac182fac818caf2cddd873a399b3d4de6e62fc87558f022f21789b5e98",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6d38e6c9a6582aa33dd54d575c84c0e3fce5cf9a9f77ff84ceaa14fbdb69542f",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales both differential output halves too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_INPUT_GAIN"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_single_ended_gain",
+    "canonical_dut_id": "130",
+    "hashes": {
+      "mutation_catalog_sha256": "7281839e82cf3e05c5c7fe551410204edfbfd1ea5cfd03c11d718f4a3f6cc540",
+      "score_deck_sha256": "d5a50ca73eec689494c9f99a218639bc86568aa183e55ed4a6e250e8dfbfc99f",
+      "task_certification_sha256": "1c217f52a8cca3f36679e77346316df3ba7efc8a9f4f826782d0a81d69b1c328",
+      "task_record_sha256": "5b2096d7711be7c947a35596bd33b14ee77d56100c2256cd2714d226952e45f3"
+    },
+    "release_dir": "130-differential-gain-driver"
+  }
+}

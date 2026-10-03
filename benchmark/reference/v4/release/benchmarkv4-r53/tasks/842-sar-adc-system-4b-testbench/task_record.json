@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "342-sar-adc-system-4b",
+  "checker_task_id": "v4_342_sar_adc_system_4b",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f339225aaaba78c21305c5531cc6910df5ee9fa4b0db501207cf0041f29f7629",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5dc39feaa3935492a537062837d11761813f66d8fd52e73d3370dd88afec6e85",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f339225aaaba78c21305c5531cc6910df5ee9fa4b0db501207cf0041f29f7629",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "351372ef745c7e971ca7fd3f927f721f7249c3cafaa152a8261f135cc33997f9",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "0ae46a73c2cb297bac90a2394fdd9a11c66e945cb95bb938bbfa98bb28c9efe5"
+  },
+  "family_id": "342",
+  "family_spec_sha256": "6daef18c68b2077ee47e1262b1192430cdfb89058c4f459c840014df247a6072",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b5378b8b858f40a7554424ad43861f260dbe3c542a12f31b6cd4a347d2165449",
+  "public_contract": "tasks/842-sar-adc-system-4b-testbench/public_contract.json",
+  "public_contract_sha256": "569eaf19281d94f4615e5b9b7d104f3c1281abf24662f6b4d7506333d09a4351",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/842-sar-adc-system-4b-testbench",
+  "task_id": "v4-842"
+}

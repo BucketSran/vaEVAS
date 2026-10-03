@@ -1,0 +1,78 @@
+{
+  "family_id": "210",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_falling_edge_sample/certification.json",
+        "certification_sha256": "04b9e9ada20b9ab8795d05c69f14787bc2ae6244f051f106a776b47772ccf4d6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "1471feb03ae2fb10ca641d547a0924b7f625609da0b37a9267b809e31eb4a7f8",
+        "mutation_id": "neg_002_falling_edge_sample",
+        "source_catalog_certification_path": "negative_variants/neg_002_falling_edge_sample/certification.json",
+        "trigger_condition": "Samples vin on falling clock edges instead of rising edges.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_track_input/certification.json",
+        "certification_sha256": "5529a679bb751f732e48e9f95b7af9e57d68768a2774fc0184dd39b510816b01",
+        "fault_class": "track_input",
+        "mutation_bundle_sha256": "ff22bc577e4d92665ab51798f0965995f9e6c82d39693a65d59f7c398b52f649",
+        "mutation_id": "neg_003_track_input",
+        "source_catalog_certification_path": "negative_variants/neg_003_track_input/certification.json",
+        "trigger_condition": "Tracks vin continuously instead of holding the sampled value.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output/certification.json",
+        "certification_sha256": "fe18c91c8122c8cd4ba8506e6862936390a983bb59ee23462f9ba2526a1e1195",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "db9ed59b7cc0636e609f7a1d556d11dee028286329380e32fc63c18c91516be5",
+        "mutation_id": "neg_004_half_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output/certification.json",
+        "trigger_condition": "Drives the held output at half amplitude.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "8ed9cd1c62a0e44f48eae9164595665cfeb1af469d993d21cdb7690359332873",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "bfe48b5aea456f731449836937557d7ee1eb82f56849e1d22e130b0e0bbc785a",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Sample Hold 5v Clock: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "79c3de1f9bb29e2264b510971b152faeadd04ec67ad632585f82151a361f2cbd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "20c375651f020fdaf991af5c074fb84f6737c446cafe6ca503ac35131287baa1",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_CROSSINGS_OF_VCLK_THROUGH"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_falling_edge_sample",
+    "canonical_dut_id": "210",
+    "hashes": {
+      "mutation_catalog_sha256": "e447f671949d11a55a964e941cab0354bb28b378c931477ecb4a47786861ad97",
+      "score_deck_sha256": "0bff3e88bccb1898a9bd00da128968ce8a817b9ad58ab1b11fa7888a27debb8a",
+      "task_certification_sha256": "f2a84e3a7861767110c5176a7b0c2ae2062063688f035fdebff104943af56590",
+      "task_record_sha256": "83c892c4322deaad64cdc4b7fbd934e04693a74b762c3f9ba720524bc6bd2114"
+    },
+    "release_dir": "210-sample-hold-5v-clock"
+  }
+}

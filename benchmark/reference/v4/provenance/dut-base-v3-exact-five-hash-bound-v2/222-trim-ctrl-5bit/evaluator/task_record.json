@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "222",
+  "checker_task_id": "v4_222_trim_ctrl_5bit",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "3405c5db3a567e212ea6a4d313068c94ef4ffd808e863379e43e7f13890f9be3",
+    "checker_profile.json": "3c7fa9832dd278465c83501756eed495ba621ecd0863ee475ab60917e8f60f6e",
+    "derivation_manifest.json": "87f47fedf796b34b91deba1a4bd16ba2ad3ba2f5918ef3cbd42ac96f4819baf2",
+    "family_spec.json": "a8389a5f85b6cd6f405441a7ea4234b8517885b6b5c0219c15837a71421024e7",
+    "harness_spec.json": "fc6292761fce736b86e167d22a633b5f06b08e74f2683f1d7523e7950cf57cbf",
+    "mutation_catalog.json": "aa52eb253c2b16cc4560661b38b5a4e7515fb7a43f62e490d91e37be4ad26995",
+    "profiles/feedback.json": "0522211b7b3679d5e62127c7b55c5e0b3e343d810fa9a3ccf71a6a254e945185",
+    "profiles/score.json": "84b4fa934071e428e22b2c870a2110d4989b019ce7667febba1c826069377e89",
+    "score_tb.scs": "593ce080425b1da16295bdd64fbf7b470d7c200fdb35197e2c34ab8360f3f7f1",
+    "solution_tree": "d346c72450ab058949e1dc46889405db5744c8f5431d7fcd899b529ac019259d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b969ceae00313b6935fe0a7981e567d910e480a9d920a1cf2e30bc9edf716b7b",
+    "instruction.md": "fc6040cc42ebde6feb33cae5b45adecd0c626658e588704d41c72b337b1a64e3",
+    "public_contract.json": "e92a5d0dd5bb2c5a20841698b39c5083be6c2c111751f55fa15aec72b92db732"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "3405c5db3a567e212ea6a4d313068c94ef4ffd808e863379e43e7f13890f9be3"
+  },
+  "release_dir": "222-trim-ctrl-5bit",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "269-trim-ctrl-5bit",
+  "support_root": "",
+  "target_artifacts": [
+    "trim_ctrl_5bit.va"
+  ]
+}

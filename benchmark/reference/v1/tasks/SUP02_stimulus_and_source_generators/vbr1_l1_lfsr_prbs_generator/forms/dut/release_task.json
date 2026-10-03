@@ -1,0 +1,44 @@
+{
+  "id": "vbr1_l1_lfsr_prbs_generator:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_lfsr_prbs_generator",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Stimulus and Source Generators",
+  "base_function": "PRBS stimulus/dither generator",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/prbs7_ref.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut/gold/tb_prbs7_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_lfsr_prbs_generator/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "lfsr_prbs_generator",
+    "source_task_id": "prbs7",
+    "historical_source_task_id": "prbs7",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_lfsr_prbs_generator/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

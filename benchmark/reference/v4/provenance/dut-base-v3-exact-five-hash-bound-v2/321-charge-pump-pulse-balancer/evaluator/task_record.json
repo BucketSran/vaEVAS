@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "321",
+  "checker_task_id": "v4_321_charge_pump_pulse_balancer",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "224b732e3628f38f6a097a8a581089b4c79ac307c4123de296fb7daaf4536317",
+    "checker_profile.json": "abeba0873ad00a99c0de5d77da159aacc61d1d38fc019697d9f1a9247086ebbd",
+    "derivation_manifest.json": "cbeeaa7fcb4bfee0fdba8b7d4c107b43530f06a8b8e6621f38ed459ba0db7ccb",
+    "family_spec.json": "9f330b32082ec5615fff82ff27e7dbc983fdd07fb2e648ca1987b8cfae344f1f",
+    "harness_spec.json": "1a1e397dae7725a47cb327c59205915523234bffb491a3fd72eefc9012c8a670",
+    "mutation_catalog.json": "0c5f4fd66a3691352722029ef3b7b58adffcab107a76a378e97d70e709ae2b12",
+    "profiles/feedback.json": "fd9dac792972294740d56c3f2853c21e189e98e9f6f02ee3a50b8e729d559fb1",
+    "profiles/score.json": "a2809d70aa350996e6d7082dc61cda1a13444c66784f9bf88e7515714ba5032d",
+    "score_tb.scs": "44ddf237a16cbf21af5b7f3f8f9d0ca3beb5c9347e9ed59757a985f1d335107b",
+    "solution_tree": "4652edc753d9d65240f0f0e6d47295dc6ead1139eb059807d3a2b14494af45a4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "3fd4cb3cbeb1b8c10e9af8d86372bbec99b32328765d17e0db68579bc51c57fc",
+    "instruction.md": "ce71a27bf51b05f7929d5bd97ed3ffbf56f2194f5ff062ffaf8474eca3ed99bf",
+    "public_contract.json": "a3ba065a9497fde80b453efb2eca44e68a4be78f667e6994296003fcb70603da"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "224b732e3628f38f6a097a8a581089b4c79ac307c4123de296fb7daaf4536317"
+  },
+  "release_dir": "321-charge-pump-pulse-balancer",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1019-charge-pump-pulse-balancer",
+  "support_root": "",
+  "target_artifacts": [
+    "charge_pump_pulse_balancer.va"
+  ]
+}

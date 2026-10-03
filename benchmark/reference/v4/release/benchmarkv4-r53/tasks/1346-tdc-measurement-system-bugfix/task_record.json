@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "tdc_measurement_top.va",
+    "edge_detector.va",
+    "interval_counter.va",
+    "binary_encoder.va",
+    "valid_latch.va"
+  ],
+  "canonical_dut_source_slug": "346-tdc-measurement-system",
+  "checker_task_id": "v4_346_tdc_measurement_system",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f3028ad516d1653735d9456f724a77811993c9ad0938a5da59b24c5ee30154fa",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "544cef748dcb1b1ea944683584c7bbf50183eba3b499dc9ebe1ac30c6a2ec494",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "2a1cfbdd26d436998130391221e22f5f938e68bd0f1b5e2cf62b00d8afad8a1b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "346",
+  "family_spec_sha256": "3ab9da12ea64b107edcdbdf1f675c0d4b4cf07729bf37c8964e4ac0c7c5cc42b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "80dee7562462790cb4c1d306c51b0eb2e230a08ff6bd35c879946d66d0b304a2",
+  "public_contract": "tasks/1346-tdc-measurement-system-bugfix/public_contract.json",
+  "public_contract_sha256": "7f57ad3368d38592faba3ef34e8450ee24e9e5bd6e1618e69c8959d51fd96ba2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1346-tdc-measurement-system-bugfix",
+  "task_id": "v4-1346"
+}

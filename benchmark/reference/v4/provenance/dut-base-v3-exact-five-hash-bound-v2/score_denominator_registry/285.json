@@ -1,0 +1,83 @@
+{
+  "family_id": "285",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "9dd52ad58836d7d5a4a2ed9ff8979a7dc9f485d5220f349f1be327b37070bd72",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "c192cfb58f117644b6fbd21528d1f7ce776449754f3d6be2a07b057c26e968f5",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "bd0c75216e456e1a878daff1b1a87859cc51eeb158cad61cf953c70b54f60493",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "19e30b3945173d05d68e10c12cb1e4d030014370052c6c16f8564b06b9c4a8d6",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "55f539d7d1f456bb2b419733ba9b6f8e463697752769295b7998b35be163ec40",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "d4c88eac8751cccee610eee5cd27b833aefa5cced09702b5e10d489989e26af6",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "a10694796b434f76b44adeb77d683e203b507d0bcf333c08ec799c67db394a52",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "5a9b24d745ec6d280fe180aa014f4f3b29b935c503b62f782aac9e74b181bec6",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "dc8c3521059edcdaad3d5a19a16249cb1fcdccf46ba2394a5eeaf77c8d3fd4b4",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "00e25de2ea8fa5ce145b7bc8480fa13c557158221f4744a1c7cccacaf0deddfa",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_TR_50P_OUTPUT_TRANSITION_SMOOTHING_TIME"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "285",
+    "hashes": {
+      "mutation_catalog_sha256": "5db47ca0caf93478ef1bca865337f6e603b73dbe9a77c87adc1e72054bb08675",
+      "score_deck_sha256": "c780c2abea311feac41ceca82697d5401f243d86f248d6e6f72672f34f70a380",
+      "task_certification_sha256": "74037d83e94d5e4bed0cfbf3e04981b1895ceeee2b7f7f7b59cd4d20426aaafb",
+      "task_record_sha256": "f6079235356534d2afb4d270d4a6a929cc7cc8be42dd0b6cb147487aa3a9441e"
+    },
+    "release_dir": "285-configurable-startup-policy"
+  }
+}

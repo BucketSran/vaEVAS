@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE satisfy the public contract; fault class metric_or_observable_fault is rejected",
+    "observed": "EVAS: property_id=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE category=observable_mismatch expected=satisfy_observable_contract observed=v4_265_dynamic_supply_enable_driver: event=stimulus_relative_trace; checked_property_ids=P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE,P_COMPUTE_CORE_0_76_X0_0",
+    "violated_property_ids": [
+      "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_265_dynamic_supply_enable_driver",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1601
+  },
+  "family_id": "265",
+  "inputs": {
+    "checker_profile_sha256": "49ab8f24591cff85663bfc91f444532c7773c4d5ef119cec530f6ae1796866d9",
+    "harness_spec_sha256": "bd55b33e78436aca17aebf680f11ecff23291515464b712b8f21effff09fbf1a",
+    "mutation_bundle_sha256": "a0e38189c1ae586b9ea4eadedb81f86d444ddf67c25d62954288803d9cee5d8c",
+    "profile_sha256": "1de6a0ab14cb7fd225304dc704f67d62d5f8e26d6c0555e1cb3646854392a853"
+  },
+  "mutation_id": "neg_003_wrong_scale",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

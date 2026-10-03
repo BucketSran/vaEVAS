@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "edge_interval_tdc_8b.va"
+  ],
+  "canonical_dut_source_slug": "059-edge-interval-tdc-8b",
+  "checker_task_id": "v4_059_edge_interval_tdc_8b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3b24adc43aa99d8d78671df19bec9bfcde7548b669c6f6bb9f2bec80d4f5a91d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f8ea0ab2adb045b03460d5b5ed2ccea313930cb5454a36e472290b265c88ec73",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f2d558f5fe9df513e01025156911797899c3588cc06b82f9dfe9ef2bc4ddab8b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "059",
+  "family_spec_sha256": "2d5c95eeda51006ceddd5782973e52082f2ddb50acb9a6c48c27c64bbac91b10",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6481df153dedde54a0499f916960c9c197bb1d8d0f6674d1e78b3a66ece61026",
+  "public_contract": "tasks/059-edge-interval-tdc-8b/public_contract.json",
+  "public_contract_sha256": "27b44e109bceecef40367235827ddcdb0597e56fb18453d95097dd017eb23276",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/059-edge-interval-tdc-8b",
+  "task_id": "v4-059"
+}

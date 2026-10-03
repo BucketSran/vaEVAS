@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "120-attenuator-gain",
+  "checker_task_id": "v4_120_attenuator_gain",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "93057102703f2bfaf6df224bd370512a33ea77c241d625f51a72d7944de5b87b",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "b18dbf45eb93b0eeab78216ffec31830c757f13546047eaf45c366671a177cc4",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "93057102703f2bfaf6df224bd370512a33ea77c241d625f51a72d7944de5b87b",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2dfc8cc6fdd53c287d8da99cd53a258dfb75bc04badca0da0224bae60f81c3c7",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "84b0bdf0526b870d4e3e5e7528bb5de341900295f6df4e77b7f100a8ede668a3"
+  },
+  "family_id": "120",
+  "family_spec_sha256": "95cabf12db0068326ee69b5590f008000091d18cbd286012d821d2d04339a8c3",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3e54a58290190a1eed5251a7f00e4727a96ec7ac2ac3fd8dd8e2b86f3f8dd07c",
+  "public_contract": "tasks/620-attenuator-gain-testbench/public_contract.json",
+  "public_contract_sha256": "e8d38fb89c373a275dd39df03965997d86bb856de65878aee1dc3f0b42676e62",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/620-attenuator-gain-testbench",
+  "task_id": "v4-620"
+}

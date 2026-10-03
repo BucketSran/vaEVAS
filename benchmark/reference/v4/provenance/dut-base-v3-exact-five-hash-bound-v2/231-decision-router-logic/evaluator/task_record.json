@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "231",
+  "checker_task_id": "v4_231_decision_router_logic",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "7ee667ceb4be94c09fc80f4283f883bc531117f905a8aa4728f51fbd8ec1280c",
+    "checker_profile.json": "644d0f82648b0d832bc27ca4a1912b1f65226d0d0ca48a9ad34bb1ea2d45a381",
+    "derivation_manifest.json": "456689459ca2f5de394be42adcb49cbd75cce7e1a94e0983068bc84748bd44c0",
+    "family_spec.json": "875c27c0a2e52b1eac586a8d8a4111813ccf72efb157acb8c9b6f3c547c0c219",
+    "harness_spec.json": "b227a58ee1ded51fc047e600ea0d04674c19dc2d26e2a2832500a6b7f42d1be3",
+    "mutation_catalog.json": "ead5cd400c44dc5c567b9f6349e620fa2cfff30a91271efe1e5b165202fda129",
+    "profiles/feedback.json": "d8c91fac93b15e461577f7e77809b802526eb38f4be6f1fbc4edcb14cd6130ea",
+    "profiles/score.json": "1f4bc6ef578571a42136f61b8f5d1f107b71d3ebc10c6619ce6e41567e166a75",
+    "score_tb.scs": "05563860279a9e78a860e6acce6419aeb35a633d2c590ca70776650c8481481a",
+    "solution_tree": "334476504d6b510a96575e3a0c7263a415274447364117752e5aa556d3c23c10",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "c5d21f9d8758b68ac2229d1a8f8f76b21db7c8165fc3fdb29ec8d691f73444b9",
+    "instruction.md": "c01b0dde0137d0d8a4d4afb1785b28ced4b2b85b871f6836c2adc64b5f6d0fb5",
+    "public_contract.json": "7350775a0312a054715fb92daad15feec4f8b4726ef263a20c87a5161dcc8da7"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "7ee667ceb4be94c09fc80f4283f883bc531117f905a8aa4728f51fbd8ec1280c"
+  },
+  "release_dir": "231-decision-router-logic",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "278-decision-router-logic",
+  "support_root": "",
+  "target_artifacts": [
+    "decision_router_logic.va"
+  ]
+}

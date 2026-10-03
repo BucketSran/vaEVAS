@@ -1,0 +1,46 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_vco_phase_integrator/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_vco_phase_integrator_ref.scs"
+    ],
+    "gold_va": [
+      "vco_phase_integrator.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_vco_phase_integrator/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_vco_phase_integrator",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "clk": "output",
+      "phase": "output",
+      "vctrl": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "vctrl",
+      "phase",
+      "clk"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "vco_phase_integrator.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_vco_phase_integrator/forms/dut/visible"
+}

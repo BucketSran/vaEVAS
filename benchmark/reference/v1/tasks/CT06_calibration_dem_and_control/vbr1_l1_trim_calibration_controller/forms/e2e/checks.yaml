@@ -1,0 +1,25 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "reset_trim_near_0p45"
+    - "trim_increments_decrements_and_recovers"
+    - "trim_clamped_to_0p05_0p85"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Requires fresh EVAS/Spectre dual validation after CT06 content repair."

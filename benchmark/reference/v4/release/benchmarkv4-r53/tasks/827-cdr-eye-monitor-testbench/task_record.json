@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "327-cdr-eye-monitor",
+  "checker_task_id": "v4_327_cdr_eye_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f195e7e6a2481e813c6776d5568c2c3aed60d7f714c4823f57544b201dfa0732",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8410fdc9ef2f8c48640893db29ac987d2afc8b8bf56334d0d42e13d7a3ee2b7d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f195e7e6a2481e813c6776d5568c2c3aed60d7f714c4823f57544b201dfa0732",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f9c5735f939d0a1b6f15457e35cda4647f264e84e72831f1da48a031ebaaa35f",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "e06b5618022afdc8ae054eb7a6bb8424981696d3cb682a7f90f53be9b2d506df"
+  },
+  "family_id": "327",
+  "family_spec_sha256": "261d594911ce33b429fb970cd0e993a01125f416a9779ce67cef38eae1a3b58a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6b8d2e926007fd3d9d5a551211841897639a6021df7ce59d92fac16d5b29cf47",
+  "public_contract": "tasks/827-cdr-eye-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "f8111444ddf81b06558ef53b95f91e23bbd84ec2991511f96f144fe9ba20be2e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/827-cdr-eye-monitor-testbench",
+  "task_id": "v4-827"
+}

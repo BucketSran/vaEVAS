@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l2_complete_calibration_loop_e2e",
+  "task_id": "vbr1_l2_complete_calibration_loop_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_complete_calibration_loop",
+  "family": "end-to-end",
+  "category": "Calibration, DEM, and Control",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "complete_calibration_loop.va",
+    "tb_complete_calibration_loop.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "raw_error_is_corrected",
+    "bounded_negative_feedback_response",
+    "metric_tracks_convergence",
+    "trim_moves_opposite_to_error",
+    "residual_monitor_tracks_correction"
+  ],
+  "designed_source": true
+}

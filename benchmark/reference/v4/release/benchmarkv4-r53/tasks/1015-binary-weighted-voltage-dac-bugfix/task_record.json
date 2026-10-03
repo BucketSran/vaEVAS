@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "simple_binary_voltage_dac_4b.va"
+  ],
+  "canonical_dut_source_slug": "015-binary-weighted-voltage-dac",
+  "checker_task_id": "v4_015_binary_weighted_voltage_dac",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "aa22fec819185f23326c1188401d83b808aabee779a000eeb186b820d7030f78",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "41985583ad19d23b45ae3fdc1f650ef7afe1bd46150d91b6d08217704c74193d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "96338c844078cce1a6668d5599620dd8f677aa7791b49b8ea4f4072ff8a61fe0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "015",
+  "family_spec_sha256": "e9e246939f63a42840fc429a0f1eaff407bb5350c935b38ce0e657541cadecaa",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6080a375d72ef3ffb0220671ca1bb9230b72518e038e02c9d6fdda4b3baffc8e",
+  "public_contract": "tasks/1015-binary-weighted-voltage-dac-bugfix/public_contract.json",
+  "public_contract_sha256": "de172fc079567dc9bc6e200d235f08577d97d03debfc717e68a7859825b9507f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1015-binary-weighted-voltage-dac-bugfix",
+  "task_id": "v4-1015"
+}

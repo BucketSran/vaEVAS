@@ -1,0 +1,79 @@
+{
+  "family_id": "362",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_ignore_fcw_msb/certification.json",
+        "certification_sha256": "123f395a0bd54cd8f376845998b3ce8bf53da9392e80a0952f283b0c71188075",
+        "fault_class": "code_decode_error",
+        "mutation_bundle_sha256": "a2ab3b115407bcbdd0c17f4c3fad060c4ec43e219e9c29e78305e4ec01196656",
+        "mutation_id": "neg_001_ignore_fcw_msb",
+        "source_catalog_certification_path": "negative_variants/neg_001_ignore_fcw_msb/certification.json",
+        "trigger_condition": "Frequency word bit 5 is high.",
+        "violated_property_ids": [
+          "P_FREQUENCY_WORD_MAPPING",
+          "P_RESTART_MONOTONICITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_divider_off_by_one/certification.json",
+        "certification_sha256": "ffd4f464381762889151d1a92d1608fa6a03a3c089745c921e0133210b19d60a",
+        "fault_class": "divider_ratio_error",
+        "mutation_bundle_sha256": "01200c459813a921096038043a0f6df20999c01876a109e5c2fe59fdea32e52c",
+        "mutation_id": "neg_003_divider_off_by_one",
+        "source_catalog_certification_path": "negative_variants/neg_003_divider_off_by_one/certification.json",
+        "trigger_condition": "At least divide_ratio rising DCO edges occur.",
+        "violated_property_ids": [
+          "P_DIVIDER_MONITOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_disable_outputs_not_stopped/certification.json",
+        "certification_sha256": "7366e9376be87453c8f3cafb27b80f94d018b80e044bc967138cd21e0fdc15a1",
+        "fault_class": "reset_disable_stop_error",
+        "mutation_bundle_sha256": "188f82d8b15c95d428d0d417a8a53a661bfe205343a68092c2d4dda669260f4a",
+        "mutation_id": "neg_005_disable_outputs_not_stopped",
+        "source_catalog_certification_path": "negative_variants/neg_005_disable_outputs_not_stopped/certification.json",
+        "trigger_condition": "Reset is asserted or enable is deasserted while clocks and metric must stop low.",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_STOP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_metric_stuck_low/certification.json",
+        "certification_sha256": "fa871a9afb2da52adff61e64195149138a1c1f9f7476de50b2dc4d7cb1857145",
+        "fault_class": "metric_stuck",
+        "mutation_bundle_sha256": "233adb057b9333fae041160ed38a96c2d8c8be325d72c1174c97315a08ae1bde",
+        "mutation_id": "neg_004_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_004_metric_stuck_low/certification.json",
+        "trigger_condition": "A nonzero frequency word is active while enabled.",
+        "violated_property_ids": [
+          "P_FREQUENCY_WORD_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_frequency_step/certification.json",
+        "certification_sha256": "88f5713304f8bfc5d76317f9d5ab523283cadf9cc3c4116e04dd88a857d52eb4",
+        "fault_class": "frequency_gain_error",
+        "mutation_bundle_sha256": "783ef2e476d94ec814b0f05af82b353a4c3358ae26ea1f93be91b12176d0dee5",
+        "mutation_id": "neg_002_half_frequency_step",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_frequency_step/certification.json",
+        "trigger_condition": "A nonzero unsaturated frequency word is active.",
+        "violated_property_ids": [
+          "P_FREQUENCY_WORD_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_ignore_fcw_msb",
+    "canonical_dut_id": "362",
+    "hashes": {
+      "mutation_catalog_sha256": "c5ecb20b5cc51d93eb94fe58af9d0a037ce1f3ebb37cbf24585e537c960a44b3",
+      "score_deck_sha256": "0eaf0d24b82e41e2e4943fac40c40ae7b98c03f96e41a72d8d7a727e4b562789",
+      "task_certification_sha256": "266784ac2da8aba58b61628effbfe376c9c70dcda420d907013e3d3648e7df4b",
+      "task_record_sha256": "fa6205b388fb3649a7dd3c8e490245b82df46450c7888c7b05d084a48bfe46db"
+    },
+    "release_dir": "362-frequency-word-dco-divider-monitor"
+  }
+}

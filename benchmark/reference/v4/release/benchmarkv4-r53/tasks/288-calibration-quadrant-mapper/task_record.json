@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "calibration_quadrant_mapper.va"
+  ],
+  "canonical_dut_source_slug": "288-calibration-quadrant-mapper",
+  "checker_task_id": "v4_288_calibration_quadrant_mapper",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "eb0a25be386257bd52077c187eab2fa63f651094998ea47766aa060190023f7b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c6775f63e1ac2f50330138993d0d475dbdc8a13ff9c5822ab6f2d3dbdebc921f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "796cd16b64a330f6926dc2d9b8a85175baa9a5523667dea601431c4049ff678d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "288",
+  "family_spec_sha256": "6ba90dbd73ccaab5779427a3f715022aa350a95141fe0304e5a132db4f7bb3f5",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c3fdc7e6da31d3e4d7fabe0aff42c16a8c4d5eb9dd3fec05eab27e23eb8c7f08",
+  "public_contract": "tasks/288-calibration-quadrant-mapper/public_contract.json",
+  "public_contract_sha256": "44554a773df87d8d6f25782ebe7e29c38c8316b3f455866f25e14975528a9080",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/288-calibration-quadrant-mapper",
+  "task_id": "v4-288"
+}

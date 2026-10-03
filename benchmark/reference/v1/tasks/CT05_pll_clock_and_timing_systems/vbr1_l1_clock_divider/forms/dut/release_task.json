@@ -1,0 +1,48 @@
+{
+  "id": "vbr1_l1_clock_divider:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_clock_divider",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "PLL Clock and Timing Systems",
+  "base_function": "Clock divider",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/gold/clk_divider.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/gold/clk_divider_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut/gold/tb_clk_divider_ref.scs"
+    ],
+    "submission_artifacts": [
+      "clk_divider_ref.va"
+    ],
+    "private_reference_artifacts": []
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_clock_divider/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "resettable_counter_divider",
+    "source_task_id": "vbm1_resettable_counter_divider_dut",
+    "historical_source_task_id": "vbm1_resettable_counter_divider_dut",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_clock_divider/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

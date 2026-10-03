@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "063",
+  "checker_task_id": "v4_063_settling_window_detector",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "808145ea8e4241502a2fefd2ae2cd13cf7df96afe5bbab2fed4866b9893dc3f1",
+    "checker_profile.json": "11f032aa367bab6b73b50344eb2ebaf613b506bb795ca99058b72d7d7b0ccb20",
+    "derivation_manifest.json": "5cd803cb43652cbf1b89436a60758c8dfc0293e72a92e0f26939882754de0ae7",
+    "family_spec.json": "53f746f228722228727bd0f717df19e2c3d00e4bb08e9a1871b4fb69a14c7be8",
+    "harness_spec.json": "3c99d111545111e3532bd63699a262b5a582ccfcce14400f0836d12e3f4179e8",
+    "mutation_catalog.json": "3271c591af8ab46415f347c71e55c52f7e1367dfca807af96e46ec4986eef373",
+    "profiles/feedback.json": "e531b5adb513e9d61763a50883aeeca2ce221ffe736fb11f38e80c9c8f7d9fcd",
+    "profiles/score.json": "8109503d799ee7d21f0af827614a83b089a1b68276b8d986df290cc4584a5505",
+    "score_tb.scs": "94080a248dbd399c246eb503ada221c6031d6f1472d4061bfd2678b62e743849",
+    "solution_tree": "cff8acbaf226ae0e7ec44b1200a9d3996fd293e21ead3fc2883acd2c524996fe",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8cb05630d853c8c1bc445cc3ceed6a173e2684a11ea9523f36a002cae8c3c13b",
+    "instruction.md": "4ce94348e95294d3c8d9d2c9930bd53c1c4869474c8d9c092e6b0e56c6486f8c",
+    "public_contract.json": "90cb47cc92f8e21302a12dadefbcfe92fcac90a976487187e3fec864998b1b84"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "808145ea8e4241502a2fefd2ae2cd13cf7df96afe5bbab2fed4866b9893dc3f1"
+  },
+  "release_dir": "063-settling-window-detector",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "063-settling-window-detector",
+  "support_root": "",
+  "target_artifacts": [
+    "settling_window_detector.va"
+  ]
+}

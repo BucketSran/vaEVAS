@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "programmable_stimulus_sequencer.va"
+  ],
+  "canonical_dut_source_slug": "097-programmable-stimulus-sequencer",
+  "checker_task_id": "v4_097_programmable_stimulus_sequencer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "6b63177822f30e616c11e914193bd9989c37b0bbe29d7138362bc0e497987944",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d7b55f9280636e8b2403a6a6ba4be721c693d1ce47ba0ac4f4a3765c42698df6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "94f0dc24ab8214bb92b0553c17498def8c0fc1f23c29ac16f85d2ed5fc23ed0f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "097",
+  "family_spec_sha256": "2e592752afa20eb01640e0d6ee203ea98c79ca48b216a406dd9cfece42b51d8e",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3068603da982acb1bd2f8419da9e129f73c5ad379ae56e80d9402d24f0697fa9",
+  "public_contract": "tasks/1097-programmable-stimulus-sequencer-bugfix/public_contract.json",
+  "public_contract_sha256": "6dc571169016ce0ce0e2420b4b0c05206f5e132393997012736b5703e25099c2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1097-programmable-stimulus-sequencer-bugfix",
+  "task_id": "v4-1097"
+}

@@ -1,0 +1,28 @@
+{
+  "artifact_mode": "system_bundle",
+  "bugfix_seed_mutation_id": "neg_001_missing_vout_reset",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "cfbcff6649229d06b418a47ffd7a9f47218a6b8cc561f2e050cf3b13ca34c439",
+  "candidate_artifacts": [
+    "phase_generator.va",
+    "pump_stage_model.va",
+    "regulation_comparator.va",
+    "voltage_multiplier_top.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "phase_generator.va",
+    "pump_stage_model.va",
+    "regulation_comparator.va",
+    "voltage_multiplier_top.va"
+  ],
+  "checker_profile_sha256": "10f505cc363400730f7a320451da94d344cc9322e054686a56188b110938b574",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "e0f89b43a24e4d4b065a6d624433a2a5394f9420675339ce93d827182ac9c268",
+  "gold_solution_tree_sha256": "75d7e5cc71dfdfded9bf904022fce7c4b264ab659c0a2489f9ec4a9fbb739f25",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "abcf6b6eacd075c895f6bf8df59eb0489661279391a1d13ddaaa67dd18e43919",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1373"
+}

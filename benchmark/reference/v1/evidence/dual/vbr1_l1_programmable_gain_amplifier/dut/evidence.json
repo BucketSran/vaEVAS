@@ -1,0 +1,125 @@
+{
+  "release_entry_id": "vbr1_l1_programmable_gain_amplifier",
+  "task_id": "vbr1_l1_programmable_gain_amplifier:dut",
+  "source_task_id": "vbr1_l1_programmable_gain_amplifier_dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Programmable gain amplifier"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_programmable_gain_amplifier/dut/gold",
+    "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_programmable_gain_amplifier/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/dut/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_programmable_gain_amplifier/dut/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/gold/programmable_gain_amplifier.va"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct04-dual-20260525_222500/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_programmable_gain_amplifier/dut/gold",
+    "result_root": "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_programmable_gain_amplifier/dut/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        9e-08
+      ],
+      "signals_compared": 6,
+      "samples": 1200,
+      "max_rmse_v": 0.1414213562373095,
+      "max_abs_v": 1.0,
+      "mean_relative_rms_error": 0.007463871158867069,
+      "max_relative_rms_error": 0.02478321939730225,
+      "mean_nrmse": 0.007463871158867069,
+      "max_nrmse": 0.02478321939730225,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "gain_sel": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 0.1414213562373095,
+          "max_abs_v": 1.0,
+          "span_v": 0.9,
+          "nrmse": 0.02,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.02
+        },
+        "out": {
+          "rmse_v": 0.022304897457572026,
+          "max_abs_v": 0.22615446524025662,
+          "span_v": 0.9,
+          "nrmse": 0.02478321939730225,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 5.652588452902169e-09,
+          "max_abs_v": 4.7857295681907885e-08,
+          "span_v": 0.748102585487908,
+          "nrmse": 7.555900170048984e-09,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_programmable_gain_amplifier/forms/dut/gold/programmable_gain_amplifier.va"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

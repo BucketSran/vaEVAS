@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_successive_approximation_calibration_search_fsm_tb",
+  "task_id": "vbr1_l1_successive_approximation_calibration_search_fsm_tb",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_successive_approximation_calibration_search_fsm",
+  "family": "tb-generation",
+  "category": "Calibration, DEM, and Control",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_successive_approximation_calibration_search_fsm.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "step_size_halves",
+    "trim_direction_follows_error",
+    "done_after_search_window"
+  ],
+  "designed_source": true
+}

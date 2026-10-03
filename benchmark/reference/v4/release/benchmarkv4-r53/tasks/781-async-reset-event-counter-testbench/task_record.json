@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "281-async-reset-event-counter",
+  "checker_task_id": "v4_281_async_reset_event_counter",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "ade2ffe948577faa8e3d5d315fcc67a9d9b63dc69ce6deddf3b4474b7e00e9e4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d0f2e0959f2cd7f9b01cdfa51199638111fd28c7f133fd7ebf20459467661fd3",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "ade2ffe948577faa8e3d5d315fcc67a9d9b63dc69ce6deddf3b4474b7e00e9e4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "18a8b818fbe8c6e6b820f54f3dc1572cba562e7a94939dc2f80d9f1a1f15d000",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "59c12ed793528939ecd6821523edfc88e05d55a1b41231566fc83b2d201892b3"
+  },
+  "family_id": "281",
+  "family_spec_sha256": "c9c42c6d6791ed2c114d499dfe9682692594a004d26dfa0da53c71f54cfdb725",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "db5904623e72399bbdb28d9c7018b30eed586f7e7140fef464d446014dc23853",
+  "public_contract": "tasks/781-async-reset-event-counter-testbench/public_contract.json",
+  "public_contract_sha256": "3a6a0e7866ffbbcf2d3abdaf55edf80ec779bc6df337a05cd54a90efbad96ea3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/781-async-reset-event-counter-testbench",
+  "task_id": "v4-781"
+}

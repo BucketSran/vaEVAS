@@ -1,0 +1,51 @@
+{
+  "id": "vbm1_thermometer_dac_15seg_dut",
+  "task_id": "vbm1_thermometer_dac_15seg_dut",
+  "release_entry_id": "vbr1_l1_unit_element_thermometer_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1-candidate",
+  "semantic_label": "4-bit 15-segment unit-element thermometer DAC",
+  "semantic_note": "This is a true unary segment DAC task. It is distinct from the historical simple binary voltage DAC that once used thermometer_dac naming.",
+  "family": "spec-to-va",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "seg14",
+    "transition(",
+    "vref",
+    "vss"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "thermometer_dac_15seg.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/thermometer_dac_15seg.va",
+    "gold/tb_thermometer_dac_15seg_ref.scs"
+  ],
+  "evidence": {
+    "expected_validation": "EVAS/Spectre dual validation via release rerun."
+  }
+}

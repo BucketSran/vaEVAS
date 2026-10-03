@@ -1,0 +1,35 @@
+{
+  "candidate": "public/submission/testbench.scs",
+  "candidate_command_template": "rm -rf /tmp/vabench-private/runs/{case} /tmp/vabench-private/evas-output/{case} && mkdir -p /tmp/vabench-private/runs/{case} && cp public/submission/testbench.scs /tmp/vabench-private/runs/{case}/testbench.scs && ln -sfn \"$(pwd)/evaluator/{dut_root}\" /tmp/vabench-private/runs/{case}/dut && evas simulate /tmp/vabench-private/runs/{case}/testbench.scs -o /tmp/vabench-private/evas-output/{case} --spectre-strict",
+  "candidate_dut_binding": "./dut",
+  "cases": [
+    {
+      "case": "reference",
+      "dut_root": "trusted_replay_fixtures/reference/dut"
+    },
+    {
+      "case": "mutation_01",
+      "dut_root": "trusted_replay_fixtures/mutation_01/dut"
+    },
+    {
+      "case": "mutation_02",
+      "dut_root": "trusted_replay_fixtures/mutation_02/dut"
+    },
+    {
+      "case": "mutation_03",
+      "dut_root": "trusted_replay_fixtures/mutation_03/dut"
+    },
+    {
+      "case": "mutation_04",
+      "dut_root": "trusted_replay_fixtures/mutation_04/dut"
+    },
+    {
+      "case": "mutation_05",
+      "dut_root": "trusted_replay_fixtures/mutation_05/dut"
+    }
+  ],
+  "fixture_policy": "private_evaluator_only",
+  "fixture_tree_sha256": "5c6529b8e47fabeec56692b99fe6e2ebcfdc4a58acbed5f2ffc84f6c970a1d41",
+  "schema_version": "r53-trusted-evas-testbench-suite-v1",
+  "working_directory": "runtime_package_root"
+}

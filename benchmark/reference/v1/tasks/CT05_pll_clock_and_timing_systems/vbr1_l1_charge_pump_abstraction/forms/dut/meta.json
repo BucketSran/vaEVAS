@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_charge_pump_abstraction_dut",
+  "task_id": "vbr1_l1_charge_pump_abstraction_dut",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_charge_pump_abstraction",
+  "family": "spec-to-va",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "charge_pump_abstraction.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "up_pulse_increases_control",
+    "down_pulse_decreases_control",
+    "control_voltage_clamped"
+  ],
+  "designed_source": true
+}

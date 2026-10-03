@@ -1,0 +1,54 @@
+{
+  "id": "vbr1_l1_higher_order_filter:bugfix",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_higher_order_filter",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Baseband Signal Conditioning",
+  "base_function": "Higher-order filter",
+  "family": "bugfix",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix/gold/tb_higher_order_filter.scs"
+    ],
+    "public_inputs": [
+      "prompt.md",
+      "gold/dut_buggy.va"
+    ],
+    "submission_artifacts": [
+      "dut_fixed.va"
+    ],
+    "private_reference_artifacts": [
+      "gold/dut_fixed.va"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_higher_order_filter/bugfix/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "higher_order_filter",
+    "source_task_id": "",
+    "historical_source_task_id": "",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_higher_order_filter/forms/bugfix"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

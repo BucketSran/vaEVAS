@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "351-pll-timing-monitor-system",
+  "checker_task_id": "v4_351_pll_timing_monitor_system",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f6f015dab85a3d7088e728070ad51763848e0da6b197ea7219143bc6cf431028",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "ebb8e6ea9d2402301a636611b8969fc99e67f7a1ceff7042efebad5c07cdf1b2",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f6f015dab85a3d7088e728070ad51763848e0da6b197ea7219143bc6cf431028",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9951ec314a96d109783e2d642efa3e3d8eb22e76527559722493997c8f41cc8d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "bc5f48e015c4e8b0f83e4d7652f2aa6fe0cc4570afe7ddcf326bd39ef1383697"
+  },
+  "family_id": "351",
+  "family_spec_sha256": "ef0c80f7ac0211a174c187b5825cebdc71a40744c0c48373cd5765f35dd65948",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "694a0786a6b4d9593c5a48d0d413737b0772fc0eb41517bdcbbae310cc4cf0e6",
+  "public_contract": "tasks/851-pll-timing-monitor-system-testbench/public_contract.json",
+  "public_contract_sha256": "d460deec5fd8b16b9a942299785db7b8b48e46209ce2ce249ed91c52330cdd3f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/851-pll-timing-monitor-system-testbench",
+  "task_id": "v4-851"
+}

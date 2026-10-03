@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "275",
+  "checker_task_id": "v4_275_deterministic_energy_accumulator",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "89e513c6de4f1d6928b4c35a2c103e24f800ad6b09836f1704861bc242be7e07",
+    "checker_profile.json": "fb7f758a08b8451bb102d676884dd5df7bbf83b52b2b4013d2f7ff8e0e979036",
+    "derivation_manifest.json": "8cb8b77f276c2d86b8f109929875b88709135492e916c2e48431b088a02ecd30",
+    "family_spec.json": "94ec1f188fb6e2bfbfb72d6b7f9d44f1db9954f0a36e4393cdb411c955984923",
+    "harness_spec.json": "6644a20f9d514fef3b4f64538a9248cfb03917c74b6924c690eb4fa82017da20",
+    "mutation_catalog.json": "d44de554964d8a0640cd7c7d57bbd957a90274265e348309b0e5c8b13f6fb5b0",
+    "profiles/feedback.json": "d2533d0e3778248565a7a8c73bd39275f9280a2f3c3b72c60f9ff565fd57e3ed",
+    "profiles/score.json": "bf372ec77633d76ec423a19e5ff67a8bca9e917250e6bd985c8dbae0c7fb62f6",
+    "score_tb.scs": "a0d899cc5e4da4bcf9d526696a8c6ccc88c0d8376c71b52a58c365217b0fb68b",
+    "solution_tree": "a8d81ac38ee7aaafaddea390d46389deff627d82b5aec379a7821ea9efc99635",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "2de60e1155392fca47c9017a924a8a4c0734c7efc62660d26f14530d7c4829ce",
+    "instruction.md": "6cc2d799e3e693f4630f841e591efb22f36713e14bd2888585a1ff0612d6baf8",
+    "public_contract.json": "f5402250dffc16e0195e5a8cd64e1a619bb465735a7947abd2e67bbb6ddbcc0b"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "89e513c6de4f1d6928b4c35a2c103e24f800ad6b09836f1704861bc242be7e07"
+  },
+  "release_dir": "275-deterministic-energy-accumulator",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "394-deterministic-energy-accumulator",
+  "support_root": "",
+  "target_artifacts": [
+    "deterministic_energy_accumulator.va"
+  ]
+}

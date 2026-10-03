@@ -1,0 +1,30 @@
+{
+  "release_entry_id": "vbr1_l1_ramp_or_step_source",
+  "task_id": "vbr1_l1_ramp_or_step_source:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Stimulus and Source Generators",
+    "base_function": "Periodic phase-ramp guard source"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/tb/gold/bound_step_period_guard_ref.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/tb/gold/tb_bound_step_period_guard_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "tran",
+      "save"
+    ],
+    "must_not_include": [],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

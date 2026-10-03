@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "two_stage_opamp_slew_macromodel.va"
+  ],
+  "canonical_dut_source_slug": "398-two-stage-opamp-slew-macromodel",
+  "checker_task_id": "v4_398_two_stage_opamp_slew_macromodel",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "21a7c13b2958bddaa50f970a266b504f93c8befde0c0f94994cb2eb0908c9e21",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "01a5f72ed0cfb7eadd88ca9d18e158d3e6acfacaa8a3143c3c7a65b86af98a30",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d609656b478eb3c1d29483578f521e50791ae3b736575fd4e6c033db8b643a4b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "398",
+  "family_spec_sha256": "4814ffa8f2c4ad144b1b3b52389c12cef5f6b346d34c7fbcefe853b76e33129c",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "45a72e712c58b9c790a68ffa0adc43744121047d989a82c3d4696eff67aa42ba",
+  "public_contract": "tasks/398-two-stage-opamp-slew-macromodel/public_contract.json",
+  "public_contract_sha256": "8aca12ede725bb733de7830b1024db2f5773ab974a2c2e46645d709e69a773ec",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/398-two-stage-opamp-slew-macromodel",
+  "task_id": "v4-398"
+}

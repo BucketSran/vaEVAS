@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "instrumentation_amp_offset_trim_top.va",
+    "diff_gain_core.va",
+    "offset_trim_controller.va"
+  ],
+  "canonical_dut_source_slug": "306-instrumentation-amplifier-offset-trim",
+  "checker_task_id": "v4_306_instrumentation_amplifier_offset_trim",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "df6a68832b362c6db24773643ac234681b0f5b3778161b03d54acfa51b69e662",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "56bdb86bd4126baf38374328ca8ce9c275b700b1cb9a2eccabed342e48ff6391",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ad2c8b88787c70c3d4eb6e9d76a28acf721b50226f174e62719243255c56957e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "306",
+  "family_spec_sha256": "25c5f8b5b55f63ad861996675ba20160f09dde0ad87bb635225f3e9e54136045",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "04970bf86b77c60a1467a14bb6fb9fb8eb80a5bc8b9de40b9d5fdbddff7f1bbe",
+  "public_contract": "tasks/306-instrumentation-amplifier-offset-trim/public_contract.json",
+  "public_contract_sha256": "a8514bf708757f26026af9f19814f39b8278919fbe58e9afb548e2916b954ffc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/306-instrumentation-amplifier-offset-trim",
+  "task_id": "v4-306"
+}

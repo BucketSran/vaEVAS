@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l2_iq_downconversion_chain",
+  "task_id": "vbr1_l2_iq_downconversion_chain:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "RF and AFE Behavioral Macromodels",
+    "base_function": "I/Q downconversion chain"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/iq_downconversion_chain.va",
+    "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/tb_iq_downconversion_chain.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

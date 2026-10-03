@@ -1,0 +1,40 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "transition("
+    - "rst"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "input_drive_present"
+    - "reset_pulse_exercised"
+    - "integrator_ramps_during_reset_low_window"
+    - "reset_window_clears_output_near_zero"
+    - "post_reset_integration_restarts_from_zero"
+  public_observables:
+    - "vin"
+    - "rst"
+    - "vout"
+  sample_times_ns:
+    - 80
+    - 200
+    - 230
+    - 245
+    - 280
+    - 315
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: reset holds stale accumulator state instead of clearing it."
+parity:
+  required: true
+  tolerance_notes: "Samples avoid reset edges at 221 ns and 251 ns; reset correctness is checked by safe-window output level."

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "lna_gain_compression_macro.va"
+  ],
+  "canonical_dut_source_slug": "032-lna-gain-compression-macro",
+  "checker_task_id": "v4_032_lna_gain_compression_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "252bb470b05c52f7a31b446fa358385d7372d78c73a6dfbd371b505b4071463e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0a1e11253a10f15537dcfcaca50446dd35de58c00c5553ed20d1232baf81545b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ca69cd746c16223372dfefeadcb010818cba4d6cb902424001964b138a350248",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "032",
+  "family_spec_sha256": "32bcce191186b6cee39ae08d20c751915ff3917d6a3b30719b8a60b996601b5c",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0d8a3c15e65dbeed2acd52516f68c85c3be4a7c920d942dc957bb6c598b512bc",
+  "public_contract": "tasks/032-lna-gain-compression-macro/public_contract.json",
+  "public_contract_sha256": "49ee26f2705a906ddea9c5cdadd4df5b76c38d1ce04eeb417956f19587fcb556",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/032-lna-gain-compression-macro",
+  "task_id": "v4-032"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "three_way_threshold_mux.va"
+  ],
+  "canonical_dut_source_slug": "133-three-way-threshold-mux",
+  "checker_task_id": "v4_133_three_way_threshold_mux",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8b4ea617f8f713f46744120fac8419d4924853ae8b737df541a44a0ff2d6d86e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c56b71e01064da7f16b94d7682410d59c455d5b1abf88361bf74ba0d73257e4c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4a825ee4900e976cd7a000ed693414c08e242896613d5cd1fdb4eec82bc0a53f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "133",
+  "family_spec_sha256": "4d9fd5be5eb112ef90a81433b052c6d8e6b9167c87a31086e971fe84af44e7da",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f2cf45088bdeacbf0ff41648abaf08acc92b2257e5f154fec2c3e28e8ed40ce9",
+  "public_contract": "tasks/133-three-way-threshold-mux/public_contract.json",
+  "public_contract_sha256": "46488f7ec27869eaa2bf4c239fc5bfead7dc9e818f5b1c58e217495708db46a4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/133-three-way-threshold-mux",
+  "task_id": "v4-133"
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "issue-290-validation-summary-v2",
+  "issue": 290,
+  "scope": "V4 repair batch 13/40 families 121-130",
+  "status": "PASS",
+  "claim_boundary": {
+    "acceptance_backend": "EVAS 0.8.2 Rust with per-case runtime logs",
+    "spectre_required": false,
+    "spectre_status": "not_applicable"
+  },
+  "engine_environment": {
+    "EVAS_ENGINE": "evas2",
+    "VAEVAS_DEFAULT_EVAS_ENGINE": "evas2"
+  },
+  "runtime_source": {
+    "git_commit": "a72fff338bc81b2ebc144b7da97a82a663c776e2",
+    "git_describe": "v0.8.2",
+    "backend": "evas-rust"
+  },
+  "results": {
+    "tests": "91 passed, 1 skipped",
+    "static_profile_parity": "10/10 PASS",
+    "static_repair_gate": "10/10 PASS",
+    "reference_gold": "10/10 PASS",
+    "active_mutations": "50/50 killed",
+    "affine_gold": "10/10 PASS",
+    "affine_mutations": "50/50 killed",
+    "insufficient_excitation": "10/10 explicit failure",
+    "per_case_runtime_logs": "130/130 valid"
+  },
+  "checker_repairs": [
+    "124 requires low/transition/high differential tanh coverage",
+    "126 requires positive and negative input coverage",
+    "129 requires positive and negative differential input coverage"
+  ],
+  "evidence_files": {
+    "runtime": "evas2_gold_mutation_smoke_121_130.json",
+    "profile_parity": "profile_parity_121_130.json",
+    "render_schema_check": "render_schema_check_121_130.json",
+    "targeted_manifest_hash_audit": "targeted_manifest_hash_audit_121_130.json"
+  },
+  "python_fallback_claimed": false
+}

@@ -1,0 +1,735 @@
+{
+  "content_sha256": "0c5b3cec1f3566f7d54b1ffb7d9bb05de595b69eae2449db416302d785c1bd43",
+  "input_hashes": {
+    "EXCLUDED_MUTATION_ARCHIVE_INDEX.json": "ef3a22071509ac370b9684f2769d2206c91ada684bf27f59397549a6b4529117",
+    "OVERFIVE_REVIEW.json": "5755ccf566406dcbdaa93b34bf5952216b31307b7c7b1a28432b839f49ed530d",
+    "SEMANTIC_SELECTION_DECISIONS.json": "c3dca85fdec66a323aaec36c16f252c9f38a7cc29f800e9c47d53f15f966622b"
+  },
+  "mutation_count": 51,
+  "mutations": [
+    {
+      "archive_reason": "Archive edge_polarity_omission as provenance-only: its observable coverage overlaps P_DIRECTION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_ignore_falling_data_edges/certification.json",
+      "certification_sha256": "25fd1644d4e5985554342a212a26201b3463022af9afb5f46a85e5afa5f2c6fa",
+      "family_id": "001",
+      "fault_class": "edge_polarity_omission",
+      "mutation_bundle_sha256": "fee7b31f0b8db87f0a227e8424dcbb5b3fe83be5b7b9274f04bb5f213f91a4f3",
+      "mutation_id": "neg_002_ignore_falling_data_edges",
+      "status": "provenance_only",
+      "trigger_condition": "falling data edge establishes phase direction",
+      "violated_property_ids": [
+        "P_DIRECTION"
+      ]
+    },
+    {
+      "archive_reason": "Archive calibration_gain_error as provenance-only: its observable coverage overlaps P_CALIBRATION_WEIGHT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_calibration_scale_16/certification.json",
+      "certification_sha256": "565581fadab5be294ee7f666887959443ab9dd8714e77c3063bff91f62893850",
+      "family_id": "002",
+      "fault_class": "calibration_gain_error",
+      "mutation_bundle_sha256": "62af0243f5a37cdfc98820899b33e7549db98ccf02cebce4d78bee71c52ba918",
+      "mutation_id": "neg_004_calibration_scale_16",
+      "status": "provenance_only",
+      "trigger_condition": "nonzero calibration code is clocked",
+      "violated_property_ids": [
+        "P_CALIBRATION_WEIGHT"
+      ]
+    },
+    {
+      "archive_reason": "Archive upper_code_msb_stuck_low as provenance-only: its observable coverage overlaps P_SUBADC_REGIONS, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_upper_decision_msb_stuck_low/certification.json",
+      "certification_sha256": "a8946fe9810e3a6f3d6a2e5369b6f3e8ed3cf43c00dca7efe8931e25f2d7bca5",
+      "family_id": "003",
+      "fault_class": "upper_code_msb_stuck_low",
+      "mutation_bundle_sha256": "8b18945ef2b66c3e1eabd2c7d213837897bf31b1bf36f0eabbd9a33920f183f8",
+      "mutation_id": "neg_002_upper_decision_msb_stuck_low",
+      "status": "provenance_only",
+      "trigger_condition": "sampled VIN is in the upper region",
+      "violated_property_ids": [
+        "P_SUBADC_REGIONS"
+      ]
+    },
+    {
+      "archive_reason": "Archive residue_gain_error as provenance-only: its observable coverage overlaps P_RESIDUE_MAPPING, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_residue_gain_low/certification.json",
+      "certification_sha256": "5dcbdf89a62fc10b686271ad1ab83007dca64f11b6fe107a3a4f4d02039b875b",
+      "family_id": "003",
+      "fault_class": "residue_gain_error",
+      "mutation_bundle_sha256": "ce51689c0055ab4c97600185a6030f852f97b2f2b139ce7478de6d8112701579",
+      "mutation_id": "neg_005_residue_gain_low",
+      "status": "provenance_only",
+      "trigger_condition": "any non-midscale VIN is sampled",
+      "violated_property_ids": [
+        "P_RESIDUE_MAPPING"
+      ]
+    },
+    {
+      "archive_reason": "Archive step_magnitude_error as provenance-only: its observable coverage overlaps P_CLOCKED_STEP, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_wrong_step_size/certification.json",
+      "certification_sha256": "75895e239cffc15d9fa8e7ce4d2cf6ed7f862226dd4f1e298f09fe55ff7f00ad",
+      "family_id": "004",
+      "fault_class": "step_magnitude_error",
+      "mutation_bundle_sha256": "34c04675ca052dcb9626045bea0f3c0df4d24de77d402f72c1affd05d5555ce8",
+      "mutation_id": "neg_003_wrong_step_size",
+      "status": "provenance_only",
+      "trigger_condition": "a nonzero error is clocked",
+      "violated_property_ids": [
+        "P_CLOCKED_STEP"
+      ]
+    },
+    {
+      "archive_reason": "Archive reset_gating_omission as provenance-only: its observable coverage overlaps P_ACTIVE_LOW_RESET, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_arms_while_reset_low/certification.json",
+      "certification_sha256": "6f9b79ad95e8c332b1d317fe392dcae9ea8dc85fc229b9ff1c8662b19664c737",
+      "family_id": "005",
+      "fault_class": "reset_gating_omission",
+      "mutation_bundle_sha256": "953618c359e0497a666fdbff3d9e9a4733480eaa03eb22450d3fa8ff6f7b94fc",
+      "mutation_id": "neg_003_arms_while_reset_low",
+      "status": "provenance_only",
+      "trigger_condition": "sig rises while rst_n is low",
+      "violated_property_ids": [
+        "P_ACTIVE_LOW_RESET"
+      ]
+    },
+    {
+      "archive_reason": "Archive unauthorized_timer_event as provenance-only: its observable coverage overlaps P_EVENT_HOLD, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_006_spurious_timer_glitch/certification.json",
+      "certification_sha256": "32c7dec5ae1d305ccaa0a042e84453d3ea31f0dc0f3b28069ff1f157a6d79b05",
+      "family_id": "005",
+      "fault_class": "unauthorized_timer_event",
+      "mutation_bundle_sha256": "80501e20ccf50ef25435d3d83b335e175fd1a6795f9c9d91c2d0ddf540da8fe6",
+      "mutation_id": "neg_006_spurious_timer_glitch",
+      "status": "provenance_only",
+      "trigger_condition": "an internal timer fires without a legal public event",
+      "violated_property_ids": [
+        "P_EVENT_HOLD"
+      ]
+    },
+    {
+      "archive_reason": "Archive state_stride_error as provenance-only: its observable coverage overlaps P_PERMUTATION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_skip_every_other_state/certification.json",
+      "certification_sha256": "f1b4ca9890c97ab1cae5c5908086749c7b91c87efb830d7fd7155e4a20f295c4",
+      "family_id": "006",
+      "fault_class": "state_stride_error",
+      "mutation_bundle_sha256": "a4a137e13c5af223dabef761320548903529f36118fb6b7bb063dfd2a65c23ef",
+      "mutation_id": "neg_002_skip_every_other_state",
+      "status": "provenance_only",
+      "trigger_condition": "successive valid rising clock edges occur",
+      "violated_property_ids": [
+        "P_PERMUTATION"
+      ]
+    },
+    {
+      "archive_reason": "Archive forced_state as provenance-only: its observable coverage overlaps P_PERMUTATION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_forces_state_three/certification.json",
+      "certification_sha256": "d0b6e5e113c415a1ca646e9a84767da4f6dcdbaf28c176fd5cd81913b25079e0",
+      "family_id": "006",
+      "fault_class": "forced_state",
+      "mutation_bundle_sha256": "966c704ebb5ae53f058890f2f3072cbf70ef4b3b804bc8c3437319214194a3b7",
+      "mutation_id": "neg_004_forces_state_three",
+      "status": "provenance_only",
+      "trigger_condition": "any valid rising clock edge occurs",
+      "violated_property_ids": [
+        "P_PERMUTATION"
+      ]
+    },
+    {
+      "archive_reason": "Archive unadvertised_output_clamp as provenance-only: its observable coverage overlaps P_LOW_PASS_RESPONSE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_output_clamped/certification.json",
+      "certification_sha256": "25fc496ce8ab76f790b092b814b3f337cb9172dda9849437040ececa4d913802",
+      "family_id": "007",
+      "fault_class": "unadvertised_output_clamp",
+      "mutation_bundle_sha256": "9d0d1d8118b4fd744c834b12613a37127752acd1d65fbfc703b0d854e8a3a177",
+      "mutation_id": "neg_004_output_clamped",
+      "status": "provenance_only",
+      "trigger_condition": "the expected response crosses the imposed clamp",
+      "violated_property_ids": [
+        "P_LOW_PASS_RESPONSE"
+      ]
+    },
+    {
+      "archive_reason": "Archive missing_periodic_update as provenance-only: its observable coverage overlaps P_LOW_PASS_RESPONSE, P_PERIODIC_UPDATE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_stuck_zero/certification.json",
+      "certification_sha256": "61c163dc332a406490f01c18cbbbe89798da9a59df58682d65c8d9b15ea61f7c",
+      "family_id": "007",
+      "fault_class": "missing_periodic_update",
+      "mutation_bundle_sha256": "d3f620e65e25fbc09b2301efd1cc1cc2835e21d5f8726294ad976a8c046e3ec0",
+      "mutation_id": "neg_005_stuck_zero",
+      "status": "provenance_only",
+      "trigger_condition": "VIN remains nonzero across update periods",
+      "violated_property_ids": [
+        "P_LOW_PASS_RESPONSE",
+        "P_PERIODIC_UPDATE"
+      ]
+    },
+    {
+      "archive_reason": "Archive step_magnitude_error as provenance-only: its observable coverage overlaps P_ERROR_DIRECTION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_wrong_step_size/certification.json",
+      "certification_sha256": "0cff1dce0eff593884ce8fc6655126dad789d67298eee761935108d76245d5fd",
+      "family_id": "008",
+      "fault_class": "step_magnitude_error",
+      "mutation_bundle_sha256": "7f3b06a35664965a4dab06b28132029e3890cb8517e44a89f48767e313d5299f",
+      "mutation_id": "neg_003_wrong_step_size",
+      "status": "provenance_only",
+      "trigger_condition": "a measurement error outside deadband is clocked",
+      "violated_property_ids": [
+        "P_ERROR_DIRECTION"
+      ]
+    },
+    {
+      "archive_reason": "Archive weak_high_rail as provenance-only: its observable coverage overlaps P_RAIL_REFERENCE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_weak_high/certification.json",
+      "certification_sha256": "aa10bfffbc6bfab98526c3863286771c65b3a41d2e35dcfcd6c48cfc28c99db5",
+      "family_id": "010",
+      "fault_class": "weak_high_rail",
+      "mutation_bundle_sha256": "25460442b69288908689e06daabe73ce325a1371b6ef41b4cd53badf475bd9ec",
+      "mutation_id": "neg_005_weak_high",
+      "status": "provenance_only",
+      "trigger_condition": "a latched high decision is driven",
+      "violated_property_ids": [
+        "P_RAIL_REFERENCE"
+      ]
+    },
+    {
+      "archive_reason": "Archive dn_channel_missing as provenance-only: its observable coverage overlaps P_DIV_SETS_DN, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_dn_channel_missing/certification.json",
+      "certification_sha256": "4bc8aa93a24a8cbd2c40f25612687be198d87e5efa3174e881184e6be4664529",
+      "family_id": "011",
+      "fault_class": "dn_channel_missing",
+      "mutation_bundle_sha256": "3c037b23ac72d5a97f7927da38f75c349affea5d0e1754e3ed7c7cca1c0e03a5",
+      "mutation_id": "neg_004_dn_channel_missing",
+      "status": "provenance_only",
+      "trigger_condition": "dIV leads REF and should assert DN before the mutual-clear edge arrives.",
+      "violated_property_ids": [
+        "P_DIV_SETS_DN"
+      ]
+    },
+    {
+      "archive_reason": "Archive ratio_bit_order_reversed as provenance-only: its observable coverage overlaps P_RATIO_DECODE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_ratio_bit_order_reversed/certification.json",
+      "certification_sha256": "51d58f423e3cdd26d47e46418cffcd3e97615411394aa8d3ea7b685999549568",
+      "family_id": "012",
+      "fault_class": "ratio_bit_order_reversed",
+      "mutation_bundle_sha256": "af2b88d073ce1ab37f11cf0c779fd76efb1229d73cfc00b839715a118d5fbf3b",
+      "mutation_id": "neg_003_ratio_bit_order_reversed",
+      "status": "provenance_only",
+      "trigger_condition": "an asymmetric code distinguishes div_code_0 as the LSB from div_code_7 as the MSB",
+      "violated_property_ids": [
+        "P_RATIO_DECODE"
+      ]
+    },
+    {
+      "archive_reason": "Archive output_scale_error as provenance-only: its observable coverage overlaps P_TIMER_INTEGRATION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_output_half_scale/certification.json",
+      "certification_sha256": "f144f4164bcd1e3469e3f9e80fd11f6ef8d62653e990fbdf83a44923fc14473a",
+      "family_id": "013",
+      "fault_class": "output_scale_error",
+      "mutation_bundle_sha256": "c5f9308d45e3d9f230815756c8380a900c2f8eacc26bccae06b9c48187531c13",
+      "mutation_id": "neg_005_output_half_scale",
+      "status": "provenance_only",
+      "trigger_condition": "the accumulated state is observed after a positive integration interval",
+      "violated_property_ids": [
+        "P_TIMER_INTEGRATION"
+      ]
+    },
+    {
+      "archive_reason": "Archive slew_rate_magnitude_error as provenance-only: its observable coverage overlaps P_EVENTUAL_TRACKING, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_step_too_small/certification.json",
+      "certification_sha256": "6d77ebf509fb3c2327aedc5c5eb1c0a9f027763f79c065e9ab437b20104c42a8",
+      "family_id": "016",
+      "fault_class": "slew_rate_magnitude_error",
+      "mutation_bundle_sha256": "c09c28c1e10c127a3457369d7e2d00c95452838db8a1b7f948af0fb47e99e8a3",
+      "mutation_id": "neg_004_step_too_small",
+      "status": "provenance_only",
+      "trigger_condition": "a sustained high or low vin level requires the configured step response",
+      "violated_property_ids": [
+        "P_EVENTUAL_TRACKING"
+      ]
+    },
+    {
+      "archive_reason": "Archive falling_slew_omission as provenance-only: its observable coverage overlaps P_BIDIRECTIONAL_STEP_LIMIT, P_EVENTUAL_TRACKING, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_missing_fall_branch/certification.json",
+      "certification_sha256": "5a121e0c2ce85c54bb8fdce73cc10e67ab167172fff7f7adb208efe641a04d91",
+      "family_id": "016",
+      "fault_class": "falling_slew_omission",
+      "mutation_bundle_sha256": "da69fffd726b663b33ea8bdfaa49001845b3d20268f84e33b59e6e735312e8f3",
+      "mutation_id": "neg_005_missing_fall_branch",
+      "status": "provenance_only",
+      "trigger_condition": "vin falls below the current output by more than step",
+      "violated_property_ids": [
+        "P_BIDIRECTIONAL_STEP_LIMIT",
+        "P_EVENTUAL_TRACKING"
+      ]
+    },
+    {
+      "archive_reason": "Archive timer_period_error as provenance-only: its observable coverage overlaps P_PERIODIC_PHASE_UPDATE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_wrong_timer_period/certification.json",
+      "certification_sha256": "8478ab668fea020d2159c3a6b2ad2604583db079669bbe437713e8d97575b186",
+      "family_id": "019",
+      "fault_class": "timer_period_error",
+      "mutation_bundle_sha256": "2da774e65aeed240ee99390cf43428cd478e5cdbfb5a0b48560ec46a13b70b57",
+      "mutation_id": "neg_003_wrong_timer_period",
+      "status": "provenance_only",
+      "trigger_condition": "the public 1 ns periodic schedule is observed",
+      "violated_property_ids": [
+        "P_PERIODIC_PHASE_UPDATE"
+      ]
+    },
+    {
+      "archive_reason": "Archive active_high_reset_polarity_inverted as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_reset_ignored/certification.json",
+      "certification_sha256": "7cb3f51f800a14a5422569a24b9ef856a087d614c2f899eef2ce9cc86725e8b3",
+      "family_id": "031",
+      "fault_class": "active_high_reset_polarity_inverted",
+      "mutation_bundle_sha256": "f516684cf37cbf3fb0315591a8ef12e86f592e83816ae4dfbef0ab087ab04685",
+      "mutation_id": "neg_004_reset_ignored",
+      "status": "provenance_only",
+      "trigger_condition": "reset is deasserted and a later rising clock edge should sample the input",
+      "violated_property_ids": [
+        "P_INITIAL_AND_RESET_COMMON_MODE"
+      ]
+    },
+    {
+      "archive_reason": "Archive limiting_metric_missing as provenance-only: its observable coverage overlaps P_NEGATIVE_LIMITING, P_POSITIVE_LIMITING, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_metric_stuck_low/certification.json",
+      "certification_sha256": "c695b4d8425db3f220bad2d42be5873e488944b29a70bfb172ce5a6b1c60b178",
+      "family_id": "031",
+      "fault_class": "limiting_metric_missing",
+      "mutation_bundle_sha256": "e36179177c911eec4fa40f9619e81b8e1d20a2fed9a1923003cd8e70d0efe277",
+      "mutation_id": "neg_005_metric_stuck_low",
+      "status": "provenance_only",
+      "trigger_condition": "a sampled input enters either limiting region",
+      "violated_property_ids": [
+        "P_NEGATIVE_LIMITING",
+        "P_POSITIVE_LIMITING"
+      ]
+    },
+    {
+      "archive_reason": "Archive compression_metric_omission as provenance-only: its observable coverage overlaps P_NEGATIVE_COMPRESSION, P_POSITIVE_COMPRESSION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_compression_metric_stuck_low/certification.json",
+      "certification_sha256": "50e995e440e3fd10534104e43cf360bb96eb40e78079f6ceea0794362456a916",
+      "family_id": "032",
+      "fault_class": "compression_metric_omission",
+      "mutation_bundle_sha256": "894ab02adbb0eb83b5d4dacb95e1280225699562bd75f9f69dde8f88603f6496",
+      "mutation_id": "neg_004_compression_metric_stuck_low",
+      "status": "provenance_only",
+      "trigger_condition": "a sampled positive or negative compression condition is active",
+      "violated_property_ids": [
+        "P_NEGATIVE_COMPRESSION",
+        "P_POSITIVE_COMPRESSION"
+      ]
+    },
+    {
+      "archive_reason": "Archive asynchronous_input_tracking as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_006_asynchronous_input_tracking/certification.json",
+      "certification_sha256": "e37844595cdb315daeda0731bc9abe3c42be41888ffdfc9e838145c19dcc39db",
+      "family_id": "032",
+      "fault_class": "asynchronous_input_tracking",
+      "mutation_bundle_sha256": "dc64f683e0fb357bbe3f07f7097bd47d1e24edcc7dfe002d9968f8baea2fae57",
+      "mutation_id": "neg_006_asynchronous_input_tracking",
+      "status": "provenance_only",
+      "trigger_condition": "vin changes between two rising clock edges while reset is inactive",
+      "violated_property_ids": [
+        "P_CLOCKED_HOLD"
+      ]
+    },
+    {
+      "archive_reason": "Archive linear_gain_error as provenance-only: its observable coverage overlaps P_LINEAR_REGION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_001_wrong_gain/certification.json",
+      "certification_sha256": "88c17780951415280b6befe2a570cb758e1c6fae671b767b20567055afc50564",
+      "family_id": "035",
+      "fault_class": "linear_gain_error",
+      "mutation_bundle_sha256": "b9aff2870b97f8f22b5a0a141b365410aebbbe57cda6db43cc404390d3b69a7b",
+      "mutation_id": "neg_001_wrong_gain",
+      "status": "provenance_only",
+      "trigger_condition": "a rising clock samples a moderate positive or negative vin displacement while reset is inactive",
+      "violated_property_ids": [
+        "P_LINEAR_REGION"
+      ]
+    },
+    {
+      "archive_reason": "Archive compression_metric_omission as provenance-only: its observable coverage overlaps P_LINEAR_REGION, P_SYMMETRIC_COMPRESSION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_metric_stuck_linear/certification.json",
+      "certification_sha256": "e975a9fe70434b3875ad7723cc95fce0a23d9ef062a9b20d89724517d31da04f",
+      "family_id": "035",
+      "fault_class": "compression_metric_omission",
+      "mutation_bundle_sha256": "8ca61721c823a022dc45592a32d3f8cc82fd1d5c1e9e65cc10312ee1669d210f",
+      "mutation_id": "neg_005_metric_stuck_linear",
+      "status": "provenance_only",
+      "trigger_condition": "a rising clock samples vin that enters either high-side or low-side compression",
+      "violated_property_ids": [
+        "P_LINEAR_REGION",
+        "P_SYMMETRIC_COMPRESSION"
+      ]
+    },
+    {
+      "archive_reason": "Archive sampled_gain_zero as provenance-only: its observable coverage overlaps P_COMMON_MODE_GAIN, P_SAMPLED_GAIN_SELECT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_001_zero_gain/certification.json",
+      "certification_sha256": "bf075dce87cd5cc171eb341b7edce6449914662c821be1cb27370593bc58dc7a",
+      "family_id": "038",
+      "fault_class": "sampled_gain_zero",
+      "mutation_bundle_sha256": "6924866872929a76bbd649ab3c83acbf1516fd539baa4428cb9805650db6099d",
+      "mutation_id": "neg_001_zero_gain",
+      "status": "provenance_only",
+      "trigger_condition": "a rising clock samples either gain_sel state while reset is inactive",
+      "violated_property_ids": [
+        "P_COMMON_MODE_GAIN",
+        "P_SAMPLED_GAIN_SELECT"
+      ]
+    },
+    {
+      "archive_reason": "Archive gain_state_stuck_high as provenance-only: its observable coverage overlaps P_COMMON_MODE_GAIN, P_SAMPLED_GAIN_SELECT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_fixed_high_gain/certification.json",
+      "certification_sha256": "2ebe254e0d6082c15560c5ca3359232fc7e17a2ba734167648342ff1fd91b5e3",
+      "family_id": "038",
+      "fault_class": "gain_state_stuck_high",
+      "mutation_bundle_sha256": "1d7d480bdd86738362ee98603d1cbc192629c268bcdc99674f5d976865d48a02",
+      "mutation_id": "neg_004_fixed_high_gain",
+      "status": "provenance_only",
+      "trigger_condition": "gain_sel is low at an active rising clock edge",
+      "violated_property_ids": [
+        "P_COMMON_MODE_GAIN",
+        "P_SAMPLED_GAIN_SELECT"
+      ]
+    },
+    {
+      "archive_reason": "Archive missing_top_cell as provenance-only: its observable coverage overlaps P_ENDPOINT_CODES, P_PREFIX_THERMOMETER, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_missing_top_cell/certification.json",
+      "certification_sha256": "59992f6bc347298731e106089f12a38fadaa75b512e46e559974d425ea5e1252",
+      "family_id": "048",
+      "fault_class": "missing_top_cell",
+      "mutation_bundle_sha256": "a703a125875c6a6cfccb5082b901480ae582658caec1608ad6205b943051d5d6",
+      "mutation_id": "neg_004_missing_top_cell",
+      "status": "provenance_only",
+      "trigger_condition": "Drives one fewer output high for every nonzero code.",
+      "violated_property_ids": [
+        "P_ENDPOINT_CODES",
+        "P_PREFIX_THERMOMETER"
+      ]
+    },
+    {
+      "archive_reason": "Archive starts_count_at_one as provenance-only: its observable coverage overlaps P_WINDOW_OPEN, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_off_by_one/certification.json",
+      "certification_sha256": "4b29c00517184923523c18dfa288ce131e87dfd0fb7ab4334ebc3f9815f7d97d",
+      "family_id": "061",
+      "fault_class": "starts_count_at_one",
+      "mutation_bundle_sha256": "7aae9f795860307c82037754520dd0425278601c6f448afb831f90244c05680d",
+      "mutation_id": "neg_005_off_by_one",
+      "status": "provenance_only",
+      "trigger_condition": "a rising gate crossing must initialize the count to zero",
+      "violated_property_ids": [
+        "P_WINDOW_OPEN"
+      ]
+    },
+    {
+      "archive_reason": "Archive asserts_immediately_in_window as provenance-only: its observable coverage overlaps P_ENTRY_AND_HOLD, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_no_hold/certification.json",
+      "certification_sha256": "24ef1a2b03a94464e01b41076f01ce27801d71169a149170c1f871da4d6fd833",
+      "family_id": "063",
+      "fault_class": "asserts_immediately_in_window",
+      "mutation_bundle_sha256": "9bca88472a722a7c296f0f675508dc320631a7cbc96f1e6c342319e00b4c8cb7",
+      "mutation_id": "neg_002_no_hold",
+      "status": "provenance_only",
+      "trigger_condition": "stimulus exercises asserts immediately in window against the public observable contract",
+      "violated_property_ids": [
+        "P_ENTRY_AND_HOLD"
+      ]
+    },
+    {
+      "archive_reason": "Archive uses_seven_bins_for_ideal_code as provenance-only: its observable coverage overlaps P_IDEAL_CODE, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_wrong_code_span/certification.json",
+      "certification_sha256": "4ca397a14620529dc4aaee8e065564dd342d6700b350b9bd4664c2b8aec809b8",
+      "family_id": "067",
+      "fault_class": "uses_seven_bins_for_ideal_code",
+      "mutation_bundle_sha256": "06faae1ade7119e5f76b9f58c802a08c9b9be3c64389e7d65e3ad50bddf8c515",
+      "mutation_id": "neg_005_wrong_code_span",
+      "status": "provenance_only",
+      "trigger_condition": "vin must be quantized over the full eight-code ideal span before error calculation",
+      "violated_property_ids": [
+        "P_IDEAL_CODE"
+      ]
+    },
+    {
+      "archive_reason": "Archive max_error_metric_scaled_by_one_half as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_007_half_scale_metric/certification.json",
+      "certification_sha256": "2b01615bb461c473fe929054ed6e6f7c87758c272d64c422665dac566fad06b4",
+      "family_id": "067",
+      "fault_class": "max_error_metric_scaled_by_one_half",
+      "mutation_bundle_sha256": "d3a37d046cfd1357d5e4e910b1128c360b6b29184d3c7772afc448dbc064fccd",
+      "mutation_id": "neg_007_half_scale_metric",
+      "status": "provenance_only",
+      "trigger_condition": "maxerr voltage must equal the retained code error times lsb_out",
+      "violated_property_ids": [
+        "P_METRIC_SCALE"
+      ]
+    },
+    {
+      "archive_reason": "Archive one_cycle_pulses_only as provenance-only: its observable coverage overlaps P_WIDTH_AND_PERIOD, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_ignore_width/certification.json",
+      "certification_sha256": "1d863566df1caf3c34947869852fd54b1f974aa9b3be9260f755a81cd3f35651",
+      "family_id": "069",
+      "fault_class": "one_cycle_pulses_only",
+      "mutation_bundle_sha256": "6afc44c7da898f734867ed3ef00c924068eb8b535afff67345b4fc1c056bf58c",
+      "mutation_id": "neg_002_ignore_width",
+      "status": "provenance_only",
+      "trigger_condition": "each pulse must remain high for the captured width in clock samples",
+      "violated_property_ids": [
+        "P_WIDTH_AND_PERIOD"
+      ]
+    },
+    {
+      "archive_reason": "Archive pulse_and_done_high_levels_are_too_low as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_007_output_levels_low/certification.json",
+      "certification_sha256": "640d59870a53c4d368a804ffc9f2e3a4db9312056de55528b13c36392bda572c",
+      "family_id": "069",
+      "fault_class": "pulse_and_done_high_levels_are_too_low",
+      "mutation_bundle_sha256": "df1756ab69c492192c1f57ddfe694404dc489cf9c1166970c32005a2ab4fa4e8",
+      "mutation_id": "neg_007_output_levels_low",
+      "status": "provenance_only",
+      "trigger_condition": "logical pulse and done highs must reach the declared output rail",
+      "violated_property_ids": [
+        "P_OUTPUT_LEVELS"
+      ]
+    },
+    {
+      "archive_reason": "Archive wrong_nominal_half_period as provenance-only: its observable coverage overlaps P_NOMINAL_CLOCK, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_too_slow/certification.json",
+      "certification_sha256": "e988fee1b3a163ebcc6da49ac1dd37519166d20bb2f83fd793c8d0ea9984dd67",
+      "family_id": "070",
+      "fault_class": "wrong_nominal_half_period",
+      "mutation_bundle_sha256": "294ad9fec9a490f354ea7eca49a435c4097ec7bdbfe4ecee56985328ebcb14d8",
+      "mutation_id": "neg_003_too_slow",
+      "status": "provenance_only",
+      "trigger_condition": "the nominal half-period must remain 10 ns in both disabled and jittered modes",
+      "violated_property_ids": [
+        "P_NOMINAL_CLOCK"
+      ]
+    },
+    {
+      "archive_reason": "Archive weak_logic_high_level as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_007_weak_high/certification.json",
+      "certification_sha256": "93372879b9179132472c961063ad7fdf0d506552a0cf14ffa45e10054fe2ade4",
+      "family_id": "070",
+      "fault_class": "weak_logic_high_level",
+      "mutation_bundle_sha256": "8e275862d416ea80daf1c296522949325f214b8ad44ce596dae4f5816554d9f4",
+      "mutation_id": "neg_007_weak_high",
+      "status": "provenance_only",
+      "trigger_condition": "clk_out high phases must reach the public vdd-coded output level",
+      "violated_property_ids": [
+        "P_OUTPUT_LEVELS"
+      ]
+    },
+    {
+      "archive_reason": "Archive input_enable_threshold_too_high_rejects_valid_low_trim as provenance-only: its observable coverage overlaps P_TRIM_TARGET, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+      "certification_sha256": "a632c870e3a33986be5ee78424146aec74266b0813787faf60c4d291eddeba4b",
+      "family_id": "073",
+      "fault_class": "input_enable_threshold_too_high_rejects_valid_low_trim",
+      "mutation_bundle_sha256": "57233bbe7043d3fd162c7a66371dbb4da7f91cdb3e92c65a49ef4f206c301499",
+      "mutation_id": "neg_002_threshold_shifted",
+      "status": "provenance_only",
+      "trigger_condition": "Raises the vin enable threshold from 0.25 V to 0.45 V, rejecting the public low-trim operating point while preserving reset and output scaling.",
+      "violated_property_ids": [
+        "P_TRIM_TARGET"
+      ]
+    },
+    {
+      "archive_reason": "Archive peak_output_scaled_low_preserves_timing_but_loses_peak_amplitude as provenance-only: its observable coverage overlaps P_MAX_RETENTION, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+      "certification_sha256": "a05a0ae8439090d7cd3731394b978f0fd5a2c81148f3ba592cdd4dab9f0c3e80",
+      "family_id": "075",
+      "fault_class": "peak_output_scaled_low_preserves_timing_but_loses_peak_amplitude",
+      "mutation_bundle_sha256": "29c1c90e863908f3b10bf7a40705d5986bd631658d143f0c81544da83e9510af",
+      "mutation_id": "neg_003_event_edge_wrong",
+      "status": "provenance_only",
+      "trigger_condition": "Scales the peak output low while leaving sampling and reset structure intact.",
+      "violated_property_ids": [
+        "P_MAX_RETENTION"
+      ]
+    },
+    {
+      "archive_reason": "Archive peak_output_transition_is_effectively_instantaneous as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_007_no_transition_smoothing/certification.json",
+      "certification_sha256": "ca438cf1ddb69171819f0b5876abab5a455628211cb87c4f9eb768dfd20f5a82",
+      "family_id": "075",
+      "fault_class": "peak_output_transition_is_effectively_instantaneous",
+      "mutation_bundle_sha256": "8b595ecacdc5c7e7b8dedef53434961f9db1b7102be5597d8d9ec4baa40c4aaa",
+      "mutation_id": "neg_007_no_transition_smoothing",
+      "status": "provenance_only",
+      "trigger_condition": "retained-peak updates must use the declared finite output transition",
+      "violated_property_ids": [
+        "P_OUTPUT_SMOOTHING"
+      ]
+    },
+    {
+      "archive_reason": "Archive passes_all_non_reset_clock_cycles_without_quiet_remainder as provenance-only: its observable coverage overlaps P_QUIET_REMAINDER, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_pass_all_cycles/certification.json",
+      "certification_sha256": "51b4348341ea2920756d4c93c443d3a3004d713649e04fbbfcb005ded5c27d70",
+      "family_id": "076",
+      "fault_class": "passes_all_non_reset_clock_cycles_without_quiet_remainder",
+      "mutation_bundle_sha256": "08689dfd29d5678537466f3edb836c01b03ee3181f0a9f0d0dd8e364c220e70a",
+      "mutation_id": "neg_002_pass_all_cycles",
+      "status": "provenance_only",
+      "trigger_condition": "Preserves active-low reset but passes every non-reset CLK high phase instead of suppressing frame cycles 2..7.",
+      "violated_property_ids": [
+        "P_QUIET_REMAINDER"
+      ]
+    },
+    {
+      "archive_reason": "Archive passes_only_the_first_clock_in_each_frame_instead_of_the_first_two as provenance-only: its observable coverage overlaps P_TWO_CYCLE_BURST, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_one_cycle_burst/certification.json",
+      "certification_sha256": "830795ed6af7015a6300bc3e60b9a139e3968dfac5d54524d08beabd16d87830",
+      "family_id": "076",
+      "fault_class": "passes_only_the_first_clock_in_each_frame_instead_of_the_first_two",
+      "mutation_bundle_sha256": "c17ca0c831ac5b31c767f15bd6139fc17dcf295d88163c7084c67feacfdd9332",
+      "mutation_id": "neg_003_one_cycle_burst",
+      "status": "provenance_only",
+      "trigger_condition": "stimulus exercises Passes only the first clock in each frame instead of the first two. against the public observable contract",
+      "violated_property_ids": [
+        "P_TWO_CYCLE_BURST"
+      ]
+    },
+    {
+      "archive_reason": "Archive serial_out_driven_from_state0_instead_of_state6 as provenance-only: its observable coverage overlaps P_SERIAL_OUTPUT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_wrong_serial_bit/certification.json",
+      "certification_sha256": "6272b73be15ed7435299b2796a5e9687ccf2833eb4ddd519728a045e7fcd8b38",
+      "family_id": "078",
+      "fault_class": "serial_out_driven_from_state0_instead_of_state6",
+      "mutation_bundle_sha256": "58e83588a4aa5e99d3f00f7c9dc0611df271169a49c18afefece1b59c01e7562",
+      "mutation_id": "neg_004_wrong_serial_bit",
+      "status": "provenance_only",
+      "trigger_condition": "Drives serial_out from state_0 instead of the public state_6 bit.",
+      "violated_property_ids": [
+        "P_SERIAL_OUTPUT"
+      ]
+    },
+    {
+      "archive_reason": "Archive fault_005_metric_scale_low as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+      "certification_sha256": "7a491c925fa36c171d6f7b79c290fe4c2eb31558b4e6d7ddde06c47ae7b61d63",
+      "family_id": "105",
+      "fault_class": "fault_005_metric_scale_low",
+      "mutation_bundle_sha256": "360dc4f2384c4f542d0958db95622b23724f94ab7ddd6bb1e97256d84f4687de",
+      "mutation_id": "neg_005_metric_scale_low",
+      "status": "provenance_only",
+      "trigger_condition": "Single Shot Pulse: scales the metric output, preserving the main path while failing measurement checks.",
+      "violated_property_ids": [
+        "P_REPEATABLE_ONE_SHOTS"
+      ]
+    },
+    {
+      "archive_reason": "Archive fault_005_metric_scale_low as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+      "certification_sha256": "e64fe4f56a619cef2105fa56e79d7d70fe66ed9953b59bb0517d4f9f20d827c2",
+      "family_id": "108",
+      "fault_class": "fault_005_metric_scale_low",
+      "mutation_bundle_sha256": "32a69a47d5873daaeddc247ed20e5da21e6966a5ab8ea43533d2b7a0d1ea2254",
+      "mutation_id": "neg_005_metric_scale_low",
+      "status": "provenance_only",
+      "trigger_condition": "Crossing Pulse Detector: scales the metric output, preserving the main path while failing measurement checks.",
+      "violated_property_ids": [
+        "P_REPEATABLE_BIDIRECTIONAL_EVENTS"
+      ]
+    },
+    {
+      "archive_reason": "Archive polarity_or_direction_error as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_inverted_compare/certification.json",
+      "certification_sha256": "dd665a176daaef7bdc6ecd3c19aad22feef8a3a81cdd163222605ba997066784",
+      "family_id": "218",
+      "fault_class": "polarity_or_direction_error",
+      "mutation_bundle_sha256": "903c5bf11f2d061c1da54385c20bdae8f9dfd710e91b3ba59d18a388b2372bb7",
+      "mutation_id": "neg_003_inverted_compare",
+      "status": "provenance_only",
+      "trigger_condition": "Inverts the latched comparison.",
+      "violated_property_ids": [
+        "P_WHENEVER_CLK_RISES_THROUGH_VDD_2"
+      ]
+    },
+    {
+      "archive_reason": "Archive pipeline_reset_state_retention as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_006_reset_state_not_cleared/certification.json",
+      "certification_sha256": "149542642fdf67199b28ddccfeac35a043230e141fa4e858afb904a32b739915",
+      "family_id": "343",
+      "fault_class": "pipeline_reset_state_retention",
+      "mutation_bundle_sha256": "48f443dac03d03ec807b1bd3839ac2558f4959e2935bd7b7b8d7746596c1dc17",
+      "mutation_id": "neg_006_reset_state_not_cleared",
+      "status": "provenance_only",
+      "trigger_condition": "reset is asserted after a nonzero aligned conversion",
+      "violated_property_ids": [
+        "P_PIPE_RESET_CLEAR"
+      ]
+    },
+    {
+      "archive_reason": "Archive latch_off_by_one as provenance-only: its observable coverage overlaps P_TDC_INTERVAL_COUNT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_002_stop_off_by_one/certification.json",
+      "certification_sha256": "38671e2fe2b42e0e78baefe2c3c870cf475b089387b81ea11db95c649ad5f026",
+      "family_id": "346",
+      "fault_class": "latch_off_by_one",
+      "mutation_bundle_sha256": "c571ab8d8c363458f42885385f91199ce6d70c79967c1402ad3966b31e1f2ee3",
+      "mutation_id": "neg_002_stop_off_by_one",
+      "status": "provenance_only",
+      "trigger_condition": "stop arrives after one or more clocks",
+      "violated_property_ids": [
+        "P_TDC_INTERVAL_COUNT"
+      ]
+    },
+    {
+      "archive_reason": "Archive encoder_bit_mapping as provenance-only: its observable coverage overlaps P_TDC_INTERVAL_COUNT, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_encoder_lsb_swapped/certification.json",
+      "certification_sha256": "15b060e37a516ea26f225c90dd5354d11fa87dbe92b22a9ba4381cdc82810c59",
+      "family_id": "346",
+      "fault_class": "encoder_bit_mapping",
+      "mutation_bundle_sha256": "faab9f014b4e740cb005f86259944efb7b5995759b0e31a62b8a3616a85ee28f",
+      "mutation_id": "neg_005_encoder_lsb_swapped",
+      "status": "provenance_only",
+      "trigger_condition": "latched count has differing low bits",
+      "violated_property_ids": [
+        "P_TDC_INTERVAL_COUNT"
+      ]
+    },
+    {
+      "archive_reason": "Archive valid_stuck_low as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_003_valid_stuck_low/certification.json",
+      "certification_sha256": "0e50905341214812d31acd7d80d6562b95b5cc7354386be7188054040087de3b",
+      "family_id": "380",
+      "fault_class": "valid_stuck_low",
+      "mutation_bundle_sha256": "c25a4e86ab3c396ab5794ef12bae18144ff04cbed5ff0326168da8a814d74570",
+      "mutation_id": "neg_003_valid_stuck_low",
+      "status": "provenance_only",
+      "trigger_condition": "valid_stuck_low",
+      "violated_property_ids": [
+        "P_ASSERT_VALID_WHILE_ENABLED_AFTER_RESET"
+      ]
+    },
+    {
+      "archive_reason": "Archive missing_clear as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_005_missing_clear/certification.json",
+      "certification_sha256": "82f04aa538796771f7a7a537706c354abbed922b9fd9d5eff17225e2cfeb681f",
+      "family_id": "386",
+      "fault_class": "missing_clear",
+      "mutation_bundle_sha256": "8d61be5296fd580dcda4d392fbb4b0beecb5154f0e1e5b55d7149a3e63c829dd",
+      "mutation_id": "neg_005_missing_clear",
+      "status": "provenance_only",
+      "trigger_condition": "missing_clear",
+      "violated_property_ids": [
+        "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+      ]
+    },
+    {
+      "archive_reason": "Archive missing_clear as provenance-only: its observable coverage overlaps the active suite's broader trigger coverage, while the selected five retain broader fault-class and trigger diversity.",
+      "certification_path": "evaluator/mutation_bundles/neg_004_missing_clear/certification.json",
+      "certification_sha256": "6ad9539a01f5ccfaf951589641e5c68c174dbad5b2ceeb5aa2b677b47b89c8b6",
+      "family_id": "398",
+      "fault_class": "missing_clear",
+      "mutation_bundle_sha256": "c0ebc59a6b6e437f36eb8b4f5b75513dbdc6521e9c107d67ccdee7a8dc0c124b",
+      "mutation_id": "neg_004_missing_clear",
+      "status": "provenance_only",
+      "trigger_condition": "missing_clear",
+      "violated_property_ids": [
+        "P_ON_RESET_OR_WHEN_ENABLE_IS"
+      ]
+    }
+  ],
+  "policy": "Certified mutations excluded from the exact-five scored suite remain immutable provenance-only evidence.",
+  "schema_version": "v4-canonical-dut-provenance-archive-v1"
+}

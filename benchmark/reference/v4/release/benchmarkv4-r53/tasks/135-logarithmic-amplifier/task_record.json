@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "logarithmic_amplifier.va"
+  ],
+  "canonical_dut_source_slug": "135-logarithmic-amplifier",
+  "checker_task_id": "v4_135_logarithmic_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "aef802f6c8807b241d20e6b10f9492120ce8d24def5e0f26d37af70229c3a245",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f4346c53a0791595410d335521ae423d0ed1488dad92603a913204c6f24f550f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f9d86f9e89fe9ab71db84092ebda531520147de78f54e4d1406be8ff7d001e9a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "135",
+  "family_spec_sha256": "5167db504b93186000791fdbc91d719d97dd1e2f454f6b0c41c43f795a4f7159",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0764ef7f0ae310bf9135fff8685dedbbe11193de3893d2f456411559dee5e1cc",
+  "public_contract": "tasks/135-logarithmic-amplifier/public_contract.json",
+  "public_contract_sha256": "3f1557cd15e2698a627bfe034734d9542fd2f74b5109cebe658cb6d3238614d1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/135-logarithmic-amplifier",
+  "task_id": "v4-135"
+}

@@ -1,0 +1,80 @@
+{
+  "family_id": "179",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_fullrange/certification.json",
+        "certification_sha256": "49a0e19043ebdbf76c7753d4df2fcf2a1c85f6d6c004fc3efdd5d114d4b9e498",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "0abb9d4f23ee351461f515d6fe3e0f8d6cabd38e0b4327acdb36c64bd9f4462c",
+        "mutation_id": "neg_003_wrong_fullrange",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_fullrange/certification.json",
+        "trigger_condition": "Uses a 50 ps full range instead of 100 ps.",
+        "violated_property_ids": [
+          "P_FULL_RANGE_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "fc449f95a3bafa52fe9a6bf80bc61de463a9fca1a98453875bae9d84313ab80f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "e0a8de36d2720f37a9be9a45178bc3cc95e66103147257bde46553af54b80428",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_FULL_RANGE_SCALE",
+          "P_INPUT_EDGE_PAIR_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_sample_reset/certification.json",
+        "certification_sha256": "754edf9fc74693424a897c25c43fea44e5978cd66c4d7da7f3b5d1ef305fcacd",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "32389664d2160444e03c097b9fe3fb392d04d1c805cf33a35d97f3336a203d3b",
+        "mutation_id": "neg_004_no_sample_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_sample_reset/certification.json",
+        "trigger_condition": "Drives the measured TDC delta at half scale.",
+        "violated_property_ids": [
+          "P_FULL_RANGE_SCALE",
+          "P_SAMPLE_REARMS_MEASUREMENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "21634d290269195328bad27fffce426da7c64ed90789755ba8ba741ec594e0b7",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "5d3185861d7434f2b55a79f7df12a59d267bb20ac3202871a857b1aa3a36f152",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "TDC Ideal Edge Delta: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_SIGNED_DELTA_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_delta/certification.json",
+        "certification_sha256": "aef9d212cac246e59cb6cb50e05876ce8b81602765c8a15b5ddb98bb1f6c3fe6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "740d30364d8cb1e0d95c27151fd45255f33775a0bd8419f8f57f4c5e112bb998",
+        "mutation_id": "neg_002_inverted_delta",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_delta/certification.json",
+        "trigger_condition": "Computes inn-inp timing instead of inp-inn timing.",
+        "violated_property_ids": [
+          "P_SIGNED_DELTA_POLARITY"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_fullrange",
+    "canonical_dut_id": "179",
+    "hashes": {
+      "mutation_catalog_sha256": "14e6cd02f65bbdad59f3a2b73fe27cd45697507f26deadd35d08cd446976dafe",
+      "score_deck_sha256": "5a2fea9d4a0a4bfdad474afc0f184f1921e6942275ae838f6c9468264c3bf30d",
+      "task_certification_sha256": "ab582afe657d134c1df3fe7bea51f1e53cfb4da649bda78fb074874f7e8449f1",
+      "task_record_sha256": "ae6ad93ceec52df7004e934932915ff78c0b2a73c838eb0cca7848bb34795446"
+    },
+    "release_dir": "179-tdc-ideal-edge-delta"
+  }
+}

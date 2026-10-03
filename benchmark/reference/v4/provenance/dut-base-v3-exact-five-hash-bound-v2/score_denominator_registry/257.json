@@ -1,0 +1,82 @@
+{
+  "family_id": "257",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "16eb1a45f3aaf4a6a093a54fd33bbf4691d93019d47d8283870917edc782f711",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "50c80e62ce9b90996e9e6206b1077e9bf4aaf1bf9a1ab08c3ed069544befcc8d",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "4c73237f0f2adc8056e9683caf870907e0081d9f3726d616e76ac5613a578662",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "07f4a8a54925250941185c39a1a68990cd1c4ab2a3c22916b10b7989620c0a55",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_COMPUTE_CORE_CLIP01_0_5_X0",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "dd4e652ee5b7572a2e87ad27b453a58ad7ef406e3a1c9110e2355936b66cf298",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "d4387d903c6f25ad6ffa5d9e1cbd0a109ba1d7fcf6907aebb40b300ab26a2196",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "1106ad9d93f5624bd15eab0b830ce8696355d49e6ee7c25b6c6f182cacc817fb",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "a412e4e5ce5affe4d914967709cd57cdf2f231ad741b0106def91a69bbb91394",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_COMPUTE_CORE_CLIP01_0_5_X0",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "8aa6ac419053cbca93ffb004eb9f2dc8a4ff01d5cb56e9106f73a0d1d00f8607",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "9f0f2820960cb8df0260805d70558c61347281e9e2506061fe77a599076fa7f3",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_flag_metric",
+    "canonical_dut_id": "257",
+    "hashes": {
+      "mutation_catalog_sha256": "1a67aa92cb1655914c64f97e5b5f96b92232f3c54765f0484862a322431896d6",
+      "score_deck_sha256": "78d5fb9e309294a965ca131d77b8dd64bacc4d7fcc9cbe6d57c66de3a54eb4bc",
+      "task_certification_sha256": "24bfa0b457e1a942883151aa4ed329ec5febb1d1fa39e00cd4c3255a071b784c",
+      "task_record_sha256": "f328ec3ca75f749793c196c9d201b09047c679b56932f90d18cd31bf499f085c"
+    },
+    "release_dir": "257-phase-mismatch-qualifier"
+  }
+}

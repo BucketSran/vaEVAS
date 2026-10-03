@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "trim_ctrl_4bit.va"
+  ],
+  "canonical_dut_source_slug": "189-trim-ctrl-4bit",
+  "checker_task_id": "v4_189_trim_ctrl_4bit",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3e8e28bef9afe9f3eac8fd3a97910a41c1d265301ec7a3d795356b013025e5f9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fcc59f9b2da06a5d53cea3446919edd2435a98abf58ece60a9a46003294dde7d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6b3e3c22bbab6dac0ff5c97a363ea84bdc223a46a144f056e527d41f57b63644",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "189",
+  "family_spec_sha256": "2e63303eac696ad7ee6351c730518113aaff5defe7b13683684ea7c4c86d6bff",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ba5dde0eef1c1d78aa826e9f95d4cb7082197f7ad28fcecc6d5fac4f57a1ef7a",
+  "public_contract": "tasks/1189-trim-ctrl-4bit-bugfix/public_contract.json",
+  "public_contract_sha256": "ff7a439cd73217555aa3e6cdf66f1f19ba788afe70f22d67470339ba4d6fd803",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1189-trim-ctrl-4bit-bugfix",
+  "task_id": "v4-1189"
+}

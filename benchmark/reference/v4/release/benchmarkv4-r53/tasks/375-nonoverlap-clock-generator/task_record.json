@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "nonoverlap_clock_generator.va"
+  ],
+  "canonical_dut_source_slug": "375-nonoverlap-clock-generator",
+  "checker_task_id": "v4_375_nonoverlap_clock_generator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "de2f573a29f86a95728e235821de45c05e0a21d02182e46c47ff68474c6af3e9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "84455de52a573ca1f40ca5d51a0ebf63fcf8262130a48485bd278c37d66166d3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "39d4e0511a1ce718a753acfa5adb4f7ecb2a25075987a01fc8d9024ffa1e316e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "375",
+  "family_spec_sha256": "81e0b531a07b110d1db9fe0d729baf22401efa8208262c78896a5a203c730131",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "79caeb8046916cfcc4225a32fa3ca82461eab917843a94d8362c79eb2aa59641",
+  "public_contract": "tasks/375-nonoverlap-clock-generator/public_contract.json",
+  "public_contract_sha256": "8674e034c68338ed706eb16341548ae12ab6da304180ad66a86f5190968a444c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/375-nonoverlap-clock-generator",
+  "task_id": "v4-375"
+}

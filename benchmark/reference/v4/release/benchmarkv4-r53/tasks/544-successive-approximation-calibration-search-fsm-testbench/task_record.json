@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "044-successive-approximation-calibration-search-fsm",
+  "checker_task_id": "v4_044_successive_approximation_calibration_search_fsm",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "053700c61309b9dcdfc1ed484942967fed3df8a900686632204fd13953cc2ec4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "9f5ff8b39597bd6940f8b398c0e60ab32e152d8b59c1773a740a362d07a05c6d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "053700c61309b9dcdfc1ed484942967fed3df8a900686632204fd13953cc2ec4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a8dc09eebc31f1e043f30173fcf2deeafe13a33899e90fa024f34a3682309093",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ea3c9bd22ec5f407441f5789f4f396028578f565a6ed842ae47baa19d267f5d0"
+  },
+  "family_id": "044",
+  "family_spec_sha256": "ec3fe0b05cb81ad52db9c2dd4517fa0799b2df0420bbda18a7a8dea1457bd45e",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "53cb3222a5fd6808fdeb022581405957bd49ba975ce7d2723a9fc557f11b4785",
+  "public_contract": "tasks/544-successive-approximation-calibration-search-fsm-testbench/public_contract.json",
+  "public_contract_sha256": "3e239d6b69530fa7247d8b55a1651b3858866c19c3b73e65a9a4125c461e0c58",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/544-successive-approximation-calibration-search-fsm-testbench",
+  "task_id": "v4-544"
+}

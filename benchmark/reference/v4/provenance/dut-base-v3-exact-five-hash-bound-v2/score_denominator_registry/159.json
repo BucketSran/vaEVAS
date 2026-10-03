@@ -1,0 +1,78 @@
+{
+  "family_id": "159",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_normalization/certification.json",
+        "certification_sha256": "f8501b992a13c7079f6ade5ec224ff3c0bc155127224964ff94b0f73ec2568b6",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "8ab2738dc17902c78cbba48e570c3ba847299d2f3dcde90ad97f36d100ca71df",
+        "mutation_id": "neg_002_wrong_normalization",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_normalization/certification.json",
+        "trigger_condition": "Normalizes by eight instead of fifteen.",
+        "violated_property_ids": [
+          "P_FRACTION_NORMALIZATION_AND_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "344572072eddaedb7a2034f58143d4aa45d7b79bb9416c18b46c855484188186",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "df6cdb7a0859b4faf6cc99e39256ebed282a48480e23e1a24480aa91ee7f4d49",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CLOCKED_FIFTEEN_TAP_COUNT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output_gain/certification.json",
+        "certification_sha256": "c2c797f8f3d345668ba2dbef6b224c28e5a767d8cace859062dad561e9928048",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "bfa6b9c43fdd9e50978f65c703fc65a9320fb9bf2221746d2935b3c32bf2934c",
+        "mutation_id": "neg_004_half_output_gain",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output_gain/certification.json",
+        "trigger_condition": "Outputs half of the normalized fraction.",
+        "violated_property_ids": [
+          "P_FRACTION_NORMALIZATION_AND_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_upper_taps/certification.json",
+        "certification_sha256": "327f1c118176e1b17c66b0db2a29ef521d87eda95322e75bcad4cd94599a2950",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "0cfda7e94ee5b15c05c7b3c2ee72aa54cbf94b04a779e7be9a64c8ebd742cb57",
+        "mutation_id": "neg_003_ignore_upper_taps",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_upper_taps/certification.json",
+        "trigger_condition": "Counts only the first ten taps.",
+        "violated_property_ids": [
+          "P_FULL_TAP_COVERAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "c393b448295afa5a7caec55330309de5339b31ba7a4dc0a30a255ef9a0117996",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6eaad846fa2320f198240b2c5a2c416dce8e496beed1454e465463d28b3c5c08",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Ref Flash 15level Decoder: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_FRACTION_NORMALIZATION_AND_GAIN"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_normalization",
+    "canonical_dut_id": "159",
+    "hashes": {
+      "mutation_catalog_sha256": "0436978050ec26f81ae58d2ce6782dd0fc122776dd7dc2e534a3d5a72c2ce85e",
+      "score_deck_sha256": "860d297ce841d8401537ef2c3bdd564bb297ad365b6ff07a71dd5b295261ab5a",
+      "task_certification_sha256": "20eeb7e520c97d119e8ddb479d393052865773dfe78e2a212f8c4bec683de856",
+      "task_record_sha256": "c228afbfaeb814bbcdf2f963bf5b8ad7ec7be048281ea3455ff691cd710d5dbb"
+    },
+    "release_dir": "159-ref-flash-15level-decoder"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "318-resistor-ladder-monotonic-decoder",
+  "checker_task_id": "v4_318_resistor_ladder_monotonic_decoder",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9956337aa2e3cc40b2ffa2b243d38bcad3e7c770c35e77e5dfbd819c42e8bc7a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "98b70c7c88fcf069b3eeadc9d2d389a470df0903f0dab758e03072c57880ec89",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9956337aa2e3cc40b2ffa2b243d38bcad3e7c770c35e77e5dfbd819c42e8bc7a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "145e0345e2a019394cfe8b1665d2fbdf26a9bc854027c4a0a94bcc34a2ab3d99",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "920123f8ef497d83181c90d8ac15bc3fec35f7826dfc38d5fffda9692312bf3b"
+  },
+  "family_id": "318",
+  "family_spec_sha256": "abbf12010a03af2de9769b1eb2fb91069e790664bde1b5124fbe33d2b3429a61",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "683475eed5d787d195e92b6ade32597464a2feae07bca3e2c3b3c33d5c27d2d9",
+  "public_contract": "tasks/818-resistor-ladder-monotonic-decoder-testbench/public_contract.json",
+  "public_contract_sha256": "bb87ca570574bd2e6c48550e1840fc81d61df724965ba51884f5cd6ae49c0370",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/818-resistor-ladder-monotonic-decoder-testbench",
+  "task_id": "v4-818"
+}

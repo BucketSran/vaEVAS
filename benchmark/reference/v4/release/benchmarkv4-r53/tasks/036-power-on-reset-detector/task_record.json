@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "power_on_reset_detector.va"
+  ],
+  "canonical_dut_source_slug": "036-power-on-reset-detector",
+  "checker_task_id": "v4_036_power_on_reset_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8a8724d694a17108af3619138c163eefb8b0ac53792d3b6a611f79f9d620f543",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7cc809edeaa31248a26cdd6ddb28b23422aa0ccb5e8fbae674234fa0a2d1783b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "1482cd574928f17ea0f78e1063537598305d010c83ed8abc53807b1993f23762",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "036",
+  "family_spec_sha256": "49a0b8829819969f5a855af95e8c7336948996e6c31570daef8cbe37f3ccf9f4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ad08d8e8c45816027659371216e643e3d7bed7dcf23897c774e10d013377c78d",
+  "public_contract": "tasks/036-power-on-reset-detector/public_contract.json",
+  "public_contract_sha256": "e302e45a21eb48e3dd1118df96712df06d5a5ccdb5a98c634bbcea7cb176600a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/036-power-on-reset-detector",
+  "task_id": "v4-036"
+}

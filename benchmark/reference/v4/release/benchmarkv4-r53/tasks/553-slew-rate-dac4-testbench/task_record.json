@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "053-slew-rate-dac4",
+  "checker_task_id": "v4_053_slew_rate_dac4",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "1e3ecd64834edc6188bff6d828186f5d8cfe87d7452bf422c47f8546c829ca5f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d16309a227967f06642b23e613ae450c17a9427f0b96895c496b7bc4aa3809d6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "1e3ecd64834edc6188bff6d828186f5d8cfe87d7452bf422c47f8546c829ca5f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c786e8e12973d01a0e34fc9bcf2ded459a6ec281a538b99a5296ed070dac76b9",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "46b7e232f753c2e9936c9a23c1b537376dd3a7a2ee79ae7eea0b23858d4a382b"
+  },
+  "family_id": "053",
+  "family_spec_sha256": "a28e0a44651afcd7d417e33526d52382007f0563cce22fac5db38292ec89b717",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8882852600a4f3e876419f384679757f533be6444c56ef6cd4b852617a253e05",
+  "public_contract": "tasks/553-slew-rate-dac4-testbench/public_contract.json",
+  "public_contract_sha256": "c3c9502fe9f22fe98d2178d591f1dc8ba692e0151202fe9f40e7072db5330ef5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/553-slew-rate-dac4-testbench",
+  "task_id": "v4-553"
+}

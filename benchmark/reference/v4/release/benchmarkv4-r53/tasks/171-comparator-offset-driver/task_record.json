@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator_offset_binary_driver.va"
+  ],
+  "canonical_dut_source_slug": "171-comparator-offset-driver",
+  "checker_task_id": "v4_171_comparator_offset_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8727482a0ad1f9cc6b639dcdc9ba3b364c5e1c46dcbb27c6176617b1bb25e2c5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "397610c905acb3539e70e9529536c1c89e782feaa9f8ff28f781d9dd17c9ba43",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fa4d75150020cfb84fca38b516dcc02a0c805ea0d5228e946f0d2faced07f501",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "171",
+  "family_spec_sha256": "9d726454f74a126e29a06003d4b3a0ed7b637e2acc292f716b704afe01573e97",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "497908daa8199b9ed383fe7c9480e8c10bd595997aeb0844bfa6798245653d59",
+  "public_contract": "tasks/171-comparator-offset-driver/public_contract.json",
+  "public_contract_sha256": "d1b4dc41a1993ecf7844f5a6d6367d151a2968739a6e76c3bdbfc2d3f78d1c52",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/171-comparator-offset-driver",
+  "task_id": "v4-171"
+}

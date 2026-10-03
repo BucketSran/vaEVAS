@@ -1,0 +1,79 @@
+{
+  "family_id": "107",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5a47dfd3dbbc2ade796a003736103329d20bd87657a48b2dfee684d6d115e753",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "175463bad6297d045c051bf872a13aabe2a48012bb42b24ce93a100148666968",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Existing concrete negative.",
+        "violated_property_ids": [
+          "P_UNSIGNED_BIT_DECODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reversed_bit_weights/certification.json",
+        "certification_sha256": "c11715a5d29e53c31046489aac4000ecd7d2c70063fdd80d73f39f044e0e64cf",
+        "fault_class": "fault_003_reversed_bit_weights",
+        "mutation_bundle_sha256": "9496e2764858f847b106aa6d2d5f1f68caf93ad255f21914097e0dd8360b1f97",
+        "mutation_id": "neg_003_reversed_bit_weights",
+        "source_catalog_certification_path": "negative_variants/neg_003_reversed_bit_weights/certification.json",
+        "trigger_condition": "Reverses the bit weights.",
+        "violated_property_ids": [
+          "P_CONTINUOUS_REEVALUATION",
+          "P_POSITIVE_FULL_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_fullscale/certification.json",
+        "certification_sha256": "a863627b25767c21336c8deff3399f7f83763d391ef2dd3c445178ecaff5da2b",
+        "fault_class": "fault_004_wrong_fullscale",
+        "mutation_bundle_sha256": "8ce39d107ca5408e58b959c0a5cf091d6be8a76c803d1998d7f60d903f5e66c7",
+        "mutation_id": "neg_004_wrong_fullscale",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_fullscale/certification.json",
+        "trigger_condition": "Uses the wrong denominator for full scale.",
+        "violated_property_ids": [
+          "P_UNIFORM_CODE_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "732af8f206a91b522194daffdc4ce0a29c2cd3df81007750dd1916c618951f33",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "c5a7189b502512b5e79c4cd512c7ce6d822163c80dcc53a27f86325d5b69ade2",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Bipolar DAC 4b Continuous: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_MONOTONIC_TRANSFER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_unipolar_output/certification.json",
+        "certification_sha256": "f2859e5a55e05c0ed81a4e99686c771092deacb96738ef454c64038b358cbde3",
+        "fault_class": "fault_002_unipolar_output",
+        "mutation_bundle_sha256": "4611ce6c8b11c75d1ec954b416905aec58fc2d1c543851b63ec421e42419a0a6",
+        "mutation_id": "neg_002_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_002_unipolar_output/certification.json",
+        "trigger_condition": "Implements a unipolar DAC instead of bipolar output.",
+        "violated_property_ids": [
+          "P_NEGATIVE_FULL_SCALE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "107",
+    "hashes": {
+      "mutation_catalog_sha256": "7a97a7e57a23ae03b1ebb732b6e05879f86d83fbe6bc3e0ca2e1071dec1af9b2",
+      "score_deck_sha256": "5bc2fbb68af42e984dd96ae705e62cc6ba9ceeedeff9e3ea66f2eb6bd769d59a",
+      "task_certification_sha256": "c340fd2a84474e9069cf113d340c52fd805539dff89ad8bfc2e1233b2cc632f6",
+      "task_record_sha256": "876185010764a70db4a0c89b2a5f728ac64ac00bd2fb81911fb7ae7ec7dc0913"
+    },
+    "release_dir": "107-bipolar-dac-4b-continuous"
+  }
+}

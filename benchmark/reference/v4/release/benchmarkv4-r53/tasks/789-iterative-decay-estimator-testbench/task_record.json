@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "289-iterative-decay-estimator",
+  "checker_task_id": "v4_289_iterative_decay_estimator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5a9e47eff11949b289a2e38f9d23d983621d7bb585daabc6e784678b25551405",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "9996d895a106b9b9532a8617e5b9407990449341fa0154ded65067363c6cafbe",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5a9e47eff11949b289a2e38f9d23d983621d7bb585daabc6e784678b25551405",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "3ddabc33ae9ed84cc63a3cb1f9d7b2c6f7a5aed5f4c1a3cab9db754579e129ad",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "daf2756ebbfac7176ede42560f55274e68df769277060c09a7c70d333339860b"
+  },
+  "family_id": "289",
+  "family_spec_sha256": "fe69e82f542bc8cb511c58c88e5fce52817a64ed6b0e36a7e3dff54bd9e0e844",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2804a967f5633a0d276a9a290e878e578d97db3a4ffd033655a33ce781774e00",
+  "public_contract": "tasks/789-iterative-decay-estimator-testbench/public_contract.json",
+  "public_contract_sha256": "5b55822c2bc3223c3a33c70eb430f07070fc12cf2d1c2b2825f85275d4a984f9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/789-iterative-decay-estimator-testbench",
+  "task_id": "v4-789"
+}

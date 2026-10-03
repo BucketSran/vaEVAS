@@ -1,0 +1,34 @@
+{
+  "release_entry_id": "vbr1_l1_acquisition_limited_sample_and_hold",
+  "task_id": "vbr1_l1_acquisition_limited_sample_and_hold:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Sampling and Analog Memory",
+    "base_function": "Acquisition-limited sample-and-hold"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_acquisition_limited_sample_and_hold/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_acquisition_limited_sample_and_hold/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_acquisition_limited_sample_and_hold/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_acquisition_limited_sample_and_hold/forms/e2e/gold/acquisition_limited_sample_hold.va",
+    "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_acquisition_limited_sample_and_hold/forms/e2e/gold/tb_acquisition_limited_sample_hold.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "phase_span_covers_nearly_full_wrap"
+    - "clock_toggles_on_phase_wrap"
+    - "late_edge_rate_exceeds_early_edge_rate"
+parity:
+  required: true
+  tolerance_notes: "Score phase-span and edge-rate behavior across stable control-voltage intervals."

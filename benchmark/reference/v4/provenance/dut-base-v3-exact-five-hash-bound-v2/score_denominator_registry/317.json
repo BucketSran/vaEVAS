@@ -1,0 +1,79 @@
+{
+  "family_id": "317",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_accumulator_update_direction_wrong/certification.json",
+        "certification_sha256": "7ce97922ec90df339c2edd94411fd8a87f6e5d3b4098b9af34cfbd7b79fb03bc",
+        "fault_class": "accumulator_update_direction_wrong",
+        "mutation_bundle_sha256": "aee2a9c32b752e5894b5f1857acf87ed1af32c3a4d140c6da6540125229e9b7d",
+        "mutation_id": "neg_001_accumulator_update_direction_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_accumulator_update_direction_wrong/certification.json",
+        "trigger_condition": "accumulator_update_direction_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_correction_metric_lsb_wrong/certification.json",
+        "certification_sha256": "dbe79622dd8ff221fefb451ccb6b0f25204afa9176f9a2d485c6eaebcb0c6959",
+        "fault_class": "correction_metric_lsb_wrong",
+        "mutation_bundle_sha256": "4c179c10c0dc4f4f1333c54fca40437c5cf2b7f79a14ecd0c429bfa5433c3bde",
+        "mutation_id": "neg_002_correction_metric_lsb_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_002_correction_metric_lsb_wrong/certification.json",
+        "trigger_condition": "correction_metric_lsb_wrong",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "951027b065c862155fedcc55a9519a9a3ec08d2398beee113eeca68342fe436a",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "311d8add858fff7e429053871f7ef31fc3b897aa0bda34949dfcae64a422d965",
+        "mutation_id": "neg_003_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_SATURATE_THE_PUBLIC_4_BIT_CALIBRATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_done_qualification_too_early/certification.json",
+        "certification_sha256": "139cb45b48847bcdeb0238c3bbddf66b9a20cdb734d3fd16d5e66bcaa5ce349a",
+        "fault_class": "done_qualification_too_early",
+        "mutation_bundle_sha256": "5ee3c4e932853ff97eb51a15df1ce33ce17597cf56d06a60bd05756d3ea27a98",
+        "mutation_id": "neg_004_done_qualification_too_early",
+        "source_catalog_certification_path": "negative_variants/neg_004_done_qualification_too_early/certification.json",
+        "trigger_condition": "done_qualification_too_early",
+        "violated_property_ids": [
+          "P_DRIVE_CORRECTION_METRIC_AS_THE_VOLTAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_saturation_endpoint_wrong/certification.json",
+        "certification_sha256": "285453d8fd4aad10c309a2ed792f103e5955da944a6d30b5c92bbabeb4f067ff",
+        "fault_class": "saturation_endpoint_wrong",
+        "mutation_bundle_sha256": "c8a624455da1a9bf9e96292ffbe22d3eeec29e6e2728247c2c6595493f303994",
+        "mutation_id": "neg_005_saturation_endpoint_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_saturation_endpoint_wrong/certification.json",
+        "trigger_condition": "saturation_endpoint_wrong",
+        "violated_property_ids": [
+          "P_ASSERT_DONE_AFTER_EIGHT_ENABLED_UPDATES"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_accumulator_update_direction_wrong",
+    "canonical_dut_id": "317",
+    "hashes": {
+      "mutation_catalog_sha256": "3d516a9de463375c0ca7bdc4d16fc85a18740f39eb124ef5c58b71dce1ed68ff",
+      "score_deck_sha256": "1e00072d91ef5261cf967c86983c6f4a2f15e8fc858c257a4815bac3214ebe8b",
+      "task_certification_sha256": "68a0f0d28929c6ae5893a25d7776f30b9ce318e106d989dc1d43bdb74908f1eb",
+      "task_record_sha256": "2c9e69607390af363c725137a253e0421c4dc5fa47bb57ead1b1dad9e3b8f265"
+    },
+    "release_dir": "317-capacitor-mismatch-calibration-engine"
+  }
+}

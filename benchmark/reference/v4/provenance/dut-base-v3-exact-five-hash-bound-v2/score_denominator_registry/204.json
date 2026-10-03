@@ -1,0 +1,78 @@
+{
+  "family_id": "204",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_denominator/certification.json",
+        "certification_sha256": "d9d60f9bcdc89d6b324f03eb881c9e3a2f7b8f7383fabd787525708adaf639a5",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "2792c0fccfae76287cfa0bded44e8fe804963bd28232f2a2195681b39e00d6d1",
+        "mutation_id": "neg_002_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_denominator/certification.json",
+        "trigger_condition": "Uses half the required MSB weight for din5.",
+        "violated_property_ids": [
+          "P_TEXT_WEIGHTED_CODE_16_DIN5_8"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_unipolar_output/certification.json",
+        "certification_sha256": "06ab3716905e6ad89716aa550e400681a6ce4b2aa87e1cb9b29d3313850ff08f",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "9c359432960d48e2995357ddb1a1d9f3cf0153456bfc15b40b6a16fbe66addad",
+        "mutation_id": "neg_003_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_003_unipolar_output/certification.json",
+        "trigger_condition": "Omits the bipolar minus-vdd offset.",
+        "violated_property_ids": [
+          "P_EACH_DIN_TERM_IS_1_WHEN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output/certification.json",
+        "certification_sha256": "0983fd7ed44a0dd94617c8fff46ee3422799266402c250828de342ba9b386e71",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "7169cdee41183ca9ffe55ab890879f3c1d13c72765f4e106a1d975fc8c4be84b",
+        "mutation_id": "neg_004_half_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output/certification.json",
+        "trigger_condition": "Drives aout at half amplitude.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_RDY_CROSSING_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "ec959497dd1f6f328fa6a5a4c09745725f9387bc0d36d9ec5ff6228e0586e519",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "290a067f8de79a1529f512c6e4390f70d6a5a58aae52a1fd0670c9f8253a7fff",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_RDY_CROSSING_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2ed821d387c36b94f3c9b587d890bfdb14f228259860bb53ede6b69cecfe3be8",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6eb5d56d5f63878a2790b823124880a09b67edcd19b1b9c8629ada6ae780d891",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "VA DAC 6b SE: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_TEXT_WEIGHTED_CODE_16_DIN5_8"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_denominator",
+    "canonical_dut_id": "204",
+    "hashes": {
+      "mutation_catalog_sha256": "0b7c79600fb61f55da43d93ef4ceb979aa0f7a5b9b7e27eece85e0f4a03e173b",
+      "score_deck_sha256": "bcce109c09a40d18c33256258e9986892aee11085852d3c39d38f556436676cd",
+      "task_certification_sha256": "e7f279d154674a10095b52498dafaf85b627442f541a1001b6a9f801a88460fa",
+      "task_record_sha256": "00ed675b6d7c56483547e55c911e5290b15d0f219c26f732e3df38571b5ce5df"
+    },
+    "release_dir": "204-va-dac-6b-se"
+  }
+}

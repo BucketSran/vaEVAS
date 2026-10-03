@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l1_uvlo_brownout_detector",
+  "task_id": "vbr1_l1_uvlo_brownout_detector:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Bias Reference and Power Management",
+    "base_function": "UVLO/brownout detector"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_uvlo_brownout_detector/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_uvlo_brownout_detector/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_uvlo_brownout_detector/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_uvlo_brownout_detector/forms/dut/gold/tb_uvlo_brownout_detector.scs",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_uvlo_brownout_detector/forms/dut/gold/uvlo_brownout_detector.va"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

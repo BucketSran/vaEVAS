@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "072",
+  "checker_task_id": "v4_072_aperture_delay_track_and_hold",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "cf99bba61061bbd4f77de77efb54d6e8a3dea79bd20a351b3eaff9436e601188",
+    "checker_profile.json": "7ddaeaa1f179f68025224cef3e4058cc1465c98c046b3fdb31661d32e5f94eb9",
+    "derivation_manifest.json": "6c9e784d57684060d2dea1cd0e5943cf8dce29455fc4a9949cc6996dd71661b9",
+    "family_spec.json": "c98697dbe527499fbf0b007b4e68fe9f3beada52d09ac3abc4c3fbc0f620f44d",
+    "harness_spec.json": "ca3f6929f0323cf83164707f33b5470dc24cde828868b579a2a0e5c29911c6ed",
+    "mutation_catalog.json": "e49594dc583e2d208a4462a6d845864b1492259da509441a327694da8c87fc38",
+    "profiles/feedback.json": "d738116f446edc69e0aaa4fa6e8ced218d8dc7ae3c6c56da220ca2713789eaae",
+    "profiles/score.json": "ddd9e455bd0043ea346086f8b5e9ae4cbec1f2e60b12c7c0328a861cddf0d6e6",
+    "score_tb.scs": "f72afdf0365b36f039d3641eb4a2cffc8953fb3c5a446748b1032676e9ec6b0c",
+    "solution_tree": "1caa35f54000cb28335952e9593aa24263910d340a302c15ee1b2b010bb6e106",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "03eb27a7ce2b3b4c497565a2a3c39d25186a1c9bfb925ee16d353ddbd9cbda7e",
+    "instruction.md": "ec1385f6149649d2da2637bd8e1e49984d8cf5ddaca6db23c2620f83c69ca1f4",
+    "public_contract.json": "6eb3237777c049154e4a14ecc07930f1d038b683db2b1bcfcdef2fabedf47d50"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "cf99bba61061bbd4f77de77efb54d6e8a3dea79bd20a351b3eaff9436e601188"
+  },
+  "release_dir": "072-aperture-delay-track-and-hold",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "072-aperture-delay-track-and-hold",
+  "support_root": "",
+  "target_artifacts": [
+    "sample_hold_aperture_ref.va"
+  ]
+}

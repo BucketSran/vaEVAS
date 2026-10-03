@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_gain_driver.va"
+  ],
+  "canonical_dut_source_slug": "130-differential-gain-driver",
+  "checker_task_id": "v4_130_differential_gain_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3134ddfe7b4c61c5cc33b0521d1681bf63be0152eeb007666206f529abb2a3fc",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "723d65fce9990296567873bd6a2c88bd0883ce3abf1011d149384bbe1def5259",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c1534eb4fda2ac0d2570166ac1b0b6ebddc06faf220b1b0891aa8e4bb9545af0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "130",
+  "family_spec_sha256": "6614a9321605b86198067739a0cd7f92bd4c090716df008ff9687e32edaa9be0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0aab982079fc5abb3709e9c9462451a85d762527d6df60d0abe6364d7d6d4dfe",
+  "public_contract": "tasks/1130-differential-gain-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "d039522edce5b146bc81752b70996dab44936a1b7d21f61f2bea9c31e1091e57",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1130-differential-gain-driver-bugfix",
+  "task_id": "v4-1130"
+}

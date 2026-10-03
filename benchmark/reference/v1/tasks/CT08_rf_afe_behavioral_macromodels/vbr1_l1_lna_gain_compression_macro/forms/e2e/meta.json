@@ -1,0 +1,31 @@
+{
+  "id": "vbr1_l1_lna_gain_compression_macro_e2e",
+  "task_id": "vbr1_l1_lna_gain_compression_macro_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_lna_gain_compression_macro",
+  "family": "end-to-end",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "lna_gain_compression_macro.va",
+    "tb_lna_gain_compression_macro.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "small_signal_gain_present",
+    "large_signal_compression_visible",
+    "compressed_output_bounded"
+  ],
+  "designed_source": true
+}

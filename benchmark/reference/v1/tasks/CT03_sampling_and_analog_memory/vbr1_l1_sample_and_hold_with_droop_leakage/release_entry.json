@@ -1,0 +1,159 @@
+{
+  "id": "vbr1_l1_sample_and_hold_with_droop_leakage",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_sample_and_hold_with_droop_leakage",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Sampling and Analog Memory",
+  "base_function": "Sample-and-hold with droop/leakage",
+  "package_status": "current_l1_seed_with_review",
+  "score_surface": "model-capability",
+  "source_base_id": "leaky_hold",
+  "canonical_kernel": "held_value_decay",
+  "source_registry_status": "needs_review",
+  "source_evidence_status": "main120_dual_pass",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/sample-hold/vbm1_leaky_hold_dut",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "tb",
+      "source_path": "tasks/tb-generation/voltage/sample-hold/vbm1_leaky_hold_tb",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "bugfix",
+      "source_path": "tasks/bugfix/voltage/sample-hold/vbm1_leaky_hold_bugfix",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/sample-hold/vbm1_leaky_hold_e2e",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut/gold/leaky_hold.va",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/dut/gold/tb_leaky_hold_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/dut/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_dut",
+      "historical_source_task_id": "vbm1_leaky_hold_dut"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb/gold/leaky_hold.va",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/tb/gold/tb_leaky_hold_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/tb/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_tb",
+      "historical_source_task_id": "vbm1_leaky_hold_tb"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/gold/tb_leaky_hold_buggy.scs",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/bugfix/gold/tb_leaky_hold_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_bugfix",
+      "historical_source_task_id": "vbm1_leaky_hold_bugfix"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e/gold/leaky_hold.va",
+        "benchmark-vabench-release-v1/tasks/CT03_sampling_and_analog_memory/vbr1_l1_sample_and_hold_with_droop_leakage/forms/e2e/gold/tb_leaky_hold_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/e2e/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_e2e",
+      "historical_source_task_id": "vbm1_leaky_hold_e2e"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

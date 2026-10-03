@@ -1,0 +1,79 @@
+{
+  "family_id": "186",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_dout_mapping/certification.json",
+        "certification_sha256": "cc42f3265ade971eea6e8c5e850175e6899015dd25d9d451571667eb3a9b4db5",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "402fea7e5a85409523680bf34ee9b67fc80db5b7689569aef16cb21c5ccc4430",
+        "mutation_id": "neg_004_wrong_dout_mapping",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_dout_mapping/certification.json",
+        "trigger_condition": "Maps the previous p state to dout in the wrong bit order.",
+        "violated_property_ids": [
+          "P_DOUT_BIT_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_test_override/certification.json",
+        "certification_sha256": "65c0a597cbd08efe5fca2a99b89cb2dce17e5389b1bb49921f10286087b05896",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "8ac145bfc3b2cd383b360b3b5c76fd3007ce7fbe978be9fe283c0cfe06e58fa4",
+        "mutation_id": "neg_003_no_test_override",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_test_override/certification.json",
+        "trigger_condition": "Drives the internal conversion clock output at half amplitude.",
+        "violated_property_ids": [
+          "P_LOGIC_OUTPUT_LEVELS",
+          "P_TEST_OVERRIDE_BEHAVIOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "1c76cb938be7455020f242db754cc07f5a98c8c0b0c87a1ebc21730182d84592",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "12770a3be779d5afd5428f809570fe94bc81326670b1839e3d4d73633efb1f0b",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "SARFEND Logic 4b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CONVERSION_RESET_AND_PREVIOUS_WORD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_comparator/certification.json",
+        "certification_sha256": "bb44cf8f8b5669ce4915da8e76f09399f844a665f719c03f21a5d03ec1a65733",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "21007d6fff73a920a6307f226f2166f1a54acd2f685b04751c8f2be1412c8dd4",
+        "mutation_id": "neg_002_inverted_comparator",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_comparator/certification.json",
+        "trigger_condition": "Uses dcompb>dcomp as the SAR comparator decision.",
+        "violated_property_ids": [
+          "P_SAMPLE_AND_COMPARATOR_DECISIONS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "f8292b16966a63d1b07e9875509d26b7c65818c9974c30e9cde7d785b81aa8aa",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "76cf3e0a13d87db549653e2b764f3e31ea2b06e5b2b8fe6014165ae5cd63f014",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_LOGIC_OUTPUT_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_dout_mapping",
+    "canonical_dut_id": "186",
+    "hashes": {
+      "mutation_catalog_sha256": "67655f9564344526b509405c926c7a4abef9d08607f961bbdd7a5af526a791a1",
+      "score_deck_sha256": "025b147d082a73a2ab0cd6e59d28e08ad0a373d9627fd43a617330e98ddc7c68",
+      "task_certification_sha256": "9e643668cf2d9a4037b17eabe6a9b4969e66633c869a9f573e881b9521be35fb",
+      "task_record_sha256": "0a288dbe03f6a1fda4c924d4c2f40028f635ebd3533934efd0143281cd60b877"
+    },
+    "release_dir": "186-sarfend-logic-4b"
+  }
+}

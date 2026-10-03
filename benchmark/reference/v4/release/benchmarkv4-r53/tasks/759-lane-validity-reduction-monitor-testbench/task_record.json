@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "259-lane-validity-reduction-monitor",
+  "checker_task_id": "v4_259_lane_validity_reduction_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "63778fbffc5453508e110977d85fdaf0be165195234dda55f411f5668376b87d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "20a424d53423b6e52601f0b17ff956e0d64fe6e14bf792adb09b5b9458445475",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "63778fbffc5453508e110977d85fdaf0be165195234dda55f411f5668376b87d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "1570c9364f554e363f897a8039f33c6b83fc376b6f1bc93418cb16e7c02b7bdd",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "f57573c32f72a46abaf905ed07f220bc09de07cd9f523cb6a4c33773b6f0e59a"
+  },
+  "family_id": "259",
+  "family_spec_sha256": "131792e394e586dc72d1739be1de39229d8f221668f35a84ed39b54bcbb1b331",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c999e0e9a2994c5050a4dfc9a5b1c537ddb8f55c030eba7a3ba36de6cb369708",
+  "public_contract": "tasks/759-lane-validity-reduction-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "ab64447ce10d615f4a34e373c00b22b306ac7f948352445e309d7ee5c0313933",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/759-lane-validity-reduction-monitor-testbench",
+  "task_id": "v4-759"
+}

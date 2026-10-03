@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "transition("
+    - "@(cross("
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "proportional_step_decays"
+    - "integral_residual_accumulates"
+    - "metric_asserts_after_valid_updates"
+    - "reset_clears_integrator"
+    - "filtered_output_bounded"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Designed release source; no imported historical EVAS/Spectre dual evidence yet."

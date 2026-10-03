@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "284",
+  "checker_task_id": "v4_284_calibration_affine_transform",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "a684b92eb2f15e18fb56b0a29707b62b7a5e3af9a973c425266d083030356c01",
+    "checker_profile.json": "8300090ab2d1b1f4f0a472a0d23d963ae1b9ec3238416fed9a9112fcb590f203",
+    "derivation_manifest.json": "766f69e7480391198a11e7934212078aca9d7dcaba46fb406bc314614ec918ca",
+    "family_spec.json": "00031208e74062ed723c3f1bebed77b479ac14cfbad676c1f67bb888730afd87",
+    "harness_spec.json": "0a4caedb422c2a9e64d2b99d014b6cdbc03f3b8a9481e4de8f29483bd9131139",
+    "mutation_catalog.json": "2155ab09709a8c4a5189e22117440ca3992c2efdb0743a0b5248eb74649f8688",
+    "profiles/feedback.json": "371a9fb0a097c390329a878cb3bef7d677982717df1fe40c34160c2abca08f9d",
+    "profiles/score.json": "53e06b10ad2aea23bdf147d15d07cab67827f819c8d8193088c696315fd5c55a",
+    "score_tb.scs": "f10d3c724fc88271f08f9c69fbc968f45704c8bc9bf315fccb053a72453e8e21",
+    "solution_tree": "b315cf185ba65c1e83899864398f8070ca8d37c32a81705725f70efcc9427343",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b71df6dc1b387a85c6ff64f44d53810b29181dea5d84c3ec89901500f4bbca41",
+    "instruction.md": "a42912b20ec2067bf57659b94b1bd07dad3bf665cc91ae49d3de64e4f3efd63a",
+    "public_contract.json": "80138f40c0784b1f54a7eb6266daa619f3f8a4af4b558167db2106306b4689ef"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "a684b92eb2f15e18fb56b0a29707b62b7a5e3af9a973c425266d083030356c01"
+  },
+  "release_dir": "284-calibration-affine-transform",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "421-calibration-affine-transform",
+  "support_root": "",
+  "target_artifacts": [
+    "calibration_affine_transform.va"
+  ]
+}

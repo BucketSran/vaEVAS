@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "resistor_ladder_monotonic_decoder.va"
+  ],
+  "canonical_dut_source_slug": "318-resistor-ladder-monotonic-decoder",
+  "checker_task_id": "v4_318_resistor_ladder_monotonic_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "340ffcb2ebb1d0cf88cb79ccdf8318ad81cf2dbddf5d0362c5106c1375524c2f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7863c1244cafb3c18ca6513b484909806006c1cc9f3a32755496f89f6d969fde",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "b4287cb6798a878958c781e92faf66bfb14a7804b4172fd82740f9078c10cd58",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "318",
+  "family_spec_sha256": "abbf12010a03af2de9769b1eb2fb91069e790664bde1b5124fbe33d2b3429a61",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6224a3c1d16e0336478344b9c7d85da3945aaba453d4836a34b77ffd6383d8ad",
+  "public_contract": "tasks/318-resistor-ladder-monotonic-decoder/public_contract.json",
+  "public_contract_sha256": "72bf5b6b2d1001abb473682843379040eabb59548d805b09ac389c76eda53416",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/318-resistor-ladder-monotonic-decoder",
+  "task_id": "v4-318"
+}

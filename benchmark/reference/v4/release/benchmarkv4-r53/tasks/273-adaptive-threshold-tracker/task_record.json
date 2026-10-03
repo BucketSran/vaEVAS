@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "adaptive_threshold_tracker.va"
+  ],
+  "canonical_dut_source_slug": "273-adaptive-threshold-tracker",
+  "checker_task_id": "v4_273_adaptive_threshold_tracker",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "11006e2aa82f5c0b280dee3efba955b22b5ab70803c790c9e9090977a5513081",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a5abc437dc996d6eca3f9afa190335e514c9a69b49db49e6134597d3ee54475a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "01c4c217c3ce0f31a2d1da16f6721109b7f685c2af61df35235988cebd3454bb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "273",
+  "family_spec_sha256": "492c8881c715ab4f6b2b4e26aed9dafa10d1dd15d61e1818b31245826f68db11",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a7a0b352d4169f4daf50ade80d363d6e298fc83d26201287ce1724618c337d06",
+  "public_contract": "tasks/273-adaptive-threshold-tracker/public_contract.json",
+  "public_contract_sha256": "c66d7337d99353827c666caddc49ba567091ef7f8e3ba70f763d1b6d7ba72bc6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/273-adaptive-threshold-tracker",
+  "task_id": "v4-273"
+}

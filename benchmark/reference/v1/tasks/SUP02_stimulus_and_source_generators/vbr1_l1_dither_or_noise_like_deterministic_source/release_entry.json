@@ -1,0 +1,144 @@
+{
+  "id": "vbr1_l1_dither_or_noise_like_deterministic_source",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_dither_or_noise_like_deterministic_source",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Stimulus and Source Generators",
+  "base_function": "Dither or noise-like deterministic source",
+  "package_status": "selected_l1_addition",
+  "score_surface": "model-capability",
+  "source_base_id": "dither_or_noise_like_deterministic_source",
+  "canonical_kernel": "deterministic_analog_dither_source",
+  "source_registry_status": "selected_from_existing_task",
+  "source_evidence_status": "selected_source_pending_dual",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "dut_companion_from_e2e:noise_gen_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "tb",
+      "source_path": "tb_companion_from_e2e:noise_gen_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/noise_gen_smoke",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": false
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/gold/noise_gen.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/gold/noise_gen_ref.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/dut/gold/tb_noise_gen_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "dut_companion_from_e2e:noise_gen_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/dut/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_dither_or_noise_like_deterministic_source_dut",
+      "historical_source_task_id": "vbr1_l1_dither_or_noise_like_deterministic_source_dut"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/gold/noise_gen.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/gold/noise_gen_ref.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/tb/gold/tb_noise_gen_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tb_companion_from_e2e:noise_gen_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/tb/spectre_result.json",
+      "release_source_task_id": "vbr1_l1_dither_or_noise_like_deterministic_source_tb",
+      "historical_source_task_id": "vbr1_l1_dither_or_noise_like_deterministic_source_tb"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/gold/noise_gen.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/gold/noise_gen_ref.va",
+        "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_dither_or_noise_like_deterministic_source/forms/e2e/gold/tb_noise_gen_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/end-to-end/voltage/noise_gen_smoke",
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_dither_or_noise_like_deterministic_source/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_dither_or_noise_like_deterministic_source/e2e/spectre_result.json",
+      "release_source_task_id": "noise_gen_smoke",
+      "historical_source_task_id": "noise_gen_smoke"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

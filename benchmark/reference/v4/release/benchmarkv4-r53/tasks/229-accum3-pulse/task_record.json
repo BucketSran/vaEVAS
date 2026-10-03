@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "accum3_pulse.va"
+  ],
+  "canonical_dut_source_slug": "229-accum3-pulse",
+  "checker_task_id": "v4_229_accum3_pulse",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "1d7422d6dced63eb7d2e04cfe01837c4994746587bd1ad5b2e9229e5457cf5ba",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "62b0bee6bf059b7b01d4112e6990def0a97f2ca1ea3e2ae2fe143dc2017693fe",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "898f92eb419a9ba31e5e05b766cd657ef4a2d912ac04d370f57a81f8dfc8c1c4",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "229",
+  "family_spec_sha256": "0b29b2d49c5e3d523e54e65874aa0dfc13e461d6ea3f832b40132dfdcc837718",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c894c5e7dae8977af49bd6ebd39b649126128b3ca4daed5a595c4df42e7758bd",
+  "public_contract": "tasks/229-accum3-pulse/public_contract.json",
+  "public_contract_sha256": "44bda9a8fc4c3d1a5b3204fce1f2b0c046329e6be3229593739264ec3b872654",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/229-accum3-pulse",
+  "task_id": "v4-229"
+}

@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "ad8df9ee0cabab7cec92f03f1aeacf496ec68c40675ab073908fed7a6b61d15d",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_RESET_CLEAR_RESET_SAMPLE_SIGNAL",
+    "P_ON_A_RISING_CLK_EDGE_WITH",
+    "P_ON_A_LATER_RISING_CLK_EDGE",
+    "P_DRIVE_VOUT_AS_VCM_PLUS_THE",
+    "P_EXPOSE_THE_RESET_SAMPLE_ON_OFFSET",
+    "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

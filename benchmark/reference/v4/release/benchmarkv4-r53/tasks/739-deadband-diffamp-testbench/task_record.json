@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "239-deadband-diffamp",
+  "checker_task_id": "v4_239_deadband_diffamp",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "934d339c62da2b7f640b32b5dce43a24390033679dbb7e08c54446faab79e3f1",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "e208f30f948561f7279278c75f672d99076ef5676c13f95119afa38548f706cc",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "934d339c62da2b7f640b32b5dce43a24390033679dbb7e08c54446faab79e3f1",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "410174cf85edfdc8d7fe83d427fa8db31689b16480202a2a725d5289b6e60581",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "4b03cc63f8aab0505e9ba16d0fc2c891625e4e23da8024882c073b802acaf6fb"
+  },
+  "family_id": "239",
+  "family_spec_sha256": "c5f6f01b1af7c36ad41346f07eb246d5a3884f08550b1c2df7558dcfcad59df5",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "86e18d21bd238061a03e140edff4ba2cff5212fd3daace779713433e9236a3c0",
+  "public_contract": "tasks/739-deadband-diffamp-testbench/public_contract.json",
+  "public_contract_sha256": "e2e6a0b1156c04d248c4c2f779f84f7d3a17223ae160c2c618c31e9d8386e683",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/739-deadband-diffamp-testbench",
+  "task_id": "v4-739"
+}

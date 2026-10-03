@@ -1,0 +1,127 @@
+{
+  "id": "vbr1_l1_crossing_metric_writer",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_crossing_metric_writer",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Crossing metric writer",
+  "package_status": "current_l1_seed",
+  "score_surface": "model-capability",
+  "source_base_id": "file_metric_writer",
+  "canonical_kernel": "crossing_metric_file_output",
+  "source_registry_status": "release_seed_with_extra_check",
+  "source_evidence_status": "main120_dual_pass",
+  "source_tasks": [
+    {
+      "form": "tb",
+      "source_path": "tasks/tb-generation/voltage/measurement/vbm1_file_metric_writer_tb",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/measurement/vbm1_file_metric_writer_dut",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/measurement/vbm1_file_metric_writer_e2e",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb/gold/file_metric_writer.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/tb/gold/tb_file_metric_writer_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/tb/spectre_result.json",
+      "release_source_task_id": "vbm1_file_metric_writer_tb",
+      "historical_source_task_id": "vbm1_file_metric_writer_tb"
+    },
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut/gold/file_metric_writer.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/dut/gold/tb_file_metric_writer_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/dut/spectre_result.json",
+      "release_source_task_id": "vbm1_file_metric_writer_dut",
+      "historical_source_task_id": "vbm1_file_metric_writer_dut"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/file_metric_writer.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/metric.out",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_crossing_metric_writer/forms/e2e/gold/tb_file_metric_writer_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_crossing_metric_writer/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_crossing_metric_writer/e2e/spectre_result.json",
+      "release_source_task_id": "vbm1_file_metric_writer_e2e",
+      "historical_source_task_id": "vbm1_file_metric_writer_e2e"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

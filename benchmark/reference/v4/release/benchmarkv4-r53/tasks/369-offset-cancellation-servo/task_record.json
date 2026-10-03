@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "offset_servo_top.va",
+    "offset_sampler.va",
+    "trim_dac.va",
+    "error_integrator.va"
+  ],
+  "canonical_dut_source_slug": "369-offset-cancellation-servo",
+  "checker_task_id": "v4_369_offset_cancellation_servo",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a64f50818b42e334f5ff9531e02382a12f289ea0cced1508a619fb6d9ca1ef70",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0a8079453563917b8bf4bb2950fb8efea40e24e7e8f77036450ece6c074c488c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8f8e630f3025cd3995b9da492ccc53b9fdf291c58cb09c1b3c2e7019b5317860",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "369",
+  "family_spec_sha256": "75187efa6b83a65562a3c5d86db3edb5f9be4a7d5c96ca88563a7c1ef5b0ecbe",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "21c80418f856e7fb4759bbeb7f0dfc01183fbd140ba6d05689fbf12d6524842c",
+  "public_contract": "tasks/369-offset-cancellation-servo/public_contract.json",
+  "public_contract_sha256": "b47f59ef338eb48ccdbc99a992ba0ec4613329438f3a7cdd849bac6d5ed1f424",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/369-offset-cancellation-servo",
+  "task_id": "v4-369"
+}

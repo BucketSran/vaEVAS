@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l2_iq_downconversion_chain_tb",
+  "task_id": "vbr1_l2_iq_downconversion_chain_tb",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_iq_downconversion_chain",
+  "family": "tb-generation",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_iq_downconversion_chain.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "quadrature_iq_phase_sequence",
+    "lo_iq_phase_monitors_are_visible",
+    "mixer_outputs_track_lo_polarity_and_input",
+    "i_and_q_outputs_are_distinct",
+    "baseband_outputs_follow_mixer_paths",
+    "common_mode_hold_when_input_centered"
+  ],
+  "designed_source": true
+}

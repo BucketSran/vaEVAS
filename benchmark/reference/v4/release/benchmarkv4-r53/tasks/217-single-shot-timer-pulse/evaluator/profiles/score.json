@@ -1,0 +1,22 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "5381f344622bc18b3a6cf4bad925bb3dfd7796558acd06e5ff331796b670ef5e",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_DETECT_RISING_VIN_CROSSINGS_AT_VTRANS",
+    "P_ON_EACH_QUALIFYING_RISING_EDGE_DRIVE",
+    "P_USE_A_TIMER_TO_SCHEDULE_THE",
+    "P_GENERATE_ONE_OUTPUT_PULSE_PER_INPUT",
+    "P_HOLD_THE_LOW_OUTPUT_LEVEL_BETWEEN"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

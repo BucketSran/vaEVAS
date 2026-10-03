@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "offset_halving_search.va"
+  ],
+  "canonical_dut_source_slug": "205-offset-halving-search",
+  "checker_task_id": "v4_205_offset_halving_search",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3e76bb6dbd9d4d41433bc86985c5024baae99b8e6ab8829b5633124d1f9ef341",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e4e63c1d9a96143fba7dbf130666c696673cf8f8ccf66f662f8f3bad6af687cb",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3232779f0680a6edd1fe018643421f4abb37a82d5f856cf354482e68187f8b8e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "205",
+  "family_spec_sha256": "1b185feb9e582636429eb662263552a4eb9271b4a410f68c3222cbdfcb691a75",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6f625e2e0d410fef8a2612b9c1fe317c87055519f4a86609c037f1e10ad0d3c7",
+  "public_contract": "tasks/205-offset-halving-search/public_contract.json",
+  "public_contract_sha256": "be5e01a9e760916e9f2a875178df7ebf9285f98a07e7d2a20781c5a05afa7e33",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/205-offset-halving-search",
+  "task_id": "v4-205"
+}

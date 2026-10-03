@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "saturation_recovery_limiter.va"
+  ],
+  "canonical_dut_source_slug": "269-saturation-recovery-limiter",
+  "checker_task_id": "v4_269_saturation_recovery_limiter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f6ec6dd5e858ffe0f852fda7e4eff08405f281af233218f23df5d546ca21b374",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "006db7524fb62276295a426538d9551f53d0d3d718d7c015c00e215e90b93089",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "c449f596a937907768a77da6b192977c2d5b59010a5e3d4e2fbdd72abd56b55d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "269",
+  "family_spec_sha256": "46a32763c11e8c15f03d8dda059967ad5da9553d2cd21acda36e4eadcf003d12",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fd0f7001b38c6385631ab3e6330af87b9f72ed756d3d19a9a24b05f7c9b5308d",
+  "public_contract": "tasks/1269-saturation-recovery-limiter-bugfix/public_contract.json",
+  "public_contract_sha256": "200be8006e638c2f9771e96faea139d23394507892f6725c771375121039c527",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1269-saturation-recovery-limiter-bugfix",
+  "task_id": "v4-1269"
+}

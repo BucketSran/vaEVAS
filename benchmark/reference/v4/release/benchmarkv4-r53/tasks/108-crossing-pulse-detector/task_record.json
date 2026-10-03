@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "source_crossing_pulse_detector.va"
+  ],
+  "canonical_dut_source_slug": "108-crossing-pulse-detector",
+  "checker_task_id": "v4_108_crossing_pulse_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "353f044698608d14873182dc74d6de82d7ce566e0d691418ffb50047f98eee66",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c05fc2ec2c528da57ff32b1c4b7271480669b19aba46a7b7a9813682290627a5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "8343d9fa088dafa340cb838036cce759f58ffe1c615f90d9cb0b673837dba6c3",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "108",
+  "family_spec_sha256": "1ce5ad15308a750941790f01950acc2a04ab9337b71a3c36d0afda006fa744de",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "76eb61416935a6c27551048c7b074624c2f1a04ad6e7349a87ba18079c78a180",
+  "public_contract": "tasks/108-crossing-pulse-detector/public_contract.json",
+  "public_contract_sha256": "19f553243ee4bd3bffe0cb879e06b866684946263bf0994d466d67bd22f0b6d7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/108-crossing-pulse-detector",
+  "task_id": "v4-108"
+}

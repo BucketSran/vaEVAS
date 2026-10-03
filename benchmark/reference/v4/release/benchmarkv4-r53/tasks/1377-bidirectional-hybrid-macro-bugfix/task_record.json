@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bidirectional_hybrid_macro.va"
+  ],
+  "canonical_dut_source_slug": "377-bidirectional-hybrid-macro",
+  "checker_task_id": "v4_377_bidirectional_hybrid_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5e699c82863ba300d5dd4bee44d142a1eaed5610bee818f3fcdf0f2fb313c167",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b7b90ca0562cf6b882d3d62edf78dd03dd857673e724b8c1aeac34b04c260803",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9acf700564959f05d032fe2bd762ce320c0944164a52fa9f44737f86d7afe0b3",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "377",
+  "family_spec_sha256": "18e9f7a0611e5a9aad274760c88246ef4b2b79997928f97f410c3854e73096a6",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "daf17e0c8b38eee4816e9aa1b53a9ea8554b481b0171b6f30accab6a09ac92d7",
+  "public_contract": "tasks/1377-bidirectional-hybrid-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "f862c2d79b3a8f3b485fef3cea749d58f4c75952c60b56850d0c12f3d364f620",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1377-bidirectional-hybrid-macro-bugfix",
+  "task_id": "v4-1377"
+}

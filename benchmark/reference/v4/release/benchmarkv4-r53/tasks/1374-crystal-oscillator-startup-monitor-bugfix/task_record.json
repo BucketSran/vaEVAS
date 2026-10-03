@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "crystal_oscillator_startup_monitor.va"
+  ],
+  "canonical_dut_source_slug": "374-crystal-oscillator-startup-monitor",
+  "checker_task_id": "v4_374_crystal_oscillator_startup_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5e29884e4695a130f96536b591cdba6ca6483f13c8ef573655a42e2b34b72834",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "afaf4b18f14ff42184ec314bd14872816ae1187127979d9d15cb8bc5fd2f232b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ab5dbf3304816660b9615fc21b85e471d7c7500cbc1f371b2a868409a69340d8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "374",
+  "family_spec_sha256": "cef84789ae7759a1b5d6cba78b14cecff1a02bf6b2d7018ea9ab32fe18915222",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "de4640ecabcf00b9ad31dbd9ce18451429bd71db4ba9b595461fd867d2dc258f",
+  "public_contract": "tasks/1374-crystal-oscillator-startup-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "ebfbeb2413b9dbb7707e25245a3728ade55d6433098c4fb4dc0247ddfb74c6cc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1374-crystal-oscillator-startup-monitor-bugfix",
+  "task_id": "v4-1374"
+}

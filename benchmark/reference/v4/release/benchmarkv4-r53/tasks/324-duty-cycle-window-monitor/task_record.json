@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "duty_cycle_window_monitor.va"
+  ],
+  "canonical_dut_source_slug": "324-duty-cycle-window-monitor",
+  "checker_task_id": "v4_324_duty_cycle_window_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e427dd7069cb028881eab1032058727e32d7683e99fd78dfec6067d923c1712a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a0ab71ba463a424258e5cedebfa63da2170d9abbd48f0795ec4ca4321934b21e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "edfaa0958e9d97f859d134b54d92c17ed846e09cc4a31473c9280a9e84d6f7aa",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "324",
+  "family_spec_sha256": "366664ab3a80ec6fc01424acfa5350255ee20255500040180e25e365c8cfc866",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "baae7630eee64b1780d8b7b975ee49cad211b64be1304e9a269664dfc0138f98",
+  "public_contract": "tasks/324-duty-cycle-window-monitor/public_contract.json",
+  "public_contract_sha256": "e246634cc3c658170e6a66e426996fa19b6379835949fd6625e15e874aa8dc5d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/324-duty-cycle-window-monitor",
+  "task_id": "v4-324"
+}

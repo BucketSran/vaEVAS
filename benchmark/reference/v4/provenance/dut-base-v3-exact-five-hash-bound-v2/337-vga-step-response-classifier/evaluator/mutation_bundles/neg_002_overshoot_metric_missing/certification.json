@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ON_EACH_ENABLED_RISING_CLK_EDGE satisfy the public contract; fault class overshoot_metric_missing is rejected",
+    "observed": "EVAS: v4_1035 checked=511 codes=[0, 1, 3, 5, 6] reset_clear=True disabled_clear=True high_gain_seen=True overshoot_seen=True settled_seen=True vout_errors=0 metric_errors=292 settled_errors=0 clear_errors=0; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=0; P_APPLY_BOUNDED_SETTLING_WITH_A_CODE mismatch_count=0; P_EXPOSE_OVERSHOOT_MAGNITUDE_ON_OVERSHOOT_METRIC mismatch_count=267; P_ASSERT_SETTLED_AFTER_TWO_CONSECUTIVE_UPDATES mismatch_count=0; diagnostic_schema=v4-checker-diagnostic-v1 status=fail category=behavior_mismatch event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace",
+    "violated_property_ids": [
+      "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_337_vga_step_response_classifier",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 760
+  },
+  "family_id": "337",
+  "inputs": {
+    "checker_profile_sha256": "8a804a3c25de275cba98a16bc8d4de47d67476c31fc813706965cfa18f769587",
+    "harness_spec_sha256": "cb7ca2c166a5af64c17886f4dfcec024d4a6884022bc4ed2042d88dc1ea26862",
+    "mutation_bundle_sha256": "7cb97983f08d83fa5d60682a52356690b783ebb1c9c5a3a0b3c15305f6bedeee",
+    "profile_sha256": "7d2e79faacfeca6731236d61c3bb1a1e56ddeda3e3825519d622d171ec9c8442"
+  },
+  "mutation_id": "neg_002_overshoot_metric_missing",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

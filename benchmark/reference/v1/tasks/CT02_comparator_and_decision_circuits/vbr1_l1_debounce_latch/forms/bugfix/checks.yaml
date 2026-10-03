@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "short_pulse_window_stays_low"
+    - "stable_high_window_latches_high"
+    - "reset_low_clears_state"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: rising-edge path bypasses debounce timer and latches immediately."
+parity:
+  required: true
+  tolerance_notes: "Samples avoid signal edges and the timer firing instant."

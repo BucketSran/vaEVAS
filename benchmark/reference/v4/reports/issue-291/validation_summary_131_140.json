@@ -1,0 +1,37 @@
+{
+  "schema_version": "v4-issue-291-validation-summary-v1",
+  "issue": 291,
+  "family_range": "131-140",
+  "status": "PASS",
+  "claim_boundary": {
+    "acceptance_backend": "EVAS 0.8.2 Rust with per-case runtime logs",
+    "spectre_required": false,
+    "spectre_status": "not_applicable"
+  },
+  "runtime_source": {
+    "git_commit": "a72fff338bc81b2ebc144b7da97a82a663c776e2",
+    "git_describe": "v0.8.2",
+    "backend": "evas-rust"
+  },
+  "results": {
+    "tests": "90 passed, 1 skipped",
+    "static_profile_parity": "10/10 PASS",
+    "static_repair_gate": "10/10 PASS",
+    "reference_gold": "10/10 PASS",
+    "active_mutations": "50/50 killed",
+    "affine_gold": "10/10 PASS",
+    "affine_mutations": "50/50 killed",
+    "insufficient_excitation": "10/10 explicit failure",
+    "per_case_runtime_logs": "130/130 valid"
+  },
+  "evidence_files": {
+    "gold": "evas2_score_gold_131_140.json",
+    "mutations": "evas2_mutation_kills_131_140.json",
+    "metamorphic": "evas2_metamorphic_131_140.json",
+    "profile_parity": "profile_parity_131_140.json",
+    "repair_gate": "repair_gate_131_140.json",
+    "schema_render": "schema_render_131_140.json",
+    "classification": "classification_131_140.json"
+  },
+  "python_fallback_claimed": false
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "settling_time_measurement_tb.va"
+  ],
+  "canonical_dut_source_slug": "101-settling-time-measurement",
+  "checker_task_id": "v4_101_settling_time_measurement",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9bf1e3b9fa5d79158a9d84620efc6daf56f84e5d412778d98a91e6a05fd9e071",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "95b9bdee43286a7dc0cddb9ad06a59b49a0c573fd8c0c8b929f9efe802ebe75f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f217ecf38e20b6af3bc3c34f2a8a7b2473d6720bee6c02b7a89180ba5c1c5b58",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "101",
+  "family_spec_sha256": "eefb23fc7add6d41f3c48ce132af632df56500c06056afc2c916ccda217afab6",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f8f0ce1b9b149424e463d08aebd0e0151a678239649544f5e5c7900bf2065f96",
+  "public_contract": "tasks/1101-settling-time-measurement-bugfix/public_contract.json",
+  "public_contract_sha256": "7b8754ae5a809fa45a2346ce65291ee212d07c96c1082ea4d324c5641df47108",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1101-settling-time-measurement-bugfix",
+  "task_id": "v4-1101"
+}

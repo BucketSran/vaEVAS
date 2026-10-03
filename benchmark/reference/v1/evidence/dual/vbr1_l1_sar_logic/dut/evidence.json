@@ -1,0 +1,143 @@
+{
+  "release_entry_id": "vbr1_l1_sar_logic",
+  "task_id": "vbr1_l1_sar_logic:dut",
+  "source_task_id": "vbm1_sar_logic_4b_dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "SAR logic"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_sar_logic/dut/gold",
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_sar_logic/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sar_logic/dut/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sar_logic/dut/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_sar_logic/forms/dut/gold/sar_logic_4b.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_sar_logic/forms/dut/gold/tb_sar_logic_4b_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rest-20260526_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_sar_logic/dut/gold",
+    "result_root": "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_sar_logic/dut/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        2.6e-07
+      ],
+      "signals_compared": 7,
+      "samples": 1200,
+      "max_rmse_v": 0.0,
+      "max_abs_v": 0.0,
+      "mean_relative_rms_error": 0.0,
+      "max_relative_rms_error": 0.0,
+      "mean_nrmse": 0.0,
+      "max_nrmse": 0.0,
+      "per_signal": {
+        "clks": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dcomp": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dp_dac_0": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dp_dac_1": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dp_dac_2": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dp_dac_3": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.0,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "rdy": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_sar_logic/forms/dut/gold/sar_logic_4b.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_sar_logic/forms/dut/gold/tb_sar_logic_4b_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

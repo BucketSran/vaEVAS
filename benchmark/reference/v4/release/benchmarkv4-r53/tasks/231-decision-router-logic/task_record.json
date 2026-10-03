@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "decision_router_logic.va"
+  ],
+  "canonical_dut_source_slug": "231-decision-router-logic",
+  "checker_task_id": "v4_231_decision_router_logic",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "de5c0e0519e9772c88ea4e3ea0d013a842c92a1c5a5d7d5f7289ff5f5ed1b542",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f19fa9bd3f182d8ca814547038d335b245ac1b96a269d85f99c652d58f416cca",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "623c1cfbe7fbc1cb68eb17016e1c04aadf6db5633d195d59c251b077ede3b66a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "231",
+  "family_spec_sha256": "875c27c0a2e52b1eac586a8d8a4111813ccf72efb157acb8c9b6f3c547c0c219",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d4cab0bc9a51603979d68f5ff2a388143691b35ac42b2b21c0e436633816e7a6",
+  "public_contract": "tasks/231-decision-router-logic/public_contract.json",
+  "public_contract_sha256": "60063fecc8c94e68646ad886e35990c08d287f24824029cba33b4346a84237a6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/231-decision-router-logic",
+  "task_id": "v4-231"
+}

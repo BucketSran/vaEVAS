@@ -1,0 +1,27 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "thermometer_dac_15seg.va"
+
+V_seg0 (seg0 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_seg1 (seg1 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_seg2 (seg2 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_seg3 (seg3 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+V_seg4 (seg4 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=400p rise=50p fall=50p width=1.4n
+V_seg5 (seg5 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_seg6 (seg6 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_seg7 (seg7 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_seg8 (seg8 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+V_seg9 (seg9 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=400p rise=50p fall=50p width=1.4n
+V_seg10 (seg10 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_seg11 (seg11 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_seg12 (seg12 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=200p rise=50p fall=50p width=1.4n
+V_seg13 (seg13 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=300p rise=50p fall=50p width=1.4n
+V_seg14 (seg14 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=400p rise=50p fall=50p width=1.4n
+V_vref (vref 0) vsource dc=0.9
+V_vss (vss 0) vsource dc=0
+
+XDUT (seg0 seg1 seg2 seg3 seg4 seg5 seg6 seg7 seg8 seg9 seg10 seg11 seg12 seg13 seg14 vref vss aout) thermometer_dac_15seg
+
+tran tran stop=5n maxstep=100p
+save seg0 seg1 seg2 seg3 seg4 seg5 seg6 seg7 seg8 seg9 seg10 seg11 seg12 seg13 seg14 vref vss

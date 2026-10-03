@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "261-falling-edge-calibration-sampler",
+  "checker_task_id": "v4_261_falling_edge_calibration_sampler",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "806490c4be286c26d37a279480cd0ac07816c5cd2d56400d771b81a509b5cfc4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "fea55158a60503ef0a5352b7c4801ecc44d771fb731e97d2859166b20a1a0dc9",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "806490c4be286c26d37a279480cd0ac07816c5cd2d56400d771b81a509b5cfc4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d501ee0368a81bb1c25b5d464f81792e4fb4ed3e417f5b085d882dc124cc9b5d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7f8b771813715f3d97554d9610b1815daed615b4ce53293e613e23597740ed2b"
+  },
+  "family_id": "261",
+  "family_spec_sha256": "34aa516da1909285419024f44e1e770392a98f04a6035001d1111efdc9a5b24e",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "fecd5bf32b278514bc823cdf266eafcbda7741dce6f7308cefbacf9fad47fc8c",
+  "public_contract": "tasks/761-falling-edge-calibration-sampler-testbench/public_contract.json",
+  "public_contract_sha256": "be6882cdf19878fc3711a7b68a664923bbacb1853ed8984d70da4308ededa185",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/761-falling-edge-calibration-sampler-testbench",
+  "task_id": "v4-761"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "thermometer_bus_encoder.va"
+  ],
+  "canonical_dut_source_slug": "052-thermometer-bus-encoder",
+  "checker_task_id": "v4_052_thermometer_bus_encoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8905a1d7b6a745d0efaed1e52a8724562e1e227906cb2d700ef75e73937187e2",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "690a10129b966c0fdffd10baf35f7f2e3225128f676e84371d8b43dfcf06065f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "14b6a3d62d6a1a1ebb8a103cbb7a39fcd9b998e0a5172397e81f2d598ae7908a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "052",
+  "family_spec_sha256": "18add0d9bb52d1b9aba2e435cb1d0a204657718c6a18c6850fdc6070786acf3f",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "036b0865abcc1dee3604485f505aae5710fc7d6eab6a882c7b745cc511162097",
+  "public_contract": "tasks/052-thermometer-bus-encoder/public_contract.json",
+  "public_contract_sha256": "b55900e6ae3ad48d227baf8938f4dfb8055fe10758841e8e5dbe6a494ccb26ee",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/052-thermometer-bus-encoder",
+  "task_id": "v4-052"
+}

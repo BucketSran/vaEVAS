@@ -1,0 +1,79 @@
+{
+  "schema_version": "v4-calibration-families-v1",
+  "status": "preregistered_before_model_execution",
+  "purpose": "Freeze generic G0-G5 skills, agent wall-time limit, provider per-turn output cap, safety limits, runner policy, and telemetry before the primary campaign.",
+  "selection_policy": {
+    "family_count": 10,
+    "forms_per_family": ["dut", "testbench", "bugfix"],
+    "scored_form_count": 30,
+    "selection_basis": [
+      "span continuous-time, event-driven, stateful, measurement, closed-loop, multi-signal, and multi-module behavior",
+      "exercise all three task forms without using task-specific skill text",
+      "exclude all selected families from the primary post-calibration denominator"
+    ],
+    "prohibited_adaptation": [
+      "task IDs or task titles in global skills",
+      "task-specific equations, thresholds, sample times, checker details, or mutation identities in global skills",
+      "changes to a selected task contract based on model outcomes unless recorded as a benchmark defect and applied independently of condition"
+    ]
+  },
+  "families": [
+    {
+      "family_id": "007",
+      "slug": "first-order-lowpass",
+      "coverage_roles": ["continuous-time-like periodic state update", "monotonic settling", "single-file baseline"]
+    },
+    {
+      "family_id": "024",
+      "slug": "clocked-sample-and-hold",
+      "coverage_roles": ["edge-triggered sampling", "intersample hold", "clock and analog input interaction"]
+    },
+    {
+      "family_id": "029",
+      "slug": "hysteresis-comparator",
+      "coverage_roles": ["threshold state machine", "hysteresis", "complementary outputs"]
+    },
+    {
+      "family_id": "055",
+      "slug": "first-order-sigma-delta-modulator",
+      "coverage_roles": ["clocked feedback loop", "state accumulation", "sequence-level checking"]
+    },
+    {
+      "family_id": "059",
+      "slug": "edge-interval-tdc-8b",
+      "coverage_roles": ["timing measurement", "multi-bit voltage-coded bus", "arming and valid protocol"]
+    },
+    {
+      "family_id": "082",
+      "slug": "agc-receiver-leveling-loop",
+      "coverage_roles": ["closed-loop adaptation", "reset and clock control", "multiple public metrics"]
+    },
+    {
+      "family_id": "170",
+      "slug": "comparator-delay-overdrive-meter",
+      "coverage_roles": ["measurement instrumentation", "multi-signal trace analysis", "time and overdrive metrics"]
+    },
+    {
+      "family_id": "307",
+      "slug": "switched-capacitor-integrator-phase-pair",
+      "coverage_roles": ["two-phase operation", "sample then integrate sequencing", "enable and reset behavior"]
+    },
+    {
+      "family_id": "342",
+      "slug": "sar-adc-system-4b",
+      "coverage_roles": ["multi-module DUT bundle", "mixed analog-digital conversion sequence", "multi-bit final code"]
+    },
+    {
+      "family_id": "357",
+      "slug": "bangbang-cdr-loop",
+      "coverage_roles": ["multi-module timing loop", "early-late feedback", "lock acquisition"]
+    }
+  ],
+  "primary_campaign": {
+    "source_family_count": 400,
+    "excluded_calibration_family_ids": ["007", "024", "029", "055", "059", "082", "170", "307", "342", "357"],
+    "family_count": 390,
+    "forms_per_family": 3,
+    "task_count": 1170
+  }
+}

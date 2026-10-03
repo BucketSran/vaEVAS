@@ -1,0 +1,161 @@
+{
+  "id": "vbr1_l1_strongarm_style_latch_comparator",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_strongarm_style_latch_comparator",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Comparator and Decision Circuits",
+  "base_function": "StrongARM-style latch comparator",
+  "package_status": "current_l1_seed",
+  "score_surface": "model-capability",
+  "source_base_id": "strongarm_comparator_behavior",
+  "canonical_kernel": "clocked_latch_comparator",
+  "source_registry_status": "release_seed",
+  "source_evidence_status": "selected_source_pending_dual",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/comparator/vbm1_strongarm_comparator_behavior_dut",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "tb",
+      "source_path": "tasks/tb-generation/voltage/comparator/vbm1_strongarm_comparator_behavior_tb",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "bugfix",
+      "source_path": "tasks/bugfix/voltage/comparator/vbm1_strongarm_comparator_behavior_bugfix",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/comparator/vbm1_strongarm_comparator_behavior_e2e",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut/gold/cmp_strongarm.va",
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/dut/gold/tb_cmp_strongarm_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/dut/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/dut/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/dut/spectre_result.json",
+      "release_source_task_id": "vbm1_strongarm_comparator_behavior_dut",
+      "historical_source_task_id": "vbm1_strongarm_comparator_behavior_dut",
+      "simulator_rerun_source": "pending_after_ct02_prompt_checker_gold_tightening"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb/gold/cmp_strongarm.va",
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/tb/gold/tb_cmp_strongarm_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/tb/spectre_result.json",
+      "release_source_task_id": "vbm1_strongarm_comparator_behavior_tb",
+      "historical_source_task_id": "vbm1_strongarm_comparator_behavior_tb",
+      "simulator_rerun_source": "pending_after_ct02_prompt_checker_gold_tightening"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/bugfix/gold/tb_strongarm_reset_priority_bug_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/bugfix/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/bugfix/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/bugfix/spectre_result.json",
+      "release_source_task_id": "vbm1_strongarm_comparator_behavior_bugfix",
+      "historical_source_task_id": "vbm1_strongarm_comparator_behavior_bugfix"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/gold/cmp_strongarm.va",
+        "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_strongarm_style_latch_comparator/forms/e2e/gold/tb_cmp_strongarm_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_strongarm_style_latch_comparator/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_strongarm_style_latch_comparator/e2e/spectre_result.json",
+      "release_source_task_id": "vbm1_strongarm_comparator_behavior_e2e",
+      "historical_source_task_id": "vbm1_strongarm_comparator_behavior_e2e",
+      "simulator_rerun_source": "pending_after_ct02_prompt_checker_gold_tightening"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

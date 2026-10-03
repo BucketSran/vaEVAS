@@ -1,0 +1,265 @@
+{
+  "case_count": 6,
+  "cases": [
+    {
+      "case_id": "gold",
+      "changed_artifacts": [],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=7464 active=55 hold_edges=8 clears=6 polarity=+27/-28 settled_rows=659 errors=0",
+      "checker_pass": true,
+      "diagnostics_complete": true,
+      "expected_pass": true,
+      "family_id": "091",
+      "insufficient_excitation_note": "insufficient_excitation trace_rows",
+      "insufficient_excitation_rejected": true,
+      "mutation_id": null,
+      "outcome_category": "behavior_pass",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=7464 active=55 hold_edges=8 clears=6 polarity=+27/-28 settled_rows=659 errors=0",
+      "timing_metamorph_pass": true,
+      "trace_row_count": 4180
+    },
+    {
+      "case_id": "neg_001_no_synchronous_demod",
+      "changed_artifacts": [
+        "chopper_gain_core.va",
+        "chopper_stabilized_differential_amplifier.va",
+        "synchronous_lp_state.va"
+      ],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=344 active=2 hold_edges=0 clears=2 polarity=+1/-1 settled_rows=0 errors=5 first=offset_residual@5.440ns=-0.10125 expected=-0.07125",
+      "checker_pass": false,
+      "diagnostics_complete": true,
+      "expected_pass": false,
+      "family_id": "091",
+      "insufficient_excitation_note": null,
+      "insufficient_excitation_rejected": null,
+      "mutation_id": "neg_001_no_synchronous_demod",
+      "outcome_category": "behavior_mismatch",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=344 active=2 hold_edges=0 clears=2 polarity=+1/-1 settled_rows=0 errors=5 first=offset_residual@9.453ns=-0.10125 expected=-0.07125",
+      "timing_metamorph_pass": false,
+      "trace_row_count": 3814
+    },
+    {
+      "case_id": "neg_002_offset_omitted",
+      "changed_artifacts": [
+        "chopper_gain_core.va",
+        "chopper_stabilized_differential_amplifier.va",
+        "synchronous_lp_state.va"
+      ],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=3539 active=27 hold_edges=4 clears=2 polarity=+14/-13 settled_rows=335 errors=5 first=settled@34.480ns=0.90000 expected=0.00000",
+      "checker_pass": false,
+      "diagnostics_complete": true,
+      "expected_pass": false,
+      "family_id": "091",
+      "insufficient_excitation_note": null,
+      "insufficient_excitation_rejected": null,
+      "mutation_id": "neg_002_offset_omitted",
+      "outcome_category": "behavior_mismatch",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=3539 active=27 hold_edges=4 clears=2 polarity=+14/-13 settled_rows=335 errors=5 first=settled@49.238ns=0.90000 expected=0.00000",
+      "timing_metamorph_pass": false,
+      "trace_row_count": 3814
+    },
+    {
+      "case_id": "neg_003_lowpass_bypassed",
+      "changed_artifacts": [
+        "chopper_gain_core.va",
+        "chopper_stabilized_differential_amplifier.va",
+        "synchronous_lp_state.va"
+      ],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=226 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=voutp@4.480ns=0.54000 expected=0.47250",
+      "checker_pass": false,
+      "diagnostics_complete": true,
+      "expected_pass": false,
+      "family_id": "091",
+      "insufficient_excitation_note": null,
+      "insufficient_excitation_rejected": null,
+      "mutation_id": "neg_003_lowpass_bypassed",
+      "outcome_category": "behavior_mismatch",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=226 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=voutp@8.138ns=0.54000 expected=0.47250",
+      "timing_metamorph_pass": false,
+      "trace_row_count": 3806
+    },
+    {
+      "case_id": "neg_004_gain_wrong",
+      "changed_artifacts": [
+        "chopper_gain_core.va",
+        "chopper_stabilized_differential_amplifier.va",
+        "synchronous_lp_state.va"
+      ],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=240 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=offset_residual@4.480ns=-0.03750 expected=-0.07500",
+      "checker_pass": false,
+      "diagnostics_complete": true,
+      "expected_pass": false,
+      "family_id": "091",
+      "insufficient_excitation_note": null,
+      "insufficient_excitation_rejected": null,
+      "mutation_id": "neg_004_gain_wrong",
+      "outcome_category": "behavior_mismatch",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=240 active=1 hold_edges=0 clears=2 polarity=+1/-0 settled_rows=0 errors=5 first=offset_residual@8.138ns=-0.03750 expected=-0.07500",
+      "timing_metamorph_pass": false,
+      "trace_row_count": 3815
+    },
+    {
+      "case_id": "neg_005_hold_ignored",
+      "changed_artifacts": [
+        "chopper_gain_core.va",
+        "chopper_stabilized_differential_amplifier.va",
+        "synchronous_lp_state.va"
+      ],
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "checker_note": "checked=1884 active=15 hold_edges=1 clears=2 polarity=+8/-7 settled_rows=196 errors=5 first=offset_residual@19.440ns=-0.00969 expected=0.00708",
+      "checker_pass": false,
+      "diagnostics_complete": true,
+      "expected_pass": false,
+      "family_id": "091",
+      "insufficient_excitation_note": null,
+      "insufficient_excitation_rejected": null,
+      "mutation_id": "neg_005_hold_ignored",
+      "outcome_category": "behavior_mismatch",
+      "status": "pass",
+      "timing_invariant": true,
+      "timing_metamorph_note": "checked=1884 active=15 hold_edges=1 clears=2 polarity=+8/-7 settled_rows=196 errors=5 first=offset_residual@28.633ns=-0.00969 expected=0.00708",
+      "timing_metamorph_pass": false,
+      "trace_row_count": 3839
+    }
+  ],
+  "certification_policy": "rust_evas2_only",
+  "diagnostic_categories": [
+    "behavior_pass",
+    "behavior_mismatch",
+    "insufficient_excitation",
+    "missing_trace",
+    "infrastructure_error"
+  ],
+  "evas_engine": "evas2",
+  "fail_count": 0,
+  "family_count": 1,
+  "family_range": "091-091",
+  "gold_pass_count": 1,
+  "insufficient_excitation_not_applicable_count": 0,
+  "insufficient_excitation_rejection_count": 1,
+  "mutation_kill_count": 5,
+  "pass_count": 6,
+  "reproduction": {
+    "command": "EVAS_ENGINE=evas2 VAEVAS_DEFAULT_EVAS_ENGINE=evas2 python3 benchmark-vabench-release-v4/scripts/validate_v4_checker_batch.py --family-range 091-091 --output <output.json> --work-root <work-root> --workers 2 --timeout-s 120 --timing-scale 1.37 --timing-shift-s 2e-09 --force",
+    "working_directory": "<repository-root>"
+  },
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-checker-batch-certification-v1",
+  "source_bindings": [
+    {
+      "canonical_task": "benchmark-vabench-release-v4/provenance/dut-base-v3-exact-five-hash-bound-v2/091-chopper-stabilized-differential-amplifier",
+      "checker_implementation": {
+        "bundle_sha256": "64284a4657c28734eb62e053aa2434c806c072ecfe03adb2752c39bb46f0bfb7",
+        "files": [
+          {
+            "path": "runners/checkers/api.py",
+            "sha256": "55157330a8bbecb3070409558baa69721f818100b1a16fdd1b399fd9c117b48a"
+          },
+          {
+            "path": "runners/checkers/common/__init__.py",
+            "sha256": "f8ab26a270bcb16eb1d212b08ec1077d1643bd5aa08cedc32f548cd0bee93eb4"
+          },
+          {
+            "path": "runners/checkers/common/issue109_factory.py",
+            "sha256": "13ffbd921afd75df79ab74b83c0e119460f84539d6631f4b8b51f181721e193d"
+          },
+          {
+            "path": "runners/checkers/common/issue109_split.py",
+            "sha256": "1c1ecbf06bfa0bfbf04a534983066999c41f40b041e42cc37976a02848e63516"
+          },
+          {
+            "path": "runners/checkers/common/relative_events.py",
+            "sha256": "1dbbdd0427be76501211753fc71d80effcf8b21c47f35cef387f81178c0c3e5f"
+          },
+          {
+            "path": "runners/checkers/common/v4_topup.py",
+            "sha256": "8704b7558460968d8c73f2c123154569064dee235e0efea25fafc09ebe03ad01"
+          },
+          {
+            "path": "runners/checkers/v4/family_261_270_diagnostics.py",
+            "sha256": "5fe84a9478d62712abf72638237e5f41692ce0e10129f41eba6aea285d014fcf"
+          },
+          {
+            "path": "runners/checkers/v4/family_271_280_diagnostics.py",
+            "sha256": "6d3b8a558966ba0e020c36c0d2039fcdfdfa450e4b0c561a14826b7750af85b2"
+          },
+          {
+            "path": "runners/checkers/v4/registry.py",
+            "sha256": "292d60bad9bcf09c979da2628040c1e9d98ac905d6335076e31714d5c27343bb"
+          },
+          {
+            "path": "runners/checkers/v4/stimulus_relative.py",
+            "sha256": "9e7143f545988f5227a14593b246536ffdd37e4fcdb2e548df4340fad2943ba5"
+          },
+          {
+            "path": "runners/checkers/v4/task_091.py",
+            "sha256": "612f09d9c16c184606f584dc501601c13cb9f39c0cd7a40c507dc5ad94207d5a"
+          },
+          {
+            "path": "runners/simulate_evas.py",
+            "sha256": "fc784ebd67a60e02b2452b2d9f7a37464e42a60154f7e7cab8f4b6dc915383bf"
+          }
+        ]
+      },
+      "family_id": "091",
+      "inputs": {
+        "checker_profile_sha256": "88c8bc22987ca9047c9083209e0fdd7dcf9d77af53d800350d3b8aaae48dea6e",
+        "feedback_deck_sha256": "109833a240584c3cb6b97b0746c5f6a1ba0d904090e82c1cab49f3d3ef036a91",
+        "feedback_profile_sha256": "da16de502a991b1a7a116e9d72fb634bf2cfe60f6a00a4b0c71a180a58b5cf8f",
+        "gold_bundle_sha256": "2519d46f93ca13ac49050ba53e274bf332d78edd391f7463575058e5bdd22176",
+        "harness_spec_sha256": "29e8bf1094fa274f5a079034cbbf2108c08edf34451cd6bde48d40ded4345e55",
+        "public_contract_sha256": "defc54e24152bde36f605b510e00d181d699a230d813c7a55f49d0dc28ab1bca",
+        "score_deck_sha256": "109833a240584c3cb6b97b0746c5f6a1ba0d904090e82c1cab49f3d3ef036a91",
+        "score_profile_sha256": "9838f114e1d05735370676f4c5d944f01d43fe34a4ca7e0b5038d7dad7637308",
+        "task_record_sha256": "fdb591f68eb45ab27ff4322a689c8841cb11a38cf585ffbb3ac2cfc77bd8d56c"
+      },
+      "mutations": [
+        {
+          "candidate_bundle_sha256": "5d02b3760639d86633263bb2a9ab2d072d34bd636962f56b724716fdd4626bdc",
+          "mutation_id": "neg_001_no_synchronous_demod"
+        },
+        {
+          "candidate_bundle_sha256": "bfb292d9a74f80db1662094722517afdf531d53a0ce4b4a28ab930e4d6d811a1",
+          "mutation_id": "neg_002_offset_omitted"
+        },
+        {
+          "candidate_bundle_sha256": "6dedab97b30d9711a9ec23a09ca7ea8dcd87559129656dd8bbe9939574c3bf35",
+          "mutation_id": "neg_003_lowpass_bypassed"
+        },
+        {
+          "candidate_bundle_sha256": "64fe05fee6543fd5731dc0cd793a8f6cb95e89c3591e3b677d04f0e33dec5296",
+          "mutation_id": "neg_004_gain_wrong"
+        },
+        {
+          "candidate_bundle_sha256": "da8bd345d66c9fe1cd15fae973f1e35d8a279fa87d820cc15246e5234c8baede",
+          "mutation_id": "neg_005_hold_ignored"
+        }
+      ]
+    }
+  ],
+  "status": "pass",
+  "timing_invariant_count": 6,
+  "timing_metamorph": {
+    "scale": 1.37,
+    "shift_s": 2e-09
+  }
+}

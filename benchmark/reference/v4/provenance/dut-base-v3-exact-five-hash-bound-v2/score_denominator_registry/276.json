@@ -1,0 +1,78 @@
+{
+  "family_id": "276",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "1e1dcf18f82e6e462251b6d9c38bbb79af678818c1d214bc77b489a0fdde9a1a",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "c3116f049aaf4e53fef6b5ae9d45d9929806b150aff877158707619cd6158bfb",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_TEXT_X0_CLIP01_V_IN0_V"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "2990527d497856e61aa68fc51b83a4d0ca34d735a8f02f8e4562ec910b394be3",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "a616873a5c5d2d2f56cef8c044e10365cb77cab3149f7a0d66847feb6e868eb9",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_FOR_EACH_VALID_UPDATE_COMPUTE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "236bb1843d4e2e3d7efd598a558bdb47f2cde8032c7526511cfc972c889cdfcd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "9e6875f306fffce1ac812b874990a63128cbe40a5fc0a12a77a8feddf895e432",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "00e1b162067c77e5df99d7a075fd8b2f24e6553d4609b18439b37c85a4069504",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "0796c5e2c3d31736c4949785c7f3bad11504ac3c97daa76fc6995d6cab945c21",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_RESET_DISABLED_AND_OUT_OF_RANGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "0e0f35194d9940dac91cd3faf19ff622a2faf589c782b7988b647d6e0e31e626",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "78a41d5b0f59aa8371b2dbc1690fe5d060701df9df4929b20da6e13d4699d0fb",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "276",
+    "hashes": {
+      "mutation_catalog_sha256": "c3f178f2f243bd191a16380887b4d74f0e3616b3860baa70bf8b4231bb87a7f8",
+      "score_deck_sha256": "a1e5488da31d340cb22604c07e4804d3349b63d6dc05f2b89ed9054a97bcd64b",
+      "task_certification_sha256": "f0d9ff28de8819c3d014fceb020239015db81815d3db7a2b568665369128ab5f",
+      "task_record_sha256": "58bde99ae440f4f4c1a07fcd0194434abe364c6eb5391646dd49e42a72d7d228"
+    },
+    "release_dir": "276-bounded-tail-dither-shaper"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "release_entry_id": "vbr1_l1_lock_detector",
+  "task_id": "vbr1_l1_lock_detector:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "Lock detector"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/tb/gold/lock_detector.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/tb/gold/tb_lock_detector_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "ahdl_include",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

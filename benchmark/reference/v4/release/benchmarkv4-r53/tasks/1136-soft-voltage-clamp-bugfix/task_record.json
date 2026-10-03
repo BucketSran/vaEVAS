@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "soft_voltage_clamp_behavior.va"
+  ],
+  "canonical_dut_source_slug": "136-soft-voltage-clamp",
+  "checker_task_id": "v4_136_soft_voltage_clamp",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "6fdec5ab1978aa63400055aa32a1b11fa14ffefa9b8dff5d057947f39d1106a5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "42b1f7166640356b30785d90739a9da8be3200b37faacc7928b0ee9b6cacc9b4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "33eb14f5146edfc5c1d16e64f132f12309fcbe9cef802dfb4d8223dd677229eb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "136",
+  "family_spec_sha256": "18b6b25e8003f6cf90102b35c724b2b7da8a088e267099364001d84da64ccf2b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "981c6c0748215c35107242b67ca723de51a82b2b031d5ade4a046e92166ef8e6",
+  "public_contract": "tasks/1136-soft-voltage-clamp-bugfix/public_contract.json",
+  "public_contract_sha256": "30e62a0e87e12d1444d03afe76a1568139d8bd4e55a9ca2ef57012abf0a75777",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1136-soft-voltage-clamp-bugfix",
+  "task_id": "v4-1136"
+}

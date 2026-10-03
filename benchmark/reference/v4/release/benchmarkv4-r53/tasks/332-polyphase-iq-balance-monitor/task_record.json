@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "polyphase_iq_balance_monitor_top.va",
+    "iq_normalizer.va",
+    "balance_metric_core.va"
+  ],
+  "canonical_dut_source_slug": "332-polyphase-iq-balance-monitor",
+  "checker_task_id": "v4_332_polyphase_iq_balance_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ae6674af05e915bc39413c953386d7d536eda61de76125204a48bfa0fad24038",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "35cf8ad0e59721499963760299fa1df988682bc75f8c6ce4eb8cf0d2cc74724c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "b594feb34d0da18858b64ca6e9911bfb8f70c34b303e7c7a8c85b37468c1557b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "332",
+  "family_spec_sha256": "5c7e620dfed357e42503f8e7b916bb199d403130ae02cf22e2186759aaf08c41",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f4e5b9ffe29cd7a8b4c242d0a2346e176eec7ffbfdb6f7983cda5f450d7052cc",
+  "public_contract": "tasks/332-polyphase-iq-balance-monitor/public_contract.json",
+  "public_contract_sha256": "7d720280b183064d82799419c6d59d0ce28c7412e188a690eb6f37e024454653",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/332-polyphase-iq-balance-monitor",
+  "task_id": "v4-332"
+}

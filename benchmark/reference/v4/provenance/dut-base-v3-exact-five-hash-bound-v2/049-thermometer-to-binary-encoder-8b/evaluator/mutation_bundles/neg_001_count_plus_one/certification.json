@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_VALID_CUMULATIVE_WORD satisfy the public contract; fault class count_plus_one is rejected",
+    "observed": "EVAS: property_id=P_THERMOMETER_COUNT_TO_BINARY category=behavior_mismatch expected=binary_count==number_of_cumulative_high_inputs observed=count_errors=13 event=stable_thermometer_vector_intervals",
+    "violated_property_ids": [
+      "P_VALID_CUMULATIVE_WORD"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_049_thermometer_to_binary_encoder_8b",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1516
+  },
+  "family_id": "049",
+  "inputs": {
+    "checker_profile_sha256": "f29826789bd939259a3396f414ca0bbb07bff34f16eb40e68304e7c438359508",
+    "harness_spec_sha256": "e35ad53ece161c4b427f6eb00c44400075ab0abed9948e178689084fe669877c",
+    "mutation_bundle_sha256": "e7fdc6a758787ad8230fc3d44eb9e42b84b13dc7a2749f21408613e9a2d5c9ab",
+    "profile_sha256": "053cde4631bb1f62e277096b73dc9d6607b86470e6f8d440da824098f6b9be2e"
+  },
+  "mutation_id": "neg_001_count_plus_one",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

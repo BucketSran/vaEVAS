@@ -1,0 +1,83 @@
+{
+  "family_id": "241",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_output_level/certification.json",
+        "certification_sha256": "0f8fba335e4d8d98b43d3404a938a5369b0af1ca3c5bea110220b04de22d8fc2",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "ab50b12983b8981d24e5c7931f868191790cccc1ab6c17f8bb61496f24982650",
+        "mutation_id": "neg_005_wrong_output_level",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_output_level/certification.json",
+        "trigger_condition": "Uses the right state transitions but drives the wrong high output rail.",
+        "violated_property_ids": [
+          "P_DEFINE_UPPER_TH_OFFSET_VHYS_2",
+          "P_TD_400_PS_FROM_0_INF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_hysteresis/certification.json",
+        "certification_sha256": "d1e6b98697aa2f7e6afac6c0e9e5c5f5e77cd2b967c0731a78a4475e75fc892b",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "bf8b7c17cf827e9cc160c3ec80923b47e10d792b43eb42cd626859e0e86603a3",
+        "mutation_id": "neg_002_no_hysteresis",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_hysteresis/certification.json",
+        "trigger_condition": "Uses a single offset threshold instead of separate upper and lower hysteresis thresholds.",
+        "violated_property_ids": [
+          "P_DEFINE_UPPER_TH_OFFSET_VHYS_2",
+          "P_VOUT_LOW_0_0_V_LOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_polarity/certification.json",
+        "certification_sha256": "d15dcddf44af8fae3de6fea3d55563f903d0ece99645d9394dc446187bcaac7f",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "3a8f06932702024ee6b210843b9c676e6517c8274553dc1ff75e7691b04b6842",
+        "mutation_id": "neg_004_wrong_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_polarity/certification.json",
+        "trigger_condition": "Swaps the high and low receiver states.",
+        "violated_property_ids": [
+          "P_DEFINE_UPPER_TH_OFFSET_VHYS_2",
+          "P_VHYS_40_MV_FROM_0_INF"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_delay/certification.json",
+        "certification_sha256": "b09ffd57502c1825c7beded39306c1f34994a9acecdc4c80e6f338d6164622a4",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "ce7d158b759858c14c712360e03d1be2c7eefa586a7b89858f2c41b50c15c58e",
+        "mutation_id": "neg_003_no_delay",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_delay/certification.json",
+        "trigger_condition": "Implements the hysteresis thresholds but ignores the required propagation delay.",
+        "violated_property_ids": [
+          "P_DEFINE_UPPER_TH_OFFSET_VHYS_2",
+          "P_OFFSET_0_0_V_INPUT_REFERRED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_stuck_low/certification.json",
+        "certification_sha256": "0f98054f4e786a92e943d524cc25e5b94311e2f79ace5087d3059da5662fa401",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "2a5dbcb390d8ff9b19fc873e33bdbbb7a73217409d396e28d58d7573827fca5e",
+        "mutation_id": "neg_001_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_001_stuck_low/certification.json",
+        "trigger_condition": "Never updates the receiver state, so high-threshold crossings do not drive the output high.",
+        "violated_property_ids": [
+          "P_DEFINE_UPPER_TH_OFFSET_VHYS_2",
+          "P_VOUT_HIGH_0_9_V_HIGH"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_output_level",
+    "canonical_dut_id": "241",
+    "hashes": {
+      "mutation_catalog_sha256": "af41090023c813bd3bbbce78efb73cc43fb1359da799631ff1f6291e0c63f909",
+      "score_deck_sha256": "3be1dad12cf3bf88f0af6abffe204251141ca6ab1fa31cf22fcc55424cc7afa6",
+      "task_certification_sha256": "e81888636edaa6b8c04cba0d363a3aadcb574657621935e017d988b9e113c552",
+      "task_record_sha256": "58eb0912a715a77a2bcfe4184fa1d43acf1b389bbf1b72c7b9cbee9bad9b44bf"
+    },
+    "release_dir": "241-hysteretic-comparator-receiver"
+  }
+}

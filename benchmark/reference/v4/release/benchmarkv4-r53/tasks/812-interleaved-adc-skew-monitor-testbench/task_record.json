@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "312-interleaved-adc-skew-monitor",
+  "checker_task_id": "v4_312_interleaved_adc_skew_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3aadc268d909bd770082b04ef8806171d567121f7a46aa8946a23264f25318b4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2cb349b3430af957f97d0043344d51677430577e8e9da767fcdacfc5546cc1e2",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3aadc268d909bd770082b04ef8806171d567121f7a46aa8946a23264f25318b4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "680fe14c81206967ad0045ea4fe46cd2b7277c91424334533998ca5ae467c7b3",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ecca0555be86869010256c5b2d38e4c13aae0701ce39cd323b7237413680dfed"
+  },
+  "family_id": "312",
+  "family_spec_sha256": "adc1ca91951b79e07206a33731f7511a7b19ccde698b7af13f7a9f18d4f061a5",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f4865b84513f9bdd707208d5bcb50e606eb4efe66c79770d93dc6a48d2d6d59c",
+  "public_contract": "tasks/812-interleaved-adc-skew-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "24840f1e5ebe69e6093303f757b99c8df331e4aae475400ad69925aef1559530",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/812-interleaved-adc-skew-monitor-testbench",
+  "task_id": "v4-812"
+}

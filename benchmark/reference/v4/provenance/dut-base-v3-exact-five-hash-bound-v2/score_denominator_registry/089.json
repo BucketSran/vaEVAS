@@ -1,0 +1,87 @@
+{
+  "family_id": "089",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "f78bb0d30536216e7cd1e9d167b95768c5f7144ce26775bf1c9de6146a5e60b4",
+        "fault_class": "threshold_boundary_error",
+        "mutation_bundle_sha256": "1b7e82ebb2d36ac8f31a22f091b68b82f672bdc318b209dc5861a5dec18ccb1c",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "boundary stimulus crosses the public threshold conditions for Edge Crossing Interval Timer",
+        "violated_property_ids": [
+          "P_A_EDGE_ARMS",
+          "P_COMPLETION_MARKER",
+          "P_FIRST_B_EDGE_CAPTURES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "5deade3de9bfa02828a9bc497e00ffdf7b4990d48c468cf9dd04b3c0529f9dd5",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "61fc7f6b9045110b44a9e8ac55b29607c3f070177b7179079c580c324625b275",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Edge Crossing Interval Timer",
+        "violated_property_ids": [
+          "P_A_EDGE_ARMS",
+          "P_COMPLETION_MARKER",
+          "P_DELAY_NORMALIZATION",
+          "P_FIRST_B_EDGE_CAPTURES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "b9058205c3ff5a0078e40d56682c1f83e50c269283d413f1a2411fa199d1846f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "2c996a7b1202b838a8000bc6820e875585214165ba75a2bb5abb5de914690b78",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable Edge Crossing Interval Timer outputs",
+        "violated_property_ids": [
+          "P_A_EDGE_ARMS",
+          "P_FIRST_B_EDGE_CAPTURES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "0051c6f515576083b68d99c548cca477a069a7853d453d5f98990427386cdd37",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "83f564d62e2a50f45a3e7a4b8789c92f2f6f611cf9d0a3b49fcc34319eeb6e8a",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Edge Crossing Interval Timer",
+        "violated_property_ids": [
+          "P_A_EDGE_ARMS",
+          "P_COMPLETION_MARKER",
+          "P_FIRST_B_EDGE_CAPTURES",
+          "P_SINGLE_CAPTURE_PER_ARM"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "b786c10547f8658f2f723d0ff62d28bc08d82e488f14e1e85a482e1ac2195748",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "28b2350f78c861852f90e4d43f8b0ab3ea99815518ce6aa44080a5c93bc520f9",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "reset/recovery stimulus exercises Edge Crossing Interval Timer state override behavior",
+        "violated_property_ids": [
+          "P_A_EDGE_ARMS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_threshold_shifted",
+    "canonical_dut_id": "089",
+    "hashes": {
+      "mutation_catalog_sha256": "a39d80a657ea3dc1a8286754851ff568ea5a3cb689cc06785cfeb9e4f558e730",
+      "score_deck_sha256": "1fcbbf308daffce406344d0948bfb20a08678d60e5e4ce9edba56dd75f9dda15",
+      "task_certification_sha256": "bffadbf510fa6d6c905b71016d39acd0da1bce789470023d5f8d9b7d584a2bd3",
+      "task_record_sha256": "a435fbe3e4be1e83688cf7b61b401f85d334cc1e46e8aab1c837573aefdf211e"
+    },
+    "release_dir": "089-edge-crossing-interval-timer"
+  }
+}

@@ -1,0 +1,20 @@
+syntax:
+  must_include:
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "low_for_negative_diff"
+    - "high_for_positive_diff"
+    - "rising_trip_near_zero_diff"
+    - "falling_trip_near_zero_diff"
+    - "rail_referenced_output_levels"
+
+parity:
+  reference: "spectre"
+  status: "pending"
+  notes:
+    - "Fresh dual evidence required after bidirectional threshold stimulus/checker tightening."

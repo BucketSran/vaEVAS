@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "259",
+  "checker_task_id": "v4_259_lane_validity_reduction_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "026a84637d636a4e05852c59def6f50cb7b4532176b83e17a1ae3b30b26773c0",
+    "checker_profile.json": "258b972ce785f7653a34a25edbb3b2a684a86ccdb6b657665424b1ca43d4b50c",
+    "derivation_manifest.json": "1b9dc4405114a9b25d9194dec2cdbab4e4912239736c55b8e837426ea818d474",
+    "family_spec.json": "131792e394e586dc72d1739be1de39229d8f221668f35a84ed39b54bcbb1b331",
+    "harness_spec.json": "6c9b2d812a9099992ac42a4e40e2e3f95bcfe3a1cd21ff004808afd47d182f91",
+    "mutation_catalog.json": "07a1280b5f572ceefd15810f1a33d8ed4c6a974f38665f9b703be93675973af1",
+    "profiles/feedback.json": "28991e71fcaa6489c7f79394cdbc0530b6645972daec9f110291dabfc8bf6d7d",
+    "profiles/score.json": "568e6917ad0a86185ea30952bd67d8e8ebea30587f7073d6904e0af005b66403",
+    "score_tb.scs": "c3003e0c7c8058b626bb477004ec0a1376835b464937e5a18d2c0531221e8578",
+    "solution_tree": "23ec4d9187b4b6250689d31f764995185f3fa0415b0fba90f165c233dfd51f5b",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "dfad93fbad10ae9569aa31991d58211bdb3aa0ead923b2a6f14f14f5fc6e764d",
+    "instruction.md": "c25a6225a66d7d34bfc91fd720fdffc8790e72e98608686d21841c1979f81bea",
+    "public_contract.json": "169c6b884e57d99e72a0db66e62e6a8fe9f2643cb5a88f9d3a1a02356d67a419"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "026a84637d636a4e05852c59def6f50cb7b4532176b83e17a1ae3b30b26773c0"
+  },
+  "release_dir": "259-lane-validity-reduction-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "350-lane-validity-reduction-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "lane_validity_reduction_monitor.va"
+  ]
+}

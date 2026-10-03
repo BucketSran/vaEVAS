@@ -1,0 +1,35 @@
+syntax:
+  must_include:
+    - "transition("
+    - "@(cross("
+    - "tran"
+    - "save"
+    - "abs("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "full_wave_rectification_around_common_mode"
+    - "envelope_peak_hold_and_decay"
+    - "negative_half_cycle_rectifies"
+    - "hold_metric_marks_envelope_memory"
+  public_observables:
+    - "clk"
+    - "rst"
+    - "vin"
+    - "rect"
+    - "env"
+    - "metric"
+parity:
+  reference: "spectre"
+  status: "pending"
+  notes:
+    - "Fresh EVAS/Spectre dual validation is required after the ahdlLib-guided quality refinement."

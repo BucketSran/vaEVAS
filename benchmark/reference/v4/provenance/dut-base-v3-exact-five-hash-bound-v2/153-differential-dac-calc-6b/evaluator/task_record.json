@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "153",
+  "checker_task_id": "v4_153_differential_dac_calc_6b",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "a022a3e19dc8f39a73da19d72d688f6c48fee7abfda0b6608af145694990715f",
+    "checker_profile.json": "305e17db64fbbba9b6d5a9b7db7c33c571c209ddc7df13c148306b5223af4814",
+    "derivation_manifest.json": "dfef2ce41d707efac63dc2eb37cf93e6d31a6c0b8ab0f461835a937031474cdb",
+    "family_spec.json": "667cea62c6c5ee9d9a78e00c8538f1c9203261298d32d417cd15aeec9127770d",
+    "harness_spec.json": "bc2f1d745c897760e147243e7c7d97a0b0e1416b6f853751c2fc938c5f02bca7",
+    "mutation_catalog.json": "69382d259b3f3d66ed5a753dce1463be77a267efbbb9a6bf318380ba5aa33222",
+    "profiles/feedback.json": "ab09ca7ec280a91bc594c890d7601fac84bbad201b9b26aff927d07c24fe2843",
+    "profiles/score.json": "a0fc5199888fa7835a0336b23a544a0436ee229807adb2c050662cc33981a728",
+    "score_tb.scs": "a9e57024449c90bbca8ac2df0c9093d50e03d518431f1bea67eadd6e63a4a9ef",
+    "solution_tree": "5599b8404a7f3f1d8e50d996727adadaea72ae1a97caf758152b005e0e42d072",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "bf52f2fe6d4a63dbe63641032df314cff1bcb8c53dfcdb6d94db095f12f125c1",
+    "instruction.md": "f7e9cae92ea7dd07d75025eea0fc1e56b29e70f1c6753a89e08bb1f49c6107c5",
+    "public_contract.json": "b7187bba497232873ac45d3b19ba440c3a409b424af161aaa255811e0a55e513"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "a022a3e19dc8f39a73da19d72d688f6c48fee7abfda0b6608af145694990715f"
+  },
+  "release_dir": "153-differential-dac-calc-6b",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "182-differential-dac-calc-6b",
+  "support_root": "",
+  "target_artifacts": [
+    "differential_dac_calc_6b.va"
+  ]
+}

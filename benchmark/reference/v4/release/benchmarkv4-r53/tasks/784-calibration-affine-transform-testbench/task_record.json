@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "284-calibration-affine-transform",
+  "checker_task_id": "v4_284_calibration_affine_transform",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a2fa0342d50f5509ccfa2b828b0ac1d4d6e13657561c7530614aa9f4b8fe6f11",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "80d5e45f92685529ca12797a4711c2e1ca9999df72ccef26068133c9daf5c2dd",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a2fa0342d50f5509ccfa2b828b0ac1d4d6e13657561c7530614aa9f4b8fe6f11",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d80abc607347feef959e92c5415c091e82e1ac52a260f83fb294191838913b1f",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "d622faf3f2cfae4d60114f4d4e4e5ba1daac544a1b25d16a6f02f0061382a358"
+  },
+  "family_id": "284",
+  "family_spec_sha256": "00031208e74062ed723c3f1bebed77b479ac14cfbad676c1f67bb888730afd87",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8128725e79bcb68d93c03ab39a619b2d9bf3ab104bfc371ac2f443be7be69891",
+  "public_contract": "tasks/784-calibration-affine-transform-testbench/public_contract.json",
+  "public_contract_sha256": "6bc6caeb62d2bb4b38670fb4ac3574e84932ba32cffb46185bf565c729976b73",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/784-calibration-affine-transform-testbench",
+  "task_id": "v4-784"
+}

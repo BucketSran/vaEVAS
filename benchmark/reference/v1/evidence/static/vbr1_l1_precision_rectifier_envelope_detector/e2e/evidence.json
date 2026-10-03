@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_precision_rectifier_envelope_detector",
+  "task_id": "vbr1_l1_precision_rectifier_envelope_detector:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Precision rectifier/envelope detector"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/e2e/gold/precision_rectifier_envelope_detector.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/e2e/gold/tb_precision_rectifier_envelope_detector.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross(",
+      "tran",
+      "save",
+      "abs("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

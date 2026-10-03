@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "gain_amp_fixed.va"
+  ],
+  "canonical_dut_source_slug": "092-fixed-gain-amplifier",
+  "checker_task_id": "v4_092_fixed_gain_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "12d2986fa93ed7d70762c88cab7ec6d0cc228880a87e451ab048085ab673c4a4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "57e1ce7f6b00504753caad2373b1c5cb8df671e845d6351ffd14905b416ef111",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4388587865e343d688371f41ea08e32518fad80e32fb0fd0f14ff3b02159b966",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "092",
+  "family_spec_sha256": "bf6a5060f836788bb12cf54a0e13f97baf44133f520195dfd3e854977403bd24",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "60386d1dd079c32ff74e86bdef705d2c41e6324074c65ab53f2c8b28bebed63d",
+  "public_contract": "tasks/092-fixed-gain-amplifier/public_contract.json",
+  "public_contract_sha256": "4c8364843f0f133b50542d598f6156d53c4d840dc5235d76bb7c43dd0bae2001",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/092-fixed-gain-amplifier",
+  "task_id": "v4-092"
+}

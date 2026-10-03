@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "config_latch_32b.va"
+  ],
+  "canonical_dut_source_slug": "056-config-latch-32b-clocked",
+  "checker_task_id": "v4_056_config_latch_32b_clocked",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "323c15042cb0760652395283d2dd220ef334e8ceda7762a01f42a2b3276f58ec",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1f2cc63948958f2954c723c7f30a2912a03b140d539c2242983512f02ee8fd4c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fa3fa0897500d20fe94d426de8405e7259d53a97dafbe32fae250199a32062f5",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "056",
+  "family_spec_sha256": "465ed8723cde1935125b42094a0bdf02c7ad2373b9e6e6df2ee833ec2e5dbcf0",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f017bd7d86727aa6c02dd07fdef973a7403d97c170a9b400ed9c3d83f813ca57",
+  "public_contract": "tasks/056-config-latch-32b-clocked/public_contract.json",
+  "public_contract_sha256": "8548c80c164a80ff317ae6ce6d9964d67f01bb5499852aab5469731fc14851a3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/056-config-latch-32b-clocked",
+  "task_id": "v4-056"
+}

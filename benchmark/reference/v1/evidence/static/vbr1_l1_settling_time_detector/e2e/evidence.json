@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_settling_time_detector",
+  "task_id": "vbr1_l1_settling_time_detector:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Measurement Instrumentation Flows",
+    "base_function": "Settling response measurement helper"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/gold/settling_time_measurement_tb.va",
+    "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/gold/tb_settling_time_measurement_tb_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(timer(",
+      "ahdl_include",
+      "save",
+      "tran",
+      "transition("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

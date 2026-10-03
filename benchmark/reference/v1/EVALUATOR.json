@@ -1,0 +1,126 @@
+{
+  "date": "2026-06-23",
+  "release": "vabench-release-v1",
+  "status": "ready",
+  "contract_version": "v1",
+  "inputs": {
+    "package_manifest": "benchmark-vabench-release-v1/MANIFEST.json",
+    "score_denominator": "benchmark-vabench-release-v1/reports/score_denominator_manifest.json",
+    "l0_conformance_manifest": "benchmark-vabench-release-v1/reports/conformance_manifest.json",
+    "certification_matrix": "benchmark-vabench-release-v1/reports/certification_matrix.json"
+  },
+  "schemas": {
+    "release_entry": "schemas/vabench-release-entry.schema.json",
+    "release_task": "schemas/vabench-release-task.schema.json",
+    "package_manifest": "schemas/vabench-package-manifest.schema.json",
+    "evaluator_contract": "schemas/vabench-evaluator-contract.schema.json",
+    "score_denominator": "schemas/vabench-score-denominator.schema.json",
+    "conformance_manifest": "schemas/vabench-conformance-manifest.schema.json",
+    "static_certification": "schemas/vabench-static-certification.schema.json",
+    "dual_certification": "schemas/vabench-dual-certification.schema.json",
+    "certification_matrix": "schemas/vabench-certification-matrix.schema.json",
+    "evidence": "schemas/vabench-evidence.schema.json",
+    "result": "schemas/vabench-release-result.schema.json"
+  },
+  "task_selection": {
+    "source_of_truth": "benchmark-vabench-release-v1/reports/score_denominator_manifest.json",
+    "package_entry_count": 86,
+    "package_form_count": 300,
+    "certified_entries": 86,
+    "certified_forms": 300,
+    "pending_entries": 0,
+    "pending_forms": 0,
+    "scored_entries": 73,
+    "scored_forms": 265,
+    "score_enabled": true,
+    "l0_conformance_excluded": true,
+    "unscored_rows_excluded": true,
+    "selection_rule": "Only rows marked counted_in_score=true by score_denominator_manifest.json may enter benchmark scores."
+  },
+  "backend_roles": {
+    "static": {
+      "role": "source/package integrity gate",
+      "certification_scope": "asset and static contract only",
+      "final_judge": false
+    },
+    "evas": {
+      "role": "formal behavioral Verilog-A certification and scoring evaluator",
+      "certification_scope": "release certification and final pass/fail axis under the pinned strict profile",
+      "final_judge": true
+    },
+    "spectre": {
+      "role": "optional non-blocking parity reference",
+      "certification_scope": "supplemental evaluator-conformance evidence only",
+      "final_judge": false
+    }
+  },
+  "result_contract": {
+    "schema": "schemas/vabench-release-result.schema.json",
+    "required_fields": [
+      "task_id",
+      "release_entry_id",
+      "backend",
+      "status",
+      "scores",
+      "artifacts"
+    ],
+    "status_values": [
+      "PASS",
+      "FAIL_STATIC",
+      "FAIL_DUT_COMPILE",
+      "FAIL_TB_COMPILE",
+      "FAIL_SIM_CORRECTNESS",
+      "FAIL_INFRA",
+      "PENDING"
+    ],
+    "evidence_schema": "schemas/vabench-evidence.schema.json",
+    "evidence_verdict_values": [
+      "not_certified",
+      "certified",
+      "quarantined"
+    ],
+    "spectre_final_judge": false,
+    "evas_final_judge": true,
+    "evas_pass_spectre_fail_is_hard_mismatch": false
+  },
+  "score_gate": {
+    "status": "score_enabled",
+    "score_claim_allowed": true,
+    "scored_entries": 73,
+    "scored_forms": 265,
+    "blocking_reason": ""
+  },
+  "baseline_protocol": {
+    "status": "ready_for_baseline_runs",
+    "ready_for_baseline_runs": true,
+    "claim_allowed": true,
+    "claim_status": "benchmark_contract_ready",
+    "minimal_lanes": [
+      "prompt_only_generation",
+      "evas_feedback_debug_generation",
+      "evas_final_judge_confirmation"
+    ],
+    "required_result_fields": [
+      "model",
+      "task_id",
+      "release_entry_id",
+      "form",
+      "candidate_artifacts",
+      "evas_status",
+      "score",
+      "failure_taxonomy"
+    ],
+    "non_goals": [
+      "Do not present controller/RAG/SFT orchestration as the core contribution.",
+      "Do not tune on the release package or memorize benchmark gold."
+    ],
+    "unscored_rows_excluded": true
+  },
+  "claim_boundary": [
+    "This contract defines evaluator IO and score gates; it is not simulator certification evidence.",
+    "Pinned strict EVAS is the formal judge for release certification and scoring.",
+    "Spectre is optional non-blocking parity evidence and is not required for a score claim.",
+    "L0 conformance cases are evaluator health checks and never scored benchmark rows.",
+    "Private Vela/Docker submission state is outside the public benchmark contract."
+  ]
+}

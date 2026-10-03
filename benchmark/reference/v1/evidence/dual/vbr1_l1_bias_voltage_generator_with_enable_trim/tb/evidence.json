@@ -1,0 +1,115 @@
+{
+  "release_entry_id": "vbr1_l1_bias_voltage_generator_with_enable_trim",
+  "task_id": "vbr1_l1_bias_voltage_generator_with_enable_trim:tb",
+  "source_task_id": "vbr1_l1_bias_voltage_generator_with_enable_trim_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Bias Reference and Power Management",
+    "base_function": "Bias voltage generator with enable/trim"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/gold",
+    "results/vabench-release-v1-dual-rerun/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/tb/gold/tb_bias_voltage_generator_with_enable_trim.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rerun/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/gold",
+    "result_root": "results/vabench-release-v1-dual-rerun/vbr1_l1_bias_voltage_generator_with_enable_trim/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 4.035385673901293e-06,
+      "max_abs_v": 8.784130249761546e-05,
+      "mean_relative_rms_error": 1.14869400130123e-06,
+      "max_relative_rms_error": 5.7434700023196325e-06,
+      "mean_nrmse": 1.14869400130123e-06,
+      "max_nrmse": 5.7434700023196325e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "out": {
+          "rmse_v": 4.035385673901293e-06,
+          "max_abs_v": 8.784130249761546e-05,
+          "span_v": 0.7026041177670485,
+          "nrmse": 5.7434700023196325e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 2.7212361468416774e-15,
+          "max_abs_v": 5.96189764223709e-14,
+          "span_v": 0.65,
+          "nrmse": 4.1865171489871954e-15,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bias_voltage_generator_with_enable_trim/forms/tb/gold/tb_bias_voltage_generator_with_enable_trim.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

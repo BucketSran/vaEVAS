@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "262-resettable-phase-toggle-monitor",
+  "checker_task_id": "v4_262_resettable_phase_toggle_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "b69de216c7055d9c23286a8780661d24c044123617233e64203936680f49c563",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "85634c7f82e68f40eac31b1bc03988dc300a132b9b5ce841f490156f3a54fafe",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "b69de216c7055d9c23286a8780661d24c044123617233e64203936680f49c563",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "272bd97c6fbac1eee0742eb0d7e2468b681b2e9011e9df0dbbe8ef03222f9f21",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "47c99ab875f3ab0abc415ff25fe929d326160570d71ac80791158048c3805997"
+  },
+  "family_id": "262",
+  "family_spec_sha256": "58c7f5145462f2f379c8772e080c86fb79aaeeff1bc41f927309dad10fde7f4f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f34ba64ae2b158529b6e3ddc8444151eeb2038f7c4d2d7b9a47cfeebfa058854",
+  "public_contract": "tasks/762-resettable-phase-toggle-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "c87d5975a9f20f945447179bc31f6379dc9de3ee82aed919f4319896f3a60294",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/762-resettable-phase-toggle-monitor-testbench",
+  "task_id": "v4-762"
+}

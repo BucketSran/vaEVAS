@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "limiting_differential_amplifier.va"
+  ],
+  "canonical_dut_source_slug": "131-limiting-differential-amplifier",
+  "checker_task_id": "v4_131_limiting_differential_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b348df612695e1ecc2acc98bda56e14e74ceda1d61250cfa31fba2c23194c0fe",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "6215be7aa8fe6dad9d55ee55f212337af29560bd3b4e01a940f0622179a7fb14",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9d1b1b1152373c8cc467f6515407254c1799028adcbf3adb6d56589e40ae5ee8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "131",
+  "family_spec_sha256": "7778d86a3b5570b927e001e0c32b2ab0a3eb0ca8410f6f03afb3d2f131afc8b0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "50c7aee19f6be5af01804a39c340f16c10e72636fb6acd2262a5413f131ade23",
+  "public_contract": "tasks/1131-limiting-differential-amplifier-bugfix/public_contract.json",
+  "public_contract_sha256": "c5eaaaf94fee90fe21285a35ae61124ec5837186818c808ec136e74e2151167c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1131-limiting-differential-amplifier-bugfix",
+  "task_id": "v4-1131"
+}

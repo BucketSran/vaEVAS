@@ -1,0 +1,78 @@
+{
+  "family_id": "382",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "5a04f5904416b725a3e5677e31b7af1457e543d04dc7a260798b4af891277ca5",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "515c70c7c371f1fac877bf189f0182f7c53749203bffa9c3a781f4e9727162b5",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_RATIO_METRIC_EXPOSES_THE_SAMPLED_DIVISOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "e2803c10892bfb797455c468b7ae60805c9c3126049d8001d19d71881e95e736",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "a187e27a25b87947dd93585c67c2bba4191b0611020bf0d1c5c01929e21a545c",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_OR_LOW_ENABLE_CLEARS_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "4fec7f535df56b2d8553ce10896347c1193a80c9020a639f58d8b358e5e5c22e",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "68ff641a639bc5fec1f268734a2a0f54ca2d67b50ac2245ead7f61364cd92ff0",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_IN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "da5423a00b0463b2afd345d020c6778aa95aa24fc74d6196c03f1c25b316e45d",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "50be897481627f61ea7475e43d06a612949a95a217f6e03d79e3dac83912bafb",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "semantic delay_edge mutation from gold",
+        "violated_property_ids": [
+          "P_VALID_IS_HIGH_AFTER_THE_FIRST"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "1b070a3c07d4299f79ce8632db6bd7be7f11d2ae1981fce0bbd540eeaac9d5bd",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "48edc83b6c3522d8cd86f2360ee74d639e37adf8f5d8b6058af56d42ffba3188",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_TOGGLE_CLK_DIV_WHENEVER_N_ENABLED"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "382",
+    "hashes": {
+      "mutation_catalog_sha256": "3be2a9a431c8bd784a1377d4da26abc5de34e921ccbf047e809bbd00733131c2",
+      "score_deck_sha256": "1087f2ee1d4d0c6f059c285860ad3f7990d22c491b24d6a6adcbaf1d2cc89059",
+      "task_certification_sha256": "f43c40a1aa559d1fd0ea899977ec9375e9d09a9b81b85aee4930f61784d9e1f2",
+      "task_record_sha256": "7f390cfd34ff3f8c085450be0b003461a8908368f199721668cc752167701813"
+    },
+    "release_dir": "382-programmable-frequency-divider"
+  }
+}

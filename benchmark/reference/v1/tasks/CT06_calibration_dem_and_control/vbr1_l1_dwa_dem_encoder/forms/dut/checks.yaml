@@ -1,0 +1,31 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "pointer_advances_by_sampled_input_code"
+    - "cell_enable_window_matches_effective_code_plus_lsb_boundary"
+    - "pointer_output_is_one_hot"
+    - "wraparound_and_multi_code_coverage"
+  public_observables:
+    - "clk_i"
+    - "rst_ni"
+    - "code_3..code_0"
+    - "cell_en_15..cell_en_0"
+    - "ptr_15..ptr_0"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Requires fresh EVAS/Spectre dual validation after CT06 content repair."

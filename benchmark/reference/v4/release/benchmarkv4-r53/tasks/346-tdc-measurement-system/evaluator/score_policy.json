@@ -1,0 +1,17 @@
+{
+  "candidate_artifacts": [
+    "tdc_measurement_top.va",
+    "edge_detector.va",
+    "interval_counter.va",
+    "binary_encoder.va",
+    "valid_latch.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "a5639753afe0fc7cc5df3f3bc090467f0eb83dca13f1f1fc8f0202c1473c0763",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "87ce6837b53bd91313f0bbaa33dba09f1e416ccc9241d1be72ecc28139523e1d",
+  "gold_solution_tree_sha256": "b0d0f931607cc6c619e2fa9b654a50c7360884bf60bf528253993545e6f72086",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "schema_version": "v4-dut-score-policy-v1",
+  "task_id": "v4-346"
+}

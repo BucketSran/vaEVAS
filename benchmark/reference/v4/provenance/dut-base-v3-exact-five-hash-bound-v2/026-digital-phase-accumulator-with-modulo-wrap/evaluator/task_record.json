@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "026",
+  "checker_task_id": "v4_026_digital_phase_accumulator_with_modulo_wrap",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "320d750ab85123bb60f37e6450802af5254b66ef15bdfc3e0ae1d8c3ea3d1894",
+    "checker_profile.json": "09a2a00b6aac2d3ed5a71c684f010f54f3f448db12e059b70ab4e502e1f348f7",
+    "derivation_manifest.json": "253408135fe8efa18a833fd336f959590556de5f02c3c7fb075dd3c833088dcb",
+    "family_spec.json": "b54b06ca961bd9587b8c4c6e3065284f39f15070e09f122f904ea3da4988a075",
+    "harness_spec.json": "8e4184427955cc4eaf276a2b314cf2ee97142c665c7b812f93eb81fc7d440da6",
+    "mutation_catalog.json": "4c3557798dacee31eb27072f8d0455acd2cd277fc0f306657f899abfdc20c0b2",
+    "profiles/feedback.json": "93751e7026d39c50b474eb5fead789908a203bc25a7e122f52dccd3e12207b27",
+    "profiles/score.json": "15fa1fa4c764f28051f23d86e9130d26b1266e01ac5c723f8581413fbc5f0175",
+    "score_tb.scs": "09fd0f4aa23ea1aa4932f36b0ffc30eedcc56ee8d8944dd581af4b4e75e48e80",
+    "solution_tree": "65c3c081e3ca9de6bca07857165efca0b0acb6d073a10c3fe930a5679ab05563",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "432bd1c0649ccca477aeab39dfd24ea7e6bd0c17f1ee6aa6ada846e38650250e",
+    "instruction.md": "2961fc0636986c93a1634a7bb2daa8d390eb3ec79be210a0da67414020593f6f",
+    "public_contract.json": "eb7809c40501ed62cb910ec1c357b91adb3ccb6d919b0410cdc32d62d9debdb4"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "320d750ab85123bb60f37e6450802af5254b66ef15bdfc3e0ae1d8c3ea3d1894"
+  },
+  "release_dir": "026-digital-phase-accumulator-with-modulo-wrap",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "028-digital-phase-accumulator-with-modulo-wrap",
+  "support_root": "",
+  "target_artifacts": [
+    "phase_accumulator_timer_wrap_ref.va"
+  ]
+}

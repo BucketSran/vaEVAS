@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "348-vga-gain-calibration-loop",
+  "checker_task_id": "v4_348_vga_gain_calibration_loop",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "65b245d433c97001b26210237aaca5a2724b5d4ec98e39a30e0a369dcc8ff3e0",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2268123f7611927f33b3960b3b003bdf566c7dbff240b6b21e8ccb0b3ba1b798",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "65b245d433c97001b26210237aaca5a2724b5d4ec98e39a30e0a369dcc8ff3e0",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "8f44d28f0abc9da23a6f74b79d1cf2d71117aba2744ee54b32a03e51e2f58317",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c8dc036005c50c3ce63ecc99fc55506a7e2b29c7087a0649e64b6ee599e95f89"
+  },
+  "family_id": "348",
+  "family_spec_sha256": "661d3b16bd2234a7b00e85d30b57df124c9e308dd14b56908509635257207959",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1de2164eedb8b41f79835d986c4551596cbb388c4e88b82223cad8567ec2bbf3",
+  "public_contract": "tasks/848-vga-gain-calibration-loop-testbench/public_contract.json",
+  "public_contract_sha256": "ab19572c48cf76fc87795081fce877d8dc1c04719c4688d7c4889373cf1667cf",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/848-vga-gain-calibration-loop-testbench",
+  "task_id": "v4-848"
+}

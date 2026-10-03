@@ -1,0 +1,82 @@
+{
+  "family_id": "289",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "8061631bddb6d3ac5b3550cd60294c02ba2da3d607b684cd89ffc8e4a402beb1",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b470da463c885f0699043e8a8d01a3b313a561ea0e6ae1483261ed596c36fa91",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "4fe23426c10ac253efefa56be1c0a848e4730d74a11e48d6e90dde15bcc42115",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "e7bc95d2bd4503477334d39190e8ae6c52fff880be9c26b72af50faac4cd8cc6",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DECAY_STATE_AND_ALL",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "57ad5c68583b6fba756b03601f0eb6aa40d4fb46000de07631b85bab99fc8098",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "842aa02307090108815d87b651f5c23e5695d75eef54d8f4c2fbde0c4189b524",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "d6309f82cafe32d40227a11874eebd33d7e627fee4c712829a9628e697cf7d40",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "4d8b7f438bec6c8306c30702411180b5baa1c7273c1e09a96ebc09af89a83e62",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_DECAY_STATE_AND_ALL",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "a697b2c2b74fa5dd41f3db9b0110bc63f743556a803337c6f6d7258367b8b6f4",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "d836ed1569b6d6fa1fd77a430336ee609a4f7b47bf91d7f7f58c45a508be2702",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "289",
+    "hashes": {
+      "mutation_catalog_sha256": "91931bd5a53e471b7e9f1db06099ca524b1b47c90e2ac3380c505f1e8e461f32",
+      "score_deck_sha256": "121c46dd8fb2b4225761cb8dde366db3f36c46787264a414f7451625893b1fb2",
+      "task_certification_sha256": "03e4e174ac94502810d7c215611a993a96c4c01946a7d7bac4dad84c1b312690",
+      "task_record_sha256": "a8870bc486a8f9da29e2dcdae36ee6f61518caefd0357d2105a8cfe2a9229fa0"
+    },
+    "release_dir": "289-iterative-decay-estimator"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "family_id": "316",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_controller_update_direction_wrong/certification.json",
+        "certification_sha256": "bce7a55fffd1d34735e78f88c5324f1e3fb86db2cb33441b9c8e621ab0517d5c",
+        "fault_class": "controller_update_direction_wrong",
+        "mutation_bundle_sha256": "8f3185f6ed8d3a95e61d4dcc01a6f729d7809828a547e85fd3a0841fce5e55e8",
+        "mutation_id": "neg_001_controller_update_direction_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_controller_update_direction_wrong/certification.json",
+        "trigger_condition": "controller_update_direction_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_CLEAR_GAIN_CODE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "af969b98447776989ff7354899756d524203ed316fc5e263788b785582a45197",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "fd15444943fee83f81145535f5777f91960c432f930f6ee0e4b56fcc573ccff1",
+        "mutation_id": "neg_003_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_INCREMENT_OR_DECREMENT_THE_GAIN_CODE",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_lock_qualification_too_early/certification.json",
+        "certification_sha256": "022efd739aff84576976c2f5ddb8f338b34a68641254999141174d1ce9f80c8f",
+        "fault_class": "lock_qualification_too_early",
+        "mutation_bundle_sha256": "591c244b4c6c9fd0218851ce3dab2e1228125d3b03be92da70f9d2e8d23ec6f1",
+        "mutation_id": "neg_004_lock_qualification_too_early",
+        "source_catalog_certification_path": "negative_variants/neg_004_lock_qualification_too_early/certification.json",
+        "trigger_condition": "lock_qualification_too_early",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_AS_A_CLAMPED_RESIDUE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_error_metric_wrong/certification.json",
+        "certification_sha256": "a5d7ced3315f14e2494c67fdc4cfcde9465e117c595b65e72ac6acda153e8725",
+        "fault_class": "error_metric_wrong",
+        "mutation_bundle_sha256": "ec62413359eb01a34a265b55f13d8f79d582b07eb09909ee4d3b9946c3f4d256",
+        "mutation_id": "neg_005_error_metric_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_error_metric_wrong/certification.json",
+        "trigger_condition": "error_metric_wrong",
+        "violated_property_ids": [
+          "P_ASSERT_LOCKED_AFTER_THREE_CONSECUTIVE_UPDATES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_residue_core_gain_step_wrong/certification.json",
+        "certification_sha256": "6ab0deeb3503fe663b06802e098ec670d2133272e76199b168b6871bfc3cc65d",
+        "fault_class": "residue_core_gain_step_wrong",
+        "mutation_bundle_sha256": "0cf2cd6907d9fb8e40bb2cd95c3c99ec003af4bcd0d32d7c216de95e453735b8",
+        "mutation_id": "neg_002_residue_core_gain_step_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_002_residue_core_gain_step_wrong/certification.json",
+        "trigger_condition": "residue_core_gain_step_wrong",
+        "violated_property_ids": [
+          "P_WHILE_CAL_EN_IS_HIGH_COMPARE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_controller_update_direction_wrong",
+    "canonical_dut_id": "316",
+    "hashes": {
+      "mutation_catalog_sha256": "4e00f8d18c11c42b37f575f16f5d6f4076bca4b3c66377edf95dfb642a28408c",
+      "score_deck_sha256": "fe997112f792874841afc320f9dc124de8c26b2133e5c5f375c002162d5f75ac",
+      "task_certification_sha256": "148c5a70f26b1caea3a2af13159b98457148a300a0bb1708b195d925200c3f5c",
+      "task_record_sha256": "04ebdc5a44d902595ed70d33244fc28be2a8cd1a5bf2a723a7e3a560b263059a"
+    },
+    "release_dir": "316-residue-amplifier-gain-calibration"
+  }
+}

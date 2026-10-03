@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "clock_sample_1600n_sequencer.va"
+  ],
+  "canonical_dut_source_slug": "195-clock-sample-1600n-sequencer",
+  "checker_task_id": "v4_195_clock_sample_1600n_sequencer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "748560124c36a866e9a5577f6d35e3152dec370915b51726860dfc2fc4c9107b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "afa3a9a8a89e9d61941daa4849bc7b42e3b70885bc47013de4aadfa3103b3867",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "be65716eb39b0de2dd1894fb0895d08ef878d54494fbc14e500c6cafbdfda0e6",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "195",
+  "family_spec_sha256": "359da5fac124d0879ff84034919283b75973d5ab10d1698ec71b6b8a7ddb62b9",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "94caae4d0df7092b2ec7a0855e2c6c08ca238a024c8655a9648f2e83094c6a80",
+  "public_contract": "tasks/1195-clock-sample-1600n-sequencer-bugfix/public_contract.json",
+  "public_contract_sha256": "09842835ac990c238b26cb91e14ecd0020dd868bb1af525809c7a72c5172e4c9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1195-clock-sample-1600n-sequencer-bugfix",
+  "task_id": "v4-1195"
+}

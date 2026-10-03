@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "resettable_integrator.va"
+
+V_vin (vin 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_rst (rst 0) vsource type=pulse val0=0.9 val1=0 period=20n delay=1n rise=50p fall=50p width=18n
+
+XDUT (vin rst vout) resettable_integrator
+
+tran tran stop=5n maxstep=100p
+save vin rst

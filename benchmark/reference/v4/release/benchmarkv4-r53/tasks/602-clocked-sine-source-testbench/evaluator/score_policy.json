@@ -1,0 +1,34 @@
+{
+  "bugfix_seed_mutation_id": "neg_002_static_common_mode",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "b28c64c108cd4cbbc17f1462ce6cd59edc9e3fa8a7979036ebd7110375f02354",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "506455a3ff84f72237c0971d5729369c24edcd7c3eb9fcf6cb4b0a6124b204d1",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_001_zero",
+    "neg_006_seed_parameter_ignored",
+    "neg_003_common_mode_sine",
+    "neg_004_reset_stuck",
+    "neg_002_static_common_mode"
+  ],
+  "read_only_support_artifacts": [
+    "support/dither_adder.va",
+    "support/gain_amp_fixed.va",
+    "support/lfsr.va"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "7d41baf4d34af34a2192742c91a815a470abfefbdf0e18078902883563e6cb2f",
+  "reference_tb_source_kind": "independent_reference_tb",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-602"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "settling_window_detector.va"
+  ],
+  "canonical_dut_source_slug": "063-settling-window-detector",
+  "checker_task_id": "v4_063_settling_window_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7f66d209ff4db35d25b09508968d7b44c5bd16f855c145919629f549b2e8bc68",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d7a0b2f26c2a200f29cfdc37bad91150a8cba3afcff9405b6a800b43e0ecd9a0",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "722ccf3ce3f90def3b206f8eb01011c542ff8bdf8fd9544dfdebaf41fcf012fc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "063",
+  "family_spec_sha256": "53f746f228722228727bd0f717df19e2c3d00e4bb08e9a1871b4fb69a14c7be8",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "30b6a8add51ab393f770cbdd51f076a810985437201f393330f4a7f4aee8efd2",
+  "public_contract": "tasks/063-settling-window-detector/public_contract.json",
+  "public_contract_sha256": "6cc3f4c862b4d570c1ba9372ba335fb2b7c8fd7f4b122d93c3b7b5125124a571",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/063-settling-window-detector",
+  "task_id": "v4-063"
+}

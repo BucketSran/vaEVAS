@@ -1,0 +1,36 @@
+{
+  "release_entry_id": "vbr1_l1_bang_bang_phase_detector",
+  "task_id": "vbr1_l1_bang_bang_phase_detector:dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "Bang-bang phase detector"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/dut/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/dut/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/dut/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/dut/gold/bbpd_ref.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/dut/gold/tb_bbpd_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(cross(",
+      "electrical",
+      "up",
+      "down",
+      "retimed_data"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

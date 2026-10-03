@@ -1,0 +1,138 @@
+{
+  "family_id": "091",
+  "gold_bundle_sha256": "2519d46f93ca13ac49050ba53e274bf332d78edd391f7463575058e5bdd22176",
+  "mutations": [
+    {
+      "artifact_hashes": {
+        "chopper_stabilized_differential_amplifier.va": "8a7eaef0c1f0662f597593cf3fbd6120cfd5b784779113191d78f8df55cfe158"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_CHOP_DEMOD_BASEBAND_GAIN",
+          "P_INTERNAL_OFFSET_SUPPRESSION"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_001_no_synchronous_demod/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "chopper_stabilized_differential_amplifier.va"
+      ],
+      "fault_class": "missing_synchronous_demodulation",
+      "id": "neg_001_no_synchronous_demod",
+      "trigger_condition": "The score stimulus exercises both chopper polarities, baseband sign changes, hold, disable clearing, and convergence.",
+      "violated_property_ids": [
+        "P_CHOP_DEMOD_BASEBAND_GAIN",
+        "P_INTERNAL_OFFSET_SUPPRESSION"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "chopper_stabilized_differential_amplifier.va": "516bc1a470b065f16ca7ce0f62cc47b595fec2c79909c7d6b8179f786f6fea14"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_INTERNAL_OFFSET_SUPPRESSION"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_002_offset_omitted/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "chopper_stabilized_differential_amplifier.va"
+      ],
+      "fault_class": "internal_offset_omitted",
+      "id": "neg_002_offset_omitted",
+      "trigger_condition": "The score stimulus exercises both chopper polarities, baseband sign changes, hold, disable clearing, and convergence.",
+      "violated_property_ids": [
+        "P_INTERNAL_OFFSET_SUPPRESSION"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "chopper_stabilized_differential_amplifier.va": "2218245560771043dc566efb6ae353beb60b728954c279acc10ae54596bae82c"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_EVENT_DRIVEN_LOWPASS",
+          "P_INTERNAL_OFFSET_SUPPRESSION",
+          "P_SETTLED_QUALIFICATION"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_003_lowpass_bypassed/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "chopper_stabilized_differential_amplifier.va"
+      ],
+      "fault_class": "lowpass_state_bypassed",
+      "id": "neg_003_lowpass_bypassed",
+      "trigger_condition": "The score stimulus exercises both chopper polarities, baseband sign changes, hold, disable clearing, and convergence.",
+      "violated_property_ids": [
+        "P_EVENT_DRIVEN_LOWPASS",
+        "P_INTERNAL_OFFSET_SUPPRESSION",
+        "P_SETTLED_QUALIFICATION"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "chopper_stabilized_differential_amplifier.va": "e3fc2a6b06f4b7cb7284de0c2fe00910f8d65e02e116acba2f7c251dcb0aac4e"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_CHOP_DEMOD_BASEBAND_GAIN"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_004_gain_wrong/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "chopper_stabilized_differential_amplifier.va"
+      ],
+      "fault_class": "baseband_gain_error",
+      "id": "neg_004_gain_wrong",
+      "trigger_condition": "The score stimulus exercises both chopper polarities, baseband sign changes, hold, disable clearing, and convergence.",
+      "violated_property_ids": [
+        "P_CHOP_DEMOD_BASEBAND_GAIN"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "chopper_stabilized_differential_amplifier.va": "31cc36110f7d65e710808842c50ad57204d5ae7e539036acb5ba3cd28354cc14"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_HOLD_PRESERVES_STATE"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_005_hold_ignored/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "chopper_stabilized_differential_amplifier.va"
+      ],
+      "fault_class": "hold_semantics_error",
+      "id": "neg_005_hold_ignored",
+      "trigger_condition": "The score stimulus exercises both chopper polarities, baseband sign changes, hold, disable clearing, and convergence.",
+      "violated_property_ids": [
+        "P_HOLD_PRESERVES_STATE"
+      ]
+    }
+  ],
+  "schema_version": "v4-mutation-catalog-v1"
+}

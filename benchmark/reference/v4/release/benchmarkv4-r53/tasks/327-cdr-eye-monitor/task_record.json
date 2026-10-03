@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "cdr_eye_monitor_top.va",
+    "edge_margin_sampler.va",
+    "eye_metric_filter.va"
+  ],
+  "canonical_dut_source_slug": "327-cdr-eye-monitor",
+  "checker_task_id": "v4_327_cdr_eye_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4056d2a6b91e8d79f2942cdffbb5bdfa88476b27c5d2222a51190acc771208f4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c9e208372e36881d7f996f0a2ca6c3a1213d41e5a3464c44cd6478f0ae4620fa",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fb034c484bb73669b21982f1a2afc75dce45d49cb0a8631d7b685c56702b7a46",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "327",
+  "family_spec_sha256": "261d594911ce33b429fb970cd0e993a01125f416a9779ce67cef38eae1a3b58a",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1b0288f0fd67156c1107c83e11ed25fa2cb419a3932a4a10d6fe317f1893a57e",
+  "public_contract": "tasks/327-cdr-eye-monitor/public_contract.json",
+  "public_contract_sha256": "e01b382c3192bcf28553892823a6330e6782dde6d1890284dcc97a412db7c518",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/327-cdr-eye-monitor",
+  "task_id": "v4-327"
+}

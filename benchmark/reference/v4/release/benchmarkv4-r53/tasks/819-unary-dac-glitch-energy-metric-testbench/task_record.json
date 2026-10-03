@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "319-unary-dac-glitch-energy-metric",
+  "checker_task_id": "v4_319_unary_dac_glitch_energy_metric",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e6731dfc6f0c9fdd54572c3a92349f246c57a17edf6ea9a14f35f50688ce4352",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "f8d5ce464e648888d6433df9976ef88d368af3adf7b7d65cc2a1a7fb93237148",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e6731dfc6f0c9fdd54572c3a92349f246c57a17edf6ea9a14f35f50688ce4352",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9f74ffc16c59e890884aeff0c116a09bf1f9bedbd588d94c048db2042cdc247e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "76d53dd4c4d9eae9763582d9d43dd92c3c1688ac760942ca98ecb60e5f560ee5"
+  },
+  "family_id": "319",
+  "family_spec_sha256": "b0ee317b8eecb09fd8f94314ea10a14981c84209b232d9bc54d4ba2338d727c1",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "546d616c4e8f5eba7421e927798e598eeb77cf5407376a6371d0da66626d02c8",
+  "public_contract": "tasks/819-unary-dac-glitch-energy-metric-testbench/public_contract.json",
+  "public_contract_sha256": "5e56c30cfcb513a326b20771b8857764de3cb05d55ace2058b7e377daf5d6d70",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/819-unary-dac-glitch-energy-metric-testbench",
+  "task_id": "v4-819"
+}

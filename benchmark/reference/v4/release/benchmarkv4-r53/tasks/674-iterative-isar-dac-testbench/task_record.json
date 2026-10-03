@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "174-iterative-isar-dac",
+  "checker_task_id": "v4_174_iterative_isar_dac",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "7e6829bfc8c5905c61671f02ea99567cd8e53840d0df3ead60891cc6dfcea5be",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "086be81894c7bec2020810d2745e534c0a30836454f277f0f45fc7514dff68a0",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "7e6829bfc8c5905c61671f02ea99567cd8e53840d0df3ead60891cc6dfcea5be",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f13edc3bda21303fc45f1537caa6b272984497412aca576a952ab5357e8a934e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "5cbb16f4c346f18323b340997c254ce9c990c4079c86edad1bdda727b755ec67"
+  },
+  "family_id": "174",
+  "family_spec_sha256": "c822b9fcce80ebccfed937d4e0eda5a12bccac903076d1afa434ad0288482942",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "737719ca7b106ed27836f44f72dd55007c3a3d34ef6a52503127eb379b0ccaa9",
+  "public_contract": "tasks/674-iterative-isar-dac-testbench/public_contract.json",
+  "public_contract_sha256": "e6042f2bbc6fb1580e503b7186c7adaa20671ee8475c0cdbb760686b97776879",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/674-iterative-isar-dac-testbench",
+  "task_id": "v4-674"
+}

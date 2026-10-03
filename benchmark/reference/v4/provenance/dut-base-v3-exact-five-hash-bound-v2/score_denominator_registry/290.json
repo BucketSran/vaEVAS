@@ -1,0 +1,82 @@
+{
+  "family_id": "290",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "b6e090c7219207ab688b50df80ff5d7d34f3505b6d59ad4189afcde678997100",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "f67c08d9e422eab83ece160a6fdbfd883e539388ab825ac589f87846ab39c919",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "3b586823255c063bbc9e0e82fc3f9ca1b10ab14abeced82e3c285a035b707678",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "10563461851c20d600b5c076a33502e9fca1145d48723ac079c0e8823d7b6cfe",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_BOUNDED_ACCUMULATOR_STATE_AND",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "4d19969b2eb84f2c407c3778fa39a71ade8c5585528932b90c3bebe80ed128dd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ffe942f76cef1ac3579444018d6160f1d705e029b306d1379449dddb202d46b8",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "44eb8a5c08caa5338770e69ddcead06af817e8a9bd6572cf993f6bdfb00efe05",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "0da4dc90759c326d293c00861162ad6dbc28f53c85f7fc053febe1202eb9bdfd",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_BOUNDED_ACCUMULATOR_STATE_AND",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "fecb85e515dc19a25a25d87bdca88e81713d136349853fb5d71a382e47458eb8",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "ccffd16a0e33343288100a7098531e4fd3117f19e9fe3bff7763441b5b2eb72e",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "290",
+    "hashes": {
+      "mutation_catalog_sha256": "99a3ff7c172897f1ffac138fc2ebcc405816878588bccaee985718eb6ba413b1",
+      "score_deck_sha256": "313f982b2dce4f190038a85a8899b07ebc1d41218673dd9ba77776d15a0d2475",
+      "task_certification_sha256": "bee98ca86fe4c0198c693ba4ca26cf3f0c14bf91fb07639087e82fca2afce762",
+      "task_record_sha256": "91593603057f948fa74a9de3f67fd46be19c35cef852bcfe94e6b2836ae373cc"
+    },
+    "release_dir": "290-bounded-window-accumulator"
+  }
+}

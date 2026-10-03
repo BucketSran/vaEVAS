@@ -1,0 +1,78 @@
+{
+  "family_id": "059",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_code/certification.json",
+        "certification_sha256": "52192f20d286203a846a31f426abfc5671663e2bf3c74e79377f27c227140a23",
+        "fault_class": "zero_code",
+        "mutation_bundle_sha256": "b1f3819a61a75442226f22e1727f11d296f2f2aa8229711343f457afc383178c",
+        "mutation_id": "neg_001_zero_code",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_code/certification.json",
+        "trigger_condition": "never reports interval",
+        "violated_property_ids": [
+          "P_START_ARMS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_off_by_one/certification.json",
+        "certification_sha256": "3015fe7297cc96b230275c310f8e7c531e7644a7c4b85fbf5256f8ac468a1dbb",
+        "fault_class": "off_by_one",
+        "mutation_bundle_sha256": "e44528660faee02226c6d285720d0d29b2943eed39f83ec4edba7fc309606bd2",
+        "mutation_id": "neg_002_off_by_one",
+        "source_catalog_certification_path": "negative_variants/neg_002_off_by_one/certification.json",
+        "trigger_condition": "adds one count",
+        "violated_property_ids": [
+          "P_NEXT_STOP_COMPLETES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_scale/certification.json",
+        "certification_sha256": "cfa1bb3f7e8710ba0eac6ecf9102e3f9734643b4caa3ca2fd0641017dee87962",
+        "fault_class": "half_scale",
+        "mutation_bundle_sha256": "a60b7cc476db88f6d8c2132e10a80a5070d367c624c7bf8652d466bae49315e3",
+        "mutation_id": "neg_004_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_scale/certification.json",
+        "trigger_condition": "uses 2 ns LSB",
+        "violated_property_ids": [
+          "P_CODE_SATURATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_stop_only/certification.json",
+        "certification_sha256": "48a9d65277a0f7fe508357f904c78acbe704a6940b0f73a9de9de51860b46de2",
+        "fault_class": "stop_only",
+        "mutation_bundle_sha256": "8054b03b65c9e9976cfdc4710104576c811e71e193dfc9d596acbecd5a0a2d61",
+        "mutation_id": "neg_005_stop_only",
+        "source_catalog_certification_path": "negative_variants/neg_005_stop_only/certification.json",
+        "trigger_condition": "measures from time zero",
+        "violated_property_ids": [
+          "P_VALID_AND_BIT_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_valid/certification.json",
+        "certification_sha256": "8b354577e8e84578af463243592dd2824b7c3605f286c2a9402b791644fdf41c",
+        "fault_class": "no_valid",
+        "mutation_bundle_sha256": "1184a536eeb07f7240571b83d22107327fc09c10e185b6f72c8044866391e06a",
+        "mutation_id": "neg_003_no_valid",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_valid/certification.json",
+        "trigger_condition": "does not assert valid",
+        "violated_property_ids": [
+          "P_INTERVAL_QUANTIZATION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero_code",
+    "canonical_dut_id": "059",
+    "hashes": {
+      "mutation_catalog_sha256": "1c5318d8fb9a7e8bbda41de95494bb9a363eb9250be24d4f51f3553c03a3fea7",
+      "score_deck_sha256": "1f5a0cb15809001a8d0f9e3a91a75501cb706301f00858683428a7d5c0f482ec",
+      "task_certification_sha256": "52b020dcb84a6af3969c9f0cbb9c13831703031c7ac8ecfbece76e6484f5de45",
+      "task_record_sha256": "39d9ea0515faeb209e0aee52e5ca98801f180852a62c7984be62b9bb4769417e"
+    },
+    "release_dir": "059-edge-interval-tdc-8b"
+  }
+}

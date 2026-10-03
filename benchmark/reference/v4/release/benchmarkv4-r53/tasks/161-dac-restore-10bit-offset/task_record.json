@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dac_restore_10bit_offset.va"
+  ],
+  "canonical_dut_source_slug": "161-dac-restore-10bit-offset",
+  "checker_task_id": "v4_161_dac_restore_10bit_offset",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d15796816eefd865ca384595d31d713a10ede060f53c338f0e5b7920dae67a6d",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "cbf86a22230bed5d95b81790aeb52b5c43e07378eb9e886969674b501ca178fa",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "098a05c008180f8e4c5388a1c6d4373d5a7f4b9cc554387c0680748a88ada031",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "161",
+  "family_spec_sha256": "6ca0061e4ba76f5cc3e2cd154dd4c514debcd81e61e5d258cc90e9a59c2b4ed1",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "607e16560f27e44257c5c1b41ad0ff524cb915840e42f4d6b26de318526332a9",
+  "public_contract": "tasks/161-dac-restore-10bit-offset/public_contract.json",
+  "public_contract_sha256": "f0a1a234b11dde3d9fc3553dc964dba7c93207df97b693b24357821997674d61",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/161-dac-restore-10bit-offset",
+  "task_id": "v4-161"
+}

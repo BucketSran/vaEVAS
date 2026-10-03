@@ -1,0 +1,121 @@
+{
+  "release_entry_id": "vbr1_l1_precision_rectifier_envelope_detector",
+  "task_id": "vbr1_l1_precision_rectifier_envelope_detector:bugfix",
+  "source_task_id": "vbr1_l1_precision_rectifier_envelope_detector_bugfix_fixed",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Precision rectifier/envelope detector"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_precision_rectifier_envelope_detector/bugfix/fixed",
+    "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_precision_rectifier_envelope_detector/bugfix/fixed",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_precision_rectifier_envelope_detector/bugfix/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_precision_rectifier_envelope_detector/bugfix/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/bugfix/gold/dut_fixed.va"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct04-dual-20260525_222500/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct04_20260525_r2/vbr1_l1_precision_rectifier_envelope_detector/bugfix/fixed",
+    "result_root": "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_precision_rectifier_envelope_detector/bugfix/fixed",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        9e-08
+      ],
+      "signals_compared": 6,
+      "samples": 1200,
+      "max_rmse_v": 0.11180339887498948,
+      "max_abs_v": 1.0,
+      "mean_relative_rms_error": 0.0038799033404713773,
+      "max_relative_rms_error": 0.0125,
+      "mean_nrmse": 0.0038799033404713773,
+      "max_nrmse": 0.0125,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 4.2177827011480856e-05,
+          "max_abs_v": 0.0004933053480281058,
+          "span_v": 0.9,
+          "nrmse": 4.686425223497873e-05,
+          "kind": "analog"
+        },
+        "env": {
+          "rmse_v": 1.3514831364651214e-06,
+          "max_abs_v": 1.6135117532400933e-05,
+          "span_v": 0.3816658333314816,
+          "nrmse": 3.5410115824838353e-06,
+          "kind": "analog"
+        },
+        "metric": {
+          "rmse_v": 0.11180339887498948,
+          "max_abs_v": 1.0,
+          "span_v": 0.9,
+          "nrmse": 0.0125,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0125
+        },
+        "rect": {
+          "rmse_v": 0.004279070013505661,
+          "max_abs_v": 0.006000044877999766,
+          "span_v": 0.39883236030025054,
+          "nrmse": 0.010728994032190053,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 1.4482976716855352e-08,
+          "max_abs_v": 4.81460968870806e-08,
+          "span_v": 0.6980817394495413,
+          "nrmse": 2.0746820749495064e-08,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_precision_rectifier_envelope_detector/forms/bugfix/gold/dut_fixed.va"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

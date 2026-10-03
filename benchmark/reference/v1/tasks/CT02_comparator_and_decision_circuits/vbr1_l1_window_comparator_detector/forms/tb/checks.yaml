@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "window_comparator_ref.va"
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+tb_compile:
+  backend: "evas"
+sim_correct:
+  tb_companion_role: "function_checked_testbench"
+  strong_benchmark_claim: true
+  checks:
+    - "true_window_comparator"
+  public_observables:
+    - "time"
+    - "vin"
+    - "out"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

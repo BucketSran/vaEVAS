@@ -1,0 +1,54 @@
+{
+  "id": "vbm1_debounce_latch_bugfix",
+  "task_id": "vbm1_debounce_latch_bugfix",
+  "release_entry_id": "vbr1_l1_debounce_latch",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "Comparator and Decision Circuits",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_debounce_latch_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_debounce_latch_buggy.scs",
+    "tb_debounce_latch_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_debounce_latch_buggy.scs",
+    "gold/tb_debounce_latch_ref.scs"
+  ],
+  "bugfix": {
+    "buggy_source": "gold/dut_buggy.va",
+    "fixed_source": "gold/dut_fixed.va",
+    "buggy_testbench": "gold/tb_debounce_latch_buggy.scs",
+    "fixed_testbench": "gold/tb_debounce_latch_ref.scs",
+    "defect": "The buggy implementation sets the latch immediately on a rising input edge instead of waiting for the debounce timer.",
+    "repair": "Restore the armed timer path so short pulses clear before the debounce interval and only a stable high input sets the latch."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_debounce_latch_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_debounce_latch_bugfix/spectre_result.json"
+  }
+}

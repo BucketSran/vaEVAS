@@ -1,0 +1,78 @@
+{
+  "family_id": "388",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "1b70a69c3615b0a211038fce7a5aef80ea87dc0a7cdef4ac63dded278edd2ed1",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "8213c6ec9fb427934ce70846247fd84c2b601e463ffeec5c45f410889957e1e0",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_HEADROOM_METRIC_REPORTS_THE_REMAINING_VBIAS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d66dec9ee076d59f829f91261bbf4dbd99fea29ce0eac2cce6394fde688ab69d",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "0898c4817527a662750405b14e06d5b3af5b0e0c426e6a86bac28b29e24d468a",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_OR_LOW_ENABLE_DRIVES_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "172de87b7e47a8af934289c05742d39abf514eb79e02e8798d3903ef07dfc9c7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "0fc213caaa9f9dc479a055f5efaeb9de0f8dde77a847ef1ab9e87b251d8cf879",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_WHEN_ENABLED_THE_OUTPUT_FOLLOWS_VIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "ad94a7f6a47ba4c631cf3c614a50690827b66632bc10041371cd98a289c1c366",
+        "fault_class": "valid_stuck_high_when_disabled",
+        "mutation_bundle_sha256": "797df611bc5df271f328c3d9f01a08ff00d925a7fb8a306a35e958bfe01ca5b1",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "valid remains high during reset, disable, or insufficient bias",
+        "violated_property_ids": [
+          "P_VALID_IS_HIGH_ONLY_WHEN_ENABLED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "1abd9d539e17059cac490c94cb051aa714e43c2a1fbc8c33f086a5ca83bc4ef6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "00a9c431531fc33f8a97599293984a0befb58b9b5ad3f8fd7f4ef1bf1e0d2f83",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_CLAMP_THE_OUTPUT_BETWEEN_VSS_AND"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "388",
+    "hashes": {
+      "mutation_catalog_sha256": "dfb727f23f5aed68849e1db6a95bede1c43972318db5738c4c7446ad420df03c",
+      "score_deck_sha256": "c30413e6426083f915e13edb7518103c8884c7b9e5683c869f595969905d7061",
+      "task_certification_sha256": "d86d3c1bf1d3e1874d4b2c153645f641d12da9d0959f61da7528c9bcf1b7237f",
+      "task_record_sha256": "59744dec77a9de588b37f30df4812b55edcbae5cd9407ab79d53f051ce23ffd7"
+    },
+    "release_dir": "388-source-follower-buffer-macro"
+  }
+}

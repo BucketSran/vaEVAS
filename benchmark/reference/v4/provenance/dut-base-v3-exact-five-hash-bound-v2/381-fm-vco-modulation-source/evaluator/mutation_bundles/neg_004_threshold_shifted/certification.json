@@ -1,0 +1,48 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED, P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS, P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE satisfy the public contract; fault class threshold_or_boundary_fault is rejected",
+    "observed": "EVAS: P_RESET_DISABLE_CLEAR mismatch_count=0 expected=clear_on_reset_and_disable observed=reset_clear=True,disabled_clear=True,raw_clear_errors=10; P_FREQUENCY_TRANSFER mismatch_count=0 expected=freq_metric=f(mod_in) observed=stable_probes=4165,probe_errors=0; P_METRIC_COVERAGE mismatch_count=0 expected=low_high_lower_clamp_and_span observed=span=0.495,lower_clamp_seen=True; P_LOWER_CLAMP mismatch_count=0 expected=freq_metric_tracks_1MHz_lower_clamp observed=probe_errors=0; P_OSCILLATOR_ACTIVITY mismatch_count=0 expected=osc_out_has_low_high_activity observed=True; P_PHASE_MARKER_ACTIVITY mismatch_count=0 expected=phase_marker_has_low_high_activity observed=True; P_PHASE_MARKER_ALIGNMENT mismatch_count=0 expected=marker_rise_aligned_with_stable_osc_cycle_phase observed=phase=rising,marker_rises=2,cycle_anchors=3,misaligned=0; P_PHASE_MARKER_CADENCE mismatch_count=0 expected=one_marker_event_per_cycle_at_stable_rising_or_falling_phase observed=phase=rising,cycle_anchors=3,missing=0,extra_rises=0; P_PERIOD_ORDERING mismatch_count=1 expected=high_mod_period<nominal_period<clamp_period observed=high=None,nominal=None,clamp=None; P_PERIOD_MODEL mismatch_count=3 expected=measured_over_expected_period_scale_consistent_across_modulation observed=measured={'nominal': None, 'high': None, 'clamp': None},expected={'nominal': None, 'high': None, 'clamp': None},scales={'nominal': None, 'high': None, 'clamp': None}; P_VALID_AFTER_ENABLE mismatch_count=3324 expected=valid_low_until_first_cycle_then_continuously_high observed=seen=True,early=3324,hold=0,late=0",
+    "violated_property_ids": [
+      "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETED",
+      "P_OSC_OUT_MUST_TOGGLE_BETWEEN_VSS",
+      "P_PHASE_MARKER_MUST_PULSE_OR_TOGGLE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_381_fm_vco_modulation_source",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 8498
+  },
+  "family_id": "381",
+  "inputs": {
+    "checker_profile_sha256": "27d94a40f7d4383b4acd98ba3c5548ad1302777f1df3d419f067db7a808714e8",
+    "harness_spec_sha256": "7f5b7782983ce6efef29f7b240ec59a175ade3f7577b0ebc32f651055c39efda",
+    "mutation_bundle_sha256": "3ff2fa611d0e3f2e7bd25a2dd1b7deccd6bf70d24b4aee3883aff6d6575e94a3",
+    "profile_sha256": "8b1a528c42bdda9dc6b3adb698dbeb14e0ab446d5ad4018c72b456581a045236"
+  },
+  "mutation_id": "neg_004_threshold_shifted",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

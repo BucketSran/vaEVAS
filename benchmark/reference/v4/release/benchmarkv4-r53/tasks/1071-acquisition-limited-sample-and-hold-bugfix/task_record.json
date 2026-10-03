@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "acquisition_limited_sample_hold.va"
+  ],
+  "canonical_dut_source_slug": "071-acquisition-limited-sample-and-hold",
+  "checker_task_id": "v4_071_acquisition_limited_sample_and_hold",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "569864e3413c73f0a85d9a3136714ba78e46fbbf4252f62dc8cd701809ea78cb",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "4cc9862c25361366c8d3bb57528d868bd2c6dc0ddeb12d2ba37f727d68b4acf0",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0ce11e9b10fa884b3bcf698f4ddb5d9a788fc16b1a18a19b021b76d2224f92b4",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "071",
+  "family_spec_sha256": "f20158c2fa17a2f224375fe7a04b2fc65de2200330874fac447375c7d21acf52",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b5c45b32660e92dd419e708537fbe613c70b6c9660c65eee7a156b9a7cf86d8d",
+  "public_contract": "tasks/1071-acquisition-limited-sample-and-hold-bugfix/public_contract.json",
+  "public_contract_sha256": "ea5b8e5a7df2279e1713c1452ac94e70953c10b209804e21294f1c792e60362f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1071-acquisition-limited-sample-and-hold-bugfix",
+  "task_id": "v4-1071"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "pipeline_stage",
+  "task_id": "pipeline_stage",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "checker_task_id": "pipeline_stage",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-release-v1",
+  "family": "spec-to-va",
+  "category": "adc",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "release_form": "dut",
+  "provenance_status": "release_addition_pending_dual",
+  "counts": {
+    "model_capability": false,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "transition(",
+    "@(cross("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "pipeline_stage.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/pipeline_stage.va",
+    "gold/tb_pipeline_stage_ref.scs"
+  ],
+  "evidence": {
+    "notes": "Pipeline ADC MDAC stage promoted as CT01 release addition; fresh dual evidence pending."
+  }
+}

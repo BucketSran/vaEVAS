@@ -1,0 +1,29 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "up_pulses_dominate_in_lead_window"
+    - "dn_pulses_dominate_in_lag_window"
+    - "up_dn_overlap_fraction_low"
+  public_observables:
+    - "clk"
+    - "data"
+    - "up"
+    - "dn"
+    - "retimed_data"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Fresh EVAS/Spectre dual validation is required after strengthening this testbench checker contract."

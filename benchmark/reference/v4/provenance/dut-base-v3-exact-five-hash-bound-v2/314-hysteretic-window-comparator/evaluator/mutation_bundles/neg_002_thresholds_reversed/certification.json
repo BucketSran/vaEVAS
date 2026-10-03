@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_USE_LOW_TRIP_AND_HIGH_TRIP satisfy the public contract; fault class thresholds_reversed is rejected",
+    "observed": "EVAS: v4_314_missing_window_assertion time=1.450000e-08 vin=0.43 low_trip=0.4 high_trip=0.62 expected=0.9 observed=0 mismatch=0.9 v4_314 checked=935 reset_samples=46 disabled_samples=64 inside=True outside=True low_hold=True high_hold=True state_errors=649 metric_errors=649 clear_errors=0 toggle_width_errors=0 missing_toggle_count=6",
+    "violated_property_ids": [
+      "P_USE_LOW_TRIP_AND_HIGH_TRIP"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_314_hysteretic_window_comparator",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1132
+  },
+  "family_id": "314",
+  "inputs": {
+    "checker_profile_sha256": "78c0aab76d6a242d94d7d7db776200dd77a3c842a9bcfb23d071b51ebaa7db0b",
+    "harness_spec_sha256": "9e8d89de693709c66aed2c19786d6c131f97f2c3dbe134000da3aba35e50d37a",
+    "mutation_bundle_sha256": "960d5cd069360dc991282bfcae44dc79fb020136aaf99b3bf3bc5a23ae36e559",
+    "profile_sha256": "a1d386a21d2f297c51f479dcd8ffcc0b0d14f15c94cde7bb5e9ed469dad3e1a1"
+  },
+  "mutation_id": "neg_002_thresholds_reversed",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

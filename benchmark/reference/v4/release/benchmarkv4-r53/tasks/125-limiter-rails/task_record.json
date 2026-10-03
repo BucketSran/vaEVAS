@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "limiter_rails.va"
+  ],
+  "canonical_dut_source_slug": "125-limiter-rails",
+  "checker_task_id": "v4_125_limiter_rails",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b1709a4137aaa6d15d6268d8ee876f502e647cefbf1cfd6bf010be414e46e561",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "6e73b062cd955609fa0b6bc0c097785816b1155f39c708113418d1f7963f669d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d0954fa3a56b5af4875f092b53836e8f73a4b250ab29ad24061254d0e10551cf",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "125",
+  "family_spec_sha256": "860d9c0671d3048a4b0fdad739a97b9a992582d9a51ea4bd83d88d0f887ae7a7",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7abcd7bfa0252fd082aee24dd7d1a6e60434b891249dd6925f7abb71ad6aa4cd",
+  "public_contract": "tasks/125-limiter-rails/public_contract.json",
+  "public_contract_sha256": "5ab97101c43b3f4aa71fcec380041eb8daf21cab4859d03d231a2200dc1a5b91",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/125-limiter-rails",
+  "task_id": "v4-125"
+}

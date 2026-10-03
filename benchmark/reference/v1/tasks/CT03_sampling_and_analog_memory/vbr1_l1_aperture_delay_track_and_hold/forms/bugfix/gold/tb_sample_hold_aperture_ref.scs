@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+Vvdd (VDD 0) vsource dc=0.9
+Vvss (VSS 0) vsource dc=0.0
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=5n rise=20p fall=20p width=10n period=20n
+Vin  (vin 0) vsource type=pwl wave=[0 0.10 5.05n 0.10 5.10n 0.35 24.90n 0.35 25.10n 0.60 44.90n 0.60 45.10n 0.25 64.90n 0.25 65.10n 0.70 84.90n 0.70 85.10n 0.40 104.90n 0.40 105.10n 0.80 130n 0.80]
+
+XDUT (VDD VSS clk vin vout) sample_hold_aperture_ref
+
+tran tran stop=130n maxstep=100p
+save vin clk vout
+
+ahdl_include "dut_fixed.va"

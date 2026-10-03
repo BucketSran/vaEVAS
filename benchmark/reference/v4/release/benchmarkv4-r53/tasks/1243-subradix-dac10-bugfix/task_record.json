@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "subradix_dac10.va"
+  ],
+  "canonical_dut_source_slug": "243-subradix-dac10",
+  "checker_task_id": "v4_243_subradix_dac10",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8579f710f9843200d17612ae63767fa99fe9ac25106f5803a096fe969da9fb92",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fbaa77a0c541484efc2fdaaed1678c8e849c7f86780f8bd863924d7738ae1dbc",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "00d3c2499b1b4bf8bcdc2f23ae680d084a60eb40363926415da14885a5e2c345",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "243",
+  "family_spec_sha256": "13717f2f68c50d98885fede55f4ecb2d38ee9c00cd947be16b83ef81fe7f1e7a",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e808ca1c99165503b2670d0aa057eecea91f302e8ba5b720af9e106f77752bd5",
+  "public_contract": "tasks/1243-subradix-dac10-bugfix/public_contract.json",
+  "public_contract_sha256": "a13a35a391622fa97ebdf511327b08ace13b64b79cd789eec009904a165cb548",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1243-subradix-dac10-bugfix",
+  "task_id": "v4-1243"
+}

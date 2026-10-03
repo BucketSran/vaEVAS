@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "344-segmented-dac-dem-system",
+  "checker_task_id": "v4_344_segmented_dac_dem_system",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "12586b3b6a95714feb6f5276a338ac3dc97c466edaa110b467d7dae8e399abbf",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "01da3ae6344c2152a2e14acc7c42622279e5223b9a8681f2cda38d6902bcf55a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "12586b3b6a95714feb6f5276a338ac3dc97c466edaa110b467d7dae8e399abbf",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "1b48fdfc595a92ea3651c39ef0ffd2c6cdfa6b963ea069e0d4b0e4b5025df30f",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "dbb7ef8aa9a1604fe3284f3f35bc40aa521a0bff8cf181dc056b991dd5a50c86"
+  },
+  "family_id": "344",
+  "family_spec_sha256": "d3d9a8a6771967e8ec6d4fa7ea04d7a2d66641760ab1372f8b37835dc2195b06",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1fbf3e414aa3528506c3d30b936266f7a9b426ee2b9bfe1ac67a45f72dca588f",
+  "public_contract": "tasks/844-segmented-dac-dem-system-testbench/public_contract.json",
+  "public_contract_sha256": "b1706f88c7ae3e4b627174be37fc9a22c79a0a5ffa2afae7c18420abfc7211ce",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/844-segmented-dac-dem-system-testbench",
+  "task_id": "v4-844"
+}

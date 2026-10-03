@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deadband_diffamp.va"
+  ],
+  "canonical_dut_source_slug": "239-deadband-diffamp",
+  "checker_task_id": "v4_239_deadband_diffamp",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "58f8fa72866460a4f21d80dd30e893fcaf45d35f978d088f20f0af406713e808",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8d0a8e9867e45f28a04d050aee42f29ebea038307275c297b6348a70746f253b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "209f1b4ff5298d238318d8e29315f2896042af335e60c7e2b5d3ea71112f4415",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "239",
+  "family_spec_sha256": "c5f6f01b1af7c36ad41346f07eb246d5a3884f08550b1c2df7558dcfcad59df5",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "dcd8f4a8d813ce91e8204771e4192414cd4ebfd80ecaf5cfdc7ac539c340dd02",
+  "public_contract": "tasks/239-deadband-diffamp/public_contract.json",
+  "public_contract_sha256": "112c0fbfbddfcef9d4375ef175a0745e0680866a94884577437653d8f660656e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/239-deadband-diffamp",
+  "task_id": "v4-239"
+}

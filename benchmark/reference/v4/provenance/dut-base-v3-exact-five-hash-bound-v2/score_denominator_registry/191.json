@@ -1,0 +1,80 @@
+{
+  "family_id": "191",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_invert_comparator/certification.json",
+        "certification_sha256": "9c5ddb9bd5b84c8b5db5a476eba18b091b6e076a13e79c1b64f2e1e62b0dcaac",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "0449d0fd1a3851bc6d9b932cc27c75ed43e77935ef9864cb27e314267a6737dd",
+        "mutation_id": "neg_002_invert_comparator",
+        "source_catalog_certification_path": "negative_variants/neg_002_invert_comparator/certification.json",
+        "trigger_condition": "Uses inverted comparator polarity for SAR decision updates.",
+        "violated_property_ids": [
+          "P_SAR_COMPARATOR_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_half_d6_level/certification.json",
+        "certification_sha256": "68a76fc3d288e40e7d680dce9658aa8acd8fba8abc2a23960eb59339e1824cbd",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "1b5178f600373dbdc06f834d314aea81ca4579315c100c95e340900605686375",
+        "mutation_id": "neg_003_half_d6_level",
+        "source_catalog_certification_path": "negative_variants/neg_003_half_d6_level/certification.json",
+        "trigger_condition": "Drives SAR output d6 at half logic amplitude.",
+        "violated_property_ids": [
+          "P_CONTROL_OUTPUT_LEVELS",
+          "P_SIX_BIT_DECISION_SEQUENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_co_level/certification.json",
+        "certification_sha256": "4a1cc0e737b02099fa7f67a04b6bb9e3edbbd05e094521855d5ec204d69efee5",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "da3c3b1630fd9fc06d9fd1664cce110d25106c75b95fd4fffce147dc5bd700b8",
+        "mutation_id": "neg_004_half_co_level",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_co_level/certification.json",
+        "trigger_condition": "Drives co at half logic level.",
+        "violated_property_ids": [
+          "P_CONTROL_OUTPUT_LEVELS",
+          "P_SAR_COMPARATOR_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "2b4e58c0a90f62d63c97cebb7d1fa29e7bc40d3e258dc26dc64195e0895761f4",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "969d9e52f82a2ce64c3e68570afd918071ba2f8c3307ca8e40e5bfe5e40933f9",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CONTROL_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "11d62ff48267beec31820c1301e4f69fdabbfe16e866728efbc18a0f6a5273d2",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "c4910ad38434336bd756da596cd6fe11bc3edb2f96d500c91e2b83cebec0ec3e",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "SAR DAS Logic 6b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_SAMPLING_RESET_CONVERSION_STATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_invert_comparator",
+    "canonical_dut_id": "191",
+    "hashes": {
+      "mutation_catalog_sha256": "718f6bb66627dcc5b43d71e28e2da971b3c65844554863ed375a0fcf70888588",
+      "score_deck_sha256": "fe327b72c253644653f8b8a1477f299b5743044038fc208ad144725757784fc7",
+      "task_certification_sha256": "55a45838231719bd5ab1dde9a980a9605b17bfc91ed0a2a92757608ab574b214",
+      "task_record_sha256": "c373a1b2678c6ce7632f611f31f7673272d53366e394cd9b7ae2ba88b04f0782"
+    },
+    "release_dir": "191-sar-das-logic-6b"
+  }
+}

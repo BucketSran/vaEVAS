@@ -1,0 +1,26 @@
+{
+  "id": "vbr1_l1_ramp_or_step_source_tb",
+  "task_id": "vbr1_l1_ramp_or_step_source_tb",
+  "release_entry_id": "vbr1_l1_ramp_or_step_source",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Stimulus and Source Generators",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "bound_step_period_guard_ref.va",
+    "tb_bound_step_period_guard_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e",
+  "base_function": "Periodic phase-ramp guard source"
+}

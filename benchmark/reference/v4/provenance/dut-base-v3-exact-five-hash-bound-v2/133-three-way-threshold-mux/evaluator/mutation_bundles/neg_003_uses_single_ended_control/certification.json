@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_DIFFERENTIAL_CONTROL satisfy the public contract; fault class uses_single_ended_control is rejected",
+    "observed": "EVAS: checked=241 max_error=0.40000",
+    "violated_property_ids": [
+      "P_DIFFERENTIAL_CONTROL"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_133_three_way_threshold_mux",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1201
+  },
+  "family_id": "133",
+  "inputs": {
+    "checker_profile_sha256": "511db9acd6fdf19283f1dd6b199ed663389bf68e927e348ee94fc35e8ef55da9",
+    "harness_spec_sha256": "968cc5ce136f969134e3fecffc18df8ecb88d1685943128be28205fc01e550e3",
+    "mutation_bundle_sha256": "da0b321f6a53498ccb26b1393674283ef33b5ff006d2efb89c55e673a85d5188",
+    "profile_sha256": "e3a8572d2d58ae4517747612e95455184638464703aebd2a5eacbc6484cbc55b"
+  },
+  "mutation_id": "neg_003_uses_single_ended_control",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

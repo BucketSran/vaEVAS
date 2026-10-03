@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "294",
+  "checker_task_id": "v4_294_power_enable_turnon_delay_gate",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "54a4290c54f1a75f3f6d1e6f984b56e22235dc47d938971ffec5a823a6fc071d",
+    "checker_profile.json": "b6dca2b81147f3e03a16eb2c15ee7671c845e7834140124ac9487b757611f0b5",
+    "derivation_manifest.json": "aae6758bd9a283b83f13e9c893d4a059f1887437179ad6da065c1901c8b22adb",
+    "family_spec.json": "884aca8734b5ca40c0e58d469f717415ac5b48bc95a370f8d13be730ab5e584c",
+    "harness_spec.json": "604ed5b9296287bb7b84144dc191d5da8bb7894d0d1df7d563eb2f645007388d",
+    "mutation_catalog.json": "93102457602eba8baef09824cf5af510f77b65bdd4b888062f2e2b3bcda2a972",
+    "profiles/feedback.json": "d834be326ad7555b94c6c2944570f140b06a20a7145e099303dd58ed982d3eed",
+    "profiles/score.json": "be94b7a624d49bdd3c0c7cc93a0d2ea2af205796872c21cad6a7ebbf3afec87d",
+    "score_tb.scs": "daeb34da5972104bfb815c96f56bf1daba05b0f0538c7f7ea4cf60b7f06fc717",
+    "solution_tree": "a9c782debd957df95d991a8bc8db1afa7f5663801bdb60c539040683c76121ee",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "26eb0c25dec0f3c73a157bba02d4c88444a14df8beb22c9776903ff4ef2a3ce1",
+    "instruction.md": "026305fb8d6b42a6663f95165d611e51f843c04fdb9affecf8b130034b2d69fb",
+    "public_contract.json": "467c8a7607a4a55d35245899a910981a21d5379f5635cace280c6103ec657031"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "54a4290c54f1a75f3f6d1e6f984b56e22235dc47d938971ffec5a823a6fc071d"
+  },
+  "release_dir": "294-power-enable-turnon-delay-gate",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "497-power-enable-turnon-delay-gate",
+  "support_root": "",
+  "target_artifacts": [
+    "power_enable_turnon_delay_gate.va"
+  ]
+}

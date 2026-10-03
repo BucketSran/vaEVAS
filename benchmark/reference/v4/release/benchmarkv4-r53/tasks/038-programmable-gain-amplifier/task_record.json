@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "programmable_gain_amplifier.va"
+  ],
+  "canonical_dut_source_slug": "038-programmable-gain-amplifier",
+  "checker_task_id": "v4_038_programmable_gain_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f3f836986ff863bdfccdc88e2c67b0af5eadc855b386eaa23169ccc04bcd9639",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "20dd50c1e07c6e02be3fa9cb76bd99a22d02aaf8416d6722c2cd4294e165cc62",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "16f2d19422e72100be4e31c008ef904bf6b48a47d33e893ce1d6bfc2a3b1d517",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "038",
+  "family_spec_sha256": "92867b2063aa3caab38f38af3085ab6fb3a594a755a3d36237a274338399ce0c",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "80a640339b3bc7f0d47b43a157a6f505342a1c72f2cef4e10b6ce6862c8a29cc",
+  "public_contract": "tasks/038-programmable-gain-amplifier/public_contract.json",
+  "public_contract_sha256": "0808c5c5821e3e06a89e33effecc81449b8a46f628d7a718d93bc4a0f4c67b9f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/038-programmable-gain-amplifier",
+  "task_id": "v4-038"
+}

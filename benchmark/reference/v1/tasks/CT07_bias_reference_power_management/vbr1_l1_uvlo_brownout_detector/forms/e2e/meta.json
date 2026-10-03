@@ -1,0 +1,31 @@
+{
+  "id": "vbr1_l1_uvlo_brownout_detector_e2e",
+  "task_id": "vbr1_l1_uvlo_brownout_detector_e2e",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_uvlo_brownout_detector",
+  "family": "end-to-end",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "uvlo_brownout_detector.va",
+    "tb_uvlo_brownout_detector.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "power_good_has_hysteresis",
+    "brownout_clears_power_good",
+    "recovery_requires_upper_threshold"
+  ],
+  "designed_source": true
+}

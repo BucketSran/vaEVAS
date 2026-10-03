@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "clocked_output_sequence_LLLHHLL"
+    - "negative_diff_latches_low"
+    - "positive_diff_below_5mV_offset_latches_low"
+    - "positive_diff_above_5mV_offset_latches_high"
+    - "decisions_sampled_after_rising_clk_edges"
+parity:
+  required: true
+  status: "pending"
+  tolerance_notes: "Fresh dual evidence required after offset staircase/checker tightening; judge settled post-clock decisions, not continuous-time comparator behavior."

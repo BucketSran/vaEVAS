@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "107",
+  "checker_task_id": "v4_107_bipolar_dac_4b_continuous",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "c340fd2a84474e9069cf113d340c52fd805539dff89ad8bfc2e1233b2cc632f6",
+    "checker_profile.json": "9a5a4dc2295d71e7243961fa68590a4f6069fd0f39677e44aefe29a2c243c1c4",
+    "derivation_manifest.json": "0445938857c994b5ac5a54f5a5ee38d313d1289b6b7efff12eb978b84e242711",
+    "family_spec.json": "743665bdb84b6ce71d50c89689ccb984db5dd53539430ff9342ad2cb274e1254",
+    "harness_spec.json": "c85eade5d317ba4e01515fc676c7226deb5dfdcd58d263436906b9018e1dde37",
+    "mutation_catalog.json": "7a97a7e57a23ae03b1ebb732b6e05879f86d83fbe6bc3e0ca2e1071dec1af9b2",
+    "profiles/feedback.json": "32f5e768679fd68975f80d6406669229eda893b35d9e8819257895cad8dd1ed2",
+    "profiles/score.json": "73cd445cd92d2139a9801fe8dc063cb41311757660e7972ac6a1d5cf32f48202",
+    "score_tb.scs": "5bc2fbb68af42e984dd96ae705e62cc6ba9ceeedeff9e3ea66f2eb6bd769d59a",
+    "solution_tree": "de82e834d9be79cd1b675966db51f34c1d3562a68aab0d5e2546a998b807f283",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "9930273c1d7d9a5a16721a9f7a851775e44141c393517679fd36c475be05dc9b",
+    "instruction.md": "a29ad481dadfbaa10363d65e298159e579b357e408c04c99df98168ffb64ce64",
+    "public_contract.json": "a3e632fd092ee4d93298213144912e7cb339e2d2df2b7ee3d1fc97f44360ad8d"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "c340fd2a84474e9069cf113d340c52fd805539dff89ad8bfc2e1233b2cc632f6"
+  },
+  "release_dir": "107-bipolar-dac-4b-continuous",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "117-bipolar-dac-4b-continuous",
+  "support_root": "",
+  "target_artifacts": [
+    "bipolar_dac_4b_continuous.va"
+  ]
+}

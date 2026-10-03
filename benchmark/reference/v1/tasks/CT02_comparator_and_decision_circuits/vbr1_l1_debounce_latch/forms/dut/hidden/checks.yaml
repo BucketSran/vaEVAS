@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "short_glitch_rejected"
+    - "stable_high_qualified_after_delay"
+    - "falling_sig_clears_output"
+parity:
+  required: true
+  tolerance_notes: "Check post-timer stable windows rather than the exact timer row."

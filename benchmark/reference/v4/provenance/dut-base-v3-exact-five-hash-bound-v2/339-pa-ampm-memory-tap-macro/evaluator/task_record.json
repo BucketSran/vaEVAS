@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "339",
+  "checker_task_id": "v4_339_pa_ampm_memory_tap_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "494d352fb4207451d2cbba3f1dec193d4bd421db2f57181ee443b7ad5898808b",
+    "checker_profile.json": "a696ade4638746e411de698448c4d275d136520259135a2907f812bd5b3fab30",
+    "derivation_manifest.json": "5e37e225088143936be14569f935ee85e7bbe5ea77426213d21377ad7afc1e74",
+    "family_spec.json": "4f6c0e346bf8f69294a4bb09ea64c50c9bbe861413011a817b9c8a3c14aaa06a",
+    "harness_spec.json": "210fbc0bdbff799b5cbc65c01fe167c54ce80bee17b7263f93994722fc4618de",
+    "mutation_catalog.json": "d274272687e4a5c0bf172a8ff4fd4095e812594b40246b7f2f2b81b0e4fb29b2",
+    "profiles/feedback.json": "1d855430a653f521a0578410f6a8d89215f69a96aad66556493a9a0cd0d24625",
+    "profiles/score.json": "d401bd16c0b686a8cb55d96e0dd708da6df121841df2e212d751f22a0ceed001",
+    "score_tb.scs": "ed8bd2300938681f20dcb306204082999e1265d326976b4e1f64502df52098fe",
+    "solution_tree": "6bd0fe85c7ff2aafab3aebd2984c15e6711945b7ca7928e41afebe4c49b1318f",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "7d5590b7c782e3cdd86016f61a1e5da81d49962808236aafa9bf9b903dc441aa",
+    "instruction.md": "d870b172e85b199e809876ad64822a48d4fe0a2d81d681e751f161842f13bba8",
+    "public_contract.json": "55234cabd8c98df27bf92e8644e07e85e34953129f4d442a5a845722c4a98f2c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "494d352fb4207451d2cbba3f1dec193d4bd421db2f57181ee443b7ad5898808b"
+  },
+  "release_dir": "339-pa-ampm-memory-tap-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1037-pa-ampm-memory-tap-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "pa_ampm_memory_tap_macro.va"
+  ]
+}

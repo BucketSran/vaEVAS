@@ -1,0 +1,35 @@
+{
+  "release_entry_id": "vbr1_l1_slew_rate_limiter",
+  "task_id": "vbr1_l1_slew_rate_limiter:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Slew-rate limiter"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/tb/gold/slew_rate_limiter.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/tb/gold/tb_slew_rate_limiter_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "ahdl_include",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

@@ -1,0 +1,78 @@
+{
+  "family_id": "058",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_wrong_mask/certification.json",
+        "certification_sha256": "cd7ddd6dbd6fd249f9409c6c8b68ce45484e19eb040d1d168599d67e7ce04012",
+        "fault_class": "mask_ignored",
+        "mutation_bundle_sha256": "fe947531ec0a9b2e4ddaa0daf4b9ec8fc91df9763a51b22aba3ae237f1bbbbe0",
+        "mutation_id": "neg_001_wrong_mask",
+        "source_catalog_certification_path": "negative_variants/neg_001_wrong_mask/certification.json",
+        "trigger_condition": "wrong masked update",
+        "violated_property_ids": [
+          "P_MASKED_SELECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_mask/certification.json",
+        "certification_sha256": "58235213b46e30a3fcdbe910a4730202fe6a2b708edbb87ee81811405962ba5b",
+        "fault_class": "mask_polarity_inverted",
+        "mutation_bundle_sha256": "cdb98c9810ac60cf48960b1697d2ec9f6a1ff651d83b83e14665428d74d02a61",
+        "mutation_id": "neg_002_wrong_mask",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_mask/certification.json",
+        "trigger_condition": "wrong masked update",
+        "violated_property_ids": [
+          "P_ZERO_MASK_IDENTITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_mask/certification.json",
+        "certification_sha256": "0c4448208c45838f2fb298e2b06450660cad6adfc719131de419f0ae351a70d8",
+        "fault_class": "mux_replaced_by_and",
+        "mutation_bundle_sha256": "d98dfee54ec9c25fe87b39e144416ee1b24714b12a461b5f6d5bf34349450762",
+        "mutation_id": "neg_004_wrong_mask",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_mask/certification.json",
+        "trigger_condition": "wrong masked update",
+        "violated_property_ids": [
+          "P_BIT_INDEPENDENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_mask/certification.json",
+        "certification_sha256": "a54e7ba37c1036a37d65558157293180d241d99d012644dc4987dcf99de3c1ae",
+        "fault_class": "output_stuck_low",
+        "mutation_bundle_sha256": "84d663fb4948decc2068f8c642d2a052a7d3aef5591ae2a843a60b26f500a1f9",
+        "mutation_id": "neg_005_wrong_mask",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_mask/certification.json",
+        "trigger_condition": "wrong masked update",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_mask/certification.json",
+        "certification_sha256": "d3265f55cb6ea52364b08c082bca46253bb4d00c82e2ad5be33b92e08b7dc549",
+        "fault_class": "bus_bit_order_reversed",
+        "mutation_bundle_sha256": "f81bbfcdf2e26c32a2379e773d63c493b2191e7323ae321c8704a34f388d29e2",
+        "mutation_id": "neg_003_wrong_mask",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_mask/certification.json",
+        "trigger_condition": "wrong masked update",
+        "violated_property_ids": [
+          "P_FULL_MASK_REPLACEMENT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_wrong_mask",
+    "canonical_dut_id": "058",
+    "hashes": {
+      "mutation_catalog_sha256": "fc56e9fac5ba2ac15a621b9bfafd41f1d41387105c4505c36bee132b311dee11",
+      "score_deck_sha256": "be1f691af4b6abd9f4f846494678e0ca5c260d7d852239982c95df46b61907d8",
+      "task_certification_sha256": "854a00ff69de5ecbe52dc53294d632a431baa066739e884cd8f873941af4e083",
+      "task_record_sha256": "555e06117878d4425f25f7a05b6b773c2d49c0fa800be09ccffbb2ca94911715"
+    },
+    "release_dir": "058-masked-config-update-32b"
+  }
+}

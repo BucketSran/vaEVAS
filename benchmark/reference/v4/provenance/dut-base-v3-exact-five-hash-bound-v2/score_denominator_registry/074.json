@@ -1,0 +1,80 @@
+{
+  "family_id": "074",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "75ecf6eba4c59304153dfc7b8c01fd7bbf74fba03478c8a1ba750cab5e11f01e",
+        "fault_class": "zero_output",
+        "mutation_bundle_sha256": "cd8a3f3969e7b4855c0300826a30ccedd256c811c1939083ba657acd558a23b0",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "mutation_bundles/neg_001_zero/certification.json",
+        "trigger_condition": "a complete enabled four-sample window",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_RMS",
+          "P_VALID_PULSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "af31009678c2f33e3ea6aafd2f0303709260889510d37da77c687717fbdf1346",
+        "fault_class": "mean_absolute_instead_of_rms",
+        "mutation_bundle_sha256": "925283aa5bb155e419eb483076d384ce1112c71136a0827ca0912d87161d0903",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "a window with unequal sample magnitudes",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_RMS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "90be4efbe52043c72b06d7880d019a583e288e6fc47da60679699aaa032a1f2c",
+        "fault_class": "falling_edge_sampling",
+        "mutation_bundle_sha256": "429617633c7cfa20a26cc17baec215eb9097e67146914b6d552ad5b4df6e5510",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "input changes between rising and falling clock edges",
+        "violated_property_ids": [
+          "P_FOUR_SAMPLE_WINDOW",
+          "P_OUTPUT_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "2b994ebd8ed7fdfa99a87ef0597f5c0360ad692a2dafa3105874d67e87288a6c",
+        "fault_class": "reset_polarity_inverted",
+        "mutation_bundle_sha256": "2e49e484a07f58439b596b3ed16dcc2e66f5cc1c5017a53ef85518a23bad1b1e",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "active-high reset followed by enabled sampling",
+        "violated_property_ids": [
+          "P_ASYNC_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "f059a3a1def89ba0f3b3b0530d31bd94e1f217330e90124d30a0322305d0f229",
+        "fault_class": "wrong_rms_divisor",
+        "mutation_bundle_sha256": "c529d32a076f2b03c0e006abc6742643f76ec9cf0064e7c761e816c627d14350",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "any nonzero completed window",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_RMS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "074",
+    "hashes": {
+      "mutation_catalog_sha256": "b3cec37cc6664c8ee24d8d10eaa69167f33b50deb645706031d301fb537dde6c",
+      "score_deck_sha256": "d1fd261424aff317ecc95d9c7c894411ae61c5f88cd882dcc8d4b95470603af0",
+      "task_certification_sha256": "f49c4f908984fb2a4f580199568bcf525f79fbfd6cac7882d3ea3b7f6884f3a8",
+      "task_record_sha256": "c1eefc5db5fade9993ace84561c33f3d6ad217eea3c36c21a298bc88498714d2"
+    },
+    "release_dir": "074-sampled-true-rms-to-dc-converter"
+  }
+}

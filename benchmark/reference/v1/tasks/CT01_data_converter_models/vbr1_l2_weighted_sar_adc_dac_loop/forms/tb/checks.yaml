@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include: []
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "transient_analysis_present"
+    - "public_observables_saved"
+    - "dut_or_system_instantiated"
+    - "sar_bit_trial_sequence_visible"
+    - "trial_dac_matches_trial_code_monitor"
+    - "comparator_decision_matches_sample_and_trial"
+    - "sar_adc_code_range_sufficient"
+    - "sar_adc_unique_code_count"
+    - "sar_code_matches_sampled_input"
+    - "dac_output_matches_weighted_code"
+    - "code_monotonic_with_sampled_input"
+    - "dac_output_in_range"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

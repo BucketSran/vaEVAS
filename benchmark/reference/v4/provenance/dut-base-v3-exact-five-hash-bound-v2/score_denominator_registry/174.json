@@ -1,0 +1,79 @@
+{
+  "family_id": "174",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_comparator_polarity/certification.json",
+        "certification_sha256": "62a40f67f1328bbea3550908330eec059bd5e967d7b21c27d592a744bbd7f421",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "978f0794ba132b91c705d07a48fc61ce71bf29e9605c8464a224c01a5f877975",
+        "mutation_id": "neg_002_inverted_comparator_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_comparator_polarity/certification.json",
+        "trigger_condition": "Updates vdac in the opposite direction for dcmp decisions.",
+        "violated_property_ids": [
+          "P_COMPARATOR_POLARITY_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_reset_to_range/certification.json",
+        "certification_sha256": "6c3c2ef44c105eba52712050c65059abc97bc8637f721b24fa649190b25eec91",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "8512391899edf948ea4454526fd7ccc48e9c9db0be4802426b48adccb6111179",
+        "mutation_id": "neg_004_no_reset_to_range",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_reset_to_range/certification.json",
+        "trigger_condition": "Shrinks the search step twice as fast as the specified radix update.",
+        "violated_property_ids": [
+          "P_RADIX_STEP_REDUCTION",
+          "P_RESET_INITIAL_SEARCH_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "7bd9e0f3ca98208a9bf5db79bac5b0eaf63ed2be634fbd41eacbdbd7e20a02d7",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "d7f6f0b9c8c5a2db073ea65d9266536eac664f9db7e813f3939db3e43f81ae5b",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_HELD_DAC_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_delta_halving/certification.json",
+        "certification_sha256": "1908deaf17f1ef6a742bf360dde6fe3f983454cb5490469698d5a0c975e30d15",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "0c52bab45ce3bf765a7b7ab533360edbe75bd253cb44fd863ddfd3513d73b3e4",
+        "mutation_id": "neg_003_no_delta_halving",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_delta_halving/certification.json",
+        "trigger_condition": "Keeps the DAC search step fixed instead of dividing by radix each cycle.",
+        "violated_property_ids": [
+          "P_RADIX_STEP_REDUCTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9325352d93733ddb0f8a4915717fbdb8ea2446ae38bd32f5fdc0720c81e2727c",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "b83130e49d7002116c323f8ef05a2b22849725ae013a2397fbd2bb3221ca75e7",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Iterative ISAR DAC: preserves the iterative search state machine but drives the DAC output with inverted polarity.",
+        "violated_property_ids": [
+          "P_COMPARATOR_POLARITY_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_inverted_comparator_polarity",
+    "canonical_dut_id": "174",
+    "hashes": {
+      "mutation_catalog_sha256": "e6c1d0bb77b16864db22aa5df852a03c470e2d6d0635f7e4909d84006eb6e237",
+      "score_deck_sha256": "af2f3dcac6b58a3865602f2a440700f22f1495d641bf048857e7f9e1b0650a20",
+      "task_certification_sha256": "074caf3f4857f9349aecf0d38bf800179d8fefd688a013d845e82ba8141cdd3d",
+      "task_record_sha256": "7ace1141a3529587c08d42aeec9e023be6095a97a94bf26b9db07e1c89a688c6"
+    },
+    "release_dir": "174-iterative-isar-dac"
+  }
+}

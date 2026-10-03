@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "tia_limiting_receiver.va"
+  ],
+  "canonical_dut_source_slug": "368-tia-limiting-receiver-macro",
+  "checker_task_id": "v4_368_tia_limiting_receiver_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "87f8ea16952727b6050f39e8be9a52a3146c3b7d9824140e6be1b84aab40df82",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "77c25dff133df67c94c4a591527f221cd3992f5ac1be6674fe5bb8c6acc5b6e3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e436507811efeba35c8bc20cc23024d505927053979c6fcf6a65104716ede561",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "368",
+  "family_spec_sha256": "97c1ecf0ab03d524f7b23e532445ab25deae794dc56ee991df30577ea51f60b8",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "147f34e227b294223a88d8f25cdc58eb866849e414325d41e25b697cad68732f",
+  "public_contract": "tasks/1368-tia-limiting-receiver-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "1cc643a154a6f0194d0f5eacad4f5f18c19b3c429c080d3f325395d3a88d20f0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1368-tia-limiting-receiver-macro-bugfix",
+  "task_id": "v4-1368"
+}

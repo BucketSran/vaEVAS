@@ -1,0 +1,78 @@
+{
+  "family_id": "350",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_comparator_polarity/certification.json",
+        "certification_sha256": "cb3e0ee6be18de01cea6d5544a32fbc73933da4a7b32762f568a5c5ed40affb0",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "2085fb8544a1a9560fd9c59c29d2c472ebc9d655bc7165dc7d9d194ce44686a4",
+        "mutation_id": "neg_001_comparator_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_001_comparator_polarity/certification.json",
+        "trigger_condition": "state crosses VCM",
+        "violated_property_ids": [
+          "P_COMPARATOR_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_short_decimation_window/certification.json",
+        "certification_sha256": "95e131bac26adb60b750aad22877c55a0e9787d98a6e37c9153927180bfc8ca3",
+        "fault_class": "wrong_window",
+        "mutation_bundle_sha256": "4527f13ada16a39097a46034da7255b8ec55840aba34cd42017f89d4ad991ea1",
+        "mutation_id": "neg_004_short_decimation_window",
+        "source_catalog_certification_path": "negative_variants/neg_004_short_decimation_window/certification.json",
+        "trigger_condition": "eight or more samples arrive",
+        "violated_property_ids": [
+          "P_DECIMATOR_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_decimator_wraps_fullscale/certification.json",
+        "certification_sha256": "c29df8ce1c22fa41c7cb5058cbef0fde759772274abf22b281a13e0d69844a49",
+        "fault_class": "reset_clear_failure",
+        "mutation_bundle_sha256": "ab7b43d9e9818357411c1e0205efbfd89fd87b1c419801dcc533515aa8205db4",
+        "mutation_id": "neg_005_decimator_wraps_fullscale",
+        "source_catalog_certification_path": "negative_variants/neg_005_decimator_wraps_fullscale/certification.json",
+        "trigger_condition": "rst is asserted at startup",
+        "violated_property_ids": [
+          "P_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_feedback_stuck_low/certification.json",
+        "certification_sha256": "419ae4bc2875a48d3de45bfcb2f88d93232f396e6e1b174497cef0b813680467",
+        "fault_class": "stuck_state",
+        "mutation_bundle_sha256": "5ea710d2ffa7a57a20bd54b21917a10835c7f9e41312c54326b36648376b718c",
+        "mutation_id": "neg_002_feedback_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_002_feedback_stuck_low/certification.json",
+        "trigger_condition": "bit_out becomes high",
+        "violated_property_ids": [
+          "P_FEEDBACK_STATE_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_integrator_input_sign/certification.json",
+        "certification_sha256": "6e0c7be36af118cf210a64ef427ff4e435c80f3995969886cc6942c472dd0a5e",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "d3e95a3023f0cb545be2f102036644674ab11142305d771298adf802a14e5fcd",
+        "mutation_id": "neg_003_integrator_input_sign",
+        "source_catalog_certification_path": "negative_variants/neg_003_integrator_input_sign/certification.json",
+        "trigger_condition": "VIN differs from feedback",
+        "violated_property_ids": [
+          "P_FEEDBACK_STATE_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_comparator_polarity",
+    "canonical_dut_id": "350",
+    "hashes": {
+      "mutation_catalog_sha256": "43ba32898c629aafcedec7fad99881442acca1d496d9a769fd9cee1edb36d98a",
+      "score_deck_sha256": "3ddceebb5a57367fdcec0a7810dd014549e293ef6f6a7e61dfe5e0f1cc101dc7",
+      "task_certification_sha256": "a49ab15c176c26f4ea798016bd46d90a7d6fa132980ce8f881ef6f083464c58b",
+      "task_record_sha256": "f48b961bb2b831d0990c16922b31a2fcbf1988be0c974082060cdc6b558d8c6b"
+    },
+    "release_dir": "350-sigma-delta-mini-loop"
+  }
+}

@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "phase_accumulator_timer_wrap_ref.va"
+
+V_VDD (VDD 0) vsource dc=0.9
+V_VSS (VSS 0) vsource dc=0
+
+XDUT (VDD VSS clk_out phase_out) phase_accumulator_timer_wrap_ref
+
+tran tran stop=5n maxstep=100p
+save VDD VSS

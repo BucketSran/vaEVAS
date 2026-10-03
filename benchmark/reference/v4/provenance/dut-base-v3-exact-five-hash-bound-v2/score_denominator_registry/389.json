@@ -1,0 +1,78 @@
+{
+  "family_id": "389",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_threshold_shifted/certification.json",
+        "certification_sha256": "2f31bb5c454948ebf5b1b9218409bd6415ff56b6edc85bb05994ef3a3cbf62b0",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "8db6c676ccbfca1093b2e9799d1549eaff515732da83893aabfbc1b3aa9b637c",
+        "mutation_id": "neg_004_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_004_threshold_shifted/certification.json",
+        "trigger_condition": "semantic threshold mutation from gold",
+        "violated_property_ids": [
+          "P_GAIN_METRIC_REPORTS_THE_ABSOLUTE_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "71abd3594110bd33fa8ff1ea8b609d0e6b29ca74feb00b3af041564addce5427",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8646e2675580811f422ed03f05b88d12516eb9aa26522cdf3d2cc52b26db06ec",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "semantic zero mutation from gold",
+        "violated_property_ids": [
+          "P_RESET_OR_LOW_ENABLE_DRIVES_VOUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale/certification.json",
+        "certification_sha256": "b4b7e835022bdfc08496f16ad15fc94b57d0703bbcdde3d83434ae5cb6a721a1",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "4a88a690ced92dfa749c286e93d5ac3160422ef0c5750f802b43e24d1ee5be5d",
+        "mutation_id": "neg_002_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale/certification.json",
+        "trigger_condition": "semantic scale mutation from gold",
+        "violated_property_ids": [
+          "P_WHEN_ENABLED_COMPUTE_AN_INVERTING_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_event_edge_wrong/certification.json",
+        "certification_sha256": "17dd7437a1726677ca72b930d4594dc528eba2598eda5d31054adb48941101ae",
+        "fault_class": "headroom_qualification_inverted",
+        "mutation_bundle_sha256": "55eb9779d76000589607b1e557d265a01f9da031f110d0cebcf57a9108a1add2",
+        "mutation_id": "neg_005_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_event_edge_wrong/certification.json",
+        "trigger_condition": "headroom_ok asserts only when the available headroom is insufficient",
+        "violated_property_ids": [
+          "P_HEADROOM_OK_IS_HIGH_ONLY_WHEN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_transfer/certification.json",
+        "certification_sha256": "fb41d58f6bdb0f9ded936ed9ca1b80759c1662e501f1966810dfd326fb246ad7",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4e035c53d81e66b90acf567fde64b72eacb0ade80e8c41353e442384bf7071ab",
+        "mutation_id": "neg_003_inverted_transfer",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_transfer/certification.json",
+        "trigger_condition": "semantic invert mutation from gold",
+        "violated_property_ids": [
+          "P_CLAMP_THE_OUTPUT_BETWEEN_VSS_AND"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_threshold_shifted",
+    "canonical_dut_id": "389",
+    "hashes": {
+      "mutation_catalog_sha256": "12ebfcbc19bb2ada0e2847b6693205865e3be2a87694cbc0e0ec28187a7f86b6",
+      "score_deck_sha256": "f2b334ab4fa68d81e0deaab907b5b54c6f8449230081398209da1caf98dcf5cc",
+      "task_certification_sha256": "52e41c15c745644dc2d47bc85575d9285f8dfe8522de140895e27d6c1dd60b91",
+      "task_record_sha256": "8f815e0ed753cfbbc0fe7f32275a5b6b6ecf0274382321a2c14b714de41d7dfc"
+    },
+    "release_dir": "389-cascode-gain-cell-headroom"
+  }
+}

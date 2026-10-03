@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "111-hysteresis-trip-characterizer",
+  "checker_task_id": "v4_111_hysteresis_trip_characterizer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "6fa3bc4954b6e4f7ffbd59ed0403b54c971a46169c6e3d0643ea117c1d068a4d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "ce792fa41db4204fbff82b7f9f29e0e8f613a191d07a87ba367cf4b213f1f40b",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "6fa3bc4954b6e4f7ffbd59ed0403b54c971a46169c6e3d0643ea117c1d068a4d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f766f8e8652fb6222a839726b31a8dfd9faacd3416b6397db8e2aa0ca980bd6e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "e2db376516a3a0d4bcfc48b0e3f176d1720ff2e95604573dc6524c409dd832af"
+  },
+  "family_id": "111",
+  "family_spec_sha256": "28268ba7fdf1cac85632e7f35713951cbb8a933e093f4c7147ef94f0e5140364",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3d2fb68632260f7c9d769716e1219773b19f2c3c5cbfc49b4162173a7090c8da",
+  "public_contract": "tasks/611-hysteresis-trip-characterizer-testbench/public_contract.json",
+  "public_contract_sha256": "476f7d34acd5b976263ad157b670093e7f8d984558cf4cb9368d2bebbb2394f0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/611-hysteresis-trip-characterizer-testbench",
+  "task_id": "v4-611"
+}

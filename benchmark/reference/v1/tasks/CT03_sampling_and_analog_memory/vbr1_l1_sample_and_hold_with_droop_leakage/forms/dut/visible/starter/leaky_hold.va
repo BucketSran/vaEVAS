@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module leaky_hold(sample, rst, vin, vout);
+    input sample, rst, vin;
+    output vout;
+    electrical sample, rst, vin, vout;
+
+    parameter real vth = 0.45;
+    parameter real decay = 0.985 from (0:1];
+    parameter real leak_period = 1n from (0:inf);
+    parameter real tr = 500p from (0:inf);
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

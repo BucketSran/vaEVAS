@@ -1,0 +1,61 @@
+{
+  "id": "vbm1_cdac_calibration_bugfix",
+  "task_id": "vbm1_cdac_calibration_bugfix",
+  "release_entry_id": "vbr1_l1_trim_calibration_controller",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_cdac_calibration_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(cross(",
+    "transition(",
+    "rst"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_cdac_calibration_ref.scs",
+    "gold/tb_cdac_calibration_buggy.scs"
+  ],
+  "reconstruction": {
+    "bug_class": "wrong_error_update_direction",
+    "single_root_cause": "The buggy source reverses the trim update direction for high versus low err windows.",
+    "fixed_expectation": "The fixed source increments during high err windows, decrements during low err windows, and clamps the trim range."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_cdac_calibration_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_cdac_calibration_bugfix/spectre_result.json",
+    "local_evas_verification": "2026-05-15: fixed source PASS; buggy source FAIL_SIM_CORRECTNESS.",
+    "spectre_status": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS."
+  }
+}

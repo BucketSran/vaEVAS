@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sar_cdac_residue.va"
+  ],
+  "canonical_dut_source_slug": "119-sar-cdac-residue",
+  "checker_task_id": "v4_119_sar_cdac_residue",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2d9d364c5b31927bed67306cc46acde4c6e5e27e733d21103730aef76e468d66",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "dcf7a064df328df403caed3f9ea60452c1023d9433a018e40b3bfe5cf1422766",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "38bbcbd88c8cba777445e506370523421afd2ad7aa0ad6989c82e1c8c3aa264a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "119",
+  "family_spec_sha256": "bbe7f990d9a65e136d24c295e26771a36eddd884540de39c3c56de5be8599a09",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0915dc51fb76bd733ee67ddbaf51f6bb782e23b72524777d5ea9b6517f955177",
+  "public_contract": "tasks/119-sar-cdac-residue/public_contract.json",
+  "public_contract_sha256": "221940ec6559bccd30481b81168fddc83e17f87937a1bf0b9cf4300257a5a8a3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/119-sar-cdac-residue",
+  "task_id": "v4-119"
+}

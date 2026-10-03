@@ -1,0 +1,31 @@
+{
+  "release_entry_id": "vbr1_l1_gain_trim_controller",
+  "task_id": "vbr1_l1_gain_trim_controller:tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Calibration, DEM, and Control",
+    "base_function": "Gain trim controller"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/tb/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/tb/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/tb/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/tb/gold/gain_trim_controller.va",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_gain_trim_controller/forms/tb/gold/tb_gain_trim_controller_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "ahdl_include",
+      "tran",
+      "save"
+    ],
+    "must_not_include": [],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "382-programmable-frequency-divider",
+  "checker_task_id": "v4_382_programmable_frequency_divider",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "c5fe54a2e27825b2408ea2c58ed0ec1423145396c8c0d214e55a3ea23c277aee",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d56bc79071cc01ad527330c0d77cc803e9caa6e6de66b11aa14e52b7bf9ade61",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "c5fe54a2e27825b2408ea2c58ed0ec1423145396c8c0d214e55a3ea23c277aee",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "04c8949614600af16ed37c6bcdab0fa2fa12dd023423973cf70c4ac2df6b811c",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "3801c736c65e82ca2cc7166746daa0a08d554ff0273e736cc8d5c58cdbac345a"
+  },
+  "family_id": "382",
+  "family_spec_sha256": "3a29be845c02b9735c93f9bd12a33fdacd5bbb22b16de20136125da9d6bb2298",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "50b864a4ba4ec4f029ff94474c75036fcfa26645ffea95b3e0a44fc51b76a0a9",
+  "public_contract": "tasks/882-programmable-frequency-divider-testbench/public_contract.json",
+  "public_contract_sha256": "b7864a3f6c33ee13a28555e8fb815193d1b2d9a1ddbbe794450c80a649e2cf2d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/882-programmable-frequency-divider-testbench",
+  "task_id": "v4-882"
+}

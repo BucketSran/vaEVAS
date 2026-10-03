@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "sample_mux_readout_top.va",
+    "sample_hold_bank.va",
+    "mux_controller.va",
+    "output_driver.va"
+  ],
+  "canonical_dut_source_slug": "349-multichannel-sample-readout",
+  "checker_task_id": "v4_349_multichannel_sample_readout",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "cb4cc4ef28bc827c7fb41a902be86aa62614c96546c97660f7fc24369c1f945c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "cc00d985f78c5e2563c8a1ff4767c89b731b5c7eb3748f9e0ca05f6e2039e19b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "13ac2d25756e420f70ac17fbac50cabf598c9419485c884ada101a064a02846e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "349",
+  "family_spec_sha256": "6953452553b858267d8c95197d7d18a614698ea4d2ff55b207cf980a38b72132",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d27e952793d842d0f4a78d7a2d4bfb58db939984f2f5acd283fe1bb42a673ec2",
+  "public_contract": "tasks/1349-multichannel-sample-readout-bugfix/public_contract.json",
+  "public_contract_sha256": "4e6273e98b9792eb9aadfafbcc4c020b5c20a0ac0da5b9b31580e6a801175d9c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1349-multichannel-sample-readout-bugfix",
+  "task_id": "v4-1349"
+}

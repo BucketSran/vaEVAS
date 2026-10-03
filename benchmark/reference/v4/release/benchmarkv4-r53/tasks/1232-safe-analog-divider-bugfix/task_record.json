@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "safe_analog_divider.va"
+  ],
+  "canonical_dut_source_slug": "232-safe-analog-divider",
+  "checker_task_id": "v4_232_safe_analog_divider",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "3886fdf79ccb6428380b7c791c1e9a279c0880b1ed56396a60b35d6bc31c22d1",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "2b05fc90991ac161e8bbc22ddc182c18bd568d6874b789672099c313174fcb69",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "77604ebcc55d0d18208b0b94c206c07da609634f569a19ec716129e5b8651c0d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "232",
+  "family_spec_sha256": "0bc7b119b0cd02dd316663f62042d00341863e8e3c0c7aede68e72b2fa7b379b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b86f528be94de486c65606a1eaa28c5adc89e9b1660747e4643a284652b0aab9",
+  "public_contract": "tasks/1232-safe-analog-divider-bugfix/public_contract.json",
+  "public_contract_sha256": "c5fe95c14846924e71108aab38b37848809b84919a55e16ba488205bdd4c104f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1232-safe-analog-divider-bugfix",
+  "task_id": "v4-1232"
+}

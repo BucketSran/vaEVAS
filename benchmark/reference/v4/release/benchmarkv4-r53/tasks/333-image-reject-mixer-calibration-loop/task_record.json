@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "image_reject_mixer_cal_loop_top.va",
+    "quadrature_mixer_proxy.va",
+    "image_cal_controller.va"
+  ],
+  "canonical_dut_source_slug": "333-image-reject-mixer-calibration-loop",
+  "checker_task_id": "v4_333_image_reject_mixer_calibration_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5f063625f64f56c237340e12f9e832e550488d781df5e4dba3d5c3377c8d596b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8a38cc049d1b927b02aaba888fb2c3cd7b7cf72e19646e7efe5a475db198e9cc",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "55cf87c2b8c3c3654305de22e89a5b4706ebc92e9d5370a1c948064c4664926d",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "333",
+  "family_spec_sha256": "b915b0b8035fd942c421fcf748f9b6ceac938dd8fca255fe9f107c647317b154",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a7a8577f5ce23ea7c08a97fe7fcd1f46824171833db39a7d6859ae6bccaadf55",
+  "public_contract": "tasks/333-image-reject-mixer-calibration-loop/public_contract.json",
+  "public_contract_sha256": "07f783dc63557b45473f396c981b05f359e424727533d6b5b98f69ca7fc2b07c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/333-image-reject-mixer-calibration-loop",
+  "task_id": "v4-333"
+}

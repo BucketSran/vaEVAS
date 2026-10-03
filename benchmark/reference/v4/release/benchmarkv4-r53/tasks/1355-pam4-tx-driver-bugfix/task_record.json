@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "pam4_tx_top.va",
+    "gray_mapper.va",
+    "level_dac.va",
+    "preemphasis_driver.va"
+  ],
+  "canonical_dut_source_slug": "355-pam4-tx-driver",
+  "checker_task_id": "v4_355_pam4_tx_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e561fc341916e11f520c8526b8345b7a9f57e2f7bed75537636a7ba80753d737",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d87695d3dd2061d96dd763c9ebb469c3f0008c9f8c32ec82d0d22ceb3b65bbb9",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "00f1d317265601849a1a673ae7aeb4fcea6c2d049f43bf6c35f83c83a45a440e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "355",
+  "family_spec_sha256": "0da82fac2756b44f8b1036107a4a06ddae152fb592cccecf812805f291f61af3",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a7ef504daede2d43d220122b92cef04c77bee465d652c9444f0d2a2f5e431dfd",
+  "public_contract": "tasks/1355-pam4-tx-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "3143d4e25188b9a3da3fef80bee2f78fc9601e74851959ed7847ac36b30ad70c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1355-pam4-tx-driver-bugfix",
+  "task_id": "v4-1355"
+}

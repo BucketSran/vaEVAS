@@ -1,0 +1,58 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_pipeline_stage_ref.scs"
+    ],
+    "gold_va": [
+      "pipeline_stage.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "D0": "output",
+      "D1": "output",
+      "PHI1": "input",
+      "PHI2": "input",
+      "VDD": "inout",
+      "VIN": "input",
+      "VREF": "input",
+      "VRES": "output",
+      "VSS": "inout"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "VDD",
+      "VSS",
+      "PHI1",
+      "PHI2",
+      "VIN",
+      "VREF",
+      "VRES",
+      "D1",
+      "D0"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "pipeline_stage.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/visible"
+}

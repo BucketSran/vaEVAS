@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "216-sar-13bit-serial-decoder",
+  "checker_task_id": "v4_216_sar_13bit_serial_decoder",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "89365e07c0a8e546d0a8ba9a48e8f9f0d0cd625faed64ab255741c3377f9ee6f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "72f8da9c6c43ddeeb9edac1942137fbebdf976bf53e7509c2a55a50b5a5fd5fb",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "89365e07c0a8e546d0a8ba9a48e8f9f0d0cd625faed64ab255741c3377f9ee6f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ae3e9967718d3ede81f5ea973ce90fc50c35fab817f245fbd55039b2e24aaf76",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "a8b8477f691534c64b8c978da65ac5eccb4085e79ae1dc3dd89a570130ec3c0a"
+  },
+  "family_id": "216",
+  "family_spec_sha256": "b2cc0614235afc6b0dea7fd9169768dc2bcb5f2330677f0659d9535759f8207c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "82315fdcbef5646862bc7fdb5d8abfe9cd2888f1079da85e1b34443e9bc974dc",
+  "public_contract": "tasks/716-sar-13bit-serial-decoder-testbench/public_contract.json",
+  "public_contract_sha256": "343ce81a9a2454d5b8c9e9cc6ddb55c0ea36df4a672219c28936716c7bdd659d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/716-sar-13bit-serial-decoder-testbench",
+  "task_id": "v4-716"
+}

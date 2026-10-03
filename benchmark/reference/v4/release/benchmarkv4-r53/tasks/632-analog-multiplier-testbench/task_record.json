@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "132-analog-multiplier",
+  "checker_task_id": "v4_132_analog_multiplier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3b6899e979dd0860673c8eaf47e9bb09cc516cf865c7bbc85e51795a84baaa1a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "f487a6f88a1e05b6904e9e78b770070f77aa2b12bae9cef4deb518191062335a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3b6899e979dd0860673c8eaf47e9bb09cc516cf865c7bbc85e51795a84baaa1a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4c10d00dc17b57ef657e109be270dbd3e70f0c27f76133331c6406317e8fd478",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "8e9c2fe3089c275f484d94203d87fb804891690a6df20ef011da2432c2c0d8c2"
+  },
+  "family_id": "132",
+  "family_spec_sha256": "443c39992e293cfb3335ccc9be32fbaa7ac2e644a82bed9bf13a523146a28f07",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "29e5f18e029d71e2c95cfdd1e5db975b3e1d9b5975a6cf7692ab2f526c79a4a3",
+  "public_contract": "tasks/632-analog-multiplier-testbench/public_contract.json",
+  "public_contract_sha256": "0f47cb5d34309c1a7620bcc095a274ee53db7b215372c14853457f95b013fe4f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/632-analog-multiplier-testbench",
+  "task_id": "v4-632"
+}

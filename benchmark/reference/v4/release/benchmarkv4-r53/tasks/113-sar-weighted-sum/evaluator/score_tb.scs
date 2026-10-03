@@ -1,0 +1,20 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "./dut/sar_weighted_sum.va"
+
+Vd10 (d10 0) vsource type=pwl wave=[0 0.55 6n 0.55 6.1n 0.75 75n 0.75]
+Vd9 (d9 0) vsource type=pwl wave=[0 0.55 12n 0.55 12.1n 0.75 75n 0.75]
+Vd8 (d8 0) vsource type=pwl wave=[0 0.55 18n 0.55 18.1n 0.75 75n 0.75]
+Vd7 (d7 0) vsource type=pwl wave=[0 0.55 24n 0.55 24.1n 0.75 75n 0.75]
+Vd6 (d6 0) vsource type=pwl wave=[0 0.55 30n 0.55 30.1n 0.75 75n 0.75]
+Vd5 (d5 0) vsource type=pwl wave=[0 0.55 36n 0.55 36.1n 0.75 75n 0.75]
+Vd4 (d4 0) vsource type=pwl wave=[0 0.55 42n 0.55 42.1n 0.75 75n 0.75]
+Vd3 (d3 0) vsource type=pwl wave=[0 0.55 48n 0.55 48.1n 0.75 75n 0.75]
+Vd2 (d2 0) vsource type=pwl wave=[0 0.55 54n 0.55 54.1n 0.75 75n 0.75]
+Vd1 (d1 0) vsource type=pwl wave=[0 0.55 60n 0.55 60.1n 0.75 75n 0.75]
+Vd0 (d0 0) vsource type=pwl wave=[0 0.55 66n 0.55 66.1n 0.75 75n 0.75]
+XDUT (d10 d9 d8 d7 d6 d5 d4 d3 d2 d1 d0 vout) sar_weighted_sum vth=0.65
+
+tran tran stop=75n maxstep=25p
+save d10 d9 d8 d7 d6 d5 d4 d3 d2 d1 d0 vout

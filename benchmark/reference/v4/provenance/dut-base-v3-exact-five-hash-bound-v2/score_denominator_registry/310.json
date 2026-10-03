@@ -1,0 +1,79 @@
+{
+  "family_id": "310",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_droop_flag_missing/certification.json",
+        "certification_sha256": "ec3ba2169c922c872881a706de52fec004c9a14548ebed6608f66c703276b9cd",
+        "fault_class": "droop_flag_missing",
+        "mutation_bundle_sha256": "c51ac5fda4a43cf46313d86337bcf4b27bd525a27c783ac6de4f2dc2cec4880b",
+        "mutation_id": "neg_002_droop_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_002_droop_flag_missing/certification.json",
+        "trigger_condition": "droop_flag_missing",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_EDGE_WHILE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_bootstrap_metric_missing/certification.json",
+        "certification_sha256": "2815fc1adeb8fa83b10f532b95991790ab5effac7bc65b9e6ade05f353966de5",
+        "fault_class": "bootstrap_metric_missing",
+        "mutation_bundle_sha256": "33fede749796e81023eefd0ea10e5ecc2359f98f8b32908d278c7da5a4584fbe",
+        "mutation_id": "neg_001_bootstrap_metric_missing",
+        "source_catalog_certification_path": "negative_variants/neg_001_bootstrap_metric_missing/certification.json",
+        "trigger_condition": "bootstrap_metric_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_enable_clear_ignored/certification.json",
+        "certification_sha256": "83332d75ad7a35e083faedebcd60e7fb35077995bfc4457220a175003e61a222",
+        "fault_class": "reset_enable_clear_ignored",
+        "mutation_bundle_sha256": "ca3bda8362de8d7f7e0f86ab3a7ae87647411e48c91c2ae8f0fd4dd13128484b",
+        "mutation_id": "neg_004_reset_enable_clear_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_enable_clear_ignored/certification.json",
+        "trigger_condition": "reset_enable_clear_ignored",
+        "violated_property_ids": [
+          "P_BETWEEN_SAMPLES_HOLD_VHOLD_AND_APPLY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_held_output_stuck_common_mode/certification.json",
+        "certification_sha256": "136850be24de0e959a19b18e1c18382cd8f305562708f18ebecdb9cdb1310e95",
+        "fault_class": "held_output_stuck_common_mode",
+        "mutation_bundle_sha256": "cc0aeb95ac0d6057cfee069341e137d46a8f92ada020396962ec056e01113bb0",
+        "mutation_id": "neg_005_held_output_stuck_common_mode",
+        "source_catalog_certification_path": "negative_variants/neg_005_held_output_stuck_common_mode/certification.json",
+        "trigger_condition": "held_output_stuck_common_mode",
+        "violated_property_ids": [
+          "P_ASSERT_DROOP_FLAG_WHEN_ACCUMULATED_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_held_sample_polarity_inverted/certification.json",
+        "certification_sha256": "a1e8861e331a8fc02b6ca93f146267047ce89000d40eca99e2e983623eed3506",
+        "fault_class": "held_sample_polarity_inverted",
+        "mutation_bundle_sha256": "552bfaf9513b666dcb195534b617f9a51ca1424050a8da199996c761a365b820",
+        "mutation_id": "neg_003_held_sample_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_003_held_sample_polarity_inverted/certification.json",
+        "trigger_condition": "held_sample_polarity_inverted",
+        "violated_property_ids": [
+          "P_EXPOSE_A_BOOT_METRIC_THAT_INCREASES"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_droop_flag_missing",
+    "canonical_dut_id": "310",
+    "hashes": {
+      "mutation_catalog_sha256": "06aca106b7aa10a01697be1b9f5723d034c4b4e73556eca6cbe4ae13ee0b9d53",
+      "score_deck_sha256": "dddc10d4cc24ecbb7814a648e556a7b94afeeb2b690dfd0d00fb0e7c2157151d",
+      "task_certification_sha256": "6147bbbec5e212e67f5c0bcf5affb25cb01192a8c9825cc39d8a365d16c08402",
+      "task_record_sha256": "909f189f347cd4783dc8f8eab7c209bc3d1a8bf498921af065f8429638489804"
+    },
+    "release_dir": "310-bootstrapped-sampler-charge-metric"
+  }
+}

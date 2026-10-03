@@ -1,0 +1,60 @@
+{
+  "active_mutations_per_family": 5,
+  "certification_evaluator": "rust_evas2",
+  "certification_reuse": {
+    "evaluators": [
+      "rust_evas2"
+    ],
+    "policy": "source_transitive_input_hash_bound",
+    "simulation_rerun_required_for_materialization": false,
+    "source_dut_gold_certification_count": 400,
+    "source_dut_gold_certification_total": 400,
+    "source_negative_certification_count": 2000,
+    "source_negative_certification_total": 2000,
+    "stale_certification_family_ids": [],
+    "stale_gold_family_ids": [],
+    "stale_negative_case_ids": []
+  },
+  "family_count": 400,
+  "materialized_artifact_sha256": {
+    "TASK_INDEX.json": "49db192cfdddb44d646f2888ae49c35ab9b9f2361510ed62f677ac88ab5010bf",
+    "prompt_modes/manifest.json": "094de5421ab39db916e05da6be4dc6f75ff3c3c0bf7ab214c4e804f8c4984fdc",
+    "prompt_modes/modes.json": "3d5a0a8452ae998d85566d3bc85ae227dd9df33e003b0a03750ac67470423218",
+    "skills/SNAPSHOT_MANIFEST.json": "bd835a5437be984a200a2ec83d52e920912cdcdd318b0037f276b89a08fb63f8"
+  },
+  "package_layout": {
+    "task_contract": "tasks/<task>/public_contract.json",
+    "task_evaluator_assets": "tasks/<task>/evaluator",
+    "task_form": "tasks/<task>/task_record.json:form",
+    "task_public_inputs": "tasks/<task>/public"
+  },
+  "prompt_record_count": 7200,
+  "public_surface": {
+    "prompt_modes": "prompt_modes",
+    "skills": "skills",
+    "task_index": "TASK_INDEX.json",
+    "tasks": "tasks"
+  },
+  "release_revision": "r53",
+  "release_status": "r53_materialized_rust_evas2_audit_pending",
+  "release_surface": "benchmarkv4_package",
+  "runtime_requirements": {
+    "evas_package": "evas-sim",
+    "evas_version": "0.8.7",
+    "experiment_policy": "EXPERIMENT_POLICY.json",
+    "experiment_policy_sha256": "b6c478b0a7ecbf855ac801ed1d1dcf08417f1fcdecd84bc80b136a10bf6b9a31"
+  },
+  "schema_version": "r53-benchmarkv4-release-manifest-v1",
+  "simulation_rerun_count_for_materialization": 0,
+  "simulation_rerun_required_for_materialization": false,
+  "source_active_mutation_count": 2000,
+  "source_release_label": "dut-base-v3-exact-five-hash-bound-v2",
+  "source_score_denominator_registry_sha256": "52c43d7ec272cd80e861cfaa98e080ba2b37580bc603836fdd8b5da77ec908a2",
+  "task_count": 1200,
+  "task_counts": {
+    "bugfix": 400,
+    "dut": 400,
+    "testbench": 400
+  },
+  "tasks_index": "TASK_INDEX.json"
+}

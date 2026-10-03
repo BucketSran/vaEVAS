@@ -1,0 +1,20 @@
+{
+  "task_id": "vbr1_l1_higher_order_filter:dut",
+  "release_entry_id": "vbr1_l1_higher_order_filter",
+  "source_task_id": "vbr1_l1_higher_order_filter_dut",
+  "backend": "spectre",
+  "status": "PASS",
+  "scores": {
+    "rerun_backend_pass": true,
+    "rerun_expected_result_met": true,
+    "raw_status": "PASS",
+    "behavior_score": 1.0
+  },
+  "artifacts": [
+    "results/vabench-release-v1-ct04-dual-20260525_222500/vbr1_l1_higher_order_filter/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_higher_order_filter/dut/evidence.json"
+  ],
+  "notes": [
+    "Imported from fresh vaBench release EVAS/Spectre dual rerun summary."
+  ]
+}

@@ -1,0 +1,19 @@
+// pipeline_stage gold testbench
+// Non-overlap PHI1/PHI2 clocks and three VIN regions exercise the upper,
+// middle, and lower 1.5-bit MDAC decisions plus residue formula.
+simulator lang=spectre
+global 0
+
+ahdl_include "pipeline_stage.va"
+
+Vvdd  (vdd  0) vsource dc=0.9
+Vvss  (vss  0) vsource dc=0.0
+Vvref (vref 0) vsource dc=0.9
+Vphi1 (phi1 0) vsource type=pulse val0=0 val1=0.9 period=20n width=8n rise=200p fall=200p delay=1n
+Vphi2 (phi2 0) vsource type=pulse val0=0 val1=0.9 period=20n width=8n rise=200p fall=200p delay=11n
+Vvin (vin 0) vsource type=pwl wave=[0 0.72 99.5n 0.72 100n 0.45 199.5n 0.45 200n 0.18 300n 0.18]
+
+IDUT (vdd vss phi1 phi2 vin vref vres d1 d0) pipeline_stage vth=0.45 vdd=0.9 tedge=200p
+
+tran tran stop=300n maxstep=500p
+save phi1 phi2 vin vres d1 d0

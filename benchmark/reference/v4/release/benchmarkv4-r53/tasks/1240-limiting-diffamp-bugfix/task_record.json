@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "limiting_diffamp.va"
+  ],
+  "canonical_dut_source_slug": "240-limiting-diffamp",
+  "checker_task_id": "v4_240_limiting_diffamp",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d6f0301f0951138723f475e77769e32ada021344f88e21d9bfeefdde135e15ff",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e962363764f43623dd1f675ed5250df2f7802e43adf7897b2a120549eb50f856",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "79f87b9d56ac706b71fbb4c530648c362b55059d002c9f6d94cef7fd6fe49849",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "240",
+  "family_spec_sha256": "27062925272df03a7fbe8454f2eb85e3fde147ca666c1c5321933dff57311290",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "773e811d0ea9dfe36761e659824e4ceca71738c0b1e7eca93797ce58a6889e4e",
+  "public_contract": "tasks/1240-limiting-diffamp-bugfix/public_contract.json",
+  "public_contract_sha256": "08b6c6969eab93a8718a25e17610657b5a37f733c8d1a2de5c62bb304aae11eb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1240-limiting-diffamp-bugfix",
+  "task_id": "v4-1240"
+}

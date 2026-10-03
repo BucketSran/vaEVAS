@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "gain_amp_fixed.va"
+  ],
+  "canonical_dut_source_slug": "092-fixed-gain-amplifier",
+  "checker_task_id": "v4_092_fixed_gain_amplifier",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "12d2986fa93ed7d70762c88cab7ec6d0cc228880a87e451ab048085ab673c4a4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "57e1ce7f6b00504753caad2373b1c5cb8df671e845d6351ffd14905b416ef111",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4388587865e343d688371f41ea08e32518fad80e32fb0fd0f14ff3b02159b966",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "092",
+  "family_spec_sha256": "bf6a5060f836788bb12cf54a0e13f97baf44133f520195dfd3e854977403bd24",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3fdb79f7f0a908aabbb5df1cd31bc13f713f80146f36c9ea121d9855a6b0824e",
+  "public_contract": "tasks/1092-fixed-gain-amplifier-bugfix/public_contract.json",
+  "public_contract_sha256": "baaeab9c924bbbec03d185b892b011deff76789ada6e61b96deda79f8dde8e50",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1092-fixed-gain-amplifier-bugfix",
+  "task_id": "v4-1092"
+}

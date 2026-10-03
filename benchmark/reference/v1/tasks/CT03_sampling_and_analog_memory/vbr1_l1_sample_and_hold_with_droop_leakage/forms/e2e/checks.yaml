@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "rising_sample_edge_captures_vin"
+    - "multiple_input_levels_are_preserved"
+    - "held_output_droops_over_time"
+    - "reset_clears_output"
+    - "post_reset_sample_recovers_to_vin"
+parity:
+  required: true
+  tolerance_notes: "Check sampled vin levels after settling, droop across wide windows, and reset recovery."

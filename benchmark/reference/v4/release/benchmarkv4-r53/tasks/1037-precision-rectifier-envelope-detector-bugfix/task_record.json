@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "precision_rectifier_envelope_detector.va"
+  ],
+  "canonical_dut_source_slug": "037-precision-rectifier-envelope-detector",
+  "checker_task_id": "v4_037_precision_rectifier_envelope_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7bde956fadb6e9eb00c50284fab1ee6a0ccb13703081104ef2c0bcf97a5eda40",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "604c6be1183f070ff88e853b40ad78df7e83f2ac7b273f1eefc158bf0cf39fad",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "07d2f1087a127f3c36ffec424012fc3cb6303ffa9cd8608a91f5f8a9ccab7c9b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "037",
+  "family_spec_sha256": "85474ce75c3decf9096201486fe0dbcb5b1c5da429071610ab37ba03d535044c",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ec34a5ba8f3e7d92466b2fd3eedfa0ed6d74d7c7d1b13721250ecb7dcb0dd1db",
+  "public_contract": "tasks/1037-precision-rectifier-envelope-detector-bugfix/public_contract.json",
+  "public_contract_sha256": "98f90a92f29f736cc50bed2dc03b5bad012be5b3c0ffd3973eb482f9197e0478",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1037-precision-rectifier-envelope-detector-bugfix",
+  "task_id": "v4-1037"
+}

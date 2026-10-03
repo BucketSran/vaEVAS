@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_RAIL_LEVELS satisfy the public contract; fault class weak_logic_high is rejected",
+    "observed": "EVAS: active_clocks=11 reset_samples=1 active_sequence=2,0,3,1,2,0,3,1,2,0,3,1 failures=12 failure_detail=clock@10.175ns_out2_high=0.540<0.810;clock@30.100ns_out0_high=0.540<0.810;clock@50.175ns_out3_high=0.540<0.810;clock@70.100ns_out1_high=0.540<0.810;clock@90.175ns_out2_high=0.540<0.810;clock@110.175ns_out0_high=0.540<0.810",
+    "violated_property_ids": [
+      "P_RAIL_LEVELS"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_006_element_shuffler",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1191
+  },
+  "family_id": "006",
+  "inputs": {
+    "checker_profile_sha256": "eefd50a30acacc9613b08381af9911d6f72a1f9881def1cdbfe830ceddda8b27",
+    "harness_spec_sha256": "92a4f6e090f855ac1e05db316c139fd7bb0d8c46761cad94e0378001f503788e",
+    "mutation_bundle_sha256": "d6cb28c04f599d32e277fc8a59b2475a6db7309c50f771a7336c2aaa355841b7",
+    "profile_sha256": "a502d2fd88a72b1dbca687ff0a80898b1b92d730a513ee6013b2820b0ff5a3f5"
+  },
+  "mutation_id": "neg_006_weak_high_level",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

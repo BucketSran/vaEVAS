@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "080-sine-periodic-voltage-source",
+  "checker_task_id": "v4_080_sine_periodic_voltage_source",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3013358dafc80bbf013e287ba0477b4a957cac09e7681bc05c7a3c44c0a444e4",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5ceafc99356814d72d0f8d6b6b065cadedfbe4fbf5054fcda9eb2242baed8f11",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3013358dafc80bbf013e287ba0477b4a957cac09e7681bc05c7a3c44c0a444e4",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "fc611f3a96774c4f3f5b871ea96fce2e12d8e04be31abcf06d05c75e6f15c19e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c03a017e19f73de41d27a618a9a621b9758be84942ea36a34c76e83ef8a1abdb"
+  },
+  "family_id": "080",
+  "family_spec_sha256": "fff541e9299fa2a25e9d24fe350ec1884bf90b083c3d2e39e7cb1cc4f55c8421",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1581906694f54e111b5a2e73db449de1a662cce541c64d81939a9e09b6945331",
+  "public_contract": "tasks/580-sine-periodic-voltage-source-testbench/public_contract.json",
+  "public_contract_sha256": "c27bf0bc80508a74fcbed3bdce78f051df4b2bf94f9c34c9f6a7112545fbc7c1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/580-sine-periodic-voltage-source-testbench",
+  "task_id": "v4-580"
+}

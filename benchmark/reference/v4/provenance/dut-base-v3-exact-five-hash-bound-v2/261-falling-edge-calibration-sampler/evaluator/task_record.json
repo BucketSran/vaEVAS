@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "261",
+  "checker_task_id": "v4_261_falling_edge_calibration_sampler",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "d82b33415a005d5c0ed03dd4d9c28bd678a6736e9c9f3942bd5bd31e95bcc5c4",
+    "checker_profile.json": "60caa72728b09733c6976a6cdb32e6e5a162313d3f5a96fbadb268f4ae7dc472",
+    "derivation_manifest.json": "94914f2279f83fce2be008bae1c2ac6fe185c5b6dd79f7ddff006310ba382b68",
+    "family_spec.json": "34aa516da1909285419024f44e1e770392a98f04a6035001d1111efdc9a5b24e",
+    "harness_spec.json": "46752206cee5cc49e56cefc4ee2b27a4a1081725e178be004eeb8865672ec786",
+    "mutation_catalog.json": "6dd3720ebeb1655a714ec27ab100b81558a8756f71f70693f218f0c64b4b194f",
+    "profiles/feedback.json": "e1bff0aaa0c894ead94d2a7c18b90d479fb75df037790bbe6b8abe09168b8745",
+    "profiles/score.json": "631e182d97aa7623f39afc3374a12e292c56d7f712c2e0ddd7817bd3b828fef7",
+    "score_tb.scs": "8a1ace0256a84491adc79b61e8ce6c24a092a267a5c915b53556b1b16300bcf4",
+    "solution_tree": "3cd49ab6de03747296feb6b80e039e765b3c088dfbe62350ae48817b013d96d3",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "17bad148493ac19d20afff1dafafb245d809eada4dc243ebe7b594860bf6be57",
+    "instruction.md": "66f3f0dc1cbf24ed0f2078cff2878e35191221fbd872dfd44548a718f03d1ded",
+    "public_contract.json": "9e0381b14c8e2d3b52276ed879d9fbc8cce802a80dcb19d728c13df277a92f9c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "d82b33415a005d5c0ed03dd4d9c28bd678a6736e9c9f3942bd5bd31e95bcc5c4"
+  },
+  "release_dir": "261-falling-edge-calibration-sampler",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "352-falling-edge-calibration-sampler",
+  "support_root": "",
+  "target_artifacts": [
+    "falling_edge_calibration_sampler.va"
+  ]
+}

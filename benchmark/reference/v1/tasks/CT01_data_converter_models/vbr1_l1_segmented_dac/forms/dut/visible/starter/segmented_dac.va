@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module segmented_dac(b0,b1,t0,t1,t2,vref,vss,aout);
+    input b0,b1,t0,t1,t2,vref,vss; output aout; electrical b0,b1,t0,t1,t2,vref,vss,aout;
+    parameter real vth=0.45; parameter real tr=500p; integer code; real y;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

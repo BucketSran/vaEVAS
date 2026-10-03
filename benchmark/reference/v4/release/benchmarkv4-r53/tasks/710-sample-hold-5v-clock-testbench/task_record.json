@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "210-sample-hold-5v-clock",
+  "checker_task_id": "v4_210_sample_hold_5v_clock",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "71f9a9d61c60892a2bf8d3f4fa89e0085e4a3c5d063493b8c989f02332479bff",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "c47cc97a3d8615c3470d976de1b0f39577f3158af17f0bdc46b8bba3080e8fe7",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "71f9a9d61c60892a2bf8d3f4fa89e0085e4a3c5d063493b8c989f02332479bff",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "7d2814c4108fd6c422672ee67f1862d241970b65e7fc24a4476aeea14ac841c8",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c790c2d4be9cedf18b198d0486c4e188db530288925584ae538bbee2d28263c0"
+  },
+  "family_id": "210",
+  "family_spec_sha256": "484cbcef68817e92c5b2c51c4b18af1e933cf90369068c7677084bf7e90f04df",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c092e2813de02e50b7cb1342507ca308b96ff98aa1ec778e7ab3668da5d78ba5",
+  "public_contract": "tasks/710-sample-hold-5v-clock-testbench/public_contract.json",
+  "public_contract_sha256": "5540f3631924a25a9b4b83304a3d48e883924773a015c7abf892b422cfa092a6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/710-sample-hold-5v-clock-testbench",
+  "task_id": "v4-710"
+}

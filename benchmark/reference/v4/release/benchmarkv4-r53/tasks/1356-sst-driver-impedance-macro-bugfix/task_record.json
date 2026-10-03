@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sst_driver_macro.va"
+  ],
+  "canonical_dut_source_slug": "356-sst-driver-impedance-macro",
+  "checker_task_id": "v4_356_sst_driver_impedance_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "fb6f695070a48d3fee52f84d3e98d87c41c9faa0208a9461708d507d70350cf8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "760d2cb9e4d0e0ec66d92eab84fde1b6f314c13454e03fe6c15aacc234636bcd",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3db34d1646b12d063baa92219b079238de393c67aa21f951ea42e293c8cfe262",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "356",
+  "family_spec_sha256": "d1156ed1f19f774807d8266755f9ccafae9ff8781a816f4310181ea76afe3247",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3f54cad1fc37fc3ca9de1d01a6643451b2e983c78413c190c8cff75601efd4c6",
+  "public_contract": "tasks/1356-sst-driver-impedance-macro-bugfix/public_contract.json",
+  "public_contract_sha256": "ff311283685136030bfd50078156a62ae2ae6ccc631f7ee6e35890dc4287ca3a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1356-sst-driver-impedance-macro-bugfix",
+  "task_id": "v4-1356"
+}

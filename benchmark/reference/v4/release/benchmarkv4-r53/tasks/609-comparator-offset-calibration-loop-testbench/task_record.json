@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "109-comparator-offset-calibration-loop",
+  "checker_task_id": "v4_109_comparator_offset_calibration_loop",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "87d1290c0b6be0e3028d4ce99f4dd09784ad66798ad9202a9a639fe8a2e5059d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d7630db3691607a735104261de83a25b5ea0fdee574f626e639a4d4f2da9be78",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "87d1290c0b6be0e3028d4ce99f4dd09784ad66798ad9202a9a639fe8a2e5059d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a230dd694c93915919cacc129d132c138433a2dca08ab136fc936302d7dadae7",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "4ca4508cc5b8583c2c636ecb8b7c410ecea5ef3acfc42f104152995fad038440"
+  },
+  "family_id": "109",
+  "family_spec_sha256": "453e16a533b8d26544b8b2fb70608adc3391af7e660ba7937b724b4f1d340cb8",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "71d677c3f29f602fc459546f3ea46de0eb1e318c50c7670991cea50a064d23e7",
+  "public_contract": "tasks/609-comparator-offset-calibration-loop-testbench/public_contract.json",
+  "public_contract_sha256": "a0f9374b88cc04bfe3cdca4b9f751c0a089b9a686da610820bfbc3dca51079ec",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/609-comparator-offset-calibration-loop-testbench",
+  "task_id": "v4-609"
+}

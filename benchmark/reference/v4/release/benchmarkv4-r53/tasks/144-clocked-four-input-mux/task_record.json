@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "clocked_four_input_mux.va"
+  ],
+  "canonical_dut_source_slug": "144-clocked-four-input-mux",
+  "checker_task_id": "v4_144_clocked_four_input_mux",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2916bb4fe9b3831e60a5a1a429fa8bcf97e82b0ebb1a4ee77ad3112cead786d8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a98fefb2e2ebccdd11f819ef899fa0ace5a8a8a56f810460b9e0b99cd06b9cf1",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "699606353490752771645283bfc4a788e9ea7951840ed0218da097f6f5315c51",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "144",
+  "family_spec_sha256": "ee52b477d55630806778aff0d3e9d32cbbf56961477d11ce3f94548207c68c6d",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0f86c831d727360978e2fea705b1ae2770b97d36619c5c52ce893fcb433ca2d0",
+  "public_contract": "tasks/144-clocked-four-input-mux/public_contract.json",
+  "public_contract_sha256": "65322010b38492377fb1bae03cec5ecd1270d4301869346a38973d351fae1aef",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/144-clocked-four-input-mux",
+  "task_id": "v4-144"
+}

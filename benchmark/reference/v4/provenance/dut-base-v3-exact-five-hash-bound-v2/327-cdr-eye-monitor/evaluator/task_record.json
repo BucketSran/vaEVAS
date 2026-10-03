@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "327",
+  "checker_task_id": "v4_327_cdr_eye_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "52a1ac45af68cd0658f06b3bbba34d34d81485b421a810e755b34a0fd41a7202",
+    "checker_profile.json": "990a9bdd849a6bc8de885fcb97993159db4e01fd54376f5ebef62466529425f9",
+    "derivation_manifest.json": "c2273d9619e9b51982119f770d632fca2b6bab5618a67700d2fe077423f84f25",
+    "family_spec.json": "261d594911ce33b429fb970cd0e993a01125f416a9779ce67cef38eae1a3b58a",
+    "harness_spec.json": "610227f300a1bd66d58afb3d4f58965cf9b27abcda821dfdfab9337e353f2e19",
+    "mutation_catalog.json": "24478fc56292e9b042c37f7fe9094111fc96b8482645355c9c85ff0ae758bbc9",
+    "profiles/feedback.json": "507c147a8213710399236020345e6baf2d96cd70cf5687b9241ebe53565e2498",
+    "profiles/score.json": "1bb97b05c2a0ae0d5fa720a580c477805749c106f33d1643c0b347126b9eb8b9",
+    "score_tb.scs": "2ea82a9e1f9cb2c84f390ed53779b226dee3b7f739b19566eb89486ad9e6814a",
+    "solution_tree": "533398ea651c6c6c2b6bdb838137e85547a2b9b2cb637b6fa271f9d9d780f4dc",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "f0a85b3c684199987792c376c47b7e60f6f8d14b86f605e070fda9bf96df8296",
+    "instruction.md": "8ae28c79a093cb71e4e7b2a29dc797e453183e8ac6b137524c8bd7112d94d30f",
+    "public_contract.json": "a7f7488bfdbace326ef2b0154d36e1c975009e1f9a3aae55115657d7dd5c1962"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "52a1ac45af68cd0658f06b3bbba34d34d81485b421a810e755b34a0fd41a7202"
+  },
+  "release_dir": "327-cdr-eye-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1025-cdr-eye-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "cdr_eye_monitor_top.va",
+    "edge_margin_sampler.va",
+    "eye_metric_filter.va"
+  ]
+}

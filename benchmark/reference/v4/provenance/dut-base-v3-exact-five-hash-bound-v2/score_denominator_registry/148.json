@@ -1,0 +1,78 @@
+{
+  "family_id": "148",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_output_gain/certification.json",
+        "certification_sha256": "d761a152b44b65202678625db0a223912296c8038eb8cf9c0cd9ee281f196b60",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "53f8b3a2163ad17d94798df499acb996de10e236cee9b8ace6d307a6e57745ed",
+        "mutation_id": "neg_002_half_output_gain",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_output_gain/certification.json",
+        "trigger_condition": "Samples correctly but drives half-amplitude outputs.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swapped_channels/certification.json",
+        "certification_sha256": "09248656fb79117daa39fb18001c03cd395eda5314821bcb725dcf432bd49619",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "af8d79d4929f37a67a75c84692b49b68fec1e83c41a07b4abf74c513b4cf2dbd",
+        "mutation_id": "neg_003_swapped_channels",
+        "source_catalog_certification_path": "negative_variants/neg_003_swapped_channels/certification.json",
+        "trigger_condition": "Swaps sampled channel outputs.",
+        "violated_property_ids": [
+          "P_CHANNEL_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_channel3_stuck_initial/certification.json",
+        "certification_sha256": "1104b2cc89f0b4641c311cdc059e40e4f55cfe1d01d2f0532d6f857a323e79b3",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "be857609a6e7e25ba311608a4772b7b59671dce484432926918580b573d98416",
+        "mutation_id": "neg_004_channel3_stuck_initial",
+        "source_catalog_certification_path": "negative_variants/neg_004_channel3_stuck_initial/certification.json",
+        "trigger_condition": "Leaves channel 3 stuck at its initial value.",
+        "violated_property_ids": [
+          "P_CONFIGURED_EDGE_SIMULTANEOUS_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "bdcb990c61511cf15ab5def29cbe312eefa4c9732b8018ea9ab85f43e34a8692",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "cfc75bce9a3e61b45ceeabfa1a8bcdb7db0220d8cfc4f6ffe041c5cf8f6982fb",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "6a9a3506b97c82944d4515022a5c68cd04f6e400b093027a2fb6ca4d10b8ce6a",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "0c0503110fb57cbf1e56073ebfb50001518c9ee239162dee18f3aacef6e5e347",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Four Channel Edge Sampler: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_GAIN_AND_HOLD"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_half_output_gain",
+    "canonical_dut_id": "148",
+    "hashes": {
+      "mutation_catalog_sha256": "055e44eb6f7118a7bc01eacce2d0330dbfecdb5d7c0d6d6525b7250ff256a859",
+      "score_deck_sha256": "31690465a71bf2e414ee5d7788276f9ab3502015ffdcc421168999540b3428a6",
+      "task_certification_sha256": "4b1c3dd1be0a6888c116132e4457ade3ddfb874bfd7be781d18ba833975225c3",
+      "task_record_sha256": "e22ccce9fa06c61cbb55a0c3e23dfdacb9c6b64a40f20aee326280541f68bc69"
+    },
+    "release_dir": "148-four-channel-edge-sampler"
+  }
+}

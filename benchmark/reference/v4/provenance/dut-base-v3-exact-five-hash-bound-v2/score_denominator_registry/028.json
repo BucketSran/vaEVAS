@@ -1,0 +1,78 @@
+{
+  "family_id": "028",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "95162455b71ffbc745f098ca19ddd50562df401b12a9bed6330ebfa973d839d7",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "e01250eb721f91ce19f8d02a0ac41cb7f83d9cf4c360a1816cbae1dfb1d92e7b",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_COMMON_MODE_INITIAL_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "d17fba8e1c5bef927f4608719c88e9b07545d4b6c47f50267617b5a38dc5d7a3",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "45f5fb99cbeadeeaec5f1f25cc215090674e5f7f1e722402f46003e216da6fd2",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_TWO_POLE_SAMPLED_SETTLING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "b0d04e248eb2f44998393414bb807a88b7983692ddf60890a62feb9d14e9481a",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "b618e2e2dbf1d85282fa38779882916691914cc58cc480e04d1cd80f7b95b094",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_LAG_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "e2c0d3f38cad63b364026cf977487abbb7de6b0b9fa85d460e81ae792d5cf1da",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "b54b033ea530b0581d2a922ffa143ca339d4925a49892b7a248a04add6f00890",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_SIGNAL_RANGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "8b048bd9d73521cc11e5aedfb366edb4a81021d5d6224ca62db7f15687a48d75",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "4c142e7b0d35fce1def4f1f81825d20f71a30fbd7b333a23c520e7154961bebb",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_GAINED_BOUNDED_TARGET"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "028",
+    "hashes": {
+      "mutation_catalog_sha256": "fa5fc27f2fa0941e78ccee547092ba63b70423bf947e7b39998166ecff308951",
+      "score_deck_sha256": "4054ee9abf931fac072b05ebb8695fc41f4c92bd79f4f393f8baedaa4858caac",
+      "task_certification_sha256": "946bc2c5244f66007dc120df2b7cec5c84dd85c157dfcf07dc985de744a562e3",
+      "task_record_sha256": "056bc982f4cab5af23af59838039be93de30a1cdc84d8546b4fc879be3480cc2"
+    },
+    "release_dir": "028-higher-order-filter"
+  }
+}

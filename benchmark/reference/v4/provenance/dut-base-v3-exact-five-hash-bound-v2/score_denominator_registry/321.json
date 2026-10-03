@@ -1,0 +1,78 @@
+{
+  "family_id": "321",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_falling_edge_update/certification.json",
+        "certification_sha256": "a66ae79509414f2b64e8ba980e9bcf712513d6fa6e916ad0ede6dbea04fc8b08",
+        "fault_class": "wrong_clock_edge",
+        "mutation_bundle_sha256": "a40b0aeb1f1f8065ce6b76546f302c1a07ec869b06cffbec4cb8497b826a70a7",
+        "mutation_id": "neg_002_falling_edge_update",
+        "source_catalog_certification_path": "negative_variants/neg_002_falling_edge_update/certification.json",
+        "trigger_condition": "Updates state on falling clock edges instead of rising edges.",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_EDGE_OBSERVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_up_dn_polarity_reversed/certification.json",
+        "certification_sha256": "a6067cc993c7722b90f36d190dd235a496518b7111ac81e25cc236780d2393df",
+        "fault_class": "reversed_up_dn_polarity",
+        "mutation_bundle_sha256": "7dc9d93cdc0693977e4d325ba724b1bc67da8d6a9904be1b90fef7a9313e90ae",
+        "mutation_id": "neg_003_up_dn_polarity_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_003_up_dn_polarity_reversed/certification.json",
+        "trigger_condition": "UP-only decreases vctrl and DN-only increases it.",
+        "violated_property_ids": [
+          "P_INCREASE_VCTRL_FOR_UP_ONLY_DECREASE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_imbalance_metric_half_scale/certification.json",
+        "certification_sha256": "ab699d11e9bb4fdb0227165b30842fb9267e1fc0c195c7674b1857534785bcee",
+        "fault_class": "wrong_metric_scale",
+        "mutation_bundle_sha256": "7346f6dec14cb2b87ad5d35c694d7cd1254b4cb70a15370c02e549c86eb537d4",
+        "mutation_id": "neg_004_imbalance_metric_half_scale",
+        "source_catalog_certification_path": "negative_variants/neg_004_imbalance_metric_half_scale/certification.json",
+        "trigger_condition": "Reports half of the accumulated imbalance magnitude.",
+        "violated_property_ids": [
+          "P_DRIVE_IMBALANCE_METRIC_FROM_THE_ACCUMULATED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_balance_threshold_too_loose/certification.json",
+        "certification_sha256": "a8a06ec716950512ec7de2c57d2eade770be0f7d77eb9d57ad0934fad5adcb65",
+        "fault_class": "premature_balance_qualification",
+        "mutation_bundle_sha256": "9066f7ba31906a4f11a6529c6188332cb25a5c80bd27a8939bcfb0a45912b7b5",
+        "mutation_id": "neg_005_balance_threshold_too_loose",
+        "source_catalog_certification_path": "negative_variants/neg_005_balance_threshold_too_loose/certification.json",
+        "trigger_condition": "Uses an overly loose balance threshold.",
+        "violated_property_ids": [
+          "P_ASSERT_BALANCED_ONLY_WHEN_THE_RECENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_wrong_clear_level/certification.json",
+        "certification_sha256": "dc0a275c6d7d32516d526545194831a7c281278532f800446d03d2850c835cfd",
+        "fault_class": "wrong_clear_level",
+        "mutation_bundle_sha256": "2485144f0cfe9fdf717cd75d2db6a8fb12042e24558c1d0ef1cc2a3fbbce6f65",
+        "mutation_id": "neg_001_wrong_clear_level",
+        "source_catalog_certification_path": "negative_variants/neg_001_wrong_clear_level/certification.json",
+        "trigger_condition": "Reset or disable clears vctrl to vss instead of vcm.",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_falling_edge_update",
+    "canonical_dut_id": "321",
+    "hashes": {
+      "mutation_catalog_sha256": "0c5f4fd66a3691352722029ef3b7b58adffcab107a76a378e97d70e709ae2b12",
+      "score_deck_sha256": "44ddf237a16cbf21af5b7f3f8f9d0ca3beb5c9347e9ed59757a985f1d335107b",
+      "task_certification_sha256": "224b732e3628f38f6a097a8a581089b4c79ac307c4123de296fb7daaf4536317",
+      "task_record_sha256": "696bb1f77c0b7e11110115cd648a542c8dd2ecf49e3ada64baec398c2d62c0e0"
+    },
+    "release_dir": "321-charge-pump-pulse-balancer"
+  }
+}

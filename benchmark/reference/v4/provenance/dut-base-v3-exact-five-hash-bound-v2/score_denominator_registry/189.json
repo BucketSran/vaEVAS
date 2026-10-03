@@ -1,0 +1,78 @@
+{
+  "family_id": "189",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_floor_without_round/certification.json",
+        "certification_sha256": "3de555c79a13cc7bd22a8cefe41267f819fcf00e99ef87b3e72c4d428ad7143d",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "8bc28896c5154e7ed4a98a9410ec7b5ee82f01982edcf22364c473ab2b8e6bae",
+        "mutation_id": "neg_002_floor_without_round",
+        "source_catalog_certification_path": "negative_variants/neg_002_floor_without_round/certification.json",
+        "trigger_condition": "Inverts output bit dout1 of the rounded trim code.",
+        "violated_property_ids": [
+          "P_ANALOG_INPUT_ROUNDING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "3d61f7d46740fa5d12034fd50e14a408e3f3e88ceb36ad3d94053d38697971a1",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8e53ffcbf70fa0aa16f98c1de1e4e2d7e877f3c7ac4ea8ea079331a5ffe73e3f",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_TRIM_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "d1940a1500fb65430a243a3b13cb758f879c833beb06853a106bdc5944166c50",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "4caeab2ca18f6d8542edc91015083b0d889c81c28ca9b4743a307cd11f9a0f95",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Trim Ctrl 4bit: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CONTINUOUS_CODE_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_output_level/certification.json",
+        "certification_sha256": "8b3f41677fa0f144e8f6f409a7160b29ce6b9e132b7c3431fa21607f75ed9748",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "91eea20f8a6f1e26affc859b5c5f3c3886e6124ebca810879a0010f91254b26e",
+        "mutation_id": "neg_004_half_output_level",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_output_level/certification.json",
+        "trigger_condition": "Drives dout0 high at half logic level.",
+        "violated_property_ids": [
+          "P_TRIM_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_invert_msb/certification.json",
+        "certification_sha256": "53912e4acb734a0b728885a539ae24e01252c6d3e63ec3d5ec8565495570f4f3",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4655f6569dacd4d363e1b7c1b8ee093dab7b7f392b4b88c17a864075d094cb73",
+        "mutation_id": "neg_003_invert_msb",
+        "source_catalog_certification_path": "negative_variants/neg_003_invert_msb/certification.json",
+        "trigger_condition": "Inverts the MSB output bit.",
+        "violated_property_ids": [
+          "P_LOW_FOUR_BIT_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_floor_without_round",
+    "canonical_dut_id": "189",
+    "hashes": {
+      "mutation_catalog_sha256": "5473eadb49abb29f8fc40ddfa6e4f21f1f130b5f6f7c8879a00c3bc74157332a",
+      "score_deck_sha256": "c6cddea946476828740da21b9187db138dbf8344a35a04a6c1b591c0a7084f92",
+      "task_certification_sha256": "def9abe375b7b350082c423dfed0f88a8eb656a8404945ec7e073d62ca24b6d8",
+      "task_record_sha256": "485e7b529b5158bb294e3b30808b882c69f3f4e412cd225d9b5219b28c5a6fbb"
+    },
+    "release_dir": "189-trim-ctrl-4bit"
+  }
+}

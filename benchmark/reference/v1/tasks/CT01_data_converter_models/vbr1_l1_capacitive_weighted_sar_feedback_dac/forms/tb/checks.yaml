@@ -1,0 +1,22 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include: []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "transient_analysis_present"
+    - "public_observables_saved"
+    - "dut_or_system_instantiated"
+    - "sparse_10bit_code_stimulus_exercised"
+    - "calibration_stimulus_exercised"
+    - "differential_outputs_observable"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

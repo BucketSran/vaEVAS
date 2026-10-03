@@ -1,0 +1,91 @@
+{
+  "agent_visible_files": [
+    "instruction.md",
+    "public_contract.json",
+    "feedback_tb.scs"
+  ],
+  "canonical_dut_id": "306",
+  "canonical_instruction": "instruction.md",
+  "category": "amplifier_macromodels",
+  "counted_in_score": true,
+  "feedback_oracle": {
+    "command": "vabench-feedback --task . --submission ../submission",
+    "diagnostic_contract": {
+      "format": "<property_id> mismatch_count=<nonnegative integer>",
+      "property_ids": [
+        "P_ON_RESET_CLEAR_THE_TRIM_STATE",
+        "P_DECODE_TRIM_2_TRIM_0_AS",
+        "P_WHILE_CAL_EN_IS_HIGH_UPDATE",
+        "P_DRIVE_VOUT_FROM_THE_CORRECTED_DIFFERENTIAL",
+        "P_EXPOSE_THE_ACTIVE_CORRECTION_ON_OFFSET",
+        "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+      ],
+      "scope": "each feedback result exposes every declared property"
+    },
+    "feedback_channels": [
+      "behavior_property_diagnostics"
+    ],
+    "public_tb": "feedback_tb.scs",
+    "public_tb_exposed": true
+  },
+  "form": "dut",
+  "gate2_status": "repair_pending_recertification",
+  "language": "verilog-a",
+  "level": "L2",
+  "oracle_policy": {
+    "checker_private": true,
+    "feedback_oracle_materialized": true,
+    "no_model_visible_starter": true,
+    "proposal_only": false,
+    "score_tb_private": true,
+    "single_public_contract": true,
+    "testbench_and_checker_split_required": true
+  },
+  "planned_checker_focus": [
+    "trim direction",
+    "calibration latency",
+    "gain polarity",
+    "metric exposure"
+  ],
+  "planned_oracle_type": "deterministic_trace_behavior_with_static_module_contract",
+  "public_modules": [
+    "instrumentation_amp_offset_trim_top",
+    "diff_gain_core",
+    "offset_trim_controller"
+  ],
+  "public_observables": [
+    "vinp",
+    "vinn",
+    "clk",
+    "rst",
+    "cal_en",
+    "trim_2",
+    "trim_1",
+    "trim_0",
+    "vout",
+    "offset_metric",
+    "ready"
+  ],
+  "schema_version": "v4-proposed-public-contract-v1",
+  "status": "repair_pending_recertification",
+  "target_artifacts": [
+    "instrumentation_amp_offset_trim_top.va",
+    "diff_gain_core.va",
+    "offset_trim_controller.va"
+  ],
+  "task_id": "v4_306_instrumentation_amplifier_offset_trim",
+  "task_slug": "1004-instrumentation-amplifier-offset-trim",
+  "title": "Instrumentation Amplifier Offset-trim System",
+  "top_module": "instrumentation_amp_offset_trim_top",
+  "track": "multi_module_ams_system_dut",
+  "validation_status": {
+    "evas_feedback_score_gold": "pending_recertification",
+    "gate2": "dut_base_sealed",
+    "next_gate": "batch31_checker_profile_evas_recertification",
+    "semantic_negative_certification": "pending_recertification",
+    "spectre_score_gold": "optional_not_run",
+    "tri_form_gate2": "pending",
+    "tri_form_gate3": "pending",
+    "untriaged_warning_count": 0
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "absolute_value.va"
+  ],
+  "canonical_dut_source_slug": "237-absolute-value",
+  "checker_task_id": "v4_237_absolute_value",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "37bb7a3ea2c61f03e090363cd58712c3fe1aa00cd15c327a8af1e83f6427c9fe",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fda7acb19214630d8df2823f467f2a04dc712d8d9349e3d57a0a6cf3a3587cfe",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "beea3ceb1c92b297b31e2c2f5d63986e524a7ed4c385d6a3123cbc1ae66e97a7",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "237",
+  "family_spec_sha256": "9c3a9652b34e05ab418e1624c1d0fd5d2967706e4b9c4edfcb52a8b36417d103",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0844ddaa2faa9ba6fa7f6dc3cbf87bdc128234c949077ce46aa0e0c73676c84d",
+  "public_contract": "tasks/237-absolute-value/public_contract.json",
+  "public_contract_sha256": "d7bb5768505a0f94d570cba4ac23fd62df49678a76ae0dad19a50c0a20acdc44",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/237-absolute-value",
+  "task_id": "v4-237"
+}

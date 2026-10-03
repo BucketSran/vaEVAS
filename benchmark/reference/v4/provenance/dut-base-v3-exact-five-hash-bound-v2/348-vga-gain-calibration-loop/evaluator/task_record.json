@@ -1,0 +1,40 @@
+{
+  "canonical_dut_id": "348",
+  "checker_task_id": "v4_348_vga_gain_calibration_loop",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "c3cfe070182d36b055afd264c5b410f7940c2a3b4787ce45f85424ea00c9d302",
+    "checker_profile.json": "ae3998a541b5ed6f58303317dce6172c180824d5c3cbd61914904280068d6a6c",
+    "derivation_manifest.json": "b27f59372bbd8efa4a409993f85774e7775fb31477a3bd2f1d95e5400d14183f",
+    "family_spec.json": "661d3b16bd2234a7b00e85d30b57df124c9e308dd14b56908509635257207959",
+    "harness_spec.json": "6f62498989e2bb85f25914ef5e73e2b3520ab0672c58b9afd4c120cc37d43c6c",
+    "mutation_catalog.json": "32bddc961e65705acdd8a2c782f8b00f2eba89bc9f8f483f7042e02171af2979",
+    "profiles/feedback.json": "f68a753cf78b7cc8dfce0c7e83b5d1df1db061a8b47c8761652b669cb217762d",
+    "profiles/score.json": "66c5173da048768042b1551cf624e2fdaac783e4289a8eca4f764bd895bcf06c",
+    "score_tb.scs": "c99ecf42077a98c47805fe1f2d3f4194b6a708734d0b68353507b786ee593bd2",
+    "solution_tree": "f430052f5c2c28519af9770365fc737b20bcba23172cb3f4fbe9903f2a4295a1",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "195b2fffe38dff3ea5087d745f5d87d03e0b7f3b3d1bc58548c2ab0b9e9d5134",
+    "instruction.md": "a16b1e06a8a3215360bb7e1bc05ed32c58e987d0d89bcbb447d0cdbf6b2db960",
+    "public_contract.json": "d3a53901133ee087ceef805ec2f05ab96e9653017bda8cca6d03516486526469"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "c3cfe070182d36b055afd264c5b410f7940c2a3b4787ce45f85424ea00c9d302"
+  },
+  "release_dir": "348-vga-gain-calibration-loop",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "907-vga-gain-calibration-loop",
+  "support_root": "",
+  "target_artifacts": [
+    "vga_cal_loop_top.va",
+    "peak_detector.va",
+    "gain_controller.va",
+    "vga_model.va",
+    "lock_detector.va"
+  ]
+}

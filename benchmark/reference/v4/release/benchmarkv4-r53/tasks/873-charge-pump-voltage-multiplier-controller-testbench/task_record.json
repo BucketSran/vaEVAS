@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "373-charge-pump-voltage-multiplier-controller",
+  "checker_task_id": "v4_373_charge_pump_voltage_multiplier_controller",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "75d7e5cc71dfdfded9bf904022fce7c4b264ab659c0a2489f9ec4a9fbb739f25",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5d54053540816ae5713c903f4e27cc57131f898b09912223386dc42dbefcaa19",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "75d7e5cc71dfdfded9bf904022fce7c4b264ab659c0a2489f9ec4a9fbb739f25",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "eee3578a8d30e898439d585f74f3adcbe253d7e988f68dc8dc3fa91917b0b88c",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "e13666c08e93252d260b3309c416d71dc1690fc8a14df0f9c7478a455f068fa0"
+  },
+  "family_id": "373",
+  "family_spec_sha256": "82e79300bcd4aa2fe320ad6999dc474e0bb9d787fbc83d7666f9c929821cab63",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "bc3f071a042c56a160ef6c5b57423b75b2219673d61ed2832cac6776ad9ff68f",
+  "public_contract": "tasks/873-charge-pump-voltage-multiplier-controller-testbench/public_contract.json",
+  "public_contract_sha256": "16c3e9e2ca346a2984165fdc5bef43f1c985a7ccaffa31bc5dda9f0dcad3b439",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/873-charge-pump-voltage-multiplier-controller-testbench",
+  "task_id": "v4-873"
+}

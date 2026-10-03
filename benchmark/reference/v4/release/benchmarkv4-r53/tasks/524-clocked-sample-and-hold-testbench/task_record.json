@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "024-clocked-sample-and-hold",
+  "checker_task_id": "v4_024_clocked_sample_and_hold",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "43fe3552fae1d3f019be008cabbd3935834ff80f302955fb4ef6822dc249ba22",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3736a53eb8947f86bf2f790c587ddd7015b0bf451c9676b2a7ad27b3a2639353",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "43fe3552fae1d3f019be008cabbd3935834ff80f302955fb4ef6822dc249ba22",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "7fc9caae29392630c72162d657a2e427c95dd83853924a7db1d1d550317340d0",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "7e733915f8018b7e124ffb1692e8732cb5676882df48d624c33a751b8b2cc0ac"
+  },
+  "family_id": "024",
+  "family_spec_sha256": "49042f557290047762cfab3dc8d01c63be93bfe6867e3c2bfaea5069063dd371",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "85a6e96d17f7066b20c5b04c58ef229decf1f49be37d65a811c327525be95512",
+  "public_contract": "tasks/524-clocked-sample-and-hold-testbench/public_contract.json",
+  "public_contract_sha256": "b95e77009e162cca420b564f828932f2c17284c05c006a8cb6e2cd98fc6a1dda",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/524-clocked-sample-and-hold-testbench",
+  "task_id": "v4-524"
+}

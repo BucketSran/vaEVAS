@@ -1,0 +1,78 @@
+{
+  "family_id": "378",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_reset_ignored/certification.json",
+        "certification_sha256": "64d29c92e7022629a330e29a000ada39ebcda3662e287a0fc0fc6f2a505256e8",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "b16292d9ff6ea1cb869cbe691e4ec9a0852486b9c8926b85bb8c450dcf2ca245",
+        "mutation_id": "neg_001_reset_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_001_reset_ignored/certification.json",
+        "trigger_condition": "reset is asserted while enable is high",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_half_overload/certification.json",
+        "certification_sha256": "b5dc756c3d753ff2dca1ffb4e8cf7ea08ca6c4fb8a9cfe5072338f3e77719680",
+        "fault_class": "wrong_gain",
+        "mutation_bundle_sha256": "273b3afb5aaa17ada3999ce058eaa3d72b0d335178d69ca494695f12718a85bc",
+        "mutation_id": "neg_003_half_overload",
+        "source_catalog_certification_path": "negative_variants/neg_003_half_overload/certification.json",
+        "trigger_condition": "load_demand exceeds demand_limit",
+        "violated_property_ids": [
+          "P_CURRENT_LIMITING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_regulation_always_ok/certification.json",
+        "certification_sha256": "57c5137ab7599109c24d31cda69a46504c1fea1e0f07cc8c1e4343727348d220",
+        "fault_class": "qualification_error",
+        "mutation_bundle_sha256": "254d54569dd8d86d3c86129a7647fbf69783dd564cbe55217e6508dd8d71a74a",
+        "mutation_id": "neg_004_regulation_always_ok",
+        "source_catalog_certification_path": "negative_variants/neg_004_regulation_always_ok/certification.json",
+        "trigger_condition": "the regulator is enabled in dropout or overload",
+        "violated_property_ids": [
+          "P_REGULATION_FLAG"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_reference/certification.json",
+        "certification_sha256": "c10f8fe513999e11f447645fd30dfddda4d39587bb3bb927dc40ae7a8d1df833",
+        "fault_class": "wrong_target",
+        "mutation_bundle_sha256": "46a5679d50bcf90bde3750bae8e17a78011daef7b24823a51d3b5218b3456117",
+        "mutation_id": "neg_005_wrong_reference",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_reference/certification.json",
+        "trigger_condition": "normal enabled operation has adequate headroom",
+        "violated_property_ids": [
+          "P_NORMAL_REGULATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_dropout_sign/certification.json",
+        "certification_sha256": "65696c5daf686a24a2d337c123b120c8aa7c667dc59c655ee14387b172faaf4a",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "798c248bb594784a6c2e721af86a5c53015d0017fdc43d83128ac2cd71413b4d",
+        "mutation_id": "neg_002_wrong_dropout_sign",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_dropout_sign/certification.json",
+        "trigger_condition": "vin is below vref plus dropout",
+        "violated_property_ids": [
+          "P_DROPOUT_CLAMP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_reset_ignored",
+    "canonical_dut_id": "378",
+    "hashes": {
+      "mutation_catalog_sha256": "3c9a6d1b5f346194d33a0bd809e1144a7ce899e422efe3043b6a2530bee78038",
+      "score_deck_sha256": "f6c3af69eab80b17a5231c3f289d739c0f02eca00edd1bbc7b8179c1c09840ec",
+      "task_certification_sha256": "6a3a413ead7ae12d6ac872ceb5d5f8f9e6660bc0ef53de27a5159a87ae94a71d",
+      "task_record_sha256": "a7ca857f8c39cea43bc20610b4b76d22d5a77243efc885fa386d822bcbba66ba"
+    },
+    "release_dir": "378-current-limited-regulator-macro"
+  }
+}

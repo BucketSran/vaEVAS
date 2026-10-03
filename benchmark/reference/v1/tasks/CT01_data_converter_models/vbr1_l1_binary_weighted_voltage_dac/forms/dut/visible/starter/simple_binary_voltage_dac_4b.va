@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module simple_binary_voltage_dac_4b(code_0, code_1, code_2, code_3, vref, vss, aout);
+    input code_0, code_1, code_2, code_3, vref, vss;
+    output aout;
+    electrical code_0, code_1, code_2, code_3, vref, vss, aout;
+    parameter real vth = 0.45;
+    parameter real tr = 500p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

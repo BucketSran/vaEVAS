@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "038-programmable-gain-amplifier",
+  "checker_task_id": "v4_038_programmable_gain_amplifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "f8ced1c3cc4cc6b35936ebb0ba341d0dc32a9f478939b82c0910fd55433556a8",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "623b96160d79852e78aa7c67a0f052c4a4956c76631e5dc8f89abacb1c83c34c",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "f8ced1c3cc4cc6b35936ebb0ba341d0dc32a9f478939b82c0910fd55433556a8",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f61a6456dfaeea581633c21ca6363294e758fb163b41d576749b487048680535",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "bc418b914a1f299e2c239099c6520fbea60e46412d9f2fd7a5fc96949ecdf60a"
+  },
+  "family_id": "038",
+  "family_spec_sha256": "92867b2063aa3caab38f38af3085ab6fb3a594a755a3d36237a274338399ce0c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "25327cb540994be5315cdc428dde1bea36c2be5cf1e2e3c8807863b02f91f4f9",
+  "public_contract": "tasks/538-programmable-gain-amplifier-testbench/public_contract.json",
+  "public_contract_sha256": "f54954171c0c6f3a4277f1d3669910993e3fbbf4a7c90c1cdeb96cbd25aaf3fa",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/538-programmable-gain-amplifier-testbench",
+  "task_id": "v4-538"
+}

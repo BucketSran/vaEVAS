@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "transition("
+    - "code="
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "enable_low_forces_all_outputs_low"
+    - "enabled_codes_1_2_3_are_cumulative_thermometer"
+    - "th3_remains_low_for_two_bit_guarded_decode"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: decoder is one-hot instead of thermometer-coded."
+parity:
+  required: true
+  tolerance_notes: "Sequence assertions use safe-time samples away from source transitions."

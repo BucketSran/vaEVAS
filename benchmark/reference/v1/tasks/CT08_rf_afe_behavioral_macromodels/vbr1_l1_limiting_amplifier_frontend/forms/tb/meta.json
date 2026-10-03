@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_limiting_amplifier_frontend_tb",
+  "task_id": "vbr1_l1_limiting_amplifier_frontend_tb",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_limiting_amplifier_frontend",
+  "family": "tb-generation",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_limiting_amplifier_frontend.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "small_input_gain_preserved",
+    "large_input_limited_high_low",
+    "limiting_metric_asserted"
+  ],
+  "designed_source": true
+}

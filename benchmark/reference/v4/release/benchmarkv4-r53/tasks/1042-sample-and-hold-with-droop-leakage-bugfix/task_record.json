@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "leaky_hold.va"
+  ],
+  "canonical_dut_source_slug": "042-sample-and-hold-with-droop-leakage",
+  "checker_task_id": "v4_042_sample_and_hold_with_droop_leakage",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "032795d37028fc4b7be43ebd53eaaef839ce95ab587cbd90bd382b572cfb32a7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "c1600d112d62ecc3ebecaa1738eb404683e36a4b863e4957bceab2936afe7230",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "48bc3a82d78bea635512944e79695c0d376024c7fcac8a651354e034fc7d4fcb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "042",
+  "family_spec_sha256": "606873e046d316a776913046cb9715d62d0f2610090fb41c8442a70e6ce8f896",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "57542329fead8df7d0732012065e349a2c7ecef1e15809b8bb27fbdf7fb47c28",
+  "public_contract": "tasks/1042-sample-and-hold-with-droop-leakage-bugfix/public_contract.json",
+  "public_contract_sha256": "50f5433e16fbdad329505a61bbb1ca6454420ee19b0b9d8acdb058a1d9411111",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1042-sample-and-hold-with-droop-leakage-bugfix",
+  "task_id": "v4-1042"
+}

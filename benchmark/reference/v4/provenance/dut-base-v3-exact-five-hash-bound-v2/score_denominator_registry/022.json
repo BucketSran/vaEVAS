@@ -1,0 +1,79 @@
+{
+  "family_id": "022",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "b60038eb5039285be5407a4f938d803bb4208ed7c64a26599edf2198431364f1",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "a89452f76521f2833a998033ae89b8f3699727998b661701c4e81bf68f9b68b4",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_RESET_MIDSCALE",
+          "P_SAMPLED_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "c063c476b101477d5648837d5562f525c512d26da992ba18f2600356ef0c303a",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4ffbb909a624f5867b8749d2fbbd8e3df4868597d2ff221eb34e971e560f5e6f",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_DN_ONLY_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "82139ca75503a2d4d1159546a1506a5780af9906c1cf4dd214e47c5f98a6d6e5",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "c08ead418c03800364241cdb98e3a0e32dd47646c88e2095f3f529f62b411885",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_HOLD_CASES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "46b1009d9c8cbea0087f63749ba64ff0f46b6d4aba8f2da4637411cd1ea6f87e",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "4d1a61eb73117fc901c3408d1d5d69a1b9405d09e166be80afbf0fd027aaae34",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_CONTROL_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "e54ea2beb726d43c0b8a4a584e3c5f2de5766f918c1cdde5dfc50b2d95b28251",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "8374ec2914275f2cb1052d91ece77cb9bba8daa9bb29f672c8ea453db01d9415",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_UP_ONLY_STEP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "022",
+    "hashes": {
+      "mutation_catalog_sha256": "a52a6aa35cc46746739cd5d8cd18148a54625a29833a4a8a2849b8c6df3a0621",
+      "score_deck_sha256": "ffa8c276a485f54061b6b0783415b3560d77adaaeeb28e84992f5ff87da1e694",
+      "task_certification_sha256": "11135f301e6760a9f737ba266da3dd268d65b180b793c9f0a43741223d11b9c1",
+      "task_record_sha256": "fd97a9afa15d6bfcb506a43346ab982909addc28733c84fe5356af087a5dde01"
+    },
+    "release_dir": "022-charge-pump-abstraction"
+  }
+}

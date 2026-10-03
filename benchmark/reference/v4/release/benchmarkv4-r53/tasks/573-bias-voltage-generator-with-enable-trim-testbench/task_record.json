@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "073-bias-voltage-generator-with-enable-trim",
+  "checker_task_id": "v4_073_bias_voltage_generator_with_enable_trim",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5058b0f72e3d9ed2c9582e0455ee79bb91a965e887bb9b907b8a7d24114421ac",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5ae60c8d2d1160c20c9b59d9a8911becc2bdb42ab37dc6d63363e574b6100b7b",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5058b0f72e3d9ed2c9582e0455ee79bb91a965e887bb9b907b8a7d24114421ac",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "ab7262c9dc9dbf8e387a1e9e9443040d4cb8f9d072ab434bb187291a1c530408",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "67d8c83108eca6ef50ce1debd10509c90843a39d0f7036b2816b6582ce761b49"
+  },
+  "family_id": "073",
+  "family_spec_sha256": "90d54d0c495e7076dff22333fa2a40d2d0e526d484c2652c4922b89f1f37239a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9a2cf293830b08e4857ac67709adb76511c226a8d478cabd59389bdfa932fe3e",
+  "public_contract": "tasks/573-bias-voltage-generator-with-enable-trim-testbench/public_contract.json",
+  "public_contract_sha256": "375813c2cb8a27334322dd72a6bb4fb7578d6fa2034381ef3c88b006055ea98d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/573-bias-voltage-generator-with-enable-trim-testbench",
+  "task_id": "v4-573"
+}

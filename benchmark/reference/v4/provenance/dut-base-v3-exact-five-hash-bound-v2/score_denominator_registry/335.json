@@ -1,0 +1,78 @@
+{
+  "family_id": "335",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_quadrature_status_too_permissive/certification.json",
+        "certification_sha256": "b4227f6f2b43de2f8d8f9da5a9ec821582f0ceafffa6eb3e3f538dcc37651d6a",
+        "fault_class": "quadrature_status_too_permissive",
+        "mutation_bundle_sha256": "92a40ce4c2c170a5615ad67a68adec19f01c1632770e273be72cca0ab36ea1b7",
+        "mutation_id": "neg_002_quadrature_status_too_permissive",
+        "source_catalog_certification_path": "negative_variants/neg_002_quadrature_status_too_permissive/certification.json",
+        "trigger_condition": "quadrature_status_too_permissive",
+        "violated_property_ids": [
+          "P_TRACK_RISING_THRESHOLD_CROSSINGS_OF_CLK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "f87ec9f48509d05abcf70c2b7079e0555c1b4526b1490a81c8ede0678b7dd52d",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "6394bbe7c269a724c87f03a5d55cb8467f652065fdff66a8ef38e16f4ed672d1",
+        "mutation_id": "neg_003_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_valid_flag_missing/certification.json",
+        "certification_sha256": "d58e10e279637643191f71849f105245e0248d40ac95df4a626ceb84568fc532",
+        "fault_class": "valid_flag_missing",
+        "mutation_bundle_sha256": "61756d6bab80143a0f3ae2dfa76bb607da00ad951e8804fccfec58e407e77329",
+        "mutation_id": "neg_004_valid_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_004_valid_flag_missing/certification.json",
+        "trigger_condition": "valid_flag_missing",
+        "violated_property_ids": [
+          "P_ASSERT_QUADRATURE_OK_WHEN_THE_MEASURED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_quadrature_status_missing/certification.json",
+        "certification_sha256": "0ce4b6322ec8529419cfce8e223ba2086b6af4c538e8f42e825090452d63d1d2",
+        "fault_class": "quadrature_status_missing",
+        "mutation_bundle_sha256": "169173477c329626a058bd39c5db8481677021545825aa44953eeac673ba82a8",
+        "mutation_id": "neg_005_quadrature_status_missing",
+        "source_catalog_certification_path": "negative_variants/neg_005_quadrature_status_missing/certification.json",
+        "trigger_condition": "quadrature_status_missing",
+        "violated_property_ids": [
+          "P_ASSERT_QUADRATURE_OK_WHEN_THE_MEASURED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_phase_error_metric_missing/certification.json",
+        "certification_sha256": "4b4f490030b8ccc217de360c619f2c1a844664b31f61d6b432d8868aa442b058",
+        "fault_class": "phase_error_metric_missing",
+        "mutation_bundle_sha256": "c43721d0374421bf5a1891fdc1fb926ed73c9cc8bdb12f9524c8bdf7ad7058d3",
+        "mutation_id": "neg_001_phase_error_metric_missing",
+        "source_catalog_certification_path": "negative_variants/neg_001_phase_error_metric_missing/certification.json",
+        "trigger_condition": "phase_error_metric_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_quadrature_status_too_permissive",
+    "canonical_dut_id": "335",
+    "hashes": {
+      "mutation_catalog_sha256": "44996b93b5f417ded31d37c2a4d830b9ebd649bf388f44d2b0aa446e7e8b38b2",
+      "score_deck_sha256": "5612f00c6e5cbf793eec0f742f45b76c5dbe02a8987e89989d0fc2cb49023fcc",
+      "task_certification_sha256": "bc1252de6e25a410b9ae31788f27af0cbf702d22080fcd59bf61af4835745f4a",
+      "task_record_sha256": "25b1d101a8d286237f1cdbf822161e76d1d37e11f4bd56d0571905ef06f3f45e"
+    },
+    "release_dir": "335-quadrature-oscillator-phase-error-monitor"
+  }
+}

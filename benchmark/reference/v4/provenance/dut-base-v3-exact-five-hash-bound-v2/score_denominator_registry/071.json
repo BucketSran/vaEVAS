@@ -1,0 +1,78 @@
+{
+  "family_id": "071",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "f992be3313c640455765d6775e5a8867e533a7343343143bbda67d54b1f535b3",
+        "fault_class": "zero_stub_output_implementation_copied_from_starter_must_not_satisfy_hidden_beha",
+        "mutation_bundle_sha256": "d2673385391743add49fed5f9eab0f1447d62d9bc2870310f668da40e7d72a7f",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises zero/stub output implementation copied from starter must not satisfy hidden behavior checker against the public observable contract",
+        "violated_property_ids": [
+          "P_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "certification_sha256": "57c2d3673acdf4ed914d76a16eb2db9538edb348235d57a965ace51d1c5bd6b5",
+        "fault_class": "acquisition_limited_sample_and_hold_uses_the_opposite_event_edge_preserving_inte",
+        "mutation_bundle_sha256": "0cf654649e440b85cef9930818ea6a7886ee2665862e30c6fbef6fa8b780c137",
+        "mutation_id": "neg_003_event_edge_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_event_edge_wrong/certification.json",
+        "trigger_condition": "stimulus exercises Acquisition Limited Sample And Hold: uses the opposite event edge, preserving interface behavior while failing timing windows. against the public observable contract",
+        "violated_property_ids": [
+          "P_FINITE_ACQUISITION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "certification_sha256": "643302cd6244d598d1c41107f92ca1168c0d36b7ada0d1169abc35b844dd319f",
+        "fault_class": "acquisition_limited_sample_and_hold_uses_the_wrong_reset_polarity_preserving_ste",
+        "mutation_bundle_sha256": "7a78ae7657db9c8ada3396b480540186ce649b96c5d6d3ceba5b44d10c782b97",
+        "mutation_id": "neg_004_reset_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_polarity_wrong/certification.json",
+        "trigger_condition": "stimulus exercises Acquisition Limited Sample And Hold: uses the wrong reset polarity, preserving steady-state behavior while failing recovery checks. against the public observable contract",
+        "violated_property_ids": [
+          "P_ACQUISITION_CONVERGENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "34dcc1cb37c4e1e4aa8c86514570e1af8c57a76e7d0ccdeb92c1f712be92553a",
+        "fault_class": "acquisition_limited_sample_and_hold_scales_the_metric_output_preserving_the_main",
+        "mutation_bundle_sha256": "baf26d00785577c0335993f4732a682fe977aec0143dfa9e5a69f6ff617a8fcc",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "stimulus exercises Acquisition Limited Sample And Hold: scales the metric output, preserving the main path while failing measurement checks. against the public observable contract",
+        "violated_property_ids": [
+          "P_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "certification_sha256": "76ab8bb054efd79a54688239330e871a47ed1ecf4f7cbbfda572c2442ff7000b",
+        "fault_class": "acquisition_limited_sample_and_hold_shifts_the_decision_threshold_preserving_nom",
+        "mutation_bundle_sha256": "a0e712b6cd5eed74d55cf3df31da1ea88212ce941924f54175bb6edb9ef09fa4",
+        "mutation_id": "neg_002_threshold_shifted",
+        "source_catalog_certification_path": "negative_variants/neg_002_threshold_shifted/certification.json",
+        "trigger_condition": "stimulus exercises Acquisition Limited Sample And Hold: shifts the decision threshold, preserving nominal behavior while failing boundary checks. against the public observable contract",
+        "violated_property_ids": [
+          "P_ACQUISITION_ENABLE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "071",
+    "hashes": {
+      "mutation_catalog_sha256": "f3d6e8b9fff4e51ac799bb1e737c943b571a61ee9d03ed0498e197e83c2d49f7",
+      "score_deck_sha256": "96ddf9a4a85be072b3f6aa48edeb13742a3f674bb7450464b4d701f093107eb0",
+      "task_certification_sha256": "d8e4ff9e71d42ce5b099527c48598d555a6ca8d4b6e069928cdc5116583fd40a",
+      "task_record_sha256": "fef61ea6912e5b2716e068ad76713612c22c52152b66367317be617b0aa2a556"
+    },
+    "release_dir": "071-acquisition-limited-sample-and-hold"
+  }
+}

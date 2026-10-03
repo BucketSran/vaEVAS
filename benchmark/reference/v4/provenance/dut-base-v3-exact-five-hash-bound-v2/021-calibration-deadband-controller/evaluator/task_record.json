@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "021",
+  "checker_task_id": "v4_021_calibration_deadband_controller",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "c4c697d4e0b555674bc86a8f45758eb7169c2ff9002b443af1d4a1f2c52fd140",
+    "checker_profile.json": "ecd992a74aac810f6e5ecf29360301c343b7592bcb33ca2f18fb7edd5c736756",
+    "derivation_manifest.json": "1576ad4433a8e0edf383305d8c73d0f1394ce31f191cc6efb02a591433914152",
+    "family_spec.json": "0b1188e866020a83eef502f77fe0075617537fc5ab5a237d75236ee54cccb3ce",
+    "harness_spec.json": "f2a567c787317396f3fadc6e254ad503019a3f2aeac69cd1b10f936630e9cc4c",
+    "mutation_catalog.json": "fd2d19c1265cd49b1a8d12ef7dd33526bad324856f3d60cf73e1a10d0fde5c91",
+    "profiles/feedback.json": "17a15daa196806656174a56b24c1b3f33d6db7077be632ec4ac671b83d4a993c",
+    "profiles/score.json": "9d16cd33ec132614843fa2bc84d95522cafcf77634b31ce75171fd4377138045",
+    "score_tb.scs": "1735120ab3cafebaf7a08e7a0f6fefe1de26c244957cc165297a96b6e1991cea",
+    "solution_tree": "a5e1e979b9a4beed51f656c06a4314f059d414a5345137444e880351faf20a95",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "f826e33797fe53e009143c2e68a179008095c98d54f71482475e6fc81cf3653a",
+    "instruction.md": "738bb2a4a0b2235e741ce433831105cc159d1b438592ac81c2f7f0729b10443b",
+    "public_contract.json": "51da495a1a9e26e3a4b147f22ad3033112e4ed4682f3b0dff77d22adbca6b4ea"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "c4c697d4e0b555674bc86a8f45758eb7169c2ff9002b443af1d4a1f2c52fd140"
+  },
+  "release_dir": "021-calibration-deadband-controller",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "023-calibration-deadband-controller",
+  "support_root": "",
+  "target_artifacts": [
+    "calibration_deadband_controller.va"
+  ]
+}

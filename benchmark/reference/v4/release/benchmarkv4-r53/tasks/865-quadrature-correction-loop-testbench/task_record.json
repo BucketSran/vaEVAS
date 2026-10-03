@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "365-quadrature-correction-loop",
+  "checker_task_id": "v4_365_quadrature_correction_loop",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "63353df25c1477dae2c0bc5d562a49402c45aa0754b018ce733e2f41db4bdf34",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "4526dc7e4f61e67ec01a5daf3a1dfbe1447fed415d9a12e9ff008b196f44198d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "63353df25c1477dae2c0bc5d562a49402c45aa0754b018ce733e2f41db4bdf34",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "29cf2e7d8937d2912b397b3afe39592622ef709c80128cccd3a89f1c8520078a",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "d359e81da4a8bc8edd1d8d05683121e084468e0476a5f73ba6bc101a7434adac"
+  },
+  "family_id": "365",
+  "family_spec_sha256": "5c3527a69cde2c2adb44004e46c2625cafd7243cf48f75e1249cb6cfa81daad0",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "84257f501b5fa79972aaa180027be47a53bd37b3df19938166a14a7bc8c847e4",
+  "public_contract": "tasks/865-quadrature-correction-loop-testbench/public_contract.json",
+  "public_contract_sha256": "b3726a90057e62f28ec0384c3b50444184bc38a1987c09c3fb6c5a34871f8005",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/865-quadrature-correction-loop-testbench",
+  "task_id": "v4-865"
+}

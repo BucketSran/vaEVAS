@@ -1,0 +1,82 @@
+{
+  "family_id": "283",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "c4670ae84d612bd94ece9b3c57bd657aa0f9ffa5aa3ffb99fe72849b8d65302b",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "f3c83771fa024c5af619153787b19728a48ca8f8a9af64816d5b39405ffdb001",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "ca270c84d12de6dc604653ec2c61676740b9f8d166cdf9dc99b522a76a94299e",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "4919b55796eafc507a283394ed07dcf472a8dfee91a45cdd628351322bb44333",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_HELD_OUTPUT_FLAG_AND",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "b0cfa625fcfb3655a59eb97e0173a207f230d456a06ee4b610588209de0dd774",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "b36579804c3be967b69da774c291735a4b6bc20bb88d8182134c50c16645c732",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "f7f62f6810b8d647a27c8a1740e217a05d5ac6baa003d19e2e495983c5616f3a",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "9046672e76730f791c173bf35627b60ee7ffd146263419ca0708ca69a87f5a53",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_HELD_OUTPUT_FLAG_AND",
+          "P_SPAN_MIN_0_62_V_SPAN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "fa8f9c6685bc3726d80b31f9b111a6e7680a94f0180241f21eb2c6893aa06d3d",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "d3eb48e5966a6c980b09e07a7b8104808817ff845ab5051e79b965074f28dd1d",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "283",
+    "hashes": {
+      "mutation_catalog_sha256": "43f88f404367f636f0ec7cfeb2698dc49387e4e4e27a33c37216e9fb8aea34a8",
+      "score_deck_sha256": "aa7024ff416647fcd315975277b455ec1d6b6c88d6f68db2f49e43c1a4a1d593",
+      "task_certification_sha256": "07b054893776d0b323ea56f6524e83172f0cf8ed862431912fdff10397a9bc24",
+      "task_record_sha256": "92a6b36619d651f9c423363566607b45810a118bd274737db6c7dce2f66c1044"
+    },
+    "release_dir": "283-mode-latch-calibration-gate"
+  }
+}

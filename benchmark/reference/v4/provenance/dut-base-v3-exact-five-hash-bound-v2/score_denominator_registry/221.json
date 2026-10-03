@@ -1,0 +1,84 @@
+{
+  "family_id": "221",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_threshold/certification.json",
+        "certification_sha256": "b8af24bf8474cfbc10701388450784aaf097b8d4f75aac93b1f7b2f58dc74b48",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "affc358912a8a388ca90a0f2bec95b817a35c95d825992f2e02c465b83e09f7c",
+        "mutation_id": "neg_004_wrong_threshold",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_threshold/certification.json",
+        "trigger_condition": "Uses a threshold above the control high level and never captures after initialization.",
+        "violated_property_ids": [
+          "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT",
+          "P_SAMPLE_VIN_ON_EACH_RISING_CONTROL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_track_input/certification.json",
+        "certification_sha256": "3aac47c0ca5a1019c2f0992113a8800b4634713b176f4c56367fe0d84cfde196",
+        "fault_class": "track_input",
+        "mutation_bundle_sha256": "4fe7bc2404131458c8ffc887406ebcebc680a2db1779e272b11d6cc6da6131b7",
+        "mutation_id": "neg_003_track_input",
+        "source_catalog_certification_path": "negative_variants/neg_003_track_input/certification.json",
+        "trigger_condition": "Tracks VIN continuously instead of holding sampled values.",
+        "violated_property_ids": [
+          "P_DO_NOT_CONTINUOUSLY_TRACK_VIN_BETWEEN",
+          "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "6c836f611b5c388907c48e8c0587abbab6213666c5eda94e8a3fd8d5be9191fb",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "66056666c212079a5c1f5623cee960a01891afc699f1cdf2a465832c25c69fac",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Samplehold Rising Edge: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_WITH_SMOOTH_VOLTAGE_DOMAIN",
+          "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "bbc05a12aaf54d1aa59d0de4e3a468676fbcc3359f903e95bba95b41d2a48b14",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "e017bc6d41c7cfa33234183d01d4cfa2d72e3814bf81d5701673e4f72bdc551f",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_DRIVE_VOUT_WITH_SMOOTH_VOLTAGE_DOMAIN",
+          "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT",
+          "P_SAMPLE_VIN_ON_EACH_RISING_CONTROL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_half_scale_capture/certification.json",
+        "certification_sha256": "b42c4d8a24152989a45f8e6ed2ecfca6291888b9237534a8ad79588807e684cf",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "694763d8eaa069a4ec9614dbc3972179ba17d7563b29fad39f242ebb289f2945",
+        "mutation_id": "neg_002_half_scale_capture",
+        "source_catalog_certification_path": "negative_variants/neg_002_half_scale_capture/certification.json",
+        "trigger_condition": "Captures half of VIN on rising control edges instead of the full held voltage.",
+        "violated_property_ids": [
+          "P_HOLD_THE_SAMPLED_VOLTAGE_ON_VOUT",
+          "P_SAMPLE_VIN_ON_EACH_RISING_CONTROL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_threshold",
+    "canonical_dut_id": "221",
+    "hashes": {
+      "mutation_catalog_sha256": "1cd8ca87e97b671751b037f051a543eeb87866be1d8c32b7ddb65c9bc98f5012",
+      "score_deck_sha256": "59f926861593a0daa818da1db2230c70b9a4bd3c630a6aeb95362765fd92c8c0",
+      "task_certification_sha256": "c52f3a2c43013adf0a19ce75546ad599235a6442ef859d8bffe42f4c4390e2a4",
+      "task_record_sha256": "25c84bc3d30d1cec8a1dc91f09da3e0e71d3b868ba64698922a3eae3bcb47eb2"
+    },
+    "release_dir": "221-samplehold-rising-edge"
+  }
+}

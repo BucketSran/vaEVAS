@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "338-lna-blocker-compression-detector",
+  "checker_task_id": "v4_338_lna_blocker_compression_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2e172c7a06d68d82c8830c79a7e926443ea8f7a17c24cc4c921001e186cac498",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8aa66a86969ead8bf7c559383437ddaf0d7b56cf942f13aaa2030ab1216b8806",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2e172c7a06d68d82c8830c79a7e926443ea8f7a17c24cc4c921001e186cac498",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "fd4541d6316fcf6423759278ba5ea206861a008bf8a2a1ba78b9797f4f801e9c",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "64817093b0e1600d6c98190a03934bf8f30a6e2ad1fe3727f043b2d47af0a573"
+  },
+  "family_id": "338",
+  "family_spec_sha256": "e20f784230f1de26a917a62c03ff71218988c224bb8c03b2dbdaed30664797ce",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "71514f1d91ebafc232ec84cdac9981bf46b87bc8d22a229166b8b48ba0ec84c3",
+  "public_contract": "tasks/838-lna-blocker-compression-detector-testbench/public_contract.json",
+  "public_contract_sha256": "261023b4717558e8f71e4367b3189c40e4418fd38b3f058cdaf4b098d8bd9394",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/838-lna-blocker-compression-detector-testbench",
+  "task_id": "v4-838"
+}

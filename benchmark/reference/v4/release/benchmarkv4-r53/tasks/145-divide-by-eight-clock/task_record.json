@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "divide_by_eight_clock.va"
+  ],
+  "canonical_dut_source_slug": "145-divide-by-eight-clock",
+  "checker_task_id": "v4_145_divide_by_eight_clock",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "6732e84d0c21bcc2dfc9f439ad610cddb921102606b2ed6b152d05e7177f3f0f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7d73ae2b569baa33442d514eaef7c99d739bd6ed4ca51d1572ba68b71dbbf2b3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "46e8d497f6423984fd68b3821435e5fdc1885b777745e8f50608599832090282",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "145",
+  "family_spec_sha256": "6125e37aaea5ed73ba971fb412b1f84bb78a131c3695c7f34cfffbcee84f3596",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1cb3e6a05a60d7d31284fc8b78415141b2bc938b3e3a549325dc4e1a76998d54",
+  "public_contract": "tasks/145-divide-by-eight-clock/public_contract.json",
+  "public_contract_sha256": "d498fcf4f4ecead1a40eb9bb68b95eb3ec2e9b0e6b93338b106e88c66e6ffd29",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/145-divide-by-eight-clock",
+  "task_id": "v4-145"
+}

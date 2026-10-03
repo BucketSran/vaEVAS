@@ -1,0 +1,80 @@
+{
+  "family_id": "323",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_delay_metric_scale_wrong/certification.json",
+        "certification_sha256": "3049971bb26154301f611944c2ea08ac4ebb2272ca3c3df2631c508cc2da2c12",
+        "fault_class": "delay_metric_scale_wrong",
+        "mutation_bundle_sha256": "e79e8bb023c5ed8ad8ff5060f37f42c438a1c99d229176b9568d676a627618fe",
+        "mutation_id": "neg_001_delay_metric_scale_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_001_delay_metric_scale_wrong/certification.json",
+        "trigger_condition": "delay_metric_scale_wrong",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_code_mapping_reversed/certification.json",
+        "certification_sha256": "141356be300c682aae7e77c8df9df2df9fdec4502d9a8664b5a1097aa53c24ff",
+        "fault_class": "code_mapping_reversed",
+        "mutation_bundle_sha256": "24abdf1dbcef091e78e776ad739d261100f8ce7dbf8677c7da7404aa3003de4b",
+        "mutation_id": "neg_005_code_mapping_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_005_code_mapping_reversed/certification.json",
+        "trigger_condition": "code_mapping_reversed",
+        "violated_property_ids": [
+          "P_DECODE_SKEW_2_SKEW_0_AS",
+          "P_EXPOSE_THE_ACTIVE_DELAY_CODE_AS",
+          "P_FOR_EACH_ACCEPTED_INPUT_CLOCK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "7f2dd3728c39237b24fac170870cf80f8d6141a51c27be8a3e7e613d92f392c2",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "d721edf58d562b8510eb6581c5bd0c912c1ef6394c333b348f327d87245c8be8",
+        "mutation_id": "neg_003_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_valid_flag_missing/certification.json",
+        "certification_sha256": "2b7b1debc443867f6c42c5365e1108445b023c3aa50d004063aa7fa74f7693b8",
+        "fault_class": "valid_flag_missing",
+        "mutation_bundle_sha256": "1fa2d4d97944e91e6c6bb522da1a111183dba8d53cb3093b6e4b6edf4d4401dd",
+        "mutation_id": "neg_004_valid_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_004_valid_flag_missing/certification.json",
+        "trigger_condition": "valid_flag_missing",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_ACTIVE_DELAY_CODE_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_delayed_output_missing/certification.json",
+        "certification_sha256": "54b267b7e9abcfba57ee14a81b53b626d3f5c32d7296038c5b1dce0f673ace6c",
+        "fault_class": "delayed_output_missing",
+        "mutation_bundle_sha256": "e9fe0deb9e37434092b54bae7d920165d140cc7469c8a6d40c0917b6d4d8497b",
+        "mutation_id": "neg_002_delayed_output_missing",
+        "source_catalog_certification_path": "negative_variants/neg_002_delayed_output_missing/certification.json",
+        "trigger_condition": "delayed_output_missing",
+        "violated_property_ids": [
+          "P_DECODE_SKEW_2_SKEW_0_AS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_delay_metric_scale_wrong",
+    "canonical_dut_id": "323",
+    "hashes": {
+      "mutation_catalog_sha256": "bc0872f06a605679d72a81f281662409aefc6161bcbab784426e57ec5ef65496",
+      "score_deck_sha256": "702949fb7c66029790cb97b754541880942dc242bb74ac6a96856174b9bf13d8",
+      "task_certification_sha256": "1f7b6dbd33513fe714a22d0c2b49406bcb40cf53c00b0d1a8428c89aca56bb07",
+      "task_record_sha256": "eeb14883fc2028a854f8ace39948705e4af2a0563763a21c79abeefb06056956"
+    },
+    "release_dir": "323-programmable-clock-skew-aligner"
+  }
+}

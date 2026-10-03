@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_005_metric_scale_low",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "39680f41019bf1350dcc39cef6a510e6d86a8650a31752f7b560c7dc50a2865e",
+  "candidate_artifacts": [
+    "adc_sample_clock_sequencer.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "adc_sample_clock_sequencer.va"
+  ],
+  "checker_profile_sha256": "b14cbdc09757c00d35210aaf624d0a8141c032aa79d185a527e29106a70e9028",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "e2d07b41432397cf31dfdd8556e8756a0c3f8525212081ce64a7561395a854e1",
+  "gold_solution_tree_sha256": "6cf188b07ce11724fac805e4dfeaf904720c40a45ae521109e0eaea4d0a09369",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "16925895b808fc8412a9817daf3f82480d313dda3e7c10a75c9a45878fef6184",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1187"
+}

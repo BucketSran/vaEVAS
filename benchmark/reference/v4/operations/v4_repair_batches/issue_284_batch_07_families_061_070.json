@@ -1,0 +1,96 @@
+{
+  "batch": "07/40",
+  "families": [
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "061",
+      "harness_spec_sha256": "777859f81e6fd7426dea1deed7116699bca8193010ef6dde92b46b1562f266f7",
+      "score_deck_sha256": "22920c20dc19b0d3badb01c3c029c985b8df4976ec90e0f4e47e18db55722707",
+      "task_record_sha256": "1721c00b39154bd1fcb8abe00b5f1719e62027117d6e49820cf30c61f30484d8"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "062",
+      "harness_spec_sha256": "1f73d511571fee329befbdbb05ef1c71f0e2f19edbccf03105395df929fe5218",
+      "score_deck_sha256": "f5b3744568c4ef863eac457b6b4f5c85ce766b3f0d1b68938dc19e4667c74a24",
+      "task_record_sha256": "dffc0af38f496f5df7c259a39c46d266a319009453e34a6971b5e03c8ab61504"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "063",
+      "harness_spec_sha256": "3c99d111545111e3532bd63699a262b5a582ccfcce14400f0836d12e3f4179e8",
+      "score_deck_sha256": "94080a248dbd399c246eb503ada221c6031d6f1472d4061bfd2678b62e743849",
+      "task_record_sha256": "3bc93d76e41d9d61222880286de91fd7dd0d07420869a3d57159fd39f7cb4f8a"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "064",
+      "harness_spec_sha256": "bbf7d9549fb4baa3632281eb73efd5b26e167eba0afaec456bd3a6915c8a32d7",
+      "score_deck_sha256": "95dddc488167ca87765073b3be49999e761dd93629235d1ba0c161cf7cace292",
+      "task_record_sha256": "ecfc77f597ab43054fa686fc63f99b3044fea6641a474f6122520a5c9b1c1843"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "065",
+      "harness_spec_sha256": "facdfc0ea56da80c0e9ef0bc4e47d66dc6d2a624331ce1a32da9f3c35281522c",
+      "score_deck_sha256": "e0ee1c7c397a10cea137d69de308033b48bc77a0a514dca01a7ae018c1438b6e",
+      "task_record_sha256": "c9b2b27851a136f3be088ff8a3b9cd1f5cdb1d371a406773689387427a660983"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "066",
+      "harness_spec_sha256": "c19526c612a69d6b737cf6472750e8bc5d91d1a26037ee2e4c45afa9f992dff0",
+      "score_deck_sha256": "c7731ccc09b4ddf658d416f52fa98c14b5ee88be400376947ca4744d2fecaf5b",
+      "task_record_sha256": "d56a1d4a1ec64c390024872be446b791545d39638d72421ae59a329abc617427"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "067",
+      "harness_spec_sha256": "3b08d07435d6ec41c216df1c15eb5aea769076a2f011b5419071596970872865",
+      "score_deck_sha256": "ada737255dd765cb1d09bd954519a784a7890df4fe50b9eb4f723ba341df1311",
+      "task_record_sha256": "473b904b02387711a2662c12c44b53e10da619ba7f2f2b88dc879679148ff86d"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "068",
+      "harness_spec_sha256": "0516a07941734dc94c23d77a9674ba8caaa061542716e06c44b17f7d1fd685f9",
+      "score_deck_sha256": "acc3efb3bed54a1a4f4da8e13076798c90dd97d3d696369337aa1ae457b783e6",
+      "task_record_sha256": "bda5f2aaeb9b336337127326f3d372c8366d46a4add6eb885cbd4e33b263f0eb"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "069",
+      "harness_spec_sha256": "b5a916c2f4dba333e58d9b0d13d0754d767fbc936ee87560d9d47e67bb2a4fcf",
+      "score_deck_sha256": "2836831be437319131f669e19de600d0cebd865f5026fa4ed1b89d878506d6a4",
+      "task_record_sha256": "3ce0e8aa07142ce89d020d4bb907a857696c632de2ca659970b663b17d185dd2"
+    },
+    {
+      "classification": "profile_parity_repaired_checker_event_relative",
+      "family_id": "070",
+      "harness_spec_sha256": "fc8d0b1161c22fabcbdfc82de0e6632ec07371259dc51c1fb08e33c20bcd2414",
+      "score_deck_sha256": "dd8f58302020cc751e4f54baa834bce254973f29c197f50867479a0025767bbf",
+      "task_record_sha256": "5669462d3971e95a9f945527f31e6a1562c10b4038cabdf211d007332624360a"
+    }
+  ],
+  "issue": 284,
+  "not_applicable": [
+    "Spectre/Cadence is not part of the repository acceptance protocol; executable validation uses pinned Rust EVAS2."
+  ],
+  "owner": "@BucketSran",
+  "scope": "families 061-070",
+  "status": "PASS_LOCAL_STATIC_AND_CHECKER_VALIDATION",
+  "validation": [
+    {
+      "command": "python3 benchmark-vabench-release-v4/scripts/validate_v4_profile_parity.py --family-range 061-070",
+      "result": "PASS"
+    },
+    {
+      "command": "python3 -m py_compile runners/checkers/v4/stimulus_relative.py runners/checkers/v4/task_061.py runners/checkers/v4/task_062.py runners/checkers/v4/task_063.py runners/checkers/v4/task_064.py runners/checkers/v4/task_065.py runners/checkers/v4/task_066.py runners/checkers/v4/task_067.py runners/checkers/v4/task_068.py runners/checkers/v4/task_069.py runners/checkers/v4/task_070.py tests/test_v4_repair_batch_284.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python3 -m pytest tests/test_v4_repair_batch_284.py tests/test_v4_checker_registry.py::test_all_checker_modules_import_from_a_clean_repository_root -q",
+      "result": "PASS"
+    }
+  ]
+}

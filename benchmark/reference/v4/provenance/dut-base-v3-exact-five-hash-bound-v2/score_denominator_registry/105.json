@@ -1,0 +1,78 @@
+{
+  "family_id": "105",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "edee6f3125b8ef65099be790ea51429a355461c779b64f807af609486d6e96de",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "a7fa5080276f7d0322cea70a50af942b540f4e1085b9007ed940a5307fb10431",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Existing concrete negative.",
+        "violated_property_ids": [
+          "P_RISING_CROSS_TRIGGER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_short_pulse/certification.json",
+        "certification_sha256": "b166f7e25caf607fe9be0a06ae995b463c9892352f3a5455231dcc446c090b01",
+        "fault_class": "fault_002_short_pulse",
+        "mutation_bundle_sha256": "34916b280e81b987b06f222e689c056003988b099b21becf41877404e919ff34",
+        "mutation_id": "neg_002_short_pulse",
+        "source_catalog_certification_path": "negative_variants/neg_002_short_pulse/certification.json",
+        "trigger_condition": "Uses a pulse width that is too short.",
+        "violated_property_ids": [
+          "P_NO_FALLING_TRIGGER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_falling_edge_trigger/certification.json",
+        "certification_sha256": "bd1a821f4fe9e5a28700a2bd704a5da66aac673aa2fbf58cd0bd009754fdf0fd",
+        "fault_class": "fault_003_falling_edge_trigger",
+        "mutation_bundle_sha256": "74f3a9dd4461198271922d655bbd4a08095f716f60b4546f0347628f0da68df9",
+        "mutation_id": "neg_003_falling_edge_trigger",
+        "source_catalog_certification_path": "negative_variants/neg_003_falling_edge_trigger/certification.json",
+        "trigger_condition": "Triggers pulses on falling input crossings.",
+        "violated_property_ids": [
+          "P_PULSE_WIDTH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_stuck_high_after_first/certification.json",
+        "certification_sha256": "60b18f7353414487ab90241b55490cac482c71c8876789077d8b49272614a968",
+        "fault_class": "fault_004_stuck_high_after_first",
+        "mutation_bundle_sha256": "f9aedfb5a1f6d92391519f4270ebbe2e6523ee2ba4346d041409cc97f412f073",
+        "mutation_id": "neg_004_stuck_high_after_first",
+        "source_catalog_certification_path": "negative_variants/neg_004_stuck_high_after_first/certification.json",
+        "trigger_condition": "Never turns the pulse off after a trigger.",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_no_output_delay/certification.json",
+        "certification_sha256": "d334b062132b872b45ef27f86a7e2d3683aa473c17a9140a1f83fa7d0e9da167",
+        "fault_class": "missing_output_delay",
+        "mutation_bundle_sha256": "0e18ff410aea247313efd49139cdd5f6262e485b78633b3b55d69ba037d747cb",
+        "mutation_id": "neg_006_no_output_delay",
+        "source_catalog_certification_path": "negative_variants/neg_006_no_output_delay/certification.json",
+        "trigger_condition": "An input threshold crossing exposes an immediate output edge instead of the declared delayed transition.",
+        "violated_property_ids": [
+          "P_TRANSITION_TIMING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "105",
+    "hashes": {
+      "mutation_catalog_sha256": "b03d577db8c847405ed9fe74692daeb1a5b67e80509d7acd9cf9aa38bbb6ef8f",
+      "score_deck_sha256": "94327a3380bcf9ce8d1902d03750978ca019b7caad6dfbba132be35a5db1faa5",
+      "task_certification_sha256": "fbc04caae6673da0a54eebbc3dbcbf5497580ce0dc976d84d1607b9d80cc4fd6",
+      "task_record_sha256": "add65440f59fd3b2ba240b114b104f4b9ce3c3ec1d04c3828851a4dd8d8cbefd"
+    },
+    "release_dir": "105-single-shot-pulse"
+  }
+}

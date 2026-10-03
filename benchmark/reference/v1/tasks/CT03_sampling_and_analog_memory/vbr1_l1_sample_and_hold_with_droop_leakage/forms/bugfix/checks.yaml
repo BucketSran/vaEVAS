@@ -1,0 +1,27 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+    - "decay"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "sample_event_captures_vin_not_fixed_internal_level"
+    - "safe_window_vout_decays_monotonically"
+    - "reset_window_clears_output_near_zero"
+    - "post_reset_sample_recovers_to_vin"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: buggy source samples a fixed internal level instead of V(vin)."
+parity:
+  required: true
+  tolerance_notes: "Sampled vin levels, decay, and reset are checked with safe-time windows, not exact timer-boundary samples."

@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_bang_bang_phase_detector:tb",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_bang_bang_phase_detector",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "PLL Clock and Timing Systems",
+  "base_function": "Bang-bang phase detector",
+  "family": "tb-generation",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb/gold/bbpd_data_edge_alignment_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb/gold/tb_bbpd_data_edge_alignment_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_bang_bang_phase_detector/tb/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "bang_bang_phase_detector",
+    "source_task_id": "vbr1_l1_bang_bang_phase_detector_tb",
+    "historical_source_task_id": "vbr1_l1_bang_bang_phase_detector_tb",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_bang_bang_phase_detector/forms/tb"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

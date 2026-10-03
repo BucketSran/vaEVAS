@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "180-track-hold-with-droop-and-aperture",
+  "checker_task_id": "v4_180_track_hold_with_droop_and_aperture",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "d4cf49c91b3a0574b5e77bf9366c222827101f2bbbf6f13a4ef3e1844d1cb8b6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "207e6e3330358f56f1a84dcb95df4d4a80b75f5b411f72aad053f77df3254ec9",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "d4cf49c91b3a0574b5e77bf9366c222827101f2bbbf6f13a4ef3e1844d1cb8b6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "3c5a84bf19ffc0a0e5ca4b4a22b76fbcf814a470e3850461c808f7c7021526c8",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "0e54d961352b68df1d7ddd32b9a44e2dda9c683c7f2aa0b2100df380e23b16b0"
+  },
+  "family_id": "180",
+  "family_spec_sha256": "5bb14a6be7cbe6aa3207e8b0c24092a10b2f3ee2b8175ea74ce27a5757471a23",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4e2e6a2583de1ecf60d730fcb113d41fa4acf1d8a4e532b9ce8b926c5fd2bc72",
+  "public_contract": "tasks/680-track-hold-with-droop-and-aperture-testbench/public_contract.json",
+  "public_contract_sha256": "8719db7ef0d5497b0780907fa938bb3f4a9659f0c8c80d0276c3528f8bb14159",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/680-track-hold-with-droop-and-aperture-testbench",
+  "task_id": "v4-680"
+}

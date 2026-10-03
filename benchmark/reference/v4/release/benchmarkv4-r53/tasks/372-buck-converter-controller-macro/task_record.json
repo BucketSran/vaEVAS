@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "buck_ctrl_top.va",
+    "error_comparator.va",
+    "power_good.va",
+    "pwm_modulator.va",
+    "soft_start.va"
+  ],
+  "canonical_dut_source_slug": "372-buck-converter-controller-macro",
+  "checker_task_id": "v4_372_buck_converter_controller_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "316ce6871d30ced75d5fa37943f794c61aeb4c421165c36ecb9cb9a165f9a018",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "10783ad10298ce4f97833a432d9c5d95f836aa32184f053e2932248d72bd6ba5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "2feb6fc64f39c2a6fb311ce3983b3a999ede3112af95a06d68688e1ca1c05824",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "372",
+  "family_spec_sha256": "a1f12e8c81d89222f8d25131fc6cb64dd7c960e44655dc3ce5325341da9006c4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "44a08603cc18cc89cb3b92b31923f8477dc4276cd78b6d324654fa15532072e6",
+  "public_contract": "tasks/372-buck-converter-controller-macro/public_contract.json",
+  "public_contract_sha256": "df69c6384b0a28036e591ab845832ac67550e2ac8ed0166d32a94032d0906c0e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/372-buck-converter-controller-macro",
+  "task_id": "v4-372"
+}

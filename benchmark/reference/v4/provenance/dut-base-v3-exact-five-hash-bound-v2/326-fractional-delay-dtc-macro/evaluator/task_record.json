@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "326",
+  "checker_task_id": "v4_326_fractional_delay_dtc_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "e2e2db8cdad4611fe46496f78af3b3993483a89247993791fdfc90758633dbe4",
+    "checker_profile.json": "56cda6f88aeb42c4edba07ed8d4c2b8965cef06a1c99113507ab6cfd246716d0",
+    "derivation_manifest.json": "1f5718087de1894a101047f1b2aa46038bffa8f63966ae8f08ed01be5d1a9d9f",
+    "family_spec.json": "67b987e3cdd24a92f52b8404fdfcaa3a4ef326f078598a7fa7514b1af22c69ab",
+    "harness_spec.json": "443189d82c7140016beb27da2db0c5d73f74a4fc4b2abff8489041957e3ccb5a",
+    "mutation_catalog.json": "303774d5f39ba51f7e5b56ee03005e23a7c5a290cd26579b3c23379474e83c3d",
+    "profiles/feedback.json": "3a1abed058894874cb4416a74c894f4c8c3b1f93be6da1c3286146e458665eb8",
+    "profiles/score.json": "0f813733b9aad1cfe5b3877ab217317e257e84c730e48228b9a667b21327e067",
+    "score_tb.scs": "3a4e1db05c2d22da87b458b3eec0aa12f94aff87c55ac1df0e50dc9f36faea29",
+    "solution_tree": "5f2c9fbf7751dae36ec8b11752b21054a0cb8c8a1a1eeb16f6b93cb421606c62",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "5ff2d0ea78ae050d325a28cf8c3c6edd402eaa50dbed1210e530afab654fdc11",
+    "instruction.md": "f72b5ca78a97331f3465d362c550132c2ce231270032059b9a2e2a0f6e503bb2",
+    "public_contract.json": "93862dfeb668f73a0fea16203205901a2b7f7adfcec7608cbf747201d582169f"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "e2e2db8cdad4611fe46496f78af3b3993483a89247993791fdfc90758633dbe4"
+  },
+  "release_dir": "326-fractional-delay-dtc-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1024-fractional-delay-dtc-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "fractional_delay_dtc_macro.va"
+  ]
+}

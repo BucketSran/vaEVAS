@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "b14845b9571abdc359d2bd9bec9272b74ba3374cb5f86a2116ed1c81a2a29524",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_SUPPLY_REFERENCED_RAILS",
+    "P_PRE_SWITCH_PERIOD",
+    "P_POST_SWITCH_PERIOD",
+    "P_CADENCE_STEP",
+    "P_HALF_DUTY_CYCLE",
+    "P_PARAMETERIZED_TIMING"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

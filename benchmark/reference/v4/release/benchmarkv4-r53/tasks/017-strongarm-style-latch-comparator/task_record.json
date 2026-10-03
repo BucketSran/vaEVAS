@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cmp_strongarm.va"
+  ],
+  "canonical_dut_source_slug": "017-strongarm-style-latch-comparator",
+  "checker_task_id": "v4_017_strongarm_style_latch_comparator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "dcae6237cc456936ebb516d10dbf2c84d3a3583d7d2e291586faf7630c34745f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "2ee3adede1894ea4af0cd8ff8985113149f864c72c6ebcd4e92f95f021e60414",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "61349a3a98867908fcc17cf4a9dbc32c12c9714980dd1fb0f4d818bd12e4f8b0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "017",
+  "family_spec_sha256": "294806ffa2413d7314fa1272929956805bd1254c1126236537b0984ed23aa9f1",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "72a82eaf3e604c24e78cf0e1105f93845a595e73898e556ef88300ae0a811e7c",
+  "public_contract": "tasks/017-strongarm-style-latch-comparator/public_contract.json",
+  "public_contract_sha256": "4ec1b53d17a0bb9dcb0ed110a478aa6cd7f8101ab835b46d03d22de5086f9ce6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/017-strongarm-style-latch-comparator",
+  "task_id": "v4-017"
+}

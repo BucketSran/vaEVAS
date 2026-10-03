@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "programmable_frequency_divider.va"
+  ],
+  "canonical_dut_source_slug": "382-programmable-frequency-divider",
+  "checker_task_id": "v4_382_programmable_frequency_divider",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d9fc6ee3f624696a8ea842f9eab6dcb68fcb5927bbcaeda0006fd64c91c73d41",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e5d1820df1d1962d905f79e743d8271790e8c9da63c244a430e4f0e32ec4dd02",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d9dc464563507fdb5b2328c5e3e216eacb4f8daaba40e165f3fa83fb0df6a9a8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "382",
+  "family_spec_sha256": "3a29be845c02b9735c93f9bd12a33fdacd5bbb22b16de20136125da9d6bb2298",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "37623c285c003bf792a1251cc47ccf0456296a15310f9cf1c94f125a1e216017",
+  "public_contract": "tasks/1382-programmable-frequency-divider-bugfix/public_contract.json",
+  "public_contract_sha256": "2a7ce80bb9af300df353585c871388ebb9d8e4585c979e61cea102e1ed88768f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1382-programmable-frequency-divider-bugfix",
+  "task_id": "v4-1382"
+}

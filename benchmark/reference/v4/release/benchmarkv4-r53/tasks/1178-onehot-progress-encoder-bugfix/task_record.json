@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "onehot_progress_encoder.va"
+  ],
+  "canonical_dut_source_slug": "178-onehot-progress-encoder",
+  "checker_task_id": "v4_178_onehot_progress_encoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b12e1e320679a4cd148b096f3784470deb60514adf588ab64e23371df63ce4b3",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d84c935c14ee549b3e6e6289d71570c9197196fb6d6fdfa940d86582f76cbe40",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "fc9728674659e9a976cd208d22e21169cc034fb7685b84437b0b762f175758fe",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "178",
+  "family_spec_sha256": "c57b742d9992a441851d56586747d7510dd350236300531a3664d9db215b0ac0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "270ec40459b8834d1a6f3b9228629e52475ffb320043d071d71c733fa7a38ec5",
+  "public_contract": "tasks/1178-onehot-progress-encoder-bugfix/public_contract.json",
+  "public_contract_sha256": "8225d5646fb6cc23657394334281a96aa0f25e2f3d8c04b16f699f981525500c",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1178-onehot-progress-encoder-bugfix",
+  "task_id": "v4-1178"
+}

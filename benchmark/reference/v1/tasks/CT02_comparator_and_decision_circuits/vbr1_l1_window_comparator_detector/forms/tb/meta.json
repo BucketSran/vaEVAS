@@ -1,0 +1,25 @@
+{
+  "id": "vbr1_l1_window_comparator_detector_tb",
+  "task_id": "vbr1_l1_window_comparator_detector_tb",
+  "release_entry_id": "vbr1_l1_window_comparator_detector",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Comparator and Decision Circuits",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "window_comparator_ref.va",
+    "tb_window_comparator_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e"
+}

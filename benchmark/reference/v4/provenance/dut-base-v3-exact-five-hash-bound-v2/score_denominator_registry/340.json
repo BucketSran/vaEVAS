@@ -1,0 +1,78 @@
+{
+  "family_id": "340",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_temperature_subsampled_on_falling_edge/certification.json",
+        "certification_sha256": "221ffedb9284fc5ca41cd0d4d5f5c4401d21e13d074ed089dacb23a516dd246a",
+        "fault_class": "temperature_compared_only_every_fourth_falling_edge",
+        "mutation_bundle_sha256": "405120672e7d0df3daded870c5bfa8a76191bd3efaa97e69cffc004b4d015cd4",
+        "mutation_id": "neg_002_temperature_subsampled_on_falling_edge",
+        "source_catalog_certification_path": "negative_variants/neg_002_temperature_subsampled_on_falling_edge/certification.json",
+        "trigger_condition": "temp_sense changes before an enabled rising clock edge",
+        "violated_property_ids": [
+          "P_ON_EACH_ENABLED_RISING_CLK_EDGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_below_trip_command_attenuated/certification.json",
+        "certification_sha256": "7b045e5cce7cb8667952357ac0c8ea3cb067d9da5a016eb008743ed2b874b7ed",
+        "fault_class": "below_trip_command_incorrectly_attenuated",
+        "mutation_bundle_sha256": "b697a467ff0151dbcb812fca2e76725a08191298c4225b153a6abdd5cf244c09",
+        "mutation_id": "neg_003_below_trip_command_attenuated",
+        "source_catalog_certification_path": "negative_variants/neg_003_below_trip_command_attenuated/certification.json",
+        "trigger_condition": "temperature is below temp_trip while the limiter is enabled",
+        "violated_property_ids": [
+          "P_PASS_POWER_CMD_THROUGH_WHILE_TEMPERATURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_foldback_state_stuck_after_overtemperature/certification.json",
+        "certification_sha256": "b39143da2b32633d734278040dd2e1361506d37bec9d1819cfe0c855f3ae15a5",
+        "fault_class": "foldback_reduction_bypassed_and_metric_stuck_after_overtemperature",
+        "mutation_bundle_sha256": "907e74c80ab854b93b79efdb107aae789abae245278899c463b2b42ac28e4fa7",
+        "mutation_id": "neg_004_foldback_state_stuck_after_overtemperature",
+        "source_catalog_certification_path": "negative_variants/neg_004_foldback_state_stuck_after_overtemperature/certification.json",
+        "trigger_condition": "temperature rises above temp_trip and later returns below the threshold while the limiter remains enabled",
+        "violated_property_ids": [
+          "P_REDUCE_LIMITED_CMD_AS_TEMPERATURE_RISES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_thermal_ok_stuck_high/certification.json",
+        "certification_sha256": "a588d666445f82b124ba87fe35a40fa7cba5f9e6d0cb10412c346b35d6dac1dd",
+        "fault_class": "thermal_ok_ignores_foldback_activity",
+        "mutation_bundle_sha256": "edd556a0b6527082eb24f811ce3e836d5635fa44d188f49cd4ffd329fb5901b3",
+        "mutation_id": "neg_005_thermal_ok_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_005_thermal_ok_stuck_high/certification.json",
+        "trigger_condition": "temperature exceeds the foldback trip point while the controller is enabled",
+        "violated_property_ids": [
+          "P_ASSERT_THERMAL_OK_ONLY_WHEN_NO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_disable_retains_limited_command/certification.json",
+        "certification_sha256": "edafb6727088108fadc0b6dd31ded27d3600d11fb78f6758f3a3f17ff45c6d17",
+        "fault_class": "disable_clear_retains_limited_command",
+        "mutation_bundle_sha256": "671b9fec0bd3e6a32c30d92eaa6f9cc06c8c8075308f007b645c2924b0ade958",
+        "mutation_id": "neg_001_disable_retains_limited_command",
+        "source_catalog_certification_path": "negative_variants/neg_001_disable_retains_limited_command/certification.json",
+        "trigger_condition": "reset is asserted or enable is low while power_cmd remains nonzero",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_temperature_subsampled_on_falling_edge",
+    "canonical_dut_id": "340",
+    "hashes": {
+      "mutation_catalog_sha256": "22b8a3fd1eaa9281a4cd2502f83d167fe8533ba72549415d1d1a7f2228be55a6",
+      "score_deck_sha256": "64f538d862a0944bf18f37a084d62ef2399d3df32d43d1e2fcd05eb351108d62",
+      "task_certification_sha256": "c50cb19ab8e99e3e9a9bdea0717da5d19564bf02f766b28299092ec3f09fb0be",
+      "task_record_sha256": "c1cd3e6c754fa26721c67c5a539b7465f8ce31db2d02d0dda46c1cc743bb7093"
+    },
+    "release_dir": "340-thermal-foldback-power-limiter"
+  }
+}

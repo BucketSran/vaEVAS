@@ -1,0 +1,16 @@
+{
+  "candidate_artifacts": [
+    "offset_servo_top.va",
+    "offset_sampler.va",
+    "trim_dac.va",
+    "error_integrator.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "047a5a5bad94226be3632dfd57b11ba347405675eff791d59c53893a9d601870",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "ebbf1a254c34b97976cf30c10c24a99effe5e44f28b13e91f5c1942bed0ad59a",
+  "gold_solution_tree_sha256": "38328f4f2e8daef4497374af268db11025df87686dcbbc7da27ce1ec7937d26e",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "schema_version": "v4-dut-score-policy-v1",
+  "task_id": "v4-369"
+}

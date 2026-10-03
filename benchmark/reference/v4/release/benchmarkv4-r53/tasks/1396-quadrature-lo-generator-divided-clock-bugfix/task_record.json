@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "quadrature_lo_generator_divided_clock.va"
+  ],
+  "canonical_dut_source_slug": "396-quadrature-lo-generator-divided-clock",
+  "checker_task_id": "v4_396_quadrature_lo_generator_divided_clock",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8c483667234383838ba7e3eb97461730969e8709e22212115deb689fde0dbb7f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "57bb0286524df2d454699a3a6f14ad796a23f79b71a659cb97227d66781a7ad6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "97637a7ab0087f7d55e3e399d5c0cc959ff2aae9068811cc4a7ce0485deab0a4",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "396",
+  "family_spec_sha256": "0e462f2083bb57adfb947a51c8b0f3acedd3eaa413390fcb14452f2630886c5e",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "810ada0cfcc05952316be433e9ff374ea4ed0bb83a87e698b69aea0f1c007b9a",
+  "public_contract": "tasks/1396-quadrature-lo-generator-divided-clock-bugfix/public_contract.json",
+  "public_contract_sha256": "0b448ecad8c4b1b47a810db39aefc0b2e3a9e8eb580aaca4fcc17ac900cac679",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1396-quadrature-lo-generator-divided-clock-bugfix",
+  "task_id": "v4-1396"
+}

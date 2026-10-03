@@ -1,0 +1,45 @@
+{
+  "id": "vbm1_segmented_dac_tb",
+  "task_id": "vbm1_segmented_dac_tb",
+  "release_entry_id": "vbr1_l1_segmented_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "tb-generation",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_segmented_dac_tb",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "ahdl_include",
+    "save",
+    "tran"
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_segmented_dac_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/segmented_dac.va",
+    "gold/tb_segmented_dac_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_segmented_dac_tb/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_segmented_dac_tb/spectre_result.json"
+  }
+}

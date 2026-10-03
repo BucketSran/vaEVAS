@@ -1,0 +1,88 @@
+{
+  "family_id": "097",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_flat_ramp/certification.json",
+        "certification_sha256": "d9da48ece247fc41d2d25ca1a481cbefb0eefb572758bc0ff9f94edcec8d2742",
+        "fault_class": "behavioral_contract_near_miss",
+        "mutation_bundle_sha256": "eda6e4f2a6a6b317087dae6fd148ff41e13e5ded168d6939613a4b900669ad81",
+        "mutation_id": "neg_002_flat_ramp",
+        "source_catalog_certification_path": "negative_variants/neg_002_flat_ramp/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Programmable Stimulus Sequencer",
+        "violated_property_ids": [
+          "P_RAMP_MODE",
+          "P_RESET_IDLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5b589334dfa774edcbb66448eadeecdae88226cd344d5ae3d03d61114786df4c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ebbf39a527e9f42b2157086388581b457298094c1e182f82b41fc60502373420",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for Programmable Stimulus Sequencer",
+        "violated_property_ids": [
+          "P_CHIRP_MODE",
+          "P_RAMP_MODE",
+          "P_RESET_IDLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "36d3951a16fb502c89ad69b4ccf264a2c2ea56bdd85be2dfa77d9e73fbf2efbf",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "4e0ed8da1cfd70aeed0b3eb79d5989217b50d0db26a94fd2cad8d7f6c82a5354",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for Programmable Stimulus Sequencer",
+        "violated_property_ids": [
+          "P_CHIRP_MODE",
+          "P_RAMP_MODE",
+          "P_RESET_IDLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_fixed_sine_not_chirp/certification.json",
+        "certification_sha256": "f83405d74b0064e4e853909c8d54e21291496630564065a364d600543abddf11",
+        "fault_class": "periodic_source_spectral_error",
+        "mutation_bundle_sha256": "002a5b2dcf836b6bd25844e79b47fed466708d2a18ba81922c827dd94241f41d",
+        "mutation_id": "neg_003_fixed_sine_not_chirp",
+        "source_catalog_certification_path": "negative_variants/neg_003_fixed_sine_not_chirp/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Programmable Stimulus Sequencer",
+        "violated_property_ids": [
+          "P_RAMP_MODE",
+          "P_RESET_IDLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_gate/certification.json",
+        "certification_sha256": "c8495a4ca421c6e38bd6b3150cea66db223ac8ff156f667a8ad6933fc228dceb",
+        "fault_class": "behavioral_contract_near_miss",
+        "mutation_bundle_sha256": "14c559cae3042485c61e322803755d34e3a8c26500504ca805dbb2696fd028c7",
+        "mutation_id": "neg_004_ignore_gate",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_gate/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Programmable Stimulus Sequencer",
+        "violated_property_ids": [
+          "P_BURST_GATE",
+          "P_BURST_IDLE",
+          "P_CONTROL_DRIVEN_SELECTION",
+          "P_RAMP_MODE",
+          "P_RESET_IDLE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_flat_ramp",
+    "canonical_dut_id": "097",
+    "hashes": {
+      "mutation_catalog_sha256": "055e88f4d17cd5db5ea987b5d124850b5a0db0fa36ca6bedd49b7bfb2fb18fcd",
+      "score_deck_sha256": "639411a0a31bf8b04b2a135ac590b4fba8629db77fbb53fa736da7f8797a38fc",
+      "task_certification_sha256": "404132afcec621d91fc8690a1526eb594b1f8f4840eeb7e6cfeed2ee20bcaca9",
+      "task_record_sha256": "5341a8280b7e59f03db2464b2556dbbd25dfaf69ae3b6d5db85a2ad994a623f8"
+    },
+    "release_dir": "097-programmable-stimulus-sequencer"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "091",
+  "checker_task_id": "v4_091_chopper_stabilized_differential_amplifier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "879980664773184af88f813057186eb84459e680827f1b0ea257d81eb736eb33",
+    "checker_profile.json": "88c8bc22987ca9047c9083209e0fdd7dcf9d77af53d800350d3b8aaae48dea6e",
+    "derivation_manifest.json": "7c5fb19521e0c89f23fb8af488b785c2e1b1b44a386c3d2489a1343e5068e07b",
+    "family_spec.json": "3ceaf909e36f588a3afb82c73ea054e7bbbd8626f531d45bb9ae6c48337bc452",
+    "harness_spec.json": "918372dd6f4adb8e28c9ed2bb713b9aa1cadd829ccfb51acb667dfcdda7f7a89",
+    "mutation_catalog.json": "ec11fb8268a4d3523e17b172624cf91300adabfd81ad4c59c05d693ee975f90f",
+    "profiles/feedback.json": "c78edebb9d5d247e034d68809bafba1d9b4b806951abed6d38bde5f2032e7402",
+    "profiles/score.json": "76ab6704f54d1c7e70066f38179527edb60cc5d09a65817ece38f86094a5c4a8",
+    "score_tb.scs": "109833a240584c3cb6b97b0746c5f6a1ba0d904090e82c1cab49f3d3ef036a91",
+    "solution_tree": "517113fe2a1334517018cf56211b14b72997071f21694b12b5e8084cca8fc635",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "109833a240584c3cb6b97b0746c5f6a1ba0d904090e82c1cab49f3d3ef036a91",
+    "instruction.md": "a9285c9ed3e13ed633a450ec36e74c1b74e46c74e4dc80f0634b6a03795a8721",
+    "public_contract.json": "41643f70887cc9f550d5e75aa4891c7f487715061bee5a81b7b220ade6c53880"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "879980664773184af88f813057186eb84459e680827f1b0ea257d81eb736eb33"
+  },
+  "release_dir": "091-chopper-stabilized-differential-amplifier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "091-chopper-stabilized-differential-amplifier",
+  "support_root": "",
+  "target_artifacts": [
+    "chopper_stabilized_differential_amplifier.va",
+    "chopper_gain_core.va",
+    "synchronous_lp_state.va"
+  ]
+}

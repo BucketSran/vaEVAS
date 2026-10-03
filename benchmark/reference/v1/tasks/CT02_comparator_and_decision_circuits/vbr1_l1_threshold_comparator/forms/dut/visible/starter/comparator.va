@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 10p
+
+module comparator(
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical VINP,
+    input  electrical VINN,
+    output electrical OUT_P
+);
+
+parameter real tedge = 100p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

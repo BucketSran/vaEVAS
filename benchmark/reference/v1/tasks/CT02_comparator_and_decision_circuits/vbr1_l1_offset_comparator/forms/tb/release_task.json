@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_offset_comparator:tb",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_offset_comparator",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D1",
+  "category": "Comparator and Decision Circuits",
+  "base_function": "Offset comparator",
+  "family": "tb-generation",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb/gold/cmp_offset_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb/gold/tb_comparator_offset_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_offset_comparator/tb/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "offset_comparator",
+    "source_task_id": "vbm1_offset_comparator_tb",
+    "historical_source_task_id": "vbm1_offset_comparator_tb",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT02_comparator_and_decision_circuits/vbr1_l1_offset_comparator/forms/tb"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

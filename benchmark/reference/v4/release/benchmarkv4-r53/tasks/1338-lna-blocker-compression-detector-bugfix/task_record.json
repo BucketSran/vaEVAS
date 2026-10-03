@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "lna_blocker_compression_detector.va"
+  ],
+  "canonical_dut_source_slug": "338-lna-blocker-compression-detector",
+  "checker_task_id": "v4_338_lna_blocker_compression_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "2a1f1c23972d680a2bf2d920d4d79c77bfd30386a3abb021eaa7e7a601f1e920",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "be36912ce947464f1c62eaf95abf7d473bffbb79f44b68ffa095a1cccf9e1bd1",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "37afb0553b2e69545b6e04499dfb974c8552b563b8283cdc324600678ca4e83a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "338",
+  "family_spec_sha256": "e20f784230f1de26a917a62c03ff71218988c224bb8c03b2dbdaed30664797ce",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7c124fc8fdc03d8d0e7ad8ed44dd2150a63496e28f527d780eb07b7d342fbb69",
+  "public_contract": "tasks/1338-lna-blocker-compression-detector-bugfix/public_contract.json",
+  "public_contract_sha256": "badb897bb51465f5feff41f0eae867ce69eca896899952311b209c85cba746a2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1338-lna-blocker-compression-detector-bugfix",
+  "task_id": "v4-1338"
+}

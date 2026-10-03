@@ -1,0 +1,78 @@
+{
+  "family_id": "391",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_reversed_frequency_map/certification.json",
+        "certification_sha256": "bc4a9dfcd59265dbbaa0aafdd9bfa800a49041c0f0e4e38f92b7fed5e1f9d479",
+        "fault_class": "wrong_gain_polarity",
+        "mutation_bundle_sha256": "124ac5e8762efa75eae49668eb81c162180f6e7a1b3a674b54e59026fa267cdf",
+        "mutation_id": "neg_001_reversed_frequency_map",
+        "source_catalog_certification_path": "negative_variants/neg_001_reversed_frequency_map/certification.json",
+        "trigger_condition": "vctrl changes between low and high values",
+        "violated_property_ids": [
+          "P_CONTROL_FREQUENCY_MAP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_valid_after_one_cycle/certification.json",
+        "certification_sha256": "248605790ec5e6439626dfb61ab505152d9612827f7bf6d28b7c538416fa3d40",
+        "fault_class": "early_valid",
+        "mutation_bundle_sha256": "76a24221e0988a3a4d21e3eda47e69e86cd4977e340311f4bf9d67928d14c47c",
+        "mutation_id": "neg_003_valid_after_one_cycle",
+        "source_catalog_certification_path": "negative_variants/neg_003_valid_after_one_cycle/certification.json",
+        "trigger_condition": "one oscillator cycle completes",
+        "violated_property_ids": [
+          "P_VALID_AFTER_TWO_CYCLES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_amplitude_metric/certification.json",
+        "certification_sha256": "fd1a05ad31d6d7ffa90aff197e0093fac4e111bc0af7de270eeaf6ccdac9cffc",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "3fca564558596cf826104f64147a046473d90a20472ee295283e269cd2fb9fdf",
+        "mutation_id": "neg_004_wrong_amplitude_metric",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_amplitude_metric/certification.json",
+        "trigger_condition": "oscillator is enabled",
+        "violated_property_ids": [
+          "P_METRIC_REPORTING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_disabled_output_not_centered/certification.json",
+        "certification_sha256": "93ea7fcebfc98fdc77775f7d478b88090a3c445bad421b830b56aedd564be14f",
+        "fault_class": "missing_disable_clear",
+        "mutation_bundle_sha256": "66082927356e6d62f1ffb5c1abf95e928fcf5f1719e3b3509cd94a11f2eda040",
+        "mutation_id": "neg_005_disabled_output_not_centered",
+        "source_catalog_certification_path": "negative_variants/neg_005_disabled_output_not_centered/certification.json",
+        "trigger_condition": "reset or disable is active",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CENTER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_noncomplementary_output/certification.json",
+        "certification_sha256": "a1d5387dd7fed0a23b4e8e70355f39b0e2407084e1e9081f9c8a38550aa55762",
+        "fault_class": "wrong_output_polarity",
+        "mutation_bundle_sha256": "b9aa247f42aa7a5b81109e91a61a206529573abf94fb7b57be7b499ee39a7c15",
+        "mutation_id": "neg_002_noncomplementary_output",
+        "source_catalog_certification_path": "negative_variants/neg_002_noncomplementary_output/certification.json",
+        "trigger_condition": "oscillator enters its positive state",
+        "violated_property_ids": [
+          "P_COMPLEMENTARY_AMPLITUDE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_reversed_frequency_map",
+    "canonical_dut_id": "391",
+    "hashes": {
+      "mutation_catalog_sha256": "65209ab8cce48af3f3d601257a6df12495a20afbb25f2372f41bdc3d3b81e7e7",
+      "score_deck_sha256": "5583f77c62c6798489dcea54d7e1007e90de48d8bc2aaed1bdf628703d70810d",
+      "task_certification_sha256": "f150ecdfcb50d780f8bb1c16a562f077a37fc8c246a51affca77d6737fb672b4",
+      "task_record_sha256": "baaede28ae6b8ef65836a7d5ebdb47175548895888b4985661674d48fb6b38a7"
+    },
+    "release_dir": "391-lc-vco-behavioral-source"
+  }
+}

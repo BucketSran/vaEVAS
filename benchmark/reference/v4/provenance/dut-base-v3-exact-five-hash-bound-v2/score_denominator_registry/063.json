@@ -1,0 +1,78 @@
+{
+  "family_id": "063",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "308de4bbaa11ba1ec611862cd9b5689d8872d24dd20b25ec19a604eb4b497d42",
+        "fault_class": "never_settles",
+        "mutation_bundle_sha256": "390d4edc83da1c7dbc804da0070d6fe96e76c8426f2bd8dbc7ef93b415a89470",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises never settles against the public observable contract",
+        "violated_property_ids": [
+          "P_ENTRY_AND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wide_tol/certification.json",
+        "certification_sha256": "99fb78eccd7ca2aa8b6010ac40647b2b835cbd571649b48d92ae7ab286538f58",
+        "fault_class": "uses_double_tolerance",
+        "mutation_bundle_sha256": "bdc71b189f0e196f903ccf6c998359c98910333cd1f2d169c345a456e03df2f7",
+        "mutation_id": "neg_003_wide_tol",
+        "source_catalog_certification_path": "negative_variants/neg_003_wide_tol/certification.json",
+        "trigger_condition": "stimulus exercises uses double tolerance against the public observable contract",
+        "violated_property_ids": [
+          "P_WINDOW_DEFINITION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_reset/certification.json",
+        "certification_sha256": "b2884d753298e5ff0306866ca3c9510944d9b901026072359d475457b25b9e1e",
+        "fault_class": "does_not_clear_outside_window",
+        "mutation_bundle_sha256": "0611d3b1adf4fbe863bd4dceb8965fbb71fcdbe2215e769e756435d50040c0e9",
+        "mutation_id": "neg_004_no_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_reset/certification.json",
+        "trigger_condition": "stimulus exercises does not clear outside window against the public observable contract",
+        "violated_property_ids": [
+          "P_EXIT_RESETS_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_code/certification.json",
+        "certification_sha256": "f53a723822541b2578b36fb6fc31b6ebcd2c957ae88ff1f9e95af5a3d6691639",
+        "fault_class": "reports_settle_time_instead_of_entry_time",
+        "mutation_bundle_sha256": "0ef4f0817f58be936bf78fc240a5f35c7c2cb05c7210531b7a44c8b908ac880d",
+        "mutation_id": "neg_005_wrong_code",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_code/certification.json",
+        "trigger_condition": "stimulus exercises reports settle time instead of entry time against the public observable contract",
+        "violated_property_ids": [
+          "P_ENTRY_TIME_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_reversed_code_bits/certification.json",
+        "certification_sha256": "74d55cdbbaa5a4e17fdf0ef1928e3f2f4312d0307814df6839cdea08831ad8eb",
+        "fault_class": "reversed_time_code_bit_order",
+        "mutation_bundle_sha256": "769bafce635ceddbb7953f12e11019f14007e4e87cebefd40a545af6226b83a8",
+        "mutation_id": "neg_006_reversed_code_bits",
+        "source_catalog_certification_path": "negative_variants/neg_006_reversed_code_bits/certification.json",
+        "trigger_condition": "stimulus exercises reversed t_code bit significance against the public observable contract",
+        "violated_property_ids": [
+          "P_BIT_ORDER_AND_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "063",
+    "hashes": {
+      "mutation_catalog_sha256": "3271c591af8ab46415f347c71e55c52f7e1367dfca807af96e46ec4986eef373",
+      "score_deck_sha256": "94080a248dbd399c246eb503ada221c6031d6f1472d4061bfd2678b62e743849",
+      "task_certification_sha256": "808145ea8e4241502a2fefd2ae2cd13cf7df96afe5bbab2fed4866b9893dc3f1",
+      "task_record_sha256": "2c5695d84eee61efe035daeece8e63e33be00dd2f6994853ab4c01485d5806a7"
+    },
+    "release_dir": "063-settling-window-detector"
+  }
+}

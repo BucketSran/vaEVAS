@@ -1,0 +1,78 @@
+{
+  "family_id": "050",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_force_zero/certification.json",
+        "certification_sha256": "ad1960f835e62e29a62200222b7ba6f7635ed37363e316f1e6e03d673214936a",
+        "fault_class": "force_zero",
+        "mutation_bundle_sha256": "c4ffeb29c69a9b0ebc098cc6856bc37d0153ae6a34179aaba187648304430297",
+        "mutation_id": "neg_001_force_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_force_zero/certification.json",
+        "trigger_condition": "DC Aware ADC3bit: forces every output bit low, so only zero-code smoke checks can pass.",
+        "violated_property_ids": [
+          "P_STATIC_CONVERSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_code_span/certification.json",
+        "certification_sha256": "76c142302e0ff4672212bcdd6c193f093982fc4440cc1a0bc1041c891ea52a7f",
+        "fault_class": "wrong_code_span",
+        "mutation_bundle_sha256": "b1cd847bf7cba5a7b2c483cca85e9224fe565c7a4084229455cf08a9888798c0",
+        "mutation_id": "neg_002_wrong_code_span",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_code_span/certification.json",
+        "trigger_condition": "DC Aware ADC3bit: uses seven bins instead of eight, shifting the ADC transition thresholds.",
+        "violated_property_ids": [
+          "P_UNIFORM_QUANTIZATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_clipping/certification.json",
+        "certification_sha256": "194f4b3990201d94639818b2e5dea59f94fae85af021a47ed5aec4d0385c6491",
+        "fault_class": "no_clipping",
+        "mutation_bundle_sha256": "f4c7151381784018650760bb57b5718b0afc374f02d70b2093c05928dac5469d",
+        "mutation_id": "neg_004_no_clipping",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_clipping/certification.json",
+        "trigger_condition": "DC Aware ADC3bit: does not clip out-of-range inputs before quantization.",
+        "violated_property_ids": [
+          "P_BINARY_BIT_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_round_to_nearest/certification.json",
+        "certification_sha256": "efdd22c4dc94a9019f7baf3c082f05f95abbd031bbc35e977f7e5c8cc26fa9ce",
+        "fault_class": "round_to_nearest",
+        "mutation_bundle_sha256": "557166ad083efa3f84a7d6e7ae4e60385d318eac3e56584e10a335a50a293e6a",
+        "mutation_id": "neg_005_round_to_nearest",
+        "source_catalog_certification_path": "negative_variants/neg_005_round_to_nearest/certification.json",
+        "trigger_condition": "DC Aware ADC3bit: rounds to the nearest code rather than using the required bin-floor quantizer.",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reversed_bit_order/certification.json",
+        "certification_sha256": "f024b8ee73eabcfd954043accf090a54602ca55ff5af0cf62e36eb179d5b2485",
+        "fault_class": "reversed_bit_order",
+        "mutation_bundle_sha256": "370f086eb17b453636d71cf9aeaa4f13f2114f2760ecde9011167a29b91eb108",
+        "mutation_id": "neg_003_reversed_bit_order",
+        "source_catalog_certification_path": "negative_variants/neg_003_reversed_bit_order/certification.json",
+        "trigger_condition": "DC Aware ADC3bit: drives the right three logic values in reversed MSB/LSB order.",
+        "violated_property_ids": [
+          "P_INPUT_CLIPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_force_zero",
+    "canonical_dut_id": "050",
+    "hashes": {
+      "mutation_catalog_sha256": "d1c7d6842e2c943390cee3a390870fe28e1c5ac78f74321c0e3d6b4f2bea05ae",
+      "score_deck_sha256": "2ef43b6607ce0df61c667ee8df373933d604eb56a4c69d7ad46fa8b81345d99b",
+      "task_certification_sha256": "0de3fe1cb3f3c27fc65d2fd4975e8631b249291a8ba42385be4aa8b347c777ab",
+      "task_record_sha256": "3af805c01fc8d7ff91a8c754a856382152e851d3a66c9aa94fc82a0545c0e122"
+    },
+    "release_dir": "050-dc-aware-adc3bit"
+  }
+}

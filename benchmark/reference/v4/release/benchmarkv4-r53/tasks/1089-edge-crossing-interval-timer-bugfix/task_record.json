@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cross_interval_163p333_ref.va"
+  ],
+  "canonical_dut_source_slug": "089-edge-crossing-interval-timer",
+  "checker_task_id": "v4_089_edge_crossing_interval_timer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "dc8e075bbca0a36f535d59e8c8802b942bc6d9f7303147d3d77270fe611464ac",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "221cd4e6f00ea0a132e7542eec94aa94dd8251790482a9c06867396bd0791951",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d1f0c7d8bc36f644349c9df7946460e8b61c1ca21a6c720198d1157b7f1cd6e2",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "089",
+  "family_spec_sha256": "ebf0a6b4dbdc11dcd700618e90e9da1c44b0dd75e1ab1ae84bd175ab5ccb59d3",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "774faac1878b5d098868a8d2819aa231c73a2dd7c03e85f5f9a47bada544ebf7",
+  "public_contract": "tasks/1089-edge-crossing-interval-timer-bugfix/public_contract.json",
+  "public_contract_sha256": "c10e53e059c3d8eae93348802282db318bbed0916a3bdb52f26a94b91ced1c96",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1089-edge-crossing-interval-timer-bugfix",
+  "task_id": "v4-1089"
+}

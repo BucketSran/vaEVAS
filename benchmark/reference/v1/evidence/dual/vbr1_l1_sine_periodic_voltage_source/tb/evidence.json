@@ -1,0 +1,80 @@
+{
+  "release_entry_id": "vbr1_l1_sine_periodic_voltage_source",
+  "task_id": "vbr1_l1_sine_periodic_voltage_source:tb",
+  "source_task_id": "vbr1_l1_sine_periodic_voltage_source_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Stimulus and Source Generators",
+    "base_function": "Sine/periodic voltage source"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_sine_periodic_voltage_source/tb/gold",
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_sine_periodic_voltage_source/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sine_periodic_voltage_source/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sine_periodic_voltage_source/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/multitone.va",
+    "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/tb_multitone_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rest-20260526_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_sine_periodic_voltage_source/tb/gold",
+    "result_root": "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_sine_periodic_voltage_source/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        5e-07
+      ],
+      "signals_compared": 1,
+      "samples": 1200,
+      "max_rmse_v": 7.146510735051515e-05,
+      "max_abs_v": 0.000202184795152327,
+      "mean_relative_rms_error": 0.0002575199035323586,
+      "max_relative_rms_error": 0.0002575199035323586,
+      "mean_nrmse": 0.0002575199035323586,
+      "max_nrmse": 0.0002575199035323586,
+      "per_signal": {
+        "OUT": {
+          "rmse_v": 7.146510735051515e-05,
+          "max_abs_v": 0.000202184795152327,
+          "span_v": 0.2775129470391993,
+          "nrmse": 0.0002575199035323586,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/multitone.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_sine_periodic_voltage_source/forms/tb/gold/tb_multitone_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

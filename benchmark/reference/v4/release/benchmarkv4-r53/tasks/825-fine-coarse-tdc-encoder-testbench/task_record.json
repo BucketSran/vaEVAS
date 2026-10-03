@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "325-fine-coarse-tdc-encoder",
+  "checker_task_id": "v4_325_fine_coarse_tdc_encoder",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "67244243cadd9cca956d321d20b13b98afa228a146f033f1689aa2fcf9cdbeba",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "84899e0f9ea627844ffdd291c4f290a47704e0ed51e49cce620d1729560300e8",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "67244243cadd9cca956d321d20b13b98afa228a146f033f1689aa2fcf9cdbeba",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "fbcdc480a6c20666edd77d07d40e0b3f64da4d0826430ff788a7490b360182b1",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "f401f027d3bee8a08b7a417adafc404981f3855438dffe10a4a37c9d2731d1e6"
+  },
+  "family_id": "325",
+  "family_spec_sha256": "e50e6d55bb6c814210717c272cc91684cdf22a849657658ab35a73c54e5aa698",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "df980c9ccc06958c27d65f4056c345aa05c43e72ad5aa0a303c9bc7b81f2463c",
+  "public_contract": "tasks/825-fine-coarse-tdc-encoder-testbench/public_contract.json",
+  "public_contract_sha256": "77d2a86132328427cb644a2bccdd3f195c14c77e42a947de133fe4416142bea3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/825-fine-coarse-tdc-encoder-testbench",
+  "task_id": "v4-825"
+}

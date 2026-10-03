@@ -1,0 +1,37 @@
+{
+  "release_entry_id": "vbr1_l1_slew_rate_limiter",
+  "task_id": "vbr1_l1_slew_rate_limiter:bugfix",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Baseband Signal Conditioning",
+    "base_function": "Slew-rate limiter"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/gold/dut_fixed.va",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/gold/tb_slew_rate_limiter_buggy.scs",
+    "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_slew_rate_limiter/forms/bugfix/gold/tb_slew_rate_limiter_ref.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "@(timer(",
+      "transition(",
+      "step"
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt(",
+      "idt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

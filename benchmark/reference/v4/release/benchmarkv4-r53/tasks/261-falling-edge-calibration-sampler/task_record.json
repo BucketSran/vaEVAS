@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "falling_edge_calibration_sampler.va"
+  ],
+  "canonical_dut_source_slug": "261-falling-edge-calibration-sampler",
+  "checker_task_id": "v4_261_falling_edge_calibration_sampler",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ead91f43a266bd418ec9cc455ad4fd78567b208c41ff7900aa0da7d5c08c0262",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "97aece0ba4748246ca01e568b287a20aa242d610834604555467fe2c71c31562",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ab466d182b97ae3bc03a9c47ed577e7a234790593d5d5cbb7f755e1ec912c8f9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "261",
+  "family_spec_sha256": "34aa516da1909285419024f44e1e770392a98f04a6035001d1111efdc9a5b24e",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "40288ea60a9b56605bd707f97171b843ab4d301d4f1b2aa3b77d27e325407bf9",
+  "public_contract": "tasks/261-falling-edge-calibration-sampler/public_contract.json",
+  "public_contract_sha256": "2f2ad24ad639fc881d65027d0718ab4e65bfffa7261c6fb88bb847ae36e0368d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/261-falling-edge-calibration-sampler",
+  "task_id": "v4-261"
+}

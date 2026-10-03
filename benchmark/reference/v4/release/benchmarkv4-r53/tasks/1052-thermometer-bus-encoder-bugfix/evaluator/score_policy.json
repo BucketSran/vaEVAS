@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_005_round_to_nearest",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "85810c833d40c7ac77cfba22af47b4597e75192266ec3b35933b768e96770fd1",
+  "candidate_artifacts": [
+    "thermometer_bus_encoder.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "thermometer_bus_encoder.va"
+  ],
+  "checker_profile_sha256": "18273c0965f7c282693f4bf249298b5b537c53da2c66d19e2306e42177af4bd5",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "9dcc77740debb0574323130df88913bbd16b2dcc7d8768ff90d59d0e29de6084",
+  "gold_solution_tree_sha256": "565f9625e010b4d21ea80a1b3faa38de1c500dcb34c7fbb846831b59d915d2c5",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "2cce54b4d21e8cd68074b38a80e9d0155d2d2f32ab4de89c403f1261c64fb7e5",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1052"
+}

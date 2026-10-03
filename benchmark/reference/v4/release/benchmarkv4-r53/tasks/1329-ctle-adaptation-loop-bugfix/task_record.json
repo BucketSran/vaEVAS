@@ -1,0 +1,38 @@
+{
+  "candidate_artifacts": [
+    "ctle_adaptation_loop_top.va",
+    "ctle_boost_core.va",
+    "boost_adapt_controller.va"
+  ],
+  "canonical_dut_source_slug": "329-ctle-adaptation-loop",
+  "checker_task_id": "v4_329_ctle_adaptation_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0a88c6c693db873b433a836f4a8cc88967c4bbbed79205e87ceeaf6c2c7bc5c0",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "82725a81e397ed7e39e622d737441d6892857fa8fcf125d057938ac46e4da0fa",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0ff9f72f2c2212965f55a052f60ca69fbe29509f9c0ae97ceb77df4ae717d0f7",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "329",
+  "family_spec_sha256": "dba1323267d6a4300c62cbdd99da6569100aecd8270111de945154dcc443d616",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "43ed73ab395dac8a6e4d0d7ef4ba4b7a40c34d89b8582219813ef76035b1db94",
+  "public_contract": "tasks/1329-ctle-adaptation-loop-bugfix/public_contract.json",
+  "public_contract_sha256": "40b6c99e3d2cfa9d9076b6bc963451e1bd615e4ce1dc858db9211e03c3db647a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1329-ctle-adaptation-loop-bugfix",
+  "task_id": "v4-1329"
+}

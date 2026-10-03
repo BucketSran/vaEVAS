@@ -1,0 +1,59 @@
+{
+  "access": "private_checker_backend",
+  "checker_source_public": false,
+  "checker_task_id": "v4_331_dfe_error_proxy_loop",
+  "contract": {
+    "public_contract": "public_contract.json",
+    "source_task_id": null,
+    "task_id": "v4_331_dfe_error_proxy_loop"
+  },
+  "diagnostic_contract": {
+    "event_context": "stimulus_relative",
+    "redaction": "public_observables_only",
+    "required_fields": [
+      "property_diagnostics",
+      "mismatch_count",
+      "expected",
+      "observed",
+      "event_context"
+    ],
+    "schema_version": "v4-checker-diagnostic-v1"
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_ON_EACH_ENABLED_DECISION_CLOCK_LATCH",
+    "P_USE_THE_PREVIOUS_DECISION_HISTORY_TO",
+    "P_EXPOSE_THE_ABSOLUTE_RESIDUAL_ON_ERROR",
+    "P_ASSERT_CONVERGED_WHEN_THE_RESIDUAL_REMAINS"
+  ],
+  "schema_version": "v4-checker-profile-v1",
+  "score_and_feedback_share_checker": true,
+  "shared_by": [
+    "test_feedback/public_tb.scs",
+    "evaluator/score_tb.scs"
+  ],
+  "trace_contract": {
+    "extra_trace_signals": [
+      "sample_in",
+      "decision_clk",
+      "rst",
+      "enable",
+      "tap_1",
+      "tap_0",
+      "corrected_out",
+      "error_metric",
+      "converged"
+    ],
+    "public_observables": [
+      "sample_in",
+      "decision_clk",
+      "rst",
+      "enable",
+      "tap_1",
+      "tap_0",
+      "corrected_out",
+      "error_metric",
+      "converged"
+    ]
+  }
+}

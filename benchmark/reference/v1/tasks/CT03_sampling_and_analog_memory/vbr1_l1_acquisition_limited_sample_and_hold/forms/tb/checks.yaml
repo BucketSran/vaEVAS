@@ -1,0 +1,32 @@
+syntax:
+  must_include:
+    - "transition("
+    - "@(cross("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "finite_acquisition_does_not_jump_to_vin"
+    - "longer_sample_window_settles_closer_to_vin"
+    - "falling_sample_edge_holds_last_acquired_value"
+    - "reset_returns_to_initial_level"
+    - "metric_marks_tracking_window"
+  public_observables:
+    - "sample"
+    - "rst"
+    - "vin"
+    - "vout"
+    - "metric"
+parity:
+  reference: "spectre"
+  status: "pending"
+  notes:
+    - "Fresh EVAS/Spectre dual validation is required after adding this release entry."

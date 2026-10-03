@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module thermometer_decoder_guarded(b0,b1,en,th0,th1,th2,th3);
+    input b0,b1,en; output th0,th1,th2,th3; electrical b0,b1,en,th0,th1,th2,th3;
+    parameter real vth=0.45; parameter real vdd=0.9; parameter real tr=40n; integer code;
+    analog begin
+        code=(V(b0)>vth?1:0)+(V(b1)>vth?2:0); if (V(en)<vth) code=0;
+        V(th0)<+transition(code>=1?vdd:0.0,0,tr,tr); V(th1)<+transition(code>=2?vdd:0.0,0,tr,tr);
+        V(th2)<+transition(code>=3?vdd:0.0,0,tr,tr); V(th3)<+transition(code>=4?vdd:0.0,0,tr,tr);
+    end
+endmodule
+
+// vaBench partial-pass negative 2 for thermometer_code_decoder:dut
+// Intended to preserve interface/smoke behavior while failing full checks.
+// Mutation note: timing_window_near_miss.

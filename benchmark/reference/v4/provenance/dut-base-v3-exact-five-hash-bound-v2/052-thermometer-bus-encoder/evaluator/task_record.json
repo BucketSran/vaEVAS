@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "052",
+  "checker_task_id": "v4_052_thermometer_bus_encoder",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9dcc77740debb0574323130df88913bbd16b2dcc7d8768ff90d59d0e29de6084",
+    "checker_profile.json": "18273c0965f7c282693f4bf249298b5b537c53da2c66d19e2306e42177af4bd5",
+    "derivation_manifest.json": "b88fd017a786b6653eec55bcd5e4811411a7969c3aa8ba26574bca4b2a2ff9de",
+    "family_spec.json": "18add0d9bb52d1b9aba2e435cb1d0a204657718c6a18c6850fdc6070786acf3f",
+    "harness_spec.json": "9f4537750880125dc76c97ddc1b5a7e499bbff39ecdfe765aa1356c8c2d332cc",
+    "mutation_catalog.json": "2cce54b4d21e8cd68074b38a80e9d0155d2d2f32ab4de89c403f1261c64fb7e5",
+    "profiles/feedback.json": "7ea4bc942741254af1e3244a7564b2b8b0eab91e857b82dc8719668dbe936f5e",
+    "profiles/score.json": "cbe7115a075acfae477b136c69802e63dff0a1934f0ac724444736e65652930e",
+    "score_tb.scs": "ee9dc6baf7ca7f2d9ee2314aca31b5a66c82f0c7f40f8507318369f385919a85",
+    "solution_tree": "c2676384131cdb163b04873afe68acb5519442f9063005788f6a55604040098c",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "7e5399d729b3b04c2ed19cc6ce2dfacfd77d807d57455a62f40410b91daf57ac",
+    "instruction.md": "b0f6172e50ab87038bd897232aec0b22cc53650b4ac31c17522f168be0718795",
+    "public_contract.json": "7e7aa86fdab9000cf87a1d52ae8e1b003090c0d1074c6136e01ab653e8f5fc7f"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9dcc77740debb0574323130df88913bbd16b2dcc7d8768ff90d59d0e29de6084"
+  },
+  "release_dir": "052-thermometer-bus-encoder",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "054-thermometer-bus-encoder",
+  "support_root": "",
+  "target_artifacts": [
+    "thermometer_bus_encoder.va"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "corners": [], "deck_overrides": {}, "deterministic_seed": 0,
+  "generated_from": {"script": "render_v4_harness.py", "version": "v4-harness-renderer-v1"},
+  "harness_spec_sha256": "918372dd6f4adb8e28c9ed2bb713b9aa1cadd829ccfb51acb667dfcdda7f7a89",
+  "parameters": {"gain": 3.0, "vos_amp": 0.02, "lp_alpha": 0.25, "settle_tol": 0.02, "settle_cycles": 3},
+  "profile_name": "score",
+  "property_ids": ["P_CHOP_DEMOD_BASEBAND_GAIN", "P_INTERNAL_OFFSET_SUPPRESSION", "P_EVENT_DRIVEN_LOWPASS", "P_RESET_ENABLE_CLEAR", "P_HOLD_PRESERVES_STATE", "P_SETTLED_QUALIFICATION"],
+  "public_visible": false, "schema_version": "v4-harness-profile-v1", "simulatorOptions": {}
+}

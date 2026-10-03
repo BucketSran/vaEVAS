@@ -1,0 +1,78 @@
+{
+  "family_id": "372",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_missing_reset_clear/certification.json",
+        "certification_sha256": "96f013dfefc715a2de2e5a79a92ab48834ed245dc12698a2b74447a5ebdab52a",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "0e2c6d6dd68eb17a1ecc797d5f227b92ea379f5a1db8cf57e3c7a6ed6007b0ec",
+        "mutation_id": "neg_001_missing_reset_clear",
+        "source_catalog_certification_path": "negative_variants/neg_001_missing_reset_clear/certification.json",
+        "trigger_condition": "reset is asserted while enable remains high",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_double_soft_step/certification.json",
+        "certification_sha256": "7d1c4c43bb84910bef9bb8adbfdaab38a543004b541b8e30c81c69603383aeb0",
+        "fault_class": "wrong_gain",
+        "mutation_bundle_sha256": "b74fa63bce1b89815b170b06d692dfed80d177949ca650809798d68c78751003",
+        "mutation_id": "neg_003_double_soft_step",
+        "source_catalog_certification_path": "negative_variants/neg_003_double_soft_step/certification.json",
+        "trigger_condition": "soft_ref is below vref during enabled clock updates",
+        "violated_property_ids": [
+          "P_SOFT_START_TRACKING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_pgood_asserts_early/certification.json",
+        "certification_sha256": "934942d3e52b29c5d50d1afaee2cd3025930e0479f80be0e091ce29cc8f3274e",
+        "fault_class": "qualification_count_error",
+        "mutation_bundle_sha256": "35dd442434cdfd0cd85bc5ac484b61a0d773e32825c1eb722963a1cec55ee60b",
+        "mutation_id": "neg_004_pgood_asserts_early",
+        "source_catalog_certification_path": "negative_variants/neg_004_pgood_asserts_early/certification.json",
+        "trigger_condition": "the first in-tolerance clock update occurs",
+        "violated_property_ids": [
+          "P_POWER_GOOD_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_weak_pwm_high/certification.json",
+        "certification_sha256": "43d5e7e6bc0e015a423f69b6f7413dcc48f20d5c8fbc79f2de5e669b660f8f24",
+        "fault_class": "weak_rail",
+        "mutation_bundle_sha256": "4d666441f51efc0b6e0dcb6fa401e1562614e0cf70be96938691266ad6a93196",
+        "mutation_id": "neg_005_weak_pwm_high",
+        "source_catalog_certification_path": "negative_variants/neg_005_weak_pwm_high/certification.json",
+        "trigger_condition": "the PWM state requests a high output",
+        "violated_property_ids": [
+          "P_PWM_ENCODING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reversed_duty_direction/certification.json",
+        "certification_sha256": "ca84aef9910e714308ddd207cb09eb45888dc9417ee7ddd88e229ab0b1fad38c",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "1f61e1023afd87c8086a6315136081e37d80dce77de6cb30382c792db20caecb",
+        "mutation_id": "neg_002_reversed_duty_direction",
+        "source_catalog_certification_path": "negative_variants/neg_002_reversed_duty_direction/certification.json",
+        "trigger_condition": "vfb is below soft_ref",
+        "violated_property_ids": [
+          "P_DUTY_DIRECTION_BOUNDS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_missing_reset_clear",
+    "canonical_dut_id": "372",
+    "hashes": {
+      "mutation_catalog_sha256": "31e9e4dd96b39198749c6c824a95130dff94185cc4566e4d618e98818f01e175",
+      "score_deck_sha256": "679be3dfc1b83ccc0a84f877105c85fc7ddfeaff24e5a526efca86609bc84527",
+      "task_certification_sha256": "136e780cf1f29ed1dff3840c7fe8f58f27ae08d4112ad276fe737783206930a4",
+      "task_record_sha256": "b1316bd6e644ba89c9ffbd9b829dba0cd7f56a69dbef5e17eab8ae2ac276cbf0"
+    },
+    "release_dir": "372-buck-converter-controller-macro"
+  }
+}

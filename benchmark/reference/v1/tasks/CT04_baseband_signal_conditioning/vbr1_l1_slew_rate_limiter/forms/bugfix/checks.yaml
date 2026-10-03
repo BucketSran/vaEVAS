@@ -1,0 +1,32 @@
+syntax:
+  must_include:
+    - "@(timer("
+    - "transition("
+    - "step"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  dut_companion_role: "function_checked_dut"
+  strong_benchmark_claim: true
+  checks:
+    - "input_up_down_steps_exercised"
+    - "rising_step_changes_by_no_more_than_configured_step_per_update"
+    - "falling_step_changes_by_no_more_than_configured_step_per_update"
+    - "output_eventually_reaches_new_target_after_large_step"
+    - "lagged_response_not_passthrough"
+  public_observables:
+    - "vin"
+    - "vout"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: buggy source limits rising slew but bypasses the falling slew clamp."
+parity:
+  required: true
+  tolerance_notes: "Sample vout on safe windows after the large falling edge, for example 100 ns and 120 ns, to avoid PWL/timer boundary dependence."

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "018",
+  "checker_task_id": "v4_018_unit_element_thermometer_dac",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "4fc3eb8c17ede48e8690ee995bcc236c5b72dd2e9e7d1e78eaef6cd4be15324e",
+    "checker_profile.json": "d629a7efd213864a1f35d89de205e142eaaf1446b7c6f106019708ad8d8fc75c",
+    "derivation_manifest.json": "2857767cb3bee1ebb19cfd67eba5622d505dc5f5fd0756cf78a9b92332f9e9c6",
+    "family_spec.json": "d10b15af580b2a2efb69ad70f16e51bca3f2a3c2d8e6f75b7425dd337377a631",
+    "harness_spec.json": "0cb185f1e7cd20674adc553c8dd74c9600268654ba5c4d6fc780df916dbfc04d",
+    "mutation_catalog.json": "250920aa2ded217c1af3ecaf42b29ba706feba278999f5951aefc3426573cb1a",
+    "profiles/feedback.json": "9b78b7d5ebf737d290da4217bae5657ee267282e1cf9d8f566e273328bb55cc7",
+    "profiles/score.json": "de83669f40830e6ccaf1944b19a26607a40b0f1df2531eb444e4de254a889c4b",
+    "score_tb.scs": "54a909bffdf299f5c115431d437f33cccdfec870059aaa39d0db86058d7e4af2",
+    "solution_tree": "e6fa236215da039048c3649987e90235054693aa38f47433a4ea4d05a07eb350",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0b1488f371d1070c75ebaaaab602fef6c7f2db6ba1def261008242f806f498c4",
+    "instruction.md": "3556909a010267709108fa49c513d6b0da29b0bb9f1b7ac3d4799b629f8287fb",
+    "public_contract.json": "c3fcf7749960c2835ff2559a464381dec3fdc2f2ca70e27c7a57d37b0cb6f59e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "4fc3eb8c17ede48e8690ee995bcc236c5b72dd2e9e7d1e78eaef6cd4be15324e"
+  },
+  "release_dir": "018-unit-element-thermometer-dac",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "019-unit-element-thermometer-dac",
+  "support_root": "",
+  "target_artifacts": [
+    "thermometer_dac_15seg.va"
+  ]
+}

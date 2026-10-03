@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "quadrature_iq_phase_sequence"
+    - "lo_iq_phase_monitors_are_visible"
+    - "mixer_outputs_track_lo_polarity_and_input"
+    - "i_and_q_outputs_are_distinct"
+    - "baseband_outputs_follow_mixer_paths"
+    - "common_mode_hold_when_input_centered"
+parity:
+  reference: "spectre"
+  status: "certified"
+  notes:
+    - "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

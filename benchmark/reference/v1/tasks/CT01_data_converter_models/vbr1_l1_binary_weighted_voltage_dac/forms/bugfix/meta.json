@@ -1,0 +1,56 @@
+{
+  "id": "vbm1_simple_binary_voltage_dac_4b_bugfix",
+  "task_id": "vbm1_simple_binary_voltage_dac_4b_bugfix",
+  "release_entry_id": "vbr1_l1_binary_weighted_voltage_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "semantic_label": "4-bit binary DAC endpoint-scaling bugfix",
+  "family": "bugfix",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_thermometer_dac_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_simple_binary_voltage_dac_4b_buggy.scs",
+    "tb_simple_binary_voltage_dac_4b_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_simple_binary_voltage_dac_4b_buggy.scs",
+    "gold/tb_simple_binary_voltage_dac_4b_ref.scs"
+  ],
+  "bugfix": {
+    "buggy_source": "gold/dut_buggy.va",
+    "fixed_source": "gold/dut_fixed.va",
+    "buggy_testbench": "gold/tb_simple_binary_voltage_dac_4b_buggy.scs",
+    "fixed_testbench": "gold/tb_simple_binary_voltage_dac_4b_ref.scs",
+    "defect": "The buggy implementation divides by 16 instead of 15, so full-scale code 15 never reaches vref.",
+    "repair": "Restore ideal 4-bit DAC endpoint scaling with code divided by 15."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_thermometer_dac_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_thermometer_dac_bugfix/spectre_result.json"
+  },
+  "task_name": "Simple 4-bit Binary-Weighted Voltage DAC Bugfix"
+}

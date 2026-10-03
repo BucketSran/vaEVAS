@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "start_gated_offset_search.va"
+  ],
+  "canonical_dut_source_slug": "110-start-gated-offset-search",
+  "checker_task_id": "v4_110_start_gated_offset_search",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7a8c1875a40512bfe697ad9f5aa2d09fb29ca4510ee8748ccc591693d04c2ff5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "95725c4c091a5e825c7de76d0a68a456a629dbcb8e87ad460e29b76d38d8e489",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "45a18e8bd2e37936fa2ace27c182b979c00381048757000f563088f300b340b6",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "110",
+  "family_spec_sha256": "3ab9c8f2ecabd8c4083cb4d6d4173bc45e7d5fbe5f517294a49de2e8d72d0d30",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6ede53749f64b43e7388d297e750d5631a18678ece3d548608c19668c61d630f",
+  "public_contract": "tasks/110-start-gated-offset-search/public_contract.json",
+  "public_contract_sha256": "3639a9d5590e49bbe6e3c8c704de0d5b038ef64c8bb5693ddb803290268e2cac",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/110-start-gated-offset-search",
+  "task_id": "v4-110"
+}

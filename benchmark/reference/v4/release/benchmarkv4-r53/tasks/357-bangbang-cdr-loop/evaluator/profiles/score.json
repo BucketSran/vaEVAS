@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 1,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "f2a8ed4fdea7708ddcfcf1c98af3ad44960ca8d33700b120b59f792d3997cc76",
+  "parameters": {
+    "maxstep": "50p",
+    "stop_time": "130n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_DISABLE_CLEAR",
+    "P_BANGBANG_DECISION",
+    "P_PHASE_CODE_UPDATE",
+    "P_PHASE_ROTATION",
+    "P_LOCK_QUALIFICATION"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

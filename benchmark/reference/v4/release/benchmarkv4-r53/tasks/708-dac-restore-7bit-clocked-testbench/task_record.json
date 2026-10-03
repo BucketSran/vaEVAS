@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "208-dac-restore-7bit-clocked",
+  "checker_task_id": "v4_208_dac_restore_7bit_clocked",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "acfcbb33ca5c74ad38a925d9e9a7d783993cd83726b0f379fbcb4bf9ef50d184",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "39ed69052d032536db5a23625303c36ede837f1a0ebf1144788b3735122508ed",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "acfcbb33ca5c74ad38a925d9e9a7d783993cd83726b0f379fbcb4bf9ef50d184",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9e13dcb56266151c52bd55fe7b2716bc2f9392f0d847973341a93d0c9ff92ba9",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "9cc59af65e64a0779a56bb97cd88ff259060c6c3f9729089bdf2ca1a3bae1050"
+  },
+  "family_id": "208",
+  "family_spec_sha256": "3b88f75821ccd44a1369c7a2ffcfacaf93a8de531aa24ba76f86b0a437369139",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7068a260120517147696b7c678b377b6fcfd1b2f4cd75a3c2930902e66c04310",
+  "public_contract": "tasks/708-dac-restore-7bit-clocked-testbench/public_contract.json",
+  "public_contract_sha256": "2661e45efe200aa1f50c236cab22c96405e8c9d98c32b69d980b88c832d23f26",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/708-dac-restore-7bit-clocked-testbench",
+  "task_id": "v4-708"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "hysteresis_trip_characterizer.va"
+  ],
+  "canonical_dut_source_slug": "111-hysteresis-trip-characterizer",
+  "checker_task_id": "v4_111_hysteresis_trip_characterizer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "863be856ae30a5048f6972929a98769c8bd02bc91c3d9bd26eb5bea73d6e58be",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "d484b0c20ff7dfa7a3c7cf94332f05a7cce3af73a70c263cd8bd40978a96a462",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "6b3f591c10077a41fc49ccca17fa5ced3b409bc84b876b42c771d24ebe2a79a0",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "111",
+  "family_spec_sha256": "28268ba7fdf1cac85632e7f35713951cbb8a933e093f4c7147ef94f0e5140364",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b327acf778f42b55d5a1de826cec50d505cf7b5bcd6ebfa3f43dcaf0480673cc",
+  "public_contract": "tasks/111-hysteresis-trip-characterizer/public_contract.json",
+  "public_contract_sha256": "63b53099e0c5267cfc796abd7227d3b1ceebf80657eab1872475ffbf385f5508",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/111-hysteresis-trip-characterizer",
+  "task_id": "v4-111"
+}

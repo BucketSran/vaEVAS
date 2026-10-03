@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_pair_gm_limiter.va"
+  ],
+  "canonical_dut_source_slug": "303-differential-pair-gm-limiter",
+  "checker_task_id": "v4_303_differential_pair_gm_limiter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f8f31622a8fc164ce746de96ff7b0b694683a84e8014d0004b527984fc427f1e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "26e04a0abee7f402e083baee2ce4301d0f8a63d7f00555c4ba05c13ea43b7208",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9bb56bafbdc5da7ce4754a9f7e7f6f2accca3a507a9dd6165a88738cd6bd315c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "303",
+  "family_spec_sha256": "e2f379c40a3a85cc21c0a0ec169c193799a178f536acb8da23c7084fcf4eae86",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "846bac87ec5f16e4724fef5adcc4f29a69cd4a5c9248403e1f6aa36c6807c0a6",
+  "public_contract": "tasks/303-differential-pair-gm-limiter/public_contract.json",
+  "public_contract_sha256": "fdbbac9436ae8ff928f552a9a1ace64912f650699e255c34b101c3db28cd8d44",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/303-differential-pair-gm-limiter",
+  "task_id": "v4-303"
+}

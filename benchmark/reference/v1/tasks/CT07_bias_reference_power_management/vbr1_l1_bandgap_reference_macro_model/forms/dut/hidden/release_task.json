@@ -1,0 +1,50 @@
+{
+  "id": "vbr1_l1_bandgap_reference_macro_model:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_bandgap_reference_macro_model",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D2",
+  "category": "Bias Reference and Power Management",
+  "base_function": "Bandgap reference macro model",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut/gold/bandgap_reference_macro_model.va",
+      "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut/gold/tb_bandgap_reference_macro_model.scs"
+    ],
+    "public_inputs": [
+      "prompt.md"
+    ],
+    "submission_artifacts": [
+      "bandgap_reference_macro_model.va"
+    ],
+    "private_reference_artifacts": []
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_bandgap_reference_macro_model/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "bandgap_reference_macro_model",
+    "source_task_id": "",
+    "historical_source_task_id": "",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT07_bias_reference_power_management/vbr1_l1_bandgap_reference_macro_model/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

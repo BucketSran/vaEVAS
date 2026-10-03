@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "269-saturation-recovery-limiter",
+  "checker_task_id": "v4_269_saturation_recovery_limiter",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e69d99781bd147878c53ab795599d7a47d570898bc09109fb4ad851ee1ea74e5",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "fdf23afd909573b031b8a8ddb7a953e7ae02914adc32d965b92c0d0785bb2621",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e69d99781bd147878c53ab795599d7a47d570898bc09109fb4ad851ee1ea74e5",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "63f171f7a10952e88769f265c469318b7bb4b8da745466b449a202b97918654e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "861700af6df65917bf06652161f61c08e89cda66914646fa57918f318ef6b871"
+  },
+  "family_id": "269",
+  "family_spec_sha256": "46a32763c11e8c15f03d8dda059967ad5da9553d2cd21acda36e4eadcf003d12",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b86c87c1580c3945dd35be31005248e04218cdd99d43e16b68a2fb04435fa1b5",
+  "public_contract": "tasks/769-saturation-recovery-limiter-testbench/public_contract.json",
+  "public_contract_sha256": "d34fcd5f2a54c331d7af38a24d4a3e1a5696a794644013b2b20a4c0bc8efe00e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/769-saturation-recovery-limiter-testbench",
+  "task_id": "v4-769"
+}

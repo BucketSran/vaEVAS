@@ -1,0 +1,28 @@
+{
+  "canonical_semantics_sha256": "1997d1e2d9926d45f500a4caed065afa919762e87c75e109f49db133b2de4e63",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {},
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_CLOCKED_EIGHT_TAP_COUNT",
+    "P_RESIDUE_CENTERING",
+    "P_OUTPUT_NORMALIZATION"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "158",
+    "feedback_semantics_sha256": "1997d1e2d9926d45f500a4caed065afa919762e87c75e109f49db133b2de4e63",
+    "harness_spec_sha256": "393f9c87f03cca7e2f961a9a8939ef7f933d3b8ea3d58af4ab058fb8d8a1710e",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "1997d1e2d9926d45f500a4caed065afa919762e87c75e109f49db133b2de4e63",
+    "task_id": "v4-158"
+  },
+  "test_deck_sha256": "99369c559e0bb53edcb3a67cdf3c20c022b78094c76bc5c04fcdc49defece2c5"
+}

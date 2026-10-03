@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ready_valid_latency_counter_12b.va"
+  ],
+  "canonical_dut_source_slug": "062-latency-counter-ready-valid-12b",
+  "checker_task_id": "v4_062_latency_counter_ready_valid_12b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "0b8badb74af9baa0acf05483545f3438b3bce1725cc6c16714021e2e3d50ca6b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "04b400bab315b3aaacf373f066747d6c0831572d2933f175b51a02c1fb739ff6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "147cb1fdfd203c7ebf741ff5d23329c60a22198027b2e7f1bf9debfabe1586b1",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "062",
+  "family_spec_sha256": "58cbb197268acec1b599a1c218d7292aee395080c1b2e39b0bddefc4fe569405",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "50eff8ec07aa1d620caeff8a939931aef3e77d654802e0dd5c0b23381e10d775",
+  "public_contract": "tasks/062-latency-counter-ready-valid-12b/public_contract.json",
+  "public_contract_sha256": "ca5c6b95e9a04e546875ff4d265e327f0a3bf529fbd898db12a2929d8cf8c3d3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/062-latency-counter-ready-valid-12b",
+  "task_id": "v4-062"
+}

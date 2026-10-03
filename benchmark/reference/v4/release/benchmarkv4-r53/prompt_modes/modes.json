@@ -1,0 +1,51 @@
+{
+  "composition_order": [
+    "canonical_instruction_and_inline_artifacts",
+    "real_skill_lookup_when_enabled",
+    "mode_wrapper_response_protocol"
+  ],
+  "modes": {
+    "G0": {
+      "evas_cli": false,
+      "process": "direct_one_shot",
+      "skills": []
+    },
+    "G1": {
+      "evas_cli": false,
+      "process": "direct_one_shot",
+      "skills": [
+        "veriloga"
+      ]
+    },
+    "G2": {
+      "evas_cli": true,
+      "process": "agentic",
+      "skills": []
+    },
+    "G3": {
+      "evas_cli": true,
+      "process": "agentic",
+      "skills": [
+        "veriloga"
+      ]
+    },
+    "G4": {
+      "evas_cli": true,
+      "process": "agentic",
+      "skills": [
+        "vabench-feedback"
+      ]
+    },
+    "G5": {
+      "evas_cli": true,
+      "process": "agentic",
+      "skills": [
+        "veriloga",
+        "vabench-feedback"
+      ]
+    }
+  },
+  "schema_version": "v4-prompt-mode-registry-v1",
+  "wall_time_policy": "safety_limit_not_ability_budget",
+  "working_token_budget": "runner_supplied_same_ceiling_within_comparison_stratum"
+}

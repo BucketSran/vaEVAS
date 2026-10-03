@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "379-periodic-sampler-aperture-metric",
+  "checker_task_id": "v4_379_periodic_sampler_aperture_metric",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "0d18c66d6cc4b387e2acfcfe898f22a878d3e248194e8f9e7782b12af204d30c",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "4ff9d6fce87064754bf46832b295f544e8c1ddf4a2f1df4c613fd85232e4b382",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "0d18c66d6cc4b387e2acfcfe898f22a878d3e248194e8f9e7782b12af204d30c",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4a93d035f4525226b815c9859a01caaedb7b6e4fbbef9a6d1625c176984af6c8",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "4a41841cca7942f378b1e6814c308e490702d7b7e2592b157dfeaf9aef93739c"
+  },
+  "family_id": "379",
+  "family_spec_sha256": "0825ff8a997b659120122472e67c77f70df8418e3053bab9e13d5efad8e4665a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a2fc3fffc66edf3b004a383a0c6100144576fe4a2122e1d34f9ffa06c6473f13",
+  "public_contract": "tasks/879-periodic-sampler-aperture-metric-testbench/public_contract.json",
+  "public_contract_sha256": "ac672ffa259ffc13d486cc5124a5abdb86fe2a940efb632d49464513f6b4b987",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/879-periodic-sampler-aperture-metric-testbench",
+  "task_id": "v4-879"
+}

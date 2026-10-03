@@ -1,0 +1,78 @@
+{
+  "family_id": "002",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_ignore_calibration/certification.json",
+        "certification_sha256": "af767aa439ed151baf9508283ac70140c298f37ea76dd38c82906e4f5a1055a5",
+        "fault_class": "calibration_omission",
+        "mutation_bundle_sha256": "2a74986cff4db296775d696f9cbc916a8c86ecc1d654570b66c310a2178c47f1",
+        "mutation_id": "neg_001_ignore_calibration",
+        "source_catalog_certification_path": "negative_variants/neg_001_ignore_calibration/certification.json",
+        "trigger_condition": "nonzero calibration code is clocked",
+        "violated_property_ids": [
+          "P_CALIBRATION_WEIGHT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reversed_polarity/certification.json",
+        "certification_sha256": "5e6bf16954d3fabc6369ee2365ced0f92d3252d8cc059a3cdbed334b958f25e6",
+        "fault_class": "differential_polarity_swap",
+        "mutation_bundle_sha256": "964097ec438bb693ab7e0e745a3faf4bf9cbc4a05e6fffa318b277f82fcccaeb",
+        "mutation_id": "neg_002_reversed_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_002_reversed_polarity/certification.json",
+        "trigger_condition": "code moves above or below midscale",
+        "violated_property_ids": [
+          "P_CODE_MONOTONICITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_common_mode_error/certification.json",
+        "certification_sha256": "c6d9af0c633f9ad97006400a28f09f0dc99fde0154f69c0290c70d6a9f153701",
+        "fault_class": "common_mode_offset",
+        "mutation_bundle_sha256": "2b24dcbe351c0dc4b764f122380c6ca8177ffa07a4b510655471b81b67e16aca",
+        "mutation_id": "neg_005_common_mode_error",
+        "source_catalog_certification_path": "negative_variants/neg_005_common_mode_error/certification.json",
+        "trigger_condition": "any code is clocked",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_COMMON_MODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_asynchronous_code_update/certification.json",
+        "certification_sha256": "d4bd26fa5e3f019aa624261b127395b137eba3b70de24ce5c4865914b471f655",
+        "fault_class": "asynchronous_update",
+        "mutation_bundle_sha256": "48f1c9a0a99cc60d07e3eaa7acda2ddbf7e60aed79f145db60aa5c219ba3612b",
+        "mutation_id": "neg_006_asynchronous_code_update",
+        "source_catalog_certification_path": "negative_variants/neg_006_asynchronous_code_update/certification.json",
+        "trigger_condition": "code changes between rising clock edges",
+        "violated_property_ids": [
+          "P_CLOCKED_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_bit_weight_swap/certification.json",
+        "certification_sha256": "6484ab35b93e94ec8d0d79e513cbd9c1a537f76a3791bc3b3969a045139a8451",
+        "fault_class": "bit_weight_permutation",
+        "mutation_bundle_sha256": "f8ebef450fd4798dd7f871cd6eb2ee43af86f4afee47a241d37d98b0d7296160",
+        "mutation_id": "neg_003_bit_weight_swap",
+        "source_catalog_certification_path": "negative_variants/neg_003_bit_weight_swap/certification.json",
+        "trigger_condition": "codes distinguish the swapped bit weights",
+        "violated_property_ids": [
+          "P_CODE_MONOTONICITY"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_ignore_calibration",
+    "canonical_dut_id": "002",
+    "hashes": {
+      "mutation_catalog_sha256": "7f96ed0d9916bbf219e8e8d6d5e1aadee4944e2a8f066e45011ba866d7ba6a69",
+      "score_deck_sha256": "a9e5927498e36d431389ccc696354e93e1e2043820e4b5dfbf6bc375b2ce2e7d",
+      "task_certification_sha256": "9a63fa34be3da9b2d4ef5b5b796950f0ac5dc53b09ad9a0426a2c1e8d6b7e0f5",
+      "task_record_sha256": "afa10f9840f5ecac67c32739a255b0d8fa1d4883d94105fc2571a0b835e411bb"
+    },
+    "release_dir": "002-capacitive-sar-feedback-dac"
+  }
+}

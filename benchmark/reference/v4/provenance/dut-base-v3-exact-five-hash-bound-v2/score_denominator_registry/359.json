@@ -1,0 +1,78 @@
+{
+  "family_id": "359",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_reports_low_fraction/certification.json",
+        "certification_sha256": "f657ea393d16e8638e7ccd5de3cf8aa99cc29335154b545d5237b83fbea94493",
+        "fault_class": "metric_error",
+        "mutation_bundle_sha256": "0db38040398ce0791f1c984d2e116a747bd811ab5920972a35442e9c0c554109",
+        "mutation_id": "neg_001_reports_low_fraction",
+        "source_catalog_certification_path": "negative_variants/neg_001_reports_low_fraction/certification.json",
+        "trigger_condition": "a complete asymmetric input cycle occurs",
+        "violated_property_ids": [
+          "P_DUTY_MEASUREMENT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_falling_edge_not_delayed/certification.json",
+        "certification_sha256": "4bbccc6277501cad0de95dba764841d22e3c9efcc2b550a13a2d7f1c55252c1f",
+        "fault_class": "timing_error",
+        "mutation_bundle_sha256": "37f193cbed1bf2b28d72bf5f55aeacf25053c43e7c687e075b11bab482ad2f9a",
+        "mutation_id": "neg_003_falling_edge_not_delayed",
+        "source_catalog_certification_path": "negative_variants/neg_003_falling_edge_not_delayed/certification.json",
+        "trigger_condition": "falling input edge occurs with nonzero trim",
+        "violated_property_ids": [
+          "P_EDGE_DELAY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_lock_asserts_early/certification.json",
+        "certification_sha256": "9ebbd7a07d4a985d7e4ff30bd81f79e64b782b2a530759de995856f2f623cc00",
+        "fault_class": "wrong_qualification",
+        "mutation_bundle_sha256": "f0e1151dc718546d77236cddc43cb40777d2de3040b7f8d3395e202ee13320ae",
+        "mutation_id": "neg_004_lock_asserts_early",
+        "source_catalog_certification_path": "negative_variants/neg_004_lock_asserts_early/certification.json",
+        "trigger_condition": "one in-window cycle completes",
+        "violated_property_ids": [
+          "P_LOCK_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_trim_fullscale/certification.json",
+        "certification_sha256": "59a55c909c6b102135b0c48c076d7b4265217cfec6c689efc050789e1b3eae4b",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "e6ce87003af6d2da8470fe4cfcf4fe5237e16cb27b644e36c9e4748d3ee1b227",
+        "mutation_id": "neg_005_reset_trim_fullscale",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_trim_fullscale/certification.json",
+        "trigger_condition": "reset or disable is asserted",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_trim_direction_reversed/certification.json",
+        "certification_sha256": "f38d0b4bc2ad4418e27c9a1fbe52178ab3d6f3c09c85f41b6cc2ed61819c370a",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "460f9be48f1267db5fa480c5b9f23472b90ea8881c3ead2d2e2dd17e3666f231",
+        "mutation_id": "neg_002_trim_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_trim_direction_reversed/certification.json",
+        "trigger_condition": "measured duty is below target",
+        "violated_property_ids": [
+          "P_TRIM_DIRECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_reports_low_fraction",
+    "canonical_dut_id": "359",
+    "hashes": {
+      "mutation_catalog_sha256": "28cf247b36cff9d5f08db1c2f5650bab9a7d1ee2b66bb2c25adb36db822dedcb",
+      "score_deck_sha256": "2ce576096f164dde90a930deccae28e455b0688b581d5a241966798e7f173e96",
+      "task_certification_sha256": "c876e88e52bba7f854824271bc6847e058120e4e079299f3f10519676cc41e7f",
+      "task_record_sha256": "686e14ae57415c39fd57f54ef401a1f6001ad58d14b03bb16944c2be3601a372"
+    },
+    "release_dir": "359-duty-cycle-corrector"
+  }
+}

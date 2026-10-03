@@ -1,0 +1,20 @@
+syntax:
+  must_include:
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "rising_trip_uses_positive_hysteresis_threshold"
+    - "falling_trip_uses_negative_hysteresis_threshold"
+    - "output_state_retains_memory_inside_window"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "flash_folded_dac4.va"
+  ],
+  "canonical_dut_source_slug": "242-flash-folded-dac4",
+  "checker_task_id": "v4_242_flash_folded_dac4",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "041695898e0a6052ccf827a94d98a663353efa51bb8f7fe9ba9f13e9bbfa02e7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "31518a935a39af775771c59e849648259f58fd25871bd59d9d54310e785f7ec5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d11ef5cb97222a67727b8dc8ed09b3209e46972bc91056c5c7d4f95f710b148c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "242",
+  "family_spec_sha256": "8c0e4e942f4c1fdbc497136010039b18e692e8d809ee6fc4b73ac47ffcc9f1c3",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "62c2770b769c308615d4a8a25da3bca7015f864d2f3d1db6ba268e2589498925",
+  "public_contract": "tasks/1242-flash-folded-dac4-bugfix/public_contract.json",
+  "public_contract_sha256": "3197d466c3bcb3051e68434ec4acfdc3fcf65e271ab41bfb7bdf01090cb6d7df",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1242-flash-folded-dac4-bugfix",
+  "task_id": "v4-1242"
+}

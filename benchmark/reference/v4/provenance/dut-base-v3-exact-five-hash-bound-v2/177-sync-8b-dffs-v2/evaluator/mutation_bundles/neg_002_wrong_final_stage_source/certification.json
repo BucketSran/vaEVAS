@@ -1,0 +1,47 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_FINAL_OUTPUT_CAPTURE, P_PHASED_CAPTURE_ORDER satisfy the public contract; fault class timing_or_state_update_fault is rejected",
+    "observed": "EVAS: property_id=P_PHASED_CAPTURE_ORDER category=observable_mismatch expected=satisfy_observable_contract observed=do8 event=stimulus_relative_trace; checked_property_ids=P_PHASED_CAPTURE_ORDER,P_INTERMEDIATE_OUTPUT_CAPTURE,P_FINAL_OUTPUT_CAPTURE,P_FULL_LEVEL_OUTPUTS",
+    "violated_property_ids": [
+      "P_FINAL_OUTPUT_CAPTURE",
+      "P_PHASED_CAPTURE_ORDER"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_177_sync_8b_dffs_v2",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1097
+  },
+  "family_id": "177",
+  "inputs": {
+    "checker_profile_sha256": "6734a0d1246497ce67436c534648f60849969d014d63ceefbdc8c7ddb0433112",
+    "harness_spec_sha256": "3508e464750e2aad9a56fd7cd81eee79fb67dd0fe1365229adf1ca63d53487ec",
+    "mutation_bundle_sha256": "606ac9c7b5ece739452d29f5ea908628a3f667f71a3e0464e4083ae09084d6c0",
+    "profile_sha256": "a3ebf82aeadd1e58259e2edd100a6767f680624d154cb000a796b9fc7f2554a0"
+  },
+  "mutation_id": "neg_002_wrong_final_stage_source",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

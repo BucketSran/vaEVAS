@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "common_gate_tia_front_end.va"
+  ],
+  "canonical_dut_source_slug": "304-common-gate-tia-front-end",
+  "checker_task_id": "v4_304_common_gate_tia_front_end",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d907286415c9ba6dc0614646fe727bfbc84a38da8fd69fd8c8aff074b24623da",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "00e104768809491dae988632b4f1b0bc3c2f98dbe9b2244ef71d83e97d8214e7",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "f067228b202fbb81aaf3c45dc4e8624479eb97509497b638a63f8d4037e5a25c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "304",
+  "family_spec_sha256": "d9bd189ecb609c32b8548fa2ac9c8afb539d8974099eda2eaf3d6cf5a3131353",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c5fc52419dbd3f92c24c4586acfacb979fbe945abe2f055b52e61ade67861751",
+  "public_contract": "tasks/1304-common-gate-tia-front-end-bugfix/public_contract.json",
+  "public_contract_sha256": "09602739e2538325704c9060933b8a16e9212c34894e09e99804f5d7b402a21b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1304-common-gate-tia-front-end-bugfix",
+  "task_id": "v4-1304"
+}

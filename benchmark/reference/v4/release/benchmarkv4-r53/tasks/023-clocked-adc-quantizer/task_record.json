@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "flash_adc_3b.va"
+  ],
+  "canonical_dut_source_slug": "023-clocked-adc-quantizer",
+  "checker_task_id": "v4_023_clocked_adc_quantizer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "17b98797e745987d755e6eb3e047fe815f6af3cdd05dfe9e499167e8b2ddbc52",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a2e0d06b4a9ad0b3facf3aa449b8d6afdcef2162530de5b5f6312b9f879b81da",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "7a38e7aee22c6b843180eac66caa0e288f15c5a31c2b5f782e01f7aa4d1a10de",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "023",
+  "family_spec_sha256": "4d47713ebf463474cd85f8f706805824495be8c3df1d063bf675ae0906de6e7e",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "663368d8239739edaca03a57ccbf69f0d0f49f14441644436eb2b9eebeecb9d1",
+  "public_contract": "tasks/023-clocked-adc-quantizer/public_contract.json",
+  "public_contract_sha256": "2f26b7de1ba536c9eff203ef75461a107737ba947ca75b2eb29458eb0e914b32",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/023-clocked-adc-quantizer",
+  "task_id": "v4-023"
+}

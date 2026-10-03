@@ -1,0 +1,17 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include: []
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "ref_edges_counted_on_expected_grid"
+    - "metric_out_normalizes_final_edge_count"
+    - "final_step_writes_candidate_metric_file"
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

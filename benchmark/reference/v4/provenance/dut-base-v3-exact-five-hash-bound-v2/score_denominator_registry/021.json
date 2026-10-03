@@ -1,0 +1,79 @@
+{
+  "family_id": "021",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "f834dd05b66971827e825a328797547461cab583ddf9d0cd0ddbb6691f3992cb",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "a3ca6f8b41635ed7501172149a36ea6f758b7765679fce1f84c21de789316253",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_BETWEEN_EDGE_HOLD",
+          "P_INITIAL_AND_RESET_TARGET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "46477dd5e8f30c5bf9c10f6a56f2825c011abfb3d70723651098eaf291a5efe1",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "c401fe25c5d8454a02f8416ecb2b0b6e9bd440c799c30cef8057eceea2e83e97",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_NEGATIVE_ERROR_STEP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "2d0b5307c09fa97c18f61d8d2384bd20f517d7fc944214771ed88413f46a615d",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "d2043ff22b088ec9cb275e4d72d34fd268847a496bc3f4727dccdbf9910d8bd8",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_DEADBAND_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "89c7ee801fa1fb8afa2897edd99033107e8598cc58f163c8a4f628286d681fa2",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "05376c3e7c24be868792d16f9b253bfbc4ad1b4ac0d16954b42fede536479191",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "0975b19bd31b3260cc43583eddcaf01818aa6f59078dee8dc96c39d7673329f5",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "958448fbbf94a5518b313eff326d4392101100c3314474956c4e4b4a52ce5ad7",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_POSITIVE_ERROR_STEP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "021",
+    "hashes": {
+      "mutation_catalog_sha256": "fd2d19c1265cd49b1a8d12ef7dd33526bad324856f3d60cf73e1a10d0fde5c91",
+      "score_deck_sha256": "1735120ab3cafebaf7a08e7a0f6fefe1de26c244957cc165297a96b6e1991cea",
+      "task_certification_sha256": "c4c697d4e0b555674bc86a8f45758eb7169c2ff9002b443af1d4a1f2c52fd140",
+      "task_record_sha256": "cb16223abf4d7320231aab3f1e82b2e5be00911dce84662e12bfdd0bd443acef"
+    },
+    "release_dir": "021-calibration-deadband-controller"
+  }
+}

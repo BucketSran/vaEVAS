@@ -1,0 +1,28 @@
+{
+  "bugfix_seed_mutation_id": "neg_004_foldback_state_stuck_after_overtemperature",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "b7e8cd2e27fe7ce60c614af5caa0b35d96b05619d56e71a17532987d3129e197",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "22b8a3fd1eaa9281a4cd2502f83d167fe8533ba72549415d1d1a7f2228be55a6",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_002_temperature_subsampled_on_falling_edge",
+    "neg_003_below_trip_command_attenuated",
+    "neg_004_foldback_state_stuck_after_overtemperature",
+    "neg_005_thermal_ok_stuck_high",
+    "neg_001_disable_retains_limited_command"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "64f538d862a0944bf18f37a084d62ef2399d3df32d43d1e2fcd05eb351108d62",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-840"
+}

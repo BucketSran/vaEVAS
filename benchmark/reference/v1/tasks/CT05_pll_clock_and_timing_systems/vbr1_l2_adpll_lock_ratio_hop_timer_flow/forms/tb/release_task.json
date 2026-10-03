@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow:tb",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow",
+  "level": "L2",
+  "track": "core",
+  "difficulty": "D3",
+  "category": "PLL Clock and Timing Systems",
+  "base_function": "ADPLL lock/ratio-hop/timer flow",
+  "family": "tb-generation",
+  "domain": "voltage",
+  "score_surface": "benchmark-e2e",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb/gold/adpll_ratio_hop_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb/gold/tb_adpll_ratio_hop_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_adpll_lock_ratio_hop_timer_flow/tb/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "adpll_lock_ratio_hop_timer_flow",
+    "source_task_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow_tb",
+    "historical_source_task_id": "vbr1_l2_adpll_lock_ratio_hop_timer_flow_tb",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_adpll_lock_ratio_hop_timer_flow/forms/tb"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

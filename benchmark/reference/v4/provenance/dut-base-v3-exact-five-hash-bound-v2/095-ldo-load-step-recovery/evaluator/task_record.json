@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "095",
+  "checker_task_id": "v4_095_ldo_load_step_recovery",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "ff31ca3fad402422e70e3e0dfc67c30fececfd0b8f742b0b56b7aa21b4e52ac4",
+    "checker_profile.json": "f922ccdde195a93289f2a2ea2fbbc4e1a9cf98df82225d2e9f843db2b31faa94",
+    "derivation_manifest.json": "735165430f2aa35b199223f4e1de18121012418188784b2387e36beed0b5ea9c",
+    "family_spec.json": "7362212daea43e322cc9f9a6eaf4837b3852431ad750a540603a6d5ae32f494d",
+    "harness_spec.json": "277ce3241f9bbd28841ef9701f6aae89efd3457a2e36a336b76db0fc0eadd154",
+    "mutation_catalog.json": "aa2d5861601224bdad292269e03e7479dc5bf191ab40c5b1ebf93dedc8a4125b",
+    "profiles/feedback.json": "f2fcd83282d9b686a14100aba28ca8148ca573b893d8cb3cf370d5bad5b32166",
+    "profiles/score.json": "a4e0ac345d5f080cd4d72a3d3955323992b58554d6e004b7ee19ffc8e42664b9",
+    "score_tb.scs": "955d10cfffd0cb4353579461aaf0141c6d1235ddd21af736631b2cfe3d4b5fd2",
+    "solution_tree": "a5981156099cf8d79b78ac029b5e2065d62e52f6b16e38dce383d1948fce179b",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d4b5060c4b96ed4ad5c335defad10d4c6f093e8a107554d47eb921c9905a9d53",
+    "instruction.md": "78e522214c11caee7330651a2865b3e023ea1bdb1542f040d09a338666704c30",
+    "public_contract.json": "a3751497426eec0b77838abaaa371e4c13cef1a51d7f47f369514334b56af0d1"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "ff31ca3fad402422e70e3e0dfc67c30fececfd0b8f742b0b56b7aa21b4e52ac4"
+  },
+  "release_dir": "095-ldo-load-step-recovery",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "104-ldo-load-step-recovery",
+  "support_root": "",
+  "target_artifacts": [
+    "ldo_load_step_recovery_flow.va"
+  ]
+}

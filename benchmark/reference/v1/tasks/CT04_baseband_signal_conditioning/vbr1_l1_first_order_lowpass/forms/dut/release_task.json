@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_first_order_lowpass:dut",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_first_order_lowpass",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D1",
+  "category": "Baseband Signal Conditioning",
+  "base_function": "First-order lowpass",
+  "family": "spec-to-va",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut/gold/first_order_lowpass.va",
+      "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut/gold/tb_first_order_lowpass_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_first_order_lowpass/dut/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "first_order_lowpass",
+    "source_task_id": "vbm1_first_order_lowpass_dut",
+    "historical_source_task_id": "vbm1_first_order_lowpass_dut",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT04_baseband_signal_conditioning/vbr1_l1_first_order_lowpass/forms/dut"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

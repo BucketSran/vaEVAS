@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "180",
+  "checker_task_id": "v4_180_track_hold_with_droop_and_aperture",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "bde6e2297c88ae6bef07d547b2e74cb53f61ae881a9d705ca6e2048ed84cc383",
+    "checker_profile.json": "690bf03cda3660b17f0c97610bd3fe36d8614b7dab22489d97371e77ef66b498",
+    "derivation_manifest.json": "bb37aa26b9ea70c4b7c043e1135b6519e1b65d302145a8f65cb28e202360ea3b",
+    "family_spec.json": "5bb14a6be7cbe6aa3207e8b0c24092a10b2f3ee2b8175ea74ce27a5757471a23",
+    "harness_spec.json": "c9e41a35a7c83f3d211e0acfe7ec8e3a4b2106ae931951274fbe823d303d6327",
+    "mutation_catalog.json": "d85c2f01be24ec5ccb2a508ea7a98ab22fe82b4bd7e015d5ddc9e7ad37115ede",
+    "profiles/feedback.json": "ef07a6eef7007c472857f6207bebe3cda8e63a46f284f0a79dcbf014fb6fd038",
+    "profiles/score.json": "f71b2dd81857d54a74af1a8304418ec8ecc19c62abb206ea1253c6b666b57538",
+    "score_tb.scs": "7b689e33a0fa06cc0823a9c8db6feae941f2892f8a150fea74b38d60db9b1dca",
+    "solution_tree": "fc96e3bf87ec11aeac5ee1681e90315b27bed07d58cb64fa9871beb0a06af8cb",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "04bb2e667fdbf6958f7083719b5c588fc5bcb10b49912582d810b0b930f79999",
+    "instruction.md": "129e9c7000040f7a88a884af72c08ecb8cc813cdae9e4db881f343eaf9e92da5",
+    "public_contract.json": "b6804f59703216ccbfff99406ac5ac72018aafa57c9aa07c873d78ed8086ebbf"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "bde6e2297c88ae6bef07d547b2e74cb53f61ae881a9d705ca6e2048ed84cc383"
+  },
+  "release_dir": "180-track-hold-with-droop-and-aperture",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "977-track-hold-with-droop-and-aperture",
+  "support_root": "",
+  "target_artifacts": [
+    "track_hold_aperture.va"
+  ]
+}

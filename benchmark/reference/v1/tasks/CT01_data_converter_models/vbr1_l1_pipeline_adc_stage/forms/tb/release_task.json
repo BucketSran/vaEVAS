@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_pipeline_adc_stage:tb",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D3",
+  "category": "Data Converter Models",
+  "base_function": "Pipeline ADC MDAC stage",
+  "family": "tb-generation",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/gold/pipeline_stage.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/gold/tb_pipeline_stage_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/tb/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "pipeline_adc_stage",
+    "source_task_id": "vbr1_l1_pipeline_adc_stage_tb",
+    "historical_source_task_id": "vbr1_l1_pipeline_adc_stage_tb",
+    "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score is enabled because this release entry is in the frozen score denominator."
+  ]
+}

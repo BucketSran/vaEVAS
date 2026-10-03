@@ -1,0 +1,37 @@
+{
+  "candidate_artifacts": [
+    "cmp_delay.va",
+    "edge_interval_timer.va"
+  ],
+  "canonical_dut_source_slug": "039-propagation-delay-comparator",
+  "checker_task_id": "v4_039_propagation_delay_comparator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "394c6ee400179472dfe46b7e8cff94844769305cbfd98a5ddcb3e2ab9c0c62b4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1e138433d738780dd69f288545b3ec1e0ba040b8343301beab867d79fc76806b",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ab2e753a0a53236996589686b1fc5ab358d253a0f6d568c254dd95cd0b1681a6",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "039",
+  "family_spec_sha256": "96aac52b93c76f5969d1baef21fbd871bf90993df6c20a90d8b8906c02749673",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "88b0be73099ebff336e183a415817e43ee479156fdcff2700feabd090a6b6788",
+  "public_contract": "tasks/039-propagation-delay-comparator/public_contract.json",
+  "public_contract_sha256": "6c17e932dd4fa77fb7521615b3984613fdd6366827ae4b6d50bf3019edf19b66",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/039-propagation-delay-comparator",
+  "task_id": "v4-039"
+}

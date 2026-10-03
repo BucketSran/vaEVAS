@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "374-crystal-oscillator-startup-monitor",
+  "checker_task_id": "v4_374_crystal_oscillator_startup_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a37ba118647d21b9f5883d08406006a1e391038ebba9bdb1b3375bd0b2445cc3",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "536581afa8af2f7274dcef92ef502602d6bbbbdb499b4d83c701469cc43893cc",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a37ba118647d21b9f5883d08406006a1e391038ebba9bdb1b3375bd0b2445cc3",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a07bbddb4e0ee3b224b3b2358d147270c84d4013e75d4c380eb70501025788b4",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "8d18edb2cad5eed7ce2f7152e412bb2646acef1b2711d85e3e8df059ea74858b"
+  },
+  "family_id": "374",
+  "family_spec_sha256": "cef84789ae7759a1b5d6cba78b14cecff1a02bf6b2d7018ea9ab32fe18915222",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ec1b9b87540f882aa9cd46ea37e73d2fd71251e72a1cdb48644b8592bc2e72ba",
+  "public_contract": "tasks/874-crystal-oscillator-startup-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "a17676404f722722226990b272efc72fb5064c045d57d8558646d4c8bfc2916b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/874-crystal-oscillator-startup-monitor-testbench",
+  "task_id": "v4-874"
+}

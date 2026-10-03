@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "159",
+  "checker_task_id": "v4_159_ref_flash_15level_decoder",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "20eeb7e520c97d119e8ddb479d393052865773dfe78e2a212f8c4bec683de856",
+    "checker_profile.json": "4136693fe2fb0a1316f14489977dda36317b5c652aa481355b0e6e8b04bc37df",
+    "derivation_manifest.json": "4f50a0aaa3374ec1fa188a4c39278ea38b18a2ac09a13e3ecc643ba9bceeacfd",
+    "family_spec.json": "0978bee71fe2d6754746b922e169cc62418931b622a96af249816f5da636d536",
+    "harness_spec.json": "cf672585cbb8f357080a13bf330ad8201653cefb1d215cd44980bd7dc6e2c36c",
+    "mutation_catalog.json": "0436978050ec26f81ae58d2ce6782dd0fc122776dd7dc2e534a3d5a72c2ce85e",
+    "profiles/feedback.json": "182f54037cd4871cbbbac01dd00ff8c5becfe098114f10af5a3e754009983a4b",
+    "profiles/score.json": "01e6e4ac47d9fc1520e6bdbae36fb9d9a2f06fdce1103182ae56366aa835316a",
+    "score_tb.scs": "860d297ce841d8401537ef2c3bdd564bb297ad365b6ff07a71dd5b295261ab5a",
+    "solution_tree": "4efcd6a901d9327042e8ebf29b9d55b6673c7abde13f688c7fafb9deff8176e0",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "23be2bfb26ef46ecaa71381ba7ede4018e7512be1ea441034c5c1ae809efe96a",
+    "instruction.md": "cdb273fa406ddee0e55c58b4b1b9b5879786de637eafeba32f42935fb94fb721",
+    "public_contract.json": "b6937451f90302017e29a865875a398b878fc21abce4a1caf19e6ee3b934be8a"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "20eeb7e520c97d119e8ddb479d393052865773dfe78e2a212f8c4bec683de856"
+  },
+  "release_dir": "159-ref-flash-15level-decoder",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "188-ref-flash-15level-decoder",
+  "support_root": "",
+  "target_artifacts": [
+    "ref_flash_15level_decoder.va"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "068-multiphase-clock-generator-4ph",
+  "checker_task_id": "v4_068_multiphase_clock_generator_4ph",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e0989f3f36198be7d0fa16f32d82d0535ee6d927dc416b2fc6c830a9c4e56da6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "6a2a13e0e3e95b180bf00ffa1bd923bf3e2276859b59859c2310115f183fc19c",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e0989f3f36198be7d0fa16f32d82d0535ee6d927dc416b2fc6c830a9c4e56da6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d4e15e6672eb32bfb445d5f7e3b9ceb84a0864d07fc0e325e45b8903c61c82fc",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "dca94d59339580d943c8a13ce18dee6b742ab51c53d30eb867b7ec3afcad1492"
+  },
+  "family_id": "068",
+  "family_spec_sha256": "75b86ba63b010056ec23087ae5e251b59196aff7f4941c10b27a2a422bbc89f4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "853ffda79fe7b5f2bf0a7327b55f1097acd6d5f16d9c5a9f312451dcc7aee3a0",
+  "public_contract": "tasks/568-multiphase-clock-generator-4ph-testbench/public_contract.json",
+  "public_contract_sha256": "d03e2e1e1d629594a395071a9611a693eda5932d42db6062996cfc3d9991bb4f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/568-multiphase-clock-generator-4ph-testbench",
+  "task_id": "v4-568"
+}

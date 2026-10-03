@@ -1,0 +1,100 @@
+{
+  "schema_version": "v4-r51-spectre-changeset-parity-v1",
+  "status": "pass",
+  "scope": {
+    "policy": "Spectre correct-plus-five replay for every family whose executable circuit, harness, or checker behavior changed relative to upstream/main c34f6fe9c5284e1a9d63e80b9bcec44e29f637ad",
+    "families": [
+      "081",
+      "102",
+      "193"
+    ],
+    "nonsemantic_exclusions": "Profile/hash-only refreshes and family 381's stale manifest hash repair do not change executable sources."
+  },
+  "run": {
+    "started_at": "2026-07-22T12:16:19+00:00",
+    "finished_at": "2026-07-22T12:20:28+00:00",
+    "spectre_backend": "sui-direct",
+    "spectre_mode": "ax",
+    "sui_host": "thu-wei",
+    "timeout_s": 600,
+    "raw_report_sha256": "8e4d9edb7087b406c4a3dd06c9520a4aaada99de5b6bb4dac873af107526b5c7"
+  },
+  "evas": {
+    "engine": "evas2",
+    "reported_version": "0.8.3",
+    "source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "source_revision": "d86ef6a33de63e69ed61651465658643f59501ff",
+    "source_tree": "clean",
+    "certification_sha256": "06d620060a5e6a5c573a7832c4f7489a218814a65395a108d5019fde14f09f02"
+  },
+  "summary": {
+    "family_count": 3,
+    "case_count": 18,
+    "gold_pass_count": 3,
+    "mutation_kill_count": 15,
+    "mutation_count": 15,
+    "evas_pass_spectre_fail_count": 0,
+    "spectre_pass_evas_fail_count": 0,
+    "untriaged_warning_count": 0
+  },
+  "families": [
+    {
+      "family_id": "081",
+      "spectre_task_id": "v4-581",
+      "checker_task_id": "v4_081_adpll_ratio_hop_timer",
+      "status": "pass",
+      "wall_time_s": 91.547,
+      "gold": "evas_pass_spectre_pass",
+      "mutations": {
+        "killed": 5,
+        "denominator": 5,
+        "ids": [
+          "neg_002_threshold_shifted",
+          "neg_003_event_edge_wrong",
+          "neg_005_metric_scale_low",
+          "neg_001_zero",
+          "neg_004_reset_polarity_wrong"
+        ]
+      }
+    },
+    {
+      "family_id": "102",
+      "spectre_task_id": "v4-602",
+      "checker_task_id": "v4_102_clocked_sine_source",
+      "status": "pass",
+      "wall_time_s": 78.859,
+      "gold": "evas_pass_spectre_pass",
+      "mutations": {
+        "killed": 5,
+        "denominator": 5,
+        "ids": [
+          "neg_001_zero",
+          "neg_006_seed_parameter_ignored",
+          "neg_003_common_mode_sine",
+          "neg_004_reset_stuck",
+          "neg_002_static_common_mode"
+        ]
+      }
+    },
+    {
+      "family_id": "193",
+      "spectre_task_id": "v4-693",
+      "checker_task_id": "v4_193_pfd_tdomain_reset_window",
+      "status": "pass",
+      "wall_time_s": 69.521,
+      "gold": "evas_pass_spectre_pass",
+      "mutations": {
+        "killed": 5,
+        "denominator": 5,
+        "ids": [
+          "neg_002_short_reset_window",
+          "neg_001_zero",
+          "neg_004_invert_up_down_outputs",
+          "neg_003_no_hide_state",
+          "neg_005_metric_scale_low"
+        ]
+      }
+    }
+  ],
+  "claim_boundary": "This artifact establishes checker-verdict parity on the behavior-changing r51 slice. It does not claim sample-by-sample waveform identity or full 400-family Spectre recertification."
+}

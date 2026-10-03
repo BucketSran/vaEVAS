@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+    - "CMP0"
+    - "CMP6"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "all_8_flash_codes_present"
+    - "comparator_threshold_ladder_matches_vin_bins"
+    - "comparator_outputs_form_thermometer_prefix"
+    - "binary_code_matches_comparator_count"
+parity:
+  required: true
+  tolerance_notes: "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

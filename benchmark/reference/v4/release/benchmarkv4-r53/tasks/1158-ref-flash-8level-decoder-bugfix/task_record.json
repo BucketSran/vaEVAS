@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ref_flash_8level_decoder.va"
+  ],
+  "canonical_dut_source_slug": "158-ref-flash-8level-decoder",
+  "checker_task_id": "v4_158_ref_flash_8level_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "1997d1e2d9926d45f500a4caed065afa919762e87c75e109f49db133b2de4e63",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "5027353244f73940b5ddf9d436a359cb81ac01ce9a5eac4eb2fcd82f3d0aff84",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "99369c559e0bb53edcb3a67cdf3c20c022b78094c76bc5c04fcdc49defece2c5",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "158",
+  "family_spec_sha256": "70ba1121ee3a843d31b9eaa76467eb365c1d0a5a53aa18be658d901ae42bd48b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a6ffb4cf53343780b76de2070b474b731cc0dd885057e08a2437c582babc37bb",
+  "public_contract": "tasks/1158-ref-flash-8level-decoder-bugfix/public_contract.json",
+  "public_contract_sha256": "61541c35936c367ee7f54a816f94c6a868daba9edf749b6c3c2f731288176e61",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1158-ref-flash-8level-decoder-bugfix",
+  "task_id": "v4-1158"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "037-precision-rectifier-envelope-detector",
+  "checker_task_id": "v4_037_precision_rectifier_envelope_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "be4eaf01a53f71de2a53d14419370fd45576ca876cfad8d5fc10c51f8ec096eb",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "7b3edf61037f605bc9d21a13319bb15fb952c226427fa7bc3ddd9c9bc3309ac8",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "be4eaf01a53f71de2a53d14419370fd45576ca876cfad8d5fc10c51f8ec096eb",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "78ab58ad7d6f41e66581449bf2d932c8ed581ded4d6018f68fe50124f1386f70",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "8e2ea5cd897762a2f224308952bdd184bc1f649218869482359206f36c30ab52"
+  },
+  "family_id": "037",
+  "family_spec_sha256": "85474ce75c3decf9096201486fe0dbcb5b1c5da429071610ab37ba03d535044c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f119aa4a1753fe27f4a9c59f0c75524c67e8abdc4d9a367c08bae4af9009813e",
+  "public_contract": "tasks/537-precision-rectifier-envelope-detector-testbench/public_contract.json",
+  "public_contract_sha256": "228419eb9456df01c1aa2de9ea2c3c8ec42bcb55ed9835d6610716560b19f9e2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/537-precision-rectifier-envelope-detector-testbench",
+  "task_id": "v4-537"
+}

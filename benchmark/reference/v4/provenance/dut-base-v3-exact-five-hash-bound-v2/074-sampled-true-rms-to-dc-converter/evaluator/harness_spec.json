@@ -1,0 +1,28 @@
+{
+  "candidate": {"artifact_paths": ["sampled_true_rms_to_dc.va"], "source_root": "./dut"},
+  "deck": {
+    "analyses": ["tran tran stop=110n maxstep=40p"],
+    "body_lines": [
+      "Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.5n period=5n width=2.1n rise=80p fall=80p",
+      "Vreset (reset 0) vsource type=pwl wave=[0 0.9 4n 0.9 4.2n 0 58n 0 58.2n 0.9 63n 0.9 63.2n 0 110n 0]",
+      "Venable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 31n 0.9 31.2n 0 41n 0 41.2n 0.9 110n 0.9]",
+      "Vinp (vinp 0) vsource type=sine sinedc=0.40 ampl=0.31 freq=29Meg",
+      "Vinn (vinn 0) vsource type=sine sinedc=0.46 ampl=0.09 freq=13Meg",
+      "XDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p"
+    ],
+    "header": ["simulator lang=spectre", "global 0"],
+    "include_templates": ["ahdl_include \"{candidate_source_root}/{artifact_path}\""],
+    "save_signals": ["vinp", "vinn", "clk", "reset", "enable", "rms_out", "valid"]
+  },
+  "family_id": "074",
+  "generator": {"name": "render_v4_harness.py", "version": "v4-harness-renderer-v1"},
+  "migration": {"notes": ["task-local semantic replacement removes all file I/O"]},
+  "profile_defaults": {"feedback": {"parameters": {"tr": "80p"}, "simulatorOptions": {"evas_profile": "balanced"}}, "score": {"parameters": {"tr": "80p"}}},
+  "property_ids": ["P_DIFFERENTIAL_RMS", "P_FOUR_SAMPLE_WINDOW", "P_ENABLE_FREEZE", "P_ASYNC_RESET", "P_VALID_PULSE", "P_OUTPUT_HOLD"],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "2eef5a2929930b2f0d34df7975e6ca50ea0cacc6013c67096597b1e6b86d1aea",
+    "family_spec_sha256": "03eac1fabd0442946406eb36713e7771942a4dbcbbade8d98ce436a1b69dd9ef"
+  },
+  "task_id": "v4-074"
+}

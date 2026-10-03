@@ -1,0 +1,79 @@
+{
+  "family_id": "177",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_final_stage_source/certification.json",
+        "certification_sha256": "fbfe699a7e972808a3e856f42756471ef2eea28ef96d29671bd0ee16d52c60a3",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "cade1a1c0b4a0bcdd922919978a66bab8d64ebf2ec6c0b5f183c2e9585def5b8",
+        "mutation_id": "neg_002_wrong_final_stage_source",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_final_stage_source/certification.json",
+        "trigger_condition": "Forces the most delayed synchronized output bit low.",
+        "violated_property_ids": [
+          "P_FINAL_OUTPUT_CAPTURE",
+          "P_PHASED_CAPTURE_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5b1402fadc736c7add5c2b379416caddf521c3a8bb38b26cf2bd3aea912286f5",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "972cb3c7e4597e9f52af1dda525372bcf5314f7e19dc88515250c77e2df99dc1",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_FULL_LEVEL_OUTPUTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_omit_do4_capture/certification.json",
+        "certification_sha256": "5a52570a1507e16d8a93da3f2d477bf054416000ed3d6691bb3f4876f81217a8",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "6b5f533a85ebe41f5f391fda8d90b84626a6ab67ba4a8cc16e1d3a556c9b36ab",
+        "mutation_id": "neg_003_omit_do4_capture",
+        "source_catalog_certification_path": "negative_variants/neg_003_omit_do4_capture/certification.json",
+        "trigger_condition": "Forces output bit do4 low regardless of the synchronized pipeline state.",
+        "violated_property_ids": [
+          "P_INTERMEDIATE_OUTPUT_CAPTURE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "caa8ae2428adbc591c5c6b2eef1bac193bd15e8c0eeaa0e6dfe6794bf1115082",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "85e11e18b8707403f06905eee30e64bccd4826d213be6b897bfc9c15b303c7d5",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Sync 8b DFFs V2: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_FULL_LEVEL_OUTPUTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_invert_do8/certification.json",
+        "certification_sha256": "490559466565ecc3635dd2966e57b85f4ca109f57f9f17e683c61bbf11b616e6",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4c1015bc6da11c969f7ded7c56bd9bb9718df33e3306724b83bee6d62599f20b",
+        "mutation_id": "neg_004_invert_do8",
+        "source_catalog_certification_path": "negative_variants/neg_004_invert_do8/certification.json",
+        "trigger_condition": "Inverts the most delayed synchronized output bit.",
+        "violated_property_ids": [
+          "P_FINAL_OUTPUT_CAPTURE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_final_stage_source",
+    "canonical_dut_id": "177",
+    "hashes": {
+      "mutation_catalog_sha256": "8fe092b144cb021dc5be6a46af296c8353ef26bbdb8c24067940fd971174dda9",
+      "score_deck_sha256": "52f90b2709082ca3c36473c0357d1ba1a69422928338341f60ebcdf029f5342c",
+      "task_certification_sha256": "813566ec921e4636f95a4453f70e01bbd7f8d2dbfd806f8991f19b6ec8b984d5",
+      "task_record_sha256": "9fcc234e16ad6df6a61459ebcbe1042bc7ba525ac6ffe3f6f9625e8221220459"
+    },
+    "release_dir": "177-sync-8b-dffs-v2"
+  }
+}

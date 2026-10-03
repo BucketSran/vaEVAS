@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "electrical"
+    - "@(cross("
+    - "transition("
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "upper_middle_lower_regions_exercised"
+    - "sub_adc_decisions_match_thresholds"
+    - "residue_follows_gain_two_mdac_formula"
+    - "residue_output_bounded"
+parity:
+  required: true
+  tolerance_notes: "Pending EVAS/Spectre refresh for new pipeline ADC stage release task."

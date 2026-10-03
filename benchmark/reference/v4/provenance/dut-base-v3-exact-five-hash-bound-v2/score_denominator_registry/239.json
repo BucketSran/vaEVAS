@@ -1,0 +1,79 @@
+{
+  "family_id": "239",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_leak/certification.json",
+        "certification_sha256": "d2b2a305d4d4908ced57d448f3172a746001413ede9d6513f60920c5d72c5ed3",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "4eb4a30f4ced881d25a33ecef2c77592dfdf890199f93e29ed2ad53af7dedca8",
+        "mutation_id": "neg_002_no_leak",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_leak/certification.json",
+        "trigger_condition": "Drops the required leakage offset inside and outside the deadband.",
+        "violated_property_ids": [
+          "P_DEADBAND_LEAK_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5e546bd7f1e00319f92b0947888a846ad46e571f71e58548e655d20403f77cf6",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ea49f6f53bd5540077eb268919eed27be8c59a3ea5002eae3eb1574b0bdf9996",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Keeps the output at its trivial zero behavior and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_ASYMMETRIC_RESIDUE_GAINS",
+          "P_DEADBAND_LEAK_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_diff/certification.json",
+        "certification_sha256": "00328e42852557b8d94aff5322f9c95d8b56aadbf5f81e208d3c21bb863c7e3d",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "4b21751ddcf22296134ba0c17454f24cd66266f0ff70e084b075e5c0edf75631",
+        "mutation_id": "neg_004_inverted_diff",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_diff/certification.json",
+        "trigger_condition": "Computes the differential input with reversed polarity.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_symmetric_gain/certification.json",
+        "certification_sha256": "3f39ba1fabe8de1c7b551c56c3481cb521d6edfdb5ac351b3793584edafa84df",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "7c9581ef8c97f0ef09a79c7ed810cf95b3caa799028ce22e2785ee90a4ba95b2",
+        "mutation_id": "neg_003_symmetric_gain",
+        "source_catalog_certification_path": "negative_variants/neg_003_symmetric_gain/certification.json",
+        "trigger_condition": "Uses the low-side gain for both polarities.",
+        "violated_property_ids": [
+          "P_ASYMMETRIC_RESIDUE_GAINS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "6a0d065be224c6c542f8c62f7289f6609680f4461867e20c2aeb2bd8e6794c30",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "e362510fccd9fd4f43d4f482f1268b125b7a96296d7ecee5f46bf0117db37ce5",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Deadband Diffamp: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_ASYMMETRIC_RESIDUE_GAINS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_leak",
+    "canonical_dut_id": "239",
+    "hashes": {
+      "mutation_catalog_sha256": "8181406b41c69293fdd9c72bcec0ad10fe8bf060185226c0a245775a3d1d01e5",
+      "score_deck_sha256": "eb5c885c8aa8bce69fdba1e9749f92c02039fae41139b3c1245c555435758693",
+      "task_certification_sha256": "9a35139f7d80c6d206099d98dcdee227e288809294e9f187014b8cc9e0096d98",
+      "task_record_sha256": "1b47bf0b998393c8d5683e7de8040aff34d8776bde683d6095c2ee47fd5ca33e"
+    },
+    "release_dir": "239-deadband-diffamp"
+  }
+}

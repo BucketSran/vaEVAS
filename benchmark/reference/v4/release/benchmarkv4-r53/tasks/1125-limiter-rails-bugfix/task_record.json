@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "limiter_rails.va"
+  ],
+  "canonical_dut_source_slug": "125-limiter-rails",
+  "checker_task_id": "v4_125_limiter_rails",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b1709a4137aaa6d15d6268d8ee876f502e647cefbf1cfd6bf010be414e46e561",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "6e73b062cd955609fa0b6bc0c097785816b1155f39c708113418d1f7963f669d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d0954fa3a56b5af4875f092b53836e8f73a4b250ab29ad24061254d0e10551cf",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "125",
+  "family_spec_sha256": "860d9c0671d3048a4b0fdad739a97b9a992582d9a51ea4bd83d88d0f887ae7a7",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "958d8b9e200a09a515f30308a0ec0016f5f5407a9e07ca60aa0d60fe48ec4376",
+  "public_contract": "tasks/1125-limiter-rails-bugfix/public_contract.json",
+  "public_contract_sha256": "76ee4688da3faeea852b747796ce2b82775ef506690cdc48ec765d83674777c0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1125-limiter-rails-bugfix",
+  "task_id": "v4-1125"
+}

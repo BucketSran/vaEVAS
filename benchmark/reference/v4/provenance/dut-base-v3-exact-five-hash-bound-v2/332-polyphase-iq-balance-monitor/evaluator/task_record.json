@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "332",
+  "checker_task_id": "v4_332_polyphase_iq_balance_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "32ad650a00f5e8f6e1fbc55b9706dbe7a49c1845e3306d0fc76bf227646e9bf5",
+    "checker_profile.json": "dbf603efe8ee82080f1f8e8e94cb3dfbbbedce40c11a0d0c74e19585dcd9395c",
+    "derivation_manifest.json": "22bb36573cb093dce73a68d8a37e47e9129cb20c4feec58411499595b7c6a7c3",
+    "family_spec.json": "5c7e620dfed357e42503f8e7b916bb199d403130ae02cf22e2186759aaf08c41",
+    "harness_spec.json": "e982e4dd9d171102c2f88718b868c4565eb27fa5d0fd265a8a1828abd2df0eb5",
+    "mutation_catalog.json": "d416eb704586f786f2a3a66531782702f415b9a6795119debed1d2bd646a4938",
+    "profiles/feedback.json": "58378f797095d4674aa5500dfff7a54b0601e3b60bd44249c36e10bcfac6015c",
+    "profiles/score.json": "95001042647513b51b1d15d0da6afd18ac3ff8a5c9c3e71a56a58ee48d51cf0b",
+    "score_tb.scs": "7da6f0edd236866b87e139c52d108adc97813bbfe9485a20d5bae3f90544baf8",
+    "solution_tree": "ed9c23eae5ae3862b029421c3f58622bed974ae6793753e7473aef91880e9ac4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "2ac931f032085e7d43cecb5dd5330b279468ce8e5fed5a501dddef2d86dfabd1",
+    "instruction.md": "33ed371169a8188b0fddaedb9d1c010db7eeb0eae10c8298b5a0af1c17b23148",
+    "public_contract.json": "056ba02073da0cddefb9ae4bd80730e0029dcccf6e69767b04128c8f557914ee"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "32ad650a00f5e8f6e1fbc55b9706dbe7a49c1845e3306d0fc76bf227646e9bf5"
+  },
+  "release_dir": "332-polyphase-iq-balance-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1030-polyphase-iq-balance-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "polyphase_iq_balance_monitor_top.va",
+    "iq_normalizer.va",
+    "balance_metric_core.va"
+  ]
+}

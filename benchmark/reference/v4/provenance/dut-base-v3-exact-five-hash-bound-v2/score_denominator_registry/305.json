@@ -1,0 +1,79 @@
+{
+  "family_id": "305",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_gain_code_decode_missing/certification.json",
+        "certification_sha256": "9bc9f47e622e9e9cfe7ba625432a3c1ce0644ae0898eb1010f049a93c66a55cd",
+        "fault_class": "gain_code_decode_missing",
+        "mutation_bundle_sha256": "893caabc66a8487d7cd80c7955cd9c9b9513e6b65a68d1d3b7ec29a8df4e4d15",
+        "mutation_id": "neg_002_gain_code_decode_missing",
+        "source_catalog_certification_path": "negative_variants/neg_002_gain_code_decode_missing/certification.json",
+        "trigger_condition": "gain_code_decode_missing",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLK_EDGE_WHILE",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_settled_flag_missing/certification.json",
+        "certification_sha256": "601258c1b20a746097c0c029528c69dd03256e957dfe502a0463967331c65df6",
+        "fault_class": "settled_flag_missing",
+        "mutation_bundle_sha256": "c8c43815a19779263f5f43c87a758b6ce81cf142816dc7edee94c1a5180e511a",
+        "mutation_id": "neg_003_settled_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_settled_flag_missing/certification.json",
+        "trigger_condition": "settled_flag_missing",
+        "violated_property_ids": [
+          "P_DRIVE_SAMPLED_METRIC_WITH_THE_HELD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_enable_clear_ignored/certification.json",
+        "certification_sha256": "9cd713b057f1312efc7a0a527f1a6cead57b6e5379eec972a17f678531625eed",
+        "fault_class": "reset_enable_clear_ignored",
+        "mutation_bundle_sha256": "c28a517c1ff56a3d9e6741c29978f77070c1bb1aa0b9c65b60c38244baed4f0e",
+        "mutation_id": "neg_004_reset_enable_clear_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_enable_clear_ignored/certification.json",
+        "trigger_condition": "reset_enable_clear_ignored",
+        "violated_property_ids": [
+          "P_MOVE_VOUT_TOWARD_VCM_GAIN_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_outputs_stuck_common_mode/certification.json",
+        "certification_sha256": "fe383d3a13df6b00bcb93a2975463d126836939d5ecc576a1ec92d0937dff2c5",
+        "fault_class": "outputs_stuck_common_mode",
+        "mutation_bundle_sha256": "966e30e5b16968508a3d77b69b80688e3580795aa3124156b12f5a5144fe5784",
+        "mutation_id": "neg_005_outputs_stuck_common_mode",
+        "source_catalog_certification_path": "negative_variants/neg_005_outputs_stuck_common_mode/certification.json",
+        "trigger_condition": "outputs_stuck_common_mode",
+        "violated_property_ids": [
+          "P_ASSERT_SETTLED_AFTER_THE_OUTPUT_HAS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_sampled_gain_polarity_inverted/certification.json",
+        "certification_sha256": "85ff92c7a5e5b3e0d8a6326df7a384dc97c37db7885bcdf892fc2cc9760e3b2f",
+        "fault_class": "sampled_gain_polarity_inverted",
+        "mutation_bundle_sha256": "6c4c8f44fe8e8f36155cfff8671f1e0f9cb67d715ec178d5c9a36f95dc2735e9",
+        "mutation_id": "neg_001_sampled_gain_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_sampled_gain_polarity_inverted/certification.json",
+        "trigger_condition": "sampled_gain_polarity_inverted",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_gain_code_decode_missing",
+    "canonical_dut_id": "305",
+    "hashes": {
+      "mutation_catalog_sha256": "e0e89bbc0d9fb831d42e3d235644e155e6580720e4021a81f30ce45229fba51c",
+      "score_deck_sha256": "62eb98afc2e09c6f9b562f9c8a0a23547056294af3011b7a033275396a237372",
+      "task_certification_sha256": "ed51c1d057b2b21f5a97948be62fbb3e863e0014edd1bd1c427d23c4e370b19b",
+      "task_record_sha256": "fdc7613ec6ea9ff0c6769d2cb2d7e437bcfb4e20df13c07a40dea5000ede85fe"
+    },
+    "release_dir": "305-capacitive-feedback-amplifier-macro"
+  }
+}

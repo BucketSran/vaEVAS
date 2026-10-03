@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "370-opamp-feedback-settling-monitor",
+  "checker_task_id": "v4_370_opamp_feedback_settling_monitor",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "c8d225cb426412bb855b412a779d5dafe5fa516c0209d25ecd1eddd8ebb86316",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "107e4089c9e0608d3a8d715a48883fe1572d8aa8d38cb85a5206ee408e6ba45d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "c8d225cb426412bb855b412a779d5dafe5fa516c0209d25ecd1eddd8ebb86316",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2903c605123618e7e17cc82275a1b67134745642cf8dea8f38a2234facd98998",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "fafbb67643e135f78939edf36c86fda087cb7ebd4a09d8abb1de716b576e1228"
+  },
+  "family_id": "370",
+  "family_spec_sha256": "b0bc360542f9cc024d05d8b4d70043ac5b449d9e6c8bcafe8f2d406fd7432e33",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "007c3816f50ba40b73f9f383e41126d7d0327680679c7873854ec2bc1e240eb6",
+  "public_contract": "tasks/870-opamp-feedback-settling-monitor-testbench/public_contract.json",
+  "public_contract_sha256": "d3a7757d22b65ef70ba57c2eacd55067e76fa1264f1c102279e02d37ba3eee64",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/870-opamp-feedback-settling-monitor-testbench",
+  "task_id": "v4-870"
+}

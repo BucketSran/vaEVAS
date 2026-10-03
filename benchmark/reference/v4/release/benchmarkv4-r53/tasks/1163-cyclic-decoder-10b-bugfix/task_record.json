@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "cyclic_decoder_10b.va"
+  ],
+  "canonical_dut_source_slug": "163-cyclic-decoder-10b",
+  "checker_task_id": "v4_163_cyclic_decoder_10b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "530aa2dcf116f7afb8ff030b59babfe6e461011fa184b3e33d6e1a6894c0e1cb",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f5da2bf6db7f66b3fbee47cf67fbf1e25abb495886bc2b5dd8233b922662b9d2",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "09482fc80103da9cfd1ff85a3ead1e5ce8de4f870b41094de306eb4cc7d48737",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "163",
+  "family_spec_sha256": "6cc09fd86389cec6c7bf50f82d9308a435a433ecf02284d0213f75dd795fd7c2",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "beb2668229e16a517fbc73e5b1877a5e205bac2b25f5ebb10cafb265dfe7f6bc",
+  "public_contract": "tasks/1163-cyclic-decoder-10b-bugfix/public_contract.json",
+  "public_contract_sha256": "2fc85f0bbb99f8292783814e589828a1a796cfef62aaa9f410ce36aa73dd1261",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1163-cyclic-decoder-10b-bugfix",
+  "task_id": "v4-1163"
+}

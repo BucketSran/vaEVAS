@@ -1,0 +1,78 @@
+{
+  "family_id": "217",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_falling_trigger/certification.json",
+        "certification_sha256": "4f9461e50d4e96283ca61338f344c5edf7a25ea8b23eccca728352a70d0140f0",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "6ab3b88a02f49f702dfd495980e06363e50930241c614f44c2cfaac77d1f9b28",
+        "mutation_id": "neg_002_falling_trigger",
+        "source_catalog_certification_path": "negative_variants/neg_002_falling_trigger/certification.json",
+        "trigger_condition": "Triggers the one-shot on falling input edges rather than rising edges.",
+        "violated_property_ids": [
+          "P_ON_EACH_QUALIFYING_RISING_EDGE_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_short_pulse/certification.json",
+        "certification_sha256": "70874dd8d1b0ca567163adf2d2797b6d47e9aba6071f8e4ac6f1a141074724cd",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "77bfb6c88b29725123397d1769d75bddd76792c0d6a0c99a9ad37b5d76902ace",
+        "mutation_id": "neg_003_short_pulse",
+        "source_catalog_certification_path": "negative_variants/neg_003_short_pulse/certification.json",
+        "trigger_condition": "Uses half the required pulse width.",
+        "violated_property_ids": [
+          "P_USE_A_TIMER_TO_SCHEDULE_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "27ab4d267f1252eeec6ccb163ed8bf5b223c680ce8f87838a57ba09da79ec21b",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b91c63791ceb09e04b0c39c86688970f74e0f9c081015400c5e82c6f02c3bc41",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Single Shot Timer Pulse: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_HOLD_THE_LOW_OUTPUT_LEVEL_BETWEEN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5e33f14c58a215ea1af5c3d0afcda39cb8a0dec1888b9afb0ad939e2a8cb3355",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "c1496537570ed36da6467088fe745ed976cd8afc9c5e23c363fe9b2c89fa4097",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_DETECT_RISING_VIN_CROSSINGS_AT_VTRANS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_turnoff/certification.json",
+        "certification_sha256": "a231268b0d827b9667b44e9c6cb1c97f6d6a95ed46e636d4d5d7519740fba8a8",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "2b3302fabf1de858049ebd1a549323ecc6b56d687a87e0be2852e24e54570e3f",
+        "mutation_id": "neg_004_no_turnoff",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_turnoff/certification.json",
+        "trigger_condition": "Never schedules the timer turn-off after a trigger.",
+        "violated_property_ids": [
+          "P_GENERATE_ONE_OUTPUT_PULSE_PER_INPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_falling_trigger",
+    "canonical_dut_id": "217",
+    "hashes": {
+      "mutation_catalog_sha256": "dec7fe6502fed453583367e30033b0d11b0c98e613040a66b89d3ca43107b628",
+      "score_deck_sha256": "fe27e7f565daa0e2124663136270084d4cd6baa8d78a5621399dd457a206ea6d",
+      "task_certification_sha256": "50f26dcb3bc902fc59535096a08b85e6324700723d212d7dd5d2a6443a7cb940",
+      "task_record_sha256": "7e30620329e914c16f2aeca0431237b1d0018d677fa7b1aef074c39afe7c63c7"
+    },
+    "release_dir": "217-single-shot-timer-pulse"
+  }
+}

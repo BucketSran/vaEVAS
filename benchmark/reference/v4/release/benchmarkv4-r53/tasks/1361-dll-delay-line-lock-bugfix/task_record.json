@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "dll_top.va",
+    "phase_detector.va",
+    "delay_line.va",
+    "lock_detector.va"
+  ],
+  "canonical_dut_source_slug": "361-dll-delay-line-lock",
+  "checker_task_id": "v4_361_dll_delay_line_lock",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e49c50a72692e15ab754bd477d74c00b2e22469ab13e9abaad494c8f6efd9e9c",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "f03883e3b2225cdf16e6ab6dbb96eb48dc8d34137815f436f7ed503c848cd2d6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "af951b194c9949bd5bc6a9798725c35de74691daa6792efec21859598cd25af9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "361",
+  "family_spec_sha256": "1971990c49c5f2e1590d0d57655a1d3269b175c6545106a3ac7557e0d9c37d27",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "bfeaab1593d039e54286975e27077db967af001e703ae4e6ef759362dc679fd7",
+  "public_contract": "tasks/1361-dll-delay-line-lock-bugfix/public_contract.json",
+  "public_contract_sha256": "85a3fe2b9cddbf558bb1edacfe9b2b36e53caef9dff9d7c9f844f656d2ecc5e9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1361-dll-delay-line-lock-bugfix",
+  "task_id": "v4-1361"
+}

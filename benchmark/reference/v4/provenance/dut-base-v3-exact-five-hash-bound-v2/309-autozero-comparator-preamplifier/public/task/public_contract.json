@@ -1,0 +1,89 @@
+{
+  "agent_visible_files": [
+    "instruction.md",
+    "public_contract.json",
+    "feedback_tb.scs"
+  ],
+  "canonical_dut_id": "309",
+  "canonical_instruction": "instruction.md",
+  "category": "comparator_decision_systems",
+  "counted_in_score": true,
+  "feedback_oracle": {
+    "command": "vabench-feedback --task . --submission ../submission",
+    "diagnostic_contract": {
+      "format": "<property_id> mismatch_count=<nonnegative integer>",
+      "property_ids": [
+        "P_ON_RESET_CLEAR_STORED_OFFSET_DECISION",
+        "P_DURING_AN_AUTO_ZERO_CLOCK_UPDATE",
+        "P_DURING_AN_EVALUATION_CLOCK_UPDATE_WITH",
+        "P_DRIVE_DECISION_HIGH_FOR_CORRECTED_NONNEGATIVE",
+        "P_EXPOSE_STORED_OFFSET_ON_OFFSET_STORE",
+        "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+      ],
+      "scope": "each feedback result exposes every declared property"
+    },
+    "feedback_channels": [
+      "behavior_property_diagnostics"
+    ],
+    "public_tb": "feedback_tb.scs",
+    "public_tb_exposed": true
+  },
+  "form": "dut",
+  "gate2_status": "repair_pending_recertification",
+  "language": "verilog-a",
+  "level": "L2",
+  "oracle_policy": {
+    "checker_private": true,
+    "feedback_oracle_materialized": true,
+    "no_model_visible_starter": true,
+    "proposal_only": false,
+    "score_tb_private": true,
+    "single_public_contract": true,
+    "testbench_and_checker_split_required": true
+  },
+  "planned_checker_focus": [
+    "auto-zero capture",
+    "corrected threshold",
+    "ready gating",
+    "reset behavior"
+  ],
+  "planned_oracle_type": "deterministic_trace_behavior_with_static_module_contract",
+  "public_modules": [
+    "autozero_comparator_preamplifier_top",
+    "offset_store_cell",
+    "clocked_comparator_core"
+  ],
+  "public_observables": [
+    "vinp",
+    "vinn",
+    "clk",
+    "rst",
+    "az_en",
+    "eval_en",
+    "decision",
+    "offset_store",
+    "ready"
+  ],
+  "schema_version": "v4-proposed-public-contract-v1",
+  "status": "repair_pending_recertification",
+  "target_artifacts": [
+    "autozero_comparator_preamplifier_top.va",
+    "offset_store_cell.va",
+    "clocked_comparator_core.va"
+  ],
+  "task_id": "v4_309_autozero_comparator_preamplifier",
+  "task_slug": "1007-autozero-comparator-preamplifier",
+  "title": "Auto-zero Comparator Preamplifier",
+  "top_module": "autozero_comparator_preamplifier_top",
+  "track": "multi_module_ams_system_dut",
+  "validation_status": {
+    "evas_feedback_score_gold": "pending_recertification",
+    "gate2": "dut_base_sealed",
+    "next_gate": "batch31_checker_profile_evas_recertification",
+    "semantic_negative_certification": "pending_recertification",
+    "spectre_score_gold": "optional_not_run",
+    "tri_form_gate2": "pending",
+    "tri_form_gate3": "pending",
+    "untriaged_warning_count": 0
+  }
+}

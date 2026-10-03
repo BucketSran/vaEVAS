@@ -1,0 +1,23 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "604ed5b9296287bb7b84144dc191d5da8bb7894d0d1df7d563eb2f645007388d",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_EACH_RISING_CROSSING_OF_CLK",
+    "P_BUILD_A_VOLTAGE_DOMAIN_POWER_SEQUENCING",
+    "P_VTH_0_45_V_LOGIC_THRESHOLD",
+    "P_VHI_0_9_V_HIGH_LEVEL",
+    "P_VDD_MIN_0_75_V_VDD",
+    "P_VBIAS_MIN_0_25_V_VBIAS"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

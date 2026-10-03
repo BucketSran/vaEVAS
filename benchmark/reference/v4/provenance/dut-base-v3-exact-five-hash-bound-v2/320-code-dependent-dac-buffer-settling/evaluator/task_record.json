@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "320",
+  "checker_task_id": "v4_320_code_dependent_dac_buffer_settling",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b81c2d10450c297606f0a9f4c06cdc566b5f0db45ec8353c1b72adabdb2db802",
+    "checker_profile.json": "b5bcff1a627076e2634eea5f92fe28384852ea1a3a30a81655a36ea8a23132cc",
+    "derivation_manifest.json": "e77f7769ba33871d26d7fa64b0df5ccd168b28fa01fd44969ca987c054f0d787",
+    "family_spec.json": "fa05e3a81f9ac287e2858a489dba34bff08af535896812f87b935bf35f8f17d0",
+    "harness_spec.json": "42fe0e8199c8b5be01c34782ed817665b6a9dd469c06b713b72285178e2402e6",
+    "mutation_catalog.json": "2a099e98ec2de17e5691c9afe273ed42926b33c0b91af2ef15c46b1c700dd191",
+    "profiles/feedback.json": "d09546350e755d306ec22279b76e9b1609c388f5aaa3c36b274bc29103e98eed",
+    "profiles/score.json": "d1044d77fcc3ad30ef9ba7ae48f0a2f3784a1ff4e627ac3e92bce32f39c0a492",
+    "score_tb.scs": "091b7870f85d232c97e5b9b9cc42570a012ff72850f110fe2c0f4193359e01f8",
+    "solution_tree": "f2ffa5321ff2b9ce27039a4ffe95e5d5922d0a78d8aebaad631a9105d7066c67",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "1a91f6af59a0536ccec4d470c265ac13d1f19a217ff7633d78f47ef0ae6ddd63",
+    "instruction.md": "aa971f50c278701f803e4c01695be2fefe7deab9d2306d8cf6724a52ff26471f",
+    "public_contract.json": "c2933fc94bed4d490dda2ffa2831471f8796d68748324f25a0e9bb108b1bfd20"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b81c2d10450c297606f0a9f4c06cdc566b5f0db45ec8353c1b72adabdb2db802"
+  },
+  "release_dir": "320-code-dependent-dac-buffer-settling",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1018-code-dependent-dac-buffer-settling",
+  "support_root": "",
+  "target_artifacts": [
+    "code_dependent_dac_buffer_top.va",
+    "ideal_code_dac.va",
+    "settling_buffer_state.va"
+  ]
+}

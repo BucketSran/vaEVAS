@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "rs_phase_detector.va"
+  ],
+  "canonical_dut_source_slug": "225-rs-phase-detector",
+  "checker_task_id": "v4_225_rs_phase_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "5c6359b22697e0389d838e447998bc3d9ad710abdb88aa76c312c26a24c2718b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9c78b7d27d7ece9c3a2e5a8f4fdefa98767a8e618e6a6f03637c88c629debe80",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "aa4397cbe4b3d78b94b5d89b713930a092ce543a3a325d313918a2f3541cd51a",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "225",
+  "family_spec_sha256": "e387826c73ba69569c09d1a6bc88eb49edb65d5781041be23f64f2ee44c5858e",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9c91bcbf240dccbed44f18b0d6c8ac4bd4fb37e91cc16c05fa34446d130e6a15",
+  "public_contract": "tasks/225-rs-phase-detector/public_contract.json",
+  "public_contract_sha256": "2cfb8d58db04c07974ff38ce990b543c2db2c6ca58618755c4a74022145a838b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/225-rs-phase-detector",
+  "task_id": "v4-225"
+}

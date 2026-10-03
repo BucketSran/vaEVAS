@@ -1,0 +1,78 @@
+{
+  "family_id": "068",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8af07a484d16542f1ddb57c6724b3b3a8d648fbde9b570da797653f9d0038b9d",
+        "fault_class": "no_clocks",
+        "mutation_bundle_sha256": "c450d312e44e942fed1fcf7dd40e52facda5adec6e03c1c7a5ad54000b6eb65c",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises no clocks against the public observable contract",
+        "violated_property_ids": [
+          "P_PERIOD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_90/certification.json",
+        "certification_sha256": "5711f48d55926e263635182ea4956f9cce68a8532dd623681cb1b678397d861f",
+        "fault_class": "wrong_quarter_phase",
+        "mutation_bundle_sha256": "fbabcf47a661a2baed64ee69975f53da2c0e8c3e761f47fc91d558a82a0f1eb4",
+        "mutation_id": "neg_003_wrong_90",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_90/certification.json",
+        "trigger_condition": "stimulus exercises wrong quarter phase against the public observable contract",
+        "violated_property_ids": [
+          "P_PHASE_OFFSETS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_period/certification.json",
+        "certification_sha256": "b3c8bdac531ea49eefe3d0747a2f93af408799bd5169bc0400ffbf1c43bd8eaf",
+        "fault_class": "uses_25ns_period",
+        "mutation_bundle_sha256": "cc20d7f4474e6b4860049718e5fbeeea208de16a2dd8b42435578cb13b8aa3b7",
+        "mutation_id": "neg_004_wrong_period",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_period/certification.json",
+        "trigger_condition": "stimulus exercises uses 25ns period against the public observable contract",
+        "violated_property_ids": [
+          "P_PHASE_STABILITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_inverted_180/certification.json",
+        "certification_sha256": "af83774ff722802fd0b585762900440c70cac31813135fee07698775f2c9cdfd",
+        "fault_class": "inverts_clk180",
+        "mutation_bundle_sha256": "1b9c8be17bd02a6d9a472db540b8a40685c93f4f4c76fbbaa99da70118ee123e",
+        "mutation_id": "neg_005_inverted_180",
+        "source_catalog_certification_path": "negative_variants/neg_005_inverted_180/certification.json",
+        "trigger_condition": "stimulus exercises inverts clk180 against the public observable contract",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_same_phase/certification.json",
+        "certification_sha256": "31ad943d5d55ec72289765066b8fcc3ccee952cb223d4fed02687e05f4c1c526",
+        "fault_class": "all_phases_equal",
+        "mutation_bundle_sha256": "a3dd43c87ca5ce1bf4c4c5e93a4e66d54d71e446d357c8bb1030ce7f40f933d0",
+        "mutation_id": "neg_002_same_phase",
+        "source_catalog_certification_path": "negative_variants/neg_002_same_phase/certification.json",
+        "trigger_condition": "stimulus exercises all phases equal against the public observable contract",
+        "violated_property_ids": [
+          "P_DUTY_CYCLE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "068",
+    "hashes": {
+      "mutation_catalog_sha256": "a481264bb37cf3217549b9872449bd87eddaea053f789ec55e43ca24b5f2ca99",
+      "score_deck_sha256": "a9a0fbdc013614f4a4d0a0f80aff235adb01851156d413096fe818d91909bc1f",
+      "task_certification_sha256": "3cdc709f25b05129d4b8bdc648f68bd5c7e616850d4732640debec6a0e6f001d",
+      "task_record_sha256": "4d408dd789e47c1dec3ff91135ed49aa3ec03b96abb6b7d3408989268fee8cff"
+    },
+    "release_dir": "068-multiphase-clock-generator-4ph"
+  }
+}

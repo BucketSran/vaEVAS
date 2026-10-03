@@ -1,0 +1,23 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "4a91dd13aeb725d260b572644a8de05fbf7adba3b76359da6f36e383ae670435",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_PERIODIC_PHASE_UPDATE",
+    "P_WRAPPED_PHASE_RANGE",
+    "P_WRAP_TOGGLES_CLOCK",
+    "P_CONTROLLED_EDGE_RATE"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

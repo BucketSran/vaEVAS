@@ -1,0 +1,82 @@
+{
+  "family_id": "253",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "ec03768c75d8fd77d4d2d93a7f0a3ced90a6f1ead49be9efd43d96c9b443b7e7",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "19599350b7827cc1ad7377818fae9d0ac84e64ca2bbe143f614d081e49216052",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "3c09087abb33efba7e95222c847f7124e828326694484ebe5d4518530a6d561a",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "c7c8b535b580c4a802cf7f3d6bd22eb6d33581b8dbcd5364bbd8799a8520e089",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_USE_THE_TWO_CONTROL_LEVELS_AS",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "19e7e4887e133009491a2c44cee418a90aa2982de0c101ac4de01592bb642ffb",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ef1affa2b99dce08d460712164860878910435ba3593a6be9180cbe3ab1b5f3a",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED",
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "7978a962fabb5e6b8e33c545fb109274dd3bd7a18a668918ccf47c075e0d6454",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "672625459d6c2e98ac55911f247ace9176a2c0dbf3572d0af5fd392a955964c8",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_SPAN_MIN_0_62_V_SPAN",
+          "P_USE_THE_TWO_CONTROL_LEVELS_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "807c0e5fb0002987b55251a9bcc6ca0472283eeac352cc1043c7d5d0f7564c13",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "22293f311e407d95d7c21daf24131afdd99632fb66c362e37278a6b228eedde9",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_flag_metric",
+    "canonical_dut_id": "253",
+    "hashes": {
+      "mutation_catalog_sha256": "5657f92cb6e9d867b865f92940f7ec6fca6a6f28b16f4576bd30e4a0661c22b1",
+      "score_deck_sha256": "679b794281a14fb2e892ab23bccf31423e2dd38bada4013814c57aa3ba47796d",
+      "task_certification_sha256": "124301d1e9a0ae2dd2a044849a67a47c2dd92f99eb36dadf044db67fe5526789",
+      "task_record_sha256": "a26a4a1aeb0428e71482626faabb2d26ecd42567ad62e445b4304d26670e2d2f"
+    },
+    "release_dir": "253-power-mode-clamped-mux"
+  }
+}

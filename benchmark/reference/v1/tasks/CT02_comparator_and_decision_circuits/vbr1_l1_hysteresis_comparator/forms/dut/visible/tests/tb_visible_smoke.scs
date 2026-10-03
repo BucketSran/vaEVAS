@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "cmp_hysteresis.va"
+
+V_VINN (VINN 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=0p rise=50p fall=50p width=1.4n
+V_VINP (VINP 0) vsource type=pulse val0=0 val1=0.9 period=3n delay=100p rise=50p fall=50p width=1.4n
+V_VSS (VSS 0) vsource dc=0
+V_VDD (VDD 0) vsource dc=0.9
+
+XDUT (VINN VINP OUTN OUTP VSS VDD) cmp_hysteresis
+
+tran tran stop=5n maxstep=100p
+save VINN VINP VSS VDD

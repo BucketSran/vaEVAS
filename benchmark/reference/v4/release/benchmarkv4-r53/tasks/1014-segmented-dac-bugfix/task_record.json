@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "segmented_dac.va"
+  ],
+  "canonical_dut_source_slug": "014-segmented-dac",
+  "checker_task_id": "v4_014_segmented_dac",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "01ffb7621acd42d310be8b44de81b429d09672fd7921d7db24604262e71e98ba",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "11fc866fbd754a8d40676e465f2b12e92e404ec39b986ec512a368cf6edd55bc",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e59042464dbf14fe7e2515d355076729d350a4711d9312240638dea6963d5dcf",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "014",
+  "family_spec_sha256": "567bf2a92711abf0d00fa6e548abf7067be3eac1fcd8e8ee18e64183957f4f32",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "90dfb699676a9ad057d3d4bf19d07197f3aa9eda6a5e905b71fca667577e2c62",
+  "public_contract": "tasks/1014-segmented-dac-bugfix/public_contract.json",
+  "public_contract_sha256": "aa133fda55953e870910a124fa029167d1c0645fe59e496ec9ea63cf1fedc835",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1014-segmented-dac-bugfix",
+  "task_id": "v4-1014"
+}

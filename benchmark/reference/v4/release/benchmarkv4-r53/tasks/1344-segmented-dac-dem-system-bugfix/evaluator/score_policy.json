@@ -1,0 +1,30 @@
+{
+  "artifact_mode": "system_bundle",
+  "bugfix_seed_mutation_id": "neg_001_dac_divisor_64",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "d1d09086b6b72ec20a8a8dce9382a4214ffa5c97f4045dd490253b732828bcd9",
+  "candidate_artifacts": [
+    "segmented_dac_dem_top.va",
+    "thermometer_decoder.va",
+    "binary_decoder.va",
+    "dwa_rotator.va",
+    "dac_driver.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "binary_decoder.va",
+    "dac_driver.va",
+    "dwa_rotator.va",
+    "segmented_dac_dem_top.va",
+    "thermometer_decoder.va"
+  ],
+  "checker_profile_sha256": "6fb08628d04d201c99bf15c916df259633f77ee7704eebdb13705cacd05bf3a5",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "54d36c5162803e4a1d5ece1d9c59bac91c760bec70529698e228ffdc49e6b529",
+  "gold_solution_tree_sha256": "12586b3b6a95714feb6f5276a338ac3dc97c466edaa110b467d7dae8e399abbf",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "2281001a0532c02678838b765909ecdce0f7319fa7e2e4f81431707e681cd2af",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1344"
+}

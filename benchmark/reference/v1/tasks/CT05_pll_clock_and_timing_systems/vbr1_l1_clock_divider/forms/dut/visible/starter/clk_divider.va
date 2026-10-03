@@ -1,0 +1,19 @@
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 50p
+
+module clk_divider(
+    input  electrical CLK_IN,
+    input  electrical RST_N,
+    output electrical CLK_OUT,
+    output electrical LOCK
+);
+
+parameter integer div_ratio = 8;
+parameter real    vth       = 0.45;
+parameter real    vdd       = 0.9;
+parameter real    tedge     = 100p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

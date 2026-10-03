@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "396",
+  "checker_task_id": "v4_396_quadrature_lo_generator_divided_clock",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "6e807041ae027ad10cf1e215205e36663ae834084c88a1511e0219e8551e2bd6",
+    "checker_profile.json": "ef967013cb6435808c22377ef62bbf8302e2871b3e500c2524dfe857fde79391",
+    "derivation_manifest.json": "543fd61dda97340d784eb8e044577a4c5e5a510dc211978b3f04389197217510",
+    "family_spec.json": "0e462f2083bb57adfb947a51c8b0f3acedd3eaa413390fcb14452f2630886c5e",
+    "harness_spec.json": "df95b772b299bbca8df9661b95f20725ce95cedcc7803cd1bc10afa0cb19bd79",
+    "mutation_catalog.json": "4cc07569a3e5ea266fad33235333fa2b2d6cb22058f68f8e1d87d084ffef9de0",
+    "profiles/feedback.json": "952a146d60961ea1f018dae112b7adb6df3e959118e0b52be03ed4bab52a23c4",
+    "profiles/score.json": "99e73c1344ce5264c03e47b07522194aa96275676f08b7d5e5de14f8c6ad9393",
+    "score_tb.scs": "411eaba1c70c3814bf8494e142a1e55a221aa3f69ffd10f60187a49413290e33",
+    "solution_tree": "a70cc42b0742e73a118ad36fad700342b795bc9058edba7d0506acd64aba05bd",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "5fc57ea40832852b5ec596d8371b7f645016913db26b948895484a568831eee6",
+    "instruction.md": "ed7907dc6f0a26d919ed6d751114823cd72aa12f13a6425890e9a06b96532d77",
+    "public_contract.json": "b6b1adf650b81feadd5af14834347ee5df868b0e37bb2551ddddda40b6dd09d8"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "6e807041ae027ad10cf1e215205e36663ae834084c88a1511e0219e8551e2bd6"
+  },
+  "release_dir": "396-quadrature-lo-generator-divided-clock",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "955-quadrature-lo-generator-divided-clock",
+  "support_root": "",
+  "target_artifacts": [
+    "quadrature_lo_generator_divided_clock.va"
+  ]
+}

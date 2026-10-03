@@ -1,0 +1,22 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "reset_gain_control_near_0p30"
+    - "low_measured_value_increases_control"
+    - "high_measured_value_decreases_control"
+    - "gain_control_reaches_high_and_low_clamps"
+parity:
+  reference: "spectre"
+  status: "pending_until_evas_spectre_rerun"
+  notes:
+    - "Requires fresh EVAS/Spectre dual validation after CT06 content repair."

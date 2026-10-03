@@ -1,0 +1,14 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dac_mismatch_unit_weighting_model(b0, b1, b2, b3, out);
+input b0, b1, b2, b3;
+output out;
+electrical b0, b1, b2, b3, out;
+parameter real vhi = 0.9;
+parameter real vlo = 0.0;
+parameter real tr = 100p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

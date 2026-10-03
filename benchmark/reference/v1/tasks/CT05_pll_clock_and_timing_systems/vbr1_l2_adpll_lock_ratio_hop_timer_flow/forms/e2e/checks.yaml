@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "adpll_ratio_hop_pre_ratio"
+    - "adpll_ratio_hop_post_ratio"
+    - "adpll_ratio_hop_feedback_divider_relation"
+    - "adpll_ratio_hop_feedback_tracks_reference"
+    - "adpll_ratio_hop_lock_reacquired"
+
+parity:
+  reference: "spectre"
+  status: "pending_fresh_dual_rerun"
+  notes:
+    - "Gold/checker were strengthened on 2026-05-31 to require feedback-divider and feedback/reference tracking evidence."
+    - "Targeted EVAS passes after the update; fresh Spectre rerun is required before restoring certified status."

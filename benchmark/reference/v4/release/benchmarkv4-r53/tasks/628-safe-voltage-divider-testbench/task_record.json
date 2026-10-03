@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "128-safe-voltage-divider",
+  "checker_task_id": "v4_128_safe_voltage_divider",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e534802f2a5457241f5ba66a2317e9a3a9832f34a1fcaf91f2ea297633aa3a1a",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "1763e3086c2a80a75cad25c1335a64976111003eaac9bc3ea27c1a9809f061b1",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e534802f2a5457241f5ba66a2317e9a3a9832f34a1fcaf91f2ea297633aa3a1a",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9a114ef52e5d4af04b83bdd6c9ec105dac542aabc1869f98e6fea70c014a1d63",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c74ac67dc8cfd7710933d398f8cf18f7794a995076332e051e5ec393bdda9bec"
+  },
+  "family_id": "128",
+  "family_spec_sha256": "c28e9e11be6fdf475be0082d5b1f9f795bcd3ddc1c4420636bf4ac57403b9d13",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4f91c2ae2cf8a8c096835dfae0f207e0e969ed6c2c6b2190e02d262801cda6d4",
+  "public_contract": "tasks/628-safe-voltage-divider-testbench/public_contract.json",
+  "public_contract_sha256": "5590a67d295d168bf428f4c9f07a8300491af74ff070d02b53dd70f1412ab9e6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/628-safe-voltage-divider-testbench",
+  "task_id": "v4-628"
+}

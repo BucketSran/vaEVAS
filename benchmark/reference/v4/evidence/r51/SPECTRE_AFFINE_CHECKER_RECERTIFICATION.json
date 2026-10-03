@@ -1,0 +1,139 @@
+{
+  "schema_version": "v4-r51-spectre-affine-checker-recertification-v1",
+  "status": "pass",
+  "scope": {
+    "policy": "Fresh direct Cadence Spectre AX correct-plus-five replay for every public alias whose checker changed after the initial r51 alias campaign.",
+    "execution_revision": "46a3ccaf2de5b9fd9e97fe622b24dd8431b6b512",
+    "checker_family_ids": [
+      "303",
+      "304",
+      "312"
+    ],
+    "forms": [
+      "dut",
+      "testbench",
+      "bugfix"
+    ],
+    "public_task_count": 9
+  },
+  "run": {
+    "started_at": "2026-07-23T08:39:55+08:00",
+    "finished_at": "2026-07-23T08:42:24+08:00",
+    "spectre_backend": "sui-direct",
+    "spectre_mode": "ax",
+    "route": "thu-jin -> thu-wei",
+    "sui_host": "thu-wei",
+    "ssh_proxyjump": "thu-jin",
+    "ahdlcmi_cache_requested": false,
+    "ahdlcmi_cache_enabled": false,
+    "group_reports": [
+      {
+        "family_id": "303",
+        "task_ids": [
+          "v4-303",
+          "v4-803",
+          "v4-1303"
+        ],
+        "remote_root": "/tmp/vaevas-r51-final-family303-20260723",
+        "case_count": 18,
+        "pass_count": 18,
+        "summary_sha256": "7a406f9e060ef91c13fd5e142388b51f5fbb4a2e075447eac200238e12df4bbd"
+      },
+      {
+        "family_id": "304",
+        "task_ids": [
+          "v4-304",
+          "v4-804",
+          "v4-1304"
+        ],
+        "remote_root": "/tmp/vaevas-r51-final-family304-20260723",
+        "case_count": 18,
+        "pass_count": 18,
+        "summary_sha256": "487f08d4aceb558abe10dc43ca8b046d81603dc24e9e0edd6d6279a5231425df"
+      },
+      {
+        "family_id": "312",
+        "task_ids": [
+          "v4-312",
+          "v4-812",
+          "v4-1312"
+        ],
+        "remote_root": "/tmp/vaevas-r51-final-family312-20260723",
+        "case_count": 18,
+        "pass_count": 18,
+        "summary_sha256": "194d38eb0464201e02cb8fe2827afc3ffa7c98acba9b9d85dd434baef2034f98"
+      }
+    ]
+  },
+  "validation": {
+    "task_count": 9,
+    "case_count": 54,
+    "spectre_simulation_success_count": 54,
+    "spectre_expected_classification_count": 54,
+    "correct_pass_count": 9,
+    "mutation_kill_count": 45,
+    "mutation_count": 45,
+    "invalid_run_count": 0,
+    "retry_count": 0,
+    "csv_duplicate_time_value_count": 0,
+    "runner_warning_count": 0,
+    "raw_spectre_error_count": 0,
+    "raw_spectre_warning_occurrence_count": 108,
+    "raw_spectre_warning_codes": {
+      "VACOMP-2435": 54,
+      "SPECTRE-592": 54
+    },
+    "untriaged_warning_count": 0,
+    "ahdlcmi_cache_mismatch_count": 0,
+    "remote_root_mismatch_count": 0
+  },
+  "families": [
+    {
+      "family_id": "303",
+      "checker_id": "v4_303_differential_pair_gm_limiter",
+      "task_ids": [
+        "v4-303",
+        "v4-803",
+        "v4-1303"
+      ],
+      "case_count": 18,
+      "correct_pass_count": 3,
+      "mutation_kill_count": 15,
+      "mutation_count": 15,
+      "status": "pass"
+    },
+    {
+      "family_id": "304",
+      "checker_id": "v4_304_common_gate_tia_front_end",
+      "task_ids": [
+        "v4-304",
+        "v4-804",
+        "v4-1304"
+      ],
+      "case_count": 18,
+      "correct_pass_count": 3,
+      "mutation_kill_count": 15,
+      "mutation_count": 15,
+      "status": "pass"
+    },
+    {
+      "family_id": "312",
+      "checker_id": "v4_312_interleaved_adc_skew_monitor",
+      "task_ids": [
+        "v4-312",
+        "v4-812",
+        "v4-1312"
+      ],
+      "case_count": 18,
+      "correct_pass_count": 3,
+      "mutation_kill_count": 15,
+      "mutation_count": 15,
+      "status": "pass"
+    }
+  ],
+  "warning_triage": {
+    "VACOMP-2435": "CDS_AHDLCMI_ENABLE is unsupported, so Spectre uses its default compiled C code flow; the cache audit still reports requested=false and enabled=false for every case.",
+    "SPECTRE-592": "Spectre X reports that preset=ax controls transient stepping; the repaired checkers intentionally avoid inferring fixed DUT timers from adaptive CSV row spacing."
+  },
+  "claim_boundary": "This artifact supersedes earlier Spectre results for checker families 303, 304, and 312 and establishes fresh correct-plus-five classification for all nine public aliases at checker revision 46a3ccaf2de5b9fd9e97fe622b24dd8431b6b512. It does not claim sample-by-sample EVAS/Spectre waveform identity or full 400-family Spectre recertification."
+}

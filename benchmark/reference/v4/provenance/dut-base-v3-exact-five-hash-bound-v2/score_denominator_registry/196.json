@@ -1,0 +1,80 @@
+{
+  "family_id": "196",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_gain/certification.json",
+        "certification_sha256": "4ee685dfc35b2e8992f28506fd0eed5f3b82428c07bb576ac723ffc54615b85a",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "0de2a02cc312b18b2da858c0e5661fbe8a9ff8ef14c7c6b7c91ed82fa748e195",
+        "mutation_id": "neg_003_wrong_gain",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_gain/certification.json",
+        "trigger_condition": "Uses unity gain instead of the specified 1.25 conversion gain.",
+        "violated_property_ids": [
+          "P_POSITIVE_LO_GAIN_PATH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "70e84bc969d92c3ce7e4a5433645f7af9b908892f7ab734011164a5da4a250ad",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "14557fa0ec421b5954690d194437c6fd7c4d7af7a2d78402eddf3d1d205249f3",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_NEGATIVE_LO_CHOP_PATH",
+          "P_POSITIVE_LO_GAIN_PATH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_chop_inversion/certification.json",
+        "certification_sha256": "1e21524d2cadbf8a08d739d7c9866ebeca335064f650f1801bae5d471104f85e",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "da11ac0392e2c4b17fc71e2e722971934a3913abe8b8afcf8fe91e9c324b8e2c",
+        "mutation_id": "neg_002_no_chop_inversion",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_chop_inversion/certification.json",
+        "trigger_condition": "Passes vin_rf without sign inversion when the local oscillator is low.",
+        "violated_property_ids": [
+          "P_NEGATIVE_LO_CHOP_PATH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_lo_polarity/certification.json",
+        "certification_sha256": "ed412f598538916a7e7532bbe1c9d891f7e664b85b816fd72d613a5da43e3718",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "33fac3855fea3154218362c2d23ca05212e0a7a33b09b55ff153c1174b7633d6",
+        "mutation_id": "neg_004_inverted_lo_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_lo_polarity/certification.json",
+        "trigger_condition": "Uses the opposite local-oscillator polarity for chopping.",
+        "violated_property_ids": [
+          "P_NEGATIVE_LO_CHOP_PATH",
+          "P_POSITIVE_LO_GAIN_PATH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "46c73d161fb5f077170e40933f49cce0765e78d37a252880355509f76d6d4a91",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "a8cb2383228919690efdf2b084bcb4889091f683775b18c8f64ed618cd30841c",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Phase Detector Chopper: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CONTINUOUS_TRACKING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_gain",
+    "canonical_dut_id": "196",
+    "hashes": {
+      "mutation_catalog_sha256": "53dc0c04821c37e38c4056cdefb90d5207d671304a8d8a6bcc473d2e17b60409",
+      "score_deck_sha256": "846f3501b6da21dcc0d9618099843f86742e9fb46843dfd66e7f77f07bb91707",
+      "task_certification_sha256": "1ff1e6ee2ca918b9da8b3dc523f3a7a2db2b97def97c49d1381f8d94481f351f",
+      "task_record_sha256": "574310a43cbe02e82bed250867f15633c8a562d8556d56156c259946b0851b22"
+    },
+    "release_dir": "196-phase-detector-chopper"
+  }
+}

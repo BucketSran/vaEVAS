@@ -1,0 +1,83 @@
+{
+  "family_id": "294",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_bias_validity/certification.json",
+        "certification_sha256": "d8b1832f5412da0549667686f751cf2b466a975913c6233f4eccdec935a0c854",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "03c546cb1436e061d112d1465ab0cae54071b82535c3cf025b9750ba7c6681c7",
+        "mutation_id": "neg_002_ignore_bias_validity",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_bias_validity/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_bias_validity",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_fault_reset/certification.json",
+        "certification_sha256": "b15d89d728f270d0570259bdd76ef233fda1fdd2cd60fa258834aa0cbf52d755",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "bf1befd4151990adcac858fe3931325b41dee5ec5648d990cf9b8845524d5e72",
+        "mutation_id": "neg_004_no_fault_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_fault_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_no_fault_reset",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VDD_MIN_0_75_V_VDD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_short_delay/certification.json",
+        "certification_sha256": "5d791a39b4fee32268b83e49326a613534fa7351103d29e4c66e6a0c80e0eeeb",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "69997b76f02eebf2a5bdcd2f4620a9a54d7244f8b6a12f23a890e604886095f6",
+        "mutation_id": "neg_005_short_delay",
+        "source_catalog_certification_path": "negative_variants/neg_005_short_delay/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_short_delay",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VBIAS_MIN_0_25_V_VBIAS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_powerdown/certification.json",
+        "certification_sha256": "1d2f908650208877d9ee79acc4821f12cc28ea139e2f05b6aad89432077f9265",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "53bc7aa6ebbb15e75d1beb7471ecd3ad2fdfc1b457e3d27c8b8444116f37c132",
+        "mutation_id": "neg_003_ignore_powerdown",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_powerdown/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_ignore_powerdown",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_turnon_delay/certification.json",
+        "certification_sha256": "a7d9045cd63efab0aaf6023b3896cb67f95675eeba6c0c63ad4cfefc19209fb2",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "68cd70c8d30fd02a8424c365b36ce5dc45a5e44838de30b930640abc62536a6c",
+        "mutation_id": "neg_001_no_turnon_delay",
+        "source_catalog_certification_path": "negative_variants/neg_001_no_turnon_delay/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_no_turnon_delay",
+        "violated_property_ids": [
+          "P_BUILD_A_VOLTAGE_DOMAIN_POWER_SEQUENCING",
+          "P_ON_EACH_RISING_CROSSING_OF_CLK"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ignore_bias_validity",
+    "canonical_dut_id": "294",
+    "hashes": {
+      "mutation_catalog_sha256": "93102457602eba8baef09824cf5af510f77b65bdd4b888062f2e2b3bcda2a972",
+      "score_deck_sha256": "daeb34da5972104bfb815c96f56bf1daba05b0f0538c7f7ea4cf60b7f06fc717",
+      "task_certification_sha256": "54a4290c54f1a75f3f6d1e6f984b56e22235dc47d938971ffec5a823a6fc071d",
+      "task_record_sha256": "6bcf084201174ff352875d591cf284ef796df4eedf129837b2082b317936a33c"
+    },
+    "release_dir": "294-power-enable-turnon-delay-gate"
+  }
+}

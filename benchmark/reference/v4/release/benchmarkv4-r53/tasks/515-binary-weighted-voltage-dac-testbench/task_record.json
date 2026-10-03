@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "015-binary-weighted-voltage-dac",
+  "checker_task_id": "v4_015_binary_weighted_voltage_dac",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "5af62124dd9e69a7a8d54b42ada20990f6b9f4c42edc118703004310a3c71a56",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "c0f87f6e0d3483b311dc9b79f333c4776bec12d53dc432910429b432ffa7ddb0",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "5af62124dd9e69a7a8d54b42ada20990f6b9f4c42edc118703004310a3c71a56",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "d0231bc8d44de02bb62d79cce84c62bf879bf2b98f2ce89378dd038faf1f2d66",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "20bc85c702904b9e07a224458832386d4085640a2c1f52d58576b7cb1bbc4855"
+  },
+  "family_id": "015",
+  "family_spec_sha256": "e9e246939f63a42840fc429a0f1eaff407bb5350c935b38ce0e657541cadecaa",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "27b0df267b0023ffc40c23a5ef155c226e98e68ee2f4b472870e35406e6086b1",
+  "public_contract": "tasks/515-binary-weighted-voltage-dac-testbench/public_contract.json",
+  "public_contract_sha256": "73643e88809c89a8c930010804c89ba620fc49c4976fe64c753963aee96d1147",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/515-binary-weighted-voltage-dac-testbench",
+  "task_id": "v4-515"
+}

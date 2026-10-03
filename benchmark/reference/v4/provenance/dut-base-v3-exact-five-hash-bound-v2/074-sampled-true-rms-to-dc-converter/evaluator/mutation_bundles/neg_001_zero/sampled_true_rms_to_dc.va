@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sampled_true_rms_to_dc(vinp, vinn, clk, reset, enable, rms_out, valid);
+    input vinp, vinn, clk, reset, enable;
+    output rms_out, valid;
+    electrical vinp, vinn, clk, reset, enable, rms_out, valid;
+    parameter real vth=0.45, vhigh=0.9, tr=100p from (0:inf);
+    analog begin
+        V(rms_out) <+ transition(0.0, 0, tr, tr);
+        V(valid) <+ transition(0.0, 0, tr, tr);
+    end
+endmodule

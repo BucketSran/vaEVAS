@@ -1,0 +1,26 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "d15cdaea8e997c65bc42c632841ddd5154d9940aad791457fd24334d760553a0",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_AN_INTEGER_STATE_Q_HELD_IN",
+    "P_ON_EACH_RISING_CROSSING_OF_V",
+    "P_ON_EACH_RISING_CROSSING_OF_V_2",
+    "P_MAINTAIN_A_CONTROL_VOLTAGE_VCTRL_Q",
+    "P_DRIVE_VCTRL_TRANSITION_VCTRL_Q_0",
+    "P_DRIVE_METRIC_AS_A_VOLTAGE_CODED"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

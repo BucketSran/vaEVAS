@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "247-voltage-match-window",
+  "checker_task_id": "v4_247_voltage_match_window",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "af0fe6a6b29e3c4257a760c6302f7ca11ddf3b4e4b5312bd4c4a42cf3df3c685",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "6b259fbc02cc991f9b18740a733736d91ac77511cb9c88224434362c68539e24",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "af0fe6a6b29e3c4257a760c6302f7ca11ddf3b4e4b5312bd4c4a42cf3df3c685",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "480af8cffb639982cec4d55a3be7b4be9e8ac5abfcdca048e64003726c6e71c0",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "1375d3b166fc204aefa8fb31b6c7913824f8ce80d68d4b1e92cae93f6a5209aa"
+  },
+  "family_id": "247",
+  "family_spec_sha256": "1acd01f3bfffab52be6b8225841958f4f813c49cdbd8ee104f436d37dcb28866",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e1a798963256d4f4c45f05a9536f29ac4320d8b8d673184bfe23d07aa95743cb",
+  "public_contract": "tasks/747-voltage-match-window-testbench/public_contract.json",
+  "public_contract_sha256": "f28017608a91a330f37113a1db84e55ce4e1f1166ea33d32b0a97ed51a16336a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/747-voltage-match-window-testbench",
+  "task_id": "v4-747"
+}

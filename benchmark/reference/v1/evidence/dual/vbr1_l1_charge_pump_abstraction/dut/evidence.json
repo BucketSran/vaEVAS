@@ -1,0 +1,125 @@
+{
+  "release_entry_id": "vbr1_l1_charge_pump_abstraction",
+  "task_id": "vbr1_l1_charge_pump_abstraction:dut",
+  "source_task_id": "vbr1_l1_charge_pump_abstraction_dut",
+  "task_form": "dut",
+  "taxonomy": {
+    "level": "L1",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "Voltage-domain charge-pump control abstraction"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l1_charge_pump_abstraction/dut/gold",
+    "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l1_charge_pump_abstraction/dut/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_charge_pump_abstraction/dut/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_charge_pump_abstraction/dut/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_charge_pump_abstraction/forms/dut/gold/charge_pump_abstraction.va"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l1_charge_pump_abstraction/dut/gold",
+    "result_root": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l1_charge_pump_abstraction/dut/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        8e-08
+      ],
+      "signals_compared": 6,
+      "samples": 1200,
+      "max_rmse_v": 2.6516703399692365e-06,
+      "max_abs_v": 3.7503896733070974e-05,
+      "mean_relative_rms_error": 1.159662274361092e-06,
+      "max_relative_rms_error": 4.419450566615394e-06,
+      "mean_nrmse": 1.159662274361092e-06,
+      "max_nrmse": 4.419450566615394e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "dn": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "metric": {
+          "rmse_v": 2.6516703399692365e-06,
+          "max_abs_v": 3.7503896733070974e-05,
+          "span_v": 0.6,
+          "nrmse": 4.419450566615394e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "up": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vctrl": {
+          "rmse_v": 1.0154092318204634e-06,
+          "max_abs_v": 1.2500027777639922e-05,
+          "span_v": 0.39999999999999997,
+          "nrmse": 2.5385230795511587e-06,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_charge_pump_abstraction/forms/dut/gold/charge_pump_abstraction.va"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

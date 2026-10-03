@@ -1,0 +1,30 @@
+{
+  "id": "vbr1_l1_power_on_reset_detector_dut",
+  "task_id": "vbr1_l1_power_on_reset_detector_dut",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_power_on_reset_detector",
+  "family": "spec-to-va",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "power_on_reset_detector.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "reset_asserted_below_supply_threshold",
+    "release_delay_after_power_good",
+    "brownout_reasserts_reset"
+  ],
+  "designed_source": true
+}

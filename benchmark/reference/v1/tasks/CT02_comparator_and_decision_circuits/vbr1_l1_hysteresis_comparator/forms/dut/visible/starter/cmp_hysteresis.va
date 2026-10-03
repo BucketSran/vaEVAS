@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Continuous differential comparator with hysteresis.
+// OUTP switches HIGH only after diff crosses +vhys/2 on the way up,
+// and returns LOW only after diff crosses -vhys/2 on the way down.
+module cmp_hysteresis (
+    input  electrical VINN,
+    input  electrical VINP,
+    output electrical OUTN,
+    output electrical OUTP,
+    inout  electrical VSS,
+    inout  electrical VDD
+);
+
+parameter real vhys = 10e-3 from (0:inf);
+parameter real tedge = 50p from [0:inf);
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

@@ -1,0 +1,78 @@
+{
+  "family_id": "037",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "2739324ab15421f949b53b1177c99714272abe32c2cdfce5f26d6cc2018e68d3",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "4c1ca5a348bc854b50a0c1578229554a291d6aa24939c6a8420908c5cbd8c7e6",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_FULL_WAVE_RECTIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "32393524682a0e09edaeb92d2ca032b7ea93b5dde3229a77d81a9474bebc21c0",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "77ace48affbe364b25d8a7551cf71456781b52ae3772c39d9a4275098ba1d92a",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_PEAK_ATTACK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "cd9a8b0fe72deadf9bc7114e122a44dd6c225f9bea8204ced34d80af8372c255",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "eaa3d071bea15bf2618cd95a45e224b9e6fff486d1617025fcb5a36cc78e6a5c",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_BOUNDED_DECAY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "28b6ee06ea58ea6aa0651c38f7ef5cc137a73041430174abc189d41bc07a0576",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "4b224d87f6745f0dafd1aad7327b654e79c3edbe4d50792ab55382758bf7a633",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_ENVELOPE_LAG_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "bb624ef93f1f97204496e9582efb67f1a861924bb0b16dc609539d1d7f45d667",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "11f1a446385be7032885ba4ffad2e4ee3d650628c162467a458d86775bb7c566",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_RESET_ENVELOPE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "037",
+    "hashes": {
+      "mutation_catalog_sha256": "0a97affc03e25319c8c7d63f54a9971db6cc9fe4f565aaffeb868b4756d84dae",
+      "score_deck_sha256": "4de1bb41a21189732777c8434b65be81a139b9535bbd8718a82c1b2c56bbd5ec",
+      "task_certification_sha256": "38661c4f909e313aa4928bb14093f1752efe272cdfc81b28e58243739630d1d7",
+      "task_record_sha256": "0eb4e337e8e2df67089337a85c9a466e1423fcff9f17a2dfe2f05f5967bbbdd1"
+    },
+    "release_dir": "037-precision-rectifier-envelope-detector"
+  }
+}

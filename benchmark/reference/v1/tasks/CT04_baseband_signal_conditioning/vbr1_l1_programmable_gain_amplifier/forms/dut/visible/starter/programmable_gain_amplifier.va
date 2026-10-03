@@ -1,0 +1,19 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);
+    input clk, rst, gain_sel, vin;
+    output out, metric;
+    electrical clk, rst, gain_sel, vin, out, metric;
+
+    parameter real vth = 0.45;
+    parameter real vcm = 0.45;
+    parameter real gain_low = 0.8;
+    parameter real gain_high = 2.4;
+    parameter real vmin = 0.0;
+    parameter real vmax = 0.9;
+    parameter real tr = 200p from (0:inf);
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

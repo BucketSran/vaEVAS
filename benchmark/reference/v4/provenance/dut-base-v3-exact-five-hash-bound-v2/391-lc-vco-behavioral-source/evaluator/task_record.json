@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "391",
+  "checker_task_id": "v4_391_lc_vco_behavioral_source",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "f150ecdfcb50d780f8bb1c16a562f077a37fc8c246a51affca77d6737fb672b4",
+    "checker_profile.json": "cf790e01ccae72f567b5b3c82db8f8f7e2b17b8f3b3079450971905bc452e728",
+    "derivation_manifest.json": "ba639a5e94aa8e406c547d4667d4d2fc4c4c659517c6d09e584c4e77875efa1c",
+    "family_spec.json": "4dcab63bb07face7b826a474e3bc303babee08460acf8015925d2eec417ff22d",
+    "harness_spec.json": "4c684ad06a6b75e9625dfa00c6e569c955af1faba922cdd84358bbe73bfe3da0",
+    "mutation_catalog.json": "65209ab8cce48af3f3d601257a6df12495a20afbb25f2372f41bdc3d3b81e7e7",
+    "profiles/feedback.json": "81d0691d507677ea2a26b254dacaef0e7a06f430e9789e2659c999b10ba7c441",
+    "profiles/score.json": "c2a73de0f2b08193a5ca483911221d4cae85aa162123d78e785d507eece529ec",
+    "score_tb.scs": "5583f77c62c6798489dcea54d7e1007e90de48d8bc2aaed1bdf628703d70810d",
+    "solution_tree": "d4873756b1ce56606f3b9a1a049bc3d8c63c52395fd044cabcccfa69e3dc43ba",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b28d18e427f93e09ca2e8a6a7bafcceabb4910de4d495fe57ba213688165c9f5",
+    "instruction.md": "5f81b27e76c306efc5efe37e0e728e3eba4e9f87fe88d7c896f9a0380274eed9",
+    "public_contract.json": "7bcc311c163e4e3a7827246cc73b98fe1fa50e7c192cd08451cebde8d3db93ff"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "f150ecdfcb50d780f8bb1c16a562f077a37fc8c246a51affca77d6737fb672b4"
+  },
+  "release_dir": "391-lc-vco-behavioral-source",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "950-lc-vco-behavioral-source",
+  "support_root": "",
+  "target_artifacts": [
+    "lc_vco_behavioral_source.va"
+  ]
+}

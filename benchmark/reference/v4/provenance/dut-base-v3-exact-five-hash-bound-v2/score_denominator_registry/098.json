@@ -1,0 +1,87 @@
+{
+  "family_id": "098",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_frequency_step/certification.json",
+        "certification_sha256": "be131d7551b18c161ee4be7d59c7c7d64f552ab515cfa35c67d40d56471d84c7",
+        "fault_class": "periodic_source_spectral_error",
+        "mutation_bundle_sha256": "815df733df39b46d331b35a26b00b1269168fa12bab0f1008a967677f553f281",
+        "mutation_id": "neg_002_no_frequency_step",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_frequency_step/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Reference Step Clock",
+        "violated_property_ids": [
+          "P_PRE_SWITCH_PERIOD",
+          "P_SUPPLY_REFERENCED_RAILS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_bad_duty_cycle/certification.json",
+        "certification_sha256": "ce7c7931e47a42ff1b6871b9c776e46aa5f44991c70b13fd7c23883990d491d7",
+        "fault_class": "event_edge_polarity_error",
+        "mutation_bundle_sha256": "82a8f6f236efefc6435595f3fc620c7aeb8db64930cfd5c35d392a8ff2588eec",
+        "mutation_id": "neg_005_bad_duty_cycle",
+        "source_catalog_certification_path": "negative_variants/neg_005_bad_duty_cycle/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Reference Step Clock",
+        "violated_property_ids": [
+          "P_CADENCE_STEP",
+          "P_HALF_DUTY_CYCLE",
+          "P_POST_SWITCH_PERIOD",
+          "P_PRE_SWITCH_PERIOD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_post_period/certification.json",
+        "certification_sha256": "61bb5802a4472d213976b7049a8a4cc38feba886896b653171b4028967369da1",
+        "fault_class": "behavioral_contract_near_miss",
+        "mutation_bundle_sha256": "848188e90f4a0af5ff777c02f6aeb1c78dea8190a7b4058fb8132e4f3d45198c",
+        "mutation_id": "neg_003_wrong_post_period",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_post_period/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Reference Step Clock",
+        "violated_property_ids": [
+          "P_PARAMETERIZED_TIMING",
+          "P_PRE_SWITCH_PERIOD",
+          "P_SUPPLY_REFERENCED_RAILS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "4d0cc4cca0100a6713323ee28c086c7ca8fe36c136878849a6855d65eb05992f",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "014918a231dac2df84813c19ddec9bbc3ba567b4acacdc248e920faf58afbba3",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "event-timing stimulus distinguishes the required active edge for Reference Step Clock",
+        "violated_property_ids": [
+          "P_CADENCE_STEP",
+          "P_POST_SWITCH_PERIOD",
+          "P_PRE_SWITCH_PERIOD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_late_switch/certification.json",
+        "certification_sha256": "e05473cf057055e75e45e10e27da9cb15ab92cfb1f2cc70aadcd3285bbf113f7",
+        "fault_class": "periodic_source_spectral_error",
+        "mutation_bundle_sha256": "fc0acff5b51a6ef56c5c589deef054fd398d5820b6791636602a0575604beae1",
+        "mutation_id": "neg_004_late_switch",
+        "source_catalog_certification_path": "negative_variants/neg_004_late_switch/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Reference Step Clock",
+        "violated_property_ids": [
+          "P_PRE_SWITCH_PERIOD",
+          "P_SUPPLY_REFERENCED_RAILS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_frequency_step",
+    "canonical_dut_id": "098",
+    "hashes": {
+      "mutation_catalog_sha256": "a630c9a3336fdd5cd5e9b03eaba6044270f456800eb9e4b06c395aa22044dcf8",
+      "score_deck_sha256": "b52b0bcc5f36b9c1c005a9e021569e17bf426f929ae04590718a4240d76f3779",
+      "task_certification_sha256": "b00eb9598793f805084c7bb358cbaf0b79121cf94b2293989fab5012de48765e",
+      "task_record_sha256": "7ce550d4b1940c5c1f4c8deef9c5cc12b1c46b2e63c6b7a17df6d85968a253a9"
+    },
+    "release_dir": "098-reference-step-clock"
+  }
+}

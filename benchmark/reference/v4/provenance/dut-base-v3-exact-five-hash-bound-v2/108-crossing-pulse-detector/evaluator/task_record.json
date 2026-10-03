@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "108",
+  "checker_task_id": "v4_108_crossing_pulse_detector",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "405ba63a7a98a7731f85b1cbdf16700001f0b98ffb77b03a22d4891dab57df10",
+    "checker_profile.json": "75466e7ffb3e30ef1061df63234cc0a151a06685a50d0011f72f676cd04d88a6",
+    "derivation_manifest.json": "77c298132d5f85ee8ece83af19872cdb7c82d02ff2d57a898326ea2e952b3acc",
+    "family_spec.json": "1ce5ad15308a750941790f01950acc2a04ab9337b71a3c36d0afda006fa744de",
+    "harness_spec.json": "1dbcf3faa1c13b20dffd17145f21257973110a5f0bc53ff5a09bc56fc0faa0ad",
+    "mutation_catalog.json": "f92ced667b1bfb31e7216e64a38f3d0fd963e0d360686984cba0a3c0ddbf1749",
+    "profiles/feedback.json": "b25d73cf9383efd9ead1eec25010963749d6633de87d62c79af6dd28f5879eaf",
+    "profiles/score.json": "27eede395c91e0baa39251c1bd80a2bc0c0b7db9c45bb1507a2c05a399d1f268",
+    "score_tb.scs": "26e367466a5b1228709d5d8c2147e2d264ad61c522b47e140e9b52eef62c9e5a",
+    "solution_tree": "821783ccf894ab947e1d41c011097abafac4a88d799ca23e864d27553585a1f3",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "643cbfe99f1d19090cacd37c861975bc9693012d16c854df3d8a2e3d1c9f2b23",
+    "instruction.md": "cca12c8f0f0591efcfe7eccac0596ec15e0182e2533d7e21e3ef16e4fed51486",
+    "public_contract.json": "292116962fb95391ed9e2df1116b84fca38a981b87a01e56ee83d5bee4ac52a6"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "405ba63a7a98a7731f85b1cbdf16700001f0b98ffb77b03a22d4891dab57df10"
+  },
+  "release_dir": "108-crossing-pulse-detector",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "119-crossing-pulse-detector",
+  "support_root": "",
+  "target_artifacts": [
+    "source_crossing_pulse_detector.va"
+  ]
+}

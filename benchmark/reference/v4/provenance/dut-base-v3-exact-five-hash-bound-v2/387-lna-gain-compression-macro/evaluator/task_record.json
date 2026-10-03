@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "387",
+  "checker_task_id": "v4_387_lna_gain_compression_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "18b8beea1c8f6e98f7c7da077b91cd24e9970eaaa1c1a9786339b9c857489a65",
+    "checker_profile.json": "dbc08968fd4fa631f9fdede8f298d3102a583792c178863f27adb4e13b401cf0",
+    "derivation_manifest.json": "ddc1745a9eb4b04da2176299effcd8be1663db379d4d9cf89b4ca88525211d94",
+    "family_spec.json": "77996821e965e721987c8ebabbc62ce7de69cbfaed7640376b7ab300925aa923",
+    "harness_spec.json": "ceebf9ab9f9e797241d0983cd5bbe94d4249f04b771951aad7b42297cf3ea908",
+    "mutation_catalog.json": "ae17d3ff3eb58ba65379af399cb0ec1a356a4de3319af6bd386278ad7370666a",
+    "profiles/feedback.json": "f818747694cc2bf5a5911f6bba7dd2cd1a7fbe779322a134dcfc20fa3f6ad819",
+    "profiles/score.json": "67ff7dc2f4a4ab96b54281437c18012dd4a4763a51df32168a9d623a2d9b245a",
+    "score_tb.scs": "99ff528ead9dc5a33c05a8f4f7dde0853696aaf69c741abc2aa4d5dd3aa5b45d",
+    "solution_tree": "49427ea08da61fcaf9f8f7dfc07c7f14750cf02d832f2965bd9f5bfe343046f5",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "883e83b963213b10f5f4d94f3d53cda9f01f6765532e4bbe156461915ece805f",
+    "instruction.md": "43d8c3f42734c9c9454b0587efbbf8dd6908fb1ab3c9da235859365c84ef4baa",
+    "public_contract.json": "588a488bf20714c4ac1a01b06d7a6af71620bead8cf783aaf8ddc1257daad950"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "18b8beea1c8f6e98f7c7da077b91cd24e9970eaaa1c1a9786339b9c857489a65"
+  },
+  "release_dir": "387-lna-gain-compression-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "946-lna-gain-compression-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "lna_gain_compression_macro.va"
+  ]
+}

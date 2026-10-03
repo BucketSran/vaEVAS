@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "lock_low_before_three_good_edges"
+    - "lock_high_after_consecutive_aligned_edges"
+parity:
+  required: true
+  tolerance_notes: "Use reference-cycle windows; do not require exact analog event ordering at coincident rows."

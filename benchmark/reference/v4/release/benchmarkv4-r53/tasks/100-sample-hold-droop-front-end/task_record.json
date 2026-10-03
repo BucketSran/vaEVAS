@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sample_hold_droop_ref.va"
+  ],
+  "canonical_dut_source_slug": "100-sample-hold-droop-front-end",
+  "checker_task_id": "v4_100_sample_hold_droop_front_end",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a5d2ebdb7eb731d1ef41028b880e704d617302c0369b1b95d1708ba6cbc13f30",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a73e9e78e7c28a2315554bb5fd8a92d65f616413989d0406fe2bf72244b23fb0",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "2eb3f59220beb51a107e783ce3da07480fb3eed15d6444660b8b454103997848",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "100",
+  "family_spec_sha256": "7903038bf782411c78f1396645e9b95d027acc5cf55ede140f868738db2b8995",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3b11b140baf943b7e04ba8bdc91558631a41425df15ba8f68e85673f613c6f85",
+  "public_contract": "tasks/100-sample-hold-droop-front-end/public_contract.json",
+  "public_contract_sha256": "7f3be2ee2f916de9c5701c0b2bc289f5f3ad7fc936dc61e870f0857590c60399",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/100-sample-hold-droop-front-end",
+  "task_id": "v4-100"
+}

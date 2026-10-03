@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l1_window_comparator_detector_bugfix",
+  "task_id": "vbr1_l1_window_comparator_detector_bugfix",
+  "release_entry_id": "vbr1_l1_window_comparator_detector",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Comparator and Decision Circuits",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_buggy.va",
+    "dut_fixed.va",
+    "tb_window_comparator_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "inside_window_high_on_rising_and_falling_sweeps",
+    "below_lower_threshold_low",
+    "above_upper_threshold_low"
+  ],
+  "source": "bugfix_companion_from_dut"
+}

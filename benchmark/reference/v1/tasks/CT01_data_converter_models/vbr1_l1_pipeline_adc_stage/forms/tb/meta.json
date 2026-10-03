@@ -1,0 +1,48 @@
+{
+  "id": "vbr1_l1_pipeline_adc_stage_tb",
+  "task_id": "vbr1_l1_pipeline_adc_stage_tb",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "checker_task_id": "pipeline_stage",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "adc",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "release_form": "tb",
+  "provenance_status": "release_addition_pending_dual",
+  "counts": {
+    "model_capability": false,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "ahdl_include",
+    "tran",
+    "save"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_pipeline_stage_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/pipeline_stage.va",
+    "gold/tb_pipeline_stage_ref.scs"
+  ],
+  "evidence": {
+    "notes": "Testbench companion for pipeline ADC MDAC stage; fresh dual evidence pending."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "bugfix_seed_mutation_id": "neg_001_drive_vctrl_mid",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "fa36ffdd397c64481eb6430eec3ab2b63f739da378cbdda6444aa63c8cd3b59a",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "7315d29f37d913290945f73aaa68f25b07a6c4df6e284ae761e1fe9eb695b5e3",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_002_drive_metric_mid",
+    "neg_003_dead_zone_state",
+    "neg_004_gain_sign_flipped",
+    "neg_005_vctrl_unclamped",
+    "neg_001_drive_vctrl_mid"
+  ],
+  "read_only_support_artifacts": [
+    "support/ref_fb_clk.va"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "5d90d2e94af32852f1cd66008f2634b853f220ecce6f2a354dc6b323bdd78857",
+  "reference_tb_source_kind": "independent_reference_tb",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-801"
+}

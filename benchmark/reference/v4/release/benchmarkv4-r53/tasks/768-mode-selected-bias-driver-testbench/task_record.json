@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "268-mode-selected-bias-driver",
+  "checker_task_id": "v4_268_mode_selected_bias_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "e61cfce01a764f8d5ab0da146b3b76c5f9ca295da152ce5d164475fd1a98f6bb",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "bb52c333f98ed1a5d8c39ddc580ae2a5480181b0048b07743f76e4fddf3d3cab",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "e61cfce01a764f8d5ab0da146b3b76c5f9ca295da152ce5d164475fd1a98f6bb",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "273334da5791c542993718ac55b430421b397834e949ce4937175a3895565588",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "448930a7a718329ea33cff6bce1d166e886c0fa894cbd27a170bf118fa600e13"
+  },
+  "family_id": "268",
+  "family_spec_sha256": "e6f0414c910eabdc107a2c05337e8b1d4aad373c35499c88ecb7b27300bf9b6d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3f5eec0c30c7f52683a3da08d7364f36d9c587c920b4fa76e1deee7736b3851a",
+  "public_contract": "tasks/768-mode-selected-bias-driver-testbench/public_contract.json",
+  "public_contract_sha256": "ec3a9a44764e9b6044b76e25349155ae919c9d390b21aa72e73af6d4c34dc5ce",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/768-mode-selected-bias-driver-testbench",
+  "task_id": "v4-768"
+}

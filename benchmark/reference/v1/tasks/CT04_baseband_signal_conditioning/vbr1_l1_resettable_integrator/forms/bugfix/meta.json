@@ -1,0 +1,61 @@
+{
+  "id": "vbm1_resettable_integrator_bugfix",
+  "task_id": "vbm1_resettable_integrator_bugfix",
+  "release_entry_id": "vbr1_l1_resettable_integrator",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "amplifier-filter",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_resettable_integrator_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(timer(",
+    "transition(",
+    "rst"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_resettable_integrator_ref.scs",
+    "gold/tb_resettable_integrator_buggy.scs"
+  ],
+  "reconstruction": {
+    "bug_class": "reset_does_not_clear_accumulator",
+    "single_root_cause": "The buggy source holds the stale accumulator value while reset is asserted instead of clearing it.",
+    "fixed_expectation": "The fixed source drives the output near zero throughout reset windows and restarts integration from zero after release."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_resettable_integrator_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_resettable_integrator_bugfix/spectre_result.json",
+    "local_evas_verification": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under formal EVAS checker mapping.",
+    "spectre_status": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under Spectre."
+  }
+}

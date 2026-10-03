@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "269",
+  "checker_task_id": "v4_269_saturation_recovery_limiter",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "39c06d40c9f205849094d6073717cb60e4d6c1f3875d7a356409dbfbf7ef5265",
+    "checker_profile.json": "29d56f750062b49e1aea91bf76392b44b7fc4a38ea7b618c906da5b5752c215b",
+    "derivation_manifest.json": "6b24a6104e82cbf61ddf10641eb8500e26d54b516de9b019a95c630b83ad8a78",
+    "family_spec.json": "46a32763c11e8c15f03d8dda059967ad5da9553d2cd21acda36e4eadcf003d12",
+    "harness_spec.json": "da50dfe1f89aadf28d46371c9dcfc8166d6664c8d04bf4c50da3969aebe8f0d0",
+    "mutation_catalog.json": "da38025dec992562d5d5ba34a871e1c6301884feff71bc5410b7b3089277ec24",
+    "profiles/feedback.json": "c6de6a2ba8c8d8e8efe7d30202f4d1222be245d9f8aa2c1030332b1397efa735",
+    "profiles/score.json": "57acb2fb28e4d01572bfb421ed3317e70f210c65b73955c920c39d6d14b3b337",
+    "score_tb.scs": "85fb7e40d4334a947d073db9f5e4acf4fe6069a6c81b3aae4890b569f86f39fb",
+    "solution_tree": "f9af588036719b07f3a36e7987ed529324e94672923bed574e3f18cac3feb868",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0d760bdd8088ceab02c47214f8da701d01dbbfb9e812141daeb7a76a9ef08e7a",
+    "instruction.md": "e026a177c3a545ddb9f80fab8e4e5fcd6a79d9681eec9a49c0f7b0f0e901d3a1",
+    "public_contract.json": "21288a72f39f1bd7d91c94d8baaf95147d6544ede92d8c8fc9c0f7ab3bef62c3"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "39c06d40c9f205849094d6073717cb60e4d6c1f3875d7a356409dbfbf7ef5265"
+  },
+  "release_dir": "269-saturation-recovery-limiter",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "373-saturation-recovery-limiter",
+  "support_root": "",
+  "target_artifacts": [
+    "saturation_recovery_limiter.va"
+  ]
+}

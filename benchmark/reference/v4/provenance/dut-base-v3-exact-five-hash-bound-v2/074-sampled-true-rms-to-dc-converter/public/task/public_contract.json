@@ -1,0 +1,56 @@
+{
+  "agent_visible_files": ["instruction.md", "public_contract.json", "feedback_tb.scs"],
+  "canonical_dut_id": "074",
+  "canonical_instruction": "instruction.md",
+  "category": "baseband_signal_conditioning",
+  "counted_in_score": true,
+  "difficulty": "D2",
+  "feedback_oracle": {
+    "command": "vabench-feedback --task . --submission ../submission",
+    "feedback_channels": ["ahdl_like_preflight", "evas_simulation", "behavior_property_diagnostics"],
+    "profile_exposed": false,
+    "public_tb": "feedback_tb.scs",
+    "public_tb_exposed": true,
+    "queryable_by_agentic_modes": true,
+    "raw_scs_exposed": true
+  },
+  "form": "dut",
+  "gate2_status": "repair_pending_recertification",
+  "language": "verilog-a",
+  "level": "L1",
+  "oracle_policy": {
+    "checker_private": true,
+    "feedback_and_score_share_checker_family": true,
+    "feedback_oracle_materialized": true,
+    "no_model_visible_raw_scs": false,
+    "no_model_visible_starter": true,
+    "proposal_only": false,
+    "public_feedback_tb_exposed": true,
+    "score_tb_private": true,
+    "single_public_contract": true,
+    "testbench_and_checker_split_required": true
+  },
+  "public_observables": ["time", "vinp", "vinn", "clk", "reset", "enable", "rms_out", "valid"],
+  "schema_version": "v4-public-contract-v1",
+  "score_oracle": {
+    "checker_profile_exposed": false,
+    "private_score_tb_exposed": false,
+    "profile_exposed": false,
+    "queryable_by_agentic_modes": false,
+    "raw_scs_exposed": false
+  },
+  "status": "repair_pending_recertification",
+  "target_artifacts": ["sampled_true_rms_to_dc.va"],
+  "task_id": "v4_074_sampled_true_rms_to_dc_converter",
+  "task_slug": "074-sampled-true-rms-to-dc-converter",
+  "title": "Sampled True-RMS-to-DC Converter",
+  "track": "baseband_signal_conditioning_dut",
+  "validation_status": {
+    "evas_feedback_score_gold": "pass",
+    "gate2": "targeted_rust_evas2_pass",
+    "next_gate": "r50_full400_rust_evas2_certification",
+    "semantic_negative_certification": "pass",
+    "spectre_score_gold": "optional_not_run",
+    "untriaged_warning_count": 0
+  }
+}

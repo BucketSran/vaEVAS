@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "089-edge-crossing-interval-timer",
+  "checker_task_id": "v4_089_edge_crossing_interval_timer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "b13e22ba0c9835e3ca0061fc9dc84bb1741e30fbbf71cc918f95830f4deab3e6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "08423044bd505a5c239c0928785f2e7b0b1122f1cfc4714fd8a66a98772ac905",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "b13e22ba0c9835e3ca0061fc9dc84bb1741e30fbbf71cc918f95830f4deab3e6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c32afdb59a860d05f480a4995c3319164b202125097de38db48341a1f66ca40a",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "c121ade21968a8abb7c2f2a2da251b3bd69b4312515823a9a16cd407f947491f"
+  },
+  "family_id": "089",
+  "family_spec_sha256": "ebf0a6b4dbdc11dcd700618e90e9da1c44b0dd75e1ab1ae84bd175ab5ccb59d3",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "47aea5beb7096306b27b82c1abdf79e586d4e4ea861432877c47f3f4fe1e8120",
+  "public_contract": "tasks/589-edge-crossing-interval-timer-testbench/public_contract.json",
+  "public_contract_sha256": "1c4036b62e41c1f9d5349675ba0e25bc3265baf43a2adbd376d2719bf7f68f40",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/589-edge-crossing-interval-timer-testbench",
+  "task_id": "v4-589"
+}

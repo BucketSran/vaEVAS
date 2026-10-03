@@ -1,0 +1,24 @@
+{
+  "artifact_mode": "multi_file",
+  "bugfix_seed_mutation_id": "neg_003_lowpass_bypassed",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "f2ad97b1456c9eaab9b44496a92248fb7eb92150544f9de0a57544429c469cbe",
+  "candidate_artifacts": [
+    "chopper_stabilized_differential_amplifier.va",
+    "chopper_gain_core.va",
+    "synchronous_lp_state.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "chopper_stabilized_differential_amplifier.va"
+  ],
+  "checker_profile_sha256": "88c8bc22987ca9047c9083209e0fdd7dcf9d77af53d800350d3b8aaae48dea6e",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "879980664773184af88f813057186eb84459e680827f1b0ea257d81eb736eb33",
+  "gold_solution_tree_sha256": "5721b1434c489db12e4e6f9ec10baae0ebb316572396dd444a3bcd853c46b702",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "ec11fb8268a4d3523e17b172624cf91300adabfd81ad4c59c05d693ee975f90f",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1091"
+}

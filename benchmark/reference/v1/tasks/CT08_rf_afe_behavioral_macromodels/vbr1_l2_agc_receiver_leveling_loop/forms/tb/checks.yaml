@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "agc_reduces_gain_on_large_input"
+    - "leveled_output_amplitude"
+    - "lock_metric_after_settling"
+    - "rssi_monitor_rises_on_overload"
+    - "gain_monitor_decreases_after_high_rssi"
+parity:
+  reference: "spectre"
+  status: "pending_fresh_dual_rerun"
+  notes:
+    - "Fresh dual rerun required after adding gain_mon/rssi_mon intermediate observability."

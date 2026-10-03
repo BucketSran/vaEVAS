@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "036",
+  "checker_task_id": "v4_036_power_on_reset_detector",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "50c066bd7e9c916e51db171d39f5946e17ce5734fcd3497449a97c56faa7179a",
+    "checker_profile.json": "3e086a0e28ceade80741406510aa74d5dd2454895ff17e1a2639f74cd09db21c",
+    "derivation_manifest.json": "1c820db4970601f589b7b7ac5cac9953ccf1beeca3dd2de2f153f31b59573fd5",
+    "family_spec.json": "49a0b8829819969f5a855af95e8c7336948996e6c31570daef8cbe37f3ccf9f4",
+    "harness_spec.json": "ecce32eb895cc80c41795fc8c8b5b11253b88930ac2d84bad98c7157d5511ce6",
+    "mutation_catalog.json": "cdf124eddb4036aaf57f4e07ee624ffa4a40ca071c6f85a6545949b37d517378",
+    "profiles/feedback.json": "a2e3cbf546a4efc3d42a9bf3bba784a582753a5bb2c2fb0a3ff7159418a339c9",
+    "profiles/score.json": "74bea1367514cd7bcdab51087285d8b32e0bb04d310ec074832d8a4d8796b220",
+    "score_tb.scs": "6442128aa3087933beecc4300ce545c81c9ad4dba84081a7a5bb231a073bf734",
+    "solution_tree": "3f3c2fde68a50de1c302a3b3fc10eb44c159a39eab5d7be8e26384e7bdf19416",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "9dd854fb7dbf58308c6feb6e082e51ecb781dcbae913493eadd201e00eae8663",
+    "instruction.md": "200dae6a64aa68eb1eb3b2e954f1fbae6a75f625ed0618ae0115fe022697ab48",
+    "public_contract.json": "823131bfa9bcdd2c5cde19c8913f5d45ec04c8d8b77645f94714f8bdcf5fde30"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "50c066bd7e9c916e51db171d39f5946e17ce5734fcd3497449a97c56faa7179a"
+  },
+  "release_dir": "036-power-on-reset-detector",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "038-power-on-reset-detector",
+  "support_root": "",
+  "target_artifacts": [
+    "power_on_reset_detector.va"
+  ]
+}

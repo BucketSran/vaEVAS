@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "cmp_strongarm.va"
+    - "save"
+    - "tran"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "outputs_toggle_nontrivially"
+    - "stimulus_exercises_positive_and_negative_edge_decisions"
+    - "stimulus_swaps_inputs_during_evaluate_phase"
+    - "falling_clk_reset_windows_are_observable"
+parity:
+  required: true
+  status: "pending"
+  tolerance_notes: "Fresh dual evidence required after latch-hold/reset stimulus and checker tightening."

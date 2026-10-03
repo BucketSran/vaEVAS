@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l1_ramp_or_step_source:e2e",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_ramp_or_step_source",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Stimulus and Source Generators",
+  "base_function": "Periodic phase-ramp guard source",
+  "family": "end-to-end",
+  "domain": "voltage",
+  "score_surface": "model-capability",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e/gold/bound_step_period_guard_ref.va",
+      "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e/gold/tb_bound_step_period_guard_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_ramp_or_step_source/e2e/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "periodic_phase_ramp_guard_source",
+    "source_task_id": "bound_step_period_guard_smoke",
+    "historical_source_task_id": "bound_step_period_guard_smoke",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP02_stimulus_and_source_generators/vbr1_l1_ramp_or_step_source/forms/e2e"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

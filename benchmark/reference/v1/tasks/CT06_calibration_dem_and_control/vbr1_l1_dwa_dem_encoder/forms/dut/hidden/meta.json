@@ -1,0 +1,33 @@
+{
+  "id": "vbr1_l1_dwa_dem_encoder_dut",
+  "task_id": "vbr1_l1_dwa_dem_encoder_dut",
+  "release_entry_id": "vbr1_l1_dwa_dem_encoder",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "spec-to-va",
+  "category": "Calibration, DEM, and Control",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dwa_ptr_gen.va",
+    "tb_dwa_ptr_gen_ref.scs",
+    "v2b_4b.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "pointer_advances_by_sampled_input_code",
+    "cell_enable_window_matches_effective_code_plus_lsb_boundary",
+    "pointer_output_is_one_hot",
+    "wraparound_and_multi_code_coverage"
+  ],
+  "source": "dut_companion_from_e2e"
+}

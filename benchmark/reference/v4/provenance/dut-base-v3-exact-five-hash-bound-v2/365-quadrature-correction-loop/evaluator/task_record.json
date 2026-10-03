@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "365",
+  "checker_task_id": "v4_365_quadrature_correction_loop",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "2d03b1eb36ce538b4ac38b905fc19240fe888bbe25c23caa2a08bcbb42030332",
+    "checker_profile.json": "ff8a0e5a7d904325ce2539b3c291003330f62e8e480c2c7fa9dd15cfc6b337e6",
+    "derivation_manifest.json": "5c3924034fa0c0d3fe50aba3bb78951d34cb52998eeaae0f2cde19670177d2fa",
+    "family_spec.json": "5c3527a69cde2c2adb44004e46c2625cafd7243cf48f75e1249cb6cfa81daad0",
+    "harness_spec.json": "25633dc0b942b5765e6cac3b0042a9f83b6ef5268dac63a7bd8e8337afa1c669",
+    "mutation_catalog.json": "0170d97687807e2dcb1e7bc983d7c751ff2d9b406bb042d5cac1e0d53634c744",
+    "profiles/feedback.json": "9f97bcbeef9c031a47970d2311c7cdf52569ce088c1e4308e066e5a0d6899378",
+    "profiles/score.json": "c1210480f31351ef1248f5443fd187bfe3ecc140dc9af403f82e40d1a6e93018",
+    "score_tb.scs": "742edea88202000e3bda420dc44dcf9961afea55e77835af3d8aed41b0f6f8df",
+    "solution_tree": "b451ef610fec7a3102195f0606f46cb87a51449ba0670b70fb3eabc26221dda8",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "1db63b1504dc057c35c5b833b476071c32a49ebd0825aeba9ee83c7a936d111c",
+    "instruction.md": "156694c0fd8c7fb2be1c29328365f8d54233a4a0e08264b19d48e3f029d757f5",
+    "public_contract.json": "5e99311ac4c7c8fc0c4afbab374af632fe426f9138ad2ede3f306b4bc1ecd91c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "2d03b1eb36ce538b4ac38b905fc19240fe888bbe25c23caa2a08bcbb42030332"
+  },
+  "release_dir": "365-quadrature-correction-loop",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "924-quadrature-correction-loop",
+  "support_root": "",
+  "target_artifacts": [
+    "quad_corr_top.va",
+    "gain_trim.va",
+    "skew_estimator.va",
+    "corrector.va"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "337",
+  "checker_task_id": "v4_337_vga_step_response_classifier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "43642314e4c380db86136c2824f5317d47e7c8a8910c8962807be4e7d4cf6a79",
+    "checker_profile.json": "8a804a3c25de275cba98a16bc8d4de47d67476c31fc813706965cfa18f769587",
+    "derivation_manifest.json": "67a5f322782945b21b43b9272d5b56bcdd1181d4f199c0f5676785f4d982950a",
+    "family_spec.json": "5d4512ace185c2a6c5f373d876ab5732a995e76f0f1e92233ff66ab31289b8d1",
+    "harness_spec.json": "cb7ca2c166a5af64c17886f4dfcec024d4a6884022bc4ed2042d88dc1ea26862",
+    "mutation_catalog.json": "c2526ff5d8abf54510edc10f5c0198f9a8510651592e73751b68ec8ad5e7df5c",
+    "profiles/feedback.json": "7d2e79faacfeca6731236d61c3bb1a1e56ddeda3e3825519d622d171ec9c8442",
+    "profiles/score.json": "539ba995664761124f15842ae564ed925b033d8827df84521d8f1d08400aa824",
+    "score_tb.scs": "81867ca13eecac63fcc2fa645b4b98030812e65492a0894c16f9a208fc2d5331",
+    "solution_tree": "f6e3009d887237226cf9bc76f86c5f71fb8157c692ebfe6079875e9df8391867",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b11e69ab98705b1731ae00eb431db002542e9a0f5d7bbad62b9da20e64dacd60",
+    "instruction.md": "633d21e5a3dc5855d46039f93c18177dbe1a9dc1a150b4f4cec9c7b206afc18f",
+    "public_contract.json": "3143ab01a9a4f767b3f51d3b31eb9aca587442d7339ae15de9a24a736625cf0c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "43642314e4c380db86136c2824f5317d47e7c8a8910c8962807be4e7d4cf6a79"
+  },
+  "release_dir": "337-vga-step-response-classifier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1035-vga-step-response-classifier",
+  "support_root": "",
+  "target_artifacts": [
+    "vga_step_response_classifier.va"
+  ]
+}

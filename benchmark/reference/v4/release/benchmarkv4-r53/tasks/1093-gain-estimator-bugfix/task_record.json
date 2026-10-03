@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "gain_estimator.va"
+  ],
+  "canonical_dut_source_slug": "093-gain-estimator",
+  "checker_task_id": "v4_093_gain_estimator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d75796a752f968067cc94046b79e11f4b2a926dd84b4cf5005ad6c263d54241b",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a3579ab0ee208b7b89aa5002e8b80c7b836a5ab70469397f1db8130c71374abe",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "aa2365ff27221ca317d82d373a1d9ae5ee2d17544da844414c0a2ea3db1c87ea",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "093",
+  "family_spec_sha256": "f37d52173916180575da20087ed0390a7a870e02cb8dcadbe590cfd4d4d43065",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "70e46529d82fda2a700fd29f1573e05c7a0b82af95ab3efb13c6742f1e7b009d",
+  "public_contract": "tasks/1093-gain-estimator-bugfix/public_contract.json",
+  "public_contract_sha256": "dd718adcff0999696fb424a69dced475905d9e9732f3d2bb3effdbacbb5340cf",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1093-gain-estimator-bugfix",
+  "task_id": "v4-1093"
+}

@@ -1,0 +1,79 @@
+{
+  "family_id": "314",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_thresholds_reversed/certification.json",
+        "certification_sha256": "5cbd602bca789e6ac6374f557a480286c2694506cc3eaad5ad0d963517cb22ab",
+        "fault_class": "thresholds_reversed",
+        "mutation_bundle_sha256": "920287e64332616d0cf9e540c8bb29da6aa1bce19f357c6dcd016a51727989b0",
+        "mutation_id": "neg_002_thresholds_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_thresholds_reversed/certification.json",
+        "trigger_condition": "thresholds_reversed",
+        "violated_property_ids": [
+          "P_USE_LOW_TRIP_AND_HIGH_TRIP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_hysteresis_chatter/certification.json",
+        "certification_sha256": "b2f497055a481c3c9baf1237cce6f2c94902a63e708f6e79918947589d558658",
+        "fault_class": "no_hysteresis_chatter",
+        "mutation_bundle_sha256": "bfa369e4d69b8e839bf15a351d940dd0a4700d3788124bde84420c04107921ed",
+        "mutation_id": "neg_001_no_hysteresis_chatter",
+        "source_catalog_certification_path": "negative_variants/neg_001_no_hysteresis_chatter/certification.json",
+        "trigger_condition": "no_hysteresis_chatter",
+        "violated_property_ids": [
+          "P_ASSERT_INSIDE_FLAG_WHEN_VIN_ENTERS",
+          "P_DO_NOT_CHATTER_FOR_SMALL_INPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_toggled_missing/certification.json",
+        "certification_sha256": "dd8367a2fcb3aa08fac7e70152dffc781dad72bc18c37c66d3dde0190332ce32",
+        "fault_class": "toggled_missing",
+        "mutation_bundle_sha256": "fa2dd8272519037eff4e493b5cd7b59249d3e21be360d02d05cc024d9f6c0544",
+        "mutation_id": "neg_003_toggled_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_toggled_missing/certification.json",
+        "trigger_condition": "toggled_missing",
+        "violated_property_ids": [
+          "P_EXPOSE_THE_CURRENT_STATE_AS_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_does_not_clear/certification.json",
+        "certification_sha256": "ed83f1da5bb99a9555632b8d078e49e249b886aa8dd2a4073b36be21826c775d",
+        "fault_class": "reset_does_not_clear",
+        "mutation_bundle_sha256": "97df6f1d7cd5dc4fc115fe719e981760916483961aa135d4aaf1936ee031176d",
+        "mutation_id": "neg_004_reset_does_not_clear",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_does_not_clear/certification.json",
+        "trigger_condition": "reset_does_not_clear",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_enable_ignored/certification.json",
+        "certification_sha256": "861642e1e33948dcef27f26ee232100a8eec795fd1994c9b45fa8bb0c4059f0f",
+        "fault_class": "enable_ignored",
+        "mutation_bundle_sha256": "a36f15c7cc4cd98c2686d7e880ec876e463793390a7c5db61f3f65d6f6f87058",
+        "mutation_id": "neg_005_enable_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_005_enable_ignored/certification.json",
+        "trigger_condition": "enable_ignored",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_thresholds_reversed",
+    "canonical_dut_id": "314",
+    "hashes": {
+      "mutation_catalog_sha256": "408fb58134d6e140e40a1db324d90eb4f8c74038db5f6a5c75688eab4042cb64",
+      "score_deck_sha256": "471ad49bad63c52030101cf7bdef534f66821e29479ddedcf886ca83202c3d70",
+      "task_certification_sha256": "be3bef47e2fc41ba597b1ce723d0c9fc2fb924f233e4d6e26d61c4f6cdd6e275",
+      "task_record_sha256": "0c3f3399f9791bb445d7e9c22746c8e949de4986ce9bc0bf60d071639f16c687"
+    },
+    "release_dir": "314-hysteretic-window-comparator"
+  }
+}

@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "tran"
+    - "save"
+  must_not_include:
+    []
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "first_peak_is_held"
+    - "reset_clears_peak"
+    - "second_peak_updates_to_larger_value"
+parity:
+  required: true
+  tolerance_notes: "Use broad windows around peaks; do not depend on exact timer alignment."

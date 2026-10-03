@@ -1,0 +1,60 @@
+{
+  "id": "vbm1_pfd_reset_race_bugfix",
+  "task_id": "vbm1_pfd_reset_race_bugfix",
+  "release_entry_id": "vbr1_l1_pfd_up_dn_logic",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "phase-detector",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_pfd_reset_race_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(cross(",
+    "transition(",
+    "UP",
+    "DN"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_pfd_reset_race_ref.scs",
+    "gold/tb_pfd_reset_race_buggy.scs"
+  ],
+  "reconstruction": {
+    "bug_class": "missing_div_branch_both_high_reset",
+    "single_root_cause": "The buggy source omits the both-high reset in the DIV edge branch.",
+    "fixed_expectation": "The fixed source resets both UP and DN regardless of whether REF or DIV arrives second."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_pfd_reset_race_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_pfd_reset_race_bugfix/spectre_result.json"
+  }
+}

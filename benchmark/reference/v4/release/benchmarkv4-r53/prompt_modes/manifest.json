@@ -1,0 +1,125 @@
+{
+  "components": {
+    "agentic_wrapper.md": {
+      "applicable_forms": [
+        "dut",
+        "testbench",
+        "bugfix"
+      ],
+      "bytes": 1193,
+      "id": "agentic_wrapper.md",
+      "kind": "wrapper",
+      "license": {
+        "spdx": null,
+        "status": "repository_license_pending"
+      },
+      "path": "prompt_modes/wrappers/agentic_wrapper.md",
+      "provenance": {
+        "source": "V4_TRI_FORM_BENCHMARK_REQUIREMENTS.md",
+        "type": "project_authored"
+      },
+      "semantic_version": "1.0.0",
+      "sha256": "27d5b928336019c8052b9238c18f9031714217e872c68cc6f51240423adeac63",
+      "stable_id": "component.wrapper.agentic",
+      "token_counts": {
+        "vabench_utf8_lexeme@1.0.0": 237
+      }
+    },
+    "direct_wrapper.md": {
+      "applicable_forms": [
+        "dut",
+        "testbench",
+        "bugfix"
+      ],
+      "bytes": 581,
+      "id": "direct_wrapper.md",
+      "kind": "wrapper",
+      "license": {
+        "spdx": null,
+        "status": "repository_license_pending"
+      },
+      "path": "prompt_modes/wrappers/direct_wrapper.md",
+      "provenance": {
+        "source": "V4_TRI_FORM_BENCHMARK_REQUIREMENTS.md",
+        "type": "project_authored"
+      },
+      "semantic_version": "1.0.0",
+      "sha256": "6c6f14a39348b41d5a389ea2796e743f89ba864148785028fac0524a90b6e5b3",
+      "stable_id": "component.wrapper.direct_one_shot",
+      "token_counts": {
+        "vabench_utf8_lexeme@1.0.0": 102
+      }
+    }
+  },
+  "reference_tokenizer": {
+    "algorithm": "Unicode word runs and individual non-whitespace punctuation marks",
+    "id": "vabench_utf8_lexeme",
+    "version": "1.0.0"
+  },
+  "schema_version": "v4-prompt-component-manifest-v1",
+  "skill_snapshots": {
+    "vabench-feedback": {
+      "path": "skills/vabench-feedback",
+      "skill_file": "skills/vabench-feedback/SKILL.md",
+      "tree_sha256": "ac22677395737018bf404507cc67b42ae3e0089551507184ed0c241328370168"
+    },
+    "veriloga": {
+      "path": "skills/veriloga",
+      "skill_file": "skills/veriloga/SKILL.md",
+      "tree_sha256": "9c8e71339ad6871f49a39739eb6fc95e2f165560c7de638e594e23f929e82dc5"
+    }
+  },
+  "skills_manifest": "skills/SNAPSHOT_MANIFEST.json",
+  "wrappers": {
+    "agentic_wrapper.md": {
+      "applicable_forms": [
+        "dut",
+        "testbench",
+        "bugfix"
+      ],
+      "bytes": 1193,
+      "id": "agentic_wrapper.md",
+      "kind": "wrapper",
+      "license": {
+        "spdx": null,
+        "status": "repository_license_pending"
+      },
+      "path": "prompt_modes/wrappers/agentic_wrapper.md",
+      "provenance": {
+        "source": "V4_TRI_FORM_BENCHMARK_REQUIREMENTS.md",
+        "type": "project_authored"
+      },
+      "semantic_version": "1.0.0",
+      "sha256": "27d5b928336019c8052b9238c18f9031714217e872c68cc6f51240423adeac63",
+      "stable_id": "component.wrapper.agentic",
+      "token_counts": {
+        "vabench_utf8_lexeme@1.0.0": 237
+      }
+    },
+    "direct_wrapper.md": {
+      "applicable_forms": [
+        "dut",
+        "testbench",
+        "bugfix"
+      ],
+      "bytes": 581,
+      "id": "direct_wrapper.md",
+      "kind": "wrapper",
+      "license": {
+        "spdx": null,
+        "status": "repository_license_pending"
+      },
+      "path": "prompt_modes/wrappers/direct_wrapper.md",
+      "provenance": {
+        "source": "V4_TRI_FORM_BENCHMARK_REQUIREMENTS.md",
+        "type": "project_authored"
+      },
+      "semantic_version": "1.0.0",
+      "sha256": "6c6f14a39348b41d5a389ea2796e743f89ba864148785028fac0524a90b6e5b3",
+      "stable_id": "component.wrapper.direct_one_shot",
+      "token_counts": {
+        "vabench_utf8_lexeme@1.0.0": 102
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "family_id": "040",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "08ba7591729023f05d9fb847e4818689ee1ad9ab102e4755c9e70085c689acf6",
+        "fault_class": "boundary_semantic_error",
+        "mutation_bundle_sha256": "44ff98cb695ca8ef774046879bcc1a44095c811b56160c0088d3691b0725f4af",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "a public endpoint, threshold, saturation, or settling boundary is exercised",
+        "violated_property_ids": [
+          "P_RESET_REFERENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "854d51a9d7dad97556554fa1a5cf28fde99433270f227e097ec8612937696278",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "b917ac905ce62abfda93f5c13a6ea34db52885e2baa90a6820732c7bcbdebd45",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "positive/negative path, feedback direction, I/Q polarity, or trim direction is exercised",
+        "violated_property_ids": [
+          "P_PTAT_TREND"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "06c8efa9b9ed3abbcffe097a42eeecce75f8387a4986711844ada3b87f3450c2",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "f0d1f4049070e4218eaadbc26c0ddbe44a26f5456cd57b25a52da41c74c1716e",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "reset, enable, initial-condition, done, or ready behavior is exercised",
+        "violated_property_ids": [
+          "P_CTAT_PTAT_AVERAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "bc991c788a1c460c44693aef6081471b2dc82d889d481b3524eaf88dcaabec12",
+        "fault_class": "metric_or_measurement_error",
+        "mutation_bundle_sha256": "c8ba3605d6e7650459c657c9b3050860da9e03a881b62e27afbee86d4147a8a5",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "a public metric, latency, count, or measurement output is observed",
+        "violated_property_ids": [
+          "P_REFERENCE_BOUNDS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "b74873dc9b896d0958a83aa557e4fa2cc496037fbb649502d15625100a475ff7",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "5fae1689063da0cdecefd7efae68fde1cb4e1197ff455c4897f720f978ab9a53",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a public edge, timer, sample, lock, or reacquire window is exercised",
+        "violated_property_ids": [
+          "P_INPUT_CLAMP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "040",
+    "hashes": {
+      "mutation_catalog_sha256": "eeee18293059edd997c4ca5926d5211c10106c1727e9dae9cfc03de778eb5262",
+      "score_deck_sha256": "f0246c3b1056324d1b239be44f7bd274bacbc6392b83efea59da530d0d752c76",
+      "task_certification_sha256": "eb7fab9f02c6a6d86de9e9e0f28de065f6c11ef45540c31e179a16ea7ee761fb",
+      "task_record_sha256": "d753be59e4b44a7745187bfa244f15da66ffc60df11d253fc476b65acad9e8b8"
+    },
+    "release_dir": "040-ptat-ctat-reference-generator"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "154-flash-adc-threshold-taps",
+  "checker_task_id": "v4_154_flash_adc_threshold_taps",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "280517aaccef025f01dbf7e26ed54ac8113da53c582d500f883a2dbc8486249e",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8f8873c77adba7c11200b249390568fc5faf8880c3ce64dd5dc637b904f8473a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "280517aaccef025f01dbf7e26ed54ac8113da53c582d500f883a2dbc8486249e",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "f26bec6054f22f4d470d0c74466d095c594379ff59ad608aed197f4e20f45497",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "79b107be0ce8f9b5d5c70b35b4b1ecd490d8aa4690170ef120b99c89866eee01"
+  },
+  "family_id": "154",
+  "family_spec_sha256": "c6ca1c452ddd07e7eb0ddbbbfa4511c0b1983abcc21893ea0ca20b119d95d04c",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "f95c53fc1f257793887b5e11c271ac4f9c117d6826353dcde56337ddcdc66b15",
+  "public_contract": "tasks/654-flash-adc-threshold-taps-testbench/public_contract.json",
+  "public_contract_sha256": "4681467c21d68cee0a18ca98606852e6f940bbe8e4ebf370eacee345e2826866",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/654-flash-adc-threshold-taps-testbench",
+  "task_id": "v4-654"
+}

@@ -1,0 +1,95 @@
+{
+  "id": "vbr1_l1_settling_time_detector",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_settling_time_detector",
+  "level": "L1",
+  "track": "support",
+  "difficulty": "D2",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Settling response measurement helper",
+  "package_status": "current_l1_seed",
+  "score_surface": "model-capability",
+  "source_base_id": "settling_time_measurement_tb",
+  "canonical_kernel": "settling_window_metric",
+  "source_registry_status": "release_seed_with_extra_check",
+  "source_evidence_status": "main120_dual_pass",
+  "source_tasks": [
+    {
+      "form": "tb",
+      "source_path": "tasks/tb-generation/voltage/measurement/vbm1_settling_time_measurement_tb_tb",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "tasks/end-to-end/voltage/measurement/vbm1_settling_time_measurement_tb_e2e",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb/gold/settling_time_measurement_tb.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/tb/gold/tb_settling_time_measurement_tb_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_settling_time_detector/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_settling_time_detector/tb/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/tb/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/tb/spectre_result.json",
+      "release_source_task_id": "vbm1_settling_time_measurement_tb_tb",
+      "historical_source_task_id": "vbm1_settling_time_measurement_tb_tb"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/gold/settling_time_measurement_tb.va",
+        "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l1_settling_time_detector/forms/e2e/gold/tb_settling_time_measurement_tb_ref.scs"
+      ],
+      "asset_materialized": true,
+      "static_status": "pass",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_settling_time_detector/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_settling_time_detector/e2e/result.json",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/e2e/evidence.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_settling_time_detector/e2e/spectre_result.json",
+      "release_source_task_id": "vbm1_settling_time_measurement_tb_e2e",
+      "historical_source_task_id": "vbm1_settling_time_measurement_tb_e2e"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

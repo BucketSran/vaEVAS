@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sum5_signed_sar_weight.va"
+  ],
+  "canonical_dut_source_slug": "211-sum5-signed-sar-weight",
+  "checker_task_id": "v4_211_sum5_signed_sar_weight",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8d49e6b9ebe28c6146ccf80a50189318b4502c4c828fd4e51b37a0bf3f62cef9",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9a469ca96425da561648727da3c87f9d77fe17c3fe1c145a89cce6eb5cbc3c20",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d30b788e7e8ac923d72c3afb04779cb7e2a54692b8be037a7067a1365f57775f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "211",
+  "family_spec_sha256": "95b15903798d74a30459eae0063b01ac89eba4d39301a20d1697f2c79e72323d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "30ce524a81c751fcc08432426da88b1861f315c00a156abaac4f161450b8456f",
+  "public_contract": "tasks/1211-sum5-signed-sar-weight-bugfix/public_contract.json",
+  "public_contract_sha256": "859e79711bfdbbbd7665718c63f40b2231fdd1b6b0a3d4f399a25b0a61f6ac9d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1211-sum5-signed-sar-weight-bugfix",
+  "task_id": "v4-1211"
+}

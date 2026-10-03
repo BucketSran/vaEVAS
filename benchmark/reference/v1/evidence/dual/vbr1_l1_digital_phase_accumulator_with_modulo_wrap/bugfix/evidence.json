@@ -1,0 +1,92 @@
+{
+  "release_entry_id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap",
+  "task_id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap:bugfix",
+  "source_task_id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap_bugfix_fixed",
+  "task_form": "bugfix",
+  "taxonomy": {
+    "level": "L1",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "Digital phase accumulator with modulo wrap"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/fixed",
+    "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/fixed",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/dut_buggy.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/dut_fixed.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/tb_phase_accumulator_timer_wrap_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/fixed",
+    "result_root": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/bugfix/fixed",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        7.5e-08
+      ],
+      "signals_compared": 2,
+      "samples": 1200,
+      "max_rmse_v": 1.6769379450514881e-15,
+      "max_abs_v": 2.9753977059954195e-14,
+      "mean_relative_rms_error": 1.2421762555936948e-15,
+      "max_relative_rms_error": 2.4843525111873897e-15,
+      "mean_nrmse": 1.2421762555936948e-15,
+      "max_nrmse": 2.4843525111873897e-15,
+      "per_signal": {
+        "clk_out": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "phase_out": {
+          "rmse_v": 1.6769379450514881e-15,
+          "max_abs_v": 2.9753977059954195e-14,
+          "span_v": 0.675,
+          "nrmse": 2.4843525111873897e-15,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/dut_buggy.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/dut_fixed.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_digital_phase_accumulator_with_modulo_wrap/forms/bugfix/gold/tb_phase_accumulator_timer_wrap_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

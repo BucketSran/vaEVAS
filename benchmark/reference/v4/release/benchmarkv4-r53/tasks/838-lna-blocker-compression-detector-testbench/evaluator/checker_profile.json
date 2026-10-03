@@ -1,0 +1,47 @@
+{
+  "access": "private_checker_backend",
+  "checker_source_public": false,
+  "checker_task_id": "v4_338_lna_blocker_compression_detector",
+  "contract": {
+    "public_contract": "public_contract.json",
+    "source_task_id": null,
+    "task_id": "v4_338_lna_blocker_compression_detector"
+  },
+  "diagnostic_contract": {
+    "event_context": "stimulus_relative",
+    "redaction": "public_observables_only",
+    "required_fields": [
+      "property_diagnostics",
+      "mismatch_count",
+      "expected",
+      "observed",
+      "event_context"
+    ],
+    "schema_version": "v4-checker-diagnostic-v1"
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_DRIVE",
+    "P_AMPLIFY_VIN_VCM_WITH_SMALL_SIGNAL",
+    "P_REDUCE_EFFECTIVE_GAIN_AS_BLOCKER_RISES",
+    "P_EXPOSE_GAIN_REDUCTION_ON_COMPRESSION_METRIC",
+    "P_ASSERT_COMPRESSED_ONLY_WHEN_THE_EFFECTIVE"
+  ],
+  "schema_version": "v4-checker-profile-v1",
+  "score_and_feedback_share_checker": true,
+  "shared_by": [
+    "test_feedback/public_tb.scs",
+    "evaluator/score_tb.scs"
+  ],
+  "trace_contract": {
+    "extra_trace_signals": [],
+    "public_observables": [
+      "vin",
+      "blocker",
+      "enable",
+      "rst",
+      "vout",
+      "compression_metric",
+      "compressed"
+    ]
+  }
+}

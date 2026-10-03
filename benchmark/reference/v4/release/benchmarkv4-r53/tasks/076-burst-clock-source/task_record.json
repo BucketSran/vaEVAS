@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "clk_burst_gen.va"
+  ],
+  "canonical_dut_source_slug": "076-burst-clock-source",
+  "checker_task_id": "v4_076_burst_clock_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "84e874aa28c5ebeef4fac3b43998291f2d8709a4f4b64b19431ee30a39ebf028",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "b1ae5ecc997f3e43237318280031107b33d1f6d7696d48e626d776434ddc4cf8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "48e0cf3d1827da8473bf3484829fd4abe7311a69413561ccb906ff15d25c6bea",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "076",
+  "family_spec_sha256": "2cdcf130fae1994b993d95e1cec56b2690854819e08edb1765649daeac716f68",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c839c29b9fc7f7ff87f2d961e0002ecbe63a1f3fea8157fffa7e37c2918af301",
+  "public_contract": "tasks/076-burst-clock-source/public_contract.json",
+  "public_contract_sha256": "f8ab0c64f1c75bac1e71231840bcb0b4f2333a8cf6f78845406a6c178d9acb84",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/076-burst-clock-source",
+  "task_id": "v4-076"
+}

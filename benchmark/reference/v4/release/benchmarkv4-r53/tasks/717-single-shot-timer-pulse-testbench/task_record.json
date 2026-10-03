@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "217-single-shot-timer-pulse",
+  "checker_task_id": "v4_217_single_shot_timer_pulse",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "d392867b6edec4ab29fb5d4727b00ae42124c6a73fb6a2adaa5b51abebe042f7",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "98f99a9860684f0fb9b0338d6c582449ddb912faa1ca293c359a409559baa0e1",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "d392867b6edec4ab29fb5d4727b00ae42124c6a73fb6a2adaa5b51abebe042f7",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "5dd83b4165fdfed469dbcf57f0af31b43a8f1af44f2bf91ff8bf812f7febd609",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "93b4f2d2b684ae917ba7cc991f97b1430108a3b661fbd8a4d2b05000095c61e4"
+  },
+  "family_id": "217",
+  "family_spec_sha256": "2090ec38a0d6ba8b40abf73410745c2126d03592554dcf568245fcb94a4d725d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ca6f02442bb882715bec65a0f1ea34dd1621399d6f0eb226424da791ec988451",
+  "public_contract": "tasks/717-single-shot-timer-pulse-testbench/public_contract.json",
+  "public_contract_sha256": "585b60a945f8815b9e7e0f68b4eade1d7bcc9d228d69d43767eac26123c659a7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/717-single-shot-timer-pulse-testbench",
+  "task_id": "v4-717"
+}

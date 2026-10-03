@@ -1,0 +1,40 @@
+{
+  "canonical_dut_id": "372",
+  "checker_task_id": "v4_372_buck_converter_controller_macro",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "136e780cf1f29ed1dff3840c7fe8f58f27ae08d4112ad276fe737783206930a4",
+    "checker_profile.json": "996871bb47e1bdd977c5c8b85ad46b4ef5a54028f60ea9fa1301df843d54681a",
+    "derivation_manifest.json": "964af1afbcd7ddc3f1e310286b7cf629a28bfcfc499965ae633832f0e072ab09",
+    "family_spec.json": "a1f12e8c81d89222f8d25131fc6cb64dd7c960e44655dc3ce5325341da9006c4",
+    "harness_spec.json": "940906316c7fd9756b2f66c16c6ec3e919cb4b314405b311c3d3e223d550ac65",
+    "mutation_catalog.json": "31e9e4dd96b39198749c6c824a95130dff94185cc4566e4d618e98818f01e175",
+    "profiles/feedback.json": "db69b8e9c24f2314875ba7a15da38dbedd5b6d425eb6d55713409a6c946a4007",
+    "profiles/score.json": "fd7e145bd63a37d5647c0f02c46812b05a20948939d585d4dab0fa6a75ec8e65",
+    "score_tb.scs": "679be3dfc1b83ccc0a84f877105c85fc7ddfeaff24e5a526efca86609bc84527",
+    "solution_tree": "fd592d076ffdf00ae94d474f2641ada1cf216857f574fa28fa8981a601a442c6",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "76f73d361f13bc8eaf4fd05dc192e6d08143d77265e6bcae1b4cfabe328164bd",
+    "instruction.md": "7084cc51b138670aa8b34b6891a4e09153e1b5e975122a1f767ae427c8a089bd",
+    "public_contract.json": "ad83102f56911e675b1c0fd30a96e6f89b62e7fb74f806c590bb62d80b09b90a"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "136e780cf1f29ed1dff3840c7fe8f58f27ae08d4112ad276fe737783206930a4"
+  },
+  "release_dir": "372-buck-converter-controller-macro",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "931-buck-converter-controller-macro",
+  "support_root": "",
+  "target_artifacts": [
+    "buck_ctrl_top.va",
+    "error_comparator.va",
+    "power_good.va",
+    "pwm_modulator.va",
+    "soft_start.va"
+  ]
+}

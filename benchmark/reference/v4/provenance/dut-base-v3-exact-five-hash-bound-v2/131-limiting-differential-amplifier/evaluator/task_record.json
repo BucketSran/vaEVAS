@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "131",
+  "checker_task_id": "v4_131_limiting_differential_amplifier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "6676caa245c991441959fbc152d878ddc48830cb0c4230dafb1c611cb75bcab9",
+    "checker_profile.json": "f8eb61b67f4966dd6e053a8882cbdae17ae402d6a795c9acb076d52eefddad45",
+    "derivation_manifest.json": "9413b24b2efa58ab3f618e340f8de3677c67eddb5c974868fb9ac69b48ad9389",
+    "family_spec.json": "7778d86a3b5570b927e001e0c32b2ab0a3eb0ca8410f6f03afb3d2f131afc8b0",
+    "harness_spec.json": "3860e939afbdb78b0066191eab4f2538751d6ca1309731ec9224513c400331c7",
+    "mutation_catalog.json": "f718d394a0ae8ce962db958d0bb7676dc81893ab90eb6e1193e03f1da8c3bd62",
+    "profiles/feedback.json": "9112d470061b95ea7b79c002d3e42dbbdecc5a1f3526a3781aa7357fa55caf49",
+    "profiles/score.json": "4543cfac0aca8155e04ae7376c627f5b9f0c07ff05c8c3c23490513c84d7b878",
+    "score_tb.scs": "f2d8a9a5489252fe021a23ba935a37101cab63403d4dbcf57f95bbb38a678378",
+    "solution_tree": "28870357a93ba8d8d03ab7b1475ef7661ea6d47b54479554b539c870ef0e6f9a",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "87558c48cb9513d1c6e98d10505735b33a86335b09365ab5e61557c5dcb9ba54",
+    "instruction.md": "13055f0277a26c3cc4481edc3e307f43877651a0a2b9fa88aa31025daf113c30",
+    "public_contract.json": "08aa4a7730a310342e3eb520071727c0600ac5f5d8ef7950ac108b0129e51c47"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "6676caa245c991441959fbc152d878ddc48830cb0c4230dafb1c611cb75bcab9"
+  },
+  "release_dir": "131-limiting-differential-amplifier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "153-limiting-differential-amplifier",
+  "support_root": "",
+  "target_artifacts": [
+    "limiting_differential_amplifier.va"
+  ]
+}

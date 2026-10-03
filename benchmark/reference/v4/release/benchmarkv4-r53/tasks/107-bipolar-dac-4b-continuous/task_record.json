@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bipolar_dac_4b_continuous.va"
+  ],
+  "canonical_dut_source_slug": "107-bipolar-dac-4b-continuous",
+  "checker_task_id": "v4_107_bipolar_dac_4b_continuous",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ec1359dfba651ca5b436b72fd64611873298ef956a58d1a27a0230d444a67839",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "a7ee11a25408f5e2ab08dad82d29a2aee4ece458d802959de509b608019d34b4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d7d6f1c1e9f6a91bf01806856796e2b6b1a4d2cf143e94ef89c41d7e2f45775e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "107",
+  "family_spec_sha256": "743665bdb84b6ce71d50c89689ccb984db5dd53539430ff9342ad2cb274e1254",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "669ba32bc74d94bbe074ae3faabe87a0e2ba5e4bc2cca9678608815a1ed32e7d",
+  "public_contract": "tasks/107-bipolar-dac-4b-continuous/public_contract.json",
+  "public_contract_sha256": "a75aac5723e63daf49f01738ad18d4148fc180978d7bd5d0438a7a09a7f2c445",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/107-bipolar-dac-4b-continuous",
+  "task_id": "v4-107"
+}

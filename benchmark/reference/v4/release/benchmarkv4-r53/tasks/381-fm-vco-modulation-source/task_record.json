@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "fm_vco_modulation_source.va"
+  ],
+  "canonical_dut_source_slug": "381-fm-vco-modulation-source",
+  "checker_task_id": "v4_381_fm_vco_modulation_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "66fea35f12f814dbd55d4d6c07efea96ecd7436365c214b40187992feb34d0c5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "4fc0d5fc11417bc4e7852acb5a79f477f9bd8954927fe1a76ae17713f802a1e1",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "50ffd5ceca9eab906f739a6f0a1bfac7fa2cafbc8ea1743db93bd6a3460a0cfc",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "381",
+  "family_spec_sha256": "1e6be83d26aa0132656ee27fcbd176477c2d5a0133a8b5d06f7122b9635e511e",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ce2e67ba3666276047e58b77cea9094ab129fe80265a2efc0130817bf918e2f0",
+  "public_contract": "tasks/381-fm-vco-modulation-source/public_contract.json",
+  "public_contract_sha256": "c77af7087bd08e26004a54efdb8307677bf55c5b06454ad1930b74401734c566",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/381-fm-vco-modulation-source",
+  "task_id": "v4-381"
+}

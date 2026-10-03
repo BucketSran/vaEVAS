@@ -1,0 +1,28 @@
+{
+  "bugfix_seed_mutation_id": "neg_003_rail_clamp_missing",
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "checker_profile_sha256": "22b8792d1362999336eb4502f5cc3c3b70acb5533041936b3b904ab0ab8cba29",
+  "full_credit": "reference_gate and five_of_five_killed_behaviorally",
+  "kill_ratio_denominator": 5,
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "d5a67461f5b653ae04fb922779e69871811c0f60eeba43d5b963d5f229cbd2b0",
+  "negative_outcomes": [
+    "killed_behaviorally",
+    "survived",
+    "invalid_run"
+  ],
+  "negative_suite_mutation_ids": [
+    "neg_001_tap_spacing_wrong",
+    "neg_003_rail_clamp_missing",
+    "neg_004_enable_reset_ignored",
+    "neg_005_monotonic_flag_wrong",
+    "neg_002_reversed_reference_not_handled"
+  ],
+  "reference_gate": "all applicable public properties pass on supplied correct DUT",
+  "reference_tb_sha256": "0096960e77496eb2517b41d392f55233c92bc671666a305c52724bb47c42b89f",
+  "schema_version": "v4-testbench-score-policy-v1",
+  "task_id": "v4-815"
+}

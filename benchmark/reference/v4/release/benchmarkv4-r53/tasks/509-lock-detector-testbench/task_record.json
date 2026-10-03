@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "009-lock-detector",
+  "checker_task_id": "v4_009_lock_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a96cb193a80cbb92af3334e050f91476f44241ab31817cfbc0ab8ab842318ead",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "d5f19c060fef5b80c32938576ab75bd337a4bc938d84041df86e2cb00fb3e99e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a96cb193a80cbb92af3334e050f91476f44241ab31817cfbc0ab8ab842318ead",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2893822b00c1f0f05aba5c3d200ba41ab8b57257faacfdacff30b841fecb9daf",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "09633e0c9e732e0ca2280638b55c21f02c2ac2a35c24cc9cc86606b8e9e2e37c"
+  },
+  "family_id": "009",
+  "family_spec_sha256": "6eb54297af6b6bbdc9cccc98df60e93c238c5c2889be02fdbe5e24c9d153ca74",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "54cdce19c16e2f02ff1758c840579c6208da35b1346484763bbb1b484e7cdcd9",
+  "public_contract": "tasks/509-lock-detector-testbench/public_contract.json",
+  "public_contract_sha256": "1f8d02c7bd86a465bc514d46f777aa261104a3e74c1ac1f6734c2bf9903b52c5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/509-lock-detector-testbench",
+  "task_id": "v4-509"
+}

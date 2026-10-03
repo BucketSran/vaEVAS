@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ctle_equalizer.va"
+  ],
+  "canonical_dut_source_slug": "352-ctle-equalizer-macro",
+  "checker_task_id": "v4_352_ctle_equalizer_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "507d845a95c1b931ddf8559f997b62f2b902a3db118fa75e00d5387759308621",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0934e2c3d72afdcce29a7545ea3c8f02dbe5df1f71eb43c0ce73af4f98287d46",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d3beb5ca0aff17ed17910a0e4dbebf7fc70a3cc0d7b6125e9d2cb988ad853fec",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "352",
+  "family_spec_sha256": "d9d7cbc5c42b158e1d9812cf4ed4ecfc551c0722561b2b8fe8090d2fd92b5d74",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "59d5085e453763b1aac62080a3e070810f0daf6fcc438f7c0ae21452dd1e91c9",
+  "public_contract": "tasks/352-ctle-equalizer-macro/public_contract.json",
+  "public_contract_sha256": "5da5fcc87c5e6362802159d0c60e1c2cb99d90814d8972eed357377c911b4ec5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/352-ctle-equalizer-macro",
+  "task_id": "v4-352"
+}

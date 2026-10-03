@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "335",
+  "checker_task_id": "v4_335_quadrature_oscillator_phase_error_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "bc1252de6e25a410b9ae31788f27af0cbf702d22080fcd59bf61af4835745f4a",
+    "checker_profile.json": "54dfed0a7873bb736f771902025fb838ce65bf3a2660d1f14ac39ac4cc625402",
+    "derivation_manifest.json": "df9cbfc646780678315e3155ffa7651abdb5d26880a03048c32cf80dc2a12661",
+    "family_spec.json": "88cb9113b178500df3b08cda05a30e2c696f9d9ab7528684c4f2a42a1f7c59c1",
+    "harness_spec.json": "da943bd969336fc1f4f5a53d012ffb1cf1c449e099bdf50607a4e88cf2810c87",
+    "mutation_catalog.json": "44996b93b5f417ded31d37c2a4d830b9ebd649bf388f44d2b0aa446e7e8b38b2",
+    "profiles/feedback.json": "cde7e07dad219a49bc65539e48f84e571556838a25c2d6b431faf33101e39a7f",
+    "profiles/score.json": "6fd5e84b97679b031e49d3ab1bfe9453802e88ab71ec545812de46be10e55a69",
+    "score_tb.scs": "5612f00c6e5cbf793eec0f742f45b76c5dbe02a8987e89989d0fc2cb49023fcc",
+    "solution_tree": "2787149152e10f0b1e963333a2b8124dda5cb875cc43646a511c6eac1b89a376",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "4439b5628ae622e5c3b2836381de6327594bdfccd05d7c443ef622e4f0452e1f",
+    "instruction.md": "69e1d0b4252bba32ef7e9ad3561fb576a90048abae63959d62d9a043d88f1c7b",
+    "public_contract.json": "6f4b6847398efe25a3d1464b79f959d4740340b505a80ce87d767fdb604fd693"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "bc1252de6e25a410b9ae31788f27af0cbf702d22080fcd59bf61af4835745f4a"
+  },
+  "release_dir": "335-quadrature-oscillator-phase-error-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1033-quadrature-oscillator-phase-error-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "quadrature_oscillator_phase_error_monitor.va"
+  ]
+}

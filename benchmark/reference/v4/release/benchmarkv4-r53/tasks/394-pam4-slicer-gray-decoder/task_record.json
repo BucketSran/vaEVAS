@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pam4_slicer_gray_decoder.va"
+  ],
+  "canonical_dut_source_slug": "394-pam4-slicer-gray-decoder",
+  "checker_task_id": "v4_394_pam4_slicer_gray_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "c36d2701285825b3ed8ae355fc2f7a44c7bb3ea7072cec0fc9419ddd1b7ad329",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "634ce490365919a072131ef604187418a7e8f9179dc6cb917d3dfb750b4fda69",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5c56bfc482218c7a1201f439c908ea340d9c32adf14cf44a97f6b94ddf9ecd9f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "394",
+  "family_spec_sha256": "92ae6d2754f9f5764ef7414705245ca70e7772c2259ad65d853bb2a79b39a7c5",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "7ca7d3c93617f6d7a367e47e8764678492269f5d9fc3470724ec29a92a6ed1dd",
+  "public_contract": "tasks/394-pam4-slicer-gray-decoder/public_contract.json",
+  "public_contract_sha256": "9dafd80ae5dec91d3b2463850ece5a8f3c520803a4f08cfa9302c66f338aa6c8",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/394-pam4-slicer-gray-decoder",
+  "task_id": "v4-394"
+}

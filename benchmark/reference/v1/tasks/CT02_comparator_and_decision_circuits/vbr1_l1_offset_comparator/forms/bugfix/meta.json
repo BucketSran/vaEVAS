@@ -1,0 +1,61 @@
+{
+  "id": "vbm1_offset_comparator_bugfix",
+  "task_id": "vbm1_offset_comparator_bugfix",
+  "release_entry_id": "vbr1_l1_offset_comparator",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "comparator",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_offset_comparator_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(cross(",
+    "transition(",
+    "vos"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_comparator_offset_ref.scs",
+    "gold/tb_comparator_offset_buggy.scs"
+  ],
+  "reconstruction": {
+    "bug_class": "offset_threshold_polarity_reversed",
+    "single_root_cause": "The buggy source latches OUT_P high for VINP-VINN below the offset threshold instead of above it.",
+    "fixed_expectation": "The fixed source produces low decisions for the low VINP phase and high decisions for the high VINP phase."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_offset_comparator_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_offset_comparator_bugfix/spectre_result.json",
+    "local_evas_verification": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under formal EVAS checker mapping.",
+    "spectre_status": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under Spectre."
+  }
+}

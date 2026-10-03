@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "uvlo_brownout_detector.va"
+  ],
+  "canonical_dut_source_slug": "046-uvlo-brownout-detector",
+  "checker_task_id": "v4_046_uvlo_brownout_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ffa15aa00dfc29307e41ddf676e98374b81882c0f15fb4875a4fdba700883a61",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1dadb13d829f1f8b7ab6c14bb2f6a04f51134a846dafde2fa819e67aec06e21c",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "10c360a9478268184f8e8104702ca7f7d0592d1fd5449ef46e7f117b760d8e1e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "046",
+  "family_spec_sha256": "3e3e3a29532d178b9f80f5db1a60c972e3d053b678be4248cc8acfaee44acfb8",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "34e4b7b7e1b31bfa6d248898f53fd2f048b26a0402faa27505b18d4af50e52ee",
+  "public_contract": "tasks/1046-uvlo-brownout-detector-bugfix/public_contract.json",
+  "public_contract_sha256": "c2dae810c3a5a7391669db1a15f485056ec7ea2a06f22e7f97b1c82e52cc5fea",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1046-uvlo-brownout-detector-bugfix",
+  "task_id": "v4-1046"
+}

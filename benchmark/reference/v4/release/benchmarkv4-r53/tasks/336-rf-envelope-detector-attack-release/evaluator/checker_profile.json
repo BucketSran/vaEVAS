@@ -1,0 +1,47 @@
+{
+  "access": "private_checker_backend",
+  "checker_source_public": false,
+  "checker_task_id": "v4_336_rf_envelope_detector_attack_release",
+  "contract": {
+    "public_contract": "public_contract.json",
+    "source_task_id": null,
+    "task_id": "v4_336_rf_envelope_detector_attack_release"
+  },
+  "diagnostic_contract": {
+    "event_context": "stimulus_relative",
+    "redaction": "public_observables_only",
+    "required_fields": [
+      "property_diagnostics",
+      "mismatch_count",
+      "expected",
+      "observed",
+      "event_context"
+    ],
+    "schema_version": "v4-checker-diagnostic-v1"
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_USE_A_FASTER_ATTACK_STEP_WHEN",
+    "P_DRIVE_ENVELOPE_WITH_THE_TRACKED_MAGNITUDE",
+    "P_EXPOSE_WHETHER_THE_LAST_UPDATE_USED"
+  ],
+  "schema_version": "v4-checker-profile-v1",
+  "score_and_feedback_share_checker": true,
+  "shared_by": [
+    "test_feedback/public_tb.scs",
+    "evaluator/score_tb.scs"
+  ],
+  "trace_contract": {
+    "extra_trace_signals": [],
+    "public_observables": [
+      "vin",
+      "clk",
+      "rst",
+      "enable",
+      "envelope",
+      "attack_metric",
+      "valid"
+    ]
+  }
+}

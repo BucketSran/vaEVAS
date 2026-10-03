@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_DECODE_GAIN_2_GAIN_0_INTO satisfy the public contract; fault class wrong_gain_decode is rejected",
+    "observed": "EVAS: P_ON_RESET_OR_WHEN_ENABLE_IS mismatch_count=0 expected=vout=vcm,metric=settled=0 observed=reset_clear=True,disabled_clear=True,clear_errors=0; P_DECODE_GAIN_2_GAIN_0_INTO mismatch_count=6 expected=target_from_binary_gain_code observed=checked=8,vout_errors=6; P_UPDATE_VOUT_ONCE_PER_RISING_CLK mismatch_count=6 expected=alpha_step_toward_target observed=vout_errors=6,move_seen=True; P_CLAMP_VOUT_TO_THE_RANGE_VSS mismatch_count=6 expected=vss<=vout<=vdd observed=vout_errors=6; P_ERROR_METRIC_MUST_EXPOSE_THE_SIGNED mismatch_count=1 expected=error_metric=vcm+target-vout observed=err_errors=1; P_ASSERT_SETTLED_AFTER_THREE_CONSECUTIVE_UPDATES mismatch_count=4 expected=settled_after_three observed=settled_errors=4,settled_seen=True",
+    "violated_property_ids": [
+      "P_DECODE_GAIN_2_GAIN_0_INTO"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_370_opamp_feedback_settling_monitor",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 1229
+  },
+  "family_id": "370",
+  "inputs": {
+    "checker_profile_sha256": "37e95119f6390a36ff62b2b6d8bf0032cc0ebb7a55c17a6998ccaac799c08adc",
+    "harness_spec_sha256": "bf1a24c9d02df3d8e77c2089db3b65c7105f30f3a0850510f1c22e3e7c7a86af",
+    "mutation_bundle_sha256": "0df329226126c7774d693096dd04b41992a3aaea72a0100856a7bda697082b89",
+    "profile_sha256": "6641d0980285b43a5de627489b5b4c5c59b0df1c0c631cd94cadeb1240169c91"
+  },
+  "mutation_id": "neg_001_wrong_gain_decode",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

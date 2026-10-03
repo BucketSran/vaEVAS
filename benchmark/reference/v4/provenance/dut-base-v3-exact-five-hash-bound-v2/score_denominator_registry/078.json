@@ -1,0 +1,79 @@
+{
+  "family_id": "078",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "5e28b1d1c5731ba3f13dcf1b71c798d1bdae09782d637539490fa2a09ec049e9",
+        "fault_class": "zero_output_state_stub",
+        "mutation_bundle_sha256": "4606547109289fbb531a6615c4a44af2a1252fb16fda53cf4b42750b7417ed3d",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises Zero output/state stub. against the public observable contract",
+        "violated_property_ids": [
+          "P_RESET_SEED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "adcacf1f93d4291f3d4c391a7d6339dbdd77aad9f620cca44534359a2fdb7b31",
+        "fault_class": "serial_output_level_scaled_below_logic_threshold",
+        "mutation_bundle_sha256": "d2c1661cac76fb1c691bb04d4cf6266d4d17b273e09b87c900df0cf1ac808d44",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Preserves the exposed LFSR state recurrence but scales serial_out below the public logic threshold.",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS",
+          "P_SERIAL_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_enable/certification.json",
+        "certification_sha256": "75925e763e81f82fa7ef5cf74832f34de1b0d7b89b9bfeb7a89b503e3b4d174e",
+        "fault_class": "advances_lfsr_while_enable_is_low",
+        "mutation_bundle_sha256": "ec66e6cff84ed3a27d9db6a4edf84893463346997ca772edc42880d5cb9281b8",
+        "mutation_id": "neg_003_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_enable/certification.json",
+        "trigger_condition": "Advances the LFSR on every non-reset clock edge instead of holding state while en is low.",
+        "violated_property_ids": [
+          "P_ENABLE_GATING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_shift_sequence_wrong/certification.json",
+        "certification_sha256": "649baaada890bdc6ebb83a2003f931b75c0345ba888eef3705b193c9e3a6319d",
+        "fault_class": "state2_loads_state0_instead_of_state1",
+        "mutation_bundle_sha256": "00c23799e6f6921793045d559883ac47159303df1afc3d7fa56616c69d9e6489",
+        "mutation_id": "neg_006_shift_sequence_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_006_shift_sequence_wrong/certification.json",
+        "trigger_condition": "each enabled clock must shift every exposed state bit toward the MSB exactly once",
+        "violated_property_ids": [
+          "P_SHIFT_SEQUENCE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_taps/certification.json",
+        "certification_sha256": "21574375bf09cd9adac5de2abbf4e00b39790cda7e5d43c2d14b68b56d19b195",
+        "fault_class": "wrong_feedback_tap_relation_for_public_prbs7_polynomial",
+        "mutation_bundle_sha256": "5b337f3c1ca1d3322fda8424315cdfaf12c9e6c1ca01d8b7e9be558218e02818",
+        "mutation_id": "neg_002_wrong_taps",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_taps/certification.json",
+        "trigger_condition": "Uses state_6 xor state_4 instead of the public state_6 xor state_5 feedback relation while preserving enable gating.",
+        "violated_property_ids": [
+          "P_FEEDBACK_POLYNOMIAL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "078",
+    "hashes": {
+      "mutation_catalog_sha256": "c0544b059523e75d287920fc141ec546ab44c92b2d3ea6d5efc8ab28f6c52200",
+      "score_deck_sha256": "cbde72adf14017064b8de8f9b53a9165ec7db879362d16453fbda504b70047f5",
+      "task_certification_sha256": "785d291b15ad1302c00e2dde0fab99c50b5d2e8b367f364809f161864666e717",
+      "task_record_sha256": "8a49e45510e85c9d391e49060bb5d0cc0a2e636424d8ade50b95e1c2fba4ecb0"
+    },
+    "release_dir": "078-lfsr-prbs-generator"
+  }
+}

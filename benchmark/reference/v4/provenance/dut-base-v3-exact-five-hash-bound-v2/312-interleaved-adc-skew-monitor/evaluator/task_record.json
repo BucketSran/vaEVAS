@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "312",
+  "checker_task_id": "v4_312_interleaved_adc_skew_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "b968ee08c666ab27ed34c937abb3b29d07a06119091c327e9f80050635e7d206",
+    "checker_profile.json": "f03ed9a172bfa167b4411c53bccb84336bae8bd9291cfd662fe4b2af2e8cd877",
+    "derivation_manifest.json": "0ebca98c8b7dd1ee34a9b04aa55de9af433573d1f6ec03429202766154566986",
+    "family_spec.json": "adc1ca91951b79e07206a33731f7511a7b19ccde698b7af13f7a9f18d4f061a5",
+    "harness_spec.json": "90432ed48ee853c17ae8019f795b8f918908b674e6d67be6d5fc8a1bd36aae2b",
+    "mutation_catalog.json": "ffa122ebcc59fe57ad1b948cb28d9b090c43383e8a178f0f8cbc9c0657d629a1",
+    "profiles/feedback.json": "3daac48ea70a2b57763d92bececafb116e7a487fd55a192a2e7747f9ae1fc90d",
+    "profiles/score.json": "1925de8fb2329d7086c9468322d11567063c591eb911638fce49ad800e6a5ebc",
+    "score_tb.scs": "1f557a956b50fc4e1b4400a2dad0d44f0c607b7f4708b2f8f9debdea1a5ca00e",
+    "solution_tree": "90ff75d1eba5191273163a674f592b24df77b48fa881d28bd6b601b288aa65aa",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "4808b1680b8df2e77122281e59944142572e53cd1ba0da265f8a8e65795e4ed9",
+    "instruction.md": "d6a69a6573985d46bf48d00f921818460e277c1a8660d008de5bb3e6dd2f35f2",
+    "public_contract.json": "a31f6917e66fa75312f8702b661d746bd42735748a57aafd59417fc8b007dc1f"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "b968ee08c666ab27ed34c937abb3b29d07a06119091c327e9f80050635e7d206"
+  },
+  "release_dir": "312-interleaved-adc-skew-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1010-interleaved-adc-skew-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "interleaved_adc_skew_monitor_top.va",
+    "sample_pair_latch.va",
+    "skew_metric_core.va"
+  ]
+}

@@ -1,0 +1,94 @@
+# Edge Delay Qualified Driver Testbench
+
+## Task Contract
+
+Write one top-level Spectre testbench that verifies the public contract of the
+supplied read-only `Edge Delay Qualified Driver` DUT. The evaluator runs the same submitted bytes
+against the correct DUT and five anonymous semantic negative DUTs. Your
+testbench must accept the correct DUT and expose all five behavioral faults.
+
+## Public Verilog-A Interface
+
+- Artifact `edge_delay_qualified_driver.va`:
+  - Module `edge_delay_qualified_driver` (entry)
+    - position 0: `clk` (input, electrical)
+    - position 1: `rst` (input, electrical)
+    - position 2: `in0` (input, electrical)
+    - position 3: `in1` (input, electrical)
+    - position 4: `in2` (input, electrical)
+    - position 5: `in3` (input, electrical)
+    - position 6: `ctrl0` (input, electrical)
+    - position 7: `ctrl1` (input, electrical)
+    - position 8: `vdd` (input, electrical)
+    - position 9: `vss` (input, electrical)
+    - position 10: `en` (input, electrical)
+    - position 11: `out` (output, electrical)
+    - position 12: `flag` (output, electrical)
+    - position 13: `metric` (output, electrical)
+
+Stable public Spectre binding:
+
+The submitted `testbench.scs` must use the supplied DUT through this public binding:
+
+- Include path: `./dut/edge_delay_qualified_driver.va`
+- DUT instance: `XDUT (clk rst in0 in1 in2 in3 ctrl0 ctrl1 vdd vss en out flag metric) edge_delay_qualified_driver`
+- Required saved public traces: `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`
+- Use one bounded transient analysis with a finite positive stop time.
+
+You must design the stimulus yourself. Save traces as bare public signal names
+(for example `clk`, not suffixed or hierarchical forms such as `clk:V` or
+`XDUT.clk`). Do not redefine the DUT, drive DUT output nets, save
+hierarchical/private nodes, or use checker/gold/internal files.
+
+## Public Parameter Contract
+
+- `edge_delay_qualified_driver.vth` defaults to `0.45`; valid range: finite; overrides vth.
+- `edge_delay_qualified_driver.vhi` defaults to `0.9`; valid range: finite; overrides vhi.
+- `edge_delay_qualified_driver.span_min` defaults to `0.62`; valid range: finite; overrides span_min.
+- `edge_delay_qualified_driver.span_max` defaults to `1.28`; valid range: finite; overrides span_max.
+- `edge_delay_qualified_driver.tr` defaults to `50p`; valid range: finite; overrides tr.
+
+
+## Required Behavior
+
+Create stimulus and save traces sufficient for the fixed evaluator oracle to check:
+
+- `P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE`: exercise and make observable: Update on rising clk or rising rst. Let xN=clip01((V(inN)-V(vss))/max(V(vdd,vss),0.05)). Reset or invalid enable/span clears all outputs. Otherwise out=flag=vhi exactly when x0>x1, and metric=vhi*clip01(abs(x0-x1)). in2, in3, and controls have no effect. Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+- `P_BUILD_A_VOLTAGE_DOMAIN_ANALOG_MIXED`: exercise and make observable: Build a voltage-domain analog/mixed-signal helper or monitor. Clock-edge qualified delay-style driver replacing specify/specparam timing with explicit event state. Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+- `P_VTH_0_45_V_LOGIC_THRESHOLD`: exercise and make observable: `vth = 0.45 V`: logic threshold for voltage-coded controls. Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+- `P_VHI_0_9_V_HIGH_LEVEL`: exercise and make observable: `vhi = 0.9 V`: high level for output observables. Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+- `P_SPAN_MIN_0_62_V_SPAN`: exercise and make observable: `span_min = 0.62 V`, `span_max = 1.28 V`: legal local supply span measured as Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+- `P_TR_50P_OUTPUT_TRANSITION_SMOOTHING_TIME`: exercise and make observable: `tr = 50p`: output transition smoothing time. Required traces: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+
+Use any deterministic stimulus layout that makes every required public behavior
+observable. Exact event counts, absolute event times, sample density, and
+reference-deck ordering are not part of the contract unless stated explicitly
+above.
+
+
+The following canonical public behavior is normative for this derived form:
+
+Update state on each rising `clk` crossing and asynchronously on a rising
+`rst` crossing. Let `span = V(vdd, vss)` and
+`xN = clip01((V(inN) - V(vss)) / max(span, 0.05))`.
+If reset is high, enable is low, or `span` is outside `[span_min, span_max]`,
+clear all outputs. Otherwise drive both `out` and `flag` to `vhi` exactly when
+`x0 > x1`, and to `0 V` otherwise; drive
+`metric = vhi * clip01(abs(x0 - x1))`. Inputs `in2`, `in3`, `ctrl0`, and
+`ctrl1` do not affect these observables.
+
+
+The required trace names are: `time`, `clk`, `ctrl0`, `ctrl1`, `en`, `flag`, `in0`, `in1`, `in2`, `in3`, `metric`, `out`, `rst`, `vdd`, `vss`.
+
+## Modeling Constraints
+
+- Submit one self-contained top-level transient `.scs` file.
+- Use only the declared `./dut/...` source paths and public DUT interfaces.
+- Do not redefine the DUT, drive declared DUT outputs, inspect private internals,
+  access undeclared files, or emit a self-reported result.
+- Missing traces, setup errors, and invalid runs do not count as behavioral kills.
+
+## Output Contract
+
+Return exactly one artifact named `testbench.scs`. Do not return a DUT,
+checker, script, data file, waveform, or auxiliary deck.

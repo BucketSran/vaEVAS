@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "135",
+  "checker_task_id": "v4_135_logarithmic_amplifier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "64fe755e8f2f860c0ead244167bd974a01d010e13af3c661a701e07bb3603f71",
+    "checker_profile.json": "c10b099d7b5646c4ee7981bffb9ae487ec1a97db9ab373d79b38242874f9336e",
+    "derivation_manifest.json": "a390901ce0e14e4b7bf43279f2353a2c87863cac8a76b50de2c1957ca640bfe7",
+    "family_spec.json": "5167db504b93186000791fdbc91d719d97dd1e2f454f6b0c41c43f795a4f7159",
+    "harness_spec.json": "8caae474b8c6539dca251fb6b4393ebbf47d0da9da76434f97644f0427dc0976",
+    "mutation_catalog.json": "a4d6463287638a2f29b925661e0dcb3616b5d2f3c85013b77838931f4cc6dc00",
+    "profiles/feedback.json": "2d67784c8cb83648c7c361da266c12ce3b7b2fd286cc73863bab02805f0dd6e8",
+    "profiles/score.json": "91e36d174bd5b68bcc621d21d4d6b188fed50d1fa1a89f688f7ac75bfabb2760",
+    "score_tb.scs": "623e70d9aa46227628c89faed86f3b71c0a4f80a72a25742043739df6839aa0f",
+    "solution_tree": "a5f0c6f85fd59cb6a4294ebb8c6f938ca4fd498bfb1841b5fbe72507f78b6dbd",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "2696ba401936dfcc788a83a4194840e2e8e1ef5975a943b845593c3dacfabb30",
+    "instruction.md": "875ed1653ca5cb34d094ae88e9e72ff4b8d530a216d9af46f8b876ca371de5c0",
+    "public_contract.json": "e93c705f3fe86ab517cd4761df1c6330a08fce354d535a26b10eb3d7cefc785e"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "64fe755e8f2f860c0ead244167bd974a01d010e13af3c661a701e07bb3603f71"
+  },
+  "release_dir": "135-logarithmic-amplifier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "157-logarithmic-amplifier",
+  "support_root": "",
+  "target_artifacts": [
+    "logarithmic_amplifier.va"
+  ]
+}

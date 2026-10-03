@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "026-digital-phase-accumulator-with-modulo-wrap",
+  "checker_task_id": "v4_026_digital_phase_accumulator_with_modulo_wrap",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "787e57128469a27aa1f6ec6e6c5f9de7bc2cd37b99a4a44f44b65b931286b415",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "215543be15badaa155a8a3cc09bb08f8b200f346c1c420ccde120ae490ad5a6e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "787e57128469a27aa1f6ec6e6c5f9de7bc2cd37b99a4a44f44b65b931286b415",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "56a5c6cb9eb17f5f0bc7d8d3bb7c7efaebd65536a8b11771d8d090b4d074faf6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "965b9e08e90cccbf355e4f62d91017fc6306d3a7713bb05063b3f3b03f34496b"
+  },
+  "family_id": "026",
+  "family_spec_sha256": "b54b06ca961bd9587b8c4c6e3065284f39f15070e09f122f904ea3da4988a075",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "61bea8bde63b9eb5008aea9814dde6a2904aeecdeab75dce2e4b5fc2630d6a28",
+  "public_contract": "tasks/526-digital-phase-accumulator-with-modulo-wrap-testbench/public_contract.json",
+  "public_contract_sha256": "a5a1234cf8730e079ef46636bf9a5cf5bf6e1c5e3f52d4f4bee1aec16bdd8d32",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/526-digital-phase-accumulator-with-modulo-wrap-testbench",
+  "task_id": "v4-526"
+}

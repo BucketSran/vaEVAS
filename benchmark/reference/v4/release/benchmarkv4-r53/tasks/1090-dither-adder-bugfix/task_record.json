@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dither_adder.va"
+  ],
+  "canonical_dut_source_slug": "090-dither-adder",
+  "checker_task_id": "v4_090_dither_adder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "327995d879c05fb62c0e075c49435029059d5b5178e01e2f00262fc8bddb29a5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8e36d6b7140610da5b2409a9e7a2628a7cb541c92b175a461da3dd2c18fc99f3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "b55018ae4be869a4a1cf312e5666b15d9fde41c335d9e6ea704a7e521bee8bdf",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "090",
+  "family_spec_sha256": "27f8b84495b5afbefb13f350539725e9c83f91bd238db9b9f02a3adace25721e",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b2d1ee68df240a3d8fd4e51e1fe8d26c99b2c9436023bc00cbde591f0e5f677c",
+  "public_contract": "tasks/1090-dither-adder-bugfix/public_contract.json",
+  "public_contract_sha256": "ecbecded1bda52af6653c927d11d371accd17d2dddedcfc9af1de9e5261847ee",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1090-dither-adder-bugfix",
+  "task_id": "v4-1090"
+}

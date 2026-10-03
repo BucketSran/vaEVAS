@@ -1,0 +1,78 @@
+{
+  "family_id": "185",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_sdo_bit/certification.json",
+        "certification_sha256": "481b63111e65a30a15ddd04a9451d48f1edd67109c6e7576b4acc8a26ff32401",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "84076b43c54297b7eb94efa7cd23d91b518625102f4c771179115ae31e9cb827",
+        "mutation_id": "neg_004_wrong_sdo_bit",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_sdo_bit/certification.json",
+        "trigger_condition": "Drives SDO from bit 0 instead of the shifted-out bit 7.",
+        "violated_property_ids": [
+          "P_SDO_EXPOSES_SHIFTED_OUT_BIT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_shift_on_rising_only/certification.json",
+        "certification_sha256": "3aee04c887b6cc4a5084de3f13c7c8e9c54837dbf703788d48adac0aa11249cd",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "47f1307ce636239d82169371c4c13c1ee60c8542f101c57fba50dfe3e7b63eff",
+        "mutation_id": "neg_002_shift_on_rising_only",
+        "source_catalog_certification_path": "negative_variants/neg_002_shift_on_rising_only/certification.json",
+        "trigger_condition": "Shifts only on rising SCKI edges instead of every SCKI transition.",
+        "violated_property_ids": [
+          "P_SHIFT_ON_SCKI_TRANSITIONS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reverse_shift_direction/certification.json",
+        "certification_sha256": "49c839794dc72a702a19cb12b897ee976aef118d6473044a7899de7d67422767",
+        "fault_class": "reverse_shift_direction",
+        "mutation_bundle_sha256": "85dc62c77c893cda65144d728590120a2c8a3c6ed248c7ac4d55a98963d992db",
+        "mutation_id": "neg_003_reverse_shift_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_reverse_shift_direction/certification.json",
+        "trigger_condition": "Shifts toward lower indexes and loads SDI into bit 7.",
+        "violated_property_ids": [
+          "P_SHIFT_DIRECTION_AND_SDI_INSERTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_ignore_reset_reload/certification.json",
+        "certification_sha256": "f65dfc224532ad21850465ce9f1f9a3a08aa82dd0c527f88aa2aed3e3653f8b9",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "33678219d5c3a25419c433b7e334d01901c0b2781aaafb0b4444e9d402d20333",
+        "mutation_id": "neg_005_ignore_reset_reload",
+        "source_catalog_certification_path": "negative_variants/neg_005_ignore_reset_reload/certification.json",
+        "trigger_condition": "Ignores the active-high reset reload and therefore keeps the pre-reset shifted state.",
+        "violated_property_ids": [
+          "P_RESET_LOADS_DEFAULT_WORD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "e8dff36475cbcfa6c1288363bc0c44a8d131bb0c22cd1537a3959c4f81fa2846",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "47730622003929e3680205b3e6c3943664c9556496cc8d9c0a3ce37d87ad787b",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_RAIL_LEVELS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_004_wrong_sdo_bit",
+    "canonical_dut_id": "185",
+    "hashes": {
+      "mutation_catalog_sha256": "8fbfd15ebe08701bdaa797a5b2de452c9c50b33acd530d2d51ed9a1137436053",
+      "score_deck_sha256": "a649147383d8afc4c41fa8b8134a604cf8fe65a98b59a338f42c9c7de5017175",
+      "task_certification_sha256": "377f5dff13cc3c91d59920d2db9da81a697af77616cd8fd45a622f2c307926a7",
+      "task_record_sha256": "e3a8482736011f8a8fae54c08b6fade5209f4473e7100b009595525917cedd2a"
+    },
+    "release_dir": "185-spi-shift-mux"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "source_follower_buffer_macro.va"
+  ],
+  "canonical_dut_source_slug": "388-source-follower-buffer-macro",
+  "checker_task_id": "v4_388_source_follower_buffer_macro",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "211f96df7154b91b04ed95a5af84461323112c2e5a16b3de7de0c0a078ea9cf4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "11b4fb4f0546cd98cbaf6f5ef333c4319d2b44c681a536f2bb811332a61e05ae",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "bd0a03bfc3d0ad2cfdfa3a91f36acd1c40a73a10a08aa3f8e9b2d4f958b70157",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "388",
+  "family_spec_sha256": "3b7f91d0b1e9b73c0a61cbf62ce7ec855c5d69bd94710500ae1136bee5c63d28",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "71d2003c20372faf948c75ac48c396c3c17754f61826459de802185e0124efd6",
+  "public_contract": "tasks/388-source-follower-buffer-macro/public_contract.json",
+  "public_contract_sha256": "6e81506bdf59931f337d5f0fc4a482954a04d1600d1855a24f2fa4627446914e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/388-source-follower-buffer-macro",
+  "task_id": "v4-388"
+}

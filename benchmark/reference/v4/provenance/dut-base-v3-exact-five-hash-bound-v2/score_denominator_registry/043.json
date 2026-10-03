@@ -1,0 +1,78 @@
+{
+  "family_id": "043",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001/certification.json",
+        "certification_sha256": "19bf5d94949292371819ec39138e5b71008e620e67b1bbbf8e7bf379cc114580",
+        "fault_class": "passes_nominal_smoke_cases_but_fails_an_endpoint",
+        "mutation_bundle_sha256": "7364e45cda389dda93f33c6ca18ff3be0ecc51bd6e855943b2a2d3154b76b0e6",
+        "mutation_id": "neg_001",
+        "source_catalog_certification_path": "negative_variants/neg_001/certification.json",
+        "trigger_condition": "Passes nominal/smoke cases but fails an endpoint, threshold, saturation, or settling boundary.",
+        "violated_property_ids": [
+          "P_RESET_NEUTRAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003/certification.json",
+        "certification_sha256": "18da16409fe4c375f8c3af7b7c337150026cbc8192045c6c034dd65114b7d5a0",
+        "fault_class": "passes_positive_or_nominal_path_but_fails_sign_f",
+        "mutation_bundle_sha256": "dcd8a60e795a6a794587157c82fe0da8fe3037dd75b947d03cfec9de5902d9d1",
+        "mutation_id": "neg_003",
+        "source_catalog_certification_path": "negative_variants/neg_003/certification.json",
+        "trigger_condition": "Passes positive or nominal path but fails sign, feedback direction, I/Q polarity, or trim direction.",
+        "violated_property_ids": [
+          "P_GAINED_LIMITER_TRANSFER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004/certification.json",
+        "certification_sha256": "d02fd6503a6de227e3a71b8556145dcf2d84df663a9ddb6b1858e304dc5f5d52",
+        "fault_class": "passes_steady_state_behavior_but_fails_reset_ena",
+        "mutation_bundle_sha256": "89d3c9fdce68256326c3578eb41bfc32841369237652564e470ceb8a9279e530",
+        "mutation_id": "neg_004",
+        "source_catalog_certification_path": "negative_variants/neg_004/certification.json",
+        "trigger_condition": "Passes steady-state behavior but fails reset, enable, initial condition, or done/ready assertion.",
+        "violated_property_ids": [
+          "P_OUTPUT_LIMITS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005/certification.json",
+        "certification_sha256": "428f5129367dafd0063882008b534fb4e4d24e71c1482ea8d93f86e000dea870",
+        "fault_class": "produces_plausible_behavior_but_fails_a_metric_w",
+        "mutation_bundle_sha256": "eb75729df53a0f0e277036ecb27bb024bbea354afc304150e18356a06c71dc5d",
+        "mutation_id": "neg_005",
+        "source_catalog_certification_path": "negative_variants/neg_005/certification.json",
+        "trigger_condition": "Produces plausible behavior but fails a metric writer, latency, count, or measurement output.",
+        "violated_property_ids": [
+          "P_STATE_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002/certification.json",
+        "certification_sha256": "3fcdcbe2f2679c57d5d6ea06749df07840c483c548a0d49610164d735065659a",
+        "fault_class": "passes_interface_and_broad_waveform_checks_but_f",
+        "mutation_bundle_sha256": "7c83e31fd224e4dcea50d8a13719dcd765214df3dae145583bb6db4a7943ee42",
+        "mutation_id": "neg_002",
+        "source_catalog_certification_path": "negative_variants/neg_002/certification.json",
+        "trigger_condition": "Passes interface and broad waveform checks but fails one edge, timer, sample, lock, or reacquire window.",
+        "violated_property_ids": [
+          "P_HYSTERESIS_STATE_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001",
+    "canonical_dut_id": "043",
+    "hashes": {
+      "mutation_catalog_sha256": "d64912867cde0a77d7e7ed2b5d0b1c3362ceaa4bfe6e892cd4e2ca44f6ebcef6",
+      "score_deck_sha256": "dc9eb8b78a5c383f0ce9c9d93e1f75e7924805a1e78974009afc21247c01253a",
+      "task_certification_sha256": "ec955739bcdd50a9b26cce9309d5e5ab005e3929037c00990e2512277067dd90",
+      "task_record_sha256": "3d7dd06d089cd461836390ffe54634c84a98da496522ac350ea6bfee9f1ba959"
+    },
+    "release_dir": "043-soft-hysteretic-limiter"
+  }
+}

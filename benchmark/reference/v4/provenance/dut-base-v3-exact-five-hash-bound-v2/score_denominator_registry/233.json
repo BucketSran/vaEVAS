@@ -1,0 +1,81 @@
+{
+  "family_id": "233",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_input_offset/certification.json",
+        "certification_sha256": "38eb118924eac53d261da7d602a0dcefee42da04e1c7d57f7375627d0d07fc58",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "42aa63dfaec0ffd6c82d51d8e68088d2fb102715f6d7593899ac213fad2d04e0",
+        "mutation_id": "neg_002_missing_input_offset",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_input_offset/certification.json",
+        "trigger_condition": "Omits the required 50 mV input offset.",
+        "violated_property_ids": [
+          "P_SUBTRACT_SIGIN_OFFSET_FROM_THE_DIFFERENTIAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "21fca05f07d610bf454d1a30ed04bd4a74c27a1cfeb7be061e6572a1a76f6b9a",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "986db829c305df1357740ab720bb113efff9f944b5ebde640c86342e7a943dd0",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Keeps the output at its trivial zero behavior and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_DIFFERENTIAL_SIGNAL_AS_V",
+          "P_DRIVE_SIGOUT_WITH_THE_CLIPPED_TARGET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_control_polarity/certification.json",
+        "certification_sha256": "846baacf6588126b0eb96ec113113c1629685e12bc4a9614466b56f11386326b",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "debe7bfafbe30199e5deab4570b92b6972a9afb57ac47ab7d747d6da348b56a5",
+        "mutation_id": "neg_003_inverted_control_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_control_polarity/certification.json",
+        "trigger_condition": "Reverses the control differential polarity.",
+        "violated_property_ids": [
+          "P_COMPUTE_THE_DIFFERENTIAL_CONTROL_AS_V",
+          "P_MULTIPLY_THE_OFFSET_CORRECTED_SIGNAL_BY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_positive_clip/certification.json",
+        "certification_sha256": "3b7f11876040de6aa33513aa20a2d2b816a016016e533d66b55276a59b1c32cf",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "f08d2534c3a7e2d98b238cdbff113b5cb585e630b09ad0aa7d72b3b35465410f",
+        "mutation_id": "neg_004_no_positive_clip",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_positive_clip/certification.json",
+        "trigger_condition": "Clips only the negative rail and leaves positive outputs unclamped.",
+        "violated_property_ids": [
+          "P_CLAMP_THE_RESULT_TO_THE_PUBLIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "a69c21ad00d6d1a4696c7ee7009a02d299b9e1150f106bf131899263a15441c1",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "ff5f21a070e91cdb3c991d3515e37d27225e8648e823d13a52040a03647cae9d",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the clipped variable-gain output too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_DRIVE_SIGOUT_WITH_THE_CLIPPED_TARGET",
+          "P_MULTIPLY_THE_OFFSET_CORRECTED_SIGNAL_BY"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_missing_input_offset",
+    "canonical_dut_id": "233",
+    "hashes": {
+      "mutation_catalog_sha256": "8a2d53b80905825118aafc50379bc6d40aed82b46a5ea6a4886cd25fe9985423",
+      "score_deck_sha256": "c564e109b72585d8177f58c216f09711c4811c6d7dc5f0f039fcae5aa593fa25",
+      "task_certification_sha256": "fd4b8686a64c648b3a4e90fbdae0cc46ec88adad21e97bbaa17cf180b4076002",
+      "task_record_sha256": "2195dca6c7f3a6538a402b3bdf4da33bbad1897b5297901fb5cc21cff998428c"
+    },
+    "release_dir": "233-vargain-diffamp-clip"
+  }
+}

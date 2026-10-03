@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "58b44cb2ed03004ba2875708495edf616193871af8bc2bd376a931642d4bbe61",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "104n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_OR_A_LOW_ENABLE_CLEARS",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_CYCLE_START_PULSES_HIGH_FOR_THE",
+    "P_PWM_OUT_IS_HIGH_WHEN_VCTRL",
+    "P_DUTY_METRIC_TRACKS_THE_CLIPPED_DUTY"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

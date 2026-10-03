@@ -1,0 +1,79 @@
+{
+  "family_id": "344",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_dac_divisor_64/certification.json",
+        "certification_sha256": "48230f5827666c957c52a285b425598c77ffcb7cbfe3e39dccbffcc361199207",
+        "fault_class": "dac_gain_error",
+        "mutation_bundle_sha256": "e107ee71231704328fec729a8b59418750d328fafcc856cb128108ceb781d71b",
+        "mutation_id": "neg_001_dac_divisor_64",
+        "source_catalog_certification_path": "negative_variants/neg_001_dac_divisor_64/certification.json",
+        "trigger_condition": "any nonzero code is sampled",
+        "violated_property_ids": [
+          "P_DEM_DAC_TRANSFER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_pointer_frozen/certification.json",
+        "certification_sha256": "e85af9e4344d9e518cf6b0e529f695ebc69cef086a1369383822e6beea108b71",
+        "fault_class": "pointer_update_error",
+        "mutation_bundle_sha256": "0d10213a5d7dd25e9b9ab8d59718fb7b93c80e9161aa4b2681bf23b84fa66ea3",
+        "mutation_id": "neg_002_pointer_frozen",
+        "source_catalog_certification_path": "negative_variants/neg_002_pointer_frozen/certification.json",
+        "trigger_condition": "a nonzero coarse request is sampled",
+        "violated_property_ids": [
+          "P_DEM_POINTER_ADVANCE",
+          "P_DEM_ROTATED_MASK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_vout_stuck_low/certification.json",
+        "certification_sha256": "d992fc562001ce57d204348fe8ad0e3c145024ab7a20f61aedde10ff6995db9f",
+        "fault_class": "reset_clear_failure",
+        "mutation_bundle_sha256": "a7b43b4ce323ee680198b41fbc1b79a4cfb3e7c0a8da14dd46b39d809fc87cbf",
+        "mutation_id": "neg_005_vout_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_vout_stuck_low/certification.json",
+        "trigger_condition": "rst is asserted at startup",
+        "violated_property_ids": [
+          "P_DEM_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_mask_short_by_one/certification.json",
+        "certification_sha256": "fa661a8f63fdf211dc7c92f6fad2ac655a1aa68d8467a375119dc376f9039855",
+        "fault_class": "unit_mask_count_error",
+        "mutation_bundle_sha256": "74a6dbc415bd3d4bd24f0eb49f8dec7244a07efc85283667973b1b56268bfe3c",
+        "mutation_id": "neg_003_mask_short_by_one",
+        "source_catalog_certification_path": "negative_variants/neg_003_mask_short_by_one/certification.json",
+        "trigger_condition": "coarse request exceeds zero",
+        "violated_property_ids": [
+          "P_DEM_ROTATED_MASK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_fine_lsb_stuck_low/certification.json",
+        "certification_sha256": "20f0ee940a5934bb3b1b40779e900fb37852e707f2850262190cc8c9ea270876",
+        "fault_class": "fine_decode_error",
+        "mutation_bundle_sha256": "2dfd9d958f312a426cefff9034ca1b04b96b26fd23ecdc438463c60c6b0faf56",
+        "mutation_id": "neg_004_fine_lsb_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_004_fine_lsb_stuck_low/certification.json",
+        "trigger_condition": "an odd fine code is sampled",
+        "violated_property_ids": [
+          "P_DEM_DAC_TRANSFER"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_dac_divisor_64",
+    "canonical_dut_id": "344",
+    "hashes": {
+      "mutation_catalog_sha256": "2281001a0532c02678838b765909ecdce0f7319fa7e2e4f81431707e681cd2af",
+      "score_deck_sha256": "ef2ae20b0bdb0cb7af642e3ade17ace80ec506f82a8226619fa3e638d8bcb5f3",
+      "task_certification_sha256": "54d36c5162803e4a1d5ece1d9c59bac91c760bec70529698e228ffdc49e6b529",
+      "task_record_sha256": "911a471dbd4cd9b848c2c73fb3e8fbe533c208d1e5dc67d8004eef90dfa0aaa9"
+    },
+    "release_dir": "344-segmented-dac-dem-system"
+  }
+}

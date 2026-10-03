@@ -1,0 +1,52 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_charge_pump_abstraction/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_charge_pump_abstraction.scs"
+    ],
+    "gold_va": [
+      "charge_pump_abstraction.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_charge_pump_abstraction/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_charge_pump_abstraction",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "clk": "input",
+      "dn": "input",
+      "metric": "output",
+      "rst": "input",
+      "up": "input",
+      "vctrl": "output"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "clk",
+      "rst",
+      "up",
+      "dn",
+      "vctrl",
+      "metric"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "charge_pump_abstraction.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_charge_pump_abstraction/forms/dut/visible"
+}

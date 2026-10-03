@@ -1,0 +1,65 @@
+{
+  "id": "vbm1_thermometer_dac_15seg_bugfix",
+  "task_id": "vbm1_thermometer_dac_15seg_bugfix",
+  "release_entry_id": "vbr1_l1_unit_element_thermometer_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1-candidate",
+  "semantic_label": "4-bit 15-segment thermometer DAC missing-segment bugfix",
+  "semantic_note": "Unlike vbm1_thermometer_dac_bugfix, this task uses fifteen unary thermometer segment inputs rather than four binary-weighted code pins.",
+  "family": "bugfix",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_thermometer_dac_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "seg14",
+    "transition(",
+    "vref",
+    "vss"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_thermometer_dac_15seg_buggy.scs",
+    "gold/tb_thermometer_dac_15seg_ref.scs"
+  ],
+  "bugfix": {
+    "buggy_source": "gold/dut_buggy.va",
+    "fixed_source": "gold/dut_fixed.va",
+    "buggy_testbench": "gold/tb_thermometer_dac_15seg_buggy.scs",
+    "fixed_testbench": "gold/tb_thermometer_dac_15seg_ref.scs",
+    "defect": "The buggy implementation omits seg14 from the unary active-segment count, so full-scale thermometer code reaches only 14/15 of vref.",
+    "repair": "Count all fifteen unary segment pins before applying active_count/15 endpoint scaling."
+  },
+  "evidence": {
+    "local_evas_verification": "2026-05-15: fixed source PASS; buggy source FAIL_SIM_CORRECTNESS. Verification artifacts were not retained in-tree.",
+    "spectre_status": "not_run"
+  }
+}

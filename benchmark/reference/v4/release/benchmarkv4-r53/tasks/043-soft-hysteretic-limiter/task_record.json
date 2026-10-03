@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "soft_hysteretic_limiter.va"
+  ],
+  "canonical_dut_source_slug": "043-soft-hysteretic-limiter",
+  "checker_task_id": "v4_043_soft_hysteretic_limiter",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "6ade5288461a13035c70cf53d72cd9653406981942ca7c1e505308d9a1475596",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "e7de49582760b076322de79e21beb1db2c36e93a2c6ac0087f1a972b6a213e1a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0288267a92703732c9ae8efd6bff0fd2cb6aca1ed7257705351c954186778db6",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "043",
+  "family_spec_sha256": "0344839bc70c44c24d599fd53c9002220a60986b5ce87509f35bc7e95da61141",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8ee4726df5618e78d9603c37e4efaaf4e86d638f632d6b0df2a0e8b36e6308e2",
+  "public_contract": "tasks/043-soft-hysteretic-limiter/public_contract.json",
+  "public_contract_sha256": "55f31c59137c34f35d3c83960958915273b03946066cd78fe6461ac183b568b8",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/043-soft-hysteretic-limiter",
+  "task_id": "v4-043"
+}

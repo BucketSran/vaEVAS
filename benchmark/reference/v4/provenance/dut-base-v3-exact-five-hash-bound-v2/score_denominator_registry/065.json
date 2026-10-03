@@ -1,0 +1,78 @@
+{
+  "family_id": "065",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "883180f8d285cc6d8ed6aa584f0c571ac1a85d443277ca8996c027bb4b4b9b8b",
+        "fault_class": "no_pulse",
+        "mutation_bundle_sha256": "660cd7c7f250827ee0f9c9132bf766e016a07d721dc1ed459dfcbed79ac2cc84",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises no pulse against the public observable contract",
+        "violated_property_ids": [
+          "P_ENABLED_HIGH"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_clock/certification.json",
+        "certification_sha256": "4b782f53207a5cb8f692e72af69da68b26632ab44c9cd38dd2cac2dab6f7e683",
+        "fault_class": "passes_enable_level",
+        "mutation_bundle_sha256": "c4acac5aeff472a4ffdec47abed3f60a607c576c81ab7d77a3abc90c45c61478",
+        "mutation_id": "neg_003_ignore_clock",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_clock/certification.json",
+        "trigger_condition": "stimulus exercises passes enable level against the public observable contract",
+        "violated_property_ids": [
+          "P_ENABLE_GATING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_invert_enable/certification.json",
+        "certification_sha256": "64c0f1292c1001e84c08413eaca2b9321ecf270630af45472f2828216f130601",
+        "fault_class": "uses_inverted_enable",
+        "mutation_bundle_sha256": "5533c46290d0c234b7d0ad8f6d856e1ad6e5f5d12a4cc65e93206b01d5e4e659",
+        "mutation_id": "neg_004_invert_enable",
+        "source_catalog_certification_path": "negative_variants/neg_004_invert_enable/certification.json",
+        "trigger_condition": "stimulus exercises uses inverted enable against the public observable contract",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "8f236ee2fd9f4dde3c44f6ec2e04c3b47bf048cfe84da43b3a6c4a2df176df1d",
+        "fault_class": "passes_clock_regardless_of_enable",
+        "mutation_bundle_sha256": "b1c796c446bee252a8c8fbadfebee8fc4f8096633674ff7c82f0e527452fb19b",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises passes clock regardless of enable against the public observable contract",
+        "violated_property_ids": [
+          "P_DISABLED_LOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_invert_output/certification.json",
+        "certification_sha256": "1bc2227f5ca338e30064831ad2f316acc13a630921c8a45196d7cfc7860dd098",
+        "fault_class": "inverts_output",
+        "mutation_bundle_sha256": "a99e9b4e6ecc529bac88bea0e623998cad025e84e17f958c3decb29c50aeaacc",
+        "mutation_id": "neg_005_invert_output",
+        "source_catalog_certification_path": "negative_variants/neg_005_invert_output/certification.json",
+        "trigger_condition": "stimulus exercises inverts output against the public observable contract",
+        "violated_property_ids": [
+          "P_ENABLED_HIGH"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "065",
+    "hashes": {
+      "mutation_catalog_sha256": "f4045e7848f9d6d83ac6132394386867ea6c26b34a3f3f7ccf27ae8e58c9943d",
+      "score_deck_sha256": "e0ee1c7c397a10cea137d69de308033b48bc77a0a514dca01a7ae018c1438b6e",
+      "task_certification_sha256": "edef22659ee367a3d98e685eed827f4bb950bd14a4d70bcb60f7e392abe9561c",
+      "task_record_sha256": "1165f6acf36d4a90ab92236c03e3f53faaa73a492265a9154d03fbf48410fef8"
+    },
+    "release_dir": "065-enable-gated-clock-pulse"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "vbm1_simple_binary_voltage_dac_4b_e2e",
+  "task_id": "vbm1_simple_binary_voltage_dac_4b_e2e",
+  "release_entry_id": "vbr1_l1_binary_weighted_voltage_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "end-to-end",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_thermometer_dac_e2e",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "ahdl_include",
+    "save",
+    "tran",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "simple_binary_voltage_dac_4b.va",
+    "tb_simple_binary_voltage_dac_4b_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/tb_simple_binary_voltage_dac_4b_ref.scs",
+    "gold/simple_binary_voltage_dac_4b.va"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_thermometer_dac_e2e/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_thermometer_dac_e2e/spectre_result.json"
+  }
+}

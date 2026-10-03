@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "022",
+  "checker_task_id": "v4_022_charge_pump_abstraction",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "11135f301e6760a9f737ba266da3dd268d65b180b793c9f0a43741223d11b9c1",
+    "checker_profile.json": "df1abf55c7d59bbaff76dd4b3f76024c112178b3a05864dee6af5850e9df60a4",
+    "derivation_manifest.json": "d60a521b70afeaec0121f905e0fa58db4f717aacdd9b3666867e6d00b8209a84",
+    "family_spec.json": "9ed96adc98a753f67b0269eed7ce6d7dec18d73e7183e543c15f783bedaa9822",
+    "harness_spec.json": "e70aa6cdcb575526fded35ff612d23346b98d842995023ad7afb4f6d2190728d",
+    "mutation_catalog.json": "a52a6aa35cc46746739cd5d8cd18148a54625a29833a4a8a2849b8c6df3a0621",
+    "profiles/feedback.json": "e307500a0c125bba4a670df8f5d3b6a25e0c3fb9926717b62720d7c141788c6b",
+    "profiles/score.json": "a19b5569948eeeec86bb1bbca242872c1a7e63f2a424943c1968a4f1e80f6f65",
+    "score_tb.scs": "ffa8c276a485f54061b6b0783415b3560d77adaaeeb28e84992f5ff87da1e694",
+    "solution_tree": "c6c2d946c041d8ef4fee5af85c61f52145382730d4027f5ded236864f222029e",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d2bd0923b70b44471287d7095280c202c34a57bd72134913f8ac9b83a10124c3",
+    "instruction.md": "10fae51e516bbb775bff11f332e132f70d854daf632c4de81525a73a11c36faf",
+    "public_contract.json": "c03c44dc7eaba24b9351645f6f78bb41acaf5f3d2fcda9820f9100419812dd4d"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "11135f301e6760a9f737ba266da3dd268d65b180b793c9f0a43741223d11b9c1"
+  },
+  "release_dir": "022-charge-pump-abstraction",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "024-charge-pump-abstraction",
+  "support_root": "",
+  "target_artifacts": [
+    "charge_pump_abstraction.va"
+  ]
+}

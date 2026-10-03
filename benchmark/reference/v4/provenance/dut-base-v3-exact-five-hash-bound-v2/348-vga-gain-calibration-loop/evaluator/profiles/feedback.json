@@ -1,0 +1,27 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "6f62498989e2bb85f25914ef5e73e2b3520ab0672c58b9afd4c120cc37d43c6c",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "225n"
+  },
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_VGA_RESET_STATE",
+    "P_VGA_PEAK_SAMPLE",
+    "P_VGA_GAIN_DIRECTION",
+    "P_VGA_OUTPUT_GAIN",
+    "P_VGA_LOCK_QUALIFICATION"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pfd_updn.va"
+  ],
+  "canonical_dut_source_slug": "011-pfd-up-dn-logic",
+  "checker_task_id": "v4_011_pfd_up_dn_logic",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "cba31f04a42cd4c26e00241a048f6bc3af713fbcb9b16dd6878ababf3e066716",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "09f108a96115e4a3b353c8b55a30622b12e1cfa61c0e8e3f2002c7257435f453",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ba578ef239bfc4331d695abf283d33d1be2fb475eaf3e679717864f6da2db2b7",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "011",
+  "family_spec_sha256": "e8f6e89675c1ee3b70fafbac899267440606007c4b1a88a55305894ebcdb65ff",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c4e6dcc77fec270b11995c0ce5df44df95698ee4fb45dcc52ec5ad5d0750da83",
+  "public_contract": "tasks/011-pfd-up-dn-logic/public_contract.json",
+  "public_contract_sha256": "f037c18936a0124be7d6d76fef09a1d9a17d9c12998afdc2cd09a8b0dd1e0f7b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/011-pfd-up-dn-logic",
+  "task_id": "v4-011"
+}

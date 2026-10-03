@@ -1,0 +1,26 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+    - "pipeline_adc_chain_4b.va"
+    - "res1"
+    - "dout3"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "all_16_pipeline_codes_present"
+    - "stage1_residue_matches_coarse_decision"
+    - "stage2_residue_matches_backend_decision"
+    - "final_code_matches_stage_concatenation"
+    - "final_code_monotonic_with_vin"
+parity:
+  required: true
+  status: "certified"
+  tolerance_notes: "Current release dual_certification report certifies this form as EVAS/Spectre pass; rerun is required after checker/gold behavior changes."

@@ -1,0 +1,80 @@
+{
+  "family_id": "038",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_inverted_gain_select/certification.json",
+        "certification_sha256": "5de6632ecada6b00dedd3a2bfc317072ed90d4fe0082f40da7feb74b6a7cde58",
+        "fault_class": "gain_select_polarity_error",
+        "mutation_bundle_sha256": "375e3805d8b86f8c86f32b019818524104111ad52b52ab42070991cc5ce916f7",
+        "mutation_id": "neg_002_inverted_gain_select",
+        "source_catalog_certification_path": "negative_variants/neg_002_inverted_gain_select/certification.json",
+        "trigger_condition": "gain_sel changes state before an active rising clock edge",
+        "violated_property_ids": [
+          "P_COMMON_MODE_GAIN",
+          "P_SAMPLED_GAIN_SELECT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_clip_metric_stuck_low/certification.json",
+        "certification_sha256": "c5247c9e07011e331642e506cb15b3fc4e510275ba9cb5acdac4a245b879e4c5",
+        "fault_class": "clip_metric_omission",
+        "mutation_bundle_sha256": "2e1c2a0ac36d3fd34ffb87d769c114560957f1eb75a8591aef45d454c8cf9fba",
+        "mutation_id": "neg_005_clip_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_clip_metric_stuck_low/certification.json",
+        "trigger_condition": "the sampled gain and vin produce an unclamped target outside a clamp limit",
+        "violated_property_ids": [
+          "P_CLIP_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_007_output_clamp_bypass/certification.json",
+        "certification_sha256": "221104444546811748e1ab79d7f941c3807e50a6b8bc984fc351e54591a8efdf",
+        "fault_class": "output_clamp_omission",
+        "mutation_bundle_sha256": "40395e070a6b300aca26fb4002b6cd10763de65884ed0b3e257b249abd6964c5",
+        "mutation_id": "neg_007_output_clamp_bypass",
+        "source_catalog_certification_path": "negative_variants/neg_007_output_clamp_bypass/certification.json",
+        "trigger_condition": "the sampled gain and vin produce an unclamped target above vmax or below vmin",
+        "violated_property_ids": [
+          "P_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_006_reset_ignored/certification.json",
+        "certification_sha256": "4a7361c0cade7e61c3c10fb5dffcfdb5d9ce38871b742410d3430daf9df13e06",
+        "fault_class": "reset_override_omission",
+        "mutation_bundle_sha256": "82be537cd236dff1b98d5e95ab26b6672fe14b1d701323f94854c4040f734b02",
+        "mutation_id": "neg_006_reset_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_006_reset_ignored/certification.json",
+        "trigger_condition": "rst is active during a clock crossing or between sampled gain updates",
+        "violated_property_ids": [
+          "P_RESET_UNITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_fixed_unity_gain/certification.json",
+        "certification_sha256": "4d7b91993f5449ba2d38b5c64c99ba003f8afcbcfc8aefa73898fe446d3da386",
+        "fault_class": "gain_state_stuck_unity",
+        "mutation_bundle_sha256": "6082fb482cc302c657a3c3751350fe98781e22bca6c5026a85adb6a2bd6eb8a3",
+        "mutation_id": "neg_003_fixed_unity_gain",
+        "source_catalog_certification_path": "negative_variants/neg_003_fixed_unity_gain/certification.json",
+        "trigger_condition": "gain_sel requests either configured gain after reset has deasserted",
+        "violated_property_ids": [
+          "P_COMMON_MODE_GAIN",
+          "P_SAMPLED_GAIN_SELECT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_inverted_gain_select",
+    "canonical_dut_id": "038",
+    "hashes": {
+      "mutation_catalog_sha256": "62ac1f400c3882f7916c05d3fbaba9600452e53dd41b41dec46e2bf10518f1b2",
+      "score_deck_sha256": "e33ca664e43cb945f0af1e5f21d66fd5f10127417f2d3a945739e8ae7a9c8622",
+      "task_certification_sha256": "56de204d1896e50bbb1a476c504bfd3667934daaf4aa2e686d52482bd10e0cc5",
+      "task_record_sha256": "27bc144983b025fc25105d5b356d526483e1555952bb615f83e35c7c1d6dacdf"
+    },
+    "release_dir": "038-programmable-gain-amplifier"
+  }
+}

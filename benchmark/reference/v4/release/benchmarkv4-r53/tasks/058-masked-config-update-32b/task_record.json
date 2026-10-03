@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "masked_config_update_32b.va"
+  ],
+  "canonical_dut_source_slug": "058-masked-config-update-32b",
+  "checker_task_id": "v4_058_masked_config_update_32b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "68113ec0fd7586e8faf3f5a1360e755b9d754d64046d98b1d8fd43fa18613340",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "99fd6794dd4204cd4c636271f369e70d9b7839d4c2a83d5ddc0feffb1ae6a233",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "407ce2eb835cc16a0224a7e35798db37be0653a61d8590991c2503030e7e6c6c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "058",
+  "family_spec_sha256": "6cbbb5c39e310f4c92135fcacee8097df06f355c64f4c914316428702c2d7cf4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "069cfb7b16704489122fa77bc18df22de8646bf423cb0af4754d78fa97c0ce84",
+  "public_contract": "tasks/058-masked-config-update-32b/public_contract.json",
+  "public_contract_sha256": "b7fe4ec4d5eb03f352dc898ae004d3b746132d181fb95a60772a55af09af31d2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/058-masked-config-update-32b",
+  "task_id": "v4-058"
+}

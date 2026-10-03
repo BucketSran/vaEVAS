@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "385-switched-cap-phase-sequencer",
+  "checker_task_id": "v4_385_switched_cap_phase_sequencer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "645607bab741733eb92d8a4234ae83358f911efa63345d01b1f5b2514b5c13de",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "8d538fa548b30b9089f602fe69257feb6077ca3f450b616555b2fb04addd1cec",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "645607bab741733eb92d8a4234ae83358f911efa63345d01b1f5b2514b5c13de",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "e60e2d48fb7be3be5f4af51059497fec55a15f2d0000d858d71c13db80b0d58d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "d2498f915960befda385bbe25674cba7daeda63cf558c323f7d95202c8fb72a2"
+  },
+  "family_id": "385",
+  "family_spec_sha256": "c37af2ac59bf5316017650955b81268d3575105accd893a417273a485b3db5db",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ca26b562bf621ee8640525b4ac2f8df6fde89b895a21f63c93eb5873eb29bb56",
+  "public_contract": "tasks/885-switched-cap-phase-sequencer-testbench/public_contract.json",
+  "public_contract_sha256": "786625033f8ec593702e766c55da8e96aef0604ee1d0489a0bce96770adc8165",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/885-switched-cap-phase-sequencer-testbench",
+  "task_id": "v4-885"
+}

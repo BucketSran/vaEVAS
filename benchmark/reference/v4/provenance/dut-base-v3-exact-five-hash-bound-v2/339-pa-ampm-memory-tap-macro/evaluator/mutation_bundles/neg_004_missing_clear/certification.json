@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_ON_RESET_OR_WHEN_DISABLED_DRIVE satisfy the public contract; fault class missing_clear is rejected",
+    "observed": "EVAS: v4_1037 checked=8 reset_clear=True disabled_clear=False compression_seen=True memory_seen=True vout_errors=0 am_errors=0 pm_errors=0 valid_errors=0 clear_errors=89; P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=90; P_ON_EACH_ENABLED_RISING_CLK_EDGE mismatch_count=0; P_APPLY_AN_AM_GAIN_COMPRESSION_PROXY mismatch_count=0; P_APPLY_A_ONE_SAMPLE_MEMORY_TERM mismatch_count=0; P_EXPOSE_AM_AND_PM_PROXIES_SEPARATELY mismatch_count=0; diagnostic_schema=v4-checker-diagnostic-v1 status=fail category=behavior_mismatch event=stimulus_relative event_context=stimulus_relative expected=public_contract observed=trace",
+    "violated_property_ids": [
+      "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_339_pa_ampm_memory_tap_macro",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 759
+  },
+  "family_id": "339",
+  "inputs": {
+    "checker_profile_sha256": "a696ade4638746e411de698448c4d275d136520259135a2907f812bd5b3fab30",
+    "harness_spec_sha256": "210fbc0bdbff799b5cbc65c01fe167c54ce80bee17b7263f93994722fc4618de",
+    "mutation_bundle_sha256": "3036ea2caf7e1305b1759beeb621e819b5c5689da47884cd89da43ed65e759cc",
+    "profile_sha256": "d401bd16c0b686a8cb55d96e0dd708da6df121841df2e212d751f22a0ceed001"
+  },
+  "mutation_id": "neg_004_missing_clear",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

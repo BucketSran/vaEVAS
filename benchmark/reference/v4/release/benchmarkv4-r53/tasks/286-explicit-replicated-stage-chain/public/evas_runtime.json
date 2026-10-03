@@ -1,0 +1,9 @@
+{
+  "candidate_root": "public/submission",
+  "command": "evas simulate public/task/visible_test.scs -o /tmp/vabench-visible/evas-output --spectre-strict",
+  "schema_version": "r53-direct-evas-runtime-v2",
+  "test": "visible_test.scs",
+  "trusted_replay": "byte_identical_visible_test",
+  "visible_test_sha256": "82c9fdfdaf31abb6be053e0ebc4c4f5e607e9e60f6c072ed01b39631dfdf24d4",
+  "working_directory": "runtime_package_root"
+}

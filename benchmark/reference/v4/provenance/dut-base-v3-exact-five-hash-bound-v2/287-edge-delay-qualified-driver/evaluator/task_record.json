@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "287",
+  "checker_task_id": "v4_287_edge_delay_qualified_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "68a47c0cece650fbd95c392bc8d6366deaeeaca946603a21b4321f47b2f34dd5",
+    "checker_profile.json": "6137a360761f4eb206702f577a0b8061d685b55d288b0574297fef0bd3dc77a0",
+    "derivation_manifest.json": "0810f5784a4153ae62b210a4024c3413caab3eeb064a267995da3400c77c8857",
+    "family_spec.json": "1159a50eb3007a785d150f4d85dae716783dfadf79c6a5133f7c0a922ffb9600",
+    "harness_spec.json": "cf4d785034762e216b76d5a39a034b8e459fbb4ab69faf540ce8c967edb59802",
+    "mutation_catalog.json": "ad64b4c85d3f07c0a149f674af9e710c2519530438e1f84fdb3dad3f1ba17b01",
+    "profiles/feedback.json": "9d74ac025d7775a25051065b0fed27614de1d847652b55127ee19b12f3a22523",
+    "profiles/score.json": "bc0ac50c27ae409b9378c35d3dfbcfead8a8a00fc8a29a79e48e96edf4345895",
+    "score_tb.scs": "a8af94588d9510e2276e47c4d8791117d8975f0655d8d11641ee7e94eaa46062",
+    "solution_tree": "fdb4407de08013857761d19ef840c684df85ec7a9703db299a2059ddbe2651e6",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "553ad89e0f3839b2acb1b6e71f237caadac14616528ebb25140a46b2f6ca03e4",
+    "instruction.md": "92f200590a2e18710108d2f021bf82e2fb94a7e86bfa5b917a3c41c320bfce1f",
+    "public_contract.json": "ff13a69ef604f3b221ba0f6429308de45295324e206df4283ceb87f9af948625"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "68a47c0cece650fbd95c392bc8d6366deaeeaca946603a21b4321f47b2f34dd5"
+  },
+  "release_dir": "287-edge-delay-qualified-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "453-edge-delay-qualified-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "edge_delay_qualified_driver.va"
+  ]
+}

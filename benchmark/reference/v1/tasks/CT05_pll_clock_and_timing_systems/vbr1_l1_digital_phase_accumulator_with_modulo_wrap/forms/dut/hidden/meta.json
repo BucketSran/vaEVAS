@@ -1,0 +1,26 @@
+{
+  "id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap_dut",
+  "task_id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap_dut",
+  "release_entry_id": "vbr1_l1_digital_phase_accumulator_with_modulo_wrap",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "spec-to-va",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "phase_accumulator_timer_wrap_ref.va",
+    "tb_phase_accumulator_timer_wrap_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "dut_companion_from_e2e"
+}

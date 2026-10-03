@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "two_channel_sample_demux.va"
+  ],
+  "canonical_dut_source_slug": "152-two-channel-sample-demux",
+  "checker_task_id": "v4_152_two_channel_sample_demux",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "51655a4ab49aa8f32706e63420d13da19a483b7447d402b22c3d4609b2d50a68",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8bab565968df3a1d62bd5389be030a3308f2a30b0bf76a4698d0657eb42c37b3",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "927f510e4b4353445edd07964818756c14e8ea29aa3ad333b6d39a3fb491f454",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "152",
+  "family_spec_sha256": "6ded92d71cae912035cd715fb957eaa845a5ad60efd4a8a9a3ac17d7410d41bf",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "5a41930481647b1315a1a0a3b4929c2e72396f7c73a55e65c56add60f35e061a",
+  "public_contract": "tasks/1152-two-channel-sample-demux-bugfix/public_contract.json",
+  "public_contract_sha256": "e64bd474d9e49d2be41a493d63d13a012ac4822b06104fe3f143056ff6db788f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1152-two-channel-sample-demux-bugfix",
+  "task_id": "v4-1152"
+}

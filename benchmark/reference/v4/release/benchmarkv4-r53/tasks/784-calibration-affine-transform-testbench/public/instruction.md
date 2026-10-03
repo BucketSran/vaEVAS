@@ -1,0 +1,86 @@
+# Calibration Affine Transform Testbench
+
+## Task Contract
+
+Write one top-level Spectre testbench that verifies the public contract of the
+supplied read-only `Calibration Affine Transform` DUT. The evaluator runs the same submitted bytes
+against the correct DUT and five anonymous semantic negative DUTs. Your
+testbench must accept the correct DUT and expose all five behavioral faults.
+
+## Public Verilog-A Interface
+
+- Artifact `calibration_affine_transform.va`:
+  - Module `calibration_affine_transform` (entry)
+    - position 0: `clk` (input, electrical)
+    - position 1: `rst` (input, electrical)
+    - position 2: `raw` (input, electrical)
+    - position 3: `gain_ctrl` (input, electrical)
+    - position 4: `offset_ctrl` (input, electrical)
+    - position 5: `en` (input, electrical)
+    - position 6: `out` (output, electrical)
+    - position 7: `resid_metric` (output, electrical)
+
+Stable public Spectre binding:
+
+The submitted `testbench.scs` must use the supplied DUT through this public binding:
+
+- Include path: `./dut/calibration_affine_transform.va`
+- DUT instance: `XDUT (clk rst raw gain_ctrl offset_ctrl en out resid_metric) calibration_affine_transform`
+- Required saved public traces: `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`
+- Use one bounded transient analysis with a finite positive stop time.
+
+You must design the stimulus yourself. Save traces as bare public signal names
+(for example `clk`, not suffixed or hierarchical forms such as `clk:V` or
+`XDUT.clk`). Do not redefine the DUT, drive DUT output nets, save
+hierarchical/private nodes, or use checker/gold/internal files.
+
+## Public Parameter Contract
+
+- `calibration_affine_transform.vth` defaults to `0.45`; valid range: finite; overrides vth.
+- `calibration_affine_transform.vhi` defaults to `0.9`; valid range: finite; overrides vhi.
+- `calibration_affine_transform.center` defaults to `0.45`; valid range: finite; overrides center.
+- `calibration_affine_transform.gain_base` defaults to `0.50`; valid range: finite; overrides gain_base.
+- `calibration_affine_transform.gain_span` defaults to `1.00`; valid range: finite; overrides gain_span.
+- `calibration_affine_transform.resid_fullscale` defaults to `0.45`; valid range: finite; overrides resid_fullscale.
+- `calibration_affine_transform.tr` defaults to `60p`; valid range: finite; overrides tr.
+
+
+## Required Behavior
+
+Create stimulus and save traces sufficient for the fixed evaluator oracle to check:
+
+- `P_ON_EACH_RISING_CLOCK_CROSSING_COMPUTE`: exercise and make observable: Update the stored output and residual metric only on each rising clk crossing. Required traces: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+- `P_MAP_GAIN_CTRL_TO_A_PUBLIC`: exercise and make observable: Let gain = gain_base + gain_span * clip01(V(gain_ctrl) / vhi), offset = V(offset_ctrl) - center, and transformed = center + gain * (V(raw) - center) + offset. Required traces: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+- `P_CLEAR_OUTPUT_AND_METRIC_WHILE_RESET`: exercise and make observable: At a rising edge, V(rst) > vth or V(en) <= vth stores both outputs at 0 V; otherwise store out = clamp(transformed, 0, vhi). Required traces: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+- `P_EXPOSE_A_BOUNDED_RESIDUAL_METRIC_FOR`: exercise and make observable: Store resid_metric = vhi * clip01(abs(transformed - V(raw)) / resid_fullscale), where clip01 limits its argument to [0, 1]. Required traces: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+- `P_USE_LOCAL_ANALOG_HELPER_FUNCTIONS_RATHER`: exercise and make observable: Use local analog helper functions rather than user task/endtask syntax. Required traces: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+
+Use any deterministic stimulus layout that makes every required public behavior
+observable. Exact event counts, absolute event times, sample density, and
+reference-deck ordering are not part of the contract unless stated explicitly
+above.
+
+
+The following canonical public behavior is normative for this derived form:
+
+- Update the stored output and metric only on each rising `clk` crossing. At that edge, if `V(rst) > vth` or `V(en) <= vth`, store `out = 0 V` and `resid_metric = 0 V`.
+- Otherwise let `gain = gain_base + gain_span * clip01(V(gain_ctrl) / vhi)` and `offset = V(offset_ctrl) - center`.
+- Compute `transformed = center + gain * (V(raw) - center) + offset` and store `out = clamp(transformed, 0, vhi)`.
+- Store `resid_metric = vhi * clip01(abs(transformed - V(raw)) / resid_fullscale)`. Here `clip01(x)` limits `x` to `[0, 1]`.
+- Use local analog helper functions rather than user task/endtask syntax.
+
+
+The required trace names are: `time`, `clk`, `en`, `gain_ctrl`, `offset_ctrl`, `out`, `raw`, `resid_metric`, `rst`.
+
+## Modeling Constraints
+
+- Submit one self-contained top-level transient `.scs` file.
+- Use only the declared `./dut/...` source paths and public DUT interfaces.
+- Do not redefine the DUT, drive declared DUT outputs, inspect private internals,
+  access undeclared files, or emit a self-reported result.
+- Missing traces, setup errors, and invalid runs do not count as behavioral kills.
+
+## Output Contract
+
+Return exactly one artifact named `testbench.scs`. Do not return a DUT,
+checker, script, data file, waveform, or auxiliary deck.

@@ -1,0 +1,62 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sampled_true_rms_to_dc(vinp, vinn, clk, reset, enable, rms_out, valid);
+    input vinp, vinn, clk, reset, enable;
+    output rms_out, valid;
+    electrical vinp, vinn, clk, reset, enable, rms_out, valid;
+
+    parameter real vth = 0.45;
+    parameter real vhigh = 0.9;
+    parameter real tr = 100p from (0:inf);
+
+    integer sample_count;
+    integer valid_state;
+    real square_sum;
+    real rms_state;
+    real sampled_value;
+    real completed_sum;
+
+    analog begin
+        @(initial_step) begin
+            sample_count = 0;
+            valid_state = 0;
+            square_sum = 0.0;
+            rms_state = 0.0;
+        end
+
+        @(cross(V(reset) - vth, +1)) begin
+            sample_count = 0;
+            valid_state = 0;
+            square_sum = 0.0;
+            rms_state = 0.0;
+        end
+
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(reset) > vth) begin
+                sample_count = 0;
+                valid_state = 0;
+                square_sum = 0.0;
+                rms_state = 0.0;
+            end else begin
+                valid_state = 0;
+                if (V(enable) > vth) begin
+                    sampled_value = V(vinp, vinn);
+                    completed_sum = square_sum + sampled_value * sampled_value;
+                    if (sample_count == 3) begin
+                        rms_state = sqrt(completed_sum / 4.0);
+                        square_sum = 0.0;
+                        sample_count = 0;
+                        valid_state = 1;
+                    end else begin
+                        square_sum = completed_sum;
+                        sample_count = sample_count + 1;
+                    end
+                end
+            end
+        end
+
+        V(rms_out) <+ transition(rms_state, 0, tr, tr);
+        V(valid) <+ transition(valid_state ? vhigh : 0.0, 0, tr, tr);
+    end
+endmodule

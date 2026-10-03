@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_005_reset_disable_not_centered",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "16c101d90b31bb88188e75ee1f44d30842d611a9d3dfd3918be851cb9ad005c9",
+  "candidate_artifacts": [
+    "downconversion_mixer_lo_polarity.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "downconversion_mixer_lo_polarity.va"
+  ],
+  "checker_profile_sha256": "83e0d08451a150147daf37a0af8473074d5628a057fad77a4f2051fd3272a8c2",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "e67322477a811a6a06bb2adf852a817950c13b99462fca80e3c47d5b5911bf3e",
+  "gold_solution_tree_sha256": "3d5d39a5e9d9d56cf2a5668537168cf060844d25970eb19e92ace2645fdde510",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "fa9a4b09f1496e2ec0d154a82d42ea4dac47025c25b07c92389428ec8f45e23c",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1400"
+}

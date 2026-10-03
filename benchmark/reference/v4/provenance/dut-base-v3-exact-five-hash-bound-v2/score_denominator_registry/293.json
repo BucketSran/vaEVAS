@@ -1,0 +1,83 @@
+{
+  "family_id": "293",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_err_metric/certification.json",
+        "certification_sha256": "0e845fbc52fb041ed03b4208e20056339e78cfe3cb5e028a5593cfc8f738b343",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5628b88de39f9d6d5b4bc1a539e1bf18411e7c4b2e5ca11a5091bbe952436e7a",
+        "mutation_id": "neg_005_wrong_err_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_err_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_err_metric",
+        "violated_property_ids": [
+          "P_ERR_SCALE_0_20_V_ERROR",
+          "P_ON_EACH_RISING_CROSSING_OF_CLK"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_settle_window/certification.json",
+        "certification_sha256": "1d7d13c6109bea51bf7974335879baff4e830e67f75807977d5db6302b662cd1",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "2de6a6ce98f6f642e97816cc6e1d700b57a90699868f72dc37b4bc32df452d00",
+        "mutation_id": "neg_002_no_settle_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_settle_window/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_no_settle_window",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VTH_0_45_V_LOGIC_THRESHOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_fixed_target/certification.json",
+        "certification_sha256": "900ca6187cb89346c9f09440e4a3007f96bc250a7bd07a2d8b729a4b9afc7a68",
+        "fault_class": "fixed_target",
+        "mutation_bundle_sha256": "72c123a5f1ca063b26112f369abf3a377ad5441da6fcd9ba1af5f14288a66797",
+        "mutation_id": "neg_003_fixed_target",
+        "source_catalog_certification_path": "negative_variants/neg_003_fixed_target/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_fixed_target",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_VHI_0_9_V_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_reset/certification.json",
+        "certification_sha256": "ff429304d44a29cc6314b98ce0a87895d7987108fbab140e18783fae57ccee32",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "ff925d0764e637cecc14405a562bda7cb975abd6bc9077107bcc570b71493fcd",
+        "mutation_id": "neg_004_ignore_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_reset",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CROSSING_OF_CLK",
+          "P_TOL_0_035_V_ALLOWED_ABSOLUTE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_always_valid/certification.json",
+        "certification_sha256": "0950e0ca2a03ef651e088a2a95ffcc3f9af9ec8e36c7423aa1899f236e92bf50",
+        "fault_class": "always_valid",
+        "mutation_bundle_sha256": "bc94b703d29a7dd0d708d3adc035d08b3a7061f40c8d3fcbfcaf34a96184415e",
+        "mutation_id": "neg_001_always_valid",
+        "source_catalog_certification_path": "negative_variants/neg_001_always_valid/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_always_valid",
+        "violated_property_ids": [
+          "P_BUILD_A_MEASUREMENT_STYLE_BIAS_REFERENCE",
+          "P_ON_EACH_RISING_CROSSING_OF_CLK"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_wrong_err_metric",
+    "canonical_dut_id": "293",
+    "hashes": {
+      "mutation_catalog_sha256": "4738bddcf6394b5fc6be4d5a7cca87864398e07c66495588206d676be68d92f0",
+      "score_deck_sha256": "cf22ad0ac19375a8e7205ad318cf9e12be47f52cf36ccf152866d8f48c40271a",
+      "task_certification_sha256": "69fa303b36fa4f0fe5f0cbb291770697622ff0faeb7c217bfe5bacd474bfee8a",
+      "task_record_sha256": "910214ef6ff75ef9b43ecfac15f3489d0a472a1c0b223651c15f85ca9caaf845"
+    },
+    "release_dir": "293-reference-settling-window-monitor"
+  }
+}

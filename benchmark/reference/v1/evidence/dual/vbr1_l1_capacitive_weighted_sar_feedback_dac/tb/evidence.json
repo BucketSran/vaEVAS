@@ -1,0 +1,117 @@
+{
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac:tb",
+  "source_task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Data Converter Models",
+    "base_function": "Capacitive/weighted SAR feedback DAC"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/gold",
+    "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/cdac_cal.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/tb_cdac_cal_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-rest-20260526_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/gold",
+    "result_root": "results/vabench-release-v1-dual-rest-20260526_ci/vbr1_l1_capacitive_weighted_sar_feedback_dac/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        6.8e-08
+      ],
+      "signals_compared": 5,
+      "samples": 1200,
+      "max_rmse_v": 1.4545793793580585e-06,
+      "max_abs_v": 3.74735273226956e-05,
+      "mean_relative_rms_error": 1.7730529303994296e-06,
+      "max_relative_rms_error": 4.4326323260010294e-06,
+      "mean_nrmse": 1.7730529303994296e-06,
+      "max_nrmse": 4.4326323260010294e-06,
+      "per_signal": {
+        "CAL0": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "CAL1": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "CLK": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "VDAC_N": {
+          "rmse_v": 1.4545793793580585e-06,
+          "max_abs_v": 3.747352732264009e-05,
+          "span_v": 0.3281525000000013,
+          "nrmse": 4.4326323260010294e-06,
+          "kind": "analog"
+        },
+        "VDAC_P": {
+          "rmse_v": 1.4545793793564413e-06,
+          "max_abs_v": 3.74735273226956e-05,
+          "span_v": 0.3281525,
+          "nrmse": 4.432632325996118e-06,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/cdac_cal.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_capacitive_weighted_sar_feedback_dac/forms/tb/gold/tb_cdac_cal_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

@@ -1,0 +1,81 @@
+{
+  "family_id": "338",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_gain_polarity_wrong/certification.json",
+        "certification_sha256": "7a1fcfa3eef76053deafaa877363fcca700f804cc429b988ec1c280146f21881",
+        "fault_class": "gain_polarity_wrong",
+        "mutation_bundle_sha256": "5c18fb3ee45a7b0b44df2b3d71e788601e0b8ef802fb793bdb8b238a6ba570ea",
+        "mutation_id": "neg_005_gain_polarity_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_005_gain_polarity_wrong/certification.json",
+        "trigger_condition": "gain_polarity_wrong",
+        "violated_property_ids": [
+          "P_AMPLIFY_VIN_VCM_WITH_SMALL_SIGNAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_compression/certification.json",
+        "certification_sha256": "fb0cf7c4ff6d21e50c3d78289cabd0d62faceec8dbb07716d4d7352c77d5cb62",
+        "fault_class": "no_compression",
+        "mutation_bundle_sha256": "e73b8996275163b8c5b8fb40935f57fd47191031780b04aac75ac5bf32aa6e43",
+        "mutation_id": "neg_001_no_compression",
+        "source_catalog_certification_path": "negative_variants/neg_001_no_compression/certification.json",
+        "trigger_condition": "no_compression",
+        "violated_property_ids": [
+          "P_ASSERT_COMPRESSED_ONLY_WHEN_THE_EFFECTIVE",
+          "P_EXPOSE_GAIN_REDUCTION_ON_COMPRESSION_METRIC",
+          "P_REDUCE_EFFECTIVE_GAIN_AS_BLOCKER_RISES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_clear/certification.json",
+        "certification_sha256": "b66ddcbf8c2a547f5fc4eabd0e87298e9caa8ec43971b8b462f32341a99dbd45",
+        "fault_class": "missing_clear",
+        "mutation_bundle_sha256": "29399593d5db2449d6c233eaed7095733cefb2c66601bd9f9491c514723052ef",
+        "mutation_id": "neg_004_missing_clear",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_clear/certification.json",
+        "trigger_condition": "missing_clear",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_metric_stuck_low/certification.json",
+        "certification_sha256": "aa14391556acd4c91fec9d94685590c2d1d90dae2baf915657b305824d4727fa",
+        "fault_class": "metric_stuck_low",
+        "mutation_bundle_sha256": "fac15eeb3fcc5d78a7cdbcc80f854505e9c5e6ce95494e3fff5eddf6e67f69b6",
+        "mutation_id": "neg_002_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_002_metric_stuck_low/certification.json",
+        "trigger_condition": "metric_stuck_low",
+        "violated_property_ids": [
+          "P_ASSERT_COMPRESSED_ONLY_WHEN_THE_EFFECTIVE",
+          "P_EXPOSE_GAIN_REDUCTION_ON_COMPRESSION_METRIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_flag_stuck_low/certification.json",
+        "certification_sha256": "acdd8ac8d24b97076eecd43fe6f611fa69edd654546caaf9802b4b7c432cedba",
+        "fault_class": "flag_stuck_low",
+        "mutation_bundle_sha256": "4271c701d76456fd6c753a237d11315db6593821a8a50679087475be148aa5f7",
+        "mutation_id": "neg_003_flag_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_003_flag_stuck_low/certification.json",
+        "trigger_condition": "flag_stuck_low",
+        "violated_property_ids": [
+          "P_ASSERT_COMPRESSED_ONLY_WHEN_THE_EFFECTIVE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_005_gain_polarity_wrong",
+    "canonical_dut_id": "338",
+    "hashes": {
+      "mutation_catalog_sha256": "80b6c2725f623c8c947df28b0bdc52b2857cf4416dccf2ad592f5f671633dd9c",
+      "score_deck_sha256": "0209842ff4eb37a77934fa5fedde60edf8d715d33b704ade22340d6f1d872f17",
+      "task_certification_sha256": "991a041ec7cd9f5dfe53bcc2603f1f4a9dc2b53399751af14a6d7aff8afde6f4",
+      "task_record_sha256": "457313cd738b94ecf24483dd877764e521431520fe55e721c4b39cfccb653771"
+    },
+    "release_dir": "338-lna-blocker-compression-detector"
+  }
+}

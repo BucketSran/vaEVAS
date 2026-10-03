@@ -1,0 +1,85 @@
+{
+  "family_id": "092",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_unity_gain/certification.json",
+        "certification_sha256": "db8887656e6b03517cca3e93f0e54808a937f69f2691747bd23713643f36862f",
+        "fault_class": "gain_transfer_error",
+        "mutation_bundle_sha256": "b376119a91b8c611b9ee6aa96a21d168ba80cbb3066c2ee946bcf535e3773db2",
+        "mutation_id": "neg_002_unity_gain",
+        "source_catalog_certification_path": "negative_variants/neg_002_unity_gain/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Fixed Gain Amplifier",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_GAIN",
+          "P_PARAMETER_OVERRIDES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "7f9efc0791f56aeb39cdc084fe4de4c01283fb7ccc0dca5083a6819a448c176d",
+        "fault_class": "metric_scaling_error",
+        "mutation_bundle_sha256": "4866c61b47891b9a46ab41f17d21c9d4da1bb92b97da07b9c7d190c93ea3b702",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "score stimulus observes the public metric/output scaling for Fixed Gain Amplifier",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_GAIN",
+          "P_OUTPUT_COMMON_MODE",
+          "P_POSITIVE_POLARITY",
+          "P_SYMMETRIC_OUTPUT_PAIR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "84f3fce40b3b37e172be9d8f3e45806c90f5ed8d986a0c450c9c61fc4c45f10a",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "7006fe7517510fcc5a7267153c85974939234746489c2439b8417308202692b5",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "nonzero behavioral stimulus requires observable Fixed Gain Amplifier outputs",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_GAIN",
+          "P_POSITIVE_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_polarity/certification.json",
+        "certification_sha256": "1f4278505dba5ef2c32ae3fadb97b2d72db30e83aaedb7bc83fa00fbcdc2c8fb",
+        "fault_class": "polarity_error",
+        "mutation_bundle_sha256": "6240ff7b5ffed4e6ac1a2841195c603f82f79b145918fe7e0918ce77377ba612",
+        "mutation_id": "neg_003_inverted_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_polarity/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Fixed Gain Amplifier",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_GAIN",
+          "P_PARAMETER_OVERRIDES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignores_gain_parameter/certification.json",
+        "certification_sha256": "cf8b42fd872eadf4699984dc00ce82dfb736c7a1fad7c56e1cb3a71cf0d5368b",
+        "fault_class": "gain_transfer_error",
+        "mutation_bundle_sha256": "20c1b446b6eaff005bab40be3bf8645988e0de6198f6d00b06e68a16780d5abd",
+        "mutation_id": "neg_004_ignores_gain_parameter",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignores_gain_parameter/certification.json",
+        "trigger_condition": "targeted stimulus exercises the violated observable contract for Fixed Gain Amplifier",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_GAIN",
+          "P_PARAMETER_OVERRIDES"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_unity_gain",
+    "canonical_dut_id": "092",
+    "hashes": {
+      "mutation_catalog_sha256": "910edd77d2e53c85a7b798d2ceffbe0d33a996aaa8f5bb562e23965e78a153e5",
+      "score_deck_sha256": "45aec88b425b22ec48aab672dd8eff5ed8584167325d03ec641d89a87f4fed15",
+      "task_certification_sha256": "6894c0c9202c6278fc15312f063cbf4d4ea837eb0826d841b1aad92f418e194f",
+      "task_record_sha256": "64220020f9592a2287dbd383d046276162a4b94016d01ca3d806516a4a5c9204"
+    },
+    "release_dir": "092-fixed-gain-amplifier"
+  }
+}

@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "@(timer("
+    - "transition("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "cppll_reacquires_after_reference_step"
+    - "late_window_tracks_new_reference"
+    - "vctrl_stays_bounded"
+
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."
+    - "Checks pre-lock, disturbance, post-step relock, and late-window tracking."

@@ -1,0 +1,78 @@
+{
+  "family_id": "137",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_midpoint/certification.json",
+        "certification_sha256": "5a92a164e729111b64ce040f4a5a2a82a33d5687416b5b9d7a92a42981d6de7e",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "fce06c3077206df4269deec4de69ca9930779932d9af838c9a82ecfd09422423",
+        "mutation_id": "neg_002_missing_midpoint",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_midpoint/certification.json",
+        "trigger_condition": "Omits the 0.2 output midpoint.",
+        "violated_property_ids": [
+          "P_VARIABLE_GAIN_MIDPOINT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_single_ended_control/certification.json",
+        "certification_sha256": "5738445522ec84b72900033a1f77535793230ca1953b669a4975faae36985262",
+        "fault_class": "single_ended_control",
+        "mutation_bundle_sha256": "dd7e3119303ffa8998b10e07453466b0fb5e59e9deb1c8de27cc0610fcc5cbc8",
+        "mutation_id": "neg_003_single_ended_control",
+        "source_catalog_certification_path": "negative_variants/neg_003_single_ended_control/certification.json",
+        "trigger_condition": "Uses sigctrl_p single-ended instead of differential control.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_SIGNAL_AND_CONTROL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_clamp/certification.json",
+        "certification_sha256": "aebae8e7cb15a0b8bbdff4ebfb12603be78e9f74ad4282bc132123099a31ad08",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "ed6f0462405e3ad497c5bc245ab3b8eac56371e984de61c119d28bd1b0f1ae3f",
+        "mutation_id": "neg_004_no_clamp",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_clamp/certification.json",
+        "trigger_condition": "Does not clamp the variable-gain output.",
+        "violated_property_ids": [
+          "P_OUTPUT_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "2e13aa9435d442ca5db0ebed5dc06fb2122a853fd0090599eca004d9d050d5fd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "3395587955bbfd927171cefa7dab392aae14555b8c2805e83d60c8b7e748c233",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_VARIABLE_GAIN_MIDPOINT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "ca294cca08358e3db5a5ce6a62d5966527a9204dd67728e5fe98563589975187",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "48781b3f8bb86dd408b14f770f32996138c5280c6d82ab2526a3a0919d825fd4",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the limited variable-gain output too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_VARIABLE_GAIN_MIDPOINT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_missing_midpoint",
+    "canonical_dut_id": "137",
+    "hashes": {
+      "mutation_catalog_sha256": "b2c49f18878726ea877e4fd4ea0002509f7ad90b33bf8080fb72cf02dfe1c1e3",
+      "score_deck_sha256": "b931e084e3bc2690837d21666aeeb68ec1164ebbf9ddda3dd5e6b0ba986acb5e",
+      "task_certification_sha256": "81a0106886bf4e073b5d84ff7f134c441f60cca041299e7d4b1d77fbdc069d93",
+      "task_record_sha256": "69220dad1593ca57683197040e5a09a11c52b6df9f622c83211de859fb0a2d4b"
+    },
+    "release_dir": "137-variable-gain-differential-amplifier"
+  }
+}

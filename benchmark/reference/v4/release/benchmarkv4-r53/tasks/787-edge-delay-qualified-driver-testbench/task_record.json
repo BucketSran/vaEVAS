@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "287-edge-delay-qualified-driver",
+  "checker_task_id": "v4_287_edge_delay_qualified_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "711281aafe5cd7766854cf4a8c864a42731e4dba0725a3b35e5d5b1048c08478",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "47588ccc9e70e2dfcc7a052a73c1148a1437868fb35d013a2acc331d8742a749",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "711281aafe5cd7766854cf4a8c864a42731e4dba0725a3b35e5d5b1048c08478",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "cf5c55065eabcc249272e533ed0e18324ffef9b0ede421f4bbfed00afdc03d2e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "50614e20c7409efe55eea5f8b50f9a9d71c0d065ffc471226b764c6b23720b53"
+  },
+  "family_id": "287",
+  "family_spec_sha256": "1159a50eb3007a785d150f4d85dae716783dfadf79c6a5133f7c0a922ffb9600",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "35e073654a8e1d1a52deb9b98865b5fec12ff8bfb0fad28cd0409f39b69ecd52",
+  "public_contract": "tasks/787-edge-delay-qualified-driver-testbench/public_contract.json",
+  "public_contract_sha256": "89a09bb1cf5ef99e73642d14816db20253bd57916f943628cd0cba7a600fcefb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/787-edge-delay-qualified-driver-testbench",
+  "task_id": "v4-787"
+}

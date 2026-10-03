@@ -1,0 +1,134 @@
+{
+  "release_entry_id": "vbr1_l2_converter_static_linearity_measurement_flow",
+  "task_id": "vbr1_l2_converter_static_linearity_measurement_flow:e2e",
+  "source_task_id": "vbr1_l2_converter_static_linearity_measurement_flow_e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L2",
+    "category": "Data Converter Models",
+    "base_function": "Converter static linearity measurement flow"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_converter_static_linearity_measurement_flow/e2e/gold",
+    "results/vabench-release-v1-dual-targeted-20260526_fix3/vbr1_l2_converter_static_linearity_measurement_flow/e2e/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_converter_static_linearity_measurement_flow/e2e/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_converter_static_linearity_measurement_flow/e2e/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_converter_static_linearity_measurement_flow/forms/e2e/gold/converter_static_linearity_measurement_flow.va",
+    "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_converter_static_linearity_measurement_flow/forms/e2e/gold/tb_converter_static_linearity_measurement_flow.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-dual-targeted-20260526_fix3/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging/vbr1_l2_converter_static_linearity_measurement_flow/e2e/gold",
+    "result_root": "results/vabench-release-v1-dual-targeted-20260526_fix3/vbr1_l2_converter_static_linearity_measurement_flow/e2e/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "policy": {
+        "policy": "spectre_equivalence_core_v1",
+        "basis": "Behavior checks are primary; waveform metrics are an acceptance gate for Spectre-equivalent behavioral output, not a claim of higher-than-Spectre precision.",
+        "reporting_terms": "Report simulator-style checks: behavior/spec pass, event consistency, relative RMS waveform error, absolute voltage error, and digital mismatch.",
+        "small_absolute_gate": "max_rmse_v<=0.05 and max_abs_v<=0.30",
+        "relative_rms_gate": "row_mean_relative_rms_error<=0.10 and worst_signal_relative_rms_error<=0.22; or row_mean_relative_rms_error<=0.08 and worst_signal_relative_rms_error<=0.25"
+      },
+      "common_window_s": [
+        0.0,
+        9.6e-08
+      ],
+      "signals_compared": 7,
+      "samples": 1200,
+      "max_rmse_v": 1.3129802184174797e-06,
+      "max_abs_v": 1.5859832331932555e-05,
+      "mean_relative_rms_error": 4.190275428888979e-07,
+      "max_relative_rms_error": 1.4588669093527552e-06,
+      "mean_nrmse": 4.190275428888979e-07,
+      "max_nrmse": 1.4588669093527552e-06,
+      "per_signal": {
+        "clk": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "code": {
+          "rmse_v": 1.307620305274161e-06,
+          "max_abs_v": 1.5150917410999831e-05,
+          "span_v": 0.9,
+          "nrmse": 1.4529114503046232e-06,
+          "kind": "analog"
+        },
+        "dnl": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.07600000000000001,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "inl": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.069,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "recon": {
+          "rmse_v": 1.3129802184174797e-06,
+          "max_abs_v": 1.5859832331932555e-05,
+          "span_v": 0.9,
+          "nrmse": 1.4588669093527552e-06,
+          "kind": "analog"
+        },
+        "rst": {
+          "rmse_v": 0.0,
+          "max_abs_v": 0.0,
+          "span_v": 0.9,
+          "nrmse": 0.0,
+          "kind": "digital",
+          "best_lag_samples": 0,
+          "best_lag_s": 0.0,
+          "mismatch_ratio": 0.0
+        },
+        "vin": {
+          "rmse_v": 1.9272996508416477e-08,
+          "max_abs_v": 4.5499430889606174e-08,
+          "span_v": 0.9,
+          "nrmse": 2.1414440564907197e-08,
+          "kind": "analog"
+        }
+      }
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_converter_static_linearity_measurement_flow/forms/e2e/gold/converter_static_linearity_measurement_flow.va",
+      "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l2_converter_static_linearity_measurement_flow/forms/e2e/gold/tb_converter_static_linearity_measurement_flow.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

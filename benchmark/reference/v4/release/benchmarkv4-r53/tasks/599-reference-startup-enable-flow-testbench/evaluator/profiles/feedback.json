@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "5703179f4161594acab15f234d1f1ce37711e0a8375384daf9b5803ecbde5394",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_SUPPLY_AND_ENABLE_MONITORS",
+    "P_RESET_OR_BROWNOUT",
+    "P_DISABLED_REFERENCE",
+    "P_ENABLED_SETTLING",
+    "P_STARTUP_VALIDITY",
+    "P_BROWNOUT_RECOVERY"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

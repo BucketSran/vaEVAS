@@ -1,0 +1,52 @@
+{
+  "id": "vbm1_strongarm_comparator_behavior_e2e",
+  "task_id": "vbm1_strongarm_comparator_behavior_e2e",
+  "release_entry_id": "vbr1_l1_strongarm_style_latch_comparator",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "end-to-end",
+  "category": "comparator",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_strongarm_comparator_behavior_e2e",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "@(cross(",
+    "transition(",
+    "ahdl_include",
+    "save"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "cmp_strongarm.va",
+    "tb_cmp_strongarm_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/cmp_strongarm.va",
+    "gold/tb_cmp_strongarm_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_strongarm_comparator_behavior_e2e/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_strongarm_comparator_behavior_e2e/spectre_result.json"
+  }
+}

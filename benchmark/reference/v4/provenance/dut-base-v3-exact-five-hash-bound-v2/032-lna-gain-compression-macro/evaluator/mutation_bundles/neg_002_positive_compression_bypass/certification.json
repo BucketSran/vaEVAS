@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_POSITIVE_COMPRESSION satisfy the public contract; fault class positive_compression_bypass is rejected",
+    "observed": "EVAS: property_id=P_POSITIVE_COMPRESSION category=behavior_mismatch expected=out:0.8600,metric:0.800 observed=out:0.7000,metric:0.800,vin:0.7800 event=clk_rise[12]@2.402500e-08s",
+    "violated_property_ids": [
+      "P_POSITIVE_COMPRESSION"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_032_lna_gain_compression_macro",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 391
+  },
+  "family_id": "032",
+  "inputs": {
+    "checker_profile_sha256": "06902f19af7feadca38659e3e199054af936d6362db9db2686499eb121d7a889",
+    "harness_spec_sha256": "b12503c38a843fb3db1ac51dd50dc3a216da75b90cbf97efb277b5170dafa599",
+    "mutation_bundle_sha256": "bf0ff7aa3971efca3f618c583575419e1778f22adc35594330d928cfb5d60647",
+    "profile_sha256": "e26b1c5bbca22af79357c66586718eb08053b4335a784dad56e6b8da2e8486c5"
+  },
+  "mutation_id": "neg_002_positive_compression_bypass",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

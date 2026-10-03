@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "356-sst-driver-impedance-macro",
+  "checker_task_id": "v4_356_sst_driver_impedance_macro",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "39a3cca5fd44e315953e5cd6e9660f0a933996393bdbdef133c726c6db9b95e6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "77b353e2f8bd2d2b5f515d1ebca65a2970169c95ca3f677d244f61a98cbc775f",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "39a3cca5fd44e315953e5cd6e9660f0a933996393bdbdef133c726c6db9b95e6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "83101bdab5ace2816d63fc13f6650f92d4245c970f86e1c3c5ca09562ed7a591",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "af372d7a6db5fd4c53f29ecba9dd22db0992cd5a9ddc6339a185bc1b17a1a9b3"
+  },
+  "family_id": "356",
+  "family_spec_sha256": "d1156ed1f19f774807d8266755f9ccafae9ff8781a816f4310181ea76afe3247",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1bcd7cf2850698f6885fbaf6f69e9cfd6187ed982abfd21e8a925b654d7066d6",
+  "public_contract": "tasks/856-sst-driver-impedance-macro-testbench/public_contract.json",
+  "public_contract_sha256": "61bfeca7b787f81b454aadd6a5c2574b5894fffd8a14b0357eedace34f487267",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/856-sst-driver-impedance-macro-testbench",
+  "task_id": "v4-856"
+}

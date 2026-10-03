@@ -1,0 +1,33 @@
+{
+  "release_entry_id": "vbr1_l1_successive_approximation_calibration_search_fsm",
+  "task_id": "vbr1_l1_successive_approximation_calibration_search_fsm:e2e",
+  "task_form": "e2e",
+  "taxonomy": {
+    "level": "L1",
+    "category": "Calibration, DEM, and Control",
+    "base_function": "Successive-approximation calibration/search FSM"
+  },
+  "static": "pass",
+  "evas": "pending",
+  "spectre": "pending",
+  "verdict": "not_certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_successive_approximation_calibration_search_fsm/forms/e2e/prompt.md",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_successive_approximation_calibration_search_fsm/forms/e2e/meta.json",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_successive_approximation_calibration_search_fsm/forms/e2e/checks.yaml",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_successive_approximation_calibration_search_fsm/forms/e2e/gold/successive_approximation_calibration_search_fsm.va",
+    "benchmark-vabench-release-v1/tasks/CT06_calibration_dem_and_control/vbr1_l1_successive_approximation_calibration_search_fsm/forms/e2e/gold/tb_successive_approximation_calibration_search_fsm.scs"
+  ],
+  "checks": {
+    "must_include": [
+      "transition(",
+      "@(cross("
+    ],
+    "must_not_include": [
+      "I(",
+      "ddt("
+    ],
+    "failures": []
+  },
+  "notes": "Static release certification only; EVAS and Spectre remain pending."
+}

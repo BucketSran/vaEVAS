@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "039-propagation-delay-comparator",
+  "checker_task_id": "v4_039_propagation_delay_comparator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2447fd73474e7358451baf4ebeea1947affe09a2c1b115715d753f2ca50d79f0",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2b7605a9a85a98a778e8ec20233a3edd2a124ed492d3fc3551e5f8e9ba8bbaaa",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2447fd73474e7358451baf4ebeea1947affe09a2c1b115715d753f2ca50d79f0",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "168bb2d19569e469f9034c6c9bcd63c7b256d57b4b097ea75b7af5d89a116885",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "6024be8c8668814bb57058a9fe83733990c9101e9feb6c5764ef4aac0ae8a700"
+  },
+  "family_id": "039",
+  "family_spec_sha256": "96aac52b93c76f5969d1baef21fbd871bf90993df6c20a90d8b8906c02749673",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a325c5c314a48d9f37c1bfe0846900275809c36f8bd726a5078fcb97b153eba7",
+  "public_contract": "tasks/539-propagation-delay-comparator-testbench/public_contract.json",
+  "public_contract_sha256": "c92f9e775566e0aaa026bb8541b1f374ed1599cdd23132c9ff77fcbb78333abd",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/539-propagation-delay-comparator-testbench",
+  "task_id": "v4-539"
+}

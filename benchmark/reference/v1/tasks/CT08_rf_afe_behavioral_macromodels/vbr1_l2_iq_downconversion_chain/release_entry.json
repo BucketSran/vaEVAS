@@ -1,0 +1,114 @@
+{
+  "id": "vbr1_l2_iq_downconversion_chain",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_iq_downconversion_chain",
+  "level": "L2",
+  "track": "core",
+  "difficulty": "D3",
+  "category": "RF and AFE Behavioral Macromodels",
+  "base_function": "I/Q downconversion chain",
+  "package_status": "selected_l2_target",
+  "score_surface": "benchmark-e2e",
+  "source_base_id": "i_q_downconversion_chain",
+  "canonical_kernel": "iq_downconversion_chain",
+  "source_registry_status": "designed_from_release_taxonomy",
+  "source_evidence_status": "release_dual_certified",
+  "source_tasks": [
+    {
+      "form": "e2e",
+      "source_path": "designed_release_spec:vbr1_l2_iq_downconversion_chain",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    },
+    {
+      "form": "tb",
+      "source_path": "designed_release_spec:vbr1_l2_iq_downconversion_chain",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e/gold/iq_downconversion_chain.va",
+        "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/e2e/gold/tb_iq_downconversion_chain.scs"
+      ],
+      "public_inputs": [
+        "prompt.md"
+      ],
+      "submission_artifacts": [
+        "iq_downconversion_chain.va",
+        "tb_iq_downconversion_chain.scs"
+      ],
+      "private_reference_artifacts": [],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_iq_downconversion_chain/e2e/evidence.json",
+      "fresh_dual_rerun_required": false,
+      "source_path": "designed_release_spec:vbr1_l2_iq_downconversion_chain",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_iq_downconversion_chain/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_iq_downconversion_chain/e2e/result.json"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/iq_downconversion_chain.va",
+        "benchmark-vabench-release-v1/tasks/CT08_rf_afe_behavioral_macromodels/vbr1_l2_iq_downconversion_chain/forms/tb/gold/tb_iq_downconversion_chain.scs"
+      ],
+      "public_inputs": [
+        "prompt.md"
+      ],
+      "submission_artifacts": [
+        "tb_iq_downconversion_chain.scs"
+      ],
+      "private_reference_artifacts": [],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_iq_downconversion_chain/tb/evidence.json",
+      "fresh_dual_rerun_required": false,
+      "source_path": "designed_release_spec:vbr1_l2_iq_downconversion_chain",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_iq_downconversion_chain/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l2_iq_downconversion_chain/tb/result.json"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

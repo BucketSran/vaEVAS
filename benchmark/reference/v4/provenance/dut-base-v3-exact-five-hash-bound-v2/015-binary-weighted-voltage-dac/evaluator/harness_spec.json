@@ -1,0 +1,74 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "simple_binary_voltage_dac_4b.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=160n maxstep=200p"
+    ],
+    "body_lines": [
+      "V_code_0 (code_0 0) vsource type=pwl wave=[0 0 7.8n 0 8n 0.9 17.8n 0.9 18n 0 27.8n 0 28n 0.9 37.8n 0.9 38n 0 47.8n 0 48n 0.9 57.8n 0.9 58n 0 67.8n 0 68n 0.9 77.8n 0.9 78n 0 87.8n 0 88n 0.9 97.8n 0.9 98n 0 107.8n 0 108n 0.9 117.8n 0.9 118n 0 127.8n 0 128n 0.9 137.8n 0.9 138n 0 147.8n 0 148n 0.9 160n 0.9]",
+      "V_code_1 (code_1 0) vsource type=pwl wave=[0 0 17.8n 0 18n 0.9 37.8n 0.9 38n 0 57.8n 0 58n 0.9 77.8n 0.9 78n 0 97.8n 0 98n 0.9 117.8n 0.9 118n 0 137.8n 0 138n 0.9 160n 0.9]",
+      "V_code_2 (code_2 0) vsource type=pwl wave=[0 0 37.8n 0 38n 0.9 77.8n 0.9 78n 0 117.8n 0 118n 0.9 160n 0.9]",
+      "V_code_3 (code_3 0) vsource type=pwl wave=[0 0 77.8n 0 78n 0.9 160n 0.9]",
+      "V_vref (vref 0) vsource dc=0.9",
+      "V_vss (vss 0) vsource dc=0",
+      "XDUT (code_0 code_1 code_2 code_3 vref vss aout) simple_binary_voltage_dac_4b"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "code_0",
+      "code_1",
+      "code_2",
+      "code_3",
+      "vref",
+      "vss",
+      "aout"
+    ]
+  },
+  "family_id": "015",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "5554095a50a9b371176ac74c98ff00ef3bf73a0a34b5df0cf54c31e0e4580a2a",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "483c93c49d99c5518cbb6ca0c1c4cd71a4db6b2c7d763f67f4be16bd2dad7894",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck is the canonical stimulus; score is generated with identical semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_BINARY_WEIGHTS",
+    "P_ENDPOINTS",
+    "P_LINEAR_MONOTONIC_MAPPING",
+    "P_CONTINUOUS_UPDATE"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "4c772443cbcc8b747a1adfd950b199509cf7ab1d30da8125d51ab44c87952aa1",
+    "family_spec_sha256": "e9e246939f63a42840fc429a0f1eaff407bb5350c935b38ce0e657541cadecaa"
+  },
+  "task_id": "v4-015"
+}

@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module element_shuffler(clk,rst_n,out0,out1,out2,out3);
+    input clk,rst_n; output out0,out1,out2,out3; electrical clk,rst_n,out0,out1,out2,out3; parameter real vth=0.45; parameter real vdd=0.9; parameter real tr=300p; integer idx;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

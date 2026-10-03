@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "supply_supervisor_brownout_por.va"
+  ],
+  "canonical_dut_source_slug": "399-supply-supervisor-brownout-por",
+  "checker_task_id": "v4_399_supply_supervisor_brownout_por",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "1a4fc717d915a8e0c74592161e2d941194b7a6d231084df1989a94b3dfe1e59f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "284b5972db74a90fc3fdcc33a0580489a2a2fa536746ce26bb77baeae2c1eb17",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "01ed2cbd0c15032b37a6b7d3327e62f0595b55661f577c1be66708a560b389af",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "399",
+  "family_spec_sha256": "580af84d460031e716a40619030de213e358ced1769c98a6971b26e1b1265956",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2641db7ed55e3f0ece74a20c15382f58289e526d793e6fb1e3d8d657ca74cf33",
+  "public_contract": "tasks/399-supply-supervisor-brownout-por/public_contract.json",
+  "public_contract_sha256": "425c489149be8837411053925b37b0772ed70b4f0b384f7aa2f9ab582708bc86",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/399-supply-supervisor-brownout-por",
+  "task_id": "v4-399"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "257-phase-mismatch-qualifier",
+  "checker_task_id": "v4_257_phase_mismatch_qualifier",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3e443570a68fa1f06a70c55eca7aa3f6a230618659cbad5c25ee61fba5f608bf",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3dda4b29983b4120aa1416f4728854417996438cab8079d31f84800668558214",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3e443570a68fa1f06a70c55eca7aa3f6a230618659cbad5c25ee61fba5f608bf",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "1b8f088e703a69af55b6beb92e06484aafacbaf931b6c737fa14119fb0edfa23",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "b8532a53e685a7da249f8969c7b7d1eb6c5383e7d91e65202617ee189f179b2f"
+  },
+  "family_id": "257",
+  "family_spec_sha256": "2a147ef1b29a28b9e5728a025d30c841534a0f13242080bad8c36b13576a0c36",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3e289a0115cffe3b88549657eee3cb416dc1fd6b3d9eb52a50f8d6d14d6f67d1",
+  "public_contract": "tasks/757-phase-mismatch-qualifier-testbench/public_contract.json",
+  "public_contract_sha256": "e52ca235c48d0a29dd3cc0e71df5df3025706fadb35c64efd1a0849b476c3319",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/757-phase-mismatch-qualifier-testbench",
+  "task_id": "v4-757"
+}

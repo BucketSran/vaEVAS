@@ -1,0 +1,64 @@
+{
+  "id": "vbr1_l1_sample_and_hold_with_droop_leakage_bugfix",
+  "task_id": "vbr1_l1_sample_and_hold_with_droop_leakage_bugfix",
+  "release_entry_id": "vbr1_l1_sample_and_hold_with_droop_leakage",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "bugfix",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_leaky_hold_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(cross(",
+    "@(timer(",
+    "transition(",
+    "decay"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_leaky_hold_buggy.scs",
+    "gold/tb_leaky_hold_ref.scs"
+  ],
+  "bugfix": {
+    "buggy_source": "gold/dut_buggy.va",
+    "fixed_source": "gold/dut_fixed.va",
+    "buggy_testbench": "gold/tb_leaky_hold_buggy.scs",
+    "fixed_testbench": "gold/tb_leaky_hold_ref.scs",
+    "defect": "The buggy implementation captures a fixed internal level on each sample event instead of the current input voltage V(vin).",
+    "repair": "Capture V(vin) on each rising sample edge, keep the leakage decay timer active while reset is low, and clear promptly when reset is high."
+  },
+  "evidence": {
+    "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_sample_and_hold_with_droop_leakage/bugfix/evidence.json",
+    "local_dual_rerun": "2026-05-23: fixed source EVAS/Spectre PASS; buggy fixed-internal-level source expected FAIL.",
+    "rerun_summary": "results/vabench-release-v1-dual-rerun-ct03-enhance-20260523/summary.json"
+  }
+}

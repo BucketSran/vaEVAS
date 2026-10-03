@@ -1,0 +1,59 @@
+{
+  "id": "vbm1_settling_time_measurement_tb_e2e",
+  "task_id": "vbm1_settling_time_measurement_tb_e2e",
+  "release_entry_id": "vbr1_l1_settling_time_detector",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "end-to-end",
+  "category": "measurement",
+  "domain": "voltage",
+  "track": "support",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_settling_time_measurement_tb_e2e",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "@(timer(",
+    "ahdl_include",
+    "save",
+    "tran",
+    "transition("
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "settling_time_measurement_tb.va",
+    "tb_settling_time_measurement_tb_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/settling_time_measurement_tb.va",
+    "gold/tb_settling_time_measurement_tb_ref.scs"
+  ],
+  "evidence": {
+    "evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_settling_time_measurement_tb_e2e/evas_result.json",
+    "spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_settling_time_measurement_tb_e2e/spectre_result.json"
+  },
+  "notes": "Semantic review: Release as normal measurement-helper behavior; keep strict boundary behavior in EVAS/Spectre conformance. Risk: The `done` threshold can be over-interpreted as exact-boundary simulator conformance or repair evidence. Checker boundary: Use safe pre-boundary and late settled windows, not the exact 120 ns row.",
+  "semantic_review": {
+    "risk": "The `done` threshold can be over-interpreted as exact-boundary simulator conformance or repair evidence.",
+    "release_decision": "Release as normal measurement-helper behavior; keep strict boundary behavior in EVAS/Spectre conformance.",
+    "checker_boundary": "Use safe pre-boundary and late settled windows, not the exact 120 ns row."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "263-settling-progress-counter",
+  "checker_task_id": "v4_263_settling_progress_counter",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "ed3f299f35744b3ea70a72ddfbfc35e9995aa9d2045de3e0b14e56511a34cfd6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "95f90d3095a5128f3fb95f0928e2bdb0a3f2d43384248f8b72d5add433fd7e97",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "ed3f299f35744b3ea70a72ddfbfc35e9995aa9d2045de3e0b14e56511a34cfd6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "a896e408933620d8eeb3a6b91a7b3c64557848b45a5aaacdf0c2e80372e377a1",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "48c537edee69c282d9b157fbb1d18b770cb670952b8e10227024614a8c937027"
+  },
+  "family_id": "263",
+  "family_spec_sha256": "d2b935612cb88bc2f0314531aff94ff77bbcc4b826a6ff6c65e028470e67aba6",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ed32a52cac29b238059fd097d4bd9582a5340445560ebef9ffd2ccf8e73f65f2",
+  "public_contract": "tasks/763-settling-progress-counter-testbench/public_contract.json",
+  "public_contract_sha256": "a83a19e45cbb84df94491f7ab65e9ab85fe3ff93166b5c3b2ee3db30ffb09409",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/763-settling-progress-counter-testbench",
+  "task_id": "v4-763"
+}

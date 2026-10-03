@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "033-log-rssi-power-detector",
+  "checker_task_id": "v4_033_log_rssi_power_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3b2729f64c1be3f9e3d7f2786e51f0af9874d43b92a1fb7e6978d23c724d2bf6",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5cbcbf497e51a2b2e5477c5ac490fa5607cfb7867d9c3226fed768599b71a4a9",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3b2729f64c1be3f9e3d7f2786e51f0af9874d43b92a1fb7e6978d23c724d2bf6",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "4f7161d8ad7ce2808d88ced6b0518be2121bdb711798d8b357d920d2b25d88e9",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "6068d9ca128f3b41f0f72122a2b52f880282a6a98a91434cdc53facb7651a7af"
+  },
+  "family_id": "033",
+  "family_spec_sha256": "4cd51398b1ea98c37db1667f0da7fa63d4e4f6d0de513dbaecedc774227756ba",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "3535d393030eab1fc687152e7a1afff8d99acf1bbcd3d75980c2fae42851c5ae",
+  "public_contract": "tasks/533-log-rssi-power-detector-testbench/public_contract.json",
+  "public_contract_sha256": "e08818b60d03fb522c2bf45e6aa98c3e9fcc294ca8257288d08faf517f6eb13e",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/533-log-rssi-power-detector-testbench",
+  "task_id": "v4-533"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "vbr1_l1_bandgap_reference_macro_model_bugfix",
+  "task_id": "vbr1_l1_bandgap_reference_macro_model_bugfix",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_bandgap_reference_macro_model",
+  "family": "bugfix",
+  "category": "Bias Reference and Power Management",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "startup_threshold_blocks_reference",
+    "reference_settles_near_nominal",
+    "line_regulation_is_bounded"
+  ],
+  "designed_source": true,
+  "public_inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "submission_artifacts": [
+    "dut_fixed.va"
+  ],
+  "private_reference_artifacts": [
+    "gold/dut_fixed.va"
+  ]
+}

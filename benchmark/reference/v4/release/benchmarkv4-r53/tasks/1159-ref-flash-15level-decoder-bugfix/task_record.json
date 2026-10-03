@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ref_flash_15level_decoder.va"
+  ],
+  "canonical_dut_source_slug": "159-ref-flash-15level-decoder",
+  "checker_task_id": "v4_159_ref_flash_15level_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f1a24ba1bc902ec209141b3e323b589c66cfd3e5ae573c9d5fc3c93586a7ca90",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0406ee526d0bacb5ee94767ca01286a1c5e468ff0067f7ef4c56068ba596ff46",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "51110f402d7548460c68ea8219328f01c42d720f75f83be9103687db1e46b398",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "159",
+  "family_spec_sha256": "0978bee71fe2d6754746b922e169cc62418931b622a96af249816f5da636d536",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "734e4fdbcb52a647b967a1ef977317bf4595e716bb27e904e964ee000bfde0fe",
+  "public_contract": "tasks/1159-ref-flash-15level-decoder-bugfix/public_contract.json",
+  "public_contract_sha256": "235f7b82bb1d6e56e7823b0693e30889c95366343ba58f91e8f01f6bfec18674",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1159-ref-flash-15level-decoder-bugfix",
+  "task_id": "v4-1159"
+}

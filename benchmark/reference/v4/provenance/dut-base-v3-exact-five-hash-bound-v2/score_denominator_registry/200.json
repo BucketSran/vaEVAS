@@ -1,0 +1,78 @@
+{
+  "family_id": "200",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_denominator/certification.json",
+        "certification_sha256": "7cbcf8612f2c8364f06b36b41add51d30d2ace3ff11d7cb6c1d59f5a3fd77a34",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "2cf9af821ce9636cf7497da972d561996ac86e0893599ac1149bbbaf7dcfc702",
+        "mutation_id": "neg_003_wrong_denominator",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_denominator/certification.json",
+        "trigger_condition": "Normalizes the 4-bit CDAC code by 8 instead of 8.5.",
+        "violated_property_ids": [
+          "P_SWITCHED_WEIGHT_DENOMINATOR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_ready_skip/certification.json",
+        "certification_sha256": "ba9dc40cebf218fe7a5fd2f6c4f6840901ef2290a6e69d7352a89a7e9d592161",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "deba916b3cf0061af4486ee2a88350e2ca4fb51c4f1a7d15009a84e58b05b9d2",
+        "mutation_id": "neg_002_no_ready_skip",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_ready_skip/certification.json",
+        "trigger_condition": "Updates aout on the first ready edge instead of skipping it.",
+        "violated_property_ids": [
+          "P_FIRST_READY_EDGE_ARMS_ONLY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_output/certification.json",
+        "certification_sha256": "1ece4a72add23e2a8c00c07fc46ee96efc0aa085749343abdfb0c36bbc0746ad",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "64ae96ac7d16e44eb2c7df9562af12f75f47fa04723f3cf7455a61004fbd4f9f",
+        "mutation_id": "neg_004_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_output/certification.json",
+        "trigger_condition": "Omits the bipolar minus-vdd output offset.",
+        "violated_property_ids": [
+          "P_BIPOLAR_CDAC_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "8654bff869c92b446215e71f3e3fa97317a3b3cddc7777c5cda9ce6b1b6d78bc",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "0435bd3357fbf7e02e40a1348c7fc90d38c82bf81e6baecfd67bc863b195a0b9",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "L2 CDAC 4b Switch: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_READY_SAMPLES_FOUR_BITS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "4c9f0b3ea7f8d354bfd66fd995b234bcffdaa7e8eb4021f6688ecb566cb9a4e0",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "8e4c1a67f698bcdd65c70602b5dc815dd7ccf6d8ee31ab68e05ffc2c32676717",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_BIPOLAR_CDAC_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_denominator",
+    "canonical_dut_id": "200",
+    "hashes": {
+      "mutation_catalog_sha256": "0ff9a520017d30f3db29b0cba884c356fa6d05def473c59a5bde0b10e8ae722e",
+      "score_deck_sha256": "d847c1c68a18316d30663f96aa911d2067e6e40ee22fe582eb360449361c320c",
+      "task_certification_sha256": "41abbd6d5436b2ba62d59007fce718a542e5ac5e8e85b7168d0ee8a3e4d94025",
+      "task_record_sha256": "64b19f8518d4f14c0895827d3a14411045927c514514707a7ea1ab55eaf7da56"
+    },
+    "release_dir": "200-l2-cdac-4b-switch"
+  }
+}

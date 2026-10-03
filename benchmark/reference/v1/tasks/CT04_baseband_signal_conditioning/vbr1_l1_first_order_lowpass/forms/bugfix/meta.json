@@ -1,0 +1,61 @@
+{
+  "id": "vbm1_first_order_lowpass_bugfix",
+  "task_id": "vbm1_first_order_lowpass_bugfix",
+  "release_entry_id": "vbr1_l1_first_order_lowpass",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1",
+  "family": "bugfix",
+  "category": "amplifier-filter",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "true-bugfix",
+  "provenance_status": "reconstructed_badcase",
+  "badcase_origin": "reconstructed",
+  "source_main120_id": "vbm1_first_order_lowpass_bugfix",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": true
+  },
+  "must_include": [
+    "@(timer(",
+    "transition(",
+    "alpha"
+  ],
+  "must_not_include": [
+    "I(",
+    "ddt(",
+    "idt("
+  ],
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/dut_buggy.va",
+    "gold/dut_fixed.va",
+    "gold/tb_first_order_lowpass_ref.scs",
+    "gold/tb_first_order_lowpass_buggy.scs"
+  ],
+  "reconstruction": {
+    "bug_class": "wrong_lowpass_update_coefficient",
+    "single_root_cause": "The buggy source uses an alpha value that is too small for the intended 500 ps update cadence.",
+    "fixed_expectation": "The fixed source uses alpha=0.025, giving a visibly faster first-order rise after the 21 ns input step."
+  },
+  "evidence": {
+    "historical_evas_result": "results/vabench-main-v1-main120-gold-evas-2026-05-08/vbm1_first_order_lowpass_bugfix/evas_result.json",
+    "historical_spectre_result": "results/vabench-main-v1-main120-gold-spectre-jin-2026-05-08/vbm1_first_order_lowpass_bugfix/spectre_result.json",
+    "local_evas_verification": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under formal EVAS checker mapping.",
+    "spectre_status": "2026-05-15: fixed source PASS and buggy source FAIL_SIM_CORRECTNESS under Spectre."
+  }
+}

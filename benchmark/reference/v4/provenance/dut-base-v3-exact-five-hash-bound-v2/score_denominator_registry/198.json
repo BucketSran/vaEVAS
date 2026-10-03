@@ -1,0 +1,78 @@
+{
+  "family_id": "198",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_threshold/certification.json",
+        "certification_sha256": "95e5adf14eaf7f617b73d574f57be7574f725e221ae0e9c4f9a62ab497639d0a",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "e72ed0b082bb9e91703ee6eb98f41df3c80698c888d53af1d42f9aad4f72d15d",
+        "mutation_id": "neg_003_wrong_threshold",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_threshold/certification.json",
+        "trigger_condition": "Compares against the full differential reference instead of the midpoint threshold.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_MIDPOINT_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "dcc29fe9956e638e28ad1ffdf2155a04378031bf72f9124688e385055198f79d",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "58931515fccf98c258cab0389889340a777a409f6e0a50621912a6b80958836a",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_INITIAL_SIGNED_CODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_output/certification.json",
+        "certification_sha256": "b1b252df548d93f6864e119a258b02778331a99a6a664e5434dc543224c4230d",
+        "fault_class": "unipolar_output",
+        "mutation_bundle_sha256": "89dbdc988c733f8fe350fb8ed784c53f690c9fa5e53ec481ca51160523288574",
+        "mutation_id": "neg_004_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_output/certification.json",
+        "trigger_condition": "Outputs 0/1 instead of -0.5/+0.5 quantizer levels.",
+        "violated_property_ids": [
+          "P_BIPOLAR_TWO_LEVEL_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9a92f427d906ddb96454f270b84f7dafcd86ebb110078c4333f722d8206bc091",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b54db2353e32d71acf5281451a04c2039f8332fbc55b1ae575f3b8ba2de54a0d",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "QTZ Differential 2level: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_CLOCKED_OUTPUT_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_invert_decision/certification.json",
+        "certification_sha256": "0249dc51ba518aa08d460bb9b47a2746838fa92585dc1ee628eab848f45b291f",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "5c3682d3d165be2c21f124e0c768a4103eb9d0be34ccc0691c39f94ad0ca18ce",
+        "mutation_id": "neg_002_invert_decision",
+        "source_catalog_certification_path": "negative_variants/neg_002_invert_decision/certification.json",
+        "trigger_condition": "Inverts the two-level quantizer decision.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_MIDPOINT_DECISION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_threshold",
+    "canonical_dut_id": "198",
+    "hashes": {
+      "mutation_catalog_sha256": "1d5bf6c57dc488d2cd84b5493a23a430bcebee7d1cd90d7fb178328d3d1491b4",
+      "score_deck_sha256": "5441154257f0e3cba4f9a184bd71cbffdccc6128143947e5b8aff4c6660c1ca4",
+      "task_certification_sha256": "a48870a932e92a3b7fe2624877af841b1075556ffffb4b94e8bc5206194dde46",
+      "task_record_sha256": "0b3f04e4d4df971c568386add69e791bc9befac1e44d864cdadf35f633907074"
+    },
+    "release_dir": "198-qtz-differential-2level"
+  }
+}

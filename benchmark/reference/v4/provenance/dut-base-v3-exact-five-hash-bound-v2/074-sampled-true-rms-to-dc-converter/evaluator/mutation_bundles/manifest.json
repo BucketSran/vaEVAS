@@ -1,0 +1,134 @@
+{
+  "family_id": "074",
+  "gold_bundle_sha256": "511a01e7614ff98663bc4713fd60eb6794cf4d6ad0b08e9b9a180a595de1e247",
+  "mutations": [
+    {
+      "artifact_hashes": {
+        "sampled_true_rms_to_dc.va": "a8eaeb00a2d73471793fc003cdf6b6484e617a75274183bb74920cefbfb355ae"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_DIFFERENTIAL_RMS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_001_zero/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sampled_true_rms_to_dc.va"
+      ],
+      "fault_class": "zero_output",
+      "id": "neg_001_zero",
+      "trigger_condition": "a complete enabled four-sample window",
+      "violated_property_ids": [
+        "P_DIFFERENTIAL_RMS",
+        "P_VALID_PULSE"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sampled_true_rms_to_dc.va": "28b8a5b52eb343fa6c113d417128bd965bde14e62b2716cb09d883ad22bc3693"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_DIFFERENTIAL_RMS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_002_threshold_shifted/certification.json",
+        "profile": "feedback",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sampled_true_rms_to_dc.va"
+      ],
+      "fault_class": "mean_absolute_instead_of_rms",
+      "id": "neg_002_threshold_shifted",
+      "trigger_condition": "a window with unequal sample magnitudes",
+      "violated_property_ids": [
+        "P_DIFFERENTIAL_RMS"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sampled_true_rms_to_dc.va": "501e9001b9e716d24a05d077b50a34b0c3b5e9fd2542700160d04ca05fdb5159"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_FOUR_SAMPLE_WINDOW"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_003_event_edge_wrong/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sampled_true_rms_to_dc.va"
+      ],
+      "fault_class": "falling_edge_sampling",
+      "id": "neg_003_event_edge_wrong",
+      "trigger_condition": "input changes between rising and falling clock edges",
+      "violated_property_ids": [
+        "P_FOUR_SAMPLE_WINDOW",
+        "P_OUTPUT_HOLD"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sampled_true_rms_to_dc.va": "7670f01dc218b0bc4bb2f9100757cdfbd577e3ab93c4d90f9000167a7e46e6e5"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_ASYNC_RESET"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_004_reset_polarity_wrong/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sampled_true_rms_to_dc.va"
+      ],
+      "fault_class": "reset_polarity_inverted",
+      "id": "neg_004_reset_polarity_wrong",
+      "trigger_condition": "active-high reset followed by enabled sampling",
+      "violated_property_ids": [
+        "P_ASYNC_RESET"
+      ]
+    },
+    {
+      "artifact_hashes": {
+        "sampled_true_rms_to_dc.va": "c302cefc1e82f0f0330ee955524ac961bd7d87bade9c86d20241e78a9351072a"
+      },
+      "certification": {
+        "activated_property_ids": [
+          "P_DIFFERENTIAL_RMS"
+        ],
+        "behavior_status": "killed_behaviorally",
+        "compile_status": "pass",
+        "evidence_path": "mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "profile": "score",
+        "simulation_status": "pass",
+        "status": "pass"
+      },
+      "changed_artifacts": [
+        "sampled_true_rms_to_dc.va"
+      ],
+      "fault_class": "wrong_rms_divisor",
+      "id": "neg_005_metric_scale_low",
+      "trigger_condition": "any nonzero completed window",
+      "violated_property_ids": [
+        "P_DIFFERENTIAL_RMS"
+      ]
+    }
+  ],
+  "schema_version": "v4-mutation-catalog-v1"
+}

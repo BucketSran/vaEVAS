@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "differential_vco_clip_idtmod.va"
+  ],
+  "canonical_dut_source_slug": "300-differential-vco-clip-idtmod",
+  "checker_task_id": "v4_300_differential_vco_clip_idtmod",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b11742d3c48a3983d3c05421a4e15b5d8e522fc0640dad777be3a093299f65a4",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "34ee6b71e3ded30b9532a86a7d1c3481e5dd17ec9401cfca9972281c8e26785e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9aa2b68f509f7446ed8230e4ee2293575b277a23d2e7a90b9a6316cc832afec4",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "300",
+  "family_spec_sha256": "5f35b1e83a22e20b6bd28afcf134a3d61e55e9bd16f1fb9c32d2b12079c11d1c",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "38cc13e0728e683d973ee5b187962abc8f0dac2ee1aaea26f4f52d7dc5a15913",
+  "public_contract": "tasks/1300-differential-vco-clip-idtmod-bugfix/public_contract.json",
+  "public_contract_sha256": "9391f5414874db3f077f680ed0959f5898811eb0063bce6b028b3b91d9f2aad5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1300-differential-vco-clip-idtmod-bugfix",
+  "task_id": "v4-1300"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_e2e",
+  "task_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac_e2e",
+  "release_entry_id": "vbr1_l1_capacitive_weighted_sar_feedback_dac",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "end-to-end",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "cdac_cal.va",
+    "tb_cdac_cal_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "e2e_companion_from_dut"
+}

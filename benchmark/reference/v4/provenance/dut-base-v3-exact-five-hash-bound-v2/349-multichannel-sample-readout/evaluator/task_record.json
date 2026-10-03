@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "349",
+  "checker_task_id": "v4_349_multichannel_sample_readout",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "614cdbbe1654c006c010af089a1ade3a79940f84c0bfeda700796d3f17fe62be",
+    "checker_profile.json": "d1f003f06cbdc537da621eedf9f52b2a9110f602792ef8038bcccd205871c525",
+    "derivation_manifest.json": "749f83351cbf21b13686bf112a0c417798bcc03684f1413b87fc5112b8f05de7",
+    "family_spec.json": "6953452553b858267d8c95197d7d18a614698ea4d2ff55b207cf980a38b72132",
+    "harness_spec.json": "32ce420e08bc4317044dc7be189f1b548c4cdfa1b52b7c06bf1d8eab02c2df73",
+    "mutation_catalog.json": "04b9918c4779b362a680270198264988d1faa005ee1043a22da7b49243729128",
+    "profiles/feedback.json": "72030405f0fe82aef4ccf039f03ef269dc7c90ac8084675631482dabca01115e",
+    "profiles/score.json": "97bc36e810bce0cf375fa8684a636f48d1b04f45115b1ca0caf47c15e1327c2f",
+    "score_tb.scs": "6a9bf4bb8d249de70a6959d1f335319a47e66b572ac5749fca912aafcae03955",
+    "solution_tree": "2c7d786ad6b27c98d487334dd5fb6a74c8a1f88a730cefc79cf92c70906ffe2d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "fb1fae435df91c06f08337234a083e12a23fbe0afe9a1f0a25474906b64fdcda",
+    "instruction.md": "a2276ffa70703b488e94bfa37c0a0b3bb0b39e4f190a7721a6b22f774e2c34c2",
+    "public_contract.json": "d3755d11dbbcdd44105e63ea4f5f36de71cd5f20170221920d404203497bd948"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "614cdbbe1654c006c010af089a1ade3a79940f84c0bfeda700796d3f17fe62be"
+  },
+  "release_dir": "349-multichannel-sample-readout",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "908-multichannel-sample-readout",
+  "support_root": "",
+  "target_artifacts": [
+    "sample_mux_readout_top.va",
+    "sample_hold_bank.va",
+    "mux_controller.va",
+    "output_driver.va"
+  ]
+}

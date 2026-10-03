@@ -1,0 +1,78 @@
+{
+  "family_id": "262",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "992b6934a6f616e27f8335c082e47f7d3a4b35d75f41832b232ce3a4e0613574",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "19704635b43783ebb4719e940a31fb70144a0c4c23b9b9a94d11b3da94f618ab",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "4e305d8f0e4ab2da2839c3dc2245a13cf0e959d32e2f4722b4d7eced5899c3dc",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "dc30e47e994c4434899bd14f8eb37e71921b4e0cf61043db4f0936eb5027e371",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "39703fc7d1fdc563d471d14e14721932c2d30118aca0a7a74227cee30a5ad197",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "a6cfd38fe516d1cc886f1bcc25f70e65f30b15381f4f00ab1a9ed32caca69c94",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "29f71528facf7a4be082d9241990a76a2552080cf28eea3f9632be963d235239",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "cd3838a7839e04840878403ee4e1772d6e4824e2bf5fd76924aa2f6449154324",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_ALL_OBSERVABLE_STATE_TO_0"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "a252a5a814bdfeb3393ad9c950e2d3f0583c357717bf7c6d1862f6343212c73a",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "e6cf60d0388ad2dabc7dfd8dc3ade083b3a939ad6e1fb12db04dca3845e2f803",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "262",
+    "hashes": {
+      "mutation_catalog_sha256": "aa8b9b42601182f25f83f49305013155d786c7f910d193f69dfc289a9958fa79",
+      "score_deck_sha256": "afa6005f453d772522766a4c776558d1ff7c73f937a29ad46fbcf0fe44d81740",
+      "task_certification_sha256": "04321dedeeab747b8141d2ac3893326a481673bf21fea3db642d150ac47dface",
+      "task_record_sha256": "1d060479ef644b5a9c4a9e20fea2f68130c5e0f8f4d519c6ec7a901cd240f091"
+    },
+    "release_dir": "262-resettable-phase-toggle-monitor"
+  }
+}

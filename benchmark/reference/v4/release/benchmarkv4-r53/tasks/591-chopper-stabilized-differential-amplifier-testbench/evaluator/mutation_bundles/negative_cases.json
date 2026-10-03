@@ -1,0 +1,63 @@
+{
+  "cases": [
+    {
+      "files": [
+        "neg_001_no_synchronous_demod/chopper_stabilized_differential_amplifier.va"
+      ],
+      "id": "neg_001_no_synchronous_demod",
+      "mutation": "missing_synchronous_demodulation",
+      "violated_property_ids": [
+        "P_CHOP_DEMOD_BASEBAND_GAIN",
+        "P_INTERNAL_OFFSET_SUPPRESSION"
+      ],
+      "why_wrong": "Chopper amplifier mutation missing_synchronous_demodulation preserves the public interface but violates the independently reconstructed signal-flow oracle."
+    },
+    {
+      "files": [
+        "neg_002_offset_omitted/chopper_stabilized_differential_amplifier.va"
+      ],
+      "id": "neg_002_offset_omitted",
+      "mutation": "internal_offset_omitted",
+      "violated_property_ids": [
+        "P_INTERNAL_OFFSET_SUPPRESSION"
+      ],
+      "why_wrong": "Chopper amplifier mutation internal_offset_omitted preserves the public interface but violates the independently reconstructed signal-flow oracle."
+    },
+    {
+      "files": [
+        "neg_003_lowpass_bypassed/chopper_stabilized_differential_amplifier.va"
+      ],
+      "id": "neg_003_lowpass_bypassed",
+      "mutation": "lowpass_state_bypassed",
+      "violated_property_ids": [
+        "P_EVENT_DRIVEN_LOWPASS",
+        "P_INTERNAL_OFFSET_SUPPRESSION",
+        "P_SETTLED_QUALIFICATION"
+      ],
+      "why_wrong": "Chopper amplifier mutation lowpass_state_bypassed preserves the public interface but violates the independently reconstructed signal-flow oracle."
+    },
+    {
+      "files": [
+        "neg_004_gain_wrong/chopper_stabilized_differential_amplifier.va"
+      ],
+      "id": "neg_004_gain_wrong",
+      "mutation": "baseband_gain_error",
+      "violated_property_ids": [
+        "P_CHOP_DEMOD_BASEBAND_GAIN"
+      ],
+      "why_wrong": "Chopper amplifier mutation baseband_gain_error preserves the public interface but violates the independently reconstructed signal-flow oracle."
+    },
+    {
+      "files": [
+        "neg_005_hold_ignored/chopper_stabilized_differential_amplifier.va"
+      ],
+      "id": "neg_005_hold_ignored",
+      "mutation": "hold_semantics_error",
+      "violated_property_ids": [
+        "P_HOLD_PRESERVES_STATE"
+      ],
+      "why_wrong": "Chopper amplifier mutation hold_semantics_error preserves the public interface but violates the independently reconstructed signal-flow oracle."
+    }
+  ],
+  "status": "five_concrete_semantic_negatives_task_local_oracle_certified_evas_pending"
+}

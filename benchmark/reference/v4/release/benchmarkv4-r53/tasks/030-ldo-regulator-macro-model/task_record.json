@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ldo_regulator_macro_model.va"
+  ],
+  "canonical_dut_source_slug": "030-ldo-regulator-macro-model",
+  "checker_task_id": "v4_030_ldo_regulator_macro_model",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a9add02313b3f1702aeba4557417c4eadafa4eeb587975bb85b1116e2b6125e8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "ea978a73ea11a046ca11ee22fb1cc4626789e2435d9790220ecfbe696c1875a8",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "caeac09c6f7e26adf26b8925b36909e07c8d031eb82b52b235f46c387d22033f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "030",
+  "family_spec_sha256": "6e87710d02e2d35422c32058229519b2817bfd95fbf7af29a66794ee25c5f3af",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6c44dfde0ab6bf1cb0772dfe76cb600ef3ad0da7662d41091107c36a9a86de82",
+  "public_contract": "tasks/030-ldo-regulator-macro-model/public_contract.json",
+  "public_contract_sha256": "604eaab9bcf0df0583fd879d005fe4733f9f7837afcf6ff427eb122c33ee65b4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/030-ldo-regulator-macro-model",
+  "task_id": "v4-030"
+}

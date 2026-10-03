@@ -1,0 +1,47 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_EXPOSE_ACTIVE_GAIN_ON_GAIN_METRIC, P_REDUCE_EFFECTIVE_GAIN_MONOTONICALLY_WHEN_THE satisfy the public contract; fault class no_compression is rejected",
+    "observed": "EVAS: P_ON_RESET_OR_WHEN_DISABLED_DRIVE mismatch_count=0 expected=vout=0.45,metrics=0,flag=0_when_inactive observed=reset_clear=True,disabled_clear=True; P_WHEN_ENABLED_PROVIDE_HIGH_GAIN_FOR mismatch_count=0 expected=vout=bounded_gain(vin) observed=checked=64; P_REDUCE_EFFECTIVE_GAIN_MONOTONICALLY_WHEN_THE mismatch_count=0 expected=compressed_and_uncompressed_regions observed=compressed=True,uncompressed=True; P_EXPOSE_ACTIVE_GAIN_ON_GAIN_METRIC mismatch_count=36 expected=gain_metric=bounded_gain,flag=1_when_compressed observed=gain_errors=18,flag_errors=18; P_CLAMP_VOUT_INSIDE_VSS_VDD mismatch_count=0 expected=vss<=vout<=vdd observed=checked=64",
+    "violated_property_ids": [
+      "P_EXPOSE_ACTIVE_GAIN_ON_GAIN_METRIC",
+      "P_REDUCE_EFFECTIVE_GAIN_MONOTONICALLY_WHEN_THE"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_387_lna_gain_compression_macro",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 461
+  },
+  "family_id": "387",
+  "inputs": {
+    "checker_profile_sha256": "dbc08968fd4fa631f9fdede8f298d3102a583792c178863f27adb4e13b401cf0",
+    "harness_spec_sha256": "ceebf9ab9f9e797241d0983cd5bbe94d4249f04b771951aad7b42297cf3ea908",
+    "mutation_bundle_sha256": "5871db1461e2588a0e84999d916317a8ed64ebb7c236af1dd47a74bba0895f4d",
+    "profile_sha256": "67ff7dc2f4a4ab96b54281437c18012dd4a4763a51df32168a9d623a2d9b245a"
+  },
+  "mutation_id": "neg_001_no_compression",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

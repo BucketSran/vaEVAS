@@ -1,0 +1,88 @@
+{
+  "agent_visible_files": [
+    "instruction.md",
+    "public_contract.json",
+    "feedback_tb.scs"
+  ],
+  "canonical_dut_id": "308",
+  "canonical_instruction": "instruction.md",
+  "category": "sampling_analog_memory",
+  "counted_in_score": true,
+  "feedback_oracle": {
+    "command": "vabench-feedback --task . --submission ../submission",
+    "diagnostic_contract": {
+      "format": "<property_id> mismatch_count=<nonnegative integer>",
+      "property_ids": [
+        "P_ON_RESET_CLEAR_RESET_SAMPLE_SIGNAL",
+        "P_ON_A_RISING_CLK_EDGE_WITH",
+        "P_ON_A_LATER_RISING_CLK_EDGE",
+        "P_DRIVE_VOUT_AS_VCM_PLUS_THE",
+        "P_EXPOSE_THE_RESET_SAMPLE_ON_OFFSET",
+        "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+      ],
+      "scope": "each feedback result exposes every declared property"
+    },
+    "feedback_channels": [
+      "behavior_property_diagnostics"
+    ],
+    "public_tb": "feedback_tb.scs",
+    "public_tb_exposed": true
+  },
+  "form": "dut",
+  "gate2_status": "repair_pending_recertification",
+  "language": "verilog-a",
+  "level": "L2",
+  "oracle_policy": {
+    "checker_private": true,
+    "feedback_oracle_materialized": true,
+    "no_model_visible_starter": true,
+    "proposal_only": false,
+    "score_tb_private": true,
+    "single_public_contract": true,
+    "testbench_and_checker_split_required": true
+  },
+  "planned_checker_focus": [
+    "sample order",
+    "difference polarity",
+    "valid gating",
+    "offset debug"
+  ],
+  "planned_oracle_type": "deterministic_trace_behavior_with_static_module_contract",
+  "public_modules": [
+    "correlated_double_sampler_top",
+    "reset_sample_latch",
+    "signal_sample_latch"
+  ],
+  "public_observables": [
+    "vin",
+    "clk",
+    "rst",
+    "sample_reset",
+    "sample_signal",
+    "vout",
+    "offset_dbg",
+    "valid"
+  ],
+  "schema_version": "v4-proposed-public-contract-v1",
+  "status": "repair_pending_recertification",
+  "target_artifacts": [
+    "correlated_double_sampler_top.va",
+    "reset_sample_latch.va",
+    "signal_sample_latch.va"
+  ],
+  "task_id": "v4_308_correlated_double_sampler_offset_cancel",
+  "task_slug": "1006-correlated-double-sampler-offset-cancel",
+  "title": "Correlated Double Sampler Offset-cancel Macro",
+  "top_module": "correlated_double_sampler_top",
+  "track": "multi_module_ams_system_dut",
+  "validation_status": {
+    "evas_feedback_score_gold": "pending_recertification",
+    "gate2": "dut_base_sealed",
+    "next_gate": "batch31_checker_profile_evas_recertification",
+    "semantic_negative_certification": "pending_recertification",
+    "spectre_score_gold": "optional_not_run",
+    "tri_form_gate2": "pending",
+    "tri_form_gate3": "pending",
+    "untriaged_warning_count": 0
+  }
+}

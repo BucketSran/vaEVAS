@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dac_restore_6bit_1p8.va"
+  ],
+  "canonical_dut_source_slug": "209-dac-restore-6bit-1p8",
+  "checker_task_id": "v4_209_dac_restore_6bit_1p8",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4bab037e154f0c4c17d2d254266cdc13b7ab751621691d3bd8e77c1cb97c36a7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fec841f3c681ca0ca375e328a2049fcd0834e0ed24ad18bb648a50f4cdf0b06e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "64f1fe595b2301dad7b4bb0161c7258fc0d3356b9b4cb098585e8f9484672761",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "209",
+  "family_spec_sha256": "51786abf1ab2247761061ef124d783500966454b3a226f57bff3fdc739ceb347",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "52b93438f294b68d31ad2bb97175d3d515cdb8f1133cf75ed80832c2325f4983",
+  "public_contract": "tasks/1209-dac-restore-6bit-1p8-bugfix/public_contract.json",
+  "public_contract_sha256": "196e68b55dc0ec70d9d450a00037ec293c834bcdd98c37c2e5edbdb7848c55fa",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1209-dac-restore-6bit-1p8-bugfix",
+  "task_id": "v4-1209"
+}

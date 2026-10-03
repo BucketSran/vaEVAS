@@ -1,0 +1,81 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "cmp_delay.va",
+      "edge_interval_timer.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=16n maxstep=10p"
+    ],
+    "body_lines": [
+      "Vvdd (vdd 0) vsource dc=0.9 type=dc",
+      "Vgnd (gnd 0) vsource dc=0.0 type=dc",
+      "Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=1n delay=100p \\",
+      "rise=50p fall=50p width=450p",
+      "Vvinp (vinp 0) vsource type=pwl wave=[0 0.455 3.9e-9 0.455 4e-9 0.4505 7.9e-9 0.4505 8e-9 0.45005 11.9e-9 0.45005 12e-9 0.450005 16e-9 0.450005]",
+      "Vvinn (vinn 0) vsource type=pwl wave=[0 0.445 3.9e-9 0.445 4e-9 0.4495 7.9e-9 0.4495 8e-9 0.44995 11.9e-9 0.44995 12e-9 0.449995 16e-9 0.449995]",
+      "IDUT (clk vinn vinp out_n out_p lp_int lm_int gnd vdd) cmp_delay",
+      "IEIT (clk out_p delay_ps) edge_interval_timer VTH=0.45"
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "clk",
+      "vinp",
+      "vinn",
+      "out_p",
+      "out_n",
+      "lp_int",
+      "lm_int",
+      "delay_ps",
+      "gnd",
+      "vdd"
+    ]
+  },
+  "family_id": "039",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "test_feedback/public_tb.scs",
+    "legacy_feedback_deck_sha256": "00eada9f62a6bf28606c485efb18738fdd05d134382b6211821cddaf1eda8aab",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "5ea3ba0ad87928f4007327f8a532557e358b86bf17c4d04e2c2771e8064299da",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides",
+      "feedback deck supplies the unified feedback/score stimulus semantics"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {}
+  },
+  "property_ids": [
+    "P_CLOCKED_DECISION",
+    "P_FALLING_RESET",
+    "P_DELAY_MAGNITUDE_TREND",
+    "P_DELAY_CLAMP",
+    "P_EDGE_INTERVAL_MEASUREMENT",
+    "P_BUNDLE_BINDING"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "7d81d36423cbcc0c08e96c9e3ad401f3afbdb82c7e30603a132b7a87eb6d66be",
+    "family_spec_sha256": "0d30674a183b6c80566924acdd2d0f8050956135c9e06ded8753e5069b0d8f95"
+  },
+  "task_id": "v4-039"
+}

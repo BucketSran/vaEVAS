@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dc_aware_adc3bit.va"
+  ],
+  "canonical_dut_source_slug": "050-dc-aware-adc3bit",
+  "checker_task_id": "v4_050_dc_aware_adc3bit",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "8f729a6e5278b15947cea6c4e4c97ece6d50c31f06e0c011b79e858bd5f101d0",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "7c6b4347143f1b82a6519492cf06d37d3ccc34f9e2b45b5e94da512760c906e5",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "0902899d0c81011b0467c094b2ffc98af4b2c6ab1ebf66db1ab23c2e702c40b9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "050",
+  "family_spec_sha256": "2882cdfb0fa38db8d336c8e286949affcbdfc5a91dc48bb1f542cdba3f01f2a6",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "70a14085a0a76ae610afdc70eaa28f4d651a05550961ef68d691ab301edc31f2",
+  "public_contract": "tasks/1050-dc-aware-adc3bit-bugfix/public_contract.json",
+  "public_contract_sha256": "15158329bcc83cb75dc41e6a7d888c590add50153c6a57d2513fc79ca16d8124",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1050-dc-aware-adc3bit-bugfix",
+  "task_id": "v4-1050"
+}

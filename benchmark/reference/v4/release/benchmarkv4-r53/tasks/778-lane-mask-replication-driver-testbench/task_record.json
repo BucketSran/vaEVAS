@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "278-lane-mask-replication-driver",
+  "checker_task_id": "v4_278_lane_mask_replication_driver",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2a2b88e1fb6ebafe809a9d73cea88b7df60b08a067ab8a9cf2178cb7e85f48e8",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "44e93c6ea31299000c7e5d0ebb376841b69e75838f3bef7acc82cef87e5b8d34",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2a2b88e1fb6ebafe809a9d73cea88b7df60b08a067ab8a9cf2178cb7e85f48e8",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "686518cac37beea2ca962083334e8a4fe29de7f54412539a7b749c5cbf0d1a93",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "5e71dd0e8af647ead5e4d8b6948223f52b52399cfaefb1b321ded67ae7367e55"
+  },
+  "family_id": "278",
+  "family_spec_sha256": "f1559e7e1fe7a4a464e8ef338f865dab270f26f87e4021c04c4a1bf60193de3f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "52b6756ee66aa1a137630c5adb441eaa69af787694dd8e90013513d09b33de45",
+  "public_contract": "tasks/778-lane-mask-replication-driver-testbench/public_contract.json",
+  "public_contract_sha256": "48e9731113f8168daab629c21a52c3c40ed5309a712f4dadd5571780aa35a870",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/778-lane-mask-replication-driver-testbench",
+  "task_id": "v4-778"
+}

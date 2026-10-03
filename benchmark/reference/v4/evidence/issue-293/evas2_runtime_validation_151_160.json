@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-repair-runtime-evidence-v1",
+  "issue": 293,
+  "family_range": "151-160",
+  "task_range": "v4-651-v4-660",
+  "status": "pass",
+  "runtime": {
+    "evas_engine": "evas2",
+    "evas_backend": "evas-rust",
+    "evas_version": "0.8.2",
+    "runtime_identity_log_count": 130,
+    "runtime_identity_log_expected": 130
+  },
+  "reference": {
+    "passed": 10,
+    "total": 10
+  },
+  "score_mutations": {
+    "killed": 50,
+    "total": 50,
+    "survivors": 0
+  },
+  "affine_metamorphic": {
+    "passed": 10,
+    "total": 10,
+    "mutation_kills": 50,
+    "mutation_total": 50
+  },
+  "insufficient_excitation": {
+    "explicit_failures": 10,
+    "total": 10
+  },
+  "spectre": "not_applicable",
+  "notes": [
+    "Acceptance uses pinned Rust EVAS2 0.8.2 only.",
+    "Every executed case was checked for Version 0.8.2 and evas_engine = evas-rust in output/evas.log.",
+    "Spectre is unavailable and is not an acceptance gate."
+  ]
+}

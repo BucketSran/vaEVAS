@@ -1,0 +1,78 @@
+{
+  "family_id": "284",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_offset_ctrl/certification.json",
+        "certification_sha256": "114818adbc3c09c3c757d3e6460cb9d8a0311fbf17cb107357e9c9074958a15e",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "717f5f49b012d3a4ac09d72599d0bc37f50e78a6b8f14a6ce2335940b478cdbe",
+        "mutation_id": "neg_002_ignore_offset_ctrl",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_offset_ctrl/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_offset_ctrl",
+        "violated_property_ids": [
+          "P_MAP_GAIN_CTRL_TO_A_PUBLIC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_ignore_gain_ctrl/certification.json",
+        "certification_sha256": "f2b9a52ebb5288eb7269c5cb68e8e494c7e12bcfa61996332d1ec7bdbcd53088",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "f308c4907fb00ddd88da1d83235ac3a912ed6b59a2d49cb21971df95675d14d2",
+        "mutation_id": "neg_001_ignore_gain_ctrl",
+        "source_catalog_certification_path": "negative_variants/neg_001_ignore_gain_ctrl/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_ignore_gain_ctrl",
+        "violated_property_ids": [
+          "P_ON_EACH_RISING_CLOCK_CROSSING_COMPUTE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_ignore_enable/certification.json",
+        "certification_sha256": "dc8c874f3b9a6ae6673c5ea99298ed82958ecbff8c6fdc6c2418bf8f4a018ea8",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "a739c75efe74757e04ad8d5b295ef7494b6be8d1ddb88a055d2c7813d579ffd7",
+        "mutation_id": "neg_003_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_003_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_ignore_enable",
+        "violated_property_ids": [
+          "P_CLEAR_OUTPUT_AND_METRIC_WHILE_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_residual_metric/certification.json",
+        "certification_sha256": "bba74b93702bbb67923d111d7322ae4e9247e2b49c2a3002b65a1244ca718cb8",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "88a9d3d89ab6919c1c8e7a72ff8475d864c877ecef0d22f879fddf9988420fd0",
+        "mutation_id": "neg_005_wrong_residual_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_residual_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_residual_metric",
+        "violated_property_ids": [
+          "P_USE_LOCAL_ANALOG_HELPER_FUNCTIONS_RATHER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_output_clip/certification.json",
+        "certification_sha256": "6d7b63f5d73fb09cdf251f09fb555203b709ef0da735d45cd128f25cb0b1e663",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "bb6ad7963ebb850b35ad8e4b86fe058a5698ffeba99446925c0b1f556f729559",
+        "mutation_id": "neg_004_no_output_clip",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_output_clip/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_no_output_clip",
+        "violated_property_ids": [
+          "P_EXPOSE_A_BOUNDED_RESIDUAL_METRIC_FOR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ignore_offset_ctrl",
+    "canonical_dut_id": "284",
+    "hashes": {
+      "mutation_catalog_sha256": "2155ab09709a8c4a5189e22117440ca3992c2efdb0743a0b5248eb74649f8688",
+      "score_deck_sha256": "f10d3c724fc88271f08f9c69fbc968f45704c8bc9bf315fccb053a72453e8e21",
+      "task_certification_sha256": "a684b92eb2f15e18fb56b0a29707b62b7a5e3af9a973c425266d083030356c01",
+      "task_record_sha256": "1357c4b79b2ff296c8ae0ef50a9cd47df49d9a58d4fe6e30f31f41932e516e6c"
+    },
+    "release_dir": "284-calibration-affine-transform"
+  }
+}

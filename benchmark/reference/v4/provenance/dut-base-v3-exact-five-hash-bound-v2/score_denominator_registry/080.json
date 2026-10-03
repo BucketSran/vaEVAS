@@ -1,0 +1,78 @@
+{
+  "family_id": "080",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "128d3109adb1811a9d12215b612fbc8fa01183a5ccb8d312bd234f2e3425a1dc",
+        "fault_class": "zero_output_stub",
+        "mutation_bundle_sha256": "7df63a906b607af1dcebd58474975aca9bf4e5a1ba8ee06ae1b946976fd7fa3a",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises Zero output stub. against the public observable contract",
+        "violated_property_ids": [
+          "P_FIRST_TONE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_frequency/certification.json",
+        "certification_sha256": "9c1bf731d6fc9f0e7576145d1357409344a08e58f279830156b0a514504bdb83",
+        "fault_class": "uses_the_wrong_third_tone_frequency",
+        "mutation_bundle_sha256": "aea4756cd39aa96667efa1ff62c9633d00e37322c1fb03013ad9a86232fde68c",
+        "mutation_id": "neg_003_wrong_frequency",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_frequency/certification.json",
+        "trigger_condition": "stimulus exercises Uses the wrong third-tone frequency. against the public observable contract",
+        "violated_property_ids": [
+          "P_THIRD_TONE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_amplitude/certification.json",
+        "certification_sha256": "b0f6f0fa7e6dd21c17ef3196d486589a8dc597cdd4361e18d8cad098c3ac16c8",
+        "fault_class": "scales_every_tone_amplitude_by_one_half",
+        "mutation_bundle_sha256": "e165896b4defa3437e12c8869b0662be1223760b0bcc84331d66be5d2b567ab5",
+        "mutation_id": "neg_004_half_amplitude",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_amplitude/certification.json",
+        "trigger_condition": "stimulus exercises Scales every tone amplitude by one half. against the public observable contract",
+        "violated_property_ids": [
+          "P_LINEAR_SUPERPOSITION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "e0703c31ba6814e9f07bfa7045b48256bf50d28983397fc9ece1c1372d53d35e",
+        "fault_class": "sine_periodic_voltage_source_scales_the_metric_output_preserving_the_main_path_w",
+        "mutation_bundle_sha256": "f1598d0cb74a8899653da0ee6e81050cd9a9580f4f1136ee8a1fd831f46e5415",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "stimulus exercises Sine Periodic Voltage Source: scales the metric output, preserving the main path while failing measurement checks. against the public observable contract",
+        "violated_property_ids": [
+          "P_ZERO_INITIAL_PHASE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_third_tone/certification.json",
+        "certification_sha256": "155b1299db55e75ba450a27aa09d9e2d464d1b57e862c0c172e98abfc2658203",
+        "fault_class": "omits_the_f3_a3_tone_from_the_public_three_tone_source",
+        "mutation_bundle_sha256": "30c8a4a3fa34d9b3ae26ddaa0de81e9c1addad66d682491b72b1eab8936283da",
+        "mutation_id": "neg_002_missing_third_tone",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_third_tone/certification.json",
+        "trigger_condition": "stimulus exercises Omits the f3/a3 tone from the public three-tone source. against the public observable contract",
+        "violated_property_ids": [
+          "P_SECOND_TONE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "080",
+    "hashes": {
+      "mutation_catalog_sha256": "1d26dacd9f4a0a0e07d739baa347c66fffb18c687f1cec6be8032895343a5934",
+      "score_deck_sha256": "5e99ef8f8a25ad17ef47b4b479757e8d2818f202241650e5d431701a09ee6713",
+      "task_certification_sha256": "cd85090a933e5bc73b12f543263388f86f42853fc908601bdc5fba9d4476d555",
+      "task_record_sha256": "88f1acc353a8bf78a6e10944970841cfd0f923e12ed3553459eda6866de0e129"
+    },
+    "release_dir": "080-sine-periodic-voltage-source"
+  }
+}

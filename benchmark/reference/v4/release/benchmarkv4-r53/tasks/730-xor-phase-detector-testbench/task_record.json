@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "230-xor-phase-detector",
+  "checker_task_id": "v4_230_xor_phase_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "900806039da131afb6a9053e4a3503524ab979de642d3e2c1a49a8f761b4d3aa",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "78373ec2f31ef9846fd0c2b522690841430de28cf943771343aff5db8e415de6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "900806039da131afb6a9053e4a3503524ab979de642d3e2c1a49a8f761b4d3aa",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "b9f82e4cf5107070e6a1cdcb0e9e33b5bea626023e2173689e3d501dad3a58b5",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "75e383107021db91b34839d740979735eb234ccd94290f16ac12ffe0211a4f44"
+  },
+  "family_id": "230",
+  "family_spec_sha256": "34194f5a894d19b1e7de9054073d74de52827b28dd9122a2f6d8e46edb1e5d7b",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9b9d56f06e28bdb3ea44ba4ffd3e9c89b7e8781131a40b8895c2fe83d322f6ac",
+  "public_contract": "tasks/730-xor-phase-detector-testbench/public_contract.json",
+  "public_contract_sha256": "0174a951bbfa8bd3bada9cc05d50b76e5ce67315e12d04d08da4201a63ead79f",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/730-xor-phase-detector-testbench",
+  "task_id": "v4-730"
+}

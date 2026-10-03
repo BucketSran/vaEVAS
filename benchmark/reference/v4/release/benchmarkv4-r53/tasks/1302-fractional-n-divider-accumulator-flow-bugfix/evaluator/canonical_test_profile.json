@@ -1,0 +1,33 @@
+{
+  "canonical_semantics_sha256": "0a9aad5a0c6d034c9ec4af5100ec11c20b5be3c728ff126d75f1a8e7b6315d41",
+  "corners": [],
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_r45_canonical_test.py",
+    "version": "r45-canonical-test-renderer-v1"
+  },
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "canonical_test",
+  "property_ids": [
+    "P_USE_REF_CLK_AS_THE_REFERENCE",
+    "P_GENERATE_A_BEHAVIORAL_DCO_CLOCK_ON",
+    "P_GENERATE_FB_CLK_BY_TOGGLING_IT",
+    "P_UPDATE_A_BOUNDED_CONTROL_VOLTAGE_MONITOR",
+    "P_DRIVE_LOCK_HIGH_AFTER_STABLE_TRACKING"
+  ],
+  "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+  "schema_version": "r45-canonical-test-profile-v1",
+  "simulator_options": {},
+  "source": {
+    "family_id": "302",
+    "feedback_semantics_sha256": "0a9aad5a0c6d034c9ec4af5100ec11c20b5be3c728ff126d75f1a8e7b6315d41",
+    "harness_spec_sha256": "f6940e5426c77ea7b940455425d47cab6389e23abfe77dd469667e1290f9a250",
+    "schema_version": "v4-harness-spec-v1",
+    "score_semantics_sha256": "0a9aad5a0c6d034c9ec4af5100ec11c20b5be3c728ff126d75f1a8e7b6315d41",
+    "task_id": "v4-302"
+  },
+  "test_deck_sha256": "bad08439c13e5c6c125a9b4ba6d5e39f435568c4982eaa8ba526de917acb4b57"
+}

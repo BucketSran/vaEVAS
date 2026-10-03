@@ -1,0 +1,80 @@
+{
+  "family_id": "364",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_q_sign_swapped/certification.json",
+        "certification_sha256": "01027cd365fedac93a157e812b38f35916204216a9d70005b67f0b5320af981d",
+        "fault_class": "mixer_polarity_error",
+        "mutation_bundle_sha256": "9d56c762d667cb5abf7aa7eec11582062281e4121de31eceb5ed1384ae069900",
+        "mutation_id": "neg_001_q_sign_swapped",
+        "source_catalog_certification_path": "negative_variants/neg_001_q_sign_swapped/certification.json",
+        "trigger_condition": "q_in differs from vcm while lo_q toggles.",
+        "violated_property_ids": [
+          "P_IQ_SIGNED_MIXING",
+          "P_RF_SUM_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_quad_ok_after_i_only/certification.json",
+        "certification_sha256": "d49fe30c93461d027572ffd1eb2f9da2c22818536790b8b8c480fa164b7a79d2",
+        "fault_class": "activity_qualification_error",
+        "mutation_bundle_sha256": "0463eee72b6f730a9ed771ca9f17aca82aee24f69a9affad84a7155d6ef03b8f",
+        "mutation_id": "neg_004_quad_ok_after_i_only",
+        "source_catalog_certification_path": "negative_variants/neg_004_quad_ok_after_i_only/certification.json",
+        "trigger_condition": "lo_i crosses before lo_q after enable.",
+        "violated_property_ids": [
+          "P_QUADRATURE_ACTIVITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_disable_keeps_rf_active/certification.json",
+        "certification_sha256": "e8c9228a7082529c164b1ba45b4caa63da1d8b373e63532be99deaccdb19ac88",
+        "fault_class": "disable_clear_error",
+        "mutation_bundle_sha256": "82ac9c99d351d82f73331d9f1daa46e32f63354c908d249f202030b607d4e4a4",
+        "mutation_id": "neg_005_disable_keeps_rf_active",
+        "source_catalog_certification_path": "negative_variants/neg_005_disable_keeps_rf_active/certification.json",
+        "trigger_condition": "enable is low while baseband and LO sources remain active.",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_rf_ignores_q/certification.json",
+        "certification_sha256": "b620b704691584845618b6cd184412c1712900a71666d61cc158b01872c64c3c",
+        "fault_class": "summer_path_missing",
+        "mutation_bundle_sha256": "04c62be163688ca9059c2d86797912ac5759426b1f411107f431f0696b8a26f6",
+        "mutation_id": "neg_003_rf_ignores_q",
+        "source_catalog_certification_path": "negative_variants/neg_003_rf_ignores_q/certification.json",
+        "trigger_condition": "Both baseband paths are active.",
+        "violated_property_ids": [
+          "P_RF_SUM_CLAMP"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_i_path_zero/certification.json",
+        "certification_sha256": "8c7830f2593f6c75abb8664832f88875040eaa2dcd5bfb7849cf202ba48a2054",
+        "fault_class": "mixer_path_missing",
+        "mutation_bundle_sha256": "c73727b7716ab1315dd385a7de7a0512fdfeb77959f0c143cd6eb84c1388a27a",
+        "mutation_id": "neg_002_i_path_zero",
+        "source_catalog_certification_path": "negative_variants/neg_002_i_path_zero/certification.json",
+        "trigger_condition": "i_in differs from vcm while lo_i toggles.",
+        "violated_property_ids": [
+          "P_IQ_SIGNED_MIXING",
+          "P_RF_SUM_CLAMP"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_q_sign_swapped",
+    "canonical_dut_id": "364",
+    "hashes": {
+      "mutation_catalog_sha256": "3ceaa044c03b83eaad842dceae349809f548b58c8a822d8a7ef4b86d0c966a60",
+      "score_deck_sha256": "bf7bb43fc6186d52e988a10c1ef421c5c52a6acdbd9193d6bf0def46adce1c3f",
+      "task_certification_sha256": "137c16243963f3861d5a20ea454be96976f2f0edaffc458b2fb96a71f32b95b2",
+      "task_record_sha256": "7d08e5175610a0c909e6c6131a30ea66554db8505f4defe0b4132dcfb8383638"
+    },
+    "release_dir": "364-iq-upconversion-mixer-chain"
+  }
+}

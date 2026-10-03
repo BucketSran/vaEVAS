@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "129-polynomial-differential-vcvs",
+  "checker_task_id": "v4_129_polynomial_differential_vcvs",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a91fe80077b86f2b92554da98d4159ccc6190d7bb1e97c86e963d3588537196f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "a51fa54a12c8877d043865d8b23fd35c07f76a63922dfd6cd554ed739b84ac64",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a91fe80077b86f2b92554da98d4159ccc6190d7bb1e97c86e963d3588537196f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "b454e846d77fdc03da751cefea37e39dd3ff22757a860409bdc3c566a314c332",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ff2de42087dc84264851d04d98664bb119da82a027d3516040aa6874f87353d2"
+  },
+  "family_id": "129",
+  "family_spec_sha256": "e869096763f4bcafeaec1af6e349c4e312e0a4dbe104aeea2a47b52a5c0bad59",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ff3df647ea035f4477dcbd43aa8a627bbf657b9bc140fc61981440b9d773a094",
+  "public_contract": "tasks/629-polynomial-differential-vcvs-testbench/public_contract.json",
+  "public_contract_sha256": "c0124af1e97c0e3b64d5c135d414e100e3011a6c2bdf08818003b4a8fc562379",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/629-polynomial-differential-vcvs-testbench",
+  "task_id": "v4-629"
+}

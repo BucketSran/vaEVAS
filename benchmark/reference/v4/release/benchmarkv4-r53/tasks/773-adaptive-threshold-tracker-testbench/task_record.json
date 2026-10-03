@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "273-adaptive-threshold-tracker",
+  "checker_task_id": "v4_273_adaptive_threshold_tracker",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "ed0c6bb21733c7eff3cabc39db8b3ef932e93658a4cd7795bfb1d1f8a74cf80d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "5c6bc4740bea37d07a728af68c49ebdf669682b62f04679d837f6167ca297206",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "ed0c6bb21733c7eff3cabc39db8b3ef932e93658a4cd7795bfb1d1f8a74cf80d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c80fbe11de82b65ffc02b8ba3e3953eea437e0e3e8c7e8e31c07d8a8034bb116",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "71449f169334103b6e13f47337eecaf29bde52f2bb4578ac01dcab607abf068e"
+  },
+  "family_id": "273",
+  "family_spec_sha256": "492c8881c715ab4f6b2b4e26aed9dafa10d1dd15d61e1818b31245826f68db11",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "31a91da8e3a72bb10c779b0994f21caf89a4fee9a5aa06d4e9ea6abd2f0a8b12",
+  "public_contract": "tasks/773-adaptive-threshold-tracker-testbench/public_contract.json",
+  "public_contract_sha256": "b5740606b77799f92f25065f54545a8c9d3a9c04b65e97906d297c491e7951a0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/773-adaptive-threshold-tracker-testbench",
+  "task_id": "v4-773"
+}

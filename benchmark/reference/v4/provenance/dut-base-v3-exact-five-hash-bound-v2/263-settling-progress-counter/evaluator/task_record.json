@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "263",
+  "checker_task_id": "v4_263_settling_progress_counter",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "efdb99caae2ada1626e14086a78159b7958daebc26daf1fb4216810572abdc9e",
+    "checker_profile.json": "f8199536434156b185958b11ca89795de884f22d2977e01fa56f2b941bd5698b",
+    "derivation_manifest.json": "41cdb940cf934e59890084dfcced06fa50c2a0fbcecb4dca7a3cddbd7aa9cd67",
+    "family_spec.json": "d2b935612cb88bc2f0314531aff94ff77bbcc4b826a6ff6c65e028470e67aba6",
+    "harness_spec.json": "2f91837cddfc2fcf8273913b6928d01ba951e7af9be7b5107be5be1106964f73",
+    "mutation_catalog.json": "69ca8e48f9f38b1c0447cdb4228323150e9cae925fc2665d44d8b1c404984bea",
+    "profiles/feedback.json": "021b18208615e036518002a7ded78b906811b26311a4a03457bf8f435b1fa776",
+    "profiles/score.json": "6d94a66c25d1c9fbc0cb5794c02dc8fe4aced71b077454aa0b19232d935c1209",
+    "score_tb.scs": "ace7b1d70dc955cf091dc06cfff98d6ec5e2685f1b573eb15f7c61efae2945b2",
+    "solution_tree": "2862b04247ce4d39d9965b297bba3c7b1ee1c8d0fe85e39ed493d423fafd106d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "8a5405edcaea29de5f320ec3db16e09f163cca00152a3d4c104b70890703c470",
+    "instruction.md": "8f4998e044ca3a61678de3f54b0bd50431186fb4e733d878ae462ac828e998d1",
+    "public_contract.json": "cee59e2b11b6c39d72df19f8a05d52c345f8b376afc661925ca1893cb1697c62"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "efdb99caae2ada1626e14086a78159b7958daebc26daf1fb4216810572abdc9e"
+  },
+  "release_dir": "263-settling-progress-counter",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "354-settling-progress-counter",
+  "support_root": "",
+  "target_artifacts": [
+    "settling_progress_counter.va"
+  ]
+}

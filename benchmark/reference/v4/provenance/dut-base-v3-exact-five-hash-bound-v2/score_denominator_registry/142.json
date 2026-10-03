@@ -1,0 +1,78 @@
+{
+  "family_id": "142",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_lsb_scale/certification.json",
+        "certification_sha256": "81323b688017c31374e09da8da205036375894e8344a00e3345b094404cdabec",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "9a5cf6bca04e0c4439049107b02b426402de23dfc75b26dc2a4c268d8bd69c93",
+        "mutation_id": "neg_002_wrong_lsb_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_lsb_scale/certification.json",
+        "trigger_condition": "Uses a wrong DAC LSB scale.",
+        "violated_property_ids": [
+          "P_MIDRISE_DIFFERENTIAL_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "e4669d0606d86c02f74ba39cf1fe5f6be6f969811f1ed7177eaf69c9763060c9",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "b1256ac804686242f14a55d97621401b75fef4a4568764702a58cf6f957e1892",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_CODE_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_inverted_outputs/certification.json",
+        "certification_sha256": "7c10648dccfd6aff2fc60a5aa62c03c596d2f4e3207418c167882569130f5a45",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "0e14ade60a90ca58863fb3c850d3e847d6a3e9014286a1f4fe7b9e4b0013c703",
+        "mutation_id": "neg_004_inverted_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_004_inverted_outputs/certification.json",
+        "trigger_condition": "Swaps DAC differential output polarity.",
+        "violated_property_ids": [
+          "P_OUTPUT_POLARITY_AND_COMMON_MODE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_midrise_offset/certification.json",
+        "certification_sha256": "98fdbc6ec05a3983c5a20801a565ed8b532b450f0423ba59c0fddf8fd1430bad",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "4fef5f1a04e9575d575344109406273865950e18434187f78703adbd90fb52b5",
+        "mutation_id": "neg_003_no_midrise_offset",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_midrise_offset/certification.json",
+        "trigger_condition": "Uses endpoint DAC levels without half-LSB mid-rise offset.",
+        "violated_property_ids": [
+          "P_MIDRISE_DIFFERENTIAL_SCALE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "9ae1e7a47ec4a8af8047218383ddbc8bc2b6e44d4c71cecee9db9a778b6c0720",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "66911edc7de27db8aaa881eff5087b8835807d03aad56a4b24c8c002bec7148c",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Ideal DAC 4bit Differential: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_MIDRISE_DIFFERENTIAL_SCALE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_lsb_scale",
+    "canonical_dut_id": "142",
+    "hashes": {
+      "mutation_catalog_sha256": "48a8d5e6b3e8e929c05309e8d8748f2a5ba9e90af17ec7dc450a59a0a2176096",
+      "score_deck_sha256": "892df7d2ad17d0e693c5b8c8e9d0a12ba1339cddd4244f737d8498e7064be17c",
+      "task_certification_sha256": "b3a612c6315455d23fc223e435fe25ef5b2e23845f7a1b03230a4745fd10d799",
+      "task_record_sha256": "50facc20679a518174c51ed4d2ecd32b5ff32bde5935d66b36356914f4744016"
+    },
+    "release_dir": "142-ideal-dac-4bit-differential"
+  }
+}

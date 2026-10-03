@@ -1,0 +1,40 @@
+{
+  "candidate_artifacts": [
+    "agc_chain_top.va",
+    "level_meter.va",
+    "gain_controller.va",
+    "vga_stage.va",
+    "filter_stage.va"
+  ],
+  "canonical_dut_source_slug": "367-baseband-agc-filter-chain",
+  "checker_task_id": "v4_367_baseband_agc_filter_chain",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "4a4621fcc5cec6eb658eefa2b8d9af6ba568238aa8316928e1dfffe2845a8cd8",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "3d3b4b913620c27f0c1971ab9eab015ca365181a2e3fbd3bcbe4b42884282023",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5a409bd7ff3e63980c59abb8bf8d758201fe4d0fb9adc8b6cffd15577656c900",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "367",
+  "family_spec_sha256": "7bfab1749d3b72a78df4d5e31a0251afc44f1292fed9dccc522da21ca3ed80f6",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ba1154410c97cbac83fe8305e694c90a2c4d46afd2601b02a269ae6dd1835ce0",
+  "public_contract": "tasks/367-baseband-agc-filter-chain/public_contract.json",
+  "public_contract_sha256": "4cd08a9dd20c1e1a47400d79196744240ab4a310c6f5a31257e5c28f55fed264",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/367-baseband-agc-filter-chain",
+  "task_id": "v4-367"
+}

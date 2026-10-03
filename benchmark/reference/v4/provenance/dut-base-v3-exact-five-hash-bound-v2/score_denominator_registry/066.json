@@ -1,0 +1,78 @@
+{
+  "family_id": "066",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "c8a6eb4921731917875a3cf719e56d6c5fe9395cd2af159b0b947445ec0e35bc",
+        "fault_class": "never_pulses",
+        "mutation_bundle_sha256": "57f20e6d3f0c60c1ec771c02a7c01ed76adbc258fcc3617ce213f2f4910440d4",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "stimulus exercises never pulses against the public observable contract",
+        "violated_property_ids": [
+          "P_RISING_SELECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_polarity/certification.json",
+        "certification_sha256": "1186652ed9cfc565bf994582da88ada285bccd2f0b0786c85ace30fd40af3386",
+        "fault_class": "swaps_selected_polarity",
+        "mutation_bundle_sha256": "cdbe67c8db07347b85cd54a0e409d1a037215b43915a20b8877d7b428ca9e30a",
+        "mutation_id": "neg_003_wrong_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_polarity/certification.json",
+        "trigger_condition": "stimulus exercises swaps selected polarity against the public observable contract",
+        "violated_property_ids": [
+          "P_OPPOSITE_EDGE_REJECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_stuck_high/certification.json",
+        "certification_sha256": "c2734e814fca67e9632cf5a838d48ec3360590b594691a0a62cc09f6965093e1",
+        "fault_class": "never_clears_pulse",
+        "mutation_bundle_sha256": "e6660358dcfe4ba2ef4ff41dd0bea6f3bdcabdbfcd5fba0f434e044490c202b0",
+        "mutation_id": "neg_004_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_004_stuck_high/certification.json",
+        "trigger_condition": "stimulus exercises never clears pulse against the public observable contract",
+        "violated_property_ids": [
+          "P_BOUNDED_PULSE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_long_pulse/certification.json",
+        "certification_sha256": "82a2a02d2eeff9461a0386d18c4b638c114af706ea7019c11078b0b2b912e3cf",
+        "fault_class": "uses_too_long_pulse",
+        "mutation_bundle_sha256": "6328dc4d42af1910eb47db29df4b777b4d1d592721951d6284c74b09fee15af4",
+        "mutation_id": "neg_005_long_pulse",
+        "source_catalog_certification_path": "negative_variants/neg_005_long_pulse/certification.json",
+        "trigger_condition": "stimulus exercises uses too long pulse against the public observable contract",
+        "violated_property_ids": [
+          "P_OUTPUT_LEVELS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_all_edges/certification.json",
+        "certification_sha256": "f7cce5615a98d12b2d8ec3a715f0b5a6f94c525717a76b98a9cd3fba78be2026",
+        "fault_class": "pulses_on_both_polarities",
+        "mutation_bundle_sha256": "4b9ec09e6d11f489ef8e89a0ee5d7b40245185f110c8964451ad2cb8c736a0d8",
+        "mutation_id": "neg_002_all_edges",
+        "source_catalog_certification_path": "negative_variants/neg_002_all_edges/certification.json",
+        "trigger_condition": "stimulus exercises pulses on both polarities against the public observable contract",
+        "violated_property_ids": [
+          "P_FALLING_SELECTION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "066",
+    "hashes": {
+      "mutation_catalog_sha256": "461031d341279a70faed20f949d1c7fdfec11c3ba9dfb0bc43de8f3558024774",
+      "score_deck_sha256": "c7731ccc09b4ddf658d416f52fa98c14b5ee88be400376947ca4744d2fecaf5b",
+      "task_certification_sha256": "6601e93c04bf05c39b8b8b3a82ce1a19c496c9f44f0159d83cc1b241c595afc9",
+      "task_record_sha256": "d022b7e6e83a6d8c69d1d72d255f0a932fe17ea56c0c7207e6984bf292ee4592"
+    },
+    "release_dir": "066-configurable-polarity-edge-detector"
+  }
+}

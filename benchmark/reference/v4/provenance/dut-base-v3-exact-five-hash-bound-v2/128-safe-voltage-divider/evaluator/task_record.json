@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "128",
+  "checker_task_id": "v4_128_safe_voltage_divider",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "22ffb862ced8c683e9a36307fbbb615997f5a9e1673410bc68f5f14b3fbdff86",
+    "checker_profile.json": "eb56a3364e90be68a514be82be370de9ccb124c8124100e76fa7bb41dd974814",
+    "derivation_manifest.json": "7b0718335d922721ecfb9787ed032efb2ba0068952a92bf7d958f5afc800d793",
+    "family_spec.json": "c28e9e11be6fdf475be0082d5b1f9f795bcd3ddc1c4420636bf4ac57403b9d13",
+    "harness_spec.json": "1b5a5bdc517d543034cc95e2327423ae2ff953d366609218a8aeeebff84d2092",
+    "mutation_catalog.json": "eebe31de2d50ed3f5e5db7f2fdc13dae764abefb08922664bc9d6823465c4a68",
+    "profiles/feedback.json": "e07a5dbaf24aeea03dfedc230aa32ce852c1a6328f878246f07a98cf2bdfcde8",
+    "profiles/score.json": "c173a4e9cd9f6c7979170d1630bb30d87ad2ea4ead96f8229ca5d4efb154b972",
+    "score_tb.scs": "b4e9bc576ce5f36beedf176aaf9cf75741b09e6b05c229150d796a4bac8269ee",
+    "solution_tree": "ef5792e33e8de84d7967893316dc5e97841ed790f7f199d0991b9b0790ec647e",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "3657bce32786c4144015ed8fb6f4165054740b1be7c386d22eceaaeb31eb2225",
+    "instruction.md": "16c1e24695ca6859ea316d9b4e84f50b2d74838210bf623e1bb64ab462f08bcf",
+    "public_contract.json": "332633b6611defce7dd335adb75e7313df869dcb663c0acbd3a085faede79971"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "22ffb862ced8c683e9a36307fbbb615997f5a9e1673410bc68f5f14b3fbdff86"
+  },
+  "release_dir": "128-safe-voltage-divider",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "150-safe-voltage-divider",
+  "support_root": "",
+  "target_artifacts": [
+    "safe_voltage_divider.va"
+  ]
+}

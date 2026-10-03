@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "397-baseband-offset-gain-trim-macro",
+  "checker_task_id": "v4_397_baseband_offset_gain_trim_macro",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9cdcf3f432439fa1121a6e97a268283c56cf0b3c3a1415bcc198595e14e598d1",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "2431f67410a5d225a0b209c3084ba77315a792c3da56d691b5210a2f1a402e21",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9cdcf3f432439fa1121a6e97a268283c56cf0b3c3a1415bcc198595e14e598d1",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "dc2ba0f60197f6a6f46de966b43a37827ca82faf9ce7e57b463fcfbd2e07e478",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "6298cd3677216fab42032b7ff2a488d8267f2372330189efbe1f9dcd59a3bcea"
+  },
+  "family_id": "397",
+  "family_spec_sha256": "3fd94ab8ea9306d3129d191787941cfd859865d5fa86c21d2466f344a3deb801",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9ad27ded5659dfe9df05659dc5cc6d4b7c9f26bcbc72b7941280440f75ce7ca5",
+  "public_contract": "tasks/897-baseband-offset-gain-trim-macro-testbench/public_contract.json",
+  "public_contract_sha256": "75d3b4ccdece942e001546306e95e395853affc9bbb50e0231722db528d7b610",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/897-baseband-offset-gain-trim-macro-testbench",
+  "task_id": "v4-897"
+}

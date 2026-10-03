@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "145-divide-by-eight-clock",
+  "checker_task_id": "v4_145_divide_by_eight_clock",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a8f63cc92c5938bfb2ea632bc56d37dc810011dae5a1f4a8f451ba4e5cdada7e",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "543b15612c9202ebe3aa0c91af9c8b5dd348265e77e02b4573d16c879b4adcfb",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a8f63cc92c5938bfb2ea632bc56d37dc810011dae5a1f4a8f451ba4e5cdada7e",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "59eaec1ffc409056376a04f0de8554d62aac00b3f0784590c35ec2507e1e160d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "35235cf1063c29dfee6da14f1fe46625a0e69092fa176dbdc1374b0c55a21c00"
+  },
+  "family_id": "145",
+  "family_spec_sha256": "6125e37aaea5ed73ba971fb412b1f84bb78a131c3695c7f34cfffbcee84f3596",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c8bbe3cdf6425aa20f2bf49b925b30f41428908d260ae6555866deabb43e71e3",
+  "public_contract": "tasks/645-divide-by-eight-clock-testbench/public_contract.json",
+  "public_contract_sha256": "5d03169a5138288d785ec4ea09acfebe4c1e987408412f0b35d66a7ede6d65f6",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/645-divide-by-eight-clock-testbench",
+  "task_id": "v4-645"
+}

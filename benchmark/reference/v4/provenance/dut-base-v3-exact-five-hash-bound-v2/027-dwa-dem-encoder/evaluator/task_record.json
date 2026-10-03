@@ -1,0 +1,37 @@
+{
+  "canonical_dut_id": "027",
+  "checker_task_id": "v4_027_dwa_dem_encoder",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9fb53b12bf3d22002c1cc0e3ad33623392d4ffa129c5c8e04142cc3c9b2371ac",
+    "checker_profile.json": "c6df2de32cc3cf9e9c0176d800f7a9cdb957d3d52022ae297135438114723b5d",
+    "derivation_manifest.json": "f5da6995e6dc8c8e87d466b693c18a6569a48f2b7ebdd4277a4b148d1ef7a631",
+    "family_spec.json": "0deb18b2ae541cb3267fef8a9510bbcf73456a5287796acca034eddad3e54d7d",
+    "harness_spec.json": "701581b0a885400645c315a80405d287e3ff529dab86f7f7ca8a9b86856d46b2",
+    "mutation_catalog.json": "e4dbdc5fdd8b934a6fad82a0c17355fe4aa94958508c69b23d42208eaecafaff",
+    "profiles/feedback.json": "0ff15825f3fa5d4da2993893307e40d687e41f18691c077cc91f446884962cc9",
+    "profiles/score.json": "bffcd6ac0d5a5607da2a20d85f001bdb4dc1e5c7afb99a9ddaa3ff2e7892b60a",
+    "score_tb.scs": "0e1e3bdbf62fdff234a67fd41874be56b85e3564593ef6082f578f2a4ffe2d2e",
+    "solution_tree": "b3af6c7b1b91ed9c7cce829ae89aa9ba33f918136f96cf1c1618dca6642742f2",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "dc2e5b022b91a149d917204e6123c4bb581980081e8a72e23b9d05afff2faaee",
+    "instruction.md": "5aca6e3a3284ce49a7c0f515f7b8bd6af1e491b580bd6e37b214e27613941b00",
+    "public_contract.json": "8d0db824af6782d7e62a940571c154325615a5a66a3de7a563146efae7bdc3b8"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9fb53b12bf3d22002c1cc0e3ad33623392d4ffa129c5c8e04142cc3c9b2371ac"
+  },
+  "release_dir": "027-dwa-dem-encoder",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "029-dwa-dem-encoder",
+  "support_root": "",
+  "target_artifacts": [
+    "dwa_ptr_gen.va",
+    "v2b_4b.va"
+  ]
+}

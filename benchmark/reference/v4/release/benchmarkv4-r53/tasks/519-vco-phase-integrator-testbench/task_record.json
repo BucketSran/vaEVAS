@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "019-vco-phase-integrator",
+  "checker_task_id": "v4_019_vco_phase_integrator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2bd88758082cfb142c40bbd778093d1f4a7b0b31ec97f5005f77d818bdf36cea",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "73cf1f91bea180d0ac090c759a95be5a430e91625b497b6957bcacfdf76ea294",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2bd88758082cfb142c40bbd778093d1f4a7b0b31ec97f5005f77d818bdf36cea",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9900d7081c9deafdeca1d077b6ee908e890b1a790f35ab7a3646611626c6112d",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "3176b80b50862fe0c03a02f4e9ecad2a6b77f6547b838b90e166e5e5b8698dc3"
+  },
+  "family_id": "019",
+  "family_spec_sha256": "00a387a882e873655a5247a5cc5c4a91755c03ea5ee82f20c58bb7d4aec40fc4",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1059e6f8b9fc785641d57b37488cb32545e9f10f03c2b2f797b62d9619578656",
+  "public_contract": "tasks/519-vco-phase-integrator-testbench/public_contract.json",
+  "public_contract_sha256": "4491dc16fd3a6561c02cb26f5360a5c041006f5f21be86ac52162e8b20ad605b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/519-vco-phase-integrator-testbench",
+  "task_id": "v4-519"
+}

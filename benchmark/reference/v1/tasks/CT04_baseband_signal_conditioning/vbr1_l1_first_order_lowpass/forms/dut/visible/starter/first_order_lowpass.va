@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module first_order_lowpass(vin,vout);
+    input vin; output vout; electrical vin,vout; parameter real alpha=0.025; parameter real tr=200p; real y;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

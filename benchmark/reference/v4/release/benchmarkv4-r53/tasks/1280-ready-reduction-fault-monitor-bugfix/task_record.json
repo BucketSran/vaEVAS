@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "ready_reduction_fault_monitor.va"
+  ],
+  "canonical_dut_source_slug": "280-ready-reduction-fault-monitor",
+  "checker_task_id": "v4_280_ready_reduction_fault_monitor",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7af7cbdf01e8868952b1ad8a907d83f8c3fbb380d0a8cfe0ccfaf079cba705c5",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8d42c0ef57ca9c8e2d2975fa5cf442840e9b7ef915577d5a1e0becb5d2dec99e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "96175da01888cd1616b93d629df3cbd6d495f1d1ee94f35b3f5e0427b7c5396f",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "280",
+  "family_spec_sha256": "261a5f79ad650f7e6e03ec4bc183a95756f25f54806949256a35cce4c336972b",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0f764009a38ea4ecccd3364922cfbcdd06380e827a57fa84af24dfae5fcfd55c",
+  "public_contract": "tasks/1280-ready-reduction-fault-monitor-bugfix/public_contract.json",
+  "public_contract_sha256": "48377009b47ccc196a428110a6d9b484f621ecb6c1c7862b46d7cee7a9957ad4",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1280-ready-reduction-fault-monitor-bugfix",
+  "task_id": "v4-1280"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator_offset_search_ref.va"
+  ],
+  "canonical_dut_source_slug": "085-comparator-offset-search",
+  "checker_task_id": "v4_085_comparator_offset_search",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "a4b4a89c4d16da47a9909a5de2a9351350b4bea119e64cf2a6bd4f57bf445005",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "cbae1c7cae4680fd78f9a8ef05ecdc71aa9dcfe228b099c2e97bb714f66a4c4f",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "331af95c0f70c3f3d4813de2c4b4545cfe8c3427d1355526df291950b8536430",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "085",
+  "family_spec_sha256": "ede63ae44e66dae3e0cfc02e0a037b84780383d5e31356cad74db521a7f68782",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "8a72492cb9158b983834bcf870d92421e85c1eb74d585d68a212c10aa24985c5",
+  "public_contract": "tasks/1085-comparator-offset-search-bugfix/public_contract.json",
+  "public_contract_sha256": "6eb18876f70c38e1c923d0565d7667fafbbfac3ce92901fe3a43754578667eeb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1085-comparator-offset-search-bugfix",
+  "task_id": "v4-1085"
+}

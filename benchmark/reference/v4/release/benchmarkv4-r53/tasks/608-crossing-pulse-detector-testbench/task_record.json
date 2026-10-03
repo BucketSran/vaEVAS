@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "108-crossing-pulse-detector",
+  "checker_task_id": "v4_108_crossing_pulse_detector",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "60d5a28a94302764488c5bd1b432e058df458453427f080b6c806c16d2655bec",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "3d3f31ea6d6fd20a5089814a310c119dfa0d3929680b2a4eeb45056ec4c6e2dc",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "60d5a28a94302764488c5bd1b432e058df458453427f080b6c806c16d2655bec",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2273100db554485f8a9dd2230c0e225cbc0b1467908b0abe06d53705bb33d6dd",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "aae58374a096d6e8283bc6dd333e38c4e8aa1634f90d606ba7d321455aa2caab"
+  },
+  "family_id": "108",
+  "family_spec_sha256": "1ce5ad15308a750941790f01950acc2a04ab9337b71a3c36d0afda006fa744de",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "54c3f1416a09e821953dda4021c4e78babfb130d630e0eb5dd7f5f8507b313c3",
+  "public_contract": "tasks/608-crossing-pulse-detector-testbench/public_contract.json",
+  "public_contract_sha256": "64f55a3711412ca23e7e82e3f6d5ec6fe3932e46f9fb9cba4f07c5d39fee44bb",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/608-crossing-pulse-detector-testbench",
+  "task_id": "v4-608"
+}

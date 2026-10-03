@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "charge_pump_pfd_state_machine.va"
+  ],
+  "canonical_dut_source_slug": "301-charge-pump-pfd-state-machine",
+  "checker_task_id": "v4_301_charge_pump_pfd_state_machine",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "dae1bbdb92ba5f192d7f3ba4f833e2e9a16d50ef3a4c74a26ee56a8e1a634eff",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "394ec18d2ae291a20d1b0f9c58f7e0005d32701168b1fa42e2fd79c4c2534dfe",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "b03baa20d95c43560487baed2f0b19fddc3ed201ac8e9e09497dee294df7b74c",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "301",
+  "family_spec_sha256": "4024374ef781f421fa2815335321ff821a20b6a7e9090b9b23687e85f08e0c71",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "38b197866c49d09d83ac0e2004d778da45e79bc41483bb5113a5ba2cd8737ead",
+  "public_contract": "tasks/1301-charge-pump-pfd-state-machine-bugfix/public_contract.json",
+  "public_contract_sha256": "6c2a522c4a03242a9e1b310231a46decdd167eeaec996718df092a4818d61f41",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1301-charge-pump-pfd-state-machine-bugfix",
+  "task_id": "v4-1301"
+}

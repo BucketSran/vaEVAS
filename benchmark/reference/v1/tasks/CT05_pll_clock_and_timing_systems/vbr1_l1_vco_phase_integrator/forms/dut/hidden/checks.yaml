@@ -1,0 +1,21 @@
+syntax:
+  must_include:
+    - "@(initial_step"
+    - "@(timer("
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "phase_span_covers_nearly_full_wrap"
+    - "clock_toggles_on_phase_wrap"
+    - "late_edge_rate_exceeds_early_edge_rate"
+parity:
+  required: true
+  tolerance_notes: "Score phase-span and edge-rate behavior across stable control-voltage intervals."

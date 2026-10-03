@@ -1,0 +1,84 @@
+{
+  "candidate": {
+    "artifact_paths": [
+      "fixed_frequency_oscillator_source.va"
+    ],
+    "source_root": "./dut"
+  },
+  "deck": {
+    "analyses": [
+      "tran tran stop=195n maxstep=200p"
+    ],
+    "body_lines": [
+      "Venable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 54n 0.9 54.2n 0 64n 0 64.2n 0.9 150n 0.9 150.2n 0 160n 0 160.2n 0.9 195n 0.9]",
+      "Vrst (rst 0) vsource type=pwl wave=[0 0.9 3n 0.9 3.2n 0 112n 0 112.2n 0.9 118n 0.9 118.2n 0 195n 0]",
+      "XDUT (enable rst osc_out period_metric valid) fixed_frequency_oscillator_source",
+      ""
+    ],
+    "header": [
+      "simulator lang=spectre",
+      "global 0"
+    ],
+    "include_templates": [
+      "ahdl_include \"{candidate_source_root}/{artifact_path}\""
+    ],
+    "save_signals": [
+      "enable",
+      "rst",
+      "osc_out",
+      "period_metric",
+      "valid"
+    ]
+  },
+  "family_id": "383",
+  "generator": {
+    "name": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "migration": {
+    "legacy_feedback_deck": "public/task/feedback_tb.scs",
+    "legacy_feedback_deck_sha256": "35cd47a0cbc970fc43d798946a67dc75bd0896585112dcc55b6c7c9142d4c55b",
+    "legacy_score_deck": "evaluator/score_tb.scs",
+    "legacy_score_deck_sha256": "34872f92fd6a6d6a402fe581f52973637fb8507a5a9eb8648ee9da7aedcb95dc",
+    "notes": [
+      "legacy feedback deck was used only to seed the canonical harness spec",
+      "legacy score deck seeded private profile-specific overrides"
+    ]
+  },
+  "profile_defaults": {
+    "feedback": {
+      "corners": [],
+      "deck_overrides": {},
+      "deterministic_seed": 0,
+      "parameters": {
+        "maxstep": "100p",
+        "stop_time": "200n"
+      },
+      "simulatorOptions": {
+        "evas_profile": "balanced"
+      }
+    },
+    "score": {
+      "corners": [],
+      "deck_overrides": {},
+      "deterministic_seed": 0,
+      "parameters": {
+        "maxstep": "100p",
+        "stop_time": "200n"
+      }
+    }
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_DRIVE",
+    "P_WHEN_ENABLED_GENERATE_A_PERIODIC_VOLTAGE",
+    "P_PERIOD_METRIC_MUST_EXPOSE_A_STABLE",
+    "P_ASSERT_VALID_AFTER_THE_FIRST_COMPLETE",
+    "P_RESET_OR_DISABLE_MUST_RESTART_THE"
+  ],
+  "schema_version": "v4-harness-spec-v1",
+  "source_contract": {
+    "checker_profile_sha256": "c42ea8cd31f1b9257fef6acceb3d489bdbf26b8511930a82a9d4c4c44781f2f1",
+    "family_spec_sha256": "1469ed97771bc37e05a88b7460ae54cb22f6885714e7c2f5b8a6a37b24896f5d"
+  },
+  "task_id": "v4-383"
+}

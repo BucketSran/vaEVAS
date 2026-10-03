@@ -1,0 +1,79 @@
+{
+  "family_id": "109",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "40e41d0c8eac567dc3b2215de12acad82e2167d790dccdf40fe14c8630f497b6",
+        "fault_class": "fault_001_zero",
+        "mutation_bundle_sha256": "2f23ca4a4c6d278666adfa56f464659c7271e1c50c6c79fa770e98d06691d956",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Leaves stimulus, estimate, and valid outputs at zero.",
+        "violated_property_ids": [
+          "P_ZERO_INITIAL_ESTIMATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_no_valid/certification.json",
+        "certification_sha256": "3980ad2f75c21b3c6830c1fc5392301952e1c2396cb44d7c7c7b6d08daca56cb",
+        "fault_class": "fault_004_no_valid",
+        "mutation_bundle_sha256": "025178965b48e41a0a30b9e4dc84a2444d0bdc82abc8afc9d8a96a8c827a000b",
+        "mutation_id": "neg_004_no_valid",
+        "source_catalog_certification_path": "negative_variants/neg_004_no_valid/certification.json",
+        "trigger_condition": "Runs the search but never asserts the completion flag.",
+        "violated_property_ids": [
+          "P_SUCCESSIVE_STEP_HALVING",
+          "P_VALID_COMPLETION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_step_halving/certification.json",
+        "certification_sha256": "2e3b2b13f984be7d800e4074b0ef923e9c22c02bf9ac4cf47343f93d1ff1ae9c",
+        "fault_class": "fault_003_no_step_halving",
+        "mutation_bundle_sha256": "e9caf99090bcab65a537197ea25d517a03498447c39355ce336927fde4171453",
+        "mutation_id": "neg_003_no_step_halving",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_step_halving/certification.json",
+        "trigger_condition": "Uses a constant search step rather than a halving search.",
+        "violated_property_ids": [
+          "P_DECISION_DIRECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "daa551791d2a4294769700db23c9b4abf0c4e2ddf293ba840e2161d40a735cd8",
+        "fault_class": "fault_005_metric_scale_low",
+        "mutation_bundle_sha256": "5c45383c4316220e2011d8067d2e8c61f981d79f039d950b7e9f259c05e6cc9e",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Reports a scaled-down offset estimate.",
+        "violated_property_ids": [
+          "P_SYMMETRIC_DIFFERENTIAL_STIMULUS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_direction/certification.json",
+        "certification_sha256": "60bfc66106ee3887e568f1cbe0ef9a410c0d4ee50dee95aa3c80cfcd1a57be20",
+        "fault_class": "fault_002_wrong_direction",
+        "mutation_bundle_sha256": "b0d60805ab292d0ae26b68d29d8218390b4419d0ca29f428349a5b402c453b67",
+        "mutation_id": "neg_002_wrong_direction",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_direction/certification.json",
+        "trigger_condition": "Moves the estimate in the opposite direction from comparator decisions.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_UPDATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_zero",
+    "canonical_dut_id": "109",
+    "hashes": {
+      "mutation_catalog_sha256": "ecfd2e08a0ddb4e931fe7e618b3584b14e333b7d04ac8a453582f6bb1289282d",
+      "score_deck_sha256": "f375c80f3344dd4ae1675d30292ef14c90701ef66eb6590036716a231d560d0b",
+      "task_certification_sha256": "6c1031276dc8aa189d0c7fff88cc8064af7c1cc2987aa5a7d642ab3a3a350bc9",
+      "task_record_sha256": "9dd53e15cea3fa04ccec2ec3dac59a962f967848241cb1234ad465f1030d13b5"
+    },
+    "release_dir": "109-comparator-offset-calibration-loop"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "track_hold_aperture.va"
+  ],
+  "canonical_dut_source_slug": "180-track-hold-with-droop-and-aperture",
+  "checker_task_id": "v4_180_track_hold_with_droop_and_aperture",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f7f65f7bfa4c60528e21d83fad76aa8d799c67bee850a1330da12e9e0b721d4f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "78f3918e9a6b901ff8ec1ec2a4eec6cd859b653ac505dc9ceb919a261a31727a",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d7dfe624b3b0a36db97480528e8c26675a45dd2a6308db5e653d9eccdd15ddf5",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "180",
+  "family_spec_sha256": "5bb14a6be7cbe6aa3207e8b0c24092a10b2f3ee2b8175ea74ce27a5757471a23",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "08ba1853c288f9df2f3aab02f6a05ec93da7c50092c8cce1afd13fb603290e36",
+  "public_contract": "tasks/1180-track-hold-with-droop-and-aperture-bugfix/public_contract.json",
+  "public_contract_sha256": "b9f298dbdd67b2c6f541cfbaf8f34704a4f2b2d8664d3e3ee22dd162d7f2127b",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1180-track-hold-with-droop-and-aperture-bugfix",
+  "task_id": "v4-1180"
+}

@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "e897146aa0ae496d658d03053930a476c079d1091ef4470e0ab8b246d34d4235",
+  "parameters": {},
+  "profile_name": "feedback",
+  "property_ids": [
+    "P_COMPUTE_THE_DIFFERENTIAL_SIGNAL_AS_V",
+    "P_COMPUTE_THE_DIFFERENTIAL_CONTROL_AS_V",
+    "P_SUBTRACT_SIGIN_OFFSET_FROM_THE_DIFFERENTIAL",
+    "P_MULTIPLY_THE_OFFSET_CORRECTED_SIGNAL_BY",
+    "P_CLAMP_THE_RESULT_TO_THE_PUBLIC",
+    "P_DRIVE_SIGOUT_WITH_THE_CLIPPED_TARGET"
+  ],
+  "public_visible": true,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {
+    "evas_profile": "balanced"
+  }
+}

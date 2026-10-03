@@ -1,0 +1,78 @@
+{
+  "family_id": "264",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "b6c7d981cc908aab5cd8d28a8f7e7f376eee1b8ff74efebd09508c8b4221e454",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "3117ca2312e8ed339752cb50d79b62d5fe751402a5d1f52551085c638e61f795",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "7d50c30b83f7195cceeeb290e73f89a88a5cbc528864453713e806c12768275e",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "16e49d7cc09953d5884e7e64ae51d7f1c8d5e6377761703d966ef3709cfd19cb",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "4bdf025b4d120b0e1a4cf80687d7753f63e3ab64e11341bd59b7612ecb7683ec",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ba1dbb6270f7c7df1465de9456a4612be4bf555d146afa42c3e5b17e77fb7a78",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "048e0df67bdc561707499c5acf9352b43081368d2a34443a7479d1896d349d0b",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "dab85d4c86ccd2b8eb54156443c1cf46d5b2d4f9df705b31959da3b3acdb6224",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_INITIALIZE_THE_HELD_BIAS_OUTPUT_FLAG"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "c6c2849ec26a9d9d76bfc139deb9dd5d8348e9bd19d48564c909d3953beecff2",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "5564c3d8ad4dbdd5cc21598c5f3ead1a7c154b0b2f6c70e41c280410f091809a",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "264",
+    "hashes": {
+      "mutation_catalog_sha256": "560a3174e4b93793123f7ca78a8d19a4470b4ff49c83cc1c2b849bf0cd8661f3",
+      "score_deck_sha256": "3e9bc25b917e6aa875ee1572476687aae39993b97d9b6e82c20b998af560a053",
+      "task_certification_sha256": "95480ed49338f7a8fbd6c0a4b0a654c0d6d611430b00290894b97c7f263d21b1",
+      "task_record_sha256": "46a8e04aefd332bd752576d130071190b1d2793e5f914b88ac7629a445bc96f6"
+    },
+    "release_dir": "264-enable-qualified-bias-hold"
+  }
+}

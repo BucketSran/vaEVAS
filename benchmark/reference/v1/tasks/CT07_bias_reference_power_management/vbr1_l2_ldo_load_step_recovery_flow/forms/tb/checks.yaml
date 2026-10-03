@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "load_step_transient_droop_visible"
+    - "closed_loop_recovery_after_step"
+    - "metric_marks_recovered_regulation"
+    - "load_monitor_tracks_step"
+    - "control_monitor_responds_to_droop"
+parity:
+  reference: "spectre"
+  status: "pending_fresh_dual_rerun"
+  notes:
+    - "Fresh dual rerun required after adding load_mon/ctrl_mon intermediate observability."

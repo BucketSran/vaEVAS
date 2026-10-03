@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "pa_compression_macro.va"
+  ],
+  "canonical_dut_source_slug": "035-pa-compression-macro",
+  "checker_task_id": "v4_035_pa_compression",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "386aeaa6f4c132721826cff8469c5682897233d7e1bdc83a1744e0d353f64a86",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "17f9eb322b1c5e966adab2c1e8b961904ad8efd3c2bd223a20ae8d4c83a5361d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "5b0674d2f4b9427147e657dcc0de54f667fafa7f755571a27d8566b683ba3faf",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "035",
+  "family_spec_sha256": "2632f9b862bf26e8d3e1ac708b444acea8af07144c5c9740d472c7dd46569ec9",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "2265ef3e456d1370593fc55eadc025afe73453348ca694886b324f2e6c398e5c",
+  "public_contract": "tasks/035-pa-compression-macro/public_contract.json",
+  "public_contract_sha256": "d3512613d7616b479468646bf57441b1c2822a62429a826b77b2c26ffa17be71",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/035-pa-compression-macro",
+  "task_id": "v4-035"
+}

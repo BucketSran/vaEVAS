@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "358-quadrature-phase-interpolator",
+  "checker_task_id": "v4_358_quadrature_phase_interpolator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3f19ba3dbc36d0ec04d8a2ed59c8179b4517d1fdbbe0da1ac01514696edd4e1c",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "70c1bd5aa7a309578b7081622ebc59efa1c8d1de413577f32b02bcdae1edc9c6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3f19ba3dbc36d0ec04d8a2ed59c8179b4517d1fdbbe0da1ac01514696edd4e1c",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "5f655ed562946247c3364f503e09661b946a0c35f8e9527c5de16f940628004b",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "1c2a6a0defb8f708b64660499111fbc6bb4490dc22a00e737c3454fa2e91963c"
+  },
+  "family_id": "358",
+  "family_spec_sha256": "4f3348c1878040f9ec850823b712b36c254e3a03af5a9206abb609f939da422f",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "0a0f7a8ab50dfa1519c711ceb73516726fa96f1666b43eff03d15c5b2e1b162a",
+  "public_contract": "tasks/858-quadrature-phase-interpolator-testbench/public_contract.json",
+  "public_contract_sha256": "9147bc5d2484988ed742a4095a7b483ceaf2d3136dc6fc72cdcb8bb5c3b8dc44",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/858-quadrature-phase-interpolator-testbench",
+  "task_id": "v4-858"
+}

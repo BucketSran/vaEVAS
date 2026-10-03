@@ -1,0 +1,255 @@
+{
+  "schema_version": "v4-r51-spectre-checker-alias-recertification-v1",
+  "status": "pass",
+  "scope": {
+    "policy": "Direct Cadence Spectre AX correct-plus-five replay for every public DUT and bugfix alias bound to the twelve checker families whose executable checker behavior changed in r51. Existing fresh testbench-form evidence completes the three-form matrix.",
+    "execution_revision": "10c84b2fad17cc245698fb8fde06a95aef751980",
+    "checker_family_ids": [
+      "077",
+      "081",
+      "091",
+      "102",
+      "193",
+      "195",
+      "220",
+      "249",
+      "303",
+      "304",
+      "312",
+      "381"
+    ],
+    "forms": [
+      "dut",
+      "testbench",
+      "bugfix"
+    ],
+    "public_task_count": 36,
+    "direct_alias_rerun_task_count": 24,
+    "existing_testbench_evidence_task_count": 12
+  },
+  "run": {
+    "started_at": "2026-07-23T06:52:32+08:00",
+    "finished_at": "2026-07-23T06:58:10+08:00",
+    "spectre_backend": "sui-direct",
+    "spectre_mode": "ax",
+    "route": "thu-jin -> thu-wei",
+    "ahdlcmi_cache_requested": false,
+    "ahdlcmi_cache_enabled": false,
+    "group_reports": [
+      {
+        "group": "a",
+        "task_ids": [
+          "v4-077",
+          "v4-1077",
+          "v4-081",
+          "v4-1081",
+          "v4-091",
+          "v4-1091"
+        ],
+        "case_count": 36,
+        "pass_count": 36,
+        "summary_sha256": "ee153066d896464c5436a8bd78c9be91ab4e5d7f93a1755e2c97ce2ffa7f43af"
+      },
+      {
+        "group": "b",
+        "task_ids": [
+          "v4-102",
+          "v4-1102",
+          "v4-193",
+          "v4-1193",
+          "v4-195",
+          "v4-1195"
+        ],
+        "case_count": 36,
+        "pass_count": 36,
+        "summary_sha256": "f1e9480bcbbba4a76e541583516c423876b60f08c597641722453c873be1feb2"
+      },
+      {
+        "group": "c",
+        "task_ids": [
+          "v4-220",
+          "v4-1220",
+          "v4-249",
+          "v4-1249",
+          "v4-303",
+          "v4-1303"
+        ],
+        "case_count": 36,
+        "pass_count": 36,
+        "summary_sha256": "fc11ef32574624b4145f4291d3449a592a5c05c7aff43eab48cfa82573034a54"
+      },
+      {
+        "group": "d",
+        "task_ids": [
+          "v4-304",
+          "v4-1304",
+          "v4-312",
+          "v4-1312",
+          "v4-381",
+          "v4-1381"
+        ],
+        "case_count": 36,
+        "pass_count": 36,
+        "summary_sha256": "a77ca1dab0e6a58f2b12c855d8289da3672d01b3cdf4bcbe45948d04fe8dde9e"
+      }
+    ]
+  },
+  "direct_alias_validation": {
+    "task_count": 24,
+    "case_count": 144,
+    "spectre_simulation_success_count": 144,
+    "spectre_expected_classification_count": 144,
+    "correct_pass_count": 24,
+    "mutation_kill_count": 120,
+    "mutation_count": 120,
+    "invalid_run_count": 0,
+    "retry_count": 0,
+    "csv_duplicate_time_value_count": 0,
+    "runner_warning_count": 0,
+    "raw_spectre_warning_occurrence_count": 288,
+    "raw_spectre_warning_codes": {
+      "VACOMP-2435": 144,
+      "SPECTRE-592": 144
+    },
+    "untriaged_warning_count": 0
+  },
+  "existing_testbench_evidence": [
+    {
+      "artifact": "SPECTRE_CHECKER_REPAIR_RECERTIFICATION.json",
+      "task_ids": [
+        "v4-577",
+        "v4-591",
+        "v4-695",
+        "v4-720",
+        "v4-749",
+        "v4-803",
+        "v4-804",
+        "v4-812",
+        "v4-881"
+      ],
+      "case_count": 54,
+      "correct_pass_count": 9,
+      "mutation_kill_count": 45,
+      "mutation_count": 45
+    },
+    {
+      "artifact": "SPECTRE_CHANGESET_PARITY.json",
+      "task_ids": [
+        "v4-581",
+        "v4-602",
+        "v4-693"
+      ],
+      "case_count": 18,
+      "correct_pass_count": 3,
+      "mutation_kill_count": 15,
+      "mutation_count": 15
+    }
+  ],
+  "combined_direct_spectre_validation": {
+    "checker_family_count": 12,
+    "public_task_count": 36,
+    "case_count": 216,
+    "spectre_simulation_success_count": 216,
+    "spectre_expected_classification_count": 216,
+    "correct_pass_count": 36,
+    "mutation_kill_count": 180,
+    "mutation_count": 180,
+    "invalid_run_count": 0,
+    "untriaged_warning_count": 0
+  },
+  "joint_validation_boundary": {
+    "evas_family_representative_case_count": 72,
+    "evas_expected_classification_count": 72,
+    "spectre_family_representative_case_count": 72,
+    "spectre_family_representative_expected_classification_count": 72,
+    "alias_specific_evas_rerun": false,
+    "interpretation": "Fresh EVAS/Spectre verdict parity exists at one testbench representative per checker family. The additional 144 Spectre cases directly certify both remaining public aliases with their own decks, solutions, profiles, and exact-five mutation overlays. This is checker-form coverage, not sample-by-sample cross-simulator waveform identity."
+  },
+  "families": [
+    {
+      "family_id": "077",
+      "checker_id": "v4_077_dither_noise_like_deterministic_source",
+      "task_ids": ["v4-077", "v4-577", "v4-1077"]
+    },
+    {
+      "family_id": "081",
+      "checker_id": "v4_081_adpll_ratio_hop_timer",
+      "task_ids": ["v4-081", "v4-581", "v4-1081"]
+    },
+    {
+      "family_id": "091",
+      "checker_id": "v4_091_chopper_stabilized_differential_amplifier",
+      "task_ids": ["v4-091", "v4-591", "v4-1091"]
+    },
+    {
+      "family_id": "102",
+      "checker_id": "v4_102_clocked_sine_source",
+      "task_ids": ["v4-102", "v4-602", "v4-1102"]
+    },
+    {
+      "family_id": "193",
+      "checker_id": "v4_193_pfd_tdomain_reset_window",
+      "task_ids": ["v4-193", "v4-693", "v4-1193"]
+    },
+    {
+      "family_id": "195",
+      "checker_id": "v4_195_clock_sample_1600n_sequencer",
+      "task_ids": ["v4-195", "v4-695", "v4-1195"]
+    },
+    {
+      "family_id": "220",
+      "checker_id": "v4_220_pfd_up_down_state",
+      "task_ids": ["v4-220", "v4-720", "v4-1220"]
+    },
+    {
+      "family_id": "249",
+      "checker_id": "v4_249_pfd_active_low_reset",
+      "task_ids": ["v4-249", "v4-749", "v4-1249"]
+    },
+    {
+      "family_id": "303",
+      "checker_id": "v4_303_differential_pair_gm_limiter",
+      "task_ids": ["v4-303", "v4-803", "v4-1303"]
+    },
+    {
+      "family_id": "304",
+      "checker_id": "v4_304_common_gate_tia_front_end",
+      "task_ids": ["v4-304", "v4-804", "v4-1304"]
+    },
+    {
+      "family_id": "312",
+      "checker_id": "v4_312_interleaved_adc_skew_monitor",
+      "task_ids": ["v4-312", "v4-812", "v4-1312"]
+    },
+    {
+      "family_id": "381",
+      "checker_id": "v4_381_fm_vco_modulation_source",
+      "task_ids": ["v4-381", "v4-881", "v4-1381"]
+    }
+  ],
+  "companion_fixture_validation": {
+    "task_id": "v4-686",
+    "checker_id": "v4_186_sarfend_logic_4b",
+    "status": "pass",
+    "correct": "pass",
+    "mutations_killed": "5/5",
+    "spectre_simulations": "6/6",
+    "classification": "mutation-fixture executability repair; not a checker-semantic alias family"
+  },
+  "latest_checker_revision_coverage": {
+    "execution_revision": "46a3ccaf2de5b9fd9e97fe622b24dd8431b6b512",
+    "superseding_artifact": "SPECTRE_AFFINE_CHECKER_RECERTIFICATION.json",
+    "superseded_family_ids": [
+      "303",
+      "304",
+      "312"
+    ],
+    "task_count": 9,
+    "case_count": 54,
+    "correct_pass_count": 9,
+    "mutation_kill_count": 45,
+    "mutation_count": 45,
+    "interpretation": "The superseding artifact replaces the earlier results for all three forms of families 303, 304, and 312 after their affine timing checker changes. The remaining nine checker families retain the original direct evidence because their executable inputs did not change."
+  },
+  "claim_boundary": "Together with SPECTRE_AFFINE_CHECKER_RECERTIFICATION.json, this artifact establishes direct correct-plus-five Spectre classification for all 36 public task forms bound to the twelve checker families repaired in r51, plus references the separately verified v4-686 fixture repair. It does not claim alias-specific EVAS reruns, sample-by-sample waveform identity, full 400-family Spectre recertification, or inclusion of supplemental Spectre evidence in the formal release seal."
+}

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_THERMOMETER_POLARITY satisfy the public contract; fault class polarity_or_direction_error is rejected",
+    "observed": "EVAS: P_CLOCKED_SELECTED_THRESHOLD_TAPS hold_mismatch dout0@2.260ns=0.90000 expected=0.00000",
+    "violated_property_ids": [
+      "P_THERMOMETER_POLARITY"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_154_flash_adc_threshold_taps",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 2323
+  },
+  "family_id": "154",
+  "inputs": {
+    "checker_profile_sha256": "55f7dab399b70bdbb513085f04b905121a05489065752fa1454e6838d7d18b46",
+    "harness_spec_sha256": "53372ae9707f7d354be2644e67ba7d8f89d9e851b19df39521911855761646c4",
+    "mutation_bundle_sha256": "41bc930d94a36a6c00033222abb81aaca5999e5a71c4e8e3202d868786771775",
+    "profile_sha256": "eda03ce3d917eff9f01912101adcdc37e59efe4db2d3e188c2e7e902bd3d27e0"
+  },
+  "mutation_id": "neg_003_inverted_outputs",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "deterministic_jittered_clock.va"
+  ],
+  "canonical_dut_source_slug": "070-jittered-clock-source-deterministic",
+  "checker_task_id": "v4_070_jittered_clock_source_deterministic",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "372bd7b9758851a67dffd51dbc9d1586c77bbcb8752ca1b60db576b3c3aee742",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fd2db87a34555a23f4a58fc52d1a6b52dd6d08e774a9a0dab91e6a5f6ee3418d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "56089292c61d9394213b696cbdb9a6d4caaea7c56b2f27572788ad847bf6076b",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "070",
+  "family_spec_sha256": "6f79fc720d0568a1cb011a2ecbb18104a4fd7b53256a53ecc03e39d1ce5c8def",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "95b672f61156972578bc589b39dc9ef9ce5650ae84d32a26e06ae4f44349bb49",
+  "public_contract": "tasks/1070-jittered-clock-source-deterministic-bugfix/public_contract.json",
+  "public_contract_sha256": "f2b55e679dd63624b67e8be8556750336bfe4cb10ab54e30435963ea480b4c84",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1070-jittered-clock-source-deterministic-bugfix",
+  "task_id": "v4-1070"
+}

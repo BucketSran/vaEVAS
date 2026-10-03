@@ -1,0 +1,18 @@
+syntax:
+  must_include:
+    - "@(final_step)"
+    - "@(cross("
+    - "$fopen"
+    - "$fwrite"
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "ref_edges_counted_on_expected_grid"
+    - "metric_out_normalizes_final_edge_count"
+    - "final_step_writes_candidate_metric_file"
+parity:
+  required: true
+  tolerance_notes: "Task-aware parity compares the finalized metric_out waveform; EVAS behavior checking also requires candidate.out with the expected count."

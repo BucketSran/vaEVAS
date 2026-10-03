@@ -1,0 +1,38 @@
+{
+  "id": "vbr1_l2_weighted_sar_adc_dac_loop_tb",
+  "task_id": "vbr1_l2_weighted_sar_adc_dac_loop_tb",
+  "release_entry_id": "vbr1_l2_weighted_sar_adc_dac_loop",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "dac_weighted_8b.va",
+    "sar_adc_weighted_8b.va",
+    "sh_ideal.va",
+    "tb_sar_adc_dac_weighted_8b_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "sar_bit_trial_sequence_visible",
+    "trial_dac_matches_trial_code_monitor",
+    "comparator_decision_matches_sample_and_trial",
+    "sar_adc_code_range_sufficient",
+    "sar_adc_unique_code_count",
+    "sar_code_matches_sampled_input",
+    "dac_output_matches_weighted_code",
+    "code_monotonic_with_sampled_input",
+    "dac_output_in_range"
+  ],
+  "source": "tb_companion_from_e2e"
+}

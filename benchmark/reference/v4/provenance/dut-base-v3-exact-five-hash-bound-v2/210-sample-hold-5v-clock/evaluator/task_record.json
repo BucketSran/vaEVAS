@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "210",
+  "checker_task_id": "v4_210_sample_hold_5v_clock",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "f2a84e3a7861767110c5176a7b0c2ae2062063688f035fdebff104943af56590",
+    "checker_profile.json": "45a59a0c4d3c05b7718062a7fe017619416f31de50e6bf090f8e3b49c2b286a6",
+    "derivation_manifest.json": "0cff1030686fcfe5158ef4bf4de0e6b0c643103a99c723a9a7a918a9932bcd37",
+    "family_spec.json": "484cbcef68817e92c5b2c51c4b18af1e933cf90369068c7677084bf7e90f04df",
+    "harness_spec.json": "bd7e897de22514a3ad333f3c57392919ab5035d5a05cf8544fed50b7af489fd3",
+    "mutation_catalog.json": "e447f671949d11a55a964e941cab0354bb28b378c931477ecb4a47786861ad97",
+    "profiles/feedback.json": "f7b0e04d1e2393c7f19c02ee8899f40cba2a25c9be3f0eec39b3e7e3e8bfd5bf",
+    "profiles/score.json": "25cb61cde824b4b638a14a57f84a84bb242eba9780ba6d8717d607ebf10857f9",
+    "score_tb.scs": "0bff3e88bccb1898a9bd00da128968ce8a817b9ad58ab1b11fa7888a27debb8a",
+    "solution_tree": "016806a4e7e87087c11145264716437929742d8513906fddb310a4082afee73b",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d9d24ed9b057e3b0c7ae45ac080bf0d167039aee2aad875bee301a6f50ae922c",
+    "instruction.md": "f21d0f7d5b9f62b657600e4a5eb1de59897f1afd8ae667434bb7c047e37da796",
+    "public_contract.json": "38d075325f69a896adca5c2b2b3534f3f295169f68d0b95c0ffce5a133f2650c"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "f2a84e3a7861767110c5176a7b0c2ae2062063688f035fdebff104943af56590"
+  },
+  "release_dir": "210-sample-hold-5v-clock",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "252-sample-hold-5v-clock",
+  "support_root": "",
+  "target_artifacts": [
+    "sample_hold_5v_clock.va"
+  ]
+}

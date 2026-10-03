@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "132",
+  "checker_task_id": "v4_132_analog_multiplier",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9179ac891c2283fead03882cbed587289a9058e98084adfee0f445210f9a27ee",
+    "checker_profile.json": "d7705833e82d53f0fca3403eb9e84eddd52b7f3ee1cb385185dd8df8c95cc377",
+    "derivation_manifest.json": "2e03677d4e7cb8d189d8aff2827ae228a54e7b04ac202406dc83314198b0aaa9",
+    "family_spec.json": "443c39992e293cfb3335ccc9be32fbaa7ac2e644a82bed9bf13a523146a28f07",
+    "harness_spec.json": "6edee8fee673547546098f0d0a9c6de226314ecc3f5961ebaebe201b87aada86",
+    "mutation_catalog.json": "0be2fa6543f91accc7726cd9e59ceac04b48a80036453beb124ec11c2024d311",
+    "profiles/feedback.json": "4e8fd948c8a2745318e4c88e172b91a5ac9e755e875de2af4ed33aa2fbd9ce09",
+    "profiles/score.json": "c3bfbc49a5c1f65dd860cb093b63b833c8b3830d2b2e53ff659953fa25a3e115",
+    "score_tb.scs": "b9adac6ab09a3eea2365f4bdf1e1eae16f4e6032605caae647f2a92e614a85f0",
+    "solution_tree": "4a979396c39b0844c8f05e7e4a96e502f9752c3e56006649c25fa667c08b6ede",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "e1dc4dd957226fdc46c7ff6947d4e175b55ed3d0fd239d55ede38b3da06d2086",
+    "instruction.md": "1f1c4cd5c23bf4777d50612d1bb046b6b08cfb8e9315ab864991b57460de0f5c",
+    "public_contract.json": "ad8d84f22258ecbb55df811223877c9be4269968cffeab655d047fa670fb05bf"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9179ac891c2283fead03882cbed587289a9058e98084adfee0f445210f9a27ee"
+  },
+  "release_dir": "132-analog-multiplier",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "154-analog-multiplier",
+  "support_root": "",
+  "target_artifacts": [
+    "analog_multiplier_gain.va"
+  ]
+}

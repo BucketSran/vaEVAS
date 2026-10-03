@@ -1,0 +1,40 @@
+{
+  "canonical_dut_id": "351",
+  "checker_task_id": "v4_351_pll_timing_monitor_system",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "fda871d7e5be71097dd29043304a04e24dc0a605a88eec38b890076122df55cd",
+    "checker_profile.json": "242e3c4acf782059ab3b5918a3ae74d91b88b0f93d8d4f196ce10c3f0cdd3215",
+    "derivation_manifest.json": "6bd651ecbda345c57795173c9e91da47931b1e96140f0c223aa29467a8ba82a6",
+    "family_spec.json": "ef0c80f7ac0211a174c187b5825cebdc71a40744c0c48373cd5765f35dd65948",
+    "harness_spec.json": "821f2fb96a06ad4f5318324d2da1b0e533ca26cad4a86eea2133ac7cfedffaed",
+    "mutation_catalog.json": "f3380a14ee3f773775c1a5160d9ba99a4836a2129b39e544ca653525ae7666dd",
+    "profiles/feedback.json": "699b4e2bf026200d6363304984f175428d226ee343ab6364ddf079c31a08c11e",
+    "profiles/score.json": "af4e1416f0ef84559def13257755eda68de40f922c2bfbe2512a1494d5d5bc0f",
+    "score_tb.scs": "ec2f079b2d0d4e8b4b71e0d95e082a096c4c1dd237c26540048843b47d60f961",
+    "solution_tree": "c110830fb9e5fde42430148675b230e442e2076745830d7c02d317ff535d3887",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "2ed1f936f55162d68d62de1daea5b3c38fdf6856c4efd9b42c17dbf73cf5c0d5",
+    "instruction.md": "7c5c3b4603fe14802d17faa30383569883d642a0333c5c579ce8779f5e121f4e",
+    "public_contract.json": "1967522c2253aa010ef8026459507c6a743193a4fd76df0d1d503b028ebe4fd1"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "fda871d7e5be71097dd29043304a04e24dc0a605a88eec38b890076122df55cd"
+  },
+  "release_dir": "351-pll-timing-monitor-system",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "910-pll-timing-monitor-system",
+  "support_root": "",
+  "target_artifacts": [
+    "pll_timing_monitor_top.va",
+    "phase_detector.va",
+    "divider.va",
+    "lock_detector.va",
+    "reacquire_timer.va"
+  ]
+}

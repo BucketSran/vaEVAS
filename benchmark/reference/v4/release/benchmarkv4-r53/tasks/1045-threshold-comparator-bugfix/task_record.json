@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "comparator.va"
+  ],
+  "canonical_dut_source_slug": "045-threshold-comparator",
+  "checker_task_id": "v4_045_threshold_comparator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "242cd8926241c86fee84abcc309888cfb7def37df30730882fe3dc3f388fceff",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "673049c3c81b645ec0ed1ff7bbd7a82796cb1af24a7408ff627d4aeb04e9005e",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "29d6fcd25d6d689e1b5f294dd8f5977f3406d4edd313bb088736a447076d2cef",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "045",
+  "family_spec_sha256": "7ae5aef2511a37e9cdb8cc5d6be1a50f5bf4a574076e4eb12c42279e4a9ad591",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "21b4765f990acd5be771c357ac48f6e7700371bd3c5d5aa90498aa5eb4c51216",
+  "public_contract": "tasks/1045-threshold-comparator-bugfix/public_contract.json",
+  "public_contract_sha256": "ff4ed8baa6d25968fdb34a8204a0eb51114fc1b1a3e4e20f229e5b5cced065d8",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1045-threshold-comparator-bugfix",
+  "task_id": "v4-1045"
+}

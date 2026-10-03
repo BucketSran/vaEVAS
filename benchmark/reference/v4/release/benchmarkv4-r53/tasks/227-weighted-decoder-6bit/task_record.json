@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "weighted_decoder_6bit.va"
+  ],
+  "canonical_dut_source_slug": "227-weighted-decoder-6bit",
+  "checker_task_id": "v4_227_weighted_decoder_6bit",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "7108c026b4ed080d863561b1b4ce70b986a7c4f18f6ddceeb71b83532ecd980f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1968b2e5c3502adaf8a5845623efd7bcce076fc83e708b9b650ba48120b8c6d4",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9365b61f041a8f74c045ee8821ea5db360b0cd00b8549423a2bbf2296c40eb86",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "227",
+  "family_spec_sha256": "b7587b595525895325c66bab77330e636d39ba322bf3388567ed16b4f2c2264f",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "aa2947052950876a5e72041efa308a7a022f007f4c917ce909faae8d50f29c91",
+  "public_contract": "tasks/227-weighted-decoder-6bit/public_contract.json",
+  "public_contract_sha256": "d138a3773c58f66be1460f6fe4c4a6ee3fe2c2482d4485b31e9c66e6e34fd9e2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/227-weighted-decoder-6bit",
+  "task_id": "v4-227"
+}

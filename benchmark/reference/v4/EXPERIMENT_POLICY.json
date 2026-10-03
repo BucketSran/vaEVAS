@@ -1,0 +1,9 @@
+{
+  "schema_version": "v4-experiment-policy-v1",
+  "agent_wall_time_seconds": 1800,
+  "timeout_finalization": {
+    "artifact_source": "latest_complete_declared_submission",
+    "score_complete_artifact": true,
+    "termination_reason": "agent_timeout"
+  }
+}

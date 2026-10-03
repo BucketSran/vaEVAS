@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "015",
+  "checker_task_id": "v4_015_binary_weighted_voltage_dac",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "94cd3a5d09f2f8f8f76e28b83576e52a18939cbf075723763fa12a84198cdac4",
+    "checker_profile.json": "4c772443cbcc8b747a1adfd950b199509cf7ab1d30da8125d51ab44c87952aa1",
+    "derivation_manifest.json": "15b5147b6eb269bf32c51962ebfb0e2467212b4b02ed443a9e61cc90a4735791",
+    "family_spec.json": "e9e246939f63a42840fc429a0f1eaff407bb5350c935b38ce0e657541cadecaa",
+    "harness_spec.json": "6cbecab72416ad3d14e7bf9aacc43d1af2d3d47df493b70f4c80290a48b21e57",
+    "mutation_catalog.json": "54494820bcb8a443ad1154c0b18111769a84b97db94d9dab78fa649be80253e5",
+    "profiles/feedback.json": "7ac8128541ef6d1a85871458ddff2b2f1978bce4f35020cc43e903027a2627a1",
+    "profiles/score.json": "9c874abe9aca540d0db9dc499da73b753f36b99ff8aecc3fe75eea04a0a54179",
+    "score_tb.scs": "5db1a9aed97e039baa8be77276e81d7b8c6877d4759d7e17f7ee7dc217887e42",
+    "solution_tree": "1ff3a35349ce0bf84e840e4c82b3e601d6673755d10b71de69c1587c6de46d7d",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "d1877ae34fea76adaa56a448df92ffb24b73ab9ec1c173007ada3887354e4856",
+    "instruction.md": "e5b82580fbb99b56dbbc58bcedef6498743a38fb911bbca07100ea2b326073ed",
+    "public_contract.json": "0cd28602ce1871688bdfef2bd2eb3a4224b4495fb69958e6385d05db67a220d2"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "94cd3a5d09f2f8f8f76e28b83576e52a18939cbf075723763fa12a84198cdac4"
+  },
+  "release_dir": "015-binary-weighted-voltage-dac",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "016-binary-weighted-voltage-dac",
+  "support_root": "",
+  "target_artifacts": [
+    "simple_binary_voltage_dac_4b.va"
+  ]
+}

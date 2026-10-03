@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "time_diff_detector.va"
+  ],
+  "canonical_dut_source_slug": "117-time-diff-detector",
+  "checker_task_id": "v4_117_time_diff_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "de6f5bd2a1b0651a3513b04224c2f67feeead460f5e1aa9898c891b5e56efcba",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "40da8fa618577443a26b9971970aa9586be7e88706a5a1f3ab0bcd8c7975dd80",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "e3ecaf0b412c72b74d3ab008d8e342be22efddb4985c09d498f57cd8656e995e",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "117",
+  "family_spec_sha256": "298a47bd335bf0143cda50b424f6396da6f83344220476573bc1d0c40c0af1ae",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "65737bdfe60ee587f199469e11bc80ea4337e6f5551c6382d5cb231b38abf3a4",
+  "public_contract": "tasks/1117-time-diff-detector-bugfix/public_contract.json",
+  "public_contract_sha256": "d5f0c3734147ba1703e0d30c6409e2de587483bf161ce7e4c48d6323cd15f165",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1117-time-diff-detector-bugfix",
+  "task_id": "v4-1117"
+}

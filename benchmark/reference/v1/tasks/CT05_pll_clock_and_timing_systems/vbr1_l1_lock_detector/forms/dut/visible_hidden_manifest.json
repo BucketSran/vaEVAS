@@ -1,0 +1,48 @@
+{
+  "form": "dut",
+  "form_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/dut",
+  "hidden": {
+    "checks": true,
+    "formal_tests": [
+      "tb_lock_detector_ref.scs"
+    ],
+    "gold_va": [
+      "lock_detector.va"
+    ],
+    "negative_cases": true
+  },
+  "hidden_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/dut/hidden",
+  "legacy_forms_compatibility": "preserved",
+  "migration_set": "release_dut49",
+  "release_entry_id": "vbr1_l1_lock_detector",
+  "status": "visible_hidden_structure_created",
+  "visible": {
+    "directions": {
+      "fb_clk": "input",
+      "lock": "output",
+      "ref_clk": "input",
+      "rst_n": "input"
+    },
+    "hidden_deleted_validation": true,
+    "ports": [
+      "ref_clk",
+      "fb_clk",
+      "rst_n",
+      "lock"
+    ],
+    "prompt": true,
+    "public_smoke": {
+      "hidden_dependency": false,
+      "runner": "visible/tests/run_visible_smoke.py",
+      "testbench": "visible/tests/tb_visible_smoke.scs"
+    },
+    "public_smoke_evidence": "evidence:visible_smoke_79_hidden_deleted_20260624",
+    "public_smoke_status": "validated_hidden_deleted_pass",
+    "starter_files": [
+      "lock_detector.va"
+    ],
+    "vectors": {},
+    "public_smoke_evidence_scope": "private_certification_report"
+  },
+  "visible_dir": "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l1_lock_detector/forms/dut/visible"
+}

@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "191",
+  "checker_task_id": "v4_191_sar_das_logic_6b",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "55a45838231719bd5ab1dde9a980a9605b17bfc91ed0a2a92757608ab574b214",
+    "checker_profile.json": "bc92590538d54272982d29fd1bfd3d3f45b82b52e21905397375fcbea7e0ebd7",
+    "derivation_manifest.json": "748362aac9b6e576ff67a81f1b65f97078e3612613756328520740084206f15a",
+    "family_spec.json": "008f0242c95ea1fb8d7f7583408f54a2f8f140c574f734722cf4d8bd5a3249b7",
+    "harness_spec.json": "8177eaa8c5b59aa57b17270edef7f3fb2cf1c86644caeabd267edd02be7a460c",
+    "mutation_catalog.json": "718f6bb66627dcc5b43d71e28e2da971b3c65844554863ed375a0fcf70888588",
+    "profiles/feedback.json": "1358a2071bed28b75dd54ef6afbca5f7cc0cc02d45baf07b11149352319b5237",
+    "profiles/score.json": "48f1c407dfb69520691f0b2cc1d0ff2a778cb05c4f6321c851fcedb7e1f77519",
+    "score_tb.scs": "fe327b72c253644653f8b8a1477f299b5743044038fc208ad144725757784fc7",
+    "solution_tree": "401e88bd529ba6504cb91511934a69109322d2461405718fec59366a2f3ace8a",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "63f796bc62cd723098d75c4a5691dcedc4453e2ec8221e0556b2a9079c3c7975",
+    "instruction.md": "58efa5dcaf433e745d3eedd717eaddfc0479c32beb32e3290ba6ea29e6632180",
+    "public_contract.json": "a6e754911f2d544e5da915c6564569cf71f007d0428907a74bd471bbd73d4792"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "55a45838231719bd5ab1dde9a980a9605b17bfc91ed0a2a92757608ab574b214"
+  },
+  "release_dir": "191-sar-das-logic-6b",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "229-sar-das-logic-6b",
+  "support_root": "",
+  "target_artifacts": [
+    "sar_das_logic_6b.va"
+  ]
+}

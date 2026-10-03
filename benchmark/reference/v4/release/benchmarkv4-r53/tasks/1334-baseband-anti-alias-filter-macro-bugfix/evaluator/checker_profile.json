@@ -1,0 +1,49 @@
+{
+  "access": "private_checker_backend",
+  "checker_source_public": false,
+  "checker_task_id": "v4_334_baseband_anti_alias_filter_macro",
+  "contract": {
+    "public_contract": "public_contract.json",
+    "source_task_id": null,
+    "task_id": "v4_334_baseband_anti_alias_filter_macro"
+  },
+  "diagnostic_contract": {
+    "event_context": "stimulus_relative",
+    "redaction": "public_observables_only",
+    "required_fields": [
+      "property_diagnostics",
+      "mismatch_count",
+      "expected",
+      "observed",
+      "event_context"
+    ],
+    "schema_version": "v4-checker-diagnostic-v1"
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_DRIVE",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_UPDATE_VOUT_AS_A_FIRST_ORDER",
+    "P_HIGHER_BANDWIDTH_CODE_MUST_MOVE_VOUT",
+    "P_EXPOSE_THE_ACTIVE_BANDWIDTH_CODE_ON"
+  ],
+  "schema_version": "v4-checker-profile-v1",
+  "score_and_feedback_share_checker": true,
+  "shared_by": [
+    "test_feedback/public_tb.scs",
+    "evaluator/score_tb.scs"
+  ],
+  "trace_contract": {
+    "extra_trace_signals": [],
+    "public_observables": [
+      "vin",
+      "clk",
+      "rst",
+      "enable",
+      "bw_1",
+      "bw_0",
+      "vout",
+      "bandwidth_metric",
+      "valid"
+    ]
+  }
+}

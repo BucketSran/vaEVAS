@@ -1,0 +1,36 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "transition("
+    - "vos"
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "clocked_negative_diff_latches_low_output"
+    - "clocked_below_offset_positive_diff_latches_low_output"
+    - "clocked_above_offset_positive_diff_latches_high_output"
+    - "output_decisions_match_positive_offset_polarity"
+    - "expected_safe_window_sequence_LLLHHLL"
+  sample_times_ns:
+    - 1.5
+    - 5.5
+    - 9.5
+    - 13.5
+    - 17.5
+    - 21.5
+    - 25.5
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: offset comparator decision polarity is reversed."
+parity:
+  required: true
+  status: "pending"
+  tolerance_notes: "Fresh dual evidence required after offset staircase/checker tightening; decision samples are taken after clock edges and away from input transitions."

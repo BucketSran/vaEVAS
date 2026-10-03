@@ -1,0 +1,78 @@
+{
+  "family_id": "192",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_invert_decision/certification.json",
+        "certification_sha256": "748a40b5999b25cf6074a117b7ae8a779d162ee9a6398cf6c8b915b21eaf0a58",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "6b8538f5f3693f139205ed002766c1a14d639dad783651e9d44d468d4cabf3c8",
+        "mutation_id": "neg_002_invert_decision",
+        "source_catalog_certification_path": "negative_variants/neg_002_invert_decision/certification.json",
+        "trigger_condition": "Stores comparator decisions with inverted dcmpp/dcmpn polarity.",
+        "violated_property_ids": [
+          "P_COMPARATOR_PULSE_DECISION_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_step_decrement/certification.json",
+        "certification_sha256": "8dacc778eb424571d6f37604db0c337cba375eea4b0a5c7d488769c3a6a5515b",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "21a21dd4cb19addc7c20ab4b1fbedceb797f07adafc1ff7bf7a21860f2de0941",
+        "mutation_id": "neg_003_no_step_decrement",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_step_decrement/certification.json",
+        "trigger_condition": "Does not advance the SAR step when comparator outputs fall.",
+        "violated_property_ids": [
+          "P_STEP_ADVANCE_ON_COMPARATOR_FALL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_cmpck/certification.json",
+        "certification_sha256": "fcba4e45c0d444d35adb87002c7fee2157bacbf798fbb5862124cc4e916f15fd",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6d827222b49cbd440b11878b5e4305d05cd6e1dd6cf940e5846411216d4c6e79",
+        "mutation_id": "neg_004_half_cmpck",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_cmpck/certification.json",
+        "trigger_condition": "Drives cmpck at half supply amplitude.",
+        "violated_property_ids": [
+          "P_CMPCK_TIMING_AND_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "82c7a2366fb91010ed16e09d54ce97a944759cbe9110a804261c6c35487b7466",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "f7450cbb368820eaa49019756d38a09a90b17dd30e5bdac39f3c0295a1c26ac9",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_RESET_INITIALIZES_SELF_TIMED_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2211362bb023e86873e54815aad0c74ec9eaae90aa3411bf474c0bdca6dcef04",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "6b87c2e6e8fb2d4c43bfcb11b1f9a276390f483f281aa64b15da9ffaf6cc3b62",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "SAR Logic 4b Self Timed: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_RESET_INITIALIZES_SELF_TIMED_STATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_invert_decision",
+    "canonical_dut_id": "192",
+    "hashes": {
+      "mutation_catalog_sha256": "66898c693a014e7d9099555b550ff16afe637e4467a249fd4320dd2658178874",
+      "score_deck_sha256": "3da125e5ff09a373436d31f3150ca69c0df005c190c8490ab18b1f88ab4de80c",
+      "task_certification_sha256": "ae743dbab7174fa9a75bc76b91786cc1f8ad73882514156e0b93d441a5003da3",
+      "task_record_sha256": "60685dc1870124b7273128f736f7c1ae264a97f051e08df86311e5f52a2cf273"
+    },
+    "release_dir": "192-sar-logic-4b-self-timed"
+  }
+}

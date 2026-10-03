@@ -1,0 +1,81 @@
+{
+  "family_id": "091",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_synchronous_demod/certification.json",
+        "certification_sha256": "44eb4dc9052d6ae31dc6ff6842940aace25fd1e1af119b73f315cb36295dee95",
+        "fault_class": "missing_synchronous_demodulation",
+        "mutation_bundle_sha256": "98ca7c6e546185123b222f8eb2254c9089e653f5d5f118761fb12d878f2a57a5",
+        "mutation_id": "neg_001_no_synchronous_demod",
+        "source_catalog_certification_path": "mutation_bundles/neg_001_no_synchronous_demod/certification.json",
+        "trigger_condition": "both chopper polarities expose missing synchronous demodulation",
+        "violated_property_ids": [
+          "P_CHOP_DEMOD_BASEBAND_GAIN",
+          "P_INTERNAL_OFFSET_SUPPRESSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_offset_omitted/certification.json",
+        "certification_sha256": "5c010d77ddcf9ee4fd3d024f7070eb8fca22c4f617939a05353f195d83068ede",
+        "fault_class": "internal_offset_omitted",
+        "mutation_bundle_sha256": "76ae4f02fd73c4f7fdd4264728ec47424accec5e5362a2bc32af763f6a680b65",
+        "mutation_id": "neg_002_offset_omitted",
+        "source_catalog_certification_path": "mutation_bundles/neg_002_offset_omitted/certification.json",
+        "trigger_condition": "alternating polarity exposes the required internal offset term",
+        "violated_property_ids": [
+          "P_INTERNAL_OFFSET_SUPPRESSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_lowpass_bypassed/certification.json",
+        "certification_sha256": "1e7f83a45a4cd7643a0b7269b8a29cd57db485e8e62a4cb2d86a79c13da2701c",
+        "fault_class": "lowpass_state_bypassed",
+        "mutation_bundle_sha256": "b4048d66cd8ad12ff99bc5d0eb50da0eb7a0910c76aa7a1cb8b9bd8b23500af4",
+        "mutation_id": "neg_003_lowpass_bypassed",
+        "source_catalog_certification_path": "mutation_bundles/neg_003_lowpass_bypassed/certification.json",
+        "trigger_condition": "edge-to-edge settling exposes bypassed retained low-pass state",
+        "violated_property_ids": [
+          "P_EVENT_DRIVEN_LOWPASS",
+          "P_INTERNAL_OFFSET_SUPPRESSION",
+          "P_SETTLED_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_gain_wrong/certification.json",
+        "certification_sha256": "300d33679398742df7e2d1f2bf9919f3d7004edf3cd414d577c570f0a9a25e92",
+        "fault_class": "baseband_gain_error",
+        "mutation_bundle_sha256": "7f39845ce8762f241d1f0733b4ad0649680b46b9c7c528098ab03074a7a89daf",
+        "mutation_id": "neg_004_gain_wrong",
+        "source_catalog_certification_path": "mutation_bundles/neg_004_gain_wrong/certification.json",
+        "trigger_condition": "multiple signed input levels expose the incorrect baseband gain",
+        "violated_property_ids": [
+          "P_CHOP_DEMOD_BASEBAND_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_hold_ignored/certification.json",
+        "certification_sha256": "7d3dab6e66b47041cea042d1e2d34d0a028119a4a5a5e99b248e03b3a4600a56",
+        "fault_class": "hold_semantics_error",
+        "mutation_bundle_sha256": "6a0babacc06777cde54d83e3e8a8cb969e3c4f59cb2c10a2e8e245ef25a958d7",
+        "mutation_id": "neg_005_hold_ignored",
+        "source_catalog_certification_path": "mutation_bundles/neg_005_hold_ignored/certification.json",
+        "trigger_condition": "chopper edges during hold expose illegal state updates",
+        "violated_property_ids": [
+          "P_HOLD_PRESERVES_STATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_no_synchronous_demod",
+    "canonical_dut_id": "091",
+    "hashes": {
+      "mutation_catalog_sha256": "ec11fb8268a4d3523e17b172624cf91300adabfd81ad4c59c05d693ee975f90f",
+      "score_deck_sha256": "109833a240584c3cb6b97b0746c5f6a1ba0d904090e82c1cab49f3d3ef036a91",
+      "task_certification_sha256": "879980664773184af88f813057186eb84459e680827f1b0ea257d81eb736eb33",
+      "task_record_sha256": "c1d8c0283a993c488b3ab8316945cb9883e22cca75a0cf13cb384a5f169c8f08"
+    },
+    "release_dir": "091-chopper-stabilized-differential-amplifier"
+  }
+}

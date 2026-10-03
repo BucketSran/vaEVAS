@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_002_ignores_rail_offsets",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "c19ea6b8014989f2656ab2b86dd669d7da144d8c933792d58f1b9c66ffb21d88",
+  "candidate_artifacts": [
+    "limiter_rails.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "limiter_rails.va"
+  ],
+  "checker_profile_sha256": "368934118ed5b8958d61b587736bf2fe6a02740892e6fafa03477e66ef1fe94b",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "33ed7496760cdb841e7fe72cfdef52f5c6258291c096c5d5426372cb345dd169",
+  "gold_solution_tree_sha256": "5119db2912488ff10fb60d624d1225d654d54451b2bd659045c8ba8a7067efc8",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "cc07d18e7d6c33d4849ab51e340d57e6029c941b0a35a30ff42d59f09aeb378d",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1125"
+}

@@ -1,0 +1,26 @@
+{
+  "artifact_mode": "system_bundle",
+  "bugfix_seed_mutation_id": "neg_003_reset_disable_clear_missing",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "832e73a0aec4e37efb14df09a656aa487107df2e0334a6cdb7dced8ae1f8b478",
+  "candidate_artifacts": [
+    "residue_amp_gain_calibration_top.va",
+    "residue_amp_core.va",
+    "gain_cal_controller.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "gain_cal_controller.va",
+    "residue_amp_core.va",
+    "residue_amp_gain_calibration_top.va"
+  ],
+  "checker_profile_sha256": "3ead6cb439284eebf0a6250310b26b4d118766da09644bc356fce5291d32e65e",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "148c5a70f26b1caea3a2af13159b98457148a300a0bb1708b195d925200c3f5c",
+  "gold_solution_tree_sha256": "a5c3aca3d38bf7bf562807c7ce37b34051f44526dec34c79e02feb67f67abd31",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "4e00f8d18c11c42b37f575f16f5d6f4076bca4b3c66377edf95dfb642a28408c",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1316"
+}

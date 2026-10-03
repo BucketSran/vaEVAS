@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "037",
+  "checker_task_id": "v4_037_precision_rectifier_envelope_detector",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "38661c4f909e313aa4928bb14093f1752efe272cdfc81b28e58243739630d1d7",
+    "checker_profile.json": "5bb3a1ce2e8349db93aa073377ebb819eb772a06a406f69d5515622aab7a2131",
+    "derivation_manifest.json": "5d05f1e7016afae6d3fabc71955c5218584b2e037eeb8bb57ee48d9dc9cd53a4",
+    "family_spec.json": "85474ce75c3decf9096201486fe0dbcb5b1c5da429071610ab37ba03d535044c",
+    "harness_spec.json": "c2d31c74c8222316cbe08daf040095e0cba5446050d104e8f439d700e4fef843",
+    "mutation_catalog.json": "0a97affc03e25319c8c7d63f54a9971db6cc9fe4f565aaffeb868b4756d84dae",
+    "profiles/feedback.json": "ec395a7bc668e079cc2d10b921c2fa52a90db5e39f6ac557240ed98085e88ecd",
+    "profiles/score.json": "59cd146452ddabf95afed07496e37cef0e36552c1043bcda9d1476159d0a55b3",
+    "score_tb.scs": "4de1bb41a21189732777c8434b65be81a139b9535bbd8718a82c1b2c56bbd5ec",
+    "solution_tree": "238ce019b4c38cb3bd65668709718c15868e22eed8afaf2e2fd05a5f290d1414",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "4bce544be8eed3cfb8291a14aaf9760baff3380722c6ad4f38c80d3d8fb8b081",
+    "instruction.md": "c1fc9408217e385d104a084052e6084e66515d9615d5976245c9d6be79bb80d4",
+    "public_contract.json": "a287551a5b732ca26a57d7e75ae1f6211d554448fcdce2e200055e32f23e96a1"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "38661c4f909e313aa4928bb14093f1752efe272cdfc81b28e58243739630d1d7"
+  },
+  "release_dir": "037-precision-rectifier-envelope-detector",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "039-precision-rectifier-envelope-detector",
+  "support_root": "",
+  "target_artifacts": [
+    "precision_rectifier_envelope_detector.va"
+  ]
+}

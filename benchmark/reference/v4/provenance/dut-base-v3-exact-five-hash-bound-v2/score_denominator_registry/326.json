@@ -1,0 +1,78 @@
+{
+  "family_id": "326",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_phase_metric_scale_wrong/certification.json",
+        "certification_sha256": "8eebbf7910afc9b3e186c6c40171883f21ec22dedbe5289e9154210f50c5c5d3",
+        "fault_class": "phase_metric_scale_wrong",
+        "mutation_bundle_sha256": "2af319b66e74297e484a4e8c6886cef6dc12396b0d094ca667808abfbdc37fc0",
+        "mutation_id": "neg_003_phase_metric_scale_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_003_phase_metric_scale_wrong/certification.json",
+        "trigger_condition": "phase_metric_scale_wrong",
+        "violated_property_ids": [
+          "P_FOR_EACH_INPUT_EDGE_EMIT_ONE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_fractional_delay_code_reversed/certification.json",
+        "certification_sha256": "bd83d44d8b6c6f22787f4766746ec59009a202466938a9c8b5e1f3f7fe91aa37",
+        "fault_class": "fractional_delay_code_reversed",
+        "mutation_bundle_sha256": "a71b05bf94c68c5b16fb4fd921b6c3faa2cde18cda5a37fd766abfde605c8c18",
+        "mutation_id": "neg_002_fractional_delay_code_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_fractional_delay_code_reversed/certification.json",
+        "trigger_condition": "fractional_delay_code_reversed",
+        "violated_property_ids": [
+          "P_DECODE_FRAC_3_FRAC_0_AS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_reset_disable_clear_missing/certification.json",
+        "certification_sha256": "0b3eb3de419926eee711ead38c22bd280d62234315c4dbca4d3d51518995d54e",
+        "fault_class": "reset_disable_clear_missing",
+        "mutation_bundle_sha256": "3371fa945a9b388565575a26e81970055ef77f9d73b27a80f966c23071f508a7",
+        "mutation_id": "neg_004_reset_disable_clear_missing",
+        "source_catalog_certification_path": "negative_variants/neg_004_reset_disable_clear_missing/certification.json",
+        "trigger_condition": "reset_disable_clear_missing",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_valid_flag_missing/certification.json",
+        "certification_sha256": "eb1c88002d75535655a3c49c23eaff2469429a338e32a7302af8952bca5af30d",
+        "fault_class": "valid_flag_missing",
+        "mutation_bundle_sha256": "4efe4cadd4d5dde507a7b771a9d7baca876c4a088e678f6044bd1b25769d1b6b",
+        "mutation_id": "neg_005_valid_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_005_valid_flag_missing/certification.json",
+        "trigger_condition": "valid_flag_missing",
+        "violated_property_ids": [
+          "P_PRESERVE_INPUT_EDGE_ORDER_AND_ASSERT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_fractional_delay_code_ignored/certification.json",
+        "certification_sha256": "4bc5191e254a4134b7ce27a17fd667ece98eece51d86de5ed47500fa51d755a9",
+        "fault_class": "fractional_delay_code_ignored",
+        "mutation_bundle_sha256": "e4ea53cdbe0dd2c4db191acf9c5e666b417ed5c4b02218cf0f691cca80aac675",
+        "mutation_id": "neg_001_fractional_delay_code_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_001_fractional_delay_code_ignored/certification.json",
+        "trigger_condition": "fractional_delay_code_ignored",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_CLEAR"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_phase_metric_scale_wrong",
+    "canonical_dut_id": "326",
+    "hashes": {
+      "mutation_catalog_sha256": "303774d5f39ba51f7e5b56ee03005e23a7c5a290cd26579b3c23379474e83c3d",
+      "score_deck_sha256": "3a4e1db05c2d22da87b458b3eec0aa12f94aff87c55ac1df0e50dc9f36faea29",
+      "task_certification_sha256": "e2e2db8cdad4611fe46496f78af3b3993483a89247993791fdfc90758633dbe4",
+      "task_record_sha256": "17533d0ed2d1fe9ef6f8ca2e19c759d71705f93f3832a83cf3e0e83c96c313d9"
+    },
+    "release_dir": "326-fractional-delay-dtc-macro"
+  }
+}

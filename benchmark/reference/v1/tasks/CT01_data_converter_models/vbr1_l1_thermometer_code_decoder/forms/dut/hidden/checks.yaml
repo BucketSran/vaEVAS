@@ -1,0 +1,19 @@
+syntax:
+  must_include:
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "enable_low_forces_all_low"
+    - "cumulative_sequence_for_codes_1_2_3"
+    - "guarded_th3_remains_low"
+parity:
+  required: true
+  tolerance_notes: "Check fixed code windows rather than transition rows."

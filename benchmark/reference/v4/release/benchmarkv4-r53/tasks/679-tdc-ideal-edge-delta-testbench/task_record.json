@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "179-tdc-ideal-edge-delta",
+  "checker_task_id": "v4_179_tdc_ideal_edge_delta",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9a3459e3c0f4ef89f4c50c04ec45aac6ea95df7dec7aca95f2890815180fb08d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "0d48fdf072e232bc01101a6f91129c125e6d40e45085fce79009e830a5fd882b",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9a3459e3c0f4ef89f4c50c04ec45aac6ea95df7dec7aca95f2890815180fb08d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "cc3ce5d7b21b4872edf168f26ef8bcb88efa1e45bb8c88cab2b02d189988258f",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2cb3919460d5633975cdc65816eee5ade4ac71cb391119d045e3f288000b55b2"
+  },
+  "family_id": "179",
+  "family_spec_sha256": "4a489ba23af77f83eb11e6e79b58466807bb58fc2f606343eb6ff4b1b222490a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "b7bad19cfeaac9ce18a80cfbd071f6d8da2bf84c223b0811b1b54e3a034c85c9",
+  "public_contract": "tasks/679-tdc-ideal-edge-delta-testbench/public_contract.json",
+  "public_contract_sha256": "5892e153fc4919f0f51efe3f9bda501d2787b3e7b8a1acccb87ad4f6cc63cd22",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/679-tdc-ideal-edge-delta-testbench",
+  "task_id": "v4-679"
+}

@@ -1,0 +1,46 @@
+{
+  "certification_policy": "rust_evas2_only",
+  "checks": {
+    "behavior": "fail_as_expected",
+    "compile": "pass",
+    "diagnostic": "present",
+    "trace_axis_metamorphic": "classification_invariant"
+  },
+  "diagnostics": {
+    "expected": "properties P_VGA_OUTPUT_GAIN satisfy the public contract; fault class gain_mapping_error is rejected",
+    "observed": "EVAS: v4_348 checked=45 mismatch_count=28 directions=['down', 'up'] codes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] locked_seen=True mismatch_detail=P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=7.55e-09 expected=0.1 observed=0.15000000000000002 metric_gap=0.05; P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=1.255e-08 expected=0.11000000000000001 observed=0.17000000000000004 metric_gap=0.06; P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=1.755e-08 expected=0.12000000000000002 observed=0.19000000000000003 metric_gap=0.07; P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=2.255e-08 expected=0.13 observed=0.21000000000000002 metric_gap=0.08; P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=2.76e-08 expected=0.13999999999999999 observed=0.22999999999999998 metric_gap=0.09; P_VGA_OUTPUT_GAIN mismatch_count=1 sample_time=3.255e-08 expected=0.15000000000000002 observed=0.25 metric_gap=0.1",
+    "violated_property_ids": [
+      "P_VGA_OUTPUT_GAIN"
+    ]
+  },
+  "evaluators": {
+    "evas2": "compile_pass_behavior_fail"
+  },
+  "evidence": {
+    "campaign": "r51-full400",
+    "checker_id": "v4_348_vga_gain_calibration_loop",
+    "report_path": "evidence/r51/RUST_EVAS2_CERTIFICATION.json",
+    "report_sha256": "1cdaaeb1a3e3a513e6cea90ab0c002640e7cab8950314dca3831dde279c900c6",
+    "trace_row_count": 2437
+  },
+  "family_id": "348",
+  "inputs": {
+    "checker_profile_sha256": "ae3998a541b5ed6f58303317dce6172c180824d5c3cbd61914904280068d6a6c",
+    "harness_spec_sha256": "6f62498989e2bb85f25914ef5e73e2b3520ab0672c58b9afd4c120cc37d43c6c",
+    "mutation_bundle_sha256": "c1a9f1e928685ee2b338dedcb0922b136c0567daf64dd2e701327b8156f46f51",
+    "profile_sha256": "66c5173da048768042b1551cf624e2fdaac783e4289a8eca4f764bd895bcf06c"
+  },
+  "mutation_id": "neg_003_gain_lsb_double",
+  "outcome": "killed_behaviorally",
+  "runtime": {
+    "evas_backend": "evas-rust",
+    "evas_engine": "evas2",
+    "evas_engine_used": "evas2",
+    "evas_source_repository": "https://github.com/Arcadia-1/EVAS.git",
+    "evas_source_revision": "91c268bc221cbb6b24fbe414196b5bdfe958fbad",
+    "evas_source_tree": "clean",
+    "evas_version": "0.8.3"
+  },
+  "schema_version": "v4-negative-certification-rust-evas2-v2",
+  "status": "pass"
+}

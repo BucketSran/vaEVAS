@@ -1,0 +1,24 @@
+syntax:
+  must_include:
+    - "transition("
+    - "/15.0"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "all_16_binary_codes_match_ideal_levels"
+    - "code_bits_match_expected_sampled_sequence"
+    - "monotonic_output"
+    - "zero_and_full_scale_codes_reach_references"
+bugfix:
+  buggy_expected: "FAIL_SIM_CORRECTNESS"
+  fixed_expected: "PASS"
+  reconstruction_note: "Single-root-cause badcase: endpoint scaling denominator is 16 instead of 15."
+parity:
+  required: true
+  tolerance_notes: "Sample points are centered in stable code windows."

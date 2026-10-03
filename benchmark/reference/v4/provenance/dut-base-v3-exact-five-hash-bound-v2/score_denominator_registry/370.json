@@ -1,0 +1,78 @@
+{
+  "family_id": "370",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_wrong_gain_decode/certification.json",
+        "certification_sha256": "a53b76927b9b769ec82d3a171a96e382c29f75c8f89afbecc3018e3388598573",
+        "fault_class": "wrong_gain_decode",
+        "mutation_bundle_sha256": "594dbc9957ce59683772314ad8174283c04932b35565b166f3fabde374488761",
+        "mutation_id": "neg_001_wrong_gain_decode",
+        "source_catalog_certification_path": "negative_variants/neg_001_wrong_gain_decode/certification.json",
+        "trigger_condition": "wrong_gain_decode",
+        "violated_property_ids": [
+          "P_DECODE_GAIN_2_GAIN_0_INTO"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_settled_stuck_high/certification.json",
+        "certification_sha256": "74b468a7ee94d550306634319577986ac137ace24757bcdd875e43fc7035b044",
+        "fault_class": "settled_stuck_high",
+        "mutation_bundle_sha256": "50f85f08923b87e54f8699f66ae9154564d9b655fca6a68f26420e51e13ad36c",
+        "mutation_id": "neg_003_settled_stuck_high",
+        "source_catalog_certification_path": "negative_variants/neg_003_settled_stuck_high/certification.json",
+        "trigger_condition": "settled_stuck_high",
+        "violated_property_ids": [
+          "P_ASSERT_SETTLED_AFTER_THREE_CONSECUTIVE_UPDATES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_clear/certification.json",
+        "certification_sha256": "a3c7ea5f9b14ee6fc5aa66562c75e979abaae80a0dbe8631a1d44695057edc29",
+        "fault_class": "missing_clear",
+        "mutation_bundle_sha256": "179fd02431bb642232e2d52cfd31f97290211fefa6206f012076312c5648cbbd",
+        "mutation_id": "neg_004_missing_clear",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_clear/certification.json",
+        "trigger_condition": "missing_clear",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_ENABLE_IS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_error_metric_zero/certification.json",
+        "certification_sha256": "6742dc5931a00440b3e467fc9d2c53b411f86bf950e24e922b65b27e89469157",
+        "fault_class": "error_metric_zero",
+        "mutation_bundle_sha256": "f0a624429ea8944b9c39f71717ac2b193fbb4ec8b66ce2d8161c9610a399fb30",
+        "mutation_id": "neg_005_error_metric_zero",
+        "source_catalog_certification_path": "negative_variants/neg_005_error_metric_zero/certification.json",
+        "trigger_condition": "error_metric_zero",
+        "violated_property_ids": [
+          "P_ERROR_METRIC_MUST_EXPOSE_THE_SIGNED"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_alpha_settling/certification.json",
+        "certification_sha256": "d64f61ecf0d4d8c5416121f7d9681edf0a33114507d70d3c094f582bec3ada53",
+        "fault_class": "no_alpha_settling",
+        "mutation_bundle_sha256": "c2fcde7083ce4c4454f915992f305f485fa95aad4a211cca1641e4a99e9ffd2f",
+        "mutation_id": "neg_002_no_alpha_settling",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_alpha_settling/certification.json",
+        "trigger_condition": "no_alpha_settling",
+        "violated_property_ids": [
+          "P_UPDATE_VOUT_ONCE_PER_RISING_CLK"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_wrong_gain_decode",
+    "canonical_dut_id": "370",
+    "hashes": {
+      "mutation_catalog_sha256": "9473910136684443e6f3c83488b81f6a1c95580b7be574a7501aaa40209993d8",
+      "score_deck_sha256": "edd7fc6572b8b7d1747dd13eb66c46d59e893b80604d04fa000e53b27388bf8f",
+      "task_certification_sha256": "6a15f6c6eb4f4e48bf79178e9d0bec1b4b0b8c44c9b38c760b8d92111ee53cfb",
+      "task_record_sha256": "d08295aaaa156cf6786237dcaded00ef7e041ce2277da6dde1314a9990cc5aae"
+    },
+    "release_dir": "370-opamp-feedback-settling-monitor"
+  }
+}

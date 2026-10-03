@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "quad_corr_top.va",
+    "gain_trim.va",
+    "skew_estimator.va",
+    "corrector.va"
+  ],
+  "canonical_dut_source_slug": "365-quadrature-correction-loop",
+  "checker_task_id": "v4_365_quadrature_correction_loop",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "d9c0ce7d1c64fb32cb6801650a16eb7ab15ea048a8409ddac020bee71185b56f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0c02089cb67da9af869ad6543d9eb9ec8abf62df4b0ef1b3c70813c676710240",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "a93ce452c15ba8c9b47df44a67dfc28ced45d044ab4bb70acacb953de293ffc8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "365",
+  "family_spec_sha256": "5c3527a69cde2c2adb44004e46c2625cafd7243cf48f75e1249cb6cfa81daad0",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "634983bf9ae0a7ec2faa29eed7203112f0a9fb943d811a9725a04e7c4516c19f",
+  "public_contract": "tasks/1365-quadrature-correction-loop-bugfix/public_contract.json",
+  "public_contract_sha256": "7bc9a6909529378263df0a0283959d923186a704039e7c50cc7554f54e100f1a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1365-quadrature-correction-loop-bugfix",
+  "task_id": "v4-1365"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "lc_vco_behavioral_source.va"
+  ],
+  "canonical_dut_source_slug": "391-lc-vco-behavioral-source",
+  "checker_task_id": "v4_391_lc_vco_behavioral_source",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ced95d67e0e90058d4090d9afd184d75446f47cb23d3d9d2f8e26aed478b5de7",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "8fc0d2c27c1dccf9c26791ea57f3c5bee5d51ff5740a09f5a1a78cd9892f9a78",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "123705a182055594437de2fc1803a3b5b0d1640c5f6604d76baea42204b05a70",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "391",
+  "family_spec_sha256": "4dcab63bb07face7b826a474e3bc303babee08460acf8015925d2eec417ff22d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "540999829379566de2d0ee3316a1f53fd2dfc133279edf0caa2d0f862ac4927d",
+  "public_contract": "tasks/1391-lc-vco-behavioral-source-bugfix/public_contract.json",
+  "public_contract_sha256": "7c970ded31bd821684bdfc770247666cff43619ad3d63859699f4ca07e561613",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1391-lc-vco-behavioral-source-bugfix",
+  "task_id": "v4-1391"
+}

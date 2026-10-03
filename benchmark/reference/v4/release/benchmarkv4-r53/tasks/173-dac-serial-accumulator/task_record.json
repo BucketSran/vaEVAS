@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "dac_serial_accumulator.va"
+  ],
+  "canonical_dut_source_slug": "173-dac-serial-accumulator",
+  "checker_task_id": "v4_173_dac_serial_accumulator",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "f9390ca6d6a8907f907118af5b2869825028b5f9fd694952ad4e1bfa12ccdc83",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "301f9e993f4a56e25b5f2202f2829cb8c72dd26c39edff3459400586f326dc67",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "500a970650d002b8ef2be7b32b176598c3e203cc518b320088af095e1a945e53",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "173",
+  "family_spec_sha256": "0441566a39e148bbb29d333c780efd726223ddd2df1f71ef66fad938df9d34b4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "e274f5954839c60cb732feb412fd078eb1398930424524f40361e70455d5339c",
+  "public_contract": "tasks/173-dac-serial-accumulator/public_contract.json",
+  "public_contract_sha256": "74e20dc6885ff43a30f9f9c0f4fb4ad908f6e222f3895ff6356499d67bf1c4dc",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/173-dac-serial-accumulator",
+  "task_id": "v4-173"
+}

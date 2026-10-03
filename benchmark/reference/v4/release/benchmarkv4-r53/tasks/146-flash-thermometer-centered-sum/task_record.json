@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "flash_thermometer_centered_sum.va"
+  ],
+  "canonical_dut_source_slug": "146-flash-thermometer-centered-sum",
+  "checker_task_id": "v4_146_flash_thermometer_centered_sum",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "372838231cebb2b8186a9390d77a7d2f6d6b987654869247c7f233f1fccd168e",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "77875423f2ff5bdbe3edbfa7462654feb7709b905e3318d133ad9fd0c5185e64",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "34e3b7ef67fee95f4e51e6d395a94187dcef535a9b17aa01b07c9ae5163fddf1",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "146",
+  "family_spec_sha256": "760c4352437eab416022b040ff623fcdfdd40a41cf08b90acc88361255389683",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "48bb6df7b9cecdded1e170dd93dc55817ddb13e5905d9091f1a3a3570a57eacf",
+  "public_contract": "tasks/146-flash-thermometer-centered-sum/public_contract.json",
+  "public_contract_sha256": "5ad33a0b78129357ffbb1870f4cce2c82529dcb9f4c3f3cf61ada8ce16f2fe4d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/146-flash-thermometer-centered-sum",
+  "task_id": "v4-146"
+}

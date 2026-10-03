@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "055-first-order-sigma-delta-modulator",
+  "checker_task_id": "v4_055_first_order_sigma_delta_modulator",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "9f44ef454119437c5c48863b9bc877925299991f726588f65c7115305b14dd46",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "4ac1ba7bf02e76dc31867dacaa08d54827ec6d1e5df893b01112e0121301f5f7",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "9f44ef454119437c5c48863b9bc877925299991f726588f65c7115305b14dd46",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "bec2afe7f9feef43de9fffdc89c9a13ad2ae48522869478dfeffffa066f561e6",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "ee54908216021623c7df716767ec1c08a4f0478e6d583346b2033585e7b4dd72"
+  },
+  "family_id": "055",
+  "family_spec_sha256": "43aab179babd997455024e3a389931216c6ce89e82c00873af4515937b4ac403",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "23269e8cbf6f7ab71f5ac67c7677a7af7c4385ac18d6381827d8d06fc8d0d416",
+  "public_contract": "tasks/555-first-order-sigma-delta-modulator-testbench/public_contract.json",
+  "public_contract_sha256": "e6d560a98d45016e96244d74f7d6084bfac2a6dbc5b813a004b52ed9574bff72",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/555-first-order-sigma-delta-modulator-testbench",
+  "task_id": "v4-555"
+}

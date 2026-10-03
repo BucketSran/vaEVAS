@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "072-aperture-delay-track-and-hold",
+  "checker_task_id": "v4_072_aperture_delay_track_and_hold",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "a075551b4e12fad71db2c449f965afae99a9f68e93d62d1843b567b0d0fd5092",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "38be33b476caf833bb6689f0a6bf656117525ae7f612ccaa49a59cf542edb00a",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "a075551b4e12fad71db2c449f965afae99a9f68e93d62d1843b567b0d0fd5092",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "b183643ceda1c62dc8c0407798787672654bce695f501855329822b29460de5a",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "44838df11948b0366b7760e1e416870e673d0ca251d2d60f2d12b6c25992f61a"
+  },
+  "family_id": "072",
+  "family_spec_sha256": "c98697dbe527499fbf0b007b4e68fe9f3beada52d09ac3abc4c3fbc0f620f44d",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d83eaa6826912c70aab2c153e31b9c376fcac8d9404bd6641f3c973891d7ce99",
+  "public_contract": "tasks/572-aperture-delay-track-and-hold-testbench/public_contract.json",
+  "public_contract_sha256": "1eb5d4b62b8805252d122d83acd44ebb25eefd60eebcb2d555c4ab599bb922a5",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/572-aperture-delay-track-and-hold-testbench",
+  "task_id": "v4-572"
+}

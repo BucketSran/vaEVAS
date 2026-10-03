@@ -1,0 +1,26 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 10p
+
+// DWA (Data Weighted Averaging) pointer rotation generator.
+// On each rising edge of clk_i, reads code_msb_i (0-15) and advances
+// the 16-element circular pointer by that amount. Outputs two 16-bit masks:
+//   cell_en_o : activated cells — MSB span + LSB unit (active high)
+//   ptr_o     : pointer position — active-high one-hot
+
+module dwa_ptr_gen (
+    input  electrical        clk_i,
+    input  electrical        rst_ni,
+    input  electrical [3:0]  code_msb_i,
+    output electrical [15:0] cell_en_o,
+    output electrical [15:0] ptr_o
+);
+
+parameter real    vdd      = 0.9;
+parameter real    vth      = 0.45;
+parameter integer ptr_init = 0;   // pointer reset value (0-15)
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

@@ -1,0 +1,78 @@
+{
+  "family_id": "351",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_up_down_swapped/certification.json",
+        "certification_sha256": "6673e6f6b326404b4a777c051ce231976cd6311d1b07bbf49ae74ba5f69126a3",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "069a6c7e78812283bf09ecb29152fbe4b12150643e002a7e50a9a73f7580abc7",
+        "mutation_id": "neg_001_up_down_swapped",
+        "source_catalog_certification_path": "negative_variants/neg_001_up_down_swapped/certification.json",
+        "trigger_condition": "one clock leads the other",
+        "violated_property_ids": [
+          "P_PHASE_COMPARE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_divider_toggles_each_edge/certification.json",
+        "certification_sha256": "56ca918c97a31bedb40ee19f46f58af8234ed151255630e343be78624f180c5c",
+        "fault_class": "wrong_divide_ratio",
+        "mutation_bundle_sha256": "8bca31a45ee10ba9091bdfd67c69a70297769c7e6f282ca1fdf69b494ebfbe78",
+        "mutation_id": "neg_003_divider_toggles_each_edge",
+        "source_catalog_certification_path": "negative_variants/neg_003_divider_toggles_each_edge/certification.json",
+        "trigger_condition": "feedback clock produces rising edges",
+        "violated_property_ids": [
+          "P_DIVIDE_BY_FOUR_EDGES"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_lock_asserts_early/certification.json",
+        "certification_sha256": "2f3f985e552277b6518bcfc16c18a102b334d0a8934ecb333bd446d0503d23a5",
+        "fault_class": "wrong_qualification",
+        "mutation_bundle_sha256": "8d7c5d94a90f2021b1dfda753ce11f65ce48d7913e209f658a3c4fd636689f26",
+        "mutation_id": "neg_004_lock_asserts_early",
+        "source_catalog_certification_path": "negative_variants/neg_004_lock_asserts_early/certification.json",
+        "trigger_condition": "one in-window comparison completes",
+        "violated_property_ids": [
+          "P_LOCK_REACQUIRE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reacquire_not_cleared_on_disable/certification.json",
+        "certification_sha256": "064473b712d35bf19cba708a5484398ec54eb121cd38cbc2ff718c4e7f6f2a8c",
+        "fault_class": "reset_disable_clear_error",
+        "mutation_bundle_sha256": "c90f3a7325b900e93f44a6e9817149a084e69c93e340b5470b74fef9e5fb8dab",
+        "mutation_id": "neg_005_reacquire_not_cleared_on_disable",
+        "source_catalog_certification_path": "negative_variants/neg_005_reacquire_not_cleared_on_disable/certification.json",
+        "trigger_condition": "Reset is asserted or enable is deasserted after the monitor has run.",
+        "violated_property_ids": [
+          "P_RESET_DISABLE_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_phase_step_reversed/certification.json",
+        "certification_sha256": "1f5340f7ac64869e77845c9a0dc2d5cf184819e4c986ad858cd48ee6d96e5575",
+        "fault_class": "wrong_polarity",
+        "mutation_bundle_sha256": "125e1805a26afc26e01ebd6f312f2c9c4ccec64fd14cf3d1b49c4548e4efbf3e",
+        "mutation_id": "neg_002_phase_step_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_002_phase_step_reversed/certification.json",
+        "trigger_condition": "reference edge arrives first",
+        "violated_property_ids": [
+          "P_PHASE_CODE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_up_down_swapped",
+    "canonical_dut_id": "351",
+    "hashes": {
+      "mutation_catalog_sha256": "f3380a14ee3f773775c1a5160d9ba99a4836a2129b39e544ca653525ae7666dd",
+      "score_deck_sha256": "ec2f079b2d0d4e8b4b71e0d95e082a096c4c1dd237c26540048843b47d60f961",
+      "task_certification_sha256": "fda871d7e5be71097dd29043304a04e24dc0a605a88eec38b890076122df55cd",
+      "task_record_sha256": "856650cef669a4da6f1c508c622afba6d833d03eca309c32cfc9496e4406a060"
+    },
+    "release_dir": "351-pll-timing-monitor-system"
+  }
+}

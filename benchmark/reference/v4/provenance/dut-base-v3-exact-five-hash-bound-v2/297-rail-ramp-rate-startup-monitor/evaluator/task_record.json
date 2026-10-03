@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "297",
+  "checker_task_id": "v4_297_rail_ramp_rate_startup_monitor",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "d8fa90ae647fad210395e6334fa802f6ae55509ca0bedf4ad3c343286c496e4a",
+    "checker_profile.json": "895e9aa64c62895da5fb559c8b224b321cb702e68946dd8d39400a7ccb296e72",
+    "derivation_manifest.json": "bf56540a55a497934b94726a57ff46d91ecf24c5046a12b47f23291afa38f0ef",
+    "family_spec.json": "292130ad04bc4ce59b643070005c279f7435183da759b9fcfd84388ca947bef1",
+    "harness_spec.json": "db782632c657fe763bfd5e4dffb74a895081fdf96f3616b32e4414bc2c02ec1b",
+    "mutation_catalog.json": "e5ddaf3d53c394ed6a8989cc61e7fb7ac3470a9ec44d36445706aabbf4c04c38",
+    "profiles/feedback.json": "bb9a19a48584d388687bb04e659aa6833cd20f74419b73f1c5f7a385e9f8b4fc",
+    "profiles/score.json": "8b9f43e1d2f2dfa3292cc244840476f2f034877be116048fad75e2ea39690b6f",
+    "score_tb.scs": "5d56350697411f6d2cc650c5eaa145f38c19704e18dd02bed983c6e341d43056",
+    "solution_tree": "d7425dabfc98c6a1c0f97e40a56197749b359e76e395bc7360c7ee5f962b22ff",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "fda7ffc0fe35261fd8879c9ad672a113cd65db87f1f3a75cc51c4828d2903393",
+    "instruction.md": "bfb9cf9b915bb7dccb25a32159975b32e34a4298aae8358f5a51a9becec284f8",
+    "public_contract.json": "af44d274dfb31b094bc0c19f2b91587f9b8b15216761edd6b2e47ffba6f930ba"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "d8fa90ae647fad210395e6334fa802f6ae55509ca0bedf4ad3c343286c496e4a"
+  },
+  "release_dir": "297-rail-ramp-rate-startup-monitor",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "500-rail-ramp-rate-startup-monitor",
+  "support_root": "",
+  "target_artifacts": [
+    "rail_ramp_rate_startup_monitor.va"
+  ]
+}

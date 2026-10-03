@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sar_13bit_serial_decoder.va"
+  ],
+  "canonical_dut_source_slug": "216-sar-13bit-serial-decoder",
+  "checker_task_id": "v4_216_sar_13bit_serial_decoder",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "52289975a1ea5b9e580092ec1b97752f9f18dc65c3dd53c7e116c3db061c8c69",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "73ddbe63167c64d01265da8d536dc07fca5889f78194c98125782771d23ecffc",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "92fbcc416c6b256f17a39f68faf60183608e32edc82619da81db7c4cfbbfc6bb",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "216",
+  "family_spec_sha256": "b2cc0614235afc6b0dea7fd9169768dc2bcb5f2330677f0659d9535759f8207c",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "4243cf4009fb5e1d15e3b1dbd146199f45fdee2acd5c95b8d811b6920d52fe93",
+  "public_contract": "tasks/216-sar-13bit-serial-decoder/public_contract.json",
+  "public_contract_sha256": "c9329ab91389ba2bc2a02634e750582eee05ed03d9e01acccfb4f9470c8a6595",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/216-sar-13bit-serial-decoder",
+  "task_id": "v4-216"
+}

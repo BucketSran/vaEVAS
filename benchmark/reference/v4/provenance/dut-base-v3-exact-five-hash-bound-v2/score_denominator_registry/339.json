@@ -1,0 +1,78 @@
+{
+  "family_id": "339",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_pm_metric_stuck_low/certification.json",
+        "certification_sha256": "9bf9bc7d1e18b52ab80fb5ecf13c43d741cbe4c14d20ec2979298d023ef10251",
+        "fault_class": "pm_metric_stuck_low",
+        "mutation_bundle_sha256": "2b91049a22bf06fda023ded721e9169b32f4c4b5508869a99a3d2a612b1dd645",
+        "mutation_id": "neg_002_pm_metric_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_002_pm_metric_stuck_low/certification.json",
+        "trigger_condition": "pm_metric_stuck_low",
+        "violated_property_ids": [
+          "P_EXPOSE_AM_AND_PM_PROXIES_SEPARATELY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_missing_clear/certification.json",
+        "certification_sha256": "716cbfd7f331dae692cd76c76bb3757777d63389df5f7167fdc8630dd468042b",
+        "fault_class": "missing_clear",
+        "mutation_bundle_sha256": "971cae9f60ca0aef7166c7b21460c57a2b23f375bcb7b39d03cae98082dbf411",
+        "mutation_id": "neg_004_missing_clear",
+        "source_catalog_certification_path": "negative_variants/neg_004_missing_clear/certification.json",
+        "trigger_condition": "missing_clear",
+        "violated_property_ids": [
+          "P_ON_RESET_OR_WHEN_DISABLED_DRIVE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_memory_missing/certification.json",
+        "certification_sha256": "cb160a45127167fe3dc6c34c977ec2658251dc1956ba6772673a144b40853955",
+        "fault_class": "memory_missing",
+        "mutation_bundle_sha256": "c456553a9c58c68e268bdb958648d4a1b2398d9995a9e9c842ce0ed1deff5faf",
+        "mutation_id": "neg_005_memory_missing",
+        "source_catalog_certification_path": "negative_variants/neg_005_memory_missing/certification.json",
+        "trigger_condition": "memory_missing",
+        "violated_property_ids": [
+          "P_APPLY_A_ONE_SAMPLE_MEMORY_TERM"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_no_compression/certification.json",
+        "certification_sha256": "e9815c014dba169719207c38de39a73326cd54e31e8b8e8674835ec10fc230e0",
+        "fault_class": "no_compression",
+        "mutation_bundle_sha256": "5d4aea082f5cf7ef93bea07e3ca3a94f46d7710192de705458aa28a0a2179680",
+        "mutation_id": "neg_001_no_compression",
+        "source_catalog_certification_path": "negative_variants/neg_001_no_compression/certification.json",
+        "trigger_condition": "no_compression",
+        "violated_property_ids": [
+          "P_APPLY_AN_AM_GAIN_COMPRESSION_PROXY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_valid_stuck_low/certification.json",
+        "certification_sha256": "b5e1aeea8c212f3ef296b2f7c6e1e8222393fb4582d6bf7637e58b2379fc0d2b",
+        "fault_class": "valid_stuck_low",
+        "mutation_bundle_sha256": "f56c65e383c092652e061c5fdec7eb30a56275ef7469062f6245490d94f6e678",
+        "mutation_id": "neg_003_valid_stuck_low",
+        "source_catalog_certification_path": "negative_variants/neg_003_valid_stuck_low/certification.json",
+        "trigger_condition": "valid_stuck_low",
+        "violated_property_ids": [
+          "P_EXPOSE_AM_AND_PM_PROXIES_SEPARATELY"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_pm_metric_stuck_low",
+    "canonical_dut_id": "339",
+    "hashes": {
+      "mutation_catalog_sha256": "d274272687e4a5c0bf172a8ff4fd4095e812594b40246b7f2f2b81b0e4fb29b2",
+      "score_deck_sha256": "ed8bd2300938681f20dcb306204082999e1265d326976b4e1f64502df52098fe",
+      "task_certification_sha256": "494d352fb4207451d2cbba3f1dec193d4bd421db2f57181ee443b7ad5898808b",
+      "task_record_sha256": "ac4df5f7b1f3e09645eb31e3264f3e4d0d717742e3f91a4150b538eb5bf357ed"
+    },
+    "release_dir": "339-pa-ampm-memory-tap-macro"
+  }
+}

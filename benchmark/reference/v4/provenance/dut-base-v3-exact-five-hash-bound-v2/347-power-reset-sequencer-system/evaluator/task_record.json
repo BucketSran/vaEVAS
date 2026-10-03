@@ -1,0 +1,40 @@
+{
+  "canonical_dut_id": "347",
+  "checker_task_id": "v4_347_power_reset_sequencer_system",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "797a75c6f1600c422b011b1d2b7a3d8e6d6e962a9643b858a7e940aa80c10e93",
+    "checker_profile.json": "adbce7d2ba365bd8d4a3b08991f91c4757118d82a05033ebe3634b7ae96ed447",
+    "derivation_manifest.json": "15da8cbc88c45912deac00868d91b7715aa9ae2441a65a2e189ea18d36e9c253",
+    "family_spec.json": "53f53541156402704f92c484744f4c56a086e8ca283c13cb3b633f0a85f4a920",
+    "harness_spec.json": "cabbacc43def23917c0f18d6f18d9cf59c951214e198fa654ddbc7470f2b27a8",
+    "mutation_catalog.json": "6d034ec7d715f3de27958ed20c2f2b4ea91da07f7a73c8613e52e65260694c46",
+    "profiles/feedback.json": "2fc7d598de8fde2017f21011e9ecc2a8e6d5c6dcd5df0b4ea2b2a11420bbcb4e",
+    "profiles/score.json": "a882db75bd03ae6cd4dcab8b121cf3adaf54ef45d8075106dd1700d4c849e315",
+    "score_tb.scs": "f6a93c90866696b70ec9c784b7e1c794490a267462f84fc6776bc0d76e227c69",
+    "solution_tree": "304f92d550b8ed58773e3f7760e7a352a8d4e2a9a78620464f4570f3aff6f798",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "85dbba09948b3a299282761b688784b08ce4505cdb069228d28f33f10bb47568",
+    "instruction.md": "7583b071a9b869529447042163f9a2365e83c12d4069efa9bc4c370c8e2b4a20",
+    "public_contract.json": "fe564831891b8372b35dd8c7528187632fc0565b8f6851e993cd38df477f0a56"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "797a75c6f1600c422b011b1d2b7a3d8e6d6e962a9643b858a7e940aa80c10e93"
+  },
+  "release_dir": "347-power-reset-sequencer-system",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "906-power-reset-sequencer-system",
+  "support_root": "",
+  "target_artifacts": [
+    "power_reset_seq_top.va",
+    "por_detector.va",
+    "reset_synchronizer.va",
+    "enable_sequencer.va",
+    "ready_flag.va"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "access": "private_checker_backend",
+  "checker_source_public": false,
+  "checker_task_id": "v4_333_image_reject_mixer_calibration_loop",
+  "contract": {
+    "public_contract": "public_contract.json",
+    "source_task_id": null,
+    "task_id": "v4_333_image_reject_mixer_calibration_loop"
+  },
+  "diagnostic_contract": {
+    "event_context": "stimulus_relative",
+    "redaction": "public_observables_only",
+    "required_fields": [
+      "property_diagnostics",
+      "mismatch_count",
+      "expected",
+      "observed",
+      "event_context"
+    ],
+    "schema_version": "v4-checker-diagnostic-v1"
+  },
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_CLEAR",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_GENERATE_I_AND_Q_OUTPUTS_USING",
+    "P_UPDATE_A_SIMPLE_GAIN_PHASE_CORRECTION",
+    "P_ASSERT_CALIBRATED_AFTER_THREE_CONSECUTIVE_UPDA"
+  ],
+  "schema_version": "v4-checker-profile-v1",
+  "score_and_feedback_share_checker": true,
+  "shared_by": [
+    "test_feedback/public_tb.scs",
+    "evaluator/score_tb.scs"
+  ],
+  "trace_contract": {
+    "extra_trace_signals": [
+      "rf_in",
+      "lo_i",
+      "lo_q",
+      "clk",
+      "rst",
+      "enable",
+      "i_out",
+      "q_out",
+      "image_metric",
+      "calibrated"
+    ],
+    "public_observables": [
+      "rf_in",
+      "lo_i",
+      "lo_q",
+      "clk",
+      "rst",
+      "enable",
+      "i_out",
+      "q_out",
+      "image_metric",
+      "calibrated"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "363-fractional-n-synthesizer-mini-loop",
+  "checker_task_id": "v4_363_fractional_n_synthesizer_mini_loop",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "fdfca3fc6711e1430c420ce99aa11bbc5bf637a33a55fd2f951bd9d4e5fd45b9",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "65cf5be0d653526e8dba937fcfbcc4ba1f44b88182fe84aac9865f128e5b8fbe",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "fdfca3fc6711e1430c420ce99aa11bbc5bf637a33a55fd2f951bd9d4e5fd45b9",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c699f645694b1632c5e746b0173560d7f9aee8139f47b26b91adc21aa632e704",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "0617c589cfce6f9ac011e163dcb585305ff87cea24ecf6b40ffe1618c9c18e2b"
+  },
+  "family_id": "363",
+  "family_spec_sha256": "9049b85075df6f56169fb9d3adec2281d050c98934c738242885e6a56fb83c3a",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "31bf0648dc86cb758c3e2ebdd77609c9cb0c5743f5d5e81aa69fe80699185969",
+  "public_contract": "tasks/863-fractional-n-synthesizer-mini-loop-testbench/public_contract.json",
+  "public_contract_sha256": "e751a63e6165e8084c10818e101a1a372f8bc3a26506cda9a0caa5b24d813e76",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/863-fractional-n-synthesizer-mini-loop-testbench",
+  "task_id": "v4-863"
+}

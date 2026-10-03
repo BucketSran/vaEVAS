@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "060-duty-cycle-meter-8b",
+  "checker_task_id": "v4_060_duty_cycle_meter_8b",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "99150e7404dd16e1259ef7a76a41a60dd281d866488edc943e4e35a7f5481ab2",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "9b19dce4028695298dfa8915c903b515d569982a72cf01365b9d5d4a590e9fb9",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "99150e7404dd16e1259ef7a76a41a60dd281d866488edc943e4e35a7f5481ab2",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "be29185585c9e44dae11165646f533b3c2f7703a273875deea74c36fccb73998",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "3f2be5e4c177e8a9dc88796d4862994640fb8b4d06db504b4e3af484695f56a9"
+  },
+  "family_id": "060",
+  "family_spec_sha256": "2b627ad1391d0cf9fa84a4dd8cb3ff3b3c92fc3cb10662f7697ccb093eec5628",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "6db023b8b3d2fd5b6c1639e1d2972d26477316451b583f81fbaf868010ea7fe9",
+  "public_contract": "tasks/560-duty-cycle-meter-8b-testbench/public_contract.json",
+  "public_contract_sha256": "10f813fd933ae42f1e46474f499acb3328efbb61a8fc8f0b414f3f363e1ea918",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/560-duty-cycle-meter-8b-testbench",
+  "task_id": "v4-560"
+}

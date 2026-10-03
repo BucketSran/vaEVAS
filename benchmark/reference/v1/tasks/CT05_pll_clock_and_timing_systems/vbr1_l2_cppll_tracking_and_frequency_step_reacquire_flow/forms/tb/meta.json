@@ -1,0 +1,26 @@
+{
+  "id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow_tb",
+  "task_id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow_tb",
+  "release_entry_id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "PLL Clock and Timing Systems",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "cppll_timer_ref.va",
+    "ref_step_clk.va",
+    "tb_cppll_freq_step_reacquire_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e"
+}

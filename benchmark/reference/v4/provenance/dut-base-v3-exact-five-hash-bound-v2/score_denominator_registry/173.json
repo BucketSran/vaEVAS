@@ -1,0 +1,79 @@
+{
+  "family_id": "173",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_no_sample_reset/certification.json",
+        "certification_sha256": "b4380109795a4856965284a9f39e1801c80aa9789aeec411c33d6b4d84797e86",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "67d0be47bb0c6f7e71441c50bf925b1589de82f2110acebdc3b6a8cc60969a23",
+        "mutation_id": "neg_002_no_sample_reset",
+        "source_catalog_certification_path": "negative_variants/neg_002_no_sample_reset/certification.json",
+        "trigger_condition": "Does not clear the serial accumulator on the sample clock boundary.",
+        "violated_property_ids": [
+          "P_SAMPLE_CLOCK_RESET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_reversed_bit_weights/certification.json",
+        "certification_sha256": "5bdf8db7769926be2932b48d3da83ac0bb7d5726ec0ea6feabed6c7100a80f24",
+        "fault_class": "reversed_bit_weights",
+        "mutation_bundle_sha256": "7ec923bd93fd5cda8e3ff18e715815650d4d56c97ab43e02fa687e71d929fdf5",
+        "mutation_id": "neg_003_reversed_bit_weights",
+        "source_catalog_certification_path": "negative_variants/neg_003_reversed_bit_weights/certification.json",
+        "trigger_condition": "Uses the reverse serial bit weighting order during accumulation.",
+        "violated_property_ids": [
+          "P_BINARY_WEIGHT_ORDER",
+          "P_SARREADY_SERIAL_ACCUMULATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unipolar_output/certification.json",
+        "certification_sha256": "01f150275384fe367efb5fc105ae86f4f2682b45d52a6f18bc64aec951904005",
+        "fault_class": "unipolar_output",
+        "mutation_bundle_sha256": "c96ac96d63df1d08b0f33dff5f2d9d52d5d662ef59680525d71687f84f6026ba",
+        "mutation_id": "neg_004_unipolar_output",
+        "source_catalog_certification_path": "negative_variants/neg_004_unipolar_output/certification.json",
+        "trigger_condition": "Emits unipolar accumulated state instead of the required bipolar output mapping.",
+        "violated_property_ids": [
+          "P_BIPOLAR_OUTPUT_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "2e621f539da01375139d1b5c4fb6f8b77cfb9c819a01598f91340df792eb5031",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "fd3e5ca8643b1d4a3ee27e4cb973e0dd0cae1d9db8244f61a30df7aede252309",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "DAC Serial Accumulator: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_BIPOLAR_OUTPUT_MAPPING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "45575e3a5af1db2ba72e0a322415ce0321d4a53053b22168b06d686e3caa0e07",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "366425476e2ba56649844f30d787b5130a904f273ffa141aa85ca995ce68ec57",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_BIPOLAR_OUTPUT_MAPPING"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_no_sample_reset",
+    "canonical_dut_id": "173",
+    "hashes": {
+      "mutation_catalog_sha256": "cad27cf5e44efd8863c02188c9222f52ed630f03a5d131d1cc2571c336bd79eb",
+      "score_deck_sha256": "fe31e6e7d07246747d50ab42c2d0ec535af48d3f8e882b399c23e33a50060022",
+      "task_certification_sha256": "d59cc68dbbcef88b2b2547ba2be3ecb53d82ef1b9420ae943bcbcb9dd1741a54",
+      "task_record_sha256": "b0b5a3a3235f22b01d3d2f81a4cf4a87e6d54b8cb97886f516ec7b596792a446"
+    },
+    "release_dir": "173-dac-serial-accumulator"
+  }
+}

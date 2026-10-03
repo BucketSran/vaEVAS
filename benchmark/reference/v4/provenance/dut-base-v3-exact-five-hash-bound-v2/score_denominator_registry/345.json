@@ -1,0 +1,78 @@
+{
+  "family_id": "345",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_calibration_direction_reversed/certification.json",
+        "certification_sha256": "1d111e07b4734005e8e52ddca57c4a5a42464475f811d659556db91e3af712fa",
+        "fault_class": "calibration_polarity",
+        "mutation_bundle_sha256": "e869a0f9735f8731272461b1c59fd49911388104713bb29778adcd2cc7a71d28",
+        "mutation_id": "neg_001_calibration_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_001_calibration_direction_reversed/certification.json",
+        "trigger_condition": "cal_ref is high during calibration",
+        "violated_property_ids": [
+          "P_CAL_CODE_UPDATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_unsigned_offset_dac/certification.json",
+        "certification_sha256": "1526fab64d887dde1aa1f4e621fa6a90d34870eb93173f759c88a4d536d673b0",
+        "fault_class": "offset_mapping_error",
+        "mutation_bundle_sha256": "b006443d38024b420e57b7fc66bd48c181abcb1bdde5be6f996e9dfaa54e11e0",
+        "mutation_id": "neg_003_unsigned_offset_dac",
+        "source_catalog_certification_path": "negative_variants/neg_003_unsigned_offset_dac/certification.json",
+        "trigger_condition": "offset code differs from zero",
+        "violated_property_ids": [
+          "P_CAL_OFFSET_DAC"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_comparator_polarity/certification.json",
+        "certification_sha256": "ec1814a906727a8216dadbf90bddf25d0c4739e7999a7f63de98df4cac41ddab",
+        "fault_class": "comparator_polarity",
+        "mutation_bundle_sha256": "f6c1979b6ddce568490465ef66a0b2a64257aa68ef88768ee429e9eeef3941b5",
+        "mutation_id": "neg_004_comparator_polarity",
+        "source_catalog_certification_path": "negative_variants/neg_004_comparator_polarity/certification.json",
+        "trigger_condition": "the corrected differential input changes sign",
+        "violated_property_ids": [
+          "P_CAL_COMPARATOR_DECISION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_reset_decision_not_gated/certification.json",
+        "certification_sha256": "e5cc46c70f6dc266315e8213cd06387891729937e0680b66cb094c4208fd5d04",
+        "fault_class": "missing_reset",
+        "mutation_bundle_sha256": "706cdb7161285bd59d89c338aa02ea6676a91eb6478f9c8afa6768e1ff014823",
+        "mutation_id": "neg_005_reset_decision_not_gated",
+        "source_catalog_certification_path": "negative_variants/neg_005_reset_decision_not_gated/certification.json",
+        "trigger_condition": "reset is asserted with a positive differential input",
+        "violated_property_ids": [
+          "P_CAL_RESET_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ready_one_cycle_early/certification.json",
+        "certification_sha256": "e669793a00dc756ec038d16de6c5d30cfe165d09281183e037cee9e4c1a20720",
+        "fault_class": "qualification_length_error",
+        "mutation_bundle_sha256": "b2f3d6e7149057d525bde798772b539c3c063acc05e090c9e9d204e921c6929a",
+        "mutation_id": "neg_002_ready_one_cycle_early",
+        "source_catalog_certification_path": "negative_variants/neg_002_ready_one_cycle_early/certification.json",
+        "trigger_condition": "three calibration updates complete",
+        "violated_property_ids": [
+          "P_CAL_READY_QUALIFICATION"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_calibration_direction_reversed",
+    "canonical_dut_id": "345",
+    "hashes": {
+      "mutation_catalog_sha256": "fd7e1414a19bdf5f0594eedc5edd7e0457b321502b0b9a3c80504ac1591497ec",
+      "score_deck_sha256": "6a6174f821cc4f0571eb8796fc70311432536344a136ebdbd34aba7c4579bff6",
+      "task_certification_sha256": "b85da9627dcddc9a20c5c881b886638d29e41c6c6e0528f7e94f53b948e10322",
+      "task_record_sha256": "b88d6a288dbc46339fecbe1934ab9180355196fe92c684e8a39de8ace9c6abdd"
+    },
+    "release_dir": "345-offset-calibrated-comparator-system"
+  }
+}

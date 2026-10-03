@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "bin_to_therm_8b.va"
+  ],
+  "canonical_dut_source_slug": "048-bin-to-thermometer-decoder-8b",
+  "checker_task_id": "v4_048_bin_to_thermometer_decoder_8b",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b9588fb880fa41ae36d398f67f5bbb6afe11993928bf89073ecd8b649cf49459",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "1bca83d16477c98f511d1d1ae867fa9201e22f4bd7cd9b2fd7594afccc67d507",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "adfcca6843a4316385da8b61363c1dddaf4ec6fbcf1fa7e9a9003f982eef2562",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "048",
+  "family_spec_sha256": "d090fbc9b83791d7a3c324355cd583333d7e49506820774fcb2b6ff5372bcf0a",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "57f529b118a6dba1bdcac0110fbdf95b14c436d58ae16dff17c6efb1e832aad9",
+  "public_contract": "tasks/1048-bin-to-thermometer-decoder-8b-bugfix/public_contract.json",
+  "public_contract_sha256": "7277703f08987fe54764a2a6944c7715c57da297afa2fc4bd5a1c6bb9806b181",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1048-bin-to-thermometer-decoder-8b-bugfix",
+  "task_id": "v4-1048"
+}

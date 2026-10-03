@@ -1,0 +1,179 @@
+{
+  "id": "vbr1_l1_pipeline_adc_stage",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_pipeline_adc_stage",
+  "level": "L1",
+  "track": "core",
+  "difficulty": "D3",
+  "category": "Data Converter Models",
+  "base_function": "Pipeline ADC MDAC stage",
+  "package_status": "selected_l1_addition",
+  "score_surface": "model-capability",
+  "source_base_id": "pipeline_adc_stage",
+  "canonical_kernel": "sample_subadc_residue_gain_two",
+  "source_registry_status": "selected_from_existing_task",
+  "source_evidence_status": "selected_source_pending_dual",
+  "source_tasks": [
+    {
+      "form": "dut",
+      "source_path": "tasks/spec-to-va/voltage/adc-sar/pipeline_stage",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    },
+    {
+      "form": "tb",
+      "source_path": "tb_companion_from_dut:pipeline_stage",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    },
+    {
+      "form": "bugfix",
+      "source_path": "bugfix_companion_from_dut:pipeline_stage.va",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    },
+    {
+      "form": "e2e",
+      "source_path": "e2e_companion_from_dut:pipeline_stage",
+      "prompt": true,
+      "meta": true,
+      "checks": true,
+      "gold": true,
+      "asset_complete": true,
+      "checks_has_sim_correct": true,
+      "checks_has_parity": true,
+      "checks_normalized_for_release": true
+    }
+  ],
+  "release_tasks": [
+    {
+      "form": "dut",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/gold/pipeline_stage.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/dut/gold/tb_pipeline_stage_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tasks/spec-to-va/voltage/adc-sar/pipeline_stage",
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/dut/evidence.json",
+      "release_source_task_id": "pipeline_stage",
+      "historical_source_task_id": "pipeline_stage",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/dut/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/dut/result.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/dut/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/dut/spectre_result.json"
+    },
+    {
+      "form": "tb",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/gold/pipeline_stage.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/tb/gold/tb_pipeline_stage_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "tb_companion_from_dut:pipeline_stage",
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/tb/evidence.json",
+      "release_source_task_id": "vbr1_l1_pipeline_adc_stage_tb",
+      "historical_source_task_id": "vbr1_l1_pipeline_adc_stage_tb",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/tb/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/tb/result.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/tb/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/tb/spectre_result.json"
+    },
+    {
+      "form": "bugfix",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/gold/dut_buggy.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/gold/dut_fixed.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/gold/pipeline_stage.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/bugfix/gold/tb_pipeline_stage_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "bugfix_companion_from_dut:pipeline_stage.va",
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/bugfix/evidence.json",
+      "release_source_task_id": "vbr1_l1_pipeline_adc_stage_bugfix",
+      "historical_source_task_id": "vbr1_l1_pipeline_adc_stage_bugfix",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/bugfix/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/bugfix/result.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/bugfix/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/bugfix/spectre_result.json"
+    },
+    {
+      "form": "e2e",
+      "release_path": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e",
+      "prompt": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/prompt.md",
+      "meta": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/meta.json",
+      "checks": "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/checks.yaml",
+      "gold": [
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/gold/pipeline_stage.va",
+        "benchmark-vabench-release-v1/tasks/CT01_data_converter_models/vbr1_l1_pipeline_adc_stage/forms/e2e/gold/tb_pipeline_stage_ref.scs"
+      ],
+      "asset_materialized": true,
+      "historical_dual_expected": false,
+      "source_path": "e2e_companion_from_dut:pipeline_stage",
+      "static_status": "pass",
+      "evas_status": "pass",
+      "spectre_status": "pass",
+      "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/e2e/evidence.json",
+      "release_source_task_id": "vbr1_l1_pipeline_adc_stage_e2e",
+      "historical_source_task_id": "vbr1_l1_pipeline_adc_stage_e2e",
+      "static_evidence": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/e2e/evidence.json",
+      "static_result": "benchmark-vabench-release-v1/evidence/static/vbr1_l1_pipeline_adc_stage/e2e/result.json",
+      "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/e2e/evas_result.json",
+      "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_pipeline_adc_stage/e2e/spectre_result.json"
+    }
+  ],
+  "missing_forms": [],
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/reports/dual_certification.json"
+  },
+  "counts": {
+    "benchmark_score": true,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "release_blockers": []
+}

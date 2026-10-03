@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "ahdl_include"
+    - "save"
+    - "tran"
+    - "transition("
+  must_not_include:
+    - "I("
+    - "ddt("
+    - "idt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "all_16_binary_codes_match_ideal_levels"
+    - "code_bits_match_expected_sampled_sequence"
+    - "monotonic_output"
+    - "zero_and_full_scale_codes_reach_references"
+parity:
+  required: true
+  tolerance_notes: "Check the mathematical binary code-to-voltage mapping; structural DAC variants live in separate tasks."

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "367-baseband-agc-filter-chain",
+  "checker_task_id": "v4_367_baseband_agc_filter_chain",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "bf24378e96d3b53df8086ec4aa7980ab9fdc1767b9a72096ce676b29b89869df",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "1bdd708da7116a8270e18ae6f4ceefb99d7d1618400599161fa783560bc49ba6",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "bf24378e96d3b53df8086ec4aa7980ab9fdc1767b9a72096ce676b29b89869df",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9c3c8662dc054a9b5439af16246a2a19c8e159babe34a0b1311c59fcc22bc378",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "33c6a5629d717a5ab7ea61cca0b0170b7822f4043384c9ab6bdb6ed009b75e84"
+  },
+  "family_id": "367",
+  "family_spec_sha256": "7bfab1749d3b72a78df4d5e31a0251afc44f1292fed9dccc522da21ca3ed80f6",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d2e8557a5bb10a911ec0906484effd2608b0f247337a7a275b0d275667b194e5",
+  "public_contract": "tasks/867-baseband-agc-filter-chain-testbench/public_contract.json",
+  "public_contract_sha256": "4b493f3e97392675a83ec170aaa8fa9c039ecad7f64d8dab5e2a6ad9e879ddd7",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/867-baseband-agc-filter-chain-testbench",
+  "task_id": "v4-867"
+}

@@ -1,0 +1,22 @@
+{
+  "artifact_mode": "single_file",
+  "bugfix_seed_mutation_id": "neg_002_missing_input_offset",
+  "bugfix_seed_selection_status": "policy_reviewed",
+  "bugfix_seed_triviality_markers": [],
+  "buggy_bundle_sha256": "105218e9a5fb48bab8ea6bf61c6a9ed2fdcc3190c7944faad9dd633fd3e7965c",
+  "candidate_artifacts": [
+    "voltage_controlled_gain_amplifier.va"
+  ],
+  "certification_evaluator": "rust_evas2",
+  "changed_artifacts": [
+    "voltage_controlled_gain_amplifier.va"
+  ],
+  "checker_profile_sha256": "6eaad93677ee1f44b12657277a849aefe652210f788b992e727bb30c6a275446",
+  "full_contract_pass_required": true,
+  "gold_dut_certification_sha256": "de1335597bafafd4484948a028ae9fda192241198438fdf16674c435a92bd273",
+  "gold_solution_tree_sha256": "89349342f2def2d5eb3ff48e1693d25cbd8a99cc761422ddf80325c4482ae3b9",
+  "materialized_checker_profile": "evaluator/checker_profile.json",
+  "mutation_catalog_sha256": "ab4d12e22890fd1faf06860063128bf41f1519f7accf436388995c63b2aa66d4",
+  "schema_version": "v4-bugfix-score-policy-v1",
+  "task_id": "v4-1138"
+}

@@ -1,0 +1,79 @@
+{
+  "family_id": "165",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_msb_weight/certification.json",
+        "certification_sha256": "ca2fa81997335dfc4db0fe0388b3e945f9facdec6a74c1a160e310f92a775486",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "69003f0793552d2725880731a4ee42aece0dfbd5a1080f6d666a2a4ba74dfe9d",
+        "mutation_id": "neg_003_wrong_msb_weight",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_msb_weight/certification.json",
+        "trigger_condition": "Uses a quarter-scale MSB weight for din4.",
+        "violated_property_ids": [
+          "P_BINARY_BIT_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "8e6186187d7e25599ef91db1b72ca74a645982813be9951cd23beebc4ecf0d09",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "ce10c9295ec566a54c50f3a2f86a7d8c9095de3d39da81b1e7ad5227cb2c3904",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_READY_CLOCKED_SAMPLING",
+          "P_VDD_SCALED_DAC_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_lsb/certification.json",
+        "certification_sha256": "a175c3a476f2d2d9b51721abcf572ff75149d3edf517a2e24b69dab64f93741a",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "1f2c11d031a3a2a6a8fc99ec3149eb32679910067bb7ed03228dd7ee691d35e1",
+        "mutation_id": "neg_004_ignore_lsb",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_lsb/certification.json",
+        "trigger_condition": "Drops the din1 least-significant bit contribution.",
+        "violated_property_ids": [
+          "P_BINARY_BIT_ORDER"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_vdd_scale/certification.json",
+        "certification_sha256": "e8cc266d641421b33bc418969b29c8f1b6438adcbb11c91229089aaba6741a2c",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "b95cb964e24559fc904ce6ca5602946ec2da74adc8a48b0df9a79b7bb6b1d6e7",
+        "mutation_id": "neg_002_missing_vdd_scale",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_vdd_scale/certification.json",
+        "trigger_condition": "Leaves the decoded DAC fraction unscaled by vdd.",
+        "violated_property_ids": [
+          "P_VDD_SCALED_DAC_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "8f27f67f4b5873b2d42caa2adab60134b01e111263dc2d01be3c8fea086186d2",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "ea090662b50237625c7d8c0ec89be7bfb15d1ddc4624f6e3aaca49665ed5cbd0",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "VA Lx DAC Ideal 4b: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_VDD_SCALED_DAC_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_msb_weight",
+    "canonical_dut_id": "165",
+    "hashes": {
+      "mutation_catalog_sha256": "8ad06ac78f54e329cf483343ca5897e804e1ed470b915d0bc21fd792f034d44a",
+      "score_deck_sha256": "3dad2726b354545b015c33020d6b34546c653d1694450edb830abb4308ce3082",
+      "task_certification_sha256": "4768d32226435a601b6c84bcc173994d33be6645454dfeef0718b07a20d9b207",
+      "task_record_sha256": "b0be65b6b294410cb9a40883a3ebadd38e0f371863a8e5d92ddd4fd52f3418ed"
+    },
+    "release_dir": "165-va-lx-dac-ideal-4b"
+  }
+}

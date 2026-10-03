@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "adc_sample_clock_sequencer.va"
+  ],
+  "canonical_dut_source_slug": "187-adc-sample-clock-sequencer",
+  "checker_task_id": "v4_187_adc_sample_clock_sequencer",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "62b8dc5599bbe19752427ff204e33654c3bed06776300b3f34592ae65d09ac5f",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "89c9a6641fb0845d2f2c969bd2e153e9f8cdce1b709196def079fb69625d9456",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9206b277e1bd32b91ec7e822291c268afb78d93aae48130d17f39b67a0386fe6",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "187",
+  "family_spec_sha256": "d998dc8a5f893ab1ebc913f9855d3fd64044bb71b4379c49a482e51643ba2aec",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "1d3f99a931fc12eab58d85ada3872856f272d4962064c991ed5d6b916789d7e6",
+  "public_contract": "tasks/1187-adc-sample-clock-sequencer-bugfix/public_contract.json",
+  "public_contract_sha256": "af0f1ed4a127b6a90a9b4a12bacc7ea70784f37e77699b4098cf8620826e1de3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1187-adc-sample-clock-sequencer-bugfix",
+  "task_id": "v4-1187"
+}

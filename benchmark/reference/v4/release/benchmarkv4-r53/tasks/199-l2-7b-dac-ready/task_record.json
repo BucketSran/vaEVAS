@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "l2_7b_dac_ready.va"
+  ],
+  "canonical_dut_source_slug": "199-l2-7b-dac-ready",
+  "checker_task_id": "v4_199_l2_7b_dac_ready",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "778db6847610efe1e0395a1a1fc055f9c6c798c62d8516a64192d7017b147698",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "eaeb968d9a69e2f03798bd7a24094a68f90ad86ce3712fb4872ff35edfc8015d",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "eb2a6ec17acdd3f28bd10194afb60c8e8a4db534fc5c2b245c9229bd95ff0f54",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "199",
+  "family_spec_sha256": "d647ad64c52d704603389b90e75a18150f5468347d8556e0bbb4664a2a36a7cc",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "a37b2784ea14f2dff66f0fec50535442e15420359213b00ceb77e09c2a598da3",
+  "public_contract": "tasks/199-l2-7b-dac-ready/public_contract.json",
+  "public_contract_sha256": "40ad006e8d35757a448721d162f355408504a70b3aa9d454fc7d72611a35e5df",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/199-l2-7b-dac-ready",
+  "task_id": "v4-199"
+}

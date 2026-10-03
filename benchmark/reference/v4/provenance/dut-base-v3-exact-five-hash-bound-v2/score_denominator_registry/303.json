@@ -1,0 +1,79 @@
+{
+  "family_id": "303",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_small_signal_gain_wrong/certification.json",
+        "certification_sha256": "16e3f3351c26205ee7dfe84c10db960aa415462c20da4ffa62b1779e522eb1db",
+        "fault_class": "small_signal_gain_wrong",
+        "mutation_bundle_sha256": "a53eb5de3aaca076fee1b7ef3006bd137fba07e114a56404ab53f3334846f7c0",
+        "mutation_id": "neg_002_small_signal_gain_wrong",
+        "source_catalog_certification_path": "negative_variants/neg_002_small_signal_gain_wrong/certification.json",
+        "trigger_condition": "small_signal_gain_wrong",
+        "violated_property_ids": [
+          "P_WHEN_ENABLED_CONVERT_THE_SAMPLED_DIFFERENTIAL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_compression_flag_missing/certification.json",
+        "certification_sha256": "3d2862787e204b593812cf1ff6317d3d55dc76d75d38c871a82f88b93829f669",
+        "fault_class": "compression_flag_missing",
+        "mutation_bundle_sha256": "95d989b739c18d357ed4dfeac9678dbec922ad308ed7d7fbd8a797e97dcdbde0",
+        "mutation_id": "neg_003_compression_flag_missing",
+        "source_catalog_certification_path": "negative_variants/neg_003_compression_flag_missing/certification.json",
+        "trigger_condition": "compression_flag_missing",
+        "violated_property_ids": [
+          "P_SCALE_SMALL_SIGNAL_OUTPUT_SEPARATION_BY",
+          "P_USE_ONLY_VOLTAGE_DOMAIN_BEHAVIORAL_STATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_enable_clear_ignored/certification.json",
+        "certification_sha256": "5fbca204eaefd06cb1ab363024bbe204f8c8c6b59e062bf38ccf3bff0ab04cba",
+        "fault_class": "enable_clear_ignored",
+        "mutation_bundle_sha256": "c3b8090bc563b43f5ba15d681a2aae918d2a96ec1a12bbead2ee0dd8d302f9da",
+        "mutation_id": "neg_004_enable_clear_ignored",
+        "source_catalog_certification_path": "negative_variants/neg_004_enable_clear_ignored/certification.json",
+        "trigger_condition": "enable_clear_ignored",
+        "violated_property_ids": [
+          "P_DRIVE_GM_METRIC_AS_A_VOLTAGE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_outputs_stuck_common_mode/certification.json",
+        "certification_sha256": "fd198f6a6dfbe0f10137ef714de0908facd63c0ac1add0ce3116dd398c94904c",
+        "fault_class": "outputs_stuck_common_mode",
+        "mutation_bundle_sha256": "84d3f5ec856084ac30431e7d46d52ad59299246a530d5dd4b710e89357d0f952",
+        "mutation_id": "neg_005_outputs_stuck_common_mode",
+        "source_catalog_certification_path": "negative_variants/neg_005_outputs_stuck_common_mode/certification.json",
+        "trigger_condition": "outputs_stuck_common_mode",
+        "violated_property_ids": [
+          "P_ASSERT_LIMIT_FLAG_ONLY_WHEN_COMPRESSION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_differential_polarity_inverted/certification.json",
+        "certification_sha256": "7ed45e003f879500f676265fd1ad3b46314befc274fb4cbf65da2fe7a07e9f93",
+        "fault_class": "differential_polarity_inverted",
+        "mutation_bundle_sha256": "65361574d5b61b288ae59274f51e1fa23bdf3c3346ba3d02528384f047807107",
+        "mutation_id": "neg_001_differential_polarity_inverted",
+        "source_catalog_certification_path": "negative_variants/neg_001_differential_polarity_inverted/certification.json",
+        "trigger_condition": "differential_polarity_inverted",
+        "violated_property_ids": [
+          "P_WHEN_DISABLED_DRIVE_BOTH_OUTPUTS_TO"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_small_signal_gain_wrong",
+    "canonical_dut_id": "303",
+    "hashes": {
+      "mutation_catalog_sha256": "f4e002cf99598c64ad37c145db99d99e00c0c389842f95cdfe22724ba5b479a0",
+      "score_deck_sha256": "43feb4ea01642746abd0583c23c581334d9a2ec059f836512b76adb794e71e34",
+      "task_certification_sha256": "6825e2e0c9eba260ddbe2cb5a8f2ad4349ecd0f8a7c121a08fdbb372e2db43ce",
+      "task_record_sha256": "e0779f81cf6e87e2b319aae0205d5f8a96666b5a2b7d54db18edd4c428da1b9c"
+    },
+    "release_dir": "303-differential-pair-gm-limiter"
+  }
+}

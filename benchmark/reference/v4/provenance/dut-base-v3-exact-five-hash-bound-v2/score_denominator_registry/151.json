@@ -1,0 +1,78 @@
+{
+  "family_id": "151",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_wrong_ref_scaling/certification.json",
+        "certification_sha256": "98f141e2b31c5ed0fd53f0a4d9835d1498db5c8acf4d24b841f73416db908de5",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "0742d53ab2b3218c42417c5f83f8c4c03a46d14a0a2e23c647c659a2af8156d8",
+        "mutation_id": "neg_002_wrong_ref_scaling",
+        "source_catalog_certification_path": "negative_variants/neg_002_wrong_ref_scaling/certification.json",
+        "trigger_condition": "Uses full reference scaling instead of ref_scaling.",
+        "violated_property_ids": [
+          "P_REFERENCE_SCALING"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_delay_equals_current/certification.json",
+        "certification_sha256": "479b5952f6ae3d68928e1b179164488600d73115b68bfdcea036584d0c4dcb29",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "88c3110126e6b2359cf2df2ff6686172c9a8b5000e7b6b338497ced6fe21312b",
+        "mutation_id": "neg_003_delay_equals_current",
+        "source_catalog_certification_path": "negative_variants/neg_003_delay_equals_current/certification.json",
+        "trigger_condition": "Drives delayed sum equal to current sum.",
+        "violated_property_ids": [
+          "P_ONE_CYCLE_DELAYED_SUM"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "a1f73a8fe767e30112025ce2a3a948d1900efa79c5dc680126440bc75170a18e",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "d716452e5d38f01d36222f23d0268e6e3d9df951ec22ed3dee61cda22e02b4ae",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_CLOCKED_FLASH_THRESHOLD_SUM"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_normalization/certification.json",
+        "certification_sha256": "d061b7378beaec0a0e10791d58b95f644444c40e22690cf388ff1d06b5762ef6",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "6b1b55e2d80a51fc2b591f665f4695161530ed4e59d878af86a56a71eb2ab89f",
+        "mutation_id": "neg_004_wrong_normalization",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_normalization/certification.json",
+        "trigger_condition": "Divides the thermometer count by 4 instead of 8.",
+        "violated_property_ids": [
+          "P_NORMALIZED_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "936f56178ed66b3a0d6b806f608c07c7964a50a1665c23591a595429d841148f",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "f989be52ea94e27e14e642d998c92b32a3f3b2e0865f18a66261fb56d4eb21e4",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Flash 8level Sum Delay: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_NORMALIZED_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_wrong_ref_scaling",
+    "canonical_dut_id": "151",
+    "hashes": {
+      "mutation_catalog_sha256": "e8128824d0da598f7f7f260b010412e1f6cedb502687755ba7bdca5c1b0f1e91",
+      "score_deck_sha256": "a0bde569a873520bd269f8ae080eb03da1b07920eb34b943b876a9ec1475ae9d",
+      "task_certification_sha256": "ee30dd1061c16c677b8302a0b4db2eb8316cbbd569a855524b5020e336e6d95c",
+      "task_record_sha256": "a7b6e9781803984c36ce2bd731bbffbaa00bbc741e509e9899c157eaf3de8265"
+    },
+    "release_dir": "151-flash-8level-sum-delay"
+  }
+}

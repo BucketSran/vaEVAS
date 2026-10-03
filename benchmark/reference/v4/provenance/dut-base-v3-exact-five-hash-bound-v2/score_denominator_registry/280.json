@@ -1,0 +1,78 @@
+{
+  "family_id": "280",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_wrong_scale/certification.json",
+        "certification_sha256": "6b99114e718effe48fd9b58aea5070c053abb82d64f5c4a0c707289f43f966b9",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "73de74e7e2901c0fb1b5ca5ccb1b78bb0999fa1c3a649b7b77527f7216c008d5",
+        "mutation_id": "neg_003_wrong_scale",
+        "source_catalog_certification_path": "negative_variants/neg_003_wrong_scale/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_wrong_scale",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_enable/certification.json",
+        "certification_sha256": "6415c3e30d39335860c550e6b783b01b94c78ece3a77d6ba07de8d509410155e",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "c89182f402a6d65864871ce8d05dcccfd251885201c553eeea2b2a94bfa667b2",
+        "mutation_id": "neg_002_ignore_enable",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_enable/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_enable",
+        "violated_property_ids": [
+          "P_COUNT_HOW_MANY_OF_X0_X1"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero_outputs/certification.json",
+        "certification_sha256": "f3b0dca5f6ed9cb15ec615e5e7c8ddeb38a832be319b723a86a08ba8774f609c",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "9babc52ab0c656740cd6a96fc08384543771968048bc6f89ec3fd83da173cb56",
+        "mutation_id": "neg_001_zero_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero_outputs/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_zero_outputs",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignore_control_or_reset/certification.json",
+        "certification_sha256": "3a5939eb41e22775011932ae596342892596bd4fb15f1f8987b9153f69ec4c43",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "6f492db2c49fbcea783a0cead44e9bb964dfac88a873395bcee36391d648cf5e",
+        "mutation_id": "neg_004_ignore_control_or_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignore_control_or_reset/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_ignore_control_or_reset",
+        "violated_property_ids": [
+          "P_COUNT_HOW_MANY_OF_X0_X1"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_wrong_flag_metric/certification.json",
+        "certification_sha256": "c32311c7a80c0511b1dd92224a7717b9dbc366b49bdd306c73979c234e8e2350",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "aa711eede7a8217d89c57bdcd565df6369170344acdcab3d7777d5ad40fb6d4e",
+        "mutation_id": "neg_005_wrong_flag_metric",
+        "source_catalog_certification_path": "negative_variants/neg_005_wrong_flag_metric/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_wrong_flag_metric",
+        "violated_property_ids": [
+          "P_MEASURE_ANALOG_INPUTS_RELATIVE_TO_THE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_wrong_scale",
+    "canonical_dut_id": "280",
+    "hashes": {
+      "mutation_catalog_sha256": "74f80042470c78896cfa63efb2ea4d9fc324f6c6685b17d937666c0dc4bdd479",
+      "score_deck_sha256": "cdde7f3ee037d4907837548ae97376925f76841d1d8a847614bf1f6fae541697",
+      "task_certification_sha256": "ef2205ccabc91e8869a45a66e9741aa80fbb5d2889d995d3ab8c63c69d020006",
+      "task_record_sha256": "5e355c73a1e7407074eb468ce13cf6e76fd758df20c1ec63c87bd73e72ad1987"
+    },
+    "release_dir": "280-ready-reduction-fault-monitor"
+  }
+}

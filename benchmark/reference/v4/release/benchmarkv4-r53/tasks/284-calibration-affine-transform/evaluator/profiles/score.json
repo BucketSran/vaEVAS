@@ -1,0 +1,22 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "0a4caedb422c2a9e64d2b99d014b6cdbc03f3b8a9481e4de8f29483bd9131139",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_EACH_RISING_CLOCK_CROSSING_COMPUTE",
+    "P_MAP_GAIN_CTRL_TO_A_PUBLIC",
+    "P_CLEAR_OUTPUT_AND_METRIC_WHILE_RESET",
+    "P_EXPOSE_A_BOUNDED_RESIDUAL_METRIC_FOR",
+    "P_USE_LOCAL_ANALOG_HELPER_FUNCTIONS_RATHER"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

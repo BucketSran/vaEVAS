@@ -1,0 +1,23 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "5886c1741bbdd1cd29903f9ab12c48e20ab5961cd289c7d760d78ba0a6caf84e",
+  "parameters": {},
+  "profile_name": "score",
+  "property_ids": [
+    "P_CLIP_VIN_TO_THE_RANGE_FROM",
+    "P_QUANTIZE_THE_CLIPPED_VALUE_INTO_EIGHT",
+    "P_SATURATE_THE_CODE_AT_THE_ENDPOINTS",
+    "P_USE_UNIFORMLY_SPACED_QUANTIZATION_LEVELS_START",
+    "P_DRIVE_D0_D1_AND_D2_AS",
+    "P_DRIVE_VRES_AS_THE_CLIPPED_INPUT"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

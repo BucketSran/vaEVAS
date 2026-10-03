@@ -1,0 +1,79 @@
+{
+  "family_id": "348",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_gain_direction_reversed/certification.json",
+        "certification_sha256": "65dcc69cf82d20108787ce137469e8e11f4d0330dee0640943a20ea55825e8d4",
+        "fault_class": "gain_control_polarity",
+        "mutation_bundle_sha256": "37ae2d2202f0f277b8907d6e4cf8f7287a881162c9f7299225e650c0a4a004c8",
+        "mutation_id": "neg_001_gain_direction_reversed",
+        "source_catalog_certification_path": "negative_variants/neg_001_gain_direction_reversed/certification.json",
+        "trigger_condition": "peak lies below target",
+        "violated_property_ids": [
+          "P_VGA_GAIN_DIRECTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_gain_lsb_double/certification.json",
+        "certification_sha256": "833f9e8973b34cd771d30a8fdf87478ec2d8717e4c5f19c1e28e2dd4de92c5e1",
+        "fault_class": "gain_mapping_error",
+        "mutation_bundle_sha256": "6be0585df0927b74c4aa96e906849649497c2185f1c2fd0bce2220f5a2033ac9",
+        "mutation_id": "neg_003_gain_lsb_double",
+        "source_catalog_certification_path": "negative_variants/neg_003_gain_lsb_double/certification.json",
+        "trigger_condition": "gain code is nonzero",
+        "violated_property_ids": [
+          "P_VGA_OUTPUT_GAIN"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_lock_one_cycle/certification.json",
+        "certification_sha256": "56260613415897bbdf240ea46063bfc69dfb70331f1e2def79294061ba6663cf",
+        "fault_class": "lock_qualification_error",
+        "mutation_bundle_sha256": "157c7f66abd372db4a73104bbb7c200a39bcfa1479750d919e1e3100a258a5f0",
+        "mutation_id": "neg_004_lock_one_cycle",
+        "source_catalog_certification_path": "negative_variants/neg_004_lock_one_cycle/certification.json",
+        "trigger_condition": "peak lies within tolerance for one update",
+        "violated_property_ids": [
+          "P_VGA_LOCK_QUALIFICATION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_peak_not_absolute/certification.json",
+        "certification_sha256": "b50d8e285bc4077bb9d1fa8159c9a26e2f1a2a1d40d319afbcfd5b01e939a135",
+        "fault_class": "peak_polarity_error",
+        "mutation_bundle_sha256": "1d76cc471f0b3f067f58abb72aca8e0ddc94e665a46e31b5b4219bb9e541481b",
+        "mutation_id": "neg_005_peak_not_absolute",
+        "source_catalog_certification_path": "negative_variants/neg_005_peak_not_absolute/certification.json",
+        "trigger_condition": "vin is negative",
+        "violated_property_ids": [
+          "P_VGA_GAIN_DIRECTION",
+          "P_VGA_PEAK_SAMPLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_reset_gain_zero/certification.json",
+        "certification_sha256": "899d851e53f4e0a300103f8f1ca6c166bb83481f6e17799c9458a32edb9878ef",
+        "fault_class": "reset_state_error",
+        "mutation_bundle_sha256": "c775cbc375f9c836ea3c23112e6d19f2d73b27a5743ccffb7adae4d26e09942d",
+        "mutation_id": "neg_002_reset_gain_zero",
+        "source_catalog_certification_path": "negative_variants/neg_002_reset_gain_zero/certification.json",
+        "trigger_condition": "reset is asserted",
+        "violated_property_ids": [
+          "P_VGA_RESET_STATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_gain_direction_reversed",
+    "canonical_dut_id": "348",
+    "hashes": {
+      "mutation_catalog_sha256": "32bddc961e65705acdd8a2c782f8b00f2eba89bc9f8f483f7042e02171af2979",
+      "score_deck_sha256": "c99ecf42077a98c47805fe1f2d3f4194b6a708734d0b68353507b786ee593bd2",
+      "task_certification_sha256": "c3cfe070182d36b055afd264c5b410f7940c2a3b4787ce45f85424ea00c9d302",
+      "task_record_sha256": "f72f2e5e2df2032218071fe74a6e21080f9f7edadb65eb17442453a04789f076"
+    },
+    "release_dir": "348-vga-gain-calibration-loop"
+  }
+}

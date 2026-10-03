@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module debounce_latch(sig, rst_n, out);
+    input sig,rst_n; output out; electrical sig,rst_n,out;
+    parameter real vth=0.45; parameter real vdd=0.9; parameter real stable=12n; parameter real tr=500p;
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

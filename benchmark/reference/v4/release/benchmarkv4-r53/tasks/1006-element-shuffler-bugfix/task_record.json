@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "element_shuffler.va"
+  ],
+  "canonical_dut_source_slug": "006-element-shuffler",
+  "checker_task_id": "v4_006_element_shuffler",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "9505c7e4fb6ef82875e30fbbada7d95de478e4825c9fd55c6b7e4fb697b198ca",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "dc4653de46863ff7f1058723a668110326e633da96e94bda6cdc6d561d10be91",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "d48f9c058c33159f48df4763976531f1a297304ac0db53e70636e7f916080de8",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "006",
+  "family_spec_sha256": "adaa158a08b0036c6dbc59aedd39853c025706538de75e087fa2122b9f64a5e2",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "edb6083583f82549d5d0ed58e170ee1cbddfc799fadb438bab96c329d03b5b42",
+  "public_contract": "tasks/1006-element-shuffler-bugfix/public_contract.json",
+  "public_contract_sha256": "bd50d871e6db4a63b802956d2244990924f813057e5818ac8a7628a4badc6299",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1006-element-shuffler-bugfix",
+  "task_id": "v4-1006"
+}

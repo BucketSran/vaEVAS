@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "configurable_polarity_edge_detector.va"
+  ],
+  "canonical_dut_source_slug": "066-configurable-polarity-edge-detector",
+  "checker_task_id": "v4_066_configurable_polarity_edge_detector",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "e264db6538497ec558d309dc3b4872ef0fbc370c74a1585607d4d8ebb9a81480",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "fe9c13a9229c142e01d659c2f1656a7a57317a4f9936b3d29e408c09f41a02fa",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "ff98db71390d01a9959b679608e2f33f457926135b5d1dd6fbfd78af32f72c86",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "066",
+  "family_spec_sha256": "d75f325184c7a96cf2ad68a520284cf91fedea7402c330bb681d6dcd310d70a4",
+  "form": "dut",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "c2531494b9990c73603769facd5b78f5ffc48cfe4bb5cf1f63bfeaded9263d77",
+  "public_contract": "tasks/066-configurable-polarity-edge-detector/public_contract.json",
+  "public_contract_sha256": "cf60bf81e4d0fad46bc8dc6bf22117f2d7dfd23a2828e23cfa2fa6284ee70190",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/066-configurable-polarity-edge-detector",
+  "task_id": "v4-066"
+}

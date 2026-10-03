@@ -1,0 +1,43 @@
+{
+  "id": "vbr1_l2_measurement_flow:e2e",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l2_measurement_flow",
+  "level": "L2",
+  "track": "support",
+  "difficulty": "D3",
+  "category": "Measurement Instrumentation Flows",
+  "base_function": "Measurement flow",
+  "family": "end-to-end",
+  "domain": "voltage",
+  "score_surface": "benchmark-e2e",
+  "artifacts": {
+    "prompt": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e/prompt.md",
+    "meta": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e/meta.json",
+    "checks": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e/checks.yaml",
+    "gold": [
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e/gold/final_step_file_metric_ref.va",
+      "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e/gold/tb_final_step_file_metric_ref.scs"
+    ]
+  },
+  "certification": {
+    "static": "pass",
+    "evas": "pass",
+    "spectre": "pass",
+    "evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_measurement_flow/e2e/evidence.json"
+  },
+  "counts": {
+    "benchmark_score": false,
+    "model_capability": false,
+    "l0_conformance": false
+  },
+  "source": {
+    "source_base_id": "measurement_flow",
+    "source_task_id": "final_step_file_metric_smoke",
+    "historical_source_task_id": "final_step_file_metric_smoke",
+    "release_path": "benchmark-vabench-release-v1/tasks/SUP01_measurement_instrumentation_flows/vbr1_l2_measurement_flow/forms/e2e"
+  },
+  "notes": [
+    "Generated from release_entry.json so each materialized form has a schema-valid release task manifest.",
+    "benchmark_score remains disabled because this release entry is outside the frozen score denominator."
+  ]
+}

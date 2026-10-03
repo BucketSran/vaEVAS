@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "034-loop-filter-abstraction",
+  "checker_task_id": "v4_034_loop_filter_abstraction",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "3ee2d3f9625e007e509deca6ef9944dce3e509a9387a8b81b1fccd4d89cd040d",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "b4cb6f520ab0dde7767d70964a5112428e2f46d96c5e479f3ded13ce9f131ce2",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "3ee2d3f9625e007e509deca6ef9944dce3e509a9387a8b81b1fccd4d89cd040d",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "9d800e385d5f2655fa816abbad7d6c27c3ea105453c93abeb0ae35610e9c52fa",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "2da6b8ba4f4b9e9fc1882f6519b4910fd26839a31faa9a5377c67bec864ec79c"
+  },
+  "family_id": "034",
+  "family_spec_sha256": "d2a9cbf828ac5c369dacbc1deea2daac348979070bac443a25d51875b859b7f9",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "d88327569a01b93aab7cf4948fb454aa87305776e2ec0ec0e036c278acd6b45b",
+  "public_contract": "tasks/534-loop-filter-abstraction-testbench/public_contract.json",
+  "public_contract_sha256": "fb5ef8d58651c1820442bccec9804e75638f9687d89a70e02ca186d7f06a05d1",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/534-loop-filter-abstraction-testbench",
+  "task_id": "v4-534"
+}

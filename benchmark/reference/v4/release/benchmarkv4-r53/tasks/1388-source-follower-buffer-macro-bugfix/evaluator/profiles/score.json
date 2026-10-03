@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "1a3aeca97d8f9eb391bbb9e608c0fb2fe59cb4c4e6912481ac164873bf183834",
+  "parameters": {
+    "maxstep": "100p",
+    "stop_time": "100n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_RESET_OR_LOW_ENABLE_DRIVES_THE",
+    "P_WHEN_ENABLED_THE_OUTPUT_FOLLOWS_VIN",
+    "P_CLAMP_THE_OUTPUT_BETWEEN_VSS_AND",
+    "P_HEADROOM_METRIC_REPORTS_THE_REMAINING_VBIAS",
+    "P_VALID_IS_HIGH_ONLY_WHEN_ENABLED"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

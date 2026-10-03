@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "122-differential-deadband",
+  "checker_task_id": "v4_122_differential_deadband",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2f8fb2bf1e0339673ecfc9daeecab8422dad37713fae9b68c20f9f51f5849c1f",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "361a5cfd4072eb82204ef936476122c29323fc33a6c21f21f95e48695624980f",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2f8fb2bf1e0339673ecfc9daeecab8422dad37713fae9b68c20f9f51f5849c1f",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "2ca65a6145665c2e6a664624080168e5d44afcd23d4b7f80f7d8a816a5c90bae",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "db7a4a14e1a1f534d75d45da6a7e63d286447a80f08e3f8df042ac18cc9ba931"
+  },
+  "family_id": "122",
+  "family_spec_sha256": "754381f1f80daa872bac16f3997b744400afb99ab316ed5bd7f45a18ff7b27ec",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "53828d47c32a865e3ff4d103079c3f5ffd63ecc2848a530218347ddeae6a4ef8",
+  "public_contract": "tasks/622-differential-deadband-testbench/public_contract.json",
+  "public_contract_sha256": "b481ac7c143f6d67a202dc51635ded0583dd9fee1b3972a97fc1920ac9a756c3",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/622-differential-deadband-testbench",
+  "task_id": "v4-622"
+}

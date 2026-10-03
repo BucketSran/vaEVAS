@@ -1,0 +1,25 @@
+syntax:
+  must_include:
+    - "@(cross("
+    - "electrical"
+    - "up"
+    - "down"
+    - "retimed_data"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "data_edges_trigger_up_or_down"
+    - "up_down_pulses_present"
+    - "up_down_not_high_together"
+
+parity:
+  reference: "spectre"
+  status: "pass"
+  notes:
+    - "Certified by release dual evidence for this form."

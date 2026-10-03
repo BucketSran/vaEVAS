@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module phase_accumulator_timer_wrap_ref (
+    inout  electrical VDD,
+    inout  electrical VSS,
+    output electrical clk_out,
+    output electrical phase_out
+);
+parameter real dt = 5n from (0:inf);
+parameter real phase_step = 0.25 from (0:1);
+parameter real tedge = 200p from (0:inf);
+
+    // TODO: implement the behavior described in visible/prompt.md.
+    // This starter is intentionally incomplete; hidden tests grade behavior.
+endmodule

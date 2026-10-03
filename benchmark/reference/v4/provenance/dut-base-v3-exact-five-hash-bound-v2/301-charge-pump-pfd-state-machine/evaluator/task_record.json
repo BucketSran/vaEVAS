@@ -1,0 +1,37 @@
+{
+  "canonical_dut_id": "301",
+  "checker_task_id": "v4_301_charge_pump_pfd_state_machine",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "d49d832fd62eec55e209161a856a02b9b77a7ece463cbedbab357414a8b8ff96",
+    "checker_profile.json": "fa36ffdd397c64481eb6430eec3ab2b63f739da378cbdda6444aa63c8cd3b59a",
+    "derivation_manifest.json": "fb3b6fac659d02fec473782baf03eeec5cc440a6d6728c88d38181a5a3abf417",
+    "family_spec.json": "4024374ef781f421fa2815335321ff821a20b6a7e9090b9b23687e85f08e0c71",
+    "harness_spec.json": "d15cdaea8e997c65bc42c632841ddd5154d9940aad791457fd24334d760553a0",
+    "mutation_catalog.json": "7315d29f37d913290945f73aaa68f25b07a6c4df6e284ae761e1fe9eb695b5e3",
+    "profiles/feedback.json": "ad7c5785e8e4f082ec9051bb31d6da89f53a8ede6640a2c06753454d5ff10cee",
+    "profiles/score.json": "9b377b03982bf2c174296e1964a690c1ccb8009bc856c3c8b46761f62adb0313",
+    "score_tb.scs": "e3548aadbebb00c32c88ac8776988f7891d73aa8296a3d423df96765ed616d21",
+    "solution_tree": "55c9922f8557c4e748ffa175988c6d93990ab471ed3c878bc690efb0731aea93",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "5eec9f877de99e7565c0eff9c4163bdfedb49b7c83814ade1d98f5f6d47658b4",
+    "instruction.md": "37d66ec3654bc42aba9a33986a9e7351bbe8c8a12f0d6bc4b82c56f221bd0de2",
+    "public_contract.json": "e5fb45a233f02ab768252ba3c2916f113ead8b86d7cc8039cc7328b77a308594",
+    "public_support/ref_fb_clk.va": "2be4ce511ab257fdd8097ceaa93cfa95a8ef2b26bcbfd88d0a7c64f20a5bd614"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "d49d832fd62eec55e209161a856a02b9b77a7ece463cbedbab357414a8b8ff96"
+  },
+  "release_dir": "301-charge-pump-pfd-state-machine",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "504-charge-pump-pfd-state-machine",
+  "support_root": "public_support",
+  "target_artifacts": [
+    "charge_pump_pfd_state_machine.va"
+  ]
+}

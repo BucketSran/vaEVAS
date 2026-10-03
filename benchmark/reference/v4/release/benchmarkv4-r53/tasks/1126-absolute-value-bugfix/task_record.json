@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "absolute_value_behavior.va"
+  ],
+  "canonical_dut_source_slug": "126-absolute-value",
+  "checker_task_id": "v4_126_absolute_value",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "793b7d854cbf2f01606edc19442fe70dde33ffa8c90d166013f1094baefda97a",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "9ed2234ec4aecc34f36ceeac49a711e638fcb6e15926df24ffe974ee9c4509d6",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "9404efc169abceb0022536f7582aeb7b051632e0ce9c27ca20e63174d27c7867",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "126",
+  "family_spec_sha256": "642472df236718ff8407f37cc4a8208d6b2e1f736d995f985c8bc3d7b89c994d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "38fbb32817a8799332eec8a8272111d01e75aafd35128e6b5262baf422e18148",
+  "public_contract": "tasks/1126-absolute-value-bugfix/public_contract.json",
+  "public_contract_sha256": "16d8aed5e8633ea6d975bf2f2f404da874276b0ddc4bc4f3c3a2ec4113617c11",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1126-absolute-value-bugfix",
+  "task_id": "v4-1126"
+}

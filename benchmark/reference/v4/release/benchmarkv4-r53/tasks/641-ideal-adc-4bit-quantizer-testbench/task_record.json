@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "141-ideal-adc-4bit-quantizer",
+  "checker_task_id": "v4_141_ideal_adc_4bit_quantizer",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "83a7d8850cb095350325674686628dce7e23141e95f4f5ca0a74b7f1c15c40a5",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "9db3e919869f01d397da964ad82f0374e1393028b002b6753c7b50e8290e1e8e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "83a7d8850cb095350325674686628dce7e23141e95f4f5ca0a74b7f1c15c40a5",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "6a26c5c34df73bd5d089fafe52b211cd24a8bc6a029f159914ecb8bdbaa33e69",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "bc3a97674725ab1f254654ad632093a4b8a0464fcfa1678758d62cef5745a26e"
+  },
+  "family_id": "141",
+  "family_spec_sha256": "727ba99822760baa7ffabb7bc0379b10bf7958a9024c405b11924d29fbc1b008",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "24a74e802a491c45fc6e1212cbff9137dc2a9af4dcc853ffb6b5df32ab108d34",
+  "public_contract": "tasks/641-ideal-adc-4bit-quantizer-testbench/public_contract.json",
+  "public_contract_sha256": "9c926acee7ac14c8395ea6b1f1fb41db9f3f0e3240f9893430dfdcab376d46b9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/641-ideal-adc-4bit-quantizer-testbench",
+  "task_id": "v4-641"
+}

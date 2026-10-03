@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "213-tool-4bit-sar-signed-dac",
+  "checker_task_id": "v4_213_tool_4bit_sar_signed_dac",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "2e858324a13edb21c94a941773e6d14767136f614df06513c874667fce3117a5",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "9404aad0d503a68f199dd40d97343866b4fd07bf0022b38fe90cd3c1a7ca931d",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "2e858324a13edb21c94a941773e6d14767136f614df06513c874667fce3117a5",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "c36bf3f1c7a30eec321cfddb4559cee8412a03c63551377b12b0bfe1b005344e",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "a89895432c1d78963ffe5c10bb4f5064841bf51f3e248ca450fc40f10ff45def"
+  },
+  "family_id": "213",
+  "family_spec_sha256": "5e9573ccd93d1c21c8ab2e3f055359c810d46cc1129892917c43b08ec75ac941",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "579a72e069a68a89e8d0e0c0eaa132c43d8d7e685c18b36040a612a0942ac383",
+  "public_contract": "tasks/713-tool-4bit-sar-signed-dac-testbench/public_contract.json",
+  "public_contract_sha256": "56bdb1d6595981d3c198129d3de233e1881f9ad30c486a2c21c585ea3d547fa0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/713-tool-4bit-sar-signed-dac-testbench",
+  "task_id": "v4-713"
+}

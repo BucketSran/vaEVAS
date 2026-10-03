@@ -1,0 +1,78 @@
+{
+  "family_id": "271",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_ignore_gate/certification.json",
+        "certification_sha256": "480707a9e9c9396d27988723014262d5f8bc40dbf63cd19948cb2825b43ca027",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "ef2598de04676284bf18cf192f6946ab5232b9ce2869c1b33f0b1a6ae027bb91",
+        "mutation_id": "neg_002_ignore_gate",
+        "source_catalog_certification_path": "negative_variants/neg_002_ignore_gate/certification.json",
+        "trigger_condition": "stimulus exercises neg_002_ignore_gate",
+        "violated_property_ids": [
+          "P_FOR_THE_SAME_GATED_SAMPLE_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_no_reset_clear/certification.json",
+        "certification_sha256": "7715934ead70466386bff4a449250a3644cf327004352bb64939683ae109c150",
+        "fault_class": "state_reset_or_enable_error",
+        "mutation_bundle_sha256": "120ee3a32a0c41ae539c9d600f964ee182e0c706a518011ead2f651ea30b7ced",
+        "mutation_id": "neg_003_no_reset_clear",
+        "source_catalog_certification_path": "negative_variants/neg_003_no_reset_clear/certification.json",
+        "trigger_condition": "stimulus exercises neg_003_no_reset_clear",
+        "violated_property_ids": [
+          "P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_unscaled_rate/certification.json",
+        "certification_sha256": "3d0e6f6ef0b011db076cf49cc798747191477c5f817ced3293b3851e5fd20131",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "dcdd05115ad31a5de231c3b6dfede144b952af4cd19eec64bb65e5994b0724c0",
+        "mutation_id": "neg_004_unscaled_rate",
+        "source_catalog_certification_path": "negative_variants/neg_004_unscaled_rate/certification.json",
+        "trigger_condition": "stimulus exercises neg_004_unscaled_rate",
+        "violated_property_ids": [
+          "P_FOR_THE_SAME_GATED_SAMPLE_WINDOW"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_average_uses_window_count/certification.json",
+        "certification_sha256": "1202fcebfd239e38e4124bac68eb4ea7d1e574ce6ec3414bd03afc4706f851ec",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "d90d5c4203f0700d1dfed667f4840bf4c4cbb7c6521469a66d1e52fe70bfea1f",
+        "mutation_id": "neg_005_average_uses_window_count",
+        "source_catalog_certification_path": "negative_variants/neg_005_average_uses_window_count/certification.json",
+        "trigger_condition": "stimulus exercises neg_005_average_uses_window_count",
+        "violated_property_ids": [
+          "P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_count_all_clocks/certification.json",
+        "certification_sha256": "0ad2f14ffa42d0a5d0e3e6e0231c7abd8e7da2d6e4ecdb79ae250a7d4b2121aa",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "d9e2b7ae566b88156062874f7a9604e950191ac802eee1a10bff9e9918752deb",
+        "mutation_id": "neg_001_count_all_clocks",
+        "source_catalog_certification_path": "negative_variants/neg_001_count_all_clocks/certification.json",
+        "trigger_condition": "stimulus exercises neg_001_count_all_clocks",
+        "violated_property_ids": [
+          "P_INITIALIZE_EVENT_COUNT_SAMPLE_COUNT_RATE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_ignore_gate",
+    "canonical_dut_id": "271",
+    "hashes": {
+      "mutation_catalog_sha256": "0713536c70d67965aa34e6935e34445fd14e3b903a6c4b4bb2fd368068e27d8f",
+      "score_deck_sha256": "cf8013df9aac96c7624586df28a3694b93ab84cf73249a9e25364c5596cda23b",
+      "task_certification_sha256": "8013ee915914cd59364062f1bd34e941d108fe8d4d90f9eb127600e10db4a448",
+      "task_record_sha256": "998f960ef55cee3fabeffb2d9fb3c0555aecee5d79e28d4f45068994dc6fd289"
+    },
+    "release_dir": "271-windowed-event-rate-monitor"
+  }
+}

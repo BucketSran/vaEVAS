@@ -1,0 +1,78 @@
+{
+  "family_id": "046",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001/certification.json",
+        "certification_sha256": "6feb49357d418e4ffe77cd3e84a632ec00d83f5ed21cade83d5b5dff6e5c2b98",
+        "fault_class": "passes_nominal_smoke_cases_but_fails_an_endpoint",
+        "mutation_bundle_sha256": "400b63f6176d11222be703636b85524e77f89abae9f5d9c85c32a0b0510ec20a",
+        "mutation_id": "neg_001",
+        "source_catalog_certification_path": "negative_variants/neg_001/certification.json",
+        "trigger_condition": "Passes nominal/smoke cases but fails an endpoint, threshold, saturation, or settling boundary.",
+        "violated_property_ids": [
+          "P_RESET_FAULT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003/certification.json",
+        "certification_sha256": "9c888c2828158a0ac36afe30a835acd43f450e6a57ac4187407bacbdfaa0af68",
+        "fault_class": "passes_positive_or_nominal_path_but_fails_sign_f",
+        "mutation_bundle_sha256": "c7b29b3e0d41b03251ea0650bb2c3805d97a7267ed75c0e4faefacb2f54befef",
+        "mutation_id": "neg_003",
+        "source_catalog_certification_path": "negative_variants/neg_003/certification.json",
+        "trigger_condition": "Passes positive or nominal path but fails sign, feedback direction, I/Q polarity, or trim direction.",
+        "violated_property_ids": [
+          "P_HYSTERESIS_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004/certification.json",
+        "certification_sha256": "f742f168cfc3908e1e1854296b1188242969ae55aedba693be8cc9e827113573",
+        "fault_class": "passes_steady_state_behavior_but_fails_reset_ena",
+        "mutation_bundle_sha256": "e487a3a9e39299d4105ab20da558e92de84ac55df80d9b348445ee7569c11fda",
+        "mutation_id": "neg_004",
+        "source_catalog_certification_path": "negative_variants/neg_004/certification.json",
+        "trigger_condition": "Passes steady-state behavior but fails reset, enable, initial condition, or done/ready assertion.",
+        "violated_property_ids": [
+          "P_BROWNOUT_CLEAR"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005/certification.json",
+        "certification_sha256": "2c0467ea063da2025448eddf8fe79d41227dacad36fefceaab9197c30d938f56",
+        "fault_class": "produces_plausible_behavior_but_fails_a_metric_w",
+        "mutation_bundle_sha256": "40ee70f2126800290e7a50d325c2fa1d73b6b931aa36d2c484d4e99960e22ab9",
+        "mutation_id": "neg_005",
+        "source_catalog_certification_path": "negative_variants/neg_005/certification.json",
+        "trigger_condition": "Produces plausible behavior but fails a metric writer, latency, count, or measurement output.",
+        "violated_property_ids": [
+          "P_STATUS_DISTINCTION"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002/certification.json",
+        "certification_sha256": "3bff57aa2a27fa7d9502147f1f5e7462593f919f8ebdbc8380d5aca6140ac874",
+        "fault_class": "passes_interface_and_broad_waveform_checks_but_f",
+        "mutation_bundle_sha256": "fa4b0c34329a1dffbb34465c031b87ca70c7b96892ffd517fdc4994bcf37e674",
+        "mutation_id": "neg_002",
+        "source_catalog_certification_path": "negative_variants/neg_002/certification.json",
+        "trigger_condition": "Passes interface and broad waveform checks but fails one edge, timer, sample, lock, or reacquire window.",
+        "violated_property_ids": [
+          "P_UPPER_TRIP_ASSERT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001",
+    "canonical_dut_id": "046",
+    "hashes": {
+      "mutation_catalog_sha256": "c00654efa2ae0667fccf078cb9b496f8446c7281788bea74d06bf8b533893ccb",
+      "score_deck_sha256": "f17d8c15646b943275dfc27533921fe6a937dee20df7bb85089c142c104345fd",
+      "task_certification_sha256": "cb5500ca87da62b382da6d90b9f19d3fb03b6feb64732feabfb7a9956d4f1441",
+      "task_record_sha256": "9c81b45e61c2b59f37bdeb57c4477c79c3f08d5cdac9a8ff2322ffd5fcd1a259"
+    },
+    "release_dir": "046-uvlo-brownout-detector"
+  }
+}

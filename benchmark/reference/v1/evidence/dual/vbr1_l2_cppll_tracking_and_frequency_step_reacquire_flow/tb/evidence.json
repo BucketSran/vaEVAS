@@ -1,0 +1,87 @@
+{
+  "release_entry_id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow",
+  "task_id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow:tb",
+  "source_task_id": "vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow_tb",
+  "task_form": "tb",
+  "taxonomy": {
+    "level": "L2",
+    "category": "PLL Clock and Timing Systems",
+    "base_function": "CPPLL tracking and frequency-step reacquire flow"
+  },
+  "static": "pass",
+  "evas": "pass",
+  "spectre": "pass",
+  "verdict": "certified",
+  "artifacts": [
+    "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/gold",
+    "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/gold",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/evas_result.json",
+    "benchmark-vabench-release-v1/evidence/dual/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/spectre_result.json",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/cppll_timer_ref.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/ref_step_clk.va",
+    "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/tb_cppll_freq_step_reacquire_ref.scs"
+  ],
+  "historical_evidence": {
+    "evas_result": "",
+    "spectre_result": "",
+    "source": "fresh release dual rerun",
+    "source_equivalence_source": "release_rerun_staging_bundle",
+    "simulator_rerun": true
+  },
+  "release_rerun": {
+    "summary": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/summary.json",
+    "staged_task_dir": "benchmark-vabench-release-v1/rerun_staging_ct05_20260525/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/gold",
+    "result_root": "results/vabench-release-v1-ct05-dual-20260525_234000_ci/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/tb/gold",
+    "raw_status": "PASS",
+    "expected_result_met": true,
+    "parity": {
+      "status": "passed",
+      "mode": "pll_task_aware",
+      "task_family": "cppll_reacquire",
+      "metrics": {
+        "evas": {
+          "late_edge_ratio": 0.987012987012987,
+          "late_fb_freq_hz": 50187604.240038104,
+          "disturb_lock_high_frac": 0.07802109213066648,
+          "pre_lock_time_s": 7.06e-08,
+          "relock_time_s": 2.1078e-06,
+          "post_lock_count": 5,
+          "late_vctrl_mean_v": 0.46362614971075367
+        },
+        "spectre": {
+          "late_edge_ratio": 0.987012987012987,
+          "late_fb_freq_hz": 50208267.834439956,
+          "disturb_lock_high_frac": 0.10400455313536441,
+          "pre_lock_time_s": 7.061722648489824e-08,
+          "relock_time_s": 2.108130417755154e-06,
+          "post_lock_count": 5,
+          "late_vctrl_mean_v": 0.46505631499835726
+        },
+        "late_edge_ratio_delta": 0.0,
+        "late_fb_freq_rel_delta": 0.0004115576038191318,
+        "disturb_lock_window_delta": 0.025983461004697936,
+        "pre_lock_time_delta_s": 1.7226484898243454e-11,
+        "relock_time_delta_s": 3.30417755153941e-10,
+        "post_lock_count_delta": 0,
+        "late_vctrl_mean_delta_v": 0.0014301652876035909
+      },
+      "notes": [
+        "ignored_signals=dco_clk"
+      ],
+      "failures": []
+    }
+  },
+  "source_equivalence": {
+    "pass": true,
+    "source": "release_rerun_staging_bundle",
+    "failures": [],
+    "release_gold": [
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/cppll_timer_ref.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/ref_step_clk.va",
+      "benchmark-vabench-release-v1/tasks/CT05_pll_clock_and_timing_systems/vbr1_l2_cppll_tracking_and_frequency_step_reacquire_flow/forms/tb/gold/tb_cppll_freq_step_reacquire_ref.scs"
+    ]
+  },
+  "failures": [],
+  "pending_blockers": [],
+  "notes": "EVAS/Spectre evidence imported from fresh release rerun staged from release gold assets."
+}

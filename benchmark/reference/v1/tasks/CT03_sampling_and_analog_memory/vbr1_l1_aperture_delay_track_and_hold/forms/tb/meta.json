@@ -1,0 +1,47 @@
+{
+  "id": "vbr1_l1_aperture_delay_track_and_hold_tb",
+  "task_id": "vbr1_l1_aperture_delay_track_and_hold_tb",
+  "release_entry_id": "vbr1_l1_aperture_delay_track_and_hold",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Sampling and Analog Memory",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D2",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "source_main120_id": "vbm1_track_hold_aperture_tb",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "ahdl_include",
+    "tran",
+    "save"
+  ],
+  "must_not_include": [],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_sample_hold_aperture_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/sample_hold_aperture_ref.va",
+    "gold/tb_sample_hold_aperture_ref.scs"
+  ],
+  "evidence": {
+    "dual_evidence": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/tb/evidence.json",
+    "evas_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/tb/evas_result.json",
+    "spectre_result": "benchmark-vabench-release-v1/evidence/dual/vbr1_l1_aperture_delay_track_and_hold/tb/spectre_result.json"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "vbm1_thermometer_dac_15seg_tb",
+  "task_id": "vbm1_thermometer_dac_15seg_tb",
+  "release_entry_id": "vbr1_l1_unit_element_thermometer_dac",
+  "asset_type": "vabench_task",
+  "benchmark_split": "vabench-main-v1-candidate",
+  "semantic_label": "4-bit 15-segment unit-element thermometer DAC testbench",
+  "semantic_note": "The testbench must exercise all fifteen unary segment pins, including the full-scale seg14 case.",
+  "family": "tb-generation",
+  "category": "dac",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D1",
+  "expected_backend": "evas",
+  "release_form": "normal",
+  "provenance_status": "clean",
+  "counts": {
+    "model_capability": true,
+    "benchmark_coverage": true,
+    "bugfix_claim": false
+  },
+  "must_include": [
+    "thermometer_dac_15seg.va",
+    "seg14",
+    "save",
+    "tran"
+  ],
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "tb_thermometer_dac_15seg_ref.scs"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source_files": [
+    "gold/thermometer_dac_15seg.va",
+    "gold/tb_thermometer_dac_15seg_ref.scs"
+  ],
+  "evidence": {
+    "expected_validation": "EVAS/Spectre dual validation via release rerun."
+  }
+}

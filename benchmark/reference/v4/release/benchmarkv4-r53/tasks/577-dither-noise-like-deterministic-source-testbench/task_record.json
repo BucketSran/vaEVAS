@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "077-dither-noise-like-deterministic-source",
+  "checker_task_id": "v4_077_dither_noise_like_deterministic_source",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "76a4529ff75cd68fa07a5ce3f17fecea5420f13d2fb86a3a2d94958b0199d696",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "282a4b078e093ef15f3ea29dcd0a13aad4b9fcddad94e777b9b53d60dafd040e",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "76a4529ff75cd68fa07a5ce3f17fecea5420f13d2fb86a3a2d94958b0199d696",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "50473eb468ec0104dda527c68b3f6898f457fda5dbdbb91cfb76fb213ded2195",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "eb37de642e803a40955d9d272c3817c35e8ad26c7bfde98681d0171d4991ab89"
+  },
+  "family_id": "077",
+  "family_spec_sha256": "b0fd2a7fdeca299e2820fd66d35e107b6cd1e9fa1272b7b3e8b8b82d8346b660",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "918da49dabc8348186a63d4bc07388e97df8419a3cfb5581a77d3d21fc120c61",
+  "public_contract": "tasks/577-dither-noise-like-deterministic-source-testbench/public_contract.json",
+  "public_contract_sha256": "7a60fa1591b2ba72cdb121eccb0b8c574bb0c1644d437e0d16e3bf5be5dd052a",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/577-dither-noise-like-deterministic-source-testbench",
+  "task_id": "v4-577"
+}

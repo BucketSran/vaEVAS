@@ -1,0 +1,41 @@
+{
+  "id": "vbr1_l1_log_rssi_power_detector_bugfix",
+  "task_id": "vbr1_l1_log_rssi_power_detector_bugfix",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "release_entry_id": "vbr1_l1_log_rssi_power_detector",
+  "family": "bugfix",
+  "category": "RF and AFE Behavioral Macromodels",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "artifacts": [
+    "dut_fixed.va"
+  ],
+  "scoring": [
+    "dut_compile",
+    "tb_compile",
+    "sim_correct"
+  ],
+  "behavior_checks": [
+    "rssi_monotonic_with_envelope",
+    "log_spacing_compresses_large_steps",
+    "low_input_floor_bounded"
+  ],
+  "designed_source": true,
+  "public_inputs": [
+    "prompt.md",
+    "gold/dut_buggy.va"
+  ],
+  "submission_artifacts": [
+    "dut_fixed.va"
+  ],
+  "private_reference_artifacts": [
+    "gold/dut_fixed.va"
+  ]
+}

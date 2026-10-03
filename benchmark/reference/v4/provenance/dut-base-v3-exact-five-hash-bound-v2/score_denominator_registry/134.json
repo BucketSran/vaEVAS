@@ -1,0 +1,78 @@
+{
+  "family_id": "134",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_missing_offset/certification.json",
+        "certification_sha256": "e991ed123716013d0a3c9a7541f7f8caa3be3ccc97cb4356a16066fb795545ae",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "e010d48665152dc65585d35b41b135f6c904fccbc1170294f98d79f94353396c",
+        "mutation_id": "neg_003_missing_offset",
+        "source_catalog_certification_path": "negative_variants/neg_003_missing_offset/certification.json",
+        "trigger_condition": "Does not subtract the 0.05 input offset.",
+        "violated_property_ids": [
+          "P_INPUT_OFFSET"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_single_ended_input/certification.json",
+        "certification_sha256": "a354fa4d86122d5ea54cf296928bd57b2c22948bfcb73cdef3455f569c5da9c4",
+        "fault_class": "single_ended_input",
+        "mutation_bundle_sha256": "d16d4cb18fc35e5f9c0c19ea6a3fa325877937a19592893bac333b5b5cc08b14",
+        "mutation_id": "neg_002_single_ended_input",
+        "source_catalog_certification_path": "negative_variants/neg_002_single_ended_input/certification.json",
+        "trigger_condition": "Uses sigin_p single-ended instead of the differential input.",
+        "violated_property_ids": [
+          "P_DIFFERENTIAL_INPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_wrong_gain/certification.json",
+        "certification_sha256": "1d289dcf67327f3b1ba75cfdc3738caf6d29ca90be85c0ca168ca1238675e914",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "3891ccba933ea323393bc72aa299399ccc42a97d0a9ee50722380219ab0a1ee9",
+        "mutation_id": "neg_004_wrong_gain",
+        "source_catalog_certification_path": "negative_variants/neg_004_wrong_gain/certification.json",
+        "trigger_condition": "Uses gain 1 instead of gain 2.",
+        "violated_property_ids": [
+          "P_GAIN_TWO_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "d701342b26e8353c401667bb5720fb7acc7353520863cead935d6ab608e918dd",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "41b64d9819a153b4e1abfb40535e1bb8041ec3c96db740b495f3a5b3843f0546",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_GAIN_TWO_OUTPUT"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "ef7585f2e87fa80a29c50aed0d1b04f497630ab5be7a9f4cf6a2eaf69a4b77f0",
+        "fault_class": "metric_or_observable_fault",
+        "mutation_bundle_sha256": "0755ad9fb63fd4732ed826ed888fcf0b9120516b16d2028fd494769dced99328",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Scales the amplified differential output too low while preserving the module/interface shape.",
+        "violated_property_ids": [
+          "P_GAIN_TWO_OUTPUT"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_003_missing_offset",
+    "canonical_dut_id": "134",
+    "hashes": {
+      "mutation_catalog_sha256": "607f7fde8bb70945799d9b1a1850e15fef1886647900f562020db9d711ade3c6",
+      "score_deck_sha256": "a1835c69cdd0344fe64b5beec2f170083d06275b9441708bf49eabc0f2e41c1f",
+      "task_certification_sha256": "c49ad6dbdddd4e8edb9c5e2d2d0c783ea008a04d7de24c702d80aab4fe2ede7d",
+      "task_record_sha256": "c0f048500e1618e66891d0ab2aa5777b2294603bb0d006393ddb1f6888f83d03"
+    },
+    "release_dir": "134-differential-amplifier-core"
+  }
+}

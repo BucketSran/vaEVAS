@@ -1,0 +1,78 @@
+{
+  "family_id": "154",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_missing_top_tap/certification.json",
+        "certification_sha256": "dffea685390fdade67cfcebd8d088ccd3e893eb3bd223f1d5248b4eb726e1a60",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "22453bc4f3ed270cfc0114979b12ddae8bbec8ee0b4a7113f037b03e6ca23c20",
+        "mutation_id": "neg_002_missing_top_tap",
+        "source_catalog_certification_path": "negative_variants/neg_002_missing_top_tap/certification.json",
+        "trigger_condition": "Forces the top threshold tap low.",
+        "violated_property_ids": [
+          "P_CLOCKED_SELECTED_THRESHOLD_TAPS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "2d2762a39e74004c731655957a8b2f365f6816f96fda9a1c0db81597fc5c95d0",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "77f4226dae3b679f8494047dee8c575c6123377e1ac0252fe57c4eb9d470bf83",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_OUTPUT_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_inverted_outputs/certification.json",
+        "certification_sha256": "84062189346892de25da8cf934e9f948e303e633fa009af257cb5c6090001f49",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "20db24dec6ed8c5999e5bf244d2d2692b8ed39c235cb060e5338135e357e058e",
+        "mutation_id": "neg_003_inverted_outputs",
+        "source_catalog_certification_path": "negative_variants/neg_003_inverted_outputs/certification.json",
+        "trigger_condition": "Inverts all thermometer output polarities.",
+        "violated_property_ids": [
+          "P_THERMOMETER_POLARITY"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_half_high_level/certification.json",
+        "certification_sha256": "3561c04bab0d8b7d2d773ca8da5977e9518efd3f1040ec918fccebdedc925afc",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "ea6f502a3c7d3339fb5521908d39bdd765b2ff170ad1f406be36380549eff7ba",
+        "mutation_id": "neg_004_half_high_level",
+        "source_catalog_certification_path": "negative_variants/neg_004_half_high_level/certification.json",
+        "trigger_condition": "Uses half high level for asserted thermometer outputs.",
+        "violated_property_ids": [
+          "P_OUTPUT_HIGH_LEVEL"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "cca134fbc0aff77086489102dee4de89563c3002b0dbab61b259ca6686524d13",
+        "fault_class": "threshold_or_boundary_fault",
+        "mutation_bundle_sha256": "6678368cbcedd3788e5b0f174fd1f0b98873357b1d1db3d00e655b734cbc6e9b",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Flash ADC Threshold Taps: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_OUTPUT_HIGH_LEVEL"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_missing_top_tap",
+    "canonical_dut_id": "154",
+    "hashes": {
+      "mutation_catalog_sha256": "4d6a87df4096990e4b106eaafa451b76aca054c0fa8f359293b88e4a0e614cd9",
+      "score_deck_sha256": "27ec32befe86dd8ec14c001440eadbff253f0e14f3b3b6b617d9c8cfbfd0396c",
+      "task_certification_sha256": "44332757f1b46c406663412f241d3bf1d981a75fe9f739c04c7f58af2d2f5685",
+      "task_record_sha256": "aaea65bd32bfdd4e3b3649b3c035473dea2ebec8a42a2eebfba8f6480ae5552d"
+    },
+    "release_dir": "154-flash-adc-threshold-taps"
+  }
+}

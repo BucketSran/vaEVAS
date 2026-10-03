@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "174",
+  "checker_task_id": "v4_174_iterative_isar_dac",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "074caf3f4857f9349aecf0d38bf800179d8fefd688a013d845e82ba8141cdd3d",
+    "checker_profile.json": "6f3dea52b21f0cd0607b23bdec566474e2566dc77d929e85d1f2f36dc61f818b",
+    "derivation_manifest.json": "dc737d36a1f393da41131d3b846fab6ab1a4d274c7fa16e978035093d46e6234",
+    "family_spec.json": "c822b9fcce80ebccfed937d4e0eda5a12bccac903076d1afa434ad0288482942",
+    "harness_spec.json": "46c4c9882c220d8aa86e4a13cbf69e18a44a8d12dc7ba22761b4587b404c62cd",
+    "mutation_catalog.json": "e6c1d0bb77b16864db22aa5df852a03c470e2d6d0635f7e4909d84006eb6e237",
+    "profiles/feedback.json": "bc42f0dccaf4adfac039da07e3093cfcfd9248a52fb537e105c7d77f62a4d788",
+    "profiles/score.json": "06d21919f76959af93135618ef68ebb3707cb929b657811d787eaf1319bf91dc",
+    "score_tb.scs": "af2f3dcac6b58a3865602f2a440700f22f1495d641bf048857e7f9e1b0650a20",
+    "solution_tree": "541be7335a753d7d822b5d8fcdd8fd8b89a3aed13caf2d2e600d67edc48f86ac",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "a434c6198be713a40585d993535f31f1b7491d28250c39545d0380c708ee487a",
+    "instruction.md": "f878d8af5822958d13bf30d1ecb0f87341200910536f1a26d1bc9d292d0036e4",
+    "public_contract.json": "233b174a6f10c351fe00c2f1a73baa8e2ee15443cbcf44d3f65b08496c022087"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "074caf3f4857f9349aecf0d38bf800179d8fefd688a013d845e82ba8141cdd3d"
+  },
+  "release_dir": "174-iterative-isar-dac",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "207-iterative-isar-dac",
+  "support_root": "",
+  "target_artifacts": [
+    "iterative_isar_dac.va"
+  ]
+}

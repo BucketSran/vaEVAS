@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "123-hard-voltage-clamp",
+  "checker_task_id": "v4_123_hard_voltage_clamp",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "ea55aebb283342ddc5ec4ba03e7eed57539cc41b08036b74046ae59b185086dc",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "1d994a091e5d41b666be8ac1d0a2afce07ddb8799a21e3dde925855eba023e5b",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "ea55aebb283342ddc5ec4ba03e7eed57539cc41b08036b74046ae59b185086dc",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "270fc6a65c1a1ce9a082368ebf185eafdf580fd333e8d46ccf8f48ff2ffaedff",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "05300f039e66f61f702341a25b6c85df7ac437a7f944d317c6a9a774c36ef0be"
+  },
+  "family_id": "123",
+  "family_spec_sha256": "e48194b24a7d904f6169e63aa3eb558d31c770c23b5641556cc4d144f5abe311",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "9a8a8f250023f74cb88f756cb47029cb25d46e538713a3d1c98d7e90b3b0613d",
+  "public_contract": "tasks/623-hard-voltage-clamp-testbench/public_contract.json",
+  "public_contract_sha256": "630499d581dd7b6a13e4530d717f62d92501aadef1c1d42dab1a0b12596e98e2",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/623-hard-voltage-clamp-testbench",
+  "task_id": "v4-623"
+}

@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "edge_delay_qualified_driver.va"
+  ],
+  "canonical_dut_source_slug": "287-edge-delay-qualified-driver",
+  "checker_task_id": "v4_287_edge_delay_qualified_driver",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "b9c4be3c8838dfd216a24aa1af9ceaee29762c7a133570e98ff4895f95590af2",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "132a7dc1c54d03e486c75ebed1c8b21f241c9525b51f89f8953203a142833075",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "3dea7fb1e795bbb3462a6649d8b1cebcf7bfadfc52953394d44f2bb1b81f1892",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "287",
+  "family_spec_sha256": "1159a50eb3007a785d150f4d85dae716783dfadf79c6a5133f7c0a922ffb9600",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "ac35024ba2b2b9c216a36d213ebbd353d25907d47dabd0afeb5dc7dad2647aae",
+  "public_contract": "tasks/1287-edge-delay-qualified-driver-bugfix/public_contract.json",
+  "public_contract_sha256": "a31b7b73600662615bc39e3ee806bb9c16d32fe8e436ebc202564141a0be0ed9",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1287-edge-delay-qualified-driver-bugfix",
+  "task_id": "v4-1287"
+}

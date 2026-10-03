@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "175",
+  "checker_task_id": "v4_175_offset_bisection_driver",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "63aad6438a86906a4eca0d997582b7832465162e8fde7c3a5bd9ae9c19c892c1",
+    "checker_profile.json": "36b08e68e83eb73fd117ef594c160c2fcfff72f3fc7284e0a900fd4b27a6e59a",
+    "derivation_manifest.json": "21f99377fd4c1ce802e23d878f9eb63090a6a91f8a578f29d747530c315e35a7",
+    "family_spec.json": "f19770976980278d70d8c2e7ddfca2cb196dcdbf2fb3206b76fdfd64c9121697",
+    "harness_spec.json": "e6a46b2cd1003742204c2372b7a03541e838fea2201347880f6519e69dbc69b6",
+    "mutation_catalog.json": "ea6c42362edaf0d492d3ef3cd9629f568ef5770705225c815d3191ae9f516fdc",
+    "profiles/feedback.json": "683f99cb01f5647d1b89a98b24ab5dada21a5539a67396d1759ddfc3f582a6a6",
+    "profiles/score.json": "cf1a56b058f0d72b63ea20a3f1691d48ba39d273ddd8f9c14ef0dcd55d8369cf",
+    "score_tb.scs": "af8a004f0ce86a83b42f52c506d381e0c7be9107ea096856a27a795ce4b6c5af",
+    "solution_tree": "36696f39fed49aab69a4ce834891ec9a4cb6bac428ed1c0a0a5675510b83a1be",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b02b10dd6e316d649141a20c6ff38bd10517b62a04f0cfd2dece77e950c26488",
+    "instruction.md": "6d78a96b1bcdbcb9f7345ce3f5699461c3c8ab42868c4c0811221ccea48181f1",
+    "public_contract.json": "b4ae2602616f6da08047d017f7e3f38fa655fc9ed022abc9c9cd347bf0ea0e26"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "63aad6438a86906a4eca0d997582b7832465162e8fde7c3a5bd9ae9c19c892c1"
+  },
+  "release_dir": "175-offset-bisection-driver",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "208-offset-bisection-driver",
+  "support_root": "",
+  "target_artifacts": [
+    "offset_bisection_driver.va"
+  ]
+}

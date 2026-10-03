@@ -1,0 +1,25 @@
+{
+  "corners": [],
+  "deck_overrides": {},
+  "deterministic_seed": 0,
+  "generated_from": {
+    "script": "render_v4_harness.py",
+    "version": "v4-harness-renderer-v1"
+  },
+  "harness_spec_sha256": "1fe8e19bf84e169a91c586903738d448a4445b4baf8a69d6147936d374d749ee",
+  "parameters": {
+    "maxstep": "200p",
+    "stop_time": "92n"
+  },
+  "profile_name": "score",
+  "property_ids": [
+    "P_ON_RESET_OR_WHEN_DISABLED_DRIVE",
+    "P_ON_EACH_ENABLED_RISING_CLK_EDGE",
+    "P_UPDATE_VOUT_AS_A_FIRST_ORDER",
+    "P_HIGHER_BANDWIDTH_CODE_MUST_MOVE_VOUT",
+    "P_EXPOSE_THE_ACTIVE_BANDWIDTH_CODE_ON"
+  ],
+  "public_visible": false,
+  "schema_version": "v4-harness-profile-v1",
+  "simulatorOptions": {}
+}

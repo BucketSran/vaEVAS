@@ -1,0 +1,23 @@
+syntax:
+  must_include:
+    - "tran"
+    - "save"
+  must_not_include:
+    - "I("
+    - "ddt("
+dut_compile:
+  backend: "evas"
+tb_compile:
+  backend: "evas"
+sim_correct:
+  checks:
+    - "raw_error_is_corrected"
+    - "bounded_negative_feedback_response"
+    - "metric_tracks_convergence"
+    - "trim_moves_opposite_to_error"
+    - "residual_monitor_tracks_correction"
+parity:
+  reference: "spectre"
+  status: "pending_fresh_dual_rerun"
+  notes:
+    - "Fresh dual rerun required after adding trim_mon/residual_mon intermediate observability."

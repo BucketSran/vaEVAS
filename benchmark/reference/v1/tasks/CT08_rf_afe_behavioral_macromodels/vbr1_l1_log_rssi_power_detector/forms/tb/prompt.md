@@ -1,0 +1,145 @@
+# Task: vbr1_l1_log_rssi_power_detector:tb
+
+## Release Task Contract
+
+- Form: `tb`
+- Level: `L1`
+- Category: RF and AFE Behavioral Macromodels
+- Base function: Log/RSSI power detector
+- Domain: `voltage`
+- Target artifact(s): `tb_log_rssi_power_detector.scs`
+- Supplied/reference support artifact(s): `log_rssi_power_detector.va`
+- Visible context: public task, interface, artifact, stimulus, and observable contract only.
+- Hidden evaluator boundary: deterministic checker and EVAS/Spectre validation are external; do not generate checker logic.
+
+## Form-Specific Requirements
+
+- Generate only the Spectre transient testbench artifact(s); do not generate hidden checker logic.
+- Instantiate the supplied/public DUT module(s), drive a public transient scenario, and save the required observables.
+- The supplied DUT/support Verilog-A file(s) `log_rssi_power_detector.va` will be co-located with the generated testbench by the evaluation harness.
+- Include it exactly with `ahdl_include "log_rssi_power_detector.va"` in the generated Spectre `.scs` netlist.
+- Use Spectre AHDL instance syntax with the instance name first and module name last: `XNAME (node1 node2 ...) module_name`.
+- Never write module-first syntax such as `module_name instance_name (...)`; that is not the release Spectre testbench syntax.
+
+## Public DUT Interface To Instantiate
+
+- `log_rssi_power_detector.va` declares module `log_rssi_power_detector` with positional ports: `clk`, `rst`, `vin`, `out`, `metric`.
+
+## Public Testbench And Observable Contract
+
+Public transient setting used by the release harness:
+
+```spectre
+tran tran stop=80n maxstep=0.5n
+```
+
+The release harness expects these exact public scalar observables:
+
+- `clk`
+- `rst`
+- `vin`
+- `out`
+- `metric`
+
+When this form generates a testbench, use plain scalar save names for these observables; do not rely on instance-qualified or aliased save names.
+
+Public stimulus/source nodes visible in the reference harness include:
+
+- `clk`
+- `rst`
+- `vin`
+
+## Public Stimulus Schedule Contract
+
+Use this exact public source schedule in generated Spectre testbenches. This schedule is part of the public testbench contract; it is not hidden checker logic.
+
+Public schedule source: `tb_log_rssi_power_detector.scs`.
+
+```spectre
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=2n width=1n rise=50p fall=50p
+Vrst (rst 0) vsource type=pwl wave=[0 0.9 2n 0.9 2.1n 0 80n 0]
+Vvin (vin 0) vsource type=pwl wave=[0 0.45 8n 0.45 8.1n 0.49 23.9n 0.49 24n 0.56 43.9n 0.56 44n 0.70 63.9n 0.70 64n 0.30 80n 0.30]
+```
+
+## Public Spectre Testbench Scaffold
+
+When this form generates a `.scs` testbench, use the following public skeleton shape. Fill in only the public stimulus details required by the task; do not copy or emit hidden checker logic.
+
+```spectre
+simulator lang=spectre
+global 0
+ahdl_include "log_rssi_power_detector.va"
+
+XDUT (clk rst vin out metric) log_rssi_power_detector
+
+tran tran stop=80n maxstep=0.5n
+save clk rst vin out metric
+```
+
+Critical syntax rules:
+
+- Every Verilog-A DUT/support file used by the testbench must have a literal `ahdl_include "<file>.va"` line in the `.scs` artifact.
+- Spectre AHDL instances use instance-first/module-last syntax: `XNAME (node1 node2 ...) module_name`.
+- Do not use module-first syntax such as `module_name instance_name (...)`.
+- Keep saved names as plain scalar public observables, not instance-qualified aliases.
+
+## Public Behavior Checks
+
+- `rssi_monotonic_with_envelope`
+- `log_spacing_compresses_large_steps`
+- `low_input_floor_bounded`
+
+## Public Behavioral Targets
+
+- Treat vin as an envelope around 0.45 V common mode and estimate amplitude as abs(vin - 0.45).
+- Use a Spectre/EVAS-friendly compressed or piecewise approximation; do not rely on unsupported log10, round, integer casts, or digital Verilog.
+- out should be monotonic with amplitude, but large-amplitude steps should be compressed rather than linear.
+- Keep a low-input floor near the bottom of the RSSI range.
+- metric should expose normalized envelope magnitude and remain bounded within 0-0.9 V.
+
+## Output Contract
+
+Return exactly one source artifact named `tb_log_rssi_power_detector.scs`.
+Do not include explanatory prose outside the source artifact contents.
+
+## Task-Specific Public Description
+
+### Log/RSSI power detector (tb-generation)
+
+Write a Spectre transient testbench for the described behavioral Verilog-A module.
+
+Behavioral intent:
+
+Convert received envelope magnitude into a monotonic logarithmic RSSI-style voltage code.
+
+Module name: `log_rssi_power_detector`.
+Domain: pure voltage-domain behavioral Verilog-A.
+Do not use current contributions, transistor-level devices, AC/noise analysis,
+or KCL/KVL solving assumptions.
+
+This is a voltage-domain RF/AFE behavioral macromodel task. Model observable gain, compression, LO polarity, RSSI, limiting, AGC, or I/Q baseband behavior with event-driven voltage states. Do not implement transistor RF physics, S-parameters, current-domain loads, communication modem algorithms, or full link-level decoding.
+
+Public port contract:
+
+```verilog
+module log_rssi_power_detector(clk, rst, vin, out, metric);
+input clk, rst, vin;
+output out, metric;
+electrical clk, rst, vin, out, metric;
+```
+
+Signal contract:
+
+clk and rst are voltage-coded logic signals. vin is the received signal envelope around 0.45 V common mode. out is a monotonic logarithmic RSSI voltage code. metric exposes normalized envelope magnitude.
+
+Saved waveform columns:
+
+```text
+clk rst vin out metric
+```
+
+Public transient contract:
+
+```spectre
+tran tran stop=80n maxstep=0.5n
+```

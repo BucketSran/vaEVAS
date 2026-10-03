@@ -1,0 +1,78 @@
+{
+  "family_id": "144",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_rising_edge_latch/certification.json",
+        "certification_sha256": "dbeff9ad8af8b1110b5494a1673b4bfd46de4c4203775bf8e9c9b2e09e81bcf5",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "17156b97e3dbf07bb861b48b9e70c50c68f31ceeed470433afd069cbfb528a35",
+        "mutation_id": "neg_002_rising_edge_latch",
+        "source_catalog_certification_path": "negative_variants/neg_002_rising_edge_latch/certification.json",
+        "trigger_condition": "Latches selected input on rising clock edge.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_SAMPLE_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_ignores_dsel1/certification.json",
+        "certification_sha256": "2d946a181da33a5f51622db1d3462fd59fff79f181cbcbd95d9e54b26bc63308",
+        "fault_class": "omission_or_incomplete_behavior",
+        "mutation_bundle_sha256": "f074c7af86ca28bbc689abf43f33e632eacdf6f03fbabfab38d759f401ba1cc9",
+        "mutation_id": "neg_004_ignores_dsel1",
+        "source_catalog_certification_path": "negative_variants/neg_004_ignores_dsel1/certification.json",
+        "trigger_condition": "Ignores dsel1 and selects only din0/din1.",
+        "violated_property_ids": [
+          "P_ALL_FOUR_INPUTS_REACHABLE"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_scale_low/certification.json",
+        "certification_sha256": "f2e8a100ed51ead0db669fa524336817fb88380678f3eab71b36e64198420793",
+        "fault_class": "timing_or_state_update_fault",
+        "mutation_bundle_sha256": "af84aeb5ec5397596b42890c796ddb240d8a5c7b0159b3a607cb2d578dc83876",
+        "mutation_id": "neg_005_metric_scale_low",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_scale_low/certification.json",
+        "trigger_condition": "Clocked Four Input Mux: scales the metric output, preserving the main path while failing measurement checks.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_SAMPLE_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_zero/certification.json",
+        "certification_sha256": "027c551b138e426028de08a66118175a6f8acb03557c026eff437d49797e512d",
+        "fault_class": "zero_stub_output",
+        "mutation_bundle_sha256": "5911b2a53c579b82ec09dcccb47a0b1114d0f220f2709fbd631aa05b803a3c52",
+        "mutation_id": "neg_001_zero",
+        "source_catalog_certification_path": "negative_variants/neg_001_zero/certification.json",
+        "trigger_condition": "Drives zero output and therefore fails the stable waveform contract.",
+        "violated_property_ids": [
+          "P_FALLING_EDGE_SAMPLE_HOLD"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_swapped_select_bits/certification.json",
+        "certification_sha256": "17a4ef8b7c2c6db0abdd5451dce8416f70ce448d5363de01666acf575e532dcf",
+        "fault_class": "polarity_or_direction_error",
+        "mutation_bundle_sha256": "96bd86f9aee2985d73e69407501c9e3aa92e99edc01543f0b7fa7629aaba9701",
+        "mutation_id": "neg_003_swapped_select_bits",
+        "source_catalog_certification_path": "negative_variants/neg_003_swapped_select_bits/certification.json",
+        "trigger_condition": "Swaps dsel0 and dsel1 in the address decode.",
+        "violated_property_ids": [
+          "P_SELECT_BIT_DECODE"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_002_rising_edge_latch",
+    "canonical_dut_id": "144",
+    "hashes": {
+      "mutation_catalog_sha256": "69a0fdeceef8dab06e30a85cc3cefa002b2774e42e035460d1e279fe235a0bce",
+      "score_deck_sha256": "c94e08242c0763a2e31dd3d39d171a00725c1d9487a44b983b8b00d33fcb1aa4",
+      "task_certification_sha256": "1dc44fc6d7f04589657ab5d1c94eea52a931c4550ba8734cbedfa62f48c2e9cb",
+      "task_record_sha256": "6df3090449c502eb9b456b7a86397e39a738fc6af104bd1d6fecc035609b1194"
+    },
+    "release_dir": "144-clocked-four-input-mux"
+  }
+}

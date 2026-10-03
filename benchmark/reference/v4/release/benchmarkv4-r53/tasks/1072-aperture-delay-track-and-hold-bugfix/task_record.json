@@ -1,0 +1,36 @@
+{
+  "candidate_artifacts": [
+    "sample_hold_aperture_ref.va"
+  ],
+  "canonical_dut_source_slug": "072-aperture-delay-track-and-hold",
+  "checker_task_id": "v4_072_aperture_delay_track_and_hold",
+  "evaluation_binding": {
+    "canonical_semantics_sha256": "ac63ab6cab0ef2d565b265cd98aee3ce9a697a42c5f11726b87793fc62f8e0be",
+    "kind": "canonical_test_deck",
+    "profile": "evaluator/canonical_test_profile.json",
+    "profile_sha256": "0ca567e2dbb987cd0ba47d00afcd8687291b8579fb67f002d4f35bdd443276fc",
+    "public_test": "public/visible_test.scs",
+    "reuse_policy": "public_visible_and_final_trusted_replay_same_bytes",
+    "test_deck_sha256": "4a828a847ca56f91ab1207ff1950dfd3145c93b960c0d5cb2f333a038227a0e9",
+    "trusted_replay_test": "evaluator/trusted_replay_test.scs"
+  },
+  "family_id": "072",
+  "family_spec_sha256": "c98697dbe527499fbf0b007b4e68fe9f3beada52d09ac3abc4c3fbc0f620f44d",
+  "form": "bugfix",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "940a79326c0c0c848487eece17880015367a453b3a70e0e1913e3b651c194cd0",
+  "public_contract": "tasks/1072-aperture-delay-track-and-hold-bugfix/public_contract.json",
+  "public_contract_sha256": "bcd778b703ae8eecb2abcf92e936de40d8ea9ada7992f72e4c5dd50c68c7960d",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/1072-aperture-delay-track-and-hold-bugfix",
+  "task_id": "v4-1072"
+}

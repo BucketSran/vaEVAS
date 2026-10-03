@@ -1,0 +1,26 @@
+{
+  "id": "vbr1_l2_flash_adc_mini_array_tb",
+  "task_id": "vbr1_l2_flash_adc_mini_array_tb",
+  "release_entry_id": "vbr1_l2_flash_adc_mini_array",
+  "checker_task_id": "vbr1_l2_flash_adc_mini_array_tb",
+  "asset_type": "vabench_task",
+  "benchmark": "vabench-release-v1",
+  "family": "tb-generation",
+  "category": "Data Converter Models",
+  "domain": "voltage",
+  "track": "core",
+  "difficulty": "D3",
+  "expected_backend": "evas",
+  "inputs": [
+    "prompt.md"
+  ],
+  "artifacts": [
+    "flash_adc_3b.va",
+    "tb_flash_adc_3b_ref.scs"
+  ],
+  "scoring": [
+    "tb_compile",
+    "sim_correct"
+  ],
+  "source": "tb_companion_from_e2e"
+}

@@ -1,0 +1,38 @@
+{
+  "canonical_dut_id": "333",
+  "checker_task_id": "v4_333_image_reject_mixer_calibration_loop",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "36ecf80ad9473d3b5ea6d2dc4df435e8fddc77800dbb4491622bd4537276c523",
+    "checker_profile.json": "611b5da73c38b3cb79e88203d52009d04a2a51bdf8e02f364f20ebc96bce1ec1",
+    "derivation_manifest.json": "4cb63893ebf11feaf755a18cddd137c1b3bfe371e65ed65cda569fa3eca512fa",
+    "family_spec.json": "b915b0b8035fd942c421fcf748f9b6ceac938dd8fca255fe9f107c647317b154",
+    "harness_spec.json": "efadb331bcb6e50c1cbd7f39ba9d8179545a1098133d01fe9f1d33bc07a28cb1",
+    "mutation_catalog.json": "f444a5172f06f3ec0346664629e09ecd137451faf0b83aa9b8c73a1dfa6f86d5",
+    "profiles/feedback.json": "be06b905f47efbecb00668d7bbfd669e74e135d999bb29180aa6befeaecd6b2b",
+    "profiles/score.json": "4dad17efbfce9903fa1dd90510b6abe72b68d0dc98183982873818d2aa3c614c",
+    "score_tb.scs": "46af32ef7c4830885ad41ecae252d661c863b979170abc7f14e3ece63466fe03",
+    "solution_tree": "7c122de939e405cb82c30589cee8555c551a54e28e6686246a456379296e9aa4",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "27df2abe74d9647cbff35d143ff1f5245716e6724c18c764901b69818b02cf50",
+    "instruction.md": "f336e61228e878018ea66ad54d453ccd5d440cc9f3125ae7adec3392055e829b",
+    "public_contract.json": "55008c67a5723ac9c65396f3a0b27d6aeb66850baeede4c177500aae5c2be61d"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "36ecf80ad9473d3b5ea6d2dc4df435e8fddc77800dbb4491622bd4537276c523"
+  },
+  "release_dir": "333-image-reject-mixer-calibration-loop",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "1031-image-reject-mixer-calibration-loop",
+  "support_root": "",
+  "target_artifacts": [
+    "image_reject_mixer_cal_loop_top.va",
+    "quadrature_mixer_proxy.va",
+    "image_cal_controller.va"
+  ]
+}

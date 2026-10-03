@@ -1,0 +1,83 @@
+{
+  "family_id": "014",
+  "schema_version": "v4-score-denominator-family-registry-v1",
+  "task": {
+    "active_mutation_count": 5,
+    "active_mutations": [
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_001_boundary/certification.json",
+        "certification_sha256": "52cb7de46f57fb9bde52aab9903e3f06cd91c58765f5b4465f906f3dbc70f5e9",
+        "fault_class": "full_scale_divisor_error",
+        "mutation_bundle_sha256": "4128c1d7fcf8cbd23464d18f660982e2b374159af0fcc366baf12139cb758781",
+        "mutation_id": "neg_001_boundary",
+        "source_catalog_certification_path": "negative_variants/neg_001_boundary/certification.json",
+        "trigger_condition": "the public full-scale and intermediate segment codes are sampled after settling",
+        "violated_property_ids": [
+          "P_ENDPOINTS",
+          "P_SEGMENT_WEIGHTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_003_polarity_direction/certification.json",
+        "certification_sha256": "3518a3f051505e68e3e2aa07819ff628a1d0db8424214fe265a50e5f01d64422",
+        "fault_class": "binary_lsb_weight_swap",
+        "mutation_bundle_sha256": "7ae900853a9fe15ce61018b47756aa64fef0e88281ce8c0081296028a2f2af87",
+        "mutation_id": "neg_003_polarity_direction",
+        "source_catalog_certification_path": "negative_variants/neg_003_polarity_direction/certification.json",
+        "trigger_condition": "the code sequence distinguishes b0 from b1 weighting",
+        "violated_property_ids": [
+          "P_CODE_MONOTONICITY",
+          "P_SEGMENT_WEIGHTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_005_metric_writeout/certification.json",
+        "certification_sha256": "6a8bb3c56e765eced90318c23663de8d1b062b2b8537acd7bee9f2efd169f9a8",
+        "fault_class": "overrange_divisor_error",
+        "mutation_bundle_sha256": "b72000c144e5f44430ca26be5e9be7691ab07a599338ca0f1abca32ffca1db21",
+        "mutation_id": "neg_005_metric_writeout",
+        "source_catalog_certification_path": "negative_variants/neg_005_metric_writeout/certification.json",
+        "trigger_condition": "the full-scale code is mapped relative to vref and vss",
+        "violated_property_ids": [
+          "P_ENDPOINTS",
+          "P_RAIL_RELATIVE_MAPPING",
+          "P_SEGMENT_WEIGHTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_004_state_reset/certification.json",
+        "certification_sha256": "4d52728a4e99ff80add3525c054ab3c45e989308e675897338c69c12471730ef",
+        "fault_class": "missing_thermometer_segment",
+        "mutation_bundle_sha256": "13d5955d8e6d3dd0f5331e9ebfb7a78f9878b0a7c961c9330fde8ec60058c541",
+        "mutation_id": "neg_004_state_reset",
+        "source_catalog_certification_path": "negative_variants/neg_004_state_reset/certification.json",
+        "trigger_condition": "t2 is asserted in the public high-code stimulus",
+        "violated_property_ids": [
+          "P_ENDPOINTS",
+          "P_SEGMENT_WEIGHTS"
+        ]
+      },
+      {
+        "certification_path": "evaluator/mutation_bundles/neg_002_timing_window/certification.json",
+        "certification_sha256": "13b41c88dd7b6f4b02096cce2a20d39d4a6f2a6815defb82e3b812b47e2a8ca4",
+        "fault_class": "timing_window_error",
+        "mutation_bundle_sha256": "bcbdd506b33984f13f4233f65ae887aace3f915be1a8963cd702aa0b8b5bd1ad",
+        "mutation_id": "neg_002_timing_window",
+        "source_catalog_certification_path": "negative_variants/neg_002_timing_window/certification.json",
+        "trigger_condition": "a code transition is observed at the public settled sample time",
+        "violated_property_ids": [
+          "P_ENDPOINTS"
+        ]
+      }
+    ],
+    "bugfix_seed": "neg_001_boundary",
+    "canonical_dut_id": "014",
+    "hashes": {
+      "mutation_catalog_sha256": "4c60e8005f82a0e4d02895b9f67b1f15de6195e789b1c9ca59073d0eab12e44a",
+      "score_deck_sha256": "05fb4d65ae86af1016acc065aa2c28d1caf15c8ea34a9cf06467d6a6b8930296",
+      "task_certification_sha256": "6b5ed57f6ffc42d77083558b97dc920fe791af791ad0f5d3647bbbdbd020cc33",
+      "task_record_sha256": "c71d11c021e1271ee5f191916e7e2355d48c4047c79e4b2c21367c306f29f9cd"
+    },
+    "release_dir": "014-segmented-dac"
+  }
+}

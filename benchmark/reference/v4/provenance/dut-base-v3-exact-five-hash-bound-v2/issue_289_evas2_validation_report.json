@@ -1,0 +1,68 @@
+{
+  "backend": {
+    "backend_log_marker": "evas_engine = evas-rust",
+    "engine": "evas2",
+    "git_commit": "a72fff338bc81b2ebc144b7da97a82a663c776e2",
+    "git_describe": "v0.8.2",
+    "version": "0.8.2"
+  },
+  "backend_identity_checked_per_case": true,
+  "batch": "012",
+  "environment": {
+    "EVAS_ENGINE": "evas2",
+    "VAEVAS_DEFAULT_EVAS_ENGINE": "evas2"
+  },
+  "families": [
+    "111",
+    "112",
+    "113",
+    "114",
+    "115",
+    "116",
+    "117",
+    "118",
+    "119",
+    "120"
+  ],
+  "issue": 289,
+  "manifest_content_sha256": "478d15e858e393ec8c3e2d05c7436f56a45fb9334eaf1ea274a13d6c1745993c",
+  "manifest_file_sha256": "9ae338434ea39812345bc7c81d79dd94cf509e3d236e37be273b264657b395d1",
+  "runtime_validation": {
+    "affine_metamorphic": {
+      "infrastructure_error_count": 0,
+      "insufficient_excitation_explicit_failure_count": 10,
+      "mutation_kill_count": 50,
+      "reference_pass_count": 10
+    },
+    "reference_and_mutations": {
+      "infrastructure_error_count": 0,
+      "mutation_kill_count": 50,
+      "mutation_survivor_count": 0,
+      "reference_failure_count": 0,
+      "reference_pass_count": 10
+    },
+    "task_ids": [
+      "v4-611",
+      "v4-612",
+      "v4-613",
+      "v4-614",
+      "v4-615",
+      "v4-616",
+      "v4-617",
+      "v4-618",
+      "v4-619",
+      "v4-620"
+    ]
+  },
+  "schema_version": "issue-289-rust-evas2-validation-v2",
+  "spectre_validation": {
+    "reason": "Spectre is not available and is not a promotion gate for this repair",
+    "status": "not_applicable"
+  },
+  "status": "PASS",
+  "tests": {
+    "profile_parity": "PASS: 10/10 static family checks",
+    "repair_gate": "PASS: 10/10 families, zero failures",
+    "scripts_and_checker_registry": "PASS: 94 passed, 1 skipped"
+  }
+}

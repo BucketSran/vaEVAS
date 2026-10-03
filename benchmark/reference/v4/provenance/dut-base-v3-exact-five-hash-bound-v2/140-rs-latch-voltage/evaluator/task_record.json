@@ -1,0 +1,36 @@
+{
+  "canonical_dut_id": "140",
+  "checker_task_id": "v4_140_rs_latch_voltage",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "910a391c1f4df4264c1ce876278f7df18404571d1b23d7c7320450c37a323d76",
+    "checker_profile.json": "0eef88dcc58f191a6cca56d7d95e93322c8a632d78e10fd95dc943982e6fce6c",
+    "derivation_manifest.json": "9f22d6d5a533e36f7769433d9023d29d73b5cefbbee98770e6fb66dfe758f5f9",
+    "family_spec.json": "c590a9dac1b970520868f440ed1d57dee29839130ab29415feee5a5cd5c954d9",
+    "harness_spec.json": "b15051eddcdab1b0c94572052a5d91bce70c7cb4c1fbdc3e298bf59691ab03f5",
+    "mutation_catalog.json": "744f287c200cd84c8d42aeda0449c96e5a8627c2c48fb28e9135c3bf4a1dd0d3",
+    "profiles/feedback.json": "1898e3aef82f0b80c39bfacfc6c1d899b76a77ef6360bd18e489440674c3700b",
+    "profiles/score.json": "96992a657b5865329a36852c95185e6c46785665b8ac72cce5b59ef3b51dacf7",
+    "score_tb.scs": "8354d2b4f209a5284292ee718b1a2294a9e112cfe3da62fd5ca20a8232481d04",
+    "solution_tree": "baf42f50ef62734a2b4a0ea99eda4fde37ac075b398dc0d003f2d90899614c69",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b30ac3c1cc72117b4a710048871063c9962b9e2141eee5fe75a2eb66f57d158b",
+    "instruction.md": "e4d71076a96b72151fe26888ef5b6cfdcd725ddaf2e122809340bb7cbdbe1120",
+    "public_contract.json": "e2f034ca0a61105cf6e101c669506794346d2747ae69e846a7645a35155c5ec8"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "910a391c1f4df4264c1ce876278f7df18404571d1b23d7c7320450c37a323d76"
+  },
+  "release_dir": "140-rs-latch-voltage",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "166-rs-latch-voltage",
+  "support_root": "",
+  "target_artifacts": [
+    "rs_latch_voltage.va"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "canonical_dut_id": "039",
+  "checker_task_id": "v4_039_propagation_delay_comparator",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "9bfee788ce22e0b7b8c2483ec92c77ae51c226e6c73b11868db051f6a8bc1be9",
+    "checker_profile.json": "e1424cc20756ac1260ceb320adb6f7ab399ed6a3ac545e75d03cd267419705d1",
+    "derivation_manifest.json": "ad75025b2b34eaccf70c2b663b1dc1ed48c8edf447b654c532fceece9078dfdc",
+    "family_spec.json": "96aac52b93c76f5969d1baef21fbd871bf90993df6c20a90d8b8906c02749673",
+    "harness_spec.json": "8729fdf06a700efb5de55a38360d5541a36c9eb69ab35987d66e4073c1a6e1fb",
+    "mutation_catalog.json": "01a397e49b893926a7efbce6a7f0b5f4f91d08dc070224ecd6f4efe3f0125787",
+    "profiles/feedback.json": "8008307fd099adb68645b2e5e05af3f47335eb418aff4d029fa2850f987d6455",
+    "profiles/score.json": "e8454d7bc03f3c92f21aa3e766e4224de4514df681293e8a30abbc5b24879cf2",
+    "score_tb.scs": "41b323d5b64bde3d6fc4edcb7877281a233bc2ea8927ed9256fa0e28a8330eab",
+    "solution_tree": "4579f2992a62590969bd4b48fac75b25d4fdccb33c22f9c4ec78560ce7c3b1ca",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "b4529b5d87af2ec8789fe1096b565c11a0cc59b12fd5ce96ce45b01596d8c392",
+    "instruction.md": "42e890c06d4d9932b64e912e4df93124b59b9871fa15052333a36bfd843fbf7c",
+    "public_contract.json": "6a60edbad5cf06ca9bc4ece689559cbca68f16beca38e20c54ef7fa6d8cef8c2"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "9bfee788ce22e0b7b8c2483ec92c77ae51c226e6c73b11868db051f6a8bc1be9"
+  },
+  "release_dir": "039-propagation-delay-comparator",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "041-propagation-delay-comparator",
+  "support_root": "",
+  "target_artifacts": [
+    "cmp_delay.va",
+    "edge_interval_timer.va"
+  ]
+}

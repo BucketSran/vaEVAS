@@ -1,0 +1,5 @@
+id,suite,conformance_axis,expected_relation,source_path,package_path,model_capability,benchmark_coverage,bugfix_claim,broad_parity_denominator,runner_hook_required
+cross_event_post_side_read,evas-spectre,event-sampling,waveform_equivalent,conformance/evas-spectre/cross_event_post_side_read,benchmark-vabench-release-v1/conformance/evas-spectre/cross_event_post_side_read,false,false,false,false,true
+file_metric_writer_io_timing,evas-spectre,checker-semantics,binary_outcome_equal,conformance/evas-spectre/file_metric_writer_io_timing,benchmark-vabench-release-v1/conformance/evas-spectre/file_metric_writer_io_timing,false,false,false,false,true
+settling_done_boundary,evas-spectre,solver-time-sampling,binary_outcome_equal,conformance/evas-spectre/settling_done_boundary,benchmark-vabench-release-v1/conformance/evas-spectre/settling_done_boundary,false,false,false,false,true
+vco_timer0_startup,evas-spectre,event-ordering,waveform_equivalent,conformance/evas-spectre/vco_timer0_startup,benchmark-vabench-release-v1/conformance/evas-spectre/vco_timer0_startup,false,false,false,false,true

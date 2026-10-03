@@ -1,0 +1,29 @@
+{
+  "checked_families": [
+    "181",
+    "182",
+    "183",
+    "184",
+    "185",
+    "186",
+    "187",
+    "188",
+    "189",
+    "190"
+  ],
+  "checks": [
+    "profile_semantic_parity",
+    "observable_alignment",
+    "trace_coverage",
+    "structured_redacted_diagnostics",
+    "task_record_hashes",
+    "score_denominator_manifest_hashes"
+  ],
+  "evidence_kind": "static_repair_gate",
+  "failure_count": 0,
+  "failures": [],
+  "runtime_evidence_claimed": false,
+  "schema_version": "v4-repair-gate-validation-v1",
+  "source": "benchmark-vabench-release-v4/provenance/dut-base-v3-exact-five-hash-bound-v2",
+  "status": "PASS"
+}

@@ -1,0 +1,39 @@
+{
+  "candidate_artifacts": [
+    "testbench.scs"
+  ],
+  "canonical_dut_source_slug": "196-phase-detector-chopper",
+  "checker_task_id": "v4_196_phase_detector_chopper",
+  "evaluation_binding": {
+    "kind": "reference_only_public_testbench",
+    "public_reference_dut_tree": "public/supplied_dut",
+    "public_reference_dut_tree_sha256": "02275c4532a6b5b186288dcf440589c4116b3fe7602f62f627be38fd872718ba",
+    "public_runtime": "public/evas_runtime.json",
+    "public_runtime_sha256": "ba137108f62fdb5c64a214913dfba05d17188a59f8739ebc54044645efca4e86",
+    "reuse_policy": "public_reference_matches_trusted_reference",
+    "trusted_reference_dut_tree_sha256": "02275c4532a6b5b186288dcf440589c4116b3fe7602f62f627be38fd872718ba",
+    "trusted_replay_fixture_tree": "evaluator/trusted_replay_fixtures",
+    "trusted_replay_fixture_tree_sha256": "36b1f20ce2795aad2476a1c3f02de638e7247de4b8b48a36ee0c13f34abad5b4",
+    "trusted_replay_suite": "evaluator/trusted_replay_suite.json",
+    "trusted_replay_suite_sha256": "12ad57f62c724f08dfdaa630333efe7f9023092afc35bd6b1298a67719bf233a"
+  },
+  "family_id": "196",
+  "family_spec_sha256": "f9e0afe8c1cf81a6b76472168c8b2c033c661c85c6f9073663dadeb865bd5b19",
+  "form": "testbench",
+  "modes": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "public_bundle_sha256": "815b4c69cf7a5b51c10032f621508fea6ded96f36875cf17d2e92cd769986811",
+  "public_contract": "tasks/696-phase-detector-chopper-testbench/public_contract.json",
+  "public_contract_sha256": "79252b7e88701d75485e8de9a3a88f932da66177f5617a8f2c6af7d24aab55d0",
+  "release_revision": "r53",
+  "schema_version": "r53-benchmarkv4-task-record-v1",
+  "scored": true,
+  "task_dir": "tasks/696-phase-detector-chopper-testbench",
+  "task_id": "v4-696"
+}

@@ -1,0 +1,39 @@
+{
+  "canonical_dut_id": "385",
+  "checker_task_id": "v4_385_switched_cap_phase_sequencer",
+  "counted_in_score": true,
+  "evaluator_hashes": {
+    "certification.json": "f367c9cb2e7a7098e04dbcc0abe73b616fd938fa29d405e52a0fcdbc42f94a52",
+    "checker_profile.json": "16c541e254996de03609f58a3d251f4d4e79783caf48d57a1f9d9501750eb9d2",
+    "derivation_manifest.json": "18e87a1827406cdbc72e94602ffc32d7aea9ca2628e6c6499fc421ad86880bf4",
+    "family_spec.json": "c37af2ac59bf5316017650955b81268d3575105accd893a417273a485b3db5db",
+    "harness_spec.json": "d4f6788089132cb689949314d5a0e127e78109c24c6deb5a142c4a33241708f7",
+    "mutation_catalog.json": "5cbc7a73c8f2845cbdfc1528f5f89fe527bf3e15078d9215257eb27fca8a4f23",
+    "profiles/feedback.json": "9ea4465a346addbc12f2d04ea7ed689c5b88594bcf4e827ca4e8357d3ee4dbf7",
+    "profiles/score.json": "88b3e01e82f9af8ef873d9b247b7614cd304fb637939f732d82c1044964d7881",
+    "score_tb.scs": "dbe103bc15d1c54ce74a9a2b7791c66b0b6b0226ed59aba7af9e9706ffea57ac",
+    "solution_tree": "0553439922034f767ee24c116d10b068c7688b6e4c9f1e2bdcc33d828383253e",
+    "toolchain_lock.json": "97f05b4212cf53c691a3b9296d9993d0dea1c0cf5a2b1bdf4fca9eab6246461c"
+  },
+  "form": "dut",
+  "public_hashes": {
+    "feedback_tb.scs": "0a064c8fd7df2e47df360b4ea2a4fa9f2779bba389578188aeed35dd8e4cd1e6",
+    "instruction.md": "d78bcc88ecf9f837ae04b856e106ab84fa73639f6eb169682418cc234e6baee2",
+    "public_contract.json": "a00d76e3bf908e3755a7084ddda3ee97dde7fb6671eabbd1ad5253c78cb663bd"
+  },
+  "readiness_evidence": {
+    "kind": "task_certification",
+    "path": "evaluator/certification.json",
+    "sha256": "f367c9cb2e7a7098e04dbcc0abe73b616fd938fa29d405e52a0fcdbc42f94a52"
+  },
+  "release_dir": "385-switched-cap-phase-sequencer",
+  "schema_version": "v4-canonical-dut-release-task-v1",
+  "source_slug": "944-switched-cap-phase-sequencer",
+  "support_root": "",
+  "target_artifacts": [
+    "hold_flagger.va",
+    "nonoverlap_phase_gen.va",
+    "sample_switch_scheduler.va",
+    "switched_cap_phase_seq_top.va"
+  ]
+}
