@@ -1,0 +1,2872 @@
+{
+  "run_id": "main-0.12.3-revalidation-20261004",
+  "evidence_use": "62 new local EVAS transient requests on main a7a42e17; no new Spectre run or historical Spectre reanalysis",
+  "created_utc": "2026-10-03T16:04:26.151130+00:00",
+  "capability_ids": [
+    "QUALIFICATION"
+  ],
+  "execution_identity": {
+    "runtime_commit": "a7a42e17c20afbf2c9570ef42d35de3717773dfd",
+    "analysis_checkpoint": "4e30318283b45f7e8788023e82f1cce061dced64",
+    "source_worktree_clean": true,
+    "runtime_identical_to_main": true,
+    "package_version": "0.12.3",
+    "schema_version": 16,
+    "kernel_sha256": "f0492ebbd4099e5b0fcb32ce34acbeea6967739d6754376cbdd3d15eba1bf740",
+    "kernel_executable": true,
+    "build_profile": "debug",
+    "build_command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "cargo_version": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc_version": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "frozen_utc": "2026-10-03T15:53:36.996341+00:00",
+    "source_sha256": {
+      "evas/pyproject.toml": "f95a73bd8adfb2f5288afccd563985c76d65e53c00e1b31632c10c548d36d3b5",
+      "evas/rust_core/Cargo.lock": "2b035f22e95c242c41f00db7c77b9553ee6d2efc1148f2120008623730610f1d",
+      "evas/rust_core/Cargo.toml": "bee3aebf4d0d7e0f4a9a6d0e93c3816e44446063aed729db96dd3f23d6e8dcb2",
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "dc2f67c517fafcf8253eb5fd8ca8a3e30009c583ddd433995bb2c7c6509b7d14",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/dynamic_roots.rs": "7663389a47ee712b7843c53da531897cecef6eadaabb5d9ba4e70e9516789b0f",
+      "evas/rust_core/src/event_accuracy.rs": "c4364a6b9fc743a981e167989a7700958d8fd87db45db2c3ac1f8cba84a9108f",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "30cda8b8efe1d404803a785930da46fce55395130ec649334b61a1ca2899a639",
+      "evas/rust_core/src/expression.rs": "e153146cfcf5dc4db6ea7d0d1967ae13f76a28a939b7a6b1e0e5416d48b56116",
+      "evas/rust_core/src/guard_trajectory.rs": "feb38b94f921176fed4924836e588437ae39207fe30762096a0d2ebb0d6acd53",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "b578ae2c33fe6ab86cf1551167c394070140ba682157aaf4e2ad8a21cf026e88",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "ddcf71f1c8e23012b1a38768db74ce956025e8bd3187f77a68dd3eee3231e240",
+      "evas/rust_core/src/ir.rs": "141ea5c5478640858478a724e30214c17e1aa725a0ff8804af122761d3b136ed",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "0e1b8c6184032c3d583a528095d110f4597205d00eb5e931ff8073abdec6b59b",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "9e7c66eeb4e3c2b170278b10108c6ab1ea9dd0eb601f1958507b10fdcf99e910",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "63766cdea80653bc146c8e65a05ee0f54e70cf091488262f64cb1d929a466773",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "679c5151a10f505e6335a406fe3e06cd3d6c00c409022c641a7c6b95fe9bbb42",
+      "evas/rust_core/src/main.rs": "dbb968c18ded399c975227294944dadf46eb750fd450836df966c8c23fb7f25f",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "61c9557420ac185f5171995edd05fd6a95699d2aac6618a02f6673a8e69aa184",
+      "evas/rust_core/src/operators.rs": "e161eea0026adc9ab012e00242a60fd18a84c9c88b6f234d9a0595e6caa97b2f",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "4e073e6190cdeeead9d95b39dbabdbc88806cf717f64a10336a541e261b48fd4",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "5abb9581a613ef8bd283bbb3ac6d8980be5574b753df9967f3b52755f726a131",
+      "evas/rust_core/src/settlement.rs": "d90a4065a8fc489ab9515ab3d44d897448481d5787f0edf93175cdc3f6265207",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "cd43ee9eb1ff6004f40089a411edebdf9253bec0a7417423c6fa314e5147e554",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "658e44d755d58ce44219662c99dd8659f11f55cf9291d9041788906a8419a676",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "83a24a6cfd06e3d201d78ff065387951d7c4fc270bd1879de056b3afcac4dac2",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "38a19d851ad25f6aba9e94ce0abc4e7fe7f8ce9e9ac2f5f96bd569026163cb77",
+      "evas/src/evas/errors.py": "e5fddcfdb4455c865c67d1d58ca460cd8f301cc91fffe2edaa12c2de771a3bb9",
+      "evas/src/evas/frontend.py": "8a6fa41b906e6e4c65a58ede400d5d3eb948cd4db2be33b3627d73089c7f380c",
+      "evas/src/evas/instance_compiler.py": "4a46b1026429ead3a918d74f7fac382f2ee3507903eedecb2d9f042e8048fff2",
+      "evas/src/evas/ir.py": "d0b72abf65e73118e278fd57b01cb4cd483dd6fdd99d3b5e746bf6a7ceb68ed9",
+      "evas/src/evas/limits.py": "4cecbc0a03fbe88b53dca760429b8cb53954504cba37d3e19b75fafd366dfa59",
+      "evas/src/evas/lowering.py": "f7554f9cb368f3eae8208a13afec5abd186c5d0052a52b96f60f10b41b1cc7d5",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+      "evas/src/evas/protocol.py": "e02b5ba3c912eccd24b78cba121e388ebf33b12666993834580055d699dcf915",
+      "evas/src/evas/runtime.py": "41eeddee793bb40e4d93a3d9cbe29256bf4fa26e5740b55ab4139e0937a52eca",
+      "evas/src/evas/syntax.py": "b7427a192e992ed623cc90ba648a3c0c59a483ae03787b36e068995e8157c8a9"
+    },
+    "build_log_sha256": "228d9d57cafc7e1e9eb325e9a18c24444053ecb6d114f9c298d58f0aeb0527f5",
+    "input_comparison": {
+      "source": "repository generator; newly frozen manifest includes current analysis paths",
+      "compared_receipt": "experiments/runs/parallel-gap-integration/results/precision-chain-matrix.json",
+      "compared_receipt_sha256": "010c6c3823238e004c5ae8261a974a675e9b9e4329c301233832fed7fbcc5971",
+      "matching_configurations": 62,
+      "matching_files_per_configuration": [
+        "dut.va",
+        "condition.json",
+        "requested_settings.json"
+      ],
+      "old_raw_data_reanalyzed": false
+    }
+  },
+  "runtime_identity": {
+    "kernel_sha256": "f0492ebbd4099e5b0fcb32ce34acbeea6967739d6754376cbdd3d15eba1bf740",
+    "source_input_manifest_sha256": "fc1f7ce122865060c956f7dc72754c9d9ca3ed258f98f99a3fbe304b32d02dab",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "max_attempts": 62,
+    "timeout_s": 90,
+    "source_sha256": {
+      "evas/src/evas/instance_compiler.py": "4a46b1026429ead3a918d74f7fac382f2ee3507903eedecb2d9f042e8048fff2",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/limits.py": "4cecbc0a03fbe88b53dca760429b8cb53954504cba37d3e19b75fafd366dfa59",
+      "evas/src/evas/protocol.py": "e02b5ba3c912eccd24b78cba121e388ebf33b12666993834580055d699dcf915",
+      "evas/src/evas/lowering.py": "f7554f9cb368f3eae8208a13afec5abd186c5d0052a52b96f60f10b41b1cc7d5",
+      "evas/src/evas/frontend.py": "8a6fa41b906e6e4c65a58ede400d5d3eb948cd4db2be33b3627d73089c7f380c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/ir.py": "d0b72abf65e73118e278fd57b01cb4cd483dd6fdd99d3b5e746bf6a7ceb68ed9",
+      "evas/src/evas/runtime.py": "41eeddee793bb40e4d93a3d9cbe29256bf4fa26e5740b55ab4139e0937a52eca",
+      "evas/src/evas/syntax.py": "b7427a192e992ed623cc90ba648a3c0c59a483ae03787b36e068995e8157c8a9",
+      "evas/src/evas/errors.py": "e5fddcfdb4455c865c67d1d58ca460cd8f301cc91fffe2edaa12c2de771a3bb9",
+      "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+      "evas/src/evas/__main__.py": "38a19d851ad25f6aba9e94ce0abc4e7fe7f8ce9e9ac2f5f96bd569026163cb77",
+      "evas/rust_core/src/implicit_dynamics.rs": "b578ae2c33fe6ab86cf1551167c394070140ba682157aaf4e2ad8a21cf026e88",
+      "evas/rust_core/src/dynamic_roots.rs": "7663389a47ee712b7843c53da531897cecef6eadaabb5d9ba4e70e9516789b0f",
+      "evas/rust_core/src/ir.rs": "141ea5c5478640858478a724e30214c17e1aa725a0ff8804af122761d3b136ed",
+      "evas/rust_core/src/linear.rs": "679c5151a10f505e6335a406fe3e06cd3d6c00c409022c641a7c6b95fe9bbb42",
+      "evas/rust_core/src/events.rs": "30cda8b8efe1d404803a785930da46fce55395130ec649334b61a1ca2899a639",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/settlement.rs": "d90a4065a8fc489ab9515ab3d44d897448481d5787f0edf93175cdc3f6265207",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/solver.rs": "cd43ee9eb1ff6004f40089a411edebdf9253bec0a7417423c6fa314e5147e554",
+      "evas/rust_core/src/lib.rs": "0e1b8c6184032c3d583a528095d110f4597205d00eb5e931ff8073abdec6b59b",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/guard_trajectory.rs": "feb38b94f921176fed4924836e588437ae39207fe30762096a0d2ebb0d6acd53",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/pwl.rs": "4e073e6190cdeeead9d95b39dbabdbc88806cf717f64a10336a541e261b48fd4",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/expression.rs": "e153146cfcf5dc4db6ea7d0d1967ae13f76a28a939b7a6b1e0e5416d48b56116",
+      "evas/rust_core/src/interval_properties.rs": "ddcf71f1c8e23012b1a38768db74ce956025e8bd3187f77a68dd3eee3231e240",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/schedule.rs": "5abb9581a613ef8bd283bbb3ac6d8980be5574b753df9967f3b52755f726a131",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/continuous.rs": "dc2f67c517fafcf8253eb5fd8ca8a3e30009c583ddd433995bb2c7c6509b7d14",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/main.rs": "dbb968c18ded399c975227294944dadf46eb750fd450836df966c8c23fb7f25f",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "61c9557420ac185f5171995edd05fd6a95699d2aac6618a02f6673a8e69aa184",
+      "evas/rust_core/src/operators.rs": "e161eea0026adc9ab012e00242a60fd18a84c9c88b6f234d9a0595e6caa97b2f",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "658e44d755d58ce44219662c99dd8659f11f55cf9291d9041788906a8419a676",
+      "evas/rust_core/src/event_accuracy.rs": "c4364a6b9fc743a981e167989a7700958d8fd87db45db2c3ac1f8cba84a9108f",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "83a24a6cfd06e3d201d78ff065387951d7c4fc270bd1879de056b3afcac4dac2",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/dense.rs": "9e7c66eeb4e3c2b170278b10108c6ab1ea9dd0eb601f1958507b10fdcf99e910",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/sparse.rs": "63766cdea80653bc146c8e65a05ee0f54e70cf091488262f64cb1d929a466773",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a"
+    }
+  },
+  "commands": [
+    {
+      "command": "python3 -B experiments/backends/dvs2-spectre-validation/run_suite.py runs/ci-validation/inputs",
+      "returncode": 0
+    },
+    {
+      "command": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source runs/ci-validation/inputs --root runs/ci-validation/matrix --kernel evas/rust_core/target/debug/evas-kernel",
+      "returncode": 0,
+      "timeout_per_configuration_s": 90,
+      "max_attempts": 62
+    },
+    {
+      "command": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source runs/ci-validation/inputs --run runs/ci-validation/matrix --identity runs/ci-validation/identity.json --output runs/ci-validation/analysis.json",
+      "returncode": 0
+    }
+  ],
+  "source_input_manifest_sha256": "fc1f7ce122865060c956f7dc72754c9d9ca3ed258f98f99a3fbe304b32d02dab",
+  "execution_file_manifest_sha256": "68fd5d43a272a4294c0931e44a0983174567bb4666166e5ca84222120588b0f4",
+  "full_analysis_sha256": "4beb2ce4c1357a43c1cdc2bc3770a08f46bd0c001676fd8f50dd2d1253f11b9b",
+  "checker_sha256": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd",
+  "analysis_script_sha256": "66653d5883ac75a43bc6760296dbdb027685b26bc0af3b1dac73e3b7c873af78",
+  "adapter_sha256": {
+    "experiments/archive/pr14-pr15-validation/matrix.py": "b018eb323bb60a49feafbbe8f3416dfc59004804314dc925dab0cfc66c6908f8",
+    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8"
+  },
+  "checker_relocation": {
+    "baseline_commit": "86183393dff71e96e87adc8231104fc4953a8f37",
+    "files": [
+      {
+        "old_path": "experiments/dvs2-spectre-validation/check_results.py",
+        "current_path": "experiments/backends/dvs2-spectre-validation/check_results.py",
+        "old_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+        "current_sha256": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd",
+        "diff": "--- experiments/dvs2-spectre-validation/check_results.py\n+++ experiments/backends/dvs2-spectre-validation/check_results.py\n@@ -14,7 +14,7 @@\n \n from run_suite import ROOT, T, v1\n from analyze import analyze as analyze_v1, read_waveform\n-sys.path.insert(0,str(ROOT/'experiments/dvs2-history-validation'))\n+sys.path.insert(0,str(ROOT/'experiments/archive/dvs2-history-validation'))\n from history import Event, check_history\n from recheck import event_contract\n \n"
+      },
+      {
+        "old_path": "experiments/dvs2-history-validation/history.py",
+        "current_path": "experiments/archive/dvs2-history-validation/history.py",
+        "old_sha256": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+        "current_sha256": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+        "diff": ""
+      },
+      {
+        "old_path": "experiments/dvs2-history-validation/recheck.py",
+        "current_path": "experiments/archive/dvs2-history-validation/recheck.py",
+        "old_sha256": "1980b3f74f61939f6abd4ab63695ccb7f14625a53816ba79154aeea3ce205e3a",
+        "current_sha256": "e3b61b913d917f4bc11871d8ef6d4a11acad0d693ea090eb506906b2bd286f70",
+        "diff": "--- experiments/dvs2-history-validation/recheck.py\n+++ experiments/archive/dvs2-history-validation/recheck.py\n@@ -14,8 +14,8 @@\n \n from history import Event, check_history, rational\n \n-ROOT = Path(__file__).resolve().parents[2]\n-PILOT = ROOT / 'experiments/dvs2-starter-pilot'\n+ROOT = Path(__file__).resolve().parents[3]\n+PILOT = ROOT / 'experiments/archive/dvs2-starter-pilot'\n sys.path.insert(0, str(PILOT))\n from analyze import read_waveform  # Existing format reader only, not its oracle/checker.\n \n@@ -122,9 +122,12 @@\n     for relative, sha in snapshot['snapshot_files'].items():\n         if digest(ROOT / relative) != sha:\n             raise ValueError('v1 snapshot artifact drift: ' + relative)\n-    for relative in ('experiments/dvs2-starter-pilot/analyze.py', 'experiments/dvs2-starter-pilot/suite.py'):\n-        if digest(ROOT / relative) != snapshot['git_files'][relative]:\n-            raise ValueError('v1 reader dependency drift: ' + relative)\n+    for name in ('analyze.py', 'suite.py'):\n+        # The frozen identity names the path at the original run. Only the\n+        # maintained reader location moved; the original hash stays unchanged.\n+        original = 'experiments/dvs2-starter-pilot/' + name\n+        if digest(PILOT / name) != snapshot['git_files'][original]:\n+            raise ValueError('v1 reader dependency drift: ' + original)\n     records = []\n     for backend in BACKENDS:\n         for condition_id in CONDITION_IDS:\n"
+      },
+      {
+        "old_path": "experiments/dvs2-starter-pilot/analyze.py",
+        "current_path": "experiments/archive/dvs2-starter-pilot/analyze.py",
+        "old_sha256": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+        "current_sha256": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+        "diff": ""
+      },
+      {
+        "old_path": "experiments/dvs2-starter-pilot/suite.py",
+        "current_path": "experiments/archive/dvs2-starter-pilot/suite.py",
+        "old_sha256": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+        "current_sha256": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+        "diff": ""
+      }
+    ]
+  },
+  "configurations": 62,
+  "summary": {
+    "base": {
+      "observations_within_targets": 31
+    },
+    "fine": {
+      "observations_within_targets": 31
+    }
+  },
+  "comparison_to_pr33": {
+    "baseline": "experiments/runs/parallel-gap-integration/results/event-horizon-checks.json",
+    "byte_identical": 62,
+    "changed": [],
+    "historical_raw_reanalyzed": false,
+    "baseline_receipt_sha256": "5658bf1036ad683c029936ed310ca046918edff08195a22f4e1f440fbe3769c1"
+  },
+  "checks": [
+    {
+      "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "returncode": 0,
+      "log": "build.log",
+      "log_sha256": "228d9d57cafc7e1e9eb325e9a18c24444053ecb6d114f9c298d58f0aeb0527f5"
+    },
+    {
+      "command": "PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -v",
+      "returncode": 0,
+      "log": "python.log",
+      "log_sha256": "881674a7d82a7a413a43646cb8a26ab0ffa3fccd8fd9d45688eafec49d06a621",
+      "passed": 540,
+      "reported_elapsed_s": 294.362
+    },
+    {
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "returncode": 0,
+      "log": "rust.log",
+      "log_sha256": "6ac56e96aa4b22222893acaa847a5e25d318192243c1a3e302358845defd7102",
+      "passed": 129,
+      "ignored": 1
+    },
+    {
+      "command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "returncode": 0,
+      "log": "clippy.log",
+      "log_sha256": "b347137b32008880c40fe48ba814debdb71be85022b319198057460d4d52707c"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s evas/validation/differential -v",
+      "returncode": 0,
+      "log": "ngspice-checker.log",
+      "log_sha256": "80993557ed7d7c0fd30a4264fe0bb2243af0b5d8dcb65f6ebd644f213c6af6a8",
+      "passed": 7
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.6965572910849005,
+      "log": "gate-0.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/traceability.py",
+        "--check"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.3373243750538677,
+      "log": "gate-1.log",
+      "log_sha256": "e44bba1d5762f3b668db3a3495de68d4566fe05e32cc47b3e1a4a8d1153f3742"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/verify_validation_version.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 1.851475124945864,
+      "log": "gate-2.log",
+      "log_sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-v"
+      ],
+      "returncode": 0,
+      "elapsed_s": 4.122430208022706,
+      "log": "gate-3.log",
+      "log_sha256": "08ec3dba82077a59f0c2d5932ed542e5662e42dc0b0683e261dcdefd981af851"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "evas/validation/check_design_math.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.07359154103323817,
+      "log": "gate-4.log",
+      "log_sha256": "5b6d4fe8c6d6733c2974bcc65d8ddc599aebdfa0d74fdd35ba0ec0d0fa9533f9"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "evas/validation/check_timed_operator_math.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.0724752499954775,
+      "log": "gate-5.log",
+      "log_sha256": "d172c2221814641251568fcb9179d9673da38d117fe70c0054f255f2dd63529a"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "evas/validation/check_dynamics_math.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.12841516605112702,
+      "log": "gate-6.log",
+      "log_sha256": "558589942e91eb71522c33bd5948e4eb6f3f3b44b956f9c9f4a9ed28bec97d42"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "evas/validation/check_event_conditions_math.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.13207166700158268,
+      "log": "gate-7.log",
+      "log_sha256": "438fd127f453d83ae8093d16b0534fcb06d25871d47ecb469647884660544dee"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/backends/dvs2-spectre-validation",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "elapsed_s": 32.80425920907874,
+      "log": "gate-8.log",
+      "log_sha256": "c39c4bf6862acbf369c51288e23cd55180b52873084c7bc6b82ad1806526beb8"
+    }
+  ],
+  "ngspice": {
+    "command": "python3 -B evas/validation/differential/ngspice_compare.py --kernel evas/rust_core/target/debug/evas-kernel --out runs/ci-validation/ngspice",
+    "returncode": 0,
+    "log_sha256": "cb5514ab18031b7a3ed0bc73bcc20805e11854955e17b866c22e850072ad2d0b",
+    "records": [
+      {
+        "case": "affine-1",
+        "static_samples": 3,
+        "transient_samples": 7,
+        "max_error_ratio": 7.401486830834321e-05,
+        "status": "pass"
+      },
+      {
+        "case": "affine-4",
+        "static_samples": 3,
+        "transient_samples": 7,
+        "max_error_ratio": 6.29126380620918e-05,
+        "status": "pass"
+      },
+      {
+        "case": "affine-16",
+        "static_samples": 3,
+        "transient_samples": 7,
+        "max_error_ratio": 9.714451465470026e-05,
+        "status": "pass"
+      },
+      {
+        "case": "affine-64",
+        "static_samples": 3,
+        "transient_samples": 7,
+        "max_error_ratio": 0.0001439818366961255,
+        "status": "pass"
+      },
+      {
+        "case": "absdelay.json",
+        "status": "unsupported",
+        "reason": "state, event and operator programs require an independent reference model"
+      },
+      {
+        "case": "cross_counter.json",
+        "status": "unsupported",
+        "reason": "state, event and operator programs require an independent reference model"
+      },
+      {
+        "case": "idt.json",
+        "status": "unsupported",
+        "reason": "state, event and operator programs require an independent reference model"
+      },
+      {
+        "case": "static_nonlinear.json",
+        "status": "pass",
+        "max_error_ratio": 0.006444340011115506,
+        "static_samples": 3
+      },
+      {
+        "case": "timer_counter.json",
+        "status": "unsupported",
+        "reason": "state, event and operator programs require an independent reference model"
+      },
+      {
+        "case": "transition_pulse.json",
+        "status": "unsupported",
+        "reason": "state, event and operator programs require an independent reference model"
+      },
+      {
+        "case": "fixed-timer-counter-away-from-edges",
+        "status": "pass",
+        "max_error_ratio": 0.0,
+        "transient_samples": 5
+      }
+    ],
+    "scope": "shared supported subset only; 5 smoke translations remain unsupported; not the original 31-condition matrix"
+  },
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "unseen_holdout": false,
+  "new_spectre_executions": 0,
+  "new_performance_experiments": 0,
+  "availability": {
+    "curated_receipt": "repository-contained",
+    "raw": "local-only",
+    "raw_directory": "runs/ci-validation",
+    "raw_inventory": "RAW_MANIFEST.json",
+    "raw_inventory_sha256": "c1a88fb1c0656c8608335a3080d95c8520e687f9a6f277bf14320371cb271436",
+    "raw_files": 947,
+    "raw_bytes": 167611896,
+    "public_archive_url": null,
+    "limits": "Full waveforms, metrics, logs and binary are not publicly archived. Input definitions, generators, checker and per-configuration hashes are repository-contained. Hash equality uses historical receipts, not a fresh reanalysis of old raw files."
+  },
+  "records": [
+    {
+      "condition": "v1-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5516170000191778,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "d335c26e16030c306f3259b648217ac4319a1e8ce62621d00e3a34c95839d84d"
+    },
+    {
+      "condition": "v1-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "904f54cbcfe99e0d755ae3a6aa3e460c67fa8e26168b6cdde43db70f05509796",
+        "condition.json": "c3a80e7894642ac9686a65a1665717c1b3caaccc39419a481d01b6ad44b6ee0a",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.5125991250388324,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "6ee1c3aef0e4f605aa54dc758728d31b6299df987780bf6c868755510553a214"
+    },
+    {
+      "condition": "v2-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "32d8cf6219973ea71c4d76b5da18bae1c36b3998482e196a308f4eda278911a5",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.6991536250570789,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "9c474bb58d9f75ce58e3d7c6c81e1158cace78949f711a51295d70aa952063b3"
+    },
+    {
+      "condition": "v2-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "32d8cf6219973ea71c4d76b5da18bae1c36b3998482e196a308f4eda278911a5",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.667976833996363,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "b8099972fb0d3698a088ea228ceecf3a0661c40e39aa4292b5e24a445c7633f7"
+    },
+    {
+      "condition": "v2-reference-zero",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "4ea9024ab711c59c638c39318422bab456446c7ffe6d5fdfda11a89d48dc8fe0",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.6711632910883054,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "feda8ee844ff54ffb44c9957f710ea9b692986696cbd6eea1f1e94decbb98afe"
+    },
+    {
+      "condition": "v2-reference-zero",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "4ea9024ab711c59c638c39318422bab456446c7ffe6d5fdfda11a89d48dc8fe0",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 4.0870802090503275,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "994cfa867f55d4ccbe8f41ffe3ba694b0a816e29985126ee2dbda480a02df132"
+    },
+    {
+      "condition": "v2-supply-fixed",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "68a77051bae0f744aca11a5638a530dee0b9eea4d37fea38fcccc043a6a2feea",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.6134710410842672,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "6f8ffd12ce96c6ba909357f2a05d15ee01f36a43a37ef3abdea03da7fde9182b"
+    },
+    {
+      "condition": "v2-supply-fixed",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "68a77051bae0f744aca11a5638a530dee0b9eea4d37fea38fcccc043a6a2feea",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.6183043750934303,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "7fcbc017d8cc39519254ec45678ea382cca0f2489f9276691dd59f7b3d531a0e"
+    },
+    {
+      "condition": "v2-input-common-mode",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "918b5ac7ba9482761490c00caec48b0a828b4b966af8aecf558ede52388b7c62",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5845304579706863,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "9a5f473e007ed85671601dd926a89637874fa9e5e993a60bd2889dd0806f21f4"
+    },
+    {
+      "condition": "v2-input-common-mode",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "a18b3080f6f97ed380daf0b19d9010471f2a701ef0d2a3fd4f102d260b02c060",
+        "condition.json": "918b5ac7ba9482761490c00caec48b0a828b4b966af8aecf558ede52388b7c62",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.871466499986127,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "19a6fc643fcf447af6f3b05739675f5bea6422996c0b969a59f5b4f6d90fe9c6"
+    },
+    {
+      "condition": "v3-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:q"
+          ],
+          "accepted_steps": 4257,
+          "discarded_trials": 2,
+          "event_count": 2
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.2151090420084074,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "14e5e84f93b1dc69c76658f186ea63b3358177b331e4b3f016ead7383a96e5fb"
+    },
+    {
+      "condition": "v3-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3239119d69626360886445f61b91c116013e7ebbe8cbcda993d9fdf31a2df540",
+        "condition.json": "857cc771b3e56f68e268f0f51fe552e650e18fb54e5a7c79c0c8c1c2365b1159",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:q"
+          ],
+          "accepted_steps": 49493,
+          "discarded_trials": 2,
+          "event_count": 2
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 9.835434500011615,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "7022ee4b1b8cbf9f4438a37519a365b63c5e0a81d01697c9ea55be20263265d0"
+    },
+    {
+      "condition": "v4-c0",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "condition.json": "3680c7b2dfe03e25b6de0d93fe3e4d8fc30c68a6a9695ea496ced456d9de3c81",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 4276,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.4774063329678029,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "2766c278a8b007d6a82843ad71cc18a1fa43194c9f9daeec0b795e3c4987a1af"
+    },
+    {
+      "condition": "v4-c0",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "condition.json": "3680c7b2dfe03e25b6de0d93fe3e4d8fc30c68a6a9695ea496ced456d9de3c81",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 49500,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 14.451341040898114,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "8f8b13472cc41bc566f9f508b5ae30debdbcbdc8a69bb63e6961754354d48469"
+    },
+    {
+      "condition": "v4-c1",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "condition.json": "f4464868c87ad2f192d4efddf66319f2c1a9326a289c55e0998135f4766e70be",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 4274,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.666132542071864,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "e23ec63ec03eae07618e45b3fea7fb3664601a6637eb0d0905f3542ae28b021f"
+    },
+    {
+      "condition": "v4-c1",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "71d5c5cad52c39e7018caffd19c37725d25e8cbcdc63000313e01b8f11589f26",
+        "condition.json": "f4464868c87ad2f192d4efddf66319f2c1a9326a289c55e0998135f4766e70be",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 49498,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 13.783704833011143,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "c970b56846c3ad8a95f0ba95d287c38e56d9b52f12d4a2f1f4b396b418724346"
+    },
+    {
+      "condition": "v5-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+        "condition.json": "737346521caacba7883bb67004cf72e4601827379f6b539ae424d7971d04a273",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:q"
+          ],
+          "accepted_steps": 4268,
+          "discarded_trials": 5,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.8214988340623677,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "550788e3e29b1eac2d6844d526718f0bcd7105d5d3642984bbd4498c2f1de761"
+    },
+    {
+      "condition": "v5-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "d26cb8085935ce71a8e08b6b877c2beffef63e3123d0cf379e34f2433a5f6c60",
+        "condition.json": "737346521caacba7883bb67004cf72e4601827379f6b539ae424d7971d04a273",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:q"
+          ],
+          "accepted_steps": 49500,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 7.75573199999053,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "351777ee18ca0bc679ff5cd3b63f0a5181ceecabbbc86d73eb247ab7a559fbd0"
+    },
+    {
+      "condition": "v6-standard",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "eaa93def8728bdb42e36e59992a0ccfb6acbe6fae33b16d4720c23da53326ac2",
+        "condition.json": "f046db087298a64ee18ad5088da619d9b4cad37f7a885bba1d87b8fa998716db",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 4253,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.3097615418955684,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "ff9dde8edbc3c9839e623602be6760eeac24e0c97ea3c7bf1c3efecea0741581"
+    },
+    {
+      "condition": "v6-standard",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "eaa93def8728bdb42e36e59992a0ccfb6acbe6fae33b16d4720c23da53326ac2",
+        "condition.json": "f046db087298a64ee18ad5088da619d9b4cad37f7a885bba1d87b8fa998716db",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 49489,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 26.90409783401992,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "759785f26144a4806b0e68ab1c7e056e5a8cbc3e09774b911147b8a2e8695141"
+    },
+    {
+      "condition": "v7-linear-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "542e6022a064e91d2907abf95431d9ccb3e63a89737241b6028812ca5b95e1dd",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5288341660052538,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "8a1b78c7bcd52eb52b410863b6914c28c5a287284a2a3bd911aeca6fe42080bd"
+    },
+    {
+      "condition": "v7-linear-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "542e6022a064e91d2907abf95431d9ccb3e63a89737241b6028812ca5b95e1dd",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.773225250071846,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "75a0deb37c0762c52e21eb044afb596327fc2a068966af1557740323cf2ea5ad"
+    },
+    {
+      "condition": "v7-linear-swapped",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "b0ba228341d388d78afa4d5a6ef25de468766bd973947b1e6fb6481a549b127f",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5457877919543535,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "8a1b78c7bcd52eb52b410863b6914c28c5a287284a2a3bd911aeca6fe42080bd"
+    },
+    {
+      "condition": "v7-linear-swapped",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "b0ba228341d388d78afa4d5a6ef25de468766bd973947b1e6fb6481a549b127f",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.6731610000133514,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "75a0deb37c0762c52e21eb044afb596327fc2a068966af1557740323cf2ea5ad"
+    },
+    {
+      "condition": "v7-linear-a-half",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "7aa06bb962193a89c65cb586a081ee8985bf3e52a75c0f0c890744ce09c97754",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.4276121249422431,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "d92a1e8fc9c6b04ae7db3e82cf06d9de433f3d64b1712ef3069c97b913619072"
+    },
+    {
+      "condition": "v7-linear-a-half",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+        "condition.json": "7aa06bb962193a89c65cb586a081ee8985bf3e52a75c0f0c890744ce09c97754",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.0200425420189276,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "1e8f0bd6b49bfcf358de5a7eea77930b3f58afd812dd967adf3ad9c62f212dd8"
+    },
+    {
+      "condition": "v7-nonlinear-0.5",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+        "condition.json": "9ec89b70693980900daba809182cbfa072ddb098e24210d00d8192cae22a6212",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.9844600830692798,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "040c80756cd23cccca98723d175d96deaaeec6373277953b58b41a829389ef96"
+    },
+    {
+      "condition": "v7-nonlinear-0.5",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+        "condition.json": "9ec89b70693980900daba809182cbfa072ddb098e24210d00d8192cae22a6212",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 5.114454417023808,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "a086340feb4eddbd973309649012f5646d98e2bc7442a823effe16dbb050d5ea"
+    },
+    {
+      "condition": "v7-nonlinear-2.0",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+        "condition.json": "f09a32a261f64c194a3905cb99794ddb164fd6687a9297e632e0623895d647e8",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.8142050419701263,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "352c838d4af48d87a5a4ce43aff94c5c411a8c93d8f4499b6636f921d12c2e8f"
+    },
+    {
+      "condition": "v7-nonlinear-2.0",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "e82dc429cdfc90645ea79b14df08130cd0de6577fb3eec4b9234159695ad4f3d",
+        "condition.json": "f09a32a261f64c194a3905cb99794ddb164fd6687a9297e632e0623895d647e8",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 4.980618624947965,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "ab61334862ca3bd99cae50b062c8e39d958ef8c688e35ef7896bcb37c781d4a3"
+    },
+    {
+      "condition": "e1-aligned",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235",
+        "requested_settings.json": "229f0674e2fb015e676bedfc504a16ce185480d027351b73e9b7e3fd5a86e880"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 3001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 3188,
+          "discarded_trials": 1,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.2410704999929294,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 3001,
+      "waveform_sha256": "f4e9533762fe159e96079961a0be944895ee7bc235447998cb81ade15fb8b394"
+    },
+    {
+      "condition": "e1-aligned",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "30594650c8544d866bfa3514414f521ba8cc760113b4160563d06a89c0afe235",
+        "requested_settings.json": "23fcbc5480785a049e7777e2786b9e20582b904126d1ca0878a3b3cf38ba77e9"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 30001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 35570,
+          "discarded_trials": 2,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 10.629120916943066,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 30001,
+      "waveform_sha256": "23b49ce4a0c61accb1a89cd31597bcf438f154471277f54e442ee5ab07534bfd"
+    },
+    {
+      "condition": "e1-shifted",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "1fe4524515822e751aef19dac08ebc93dc4ee44e4f7a498943a0fdabf97be0b8",
+        "requested_settings.json": "229f0674e2fb015e676bedfc504a16ce185480d027351b73e9b7e3fd5a86e880"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 3001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 3192,
+          "discarded_trials": 3,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.2438247499521822,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 3001,
+      "waveform_sha256": "ffd1e0f17bc36584b54de88f4339e2f0a42df8f172dc6a2ffb04dee64f51d859"
+    },
+    {
+      "condition": "e1-shifted",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "1fe4524515822e751aef19dac08ebc93dc4ee44e4f7a498943a0fdabf97be0b8",
+        "requested_settings.json": "23fcbc5480785a049e7777e2786b9e20582b904126d1ca0878a3b3cf38ba77e9"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 30001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 35575,
+          "discarded_trials": 3,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 8.81725158309564,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 30001,
+      "waveform_sha256": "71d5b77e709f6e78ec8595291c62c66429dc1b926877080c582aecf666d1aa26"
+    },
+    {
+      "condition": "e1-slow",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "5b8184d07ad3ddf163661de111347a475b40c4b0c76f33c139be30fb646eb749",
+        "requested_settings.json": "229f0674e2fb015e676bedfc504a16ce185480d027351b73e9b7e3fd5a86e880"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 3001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 3187,
+          "discarded_trials": 2,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.8973643329227343,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 3001,
+      "waveform_sha256": "d864e88dca21473200a70dad8b862bb3226df8c1133d173bc3a001cf2680b354"
+    },
+    {
+      "condition": "e1-slow",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c4fe9c2082cfb3cdc245e9d18559b3db375a5aa7fef648b7791ccbe5707e7212",
+        "condition.json": "5b8184d07ad3ddf163661de111347a475b40c4b0c76f33c139be30fb646eb749",
+        "requested_settings.json": "23fcbc5480785a049e7777e2786b9e20582b904126d1ca0878a3b3cf38ba77e9"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 30001,
+        "stop": 3e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:n_up",
+            "dut:n_down"
+          ],
+          "accepted_steps": 35569,
+          "discarded_trials": 1,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 8.319492375012487,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 30001,
+      "waveform_sha256": "1f3fa35ec439e2622abb19d0572b244375d62b170c8e7efa7ef3739dd91b9774"
+    },
+    {
+      "condition": "e2-low",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "eaadfbd94df7194e8a4ee09e0ef3e86fa309875a767fb30a20f8c06122ff071c",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 4275,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.4629493330139667,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "20329d003bc24613b2b6d787f24465caf0405fc094308bbeee9ffce3e86519ce"
+    },
+    {
+      "condition": "e2-low",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "eaadfbd94df7194e8a4ee09e0ef3e86fa309875a767fb30a20f8c06122ff071c",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 49498,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 11.07362916704733,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "7ffbd9fc84f46979886b922fa598d7c0c367b0e681cdecc3a67a59bd42372e01"
+    },
+    {
+      "condition": "e2-clock-high",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "63009183becc246b3ad5d33c3ff210cabf0f32a5c898cbf16c1b41c80e2f994d",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 4276,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.44539279199671,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "dd90beeb333a7d3d7717148ca3b518b0dbbd58cdc95ce9af345c3a73357f4b3c"
+    },
+    {
+      "condition": "e2-clock-high",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "63009183becc246b3ad5d33c3ff210cabf0f32a5c898cbf16c1b41c80e2f994d",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 49498,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 11.14902237500064,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "b0bf39cd19abc088840d1170e781936953aa2cb7a70e9b488d44f7216aee3f3e"
+    },
+    {
+      "condition": "e2-reset-high",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "7f7f9f11a94c285fc4409ffb4ed7722ef5a6989ec855761514e901c1357d58a7",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 4276,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.4669073750264943,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "b1e83431a6f7445c14b88ce9cd65b5eab846248622e2b9b15d3db1781621a34a"
+    },
+    {
+      "condition": "e2-reset-high",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "7f7f9f11a94c285fc4409ffb4ed7722ef5a6989ec855761514e901c1357d58a7",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:held"
+          ],
+          "accepted_steps": 49498,
+          "discarded_trials": 4,
+          "event_count": 5
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 10.565351249999367,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "774982658d1ce48f217b843e4adee60d65f36360eef73b2c927c02c78182c8c6"
+    },
+    {
+      "condition": "c1-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "6f85192d55bee9cfda9a9fe1b78ed496239c41c80910dd7161b418d56b967869",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_a:held",
+            "sampler_b:held"
+          ],
+          "accepted_steps": 4285,
+          "discarded_trials": 6,
+          "event_count": 9
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.162858625059016,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "a2d0b1a8281d836de8b7e9037be0df2c98bd2be534db56fd4bf207e53c0f68e0"
+    },
+    {
+      "condition": "c1-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "6f85192d55bee9cfda9a9fe1b78ed496239c41c80910dd7161b418d56b967869",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_a:held",
+            "sampler_b:held"
+          ],
+          "accepted_steps": 49504,
+          "discarded_trials": 6,
+          "event_count": 9
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 23.64143054105807,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "93e7e513ee6adca30d3e9a7644875fd5e98e84d7b80210d4c79b2d813a30475f"
+    },
+    {
+      "condition": "c1-swapped",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "60535c171662f0b48e9c710f2c3ceada565b60d3b386cca49ce55483c124189b",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_b:held",
+            "sampler_a:held"
+          ],
+          "accepted_steps": 4285,
+          "discarded_trials": 6,
+          "event_count": 9
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.3372387499548495,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "a2d0b1a8281d836de8b7e9037be0df2c98bd2be534db56fd4bf207e53c0f68e0"
+    },
+    {
+      "condition": "c1-swapped",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "60535c171662f0b48e9c710f2c3ceada565b60d3b386cca49ce55483c124189b",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_b:held",
+            "sampler_a:held"
+          ],
+          "accepted_steps": 49504,
+          "discarded_trials": 6,
+          "event_count": 9
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 24.208948666928336,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "93e7e513ee6adca30d3e9a7644875fd5e98e84d7b80210d4c79b2d813a30475f"
+    },
+    {
+      "condition": "c1-no-reset-a",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "9da2827a4d911f17f4b1bfc753fc66bb07c871d43ba8efec52d64376af3e3cc9",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_a:held",
+            "sampler_b:held"
+          ],
+          "accepted_steps": 4282,
+          "discarded_trials": 5,
+          "event_count": 8
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.0946183340856805,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "42e0d96461dea5edc8906b18e16aade5b298518464a10ea74c6f49b797ab8427"
+    },
+    {
+      "condition": "c1-no-reset-a",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+        "condition.json": "9da2827a4d911f17f4b1bfc753fc66bb07c871d43ba8efec52d64376af3e3cc9",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler_a:held",
+            "sampler_b:held"
+          ],
+          "accepted_steps": 49504,
+          "discarded_trials": 5,
+          "event_count": 8
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 23.627325000008568,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "c3328afca3bd2565025ae3d5fc6922c851a165c8bda1ede9791bf850a3f4b72e"
+    },
+    {
+      "condition": "c2-main",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "76e1d3cdef4b1bcbf4349bdb796aa4f308c0eb18f10c259dc95974a579a53aed",
+        "condition.json": "18e2a65c996f20fc3dcc14667a2375579a8539f1c1ef40a20da425be79d34d4c",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler:held"
+          ],
+          "accepted_steps": 4269,
+          "discarded_trials": 3,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.115723916096613,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "a3acd6b4e991e61b6a716203dccc25e0eb34b199b449b81639002d8e9c635eb2"
+    },
+    {
+      "condition": "c2-main",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "76e1d3cdef4b1bcbf4349bdb796aa4f308c0eb18f10c259dc95974a579a53aed",
+        "condition.json": "18e2a65c996f20fc3dcc14667a2375579a8539f1c1ef40a20da425be79d34d4c",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "sampler:held"
+          ],
+          "accepted_steps": 49496,
+          "discarded_trials": 3,
+          "event_count": 3
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 30.447748917038552,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "5deee5b5e774d2f8b4806124a5a14fd85b3d8d4877a21cd7ca30929fcc130de6"
+    },
+    {
+      "condition": "d1-free",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "accepted_steps": 4253,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.48890133399982,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "b760715e3dd4f9d7df410c4fb2bf20a074db8251997cefeeb60e1631f41671fe"
+    },
+    {
+      "condition": "d1-free",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "accepted_steps": 49489,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 12.243847624980845,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "1a48ca6e83d4b9fd8a3d21b97b7f8a140435881e609f6a6dbdd283f5dc1c571b"
+    },
+    {
+      "condition": "d1-reset",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "accepted_steps": 4259,
+          "discarded_trials": 2,
+          "event_count": 2
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 1.305293916957453,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "7935e3e07cd3f851eb2f781f8c37da88ab5419ff0314efd6eddd070f5cc62745"
+    },
+    {
+      "condition": "d1-reset",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "accepted_steps": 49491,
+          "discarded_trials": 2,
+          "event_count": 2
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 11.37687541602645,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "4cfbadd62d5c61474fb607e8d0e208d6b48a5792bf294120dd61a55dc7654ae1"
+    },
+    {
+      "condition": "d2-constant",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "ea2a0f297b1267aee94eb345c936b02a6f6282165509be65da1075e15912f902",
+        "condition.json": "bd7d3ed12cff50d11e91caf68283bc22419796a649fdaeafda2afc6b4a07bc5c",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 4253,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 3.4632209580158815,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "f1aed3e7544e7406e985847a30311f08b7c41e465226517f31b8204122b214ce"
+    },
+    {
+      "condition": "d2-constant",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "ea2a0f297b1267aee94eb345c936b02a6f6282165509be65da1075e15912f902",
+        "condition.json": "bd7d3ed12cff50d11e91caf68283bc22419796a649fdaeafda2afc6b4a07bc5c",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 49489,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 30.642366165993735,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "0fe966fe2aaee25ee065be10c872463adf37262212216aeee96edc13a79c7868"
+    },
+    {
+      "condition": "d2-chirp",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "ea2a0f297b1267aee94eb345c936b02a6f6282165509be65da1075e15912f902",
+        "condition.json": "14dfcdfaf1cbe6fa2f01e340d90be5ab181dd4a64930fd4209e3d0a908f43c60",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 4253,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.6734436249826103,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "e492c5bdeb28cd6378aa315f80d24a637d7234930fbd499894264deff4137065"
+    },
+    {
+      "condition": "d2-chirp",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "ea2a0f297b1267aee94eb345c936b02a6f6282165509be65da1075e15912f902",
+        "condition.json": "14dfcdfaf1cbe6fa2f01e340d90be5ab181dd4a64930fd4209e3d0a908f43c60",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 49489,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 31.99388879199978,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "9cfab3410b96ae061b3d882685384d3a2511035421aa5da6e8a51d6f99163063"
+    },
+    {
+      "condition": "s1-default",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651",
+        "condition.json": "0e8fa8d168e77f10f4701ebae6f5c5efd3a605edb443fa71790672b150892f6d",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5009582079946995,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "21ef023667ae0c52214ae995a2ad945896407a0ddf236bcb50c499b802ec3da5"
+    },
+    {
+      "condition": "s1-default",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651",
+        "condition.json": "0e8fa8d168e77f10f4701ebae6f5c5efd3a605edb443fa71790672b150892f6d",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.637561250012368,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "19b48de4ce15ac64509c801fef88f5433512b82893e4214582f06565a22b1a1d"
+    },
+    {
+      "condition": "s1-override",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651",
+        "condition.json": "a2fae2da372d6a2f6ddeeab15034b9c2a99b8fd68b1e1b4043f6db0bae33c736",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.5205446250038221,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 4001,
+      "waveform_sha256": "13ec0e3e4fcb0a15bc75deec40bc4e778c1846a30c5ddae6e397f839444cd5c3"
+    },
+    {
+      "condition": "s1-override",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651",
+        "condition.json": "a2fae2da372d6a2f6ddeeab15034b9c2a99b8fd68b1e1b4043f6db0bae33c736",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.12.3",
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ],
+        "transient_summary": {
+          "state_names": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0,
+          "event_count": 0
+        }
+      },
+      "execution_status": "waveform_available",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 2.391378041007556,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "analysis_status": "observations_within_targets",
+      "sample_count": 40001,
+      "waveform_sha256": "1fa6ad75587213bc947bb8960e611b2a734aad1fcbdc6f5dd8f6b085e146c8ef"
+    }
+  ]
+}

@@ -91,6 +91,12 @@ PYTHONPATH=evas/src python3 -m unittest discover -s evas/tests -v
 cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 ```
 
+[CI 工作流](../.github/workflows/numerical-assurance.yml)在 EVAS、实验工具或维护脚本变更时，
+运行完整 Python/Rust 回归、Clippy、格式、追溯矩阵、冻结身份及独立数学/检查器校准。
+另外运行 ngspice 共同子集和有界 fuzz。回归使用 Python 3.12、Rust stable，fuzz 使用 nightly；
+它不覆盖所有操作系统/工具链，也不自动执行 Spectre 或原 31×2 矩阵。
+各次矩阵执行与正式资格边界仍以具名收据为准。
+
 静态回放工具 [run_static_regression.py](tests/run_static_regression.py) 检查符合静态入口的
 原矩阵模型；两档的采样点与残差检查不能替代瞬态事件验证。
 新增能力需要同时说明数学含义、状态生命周期、组合边界和独立答案，要求见
