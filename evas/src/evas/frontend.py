@@ -6,7 +6,7 @@ from .ir import Program
 from .elaboration import inline_functions
 from .instance_compiler import Compilation, InstanceCompiler
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
-                     Conditional as SyntaxConditional, ContributionStatement)
+                     Conditional as SyntaxConditional, ContributionStatement, Loop)
 
 
 @dataclass(frozen=True)
@@ -53,7 +53,10 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     # the whole program's structural voltage graph before numeric cancellation.
     def body_expressions(statements):
         for statement in statements:
-            if isinstance(statement, ContributionStatement):
+            if isinstance(statement, Loop):
+                yield from (statement.start,statement.limit,statement.update)
+                yield from body_expressions(statement.body)
+            elif isinstance(statement, ContributionStatement):
                 yield statement.rhs
             elif isinstance(statement, SyntaxAssignment):
                 yield statement.rhs
@@ -68,7 +71,8 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
                                      *(arg for event in model.events for leaf in event.triggers
                                        for arg in leaf.arguments if arg is not None)))
     def has_condition(body):
-        return any(isinstance(statement, SyntaxConditional) for statement in body)
+        return any(isinstance(statement, SyntaxConditional) or isinstance(statement, Loop) and has_condition(statement.body)
+                   for statement in body)
 
     has_conditions = any(has_condition(model.analog) or any(has_condition(event.body) for event in model.events)
                          for _, model, _ in bindings)

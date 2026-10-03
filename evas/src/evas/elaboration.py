@@ -3,7 +3,7 @@ from dataclasses import replace
 
 from .errors import CompileError
 from .limits import MAX_EXPRESSION_DEPTH, MAX_IR_ITEMS, MAX_SOURCE_NESTING
-from .syntax import Conditional, Expr, Model, OPERATOR_NAMES
+from .syntax import Conditional, Expr, Loop, Model, OPERATOR_NAMES
 
 
 def inline_functions(model: Model) -> Model:
@@ -77,7 +77,10 @@ def inline_functions(model: Model) -> Model:
     def body(statements):
         result = []
         for statement in statements:
-            if isinstance(statement, Conditional):
+            if isinstance(statement, Loop):
+                result.append(replace(statement, start=expand(statement.start), limit=expand(statement.limit),
+                                      update=expand(statement.update), body=body(statement.body)))
+            elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=expand(statement.left), right=expand(statement.right),
                                       then_body=body(statement.then_body), else_body=body(statement.else_body)))
             else:
@@ -97,3 +100,78 @@ def inline_functions(model: Model) -> Model:
                        replace(leaf, arguments=tuple(expand(arg) if arg is not None else None
                                                    for arg in leaf.arguments)) for leaf in event.triggers))
                            for event in model.events])
+
+
+def unroll_loops(model: Model, parameter):
+    """Instance-constant genvar loops, without adding a runtime execution path."""
+    from .ir import Affine
+    from .lowering import lower
+    from .syntax import Assignment, contains_operator
+
+    def has_loop(statements):
+        return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
+                   and (has_loop(statement.then_body) or has_loop(statement.else_body))
+                   for statement in statements)
+
+    if not has_loop(model.analog):
+        return tuple(model.analog)
+
+    budget = 4096
+    count = 0
+    iterations = 0
+
+    def fail(message, token):
+        raise CompileError(f'{model.source}:{token.line}:{token.column}: {message}')
+
+    def substitute(expr, indices):
+        if expr.op == 'parameter' and expr.value in indices:
+            return Expr('number', float(indices[expr.value]), (), expr.token)
+        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args))
+
+    def constant(expr, indices):
+        value = lower(substitute(expr,indices), parameter, {}, model.source)
+        if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
+            fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
+        return int(value.constant)
+
+    def body(statements, indices, depth=0):
+        nonlocal count, iterations
+        if depth > MAX_SOURCE_NESTING:
+            fail('static loop nesting budget exceeded', statements[0].token)
+        result = []
+        for statement in statements:
+            if isinstance(statement, Loop):
+                if statement.name not in model.genvars or statement.name in indices:
+                    fail('static for requires an unshadowed declared genvar', statement.token)
+                value = constant(statement.start, indices)
+                seen = set()
+                while True:
+                    scope = {**indices, statement.name:value}
+                    end = constant(statement.limit,scope)
+                    active = {'<': value<end, '<=':value<=end, '>':value>end, '>=':value>=end}[statement.relation]
+                    if not active:
+                        break
+                    if value in seen or len(seen) == budget:
+                        fail('nonterminating or over-budget static loop', statement.token)
+                    iterations += 1
+                    if iterations > budget:
+                        fail('total static iteration budget (4096) exceeded', statement.token)
+                    seen.add(value)
+                    result.extend(body(statement.body, scope, depth+1))
+                    value = constant(statement.update, scope)
+            elif isinstance(statement, Conditional):
+                result.append(replace(statement, left=substitute(statement.left,indices), right=substitute(statement.right,indices),
+                                      then_body=body(statement.then_body,indices,depth+1),
+                                      else_body=body(statement.else_body,indices,depth+1)))
+            else:
+                if isinstance(statement, Assignment) and statement.name in model.genvars:
+                    fail('genvar can only be assigned in its for control',statement.token)
+                if indices and contains_operator(statement.rhs):
+                    fail('history call sites in static loops require expanded call-site identity',statement.token)
+                count += 1
+                if count > budget:
+                    fail('elaborated statement budget (4096) exceeded',statement.token)
+                result.append(replace(statement,rhs=substitute(statement.rhs,indices)))
+        return tuple(result)
+
+    return body(model.analog,{})

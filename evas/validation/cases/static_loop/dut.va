@@ -1,0 +1,13 @@
+module static_loop(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+parameter real count=3;
+genvar i;
+real sum;
+analog begin
+  sum=0;
+  for(i=0;i<count;i=i+1) begin
+    sum=sum+(i+1)*V(u,r);
+  end
+  V(y,r)<+sum-2*V(y,r);
+end
+endmodule

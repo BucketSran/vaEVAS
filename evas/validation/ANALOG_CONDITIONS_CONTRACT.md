@@ -178,3 +178,22 @@ vout - vref = min(0.875, max(-0.75, y0))
 [pure_function](cases/pure_function/dut.va)及 [test_user_functions.py](../tests/test_user_functions.py)
 用手算电压、多项式 guard 的两根、局部顺序写与实例参数隔离验证。该切片不新增 IR
 字段、动态状态或历史执行器，也不改变原 31 条件；候选尚未合并，没有新 Spectre 运行。
+
+## 静态 genvar 循环的分支候选
+
+语言依据是 [Verilog-AMS LRM 2.4 §3.5](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的 genvar 与 analog for。该分支只展开标量 genvar、整数实例常量控制的有限循环，
+支持递增、递减、嵌套和零次迭代。更新仅允许写循环头的同一个 genvar；
+重复值、动态电压边界、非整数/超出 32 位控制值、嵌套同名变量和预算超限明确拒绝。
+总迭代数与实际叶子语句各限 4096，空的嵌套循环也不能逃过总工作预算。
+
+`elaboration.py::unroll_loops` 在每个实例参数绑定后替换索引并输出普通语句。
+贡献仍加入同一方程组，局部赋值保留展开后的顺序。对 count=3，
+`sum=Σ(i+1)u=6u`，`y=sum−2y` 应解得 `y=2u`。这不是新增运行时执行器。
+模块参数覆盖必须独立于实例顺序；纯函数先内联，再替换循环索引。
+
+[static_loop](cases/static_loop/dut.va)和 [test_static_loops.py](../tests/test_static_loops.py)
+验证手算求和、非收缩反馈、实例隔离、嵌套/空循环、函数组合及预算拒绝。
+循环内历史调用暂不支持：重复展开同一源码调用点需要先扩展历史身份契约。
+这是当前实现限制；LRM 允许合规的 genvar analog 循环中使用历史算子。
+通用数组、运行时循环和层次不由这一切片获得支持。候选尚未合并。

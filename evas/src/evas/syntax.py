@@ -36,7 +36,7 @@ OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
-             "function", "endfunction"}
+             "function", "endfunction", "for", "genvar"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | _BUILTINS
 
@@ -106,6 +106,17 @@ class ContributionStatement:
 
 
 @dataclass(frozen=True)
+class Loop:
+    name: str
+    start: Expr
+    relation: str
+    limit: Expr
+    update: Expr
+    body: tuple["Assignment | Conditional | ContributionStatement | Loop", ...]
+    token: Token
+
+
+@dataclass(frozen=True)
 class Trigger:
     kind: str
     arguments: tuple[Expr | None, ...]
@@ -136,11 +147,12 @@ class Model:
     directions: dict[str, str]
     nodes: set[str]
     parameters: dict[str, Expr]
-    analog: list[Assignment | Conditional | ContributionStatement]
+    analog: list[Assignment | Conditional | ContributionStatement | Loop]
     variables: dict[str, str]
     initial: list[Assignment]
     events: list[Event]
     functions: dict[str, Function] = field(default_factory=dict)
+    genvars: frozenset[str] = frozenset()
 
 
 class Parser:
@@ -270,16 +282,16 @@ class Parser:
             left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return left
 
-    def statements(self, conditional=False) -> tuple[Assignment | Conditional, ...]:
+    def statements(self, conditional=False, analog=False):
         if self.nesting >= MAX_SOURCE_NESTING:
             self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
         self.nesting += 1
         try:
-            return self._statements(conditional)
+            return self._statements(conditional, analog)
         finally:
             self.nesting -= 1
 
-    def _statements(self, conditional=False) -> tuple[Assignment | Conditional, ...]:
+    def _statements(self, conditional=False, analog=False):
         token = self.token
         if token.text == ";":
             self.take(";")
@@ -288,7 +300,7 @@ class Parser:
             self.take("begin")
             result = []
             while self.token.text != "end":
-                result.extend(self.statements(conditional))
+                result.extend(self.statements(conditional, analog))
             self.take("end")
             return tuple(result)
         if token.text == "if" and conditional:
@@ -300,12 +312,39 @@ class Parser:
                 self.fail("event condition requires <, <=, > or >=", relation)
             right = self.expression()
             self.take(")")
-            then_body = self.statements(True)
+            then_body = self.statements(True, analog)
             else_body = ()
             if self.token.text == "else":
                 self.take("else")
-                else_body = self.statements(True)
+                else_body = self.statements(True, analog)
             return (Conditional(relation.text, left, right, then_body, else_body, token),)
+        if analog and token.text == "for":
+            self.take("for")
+            self.take("(")
+            name = self.name()
+            self.take("=")
+            start = self.expression()
+            self.take(";")
+            left = self.expression()
+            relation = self.take()
+            if left.op != "parameter" or left.value != name or relation.text not in ("<", "<=", ">", ">="):
+                self.fail("static for condition requires its genvar and <, <=, > or >=", relation)
+            limit = self.expression()
+            self.take(";")
+            if self.name() != name:
+                self.fail("for initialization and update must write the same genvar", token)
+            self.take("=")
+            update = self.expression()
+            self.take(")")
+            return (Loop(name, start, relation.text, limit, update, self.statements(True, True), token),)
+        if analog and token.text == "V":
+            branch = self.expression()
+            if branch.op != "voltage":
+                self.fail("contribution target must be V(p) or V(p,n)", branch.token)
+            self.take("<+")
+            rhs = self.expression()
+            self.take(";")
+            return (ContributionStatement(branch, rhs, token),)
         name = self.name()
         self.take("=")
         rhs = self.expression()
@@ -348,8 +387,8 @@ class Parser:
         ports = self.names()
         self.take(")")
         self.take(";")
-        directions, nodes, parameters, variables, functions = {}, set(), {}, {}, {}
-        while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real")
+        directions, nodes, parameters, variables, functions, genvars = {}, set(), {}, {}, {}, set()
+        while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real", "genvar")
                or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
             if self.token.text == "analog":
                 function = self.function()
@@ -361,16 +400,22 @@ class Parser:
             if kind == "parameter":
                 self.take("real")
                 param = self.name()
-                if param in parameters or param in ports or param in nodes or param in variables:
+                if param in parameters or param in ports or param in nodes or param in variables or param in genvars:
                     self.fail(f"duplicate parameter/node name {param!r}")
                 self.take("=")
                 parameters[param] = self.expression()
             else:
                 names = self.names()
+                if set(names) & genvars:
+                    self.fail("duplicate genvar name")
                 if kind in ("integer", "real"):
                     if (set(names) & (nodes | set(ports) | parameters.keys() | variables.keys())):
                         self.fail("duplicate variable/node/parameter name")
                     variables.update(dict.fromkeys(names, kind))
+                elif kind == "genvar":
+                    if set(names) & (nodes | set(ports) | parameters.keys() | variables.keys()):
+                        self.fail("genvar name conflicts with a module declaration")
+                    genvars.update(names)
                 elif kind == "electrical":
                     if nodes.intersection(names) or (parameters.keys() | variables.keys()) & set(names):
                         self.fail("duplicate electrical/parameter name")
@@ -422,22 +467,21 @@ class Parser:
                         self.fail("event OR supports only cross leaves", token)
                     events.append(Event(tuple(triggers), self.statements(True), token))
                 continue
-            if self.token.text == "V":
-                token = self.token
-                branch = self.expression()
-                if branch.op != "voltage":
-                    self.fail("contribution target must be V(p) or V(p,n)", branch.token)
-                self.take("<+")
-                rhs = self.expression()
-                self.take(";")
-                analog.append(ContributionStatement(branch, rhs, token))
-            else:
-                analog.extend(self.statements(True))
+            analog.extend(self.statements(True, True))
         self.take("end")
         self.take("endmodule")
         self.take("<eof>")
-        if not any(isinstance(statement, ContributionStatement) for statement in analog):
+        pending = list(analog)
+        contributed = False
+        while pending:
+            statement = pending.pop()
+            contributed |= isinstance(statement, ContributionStatement)
+            if isinstance(statement, Loop):
+                pending.extend(statement.body)
+            elif isinstance(statement, Conditional):
+                pending.extend((*statement.then_body, *statement.else_body))
+        if not contributed:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys()):
+        if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions)
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars))

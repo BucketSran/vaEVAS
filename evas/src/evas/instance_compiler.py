@@ -11,6 +11,7 @@ from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contri
                  Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
 from .lowering import lower, scale
 from .limits import MAX_PARAMETER_DEPTH, check_ir
+from .elaboration import unroll_loops
 from .syntax import (CompileError, Model, contains_operator,
                      Conditional as SyntaxConditional, ContributionStatement)
 
@@ -86,7 +87,7 @@ class InstanceCompiler:
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
             origin = Origin(self.model.source, event.token.line, event.token.column, self.instance.name)
             self.compilation.events.append(Event(event_trigger, self.body(event.body), origin))
-        _, contributions = self.execute_analog(self.model.analog, {})
+        _, contributions = self.execute_analog(unroll_loops(self.model, self.parameter), {})
         self.emit_contributions(contributions)
 
     def initialize_states(self):
