@@ -1,0 +1,97 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:28 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// qpsk_demodulator
+//
+// -  QPSK (quadrature phase shift key) modulator
+//
+// vin:		input [V,A]
+// vout_i:	i-phase output [V,A]
+// vout_q:	q-phase output [V,A]
+//
+// INSTANCE parameters
+//    freq        = demodulation frequency [Hz]
+//    vthresh     = threshold detection voltage [V]
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    tstart      = time at which demodulation starts [s]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// Does a QPSK demodulation on the input signal. It does not contain a
+// dynamic sync'ing mechanism. Syncing can be adjusted by changing
+// 'tstart'.
+//
+// Detection works by separately sampling the i-phase of vin and the
+// q-phase of vin at 'freq' Hz and 90 degress out of phase. The first
+// i-phase sample is done at 'tstart' + 0.5/'freq', the next 1/'freq'
+// seconds later, etc. Similarly the first q-phase sample is done at
+// 'tstart' + 0.25/'freq', the next 1/'freq' seconds later, etc.
+//
+// For the i-phase, a high is detected if the sample < -'vthresh'
+// For the q-phase, a high is detected if the sample >  'vthresh'
+//
+(* instrument_module *)
+module qpsk_demodulator (vin, vout_i, vout_q);
+input vin;
+output vout_i, vout_q;
+electrical vout_i, vout_q, vin;
+parameter real freq=1 from (0:inf);
+parameter real vthresh = 0.1 from [0:inf);
+parameter real tstart=0 from [0:inf);
+parameter real vlogic_high = 5;
+parameter real vlogic_low  = 0;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+   real period;
+
+   integer i_bit, q_bit;
+
+   real i_vout_val;
+   real q_vout_val;
+ 
+   real tnext_i, tnext_q;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+         period = 1/freq;
+	 tnext_i = $abstime + 0.50 * period + tstart;
+	 tnext_q = $abstime + 0.25 * period + tstart;
+      end
+
+      @ ( timer( tnext_i )) begin
+	 i_bit = V(vin) < -vthresh;
+         i_vout_val = i_bit * (vlogic_high - vlogic_low) + vlogic_low;
+	 tnext_i = tnext_i + period;
+      end
+      @ ( timer( tnext_q )) begin
+	 q_bit = V(vin) > vthresh;
+         q_vout_val = q_bit * (vlogic_high - vlogic_low) + vlogic_low;
+	 tnext_q = tnext_q + period;
+      end
+
+      V(vout_i) <+ transition(i_bit,tdel,trise,tfall);
+      V(vout_q) <+ transition(q_bit,tdel + 0.25 * period ,trise,tfall);
+    end
+endmodule
+
+
+
+

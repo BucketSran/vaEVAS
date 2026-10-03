@@ -1,0 +1,60 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:48 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+
+//--------------------
+// deadband
+//
+// -  dead band
+//
+// sigin:	input (val,flow)
+// sigout:	output (val,flow)
+//
+// INSTANCE parameters
+//    sigin_dead_high = upper deadband limit (val)
+//    sigin_dead_low  = lower deadband limit (val)
+//
+// MODEL parameters
+//    {none}
+//
+// Deadband region is when 'sigin' is between 'sigin_dead_high' and
+// 'sigin_dead_low'. 'sigout' is zero in the deadband region.
+// Above the deadband the output is 'sigin' - sigin_dead_high.
+// Below the deadband the output is 'sigin' - sigin_dead_low.
+//
+
+module deadband (sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real sigin_dead_high = 1.0;
+parameter real sigin_dead_low = -1.0;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (sigin_dead_high <= sigin_dead_low) begin
+	    $display("Range specification error.  sigin_dead_high = (%E) less than sigin_dead_low = (%E).\n", sigin_dead_high, sigin_dead_low );
+	    $finish;
+	 end
+      end
+
+      if ( V(sigin) < sigin_dead_low )
+         V(sigout) <+ V(sigin) - sigin_dead_low;
+      else if ( V(sigin) > sigin_dead_high )
+	 V(sigout) <+ V(sigin) - sigin_dead_high;
+      else 
+	 V(sigout) <+ 0.0;
+    end
+endmodule

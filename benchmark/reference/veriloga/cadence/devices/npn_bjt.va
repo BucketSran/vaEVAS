@@ -1,0 +1,235 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:47:02 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+//--------------------
+// npn_bjt
+//
+// -  Bipolar Junction Transistor
+//
+// vcoll:	collector	[V,A]
+// vbase:	base		[V,A]
+// vemit:	emitter		[V,A]
+// vsubs:	substrate	[V,A]
+//
+// INSTANCE parameters
+//    area = cross section area
+//    is  = saturation current			[]
+//    ise = base-emitter leakage current	[]
+//    isc = base-collector leakage current	[]
+//    bf  = beta forward			[]
+//    br  = beta reverse			[]	
+//    nf  = forward emission coefficient	[]	
+//    nr  = reverse emission coefficient	[]
+//    ne  = b-e leakage emission coefficient	[]	
+//    nc  = b-c leakage emission coefficient	[]
+//    vaf = forward Early voltage		[V]
+//    var = reverse Early voltage		[V]
+//    ikf = forward knee current 		[A]
+//    ikr = reverse knee current 		[A]
+//    cje = capacitance, base-emitter junction	[F]
+//    vje = voltage, base-emitter junction	[V]
+//    mje = b-e grading exponential factor	[]	
+//    cjc = capacitance, base-collector junction	[F]
+//    vjc = voltage, base-collector junction	[V]
+//    mjc = b-c grading exponential factor	[]
+//    cjs = capacitance, collector-substrate junction	[F]
+//    vjs = voltage, collector-substrate junction	[V]
+//    mjs = c-s grading exponential factor	[]
+//    fc  = forward bias capacitance factor	[]
+//    tf  = ideal forward transit time		[s]
+//    xtf = tf bias coefficient			[]
+//    vtf = tf-vbc dependence voltage		[V]
+//    itf = high current factor			[]
+//    tr  = reverse diffusion capacitance	[s]
+//
+// This is gummel-poon-ish npn bjt model
+//
+
+module npn_bjt(vcoll, vbase, vemit, vsubs);
+inout vcoll, vbase, vemit, vsubs;
+electrical vcoll, vbase, vemit, vsubs;
+parameter real area = 1 from (0:inf); 
+parameter real is=1e-16 from (0:inf);
+parameter real ise=0 from [0:inf);
+parameter real isc=0 from [0:inf);
+parameter real bf=100 from (0:inf);
+parameter real br=1 from (0:inf);
+parameter real nf=1.0 exclude 0;
+parameter real nr=1.0 exclude 0;
+parameter real ne=1.5 exclude 0;
+parameter real nc=2.0 exclude 0;
+parameter real vaf=1M from (0:inf];
+parameter real var=1M from (0:inf];
+parameter real ikf=1M from (0:inf];
+parameter real ikr=1M from (0:inf];
+parameter real cje=0 from [0:inf);
+parameter real vje=0.75 exclude 0;
+parameter real mje=0.5 from [0:1);
+parameter real cjc=0 from [0:inf);
+parameter real vjc=0.75 exclude 0;
+parameter real mjc=0.5 from [0:1);
+parameter real cjs=0 from [0:inf);
+parameter real vjs=0.75 exclude 0;
+parameter real mjs=0.33 from [0:1);
+parameter real fc=0.5 from [0:1);
+parameter real tf=0n;
+parameter real xtf=0;
+parameter real vtf=1M exclude 0;
+parameter real itf=0;
+parameter real tr=1n;
+
+`define F1(m, f, v)		((v/(1 - m))*(1 - pow((1 - f), m)))
+`define F2(m, f)		(pow((1 - f), (1 + m)))
+`define F3(m, f)		(1 - f*(1 + m))
+
+   real Vbe, Vbc, Vcs;
+   real Ice, Ibe, Ibc, Ics;
+
+   real IsExpVbe, IsExpVbc, IseExpVbe, IscExpVbc;
+   real InvQ1, Q1, Q2, Qb, Ifwd, x;
+
+   real fpbe, fpbc, fpcs;
+   real fbe1, fbe2, fbe3;
+   real fbc1, fbc2, fbc3;
+   real fcs1, fcs2, fcs3;
+
+   real ddt_expr1;
+   real ddt_expr2;
+   real ddt_expr3;
+   real ddt_expr4;
+   real ddt_expr5;
+   real ddt_expr6;
+
+   real pow_expr1;
+   real pow_expr2;
+   real pow_expr3;
+
+   analog begin
+
+      @ ( initial_step or initial_step("static") ) begin
+	 fbe1 = `F1(mje, fc, vje);
+	 fbe2 = `F2(mje, fc);
+	 fbe3 = `F3(mje, fc);
+	 fpbe = fc*mje;
+
+	 fbc1 = `F1(mjc, fc, vjc);
+	 fbc2 = `F2(mjc, fc);
+	 fbc3 = `F3(mjc, fc);
+	 fpbc = fc*mjc;
+
+	 fcs1 = `F1(mjs, fc, vjs);
+	 fcs2 = `F2(mjs, fc);
+	 fcs3 = `F3(mjs, fc);
+	 fpcs = fc*mjs;
+      end
+
+      Ibe = 0.0;
+      Ibc = 0.0;
+      Vbe = V(vbase,vemit);
+      Vbc = V(vbase,vcoll);
+      Vcs = V(vcoll,vsubs);
+
+      //       
+      // Intrinsic BJT
+      //
+      IsExpVbe = is*exp(Vbe/(nf*$vt));
+      IsExpVbc = is*exp(Vbc/(nr*$vt));
+      IseExpVbe = ise*(exp(Vbe/(ne*$vt)) - 1);
+      IscExpVbc = isc*(exp(Vbc/(nc*$vt)) - 1);
+   
+      InvQ1 = 1;
+      if (vaf != 1M) InvQ1 = InvQ1 - Vbc/vaf;
+      if (var != 1M) InvQ1 = InvQ1 - Vbe/var;
+      Q1 = 1/InvQ1;
+      Q2 = 0;
+      if (ikf != 1M) Q2 = Q2 + (IsExpVbe - is)/ikf;
+      if (ikr != 1M) Q2 = Q2 + (IsExpVbc - is)/ikr;
+      Qb = (Q1/2)*(1 + sqrt(1 + 4*Q2));
+      Ice = (IsExpVbe - IsExpVbc)/Qb - IsExpVbc/br - IscExpVbc;
+      Ibe = (IsExpVbe - is)/bf + (IsExpVbc - is)/br
+          + IseExpVbe + IscExpVbc;
+
+      //
+      // Diffusion Capacitor
+      //
+      Ifwd = IsExpVbe - is;
+      x = 1;
+      if (vtf != 1M) x = x*xtf*exp(Vbc/(sqrt(2)*vtf));
+      if (itf != 0) x = x*pow((Ifwd/(Ifwd + itf)), 2);
+      Ibe = Ibe + ddt( tf*(Ifwd/Qb)*(1 + x) );
+      Ibc = Ibc + ddt( tr*(IsExpVbc - is) );
+
+      //
+      // B-C Junction Capacitor
+      //
+      if ( Vbc <= fpbc) 
+	 pow_expr1 = pow((1 - Vbc/vjc), (1 - mjc));
+      else
+	 pow_expr1 = 0.0;
+
+      ddt_expr1 = ddt( cjc*vjc*(1 - pow_expr1)/(1 - mjc));
+      ddt_expr2 = ddt( cjc*(fbc1 + (1/fbc2)*(fbc3*(Vbc - fpbc) +
+            (0.5*mjc/vjc)*(Vbc*Vbc - fpbc*fpbc))) );
+
+      if (Vbc <= fpbc) begin
+         Ibc = Ibc+ddt_expr1;
+      end else begin
+         Ibc = Ibc+ddt_expr2;
+      end
+
+      //
+      // B-E Junction Capacitor
+      //
+      if (Vbe <= fpbe)
+         pow_expr2 = pow((1 - Vbe/vje), (1 - mje));
+      else
+         pow_expr2 = 0.0;
+
+      ddt_expr3 = ddt( cje*vje*(1 - pow_expr2)/(1 - mje));
+      ddt_expr4 = ddt( cje*(fbe1 + (1/fbe2)*(fbe3*(Vbe - fpbe) +
+            (0.5*mje/vje)*(Vbe*Vbe - fpbe*fpbe))) );
+
+      if (Vbe <= fpbe) begin
+         Ibe = Ibe + ddt_expr3;
+      end else begin
+         Ibe = Ibe + ddt_expr4;
+      end
+
+      //
+      // C-S Junction Capacitor
+      //
+
+      if (Vcs <= fpcs)
+         pow_expr3 = pow((1 - Vcs/vjs), (1 - mjs));
+      else
+         pow_expr3 = 0.0;
+
+      ddt_expr5 = ddt( cjs*vjs*(1 - pow_expr3)/(1 - mjs) );
+      ddt_expr6 = ddt( cjs*(fcs1 + (1/fcs2)*(fcs3*(Vcs - fpcs) +
+            (0.5*mjs/vjs)*(Vcs*Vcs - fpcs*fpcs))) );
+
+      if (Vcs <= fpcs) begin
+         Ics = ddt_expr5;
+      end else begin
+         Ics = ddt_expr6;
+      end
+
+      I(vcoll,vemit) <+ area*Ice;
+      I(vbase,vemit) <+ area*Ibe;
+      I(vbase,vcoll) <+ area*Ibc;
+      I(vcoll,vsubs) <+ area*Ics;
+    end
+endmodule
+
+
+
+
+

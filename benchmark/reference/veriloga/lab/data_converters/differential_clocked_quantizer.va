@@ -1,0 +1,47 @@
+// VerilogA for VerilogA, QTZ, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module QTZ(VINP, VINN, VREFP, VREFN, DOUT, CLK);
+input VINP, VINN, CLK;
+output DOUT;
+inout VREFP, VREFN;
+electrical VINP, VINN, CLK, DOUT, VREFP, VREFN;
+
+// parameter integer order=1;
+parameter integer N=2;
+parameter real vth=0.45;
+parameter real ttol=5p from [0:inf);
+parameter real td=0 from [0:inf);
+parameter real tt=10p from (0:inf);
+integer state;
+real vinp, vinn, vrefp, vrefn, vout[N:0], vindif, vrefdif;
+genvar i;  // for loop use
+
+analog begin
+vinp = V(VINP);
+vinn = V(VINN);
+vrefp = V(VREFP);
+vrefn = V(VREFN);
+vindif = vinp - vinn;
+vrefdif = vrefp - vrefn;
+vout[0] = -N/2-0.5;
+
+@ (cross(V(CLK)-vth, 1, ttol)) begin
+for (i = 0; i < N; i=i+1) begin
+if (vindif > vrefn + i * vrefdif / N) 
+vout[i+1] = vout[i] + 1;
+else
+vout[i+1] = vout[i] ;
+end
+end
+
+if (vout[N] == -N/2-0.5) begin
+vout[N] = vout[N] + 1;
+end
+
+V(DOUT) <+ (vout[N]);
+end
+
+endmodule

@@ -1,0 +1,86 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:29 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define PI 3.14159
+
+
+
+//--------------------
+// three_phase_motor
+//
+// -  Three phase motor
+//
+// vp1, vn1:	phase 1 terminals [V,A]
+// vp2, vn2:	phase 2 terminals [V,A]
+// vp3, vn3:	phase 3 terminals [V,A]
+// pos:		position of shaft [rad,Nm]
+// shaft:	speed of shaft [rad/s,Nm]
+// com:		rotational reference point [rad/s,Nm]
+//
+// INSTANCE parameters
+//    km = motor constant [Vs/rad]
+//    kf = flux constant  [Nm/A]
+//    j  = inertia factor [Nms^2/rad]
+//    d  = drag (friction)  [Nms/rad]
+//    rm = motor resistance [Ohms]
+//    lm = motor inductance [H]
+//
+// MODEL parameters
+//    {none}
+//
+
+
+module three_phase_motor (vp1, vn1, vp2, vn2, vp3, vn3,shaft_pos,shaft_w,com);
+inout vp1, vn1, vp2, vn2, vp3, vn3;
+inout shaft_w, com;
+rotational shaft_pos;
+electrical vp1, vn1, vp2, vn2, vp3, vn3;
+rotational_omega shaft_w, com;
+parameter real km = 0.06;
+parameter real kf = 0.6;
+parameter real j = 0.0004;
+parameter real d = 0.1;
+parameter real rm = 0.2;
+parameter real lm = 1m;
+
+   real theta, back_emf;
+
+   integer nu;
+
+   analog begin
+      back_emf = km * Omega(shaft_w,com);
+      theta = idt(Omega(shaft_w,com), 0.0);
+	
+      if ( theta == 0.0 )
+          nu = 0.0;
+      else
+           nu = ( theta > 0.0 ) ? (theta/2/`PI - 0.5) : (theta/2/`PI + 0.5);
+      theta = theta - nu*2*`PI;
+      Theta(shaft_pos) <+ theta;
+      V(vp1,vn1) <+ back_emf*cos(theta) + rm*I(vp1, vn1) + ddt(lm*I(vp1,vn1));
+      V(vp2,vn2) <+ back_emf*cos(theta-2*`PI/3) + rm*I(vp2, vn2) + ddt(lm*I(vp2,vn2));
+      V(vp3,vn3) <+ back_emf*cos(theta+2*`PI/3) + rm*I(vp3, vn3) + ddt(lm*I(vp3, vn3));
+
+      Tau(shaft_w, com) <+   kf *( I(vp1, vn1)*cos(theta)
+                         + I(vp2, vn2)*cos(theta-2*`PI/3)
+                         + I(vp3, vn3)*cos(theta+2*`PI/3))
+                         - d * Omega(shaft_w,com)
+                         - ddt( j * Omega(shaft_w,com));
+   end
+endmodule
+
+
+	
+
+
+
+
+

@@ -1,0 +1,59 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:48 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define PI  	3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// varfreq_sin
+//
+// -  variable frequency sinusoidal src
+//
+// sigin:	frequency controlling signal (val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    amp         = amplitude of the output signal (val)
+//    center_freq = centre frequency of oscillation freq when 'sigin' = 0 [Hz]
+//    freq_gain   = oscillator conversion gain (Hz/val)
+//
+// MODEL parameters
+//    {none}
+//
+// Outputs a variable frequency sinusoidal signal. It's instantaneous
+// frequency is ('center_freq' + 'freq_gain' * 'sigin') [Hz]
+//
+
+module varfreq_sin(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real amp = 1;
+parameter real center_freq = 1K;
+parameter real freq_gain = 1K;
+
+   real phase, freq_inst;
+
+   analog begin
+      phase = center_freq * $abstime + freq_gain * idt(V(sigin), 0);
+
+      freq_inst = center_freq + freq_gain*V(sigin);
+
+      V(sigout) <+ amp * sin(2 * `PI * phase);
+      $bound_step(1.0/(freq_inst * 20));
+   end
+endmodule
+
+
+
+
+

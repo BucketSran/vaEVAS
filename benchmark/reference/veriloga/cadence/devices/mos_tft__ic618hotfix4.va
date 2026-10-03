@@ -1,0 +1,275 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:47:02 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define CHECK_BACK_SURFACE 1
+`define n_type 1
+`define p_type 0
+
+
+//--------------------
+// mos_tft
+//
+// -  silicon-on-insulator thin film transistor
+//
+// vdrain:	drain terminal      [V,A]
+// vgate_front:	front gate terminal [V,A]
+// vsource:	source terminal     [V,A]
+// vgate_back:	back gate terminal  [V,A]
+//
+// INSTANCE parameters
+//    length = length []
+//    width = width []
+//    toxf   = oxide thickness [m]
+//    toxb   = oxide thickness [m]
+//    nsub   = [cm^-3]
+//    ngate  = [cm^-3]
+//    nbody  = [cm^-3]
+//    tb     = [m]
+//    u0     = []
+//    lambda = channel length modulation factor []
+//    dev_type   = dev_type []
+//
+// A fully depleted back surface tft MOSFET model. No
+// short-channel effects.
+//
+(* instrument_module *)
+module mos_tft(vdrain, vgate_front, vsource, vgate_back);
+inout vdrain, vgate_front, vsource, vgate_back;
+electrical vdrain, vgate_front, vsource, vgate_back;
+parameter real length=1 from (0:inf);
+parameter real width=1 from (0:inf);
+parameter real toxf = 20n;
+parameter real toxb = 0.5u;
+parameter real nsub = 1e14;
+parameter real ngate = 1e19;
+parameter real nbody = 5e15;
+parameter real tb = 0.1u;
+parameter real u0 = 700;
+parameter real lambda = 0.05;
+parameter integer dev_type=`n_type;
+
+
+`define C   	2.997924562e8
+
+
+   real
+      id,
+      vgfs,
+      vds,
+      vgbs,
+      vdsat;
+
+   real   
+      phi,   // body potential.
+      vfbf,  // flat-band voltage - front channel.
+      vfbb,  // flat-band voltage - back channel.
+      vtfa,  // threshold voltage - back channel accumulated.
+      vgba,  // vgb for accumulation at back surface.
+      vgbi,  // vgb for inversion at back surface.
+      vtff,  // threshold voltage.
+      wkf,   // work-function, front-channel.
+      wkb,   // work-function, back-channel.
+      alpha, // capacitance ratio.
+      cob,   // capacitance back-gate to body.
+      cof,   // capacitance front-gate to body.
+      cb,    // body intrinsic capacitance.
+      cbb,   // series body / back-gate capacitance.
+      cfb,   // series front-gate / body capacitance.
+      cfbb,  // series front-gate / body / back-gate capacitance.
+      qb,    // fixed depleted body charge.
+      kp,    // K-prime.
+      qgf,   // front-gate charge.
+      qgb,   // back-gate charge.
+      qn,    // channel charge.
+      qd,    // drain component of channel charge.
+      qs;    // source component of channel charge.
+
+   // $error variables.
+   integer back_surf;
+
+   real Vt, eps0, charge, boltz, ni, epsox, epsil;
+
+   real tmp1;
+
+   integer dev_type_sign;
+
+   analog begin
+
+      @ ( initial_step or initial_step("static") ) begin
+
+	 if( dev_type == `n_type )  dev_type_sign = 1;
+	 else dev_type_sign = -1;
+
+	 eps0 = 8.854e-12;       // F/m
+	 charge = 1.602e-19;     // C
+	 boltz = 1.3806226e-23;  // J/K
+	 ni = 9.6e9;             // 1/cm^3
+
+	 epsox = 3.9*eps0;
+	 epsil = 11.7*eps0;
+	 Vt = boltz*$temperature/charge;
+
+	 phi = 2*Vt*ln(nbody/ni);
+	 wkf = Vt*ln(ngate/ni) - phi/2;
+	 wkb = Vt*ln(nsub/ni) - phi/2;
+	 vfbf = wkf;                  // front-channel fixed charge assumed zero.
+	 vfbb = wkb;                  // back-channel fixed charge assumed zero.
+	 qb = charge*nbody*1e6*tb;
+	 cob = epsox/toxb;
+	 cof = epsox/toxf;
+	 cb = epsil/tb;
+	 cbb = cob*cb/(cob + cb);
+	 cfb = cof*cb/(cof + cb);
+	 cfbb = cfb*cob/(cfb + cob);
+	 alpha = cbb/cof;
+
+	 vtfa = vfbf + (1 + cb/cof)*phi - qb/(2*cof);
+	 vgba = dev_type_sign*vfbb - phi*cb/cob - qb/(2*cob);
+	 vgbi = dev_type_sign*vfbb + phi - qb/(2*cob);
+
+	 kp = width*u0*1e-4*cof/length;
+   
+	 back_surf = 0;
+
+`ifdef DEBUG
+	 $strobe(" length = %E\n", length);
+	 $strobe(" width = %E\n", width);
+	 $strobe(" dev_type_sign = %d\n", dev_type_sign);
+	 $strobe("  %E\n", Vt);
+	 $strobe(" eps0 = %E\n", eps0);
+	 $strobe(" charge = %E\n", charge);
+	 $strobe(" boltz = %E\n", boltz);
+	 $strobe(" ni = %E\n", ni);
+	 $strobe(" epsox = %E\n", epsox);
+	 $strobe(" epsil = %E\n", epsil);
+	 $strobe(" phi = %E\n", phi);
+	 $strobe(" wkf = %E\n", wkf);
+	 $strobe(" wkb = %E\n", wkb);
+	 $strobe(" vfbf = %E\n", vfbf);
+	 $strobe(" vfbb = %E\n", vfbb);
+	 $strobe(" qb = %E\n", qb);
+	 $strobe(" cob = %E\n", cob);
+	 $strobe(" cof = %E\n", cof);
+	 $strobe(" cb = %E\n", cb);
+	 $strobe(" cbb = %E\n", cbb);
+	 $strobe(" cfb = %E\n", cfb);
+	 $strobe(" cfbb = %E\n", cfbb);
+	 $strobe(" alpha = %E\n", alpha);
+	 $strobe(" vtfa = %E\n", vtfa);
+	 $strobe(" vgba = %E\n", vgba);
+	 $strobe(" vgbi = %E\n", vgbi);
+	 $strobe(" kp = %E\n", kp);
+`endif
+
+      end
+
+
+      vgfs = dev_type_sign*V(vgate_front, vsource);
+      vds = dev_type_sign*V(vdrain, vsource);
+      vgbs = dev_type_sign*V(vgate_back, vsource);
+
+      //
+      // calc. threshold and saturation voltages.
+      //
+      vtff = vtfa - (vgbs - vgba)*cbb/cof;
+      vdsat = (vgfs - vtff)/(1 + alpha);
+
+      //
+      // drain current calculatins.
+      //
+      if (vgfs < vtff) begin
+
+         //
+         // front-channel in accumulation / cutoff region(s).
+         //
+         id = 0;
+         qn = 0;
+         qd = 0;
+         qs = 0;
+         qgf = width*length*cfbb*(vgfs - wkf - qb/(2*cbb)
+                                  - (vgbs - vfbb + qb/(2*cob)));
+         qgb = - (qgf + width*length*qb);
+
+      end else if (vds < vdsat) begin
+
+         //
+         // front-channel in linear region.
+         //
+         id = kp*((vgfs - vtff)*vds - 0.5*(1 + cbb/cof)*vds*vds);
+         id = id*(1 + lambda*vds);
+         tmp1 = (1 + alpha)*vds;
+         qn = -width*length*cof*(vgfs - vtff - tmp1/2 + tmp1*tmp1/
+            (12*(vgfs - vtff - tmp1/2)));
+         qd = 0.4*qn;
+         qs = 0.6*qn;
+         qgf = width*length*cof*(vgfs - wkf - phi - vds/2 + tmp1*vds/
+            (12*(vgfs - vtff - tmp1/2)));
+         qgb = - (qgf + qn + width*length*qb);
+
+      end else begin
+
+
+         //
+         // front-channel in saturation.
+         //
+         id = 0.5*kp*(pow((vgfs - vtff), 2))/(1 + cbb/cof);
+         id = id*(1 + lambda*vds);
+         qn = -width*length*cof*(2.0/3.0)*(vgfs - vtff);
+         qd = 0.4*qn;
+         qs = 0.6*qn;
+         qgf = width*length*cof*(vgfs - wkf - phi -
+               ((vgfs - vtff)/(3*(1 + alpha))));
+         qgb = - (qgf + qn + width*length*qb);
+
+      end
+
+      //
+      // intrinsic device.
+      //
+      I(vdrain, vsource) <+ dev_type_sign*id;
+      I(vdrain, vgate_back) <+ dev_type_sign*ddt(qd);
+      I(vsource, vgate_back) <+ dev_type_sign*ddt(qs);
+      I(vgate_front, vgate_back) <+ dev_type_sign*ddt(qgf);
+
+`ifdef CHECK_BACK_SURFACE
+
+      //
+      // check back-surface contraints.  save the state in the back_surf 
+      // variable.  at the final of the $analysis, use back_surf to 
+      // print out any possible violations.
+      //
+      if (vgbs > vgbi && !back_surf) begin
+         back_surf = 1;
+      end else if (vgbs < vgba && !back_surf) begin
+         back_surf = 2;
+      end
+
+
+      @ ( final_step ) begin
+	 if (back_surf == 1) begin
+	    $display("Back-surface went into inversion during analysis.\n");
+	 end else if (back_surf == 2) begin
+	    $display("Back-surface went into accumulation during analysis.\n");
+	 end
+      end
+
+`endif
+
+   end
+
+endmodule
+
+
+
+
+
+
+

@@ -1,0 +1,75 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:55 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// bit_error_rate
+//
+// -  Bit error rate
+//
+// vin1:	[V,A]
+// vin2:	[V,A]
+//
+// INSTANCE parameters
+//    tstart  = when the start measuring [s]
+//    tperiod = how often to compare bits [s]
+//    vtrans  = voltages above this at input are considered high [V]
+//
+// MODEL parameters
+//    {none}
+//
+// This model compares the two input signals 'tstart+tperiod/2' and then every
+// 'tperiod' seconds later. At the end of the simulation it prints the bit
+// error rate which is the number of errors found divided by the the number of
+// bits compared.
+//
+(* instrument_module *)
+module bit_error_rate (vin1, vin2);
+input vin1, vin2;
+electrical vin1, vin2;
+parameter real tstart  = 0 from [0:inf);
+parameter real tperiod = 1 from (0:inf);
+parameter real vtrans = 0.5;
+
+   real tnext;
+
+   integer bits;
+   integer errors;
+
+   analog begin
+
+      @ ( initial_step ) begin
+          tnext = (tstart + tperiod/2);
+      end
+
+      @ ( timer( tnext )) begin
+         if ((V(vin1) > vtrans) != (V(vin2) > vtrans)) begin
+            errors = errors + 1;
+         end
+         bits = bits + 1;
+         tnext = tnext + tperiod;
+      end
+
+      @ ( final_step ) begin
+	   if (bits > 0 ) 
+		 $strobe( "%m: bits measured = %d, bit errs detected = %d, bit err rate = %g.\n",bits,errors,errors/(1.0*bits) );
+
+	    else 
+		 $strobe( "No bits detected!!");
+      end
+
+   end
+
+endmodule
+
+
+

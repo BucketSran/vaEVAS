@@ -1,0 +1,26 @@
+`include "disciplines.vams"
+module L2_7bit_sar_logic(CLKC,CLKS,DCMPP,DCMPN,CMPCK,DO,DCTRLP,DCTRLN);
+input CLKC,CLKS,DCMPP,DCMPN; output CMPCK; output [6:0] DO; output [6:1] DCTRLP,DCTRLN;
+electrical CLKC,CLKS,DCMPP,DCMPN,CMPCK; electrical [6:0] DO; electrical [6:1] DCTRLP,DCTRLN;
+parameter real vdd=1.1,t_logic_delay=200p;
+integer step,ck,d[0:6],p[1:6],n[1:6]; genvar i;
+analog begin
+ @(initial_step or cross(V(CLKS)-vdd/2,+1)) begin
+  step=6;ck=0;
+  for(i=0;i<7;i=i+1)d[i]=0;
+  for(i=1;i<7;i=i+1)begin p[i]=0;n[i]=0;end
+ end
+ @(cross(V(CLKC)-vdd/2,+1))ck=1;
+ @(cross(V(DCMPP)-vdd/2,+1) or cross(V(DCMPN)-vdd/2,+1))begin
+  ck=0;
+  if(step>=0)d[step]=(V(DCMPP)>V(DCMPN));
+  if(step>=1)begin if(d[step])n[step]=1;else p[step]=1;end
+ end
+ @(cross(V(DCMPP)-vdd/2,-1) or cross(V(DCMPN)-vdd/2,-1))begin
+  step=step-1; if(step>=0)ck=1;
+ end
+ V(CMPCK)<+transition(ck*vdd,t_logic_delay,10p);
+ for(i=0;i<7;i=i+1)V(DO[i])<+transition(d[i]*vdd,0,10p);
+ for(i=1;i<7;i=i+1)begin V(DCTRLP[i])<+transition(p[i]*vdd,0,10p);V(DCTRLN[i])<+transition(n[i]*vdd,0,10p);end
+end
+endmodule

@@ -1,0 +1,21 @@
+// VerilogA for VAComponent, opamp_diff_sp, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+module LI_VCVS_NLIN(inp, inn, outp, outn);
+inout inp, inn, outp, outn;
+electrical inp, inn, outp, outn;
+parameter Vcmo = 1.1 from (0:inf);
+parameter a1 = 1;
+parameter a2 = 0;
+parameter a3 = 0;
+parameter a5 = 0;
+parameter a7 = 0;
+parameter Vsat = 10000000;
+real Vid, Vod;
+analog begin Vid = V(inp,inn);
+			Vod = (a1*Vid+a2*Vid**2+a3*Vid**3+a5*Vid**5+a7*Vid**7)/2;
+			V(outp) <+ Vcmo + (Vod>Vsat?Vsat:(Vod<-Vsat?-Vsat:Vod));
+		    	V(outn) <+ Vcmo - (Vod>Vsat?Vsat:(Vod<-Vsat?-Vsat:Vod));
+end
+endmodule

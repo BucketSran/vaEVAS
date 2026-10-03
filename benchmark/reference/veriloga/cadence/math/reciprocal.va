@@ -1,0 +1,49 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:36 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// reciprocal
+//
+// -  reciprocal
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    gain = gain (val)
+//    min_sigdenom = minimum denominator (val)
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is 'gain'/'denom'
+//
+
+module reciprocal (sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real gain = 1.0;
+parameter real min_sigdenom = 1.0e-9 from (0:inf);
+
+   real denom;
+
+   analog begin
+
+      denom = V(sigin);
+      if ( abs(denom) < min_sigdenom )  
+	 denom = ( denom > 0.0 ) ? min_sigdenom : - min_sigdenom;
+
+      V(sigout) <+ gain / denom;
+   end
+endmodule

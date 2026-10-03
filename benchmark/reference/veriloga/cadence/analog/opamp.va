@@ -1,0 +1,119 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:21 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define PI  	3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// opamp
+//
+// -  operational amplifier
+//
+// vin_p,vin_n:	differential input voltage [V,A]
+// vout:	output voltage [V,A]
+// vref:	reference voltage [V,A]
+// vspply_p:	positive supply voltage [V,A]
+// vspply_n:	negative supply voltage [V,A]
+//
+// INSTANCE parameters
+//    gain           = gain []
+//    freq_unitygain = unity gain frequency [Hz]
+//    rin            = input resistance [Ohms]
+//    vin_offset     = input offset voltage referred to negative [V]
+//    ibias          = input current [A]
+//    iin_max           = maximum current [A]
+//    slew_rate      = slew rate [A/F]
+//    rout           = output resistance [Ohms]
+//    vsoft          = soft output limiting value [V]
+//
+// MODEL parameters
+//    {none}
+//
+
+module opamp(vout, vref, vin_p, vin_n, vspply_p, vspply_n);
+input vref, vspply_p, vspply_n;
+inout vout, vin_p, vin_n;
+electrical vout, vref, vin_p, vin_n, vspply_p, vspply_n;
+parameter real gain = 835e3;
+parameter real freq_unitygain  = 1.0e6;
+parameter real rin = 1e6;
+parameter real vin_offset = 0.0;
+parameter real ibias = 0.0;
+parameter real iin_max = 100e-6;
+parameter real slew_rate = 0.5e6;
+parameter real rout = 80;
+parameter real vsoft = 0.5;
+   real c1;
+   real gm_nom;
+   real r1;
+   real vmax_in;
+   real vin_val;
+
+   electrical cout;
+
+ 
+   analog begin
+
+      @ ( initial_step or initial_step("dc") ) begin
+	 c1 = iin_max/(slew_rate);
+	 gm_nom = 2 * `PI * freq_unitygain * c1;
+	 r1 = gain/gm_nom;
+	 vmax_in = iin_max/gm_nom;
+      end
+ 
+      vin_val = V(vin_p,vin_n) + vin_offset;
+
+      //
+      // Input stage.
+      //
+      I(vin_p, vin_n) <+ (V(vin_p, vin_n) + vin_offset)/ rin;
+      I(vref, vin_p) <+ ibias;
+      I(vref, vin_n) <+ ibias;
+
+      //
+      // GM stage with slewing
+      //
+      I(vref, cout) <+ V(vref, cout)/100e6;
+
+      if (vin_val > vmax_in)
+         I(vref, cout) <+ iin_max;
+      else if (vin_val < -vmax_in)
+         I(vref, cout) <+ -iin_max;
+      else 
+         I(vref, cout) <+ gm_nom*vin_val ;
+
+      //
+      // Dominant Pole.
+      //
+      I(cout, vref) <+ ddt(c1*V(cout, vref));
+      I(cout, vref) <+ V(cout, vref)/r1;
+
+      //
+      // Output Stage.
+      //
+      I(vref, vout) <+ V(cout, vref)/rout;
+      I(vout, vref) <+ V(vout, vref)/rout;
+
+      //
+      // Soft Output Limiting.
+      //
+      if (V(vout) > (V(vspply_p) - vsoft))
+         I(cout, vref) <+ gm_nom*(V(vout, vspply_p)+vsoft);
+      else if (V(vout) < (V(vspply_n) + vsoft))
+         I(cout, vref) <+ gm_nom*(V(vout, vspply_n)-vsoft); 
+   end
+endmodule
+
+
+
+
+

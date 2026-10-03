@@ -1,0 +1,53 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:55:52 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// attenuator
+//
+// -  Attenuator
+//
+// vin:		am input signal     [V,A]
+// vout:	rectified am signal [V,A]
+//
+// INSTANCE parameters
+//    attenuation = 20log10 attenuation [dB]
+//
+// MODEL parameters
+//    {none}
+//
+// vout is attenuated by 'attenuation' [dB]
+//
+
+module attenuator(vin, vout);
+input  vin;
+output  vout;
+electrical vin, vout;
+parameter real attenuation = 0;
+
+   real gain;
+
+   analog begin
+
+      @ ( initial_step ) begin
+         gain = 1 / pow (10, (attenuation/20) );
+      end
+
+      V(vout) <+ gain * V(vin);
+   end
+endmodule
+
+
+
+
+
+

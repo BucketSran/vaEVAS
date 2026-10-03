@@ -1,0 +1,49 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:25 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// cube_root
+//
+// -  cubic root
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    epsilon = small number added to sigin to ensure that not getting
+//              pow(0,0.3333..). This is because 'pow' is implemented using
+//              logs. (val)
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is the cubic root of 'sigin'
+//
+
+module cube_root (sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real epsilon = 1e-6;
+  real sigin_val;
+
+   analog begin
+
+      sigin_val = V(sigin) + epsilon;
+      if ( sigin_val < 0.0 ) 
+         V(sigout) <+ -(pow(abs(sigin_val) + epsilon,0.333333333333333333));
+      else 
+         V(sigout) <+  pow(sigin_val + epsilon,0.333333333333333333);
+   end
+endmodule
+

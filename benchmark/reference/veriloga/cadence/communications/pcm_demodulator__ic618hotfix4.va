@@ -1,0 +1,132 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+//
+// useful #def's
+
+`define NUM_OF_BITS 8
+
+
+
+
+
+//--------------------
+// pcm_demodulator
+//
+// -  an 8 bit PCM demodulator
+//
+// vin:		input signal     [V,A]
+// vout:	demodulated signal [V,A]
+//
+// INSTANCE parameters
+//    freq_sample = sample frequency [Hz]
+//    tstart      = when to start sampling [s]
+//    vout_min    = minimum input voltage [V]
+//    vout_max    = maximum input voltage [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// The PCM demodulator samples 'vin' at 'bit_rate' [Hz] starting
+// 'tstart' + 0.5/'bit_rate'. Each set of 8 samples is considered
+// a binary word and these sets are converted to an output voltage
+// using a linear 8 bit binary code with 0 representing 'vin_min' and
+// 255 representing 'vin_max'. The first bit recieved is the LSB, bit 0,
+// the last bit recieved is the MSB, bit 7.
+//
+// Clearly the output rate is 'bit_rate'/8.
+//
+(* instrument_module *)
+module pcm_demodulator(vin, vout);
+electrical  vin, vout;
+parameter real data_rate = 1M from (0:inf);
+parameter real tstart  = 1u from (0:inf);
+parameter real vout_min = -5;
+parameter real vout_max = 5;
+parameter real vtrans = 0;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+
+   real tbit_stream;	    // time between the input bits
+   real toutput; // time between output changes
+   real tbit_next;
+   real toutput_next;
+   integer code;
+   integer bit[0:7];
+   integer bit_num;
+   integer i;
+   real vout_val;
+
+   analog function real code2volt;
+   input code, vmax, vmin;
+   integer code;
+   real vmax, vmin;
+
+      real v_normal;  // normalized output voltage;
+
+   begin
+      v_normal = code/(pow(2,`NUM_OF_BITS) - 1);
+
+      code2volt = v_normal * (vmax - vmin) + vmin;
+   end
+   endfunction
+
+   analog begin
+
+      @ ( initial_step ) begin
+         tbit_stream = 1/data_rate;
+         toutput = `NUM_OF_BITS*tbit_stream;
+         tbit_next = tstart + tbit_stream * 0.5;
+         toutput_next = tstart + toutput;
+         for (i=0; i < `NUM_OF_BITS; i=i+1) begin
+            bit[i] = 0;
+         end
+      end
+
+      $bound_step(tbit_stream/2);
+
+      @(timer(tbit_next)) begin
+	 if( bit_num > (`NUM_OF_BITS-1)) begin
+            
+         end else begin
+           bit[bit_num] = (V(vin) > vtrans);
+         end
+
+         if (bit_num == (`NUM_OF_BITS-1))begin
+            code = 0;
+            for (i=(`NUM_OF_BITS-1); i >= 0; i=i-1 ) begin
+               code = code*2 + bit[i];
+            end
+         end
+         bit_num = bit_num + 1;
+         tbit_next = tbit_next + tbit_stream;
+      end
+
+      @(timer(toutput_next)) begin
+         bit_num = 0;
+         vout_val = code2volt(code,vout_max,vout_min);
+         toutput_next = toutput_next + toutput;
+      end
+
+      V(vout) <+ transition(vout_val,tdel,trise,tfall);
+   end  
+endmodule
+
+
+
+
+
+

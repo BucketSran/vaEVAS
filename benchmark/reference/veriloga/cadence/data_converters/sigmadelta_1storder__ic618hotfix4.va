@@ -1,0 +1,83 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:40 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+//--------------------
+// sigmadelta_1storder
+//
+// - first order sigmadelta analog to digital converter
+//
+// vin:		[V,A]
+// vclk:	[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    vth        = threshold voltage of 2 level quantizer [V]
+//    vout_high  = range of sigma-delta is 0-vout_high [V] 
+//    vtrans_clk = transition of voltage of clock [V]
+//    tdel,trise,tfall = {usual}
+//
+// MODEL parameters
+//    {none}
+//
+(* instrument_module *)
+module sigmadelta_1storder(vin, vclk, vout);
+input vin, vclk;
+output vout;
+electrical vin, vout, vclk ;
+parameter real vth=0.0 ;
+parameter real vout_high=5.0 ;
+parameter real vtrans_clk=2.5 ;
+parameter real trise=20n from (0:inf);
+parameter real tfall=20n from (0:inf);
+parameter real tdel=0.0 from [0:inf);
+
+   real vsum;
+   real vd;
+   real vint ;
+   real vout_val;
+
+   real hi, lo;
+
+   analog begin
+
+      @ ( initial_step ) begin
+         vout_val = 1.0;
+         hi=1.0;
+         lo=-1.0;
+      end
+
+      @ (cross(V(vclk)-vtrans_clk, 1.0))begin
+
+         // summing junction
+         vsum = V(vin) - vd ;
+         
+         // integrator
+         vint = vsum + vint;
+         
+         // quantizer
+         if (vint > vth)
+            vout_val = hi ;
+	 else
+            vout_val = lo ;
+         
+         // D2A
+         vd = vout_high * vout_val ;
+         
+      end
+      V(vout) <+ transition(vout_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+

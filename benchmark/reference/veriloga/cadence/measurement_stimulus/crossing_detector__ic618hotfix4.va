@@ -1,0 +1,76 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1995/10/27 05:30:15 $
+// $Revision: 1.1 $
+//
+//
+//The sample SpectreHDL library is unsupported and subject to change
+//without notice. Future versions of SpectreHDL may not be compatible
+//with this library.
+
+
+
+//--------------------
+// crossing_detector
+//
+// -  crossing_detector
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    pulse_width  = width of pulse generated when a crossing is detected [s]
+//    sigcrossing  = detecting 'sigin' crossing this value []
+//    vlogic_high  = logic high value [V]
+//    vlogic_low   = logic low value [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is normally 'vlogic_low'. When 'sigin' crosses 'sigcrossing',
+// 'sigout' rises to 'vlogic_high' after a delay of 'tdel'. 'sigout'
+// remains high until 'pulse_width' seconds have passed. The rise and
+// fall of the pulse are characterised by 'trise' and 'tfall'.
+//
+(* instrument_module *)
+module crossing_detector (sigin,sigout); 
+electrical sigin,sigout;
+parameter real pulse_width = 1u from (0:inf);
+parameter real sigcrossing = 0;
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+   real sigout_val;
+
+   real tbreak;   // when switch pulse off.
+
+   analog begin
+
+      @ ( initial_step ) begin
+        sigout_val = vlogic_low;
+      end
+
+      @ (cross(V(sigin) - sigcrossing, 0)) begin
+         sigout_val = vlogic_high;
+         tbreak = $abstime + pulse_width;
+      end
+
+      @ (timer(tbreak)) begin
+         sigout_val = vlogic_low;
+      end
+
+      V(sigout) <+ transition(sigout_val,tdel,trise,tfall);
+   
+   end
+endmodule
+
+
+
+
+
+
+

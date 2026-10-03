@@ -1,0 +1,232 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:26 $
+// $Revision: 1.1 $
+
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+//
+
+`define NO 0
+`define YES 1
+
+`define arg   0
+`define rise  1
+`define fall  2
+`define cross 3
+`define at    10
+`define when  11 
+
+
+
+//--------------------
+// find_probe
+//
+// -  signal statistics probe
+//
+// out_pos, out_neg:		signal to measure []
+// start_pos, start_neg:	signal that controls start of measurement []
+// ref_pos, ref_neg:		differential reference signal;
+//
+// INSTANCE parameters
+//    start         = argument value that starts measurements;
+//    stop          = argument value that stops measurements;
+//    start_td      = signal delays [s]
+//    start_val     = signal value that starts/end measurement []
+//    start_count   = num signal values that starts/end measurement
+//    start_mode    = one of starting/stopping modes []
+//                              0 => arg - argument value (simulation time)
+//		                1 => rise - crossing of signal value on rise
+//		                2 => fall - crossing of signal value on fall
+//		                3 => cross - any crossing of the signal value
+//    start_ref_val = start signal reference value []
+//    arg_val       = argument value that controls when to measure signals []
+//                       If 'arg_val' is given then measure at the specified
+//                       value of the simulation argument. If it is not given
+//                       then measure at the occurence of the event:
+//
+//                       1. If start_ref_val is given then measure output
+//                          signal when start signal is equal to the
+//                          reference value;
+//                       2. If start_ref_val is not given then measure
+//                          output signal when start signal is equal
+//                          to reference signal.
+//
+// MODEL parameters
+//    {none}
+//
+// This probe measures output signal at the occurence of the event;
+//
+//    1. if 'arg_val' is given measure at this value;
+//
+//    2. if 'start_ref_val' is given then measure output
+//         signal when start signal crosses this value;
+//
+//    3. if 'start_ref_val' is not given then measure when output
+//	      signal equal to reference signal.
+//
+(* instrument_module *)
+module find_probe (out_pos, out_neg, start_pos, start_neg, ref_pos, ref_neg);
+inout out_pos, out_neg, start_pos, start_neg, ref_pos, ref_neg;
+electrical out_pos, out_neg, start_pos, start_neg, ref_pos, ref_neg;
+parameter real start_ref_val = 1M;
+parameter real arg_val = -1M;
+parameter real start_val = 1M;
+parameter real start_td = 0;
+parameter integer start_count = 0;
+parameter integer start_mode = `arg;
+
+	integer startDirection;
+	real argValue, outValue, startValue, refValue;
+	real outCur, startCur, refCur, argCur;
+
+	integer doMeasure, dostart, msgFlag;
+	integer startCnt;
+	real argstartPrev, argstartCur;
+        integer mode;
+
+   	real lc_startDirection;
+	real lc_startRefVal, lc_outRef;
+   	integer crossStartDirection;
+   	integer crossRefVal;
+   	integer crossOutRef;
+
+	analog function integer direction;
+	input mode;
+	integer mode;
+
+	    if (mode == `rise) direction = 1;
+	    else if (mode == `fall) direction = -1;
+	    else if (mode == `cross) direction = 0;
+	endfunction
+
+
+	analog begin
+	    @ ( initial_step ) begin
+	       doMeasure = `NO;
+	       dostart = `NO;
+	       msgFlag = `NO;
+	       mode = `at;
+	       startDirection = direction(start_mode);
+
+	       if (start_count == 0) doMeasure = `YES;
+	       if (start_val < 1M) dostart = `YES;
+	       if (arg_val == -1M) mode = `when;
+	    end
+
+	    if (analysis("tran")) begin
+
+         	lc_startDirection = last_crossing(V(start_pos, start_neg) -
+                                           start_val, startDirection);
+
+		lc_startRefVal = last_crossing(V(start_pos,start_neg) -
+						start_ref_val, 0);
+
+		lc_outRef = last_crossing(V(out_pos, out_neg) -
+					  V(ref_pos, ref_neg), 0);
+
+	 	crossStartDirection = 0;
+	 	crossRefVal = 0;
+	 	crossOutRef = 0;
+
+	 	argstartCur = 0.0;
+		argValue = 0.0;
+
+		argCur = $abstime;
+		outCur = V(out_pos, out_neg);
+		startCur = V(start_pos, start_neg);
+		refCur = V(ref_pos, ref_neg);
+
+         	@ (cross(V(start_pos, start_neg) - start_val, 
+			 startDirection)) begin
+			crossStartDirection = 1;
+		 end
+
+
+		@ (cross(V(start_pos, start_neg) -
+				    start_ref_val, 0)) begin
+			crossRefVal = 1;
+		end
+
+		@ (cross(V(out_pos, out_neg) -
+				    V(ref_pos, ref_neg), 0)) begin
+			crossOutRef = 1;
+		end
+
+		if (mode == `at) begin
+		    @ ( timer(arg_val)) begin
+			argValue = $abstime;
+			outValue = outCur;
+			startValue = startCur;
+			refValue = refCur;
+			msgFlag = `YES;
+		    end
+		end
+
+		if (mode == `when) begin
+		    if (dostart) begin
+			argstartCur = lc_startDirection;
+			if ($abstime - start_td >= 0) begin
+			    if (startCnt+1 == start_count) begin
+				if ( crossStartDirection ) begin
+				    dostart = `NO;
+				    doMeasure = `YES;
+				end
+			    end
+
+			    if (argstartCur != argstartPrev) 
+				startCnt = startCnt + 1;
+			end
+		    end
+
+		    if (doMeasure) begin
+			if (start_ref_val < 1M) begin
+			    argValue = lc_startRefVal;
+			    if ( crossRefVal ) begin
+				    outValue = outCur;
+				    startValue = startCur;
+				    refValue = refCur;
+				    doMeasure = `NO;
+				msgFlag = `YES;
+			    end
+			end else begin
+			    argValue = lc_outRef;
+			    if ( crossOutRef ) begin
+				outValue = V(out_pos, out_neg);
+				startValue = V(start_pos, start_neg);
+				refValue = V(ref_pos, ref_neg);
+				doMeasure = `NO;
+				msgFlag = `YES;
+			    end
+			end
+		    end
+		end
+
+		argstartPrev = argstartCur;
+	    end
+
+	   @ ( final_step ) begin
+	       if (analysis("tran")) begin
+		   $strobe("\nModule instance: %M\n");
+		   if (msgFlag == `NO) begin
+		       $strobe("\n Start event did not occur.");
+		   end else begin
+		       $strobe("    Argument  = %2.12g\n", argValue);
+		       $strobe("    Output signal = %2.12g\n", outValue);
+		       $strobe("    Reference signal = %2.12g\n", refValue);
+		       $strobe("    Start signal = %2.12g\n", startValue);
+		   end
+		   $strobe("\n");
+	       end
+	   end
+
+	end
+
+endmodule
+
+
+
+

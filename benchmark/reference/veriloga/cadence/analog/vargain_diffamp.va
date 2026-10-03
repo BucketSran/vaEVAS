@@ -1,0 +1,77 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:50 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// vargain_diffamp
+//
+// -  variable gain differential amplifier
+//
+// sigin_p,sigin_n:	differential input terminals (val,flow)
+// sigctrl_p,sigctrl_n:	differential controlling terminals (val,flow)
+// sigout:		(val,flow)
+// 
+// INSTANCE parameters
+//    gain_const   = amplifier gain when (sigctrl_p - sigctrl_n) = 1 unit []
+//    sigout_high  = upper output limit (val)
+//    sigout_low   = lower output limit (val)
+//    sigin_offset = input offset (val)
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' is the product of 'gain_const', ('sigctrl_p - sigctrl_n'), and the
+// adjusted input differential signal added to
+// ('sigout_high' + 'sigout_low')/2. The adjusted input differential signal
+// is the input differential signal minus 'sigin_offset'.
+//
+
+module vargain_diffamp(sigin_p, sigin_n, sigctrl_p, sigctrl_n, sigout);
+input sigin_p, sigin_n, sigctrl_p, sigctrl_n;
+output sigout;
+electrical sigin_p, sigin_n, sigctrl_p, sigctrl_n, sigout;
+parameter real gain_const= 1;
+parameter real sigout_high = 10;
+parameter real sigout_low = -10;
+parameter real sigin_offset = 0;
+
+   real sigout_symm;	// output is with respect to this signal
+   real sigout_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (sigout_high <= sigout_low) begin
+	    $display("Range specification error.  sigout_high = (%E) less than sigout_low = (%E).\n", sigout_high, sigout_low );
+	    $finish;
+	 end
+	 sigout_symm = (sigout_high + sigout_low)/2;
+      end
+
+      sigout_val = gain_const*V(sigctrl_p, sigctrl_n)*(V(sigin_p, sigin_n)
+				- sigin_offset) + sigout_symm;
+      if (sigout_val > sigout_high) begin
+         sigout_val = sigout_high;
+      end else if (sigout_val < sigout_low) begin
+         sigout_val = sigout_low;
+      end
+      V(sigout) <+ sigout_val;
+   end
+endmodule
+      
+
+
+
+
+
+
+

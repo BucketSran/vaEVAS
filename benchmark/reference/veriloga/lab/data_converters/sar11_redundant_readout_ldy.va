@@ -1,0 +1,45 @@
+// VerilogA for Z_pipeline, TB_SAR_SUM, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module TB_SAR_SUM(DIN,VOUT);
+input [10:0] DIN;
+output VOUT;
+electrical [10:0] DIN;
+electrical VOUT;
+
+parameter real vth=0.45;
+real din[0:10];
+real vout;
+
+analog begin
+din[10]=V(DIN[10]);
+din[9]=V(DIN[9]);
+din[8]=V(DIN[8]);
+din[7]=V(DIN[7]);
+din[6]=V(DIN[6]);
+din[5]=V(DIN[5]);
+din[4]=V(DIN[4]);
+din[3]=V(DIN[3]);
+din[2]=V(DIN[2]);
+din[1]=V(DIN[1]);
+din[0]=V(DIN[0]);
+
+vout=480*(din[10]>vth)+
+	256*(din[9]>vth)+
+	128*(din[8]>vth)+
+	64*(din[7]>vth)+
+	48*(din[6]>vth)+
+	20*(din[5]>vth)+
+	12*(din[4]>vth)+
+	8*(din[3]>vth)+
+	4*(din[2]>vth)+
+	2*(din[1]>vth)+
+	1*(din[0]>vth);
+
+V(VOUT) <+ vout/512-1;
+end
+
+
+endmodule

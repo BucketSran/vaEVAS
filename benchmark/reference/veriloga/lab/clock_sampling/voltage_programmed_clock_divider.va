@@ -1,0 +1,25 @@
+// VerilogA for PLL_study_va, divider, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module divider(in,out,divctrl);
+input in,divctrl;
+output out;
+electrical in,out,divctrl;
+parameter real Vlo=0, Vhi=1.2;
+integer n;
+
+analog begin
+      @(initial_step) begin
+             n = 0;
+      end
+      
+      @(cross(V(in)-(Vhi-Vlo)/2,1)) begin
+          n = n + 1 ;
+          if(n>=V(divctrl))
+             n = 0;
+      end
+      V(out)<+ transition(n?Vlo:Vhi,0,0);
+end
+endmodule

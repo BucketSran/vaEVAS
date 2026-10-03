@@ -1,0 +1,73 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:03 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// limiting_diffamp
+//
+// -  limiting differential amplifier
+//
+// sigin_p,sigin_n:	(val,flow)
+// sigout:		(val,flow)
+//
+// INSTANCE parameters
+//    sigout_high   = upper amplifier output limit (val)
+//    sigout_low    = lower amplifier output limit (val)
+//    gain          = amplifer gain within the limits []
+//    sigin_offset  = input offset (val)
+//
+// MODEL parameters
+//    {none}
+//
+// Has limited output swing. 'sigout' is 'gain' times the adjusted
+// differential input signal about ('sigout_high' + 'sigout_low')/2.
+// The adjusted differential input signal is the differential input signal
+// minus 'sigin_offset'.
+//
+
+module limiting_diffamp(sigin_p, sigin_n, sigout);
+input sigin_p, sigin_n;
+output sigout;
+electrical sigin_p, sigin_n, sigout;
+parameter real gain = 1;
+parameter real sigout_high = 10;
+parameter real sigout_low = -10;
+parameter real sigin_offset = 0;
+
+   real sigout_ref;
+   real sigout_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (sigout_high <= sigout_low) begin
+	    $display("Range specification error.  sigout_high = (%E) less than sigout_low = (%E).\n", sigout_high, sigout_low );
+	    $finish;
+	 end
+	 sigout_ref = (sigout_high + sigout_low)/2;
+      end
+
+      sigout_val = gain*(V(sigin_p, sigin_n) - sigin_offset) + sigout_ref;
+
+      if (sigout_val > sigout_high) begin
+         sigout_val = sigout_high;
+      end else if (sigout_val < sigout_low) begin
+         sigout_val = sigout_low;
+      end
+      V(sigout) <+ sigout_val;
+   end
+endmodule
+
+
+
+
+

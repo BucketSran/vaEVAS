@@ -1,0 +1,72 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:13 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+ 
+ 
+
+//--------------------
+// road
+//
+// -  model of road with bumps
+//
+// posin:	terminal [m,N]
+//
+// INSTANCE parameters
+//    height   = height of bumps [m]
+//    length   = length of bumps [m]
+//    speed    = speed [m/s]
+//    distance = distance to first bump [m]
+//
+// MODEL parameters
+//    {none}
+//
+
+module road (posin);
+inout posin;
+kinematic posin;
+parameter real height   = 0.05 from (0:inf);    // height of bumps
+parameter real length   = 0.10 from (0:inf);    // length of bumps
+parameter real speed    = 10 from (0:inf);    // speed
+parameter real distance = 0 from [0:inf);  // distance to first bump
+real duration, offset, Time;
+
+
+    analog begin
+
+        @ ( initial_step ) begin
+	    duration = length / speed;
+	    offset = distance / speed;
+        end
+
+	Time = $abstime - offset;
+	if (Time < 0) begin
+	    Pos(posin) <+ 0;
+	    @ ( timer( offset ) )
+		; // do nothing
+	end else if (Time < duration/2) begin
+	    Pos(posin) <+ 2 * height * Time / duration;
+	    @ ( timer ( duration / 2 + offset ) ) 
+		; // do nothing
+	end else if (Time < duration) begin
+	    Pos(posin) <+ 2 * height * (1 - Time / duration);
+	    @ ( timer ( duration + offset ) )
+ 		; // do nothing
+	end else begin
+	    Pos(posin) <+ 0;
+	end
+    end
+endmodule
+
+
+
+
+
+

@@ -1,0 +1,116 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+//
+// useful #def's
+`define PI      3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// pm_modulator
+//
+// -  PM modulator
+//
+// vin:		input signal     [V,A]
+// vout:	modulated signal [V,A]
+//
+// INSTANCE parameters
+//    f_carrier = carrier frequency [Hz]
+//    amp       = amplitude of the pm modulator output []
+//    vin_max   = maximum acceptable input (clipping occurs above this) [V]
+//    vin_min   = minimum acceptable input (clipping occurs above this) [V]
+//    phase_max = the phase shift produced when the modulating signal is
+//                at vin_max [rad].
+//
+// MODEL parameters
+//    {none}
+//
+// 'vout' = 'amp' * sin(2 * `PI * 'f_carrier' * 'time'
+//				+ 'phase_max' * 'vin_adjusted')
+//
+// ,where, 'vin_adjusted' is scaled version of 'vin' that lies within
+// the +/-1 range.
+//
+// Before scaling 'vin' is limited to the vin_max to vin_min range by clipping.
+// 
+
+module pm_modulator(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real f_carrier = 1M;
+parameter real amp = 1;
+parameter real vin_max = 1;
+parameter real vin_min = 1;
+parameter real phase_max = 0.3142 from (0:6.283);
+
+   real vin_val, vin_adjusted;
+
+   real vin_offset;
+   real vin_scale;
+   real w_carrier;
+
+   real phase_lin;		// w_carrier*time component of phase
+   real phase_nonlin;		// the idt(k*f(t)) of phase
+
+   integer num_cycles;		// number of cycles in linear phase component
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+         vin_offset = (vin_max + vin_min)/2;
+         vin_scale  = (vin_max - vin_min)/2;
+         w_carrier  = (2*`PI*f_carrier);
+	 if (vin_max <= vin_min) begin
+	    $display("Range specification error.  vin_max = (%E) less than vin_min = (%E).\n", vin_max, vin_min );
+	    $finish;
+	 end
+      end
+
+      //
+      // clip out of range inputs
+      //
+      vin_val = V(vin)  > vin_max ? vin_max : V(vin);
+      vin_val = vin_val < vin_min ? vin_min : vin_val;
+
+      //
+      // adjust the input for modulation
+      //
+      vin_adjusted = (vin_val - vin_offset) / vin_scale;
+
+      //
+      // linear portion is calculated so that it remains in the +/- 2`PI range
+      // This is to ensure it's value doesn't get too large and cause rounding
+      // problems for calculation of the phase.
+      //
+      phase_lin = w_carrier * $abstime;
+      num_cycles = phase_lin / (2*`PI);
+      phase_lin = phase_lin - num_cycles * 2 * `PI;
+
+      phase_nonlin = phase_max * vin_adjusted;
+
+      V(vout) <+ amp * sin (phase_lin + phase_nonlin);
+
+      //
+      // ensure that modulator output recalculated soon.
+      //
+      $bound_step (0.04 / f_carrier);
+   end
+endmodule
+
+
+
+
+
+
+

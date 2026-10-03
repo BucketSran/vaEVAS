@@ -1,0 +1,47 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:22 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// adder_4
+//
+// -  4 input adder
+//
+// sigin1, sigin2, sigin3, sigin4:	(val,flow)
+// sigout:				(val,flow)
+//
+// INSTANCE parameters
+//    gain1 = gain for sigin1 []
+//    gain2 = gain for sigin2 []
+//    gain3 = gain for sigin3 []
+//    gain4 = gain for sigin4 []
+//
+// MODEL parameters
+//    {none}
+//
+// sigout = gain1*sigin1 + gain2*sigin2 +gain3*sigin3 + gain4*sigin4
+//
+
+module adder_4 (sigin1, sigin2, sigin3, sigin4, sigout);
+input sigin1, sigin2, sigin3, sigin4;
+output sigout;
+electrical sigin1, sigin2, sigin3, sigin4, sigout;
+parameter real gain1 = 1;
+parameter real gain2 = 1;
+parameter real gain3 = 1;
+parameter real gain4 = 1;
+
+     analog 
+	V(sigout) <+ gain1*V(sigin1)+ gain2*V(sigin2) + gain3*V(sigin3)
+                       + gain4*V(sigin4);
+
+endmodule

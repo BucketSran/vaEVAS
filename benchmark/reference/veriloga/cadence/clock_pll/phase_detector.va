@@ -1,0 +1,75 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:56:18 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+`define chop 0
+`define mult 1
+
+//--------------------
+// phase_detector
+//
+// -  phase detector
+//
+// vlocal_osc: local oscillator voltage [V,A]
+// vin_rf: pll radio frequency input voltage [V,A]
+// vif: intermediate frequency output voltage [V,A]
+//
+// INSTANCE parameters
+//    gain = gain of detector []
+//    pd_type = type of phase detection to be used; chopper or multiplier []
+//
+// MODEL parameters
+//    {none}
+//
+
+module phase_detector (vlocal_osc, vin_rf, vif);
+input vlocal_osc, vin_rf;
+output vif;
+electrical vlocal_osc, vin_rf, vif;
+parameter real gain = 1;
+parameter integer pd_type = `chop;
+
+   //
+   // functions used by phase_detector
+   //
+
+   analog function real multiplier;
+      input a;
+      input b;
+      real a;
+      real b;
+
+      multiplier = a * b;
+   endfunction
+   
+   analog function real chopper;
+      input a;
+      input b;
+      real a;
+      real b;
+
+      chopper = ((a > 0) ? b : -b);
+   endfunction
+
+
+    analog begin
+	if (pd_type == `chop) begin
+	    @ ( cross( V(vlocal_osc) ) )
+                ;
+	    V(vif) <+ gain*chopper(V(vlocal_osc), V(vin_rf));
+	end else begin
+	    V(vif) <+ gain*multiplier(V(vlocal_osc), V(vin_rf));
+	end
+    end
+endmodule
+
+
+

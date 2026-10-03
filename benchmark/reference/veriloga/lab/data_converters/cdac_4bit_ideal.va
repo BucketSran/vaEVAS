@@ -1,0 +1,41 @@
+// VerilogA for wxy_lib, L2_CDAC_4b_ideal, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 10p
+
+module L2_CDAC_4b_ideal(VRES, CLKS, DCTRL, VIN);
+output VRES;
+electrical VRES;
+input CLKS;
+electrical CLKS;
+input [3:1] DCTRL;
+electrical [3:1] DCTRL;
+input VIN;
+electrical VIN;
+
+parameter real vdd = 1, vrefp = 1, vrefn = 0;
+real vres;
+
+analog begin
+	@(initial_step or cross(V(CLKS)-vdd/2,-1)) begin
+		vres = V(VIN);
+	end
+
+	@(cross(V(DCTRL[3])-vdd/2, +1)) begin
+		vres = vres + 0.5 * (vrefp - vrefn);
+	end
+
+	@(cross(V(DCTRL[2])-vdd/2, +1)) begin
+		vres = vres + 0.25 * (vrefp - vrefn);
+	end
+
+	@(cross(V(DCTRL[1])-vdd/2, +1)) begin
+		vres = vres + 0.125 * (vrefp - vrefn);
+	end
+
+	V(VRES) <+ transition(vres,0);
+end
+
+endmodule

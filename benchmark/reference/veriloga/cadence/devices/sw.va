@@ -1,0 +1,56 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:46:27 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// sw
+//
+// -  switch
+//
+// vp,vn:               output terminals [V,A]
+// vctrlp,vctrln:       control terminals [V,A]
+//
+// INSTANCE parameters
+//    vth = threshold voltage [V]
+//
+// MODEL parameters
+//    {none}
+//
+// If ('vctrlp' - 'vctrln' > 'vth') then the branch between 'vp' and 'vn'
+// is shorted. Otherwise the branch between 'vp' and 'vn' is opened
+//
+
+module sw(vp, vn, vctrlp, vctrln);
+input vctrlp, vctrln;
+inout vp, vn;
+electrical vp, vn, vctrlp, vctrln;
+
+parameter real vth = 2;
+parameter real ron = 10.0 from (0:inf) ;
+parameter real roff = 100.0M from (ron:inf);
+
+parameter real td = 0.0;
+parameter real tt = 100e-12;
+
+real R;
+    analog begin
+
+      @ (above(V(vctrlp, vctrln) - vth))	R = ron;
+      @ (above(vth-V(vctrlp, vctrln) ))         R = roff;
+	
+      I(vp, vn) <+ V(vp, vn) / transition (R, td, tt);
+
+   end
+
+
+endmodule
+

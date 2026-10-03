@@ -1,0 +1,47 @@
+// VerilogA for 2023_CT_Pipeline_Coop, VA_encoder_test, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module VA_encoder_test(CK, D, SUM);
+input CK;
+output [15:0] D;
+output SUM;
+electrical CK, SUM;
+electrical [15:0] D;
+
+integer index = 0;
+integer d[15:0];
+
+analog begin
+	
+	@(cross(V(CK)-0.5,1))begin	
+		if(index < 16)begin
+			d[index] = 1;
+			index = index + 1;
+		end
+	end
+	
+	V(SUM) <+ index;
+	V(D[0]) <+ d[0];
+	V(D[1]) <+ d[1];
+	V(D[2]) <+ d[2];
+	V(D[3]) <+ d[3];
+	V(D[4]) <+ d[4];
+	V(D[5]) <+ d[5];
+	V(D[6]) <+ d[6];
+	V(D[7]) <+ d[7];
+	V(D[8]) <+ d[8];
+	V(D[9]) <+ d[9];
+	V(D[10]) <+ d[10];
+	V(D[11]) <+ d[11];
+	V(D[12]) <+ d[12];
+	V(D[13]) <+ d[13];
+	V(D[14]) <+ d[14];
+	V(D[15]) <+ d[15];
+
+end
+
+
+
+endmodule

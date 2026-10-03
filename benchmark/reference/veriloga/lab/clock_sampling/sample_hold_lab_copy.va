@@ -1,0 +1,58 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:39 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// sah_ideal
+//
+// -  ideal sample and hold amplifier
+//
+// vin:		[V,A]
+// vclk:	[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    vtrans_clk = transition voltage of the clock [V]
+//   
+// MODEL parameters
+//    {none}
+//
+
+module sah_ideal(vin, vout, vclk);
+input vin, vclk;
+output vout;
+electrical vin, vout, vclk;
+parameter real vtrans_clk = 2.5;
+real vout_val;
+
+	analog begin
+		@ (cross(V(vclk) - vtrans_clk, 1.0))
+			vout_val = V(vin);
+		V(vout) <+ vout_val ;
+	end
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

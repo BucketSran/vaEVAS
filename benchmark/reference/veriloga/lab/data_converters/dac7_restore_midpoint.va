@@ -1,0 +1,30 @@
+// VerilogA for z_2025_PipelindSAR, L1_DAC_restore_6bit, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+`default_transition 1p
+
+module DAC_restore_7bit(input D1, D2, D3, D4, D5, D6, D0, CLK, output VOUT);
+
+electrical D1, D2, D3, D4, D5, D6, D0, CLK, VOUT;
+
+parameter real vdd = 0.9;
+parameter real vpp = 1.8;
+parameter real vth = 0.45;
+parameter real lsb = 1.8/128;
+
+real vout;
+
+analog begin
+	@(cross(V(CLK)-vth, +1)) begin
+		vout = 0;
+		vout = vout + (V(D6)>vth)*64 + (V(D5)>vth)*32 + (V(D4)>vth)*16 + (V(D3)>vth)*8 + (V(D2)>vth)*4 + (V(D1)>vth)*2 + (V(D0)>vth)*1;
+		vout = (vout + 0.5) * lsb - 0.9;
+	end
+	
+	V(VOUT) <+ transition(vout);	
+	
+end
+
+endmodule

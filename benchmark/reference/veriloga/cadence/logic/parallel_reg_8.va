@@ -1,0 +1,83 @@
+`include "discipline.h"
+`include "constants.h"
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+
+ 
+
+//--------------------
+// parallel_reg_8
+//
+// -  8 bit parallel register
+//
+// vin_d0 ..vin_d7:	input data lines [V,A]
+// vout_d0..vout_d7:	output data lines [V,A]
+// venable:		enable line [V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for low  [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// Input occurs on the rising edge of venable.
+//
+
+
+module parallel_reg_8
+   (vin_d0,vin_d1,vin_d2,vin_d3,vin_d4,vin_d5,vin_d6,vin_d7
+   ,vout_d0,vout_d1,vout_d2,vout_d3,vout_d4,vout_d5,vout_d6,vout_d7
+   ,venable);
+electrical vin_d0,vin_d1,vin_d2,vin_d3,vin_d4,vin_d5,vin_d6,vin_d7;
+electrical vout_d0,vout_d1,vout_d2,vout_d3,vout_d4,vout_d5,vout_d6,vout_d7;
+electrical venable;
+ 
+   parameter real vlogic_high = 5;
+   parameter real vlogic_low = 0;
+   parameter real vtrans = 2.5;
+   parameter real tdel = 3u from [0:inf);
+   parameter real trise = 1u from (0:inf);
+   parameter real tfall = 1u from (0:inf);
+
+
+   integer d[0:7];
+
+   analog begin
+      @ ( cross ( V(venable) - vtrans, +1, 1.0, venable.potential.abstol)) begin
+         d[0] = V(vin_d0) > vtrans;
+         d[1] = V(vin_d1) > vtrans;
+         d[2] = V(vin_d2) > vtrans;
+         d[3] = V(vin_d3) > vtrans;
+         d[4] = V(vin_d4) > vtrans;
+         d[5] = V(vin_d5) > vtrans;
+         d[6] = V(vin_d6) > vtrans;
+         d[7] = V(vin_d7) > vtrans;
+      end
+
+      V(vout_d0) <+ transition((d[0] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d1) <+ transition((d[1] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d2) <+ transition((d[2] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d3) <+ transition((d[3] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d4) <+ transition((d[4] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d5) <+ transition((d[5] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d6) <+ transition((d[6] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+      V(vout_d7) <+ transition((d[7] ? vlogic_high : vlogic_low)
+					,tdel,trise,tfall);
+    end
+
+endmodule
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:08 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// gearbox
+//
+// -  gearbox
+//
+// wshaft1:	shaft of the first gear [rad/s,Nm]
+// wshaft2:	shaft of the second gear [rad/s,Nm]
+//
+// INSTANCE parameters
+//    radius1  = radius of first gear   [m]
+//    radius2  = radius of second gear  [m]
+//    inertia1 = inertia of first gear  [Nms/rad]
+//    inertia2 = inertia of second gear [Nms/rad]
+//
+// MODEL parameters
+//    {none}
+//
+// This is a model of two intermeshed gears
+//
+
+module gearbox(wshaft1, wshaft2);
+inout wshaft1, wshaft2;
+rotational_omega wshaft1, wshaft2;
+parameter real radius1=1 from (0:inf);
+parameter real inertia1=0 from [0:inf);
+parameter real radius2=1 from (0:inf);
+parameter real inertia2=0 from [0:inf);
+
+   analog begin
+
+      //
+      // Calculate the angular velocity of shaft1 from that of shaft2
+      //
+      Omega( wshaft1 ) <+ Omega( wshaft2 ) * radius2 / radius1;
+
+      // Calculate the torque on shaft1 from the torque on shaft2 and the
+      // angular acceleration.
+      //
+      Tau( wshaft2 ) <+ inertia2 * ddt( Omega( wshaft2 ) )
+                        + (Tau( wshaft1 ) - inertia1 * ddt( Omega( wshaft1 ) ))
+                          * (radius2 / radius1);
+    end
+endmodule
+
+
+
+
+
+

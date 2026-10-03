@@ -1,0 +1,114 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:27 $
+// $Revision: 1.1 $
+
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+//
+
+`define NO 0
+`define YES 1
+
+
+`define arg   0
+`define rise  1
+`define fall  2
+`define cross 3
+`define at    10
+`define when  11 
+
+
+
+//--------------------
+// find_slope
+//
+// -  signal statistics probe
+//
+// out_pos, out_neg:		signal to measure []
+//
+// INSTANCE parameters
+//    arg_val1 = first argument value []
+//    arg_val2 = (optional) second argument value []
+//
+// MODEL parameters
+//    {none}
+//
+// This probe measures slope of a signal between 'arg_val1' and 'arg_val2';
+// If 'arg_val2' is not specified, it is set to the value exceeding 'arg_val1'
+// by 0.1%.
+//
+
+(* instrument_module *)
+module find_slope (out_pos, out_neg);
+inout out_pos, out_neg;
+electrical out_pos, out_neg;
+parameter real arg_val1 = -1M;
+parameter real arg_val2 = -1M;
+
+	integer msgFlag;
+
+	real argValue1, outValue1;
+	real argValue2, outValue2;
+	real outCur, argCur;
+	real slope;
+
+	// avoid assignments to parameters
+	real loc_arg_val2;
+
+
+	analog begin
+	    @ ( initial_step ) begin
+		msgFlag = `NO;
+	    // If second argument value is not specified,
+	    //increment fist argument value by 0.1%. 
+	       if (arg_val2 == -1M) 
+		  loc_arg_val2 = 1.001 * arg_val1;
+	       else
+		  loc_arg_val2 = arg_val2;
+	    end
+
+	    if (analysis("tran")) begin
+		argCur = $abstime;
+		outCur = V(out_pos, out_neg);
+
+		if (msgFlag == `NO) begin
+		    @ ( timer(arg_val1)) begin
+			argValue1 = $abstime;
+			outValue1 = outCur;
+		    end
+
+		    @ ( timer(loc_arg_val2)) begin
+			argValue2 = $abstime;
+			outValue2 = outCur;
+			msgFlag = `YES;
+		    end
+		end
+
+	    end
+
+	   @ ( final_step ) begin
+	       if (analysis("tran")) begin
+		   $strobe("\nModule instance: %M\n");
+		   if (msgFlag == `NO) begin
+		       $strobe("\n Event did not occur.");
+		   end else begin
+		       slope = (outValue2 - outValue1) / (argValue2 - argValue1);
+		       $strobe("    Argument  = %2.12g\n", argValue1);
+		       $strobe("    Signal slope = %2.12g\n", slope);
+		   end
+		   $strobe("\n");
+	       end
+	   end
+
+	end
+
+endmodule
+
+
+
+
+

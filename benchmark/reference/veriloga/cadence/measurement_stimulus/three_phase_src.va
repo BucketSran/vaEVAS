@@ -1,0 +1,54 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:14 $
+// $Revision: 1.1 $
+//
+//
+//
+
+
+
+//--------------------
+// three_phase_src
+//
+// -  Three phase source
+//
+// vouta:	A-phase terminal [V,A]
+// voutb:	B-phase terminal [V,A]
+// voutc:	C-phase terminal [V,A]
+// vout_star:	star terminal [V,A]
+//
+// INSTANCE parameters
+//    amp  = phase to phase voltage amplitude [V]
+//    freq = output frequency [Hz]
+//
+// MODEL parameters
+//    {none}
+//
+
+
+module three_phase_src(vout_a, vout_b, vout_c, vout_star);
+electrical vout_a, vout_b, vout_c, vout_star;
+parameter real amp = 380 from (0:inf);
+parameter real freq = 50 from (0:inf);
+
+   real phase_amp;
+ 
+   analog begin
+   @ ( initial_step )
+       phase_amp = amp/sqrt(3.0);
+
+   V(vout_a,vout_star) <+ phase_amp * sin(2*`M_PI*freq*$abstime);
+   V(vout_b,vout_star) <+ phase_amp * sin(2*`M_PI*freq*$abstime+2.0/3.0*`M_PI);
+   V(vout_c,vout_star) <+ phase_amp * sin(2*`M_PI*freq*$abstime+4.0/3.0*`M_PI);
+
+   $bound_step( 0.1/freq );	// ensure 10 time points per period
+
+   end
+
+endmodule
+
+
+
+

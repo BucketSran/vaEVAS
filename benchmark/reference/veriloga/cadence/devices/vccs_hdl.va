@@ -1,0 +1,45 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:46:29 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// vccs_hdl
+//
+// -  voltage controlled current source
+//
+// iout_p,iout_n:	controlled current source terminals [V,A]
+// vin_p,vin_n:		controlling voltage terminals       [V,A]
+//
+// INSTANCE parameters
+//    gm = conductance multiplier (V to I gain) [Mhos]
+//
+// MODEL parameters
+//    {none}
+//
+
+module vccs_hdl(iout_p, iout_n, vin_p, vin_n);
+input vin_p, vin_n;
+output iout_n, iout_p;
+electrical iout_n, iout_p, vin_p, vin_n;
+parameter real gm = 0;
+
+   analog
+      I(iout_p, iout_n) <+ gm*V(vin_p, vin_n);
+
+endmodule
+
+
+
+
+
+
+

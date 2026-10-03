@@ -1,0 +1,22 @@
+// VerilogA for 2022_TI_SAR, v_decoder_7b, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 10p
+
+module V_ENCODER_7B(D);
+output [6:0] D;
+electrical [6:0] D;
+
+parameter CTRL = 64;
+integer dout[6:0];
+genvar i;
+
+analog begin
+
+	for(i = 0; i < 7; i = i + 1) begin
+		dout[i] = (CTRL >> i) & 1;
+		V(D[i]) <+ dout[i];
+	end
+end
+endmodule

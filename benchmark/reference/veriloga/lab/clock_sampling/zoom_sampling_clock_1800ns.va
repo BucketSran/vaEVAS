@@ -1,0 +1,124 @@
+// VerilogA for verilogAMS, TIMING, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Mingjie Liu, Xiyuan Tang
+// Timing generation for ADC.
+// version 6: RST - SAMPLE - NC -SAR- AMP - ZOOM - INT - AMP - ZOOM (1800n)
+
+
+module CLOCK_VA_SAMPLE_1800n(RST, S, SS, NC_AZ,NC,CONV);
+
+output RST;
+voltage RST;
+
+output S,SS,NC_AZ, NC;
+voltage S,SS, NC_AZ,NC;
+
+
+output  CONV;
+voltage  CONV;
+
+
+
+
+parameter real vdd=1.1; // VDD voltage
+
+parameter real init_delay=0n; //initial delay before RST pulse
+
+parameter real trise=0.02n; //rise time
+parameter real tfall=0.02n; //fall time
+
+parameter real RST_period=1800n; // RST period
+parameter real RST_width=20n; // width of RST pulse
+
+parameter real S_delay=20n; // S delay from RST posedge
+parameter real S_interval=600n; // delay interval between S pulses
+parameter real S_width=36n; // S pulse width
+parameter integer S_num=3; // number of S in RST period
+
+
+parameter real SS_delay=20n; // SS delay from RST posedge
+parameter real SS_interval=600n; // delay interval between S pulses
+parameter real SS_width=50n; // SS pulse width
+parameter integer SS_num=3; // number of SS in RST period
+
+
+parameter real NC_AZ_delay=52n; // NC delay from RST posedge
+parameter real NC_AZ_interval=600n; // delay interval between NC pulses
+parameter real NC_AZ_width=4n; // NC pulse width
+parameter integer NC_AZ_num=3; // number of NC in RST period
+
+parameter real NC_delay=58n; // NC delay from RST posedge
+parameter real NC_interval=600n; // delay interval between NC pulses
+parameter real NC_width=10n; // NC pulse width
+parameter integer NC_num=3; // number of NC in RST period
+
+parameter real CONV_delay = 72n;
+parameter real CONV_width = 538n;
+parameter real CONV_interval= 600n;
+parameter integer CONV_num=3;
+
+
+real rst, s, ss, sar,res_az, res,int_az, int, zoom, phi_sar,phi_zoom,rst_zoom, expo, inta, intb, nc_az,nc, conv;
+genvar i, j, k;
+
+analog begin
+	// initialize everything to 0
+	@(initial_step) begin
+		V(RST) <+ 0;
+		V(S) <+ 0;
+		V(SS) <+ 0;
+		V(NC) <+ 0;
+		V(NC_AZ) <+ 0;
+	end
+
+	// timing for RST
+	@(timer(init_delay,RST_period)) rst=vdd;
+	@(timer(init_delay+RST_width,RST_period)) rst=0;
+	V(RST) <+ transition(rst, 0, trise, tfall);
+
+	// timing for S
+	for(i=0;i<S_num;i=i+1) begin
+		@(timer(init_delay+S_delay+i*S_interval,RST_period)) s=vdd;
+		@(timer(init_delay+S_delay+i*S_interval+S_width,RST_period)) s=0;
+	end
+	V(S) <+ transition(s, 0, trise, tfall);
+
+
+	// timing for SS
+	for(i=0;i<SS_num;i=i+1) begin
+		@(timer(init_delay+SS_delay+i*SS_interval,RST_period)) ss=vdd;
+		@(timer(init_delay+SS_delay+i*SS_interval+SS_width,RST_period)) ss=0;
+	end
+	V(SS) <+ transition(ss, 0, trise, tfall);
+
+	// timing for NC_AZ
+	for(i=0;i<NC_AZ_num;i=i+1) begin
+		@(timer(init_delay+NC_AZ_delay+i*NC_AZ_interval,RST_period)) nc_az=vdd;
+		@(timer(init_delay+NC_AZ_delay+i*NC_AZ_interval+NC_AZ_width,RST_period)) nc_az=0;
+	end
+	V(NC_AZ) <+ transition(nc_az, 0, trise, tfall);
+
+
+	// timing for NC
+	for(i=0;i<NC_num;i=i+1) begin
+		@(timer(init_delay+NC_delay+i*NC_interval,RST_period)) nc=vdd;
+		@(timer(init_delay+NC_delay+i*NC_interval+NC_width,RST_period)) nc=0;
+	end
+	V(NC) <+ transition(nc, 0, trise, tfall);
+
+
+
+	// timing for CONV
+	for(i=0;i<CONV_num;i=i+1) begin
+		@(timer(init_delay+CONV_delay+i*CONV_interval,RST_period)) conv=vdd;
+		@(timer(init_delay+CONV_delay+i*CONV_interval+CONV_width,RST_period)) conv=0;
+	end
+	V(CONV) <+ transition(conv, 0, trise, tfall);
+
+
+end
+
+endmodule

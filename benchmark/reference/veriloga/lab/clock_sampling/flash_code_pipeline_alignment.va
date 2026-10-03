@@ -1,0 +1,47 @@
+// VerilogA for PIPE_SAR_1P3G_2022, FLASH_DATA_ALIGN_V2, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+//test bench for data align
+module FLASH_DATA_ALIGN_V2(dither_out, dout, clk, din, dither_in);
+output dither_out;
+electrical dither_out;
+output [3:0] dout;
+electrical [3:0] dout;
+input clk;
+electrical clk;
+input [7:0] din;
+electrical [7:0] din;
+input dither_in;
+electrical dither_in;
+parameter real Vth = 0.45;
+integer dregval,dreg4,dreg3,dreg2,dreg1,dreg_out;
+genvar i;
+analog begin
+
+  @(initial_step) begin
+	 dreg1 = 0;
+	 dreg2 = 0;
+	 dreg3 = 0;
+ 	dregval = 0;
+  end
+
+   @(cross(V(clk)-Vth,+1)) begin
+		dregval = 0;
+        for(i = 0;i < 8 ; i=i+1)
+		begin
+		 dregval= dregval + (V(din[i]) > Vth);
+		end
+	 dreg_out = dreg4;
+	 dreg4 = dreg3;
+	 dreg3 = dreg2;
+	 dreg2 = dreg1;
+	 dreg1 = dregval;
+   end
+V(dout[3]) <+ transition(dreg_out>>3,1p,50p);
+V(dout[2]) <+ transition((dreg_out&4)>>2,1p,50p);
+V(dout[1]) <+ transition((dreg_out&2)>>1,1p,50p);
+V(dout[0]) <+ transition((dreg_out&1),1p,50p);
+end
+
+endmodule

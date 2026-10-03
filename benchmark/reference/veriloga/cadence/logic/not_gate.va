@@ -1,0 +1,73 @@
+`include "discipline.h"
+`include "constants.h"
+ 
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+//The sample SpectreHDL library is unsupported and subject to change
+//without notice. Future versions of SpectreHDL may not be compatible
+//with this library.
+
+
+ 
+//--------------------
+// not_gate
+//
+// -  not gate
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = output voltage for high  [V]
+//    vlogic_low   = output voltage for high  [V]
+//    vtrans      = voltages above this at input are considered high  [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+
+module not_gate(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans = 1.4;
+parameter real tdel = 2u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+   real vout_val;
+   integer logic_in;
+
+   analog begin
+
+      @ ( initial_step ) begin
+         if (vlogic_high < vlogic_low) begin
+            $display("Range specification error.  vlogic_high = (%E) less than vlogic_low = (%E).\n", vlogic_high, vlogic_low );
+            $finish;
+         end
+         if (vtrans > vlogic_high || vtrans < vlogic_low) begin
+            $display("Inconsistent $threshold specification w/logic family.\n");
+         end
+      end
+
+      logic_in = V(vin) > vtrans;
+
+      @ (cross(V(vin) - vtrans, 1))  logic_in = 1;
+      @ (cross(V(vin) - vtrans, -1)) logic_in = 0;
+
+      //
+      // define the logic function.
+      //
+      vout_val = !(logic_in) ? vlogic_high : vlogic_low;
+
+      V(vout) <+ transition( vout_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+
+

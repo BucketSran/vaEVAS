@@ -1,0 +1,61 @@
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module IDEAL_ADC(Digital, Vip, Vin, CLK);
+
+	inout Digital, Vip, Vin, CLK;
+	electrical Digital, Vip, Vin, CLK;
+	parameter real Trise = 0 from [0:inf);
+	parameter real Tfall = 0 from [0:inf);
+	parameter real Tdel = 0 from [0:inf);
+	parameter real Vtrans_clk = 0.5 from (0:inf);
+	parameter real Vfs = 1.0 from (0:inf);
+	parameter integer seed = 1 from (0:inf);
+	parameter real m_sigma = 0 from [0:inf);
+	parameter integer LVL = 16 from (0:inf);
+   	
+	real Sample;
+   	real CMP_LVL;
+   	real LSB;
+	real H_LSB;
+   	real Vod;
+   	integer i;
+
+   	analog begin
+
+      	@ ( initial_step ) begin
+          	
+			LSB = Vfs / LVL;
+			H_LSB = LSB / 2;
+      	
+		end
+
+      	@ (cross(V(CLK) - Vtrans_clk, +1)) begin
+
+         	Sample = V(Vip) - V(Vin);
+			CMP_LVL = -Vfs / 2 + H_LSB;
+	     	Vod = 0;
+         	
+			for (i = 1 ; i <= LVL ; i = i + 1) begin 
+            		
+				if (Sample > CMP_LVL) begin
+
+		           	Vod = Vod + 1;
+	
+		     	end
+				CMP_LVL = CMP_LVL + LSB;
+
+	         end
+
+      	end
+
+      //
+      // assign the outputs
+      //
+
+      V(Digital) <+ transition(Vod, Tdel, Trise, Tfall);
+   	
+	end
+
+endmodule

@@ -1,0 +1,36 @@
+// VerilogA for wxy_lib, L1_DAC_4b_ideal, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+`define NUM_ADC_BITS 4
+`default_transition 30p
+
+module L1_DAC_4b_ideal(input electrical [`NUM_ADC_BITS:1] DIN, input electrical RDY, output electrical AOUT);
+
+parameter real vdd = 1, vth = 0.5;
+
+//real weight[`NUM_ADC_BITS:1] = {4,2,1,0.5};
+//real sum;
+
+real aout;
+genvar i;
+
+analog begin
+//	@(initial_step) begin
+//		sum = weight[1];
+//		for(i = `NUM_ADC_BITS; i>=1; i--) begin
+//			sum = sum + weight[1];
+//		end
+//	end
+	@(cross(V(RDY)-vth,+1)) begin
+		aout = 0;
+		for(i = 1; i<=`NUM_ADC_BITS; i=i+1) begin
+			aout = aout + (V(DIN[`NUM_ADC_BITS-i+1]) > vth) * 1/(pow(2,i));
+		end
+		aout = (2 * aout - 1)*vdd;
+	end
+	V(AOUT) <+ transition(aout);
+end
+
+endmodule

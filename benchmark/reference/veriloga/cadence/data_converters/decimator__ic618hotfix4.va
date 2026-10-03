@@ -1,0 +1,72 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:37 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// decimator
+//
+// -  decimator
+//
+// vin:		[V,A]
+// vout:	[V,A]
+// vclk:	[V,A]
+//
+// INSTANCE parameters
+//    N          = oversampling ratio [V]
+//    vtrans_clk = transition voltage of the clock [V]
+//    tdel,trise,tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// Produces a cumlative average of 'N' samples of 'vin'. 'vin' is sampled
+// on the positive 'vclk' transition. The cumlative average of the previous
+// set of 'N' samples is outputted until a new set of 'N' samples has been
+// captured.
+//
+// Transfer Function:	1/N * (1 - Z^-N)/(1-Z^-1)
+//
+(* instrument_module *)
+module decimator(vin, vout, vclk);
+input vin,vclk;
+output vout;
+electrical vin, vout, vclk;
+parameter integer N=64 from [0:inf); 
+parameter real vtrans_clk=2.5;
+parameter real tdel = 0 from [0:inf);
+parameter real trise = 0 from [0:inf);
+parameter real tfall = 0 from [0:inf);
+
+   integer count;
+   real sum;
+   real vout_val;
+
+   analog begin
+      @ (cross(V(vclk) - vtrans_clk, 1.0)) begin
+         sum = sum + V(vin);
+         count= count + 1;
+
+         if (count == N) begin
+            count = 0;
+	    vout_val = sum/N;
+	    sum = 0.0;
+         end
+      end
+      V(vout) <+ transition(vout_val,tdel,trise,tfall);
+   end
+endmodule
+
+
+
+
+
+

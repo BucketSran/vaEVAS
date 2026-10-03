@@ -1,0 +1,76 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:28 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+//--------------------
+// em_relay
+//
+// -  electromagnetic relay
+//
+// vopen:	normally opened terminal [V,A]
+// vcomm:	common terminal [V,A]
+// vclosed:	normally closed terminal [V,A]
+// vctrl_n:	negative control signal [V,A]
+// vctrl_p:	positive control signal [V,A]
+//
+// INSTANCE parameters
+//    vtrig = input value to close relay [V]
+//    vrelease = input value to open relay [V]
+//
+// MODEL parameters
+//    {none}
+//
+// This is a model of a voltage-controlled single-pole, double-throw switch.
+// When the voltage differential between 'vctrl_p' and 'vctrl_n' exceeds
+// 'vtrig' the normally open branch is shorted (closed). Otherwise, the
+// normally open branch stays open. If the open branch is already closed and
+// the voltage differential between 'vctrl_p' and 'vctrl_n' falls below
+// 'vrelease', the normally open branch is opened.
+// 
+(* instrument_module *)
+module em_relay (vopen, vcomm, vclosed, vctrl_p, vctrl_n);
+input vctrl_p, vctrl_n;
+inout vopen,vclosed,vcomm;
+electrical vopen,vclosed,vcomm;
+electrical vctrl_p, vctrl_n;
+parameter real vtrig=0.5 from (0:inf);
+parameter real vrelease=0.5 from (0:inf);
+
+   integer closed;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (vtrig < vrelease) begin
+	    $display( "'vtrig' value must be larger than 'vrelease' value.\n" );
+	    $finish;
+	 end
+	 closed = 0;
+      end
+
+      @ (cross(abs(V(vctrl_p,vctrl_n)) - vtrig,1,1.0,vctrl_p.potential.abstol) )
+         closed = 1;
+      @ (cross(abs(V(vctrl_p,vctrl_n)) - vrelease,-1,1.0,vctrl_p.potential.abstol) )
+         closed = 0;
+
+      if (closed)
+         V(vopen,vcomm) <+ 0.0;
+      else
+         V(vclosed,vcomm) <+ 0.0;
+   end
+endmodule
+
+
+
+
+
+

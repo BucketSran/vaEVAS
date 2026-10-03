@@ -1,0 +1,34 @@
+// VerilogA for ADC_LIB, LT_READOUT_SAR4_NEW, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module LT_READOUT_SAR4_NEW(DIN, VOUT, GND);
+inout VOUT, GND;
+inout [3:0] DIN;
+
+electrical VOUT, GND;
+electrical [3:0] DIN;
+
+parameter real td = 0;
+parameter real tr = 10p;
+parameter real vth = 0.9;
+parameter real vref = 1.8;
+
+
+integer din[3:0];
+real vout;
+
+genvar i;
+
+analog begin
+	for (i = 0; i < 4; i = i + 1) begin
+		din[i] = (V(DIN[i]) - vth > 0);
+	end
+
+	vout = 1*din[0]*vref/16.0 + 2*din[1]*vref/16.0 + 4*din[2]*vref/16.0 + 8*din[3]*vref/16.0;
+	V(VOUT) <+ transition(vout, td, tr);
+
+end
+
+endmodule

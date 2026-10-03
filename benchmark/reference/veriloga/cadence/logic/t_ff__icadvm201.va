@@ -1,0 +1,74 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// t_ff
+//
+// -  trigger (or toggle) type flip flop
+//
+// vtrig:		trigger	[V,A]
+// vout_q, vout_qbar:	otuputs	[V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = output voltage for high [V]
+//    vlogic_low  = output voltage for high [V]
+//    vtrans      = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// Triggered on the rising edge
+//
+// logic table:
+//
+//
+//    T   Q   Q(t+e)
+//  ------------
+//    0   0   0
+//    0   1   1
+//    1   0   1
+//    1   1   0
+//
+//
+module t_ff(vtrig, vout_q, vout_qbar);
+input vtrig;
+output vout_q, vout_qbar;
+electrical vtrig, vout_q, vout_qbar;
+parameter integer initial_state = 0 from [0:1];
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans = 2.5;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+   integer q;
+
+   analog begin
+
+      @ ( initial_step or initial_step("dc") ) begin
+	 q = initial_state;
+      end
+
+      @ (cross( V(vtrig) - vtrans, +1 ))
+         q = !q;
+
+      V(vout_q) <+ transition( vlogic_high*q + vlogic_low*!q,
+				 tdel, trise, tfall );
+      V(vout_qbar) <+ transition( vlogic_high*!q + vlogic_low*q,
+				    tdel, trise, tfall );
+    end
+endmodule
+
+
+
+
+

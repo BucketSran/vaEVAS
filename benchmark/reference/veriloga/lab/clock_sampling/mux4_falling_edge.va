@@ -1,0 +1,40 @@
+// VerilogA for PIPE_SAR_1P3G_2022, MUX4T1, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module MUX4T1(DSEL,DIN,DOUT,CLKS);
+input [1:0] DSEL;
+input [3:0] DIN;
+input CLKS;
+output DOUT;
+electrical [1:0] DSEL;
+electrical [3:0] DIN;
+electrical CLKS,DOUT;
+parameter real Vth = 0.45;
+real dreg;
+analog begin
+
+  @(initial_step) begin
+	 dreg = 0;
+  end
+
+   @(cross(V(CLKS)-Vth,-1)) begin //sample before csel changes
+     if(V(DSEL[1])<Vth)
+		begin
+			if(V(DSEL[0])<Vth)
+		    	dreg = V(DIN[0]);
+			else
+				dreg = V(DIN[1]);
+		end
+	else
+		begin
+			if(V(DSEL[0])<Vth)
+		    	dreg = V(DIN[2]);
+			else
+				dreg = V(DIN[3]);
+		end
+   end
+V(DOUT) <+ transition(dreg,1p,1p);
+end
+endmodule

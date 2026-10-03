@@ -1,0 +1,47 @@
+// VerilogA for coursedesign_cyclicADC, cyclic_decoder, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module cyclic_decoder(dp,dn,ready,clks,dout);
+input dp,dn,ready,clks;
+output dout;
+electrical dp,dn,ready,clks,dout;
+
+parameter real Vlo=0, Vhi=1.1;
+parameter real Vth = 0.55;
+parameter integer Nbit = 10;
+
+real compout1,compout2;
+real sum,counter,sumresult;
+analog begin
+
+     @(initial_step) begin
+             counter = Nbit-1;
+             sum = 0;
+             sumresult = 0;
+             compout1 = 0;
+             compout2 = 0;
+      end
+      @(cross(V(clks)-Vth,1)) begin
+	  sumresult = sum/(pow(2,Nbit)-1)-0.5;
+         counter = Nbit-1;
+         sum = 0;
+      end
+      @(cross(V(ready)-Vth,1)) begin
+        compout1 = V(dp); // >0.25Vr
+        compout2 = V(dn); // >-0.25Vr
+        if(compout1>Vth)
+        begin 
+        sum = sum + pow(2,counter);
+        end
+        if(compout1<Vth && compout2>Vth)
+	 begin 
+         sum = sum + 0.5*pow(2,counter);
+        end
+        counter = counter-1 ;
+      end
+  V(dout) <+ transition(sumresult, 1p, 1p, 1p);
+
+end
+endmodule

@@ -1,0 +1,101 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define PI  	3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// qam_16ary_mod
+//
+// -  16-ary quadrature amplitude modulator
+//
+// vin_b[0-3]:	bits of input code [V,A]
+// vout:	modulated output [V,A]
+//
+// INSTANCE parameters
+//    freq       = modulation frequency [Hz]
+//    phase_ampl = amplitude of the i and q phase signals [V]
+//    vtrans     = voltages above this at input are considered high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// This model does 16 value (4 bit) QAM.
+//
+// It encodes the MSBs on the i-phase and the LSBs on the q-phase. It's
+// constellation diagram may be represented as;
+//
+//                           ^
+//                          / \
+//                           | Q phase
+//              _____________|______________
+//             |      |      |      |      |
+//             | 0011 | 0111 | 1011 | 1111 |
+//       0     |______|______|______|______|
+//             |      |      |      |      |
+//       V     | 0010 | 0110 | 1010 | 1110 |
+//       o  ___|______|______|______|______|___________\ I Phase
+//       l     |      |      |      |      |           /
+//       t     | 0001 | 0101 | 1001 | 1101 |
+//       s     |______|______|______|______|
+//             |      |      |      |      |
+//             | 0000 | 0100 | 1000 | 1100 |
+//             |______|______|______|______|
+//                           |
+//                           |
+//                        0 Volts 
+//
+// The two MSB's are encoded on the i-phase.
+// The two LSB's are encoded on the q-phase.
+//
+// The modulating formula is;
+//
+// Vout = i_phase * cos(wt) + q_phase * sin(wt)
+//
+// i_phase and q_phase vary between -'phase_ampl' and 'phase_ampl'
+//
+
+module qam_16ary_mod (vin_b0,vin_b1,vin_b2,vin_b3,vout);
+input vin_b0,vin_b1,vin_b2,vin_b3;
+output vout;
+electrical vin_b0,vin_b1,vin_b2,vin_b3,vout;
+parameter real freq = 1 from (0:inf);
+parameter real phase_ampl = 1;
+parameter real vtrans = 2.5;
+parameter real tdel=0 from [0:inf);
+parameter real trise=1n;
+parameter real tfall=1n;
+
+   real omega;
+
+   integer row, col;
+
+   real i_phase, q_phase;
+
+   analog begin
+      @ ( initial_step ) begin
+         omega = 2 * `PI * freq;
+      end
+      row = 2*(V(vin_b3) > vtrans) + (V(vin_b2) > vtrans);
+      col = 2*(V(vin_b1) > vtrans) + (V(vin_b0) > vtrans);
+      i_phase = phase_ampl / 1.5 * transition( row - 1.5,tdel,trise,tfall);
+      q_phase = phase_ampl / 1.5 * transition( col - 1.5,tdel,trise,tfall);
+      V(vout) <+ i_phase * cos(omega*$abstime) + q_phase * sin(omega*$abstime);
+      $bound_step( 0.1 / freq );
+   end
+endmodule
+
+
+
+
+

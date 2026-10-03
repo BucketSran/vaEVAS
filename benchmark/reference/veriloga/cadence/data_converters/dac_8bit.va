@@ -1,0 +1,91 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:34 $
+// $Revision: 1.1 $
+//
+//
+ 
+
+
+//--------------------
+// dac_8bit
+//
+// -  8 bit digital analog converter
+//
+// vd0..vd7:	data inputs [V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    vref          = reference voltage for the conversion [V]
+//    mismatch_fact = maximum mismatch as a percentage of the average val []
+//    vtrans        = logic high to low transition voltage [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+// Mismatch effects can be modeled in this DAC by setting 'mismatch' to a
+// non-zero value. The maximum mismatch on a bit is then +/-'mismatch'
+// percent of that bit's nominal value.
+//
+
+module dac_8bit(vd7, vd6, vd5, vd4, vd3, vd2, vd1, vd0, vout);
+electrical vd7, vd6, vd5, vd4, vd3, vd2, vd1, vd0, vout;
+parameter real vref=1 from [0:inf);
+parameter real mismatch_fact=0 from [0:inf);
+parameter real trise=1u from (0:inf);
+parameter real tfall=1u from (0:inf);
+parameter real tdel=0  from [0:inf);
+parameter real vtrans=2.5;
+
+`define NUM_DAC_BITS 8
+`define MAXINT  2_147_483_647.0
+
+// macro to calculate the fractional mismatches in bits
+`define FRAC_MM(I) (1.0 + mismatch_fact*(dist_range*abs($random(I)/`MAXINT) - \
+                    half_dist_range))
+
+   real dist_range, half_dist_range;
+
+   real bit_var[0:`NUM_DAC_BITS-1];
+
+   real out_scaled;	// scaled version of the DAC output
+
+   real full_scaled;
+   integer iseed;
+
+   analog begin
+
+      @ ( initial_step ) begin
+         dist_range = 0.02;
+         half_dist_range = 0.01;
+	 generate j ( 0, `NUM_DAC_BITS-1 ) begin
+	    iseed = j;
+	    bit_var[j] = `FRAC_MM(iseed);
+	 end
+         full_scaled =  bit_var[7]/2 + bit_var[6]/4 + bit_var[5]/8
+		       + bit_var[4]/16 + bit_var[3]/32 + bit_var[2]/64
+                       + bit_var[1]/128 + bit_var[0]/256;
+      end
+
+      out_scaled = 0;
+      out_scaled = out_scaled + ((V(vd7) > vtrans) ? (bit_var[7]/2) : 0);
+      out_scaled = out_scaled + ((V(vd6) > vtrans) ? (bit_var[6]/4) : 0);
+      out_scaled = out_scaled + ((V(vd5) > vtrans) ? (bit_var[5]/8) : 0);
+      out_scaled = out_scaled + ((V(vd4) > vtrans) ? (bit_var[4]/16) : 0);
+      out_scaled = out_scaled + ((V(vd3) > vtrans) ? (bit_var[3]/32) : 0);
+      out_scaled = out_scaled + ((V(vd2) > vtrans) ? (bit_var[2]/64) : 0);
+      out_scaled = out_scaled + ((V(vd1) > vtrans) ? (bit_var[1]/128) : 0);
+      out_scaled = out_scaled + ((V(vd0) > vtrans) ? (bit_var[0]/256) : 0);
+      V(vout) <+ transition(vref*out_scaled/full_scaled, tdel, trise,
+                             tfall);
+    end
+endmodule
+
+
+
+
+
+
+

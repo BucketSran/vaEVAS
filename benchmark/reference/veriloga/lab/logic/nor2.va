@@ -1,0 +1,23 @@
+// VerilogA for verilogaLib, nor2, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module nor2 (out, in1, in2);
+
+output out; voltage out;
+input in1, in2; voltage in1, in2;
+parameter real vh = 1.1;			// output voltage in high state
+parameter real vl = 0;			// output voltage in low state
+parameter real vth = 0.55;	// threshold voltage at inputs
+parameter real td = 0 from [0:inf);	// delay to start of output transition
+parameter real tt = 0 from [0:inf);	// transition time of output signals
+
+analog begin
+    @(cross(V(in1) - vth) or cross(V(in2) - vth))
+	;
+
+    V(out) <+ transition( !((V(in1) > vth) || (V(in2) > vth)) ? vh : vl, td, tt );
+end
+endmodule
+

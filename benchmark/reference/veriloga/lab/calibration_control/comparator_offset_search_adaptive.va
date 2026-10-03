@@ -1,0 +1,34 @@
+// VerilogA for 2021_Pipeline, l1v_logic_stage1, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+`default_transition 10p
+
+module V_comp_offset (CLK, VOUT, VINP, VINN);
+
+input CLK, VOUT;
+output VINP, VINN;
+electrical CLK, VOUT, VINP, VINN;
+
+parameter vdd = 0.9;
+parameter vcm = 0.45;
+
+real vin = 0, step = 10m;
+integer state = 1, sign = 1;
+
+
+analog begin
+
+	@ (cross(V(CLK)-0.5*vdd, -1)) begin
+		sign = V(VOUT) < 0.5*vdd;
+		if((state != sign) && (step > 0u))
+			step = step / 2;
+		state = sign;
+		vin = vin + (2*state-1) * step;
+	end
+	V(VINP) <+ (vcm + 0.5 * vin);
+	V(VINN) <+ (vcm - 0.5 * vin);
+
+end
+
+endmodule

@@ -1,0 +1,23 @@
+// VerilogA for PLL, MUX4, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module MUX4(delay0,delay1,delay2,ctrl,Vout,GND);
+inout delay0,delay1,delay2,ctrl,Vout,GND;
+electrical delay0,delay1,delay2,ctrl,Vout,GND;
+integer control;
+real vout;
+//delay 0,1,2 means 0delay 1delay 2delay input
+analog begin
+control=V(ctrl,GND);
+case (control)
+0:vout=V(delay1,GND);
+1:vout=V(delay2,GND);
+2:vout=V(delay1,GND);
+3:vout=V(delay0,GND);
+endcase
+V(Vout,GND) <+ vout;
+end
+
+endmodule

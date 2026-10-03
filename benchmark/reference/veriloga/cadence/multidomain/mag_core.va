@@ -1,0 +1,108 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:51:56 $
+// $Revision: 1.1 $
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+`define pi      3.14159265358979323846264338327950288419716939937511
+`define u0      (`pi*4.0e-7)
+
+
+
+
+//--------------------
+// mag_core
+//
+// -  Jiles/Atherton magnetic core model
+//
+// mp:	positive MMF terminal	[A,Wb]
+// mn:	negative MMF terminal	[A,Wb]
+//
+// INSTANCE parameters
+//    len  = effective magnetic length of core [m]
+//    area = magnetic cross-sec area of core [m^2]
+//    ms    = saturation magnetization
+//    gamma = shaping coefficient
+//    k     = bulk coupling coefficient 
+//    alpha = interdomain coupling coef.
+//    c     = coef. for reversable magnetization
+//
+// MODEL parameters
+//    {none}
+//
+
+module mag_core(mp,mn);
+inout mp, mn;
+magnetic mp, mn;
+parameter real len=0.1 from (0:1000);
+parameter real area=1 from (0:inf);
+parameter real ms=1.6M from (0:inf);
+parameter real gamma=1100 from (0:inf);
+parameter real k=2000 from (0:inf);
+parameter real alpha=1.6m from (0:inf);
+parameter real c=0.2 from [0:1];
+
+   magnetic Hdot;  	// internal Hdot node
+   real H;	// field intensity
+   real B;	// flux density
+   real Manh;		// anhysteric magnetization
+   real Mirr;		// irreversible magnetization
+   real dMirr;		// dMirr/dH
+   real M;		// total magnetization
+   real Heff;		// effective field intensity
+   real delta;		// direction of the input MMF
+   integer migrating;	// flag indicating that the pinning sites are moving
+   
+
+   // Sign function:
+   //
+   analog function real sign;
+   input x;
+   real x;
+
+      sign = (x >= 0.0 ? 1.0 : -1.0);
+   endfunction
+
+   // Hyperbolic cotangent function:
+   //
+   analog function real coth;
+   input z;
+   real z;
+   
+   real x,y;
+   begin
+      x = exp(min(80,max(-80,z)));
+      coth = ((x+1/x)/(x-1/x));
+   end
+   endfunction
+
+
+   analog begin
+      H = MMF(mp,mn) / len;
+      MMF(Hdot) <+ ddt(H);
+      delta = sign(MMF(Hdot));
+`ifdef __VAMS_ENABLE__
+      B = Phi(<mp>)/area;
+`else
+      B = Phi(mp,mp)/area;
+`endif
+      M = B/`u0 - H;
+      Heff = H + alpha * M;
+
+      if (abs(Heff) > 0.001 * gamma)  begin
+         Manh = ms * (coth(Heff/gamma) - gamma/Heff);
+      end else begin
+         Manh = ms * Heff/(3.0*gamma);     // Taylor series expansion of coth
+      end
+
+      dMirr = (Manh - M)/(delta*k - alpha*(Manh - M)) * MMF(Hdot);
+      migrating = (delta > 0) ^ (M > Manh);
+      Mirr = idt( migrating * dMirr, Manh );
+
+      M = (1-c)*Mirr + c*Manh;
+      Phi(mp,mn) <+ area*`u0*(H+M);
+    end
+endmodule

@@ -1,0 +1,123 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:49:11 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+
+//--------------------
+// saturating_integ
+//
+// -  saturating integrator
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    sigout0    = initial sigout value (val)
+//    gain       = []
+//    sigout_max = maximum signal out (val)
+//    sigout_min = minimum signal out (val)
+//    
+// MODEL parameters
+//    {none}
+//
+// The output is the limited integral of the input. The limits are
+// 'sigout_max', 'sigin_min'.
+//
+// sigout0 must lie between 'sigout_max', and 'sigin_min'.
+//
+(* instrument_module *)
+module saturating_integ(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real sigout0 = 0;
+parameter real gain = 1;
+parameter real sigout_max=2;
+parameter real sigout_min=-2;
+   
+   integer sat_high, sat_low; // boolean flags 
+
+   real integ_val;
+
+   real sigout_val;
+   real input_expr;
+   real idtral;
+   integer cross1;
+   integer cross2;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 integ_val = sigout0;
+	 if (sigout0 <= sigout_min) begin
+	    $display("sigout0 = (%E) less than or equal to sigout_min = (%E).\n", sigout0, sigout_min );
+	    $finish;
+	 end else if (sigout0 >= sigout_max) begin
+	    $display("sigout0 = (%E) greater than or equal to sigout_max = (%E).\n", sigout0, sigout_max );
+	    $finish;
+	 end
+      end
+
+      cross1 = 0;
+      cross2 = 0;
+      if ( (!sat_low) && (!sat_high) ) 
+	   input_expr = V(sigin);
+      else
+	   input_expr = 0.0;
+      idtral = idt(input_expr, 0 );
+
+      @ ( cross(integ_val - sigout_max, 1, 1.0, sigin.potential.abstol) ) 
+	   cross1 = 1;
+
+      @ ( cross(integ_val - sigout_min, -1, 1.0, sigin.potential.abstol) )
+	   cross2 = 1;
+
+      if (sat_low ) begin
+         sigout_val = sigout_min;
+         if (V(sigin) > 0) sat_low =0;
+      end else if (sat_high) begin
+         sigout_val = sigout_max;
+         if (V(sigin) < 0) sat_high =0;
+      end else begin
+
+         integ_val = gain*(idtral) + sigout0;
+         if (integ_val > sigout_max) begin
+            sigout_val = sigout_max;
+         end else if (integ_val < sigout_min) begin
+            sigout_val = sigout_min;
+         end else begin
+            sigout_val = integ_val;
+         end
+
+         if ( cross1 )
+             if (V(sigin) > 0 ) begin
+                 sat_high = 1;
+                 sat_low  = 0;
+             end
+
+	 if ( cross2 )
+              if ( V(sigin) < 0 ) begin
+                  sat_low = 1;
+                  sat_high = 0;
+              end
+      end
+
+      V(sigout) <+ sigout_val;
+
+      // check that model doesn't get into a unallowed state
+      if (sat_high && sat_low) begin
+         $display("%M is malfunctioning - in unallowed state");
+         $finish;
+      end 
+   end
+endmodule

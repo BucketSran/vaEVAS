@@ -1,0 +1,92 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:13:33 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// half_subtractor
+//
+// -  half subtractor
+//
+// vin1, vin2:	inputs	[V,A]
+// vout_diff:	difference out	[V,A]
+// vout_borrow:	borrow out	[V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = logic high value [V]
+//    vlogic_low  = logic low value [V]
+//    vtrans      = threshold for inputs to be high [V]
+//    tdel, trise, tfall = {usual} [s]
+//
+// Formula:
+//
+//      vin1 - vin2 = vout_diff and borrow
+//
+// Truth Table:
+//
+//	in1	in2	diff	borrow
+//      ------------------------------
+//	0	0	0	0
+//	0	1	1	1
+//	1	0	1	0
+//	1	1	0	0
+//
+
+module half_subtractor(vin1, vin2, vout_diff, vout_borrow);
+input vin1, vin2;
+output vout_diff, vout_borrow;
+electrical vin1, vin2, vout_diff, vout_borrow;
+parameter real vlogic_high = 5;
+parameter real vlogic_low = 0;
+parameter real vtrans = 1.4;
+parameter real tdel = 3u from [0:inf);
+parameter real trise = 1u from (0:inf);
+parameter real tfall = 1u from (0:inf);
+
+   real vout_diff_val;
+   real vout_borrow_val;
+   integer a, b;
+
+
+   analog begin
+ 
+      @ ( initial_step ) begin
+	 if (vlogic_high < vlogic_low) begin
+	    $display("Range specification error.  vlogic_high = (%E) less than vlogic_low = (%E).\n", vlogic_high, vlogic_low );
+	    $finish;
+	 end
+	 if (vtrans > vlogic_high || vtrans < vlogic_low) begin
+	    $display("Inconsistent $threshold specification w/logic family.\n");
+	 end
+      end
+
+      a = V(vin1) > vtrans;
+      b = V(vin2) > vtrans;
+
+      @ (cross(V(vin1) - vtrans, 1))  a = 1;
+      @ (cross(V(vin1) - vtrans, -1)) a = 0;
+
+      @ (cross(V(vin2) - vtrans, 1))  b = 1;
+      @ (cross(V(vin2) - vtrans, -1)) b = 0;
+
+      vout_diff_val = a ^ b ? vlogic_high : vlogic_low;
+      vout_borrow_val = !a && b ? vlogic_high : vlogic_low;
+
+      V(vout_diff) <+ transition( vout_diff_val, tdel, trise, tfall);
+      V(vout_borrow) <+ transition( vout_borrow_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+
+

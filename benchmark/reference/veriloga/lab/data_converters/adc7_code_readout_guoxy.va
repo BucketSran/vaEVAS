@@ -1,0 +1,35 @@
+// VerilogA for ZDYF_PIPE, ideal_ADC_OUT_7BITS, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ideal_ADC_OUT_7BITS(input electrical [6:0] DIN, output electrical DOUT);
+
+parameter real Vlo=0, Vhi=0.9;
+parameter real Vth = 0.45;
+parameter real tt = 100p;
+parameter real scaling = 32;
+
+real dacreg[0:6];
+genvar i;
+analog begin
+
+  @(initial_step) begin
+	dacreg[6] = 16;
+	dacreg[5] = 8;
+	dacreg[4] = 4;
+	dacreg[3] = 2;
+	dacreg[2] = 1;
+	dacreg[1] = 0.5;
+	dacreg[0] = 0.25;
+  end
+V(DOUT)<+ (V(DIN[6])>Vth)?dacreg[6]/scaling:0;
+V(DOUT)<+ (V(DIN[5])>Vth)?dacreg[5]/scaling:0;
+V(DOUT)<+ (V(DIN[4])>Vth)?dacreg[4]/scaling:0;
+V(DOUT)<+ (V(DIN[3])>Vth)?dacreg[3]/scaling:0;
+V(DOUT)<+ (V(DIN[2])>Vth)?dacreg[2]/scaling:0;
+V(DOUT)<+ (V(DIN[1])>Vth)?dacreg[1]/scaling:0;
+V(DOUT)<+ (V(DIN[0])>Vth)?dacreg[0]/scaling:0;
+end
+endmodule
+

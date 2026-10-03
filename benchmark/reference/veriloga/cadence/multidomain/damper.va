@@ -1,0 +1,40 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:06 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+//--------------------
+// damper
+//
+// -  mechanical damper
+//
+// posp,posn:	terminals [m,N]
+//
+// INSTANCE parameters
+//    d = friction coefficient [N/m]
+//
+// MODEL parameters
+//    {none}
+//
+
+module damper (posp, posn);
+inout posp, posn;
+kinematic  posp, posn;
+parameter real d = 1000;  // friction coefficient given in N/m
+
+    analog
+	F(posp,posn) <+ d*ddt(Pos(posp,posn));
+   
+endmodule
+
+
+
+
+

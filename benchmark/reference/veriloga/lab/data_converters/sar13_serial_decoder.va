@@ -1,0 +1,44 @@
+// VerilogA for NC_SPLIT_PIPELINE, SAR_5bit_decoder, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module SAR_13bit_decoder(din,clks,ready,dout,dnum);
+input din,clks,ready,dnum;
+output dout;
+electrical din,clks,ready,dout,dnum;
+parameter real Vlo=0, Vhi=1.1;
+parameter real Vth = 0.55;
+parameter integer Nbit = 13;
+real compout;
+real sum,counter,sumresult,dcnt;
+analog begin
+
+     @(initial_step) begin
+             counter = Nbit-1;
+             sum = 0;
+             sumresult = 0;
+             compout = 0;
+  	      dcnt=0;
+      end
+      @(cross(V(clks)-Vth,1)) begin
+	 sumresult = sum/(pow(2,Nbit)-1)-0.5;
+         counter = Nbit-1;
+         sum = 0;
+          dcnt=0;
+      end
+      @(cross(V(ready)-Vth,1)) begin
+        compout = V(din);
+        if(compout>Vth)
+        begin 
+        sum = sum + pow(2,counter);
+        dcnt = dcnt+1;
+        end
+        counter = counter-1 ;
+      end
+  V(dout) <+ transition(sumresult, 1p, 1p, 1p);
+  V(dnum) <+ transition(dcnt, 1p, 1p, 1p);
+end
+
+
+endmodule

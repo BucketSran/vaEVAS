@@ -1,0 +1,79 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:58 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// hysteresis
+//
+// -  rectangular hysteresis
+//
+// sigin:	(flow,val)
+// sigout:	(flow,val)
+//
+// INSTANCE parameters
+//    hyst_state_init  = The initial output []
+//    sigout_high      = max input/output (val)
+//    sigout_low       = min input/output (val)
+//    sigtrig_low      = The sigin value that will cause sigout to go low when
+//                       sigout is high. (val)
+//    sigtrig_high     = The sigin value that will cause sigout to go high when
+//                       sigout is low. (val)
+//    tdel, trise, tfall = {usual} [s]
+//
+// MODEL parameters
+//    {none}
+//
+(* instrument_module *)
+module hysteresis(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout ;
+parameter integer hyst_state_init=1;
+parameter real sigout_high = 1 ;
+parameter real sigout_low = -1;
+parameter real sigtrig_high = 1 ;
+parameter real sigtrig_low = -1;
+parameter real tdel = 0 from [0:inf);
+parameter real trise = 20n from (0:inf);
+parameter real tfall = 20n from (0:inf);
+
+   integer hyst_state;
+   real    sigout_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 hyst_state = hyst_state_init;
+      end
+
+      @ (cross (V(sigin) - sigtrig_high,1) )
+         if (hyst_state == 0) 
+            hyst_state = 1;
+
+      @ (cross (V(sigin) - sigtrig_low,-1) )
+         if (hyst_state == 1)
+            hyst_state = 0;
+   
+      if (hyst_state == 1) begin
+         sigout_val = sigout_high;
+      end else begin
+         sigout_val = sigout_low;
+      end
+
+      V(sigout) <+ transition (sigout_val, tdel, trise, tfall);
+   end
+endmodule
+
+
+
+
+

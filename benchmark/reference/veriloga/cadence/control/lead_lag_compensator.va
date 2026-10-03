@@ -1,0 +1,84 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:47:59 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+
+//--------------------
+// lead_lag_compensator
+//
+// -  lead-lag compensator
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    gain   = compensator gain []
+//    tau1   = compensator zero at -(1/tau1) [s]
+//    alpha1 = compensator pole at -(1/(alpha*tau1)); alpha1 > 1 []
+//    tau2   = compensator zero at -(1/tau2) [s]
+//    alpha2 = compensator pole at -(1/(alpha*tau2)); alpha2 < 1 []
+//
+// MODEL parameters
+//    {none}
+//
+// TF:
+//                     1 +  'tau1' * S                      1 +  'tau2' * S
+// 'gain'* 'alpha1' * ------------------------ * alpha2 * -------------------
+//                     1 + alpha1 * 'tau1' * S          1 + alpha2 * 'tau2' * S
+//
+// NOTE
+//    Defining larger values of 'abstol' and 'huge' for the quantities
+//    associated with sigin and sigout can help overcome convergence and
+//    clipping problems.
+//
+
+module lead_lag_compensator(sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real gain   = 1   from (0:inf);
+parameter real tau1   = 1   from [0:inf);
+parameter real alpha1 = 2   from (1:inf);
+parameter real tau2   = 1   from [0:inf);
+parameter real alpha2 = 0.1 from (0:1);
+
+   real integ_gain1;
+   real sigin_gain1;
+
+   real integ_gain2;
+   real sigin_gain2;
+
+   electrical sig_inter; // intermediate node in compensator
+
+   analog begin
+
+      @ ( initial_step or initial_step( "dc" ) or initial_step( "ac" )) begin
+         integ_gain1 = 1/alpha1/tau1;
+	 sigin_gain1 = gain*alpha1;
+	 integ_gain2 = 1/alpha2/tau2;
+	 sigin_gain2 = alpha2;
+      end
+
+      V(sig_inter) <+ integ_gain1 * idt(sigin_gain1 * V(sigin)
+                                            - V(sig_inter),0)
+                     + gain * V(sigin);
+
+      V(sigout)    <+ integ_gain2 * idt(sigin_gain2 * V(sig_inter)
+                                            - V(sigout),0)
+                     + V(sig_inter);
+   end
+endmodule
+
+
+
+
+

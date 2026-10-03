@@ -1,0 +1,73 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:50 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// deadband_diffamp
+//
+// -  dead band amplifier
+//
+// sigin_p,sigin_n:	differential input terminals (val,flow)
+// sigout:		output terminal (val,flow)
+//
+// INSTANCE parameters
+//    sigin_dead_low  = lower range of dead band (val)
+//    sigin_dead_high = upper range of dead band (val)
+//    sigout_leak     = offset signal; only output in deadband (val)
+//    gain_low        = differential gain in lower region []
+//    gain_high       = differential gain in upper region []
+// 
+// MODEL parameters
+//    {none}
+//
+// Outputs 'sigout_leak' when differential input (sigin_p-sigin_n) is
+// between 'sigin_dead_low' and 'sigin_dead_high'. When outside the deadband,
+// the output is an amplified version of the differential input
+// plus 'sigout_leak'.
+//
+
+module deadband_diffamp(sigin_p, sigin_n, sigout);
+input sigin_p, sigin_n;
+output sigout;
+electrical sigin_p, sigin_n, sigout;
+parameter real sigin_dead_low = -10;
+parameter real sigin_dead_high = 10;
+parameter real sigout_leak = 0;
+parameter real gain_low = 1;
+parameter real gain_high = 1;
+   real sigout_val, sigin_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (sigin_dead_high <= sigin_dead_low) begin
+	    $display("Range specification error.  sigin_dead_high = (%E) less than sigin_dead_low = (%E).\n", sigin_dead_high, sigin_dead_low );
+	    $finish;
+	 end
+      end
+
+      sigout_val = sigout_leak;
+      sigin_val = V(sigin_p, sigin_n);
+
+      if (sigin_val >= sigin_dead_high) begin
+         sigout_val = gain_high * (sigin_val - sigin_dead_high) + sigout_leak;
+      end else if (sigin_val <= sigin_dead_low) begin
+         sigout_val = gain_low * (sigin_val - sigin_dead_low) + sigout_leak;
+      end
+      V(sigout) <+ sigout_val;
+   end
+endmodule
+
+
+
+
+

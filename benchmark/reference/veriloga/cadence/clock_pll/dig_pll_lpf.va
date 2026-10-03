@@ -1,0 +1,76 @@
+`include "discipline.h"
+`include"constants.h"
+
+// $Date: 1997/09/05 22:43:52 $
+// $Revision: 1.1 $
+//
+//
+//The sample SpectreHDL library is unsupported and subject to change
+//without notice. Future versions of SpectreHDL may not be compatible
+//with this library.
+
+`define PI  	3.14159265358979323846264338327950288419716939937511
+
+//--------------------
+// dig_pll_lpf
+//
+// -  The phase-locked loop's input filter
+//
+// in:	input node [V,A]
+// ref:	reference node (typically set to gnd) [V,A]
+//
+// INSTANCE parameters
+//    zero_freq = the frequency at which the zero in the transfer function
+//                occurs [Hz].
+//    pole_freq = the frequency at which the non-zero pole in the transfer
+//                function occurs [Hz].
+//    r_nom     = nomial resistance of the RC network [Ohms]
+//
+// MODEL parameters
+//    {none}
+//
+// This model is a structural RC model.
+// The transfer function between Iin and Vin is;
+//
+//            ( 1 + S/(2*PI*'zero_freq'))
+//     K * -------------------------------------
+//           S * ( 1 + S/(2*PI*'pole_freq'))
+//
+// 'K' is not a parameter that can be set. It will be a very large number.
+// It's equation is given by;
+//
+//                 2 * PI * r_nom
+//    K =    -------------------------------
+//            (     1     )   (     1     )
+//            ( --------- ) - ( --------- )
+//            ( zero_freq )   ( pole_freq )
+//
+//  However, K can be indirectly adjusted by changing 'r_nom'.
+//
+
+module dig_pll_lpf(in, ref);
+electrical in, ref;
+parameter real pole_freq = 3M;
+parameter real zero_freq = 0.5M;
+parameter real r_nom = 10K;
+ 
+        electrical comm;
+ 
+        capacitor #(.c(1/(r_nom*2 * `PI * zero_freq) -
+                       1/(r_nom*2 * `PI * pole_freq)) )
+               c2 (in, comm);
+ 
+        resistor  #(.r(r_nom)) r1 (comm, ref);
+        capacitor #(.c(1/(r_nom*2 * `PI * pole_freq)) )
+               c1 (comm, ref) ;
+ 
+   analog begin
+      @ (initial_step) begin
+         if (pole_freq <= zero_freq) begin
+            $display("Unrealisable filter:  pole's frequency = (%E) less than zero's frequency = (%E).\n", pole_freq, zero_freq );
+            $finish;
+         end
+      end
+   end
+endmodule
+ 

@@ -1,0 +1,28 @@
+name: Benchmark evidence
+
+on:
+  pull_request:
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'experiments/va_screen/**', '.github/workflows/benchmark-evidence.yml']
+  push:
+    branches: [main]
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'experiments/va_screen/**', '.github/workflows/benchmark-evidence.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Frozen sources and current calibration consumers
+        run: python3 -B -m experiments.va_screen.identity --historical
+      - name: Identity and result reporting regressions
+        run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v

@@ -1,0 +1,50 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:28 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// exponential
+//
+// -  exponential function
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    max_sigin = maximum value of 'sigin' accepted (val)
+//
+// MODEL parameters
+//    {none}
+//
+// The 'sigout' is an exponential function of the 'sigin'.
+// However if 'sigin' is greater than 'max_sigin' then 'sigin' is taken
+// to be 'max_sigin'. This is necessary as the exponential function
+// explodes very quickly.
+//
+
+module exponential (sigin, sigout);
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real max_sigin = 180;
+
+    analog begin
+
+       if ( V(sigin) > max_sigin )
+          V(sigout) <+ exp(max_sigin);
+       else
+          V(sigout) <+ exp(V(sigin));
+   end
+
+endmodule
+
+

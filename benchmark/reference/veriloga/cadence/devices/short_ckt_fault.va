@@ -1,0 +1,51 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:28 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// short_ckt_fault
+//
+// -  short circuit fault
+//
+// vp,vn:		output terminals [V,A]
+//
+// INSTANCE parameters
+//    twait = time to wait before short circuit occurs [s]
+//
+// MODEL parameters
+//    {none}
+//
+// At time='twait', the two terminals short. Before this the connection
+// between the terminals is open.
+//
+
+module short_ckt_fault(vp, vn);
+inout vp, vn;
+electrical vp, vn;
+parameter real twait = 0.3m;
+
+   analog begin
+      if ($abstime < twait)begin
+      	 I(vp,vn) <+ 0.0;
+      end
+      else begin
+      	 V(vp,vn) <+ 0.0 ;
+      end
+   end
+endmodule
+
+
+
+
+
+
+

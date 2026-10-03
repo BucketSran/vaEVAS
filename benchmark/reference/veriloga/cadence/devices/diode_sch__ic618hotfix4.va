@@ -1,0 +1,130 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1998/09/23 03:47:02 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+`define BREAK_DOWN_WARN 1
+
+
+
+//--------------------
+// diode_sch
+//
+// -  Diode based on Schockley equation
+//
+// vanode:	Anode voltage [V,A]
+// vcathode:	Cathode voltage [V,A]
+//
+// INSTANCE parameters
+//    area = area of junction	[]
+//    is   = saturation current []
+//    n    = emission coefficient []
+//    cjo  = zero-bias junction capacitance [F]
+//    m    = grading coefficient []
+//    phi  = body potential [V]
+//    fc   = forward bias capacitance [F]
+//    tt   = transit time [s]
+//    bv   = reverse breakdown voltage [V]
+//    rs   = series resistance [Ohms]
+//    gmin = minimal conductance [Mhos]
+//
+(* instrument_module *)
+module diode_sch(vanode, vcathode);
+inout vanode, vcathode;
+electrical vanode, vcathode;
+parameter real area = 1 from (0:inf);
+parameter real is=1e-14 from (0:inf);
+parameter real n=1 from (0:inf);
+parameter real cjo=0 from [0:inf);
+parameter real m=0.5 from [0:inf);
+parameter real phi=0.7 exclude 0;
+parameter real fc=0.5 from (0:1];
+parameter real tt=1p from [0:inf);
+parameter real bv=10e9 from [0:inf);
+parameter real rs=0 from [0:inf);
+parameter real gmin=1e-12 from [0:inf);
+
+   integer BreakingDown;
+
+   real Vd, Id, Qd;
+
+   real f1, f2, f3, fcp;
+   real ibv;
+
+   analog begin
+
+      @ ( initial_step or initial_step("static") ) begin
+	 BreakingDown = 0;
+	 f1 = (phi/(1 - m))*(1 - pow((1 - fc), m));
+	 f2 = pow((1 - fc), (1 + m));
+	 f3 = 1 - fc*(1 + m);
+	 fcp = fc*phi;
+	 ibv = is*bv/$vt;
+      end
+
+      Vd = V(vanode, vcathode);
+
+`ifdef __VAMS_ENABLE__
+      Id = I(<vanode>);
+`else
+      Id = I(vanode, vanode);
+`endif
+
+      //
+      // intrinsic diode.
+      //
+      if (Vd < -5*n*$vt) begin
+         if (Vd == -bv) begin
+            I(vanode, vcathode) <+ -area*ibv;
+         end else if (Vd > -bv) begin
+            I(vanode, vcathode) <+ -area*is;
+         end else begin
+            I(vanode, vcathode) <+ -area*is*(exp(-(bv + Vd)/$vt) - 
+               1 + bv/$vt);
+         end
+      end else begin
+         I(vanode, vcathode) <+ area*is*(exp((Vd - rs*Id)/(n*$vt)) - 1);
+      end       
+
+      I(vanode, vcathode) <+ gmin * Vd;
+
+      //
+      // capacitance (junction and diffusion).
+      //
+      if (Vd <= fcp) begin
+         Qd = tt*Id  + area*cjo*phi*(1 - pow((1 - Vd/phi), (1 - m)))/(1 - m);
+      end else begin 
+         Qd = tt*Id + area*cjo*(f1 + (1/f2)*(f3*(Vd - fcp) + (0.5*m/phi)*
+            (Vd*Vd - fcp*fcp)));
+      end
+
+      I(vanode, vcathode) <+ ddt(Qd);
+
+`ifdef BREAK_DOWN_WARN
+      if (V(vanode,vcathode) < -bv) begin
+         if (!BreakingDown) begin
+            $display( "Breakdown voltage exceeded at t = %E.\n", $abstime );
+            BreakingDown = 1;
+         end
+      end else begin
+         if (BreakingDown) begin
+            $strobe( "Breakdown voltage no longer exceeded at t = %E.\n",
+                    $abstime );
+            BreakingDown = 0;
+         end
+      end
+`endif
+   end
+endmodule
+
+
+
+
+
+

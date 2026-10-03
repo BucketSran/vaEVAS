@@ -1,0 +1,48 @@
+// VerilogA for Z_pipeline, TB_flash, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module TB_flash(DIN,DOUT);
+
+input [7:0] DIN;
+
+output DOUT;
+electrical [7:0] DIN;
+electrical DOUT;
+
+parameter real vth=0.45;
+parameter real GAIN=4;
+real din[0:10];
+real vout,vresp,vresn;
+real dout;
+analog begin
+
+din[7]=V(DIN[7]);
+din[6]=V(DIN[6]);
+din[5]=V(DIN[5]);
+din[4]=V(DIN[4]);
+din[3]=V(DIN[3]);
+din[2]=V(DIN[2]);
+din[1]=V(DIN[1]);
+din[0]=V(DIN[0]);
+
+
+
+dout=
+	0.9*0.125*
+	((din[7]>vth)+
+	 (din[6]>vth)+
+	 (din[5]>vth)+
+	 (din[4]>vth)+
+	 (din[3]>vth)+
+	 (din[2]>vth)+
+	 (din[1]>vth)+
+	 (din[0]>vth)-4);
+
+;
+
+V(DOUT) <+ dout;
+end
+
+endmodule

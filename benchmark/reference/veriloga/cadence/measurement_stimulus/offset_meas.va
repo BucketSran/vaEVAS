@@ -1,0 +1,74 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:30 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// offset_meas
+//
+// -  slew rate measurer
+//
+// vamp_out:		output voltage of opamp being measured [V,A]
+// vamp_p:		positive terminal of opamp being measured [V,A]
+// vamp_n:		negative terminal of opamp being measured [V,A]
+// vamp_spply_p:	positive supply of opamp being measured [V,A]
+// vamp_spply_n:	negative supply of opamp being measured [V,A]
+//
+// INSTANCE parameters
+//    vspply_p = positive supply voltage required by opamp [V]
+//    vspply_n = negative supply voltage required by opamp [V]
+//    tsettle  = Time to let opamp settle before measuring the offset [s]
+//
+// MODEL parameters
+//    {none}
+//
+// The opamp terminals of the opamp under test are connected to this model.
+// It shorts 'vamp_out' to 'vamp_n' and grounds 'vamp_vp'. After 'tsettle'
+// seconds, the voltage read at vamp_out is taken to be the 'offset'.
+//
+// The result is printed to the screen.
+//
+
+module offset_meas (vamp_out,vamp_p,vamp_n,vamp_spply_p,vamp_spply_n);
+input vamp_spply_n,vamp_spply_p;
+inout vamp_out,vamp_p,vamp_n;
+electrical vamp_out,vamp_p,vamp_n,vamp_spply_n,vamp_spply_p;
+parameter real vspply_p = 5.0;
+parameter real vspply_n = -5.0;
+parameter real tsettle  = 1m from (0:inf);
+
+   real offset;
+
+ 
+   analog begin
+
+     @ ( initial_step ) begin
+	 if (vspply_n >= vspply_p) begin
+	    $display("Range specification error.  vspply_n = (%f) greater than vspply_p = (%f).\n", vspply_n, vspply_p );
+	    $finish;
+	 end
+      end
+
+      V(vamp_spply_p) <+ vspply_p;
+      V(vamp_spply_n) <+ vspply_n;
+
+      V(vamp_p) <+ 0.0;
+
+      V(vamp_n,vamp_out) <+ 0.0;
+
+          
+      @ ( timer(tsettle)) begin
+         offset = V(vamp_out);
+         $strobe("measured offset %f",offset);
+      end
+   end
+endmodule
+

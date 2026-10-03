@@ -1,7 +1,8 @@
 # 实验与结果
 
 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
-目前已有记录主要验证 EVAS 仿真器；Benchmark 任务迁入后的评测另行登记，
+已有记录主要验证 EVAS 仿真器；[Verilog-A 能力初筛](va_screen/README.md)
+记录六个 Harbor 任务的 Spectre 校准与模型评测。
 仿真器语义测试的通过数不作为建模任务成绩。
 
 ## main 保留什么
@@ -30,10 +31,11 @@
 
 ## 目录结构
 
-目录名沿用历史批次名（保留原目录名以便历史链接与来源追溯），按职责分为三类：
+部分目录沿用历史批次名，以便追溯原链接和来源。按职责查阅以下入口：
 
 | 目录 | 职责 | 内容 |
 | --- | --- | --- |
+| [va_screen/](va_screen/README.md) | Benchmark 初筛 | 六题构建、校准与模型评测工具，冻结输入身份和首轮精简结果 |
 | [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：当前检查点收据、矩阵分析、生命周期验证工具及独立校准，持续维护 |
 | [backends/](backends/) | 跨后端对照 | [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
 | [archive/](archive/) | 已结束批次 | [dvs2-starter-pilot](archive/dvs2-starter-pilot/README.md)：试点输入生成与工具身份；[dvs2-history-validation](archive/dvs2-history-validation/README.md)：精确有理数事件判据与旧波形重判；[pr14-pr15-validation](archive/pr14-pr15-validation/README.md)：该批次矩阵与算子探针 |

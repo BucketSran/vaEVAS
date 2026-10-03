@@ -1,0 +1,75 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// audio_src
+//
+// -  Audio source
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    amp1  = amplitude of the first sinusoid  [V]
+//    amp2  = amplitude of the second sinusoid [V]
+//    amp3  = amplitude of the third sinusoid  [V]
+//    amp4  = amplitude of the fourth sinusoid [V]
+//    freq1 = frequency of the first sinusoid  [Hz]
+//    freq2 = frequency of the second sinusoid [Hz]
+//    freq3 = frequency of the third sinusoid  [Hz]
+//    freq4 = frequency of the fourth sinusoid [Hz]
+//
+// MODEL parameters
+//    {none}
+//
+// This model synthesizes an audio source.
+// Its output is the sum of 4 sinusoidal sources
+//
+
+module audio_src(vout);
+electrical vout;
+parameter real amp1 = 1 from [0:inf);
+parameter real amp2 = 1 from [0:inf);
+parameter real amp3 = 1 from [0:inf);
+parameter real amp4 = 1 from [0:inf);
+parameter real freq1 = 40   from (0:inf);
+parameter real freq2 = 311  from (0:inf);
+parameter real freq3 = 2003 from (0:inf);
+parameter real freq4 = 5454 from (0:inf);
+
+   real max_freq;
+
+   analog begin
+
+      @ ( initial_step ) begin
+          max_freq = freq1;
+          max_freq = max( max_freq, freq2 );
+          max_freq = max( max_freq, freq3 );
+          max_freq = max( max_freq, freq4 );
+      end
+
+      V(vout) <+ amp1 * sin( 2 * `M_PI * freq1 * $abstime ) +
+                amp2 * sin( 2 * `M_PI * freq2 * $abstime ) +
+                amp3 * sin( 2 * `M_PI * freq3 * $abstime ) +
+                amp4 * sin( 2 * `M_PI * freq4 * $abstime );
+
+      $bound_step( 0.1/max_freq );      // ensure 10 time points per period
+   end
+endmodule
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+// VerilogA for 10G_4BIT_SUBADC, CAL4bit, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+`define NUM_TRIM_BITS 4
+
+module CAL4bit(input electrical AIN, output electrical [(`NUM_TRIM_BITS-1):0] DOUT);
+
+parameter real vth = 0.5;
+
+real x;
+real y;
+genvar i;
+
+analog begin
+	x = V(AIN);
+	for(i=0;i<`NUM_TRIM_BITS;i=i+1) begin
+		y = x % 2;
+		if($floor(y) > vth) begin
+			V(DOUT[i]) <+ transition(0.9);
+		end
+		else begin
+			V(DOUT[i]) <+ transition(0);
+		end
+		x = x / 2;
+	end
+end
+
+endmodule
+

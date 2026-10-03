@@ -1,0 +1,57 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 1997/09/03 22:45:38 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+//--------------------
+// pll
+//
+// -  Phase locked loop
+//
+// vlocal_osc:  local oscillator voltage [V,A]
+// vin_rf:  	pll radio frequency input voltage [V,A]
+// vout: 	voltage proportional to the frequency being locked onto [V,A]
+// vout_ph_det:	output of the phase detector [V,A]
+//
+// INSTANCE parameters
+//    vco_gain            = gain of VCO cell [Hz/V]
+//    vco_center_freq     = VCO oscillation frequency [Hz]
+//    phase_detect_type   = type of phase detection cell to be used []
+//    vout_filt_bandwidth = bandwidth of the low pass filter on output [Hz]
+//
+// MODEL parameters
+//    {none}
+//
+
+`define CHOP 0
+`define MULT 1
+module pll(vin_rf,vlocal_osc,vout_ph_det,vout);
+electrical vin_rf, vlocal_osc, vout_ph_det, vout;
+parameter real vout_filt_bandwidth=130;
+parameter real vco_gain=1K;
+parameter real vco_center_freq=2.5K;
+parameter integer phase_detect_type = `CHOP;
+
+
+   phase_detector     #(.gain(2),.pd_type(phase_detect_type) )
+                         pd    (vlocal_osc,vin_rf,vout_ph_det);
+
+   vco                #(.amp(1),.center_freq(vco_center_freq),
+                                .vco_gain(vco_gain) )
+                         osc   (vout,vlocal_osc);
+
+   lpf_1storder       #(.bandwidth(vout_filt_bandwidth) )
+                         lpf   (vout_ph_det,vout);
+
+endmodule
+
+
+

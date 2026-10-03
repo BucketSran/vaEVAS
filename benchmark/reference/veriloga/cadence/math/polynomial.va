@@ -1,0 +1,47 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:32 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+//--------------------
+// polynomial
+//
+// -  3rd order polynomial function
+//
+// sigin:	(val,flow)
+// sigout:	(val,flow)
+//
+// INSTANCE parameters
+//    p3 = cubic coefficient    []
+//    p2 = square coefficient   []
+//    p1 = linear coefficient   []
+//    p0 = constant coefficient []
+//
+// MODEL parameters
+//    {none}
+//
+// 'sigout' = 'p3' * 'sigin'^3 + 'p2' * 'sigin^2 + 'p1' * sigin + p0
+//
+
+module polynomial ( sigin, sigout );
+input sigin;
+output sigout;
+electrical sigin, sigout;
+parameter real p0 = 1.0; 
+parameter real p1 = 1.0; 
+parameter real p2 = 1.0; 
+parameter real p3 = 1.0;
+
+   analog
+
+      V(sigout) <+ p0 + p1*V(sigin) + p2*V(sigin)*V(sigin)
+	                + p3*V(sigin)*V(sigin)*V(sigin);
+endmodule

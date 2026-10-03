@@ -1,0 +1,188 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:53:17 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// adc_dnl_8bit
+//
+// -  8 bit ADC DNL measurement
+//
+// vd0..vd7:	data lines from ADC [V,A]
+// vout:	voltage sent from conversion to ADC [V,A]
+// vclk:	Clocking signal for the ADC [V,A]
+//
+// INSTANCE parameters
+//    vlogic_high = [V]
+//    vlogic_low  = [V]
+//    tsettle     = time to allow for settling after the data lines are
+//                  changed before 'vd0-7' are recorded [s]
+//                  - also the period of the ADC conversion clock.
+//    vstart      = voltage at which start conversion sweep []
+//    vend        = voltage at which end conversion sweep []
+//    log_to_file = whether to log the results to a file; yes or no []
+//    filename    = the name of the file in which the results are logged []
+//
+// MODEL parameters
+//    {none}
+//
+// Measures an 8 bit ADC's DNL using a histogram method. 'vout' is
+// sequentially set to 4096 equally spaced voltages between 'vstart' and
+// 'vend'. At each different value of 'vout' a clock pulse in generated
+// causing the ADC to convert this 'vout' value. The resultant code of
+// each conversion is stored.
+//
+// When all the conversions have been done, the DNL is calculated from
+// the recorded data.
+// 
+// If 'log_to_file' is 'yes', then the DNL (differential non-linearity) is
+// recorded and writen to the file, 'filename'.
+//
+(* instrument_module *)
+module adc_dnl_8bit(vd7, vd6, vd5, vd4, vd3, vd2, vd1, vd0, vout, vclk);
+electrical vd7, vd6, vd5, vd4, vd3, vd2, vd1, vd0;
+electrical vout, vclk;
+parameter real tsettle=200n from (0:inf);
+parameter real vlogic_high=5.0;
+parameter real vlogic_low=0.0;
+parameter real vstart=0.0;
+parameter real vend=0.0;
+parameter integer log_to_file = 0;
+
+`define NUM_ADC_BITS 8
+`define NUM_OF_CODES 256
+`define NUM_OF_CONVS 4096
+
+   integer out_file;
+
+   // for generating vout levels
+   integer conv;	// conversion number
+   real vout_inc;
+   real vout_val;
+  
+   // for dnl calculations
+   integer i;
+   real    vtrans;
+   integer just_finished; // flag for doing dnl calculations
+   integer code_val[0:`NUM_OF_CONVS-1];
+   integer bucket[0:`NUM_OF_CODES-1]; // holds number of code hits for each code
+   real    width [0:`NUM_OF_CODES-1]; // holds the code width calculations
+   real    dnl   [0:`NUM_OF_CODES-1]; // dnl for each code
+   integer total_hits;     // totals hits between codes 1 and 254
+   real    max_dnl;
+   integer max_dnl_code;
+
+   // for generating clock
+   //
+   real tnext_high;
+   real tnext_low;
+   real vclk_val;
+
+ 
+   analog begin
+
+    @ ( initial_step ) begin
+      vtrans = vlogic_high/2;
+      vout_inc = (vend-vstart)/(`NUM_OF_CONVS-1);
+      vout_val = vstart;
+      for (i=0; i < `NUM_OF_CODES; i = i + 1) begin
+         bucket[i] = 0;
+      end
+      tnext_high = tsettle/2;
+      tnext_low = tsettle;
+    end
+
+    @ ( timer(tnext_high) ) begin
+         tnext_low  = tnext_high + tsettle/2;
+         tnext_high = tnext_high + tsettle;
+         vclk_val   = vlogic_high;
+
+         // record the code value
+         code_val[conv] = 0;
+         code_val[conv] = code_val[conv] + (V(vd0) > vtrans)*1;
+         code_val[conv] = code_val[conv] + (V(vd1) > vtrans)*2;
+         code_val[conv] = code_val[conv] + (V(vd2) > vtrans)*4;
+         code_val[conv] = code_val[conv] + (V(vd3) > vtrans)*8;
+         code_val[conv] = code_val[conv] + (V(vd4) > vtrans)*16;
+         code_val[conv] = code_val[conv] + (V(vd5) > vtrans)*32;
+         code_val[conv] = code_val[conv] + (V(vd6) > vtrans)*64;
+         code_val[conv] = code_val[conv] + (V(vd7) > vtrans)*128;
+
+         // get setup for the next conversion
+         conv = conv + 1;
+         vout_val = conv*vout_inc + vstart;
+
+         if (conv==`NUM_OF_CONVS) begin
+            just_finished=1;
+            tnext_low=1M;
+            tnext_high=1M;
+            vout_val = vend;
+         end
+      end
+
+      @ (timer(tnext_low)) begin
+         vclk_val = vlogic_low;
+      end
+
+      if (just_finished) begin  // calculate the dnl function
+         just_finished = 0;
+
+         for (i=0; i < `NUM_OF_CONVS; i = i + 1) begin
+            bucket[(code_val[i])] = bucket[(code_val[i])] + 1;
+         end
+
+         for (i=1; i < `NUM_OF_CODES-1; i = i + 1) begin
+            total_hits = total_hits + bucket[i];
+         end
+
+         for (i=1; i < `NUM_OF_CODES-1; i = i + 1) begin
+            width[i] = 1.0*bucket[i]/total_hits*(`NUM_OF_CODES-2);
+         end
+
+         max_dnl = 0;
+         max_dnl_code = 0;
+         for (i=1; i < `NUM_OF_CODES-1; i = i + 1) begin
+            dnl[i] = width[i] - 1;
+            if (max_dnl < abs(dnl[i])) begin
+               max_dnl = abs(dnl[i]);
+               max_dnl_code = i;
+            end
+         end
+
+         // log the results to a file if desired
+         //
+         if (log_to_file) begin
+            out_file = $fopen( "%C:r.dat" );
+            $fstrobe(out_file,"# Generated by Spectre from `%M'");
+            for (i=0; i < `NUM_OF_CODES; i = i + 1) begin
+               $fstrobe(out_file,"%d\t%f",i,dnl[i]);
+            end
+            $fclose(out_file);
+
+            $strobe("Max DNL is %f at code %d",max_dnl,max_dnl_code);
+         end
+      end
+
+      V(vclk) <+ transition(vclk_val,0,30u,30u);
+      V(vout) <+ transition(vout_val,0,30u,30u);
+
+      @ ( final_step ) begin
+         if (log_to_file) $fclose(out_file);
+      end
+   end
+endmodule
+
+
+
+
+
+
+

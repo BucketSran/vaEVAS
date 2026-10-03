@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "constants.h"
+`include "discipline.h"
+
+
+
+module Limiter(vdd,vss,vin,vmax,vmin,vout);
+inout vdd,vss,vin,vmax,vmin,vout;
+electrical vdd,vss,vin,vmax,vmin,vout,vout1;
+  analog begin
+
+    if (V(vin) > V(vdd)-V(vmax))
+      V(vout) <+ V(vdd)-V(vmax);
+    else if (V(vin) < V(vss)+V(vmin))
+      V(vout) <+ V(vss)+V(vmin);
+    else 
+      V(vout) <+ V(vin);
+
+  
+
+
+  end
+endmodule

@@ -1,0 +1,61 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:54:16 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+ 
+
+
+//--------------------
+// wheel
+//
+// - wheel
+//
+// posp,posn:	terminals [m,N]
+//
+// INSTANCE parameters
+//    height = height of the wheel [m]
+//
+// MODEL parameters
+//    {none}
+//
+// Model of bearing wheel on fixed surface
+//
+(* instrument_module *)
+module wheel (posp, posn);
+inout posp, posn;
+kinematic posp, posn;
+parameter real height = 0.5 from (0:inf);
+integer reported;
+integer flying;
+
+    analog begin
+	if (Pos(posp,posn) < height) begin
+	    Pos(posp,posn) <+ height + F(posp,posn) / 200K;
+	    flying = 0;
+	end else begin
+	    F(posp,posn) <+ 0;
+	    flying = 1;
+	end
+	if (reported) begin
+	    if (!flying) begin
+		reported = 0;
+		$strobe( "On ground again at t = %E s.\n", $abstime );
+	    end
+	end else begin
+	    if (flying) begin
+		$strobe( "Airborne at t = %E s.\n", $abstime );
+		reported = 1;
+	    end
+	end
+    end
+endmodule
+
+
+

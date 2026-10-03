@@ -1,0 +1,64 @@
+
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module DFFRSHQ(QP, VSS, VDD, CK, D, RN, SN);
+output QP;
+voltage QP;
+inout VSS;
+voltage VSS;
+inout VDD;
+voltage VDD;
+input CK;
+voltage CK;
+input D;
+voltage D;
+input RN;
+voltage RN;
+input SN;
+voltage SN;
+
+parameter real tcplh=100p from (0:inf); // Prop delay for CK->QP, L->H
+parameter real tcphl=100p from (0:inf); // Prop delay for CK->QP, H->L
+parameter real trphl=100p from (0:inf); // Prop delay for RN->QP
+parameter real tsplh=100p from (0:inf); // Prop delay for SN->QP
+parameter real tr=10p from (0:2*min(tcplh,tsplh)]; // Rising time
+parameter real tf=10p from (0:2*min(tcphl,trphl)]; // Falling time
+parameter real jitter=0 from [0:min(min(tcplh,tsplh)-tr/2,min(tcphl,trphl)-tf/2)];
+parameter string initval="VSS";         // Initial output status
+
+real vth,td0,td,vnow,vout;
+integer seed;
+analog begin
+    @(initial_step) begin
+        vth = (V(VDD)+V(VSS))*0.5;
+        case(initval)
+            "VDD" : vout = V(RN)<vth ? V(VSS) : V(VDD);
+            "VSS" : vout = V(SN)<vth ? V(VDD) : V(VSS);
+            "D"   : vout = V(RN)<vth ? V(VSS) : (V(SN)<vth ? V(VDD) : (V(D)>vth ? V(VDD) : V(VSS)));
+        endcase
+        vnow = vout;
+        seed = 9;
+    end
+
+    @(cross(V(CK)-vth,1)) begin
+        vnow = vout;
+        vout = V(RN)<vth ? V(VSS) : (V(SN)<vth ? V(VDD) : (V(D)>vth ? V(VDD) : V(VSS)));
+        if(vout!=vnow) begin
+            td0 = vout>vnow ? tcplh-tr*0.5 : tcphl-tf*0.5;
+            td = td0+jitter*$rdist_normal(seed,0,1);
+        end
+    end
+
+    @(cross(V(RN)-vth,-1) or cross(V(SN)-vth,-1)) begin
+        vnow = vout;
+        vout = V(RN)<vth ? V(VSS) : V(VDD);
+        if(vout!=vnow) begin
+            td0 = vout>vnow ? tsplh-tr*0.5 : trphl-tf*0.5;
+            td = td0+jitter*$rdist_normal(seed,0,1);
+        end
+    end
+    V(QP) <+ transition(vout, td, tr, tf);
+end
+endmodule

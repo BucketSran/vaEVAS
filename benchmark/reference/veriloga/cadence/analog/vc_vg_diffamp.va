@@ -1,0 +1,80 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:45:45 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// vc_vg_diffamp
+//
+// -  voltage-controlled variable-gain amplifier
+//
+// vin_p,vin_n:		differential input terminals [V,A]
+// vctrl_p,vctrl_n:	differential controlling voltage terminals [V,A]
+// vout:		[V,A]
+// 
+// INSTANCE parameters
+//    gain_const = amplifier gain when (vctrl_p - vctrl_n) = 1 volt []
+//    vout_high  = upper output limit [V]
+//    vout_low   = lower output limit [V]
+//    vin_offset = input offset [V]
+//
+// MODEL parameters
+//    {none}
+//
+// When there is no input offset voltage, the output is;
+//
+//    'vout' = 'gain_const' * ('vctrl_p - vctrl_n') * ('vin_p' - 'vin_n') +
+//             ('vout_high' + 'vout_low')/2.
+//
+// When there is an input offset voltage 'vin_offset' is subtracted from
+// ('vin_p' - 'vin_n').
+//
+
+module vc_vg_diffamp(vin_p, vin_n, vctrl_p, vctrl_n, vout);
+input vin_p, vin_n, vctrl_p, vctrl_n;
+output vout;
+electrical vin_p, vin_n, vctrl_p, vctrl_n, vout;
+parameter real gain_const= 1;
+parameter real vout_high = 10;
+parameter real vout_low = -10;
+parameter real vin_offset = 0;
+
+   real vout_symm;	// output voltage is with respect to this
+   real vout_val;
+
+   analog begin
+
+      @ ( initial_step ) begin
+	 if (vout_high <= vout_low) begin
+	    $display("Range specification error.  vout_high = (%E) less than vout_low = (%E).\n", vout_high, vout_low );
+	    $finish;
+	 end
+	 vout_symm = (vout_high + vout_low)/2;
+      end
+
+      vout_val = gain_const*V(vctrl_p, vctrl_n)*(V(vin_p, vin_n) - vin_offset)
+                  + vout_symm;
+      if (vout_val > vout_high) begin
+         vout_val = vout_high;
+      end else if (vout_val < vout_low) begin
+         vout_val = vout_low;
+      end
+      V(vout) <+ vout_val;
+   end
+endmodule
+      
+
+
+
+
+
+
+

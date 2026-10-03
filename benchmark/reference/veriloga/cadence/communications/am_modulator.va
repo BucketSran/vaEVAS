@@ -1,0 +1,103 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 2000/03/13 23:00:55 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+//
+// useful #def's
+`define PI      3.14159265358979323846264338327950288419716939937511
+
+
+
+//--------------------
+// am_modulator
+//
+// -  AM modulator
+//
+// vin:		input signal     [V,A]
+// vout:	modulated signal [V,A]
+//
+// INSTANCE parameters
+//    f_carrier  = carrier frequency [Hz]
+//    vin_max    = maximum input signal [V] 
+//    vin_min    = minimum input signal [V]
+//    mod_depth  = modulation depth []
+//    unmod_amp  = Unmodulation carrier amplitude [V]
+//
+// MODEL parameters
+//    {none}
+//
+// 'vin' is limited to the 'vin_max' to 'vin_min' range by clipped.
+// It is also scaled so that it lies within the +/-1 range.
+// This produces 'vin_adjusted'.
+// 'vout' is then given by the following formula;
+//
+// 'vout' = 'unmod_amp' * (1 + 'mod_depth' * 'vin_adjusted')
+//                           * cos (2 * `PI * 'f_carrier' * 'time')
+//
+
+module am_modulator(vin, vout);
+input vin;
+output vout;
+electrical vin, vout;
+parameter real f_carrier = 1M;
+parameter real vin_max = 1;
+parameter real vin_min = -1;
+parameter real mod_depth = 0.5 from [0:1];
+parameter real unmod_amp = 2 from (0:inf);
+
+   real vin_val, vin_adjusted;
+
+   real vin_offset;
+   real vin_scale;
+   real w_carrier;
+
+
+   analog begin
+
+      @ ( initial_step ) begin
+         vin_offset = (vin_max + vin_min)/2;
+         vin_scale  = (vin_max - vin_min)/2;
+	 w_carrier  = (2*`PI*f_carrier);
+
+	 if (vin_max <= vin_min) begin
+	    $display("Range specification error.  vin_max = (%E) less than vin_min = (%E).\n", vin_max, vin_min );
+	    $finish;
+	 end
+      end
+
+      //
+      // clip out of range inputs
+      //
+      vin_val = V(vin)  > vin_max ? vin_max : V(vin);
+      vin_val = vin_val < vin_min ? vin_min : vin_val;
+
+      //
+      // adjust the input for modulation
+      //
+      vin_adjusted = (vin_val - vin_offset) / vin_scale;
+
+      //
+      // generate the modulated output
+      //
+      V(vout) <+ unmod_amp * ( 1 + mod_depth * vin_adjusted )
+                                  * cos (w_carrier * $abstime);
+
+      //
+      // to ensure at least 25 points in an output cycle
+      //
+      $bound_step (0.04 / f_carrier);
+   end
+endmodule
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+// VerilogA for NEX_ADC, _tool_iSAR, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module _tool_iSAR(VDAC,DCMP,RST,CLK);
+
+input RST, CLK, DCMP;
+output VDAC;
+electrical RST, CLK, VDAC, DCMP;
+
+parameter vth = 0.5;
+parameter tr = 100p;
+parameter range = 100m;
+parameter lsb = 10u;
+parameter radix = 2;
+
+real vdac;
+real vdelta;
+
+analog begin
+
+	@(cross(V(RST)-vth,+1)) begin
+		vdac = 0;
+		vdelta = range;
+	end
+
+	@(cross(V(CLK)-vth,+1)) begin
+		if(vdelta > lsb) begin
+			if(V(DCMP) > vth)
+				vdac = vdac - vdelta;
+			else
+				vdac = vdac + vdelta;
+			
+			vdelta = vdelta / radix;
+		end
+	end
+
+	V(VDAC) <+ transition(vdac, 0, tr, tr);
+
+end
+
+
+endmodule

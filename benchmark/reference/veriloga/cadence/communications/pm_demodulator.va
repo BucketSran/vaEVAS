@@ -1,0 +1,81 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 1997/08/28 05:56:21 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+//--------------------
+// pm_demodulator
+//
+// -  PM demodulator
+//
+// vin:		pm rf input signal [V,A]
+// vout:	demodulated signal [V,A]
+//
+// INSTANCE parameters
+//    rf_gain      = gain of RF (radio frequency) stage []
+//    pll_out_bw   = bandwidth of pll output filter [Hz]
+//    pll_vco_gain = gain of the pll's vco []
+//    pll_vco_cf   = the center frequency of the pll's  [Hz]
+//    af_wn        = location of both AF (audio frequency) filter poles [Hz]
+//    af_gain      = gain of the audio amplifier []
+//    af_lev_shift = added to AF signal after amplification and filtering [V]
+//
+// MODEL parameters
+//    {none}
+//
+// Demodulates the signal in 'vin' and outputs it as 'vout'
+//
+// Consists of 4 stages in series;
+//    1: RF amp stage amplifiers 'vin'.
+//    2: Detector stage is a phase locked loop (PLL) - the phase detector
+//       output is tapped.
+//    3: AF filters stage is a low pass filter that extracts the AF signal
+//       - has gain of one, and two poles at 'af_wn' [rad/s]
+//    4: AF amp stage amplifies by af_gain and adds 'af_lev_shift'   
+//
+
+`define CHOP 0
+`define MULT 1
+
+module pm_demodulator(vin, vout);
+electrical  vin, vout;
+parameter real rf_gain = 1;
+parameter real pll_out_bw = 50K;
+parameter real pll_vco_gain = 5K;
+parameter real pll_vco_cf = 1M;
+parameter real af_wn   = 1K;
+parameter real af_gain = 1;
+parameter real af_lev_shift = 0;
+
+
+   electrical demod_gnd, vrf, v_lo, vph_det,vdetect, vaf;
+
+   svcvs #(.gain(1),.poles({-af_wn,0,-af_wn,0}) )
+                    af_filter(vaf,demod_gnd,vph_det,demod_gnd);
+
+   pll   #(.vout_filt_bandwidth(pll_out_bw),.vco_gain(pll_vco_gain), 
+           .vco_center_freq(pll_vco_cf),.phase_detect_type(`MULT))
+                    Pll(vrf,v_lo,vph_det,vdetect);
+
+   analog begin
+      V(demod_gnd) <+ 0.0;
+
+      V(vrf) <+ rf_gain * V(vin);
+
+      V(vout) <+ af_gain*V(vaf) + af_lev_shift;
+   end
+endmodule
+
+
+
+
+
+

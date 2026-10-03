@@ -1,0 +1,24 @@
+// VerilogA for ZDYF_PIPE, ideal_PIPE_10B_TI_ALIGN, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ideal_PIPE_10B_TI_ALIGN(input electrical DIN1, input electrical DIN2, input electrical CLK_ALIGN, output electrical DOUT);
+parameter real gnd=0, vdd=0.9;
+parameter real vth = 0.45;
+real out;
+analog begin
+	@(initial_step) begin
+		out = V(DIN1);
+	end
+	@ (cross(V(CLK_ALIGN) - vth, +1)) begin
+		out = V(DIN1);
+	end
+	@ (cross(V(CLK_ALIGN) - vth, -1)) begin
+		out = V(DIN2);
+	end
+	V(DOUT) <+ out;
+end
+
+
+endmodule

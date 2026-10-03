@@ -1,0 +1,32 @@
+// VerilogA forD2A_4b, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dac_ideal_4b(DIN,DOUT);
+input [3:0] DIN; 
+electrical [3:0] DIN;
+output DOUT;
+electrical DOUT;
+parameter real Vlo=0, Vhi=0.9;
+parameter real Vth = 0.45;
+parameter real tt = 100p;
+parameter real scaling = 8;
+real dacreg[0:3];
+genvar i;
+analog begin
+
+  @(initial_step) begin
+	dacreg[3]  = 8;
+	dacreg[2]  = 4;
+	dacreg[1]  = 2;
+	dacreg[0]  = 1;
+  end
+V(DOUT)<+ (V(DIN[3])>Vth)?dacreg[3]/scaling:0;
+V(DOUT)<+ (V(DIN[2])>Vth)?dacreg[2]/scaling:0;
+V(DOUT)<+ (V(DIN[1])>Vth)?dacreg[1]/scaling:0;
+V(DOUT)<+ (V(DIN[0])>Vth)?dacreg[0]/scaling:0;
+V(DOUT)<+ -1;
+end
+
+endmodule

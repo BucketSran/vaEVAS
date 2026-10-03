@@ -1,0 +1,70 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:48:26 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+
+//--------------------
+// dc_motor
+//
+// -  DC motor
+//
+// vp:		positive terminal	[V,A]
+// vn:		negative terminal	[V,A]
+//
+// pos_shaft:	motor shaft [rad,Nm]
+//
+// INSTANCE parameters
+//    {none}
+//
+// MODEL parameters
+//    km = motor constant [Vs/rad]
+//    kf = flux constant  [Nm/A]
+//    j  = inertia factor [Nms^2/rad]
+//    d  = drag (friction)  [Nms/rad]
+//    rm = motor resistance [Ohms]
+//    lm = motor inductance [H]
+//
+// A model of a DC motor driving a shaft
+//
+
+module dc_motor(vp, vn, wshaft, pos_shaft);
+inout vp, vn;
+inout wshaft;
+inout pos_shaft;
+electrical vp, vn;
+rotational_omega wshaft;
+rotational pos_shaft;
+parameter real km = 4.5;
+parameter real kf = 6.2;
+parameter real j = 0.004;
+parameter real d = 0.1;
+parameter real rm = 5.0;
+parameter real lm = 0.02;
+
+   analog begin
+      V(vp, vn) <+ km*Omega(wshaft) + rm*I(vp, vn) + ddt(lm*I(vp, vn));
+      Tau(wshaft) <+ kf*I(vp, vn) - d*Omega(wshaft) - ddt(j*Omega(wshaft));
+`ifdef __VAMS_ENABLE__
+      Tau(pos_shaft) <+ Tau(<wshaft>);
+`else
+      Tau(pos_shaft) <+ Tau(wshaft,wshaft);
+`endif
+
+      Theta(pos_shaft) <+ idt(Omega(wshaft),0);	
+   end
+endmodule
+
+   
+
+
+
+
+

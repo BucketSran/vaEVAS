@@ -1,0 +1,45 @@
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:46:21 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+
+//--------------------
+// cccs_hdl
+//
+// -  current controlled current source
+//
+// iout_p,iout_n:	controlled current terminals  [V,A]
+// iin_p,iin_n:		controlling current terminals [V,A]
+//
+// INSTANCE parameters
+//    gain = current gain []
+//
+// MODEL parameters
+//    {none}
+//
+
+module cccs_hdl(iout_p, iout_n, iin_p, iin_n);
+input iin_p, iin_n;
+output iout_p, iout_n;
+electrical iout_p, iout_n, iin_p, iin_n;
+parameter real gain = 0;
+
+   analog
+      I(iout_p, iout_n) <+ gain*I(iin_p, iin_n);
+
+endmodule
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+// VerilogA for HV_7BITDAC, DAC7B_TB_VA, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module DAC7B_TB_VA(CLKS,DIN);
+input CLKS;
+output [0:6] DIN;
+electrical CLKS;
+electrical [0:6] DIN;
+
+parameter real Vlo=0;
+parameter real Vhi=5;
+parameter real Vth = 0.75;
+parameter real tt = 200p from [1p:inf); //digital r/f time
+
+integer dacreg[0:6],counter;
+genvar i;
+analog begin
+
+ @(initial_step) begin
+        for(i = 0;i < 7 ; i=i+1)
+	begin
+	 dacreg[i] = 0;
+	end
+     counter = 0;
+    end
+ 
+    @(cross(V(CLKS)-Vth,1)) begin
+	 counter = counter + 1;
+	  if(counter>(pow(2,8)-1))
+       begin
+         counter = 0;
+       end
+     for(i = 0;i < 7 ; i=i+1)
+	begin
+	 dacreg[i] = 1 - counter>>(7-i)&1;
+    end
+      
+     end
+   
+for(i = 0;i < 7 ; i=i+1)
+	begin
+	  V(DIN[i])<+ transition(dacreg[i]?Vhi:Vlo,0,tt);
+	end
+end
+endmodule

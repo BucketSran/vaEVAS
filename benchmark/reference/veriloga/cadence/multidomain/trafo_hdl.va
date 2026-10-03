@@ -1,0 +1,69 @@
+
+`include "discipline.h"
+`include "constants.h"
+
+// $Date: 1997/08/28 05:52:03 $
+// $Revision: 1.1 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+ 
+
+//--------------------
+// tranfo_hdl
+//
+// -  two phase transformer
+//
+// vp_1, vn_1:	[V,A]
+// vp_2, vn_2:	[V,A]
+//
+// INSTANCE parameters
+//    turns1     = number of turns in the first winding []
+//    turns1     = number of turns in the second winding []
+//    rwinding1  = resistance per turn of first winding [Ohms]
+//    rwinding2  = resistance per turn of second winding [Ohms]
+//    len        = length of the transformer core [m]
+//    area       = area of the transformer core [m^2]
+//    ms         = saturation magnetization
+//    gamma      = shaping coefficient
+//    k          = bulk coupling coefficient 
+//    alpha      = interdomain coupling coef.
+//    c          = coef. for reversable magnetization
+//
+// MODEL parameters
+//    {none}
+//
+// This is structural transformer model implemented using
+// Jiles-Atherton core and winding primitives
+//
+
+module trafo_hdl(vp_1, vn_1, vp_2, vn_2); 
+electrical vp_1, vn_1, vp_2, vn_2;
+parameter real turns1 = 1 from (0:inf);
+parameter real turns2 = 1 from (0:inf);
+parameter real rwinding1 = 0 from [0:inf);
+parameter real rwinding2 = 0 from [0:inf);
+parameter real len = 0.1 from (0:inf);
+parameter real area = 0.0001 from (0:inf);
+parameter real ms=1.6M from (0:inf);
+parameter real gamma=1100 from (0:inf);
+parameter real k=2000 from (0:inf);
+parameter real alpha=1.6m from (0:inf);
+parameter real c=0.2 from [0:1];
+
+magnetic m1, m2, mgnd;
+
+   mag_core #(.len(len), .area(area), .ms(ms), .gamma(gamma), .k(k), .alpha(alpha), .c(c) ) core(m1, m2);
+   mag_winding #(.num_turns(turns1), .rturn(rwinding1) ) winding1(vp_1,vn_1,mgnd,m1);
+   mag_winding #(.num_turns(turns2), .rturn(rwinding2) ) winding2(vp_2,vn_2,m2,mgnd);
+
+   analog begin
+      MMF(mgnd) <+ 0.0;
+   end
+endmodule
+
+
+
+

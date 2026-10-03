@@ -1,0 +1,80 @@
+`include "discipline.h"
+`include"constants.h"
+
+
+// $Date: 1997/09/05 22:44:00 $
+// $Revision: 1.2 $
+//
+//
+// Based on the OVI Verilog-A Language Reference Manual, version 1.0 1996
+//
+//
+
+
+//--------------------
+// dig_pll
+//
+// -  Digital phase locked loop
+//
+// vin:		[V,A]
+// vout:	[V,A]
+//
+// INSTANCE parameters
+//    pump_iamp     = amplitude of the charge pump's output current [A]
+//    vco_cen_freq  = center frequency of the vco [Hz]
+//    vco_gain      = the gain of the vco []
+//    lpf_zero_freq = zero frequency of LPF (low pass filter) [Hz]
+//    lpf_pole_freq = pole frequency of LPF [Hz]
+//    lpf_r_nom     = nomial resistance of RC network implementing LPF
+//
+// MODEL parameters
+//    {none}
+//
+// The model comprises a number of submodels; digital phase detector, a
+// change pump, a low pass filter (LPF) and a digital VCO.
+//
+// They are arranged;
+//
+//            ___________        ________                   _______
+//           |           |      |        |  Iq     Vin_VCO |       |
+// Vin ------|   Phase   |------| Charge |--->--|----------|       |
+//           |           |      |        |      V          |  VCO  |
+//       ----|  Detector |------|  Pump  |   ___|___       |       |
+//       |   |___________|      |________|  |       |      |_______|
+//       |                           |      |  RC   |          |
+//       |                           |      |Network|          |
+//       |                           |      | (LPF) |          |----- Vout
+//       | V_local_osc               |      |_______|          |
+//       |                           |          |              |
+//       |                           |-----------              |
+//       |                           |                         |
+//       |                         __|__                       |
+//       |                     gnd /////                       |
+//       |                                                     |
+//       |-----------------------------------------------------|
+//
+
+module dig_pll (vin,vout,gnd);
+electrical vin,vout,gnd;
+parameter real pump_iamp = 1m from (0:inf);
+parameter real vco_cen_freq = 1M from (0:inf);
+parameter real vco_gain = 1M from (0:inf);
+parameter real lpf_pole_freq = 3M from (0:inf);
+parameter real lpf_zero_freq = 0.5M from (0:inf);
+parameter real lpf_r_nom = 10K from (0:inf);
+
+   electrical inc, dec;
+   electrical vco_in;
+
+   freq_ph_detector    PhaseDet(vin,vout,inc,dec);
+
+   charge_pump         #(.iamp(pump_iamp)) QPump (inc,dec,vco_in,gnd)  ;
+
+   dig_vco             #(.center_freq(vco_cen_freq),.vco_gain(vco_gain) )
+                                VCO (vco_in,vout);
+
+   dig_pll_lpf         #(.pole_freq(lpf_pole_freq),.zero_freq(lpf_zero_freq),
+                             .r_nom(lpf_r_nom)) 
+                                LPF (vco_in,gnd);
+endmodule
+
