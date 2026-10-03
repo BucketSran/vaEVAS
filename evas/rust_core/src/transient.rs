@@ -1557,6 +1557,7 @@ mod tests {
                     line: 3,
                     column: 1,
                     instance: "dut".into(),
+                    expansion: Vec::new(),
                 },
             });
             program.contributions[0].rhs = Expression::Multiply {
@@ -1631,6 +1632,7 @@ mod tests {
                     line: 3 + index,
                     column: 1,
                     instance: "dut".into(),
+                    expansion: Vec::new(),
                 },
             });
         }

@@ -885,6 +885,7 @@ impl Operators {
                 || origin.source.is_empty()
                 || origin.line == 0
                 || origin.column == 0
+                || !origin.valid_expansion()
                 || !program
                     .contributions
                     .iter()
@@ -894,6 +895,7 @@ impl Operators {
                     origin.source.clone(),
                     origin.line,
                     origin.column,
+                    origin.expansion.clone(),
                 ))
             {
                 return Err(Error::new(

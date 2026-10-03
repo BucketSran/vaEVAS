@@ -125,7 +125,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。候选尚未合并。
 
 本分支候选同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值和累加贡献。
-总迭代与展开语句各限 4096；循环内历史调用、运行时循环和数组索引仍拒绝。
+总迭代与展开语句各限 4096；运行时循环仍拒绝；每个展开的历史调用分别占用一个算子槽。
+本候选也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
+数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
 范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
 
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见

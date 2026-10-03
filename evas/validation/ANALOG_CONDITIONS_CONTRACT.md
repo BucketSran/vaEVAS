@@ -194,6 +194,30 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 [static_loop](cases/static_loop/dut.va)和 [test_static_loops.py](../tests/test_static_loops.py)
 验证手算求和、非收缩反馈、实例隔离、嵌套/空循环、函数组合及预算拒绝。
-循环内历史调用暂不支持：重复展开同一源码调用点需要先扩展历史身份契约。
-这是当前实现限制；LRM 允许合规的 genvar analog 循环中使用历史算子。
+每个展开的历史调用在 lowering 时生成独立 OperatorRef 槽，并携带 `Origin.expansion`
+中的 genvar 名称/值路径。实例、原源码位置和展开路径组成调用点身份；重复身份
+仍拒绝，接收变量不参与历史所有权。IR17 的普通调用使用空路径。LRM 允许合规的 genvar
+analog 循环中使用历史算子。[test_loop_histories.py](../tests/test_loop_histories.py)
+检查两个不同 IC/增益的积分、嵌套的四个积分及数组接收者；改变输出网格仍保持解析答案。
 通用数组、运行时循环和层次不由这一切片获得支持。候选尚未合并。
+
+
+<a id="variable-arrays"></a>
+
+## 变量数组的分支候选
+
+语言依据为 [LRM 2.4 §3.2](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)：
+real/integer 变量可以有常量整数范围，范围可以递增、递减并包含负下标。
+本候选先绑定实例参数，再展开 genvar 循环，最后把一维数组元素改名为独立标量。
+总数组元素限 4096；声明范围和下标必须为有符号 32 位实例常量整数。
+动态索引、多维、参数数组、整数组赋值和函数数组参数仍未开放。
+
+`a[0]=u; a[1]=2*a[0]; y=a[0]+a[1]-2y` 仍求 `3y=3u`，不是顺序写电压。
+事件状态 `a[0]` 与 `a[1]` 分别进入 State 表；事件中先执行 `a[0]=a[0]+1`，
+后执行 `a[1]=a[0]+a[1]`，四次事件后从 `[0,1]` 得到 `[4,11]`。
+每个状态需按既有契约显式初始化；没有赋值的局部元素不能借用其他元素的值。
+
+[variable_array](cases/variable_array/dut.va) 和
+[test_variable_arrays.py](../tests/test_variable_arrays.py) 检查手算求和、参数范围、
+负/降序索引、实例隔离、事件顺序、越界和预算拒绝。数组在进入 Rust 前消失，
+不增加 IR 或运行时数组执行器；历史仍属于算子槽。本候选未合并，无新 Spectre 运行。

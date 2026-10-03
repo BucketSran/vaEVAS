@@ -54,13 +54,12 @@ class StaticLoops(unittest.TestCase):
             with self.subTest(declarations=declarations), self.assertRaises(CompileError):
                 compiled('V(y,r)<+1;', declarations)
 
-    def test_nonterminating_dynamic_shadowed_and_history_loops_are_explicit(self):
+    def test_nonterminating_dynamic_and_shadowed_loops_are_explicit(self):
         for body in (
             'for(i=0;i<2;i=i) V(y,r)<+1;',
             'for(i=0;i<2;i=i-1) V(y,r)<+1;',
             'for(i=0;i<V(u,r);i=i+1) V(y,r)<+1;',
             'for(i=0;i<2;i=i+1) for(i=0;i<2;i=i+1) V(y,r)<+1;',
-            'for(i=0;i<2;i=i+1) V(y,r)<+idt(V(u,r),0);',
             'for(i=0;i<2;i=i+1) i=1; V(y,r)<+1;',
             'for(i=0;i<2;i=i+.5) V(y,r)<+1;',
             'for(i=0;i<100000;i=i+1) V(y,r)<+1;',

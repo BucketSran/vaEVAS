@@ -185,9 +185,20 @@ pub struct Origin {
     pub line: usize,
     pub column: usize,
     pub instance: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub expansion: Vec<(String, i32)>,
 }
 
 impl Origin {
+    pub fn valid_expansion(&self) -> bool {
+        self.expansion.len() <= 64
+            && self.expansion.iter().all(|(name, _)| {
+                let mut bytes = name.bytes();
+                bytes.next().is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
+                    && bytes.all(|c| c == b'_' || c.is_ascii_alphanumeric())
+            })
+    }
+
     pub fn label(&self) -> String {
         format!(
             "{}:{}:{} ({})",
@@ -366,10 +377,10 @@ pub enum EventTrigger {
         enabled: bool,
     },
     HeldTimer {
-        start: Expression,
-        period: Expression,
+        start: Box<Expression>,
+        period: Box<Expression>,
         time_tolerance: f64,
-        enabled: Expression,
+        enabled: Box<Expression>,
     },
 }
 

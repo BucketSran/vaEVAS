@@ -27,7 +27,7 @@ _TOKEN = re.compile(
     r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
     r"|(?P<macro>`M_PI)"
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[<>(){}+*/;,=@\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
@@ -65,10 +65,11 @@ def _tokens(source: str, name: str) -> list[Token]:
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
-                "idt", "laplace_nd", "idtmod", "ddt", "call"]
+                "idt", "laplace_nd", "idtmod", "ddt", "call", "index"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
+    expansion: tuple[tuple[str, int], ...] = ()
 
 
 def contains_operator(expr: Expr) -> bool:
@@ -86,6 +87,7 @@ class Assignment:
     name: str
     rhs: Expr
     token: Token
+    index: Expr | None = None
 
 
 @dataclass(frozen=True)
@@ -153,6 +155,7 @@ class Model:
     events: list[Event]
     functions: dict[str, Function] = field(default_factory=dict)
     genvars: frozenset[str] = frozenset()
+    arrays: dict[str, tuple[Expr, Expr]] = field(default_factory=dict)
 
 
 class Parser:
@@ -269,6 +272,11 @@ class Parser:
                         arguments.append(self.expression())
                 self.take(")")
                 left = Expr("call", token.text, tuple(arguments), token)
+            elif self.token.text == "[":
+                self.take("[")
+                index = self.expression()
+                self.take("]")
+                left = Expr("index", token.text, (index,), token)
             else:
                 left = Expr("parameter", token.text, (), token)
         else:
@@ -346,10 +354,15 @@ class Parser:
             self.take(";")
             return (ContributionStatement(branch, rhs, token),)
         name = self.name()
+        index = None
+        if self.token.text == "[":
+            self.take("[")
+            index = self.expression()
+            self.take("]")
         self.take("=")
         rhs = self.expression()
         self.take(";")
-        return (Assignment(name, rhs, token),)
+        return (Assignment(name, rhs, token, index),)
 
     def function(self) -> Function:
         token = self.take("analog")
@@ -387,7 +400,7 @@ class Parser:
         ports = self.names()
         self.take(")")
         self.take(";")
-        directions, nodes, parameters, variables, functions, genvars = {}, set(), {}, {}, {}, set()
+        directions, nodes, parameters, variables, functions, genvars, arrays = {}, set(), {}, {}, {}, set(), {}
         while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real", "genvar")
                or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
             if self.token.text == "analog":
@@ -405,7 +418,27 @@ class Parser:
                 self.take("=")
                 parameters[param] = self.expression()
             else:
-                names = self.names()
+                if kind in ("integer", "real"):
+                    names = []
+                    while True:
+                        variable = self.name()
+                        if variable in names:
+                            self.fail("duplicate variable in declaration")
+                        names.append(variable)
+                        if self.token.text == "[":
+                            self.take("[")
+                            left = self.expression()
+                            self.take(":")
+                            right = self.expression()
+                            self.take("]")
+                            if self.token.text == "[":
+                                self.fail("multidimensional variable arrays are not yet supported")
+                            arrays[variable] = (left, right)
+                        if self.token.text != ",":
+                            break
+                        self.take(",")
+                else:
+                    names = self.names()
                 if set(names) & genvars:
                     self.fail("duplicate genvar name")
                 if kind in ("integer", "real"):
@@ -482,4 +515,4 @@ class Parser:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars))
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays)

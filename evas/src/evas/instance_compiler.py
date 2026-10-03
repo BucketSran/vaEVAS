@@ -12,6 +12,7 @@ from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contri
 from .lowering import lower, scale
 from .limits import MAX_PARAMETER_DEPTH, check_ir
 from .elaboration import unroll_loops
+from .array_elaboration import scalarize_arrays
 from .syntax import (CompileError, Model, contains_operator,
                      Conditional as SyntaxConditional, ContributionStatement)
 
@@ -69,10 +70,6 @@ class InstanceCompiler:
         self.compilation = compilation
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
-        self.local_variables = set(model.variables) if not model.initial and not model.events else set()
-        self.preserve_analog_structure = compilation.preserve_structure or bool(self.local_variables)
-        self.state_names = tuple(name for name in model.variables if name not in self.local_variables)
-        self.state_ids = {name: len(compilation.states) + index for index, name in enumerate(self.state_names)}
         self.initials = {}
         self.allowed_condition_nodes = {0} | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
@@ -81,6 +78,11 @@ class InstanceCompiler:
         for expr in self.model.parameters.values():
             self.validate_default(expr)
         self.bind_parameters()
+        self.model = scalarize_arrays(self.model, self.parameter)
+        self.local_variables = set(self.model.variables) if not self.model.initial and not self.model.events else set()
+        self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
+        self.state_names = tuple(name for name in self.model.variables if name not in self.local_variables)
+        self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
         self.initialize_states()
         for event in self.model.events:
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
@@ -203,7 +205,7 @@ class InstanceCompiler:
             settings = [lower(arg, self.parameter, {}, self.model.source) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
-        origin = Origin(self.model.source, expr.token.line, expr.token.column, self.instance.name)
+        origin = Origin(self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
         index = len(self.compilation.operators)
         if expr.op == "idt":
             reset = lower(expr.args[2], resolve, {}, self.model.source, preserve_structure=True) if len(expr.args) == 3 else None
@@ -375,6 +377,6 @@ class InstanceCompiler:
                 raise CompileError(f"{self.model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
             sign = 1.0 if (local_p, local_n) == pair else -1.0
-            origin = Origin(self.model.source, branch.token.line, branch.token.column, self.instance.name)
+            origin = Origin(self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
             identity = BranchIdentity(self.instance.name, *pair)
             self.compilation.contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))

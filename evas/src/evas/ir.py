@@ -1,4 +1,4 @@
-"""Version 16: combined voltage/event IR with selects, reset histories and operators.
+"""Version 17: voltage/event IR with held timers and expanded call-site identities.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -20,6 +20,7 @@ class Origin:
     line: int
     column: int
     instance: str
+    expansion: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)

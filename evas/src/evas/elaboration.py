@@ -42,7 +42,7 @@ def inline_functions(model: Model) -> Model:
             if stack and expr.value not in model.parameters:
                 fail('function may only read its locals, arguments and module parameters', expr.token)
             return expr
-        if stack and (expr.op == 'voltage' or expr.op in OPERATOR_NAMES):
+        if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES):
             fail('pure analog functions cannot use voltage access or history operators', expr.token)
         args = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
         if expr.op != 'call':
@@ -65,6 +65,8 @@ def inline_functions(model: Model) -> Model:
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
         for statement in function.body:
+            if statement.index is not None:
+                fail('pure analog function assignments require scalar targets', statement.token)
             if statement.name not in names:
                 fail('function assignments must target its local variables or return value', statement.token)
             local[statement.name] = expand(statement.rhs, local, names, (*stack, name), depth+1)
@@ -84,7 +86,10 @@ def inline_functions(model: Model) -> Model:
                 result.append(replace(statement, left=expand(statement.left), right=expand(statement.right),
                                       then_body=body(statement.then_body), else_body=body(statement.else_body)))
             else:
-                result.append(replace(statement, rhs=expand(statement.rhs)))
+                updates = {'rhs': expand(statement.rhs)}
+                if getattr(statement, 'index', None) is not None:
+                    updates['index'] = expand(statement.index)
+                result.append(replace(statement, **updates))
         return tuple(result)
 
     # Validate even unused declarations with symbolic real arguments, so bad
@@ -95,6 +100,7 @@ def inline_functions(model: Model) -> Model:
         expand(dummy)
     return replace(model,
                    parameters={n: expand(e) for n,e in model.parameters.items()},
+                   arrays={n: tuple(expand(e) for e in bounds) for n,bounds in model.arrays.items()},
                    analog=list(body(model.analog)), initial=list(body(model.initial)),
                    events=[replace(event, body=body(event.body), triggers=tuple(
                        replace(leaf, arguments=tuple(expand(arg) if arg is not None else None
@@ -106,7 +112,7 @@ def unroll_loops(model: Model, parameter):
     """Instance-constant genvar loops, without adding a runtime execution path."""
     from .ir import Affine
     from .lowering import lower
-    from .syntax import Assignment, contains_operator
+    from .syntax import Assignment, ContributionStatement
 
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
@@ -126,7 +132,8 @@ def unroll_loops(model: Model, parameter):
     def substitute(expr, indices):
         if expr.op == 'parameter' and expr.value in indices:
             return Expr('number', float(indices[expr.value]), (), expr.token)
-        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args))
+        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args),
+                       expansion=tuple(indices.items()))
 
     def constant(expr, indices):
         value = lower(substitute(expr,indices), parameter, {}, model.source)
@@ -166,12 +173,15 @@ def unroll_loops(model: Model, parameter):
             else:
                 if isinstance(statement, Assignment) and statement.name in model.genvars:
                     fail('genvar can only be assigned in its for control',statement.token)
-                if indices and contains_operator(statement.rhs):
-                    fail('history call sites in static loops require expanded call-site identity',statement.token)
                 count += 1
                 if count > budget:
                     fail('elaborated statement budget (4096) exceeded',statement.token)
-                result.append(replace(statement,rhs=substitute(statement.rhs,indices)))
+                updates = {'rhs': substitute(statement.rhs, indices)}
+                if isinstance(statement, Assignment) and statement.index is not None:
+                    updates['index'] = substitute(statement.index, indices)
+                if isinstance(statement, ContributionStatement):
+                    updates['branch'] = substitute(statement.branch, indices)
+                result.append(replace(statement, **updates))
         return tuple(result)
 
     return body(model.analog,{})

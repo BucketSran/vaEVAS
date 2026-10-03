@@ -1,6 +1,6 @@
 """Bound recursive compiler work and the size of the expanded wire tree.
 
-IR v16 is a tree on the wire even when Python objects share subexpressions.
+IR is a tree on the wire even when Python objects share subexpressions.
 Measure that expansion with memoized, iterative traversal before allocating it.
 These are implementation budgets, not Verilog-A language restrictions.
 """
