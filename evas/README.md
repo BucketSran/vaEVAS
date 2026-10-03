@@ -31,18 +31,18 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 
 ```sh
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
-PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json \
   --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
 结果以 JSON 输出，包含节点顺序和各样本电压。
-[static_sum.json](examples/static_sum.json) 的三个样本中，`out` 约为
+[第 1 课](examples/01-static-gain/README.md)的三个样本中，`out` 约为
 `0.225 V`、`1.825 V`、`-0.325 V`；`ref` 的变化也参与支路电压方程。
 
 只查看编译后的 IR，或运行带积分历史的瞬态示例：
 
 ```sh
-PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
+PYTHONPATH=evas/src python3 -m evas compile evas/examples/01-static-gain/sim.json
 PYTHONPATH=evas/src python3 -m evas transient validation/smoke/idt.json \
   --kernel evas/rust_core/target/debug/evas-kernel
 ```
@@ -53,8 +53,8 @@ PYTHONPATH=evas/src python3 -m evas transient validation/smoke/idt.json \
 manifest 声明源文件、实例参数和端口到全局网络的映射。
 静态入口提供驱动节点与样本；瞬态入口提供 PWL 源、观察时间和停止时间。
 `solve` 不推进历史；含状态、事件或历史算子的模型使用 `transient`。
-[examples/](examples/) 仅保留 [static_sum.json](examples/static_sum.json)，
-用来说明 manifest 的数据结构；覆盖各条仿真能力路径的最小冒烟集
+[examples/](examples/) 按三课组织（静态求解 → 瞬态与历史 → 事件），
+每课自带电路图、va/json 字段对照与期望输出；覆盖各条仿真能力路径的最小冒烟集
 （静态非线性、连续积分、延迟历史、定时/过阈事件、有限边沿）见
 [validation/smoke/](validation/smoke/)：
 

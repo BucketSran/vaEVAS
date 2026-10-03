@@ -32,12 +32,12 @@ EVAS 将 Verilog-A 中的电压贡献转为方程，由 Rust 内核联立求解�
 git clone https://github.com/BucketSran/vaEVAS.git
 cd vaEVAS
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
-PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
+PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json \
   --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
-[示例 manifest](evas/examples/static_sum.json)定义三组输入，所引用的
-[Verilog-A 模型](evas/examples/static_sum.va)将三条电压贡献相加。
+[入门示例](evas/examples/README.md)按三课组织：静态求解、瞬态积分与
+阈值事件计数；[第 1 课](evas/examples/01-static-gain/README.md)的三输入求和将三条电压贡献相加。
 命令输出 JSON，`solutions` 中的电压按 `nodes` 顺序排列；三组输入的 `out` 电压约为
 `0.225 V`、`1.825 V` 和 `-0.325 V`。
 

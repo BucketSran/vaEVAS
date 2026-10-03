@@ -17,4 +17,4 @@
 需要期望值或阈值时移入 `cases/`，不在本目录扩充。
 
 演示 manifest 数据结构的单一示例保留在
-[examples/static_sum.json](../../examples/static_sum.json)。
+[examples/](../../examples/README.md)（三课入门教学示例）。

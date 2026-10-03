@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module integrated_ramp(vin, vout, vref);
+    input vin;
+    output vout;
+    inout vref;
+    electrical vin, vout, vref;
+    analog begin
+        // Input is normalized by 1 us. Explicit output initial value: 0.25 V.
+        V(vout, vref) <+ idt(V(vin, vref)/1e-6, 0.25);
+    end
+endmodule
