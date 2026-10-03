@@ -10,6 +10,7 @@
 | 本页 | 阅读入口与分层说明 |
 | [UPDATE.md](UPDATE.md) | 按版本/检查点的更新摘要 |
 | [PROCESS.md](PROCESS.md) | TDD 开发流程与硬性检查规则 |
+| [DECISIONS.md](DECISIONS.md) | 电压域定位、架构取舍与兼容性决策 |
 | [CAPABILITIES.md](CAPABILITIES.md) | 能力与缺口总表（一句话矩阵 + 检查点身份） |
 | [TRACEABILITY.md](TRACEABILITY.md) | 追溯矩阵（**自动生成**，勿手编） |
 | [math/](math/README.md) | 数学原理章节：求解、事件、算子、连续动态 |

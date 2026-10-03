@@ -1,6 +1,10 @@
 //! Outward binary64 bounds for event scheduling. No change to the static solver.
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
+#[cfg(test)]
+#[path = "interval_properties.rs"]
+mod properties;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct Interval {
     pub lo: f64,

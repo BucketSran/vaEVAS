@@ -1,0 +1,58 @@
+name: Numerical assurance
+
+on:
+  pull_request:
+    paths: ['evas/**', '.github/workflows/numerical-assurance.yml']
+  push:
+    branches: [main]
+    paths: ['evas/**', '.github/workflows/numerical-assurance.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  properties-and-ngspice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y ngspice
+      - run: rustup update stable --no-self-update
+      - run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+      - run: cargo +stable test --locked --manifest-path evas/rust_core/Cargo.toml properties
+      - run: python3 -B -m unittest discover -s evas/validation/differential -v
+      - run: >-
+          python3 -B evas/validation/differential/ngspice_compare.py
+          --kernel evas/rust_core/target/debug/evas-kernel
+          --out runs/ngspice-ci
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: ngspice-comparison
+          path: runs/ngspice-ci
+          if-no-files-found: ignore
+          retention-days: 14
+  fuzz-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: rustup toolchain install nightly --profile minimal
+      - run: cargo install cargo-fuzz --version 0.13.2 --locked
+      - working-directory: evas/rust_core
+        run: |
+          mkdir -p fuzz/corpus/parse_request
+          cp fuzz/seeds/static.json fuzz/corpus/parse_request/static.json
+          cargo +nightly fuzz run parse_request -- -max_total_time=45 -max_len=65536
+          cargo +nightly fuzz run run -- -max_total_time=45 -max_len=24
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: fuzz-failure-inputs
+          path: evas/rust_core/fuzz/artifacts
+          if-no-files-found: ignore
+          retention-days: 14
