@@ -119,7 +119,9 @@ def evas(source, root, kernel):
     shutil.copyfile(source/'conditions.json', root/'conditions.json')
     save(root/'STARTED.json', dict(kernel_sha256=sha(kernel), source_input_manifest_sha256=sha(source/'INPUT_MANIFEST.json'),
          python=sys.version, max_attempts=62, timeout_s=90,
-         source_sha256={str(p.relative_to(ROOT)): sha(p) for pattern in ['evas/src/**/*.py', 'evas/rust_core/src/**/*.rs'] for p in ROOT.glob(pattern)}))
+         source_sha256={str(p.relative_to(ROOT)): sha(p) for pattern in ['evas/src/**/*.py', 'evas/rust_core/src/**/*.rs',
+             'evas/rust_core/ir/src/**/*.rs', 'evas/rust_core/ir/Cargo.toml',
+             'evas/rust_core/Cargo.toml', 'evas/rust_core/Cargo.lock'] for p in ROOT.glob(pattern)}))
     records = []
     for c in json.loads((source/'conditions.json').read_text()):
         for profile in PROFILES:

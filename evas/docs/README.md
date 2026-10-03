@@ -14,6 +14,7 @@
 | [CAPABILITIES.md](CAPABILITIES.md) | 能力与缺口总表（一句话矩阵 + 检查点身份） |
 | [TRACEABILITY.md](TRACEABILITY.md) | 追溯矩阵（**自动生成**，勿手编） |
 | [math/](math/README.md) | 数学原理章节：求解、事件、算子、连续动态 |
+| [diagnostics.md](diagnostics.md) | 可选诊断、静态来源查询与只读 MCP |
 
 ## 按问题阅读
 
@@ -28,6 +29,7 @@
 | 积分反馈、滤波、`ddt`、DAE 怎样组合？ | [连续动态](math/continuous.md) |
 | 正确答案从哪里来？ | [验证集](../validation/README.md) |
 | 实际跑了什么，哪些材料可以复核？ | [实验索引](../../experiments/README.md) |
+| 试算为何失败，哪些原因还无法判断？ | [诊断与查询](diagnostics.md) |
 
 ## 分层约定
 

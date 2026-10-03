@@ -54,7 +54,9 @@ class Server:
                     raise ValueError('Already initialized')
                 if (not isinstance(params.get('protocolVersion'), str) or
                         not isinstance(params.get('capabilities'), dict) or
-                        not isinstance(params.get('clientInfo'), dict)):
+                        not isinstance(params.get('clientInfo'), dict) or
+                        not isinstance(params['clientInfo'].get('name'), str) or
+                        not isinstance(params['clientInfo'].get('version'), str)):
                     raise ValueError('Initialization requires version/capabilities/clientInfo')
                 self.phase = 'initializing'
                 result = dict(protocolVersion=VERSION, capabilities=dict(tools=dict(listChanged=False)),

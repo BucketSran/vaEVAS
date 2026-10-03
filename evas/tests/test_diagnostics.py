@@ -66,6 +66,15 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual([r['start'] for r in committed], [0.25])
         self.assertTrue(any(r['outcome']=='rejected' for r in payload['diagnostics']['records']))
         self.assertEqual(session.query('samples')['status'], 'unknown')
+        server = Server(session)
+        server.phase = 'ready'
+        result = server.dispatch(dict(jsonrpc='2.0', id=1, method='tools/call',
+            params=dict(name='evas_status', arguments={})))
+        self.assertEqual(result['result']['structuredContent']['status'], 'failed')
+        result = server.dispatch(dict(jsonrpc='2.0', id=2, method='tools/call',
+            params=dict(name='evas_trace', arguments={})))
+        self.assertFalse(result['result']['isError'])
+        self.assertTrue(result['result']['structuredContent']['items'])
 
     def test_small_budget_is_explicit_and_does_not_change_answers(self):
         with patch.dict('os.environ', {'EVAS_DIAGNOSTICS_RECORDS':'1', 'EVAS_DIAGNOSTICS_BYTES':'256'}):
@@ -131,3 +140,19 @@ class DiagnosticTests(unittest.TestCase):
             diagnostic = _invoke(request, KERNEL, diagnostics_path=self.root/'parallel.json')
         self.assertEqual(ordinary, diagnostic)
         self.assertEqual(json.loads((self.root/'parallel.json').read_text())['coverage'], 'calling_thread_only')
+
+    def test_invalid_budget_and_existing_sidecar_fail_explicitly(self):
+        request = capture(self.fixture(), KERNEL)['payload']['request']
+        with patch.dict('os.environ', {'EVAS_DIAGNOSTICS_RECORDS':'bad'}):
+            with self.assertRaises(KernelError) as error:
+                _invoke(request, KERNEL, diagnostics_path=self.root/'invalid.json')
+        self.assertEqual(error.exception.detail['kind'], 'invalid_config')
+        report = json.loads((self.root/'invalid.json').read_text())
+        self.assertEqual(report['status'], 'failed')
+        self.assertFalse(report['records'])
+        sidecar = self.root/'existing.json'
+        sidecar.write_text('preserve')
+        with self.assertRaises(KernelError) as error:
+            _invoke(request, KERNEL, diagnostics_path=sidecar)
+        self.assertEqual(error.exception.detail['kind'], 'diagnostic_io')
+        self.assertEqual(sidecar.read_text(), 'preserve')

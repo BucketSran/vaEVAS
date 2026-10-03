@@ -17,6 +17,11 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 | 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd` 和 `ddt` |
 | 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
 | 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
+| 诊断与来源查询 | 可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
+
+查询入口和身份/截断规则见[诊断说明](docs/diagnostics.md)。
+Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数值与历史仍由一个内核统一管理。
+配对测量与结构取舍见[性能实验](../experiments/performance/README.md)。
 
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
