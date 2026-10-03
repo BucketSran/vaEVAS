@@ -195,7 +195,8 @@ class EventAccuracy(unittest.TestCase):
                      'integer n; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source)
-        # Structural state/operator dependencies now reject before interval bounds.
+        # The nonzero interval dependency survives coefficient underflow; the
+        # candidate cannot certify a same-time guard change across its root.
         self.assertEqual(caught.exception.detail['kind'],'unsupported_cross')
         self.assertIn('depend',caught.exception.detail['message'])
 

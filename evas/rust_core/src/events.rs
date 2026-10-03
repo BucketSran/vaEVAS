@@ -276,6 +276,7 @@ pub(crate) struct EventModel {
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
     pub(crate) dynamic_guards: Vec<bool>,
+    pub(crate) relocalized_guards: Vec<bool>,
     pub(crate) guard_operators: Vec<BTreeSet<usize>>,
     pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
@@ -438,6 +439,7 @@ impl EventModel {
             rhs,
             guards,
             dynamic_guards,
+            relocalized_guards: Vec::new(),
             guard_operators: Vec::new(),
             triggers,
             actions,
@@ -717,18 +719,29 @@ impl EventModel {
                     &self.program,
                     &event.origin.instance,
                 )?;
-                if nodes.iter().any(|node| event_affected[*node]) {
-                    return Err(Error::new("unsupported_cross",format!("cross guard may depend on event state through the voltage network at {}",event.origin.label())));
-                }
                 for node in &nodes {
                     operators.extend(&operator_influence[*node]);
                 }
+                let held = nodes.iter().any(|node| event_affected[*node])
+                    || self.guards[index]
+                        .as_ref()
+                        .is_some_and(|g| !g.state_dependencies.is_empty());
+                if held && (self.guards[index].is_none() || !self.program.operators.is_empty()) {
+                    return Err(Error::new("unsupported_cross", "event-mutated guards currently require affine relations without history operators"));
+                }
+                self.relocalized_guards.push(held);
                 self.dynamic_guards[index] |=
-                    !operators.is_empty() || nodes.iter().any(|node| affected[*node]);
+                    !operators.is_empty() || (!held && nodes.iter().any(|node| affected[*node]));
                 self.guard_operators.push(operators);
             } else {
+                self.relocalized_guards.push(false);
                 self.guard_operators.push(BTreeSet::new());
             }
+        }
+        if self.relocalized_guards.iter().any(|&held| held)
+            && self.dynamic_guards.iter().any(|&dynamic| dynamic)
+        {
+            return Err(Error::new("unsupported_cross", "event-mutated affine guards cannot yet share a calendar with history/polynomial guards"));
         }
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(

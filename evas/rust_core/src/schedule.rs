@@ -1,4 +1,4 @@
-//! Immutable event calendar. Nominal timer times never accumulate accepted steps.
+//! Certified event calendars. Nominal timer times never accumulate accepted steps.
 use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::interval::Interval as I;
@@ -8,6 +8,7 @@ use crate::pwl::{Root, Trajectory};
 
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
 
+#[derive(Clone)]
 pub(crate) struct ScheduledEvent {
     pub(crate) time: f64,
     pub(crate) event: usize,
@@ -20,6 +21,7 @@ impl ScheduledEvent {
     }
 }
 
+#[derive(Clone)]
 enum Moment {
     Cross(Root),
     Dynamic {
@@ -201,7 +203,7 @@ pub(crate) fn schedule(
     trajectory: &Trajectory,
     operators: &Operators,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, Some(operators))
+    schedule_with_history(model, trajectory, Some(operators), None)
 }
 
 // Build the complete calendar first when every guard is independent of
@@ -211,24 +213,82 @@ pub(crate) fn independent_schedule(
     model: &EventModel,
     trajectory: &Trajectory,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, None)
+    schedule_with_history(model, trajectory, None, None)
+}
+
+pub(crate) fn schedule_held(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after: None,
+            changed: &[],
+            pending: &[],
+        }),
+    )
+}
+
+pub(crate) fn reschedule_held(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after: Some(after),
+            changed,
+            pending,
+        }),
+    )
+}
+
+struct HeldCalendar<'a> {
+    states: &'a [I],
+    after: Option<f64>,
+    changed: &'a [bool],
+    pending: &'a [ScheduledEvent],
 }
 
 fn schedule_with_history(
     model: &EventModel,
     trajectory: &Trajectory,
     operators: Option<&Operators>,
+    held: Option<HeldCalendar<'_>>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
     let _timing = crate::diagnostics::span("event.calendar");
 
-    let mut events = Vec::new();
+    let mut events: Vec<_> = held.as_ref().map_or_else(Vec::new, |h| {
+        h.pending
+            .iter()
+            .filter(|e| !h.changed[e.event])
+            .cloned()
+            .collect()
+    });
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
-        Some(GuardBounds::new(
-            &model.program,
-            &model.driven,
-            &model.dynamic_guards,
-        )?)
+        Some(if let Some(h) = &held {
+            GuardBounds::held(
+                &model.program,
+                &model.driven,
+                &model.dynamic_guards,
+                h.states,
+            )?
+        } else {
+            GuardBounds::new(&model.program, &model.driven, &model.dynamic_guards)?
+        })
     } else {
         None
     };
@@ -242,6 +302,12 @@ fn schedule_with_history(
             if model.dynamic_guards[index] {
                 continue;
             }
+            if held
+                .as_ref()
+                .is_some_and(|h| h.after.is_some() && !h.changed[index])
+            {
+                continue;
+            }
             let event = &model.program.events[leaf.event];
             let EventTrigger::Cross { direction, .. } = &leaf.trigger else {
                 continue;
@@ -249,7 +315,14 @@ fn schedule_with_history(
             // A state-independent guard is affine on the union of the knots
             // of its nonzero input coefficients. Unrelated knots must not
             // introduce artificial near-boundary root uncertainty.
-            let knots = trajectory.input_knots(&bounds.active_inputs(index));
+            let mut knots = trajectory.input_knots(&bounds.active_inputs(index));
+            if let Some(after) = held.as_ref().and_then(|h| h.after) {
+                knots.retain(|t| *t > after);
+                knots.insert(0, after);
+            }
+            if knots.len() < 2 {
+                continue;
+            }
             let values: Vec<_> = knots
                 .iter()
                 .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
@@ -330,7 +403,17 @@ fn schedule_with_history(
         }
     }
     for (index, leaf) in model.triggers.iter().enumerate() {
+        if held.as_ref().is_some_and(|h| h.after.is_some()) {
+            continue;
+        }
         add_timer(&mut events, index, &leaf.trigger, trajectory.config.stop)?;
+    }
+    if let Some(after) = held.as_ref().and_then(|h| h.after) {
+        if events.iter().any(|event| event.bounds().lo <= after) {
+            return Err(unresolved(
+                "future event window overlaps the accepted event boundary",
+            ));
+        }
     }
     events.sort_by(|a, b| {
         a.moment

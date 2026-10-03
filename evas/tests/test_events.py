@@ -230,7 +230,6 @@ class EventRejections(unittest.TestCase):
     def test_state_feedback_nonlinear_and_cross_block_state_dependency_rejected(self):
         for source in [
             model('@(initial_step) n=0; @(cross(V(y)-.5,1)) n=n+1; V(y)<+V(u)+n;','integer n;'),
-            model('@(initial_step) n=0; @(cross(V(u)-n,1)) n=n+1; V(y)<+n;','integer n;'),
             model('''@(initial_step) n=0; @(cross(V(u)-.5,1)) n=n+1;
               @(cross(V(y)-.25,1)) ; V(y)<+V(y)+n; V(y)<+-2*V(y);''','integer n;'),
             model('@(initial_step) n=0; @(cross(V(u),1)) n=n+1; V(y)<+V(u)*V(u)+n;','integer n;'),

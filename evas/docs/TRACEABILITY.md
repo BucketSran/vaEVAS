@@ -1,7 +1,7 @@
 # 追溯矩阵（自动生成，勿手编）
 
 由 `scripts/traceability.py` 读取测试 `GUARDS`、能力表及 DUT 目录生成。
-流程与标签语义见 [PROCESS.md](PROCESS.md)。共 47 个测试文件。
+流程与标签语义见 [PROCESS.md](PROCESS.md)。共 48 个测试文件。
 标签是人工审查的文件级关联，不证明完整覆盖、测试通过或先红后绿。
 证据链接沿用能力表中的检查点，不自动认证当前代码；实现入口见数学章节的代码地图。
 
@@ -13,9 +13,9 @@
 | LIN | [契约/数学](math/solving.md) | [test_accuracy](../tests/test_accuracy.py) [test_affine](../tests/test_affine.py) [test_contracts](../tests/test_contracts.py) [test_parallel](../tests/test_parallel.py) [test_refinement](../tests/test_refinement.py) [test_reuse](../tests/test_reuse.py) | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | NONLINEAR | [求解与精度链](math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | [test_nonlinear](../tests/test_nonlinear.py) [test_nonlinear_transient](../tests/test_nonlinear_transient.py) [test_parallel](../tests/test_parallel.py) | [精度链检查点](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
 | SPARSE | [契约/数学](math/solving.md#稀疏分支与性能边界) | [test_refinement](../tests/test_refinement.py) [test_reuse](../tests/test_reuse.py) [test_sparse](../tests/test_sparse.py) [test_sparse_transient](../tests/test_sparse_transient.py) | [当前配对测量](../../experiments/performance/README.md)、[历史 PR8](https://github.com/BucketSran/vaEVAS/pull/8) |
-| CROSS | [契约/数学](math/events.md) | [test_dynamic_cross](../tests/test_dynamic_cross.py) [test_event_accuracy](../tests/test_event_accuracy.py) [test_events](../tests/test_events.py) | [动态根与组合检查点](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json) |
-| TIMER | [定时](math/events.md#固定-timer) | [test_timer](../tests/test_timer.py) | [固定 timer 历史检查](../../experiments/backends/dvs2-spectre-validation/results/timer-0.5.3.json) |
-| EVENT-ORDER | [生命周期](math/events.md) | [test_diagnostics](../tests/test_diagnostics.py) [test_event_conditions](../tests/test_event_conditions.py) [test_event_or](../tests/test_event_or.py) [test_event_writers](../tests/test_event_writers.py) [test_settlement](../tests/test_settlement.py) | [事件条件历史对照](../../experiments/archive/pr14-pr15-validation/results/event-conditions-0.9.0.json) |
+| CROSS | [契约/数学](math/events.md) | [test_dynamic_cross](../tests/test_dynamic_cross.py) [test_event_accuracy](../tests/test_event_accuracy.py) [test_event_relocalization](../tests/test_event_relocalization.py) [test_events](../tests/test_events.py) | [动态根历史检查点](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[重定位开发测试](../tests/test_event_relocalization.py) |
+| TIMER | [定时](math/events.md#固定-timer) | [test_event_relocalization](../tests/test_event_relocalization.py) [test_timer](../tests/test_timer.py) | [固定 timer 历史检查](../../experiments/backends/dvs2-spectre-validation/results/timer-0.5.3.json) |
+| EVENT-ORDER | [生命周期](math/events.md) | [test_diagnostics](../tests/test_diagnostics.py) [test_event_conditions](../tests/test_event_conditions.py) [test_event_or](../tests/test_event_or.py) [test_event_relocalization](../tests/test_event_relocalization.py) [test_event_writers](../tests/test_event_writers.py) [test_settlement](../tests/test_settlement.py) | [事件条件历史对照](../../experiments/archive/pr14-pr15-validation/results/event-conditions-0.9.0.json) |
 | TRANSITION | [算子](math/operators.md#transition) | [test_semantic_invariants](../tests/test_semantic_invariants.py) [test_transition](../tests/test_transition.py) [test_transition_accuracy](../tests/test_transition_accuracy.py) | [历史误差修复对照](../../experiments/backends/dvs2-spectre-validation/results/transition-0.6.1.json) |
 | ABSDELAY | [算子](math/operators.md#absdelay) | [test_absdelay](../tests/test_absdelay.py) [test_absdelay_accuracy](../tests/test_absdelay_accuracy.py) | [算子专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json) |
 | SLEW | [算子](math/operators.md#slew) | [test_slew](../tests/test_slew.py) [test_slew_accuracy](../tests/test_slew_accuracy.py) | [算子专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json) |
@@ -26,7 +26,7 @@
 | ANALOG | [契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | [test_analog_conditions](../tests/test_analog_conditions.py) | 按所属能力查阅；此行不绑定执行 |
 | NONLINEAR-TRANSIENT | [契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | [test_nonlinear_transient](../tests/test_nonlinear_transient.py) [test_precision_chain](../tests/test_precision_chain.py) | 按所属能力查阅；此行不绑定执行 |
 | TIMED-OPERATOR | [契约](../validation/TIMED_OPERATOR_CONTRACTS.md) | [test_absdelay](../tests/test_absdelay.py) [test_absdelay_accuracy](../tests/test_absdelay_accuracy.py) [test_semantic_invariants](../tests/test_semantic_invariants.py) [test_slew](../tests/test_slew.py) [test_slew_accuracy](../tests/test_slew_accuracy.py) [test_timed_composition](../tests/test_timed_composition.py) [test_timer](../tests/test_timer.py) [test_transition](../tests/test_transition.py) [test_transition_accuracy](../tests/test_transition_accuracy.py) | 按所属能力查阅；此行不绑定执行 |
-| EVENT-CONDITIONS | [契约](../validation/EVENT_CONDITIONS_CONTRACT.md) | [test_dynamic_cross](../tests/test_dynamic_cross.py) [test_event_conditions](../tests/test_event_conditions.py) [test_event_or](../tests/test_event_or.py) [test_event_window_sampling](../tests/test_event_window_sampling.py) [test_event_writers](../tests/test_event_writers.py) [test_events](../tests/test_events.py) [test_settlement](../tests/test_settlement.py) | 按所属能力查阅；此行不绑定执行 |
+| EVENT-CONDITIONS | [契约](../validation/EVENT_CONDITIONS_CONTRACT.md) | [test_dynamic_cross](../tests/test_dynamic_cross.py) [test_event_conditions](../tests/test_event_conditions.py) [test_event_or](../tests/test_event_or.py) [test_event_relocalization](../tests/test_event_relocalization.py) [test_event_window_sampling](../tests/test_event_window_sampling.py) [test_event_writers](../tests/test_event_writers.py) [test_events](../tests/test_events.py) [test_settlement](../tests/test_settlement.py) | 按所属能力查阅；此行不绑定执行 |
 | LAPLACE | [契约](../validation/LAPLACE_CONTRACTS.md) | [test_laplace](../tests/test_laplace.py) [test_mixed_dynamics](../tests/test_mixed_dynamics.py) | 按所属能力查阅；此行不绑定执行 |
 
 ### 直接使用的 DUT 模型（case:*）
@@ -44,6 +44,7 @@
 | [case:d2_v6_01_standard](../validation/cases/d2_v6_01_standard/dut.va) | 未声明关联 |
 | [case:d2_v7_01](../validation/cases/d2_v7_01/dut.va) | [test_affine](../tests/test_affine.py) |
 | [case:d2_v7_02](../validation/cases/d2_v7_02/dut.va) | 未声明关联 |
+| [case:event_relocalization](../validation/cases/event_relocalization/dut.va) | [test_event_relocalization](../tests/test_event_relocalization.py) |
 | [case:n_v1_02](../validation/cases/n_v1_02/dut.va) | [test_affine](../tests/test_affine.py) |
 | [case:n_v1_02_reordered](../validation/cases/n_v1_02_reordered/dut.va) | 未声明关联 |
 | [case:n_v3_02](../validation/cases/n_v3_02/dut.va) | 未声明关联 |

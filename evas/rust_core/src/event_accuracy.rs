@@ -1,5 +1,6 @@
 //! Enclose affine guards from the original binary64 IR, including assembly and
-//! linear solve roundoff. Prepared once for a state-independent event schedule.
+//! linear solve roundoff. Held-state projections are rebuilt only after an
+//! accepted event changes a relevant state enclosure.
 use crate::affine_bounds::affine;
 use crate::interval::{equal_products, Interval as I};
 use crate::ir::{Error, EventTrigger, Expression, Program};
@@ -10,6 +11,7 @@ pub(crate) fn unresolved(message: &str) -> Error {
 
 pub(crate) struct GuardBounds {
     coefficients: Vec<Vec<I>>,
+    state_coefficients: Vec<Vec<I>>,
     driven_count: usize,
 }
 
@@ -34,17 +36,46 @@ impl GuardBounds {
         Self::expressions(program, driven, &expressions)
     }
 
+    pub(crate) fn held(
+        program: &Program,
+        driven: &[String],
+        dynamic: &[bool],
+        states: &[I],
+    ) -> Result<Self, Error> {
+        let mut expressions = Vec::new();
+        for event in &program.events {
+            for trigger in event.trigger.leaves()? {
+                expressions.push(match trigger {
+                    EventTrigger::Cross { guard, .. } => {
+                        (!dynamic[expressions.len()]).then_some(guard)
+                    }
+                    _ => None,
+                });
+            }
+        }
+        Self::project(program, driven, &expressions, Some(states))
+    }
+
     /// Project state-independent affine expressions onto the driven inputs.
     pub(crate) fn expressions(
         program: &Program,
         driven: &[String],
         expressions: &[Option<&Expression>],
     ) -> Result<Self, Error> {
+        Self::project(program, driven, expressions, None)
+    }
+
+    fn project(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+        states: Option<&[I]>,
+    ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
         let width = driven.len() + program.states.len() + program.operators.len() + 1;
         let nodes = crate::affine_bounds::node_map(program, driven)?;
-        let coefficients = expressions
+        let mut coefficients = expressions
             .iter()
             .map(|expression| {
                 // Keep rows aligned with event indices; timer has no guard.
@@ -64,6 +95,24 @@ impl GuardBounds {
                     .collect::<Vec<_>>())
             })
             .collect::<Result<Vec<_>, Error>>()?;
+        let state_coefficients = coefficients
+            .iter()
+            .map(|row| row[driven.len()..driven.len() + program.states.len()].to_vec())
+            .collect();
+        if let Some(states) = states {
+            if states.len() != program.states.len() {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "held state bounds length mismatch",
+                ));
+            }
+            for row in &mut coefficients {
+                for (index, state) in states.iter().enumerate() {
+                    row[width - 1] = row[width - 1] + row[driven.len() + index] * *state;
+                    row[driven.len() + index] = I::ZERO;
+                }
+            }
+        }
         if coefficients.iter().flatten().any(|x| !x.finite()) {
             return Err(unresolved("nonfinite event trajectory bounds"));
         }
@@ -77,8 +126,20 @@ impl GuardBounds {
         }
         Ok(Self {
             coefficients,
+            state_coefficients,
             driven_count: driven.len(),
         })
+    }
+
+    pub(crate) fn changed_by(&self, before: &[I], after: &[I]) -> Vec<bool> {
+        self.state_coefficients
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .enumerate()
+                    .any(|(i, c)| !c.zero() && before[i] != after[i])
+            })
+            .collect()
     }
 
     /// Only a proven zero coefficient permits ignoring an input breakpoint.

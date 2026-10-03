@@ -3,6 +3,136 @@ use super::*;
 use crate::ir::{Program, Tolerances, TransientInputs};
 use serde_json::json;
 
+fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let origin = json!({"source":"relocalization.va","line":1,"column":1,"instance":"dut"});
+    let program: Program = serde_json::from_value(json!({
+        "schema_version": SCHEMA_VERSION, "nodes": ["0","u","y"],
+        "states": [{"instance":"dut","name":"q","kind":"real","initial":0.75}],
+        "events": [
+            {"origin":origin,"trigger":{"kind":"timer","start":0.25,"period":0,
+             "time_tolerance":1e-12,"enabled":true},"body":[{"kind":"assign","state":0,
+             "rhs":{"op":"affine","constant":0.5,"terms":[]}}]},
+            {"origin":origin,"trigger":{"kind":"cross","direction":1,"time_tolerance":1e-9,
+             "expression_tolerance":1e-8,"guard":{"op":"add",
+               "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+               "right":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+                 "right":{"op":"state","state":0}}}},"body":[]},
+            {"origin":origin,"trigger":{"kind":"cross","direction":1,"time_tolerance":1e-9,
+             "expression_tolerance":1e-8,"guard":{"op":"affine","constant":-0.5,
+                 "terms":[{"node":1,"coefficient":1}]}},"body":[]}
+        ],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},
+          "positive":2,"negative":0,"rhs":{"op":"state","state":0},"origin":origin}]
+    })).unwrap();
+    let model = EventModel::new(
+        program,
+        vec!["u".into()],
+        Tolerances {
+            absolute: 1e-8,
+            relative: 1e-8,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            pwl: vec![vec![[0., 0.], [1., 1.]]],
+            output_times: vec![0., 1.],
+            stop: 1.,
+            max_step: 1.,
+        },
+        1,
+    )
+    .unwrap();
+    let states = model.initial();
+    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    let calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
+    let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+    let circuit = model.circuit(&states).unwrap();
+    let accepted = Frame {
+        time: 0.,
+        solution: circuit.solve(&[0.]).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    (
+        model,
+        trajectory,
+        Controller {
+            accepted,
+            event: 0,
+            records: vec![],
+        },
+        calendar,
+    )
+}
+
+#[test]
+fn failed_future_guard_ordering_rolls_back_then_retries_in_the_same_controller() {
+    let (model, trajectory, mut controller, mut calendar) = relocalization_fixture();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.time, e.event, e.bounds()))
+        .collect();
+    let voltages = controller.accepted.solution.voltages.clone();
+    let mut program = model.program.clone();
+    // q = (binary64 1/3)*u + (binary64 5/12). At u=.25 its
+    // enclosure overlaps the independent exact .5 root. Do not invent a tie.
+    program.events[0].body = serde_json::from_value(json!([{"kind":"assign","state":0,
+        "rhs":{"op":"affine","constant":5./12.,"terms":[{"node":1,"coefficient":1./3.}]}}]))
+    .unwrap();
+    let ambiguous =
+        EventModel::new(program, model.driven.clone(), model.tolerances.clone()).unwrap();
+    let error = controller
+        .accept_relocalized(&ambiguous, &trajectory, &mut calendar)
+        .unwrap_err();
+    assert_eq!(error.kind, "event_resolution");
+    assert!(error.message.contains("ordering"));
+    assert_eq!(controller.accepted.time, 0.);
+    assert_eq!(controller.accepted.states, vec![0.75]);
+    assert_eq!(controller.accepted.state_bounds, vec![I::point(0.75)]);
+    assert_eq!(controller.accepted.solution.voltages, voltages);
+    assert_eq!(controller.event, 0);
+    assert!(controller.records.is_empty());
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>(),
+        original
+    );
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = relocalization_fixture();
+    controller
+        .accept_relocalized(&model, &trajectory, &mut calendar)
+        .unwrap();
+    clean
+        .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>(),
+        clean_calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(calendar.len(), 2);
+    assert_eq!(calendar[0].time, 0.5);
+    assert_eq!(calendar[1].time, 0.5);
+}
+
 fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"lifecycle.va","line":1,"column":1,"instance":"dut"});
     let mut filter_origin = origin.clone();

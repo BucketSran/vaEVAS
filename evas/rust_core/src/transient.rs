@@ -7,7 +7,9 @@ use crate::ir::{
 };
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
-use crate::schedule::{independent_schedule, schedule, ScheduledEvent};
+use crate::schedule::{
+    independent_schedule, reschedule_held, schedule, schedule_held, ScheduledEvent,
+};
 use crate::solver::Circuit;
 
 struct Frame {
@@ -34,6 +36,17 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &[ScheduledEvent],
     ) -> Result<(), Error> {
+        let (next, records, end) = self.prepare_events(model, trajectory, crossings)?;
+        self.commit_events(next, records, end);
+        Ok(())
+    }
+
+    fn prepare_events(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        crossings: &[ScheduledEvent],
+    ) -> Result<(Frame, Vec<EventRecord>, usize), Error> {
         let time = crossings[self.event].time;
         let mut end = self.event;
         while end < crossings.len() && crossings[end].time == time {
@@ -53,6 +66,66 @@ impl Controller {
         )?;
         next.operators
             .check_deadline_order(time, crossings.get(end).map(|e| e.bounds()))?;
+        Ok((next, records, end))
+    }
+
+    fn accept_relocalized(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        crossings: &mut Vec<ScheduledEvent>,
+    ) -> Result<(), Error> {
+        let (next, records, end) = self.prepare_events(model, trajectory, crossings)?;
+        let window = records.iter().fold(I::point(next.time), |t, r| {
+            let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
+            t.hull(I { lo, hi })
+        });
+        let inputs = trajectory.range(window)?.0;
+        let projection = crate::event_accuracy::GuardBounds::held(
+            &model.program,
+            &model.driven,
+            &model.dynamic_guards,
+            &self.accepted.state_bounds,
+        )?;
+        let changed = projection.changed_by(&self.accepted.state_bounds, &next.state_bounds);
+        let before = projection.values(&inputs);
+        let after = crate::event_accuracy::GuardBounds::held(
+            &model.program,
+            &model.driven,
+            &model.dynamic_guards,
+            &next.state_bounds,
+        )?
+        .values(&inputs);
+        for (index, held) in model.relocalized_guards.iter().enumerate() {
+            if !held || !changed[index] {
+                continue;
+            }
+            let a = before[index].sign();
+            let b = after[index].sign();
+            if a.is_none() || b.is_none() || a != b {
+                return Err(Error::new(
+                    "unsupported_cross",
+                    "event-dependent guard jump or uncertain same-time crossing requires an event closure contract",
+                ));
+            }
+        }
+        let future = reschedule_held(
+            model,
+            trajectory,
+            &next.state_bounds,
+            next.time,
+            &changed,
+            &crossings[end..],
+        )?;
+        // Build and validate the future first; calendar replacement and state
+        // acceptance have no remaining fallible operation between them.
+        self.commit_events(next, records, 0);
+        *crossings = future;
+        Ok(())
+    }
+
+    fn commit_events(&mut self, next: Frame, records: Vec<EventRecord>, end: usize) {
+        let time = next.time;
         self.accepted = next;
         self.event = end;
         let committed = records.len();
@@ -65,7 +138,6 @@ impl Controller {
             committed,
             None,
         );
-        Ok(())
     }
 }
 
@@ -522,7 +594,19 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
-    let (operators, crossings) = if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
+    let relocalize = model.relocalized_guards.iter().any(|&held| held);
+    let (operators, mut crossings) = if relocalize {
+        let operators = Operators::new_until(
+            &model.program,
+            &trajectory,
+            &model.driven,
+            &initial,
+            trajectory.config.stop,
+        )?;
+        let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
+        let crossings = schedule_held(&model, &trajectory, &bounds)?;
+        (operators, crossings)
+    } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
         let operators = Operators::new_until(
             &model.program,
             &trajectory,
@@ -591,7 +675,11 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         if controller.event < crossings.len()
             && crossings[controller.event].time == controller.accepted.time
         {
-            controller.accept_events(&model, &trajectory, &crossings)?;
+            if relocalize {
+                controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
+            } else {
+                controller.accept_events(&model, &trajectory, &crossings)?;
+            }
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
@@ -645,7 +733,11 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                     Some("earlier scheduled event"),
                 );
             }
-            controller.accept_events(&model, &trajectory, &crossings)?;
+            if relocalize {
+                controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
+            } else {
+                controller.accept_events(&model, &trajectory, &crossings)?;
+            }
         } else {
             if !model.program.operators.is_empty() {
                 let next = crate::diagnostics::outcome(

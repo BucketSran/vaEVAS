@@ -1,0 +1,86 @@
+"""Held-threshold roots from piecewise equations, not an EVAS snapshot.
+
+u=t, threshold=.75 before .25 and .5 afterward: the only cross is .5.
+The timer changes both future guards and state-dependent voltage projections.
+"""
+GUARDS = ["CROSS", "TIMER", "EVENT-ORDER", "EVENT-CONDITIONS", "case:event_relocalization"]
+
+from pathlib import Path
+import unittest
+from evas import KernelError, compile_sources, transient
+from test_affine import KERNEL, instance, model
+
+DUT = (Path(__file__).resolve().parents[1] / "validation/cases/event_relocalization/dut.va").read_text()
+
+
+def run(source=DUT, *, module="event_relocalization", times=None, step=1):
+    program = compile_sources({"relocalization.va": source}, [instance(module=module)])
+    return transient(program, {"u": [[0,0],[1,1]]}, times or [0,.25,.5,.75,1],
+                     stop=1, max_step=step, kernel=KERNEL)
+
+
+class EventRelocalization(unittest.TestCase):
+    def test_changed_threshold_invalidates_original_root(self):
+        result = run()
+        hits = result["transient"]["events"]
+        self.assertEqual([hit["time"] for hit in hits], [.25,.5])
+        self.assertEqual([row[-1] for row in result["transient"]["states"]], [0,0,1,1,1])
+
+    def test_internal_voltage_projection_is_relocalized(self):
+        source = model('''
+          @(initial_step) q=.75;
+          @(initial_step) n=0;
+          @(timer(.25,0,1e-12)) q=.5;
+          @(cross(V(z,r),1,1e-9,1e-8)) n=n+1;
+          V(z,r)<+V(u,r)-q;
+          V(y,r)<+n;
+        ''', 'real q; integer n; electrical z;')
+        self.assertEqual([e["time"] for e in run(source, module="m")["transient"]["events"]], [.25,.5])
+
+    def test_observations_and_steps_do_not_rearm_consumed_roots(self):
+        a = run()
+        b = run(times=[0,.125,.25,.375,.5,.625,.75,.875,1], step=.0625)
+        self.assertEqual(a["transient"]["events"], b["transient"]["events"])
+        self.assertEqual(b["transient"]["states"][-1][-1], 1)
+
+    def test_removed_future_root_does_not_fire(self):
+        source = DUT.replace('threshold=.5;', 'threshold=2;')
+        result = run(source)
+        self.assertEqual([e["time"] for e in result["transient"]["events"]], [.25])
+        self.assertEqual(result["transient"]["states"][-1][-1], 0)
+
+    def test_initial_zero_of_held_guard_does_not_fire(self):
+        source = model('''@(initial_step) n=0;
+          @(cross(V(u,r)-n,1)) n=n+1; V(y,r)<+n;''', 'integer n;')
+        result = run(source, module='m')
+        self.assertEqual(result['transient']['events'], [])
+        self.assertEqual(result['transient']['states'][-1], [0])
+
+    def test_nonrepresentable_root_is_consumed_once(self):
+        source = DUT.replace('threshold=.5;', 'threshold=1.0/3.0;')
+        result = run(source)
+        hits = result['transient']['events']
+        self.assertEqual(len(hits), 2)
+        self.assertAlmostEqual(hits[1]['time'], 1/3, delta=1e-9)
+        self.assertEqual(result['transient']['states'][-1][-1], 1)
+
+    def test_moved_later_root_and_stop_arrival(self):
+        for threshold in ('.875', '1'):
+            with self.subTest(threshold=threshold):
+                result = run(DUT.replace('threshold=.5;', f'threshold={threshold};'))
+                self.assertEqual([e['time'] for e in result['transient']['events']],
+                                 [.25, float(threshold)])
+
+    def test_jump_across_zero_requires_separate_same_time_event_contract(self):
+        source = DUT.replace('threshold=.5;', 'threshold=.125;')
+        with self.assertRaisesRegex(KernelError, "unsupported_cross"):
+            run(source)
+
+    def test_history_dependent_relocalization_stays_explicit(self):
+        source = DUT.replace('V(u,r)-threshold', 'idt(V(u,r),0)-threshold')
+        with self.assertRaisesRegex(KernelError, "unsupported_cross"):
+            run(source)
+
+
+if __name__ == '__main__':
+    unittest.main()

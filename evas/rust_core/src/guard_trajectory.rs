@@ -34,12 +34,6 @@ pub(crate) fn dependencies(
         )),
         _ => {
             let a = affine(expr, program, owner)?;
-            if !a.state_dependencies.is_empty() {
-                return Err(Error::new(
-                    "unsupported_cross",
-                    "cross guard depends on event state",
-                ));
-            }
             Ok((a.node_dependencies, a.operator_dependencies))
         }
     }
