@@ -4,6 +4,10 @@ These are development cases, not additional conditions in the original matrix.
 The oracle integrates the source polyline by exact rational trapezoid areas;
 it does not use the kernel's history or output sampling grid.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 import copy
 from fractions import Fraction as F
 import json

@@ -12,7 +12,7 @@ README 给出当前证据和使用入口；各阶段完整记录见[固定历史
 ## 当前证据
 
 运行时 `8618339` 和审查头 `18063c9` 已由 PR33 合并。以下是已执行并绑定该源码的证据，
-本次文档整理没有新执行；数学与支持边界见[事件截止点](../../../evas/docs/CONTINUOUS.md#known-event-horizons)。
+本次文档整理没有新执行；数学与支持边界见[事件截止点](../../../evas/docs/math/continuous.md#known-event-horizons)。
 
 | 收据 | 实际执行与限制 |
 | --- | --- |

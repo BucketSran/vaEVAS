@@ -4,6 +4,10 @@ These tests cover the bounded EVENT-ORDER extension: different event blocks may
 write the same state when a candidate batch selects at most one writer.
 Simultaneous selected writers remain an atomic runtime conflict.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["EVENT-CONDITIONS"]
+
 import unittest
 
 from evas import KernelError, compile_sources, transient

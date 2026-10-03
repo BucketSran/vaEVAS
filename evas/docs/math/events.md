@@ -1,10 +1,10 @@
 # 事件、时间推进与历史
 
 适用范围：IR16 的 `cross`、固定 `timer`、受限事件体条件、cross OR 与多事件写者。
-能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](CAPABILITIES.md)。
+能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](../CAPABILITIES.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
-[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
+[共同生命周期](continuous.md#shared-lifecycle-closure)。
 数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；当前非点 cross 选择 te=tau。
 这是 EVAS 的观察约定，不能读成 LRM 要求所有事件体在真根处读取。
 
@@ -16,7 +16,7 @@
 
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
-时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
+时间容差及表达式容差。依据与首版选择见[独立契约](../../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
 当前只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
 
 IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
@@ -56,7 +56,7 @@ timer OR 仍拒绝。动态 guard 的范围见下节，多块写同一状态的�
 
 IR16 已合并状态独立多项式及受限连续算子驱动 cross；值/导数区间隔离根，
 同号端点及末端零点不能跳过内部根。切线、平台、事件修改轨迹或不能证明的次序明确失败。
-数学、实现和独立测试见[连续动态章节](CONTINUOUS.md#非线性-guard-的根证明)。
+数学、实现和独立测试见[连续动态章节](continuous.md#非线性-guard-的根证明)。
 下面仿射根公式与触零约定仍仅用于原 PWL/仿射路径。
 
 ## 仿射轨迹上的数学定位
@@ -82,7 +82,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 仍位于这个窗口。输出 transition 的斜率为 `0.8 V/50 ns`，此时间偏移对应边沿上的 4 mV
 名义波形差值；平台电压及 50 ns 边沿时长相同。
 
-事件日志和六次诊断执行见[实验收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)。
+事件日志和六次诊断执行见[实验收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)。
 只收紧 cross 表达式或时间容差显著减小了偏移；只收紧全局求解容差没有减小本例偏移。
 这支持事件定位差异的解释，不证明 Spectre 出错、EVAS 普遍更准确，或其他模型也遵循相同比例。
 
@@ -102,7 +102,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 - `@(cross(g[, direction[, ttol[, tol]]]))` 接受空语句、顺序赋值或下述受限 if/else 块。方向为 -1/0/+1，默认 0；
   两项容差必须为正的有限实例常数，默认分别为 1 ps 和 1e-9 表达式单位。不支持 cross enable；cross 的受限 `or` 见[OR 规则](#event-or)。
 - 事件同刻贡献及赋值表达式仍须对电压和状态联合仿射；更广连续多项式贡献、积分和 guard
-  的限定范围见[连续动态](CONTINUOUS.md)。以下仿射事件规则继续适用。
+  的限定范围见[连续动态](continuous.md)。以下仿射事件规则继续适用。
   根据 IR 结构保留变量依赖，不以舍入为零的系数证明某项为常量；变量表达式之间的乘法拒绝，
   即使存在代数抵消也可能保守拒绝。区间转换另行检查，不能静默丢弃乘积项。
   整数状态采用精确 signed 32-bit 范围，仅接受整数常数/整数状态运算，超范围报错，不模拟溢出或隐含取整。
@@ -128,7 +128,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
   新状态区间随成功批次提交，失败候选不改变它；后续放大必须继续验收这份不确定性。
   无算子的观察仍复用固定电路分解，认证失败前不更新接受帧。冗余关系若只在某个状态点成立，
   而非误差映射状态域的恒等式，可能在初始化就明确拒绝。
-  [独立采样/跨事件回归](../tests/test_precision_chain.py)和[review 记录](../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)
+  [独立采样/跨事件回归](../../tests/test_precision_chain.py)和[review 记录](../../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)
   记录该变化。均不覆盖前端常量折叠，也不是通用物理单位误差保证。
   无唯一数值解或不能通过一致性检查时明确拒绝，失败不消费事件。容差不用于合并相邻事件。
 - guard 不得直接依赖状态，也不能通过电压方程间接依赖状态。Rust 用方程连通性保守检查，
@@ -210,7 +210,7 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 日程空间随事件数线性增长，最多 1,000,000 条事件，超限返回 `event_budget`；时间推进仍保留独立的 1,000,000 步上限。
 
 后续需要单独扩展：动态 timer、复合事件、状态反馈 guard 的同刻迭代，以及非线性轨迹上的
-通用根定位。现有波形算子及积分的限定能力见[算子手册](OPERATORS.md)。
+通用根定位。现有波形算子及积分的限定能力见[算子手册](operators.md)。
 
 ## 同块顺序赋值与同刻联立求解
 
@@ -224,7 +224,7 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 `s+=Phi(s−,v+)`，再求 `F(v+,Phi(s−,v+),t)=0`。固定候选算子值后，这条事件代入路径限定为仿射，
 可代入后直接解线性方程；integer 更新只含整数状态算术，不引入待求电压或隐含取整。
 电压同刻联立规则是本实现的选择，有限定对照支持，不称为所有 Verilog-A 事件的唯一通用语义。
-积分/滤波的复位观察闭包及未来历史认证另见[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
+积分/滤波的复位观察闭包及未来历史认证另见[共同生命周期](continuous.md#shared-lifecycle-closure)。
 若两个同刻触发的事件块都写同一状态，EVAS 在求解前拒绝该候选批次并保持旧帧不变。
 这与同一块内重复写不同：同块重复写有明确的语句顺序；跨块重复写没有本实现愿意采用的隐式优先级。
 
@@ -245,10 +245,10 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
-独立冲突与互斥批次回归见 [test_event_writers.py](../tests/test_event_writers.py)；
+独立冲突与互斥批次回归见 [test_event_writers.py](../../tests/test_event_writers.py)；
 真实帧回退由 Rust 私有测试检查。固定 V3 的 EVAS/Spectre 对照见
-[对照收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-spectre-v3.json)，
-定位差异见[诊断收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)及
+[对照收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-spectre-v3.json)，
+定位差异见[诊断收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)及
 [后端容差解释](#backend-cross-tolerances)。这些是有限观测证据；raw 只在本地/thu-sui 保留，
 不等于公开完整复现包或完整矩阵的新执行。
 
@@ -258,7 +258,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 ## 受限事件体条件
 
-[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
+[共同闭包](continuous.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
 保留每次事件体的局部赋值顺序及整批提交。非点事件日志的可选 `observation_time_bounds`
 报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。当前 cross 策略显式选择 te=tau，
 没有改成 Spectre 的晚触发条件取值；对照只证明所列样例的兼容差异。
@@ -268,7 +268,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 则使用 guard(tau)=0 判定等号。未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
 因此 `u=3t, cross(u-1)` 内的 `u>1` 在根处为假；不能因为 b 的微小舍入延迟把该条件改判为真。
 其余条件仍需在可行输入盒内证明同一选择；不能证明时拒绝，点时刻 timer 保持原观察语义。
-数学与非线性连续重启见[根盒采样](CONTINUOUS.md#事件修改的联合积分与复位)。
+数学与非线性连续重启见[根盒采样](continuous.md#事件修改的联合积分与复位)。
 数学根观察约定不等于其他仿真器的回调时刻。
 
 `cross`（包括受限 OR）或固定 `timer` 的事件体可含嵌套 `if/else`、顺序块、空语句及无 else 分支。
@@ -307,7 +307,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 含条件的整个程序在事件、初值和普通观察点都保留输入及已接受状态包围；即使没有算子也不丢掉采样误差。
 电压使用 `vabstol+reltol*abs(v)`，real 状态只有相对项，integer 必须精确；未通过时返回
 `event_accuracy`，含历史算子时为 `waveform_accuracy`。联合连续网络另在根盒上
-认证采样并保留根到代表时刻的新流误差，见[共同误差链](CONTINUOUS.md#事件修改的联合积分与复位)。
+认证采样并保留根到代表时刻的新流误差，见[共同误差链](continuous.md#事件修改的联合积分与复位)。
 此认证不推广为所有算子的历史采样认证、源到 IR 舍入保证或连续时间资格。
 
 每个 EventModel 持有至多一份证书缓存，键为激活块及选中赋值/分支路径；只缓存系数。
@@ -316,14 +316,14 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 私有回退测试直接检查非零 transition 历史下的失败、成功弃步、修正未来输入重试与新缓存控制的一致性；
 这仍不是完整调度器任意故障注入证明。
 
-实现入口：[event_conditions.rs](../rust_core/src/event_conditions.rs) 负责结构、路径和谓词认证；
-[settlement_bounds.rs](../rust_core/src/settlement_bounds.rs) 负责选中原 IR 的误差传播。
-独立答案与边界控制见 [test_event_conditions.py](../tests/test_event_conditions.py)，
-实际帧回退见 [transient_condition_tests.rs](../rust_core/src/transient_condition_tests.rs)。
-完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
+实现入口：[event_conditions.rs](../../rust_core/src/event_conditions.rs) 负责结构、路径和谓词认证；
+[settlement_bounds.rs](../../rust_core/src/settlement_bounds.rs) 负责选中原 IR 的误差传播。
+独立答案与边界控制见 [test_event_conditions.py](../../tests/test_event_conditions.py)，
+实际帧回退见 [transient_condition_tests.rs](../../rust_core/src/transient_condition_tests.rs)。
+完整目标契约与剩余组合边界见[验证契约](../../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
 状态反馈谓词、通用非线性谓词及普通 analog 条件与动态算子的组合仍超出本页范围。
-受限 idt reset 见[算子手册](OPERATORS.md#idt)，当前总体缺口见[能力表](CAPABILITIES.md#后续工作)。
+受限 idt reset 见[算子手册](operators.md#idt)，当前总体缺口见[能力表](../CAPABILITIES.md#后续工作)。
 区间传播会增加运算和存储，丢失相关性时可能保守拒绝；这条路径没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
@@ -341,11 +341,11 @@ EVAS 保留合法的顺序赋值，不将特定后端的异常输出设为期望
 
 ## 实现与验证入口
 
-- [events.rs](../rust_core/src/events.rs)：身份、结构依赖、顺序代入和赋值重放。
-- [settlement.rs](../rust_core/src/settlement.rs)、[settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)：同刻联立、原关系检查及区间认证。
-- [schedule.rs](../rust_core/src/schedule.rs)、[event_accuracy.rs](../rust_core/src/event_accuracy.rs)：固定日程、根和误差界。
-- [transient.rs](../rust_core/src/transient.rs)：候选帧、原子提交、丢弃及回退测试。
-- [test_settlement.py](../tests/test_settlement.py)、[test_timer.py](../tests/test_timer.py)、[test_event_accuracy.py](../tests/test_event_accuracy.py)：独立开发回归。
-- [Spectre 实验](../../experiments/backends/dvs2-spectre-validation/README.md)与[共同历史协议](../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
+- [events.rs](../../rust_core/src/events.rs)：身份、结构依赖、顺序代入和赋值重放。
+- [settlement.rs](../../rust_core/src/settlement.rs)、[settlement_bounds.rs](../../rust_core/src/settlement_bounds.rs)：同刻联立、原关系检查及区间认证。
+- [schedule.rs](../../rust_core/src/schedule.rs)、[event_accuracy.rs](../../rust_core/src/event_accuracy.rs)：固定日程、根和误差界。
+- [transient.rs](../../rust_core/src/transient.rs)：候选帧、原子提交、丢弃及回退测试。
+- [test_settlement.py](../../tests/test_settlement.py)、[test_timer.py](../../tests/test_timer.py)、[test_event_accuracy.py](../../tests/test_event_accuracy.py)：独立开发回归。
+- [Spectre 实验](../../../experiments/backends/dvs2-spectre-validation/README.md)与[共同历史协议](../../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
 
 这些证据不等于完整 DVS 资格、任意非线性事件支持或其他仿真器内部算法的证明。

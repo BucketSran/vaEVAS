@@ -36,9 +36,9 @@ Resolve only material ambiguities; use existing contracts for routine choices.
 
 Use the current [module/interface map](../../../evas/README.md#模块与接口), then the
 owning handbook chapter for code responsibilities: [voltage solving and sparse
-paths](../../../evas/docs/NUMERICS.md), [event settlement](../../../evas/docs/EVENTS.md),
-[operator histories](../../../evas/docs/OPERATORS.md), or [continuous dynamics,
-derivatives and DAE](../../../evas/docs/CONTINUOUS.md). Read only the affected
+paths](../../../evas/docs/math/solving.md), [event settlement](../../../evas/docs/math/events.md),
+[operator histories](../../../evas/docs/math/operators.md), or [continuous dynamics,
+derivatives and DAE](../../../evas/docs/math/continuous.md). Read only the affected
 sections and verify their entries against the checkout rather than copying a
 second code map into this skill.
 

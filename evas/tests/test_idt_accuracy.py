@@ -1,4 +1,7 @@
 """Binary64-source rational references; no sampled numerical-integration oracle."""
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 from fractions import Fraction as F
 import json
 from pathlib import Path

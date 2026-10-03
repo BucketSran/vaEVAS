@@ -8,7 +8,7 @@ PR26 的历史检查点为 IR v11，当前完整矩阵从[验证集入口](READM
 设计来源 `5b090571c7de7c6ec08a05c803479505c5d745ee`；实现在分支 `feat/evas-event-conditions`
 同步 main `a0c80431278988b66aa6cd8b725b44e1862ece17` 后推进，条件切片与 OR 检查点分别见 §9、§10。
 以下完整目标继续约束受限实现及后续扩展；原设计阶段事实和校准结果不当作仿真证据。
-当前实现、数学与精度边界以[事件手册](../docs/EVENTS.md#event-conditions)为准。
+当前实现、数学与精度边界以[事件手册](../docs/math/events.md#event-conditions)为准。
 能力归属为 LANG、CROSS、EVENT-ORDER、COMPOSE；依赖已有 TRANSITION。
 本地数学检查的组数不是模型条件数，也不改变原 31 条件的分母。
 
@@ -44,9 +44,9 @@ PDF SHA-256：`621b2a1a3751e7685600f180fe8f362766fe13e952023ded3d7ae48314337c03`
 
 LRM 的 OR 说明支持任一子事件触发后续语句；它本身不提供本实现的浮点同根证明、
 批次去重算法或所有模拟器的回调次数保证。以下一次执行是明确的 EVAS 首版契约。
-初始 cross、PWL 触零/平台到达沿用[事件手册](../docs/EVENTS.md)的已审查边界；
+初始 cross、PWL 触零/平台到达沿用[事件手册](../docs/math/events.md)的已审查边界；
 手册中尚有旧版本叙述，实际身份和历史认证范围以本基线源码及
-[算子手册](../docs/OPERATORS.md#历史误差与电压精度)为准。
+[算子手册](../docs/math/operators.md#历史误差与电压精度)为准。
 
 ## 2. 从首个失败到完整路径
 
@@ -144,8 +144,8 @@ F(v+, q+, H_e, u(e)) = 0
 ### 4.2 等号与不可判定
 
 本节保留第一阶段在代表时间 e 认证谓词的设计；IR16 共同观察显式绑定 te=tau，
-并另认证根盒与存储代表时刻。当前实现以[事件时间绑定](../docs/EVENTS.md#event-conditions)
-及[共同生命周期](../docs/CONTINUOUS.md#shared-lifecycle-closure)为准，不能混用两种时刻的结论。
+并另认证根盒与存储代表时刻。当前实现以[事件时间绑定](../docs/math/events.md#event-conditions)
+及[共同生命周期](../docs/math/continuous.md#shared-lifecycle-closure)为准，不能混用两种时刻的结论。
 
 令差值的可靠包围为 P=[l,h]，比较阈值为 0：
 
@@ -321,7 +321,7 @@ git diff --check
 
 ## 9. 0.8.0 条件实现历史检查点
 
-本地实现入口及新增独立答案在[事件手册](../docs/EVENTS.md#event-conditions)。
+本地实现入口及新增独立答案在[事件手册](../docs/math/events.md#event-conditions)。
 已同步 IR v8、输入区间接口和实际赋值集合；受影响的旧版本/原始 IR 测试协调迁移。
 新检查覆盖精确等号、舍入伪等号、嵌套/空分支、交替采样复位、状态独立内部电压、
 同刻反馈赋值、结构反馈拒绝、transition 联动与实际已接受帧回退。
@@ -357,7 +357,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 在 §9 实现上增加一个 block 多个 cross 叶子的 OR。所有根先保留独立身份、定位区间与
 容差，再在认证的同根批次按 block 去重；同块执行一次并记录全部 fired_triggers。
 以认证的非零输入系数选择 guard 的 PWL 断点，修复 C1 第二实例被无关断点切分后
-无法包围根的问题。证明、状态提交边界及代码映射见[OR 说明](../docs/EVENTS.md#event-or)。
+无法包围根的问题。证明、状态提交边界及代码映射见[OR 说明](../docs/math/events.md#event-or)。
 
 独立 TDD 实际 RED 为 OR 语法拒绝，以及额外无关输入断点使事件被拒绝；聚焦 GREEN
 检查分离/同根/近邻根、方向、叶子证据、输出网格和 raw IR 拒绝。Rust 另验证 OR 批次

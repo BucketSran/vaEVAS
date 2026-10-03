@@ -42,7 +42,7 @@ timer 的显式容差按 §5.10.3.3 单独处理，不沿用 cross 的单侧窗�
 也不能把 `g(tau)=0` 用作 `g(te)=0` 的证明。严格比较尤其不能以连续量误差很小为由选另一分支。
 
 **第一批检查点的已知选择**：非点 cross 的部分条件使用数学根 tau，并利用触发 guard 的零集证明等号；
-相关实现/测试暂保留，见[连续动态](../docs/CONTINUOUS.md#事件修改的联合积分与复位)。
+相关实现/测试暂保留，见[连续动态](../docs/math/continuous.md#事件修改的联合积分与复位)。
 它是 EVAS 当前约定，不能从 LRM 推导出“所有事件回调都应在真根采样”。
 0.12.1 显式选择 te=tau 并共用观测对象；可选晚触发策略和更广历史认证仍须另行实现及回归。
 
@@ -113,7 +113,7 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 实际复位与采样采用共同复位后观察：积分读 IC，未复位滤波保留旧物理状态；
 观察闭包与未来传播分开，事件体每轮从同一接受状态重放，保持局部顺序赋值。
 原六配置同一 IR 回放均从拒绝变为有限轨迹一致；更密输出、线性/非线性方法与独立赋值交换均验证。
-不放宽历史一致性或任何原阈值。数学、代码和限制见[共同闭包](../docs/CONTINUOUS.md#shared-lifecycle-closure)。
+不放宽历史一致性或任何原阈值。数学、代码和限制见[共同闭包](../docs/math/continuous.md#shared-lifecycle-closure)。
 另补直接项事件反馈的准入反例：H=1 时 q+=y+=q+ 不唯一，停住的迭代不能作为正确求解。
 该结构环现明确拒绝；无节点反馈的局部顺序更新、经过严格 proper 物理状态的控制组均通过。
 保守结构拒绝还不等于一般直接项事件反馈的联合认证。
@@ -128,9 +128,9 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 全部新旧证据、工具失败和可用性见[实施收据](../../experiments/runs/parallel-gap-integration/results/lifecycle-closure-checks.json)。
 
 下文维护首版直接输入路径与历史交付契约。IR16 已合并的联合动态范围、数学和独立检查
-见[连续动态章节](../docs/CONTINUOUS.md)，下文首版拒绝项不能当作新范围的语言限制。
+见[连续动态章节](../docs/math/continuous.md)，下文首版拒绝项不能当作新范围的语言限制。
 
-本页固定 DYNAMICS 首版 `idt` 的受限子集、解析答案和验证边界；实现说明见[算子手册](../docs/OPERATORS.md#idt)。
+本页固定 DYNAMICS 首版 `idt` 的受限子集、解析答案和验证边界；实现说明见[算子手册](../docs/math/operators.md#idt)。
 设计起点为 `main` 的 `5b090571c7de7c6ec08a05c803479505c5d745ee`（EVAS 0.6.1 / IR v6）；
 该历史基线没有 `idt`。后续 [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 已交付
 受限二参数积分，[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 已交付三参数复位（IR v11）。
@@ -268,7 +268,7 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 
 ### 共同观察入口的追加回归
 
-[审查修复](../docs/CONTINUOUS.md#lifecycle-observation-review-fixes)增加两条跨算子义务：
+[审查修复](../docs/math/continuous.md#lifecycle-observation-review-fixes)增加两条跨算子义务：
 
 - 所有在非点事件中使用的历史观察覆盖同一个 W；“历史不可修改”不能代替“时间函数恒定”的证明。
   恒等包装、断开恒零组件不改变误差验收。宽盒须拒绝超预算结果，缩窄根盒后解析答案可通过。
@@ -284,7 +284,7 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 ### 已知事件截止点的独立义务
 
 0.12.2 仅将固定 timer / 仿射源 cross 日程用于限定非线性历史认证；
-数学与未支持组合见[截止点说明](../docs/CONTINUOUS.md#known-event-horizons)。
+数学与未支持组合见[截止点说明](../docs/math/continuous.md#known-event-horizons)。
 答案来自分段初值问题，不以另一份 EVAS 输出作为 oracle。
 
 | 义务 | 独立答案或完整性检查 |

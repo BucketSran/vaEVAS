@@ -4,6 +4,9 @@ Nominal answers use exact Fraction arithmetic on the submitted binary64 values.
 The t=0/stop counts below test EVAS's explicit convention, not universal LRM
 qualification. These tests do not change the original 31-condition denominator.
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["TIMED-OPERATOR"]
+
 import copy
 from fractions import Fraction as Q
 import json

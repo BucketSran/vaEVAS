@@ -1,4 +1,8 @@
 """Sparse-size public circuits with independently constructed voltage answers."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["SPARSE", "DEV:sparse-reuse"]
+
 import unittest
 
 from evas import KernelError, compile_sources, solve

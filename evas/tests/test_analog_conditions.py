@@ -3,6 +3,9 @@
 These are development regressions for the v1-main gap.  The expected values are
 the hand piecewise formula for a sequential local real, not EVAS output.
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["ANALOG"]
+
 
 import unittest
 

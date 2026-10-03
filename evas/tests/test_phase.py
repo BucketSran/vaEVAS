@@ -1,4 +1,8 @@
 """Restricted idtmod/sin phase contracts for D2-style voltage-domain models."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 import math
 import subprocess
 import json

@@ -4,6 +4,10 @@ The oracle solves d1*y' + d0*y = b0*u on the binary64 source PWL segments.
 It is independent of the kernel implementation and keeps standard array syntax
 separate from the historical non-standard brace form.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["LAPLACE"]
+
 import copy
 from decimal import Decimal, getcontext
 import json

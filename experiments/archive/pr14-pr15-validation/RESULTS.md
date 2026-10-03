@@ -169,7 +169,7 @@ PWL 前向误差，不以优化后是否存在 `select` 为开关；Python/Rust 
 [整理收据](results/event-conditions-0.9.0.json)包含源码/内核/输入/checker 身份、逐配置结果、
 基线/最终原始清单哈希及实际 TDD RED/GREEN 日志哈希。原始波形和日志目前仅本地保留，
 未公开归档；校验和不能替代公开原始材料。独立数学及实现入口见
-[事件 OR](../../../evas/docs/EVENTS.md#event-or)与[条件契约](../../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
+[事件 OR](../../../evas/docs/math/events.md#event-or)与[条件契约](../../../evas/validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
 
 **260 Python、56 Rust** 回归通过；14 条条件数学、9 条动态数学检查通过。
 locked 构建、all-targets warnings-as-errors、格式及 diff 检查通过。修正后的 Spectre OR 专项已完成：原专项 EVAS 16/16、Spectre 15/16；
@@ -404,7 +404,7 @@ EVAS 列使用新内核瞬态 API，不能与旧 EVAS 0.8.7 混称。服务器�
 原 D1 free/reset 两条件 × base/fine 两档，全部满足未修改原 checker 的有限观测判据。
 使用原冻结 DUT、条件与请求设置；源码、内核、输入及 checker 哈希均在收据中。
 没有新增 Spectre 执行、其他 29 条件或完整矩阵重跑，原矩阵成绩保持历史口径；正式资格仍 I。
-复位 checker 的数值 witness 误差不是内核全时域精度界，解释见[算子文档](../../../evas/docs/OPERATORS.md#idt)。
+复位 checker 的数值 witness 误差不是内核全时域精度界，解释见[算子文档](../../../evas/docs/math/operators.md#idt)。
 全量 Python 277 方法、Rust 63 测试及编译器零警告检查通过；Clippy 组件不可用。
 原始波形仅本地保留，未作为公开归档发布。
 

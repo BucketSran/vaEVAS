@@ -1,10 +1,10 @@
 # 电压方程与数值求解
 
 适用范围：IR16 中的静态多项式、限定仿射与无状态多项式瞬态电压求解；
-有历史的联合积分/滤波/DAE 由[连续动态手册](CONTINUOUS.md)维护。
-事件定位与状态的额外认证见[事件手册](EVENTS.md)。
+有历史的联合积分/滤波/DAE 由[连续动态手册](continuous.md)维护。
+事件定位与状态的额外认证见[事件手册](events.md)。
 本章分别说明工作点收敛、瞬态根盒和稀疏求解；三者提供的保证不同。
-实现、证据和交付状态见[能力总表](CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
+实现、证据和交付状态见[能力总表](../CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
 
 ## 数学对象
 
@@ -53,7 +53,7 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 不套用这两条 Krawczyk 结构限制；一致的冗余约束与同支路贡献仍可认证。
 入口由 `analog.rs` 统一分流，条件消解后只缓存方程与映射，不保存输入、解或物理历史。
 普通输入条件当前仍只支持仿射叶子，不与多项式叶子联立。
-设计说明、high-gain 和反馈增益反例见 [NONLINEAR_TRANSIENT_CONTRACT.md](../validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
+设计说明、high-gain 和反馈增益反例见 [NONLINEAR_TRANSIENT_CONTRACT.md](../../validation/NONLINEAR_TRANSIENT_CONTRACT.md)。
 
 ### Newton 更新与收敛
 
@@ -82,7 +82,7 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 
 ### 容差与失败
 
-两项容差均须有限，`vabstol > 0`、`reltol >= 0`。默认值见 [EVAS README](../README.md#精度与结果解释)；开发回归用独立
+两项容差均须有限，`vabstol > 0`、`reltol >= 0`。默认值见 [EVAS README](../../README.md#精度与结果解释)；开发回归用独立
 70 位 Decimal 二分参考解检查容差细化、等价方程缩放和不同电压量级。
 这些判据是局部数值收敛要求，不是任意病态问题的前向误差上界，也不保证所有表达式
 改写的浮点结果相同。过严设置可能无法达到，返回失败，不自动放宽容差。
@@ -95,9 +95,9 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 本实现借鉴电压绝对/相对容差的概念，未复制 Spectre 的求解算法或精度预设；
 相同容差名称和值不等价于相同实际误差。当前没有电流未知量，不提供 `iabstol`。
 本章的无状态多项式瞬态路径只在请求输出时刻求工作点，不推进物理状态或定位事件。
-含积分反馈、隐式非线性电压关系或动态 guard 的路径见[连续动态](CONTINUOUS.md)；
+含积分反馈、隐式非线性电压关系或动态 guard 的路径见[连续动态](continuous.md)；
 不能把本章路径的限制推广到整个 `transient` 入口。
-事件的 `ttol` / `tol` 仍独立控制定位；idt 等历史算子的运算误差还需独立传播和验收，见[算子手册](OPERATORS.md#历史误差与电压精度)。
+事件的 `ttol` / `tol` 仍独立控制定位；idt 等历史算子的运算误差还需独立传播和验收，见[算子手册](operators.md#历史误差与电压精度)。
 静态电压容差不替代事件时间容差或积分精度。
 
 错误区分编译拒绝、IR/输入错误、线性奇异、`singular_jacobian`、`nonconvergence`、
@@ -120,7 +120,7 @@ Krawczyk 以内缩的电压预算盒 `X`、输入区间 `U`、`F(x,U)` 和 `J(X,
 仿射矩阵路径不变。认证相对于传输的原 IR，无法恢复前端之前已折叠的信息。
 条件范围由两端做结构检查：加法、无电压依赖标量乘法，以及嵌套输入条件；
 输入依赖乘积和高次幂明确拒绝，包含不可达臂和会相消的项。
-数学、调用点、独立 Fraction 反例及限制见[条件契约](../validation/ANALOG_CONDITIONS_CONTRACT.md)。
+数学、调用点、独立 Fraction 反例及限制见[条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)。
 这条普通 analog 条件路径不复制 Spectre 的步进策略，也不证明连续时间观察误差；
 其与事件或动态算子的组合尚未支持，不能把该路径边界推广为整个求解器的限制。
 
@@ -163,7 +163,7 @@ guard 依赖分析改为在稀疏系数中查找节点，同时保留原表达�
 旧检查点的速度差异与测量限制保留在[固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/NUMERICS.md#稀疏分支与性能边界)。
 它们不是当前版本的速度保证；静态基准也不能解释事件或历史认证的成本。
 
-局部基准入口是 [static_solver.rs](../rust_core/benches/static_solver.rs)：
+局部基准入口是 [static_solver.rs](../../rust_core/benches/static_solver.rs)：
 
 ```sh
 cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench static_solver
@@ -178,20 +178,20 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 ## 实现与证据
 
-- 精度链修复及兼容边界见[review 记录](../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)。
-  [独立回归](../tests/test_precision_chain.py)覆盖点输入近重根、贡献拆分、采样误差跨事件放大及正控制。
-- 历史 `ddfd379` 的标量根盒与同刻不可变查询优化见[专项 review 与测量](../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization)。
+- 精度链修复及兼容边界见[review 记录](../../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)。
+  [独立回归](../../tests/test_precision_chain.py)覆盖点输入近重根、贡献拆分、采样误差跨事件放大及正控制。
+- 历史 `ddfd379` 的标量根盒与同刻不可变查询优化见[专项 review 与测量](../../../experiments/runs/parallel-gap-integration/REVIEW.md#accuracy-optimization)。
   固定四个工作负载、同一误差预算的 release 内核计时，不包含 Python/JSON 开销；不能外推到最新精度链修复。
-- 组装：[assembly.rs](../rust_core/src/assembly.rs)；静态求解：[solver.rs](../rust_core/src/solver.rs)。
-- 多项式值/导数：[expression.rs](../rust_core/src/expression.rs)；阻尼迭代：[nonlinear.rs](../rust_core/src/nonlinear.rs)。
-- 无状态非线性瞬态入口：[transient.rs](../rust_core/src/transient.rs)；回归：
-  [test_nonlinear_transient.py](../tests/test_nonlinear_transient.py) 用单调三次方程独立二分根、
+- 组装：[assembly.rs](../../rust_core/src/assembly.rs)；静态求解：[solver.rs](../../rust_core/src/solver.rs)。
+- 多项式值/导数：[expression.rs](../../rust_core/src/expression.rs)；阻尼迭代：[nonlinear.rs](../../rust_core/src/nonlinear.rs)。
+- 无状态非线性瞬态入口：[transient.rs](../../rust_core/src/transient.rs)；回归：
+  [test_nonlinear_transient.py](../../tests/test_nonlinear_transient.py) 用单调三次方程独立二分根、
   参数/尺度/容差变化、输出网格、失败 sample 标号和事件组合拒绝校验这条路径的边界。
-- 当前线性代数：[linear.rs](../rust_core/src/linear.rs)；精度回归：[test_accuracy.py](../tests/test_accuracy.py)。
-- 稀疏算法：[linear/sparse.rs](../rust_core/src/linear/sparse.rs)、[columns.rs](../rust_core/src/linear/columns.rs)；
-  [稀疏测试](../rust_core/src/linear/sparse_tests.rs)覆盖固定种子矩形系统、构造答案及稠密对照。
-- [稀疏静态回归](../tests/test_sparse.py)检查耦合、尺度、冗余、奇异与变化的 Jacobian；
-  [瞬态整合回归](../tests/test_sparse_transient.py)检查 guard 链、同刻反馈环及多实例算子组合。
+- 当前线性代数：[linear.rs](../../rust_core/src/linear.rs)；精度回归：[test_accuracy.py](../../tests/test_accuracy.py)。
+- 稀疏算法：[linear/sparse.rs](../../rust_core/src/linear/sparse.rs)、[columns.rs](../../rust_core/src/linear/columns.rs)；
+  [稀疏测试](../../rust_core/src/linear/sparse_tests.rs)覆盖固定种子矩形系统、构造答案及稠密对照。
+- [稀疏静态回归](../../tests/test_sparse.py)检查耦合、尺度、冗余、奇异与变化的 Jacobian；
+  [瞬态整合回归](../../tests/test_sparse_transient.py)检查 guard 链、同刻反馈环及多实例算子组合。
   答案来自几何递推、`(I-P/4)s=bias+u` 和既有 Fraction 折线契约；反转实例顺序、改变步长/输出网格。
   同一文件的 idt 回归检查耦合网络中原始 PWL 的精确有理数积分、电压递推及过严预算拒绝。
 - `solver.rs` 的私有测试明确断言实际选择稀疏后端，覆盖原残差失败后的因子复用，以及
@@ -202,7 +202,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
   历史执行不代表当前版本重新运行。
 
 这里的电压域约束与 Newton 公式是数学表述；具体行尺度、容差组合、初猜及失败策略是 EVAS 的实现选择。
-语法/运算符的来源见[实现范围](../README.md#实现范围)；本文未声称复制 Spectre 内部求解流程。
+语法/运算符的来源见[实现范围](../../README.md#实现范围)；本文未声称复制 Spectre 内部求解流程。
 
 <a id="无状态瞬态的输入误差边界"></a>
 
@@ -225,4 +225,4 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 这些认证相对于传输后的原 IR 和给定源定义，不能恢复前端折叠损失，不能证明全局多解选择，
 本章的工作点证书也不证明连续时间全轨迹误差。
-非线性历史的 Picard/Taylor 传播及其内部步长由[连续动态章节](CONTINUOUS.md#多项式非线性积分与误差证明)说明。
+非线性历史的 Picard/Taylor 传播及其内部步长由[连续动态章节](continuous.md#多项式非线性积分与误差证明)说明。

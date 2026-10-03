@@ -4,6 +4,10 @@ The oracle uses exact rational arithmetic on the binary64 source/parameter
 values actually passed to EVAS. It never reads an EVAS-generated waveform to
 construct expected values. Zero delay is an EVAS extension, not an LRM demand.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["TIMED-OPERATOR"]
+
 import copy
 from fractions import Fraction
 import json

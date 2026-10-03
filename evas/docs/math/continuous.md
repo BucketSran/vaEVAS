@@ -1,9 +1,9 @@
 # 连续动态联合求解与动态 cross
 
 本页说明 IR16 的联合连续网络：电压代数关系、调用点物理状态、误差传播与动态事件。
-能力 ID 为 DYNAMICS、CROSS、COMPOSE、LANG；支持与缺口由[能力表](CAPABILITIES.md)维护，
-被测版本和结果由[实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)维护。
-直接输入算子的解析路径见 [OPERATORS](OPERATORS.md)，事件语句规则见 [EVENTS](EVENTS.md)。
+能力 ID 为 DYNAMICS、CROSS、COMPOSE、LANG；支持与缺口由[能力表](../CAPABILITIES.md)维护，
+被测版本和结果由[实验入口](../../../experiments/runs/parallel-gap-integration/README.md#当前证据)维护。
+直接输入算子的解析路径见 [OPERATORS](operators.md)，事件语句规则见 [EVENTS](events.md)。
 
 ## 行为与边界
 
@@ -155,7 +155,7 @@ b 时重新使用点输入、新历史和 Q 的区间检查原电压关系，未
 例如 `u=3t, cross(u-1)` 的 `u>1` 在 tau=1/3 为假，不能因 b 的舍入延迟变成真。
 这是 EVAS 的观察约定，不据此声称与 Spectre 的事件回调取值一致；点时刻 timer 仍在该点判断。
 共同接口区分真根 tau、实际触发 te 和代表时刻 b，见
-[第一批生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
+[第一批生命周期契约](../../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
 LRM 允许 cross 在真根之后的容差窗口触发；不能用这里的 `g(tau)=0` 证明 `g(te)=0`。
 共同事件对象显式保留 `te=tau` 的策略，并记录观测区间；尚未增加可选择的晚触发策略。
 积分的候选 reset 被认证为零时，包括显式传入零 reset 和释放复位的情形，
@@ -208,12 +208,12 @@ IR 程序版本仍为 16，该字段只扩展 JSON 输出元数据。
 
 生产 `Controller` 在准备整批事件和检查下一截止点成功后，一次更新接受帧、事件游标及记录。
 失败不消费日程；成功但丢弃的候选也不安装算子目标。
-实现入口为 [transient.rs](../rust_core/src/transient.rs)、[operators.rs](../rust_core/src/operators.rs)、
-[continuous_history.rs](../rust_core/src/continuous_history.rs) 与 [nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs)。
-直接项及导数暴露的事件环准入检查由 [reset_dependencies.rs](../rust_core/src/reset_dependencies.rs) 维护。
-公共闭式回归见 [test_lifecycle_closure.py](../tests/test_lifecycle_closure.py)，真实控制器回退见
-[transient_lifecycle_tests.rs](../rust_core/src/transient_lifecycle_tests.rs)；
-[共同闭包收据](../../experiments/runs/parallel-gap-integration/results/lifecycle-closure-checks.json)保留 RED、原六个反例、
+实现入口为 [transient.rs](../../rust_core/src/transient.rs)、[operators.rs](../../rust_core/src/operators.rs)、
+[continuous_history.rs](../../rust_core/src/continuous_history.rs) 与 [nonlinear_dynamics.rs](../../rust_core/src/nonlinear_dynamics.rs)。
+直接项及导数暴露的事件环准入检查由 [reset_dependencies.rs](../../rust_core/src/reset_dependencies.rs) 维护。
+公共闭式回归见 [test_lifecycle_closure.py](../../tests/test_lifecycle_closure.py)，真实控制器回退见
+[transient_lifecycle_tests.rs](../../rust_core/src/transient_lifecycle_tests.rs)；
+[共同闭包收据](../../../experiments/runs/parallel-gap-integration/results/lifecycle-closure-checks.json)保留 RED、原六个反例、
 两档原矩阵和失败记录。Spectre 复用第一批原始导出，没有新远端执行或性能测量。
 
 <a id="lifecycle-observation-review-fixes"></a>
@@ -238,7 +238,7 @@ transition 只在保留下来的已知斜坡/平台上提供根盒观察；激�
 absdelay、slew、idtmod 的非点事件观察尚无对应区间接口，现在明确拒绝而不退回代表时刻采样；
 精确时刻的原支持保持。该拒绝目前作用于同一模型的算子向量，即使该算子未被事件直接读取也可能保守拒绝。
 这不构成所有算子的连续时间精度证明，也未实现一般事件固定点的唯一性认证。
-该修复的执行身份和验证见[审查修复收据](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)；
+该修复的执行身份和验证见[审查修复收据](../../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json)；
 上方共同闭包收据描述较早快照，不改写为后续修复成绩。
 
 以下反例用于检查采样误差是否进入未来历史：
@@ -255,7 +255,7 @@ absdelay、slew、idtmod 的非点事件观察尚无对应区间接口，现在�
 正式历史仅在 Frame 全部验收通过后替换；查询、失败、丢弃和重试均不改写它。
 同刻重放从同一份已接受状态开始。旧失败及修复对照见
 [固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/CONTINUOUS.md#lifecycle-observation-review-fixes)和
-[动态闭包审查收据](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json)。
+[动态闭包审查收据](../../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json)。
 
 ## 多项式非线性积分与误差证明
 
@@ -319,7 +319,7 @@ Logistic `y'=y*(1-y),y(0)=.25` 的 `1/(1+3*exp(-t))`，
 查询超过已认证截止点返回 `event_resolution`。下一段传播、同刻重放、精度及顺序检查全部成功后，
 真实 Controller 才一起提交接受帧、日程游标和事件记录；失败或丢弃候选均不消费事件。
 
-独立回归见 [test_event_horizons.py](../tests/test_event_horizons.py)：分段有理解、t=0 事件、无变化事件、
+独立回归见 [test_event_horizons.py](../../tests/test_event_horizons.py)：分段有理解、t=0 事件、无变化事件、
 周期切换、非点仿射根盒、混合滤波，以及输出网格/max_step 不变性。
 Rust 私有测试检查认证域、前缀不变性和真实 Controller 的重复失败、丢弃、重试。
 事件截止点接入非线性连续网络；线性解析传播保持原实现，动态 guard 日程仍要求完整历史。
@@ -410,30 +410,30 @@ Picard 管和 Taylor 包围的依据可参见
 
 ## 实现与独立检查
 
-审查联合路径时可依次阅读 [混合算子解析答案](../tests/test_mixed_dynamics.py)、
-[根盒采样与拒绝反例](../tests/test_event_window_sampling.py)、
-[隐式 DAE 解析答案](../tests/test_implicit_dynamics.py)。Rust 私有检查另外覆盖精确有理数包围、
+审查联合路径时可依次阅读 [混合算子解析答案](../../tests/test_mixed_dynamics.py)、
+[根盒采样与拒绝反例](../../tests/test_event_window_sampling.py)、
+[隐式 DAE 解析答案](../../tests/test_implicit_dynamics.py)。Rust 私有检查另外覆盖精确有理数包围、
 奇异 Jacobian、查询无副作用与拒绝/丢弃后的重试；这些都是开发证据，不增加原 31 条件的分母。
 
-- [continuous.rs](../rust_core/src/continuous.rs)：依赖闭包、贡献关系、DC、联合连续状态及 PWL 段。
-- [continuous_runtime.rs](../rust_core/src/continuous_runtime.rs)：线性/多项式轨迹共用查询及事件瞬间连续性接口。
-- [continuous_derivatives.rs](../rust_core/src/continuous_derivatives.rs)：导数质量关系与连续性准入。
-- [continuous_history.rs](../rust_core/src/continuous_history.rs)：事件后的线性物理状态重建。
-- [nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs)：混合状态网络、Picard 管、区间 Taylor 与非线性候选历史。
-- [implicit_dynamics.rs](../rust_core/src/implicit_dynamics.rs)：原始约束导数、初始根认证及 index-one 联合延续。
-- [state_space.rs](../rust_core/src/state_space.rs)：区间矩阵指数与遗漏项证明。
-- [guard_trajectory.rs](../rust_core/src/guard_trajectory.rs)、[dynamic_roots.rs](../rust_core/src/dynamic_roots.rs)：连续值/导数包围和根隔离。
-- [operators.rs](../rust_core/src/operators.rs)、[schedule.rs](../rust_core/src/schedule.rs)：算子接入及事件认证。
-- [transient.rs](../rust_core/src/transient.rs)、[settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)：根盒采样状态与代表时刻输出分别认证，整帧提交。
-- [test_continuous_dynamics.py](../tests/test_continuous_dynamics.py)：解析反馈/振荡器、精确 PWL 积分、二阶/三阶 ramp、完整分子、直接通路、DC、导数侧别、网格不变性及误差放大。
-- [test_dynamic_cross.py](../tests/test_dynamic_cross.py)：同号端点双根、末端根前的另一根、sqrt/正弦/积分根、方向、网格不变性和切线拒绝。
+- [continuous.rs](../../rust_core/src/continuous.rs)：依赖闭包、贡献关系、DC、联合连续状态及 PWL 段。
+- [continuous_runtime.rs](../../rust_core/src/continuous_runtime.rs)：线性/多项式轨迹共用查询及事件瞬间连续性接口。
+- [continuous_derivatives.rs](../../rust_core/src/continuous_derivatives.rs)：导数质量关系与连续性准入。
+- [continuous_history.rs](../../rust_core/src/continuous_history.rs)：事件后的线性物理状态重建。
+- [nonlinear_dynamics.rs](../../rust_core/src/nonlinear_dynamics.rs)：混合状态网络、Picard 管、区间 Taylor 与非线性候选历史。
+- [implicit_dynamics.rs](../../rust_core/src/implicit_dynamics.rs)：原始约束导数、初始根认证及 index-one 联合延续。
+- [state_space.rs](../../rust_core/src/state_space.rs)：区间矩阵指数与遗漏项证明。
+- [guard_trajectory.rs](../../rust_core/src/guard_trajectory.rs)、[dynamic_roots.rs](../../rust_core/src/dynamic_roots.rs)：连续值/导数包围和根隔离。
+- [operators.rs](../../rust_core/src/operators.rs)、[schedule.rs](../../rust_core/src/schedule.rs)：算子接入及事件认证。
+- [transient.rs](../../rust_core/src/transient.rs)、[settlement_bounds.rs](../../rust_core/src/settlement_bounds.rs)：根盒采样状态与代表时刻输出分别认证，整帧提交。
+- [test_continuous_dynamics.py](../../tests/test_continuous_dynamics.py)：解析反馈/振荡器、精确 PWL 积分、二阶/三阶 ramp、完整分子、直接通路、DC、导数侧别、网格不变性及误差放大。
+- [test_dynamic_cross.py](../../tests/test_dynamic_cross.py)：同号端点双根、末端根前的另一根、sqrt/正弦/积分根、方向、网格不变性和切线拒绝。
 
 数学答案来自手推闭式、Fraction 面积和已知根，不用另一份同算法代码作正确性 oracle。
-[test_dynamic_closure.py](../tests/test_dynamic_closure.py) 检查内部导数、联合复位、非线性闭式、
+[test_dynamic_closure.py](../../tests/test_dynamic_closure.py) 检查内部导数、联合复位、非线性闭式、
 网格/贡献顺序不变性、误差放大和明确拒绝；Rust 私有测试检查两套联合历史失败/丢弃/重试。
 不确定时刻回归包括 q 从 1 切换为 2 的 `y'=-q*y²` 分段有理解、两次非精确根的复位/释放、
 较宽根盒在严格电压预算及 10⁶ 倍输出增益下拒绝，以及跨三角 PWL 顶点的精确有理数面积。
-旧版本的拒绝日志与新执行身份见[事件窗口检查收据](../../experiments/runs/parallel-gap-integration/results/nonlinear-event-window-checks.json)。
+旧版本的拒绝日志与新执行身份见[事件窗口检查收据](../../../experiments/runs/parallel-gap-integration/results/nonlinear-event-window-checks.json)。
 旧 Frame 回退回归继续运行，矩阵条件数不因增加开发测试方法而变化。
 独立数学通过不证明跨后端兼容或性能领先。
 精确执行身份和数量由实验收据维护；开发回归不改变原矩阵分母。
@@ -454,7 +454,7 @@ Picard 管和 Taylor 包围的依据可参见
 | INIT-C6 连续 guard 边界 | `H=1` 的 ddt 直接通路拒绝连续 cross；`H=1/(1+s)` 输出 `1-exp(-t)`，过 .5 的时刻为 `log(2)` | 算子名称不能代替连续性证明 |
 
 INIT-C1–4 和网格/断点观察由 `ContinuousInitializationContracts` 检查；区间与只读查询由
-[continuous.rs 私有测试](../rust_core/src/continuous.rs)检查；INIT-C6 由动态 cross 回归检查。
+[continuous.rs 私有测试](../../rust_core/src/continuous.rs)检查；INIT-C6 由动态 cross 回归检查。
 已有极小容差的独立历史误差拒绝回归继续保留。这里的 t=0 规则与断点侧别是 EVAS 的接口约定，
 不把这个初始化组合探针当作 Spectre 的一致性结论或未见确认集。
 
@@ -462,7 +462,7 @@ INIT-C1–4 和网格/断点观察由 `ContinuousInitializationContracts` 检查
 
 ## 检查点与审阅入口
 
-审查时沿[功能对应表](../README.md#review-map)定位文件，再核对以下关系：
+审查时沿[功能对应表](../../README.md#review-map)定位文件，再核对以下关系：
 
 1. 贡献累加和代数消元是否保持原方程；每个调用点的状态与初值是否独立。
 2. DC 初始化、事件观察和未来传播是否使用各自的状态；重启是否保留其他调用点的物理历史。
@@ -473,5 +473,5 @@ INIT-C1–4 和网格/断点观察由 `ContinuousInitializationContracts` 检查
 初始化、采样盒、复位闭包和已知事件截止点的旧审查过程保留在
 [固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/CONTINUOUS.md#checkpoint-evidence)。
 该历史章节中的“候选/未合并”描述只属于原检查点，当前交付状态以能力表为准。
-各次实际输入、失败、测试数量与波形身份继续由[实验收据](../../experiments/runs/parallel-gap-integration/README.md#当前证据)维护。
+各次实际输入、失败、测试数量与波形身份继续由[实验收据](../../../experiments/runs/parallel-gap-integration/README.md#当前证据)维护。
 这些记录没有新的 Spectre 执行或当前性能承诺，也不构成连续时间全轨迹资格。

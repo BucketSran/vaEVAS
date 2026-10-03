@@ -1,4 +1,8 @@
 """Independent binary64-input rational contracts for operator error transfer."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["TIMED-OPERATOR"]
+
 from fractions import Fraction as F
 import unittest
 

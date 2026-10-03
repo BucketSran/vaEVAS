@@ -1,4 +1,8 @@
 """Event sampling must certify every possible root time, not only its representative."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["EVENT-CONDITIONS", "DYNAMICS"]
+
 import math
 import unittest
 

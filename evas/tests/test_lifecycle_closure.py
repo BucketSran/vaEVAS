@@ -1,4 +1,7 @@
 """Post-reset joint closure with independent piecewise IVP answers."""
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 import math
 import unittest
 from fractions import Fraction as Q

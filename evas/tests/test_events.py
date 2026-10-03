@@ -3,6 +3,9 @@
 These are new, transition-free probes, not replacements for DVS E1 or additional
 conditions in its fixed 31-condition denominator. Freeze before implementing.
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["CROSS", "EVENT-CONDITIONS"]
+
 import copy
 import json
 import math

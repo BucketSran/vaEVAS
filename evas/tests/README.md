@@ -16,6 +16,14 @@ PYTHONPATH=src python3 -m unittest discover tests          # 全量，约 4 分�
 PYTHONPATH=src python3 -m unittest tests.test_idt -v       # 单个文件
 ```
 
+## GUARDS 守护标签
+
+每个测试文件顶部声明 `GUARDS = [...]`，标注它守护的契约/能力/条件 ID
+（纯开发回归用 `DEV:<主题>` 诚实标注）。标签由
+`scripts/traceability.py` 扫描生成 [docs/TRACEABILITY.md](../docs/TRACEABILITY.md)；
+`python3 scripts/traceability.py --check` 拒绝无标签文件。流程规则见
+[docs/PROCESS.md](../docs/PROCESS.md)。
+
 ## 期望值的独立性约定
 
 所有期望值独立于被测实现固定：精确分数（`Fraction`）梯形积分、

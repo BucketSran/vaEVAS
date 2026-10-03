@@ -1,4 +1,8 @@
 """Sparse-size event/operator integration with independent mathematical answers."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["SPARSE", "DEV:sparse-reuse"]
+
 from fractions import Fraction as F
 import unittest
 

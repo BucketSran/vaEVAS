@@ -1,4 +1,8 @@
 """Independent dynamic composition answers, separate from the frozen 31 cases."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 import math
 import unittest
 from fractions import Fraction

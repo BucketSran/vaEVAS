@@ -1,4 +1,8 @@
 """Known-event horizons, checked against independent piecewise IVP answers."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 from fractions import Fraction
 import math
 import unittest

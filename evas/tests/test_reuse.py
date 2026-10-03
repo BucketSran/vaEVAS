@@ -1,4 +1,8 @@
 """Public contracts for repeated solves; expected values do not use EVAS algebra."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DEV:sparse-reuse"]
+
 import unittest
 
 from evas import KernelError, compile_sources, solve
