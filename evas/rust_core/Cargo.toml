@@ -10,3 +10,7 @@ serde_json = { version = "=1.0.150", features = ["float_roundtrip"] }
 [[bench]]
 name = "static_solver"
 harness = false
+
+[dev-dependencies]
+num-rational = "=0.4.2"
+proptest = "=1.11.0"

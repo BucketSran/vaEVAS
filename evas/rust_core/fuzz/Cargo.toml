@@ -1,0 +1,29 @@
+[package]
+name = "evas-kernel-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "=0.4.13"
+evas-kernel = { path = ".." }
+
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "parse_request"
+path = "fuzz_targets/parse_request.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "run"
+path = "fuzz_targets/run.rs"
+test = false
+doc = false
+bench = false

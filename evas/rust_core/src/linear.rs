@@ -115,3 +115,6 @@ mod tests {
 
 #[cfg(test)]
 mod sparse_tests;
+
+#[cfg(test)]
+mod properties;
