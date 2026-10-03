@@ -4,7 +4,7 @@ GUARDS = ["LANG", "COMPOSE"]
 import json
 import unittest
 from evas import CompileError, compile_sources, solve
-from evas.ir import Affine, Binary, BranchIdentity, Contribution, Origin, Program
+from evas.ir import Affine, Binary, BranchIdentity, Contribution, Origin, Program, SCHEMA_VERSION
 from test_affine import KERNEL, instance, model
 
 
@@ -85,6 +85,6 @@ class FrontendLimits(unittest.TestCase):
 
     def test_small_shared_expression_preserves_value_and_ir(self):
         p=self.compile(model('x=V(u,r);'+'x=x+x;'*8+'V(y,r)<+x;', 'real x;'))
-        self.assertEqual(json.loads(json.dumps(p.to_dict()))['schema_version'],16)
+        self.assertEqual(json.loads(json.dumps(p.to_dict()))['schema_version'],SCHEMA_VERSION)
         result=solve(p,['u'],[[.125]],kernel=KERNEL)
         self.assertEqual(result['solutions'][0]['voltages'][p.nodes.index('y')],32)

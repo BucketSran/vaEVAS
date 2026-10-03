@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 
 @dataclass(frozen=True)
@@ -189,14 +189,23 @@ class TimerTrigger:
 
 
 @dataclass(frozen=True)
+class HeldTimerTrigger:
+    start: Expression
+    period: Expression
+    time_tolerance: float
+    enabled: Expression
+    kind: str = field(default="held_timer", init=False)
+
+
+@dataclass(frozen=True)
 class OrTrigger:
-    triggers: tuple[CrossTrigger | TimerTrigger, ...]
+    triggers: tuple[CrossTrigger | TimerTrigger | HeldTimerTrigger, ...]
     kind: str = field(default="or", init=False)
 
 
 @dataclass(frozen=True)
 class Event:
-    trigger: CrossTrigger | TimerTrigger | OrTrigger
+    trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger
     body: tuple[Assignment | Conditional, ...]
     origin: Origin
 

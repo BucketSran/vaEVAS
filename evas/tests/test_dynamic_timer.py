@@ -1,0 +1,98 @@
+"""Dynamic timer answers from held absolute-time schedules, not backend logs."""
+GUARDS = ["TIMER", "EVENT-ORDER", "LANG"]
+
+import unittest
+import copy
+import json
+import subprocess
+from evas import CompileError, KernelError
+from evas import compile_sources
+from test_affine import KERNEL, instance, model
+from test_timer import run_timer
+
+
+class DynamicTimer(unittest.TestCase):
+    def test_self_scheduled_one_shot_clock_and_query_invariance(self):
+        source=model('''@(initial_step) begin next=.25; n=0; end
+          @(timer(next,0,1e-12)) begin next=next+.25; n=n+1; end
+          V(y,r)<+n;''', 'real next; integer n;')
+        a=run_timer(source,stop=1,times=[0,1],step=1)
+        b=run_timer(source,stop=1,times=[0,.25,.375,.5,.75,1],step=.0625)
+        self.assertEqual(a['transient']['events'], b['transient']['events'])
+        self.assertEqual([e['time'] for e in a['transient']['events']],[.25,.5,.75,1])
+        self.assertEqual(a['transient']['states'][-1],[1.25,4])
+
+    def test_start_change_replaces_the_old_future_occurrence(self):
+        source=model('''@(initial_step) begin next=.75; n=0; end
+          @(timer(.25,0,1e-12)) next=.5;
+          @(timer(next,0,1e-12)) n=n+1;
+          V(y,r)<+n;''', 'real next; integer n;')
+        r=run_timer(source,stop=1,times=[0,1])
+        self.assertEqual([e['time'] for e in r['transient']['events']],[.25,.5])
+        self.assertEqual(r['transient']['states'][-1],[.5,1])
+
+    def test_period_change_and_enable_preserve_absolute_phase(self):
+        source=model('''@(initial_step) begin period=.5; n=0; end
+          @(timer(.125,0,1e-12)) period=.25;
+          @(timer(0,period,1e-12)) n=n+1;
+          V(y,r)<+n;''', 'real period; integer n;')
+        r=run_timer(source,stop=1,times=[0,1])
+        self.assertEqual([e['time'] for e in r['transient']['events']],[0,.125,.25,.5,.75,1])
+        self.assertEqual(r['transient']['states'][-1],[.25,5])
+        source=model('''@(initial_step) begin enable=0; n=0; end
+          @(timer(.375,0,1e-12)) enable=1;
+          @(timer(0,.25,1e-12,enable)) n=n+1;
+          V(y,r)<+n;''', 'integer enable,n;')
+        r=run_timer(source,stop=1,times=[0,1])
+        self.assertEqual([e['time'] for e in r['transient']['events']],[.375,.5,.75,1])
+        self.assertEqual(r['transient']['states'][-1],[1,3])
+
+    def test_unchanged_and_past_one_shot_times_do_not_rearm(self):
+        for assignment in ('next=next;', 'next=0;'):
+            source=model('''@(initial_step) begin next=.25; n=0; end
+              @(timer(next,0,1e-12)) begin '''+assignment+''' n=n+1; end
+              V(y,r)<+n;''', 'real next; integer n;')
+            r=run_timer(source,stop=1,times=[0,1])
+            self.assertEqual([e['time'] for e in r['transient']['events']],[.25])
+
+    def test_dynamic_timer_or_exact_cross_executes_once(self):
+        source=model('''@(initial_step) begin next=.5; n=0; end
+          @(timer(next,0,1e-12) or cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1;
+          V(y,r)<+n;''', 'real next; integer n;')
+        r=run_timer(source,stop=1,times=[0,1])
+        event,=r['transient']['events']
+        self.assertEqual(event['time'],.5)
+        self.assertEqual([leaf['kind'] for leaf in event['fired_triggers']],['timer','cross'])
+        self.assertEqual(r['transient']['states'][-1],[.5,1])
+
+    def test_uncertainty_and_raw_dependency_are_not_silently_dropped(self):
+        source=model('''@(initial_step) begin next=.75; n=0; end
+          @(timer(.25,0,1e-12)) next=(1.0/3.0)*V(u,r)+5.0/12.0;
+          @(timer(next,0,1e-30)) n=n+1; V(y,r)<+n;''', 'real next; integer n;')
+        with self.assertRaisesRegex(KernelError,'event_resolution'):
+            run_timer(source,stop=1,times=[0,1])
+        program=compile_sources({'timer.va':source},[instance()]).to_dict()
+        for expression, kind in ((dict(op='state',state=99),'invalid_ir'),
+                                 (dict(op='affine',constant=.5,terms=[dict(node=program['nodes'].index('u'),coefficient=0)]),'unsupported_timer')):
+            raw=copy.deepcopy(program)
+            raw['events'][1]['trigger']['start']=expression
+            payload=dict(program=raw,driven=['u'],samples=[],transient=dict(
+                pwl=[[[0,0],[1,1]]],output_times=[0,1],stop=1,max_step=1))
+            result=subprocess.run([str(KERNEL)],input=json.dumps(payload),text=True,capture_output=True)
+            self.assertEqual(result.returncode,2)
+            self.assertEqual(result.stdout,'')
+            self.assertEqual(json.loads(result.stderr)['kind'],kind)
+
+    def test_continuous_voltage_parameters_and_history_stay_explicit(self):
+        for setting in ('V(u,r)', 'idt(V(u,r),0)'):
+            source=model('@(initial_step) n=0; @(timer('+setting+',0,1e-12)) n=n+1; V(y,r)<+n;', 'integer n;')
+            with self.assertRaises((CompileError,KernelError)):
+                run_timer(source,stop=1,times=[0,1])
+        source=model('''@(initial_step) next=.25;
+          @(timer(next,0,1e-12)) next=next+.25;
+          V(y,r)<+idt(V(u,r),0);''','real next;')
+        with self.assertRaisesRegex(KernelError,'unsupported_timer'):
+            run_timer(source,stop=1,times=[0,1])
+
+
+if __name__ == '__main__': unittest.main()

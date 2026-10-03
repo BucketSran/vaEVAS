@@ -70,7 +70,30 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
 
 #[test]
 fn failed_future_guard_ordering_rolls_back_then_retries_in_the_same_controller() {
-    let (model, trajectory, mut controller, mut calendar) = relocalization_fixture();
+    check_failed_future_guard_ordering(relocalization_fixture);
+}
+
+fn timer_relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let (base, trajectory, controller, _) = relocalization_fixture();
+    let mut program = base.program;
+    program.events[1].trigger = serde_json::from_value(json!({"kind":"held_timer",
+        "start":{"op":"state","state":0},"period":{"op":"affine","constant":0,"terms":[]},
+        "time_tolerance":1e-9,"enabled":{"op":"affine","constant":1,"terms":[]}}))
+    .unwrap();
+    let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+    let calendar = schedule_held(&model, &trajectory, &controller.accepted.state_bounds).unwrap();
+    (model, trajectory, controller, calendar)
+}
+
+#[test]
+fn failed_dynamic_timer_ordering_preserves_the_complete_frame_then_retries() {
+    check_failed_future_guard_ordering(timer_relocalization_fixture);
+}
+
+fn check_failed_future_guard_ordering(
+    fixture: fn() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>),
+) {
+    let (model, trajectory, mut controller, mut calendar) = fixture();
     let original: Vec<_> = calendar
         .iter()
         .map(|e| (e.time, e.event, e.bounds()))
@@ -102,7 +125,7 @@ fn failed_future_guard_ordering_rolls_back_then_retries_in_the_same_controller()
             .collect::<Vec<_>>(),
         original
     );
-    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = relocalization_fixture();
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = fixture();
     controller
         .accept_relocalized(&model, &trajectory, &mut calendar)
         .unwrap();

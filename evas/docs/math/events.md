@@ -400,3 +400,29 @@ Rust 的 [Controller 回退检查](../../rust_core/src/transient_lifecycle_tests
 网络贡献仍须联合仿射且不含历史算子；这项能力不是隐式非线性网络求解。
 开发检查包括平方根答案、内部节点投影、观察网格不变性、原始算术消去拒绝，
 以及同一 Controller 内的候选跳变失败/重试。候选尚未合并，没有新 Spectre 对照。
+
+<a id="held-timer"></a>
+
+### 保持状态控制的动态 timer（IR17 分支候选）
+
+语言依据为 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)：
+起始时间、周期和 enable 可以改变，time_tol 是常量；start/period 不能调用模拟滤波函数。
+变化后下一事件使用最新参数；重新启用时如同没有禁用，不能把 enable 的变化当作新相位原点。
+
+本切片以每个事件间保持的 `q_k` 求 `a(q_k)`、`p(q_k)`、`e(q_k)` 的区间。
+若 p>0，未来发生集合为 `a+k*p` 中严格晚于已接受边界的名义事件；
+p≤0 则只考虑未来的一次 a。没有改变参数的叶子继续使用原日程。
+`next=next+.25` 的单次 timer 应依次在 .25、.5、.75、1 发生；
+start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时刻重起周期。
+
+从原 IR 计算参数包围，nominal-time、stop 和已接受边界的比较须可认证。
+不确定窗口横跨边界或 stop、启用真假不明、正周期无法证明、时间误差超容差或预算超限均拒绝。
+新日程及与保留 cross/timer 的排序/同刻认证在候选中完成；失败不修改旧帧。
+同一 Controller 的失败排序及修正重试见 transient_lifecycle_tests。
+
+`held_timer` 保存参数表达式；原固定 timer 的 IR 字段和定位公式保留。
+事件记录仍为 `kind=timer`，OR 内 timer 叶子也不包含虚构 guard 值。
+目前参数须是状态/常量的联合仿射表达式，整个电压网络无历史算子。
+这项限制保护未来预测截止点：在新日程确定前，不能把旧截止点当作动态历史的推进上限。
+连续电压参数、动态 tolerance、一般非线性参数以及历史联合闭包仍需补齐。
+独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。候选尚未合并，无新 Spectre 对照。

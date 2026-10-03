@@ -376,6 +376,29 @@ impl EventModel {
                         dynamic_guards.push(false);
                         None
                     }
+                    EventTrigger::HeldTimer {
+                        start,
+                        period,
+                        enabled,
+                        time_tolerance,
+                    } => {
+                        if !time_tolerance.is_finite() || *time_tolerance <= 0. {
+                            return Err(Error::new("invalid_ir", "invalid timer tolerance"));
+                        }
+                        for expression in [start, period, enabled] {
+                            let value = affine(expression, &program, &event.origin.instance)?;
+                            if !value.node_dependencies.is_empty()
+                                || !value.operator_dependencies.is_empty()
+                            {
+                                return Err(Error::new("unsupported_timer", "dynamic timer parameters require held-state affine expressions"));
+                            }
+                        }
+                        if !program.operators.is_empty() {
+                            return Err(Error::new("unsupported_timer", "dynamic timer prediction horizons with operator histories require joint closure"));
+                        }
+                        dynamic_guards.push(false);
+                        None
+                    }
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 };
                 guards.push(guard);
@@ -732,7 +755,8 @@ impl EventModel {
                     !operators.is_empty() || (!held && nodes.iter().any(|node| affected[*node]));
                 self.guard_operators.push(operators);
             } else {
-                self.relocalized_guards.push(false);
+                self.relocalized_guards
+                    .push(matches!(leaf.trigger, EventTrigger::HeldTimer { .. }));
                 self.guard_operators.push(BTreeSet::new());
             }
         }

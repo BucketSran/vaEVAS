@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 import math
 from typing import TYPE_CHECKING
 
-from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
+from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
 from .lowering import lower, scale
 from .limits import MAX_PARAMETER_DEPTH, check_ir
@@ -255,13 +255,20 @@ class InstanceCompiler:
             result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True),
                                    int(direction), time_tol, expr_tol)
         else:
-            start = setting(leaf.arguments[0])
-            period = 0.0 if leaf.arguments[1] is None else setting(leaf.arguments[1])
             time_tol = setting(leaf.arguments[2])
-            enabled = setting(leaf.arguments[3]) != 0 if len(leaf.arguments) == 4 else True
-            if start < 0 or time_tol <= 0:
+            if time_tol <= 0:
                 raise CompileError("timer requires nonnegative start and positive time_tol")
-            result = TimerTrigger(start, period, time_tol, enabled)
+            values = [lower(arg, self.symbol, {}, self.model.source, preserve_structure=True) if arg is not None else Affine(0., ())
+                      for arg in (leaf.arguments[0], leaf.arguments[1], leaf.arguments[3] if len(leaf.arguments) == 4 else None)]
+            if len(leaf.arguments) < 4:
+                values[2] = Affine(1., ())
+            if all(isinstance(value, Affine) and not value.terms for value in values):
+                start, period, enabled = (value.constant for value in values)
+                if start < 0:
+                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                result = TimerTrigger(start, period, time_tol, enabled != 0)
+            else:
+                result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
         return result
 
     def body(self, statements):

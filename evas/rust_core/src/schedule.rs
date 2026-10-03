@@ -35,6 +35,10 @@ enum Moment {
         period: f64,
         index: usize,
     },
+    HeldTimer {
+        bounds: I,
+        index: usize,
+    },
 }
 
 impl Moment {
@@ -43,6 +47,7 @@ impl Moment {
             Self::Cross(root) => root.bounds,
             Self::Dynamic { bounds, .. } => *bounds,
             Self::Timer { bounds, .. } => *bounds,
+            Self::HeldTimer { bounds, .. } => *bounds,
         }
     }
 
@@ -70,6 +75,16 @@ impl Moment {
                     ..
                 },
             ) => a == b && p == q && k == l,
+            (
+                Self::HeldTimer {
+                    bounds: a,
+                    index: k,
+                },
+                Self::HeldTimer {
+                    bounds: b,
+                    index: l,
+                },
+            ) => same_guard && a == b && k == l,
             _ => false,
         }
     }
@@ -107,6 +122,10 @@ impl Moment {
                 let error = I::point(time) - *bounds;
                 error.finite() && error.magnitude() <= *time_tolerance
             }
+            (Self::HeldTimer { bounds, .. }, EventTrigger::HeldTimer { time_tolerance, .. }) => {
+                let error = I::point(time) - *bounds;
+                error.finite() && error.magnitude() <= *time_tolerance
+            }
             _ => false,
         }
     }
@@ -117,22 +136,61 @@ fn add_timer(
     event: usize,
     trigger: &EventTrigger,
     stop: f64,
+    model: &EventModel,
+    states: Option<&[I]>,
+    after: Option<f64>,
 ) -> Result<(), Error> {
-    let EventTrigger::Timer {
-        start,
-        period,
-        enabled,
-        ..
-    } = trigger
-    else {
-        return Ok(());
+    let (start, period, enabled, held) = match trigger {
+        EventTrigger::Timer {
+            start,
+            period,
+            enabled,
+            ..
+        } => (I::point(*start), I::point(*period), *enabled, false),
+        EventTrigger::HeldTimer {
+            start,
+            period,
+            enabled,
+            ..
+        } => {
+            let states = states.ok_or_else(|| {
+                Error::new("unsupported_timer", "dynamic timer requires a held epoch")
+            })?;
+            let value = |expression: &crate::ir::Expression| -> Result<I, Error> {
+                let row = crate::affine_bounds::affine(expression, &model.program)?;
+                let offset = model.program.nodes.len();
+                let result = states
+                    .iter()
+                    .enumerate()
+                    .fold(*row.last().unwrap(), |sum, (i, &state)| {
+                        sum + row[offset + i] * state
+                    });
+                if !result.finite() {
+                    return Err(unresolved("nonfinite dynamic timer parameter bounds"));
+                }
+                Ok(result)
+            };
+            let start = value(start)?;
+            let period = value(period)?;
+            let enabled = value(enabled)?
+                .sign()
+                .ok_or_else(|| unresolved("cannot certify dynamic timer enable"))?
+                != 0;
+            if start.lo < 0. || period.lo <= 0. && period.hi > 0. {
+                return Err(unresolved(
+                    "cannot certify dynamic timer start or period regime",
+                ));
+            }
+            (start, period, enabled, true)
+        }
+        _ => return Ok(()),
     };
-    if !enabled || *start > stop {
+    if !enabled || start.lo > stop {
         return Ok(());
     }
-    if *period > 0.0 {
+    if period.lo > 0.0 {
         let remaining = EVENT_BUDGET - events.len();
-        let excess = I::point(*start) + I::point(remaining as f64) * I::point(*period);
+        let excess = start + I::point(remaining as f64) * period;
         if excess.finite() && excess.hi <= stop {
             return Err(Error::new(
                 "event_budget",
@@ -146,14 +204,16 @@ fn add_timer(
         // enclosure covers both product and sum; mul_add chooses one rounded
         // representative of the real start + index * period, not prior time + T.
         let bounds = if index == 0 {
-            I::point(*start)
+            start
         } else {
-            I::point(*start) + I::point(index as f64) * I::point(*period)
+            start + I::point(index as f64) * period
         };
-        let time = if index == 0 {
-            *start
+        let time = if held {
+            bounds.hi
+        } else if index == 0 {
+            start.lo
         } else {
-            (index as f64).mul_add(*period, *start)
+            (index as f64).mul_add(period.lo, start.lo)
         };
         if time == f64::INFINITY {
             // All operands are nonnegative: this and every later nominal time
@@ -171,6 +231,19 @@ fn add_timer(
                 "cannot certify timer nominal time relative to stop",
             ));
         }
+        if let Some(after) = after {
+            if bounds.hi <= after {
+                if period.hi <= 0. {
+                    break;
+                }
+                continue;
+            }
+            if bounds.lo <= after {
+                return Err(unresolved(
+                    "dynamic timer window overlaps the accepted boundary",
+                ));
+            }
+        }
         if previous.is_some_and(|last| time <= last) {
             return Err(unresolved("timer period cannot advance representable time"));
         }
@@ -183,15 +256,19 @@ fn add_timer(
         events.push(ScheduledEvent {
             time,
             event,
-            moment: Moment::Timer {
-                bounds,
-                start: *start,
-                period: *period,
-                index,
+            moment: if held {
+                Moment::HeldTimer { bounds, index }
+            } else {
+                Moment::Timer {
+                    bounds,
+                    start: start.lo,
+                    period: period.lo,
+                    index,
+                }
             },
         });
         previous = Some(time);
-        if *period <= 0.0 || bounds == I::point(stop) {
+        if period.hi <= 0.0 || bounds == I::point(stop) {
             break;
         }
     }
@@ -423,10 +500,21 @@ fn schedule_with_history(
         }
     }
     for (index, leaf) in model.triggers.iter().enumerate() {
-        if held.as_ref().is_some_and(|h| h.after.is_some()) {
+        if held
+            .as_ref()
+            .is_some_and(|h| h.after.is_some() && !h.changed[index])
+        {
             continue;
         }
-        add_timer(&mut events, index, &leaf.trigger, trajectory.config.stop)?;
+        add_timer(
+            &mut events,
+            index,
+            &leaf.trigger,
+            trajectory.config.stop,
+            model,
+            held.as_ref().map(|h| h.states),
+            held.as_ref().and_then(|h| h.after),
+        )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
         if events.iter().any(|event| event.bounds().lo <= after) {
@@ -463,6 +551,18 @@ fn schedule_with_history(
                                 .as_ref()
                                 .is_some_and(|b| b.same_zero_set(first.event, next.event)))
                 }
+                (
+                    EventTrigger::HeldTimer {
+                        start: a,
+                        period: p,
+                        ..
+                    },
+                    EventTrigger::HeldTimer {
+                        start: b,
+                        period: q,
+                        ..
+                    },
+                ) => a == b && p == q,
                 _ => false,
             };
             if !first.moment.coincides(&next.moment, same_guard) {

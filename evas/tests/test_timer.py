@@ -181,8 +181,8 @@ class TimerContracts(unittest.TestCase):
         self.assertEqual([e['time'] for e in result['transient']['events']], [1e308])
 
     def test_frontend_rejects_dynamic_default_and_invalid_settings(self):
-        for arguments in ['2', '2,5', '2,5,0', '-1,0,1', 'V(u),0,1', '0,n,1',
-                          '0,0,n', '0,0,1,n', '0,0,1,1,1', '0,0,,1', '0,,,1', '0,0,1 or cross(V(u))']:
+        for arguments in ['2', '2,5', '2,5,0', '-1,0,1', 'V(u),0,1',
+                          '0,0,n', '0,0,1,1,1', '0,0,,1', '0,,,1', '0,0,1 or cross(V(u))']:
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
 

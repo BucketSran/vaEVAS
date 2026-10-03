@@ -28,7 +28,7 @@ impl GuardBounds {
                     EventTrigger::Cross { guard, .. } => {
                         (!dynamic[expressions.len()]).then_some(guard)
                     }
-                    EventTrigger::Timer { .. } => None,
+                    EventTrigger::Timer { .. } | EventTrigger::HeldTimer { .. } => None,
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 });
             }

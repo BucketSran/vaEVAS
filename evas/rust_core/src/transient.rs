@@ -109,6 +109,24 @@ impl Controller {
             Some(&next.state_bounds),
         )?;
         for (index, held) in model.relocalized_guards.iter().enumerate() {
+            if let EventTrigger::HeldTimer {
+                start,
+                period,
+                enabled,
+                ..
+            } = &model.triggers[index].trigger
+            {
+                let owner = &model.program.events[model.triggers[index].event]
+                    .origin
+                    .instance;
+                for expression in [start, period, enabled] {
+                    changed[index] |= crate::events::affine(expression, &model.program, owner)?
+                        .state_dependencies
+                        .iter()
+                        .any(|&s| self.accepted.state_bounds[s] != next.state_bounds[s]);
+                }
+                continue;
+            }
             let (a, b) = if *held && model.dynamic_guards[index] {
                 let EventTrigger::Cross { guard, .. } = &model.triggers[index].trigger else {
                     unreachable!()
@@ -529,7 +547,7 @@ fn prepare_batch_until(
         }
         let (kind, guard_value) = match &model.program.events[id].trigger {
             EventTrigger::Cross { .. } => ("cross", fired[0].guard_value),
-            EventTrigger::Timer { .. } => ("timer", None),
+            EventTrigger::Timer { .. } | EventTrigger::HeldTimer { .. } => ("timer", None),
             EventTrigger::Or { .. } => ("or", None),
         };
         if kind != "or" {

@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import unittest
 from test_affine import KERNEL
+from evas.ir import SCHEMA_VERSION
 
 MATRIX = [
  [-473,373,250,376,294,-152,-394,-293],
@@ -31,7 +32,7 @@ def request(blocks=1):
                 rhs=dict(op='affine',constant=sum(a*x for a,x in zip(row,ROOTS)),
                          terms=[dict(node=8*block+j+1,coefficient=(i==j)-a) for j,a in enumerate(row)]),
                 origin=dict(source='refinement.va',line=index+1,column=1,instance=f'block{block}')))
-    return dict(program=dict(schema_version=16,nodes=['0']+[f'y{i}' for i in range(8*blocks)],contributions=contributions),
+    return dict(program=dict(schema_version=SCHEMA_VERSION,nodes=['0']+[f'y{i}' for i in range(8*blocks)],contributions=contributions),
                 driven=[],samples=[[]],tolerances=dict(absolute=1e-13,relative=0))
 
 

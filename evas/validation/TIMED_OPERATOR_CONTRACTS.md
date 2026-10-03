@@ -206,3 +206,15 @@ python3 evas/validation/check_timed_operator_math.py
 [开发测试](../tests/test_history_projection.py)检查独立值、等价直接编码和加密观察网格。
 内部关系必须仿射且无离散状态或历史依赖，投影区间不能丢弃；历史反馈仍拒绝。
 该候选未合并，新增开发样例不计入原矩阵或未见确认集，没有新后端对照结果。
+
+## 动态 timer 的分支候选
+
+IR17 开放保持状态控制的 start、period、enable，time_tol 保持正有限实例常量。
+语言依据、绝对相位和不确定性方法见[事件手册](../docs/math/events.md#held-timer)。
+固定答案包括：自调度 .25 步进钟四次事件；.75 的待发生事件改为 .5；
+period 在 .125 从 .5 改为 .25 后，事件为 0、.25、.5、.75、1；
+enable 在 .375 打开后，事件为 .5、.75、1，不能补发之前的周期。
+未改写或改为过去的单次时间不重触发；OR 中精确同刻的动态 timer 与 cross 只执行一次。
+原算术参数包围进入时间容差，过严容差、raw IR 的越界状态和零系数电压依赖仍拒绝。
+新测试见 [test_dynamic_timer.py](../tests/test_dynamic_timer.py)，失败回退见
+[Controller 测试](../rust_core/src/transient_lifecycle_tests.rs)。连续电压控制/算子历史组合未开放，候选尚未合并。

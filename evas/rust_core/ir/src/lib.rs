@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 16;
+pub const SCHEMA_VERSION: u32 = 17;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -364,6 +364,12 @@ pub enum EventTrigger {
         period: f64,
         time_tolerance: f64,
         enabled: bool,
+    },
+    HeldTimer {
+        start: Expression,
+        period: Expression,
+        time_tolerance: f64,
+        enabled: Expression,
     },
 }
 

@@ -85,6 +85,8 @@ def validate_response(response, program, count, output_times=None):
                     or 'time_bounds' in leaf and not _bounds(leaf['time_bounds'])):
                 _invalid('invalid fired trigger record')
             kind = leaves[leaf['trigger']].kind
+            if kind == 'held_timer':
+                kind = 'timer'
             if (leaf.get('kind', kind) != kind
                     or kind == 'cross' and not _finite(leaf.get('guard_value'))
                     or kind == 'timer' and 'guard_value' in leaf):

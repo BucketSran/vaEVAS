@@ -155,7 +155,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 参数按有效依赖图迭代求值，声明顺序不改变依赖链限制。IR 大小检查计入每次引用的展开成本，
 同时缓存子图的计算结果；不会为了估算大小而先复制整个表达式树。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。本版本保持 IR16，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。本分支候选使用 IR17，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -293,9 +293,10 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 Program 和成功 Response 的 `schema_version` 均为 **16**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
 `invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–15 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用，旧 IR15 内核不能消费 IR16。
+前端与内核须配套使用。本分支候选 IR17 新增保持状态 timer 表达式；
+IR1–16 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR16，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR17，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

@@ -11,13 +11,14 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from evas import KernelError, compile_sources, solve, transient
+from evas.ir import SCHEMA_VERSION
 from test_affine import instance, model
 
 
 class RuntimeContracts(unittest.TestCase):
     def setUp(self):
         self.program=compile_sources({'runtime.va':model('V(y,r)<+V(u,r);')},[instance()])
-        self.response=dict(engine='evas-static-0.12.2',schema_version=16,nodes=list(self.program.nodes),
+        self.response=dict(engine='evas-static-0.12.2',schema_version=SCHEMA_VERSION,nodes=list(self.program.nodes),
                            solutions=[dict(voltages=[0,.2,.2],max_residual_v=0,max_residual_ratio=0)])
 
     def invoke(self,response,**kwargs):
