@@ -126,16 +126,43 @@ class VoltageAccuracy(unittest.TestCase):
         self.assertAlmostEqual(row['z'], -1, delta=1e-8)
         self.assertLessEqual(item['max_voltage_correction_ratio'], 1)
 
-    def test_numerically_dependent_coupling_fails_explicitly(self):
+    def test_initially_dependent_coupling_recovers_a_regular_root(self):
         source = model('V(y,r)<+1-k*V(u,r)-pow(V(y,r),3);',
                        'parameter real k=1;')
         instances = [instance('a', connections=dict(u='b', y='a', r='0')),
                      instance('b', connections=dict(u='a', y='b', r='0'),
                               parameters=dict(k=1+1e-15))]
         program = compile_sources({'ill-conditioned.va': source}, instances)
-        with self.assertRaises(KernelError) as error:
-            solve(program, [], [[]], kernel=KERNEL)
-        self.assertEqual(error.exception.detail['kind'], 'singular_jacobian')
+        # The Jacobian at zero is nearly singular, but the desired root is
+        # regular. Eliminate b=1-a-a^3 and bisect the resulting polynomial;
+        # this oracle does not use the implementation's Newton/homotopy path.
+        from decimal import Decimal, localcontext
+        with localcontext() as context:
+            context.prec=70
+            k=Decimal.from_float(1+1e-15)
+            lo,hi=Decimal('.4'),Decimal('.5')
+            for _ in range(220):
+                a=(lo+hi)/2
+                b=1-a-a**3
+                if b+b**3+k*a-1 > 0: lo=a
+                else: hi=a
+            a=(lo+hi)/2
+            expected=[float(a),float(1-a-a**3)]
+        result=solve(program,[],[[]],kernel=KERNEL)
+        solution=result['solutions'][0]
+        for node,answer in zip(['a','b'],expected):
+            self.assertAlmostEqual(solution['voltages'][program.nodes.index(node)],answer,delta=1e-10)
+        self.assertLessEqual(solution['max_voltage_correction_ratio'],1)
+
+    def test_dependent_jacobian_at_every_root_still_fails(self):
+        # Both equations constrain only a+b, so no isolated voltage solution
+        # exists even though their residuals can vanish.
+        source=model('V(y,r)<+1-V(u,r)-pow(V(y,r)+V(u,r),3);')
+        instances=[instance('a',connections=dict(u='b',y='a',r='0')),
+                   instance('b',connections=dict(u='a',y='b',r='0'))]
+        program=compile_sources({'dependent.va':source},instances)
+        with self.assertRaisesRegex(KernelError,'singular_jacobian'):
+            solve(program,[],[[]],kernel=KERNEL)
 
     def test_unattainable_tolerance_does_not_accept_a_rounded_away_update(self):
         source = model('V(y,r)<+3-pow(V(y,r),2);')
