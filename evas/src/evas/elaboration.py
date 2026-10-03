@@ -11,7 +11,7 @@ def inline_functions(model: Model) -> Model:
     if not model.functions:
         return model
     def fail(message, token):
-        raise CompileError(f'{model.source}:{token.line}:{token.column}: {message}')
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def bounded(expr):
         # Shared AST arguments still expand at every use on the JSON wire.
@@ -131,13 +131,15 @@ def unroll_loops(model: Model, parameter):
     iterations = 0
 
     def fail(message, token):
-        raise CompileError(f'{model.source}:{token.line}:{token.column}: {message}')
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def substitute(expr, indices):
         if expr.op == 'parameter' and expr.value in indices:
             return Expr('number', float(indices[expr.value]), (), expr.token)
-        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args),
-                       expansion=tuple(indices.items()))
+        path = (*expr.expansion,*indices.items())
+        if len(path) > MAX_SOURCE_NESTING:
+            fail('expanded call-site identity depth budget exceeded',expr.token)
+        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args), expansion=path)
 
     def constant(expr, indices):
         value = lower(substitute(expr,indices), parameter, {}, model.source)

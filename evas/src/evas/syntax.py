@@ -4,7 +4,7 @@ Consume every token and retain source locations; instance binding and lowering
 belong to frontend.py.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import math
 import re
 from typing import Literal
@@ -20,12 +20,15 @@ class Token:
     kind: str
     line: int
     column: int
+    source: str = ''
+    expansion: tuple[tuple[str, int], ...] = ()
 
 
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
-    r'|(?P<include>`include[ \t]+"(?:constants|disciplines)\.vams")'
-    r"|(?P<macro>`M_PI)"
+    r'|(?P<include>`include[ \t]+"[^"\n]+")'
+    r"|(?P<macro>`M_PI\b)"
+    r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@#.\-])"
 )
@@ -41,23 +44,32 @@ _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | _BUILTINS
 
 
-def _tokens(source: str, name: str) -> list[Token]:
+def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
     result = []
     offset, line, column = 0, 1, 1
     while offset < len(source):
         match = _TOKEN.match(source, offset)
         if not match:
-            raise CompileError(f"{name}:{line}:{column}: unsupported or invalid token {source[offset:offset+20]!r}")
+            if not tolerant:
+                raise CompileError(f"{name}:{line}:{column}: unsupported or invalid token {source[offset:offset+20]!r}")
+            result.append(Token(source[offset], 'unsupported', line, column, name))
+            if len(result) > 100_000:
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
+            offset += 1
+            column += 1
+            continue
         text, kind = match.group(), match.lastgroup
         if kind not in ("space", "comment"):
-            result.append(Token(text, kind, line, column))
+            result.append(Token(text, kind, line, column, name))
+            if len(result) > 100_000:
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
         if "\n" in text:
             line += text.count("\n")
             column = len(text.rsplit("\n", 1)[1]) + 1
         else:
             column += len(text)
         offset = match.end()
-    result.append(Token("<eof>", "eof", line, column))
+    result.append(Token("<eof>", "eof", line, column, name))
     return result
 
 
@@ -169,9 +181,9 @@ class Model:
 
 
 class Parser:
-    def __init__(self, source: str, name: str):
+    def __init__(self, source: str, name: str, *, tokens=None):
         self.source = name
-        self.tokens = _tokens(source, name)
+        self.tokens = _tokens(source, name) if tokens is None else tokens
         self.index = 0
         self.nesting = 0
 
@@ -181,7 +193,7 @@ class Parser:
 
     def fail(self, message: str, token: Token | None = None):
         token = token or self.token
-        raise CompileError(f"{self.source}:{token.line}:{token.column}: {message}")
+        raise CompileError(f"{token.source or self.source}:{token.line}:{token.column}: {message}")
 
     def take(self, text: str | None = None) -> Token:
         token = self.token
@@ -298,7 +310,7 @@ class Parser:
                 break
             self.take()
             left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
-        return left
+        return replace(left, expansion=left.token.expansion)
 
     def statements(self, conditional=False, analog=False):
         if self.nesting >= MAX_SOURCE_NESTING:
@@ -514,7 +526,7 @@ class Parser:
     def parse(self, *, eof=True) -> Model:
         while self.token.kind == "include":
             self.take()
-        self.take("module")
+        module_token = self.take("module")
         name = self.name()
         self.take("(")
         ports = self.names()
@@ -605,4 +617,4 @@ class Parser:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children))
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children))

@@ -86,7 +86,7 @@ class InstanceCompiler:
         for event in self.model.events:
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
-            origin = Origin(self.model.source, event.token.line, event.token.column, self.instance.name)
+            origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
             self.compilation.events.append(Event(event_trigger, self.body(event.body), origin))
         _, contributions = self.execute_analog(unroll_loops(self.model, self.parameter), {})
         self.emit_contributions(contributions)
@@ -151,7 +151,7 @@ class InstanceCompiler:
             settings = [lower(arg, self.parameter, {}, self.model.source) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
-        origin = Origin(self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
         index = len(self.compilation.operators)
         if expr.op == "idt":
             reset = lower(expr.args[2], resolve, {}, self.model.source, preserve_structure=True) if len(expr.args) == 3 else None
@@ -222,7 +222,7 @@ class InstanceCompiler:
     def body(self, statements):
         result = []
         for statement in statements:
-            origin = Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name)
+            origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
             if isinstance(statement, SyntaxConditional):
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
@@ -277,7 +277,7 @@ class InstanceCompiler:
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
-                origin = Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name)
+                origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
                 left = self.lower_local(statement.left, result, preserve_structure=True)
                 right = self.lower_local(statement.right, result, preserve_structure=True)
                 check_ir(left, origin)
@@ -323,6 +323,6 @@ class InstanceCompiler:
                 raise CompileError(f"{self.model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
             sign = 1.0 if (local_p, local_n) == pair else -1.0
-            origin = Origin(self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
+            origin = Origin(branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
             identity = BranchIdentity(self.instance.name, *pair)
             self.compilation.contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))

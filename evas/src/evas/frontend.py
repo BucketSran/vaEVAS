@@ -5,6 +5,7 @@ from typing import Mapping
 from .ir import Program
 from .elaboration import inline_functions
 from .hierarchy import bind_hierarchy
+from .preprocessor import preprocess_sources
 from .instance_compiler import Compilation, InstanceCompiler
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
                      Conditional as SyntaxConditional, ContributionStatement, Loop)
@@ -21,8 +22,8 @@ class Instance:
 def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
     """Compile source text and explicit flat instances; never import validation data."""
     models = {}
-    for path, text in sources.items():
-        for parsed in Parser(text, path).parse_all():
+    for path, tokens in preprocess_sources(sources):
+        for parsed in Parser('', path, tokens=tokens).parse_all():
             model = inline_functions(parsed)
             if model.name in models:
                 raise CompileError(f"duplicate module {model.name!r}")

@@ -243,3 +243,32 @@ electrical 网络；未连接端口、实例数组、generate、层次变量访�
 [hierarchy](cases/hierarchy/dut.va) 与 [test_hierarchy.py](../tests/test_hierarchy.py)
 检查上述手算答案、参数传播、同刻事件、实例身份、连接错误与预算边界。
 此展开不增加 IR 或第二个运行时；候选未合并，无新 Spectre 对照。
+
+
+<a id="preprocessing"></a>
+
+## 预处理的分支候选
+
+依据 [LRM 2.4 §10.4–10.5](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+及它引用的 Verilog 文本宏规则。候选支持对象/函数宏、define/undef、续行、
+ifdef/ifndef/elsif/else/endif 和 include。`__VAMS_ENABLE__` 始终定义且不能重定义；
+undef 对它无效。`__LINE__` 和 `__FILE__` 保留调用位置；字符串仍不在电压表达式范围内。
+
+`preprocessor.py` 在语法解析前展开 Token；不加入表达式执行器。sources 是文件库存，
+include 用相对当前文件的规范化路径查找。库存中被 include 引用的文件不再次作为根
+编译；其余根按给定顺序共享宏环境。只处理已提供的文件，无隐式磁盘/网络读取。
+include guard 不受库存顺序影响；条件块须在各文件内配对。
+
+`SCALE(x) = G*(x)`、G=3 应给 `y=3u+1`。复制积分宏
+`TWICE(x) = idt(x,1)+idt(2x,2)` 在 u=t 时应给 `y=3+1.5t²`。
+宏参数先展开，再替换；`F(F(1))` 是有限嵌套，不是递归定义。复制的每个调用
+保留原调用位置和 `_macro_NAME`/Token 序号路径；与 genvar 路径组合，防止历史合并。
+
+活动 Token 总展开数限 100000，展开/包含/条件嵌套及完整身份路径限 64。
+递归、缺失文件/宏、参数错配、未知指令、预算超限均给出诊断；不活动分支
+不展开宏或读取 include。宏拼接、字符串化、动态 include 名称、跨文件未配对条件
+及其余编译指令仍未支持。标准内建 include 仍只提供原有有限数学常量。
+
+[preprocessor](cases/preprocessor/dut.va) 和 [test_preprocessor.py](../tests/test_preprocessor.py)
+检查手算电压/积分、宏嵌套、复制历史、循环组合、条件/续行、包含位置、预算和失败。
+宏与 include 的失败不能静默变成默认值。本候选未合并，无新 Spectre 对照。

@@ -10,7 +10,7 @@ def bind_parameters(model, overrides, instance_name):
     def validate(expr):
         if (expr.op in ('voltage', 'array', 'index') or contains_operator(expr)
                 or expr.op == 'parameter' and expr.value not in model.parameters):
-            raise CompileError(f'{model.source}:{expr.token.line}: invalid parameter default')
+            raise CompileError(f'{expr.token.source or model.source}:{expr.token.line}: invalid parameter default')
         for arg in expr.args:
             validate(arg)
 
@@ -43,7 +43,7 @@ def bind_parameters(model, overrides, instance_name):
             depth = 1 + max((depths[ref] for ref in dependencies[name]), default=0)
             if depth > MAX_PARAMETER_DEPTH:
                 token = model.parameters[name].token
-                raise CompileError(f'{model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded')
+                raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded')
             if name in overrides:
                 value = overrides[name]
                 if isinstance(value, bool) or not isinstance(value, (int, float)):

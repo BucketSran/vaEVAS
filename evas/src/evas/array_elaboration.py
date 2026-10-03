@@ -11,7 +11,7 @@ ARRAY_BUDGET = 4096
 
 def scalarize_arrays(model, parameter):
     def fail(message, token):
-        raise CompileError(f'{model.source}:{token.line}:{token.column}: {message}')
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def integer(expr):
         try:
