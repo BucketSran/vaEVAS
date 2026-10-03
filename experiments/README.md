@@ -38,7 +38,7 @@
 | --- | --- | --- |
 | [va_screen/](va_screen/README.md) | Benchmark 初筛 | 六题构建、校准与模型评测工具，冻结输入身份和首轮精简结果 |
 | [performance/](performance/README.md) | 成本测量 | 固定请求配对、构建基线、紧凑收据；数学与支持范围仍归 EVAS 手册 |
-| [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：当前检查点收据、矩阵分析、生命周期验证工具及独立校准，持续维护 |
+| [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：合并检查点收据、矩阵分析、生命周期验证工具及独立校准；[capability-completion](runs/capability-completion/README.md)：本分支 0.13.0 候选、原矩阵重跑和冻结确认集的收据及审查入口 |
 | [backends/](backends/) | 跨后端对照 | [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
 | [archive/](archive/) | 已结束批次 | [dvs2-starter-pilot](archive/dvs2-starter-pilot/README.md)：试点输入生成与工具身份；[dvs2-history-validation](archive/dvs2-history-validation/README.md)：精确有理数事件判据与旧波形重判；[pr14-pr15-validation](archive/pr14-pr15-validation/README.md)：该批次矩阵与算子探针 |
 

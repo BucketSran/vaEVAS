@@ -5,7 +5,8 @@
 改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
 矩阵同时展示下表的证据入口，收据各自绑定历史执行，不能自动证明当前代码。
-执行身份与历史检查点见[实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)。
+本分支执行与审查批次见[补齐候选收据](../../experiments/runs/capability-completion/README.md)；
+历史检查点见[原实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)。
 
 ## 状态约定
 
@@ -34,13 +35,14 @@
 | SLEW | 固定正/负限速、直接连续 PWL 仿射输入；本分支候选支持内部仿射电压投影 | [算子](math/operators.md#slew) | 候选未合并；动态参数、状态/嵌套和历史反馈尚缺 | [专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json)、[投影开发回归](../tests/test_history_projection.py) |
 | DYNAMICS | idt/idtmod/sin、积分反馈、联合 reset、1–8 阶滤波、受限 ddt、index-one 多项式 DAE；本分支候选新增 DAE 与直接 PWL proper 滤波联合状态 | [算子](math/operators.md)、[联合数学](math/continuous.md) | 候选未合并；DAE 与事件/复位/ddt、内部反馈滤波组合、非线性滤波 DC、通用函数混合等尚缺 | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json)、[DAE/滤波开发测试](../tests/test_implicit_filters.py) |
 | COMPOSE | 实例隔离（候选新增静态层次）、积分/滤波闭包、DC 与瞬态导数一致求值、事件重启复用物理历史 | [联合数学](math/continuous.md) | 结构依赖不可绕过；非线性混合限积分+proper 滤波 | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
-| QUALIFICATION | 原矩阵两档各 31/31（0.12.3 / IR16，LU 复用检查点新执行） | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；未见确认集、独立观察误差与一般连续时间资格尚缺 | [当前矩阵收据](../../experiments/performance/matrix.json)、[前轮收据](../../experiments/runs/parallel-gap-integration/results/main-0.12.3-matrix.json) |
+| QUALIFICATION | 原矩阵两档各 31/31（合并基线 0.12.3 / IR16）；候选 0.13.0 / IR17 重跑仍各 31/31；七个预先冻结确认案例首次及复跑各 14/14 | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；七案例确认限该冻结批次，不覆盖后加 DAE/滤波或一般组合；独立观察误差与一般连续时间资格仍缺 | [候选收据](../../experiments/runs/capability-completion/receipt.json)、[合并基线收据](../../experiments/performance/matrix.json) |
 | PERFORMANCE | 稀疏分流、查询复用、标量根证明、独立静态并行；逐位相同的仿射矩阵跨候选复用 LU | [求解手册](math/solving.md#稀疏分支与性能边界)、[只读诊断](diagnostics.md) | 完整请求成本已测；历史/guard 优化见 [Issue58](https://github.com/BucketSran/vaEVAS/issues/58)，长输出协议见 [Issue59](https://github.com/BucketSran/vaEVAS/issues/59)；无 Spectre 同配置加速结论 | [当前库内与进程测量](../../experiments/performance/README.md)、[历史计时](../../experiments/runs/solver-performance.json) |
 
 ## 检查点身份
 
 | 检查点 | 固定执行身份 |
 | --- | --- |
+| 本分支候选 / 0.13.0 / IR17，未合并 | 确认冻结 `5171558c`、首次运行后端 `63afd040`；最终矩阵/确认复跑及整合回归 `152a920d`；见[候选收据](../../experiments/runs/capability-completion/README.md) |
 | 诊断与性能 / 0.12.3 / IR16 | 配对基线 `e91cf6ff`、候选 `eb03f94d`；原矩阵运行时 `a388a651`；见[当前收据](../../experiments/performance/README.md) |
 | PR50 / 0.12.3 / IR16：前轮矩阵重跑 | 被测 main `a7a42e17`；运行时、内核及新执行见前轮收据 |
 | PR33 / IR16：事件截止点 | 运行时 `8618339`，合并点 `b4921ca` |
