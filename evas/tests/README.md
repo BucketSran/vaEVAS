@@ -43,6 +43,9 @@ docstring 中说明答案来源，不得以"EVAS 当前输出"为期望值。
 | [test_laplace.py](test_laplace.py) / [test_phase.py](test_phase.py) | 一阶滤波 / idtmod-sin 相位 |
 | [test_nonlinear.py](test_nonlinear.py) / [test_nonlinear_transient.py](test_nonlinear_transient.py) | 多项式静态与瞬态 |
 | [test_migrate.py](test_migrate.py) | IR16 迁移与批量重编译 |
+| [test_frontend_limits.py](test_frontend_limits.py) | 语法/参数/IR 预算、共享表达式展开、真实 Rust 传输 |
+| [test_manifest.py](test_manifest.py) | manifest 校验、重复字段、CLI 诊断及批次失败隔离 |
+| [test_runtime_contracts.py](test_runtime_contracts.py) | 故障响应注入、超时配置及真实子进程回收 |
 
 ### 精度与准确性
 

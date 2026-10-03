@@ -16,7 +16,7 @@ from typing import Mapping, Sequence
 from .frontend import CompileError, Instance, compile_sources
 
 
-MANIFEST_FIELDS = {"models", "instances", "driven", "samples", "tolerances", "transient"}
+from .manifest import parse_manifest
 
 
 class _TextDecodeError(ValueError):
@@ -82,14 +82,7 @@ def recompile_manifest(manifest_path: Path, output_path: Path, *, repo_root: Pat
         except _TextDecodeError as exc:
             manifest_hash = exc.digest
             raise ValueError(str(exc)) from exc
-        manifest = json.loads(manifest_text)
-        if not isinstance(manifest, dict):
-            raise ValueError("manifest root must be a JSON object")
-        unknown = set(manifest) - MANIFEST_FIELDS
-        if unknown:
-            raise ValueError(f"unknown manifest fields: {sorted(unknown)}")
-        if "models" not in manifest or "instances" not in manifest:
-            raise KeyError("models and instances are required")
+        manifest = parse_manifest(manifest_text)
         model_paths = []
         for declared in manifest["models"]:
             if not isinstance(declared, str):

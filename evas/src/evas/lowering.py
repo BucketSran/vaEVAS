@@ -1,8 +1,9 @@
 """Bind arithmetic to polynomial IR, preserving the affine constant-folding path."""
 import math
+from typing import Callable, Mapping
 
 from .ir import Affine, Binary, Expression, OperatorRef, Power, Select, StateRef, Term
-from .syntax import CompileError, Expr
+from .syntax import CompileError, Expr, OPERATOR_NAMES
 
 
 def affine(constant, terms):
@@ -17,11 +18,12 @@ def scale(expression: Expression, factor: float) -> Expression:
     return Binary("multiply", Affine(factor, ()), expression)
 
 
-def lower(expr: Expr, parameters, nodes, source: str, operators=None, preserve_structure=False) -> Expression:
+def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
+          source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False) -> Expression:
     def fail(message):
         raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
 
-    if expr.op in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "ddt", "sin"):
+    if expr.op in OPERATOR_NAMES:
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)

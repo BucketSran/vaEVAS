@@ -7,10 +7,11 @@ belong to frontend.py.
 from dataclasses import dataclass
 import math
 import re
+from typing import Literal
 
 
-class CompileError(ValueError):
-    pass
+from .errors import CompileError
+from .limits import MAX_SOURCE_NESTING, check_expression
 
 
 @dataclass(frozen=True)
@@ -30,8 +31,13 @@ _TOKEN = re.compile(
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
-_RESERVED = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "V", "pow", "integer", "initial_step", "if", "else", "or", "timer", "cross", "transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "ddt", "sin"}
+OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
+                    "idt": (2, 3), "laplace_nd": (3,), "idtmod": (4,), "ddt": (1,)}
+OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
+_KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
+             "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or"}
+_BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
+_RESERVED = _KEYWORDS | _BUILTINS
 
 
 def _tokens(source: str, name: str) -> list[Token]:
@@ -56,10 +62,22 @@ def _tokens(source: str, name: str) -> list[Token]:
 
 @dataclass(frozen=True)
 class Expr:
-    op: str
+    op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
+                "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
+                "idt", "laplace_nd", "idtmod", "ddt"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
+
+
+def contains_operator(expr: Expr) -> bool:
+    pending = [expr]
+    while pending:
+        current = pending.pop()
+        if current.op in OPERATOR_NAMES:
+            return True
+        pending.extend(current.args)
+    return False
 
 
 @dataclass(frozen=True)
@@ -119,6 +137,7 @@ class Parser:
         self.source = name
         self.tokens = _tokens(source, name)
         self.index = 0
+        self.nesting = 0
 
     @property
     def token(self) -> Token:
@@ -150,6 +169,17 @@ class Parser:
         return names
 
     def expression(self, minimum: int = 0) -> Expr:
+        if self.nesting >= MAX_SOURCE_NESTING:
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+        self.nesting += 1
+        try:
+            result = self._expression(minimum)
+            check_expression(result, self.source)
+            return result
+        finally:
+            self.nesting -= 1
+
+    def _expression(self, minimum: int = 0) -> Expr:
         token = self.take()
         if token.text in ("+", "-"):
             left = Expr("unary" + token.text, None, (self.expression(30),), token)
@@ -181,15 +211,14 @@ class Parser:
                 arguments.append(self.expression())
             self.take("}")
             left = Expr("array", None, tuple(arguments), token)
-        elif token.text in ("transition", "absdelay", "slew", "idt", "laplace_nd", "idtmod", "ddt"):
+        elif token.text in OPERATOR_ARITIES:
             self.take("(")
             arguments = [self.expression()]
             while self.token.text == ",":
                 self.take(",")
                 arguments.append(self.expression())
             self.take(")")
-            required = {"transition": 4, "absdelay": 2, "slew": 3, "idt": (2, 3), "laplace_nd": 3, "idtmod": 4, "ddt": 1}[token.text]
-            allowed = required if isinstance(required, tuple) else (required,)
+            allowed = OPERATOR_ARITIES[token.text]
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)
                 self.fail(f"{token.text} requires {label} explicit arguments", token)
@@ -222,6 +251,15 @@ class Parser:
         return left
 
     def statements(self, conditional=False) -> tuple[Assignment | Conditional, ...]:
+        if self.nesting >= MAX_SOURCE_NESTING:
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+        self.nesting += 1
+        try:
+            return self._statements(conditional)
+        finally:
+            self.nesting -= 1
+
+    def _statements(self, conditional=False) -> tuple[Assignment | Conditional, ...]:
         token = self.token
         if token.text == ";":
             self.take(";")

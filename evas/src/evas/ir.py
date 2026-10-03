@@ -8,6 +8,8 @@ voltage constraints, including when connected to the same external nodes.
 from dataclasses import asdict, dataclass, field
 from typing import Literal
 
+from .limits import check_ir
+
 
 SCHEMA_VERSION = 16
 
@@ -227,4 +229,5 @@ class Program:
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:
+        check_ir(self)
         return asdict(self)

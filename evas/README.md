@@ -43,7 +43,7 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
 
 ```sh
 PYTHONPATH=evas/src python3 -m evas compile evas/examples/01-static-gain/sim.json
-PYTHONPATH=evas/src python3 -m evas transient validation/smoke/idt.json \
+PYTHONPATH=evas/src python3 -m evas transient evas/validation/smoke/idt.json \
   --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
@@ -117,6 +117,41 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 仍拒绝超出范围的循环、层次实例、通用数组、命名支路、电流贡献、通用预处理等。
 不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
 
+<a id="frontend-boundaries"></a>
+
+## 前端输入与执行边界
+
+CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是非空数组；
+实例的 `connections`、`parameters` 必须是对象。重复 JSON 字段和非有限数字会被拒绝，
+避免后一个参数悄悄覆盖前一个。迁移中已识别的输入错误按单项记录，后续模型继续处理。
+
+编译器有明确的资源预算。这些是实现限制，不是 Verilog-A 语言规则：
+
+| 对象 | 当前上限 |
+| --- | ---: |
+| 语法递归嵌套 | 64 层 |
+| 源表达式树深度 | 80 层 |
+| 覆盖后有效参数依赖链 | 64 层 |
+| Program 序列化容器深度 | 96 层，为 Rust 请求外层保留空间 |
+| 展开后的 IR 值与容器总数 | 100,000 |
+
+参数按有效依赖图迭代求值，声明顺序不改变依赖链限制。IR 大小检查计入每次引用的展开成本，
+同时缓存子图的计算结果；不会为了估算大小而先复制整个表达式树。
+超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
+包括旧版本偶尔能处理的长表达式。本版本保持 IR16，不通过重关联算式或消去依赖绕过预算；
+更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
+
+`solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
+不包含 Python 编译与序列化。API 可传正的有限秒数，或用 `timeout=None` 关闭上限。
+CLI 使用 `--timeout 600` 调整；时间超限会终止并回收内核子进程，报告 `kernel_timeout`。
+仿真时间 `stop` 与这个墙钟时间上限是两个不同设置。
+
+CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在时的 `sample`；
+成功结果仍输出到 stdout。输入/编译错误仍是可读文本，错误退出码均为 2。
+适配器验证返回结果的身份、行数、电压/状态维度及有限数值；坏响应为 `invalid_response`，
+无法启动进程或不合格式的进程错误为 `kernel_process`。
+这些检查保护调用边界，不代替内核的电压精度验收。
+
 ## 模块与接口
 
 Python 的公开接口：`compile_sources(sources, instances) -> Program`，
@@ -145,12 +180,12 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 | 功能与数学入口 | 源码入口及责任 | 独立契约 | 回归入口 |
 | --- | --- | --- | --- |
-| 模型编译与贡献：[参数](#参数绑定契约)、[IR 与贡献](#ir-与贡献契约) | [syntax.py](src/evas/syntax.py) 解析；[frontend.py](src/evas/frontend.py) 绑定；[lowering.py](src/evas/lowering.py) 转换表达式；[Python IR](src/evas/ir.py) / [Rust IR](rust_core/src/ir.rs) 定义传输；[assembly.rs](rust_core/src/assembly.rs) 累加贡献 | 本页接口契约；[起步案例卡](validation/CASE_CARDS.md)的静态关系 | [test_contracts.py](tests/test_contracts.py)、[test_affine.py](tests/test_affine.py) |
+| 模型编译与贡献：[参数](#参数绑定契约)、[IR 与贡献](#ir-与贡献契约) | [syntax.py](src/evas/syntax.py) 解析；[frontend.py](src/evas/frontend.py) 编排；[instance_compiler.py](src/evas/instance_compiler.py) 绑定实例、参数、状态和调用点；[lowering.py](src/evas/lowering.py) 转换表达式；[Python IR](src/evas/ir.py) / [Rust IR](rust_core/src/ir.rs) 定义传输；[assembly.rs](rust_core/src/assembly.rs) 累加贡献 | 本页接口契约；[起步案例卡](validation/CASE_CARDS.md)的静态关系 | [test_contracts.py](tests/test_contracts.py)、[test_affine.py](tests/test_affine.py) |
 | 电压求解与精度：[NUMERICS](docs/math/solving.md) | [solver.rs](rust_core/src/solver.rs) 工作点；[nonlinear.rs](rust_core/src/nonlinear.rs) Newton；[linear.rs](rust_core/src/linear.rs) 稠密/稀疏分流；[analog.rs](rust_core/src/analog.rs) 无状态瞬态与普通条件；[expression.rs](rust_core/src/expression.rs)、[interval.rs](rust_core/src/interval.rs)、[affine_bounds.rs](rust_core/src/affine_bounds.rs) 提供共用运算与认证 | [非线性瞬态](validation/NONLINEAR_TRANSIENT_CONTRACT.md)、[普通条件](validation/ANALOG_CONDITIONS_CONTRACT.md) | [精度](tests/test_accuracy.py)、[稀疏](tests/test_sparse.py)、[普通条件](tests/test_analog_conditions.py)、[非线性瞬态](tests/test_nonlinear_transient.py)、[精度链](tests/test_precision_chain.py) |
 | 事件与同刻关系：[EVENTS](docs/math/events.md) | [events.rs](rust_core/src/events.rs) 赋值语义；[event_conditions.rs](rust_core/src/event_conditions.rs) 选支；[pwl.rs](rust_core/src/pwl.rs) 输入与仿射根；[schedule.rs](rust_core/src/schedule.rs) 日程；[event_accuracy.rs](rust_core/src/event_accuracy.rs) 定位认证；[settlement.rs](rust_core/src/settlement.rs) / [settlement_bounds.rs](rust_core/src/settlement_bounds.rs) 联立求解与误差 | [事件条件](validation/EVENT_CONDITIONS_CONTRACT.md)、[定时契约](validation/TIMED_OPERATOR_CONTRACTS.md) | [cross](tests/test_events.py)、[timer](tests/test_timer.py)、[同刻](tests/test_settlement.py)、[条件](tests/test_event_conditions.py)、[OR](tests/test_event_or.py)、[写者冲突](tests/test_event_writers.py) |
 | 独立波形算子：[OPERATORS](docs/math/operators.md) | [operators.rs](rust_core/src/operators.rs) 管理调用点、值/区间查询及候选历史；各算子的文件与测试见[算子对应表](docs/math/operators.md#operator-map) | [定时算子](validation/TIMED_OPERATOR_CONTRACTS.md)、[积分](validation/DYNAMICS_CONTRACTS.md)、[低通](validation/LAPLACE_CONTRACTS.md) | 各算子回归；[定时组合](tests/test_timed_composition.py)、[语义不变性](tests/test_semantic_invariants.py) |
 | 联合连续动态：[CONTINUOUS](docs/math/continuous.md) | [continuous.rs](rust_core/src/continuous.rs) 关系与 DC；[continuous_derivatives.rs](rust_core/src/continuous_derivatives.rs) 导数；[state_space.rs](rust_core/src/state_space.rs) 线性传播；[nonlinear_dynamics.rs](rust_core/src/nonlinear_dynamics.rs) 多项式传播；[implicit_dynamics.rs](rust_core/src/implicit_dynamics.rs) DAE；[guard_trajectory.rs](rust_core/src/guard_trajectory.rs) / [dynamic_roots.rs](rust_core/src/dynamic_roots.rs) 动态根 | [动态与生命周期](validation/DYNAMICS_CONTRACTS.md) | [连续关系](tests/test_continuous_dynamics.py)、[动态 cross](tests/test_dynamic_cross.py)、[动态组合](tests/test_dynamic_closure.py)、[混合算子](tests/test_mixed_dynamics.py)、[DAE](tests/test_implicit_dynamics.py) |
-| 请求与接受帧：[共同生命周期](docs/math/continuous.md#shared-lifecycle-closure) | [__main__.py](src/evas/__main__.py) / [runtime.py](src/evas/runtime.py) / [main.rs](rust_core/src/main.rs) 处理请求；[transient.rs](rust_core/src/transient.rs) 试算与整批提交；[continuous_runtime.rs](rust_core/src/continuous_runtime.rs) / [continuous_history.rs](rust_core/src/continuous_history.rs) 区分观察与未来历史；[reset_dependencies.rs](rust_core/src/reset_dependencies.rs) 检查复位及瞬时反馈依赖 | [共同生命周期契约](validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract) | [观察闭包](tests/test_lifecycle_closure.py)、[事件时间盒](tests/test_event_window_sampling.py)、[已知事件截止点](tests/test_event_horizons.py)；[真实控制器回退](rust_core/src/transient_lifecycle_tests.rs) |
+| 请求与接受帧：[共同生命周期](docs/math/continuous.md#shared-lifecycle-closure) | [__main__.py](src/evas/__main__.py) / [manifest.py](src/evas/manifest.py) 校验输入；[runtime.py](src/evas/runtime.py) / [protocol.py](src/evas/protocol.py) 处理进程与响应；[main.rs](rust_core/src/main.rs) 处理请求；[transient.rs](rust_core/src/transient.rs) 试算与整批提交；[continuous_runtime.rs](rust_core/src/continuous_runtime.rs) / [continuous_history.rs](rust_core/src/continuous_history.rs) 区分观察与未来历史；[reset_dependencies.rs](rust_core/src/reset_dependencies.rs) 检查复位及瞬时反馈依赖 | [共同生命周期契约](validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract) | [观察闭包](tests/test_lifecycle_closure.py)、[事件时间盒](tests/test_event_window_sampling.py)、[已知事件截止点](tests/test_event_horizons.py)；[真实控制器回退](rust_core/src/transient_lifecycle_tests.rs) |
 
 `tests/` 与 `validation/` 的分工：**[tests/](tests/) 是"改代码时别改坏"的护栏**——
 开发回归套件，随时全量运行，期望值独立于实现但准入跟随开发节奏；

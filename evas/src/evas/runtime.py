@@ -1,49 +1,41 @@
 """Process adapter: one batch crosses to Rust; no Python evaluation callbacks."""
 
 import json
+import math
 from pathlib import Path
 import subprocess
 
-from .ir import Program, SCHEMA_VERSION
+from .ir import Program
+from .errors import KernelError
+from .manifest import finite_float, reject_constant, unique_object
+from .protocol import validate_response
 
-
-class KernelError(RuntimeError):
-    def __init__(self, detail: dict):
-        self.detail = detail
-        super().__init__(f"{detail['kind']}: {detail['message']}")
+DEFAULT_TIMEOUT = 300.0
 
 
 def solve(program: Program, driven: list[str], samples: list[list[float]], *,
           kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
-          absolute: float | None = None, relative: float | None = None) -> dict:
+          absolute: float | None = None, relative: float | None = None,
+          timeout: float | None = DEFAULT_TIMEOUT) -> dict:
     """Solve with voltage tolerances; absolute/relative are legacy aliases."""
     request = dict(program=program.to_dict(), driven=driven, samples=samples,
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
-    response = _invoke(request, kernel)
-    if (response.get("schema_version") != SCHEMA_VERSION or response.get("nodes") != list(program.nodes)
-            or len(response.get("solutions", [])) != len(samples)):
-        raise KernelError(dict(kind="invalid_response", message="kernel response identity or shape mismatch"))
-    return response
+    response = _invoke(request, kernel, timeout)
+    return validate_response(response, program, len(samples))
 
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
               kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
-              absolute: float | None = None, relative: float | None = None) -> dict:
+              absolute: float | None = None, relative: float | None = None,
+              timeout: float | None = DEFAULT_TIMEOUT) -> dict:
     """Advance PWL physical inputs in Rust; observations are post-event values."""
     request = dict(program=program.to_dict(), driven=list(sources), samples=[],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
-    response = _invoke(request, kernel)
-    if (response.get("schema_version") != SCHEMA_VERSION
-            or response.get("nodes") != list(program.nodes)
-            or len(response.get("solutions", [])) != len(output_times)
-            or response.get("transient", {}).get("times") != output_times
-            or response["transient"].get("state_names") != [f"{s.instance}:{s.name}" for s in program.states]
-            or len(response["transient"].get("states", [])) != len(output_times)):
-        raise KernelError(dict(kind="invalid_response", message="transient response identity or shape mismatch"))
-    return response
+    response = _invoke(request, kernel, timeout)
+    return validate_response(response, program, len(output_times), output_times)
 
 
 def _tolerances(vabstol, reltol, absolute, relative):
@@ -57,14 +49,36 @@ def _tolerances(vabstol, reltol, absolute, relative):
                 relative=1e-10 if relative is None else relative)
 
 
-def _invoke(request, kernel):
-    result = subprocess.run([str(kernel)], input=json.dumps(request, allow_nan=False),
-                            text=True, capture_output=True, check=False)
+def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT):
+    if timeout is not None:
+        try:
+            valid = not isinstance(timeout, bool) and isinstance(timeout, (int, float)) and math.isfinite(timeout) and timeout > 0
+        except OverflowError:
+            valid = False
+        if not valid:
+            raise ValueError("timeout must be a positive finite number of seconds or None")
+    try:
+        # subprocess.run kills and waits for its child before TimeoutExpired
+        # escapes. No abandoned kernel can keep writing after this diagnostic.
+        result = subprocess.run([str(kernel)], input=json.dumps(request, allow_nan=False),
+                                text=True, capture_output=True, check=False, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise KernelError(dict(kind="kernel_timeout", message=f"kernel exceeded execution timeout ({timeout} s)", timeout_seconds=timeout)) from exc
+    except (OSError, UnicodeError) as exc:
+        raise KernelError(dict(kind="kernel_process", message=str(exc))) from exc
     if result.returncode:
         try:
-            detail = json.loads(result.stderr)
-        except json.JSONDecodeError:
+            detail = json.loads(result.stderr, object_pairs_hook=unique_object,
+                                parse_constant=reject_constant, parse_float=finite_float)
+            if (not isinstance(detail, dict) or not isinstance(detail.get("kind"), str)
+                    or not isinstance(detail.get("message"), str)
+                    or "sample" in detail and (type(detail["sample"]) is not int or detail["sample"] < 0)):
+                raise ValueError("invalid kernel diagnostic")
+        except (ValueError, RecursionError):
             detail = dict(kind="kernel_process", message=result.stderr or f"exit {result.returncode}")
         raise KernelError(detail)
-    response = json.loads(result.stdout)
-    return response
+    try:
+        return json.loads(result.stdout, object_pairs_hook=unique_object,
+                          parse_constant=reject_constant, parse_float=finite_float)
+    except (ValueError, RecursionError) as exc:
+        raise KernelError(dict(kind="invalid_response", message=f"invalid kernel JSON: {exc}")) from exc
