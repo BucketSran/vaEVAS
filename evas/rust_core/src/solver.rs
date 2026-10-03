@@ -3,7 +3,9 @@ use crate::assembly::{assemble, AssembledCircuit, Equation};
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program, Solution, Tolerances};
 use crate::{expression, linear, nonlinear};
-use std::sync::OnceLock;
+use std::sync::{Arc, OnceLock};
+
+type AffineFactor = Arc<OnceLock<Result<linear::Factorization, Error>>>;
 
 pub struct Circuit {
     pub nodes: Vec<String>,
@@ -15,7 +17,7 @@ pub struct Circuit {
     driven_coefficients: Vec<linear::Row>,
     dense_residuals: Vec<Option<DenseResidual>>,
     // Only coefficients are cached; inputs, solutions and physical state are not.
-    affine_factor: Option<OnceLock<Result<linear::Factorization, Error>>>,
+    affine_factor: Option<AffineFactor>,
 }
 
 // Cache dense spans only when they occupy at most twice the actual terms.
@@ -173,6 +175,8 @@ impl Circuit {
         driven_names: &[String],
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("circuit.prepare");
+
         let AssembledCircuit {
             nodes,
             equations,
@@ -183,7 +187,7 @@ impl Circuit {
         let affine_factor = equations
             .iter()
             .all(|eq| eq.nonlinear.is_empty())
-            .then(OnceLock::new);
+            .then(|| Arc::new(OnceLock::new()));
         let mut unknown_columns = vec![None; nodes.len()];
         for (column, &node) in unknown.iter().enumerate() {
             unknown_columns[node] = Some(column);
@@ -346,6 +350,8 @@ impl Circuit {
         solution: &Solution,
         input_bounds: &[I],
     ) -> Result<(), Error> {
+        let _timing = crate::diagnostics::span("voltage.waveform_certificate");
+
         if input_bounds.len() != self.driven.len() {
             return Err(Error::new(
                 "invalid_inputs",
@@ -566,6 +572,9 @@ impl Circuit {
         inputs: &[f64],
         initial_voltages: Option<&[f64]>,
     ) -> Result<Solution, Error> {
+        let _timing = crate::diagnostics::span("circuit.solve");
+        crate::diagnostics::counter("circuit_solve_calls", 1);
+
         if inputs.len() != self.driven.len() || inputs.iter().any(|x| !x.is_finite()) {
             return Err(Error::new(
                 "invalid_inputs",
@@ -711,7 +720,35 @@ impl Circuit {
         None
     }
 
+    /// Reuse only an identical numeric matrix. RHS and all physical checks stay
+    /// local. Changed coefficients/order or a nonlinear mode prevent reuse.
+    pub(crate) fn reuse_affine_factor_from(&mut self, previous: &Self) {
+        let compatible = self.affine_factor.is_some()
+            && previous.affine_factor.is_some()
+            && self.nodes == previous.nodes
+            && self.unknown == previous.unknown
+            && self.driven == previous.driven
+            && self.equations.len() == previous.equations.len()
+            && self
+                .equations
+                .iter()
+                .zip(&previous.equations)
+                .all(|(a, b)| {
+                    a.coefficients.len() == b.coefficients.len()
+                        && a.coefficients
+                            .iter()
+                            .zip(&b.coefficients)
+                            .all(|((na, va), (nb, vb))| na == nb && va.to_bits() == vb.to_bits())
+                });
+        if compatible {
+            self.affine_factor.clone_from(&previous.affine_factor);
+            crate::diagnostics::counter("affine_cache_links", 1);
+        }
+    }
+
     fn check_affine_residuals(&self, values: &[f64]) -> Result<(f64, f64), Error> {
+        let _timing = crate::diagnostics::span("voltage.original_residual");
+
         let mut max_residual_v = 0.0_f64;
         let mut max_residual_ratio = 0.0_f64;
         for (eq, dense) in self.equations.iter().zip(&self.dense_residuals) {
@@ -878,6 +915,7 @@ mod tests {
                 &[],
                 &bounds,
                 &[],
+                Some(&accepted),
             );
             if input == 1.0 {
                 // Sequential binary64 replay loses delta in (1+delta)-1,
@@ -991,3 +1029,7 @@ mod tests {
         assert!(DenseResidual::prepare(&distant).is_none());
     }
 }
+
+#[cfg(test)]
+#[path = "solver_cache_tests.rs"]
+mod cache_tests;

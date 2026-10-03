@@ -2,6 +2,7 @@
 
 import json
 import math
+import os
 from pathlib import Path
 import subprocess
 
@@ -49,7 +50,7 @@ def _tolerances(vabstol, reltol, absolute, relative):
                 relative=1e-10 if relative is None else relative)
 
 
-def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT):
+def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT, *, diagnostics_path=None):
     if timeout is not None:
         try:
             valid = not isinstance(timeout, bool) and isinstance(timeout, (int, float)) and math.isfinite(timeout) and timeout > 0
@@ -60,8 +61,11 @@ def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT):
     try:
         # subprocess.run kills and waits for its child before TimeoutExpired
         # escapes. No abandoned kernel can keep writing after this diagnostic.
+        options = {}
+        if diagnostics_path is not None:
+            options["env"] = dict(os.environ, EVAS_DIAGNOSTICS_PATH=str(diagnostics_path))
         result = subprocess.run([str(kernel)], input=json.dumps(request, allow_nan=False),
-                                text=True, capture_output=True, check=False, timeout=timeout)
+                                text=True, capture_output=True, check=False, timeout=timeout, **options)
     except subprocess.TimeoutExpired as exc:
         raise KernelError(dict(kind="kernel_timeout", message=f"kernel exceeded execution timeout ({timeout} s)", timeout_seconds=timeout)) from exc
     except (OSError, UnicodeError) as exc:

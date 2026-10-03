@@ -2,7 +2,7 @@
 //! Dynamic column ordering; only exact zeros are removed, never small entries.
 use super::{columns::Columns, Row};
 use crate::ir::Error;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{btree_map::Entry, BTreeMap, BTreeSet};
 
 pub(crate) struct Factorization {
     // Compact factors: lower by column for ordered RHS elimination, upper by row.
@@ -16,6 +16,8 @@ pub(crate) struct Factorization {
 
 impl Factorization {
     pub(super) fn new(rows: Vec<Row>, columns: usize) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("factor.sparse");
+        let preparation = crate::diagnostics::span("factor.sparse_prepare");
         let count = rows.len();
         if count < columns {
             return Err(Error::new(
@@ -57,8 +59,12 @@ impl Factorization {
         let mut upper: Vec<Row> = Vec::with_capacity(columns);
         let mut diagonal = Vec::with_capacity(columns);
         let threshold = 64.0 * f64::EPSILON * columns.max(1) as f64;
+        drop(preparation);
         for (step, lower_column) in lower.iter_mut().enumerate() {
+            let ordering = crate::diagnostics::span("factor.sparse_ordering");
             let (column, mut candidates) = active.take_next();
+            drop(ordering);
+            let pivoting = crate::diagnostics::span("factor.sparse_pivot");
             let pivot = candidates
                 .iter()
                 .copied()
@@ -77,6 +83,8 @@ impl Factorization {
                         ),
                     )
                 })?;
+            drop(pivoting);
+            let _elimination = crate::diagnostics::span("factor.sparse_elimination");
             let old_position = position[pivot];
             order.swap(step, old_position);
             position[order[old_position]] = old_position;
@@ -101,19 +109,35 @@ impl Factorization {
                     lower_column.push((id, multiplier));
                 }
                 for &(k, value) in &pivot_row {
-                    let updated = rows[id].get(&k).copied().unwrap_or(0.0) - multiplier * value;
+                    // Existing coefficients keep the same active membership.
+                    // Only new fill or exact cancellation changes the degree.
+                    let entry = rows[id].entry(k);
+                    let old = match &entry {
+                        Entry::Occupied(entry) => *entry.get(),
+                        Entry::Vacant(_) => 0.0,
+                    };
+                    let updated = old - multiplier * value;
                     if !updated.is_finite() {
                         return Err(Error::new(
                             "nonfinite_arithmetic",
                             "nonfinite elimination coefficient",
                         ));
                     }
-                    if updated == 0.0 {
-                        rows[id].remove(&k);
-                        active.remove(k, id);
-                    } else {
-                        rows[id].insert(k, updated);
-                        active.insert(k, id);
+                    match entry {
+                        Entry::Occupied(mut entry) => {
+                            if updated == 0.0 {
+                                entry.remove();
+                                active.remove(k, id);
+                            } else {
+                                *entry.get_mut() = updated;
+                            }
+                        }
+                        Entry::Vacant(entry) => {
+                            if updated != 0.0 {
+                                entry.insert(updated);
+                                active.insert(k, id);
+                            }
+                        }
                     }
                 }
             }
@@ -131,6 +155,12 @@ impl Factorization {
                 .enumerate()
                 .any(|(position, &column)| column != position)
         });
+        crate::diagnostics::counter(
+            "sparse_lu_entries",
+            diagonal.len()
+                + lower.iter().map(Vec::len).sum::<usize>()
+                + upper.iter().map(Vec::len).sum::<usize>(),
+        );
         Ok(Self {
             lower,
             upper,

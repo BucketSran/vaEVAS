@@ -39,19 +39,32 @@ impl Controller {
         while end < crossings.len() && crossings[end].time == time {
             end += 1;
         }
-        let (next, records) = prepare_calendar_batch(
-            model,
-            trajectory,
-            &self.accepted,
+        let (next, records) = crate::diagnostics::outcome(
+            "event_candidate",
             time,
-            &crossings[self.event..end],
-            prediction_end(model, trajectory, crossings.get(end)),
+            prepare_calendar_batch(
+                model,
+                trajectory,
+                &self.accepted,
+                time,
+                &crossings[self.event..end],
+                prediction_end(model, trajectory, crossings.get(end)),
+            ),
         )?;
         next.operators
             .check_deadline_order(time, crossings.get(end).map(|e| e.bounds()))?;
         self.accepted = next;
         self.event = end;
+        let committed = records.len();
         self.records.extend(records);
+        crate::diagnostics::record(
+            "event_batch",
+            "committed",
+            Some(time),
+            Some(time),
+            committed,
+            None,
+        );
         Ok(())
     }
 }
@@ -126,13 +139,22 @@ fn prepare_root_window(
     moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<Frame, Error> {
+    let _timing = crate::diagnostics::span("controller.prepare_candidate");
+
     let EventMoment {
         representative: time,
         observation: time_bounds,
         fired_roots: fired_leaves,
         prediction_end,
     } = moment;
+    let copying = crate::diagnostics::span("history.clone");
     let mut operators = accepted.operators.clone();
+    drop(copying);
+    crate::diagnostics::counter("history_clone_calls", 1);
+    crate::diagnostics::counter(
+        "history_clone_operator_slots",
+        model.program.operators.len(),
+    );
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
     let old_bounds = accepted.state_bounds.as_slice();
@@ -155,6 +177,7 @@ fn prepare_root_window(
                 values,
                 old_bounds,
                 bounds,
+                Some(&accepted.circuit),
             )
         } else {
             crate::settlement::prepare_window(
@@ -165,6 +188,7 @@ fn prepare_root_window(
                 values,
                 old_bounds,
                 bounds,
+                Some(&accepted.circuit),
             )
         }
     };
@@ -574,6 +598,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             crossings.get(controller.event).map(|e| e.bounds()),
         )?;
         if output < trace.times.len() && controller.accepted.time == trace.times[output] {
+            let _output = crate::diagnostics::span("output.collect");
             solutions.push(controller.accepted.solution.clone());
             trace.states.push(controller.accepted.states.clone());
             output += 1;
@@ -587,6 +612,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 "transient execution exceeded 1,000,000 accepted steps",
             ));
         }
+        let accepted_start = controller.accepted.time;
         let mut time =
             (controller.accepted.time + trajectory.config.max_step).min(trajectory.knots[knot]);
         if output < trace.times.len() {
@@ -610,25 +636,37 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         if controller.event < crossings.len() && crossings[controller.event].time <= time {
             if crossings[controller.event].time < time {
                 trace.discarded_trials += 1;
+                crate::diagnostics::record(
+                    "time_proposal",
+                    "discarded",
+                    Some(controller.accepted.time),
+                    Some(time),
+                    1,
+                    Some("earlier scheduled event"),
+                );
             }
             controller.accept_events(&model, &trajectory, &crossings)?;
         } else {
             if !model.program.operators.is_empty() {
-                let next = prepare_root_window(
-                    &model,
-                    &trajectory,
-                    &controller.accepted,
-                    EventMoment {
-                        representative: time,
-                        observation: I::point(time),
-                        fired_roots: &[],
-                        prediction_end: prediction_end(
-                            &model,
-                            &trajectory,
-                            crossings.get(controller.event),
-                        ),
-                    },
-                    &[],
+                let next = crate::diagnostics::outcome(
+                    "history_candidate",
+                    time,
+                    prepare_root_window(
+                        &model,
+                        &trajectory,
+                        &controller.accepted,
+                        EventMoment {
+                            representative: time,
+                            observation: I::point(time),
+                            fired_roots: &[],
+                            prediction_end: prediction_end(
+                                &model,
+                                &trajectory,
+                                crossings.get(controller.event),
+                            ),
+                        },
+                        &[],
+                    ),
                 )?;
                 next.operators.check_deadline_order(
                     time,
@@ -657,6 +695,14 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             }
         }
         trace.accepted_steps += 1;
+        crate::diagnostics::record(
+            "controller_step",
+            "committed",
+            Some(accepted_start),
+            Some(controller.accepted.time),
+            1,
+            None,
+        );
         if controller.accepted.time == trajectory.knots[knot] {
             knot += 1;
         }
@@ -677,6 +723,8 @@ fn run_stateless_transient(
     transient: crate::ir::TransientInputs,
     tolerances: crate::ir::Tolerances,
 ) -> Result<Response, Error> {
+    let _timing = crate::diagnostics::span("controller.stateless");
+
     let trajectory = Trajectory::new(transient, driven.len())?;
     let times = trajectory.config.output_times.clone();
     let nodes = program.nodes.clone();

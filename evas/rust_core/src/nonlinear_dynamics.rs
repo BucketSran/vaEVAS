@@ -554,6 +554,8 @@ impl NonlinearContinuous {
     // Extend only a disposable candidate; retained dense steps and their
     // endpoint enclosures stay unchanged when an event leaves the mode intact.
     fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
+        let _timing = crate::diagnostics::span("history.nonlinear_propagate");
+
         let trajectory = &self.context.trajectory;
         if !horizon.is_finite() || horizon < self.start || horizon > trajectory.config.stop {
             return Err(Error::new(
@@ -605,6 +607,15 @@ impl NonlinearContinuous {
                         accepted = Some(step);
                         break;
                     }
+                    crate::diagnostics::record(
+                        "nonlinear_candidate",
+                        "rejected",
+                        Some(start),
+                        Some(end),
+                        1,
+                        Some("tube or Taylor remainder not certified"),
+                    );
+                    crate::diagnostics::counter("nonlinear_rejected_trials", 1);
                     end = start + (end - start) * 0.5;
                 }
                 let step = accepted.ok_or_else(|| {
@@ -616,6 +627,15 @@ impl NonlinearContinuous {
                 state = step.range(I::point(step.end));
                 start = step.end;
                 self.steps.push(step);
+                crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
+                crate::diagnostics::record(
+                    "nonlinear_candidate",
+                    "certified",
+                    Some(self.steps.last().unwrap().start),
+                    Some(start),
+                    1,
+                    None,
+                );
             }
         }
         Ok(())

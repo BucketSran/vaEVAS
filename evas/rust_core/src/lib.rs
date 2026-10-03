@@ -4,6 +4,7 @@ mod analog;
 mod assembly;
 mod batch;
 mod continuous;
+pub mod diagnostics;
 mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
@@ -42,6 +43,7 @@ pub fn run(request: Request) -> Result<Response, Error> {
 /// Independent static samples may run concurrently. Results and errors retain
 /// input order; transient state always advances on the serial controller.
 pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Response, Error> {
+    let _timing = crate::diagnostics::span("kernel.run");
     if !(1..=64).contains(&static_threads) {
         return Err(Error::new(
             "invalid_config",

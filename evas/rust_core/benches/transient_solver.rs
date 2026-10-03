@@ -68,6 +68,13 @@ fn main() {
     assert!(count >= 2);
     let mut records = Vec::new();
     for kind in ["pwl", "idt", "nonlinear_idt", "timer", "cross"] {
+        if let Ok(directory) = std::env::var("EVAS_BENCH_REQUESTS") {
+            std::fs::write(
+                std::path::Path::new(&directory).join(format!("{kind}-{count}.json")),
+                serde_json::to_vec(&request(kind, count)).unwrap(),
+            )
+            .unwrap();
+        }
         let mut trials = Vec::new();
         for _ in 0..5 {
             let input = request(kind, count);

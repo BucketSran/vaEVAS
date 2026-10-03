@@ -10,6 +10,8 @@ pub(crate) struct Factorization {
 
 impl Factorization {
     pub(super) fn new(mut a: Vec<Vec<f64>>, columns: usize) -> Result<Self, Error> {
+        let _timing = crate::diagnostics::span("factor.dense");
+
         if a.len() < columns {
             return Err(Error::new(
                 "singular_system",

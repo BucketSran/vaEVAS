@@ -219,6 +219,8 @@ fn schedule_with_history(
     trajectory: &Trajectory,
     operators: Option<&Operators>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    let _timing = crate::diagnostics::span("event.calendar");
+
     let mut events = Vec::new();
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {

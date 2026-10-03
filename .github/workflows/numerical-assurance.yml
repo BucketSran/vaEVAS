@@ -27,14 +27,14 @@ jobs:
       - name: Build the kernel used by Python regressions
         run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
       - name: Full Rust regression, including interval properties
-        run: cargo +stable test --locked --manifest-path evas/rust_core/Cargo.toml
+        run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
       - name: Full Python regression
         env:
           PYTHONPATH: evas/src
         run: python3 -B -m unittest discover -s evas/tests -v
       - name: Rust lint and formatting
         run: |
-          cargo +stable clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings
+          cargo +stable clippy --locked --workspace --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings
           cargo +stable fmt --manifest-path evas/rust_core/Cargo.toml -- --check
       - name: Traceability and frozen validation identities
         run: |
