@@ -41,4 +41,4 @@ P表示原有限观测判据内；正式资格仍I。基础/细化均保留31分
 main24/31；analog25/31；Spectre31/31（每档）。
 对应的旧候选分支对剩余6条各自新执行两档，三分支均4/4，尚未统一基线及IR。
 
-[完整收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/archive/pr14-pr15-validation/results/analog-gap-spectre-comparison.json)；[解释与边界](../RESULTS.md#analog-gap-spectre-comparison)。
+[完整收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-gap-spectre-comparison.json)；[解释与边界](../RESULTS.md#analog-gap-spectre-comparison)。

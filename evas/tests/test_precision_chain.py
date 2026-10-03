@@ -3,6 +3,10 @@
 These probes are development regressions, not new original-matrix conditions.
 An unprovable result may be refused; an accepted result must meet its budget.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DEV:precision-chain", "NONLINEAR-TRANSIENT"]
+
 from decimal import Decimal, localcontext
 from fractions import Fraction
 import math

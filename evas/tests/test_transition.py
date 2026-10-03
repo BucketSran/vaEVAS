@@ -3,6 +3,10 @@
 Expected voltages come from frozen TR-* equations, not another simulator or
 an EVAS-generated golden waveform. Binary64 rounding allowance is 2e-12 V.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["TRANSITION", "TIMED-OPERATOR"]
+
 import copy
 import json
 import math

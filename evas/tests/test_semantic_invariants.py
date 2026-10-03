@@ -5,6 +5,9 @@ tests remain in test_affine, test_transition and test_settlement. These probes
 add history contribution permutations, alpha-renaming and observation taps.
 They are development regressions, not new conditions in the fixed DVS set.
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["TRANSITION", "TIMED-OPERATOR", "COMPOSE"]
+
 from fractions import Fraction as F
 from itertools import permutations
 import re

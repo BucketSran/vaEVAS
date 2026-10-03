@@ -1,3 +1,7 @@
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DEV:ir-migration"]
+
 import hashlib
 import json
 from pathlib import Path

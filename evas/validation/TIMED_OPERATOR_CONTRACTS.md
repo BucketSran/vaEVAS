@@ -5,8 +5,8 @@
 以下编号是行为义务和数学样例，尚未冻结成共同 VA 条件，正式样本数 `N=null`。
 样例已公开参与设计，不能称为未见确认集。
 受限 timer、transition、absdelay、slew 后续已由 PR12–15 交付，
-实现、实验和已知差异见[能力总表](../docs/CAPABILITIES.md)及[算子手册](../docs/OPERATORS.md)。
-PR12 已审查合入的同刻联立规则见[事件手册](../docs/EVENTS.md)；下文保留原候选前态读取规则作为历史，不为适配后端静默改写原答案。
+实现、实验和已知差异见[能力总表](../docs/CAPABILITIES.md)及[算子手册](../docs/math/operators.md)。
+PR12 已审查合入的同刻联立规则见[事件手册](../docs/math/events.md)；下文保留原候选前态读取规则作为历史，不为适配后端静默改写原答案。
 
 本文件归属 [V5/V7 行为要求](PROTOCOL.md#七组行为要求)，沿用
 [观察资格协议](METHOD_QUALIFICATION.md)。实现顺序、模块划分与分工讨论记录在本次 PR；

@@ -2,6 +2,10 @@
 
 These are development combinations, not new conditions or an untouched holdout.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS", "COMPOSE"]
+
 import math
 import unittest
 

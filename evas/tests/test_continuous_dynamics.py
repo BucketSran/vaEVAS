@@ -5,6 +5,9 @@ direct PWL derivatives, and proper higher-order ``laplace_nd`` filters.  The
 expected values come from closed forms or exact PWL areas, not from the kernel's
 state-space machinery.
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 
 from fractions import Fraction
 import itertools

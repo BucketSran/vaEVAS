@@ -171,7 +171,7 @@
   "kernel": "evas/rust_core/target/debug/evas-kernel",
   "matrix_worker_sha256": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
   "replay_helper_sha256": "8e1eb47971417533d098edbb814afdb266c25c6b3a4a94cb27e27584ba04a68e",
-  "source_input_reference": "experiments/archive/pr14-pr15-validation/results/idt-reset-merge-validation.json",
+  "source_input_reference": "experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json",
   "source_input_verification": "all three frozen input hashes matched candidate/v1-main records for each profile",
   "environment": {
     "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
@@ -190,7 +190,7 @@
     "rust_tests": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
     "clippy": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
     "format": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
-    "worker": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py worker --root <profile directory> --kernel evas/rust_core/target/debug/evas-kernel",
+    "worker": "python3 -B experiments/pr14-pr15-validation/matrix.py worker --root <profile directory> --kernel evas/rust_core/target/debug/evas-kernel",
     "analysis": "matrix.check(matrix.read_waveform(work/'waveform.csv','evas'), frozen_condition)"
   },
   "checks": {

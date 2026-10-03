@@ -6,13 +6,13 @@
 
 当前 EVAS 0.12.2 / IR16 由 [PR33](https://github.com/BucketSran/vaEVAS/pull/33)
 合并到 main `b4921ca`，尚未发布版本 tag。
-README 给出当前证据和使用入口；各阶段完整记录见[固定历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md)，
+README 给出当前证据和使用入口；各阶段完整记录见[固定历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md)，
 数学与兼容性审查在 [REVIEW](REVIEW.md)。
 
 ## 当前证据
 
 运行时 `8618339` 和审查头 `18063c9` 已由 PR33 合并。以下是已执行并绑定该源码的证据，
-本次文档整理没有新执行；数学与支持边界见[事件截止点](../../../evas/docs/CONTINUOUS.md#known-event-horizons)。
+本次文档整理没有新执行；数学与支持边界见[事件截止点](../../../evas/docs/math/continuous.md#known-event-horizons)。
 
 | 收据 | 实际执行与限制 |
 | --- | --- |
@@ -29,13 +29,13 @@ README 给出当前证据和使用入口；各阶段完整记录见[固定历史
 
 | 主题 | 实验与审查 |
 | --- | --- |
-| 历史误差为什么要继续传入输出验收？ | <a id="ir15-precision-chain"></a>[IR15 精度链](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#ir15-precision-chain)、[数学审查](REVIEW.md#precision-chain) |
-| 线性动态、积分反馈、高阶滤波与 ddt 如何联合？ | <a id="continuous-dynamics"></a>[IR16 连续动态](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#continuous-dynamics) |
-| 一般非线性动态与联合复位怎样补齐？ | <a id="dynamic-closure"></a>[动态补齐](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#dynamic-closure) |
-| DAE、混合算子、非精确事件采样如何认证？ | <a id="certified-mixed-dynamics"></a>[混合动态](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#certified-mixed-dynamics) |
-| 冷启动、续算、复位观察与 Spectre 有哪些差异？ | <a id="shared-lifecycle-review"></a>[第一批共同生命周期对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#shared-lifecycle-review) |
-| 怎样把观察、未来安装与原子提交分开？ | <a id="lifecycle-closure-review"></a>[共同闭包实现](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#lifecycle-closure-review) |
-| 根时刻误差或导数消元后的瞬时依赖是否会遗漏？ | <a id="lifecycle-observation-review-fixes"></a>[追加修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#lifecycle-observation-review-fixes) |
+| 历史误差为什么要继续传入输出验收？ | <a id="ir15-precision-chain"></a>[IR15 精度链](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#ir15-precision-chain)、[数学审查](REVIEW.md#precision-chain) |
+| 线性动态、积分反馈、高阶滤波与 ddt 如何联合？ | <a id="continuous-dynamics"></a>[IR16 连续动态](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#continuous-dynamics) |
+| 一般非线性动态与联合复位怎样补齐？ | <a id="dynamic-closure"></a>[动态补齐](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#dynamic-closure) |
+| DAE、混合算子、非精确事件采样如何认证？ | <a id="certified-mixed-dynamics"></a>[混合动态](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#certified-mixed-dynamics) |
+| 冷启动、续算、复位观察与 Spectre 有哪些差异？ | <a id="shared-lifecycle-review"></a>[第一批共同生命周期对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
+| 怎样把观察、未来安装与原子提交分开？ | <a id="lifecycle-closure-review"></a>[共同闭包实现](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#lifecycle-closure-review) |
+| 根时刻误差或导数消元后的瞬时依赖是否会遗漏？ | <a id="lifecycle-observation-review-fixes"></a>[追加修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#lifecycle-observation-review-fixes) |
 
 这些记录绑定各次被测源码与构建，保留原始失败和修复过程。
 重判历史 Spectre 波形不计为新执行，开发回归不增加原矩阵条件数。
@@ -63,14 +63,14 @@ python3 -B experiments/runs/parallel-gap-integration/analyze.py \
 
 ## 历史与资产
 
-重复的长篇历史叙述保留在[固定交付前快照](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/runs/parallel-gap-integration/REVIEW.md)。
+重复的长篇历史叙述保留在[固定交付前快照](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/REVIEW.md)。
 六份大历史 JSON 以 `.json.gz` 在仓库内无损保存；
 [归档清单](results/historical-receipts.json)记录原路径/字节数/SHA256、压缩文件身份与固定历史链接。
 只有整理收据被压缩，完整 raw 波形/日志仍为仅本地保留。
 
 | 固定检查点 | 历史入口 |
 | --- | --- |
-| 初期 IR14 与已发现反例 | [协议快照](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/runs/parallel-gap-integration/README.md)、[矩阵摘要](results/MATRIX.md)、[原收据 gzip](results/original31.json.gz) |
+| 初期 IR14 与已发现反例 | [协议快照](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/README.md)、[矩阵摘要](results/MATRIX.md)、[原收据 gzip](results/original31.json.gz) |
 | 联合功能 `39a4545` | [数学/范围](REVIEW.md#gap-completion)、[31 行摘要](results/gap-completion-matrix.md)、[矩阵 gzip](results/gap-completion-current.json.gz)、[检查 gzip](results/gap-completion-checks.json.gz) |
 | 查询/根认证优化 `ddfd379` | [原理/测量](REVIEW.md#accuracy-optimization)、[矩阵 gzip](results/accuracy-optimization-matrix.json.gz)、[计时收据](results/accuracy-optimization-profile.json) |
 | analog 单项与 Spectre 原执行 | [历史结果](../../archive/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)、[Spectre 收据 gzip](../../archive/pr14-pr15-validation/results/analog-gap-spectre-comparison.json.gz)、[analog 收据 gzip](../../archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz) |

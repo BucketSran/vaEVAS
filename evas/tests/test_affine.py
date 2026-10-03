@@ -3,6 +3,9 @@
 The expected numbers and rejection cases here are independent of the lowering
 implementation. Build the kernel once before running (see evas/README.md).
 """
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["LANG", "LIN", "COMPOSE", "case:n_v1_02", "case:d2_v7_01"]
+
 
 import itertools
 import json

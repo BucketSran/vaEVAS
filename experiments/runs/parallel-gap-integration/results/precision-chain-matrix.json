@@ -123,8 +123,8 @@
   "analysis_script_sha256": "56fd5167ec552fa5119236f7d8f5365ee529034928a5182d267d0e396960a5b9",
   "configurations": 62,
   "adapter_sha256": {
-    "experiments/archive/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
-    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8"
+    "experiments/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8"
   },
   "summary": {
     "base": {
@@ -201,7 +201,7 @@
     {"condition":"s1-override","profile":"fine","input_sha256":{"dut.va":"24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651","condition.json":"a2fae2da372d6a2f6ddeeab15034b9c2a99b8fd68b1e1b4043f6db0bae33c736","requested_settings.json":"2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"},"effective_settings":{"vabstol":1e-09,"reltol":1e-06,"max_step":1e-10,"output_points":40001,"stop":4e-06,"engine":"evas-events-0.9.0","unsupported_spice_controls":["iabstol","integration method"],"transient_summary":{"state_names":[],"accepted_steps":0,"discarded_trials":0,"event_count":0}},"execution_status":"waveform_available","execution":{"returncode":0,"timeout":false,"elapsed_s":2.007044958998449,"log_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"analysis":{"formal_dvs_qualification":"I","continuous_time_qualified":false,"scope":"finite accepted exports; candidate uncertainty bounds are not qualified","observation":{"sample_count":40001,"max_gap_s":1.0000000000021927e-10,"input_max_error_v":{"u":3.608224830031759e-16,"v":2.220446049250313e-16}},"analytic_max_error":{"vout":4.440892098500626e-16},"analytic_targets":{"vout":0.001},"status":"observations_within_targets"},"waveform_sha256":"1fa6ad75587213bc947bb8960e611b2a734aad1fcbdc6f5dd8f6b085e146c8ef"}
   ],
   "compatibility": {
-    "baseline_receipt": "experiments/runs/parallel-gap-integration/results/accuracy-optimization-matrix.json",
+    "baseline_receipt": "experiments/parallel-gap-integration/results/accuracy-optimization-matrix.json",
     "baseline_receipt_sha256": "c4695666fd5a5b7fdb5f86c054cbef48041305db04b1b1ec3044720f940860b3",
     "baseline_runtime_commit": "ddfd3795ee7edd7cb5d3e6ccf2160d5872f334d4",
     "baseline_kernel_sha256": "8ecace3b7fa021c12da6c3a4b0b944966e89d00a1a398ca6c95775e185bea948",

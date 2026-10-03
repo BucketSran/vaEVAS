@@ -5,7 +5,7 @@ EVAS 运行时 `39a4545c34fb22b1bd69731ca6b8bd8852b0e9dd`，IR v15；执行时�
 “达”仅指原检查器的 `observations_within_targets`，正式资格仍 I。两档分别以 31 为分母。
 EVAS 为本轮 62 次新执行；Spectre 为上一轮 62 次执行的导出结果重新核验，未新启动远端任务。
 相对 analog 候选 `9c5d6c5`，新增六条条件、12 个配置；原达标 50 份 CSV 逐字节一致。
-完整输入、设置、检查器和输出身份见[收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/runs/parallel-gap-integration/results/gap-completion-current.json)，数学及范围见[复审入口](../REVIEW.md#gap-completion)。
+完整输入、设置、检查器和输出身份见[收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/gap-completion-current.json)，数学及范围见[复审入口](../REVIEW.md#gap-completion)。
 
 | 原条件 | EVAS 基础 | EVAS 细化 | Spectre 基础（复用重判） | Spectre 细化（复用重判） | 相对 analog 基线 |
 | --- | --- | --- | --- | --- | --- |

@@ -1,4 +1,7 @@
 """Index-one polynomial DAE answers derived by substitution, not a solver oracle."""
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DYNAMICS"]
+
 import unittest
 from evas.runtime import KernelError
 from test_continuous_dynamics import compile_model, run, rows, values, assert_close

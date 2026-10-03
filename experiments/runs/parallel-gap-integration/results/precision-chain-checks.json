@@ -85,7 +85,7 @@
     },
     {
       "check": "matrix_execution",
-      "command_template": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
+      "command_template": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -95,7 +95,7 @@
     },
     {
       "check": "matrix_analysis",
-      "command_template": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
+      "command_template": "python3 -B experiments/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -194,11 +194,11 @@
   },
   "formal_dvs_qualification": "I",
   "continuous_time_qualified": false,
-  "matrix_receipt": "experiments/runs/parallel-gap-integration/results/precision-chain-matrix.json",
+  "matrix_receipt": "experiments/parallel-gap-integration/results/precision-chain-matrix.json",
   "matrix_receipt_sha256": "010c6c3823238e004c5ae8261a974a675e9b9e4329c301233832fed7fbcc5971",
   "receipt_formatting": {
     "original_matrix_sha256": "98c85af7918c82929cf7a8d5ce110c4c7c1e81067a916a92590ed0ece62aca95",
-    "original_matrix_history_url": "https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/runs/parallel-gap-integration/results/precision-chain-matrix.json",
+    "original_matrix_history_url": "https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/precision-chain-matrix.json",
     "change": "JSON formatting only; all decoded values preserved; no new simulation or reanalysis"
   }
 }

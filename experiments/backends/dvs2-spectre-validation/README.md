@@ -10,7 +10,7 @@ EVAS 的黄金答案；版本、步长、容差与事件历史差异分别记录
 ## 原 31 条件
 
 Spectre 21.1.0.509.isr12 在两档各达到 **31/31**，共 62 条配置、1,333,719 个导出点。
-[历史完整报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#original-31-condition-comparison)说明范围和观测结果，
+[历史完整报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#original-31-condition-comparison)说明范围和观测结果，
 [执行协议](PROTOCOL.md)固定输入、预算与判据。
 [收据](results/RECEIPT.json)、[分析](results/analysis.json)和
 [生效设置](results/effective-settings.json)保留实际身份。
@@ -20,17 +20,17 @@ Spectre 21.1.0.509.isr12 在两档各达到 **31/31**，共 62 条配置、1,333
 
 ## 专项报告索引
 
-完整实验记录从[固定历史提交](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md)查阅，保留原来的版本、失败、数学解释与命令。
+完整实验记录从[固定历史提交](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md)查阅，保留原来的版本、失败、数学解释与命令。
 下面按研究问题阅读，不需要按 PR 编号猜能力范围。
 
 | 问题 | 报告 |
 | --- | --- |
-| 事件检查器能否检出漏事件、重复和共同历史矛盾？ | [独立校准](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#事件检查器的独立校准补充) |
-| 孤立触零为何可能产生额外跳变？ | [触零实验](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pwl-触零边界实验)、[修复回放](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#孤立触零契约回放045) |
-| 零平台、端点和停止点如何处理？ | [边界实验](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#零平台和停止点边界046) |
-| 固定 timer 的事件前后解怎样联立？ | <a id="pr12-fixed-timer-comparison"></a>[timer 初版对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison) |
-| timer 试算与整数顺序赋值有哪些反例？ | <a id="pr12-timer-repair-051"></a>[0.5.1 修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr12-timer-repair-051)、<a id="pr12-timer-hardening-052"></a>[0.5.2 加固](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)、<a id="pr12-integer-sequence-053"></a>[0.5.3 整数顺序](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
-| 大绝对时间的 transition 历史误差为何不能只检查残差？ | <a id="pr13-transition-061"></a>[0.6.1 精度修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr13-transition-061)、[0.6.0 对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr13-transition-060) |
+| 事件检查器能否检出漏事件、重复和共同历史矛盾？ | [独立校准](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#事件检查器的独立校准补充) |
+| 孤立触零为何可能产生额外跳变？ | [触零实验](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pwl-触零边界实验)、[修复回放](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#孤立触零契约回放045) |
+| 零平台、端点和停止点如何处理？ | [边界实验](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#零平台和停止点边界046) |
+| 固定 timer 的事件前后解怎样联立？ | <a id="pr12-fixed-timer-comparison"></a>[timer 初版对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison) |
+| timer 试算与整数顺序赋值有哪些反例？ | <a id="pr12-timer-repair-051"></a>[0.5.1 修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)、<a id="pr12-timer-hardening-052"></a>[0.5.2 加固](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)、<a id="pr12-integer-sequence-053"></a>[0.5.3 整数顺序](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053) |
+| 大绝对时间的 transition 历史误差为何不能只检查残差？ | <a id="pr13-transition-061"></a>[0.6.1 精度修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-061)、[0.6.0 对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-060) |
 
 上述 EVAS 版本是各次实验的被测身份，当前能力见[能力表](../../../evas/docs/CAPABILITIES.md)。
 

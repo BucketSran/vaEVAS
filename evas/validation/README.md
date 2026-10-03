@@ -7,6 +7,8 @@
 预期结果来自模型声明的方程与状态转移，而非 EVAS 输出或 Spectre 波形。
 跨后端一致性用于诊断；两个实现给出相近结果，并不能单独证明它们正确。
 
+测试文件声明的契约关联与能力证据入口见[追溯矩阵](../docs/TRACEABILITY.md)；
+它不证明逐条件覆盖或执行通过。
 验证目录分两级：[smoke/](smoke/) 是各能力路径的最小可运行冒烟集，
 只验证链路连通，不带期望值；[cases/](cases/) 及各协议文档构成完整验证集。
 
@@ -29,7 +31,7 @@
 | 查看模型源码与条件对应关系 | [共同 DUT](cases/README.md) |
 | 理解原条件的刺激、答案与错误对照 | [起步案例卡](CASE_CARDS.md)、[补充案例卡](NEXT_CASE_CARDS.md) |
 | 理解误差、事件历史与正式资格 | [范围与判定协议](PROTOCOL.md)、[观察资格协议](METHOD_QUALIFICATION.md) |
-| 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/CONTINUOUS.md) |
+| 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
 
@@ -66,7 +68,7 @@
 
 这是固定旧版本的[历史矩阵](../../experiments/backends/dvs2-four-backend-validation/results/MATRIX.md)，
 不把新版 EVAS 成绩填入旧表。失败、执行身份和设置分别保留。
-IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md)。
+IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md)。
 
 ## 专项契约
 
@@ -156,7 +158,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | --- | ---: | --- |
 | `v1-main` | 1 | [顺序局部赋值、输入 if/else 限幅](ANALOG_CONDITIONS_CONTRACT.md) |
 | `v6-standard`、`c2-main` | 2 | [常量数组、一阶 laplace_nd 与滤波采样](LAPLACE_CONTRACTS.md) |
-| `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/OPERATORS.md#idtmod-与-sin) |
+| `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/math/operators.md#idtmod-与-sin) |
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
 原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后轨迹重定位、非线性滤波初值及验证资格缺口仍见

@@ -171,7 +171,7 @@
     },
     {
       "check": "matrix_execution",
-      "command": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --kernel runs/continuous-dynamics-20261001T063752Z-128260/bin/evas-kernel",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --kernel runs/continuous-dynamics-20261001T063752Z-128260/bin/evas-kernel",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -181,7 +181,7 @@
     },
     {
       "check": "matrix_analysis",
-      "command": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --identity runs/continuous-dynamics-20261001T063752Z-128260/SOURCE_IDENTITY.json --output runs/continuous-dynamics-20261001T063752Z-128260/matrix-analysis.json",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/continuous-dynamics-20261001T063752Z-128260/matrix-evas --identity runs/continuous-dynamics-20261001T063752Z-128260/SOURCE_IDENTITY.json --output runs/continuous-dynamics-20261001T063752Z-128260/matrix-analysis.json",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -370,7 +370,7 @@
   },
   "formal_dvs_qualification": "I",
   "continuous_time_qualified": false,
-  "matrix_receipt": "experiments/runs/parallel-gap-integration/results/continuous-dynamics-matrix.json",
+  "matrix_receipt": "experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json",
   "matrix_receipt_sha256": "63818ae388bdb05ee241ba20f48306eb7cac92cac57281dc291c91765872a835",
   "contract_limits": [
     "Affine continuous voltage/integral/filter systems only; no general nonlinear DAE or event-modified continuous feedback/reset.",

@@ -53,7 +53,7 @@ benchmark 的运行入口将随任务集补齐，目前可先运行 EVAS 示例�
 [实验记录](experiments/README.md)提供当前 EVAS 的验证结果、Spectre 等后端的历史对照和复现入口。
 各轮结果绑定实际源码、输入和检查器；有限测试的通过范围与剩余验证限制在对应记录中说明。
 main 保留持续维护的工具与支撑公开结论的精简证据；已结束的审查和阶段报告从固定历史提交查阅。
-具体资产去向见[实验索引](experiments/README.md#现有目录如何处理)，保留规则见[贡献指南](CONTRIBUTING.md#main-branch-contents)。
+具体资产去向见[实验索引](experiments/README.md#目录结构)，保留规则见[贡献指南](CONTRIBUTING.md#main-branch-contents)。
 
 ## 仓库导航
 

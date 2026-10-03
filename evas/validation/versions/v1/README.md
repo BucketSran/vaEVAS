@@ -32,12 +32,12 @@
 
 ```sh
 python3 -B scripts/verify_validation_version.py
-git show b28a476ac0f5ccc063c41a93a59acb7f956d7e1d:experiments/archive/dvs2-starter-pilot/DIAGNOSIS.md
+git show b28a476ac0f5ccc063c41a93a59acb7f956d7e1d:experiments/dvs2-starter-pilot/DIAGNOSIS.md
 ```
 
 需要整个版本的独立文件副本时，可在新目录解包 `git archive validation-v1`；无需切换或覆盖当前工作区。浅克隆缺少历史对象时需先取得对应标签及历史。哈希校验只证明工件身份，不能代替仿真正确性或私有原始证据校验。
 
-当前分支的便捷入口：[历史结果](../../../../experiments/archive/dvs2-starter-pilot/RESULTS.md)、[故障归因](../../../../experiments/archive/dvs2-starter-pilot/DIAGNOSIS.md)、[后续设计](../../INDEPENDENT_SET_DESIGN.md)。这些链接会随分支演进；精确历史以清单中的提交与哈希为准。
+当前分支的便捷入口：[历史结果](../../../../experiments/dvs2-starter-pilot/RESULTS.md)、[故障归因](../../../../experiments/dvs2-starter-pilot/DIAGNOSIS.md)、[后续设计](../../INDEPENDENT_SET_DESIGN.md)。这些链接会随分支演进；精确历史以清单中的提交与哈希为准。
 
 ## 后续版本规则
 

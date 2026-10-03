@@ -1,4 +1,8 @@
 """Check Rust event arithmetic against Python's independent exact fractions."""
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["DEV:cross-language-arithmetic"]
+
 from fractions import Fraction
 import json
 import math

@@ -6,6 +6,10 @@ answers from a sampled DUT trajectory. SI/scaling comparisons allow a bounded
 test margin for binary64 encoding and evaluation; no forward-error theorem is
 claimed for other inputs.
 """
+
+# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+GUARDS = ["SLEW", "TIMED-OPERATOR"]
+
 import copy
 from fractions import Fraction as F
 import json

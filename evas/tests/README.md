@@ -1,11 +1,9 @@
 # 开发回归测试
 
 本目录是**开发回归套件**：改代码时确认没有破坏已知行为。
-它回答"这次改动有没有引入回归"，不回答"EVAS 语义是否正确"——
-后者由上级 [validation/](../validation/) 的固定条件矩阵与协议回答。
-套件中每个文件都声明自己不是验证矩阵的追加条件
-（如 `test_idt.py` 的 "development cases, not additional conditions in the
-original matrix"）；通过 506 个测试不等于获得 506 项验证。
+测试用独立答案检查已声明的语义和边界，但不单独授予验证资格。
+[validation/](../validation/) 管理条件矩阵与协议；开发测试方法数
+不计入矩阵分母，也不能证明所有合法模型和算子组合都已覆盖。
 
 ## 如何运行
 
@@ -13,8 +11,16 @@ original matrix"）；通过 506 个测试不等于获得 506 项验证。
 
 ```sh
 PYTHONPATH=src python3 -m unittest discover tests          # 全量，约 4 分钟
-PYTHONPATH=src python3 -m unittest tests.test_idt -v       # 单个文件
+PYTHONPATH=src:tests python3 -m unittest test_idt -v       # 单个文件
 ```
+
+## GUARDS 守护标签
+
+每个测试文件声明非空 `GUARDS` 列表，标注契约、能力或直接使用的 DUT 模型。
+它是文件级导航，不是逐方法覆盖或执行证明；开发主题可加 `DEV:<主题>`。
+从仓库根目录运行 `python3 -B scripts/traceability.py --check`，检查标签、
+本地目标和[生成矩阵](../docs/TRACEABILITY.md)是否同步。标签语义与生成命令见
+[PROCESS.md](../docs/PROCESS.md)。
 
 ## 期望值的独立性约定
 
