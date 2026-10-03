@@ -300,3 +300,16 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 [nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs) 和
 [transient_lifecycle_tests.rs](../rust_core/src/transient_lifecycle_tests.rs)。
 该开发回归不增加原 31 条件分母；未新增跨后端或性能结论。
+
+### 候选 DAE 与直接 PWL 滤波的组合义务
+
+本分支允许无事件 index-one 多项式 DAE 搭配直接连续 PWL 仿射输入的 proper 滤波。
+各滤波的全部状态以 `A*x(0)=-B*u(0)` 的区间解启动；积分 IC 独立保存。
+算子输出初值区间须进入电压初始根认证，后续所有物理状态与代数电压共同延续。
+内部节点/其他算子驱动的滤波初值仍须联合认证，当前明确拒绝。
+
+[test_implicit_filters.py](../tests/test_implicit_filters.py) 的独立义务包括：
+用 `f'=u-f` 与 `y+y²=z+f` 构造 `y=t`；用非零滤波 DC 和非零积分 IC 证明两者不互相覆盖；
+保留 numerator 的直接通路；以两极点 ramp 闭式核对高阶状态；
+交换调用次序和加密输出保持同一结果；超小预算及未认证 DC 反馈须拒绝。
+这些是开发回归，不改变原 31 条件或升级正式资格。
