@@ -194,6 +194,18 @@ impl Controller {
         )?;
         next.operators
             .check_deadline_order(next.time, future.first().map(|e| e.bounds()))?;
+        // Extending a nonlinear dense history can widen its endpoint box.
+        // The committed observation must satisfy the budget against that
+        // final history as well as the earlier reset/observation closure.
+        let point_inputs = trajectory.value_bounds(next.time);
+        model.certify(
+            &model.conditions.select(&[], &point_inputs)?,
+            &point_inputs,
+            &next.state_bounds,
+            &next.operators.bounds(next.time)?,
+            &next.solution.voltages,
+            &next.states,
+        )?;
         // Build and validate the future first; calendar replacement and state
         // acceptance have no remaining fallible operation between them.
         self.commit_events(next, records, 0);
