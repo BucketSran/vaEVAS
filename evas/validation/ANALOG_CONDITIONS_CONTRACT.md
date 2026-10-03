@@ -25,7 +25,7 @@ end
 二次及更高次幂均拒绝，不能靠相消、空分支或不可达分支消除这个限制。这个结构检查
 在 Python 编译端和 Rust 内核分别执行；两侧都检查所有条件臂。分支体目前只允许局部 `real`
 赋值；不支持在普通 analog `if` 内贡献方程、调用动态算子、访问事件状态、数组、
-循环、函数内联或让谓词依赖输出/内部待解电压。手写 IR 若让 `select` 谓词依赖未驱动节点，
+循环或让谓词依赖输出/内部待解电压。纯函数的分支候选见本页末段；手写 IR 若让 `select` 谓词依赖未驱动节点，
 内核也会拒绝。输入选择的分段常数仍按输入依赖处理，暂不允许它作为标量乘另一个
 输入依赖表达式；此限制是本切片的保守边界，不是声称该表达式必然非仿射。
 
@@ -157,3 +157,24 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 条件体中的新动态调用、带 `Select` 的历史/事件方程仍明确拒绝；单个普通条件和单个积分分别支持，
 不表示二者已能联立。验证见 [test_gap_integration.py](../tests/test_gap_integration.py)。
+
+## 纯函数的分支候选
+
+依据 [Verilog-AMS LRM 2.4 §4.7](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的 analog function 作用域及函数返回规则。此分支仅开放 real 返回值和 real input 参数、
+顺序局部赋值、模块参数读取与受限嵌套调用。输出/inout 参数、数组、条件函数和递归
+仍未开放。函数内部禁止电压访问、贡献、事件和历史算子；实参中的历史调用也明确拒绝，
+避免内联复制调用点。函数可接收已经在外部求得的电压表达式。
+
+`elaboration.py::inline_functions` 在实例绑定前以实参替换形参。局部赋值按顺序建立
+表达式环境，返回函数名最后一次赋值：例如 `tmp=gain*x; f=tmp+1` 展开为 `gain*x+1`。
+模块参数仍留给每个实例独立绑定。展开结果进入既有 `lowering.py` 和同一电压方程组，
+`V(y)<+f(V(u))-2*V(y)` 不按语句顺序写节点，而是求 `3y=gain*u+1`。
+
+只允许读取已赋值的局部变量，未知函数、递归和缺少返回值均给出源码诊断。
+表达式深度、调用深度和实际展开大小受前端预算约束；共享实参不能逃过 JSON 树大小
+计数，失败不得变成 Python 的 `RecursionError` 或无限展开。
+
+[pure_function](cases/pure_function/dut.va)及 [test_user_functions.py](../tests/test_user_functions.py)
+用手算电压、多项式 guard 的两根、局部顺序写与实例参数隔离验证。该切片不新增 IR
+字段、动态状态或历史执行器，也不改变原 31 条件；候选尚未合并，没有新 Spectre 运行。

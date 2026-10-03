@@ -120,6 +120,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
 - manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
+- 本分支候选新增 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
+  函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
+  [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。候选尚未合并。
 
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
 [事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，

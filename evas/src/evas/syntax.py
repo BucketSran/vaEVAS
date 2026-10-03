@@ -4,7 +4,7 @@ Consume every token and retain source locations; instance binding and lowering
 belong to frontend.py.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import math
 import re
 from typing import Literal
@@ -35,7 +35,8 @@ OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
                     "idt": (2, 3), "laplace_nd": (3,), "idtmod": (4,), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
-             "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or"}
+             "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
+             "function", "endfunction"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | _BUILTINS
 
@@ -64,7 +65,7 @@ def _tokens(source: str, name: str) -> list[Token]:
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
-                "idt", "laplace_nd", "idtmod", "ddt"]
+                "idt", "laplace_nd", "idtmod", "ddt", "call"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
@@ -118,6 +119,15 @@ class Event:
     token: Token
 
 
+@dataclass(frozen=True)
+class Function:
+    name: str
+    inputs: tuple[str, ...]
+    variables: frozenset[str]
+    body: tuple[Assignment, ...]
+    token: Token
+
+
 @dataclass
 class Model:
     name: str
@@ -130,6 +140,7 @@ class Model:
     variables: dict[str, str]
     initial: list[Assignment]
     events: list[Event]
+    functions: dict[str, Function] = field(default_factory=dict)
 
 
 class Parser:
@@ -237,8 +248,17 @@ class Parser:
             left = Expr("power", None, (base, exponent), token)
         elif token.kind == "name" and token.text not in _RESERVED:
             if self.token.text == "(":
-                self.fail(f"call {token.text!r} is not supported in this slice", token)
-            left = Expr("parameter", token.text, (), token)
+                self.take("(")
+                arguments = []
+                if self.token.text != ")":
+                    arguments.append(self.expression())
+                    while self.token.text == ",":
+                        self.take(",")
+                        arguments.append(self.expression())
+                self.take(")")
+                left = Expr("call", token.text, tuple(arguments), token)
+            else:
+                left = Expr("parameter", token.text, (), token)
         else:
             self.fail(f"unsupported expression {token.text!r}", token)
         while self.token.text in ("+", "-", "*", "/"):
@@ -292,6 +312,33 @@ class Parser:
         self.take(";")
         return (Assignment(name, rhs, token),)
 
+    def function(self) -> Function:
+        token = self.take("analog")
+        self.take("function")
+        if self.token.text == "integer":
+            self.fail("analog function return type currently requires real")
+        if self.token.text == "real":
+            self.take("real")
+        name = self.name()
+        self.take(";")
+        inputs, variables = [], set()
+        while self.token.text in ("input", "real"):
+            kind = self.take().text
+            names = self.names()
+            target = inputs if kind == "input" else variables
+            if set(names) & set(target) or name in names:
+                self.fail("duplicate function input/local name")
+            if kind == "input":
+                inputs.extend(names)
+            else:
+                variables.update(names)
+            self.take(";")
+        if not inputs or not set(inputs) <= variables:
+            self.fail("function requires typed real input arguments", token)
+        body = self.statements()
+        self.take("endfunction")
+        return Function(name, tuple(inputs), frozenset(variables), body, token)
+
     def parse(self) -> Model:
         while self.token.kind == "include":
             self.take()
@@ -301,8 +348,15 @@ class Parser:
         ports = self.names()
         self.take(")")
         self.take(";")
-        directions, nodes, parameters, variables = {}, set(), {}, {}
-        while self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real"):
+        directions, nodes, parameters, variables, functions = {}, set(), {}, {}, {}
+        while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real")
+               or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
+            if self.token.text == "analog":
+                function = self.function()
+                if function.name in functions:
+                    self.fail("duplicate analog function name", function.token)
+                functions[function.name] = function
+                continue
             kind = self.take().text
             if kind == "parameter":
                 self.take("real")
@@ -384,4 +438,6 @@ class Parser:
         self.take("<eof>")
         if not any(isinstance(statement, ContributionStatement) for statement in analog):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
-        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events)
+        if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys()):
+            self.fail("function name conflicts with a module declaration")
+        return Model(name, self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions)

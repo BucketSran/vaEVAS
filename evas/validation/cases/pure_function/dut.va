@@ -1,0 +1,15 @@
+module pure_function(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+parameter real gain=2;
+analog function real transfer;
+  input x;
+  real x,tmp;
+  begin
+    tmp=gain*x;
+    transfer=tmp+1;
+  end
+endfunction
+analog begin
+  V(y,r) <+ transfer(V(u,r))-2*V(y,r);
+end
+endmodule

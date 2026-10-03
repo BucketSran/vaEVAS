@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Mapping
 
 from .ir import Program
+from .elaboration import inline_functions
 from .instance_compiler import Compilation, InstanceCompiler
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
                      Conditional as SyntaxConditional, ContributionStatement)
@@ -20,7 +21,7 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     """Compile source text and explicit flat instances; never import validation data."""
     models = {}
     for path, text in sources.items():
-        model = Parser(text, path).parse()
+        model = inline_functions(Parser(text, path).parse())
         if model.name in models:
             raise CompileError(f"duplicate module {model.name!r}")
         models[model.name] = model

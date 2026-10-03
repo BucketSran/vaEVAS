@@ -27,6 +27,8 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)
+    if expr.op == "call":
+        fail(f"unknown analog function {expr.value!r}")
     if expr.op == "array":
         fail("standard array literals are only supported as laplace_nd coefficient lists")
     if expr.op == "number":
