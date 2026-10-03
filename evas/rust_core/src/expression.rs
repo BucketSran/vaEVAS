@@ -321,14 +321,12 @@ impl Accumulator {
     }
 }
 
-impl Relation {
-    fn selects_sign(self, sign: i8) -> bool {
-        match self {
-            Self::Lt => sign < 0,
-            Self::Le => sign <= 0,
-            Self::Gt => sign > 0,
-            Self::Ge => sign >= 0,
-        }
+fn selects_sign(relation: Relation, sign: i8) -> bool {
+    match relation {
+        Relation::Lt => sign < 0,
+        Relation::Le => sign <= 0,
+        Relation::Gt => sign > 0,
+        Relation::Ge => sign >= 0,
     }
 }
 
@@ -488,7 +486,7 @@ fn select_predicate(
     right: &Expression,
     nodes: &[f64],
 ) -> Result<bool, Error> {
-    Ok(relation.selects_sign(predicate_sign(left, right, nodes)?))
+    Ok(selects_sign(relation, predicate_sign(left, right, nodes)?))
 }
 
 fn enclosed_predicate(

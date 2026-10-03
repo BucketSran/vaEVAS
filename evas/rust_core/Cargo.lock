@@ -46,9 +46,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "evas-ir"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "evas-kernel"
 version = "0.12.3"
 dependencies = [
+ "evas-ir",
  "num-rational",
  "proptest",
  "serde",

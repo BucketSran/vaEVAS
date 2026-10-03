@@ -3,7 +3,12 @@ name = "evas-kernel"
 version = "0.12.3"
 edition = "2021"
 
+[workspace]
+members = ["ir"]
+resolver = "2"
+
 [dependencies]
+evas-ir = { path = "ir", version = "=0.1.0" }
 serde = { version = "=1.0.228", features = ["derive"] }
 serde_json = { version = "=1.0.150", features = ["float_roundtrip"] }
 
