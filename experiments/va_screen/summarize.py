@@ -8,8 +8,11 @@ from pathlib import Path
 def main():
     p=argparse.ArgumentParser();p.add_argument('run',type=Path);p.add_argument('--output',type=Path,required=True);args=p.parse_args()
     run=args.run.resolve();records=[];infra=[]
-    # The initial old-CLI job produced request rejections, not model submissions.
-    designated={'glm':['glm'],'codex':['codex-native-preflight','codex-native']}
+    amendment_path=run/'channel-amendment.json'
+    amendment=json.loads(amendment_path.read_text()) if amendment_path.exists() else None
+    # Only the historical amended run used replacement job names.
+    designated={label:amendment[f'scored_{label}_jobs'] if amendment else [label]
+                for label in ['glm','codex']}
     for label,jobs in designated.items():
         for job in jobs:
             for trial in sorted((run/job).glob('va*')):
@@ -43,10 +46,12 @@ def main():
                     cases_sha256=v['cases_sha256'],checker_sha256=v['checker_sha256'],spectre_version=v.get('spectre_version'),
                     cases=[{k:c[k] for k in ['name','status','passed','bad_samples','bad_edge_checks','failures','waveform_sha256'] if k in c} for c in v['cases']],
                     trial=str(trial.relative_to(run)),remote_root=v['remote_root']))
-    for trial in (run/'codex').glob('va*'):
-        result=trial/'result.json'
-        if result.exists():
-            r=json.loads(result.read_text());infra.append(dict(channel='codex-old-cli',trial=str(trial.relative_to(run)),exception=r.get('exception_info')))
+    if amendment and 'codex' not in designated['codex']:
+        # The original old-CLI job produced request rejections, not submissions.
+        for trial in (run/'codex').glob('va*'):
+            result=trial/'result.json'
+            if result.exists():
+                r=json.loads(result.read_text());infra.append(dict(channel='codex-old-cli',trial=str(trial.relative_to(run)),exception=r.get('exception_info')))
     assert len({(r['task'],r['channel']) for r in records})==len(records),'multiple submissions for one logical trial'
     for task in {r['task'] for r in records}:
         assert len({r['instruction_sha256'] for r in records if r['task']==task})==1,'models received different prompts'
@@ -64,7 +69,7 @@ def main():
                 remote_root=d['remote_root']))
     result=dict(run_root=str(run),protocol=json.loads((run/'protocol.json').read_text()),frozen_inputs_unchanged=unchanged,
                 analysis_script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-                channel_amendment=json.loads((run/'channel-amendment.json').read_text()),
+                channel_amendment=amendment,
                 submission_identity_and_no_tool_audit=True,
                 expected_submissions=12,graded_submissions=len(records),records=records,infrastructure_events=infra,
                 human_authored_diagnostics=diagnostics)

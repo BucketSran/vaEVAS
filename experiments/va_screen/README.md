@@ -54,7 +54,7 @@ VCO 对分段线性频率解析积分并求半周期交点；运放使用独立 
 
 ```sh
 python3 -B -m experiments.va_screen.identity --historical
-python3 -B -m unittest experiments.va_screen.test_identity -v
+python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
 ```
 
 检查器比较当前评分文件、参考解、生成器和评分适配入口与校准身份，
@@ -111,6 +111,16 @@ PYTHONPATH="$PWD" uvx --from harbor==0.23.0 harbor run \
   --verifier experiments.va_screen.harbor_adapters:RemoteSpectreVerifier \
   --jobs-dir "$PWD/runs/va-screen/harbor" --job-name oracle-integration -n 1 -r 0
 ```
+
+使用 `run_pilot` 输出的运行目录生成汇总：
+
+```sh
+python3 -B -m experiments.va_screen.summarize runs/va-screen/pilot-YYYYMMDD-HHMMSS \
+  --output runs/va-screen/pilot-YYYYMMDD-HHMMSS/final-summary.json
+```
+
+新运行默认读取 `codex` 和 `glm` job；只有运行目录含 `channel-amendment.json` 时，
+才按其登记的 job 名汇总。首轮渠道修订记录与成绩仍绑定历史脚本，不回写旧汇总。
 
 每题 `tests/test.sh` 也可在已配置 Spectre 的环境独立运行，默认从 `/work/dut.va` 取提交、
 向 `/logs/verifier` 写 `report.json` 和 `reward.txt`；可用 `CANDIDATE`、`VERIFY_OUTPUT` 覆盖路径。
