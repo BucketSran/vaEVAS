@@ -1,0 +1,299 @@
+{
+  "scope": "Repair shared observation bounds and derivative-exposed instantaneous event dependencies after the lifecycle review.",
+  "implementation_status": "uncommitted local checkpoint on feat/evas-certified-mixed-dynamics; no push or merge",
+  "execution_identity": {
+    "base_commit": "0d255b0c6719b9436d481b710419f62223aef6ad",
+    "branch": "feat/evas-certified-mixed-dynamics",
+    "source_worktree_clean": false,
+    "source_identity_kind": "uncommitted local source snapshot after lifecycle review fixes; not a Git runtime commit",
+    "source_snapshot": "runtime-source",
+    "source_sha256": {
+      "evas/pyproject.toml": "9a9a031752438a5a7a54fdc4635bec9882404d512bef142ad8b5c1e8c56829e4",
+      "evas/rust_core/Cargo.lock": "95e74326a1adbf245941c12ccf99c076d4bdc8473f55af51c684678b5b6f529a",
+      "evas/rust_core/Cargo.toml": "f04c1f3f50799ef5ab1b53f0268e06eb9f066883b57435627c46d2d18e32ed87",
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/continuous.rs": "dc2f67c517fafcf8253eb5fd8ca8a3e30009c583ddd433995bb2c7c6509b7d14",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_runtime.rs": "13619e40dc61b923eb231c70a5851033c7471dc05f4acdcce81c7e52b837cdfd",
+      "evas/rust_core/src/dynamic_roots.rs": "7663389a47ee712b7843c53da531897cecef6eadaabb5d9ba4e70e9516789b0f",
+      "evas/rust_core/src/event_accuracy.rs": "c4364a6b9fc743a981e167989a7700958d8fd87db45db2c3ac1f8cba84a9108f",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "30cda8b8efe1d404803a785930da46fce55395130ec649334b61a1ca2899a639",
+      "evas/rust_core/src/expression.rs": "e153146cfcf5dc4db6ea7d0d1967ae13f76a28a939b7a6b1e0e5416d48b56116",
+      "evas/rust_core/src/guard_trajectory.rs": "feb38b94f921176fed4924836e588437ae39207fe30762096a0d2ebb0d6acd53",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "6a22ef3f2212ad18f2f614e9ec0b9d647f8e7245ad6344d64fb16f684c1e49d6",
+      "evas/rust_core/src/interval.rs": "578f32b3a579314155456eb071d1ec43fded59b524250f78ff592cc8c2fb0cb2",
+      "evas/rust_core/src/ir.rs": "141ea5c5478640858478a724e30214c17e1aa725a0ff8804af122761d3b136ed",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "48e6d0348e1f65d443864118a03245489b5bd0a3d9e4507cc98a960485b8ed6a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "9e7c66eeb4e3c2b170278b10108c6ab1ea9dd0eb601f1958507b10fdcf99e910",
+      "evas/rust_core/src/linear/sparse.rs": "63766cdea80653bc146c8e65a05ee0f54e70cf091488262f64cb1d929a466773",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "cd7207261a78b6f41183d4f237eb08505b05edd155d9a2c9b3ffe4ad81e797ee",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/nonlinear.rs": "34c7334688651b28bcd880ce5fe509cc90c85091c81e40f3a81a053570e9f9d8",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "71baa055fdb98d3f7cb4e93a92027d38cf352e875b52796aa33dd32b4c71c0d7",
+      "evas/rust_core/src/operators.rs": "981825c7ef46e0a318bc9eb0e439bddcbb97ad09dce06bfa00be064bb274e49a",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "4e073e6190cdeeead9d95b39dbabdbc88806cf717f64a10336a541e261b48fd4",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "e1d47eed9ebe09c65eb952337434819d0d243c80141a4ae747380fe02cd73b07",
+      "evas/rust_core/src/settlement.rs": "d90a4065a8fc489ab9515ab3d44d897448481d5787f0edf93175cdc3f6265207",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "ff2c7e939c6df03cf46095ccd6dcc653ffbb21d2c35e4090dd06250cc3c8d0e8",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "3e51679701837aa8ae1a63def3243bfa6d6b48ffa8ccba2b012a56cbf351f2a4",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "726d75042adf4ab2eb9ef9fa2bf43e7d6c94cfcc8ec09df307398e39c422a405",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/src/evas/frontend.py": "a72e6f0a8e1ad339e1a51282b71b784406206a977399dc801bf563b5b39de0ef",
+      "evas/src/evas/ir.py": "f2244b3096a8143f6610d166b0fa54796774fe513ff3ae18ca34e469427aa388",
+      "evas/src/evas/lowering.py": "515f4a6ac5852abb6075eab44c1e34006edfe30bccc4d5e7dde4b739d6d6f745",
+      "evas/src/evas/migrate.py": "b6e0b237565a6b288f824eb5a1b7bc9f6b372ec45d163445f5f19a1bfe705d9f",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "e71ed332e855fcf6dcbdea8ba3b8b24d5fb8516ee08528d786464dcc7ac9e1ea"
+    },
+    "kernel_sha256": "3100fa1d83e58bf6c1fff2d96c32412584cfe335bf9ae8a0fa59f19617672766",
+    "package_version": "0.12.1",
+    "schema_version": 16,
+    "build_profile": "debug",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O"
+  },
+  "source_identity_sha256": "16523125dfb2234c13cace32ed76612eab216a54b6f6e8a96639d882c7721856",
+  "verification_source_manifest_sha256": "8f4bf181243512db2f624f2990f4fcc728f66574f5c70d9512fbf0c69afdcd6a",
+  "prior_checkpoint": {
+    "receipt": "lifecycle-closure-checks.json",
+    "kernel_sha256": "7713715395bca238b19f14dfbb6fb62c51f3d1a7a4a7a2149c4df42ee265c16c",
+    "archive_verified_unchanged": true
+  },
+  "fixed_findings": [
+    {
+      "finding": "Immutable history can still vary over root window W",
+      "method": "Always enclose nonpoint event observations; separate observation range from cross-guard derivative eligibility; keep direct integral release sample continuous",
+      "oracle": "u=t, tau=sqrt(2): idt(u,0)=1 and idt(u^2,0)=2*sqrt(2)/3; wide window rejected at tight tolerance; narrow window accepted"
+    },
+    {
+      "finding": "ddt restores instantaneous dependence hidden by an integral or relative-degree-one filter",
+      "method": "Propagate value and first-derivative graph layers through original voltage relations; reject structural event feedback through derivative or filter feedthrough",
+      "oracle": "four encodings of q+=y+=q+ are nonunique; ordinary q=q+1, double integral followed by ddt, and derivative of relative-degree-two low-pass remain accepted"
+    },
+    {
+      "finding": "Future-history installation returned mixed-phase observations",
+      "method": "Evaluation::advanced returns only candidate Operators; observed_after owns same-event values and bounds; unchanged production atomic commit and replay checks"
+    },
+    {
+      "finding": "Stale actual-reset/sample rejection statement",
+      "method": "Mark 0.12.0 failure historical and link the 0.12.1 closure repair"
+    }
+  ],
+  "regression_red": {
+    "methods": 4,
+    "failing_subtests": 8,
+    "log_sha256": "e8125ac4a44cfe5f0d008fa8199de9c07f241fd4057ed65b2d97507d14b6d7b7",
+    "previous_kernel_sha256": "7713715395bca238b19f14dfbb6fb62c51f3d1a7a4a7a2149c4df42ee265c16c"
+  },
+  "unchanged_review_requests": [
+    {
+      "case": "source_history",
+      "request_sha256": "5be406804969ed4bbac238434616cf2a2d2e5be9f42323849a0cf5a44acd3d3c",
+      "identical_previous_request": true,
+      "returncode": 2,
+      "error": {
+        "kind": "waveform_accuracy",
+        "message": "cannot certify same-time forward error at dut:q: bound 1.0789575753844538e-5, budget 1.000002157408744e-7"
+      }
+    },
+    {
+      "case": "derivative_feedback",
+      "request_sha256": "8fd83cf2f572bed442fafcb31882b8cb65126acea5ed388c21102f64c0f0680b",
+      "identical_previous_request": true,
+      "returncode": 2,
+      "error": {
+        "kind": "unsupported_operator",
+        "message": "instantaneous event feedback through direct or derivative feedthrough at continuous.va:1:145 (dut)"
+      }
+    }
+  ],
+  "checks": {
+    "python": {
+      "methods": 497,
+      "outcome": "all passed, validated complete unittest summary",
+      "log": "python-final.log",
+      "wrapper_returncode_note": "zsh read-only status variable failed after the test command completed; retained wrapper-failure.txt",
+      "log_sha256": "57de1cd45c8c2f4ebe5d86bf2bee755ecacd2df92fc392e22a69dc3313c14dbc"
+    },
+    "rust": {
+      "passed": 122,
+      "ignored": 1,
+      "failed": 0,
+      "log": "rust-final.log",
+      "log_sha256": "5cbdbc44adbef74217303f00b10e4b79e208d35f38c635bef58f55106acfc4c1"
+    },
+    "lifecycle_counts": {
+      "evas": {
+        "classified_trigger_observation": 2,
+        "finite_consistent": 18
+      },
+      "spectre": {
+        "classified_trigger_observation": 2,
+        "finite_consistent": 9,
+        "finite_inconsistent": 8,
+        "analysis_failure": 1
+      }
+    }
+  },
+  "gates": {
+    "math": {
+      "command": [
+        "python3",
+        "-B",
+        "evas/validation/check_lifecycle_math.py"
+      ],
+      "returncode": 0,
+      "log": "math-verified.log",
+      "log_sha256": "83166b089fbcb82fac63f22522fa6ae99bb5e46368cd35d756277fd463dd6346"
+    },
+    "checker": {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/runs/parallel-gap-integration",
+        "-p",
+        "test_lifecycle_contract.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "log": "checker-verified.log",
+      "log_sha256": "e2a02c70191f32ca516349fc377124bed24fc5c2f5a26ea69fb9b89705ca2028"
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "returncode": 0,
+      "log": "clippy-verified.log",
+      "log_sha256": "99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6"
+    },
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "evas/rust_core/Cargo.toml",
+        "--check"
+      ],
+      "returncode": 0,
+      "log": "fmt-verified.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "new_regression_methods": 7,
+  "lifecycle_methods_total": 13,
+  "matrix": {
+    "configurations": 62,
+    "original_conditions": 31,
+    "summary": {
+      "base": {
+        "observations_within_targets": 31
+      },
+      "fine": {
+        "observations_within_targets": 31
+      }
+    },
+    "compatibility_with_prior_checkpoint": {
+      "input_sha256": 62,
+      "waveform_sha256": 62,
+      "analysis": 62,
+      "effective_settings": 62
+    },
+    "input_manifest_sha256": "ca8518198aed16ba02a1efcc967fe9cceeb3d15d1d9dbc0db83ba8d933cedec4",
+    "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "analysis_sha256": "a0284b3cfd2aecced8864fba9a4d2f23da593a0306921caa6196671d8dedda82",
+    "thresholds_inputs_checker_and_denominator_unchanged": true
+  },
+  "lifecycle": {
+    "new_evas_requests": 20,
+    "reused_spectre_records": 20,
+    "new_spectre_executions": 0,
+    "counts": {
+      "evas": {
+        "classified_trigger_observation": 2,
+        "finite_consistent": 18
+      },
+      "spectre": {
+        "classified_trigger_observation": 2,
+        "finite_consistent": 9,
+        "finite_inconsistent": 8,
+        "analysis_failure": 1
+      }
+    },
+    "analysis_sha256": "0b62d416b34cd600ecb3004eb33ea3838e4b47499f670c76c67fdbd5f984c0c7",
+    "checker_and_inputs_unchanged": true
+  },
+  "intermediate_failures_preserved": [
+    {
+      "log": "python-initial.log",
+      "sha256": "e824d5eaf47b6a654edddac9f7d0a37a1df08bce223fc3db1759e3a556f5483d",
+      "result": "494 methods, two event-writer transition regressions; fixed by separating future installation from observation; final full suite passed"
+    },
+    {
+      "log": "wrapper-failure.txt",
+      "sha256": "28191b331e5f218d190838cae5f1581c1e8f909d6004a58f64cb9e2ee2171cb4",
+      "result": "zsh read-only status variable failed in post-command wrappers; successful full test summary and simulator completions independently validated; cheap gates reexecuted with explicit return-code capture"
+    }
+  ],
+  "remaining_limits": [
+    "Conservative structural rejection is not a uniqueness solver for general same-event feedback.",
+    "Nonpoint observations of absdelay/slew/idtmod lack certified range interfaces and are explicitly rejected, including when present elsewhere in the operator vector; exact-timer controls pass.",
+    "Transition observations cover retained ramp/plateau windows under existing deadline ordering; this work is not complete all-operator continuous-time or uncertain target-origin certification.",
+    "No new Spectre execution, performance claim, untouched confirmation set or formal continuous-time qualification."
+  ],
+  "formal_dvs_qualification": "I",
+  "raw_archive": {
+    "path": "runs/lifecycle-review-fixes-20261002",
+    "availability": "local-only ignored run",
+    "sealed_read_only": true,
+    "manifest": "RAW_MANIFEST.json",
+    "manifest_sha256": "cea8cdd3dece7f190d047fab99acfab2e260b62f3bf2b4b07ef45347446ca354",
+    "files": 857,
+    "bytes": 176484654
+  },
+  "review_entries": [
+    "evas/docs/CONTINUOUS.md#lifecycle-observation-review-fixes",
+    "evas/rust_core/src/operators.rs",
+    "evas/rust_core/src/reset_dependencies.rs",
+    "evas/tests/test_lifecycle_closure.py"
+  ],
+  "documentation_check": {
+    "local_links": 207,
+    "failures": 0,
+    "sha256": "3afa6a2da50e68c13511d8dabcf6b57085b2a197afb38fb8ecf392f04d225040"
+  }
+}

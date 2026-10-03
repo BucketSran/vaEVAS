@@ -1,6 +1,6 @@
 # v2 候选契约：边界、动态与组合
 
-2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个条件已编码并完成四后端两档基线；有限观测结论见[执行报告](../../experiments/dvs2-four-backend-validation/README.md)，正式资格仍未取得。** 本文件落实 [验证范围与契约](README.md) 的补充行为义务；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
+2026-09-28，`v2-draft-20260928`。**七张候选卡、16 个条件已编码并完成四后端两档基线；有限观测结论见[执行报告](../../experiments/backends/dvs2-four-backend-validation/README.md)，正式资格仍未取得。** 本文件落实 [验证范围与契约](README.md) 的补充行为义务；判定、设置与复用规则统一见 [METHOD_QUALIFICATION.md](METHOD_QUALIFICATION.md)。v1 八张卡保留在 [CASE_CARDS.md](CASE_CARDS.md)，修订迁移不混入本页新增条件数。
 
 ## 总览与选择依据
 
@@ -172,12 +172,12 @@ PWL u 的节点为 (0,0),(1,.4),(2,.4),(3,−.2),(4,−.2)；v 为 (0,−.2),(1,
 | 顺序条件 | `s1-default-reordered` 仅将三条贡献次序反转；参数、刺激、端口、模块名、设置和观察合同与 `s1-default` 相同。两种编码须各自符合绝对答案，不能只要求彼此接近。 |
 
 新源码为 [n_v1_02_reordered/dut.va](cases/n_v1_02_reordered/dut.va)。
-[补充入口](../../experiments/dvs2-spectre-validation/s1_review.py)输出两条既有条件与一条新条件的清单；
+[补充入口](../../experiments/backends/dvs2-spectre-validation/s1_review.py)输出两条既有条件与一条新条件的清单；
 新条件有 `comparison_condition=s1-default`，不进入原构建器的 31 条列表。
 历史检查器按条件 ID 选取 S1 参数，因此补充入口的 `check(rows, condition_id)`
 明确绑定原默认条件的独立答案，并拒绝未知 ID；不能把新 ID 直接传给历史 `check`。
 
-[本地校准](../../experiments/dvs2-spectre-validation/test_s1_review.py)同时检查
+[本地校准](../../experiments/backends/dvs2-spectre-validation/test_s1_review.py)同时检查
 VA 字节仅改变贡献顺序、两档网表完全相同，以及两种编码的相同错误波形仍被绝对答案拒绝。
 这是测试设计与检查器证据，**不是新编码在任何仿真器上的通过结果**；
 `s1-default-reordered` 后端执行状态为 T（未运行），正式资格仍为 I。
@@ -186,8 +186,8 @@ VA 字节仅改变贡献顺序、两档网表完全相同，以及两种编码�
 从仓库根目录运行，无仿真器或私有归档依赖：
 
 ```sh
-python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_s1_review.py' -v
-python3 -B experiments/dvs2-spectre-validation/s1_review.py
+python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_s1_review.py' -v
+python3 -B experiments/backends/dvs2-spectre-validation/s1_review.py
 ```
 
 第一条运行校准；第二条只输出 JSON 条件清单，不启动后端。
@@ -198,7 +198,7 @@ python3 -B experiments/dvs2-spectre-validation/s1_review.py
 
 先完成方法协议和 V6 修订，之后 E1/E2/C1/C2，最后 D1/D2/S1。拟议 16 条件若全部通过测试合同资格审查并采用四后端两档，为 128 条配置记录上限；这是配置预算，编译失败和复用会改变实际启动数。测试合同资格与后端是否成功分开，不能删除某后端执行失败的有效条件。V6 迁移、设置校准、观察干预及后续尺度变体另列，不能藏在该数里。
 
-先按用户要求执行 Spectre：新增 16 条件共 32 条配置，加上 14 个原条件和一个低通修订的复验，共 62 条配置，见 [Spectre 实验](../../experiments/dvs2-spectre-validation/README.md)。随后按补测请求完成 EVAS、OpenVAF 各 34 条和 Gnucap 62 条配置，见 [四后端实验](../../experiments/dvs2-four-backend-validation/README.md)。本页新增 16 条件已有完整的四后端两档 128 条结论；当前全集另含旧条件和低通修订，共 248 条配置。编译失败记录不等于电路启动。`python3 -B evas/validation/check_design_math.py` 仍只核对锚点、状态表、误差传播示例及区别性反例；算术检查自身不授予观察资格。
+先按用户要求执行 Spectre：新增 16 条件共 32 条配置，加上 14 个原条件和一个低通修订的复验，共 62 条配置，见 [Spectre 实验](../../experiments/backends/dvs2-spectre-validation/README.md)。随后按补测请求完成 EVAS、OpenVAF 各 34 条和 Gnucap 62 条配置，见 [四后端实验](../../experiments/backends/dvs2-four-backend-validation/README.md)。本页新增 16 条件已有完整的四后端两档 128 条结论；当前全集另含旧条件和低通修订，共 248 条配置。编译失败记录不等于电路启动。`python3 -B evas/validation/check_design_math.py` 仍只核对锚点、状态表、误差传播示例及区别性反例；算术检查自身不授予观察资格。
 
 尚未展开：V3 初始高迟滞/above/enable/last_crossing；V4 量化、位序、递推；V5 absdelay/slew/中断边沿及动态 timer；V6 导数、采样滤波与长期相位；V7 更多选择器和层级；不同时间尺度、非零参考下的新组合。它们仍在总设计义务矩阵中，不因本页完成而默认为已覆盖。
 

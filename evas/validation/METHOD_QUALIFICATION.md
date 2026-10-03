@@ -2,7 +2,7 @@
 
 2026-09-28，`v2-draft-20260928`，**共同历史检查已实现并完成有限校准及旧波形重判；新条件已完成四后端两档基线，完整协议仍未取得资格**。本文件落实 [验证范围与契约](README.md) 的观察资格要求；新案例在 [NEXT_CASE_CARDS.md](NEXT_CASE_CARDS.md)。[v1](versions/v1/README.md) 的源码、分析器、结果与标签不变。
 
-当前实现及证据见[共同历史重判](../../experiments/dvs2-history-validation/README.md)：17 项构造校准/适配检查通过，复核248份所读历史工件并重判24份波形；32条配置中另外8条保留原执行失败。两个条件性误差场景均为13份相容、11份不相容，正式资格仍为 I。重判不增加电路运行数，也不证明完整观察误差界已经建立。
+当前实现及证据见[共同历史重判](../../experiments/archive/dvs2-history-validation/README.md)：17 项构造校准/适配检查通过，复核248份所读历史工件并重判24份波形；32条配置中另外8条保留原执行失败。两个条件性误差场景均为13份相容、11份不相容，正式资格仍为 I。重判不增加电路运行数，也不证明完整观察误差界已经建立。
 
 ## 1. 本轮要交付什么
 
@@ -10,7 +10,7 @@
 
 每条条件固定 `condition_id / contract_revision / dut_hash / stimulus_hash / initial_state / observation_revision / target_revision`；每次执行另固定工具及编译器身份、网表、请求/实际设置、命令、输出哈希；每次重判固定分析器版本与原执行 ID。分母只由获审查的条件列表确定，不能由成功生成波形的数量决定。
 
-下面的阈值和观察预算是待审查设计，不是已达到的测量能力。新案例先完成 [Spectre 执行](../../experiments/dvs2-spectre-validation/README.md)，再完成 [四后端补测与设置审计](../../experiments/dvs2-four-backend-validation/README.md)；不能把数学检查或仿真完成写成正式资格 P。
+下面的阈值和观察预算是待审查设计，不是已达到的测量能力。新案例先完成 [Spectre 执行](../../experiments/backends/dvs2-spectre-validation/README.md)，再完成 [四后端补测与设置审计](../../experiments/backends/dvs2-four-backend-validation/README.md)；不能把数学检查或仿真完成写成正式资格 P。
 
 ## 2. 修订编码与固定设置
 
@@ -90,6 +90,6 @@
 
 ## 7. 来源及未解决项
 
-规范定位： [LRM 2.4](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) §4.5.8、§5.10.2–3；实际故障和配置依据见 [v1 诊断](../../experiments/dvs2-starter-pilot/DIAGNOSIS.md)。本次取得资料的身份见 [SOURCE_RECEIPTS.json](SOURCE_RECEIPTS.json)。数学判定、校准反例、预算和执行次序是本项目的设计，不是规范给出的测试集。
+规范定位： [LRM 2.4](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) §4.5.8、§5.10.2–3；实际故障和配置依据见 [v1 诊断](../../experiments/archive/dvs2-starter-pilot/DIAGNOSIS.md)。本次取得资料的身份见 [SOURCE_RECEIPTS.json](SOURCE_RECEIPTS.json)。数学判定、校准反例、预算和执行次序是本项目的设计，不是规范给出的测试集。
 
 执行前需落实各后端有效设置的完整记录方式、原始输出与插值/跳变的适配规则及必要的观察配置；授予正式 P/F 前还需完成目标合同范围内的保守性验证和每种测量的 B 上界。初版求解器采用精确有理数、保守区间与共同见证核验，并完成所列控制；旧波形中的 B=0 和 B=0.25 mV 只是两个明确假设，不是已取得的物理误差界。公开环境从零复现按 M4 另行验证。当前文件没有声称完整资格已经通过。

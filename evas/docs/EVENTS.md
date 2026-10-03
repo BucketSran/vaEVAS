@@ -1,24 +1,25 @@
 # 事件、时间推进与历史
 
-适用范围：IR16 的受限事件体条件、cross OR 与多事件写者；当前与历史检查点身份见
-[能力总表](CAPABILITIES.md)。能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE。
+适用范围：IR16 的 `cross`、固定 `timer`、受限事件体条件、cross OR 与多事件写者。
+能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](CAPABILITIES.md)。
 
-共同重构的第一批审查从[生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)进入：
-首次初始化、已知历史续算、实际复位、只读观察及原子提交分别定义。
-数学根 tau、实际触发 te 与内部代表时刻 b 也分别记录。
-本页已有的同刻联立规则是 EVAS 当前选择；特别是非点 cross 的真根条件约定，
-不能被读成 LRM 要求所有事件体在真根处读取。第一批反例/对照不修改当前求解器。
+本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
+[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
+数学根 tau、实际触发 te 与内部代表时刻 b 是不同对象；当前非点 cross 选择 te=tau。
+这是 EVAS 的观察约定，不能读成 LRM 要求所有事件体在真根处读取。
 
 <a id="event-or"></a>
 
-## cross 的事件 OR（0.9.0）
+<a id="cross-的事件-or090"></a>
+
+## cross 的事件 OR
 
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
 时间容差及表达式容差。依据与首版选择见[独立契约](../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
-首版只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
+当前只接受两个以上的 cross 叶子，拒绝 timer 混合及原始 IR 中的空/单叶/嵌套 OR。
 
-OR 结构由 IR v9 引入，当前 IR16 继续使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
+IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存 cross 列表。
 `EventModel` 为叶子保存 `(block, leaf)` 身份，写者与赋值路径仍按 block 管理。
 日程按叶子定位和认证；只有证明同根且共同代表时间满足每个叶子的容差后，
 候选批次才将 block 去重，并调用既有顺序赋值和电压联立求解。
@@ -48,9 +49,8 @@ C1 的第二实例及独立的无关输入断点探针实际复现了这种拒�
 独立回归在 `test_event_or.py`；实际已接受帧的失败/重试检查在
 `transient_condition_tests.rs`。数学/测试方法数与原 31 条件计数分别记录。
 
-0.9.0 OR 历史检查点的剩余边界包括反馈或非线性 guard、timer OR、多块同状态写入、
-全部故障点的系统性注入及完整连续时间误差资格。后续多写者的受限扩展见
-[本次交付](#multiple-event-writers)，不改写该历史检查点的范围。
+timer OR 仍拒绝。动态 guard 的范围见下节，多块写同一状态的规则见
+[写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
 ## 连续动态与多项式 guard
 
@@ -72,7 +72,7 @@ IR16 已合并状态独立多项式及受限连续算子驱动 cross；值/导�
 
 EVAS 与 Spectre 可以满足同一事件契约，却在容差允许范围内选择不同的触发时刻。
 EVAS 在当前受限 PWL/仿射范围内从分段关系求根、包围根误差，再选择并认证可表示的事件时间。
-Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验确认其实际触发时刻受 cross
+Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验确认其实际触发时刻受 cross
 容差及时间步设置影响。相同容差数值不保证相同的事件时刻，也不代表两者采用相同的误差控制。
 
 [Verilog-AMS LRM 2.4 §5.10.3.1](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
@@ -82,7 +82,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验�
 仍位于这个窗口。输出 transition 的斜率为 `0.8 V/50 ns`，此时间偏移对应边沿上的 4 mV
 名义波形差值；平台电压及 50 ns 边沿时长相同。
 
-事件日志和六次诊断执行见[实验收据](../../experiments/pr14-pr15-validation/results/event-writers-timing.json)。
+事件日志和六次诊断执行见[实验收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)。
 只收紧 cross 表达式或时间容差显著减小了偏移；只收紧全局求解容差没有减小本例偏移。
 这支持事件定位差异的解释，不证明 Spectre 出错、EVAS 普遍更准确，或其他模型也遵循相同比例。
 
@@ -100,10 +100,10 @@ Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验�
   可以引用有效实例参数；暂不接受依赖电压或其他状态的初始化。初始化常数在绑定时确定，
   Rust 在 t=0 的首次求解前安装一次。初始高电平、初始零值的离开本身不产生 `cross`。
 - `@(cross(g[, direction[, ttol[, tol]]]))` 接受空语句、顺序赋值或下述受限 if/else 块。方向为 -1/0/+1，默认 0；
-  两项容差必须为正的有限实例常数，默认分别为 1 ps 和 1e-9 表达式单位。不支持 cross enable；cross 的受限 `or` 见下节。
+  两项容差必须为正的有限实例常数，默认分别为 1 ps 和 1e-9 表达式单位。不支持 cross enable；cross 的受限 `or` 见[OR 规则](#event-or)。
 - 事件同刻贡献及赋值表达式仍须对电压和状态联合仿射；更广连续多项式贡献、积分和 guard
   的限定范围见[连续动态](CONTINUOUS.md)。以下仿射事件规则继续适用。
-  0.4.4 根据 IR 结构保留变量依赖，不以舍入为零的系数证明某项为常量；变量表达式之间的乘法拒绝，
+  根据 IR 结构保留变量依赖，不以舍入为零的系数证明某项为常量；变量表达式之间的乘法拒绝，
   即使存在代数抵消也可能保守拒绝。区间转换另行检查，不能静默丢弃乘积项。
   整数状态采用精确 signed 32-bit 范围，仅接受整数常数/整数状态运算，超范围报错，不模拟溢出或隐含取整。
   real 状态可以在事件时采样仿射电压表达式。
@@ -112,24 +112,23 @@ Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验�
   返回 `event_conflict`，不按声明顺序、源码位置或事件类型决定胜负。
   构建期仍拒绝事件块直接读取另一个事件块也可能写入的状态，避免隐藏的跨块顺序依赖。
   同块语句依次看到自己的更新。
-  0.5.3 支持同块对同一 integer 状态重复赋值，和 real 一样逐句更新局部状态。
+  支持同块对同一 integer 状态重复赋值，和 real 一样逐句更新局部状态。
   每次 integer 赋值都检查精确整数及 signed 32-bit 范围，后续写回合法值不能掩盖中间越界。
   与特定 Spectre 版本的重复赋值差异见下文，不将其作为整体拒绝合法程序的依据。
-  事件块不能直接读取其他事件块写入的状态。0.5.1 起，同刻事件从同一份事件前状态出发，
+  同刻事件从同一份事件前状态出发，
   将更新 `s+=Phi(s-,v+)` 代入原电压方程，联立求解同刻电压；同块赋值顺序保留。
   求解后重放原赋值、检查原电压方程残差与状态一致性，再整批提交。整数状态精确一致，
   real 状态重放使用 `reltol * max(abs(state), abs(replay))`，不借用电压绝对容差。
-  0.5.2 另从原 IR 用向外舍入独立重建联立方程，包围事件后的电压和状态；
+  另从原 IR 用向外舍入独立重建联立方程，包围事件后的电压和状态；
   电压误差须小于 `vabstol + reltol*abs(v)`，real 状态误差须小于 `reltol*abs(state)`，
   integer 状态须精确。预算取向下界、误差取向上界，不能认证时返回 `event_accuracy`。
   real 状态没有绝对误差下限，接近零或舍入严重的合法问题可能被保守拒绝。
-  历史检查点的无条件、无算子路径把事件前状态和采样驱动作为给定点量；含条件路径才携带
-  PWL 与跨事件状态包围。IR v15 精度链修复统一在初始化、事件候选及普通观察时刻使用
-  原 PWL 输入包围和已接受 `Frame.state_bounds`，不以条件或算子是否存在为精度开关。
+  初始化、事件候选及普通观察时刻统一使用原 PWL 输入包围和已接受 `Frame.state_bounds`，
+  不以条件或算子是否存在为精度开关。
   新状态区间随成功批次提交，失败候选不改变它；后续放大必须继续验收这份不确定性。
   无算子的观察仍复用固定电路分解，认证失败前不更新接受帧。冗余关系若只在某个状态点成立，
   而非误差映射状态域的恒等式，可能在初始化就明确拒绝。
-  [独立采样/跨事件回归](../tests/test_precision_chain.py)和[review 记录](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)
+  [独立采样/跨事件回归](../tests/test_precision_chain.py)和[review 记录](../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)
   记录该变化。均不覆盖前端常量折叠，也不是通用物理单位误差保证。
   无唯一数值解或不能通过一致性检查时明确拒绝，失败不消费事件。容差不用于合并相邻事件。
 - guard 不得直接依赖状态，也不能通过电压方程间接依赖状态。Rust 用方程连通性保守检查，
@@ -139,14 +138,14 @@ Spectre 的闭源实现不能由波形反推出完整算法；本次 V3 实验�
   观测时刻会实际求解；若恰逢接受的事件时刻，返回事件后电压。事件不必落在输出网格上。
 
 通过上述限制，固定状态下的方程系数不变，输入每个分段内的节点电压和 guard 都是时间的仿射函数。
-guard 的状态独立性允许提前生成事件日程。0.4.3 同时进行普通求解和保守误差界计算：
+guard 的状态独立性允许提前生成事件日程。内核同时进行普通求解和保守误差界计算：
 
 1. JSON 保留 Python 提交的 binary64 值；以编译后 IR 系数及 PWL 点的这些精确数值定义仿射问题。
 2. 区间四则运算向外舍入，覆盖原 IR 的贡献累加、消元、输入插值和 guard 求值。
    电压、驱动和状态的传递系数一次性准备；所有状态系数必须能证明为零。
    主元区间包含零，或冗余约束不能证明为恒等式时，明确拒绝。
 3. 从断点 guard 区间包围真实仿射根，得到 `[t_lo,t_hi]`；候选时间取可表示的 `t_hi`。
-   0.5.2 在端点 guard 均为精确单点时，用四个 binary64 乘积和的精确符号，
+   在端点 guard 均为精确单点时，用四个 binary64 乘积和的精确符号，
    在有效根包围内对可表示时间作至多 64 次二分；找到精确根才收缩为单点。
    非可表示根和不确定端点仍保留区间；不能先建立有限、严格位于段内的根包围时仍拒绝。
    对斜率区间 `m`，用向外舍入验证 `t_event-t_lo <= ttol`，以及
@@ -159,12 +158,12 @@ guard 的状态独立性允许提前生成事件日程。0.4.3 同时进行普�
 误差界可能偏宽，数值上本来可解的电路也可能被保守拒绝；不自动放宽容差，不用表达式容差过滤小信号。
 界限针对编译后 IR 所定义的仿射实数问题，不覆盖前端常量折叠误差、任意非线性或微分轨迹。
 区间准备另有稠密消元和传递系数存储开销。同刻状态认证只缓存最近一批事件的
-符号传递系数；0.8.0 的键还包含选中语句与分支决定。缓存不保存已接受/候选状态，
+符号传递系数；键还包含选中语句与分支决定。缓存不保存已接受/候选状态，
 批次或路径变化时替换，不随事件次数增长。
-小规模重复事件测量见下述 0.5.2 证据，不据此声明大型网络性能或仿真器排名。
+历史计时见[固定章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/EVENTS.md#timer-与同刻兼容性)，不据此声明大型网络性能或仿真器排名。
 用于定位的初始化状态冻结试算也必须可解；不能完成时直接报告错误。
 
-0.4.6 中，精确零点归到达段所有：若相邻 guard 值为 `a,0`，且 `a` 非零，
+精确零点归到达段所有：若相邻 guard 值为 `a,0`，且 `a` 非零，
 则方向为 `-sign(a)`；按 direction 过滤后执行一次，不依赖下一段是否存在或返回哪一侧。
 这包括内部孤立零点、零平台入口及 stop。零到零、零到非零都不触发；初始零平台和
 恒零输入也不产生事件。再次经过非零段到零时可以重新触发。只有区间能证明精确为零时才走此规则，
@@ -232,51 +231,50 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 具体有三条独立路径保持局部顺序：`EventModel::event_circuit` 构造代入方程，
 `EventModel::apply` 重放原赋值，`Bounds::new` 从原 IR 构造区间认证。每次试算均固定从
 s− 开始，因此求解、重放或缓存重试不会再累计一次事件。验收后才原子提交；失败时旧帧不变。
-0.5.3 只移除输入绑定时的 integer 重复写禁令，没有改动这三条路径或放宽原精度/范围检查。
 
 <a id="multiple-event-writers"></a>
 
-### 多事件块写同一状态（PR25 已交付）
+<a id="多事件块写同一状态pr25-已交付"></a>
 
-本检查点在 0.9.0 / IR v9 之后增加候选批次 writer 检查，不改变 IR。
+### 多事件块写同一状态
+
+写者检查按实际候选批次执行。
 构建期允许不同事件块潜在写同一 state，但仍拒绝事件块读取另一个事件块也可能写入的 state。
 每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
 只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
-本检查点新增 `test_event_writers.py` 及一项 Rust 已接受帧回退测试，并用原 31 源中的
-`v3-main` 两档冻结输入做局部 worker 回放；两档均生成波形且原 checker 给出
-`observations_within_targets`。这些证据不替代完整矩阵重跑，不改写 0.9.0 检查点。
-
-后续固定干净候选 `bfaf8d3` 与同一内核，EVAS 和 Spectre 21.1.0.509.isr12 各新执行两档，
-四次均满足原 V3 有限观测判据；见[新对照收据](../../experiments/pr14-pr15-validation/results/event-writers-spectre-v3.json)。
-六次 Spectre 单参数/事件日志诊断见[定位收据](../../experiments/pr14-pr15-validation/results/event-writers-timing.json)，
-解释见[后端容差](#backend-cross-tolerances)。原 checker 未改，正式资格仍 I，raw 仅本地/thu-sui 保留。
-重分析入口为 [event_writer_compare.py](../../experiments/pr14-pr15-validation/event_writer_compare.py) 与
-[event_writer_timing.py](../../experiments/pr14-pr15-validation/event_writer_timing.py)；有收据不等于公开完整复现包。
+独立冲突与互斥批次回归见 [test_event_writers.py](../tests/test_event_writers.py)；
+真实帧回退由 Rust 私有测试检查。固定 V3 的 EVAS/Spectre 对照见
+[对照收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-spectre-v3.json)，
+定位差异见[诊断收据](../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)及
+[后端容差解释](#backend-cross-tolerances)。这些是有限观测证据；raw 只在本地/thu-sui 保留，
+不等于公开完整复现包或完整矩阵的新执行。
 
 <a id="event-conditions"></a>
 
-## 受限事件体条件（0.8.0 实现切片，0.9.0 延续）
+<a id="受限事件体条件080-实现切片090-延续"></a>
 
-0.12.1 的[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
+## 受限事件体条件
+
+[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)将复位后观察与未来历史分开，
 保留每次事件体的局部赋值顺序及整批提交。非点事件日志的可选 `observation_time_bounds`
 报告共同观测区间；`time` 是存储代表时刻，点事件省略区间字段。当前 cross 策略显式选择 te=tau，
-没有改成 Spectre 的晚触发条件取值；第一批对照仍是这一兼容差异的证据。
+没有改成 Spectre 的晚触发条件取值；对照只证明所列样例的兼容差异。
 
-0.12.0 的非点 cross 候选在数学根 tau 上认证赋值和条件，代表时刻 b 另作提交电压验收。
+非点 cross 候选在数学根 tau 上认证赋值和条件，代表时刻 b 另作提交电压验收。
 完整根盒保留源/历史误差；若条件差值与实际触发的仿射 guard 有精确的同零集证明，
 则使用 guard(tau)=0 判定等号。未触发 OR 叶子、timer、区间系数或单纯舍入相等不能提供这项证明。
-因此 `u=3t, cross(u-1)` 内的 `u>1` 在根处为假；这改变了旧候选按 b 处微小延迟选支的行为。
+因此 `u=3t, cross(u-1)` 内的 `u>1` 在根处为假；不能因为 b 的微小舍入延迟把该条件改判为真。
 其余条件仍需在可行输入盒内证明同一选择；不能证明时拒绝，点时刻 timer 保持原观察语义。
 数学与非线性连续重启见[根盒采样](CONTINUOUS.md#事件修改的联合积分与复位)。
-本轮没有新 Spectre 对照，这项数学根观察约定不等于其他仿真器的回调时刻。
+数学根观察约定不等于其他仿真器的回调时刻。
 
-单个 `cross` 或固定 `timer` 的事件体可含嵌套 `if/else`、顺序块、空语句及无 else 分支。
+`cross`（包括受限 OR）或固定 `timer` 的事件体可含嵌套 `if/else`、顺序块、空语句及无 else 分支。
 仅接受 `< <= > >=`，两侧为实例常数或状态独立的仿射电压表达式；else 归最近未配对 if。
 依据是 LRM 2.4 §4.2.5、§5.3、§5.7、§5.8.1。以下数值认证方法是 EVAS 的实现选择，
-不是 Spectre 内部算法的陈述。0.8.0 切片当时未执行新的后端对照；0.9.0 对照见[OR 说明](#event-or)。
+不是 Spectre 内部算法的陈述。后端执行身份由实验收据维护。
 
 例如 `@(timer(.5,.5,.001)) if (V(rst)>=.5) held=0; else held=V(vin);` 在每次实际事件时间
 读取 rst 并选择复位或采样。所有分支都做静态合法性检查，执行时只判断沿路径实际到达的条件。
@@ -284,7 +282,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 结构依赖先检查，再作区间消元；`0*q`、`q-q`、下溢系数均不能作为独立性证明。
 内部无状态网络如 `z=2*rst-1/4` 可以作为谓词来源。
 
-0.9.0 的点观察契约令实际代表时间为 e，精确实数 PWL 插值为 u(e)，谓词差为
+点观察契约令实际代表时间为 e，精确实数 PWL 插值为 u(e)，谓词差为
 `d(e)=lhs(v(e))-rhs(v(e))`。从原 binary64 IR 的仿射网络得到输入到 d 的区间传递系数，
 结合原 PWL 的 `U(e)`，形成包围 `D=[L,H]`。四种关系按下表认证：
 
@@ -297,7 +295,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 其他有限区间返回 `event_condition`；非有限值也拒绝。不使用额外 epsilon，精确单点 `[0,0]`
 按普通严格/非严格比较处理。`cross` 的定位证书不证明代表时间处 guard 必为零。
-0.12.0 的非点 cross 转而证明实际根处的条件；只在有精确同零集证书时使用该根约束，
+非点 cross 证明实际根处的条件；只在有精确同零集证书时使用该根约束，
 其余条件使用根盒源包围。不能把普通 timer 或近似相等的表达式强行改成等号。
 例如 binary64 的 0.1→0.9 在 t=0.5 的实数插值比 0.5 大 `1/72057594037927936`，
 普通浮点插值却可得到 0.5。当前区间不能判定这个边界时会保守拒绝，不冒充精确实数比较器。
@@ -308,14 +306,14 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 不能只保证选支正确，却把 RHS 的已舍入输入重新当作精确量。
 含条件的整个程序在事件、初值和普通观察点都保留输入及已接受状态包围；即使没有算子也不丢掉采样误差。
 电压使用 `vabstol+reltol*abs(v)`，real 状态只有相对项，integer 必须精确；未通过时返回
-`event_accuracy`，含历史算子时为 `waveform_accuracy`。0.12.0 联合连续网络另在根盒上
+`event_accuracy`，含历史算子时为 `waveform_accuracy`。联合连续网络另在根盒上
 认证采样并保留根到代表时刻的新流误差，见[共同误差链](CONTINUOUS.md#事件修改的联合积分与复位)。
-本轮不把这个范围推广为所有算子的历史采样认证、源到 IR 舍入保证或连续时间资格。
+此认证不推广为所有算子的历史采样认证、源到 IR 舍入保证或连续时间资格。
 
 每个 EventModel 持有至多一份证书缓存，键为激活块及选中赋值/分支路径；只缓存系数。
 每次试算从已接受帧开始重新判定，只有选中路径实际写过的状态能触发算子目标更新。
 候选的状态、包围、电压、算子历史和记录全部通过检查后才随游标一起提交。
-新增测试直接检查非零 transition 历史下的失败、成功弃步、修正未来输入重试与新缓存控制的一致性；
+私有回退测试直接检查非零 transition 历史下的失败、成功弃步、修正未来输入重试与新缓存控制的一致性；
 这仍不是完整调度器任意故障注入证明。
 
 实现入口：[event_conditions.rs](../rust_core/src/event_conditions.rs) 负责结构、路径和谓词认证；
@@ -324,33 +322,22 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 实际帧回退见 [transient_condition_tests.rs](../rust_core/src/transient_condition_tests.rs)。
 完整目标契约与剩余组合边界见[验证契约](../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
-0.8.0 切片当时尚未支持 `cross … or cross …`，也未执行原采样复位 8 条件；0.9.0 main 已补齐 OR 并完成两档有限观测验证，见[当前契约检查点](../validation/EVENT_CONDITIONS_CONTRACT.md#current-checkpoint)。
-该历史检查点仍不支持状态反馈谓词、通用非线性谓词、多块同状态写入、普通 analog if 和 idt reset。
-PR25 在候选批次可证明至多一个实际选中块写同一状态时，受限支持多事件块写同一状态；
-见[交付说明](#multiple-event-writers)。`feat/evas-idt-reset` 分支另补状态 reset 的限定形式，
-边界见[算子手册](OPERATORS.md#idt)。
-区间传播会增加运算和存储，丢失相关性时可能保守拒绝；未测量本轮运行开销，也没有自动细化步长或高精度回退。
+状态反馈谓词、通用非线性谓词及普通 analog 条件与动态算子的组合仍超出本页范围。
+受限 idt reset 见[算子手册](OPERATORS.md#idt)，当前总体缺口见[能力表](CAPABILITIES.md#后续工作)。
+区间传播会增加运算和存储，丢失相关性时可能保守拒绝；这条路径没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
 
-[0.5.0 历史对照](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-fixed-timer-comparison)
-曾暴露旧电压采样和同刻根认证拒绝；
-[0.5.1 修复](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-repair-051)
-采用联立求解并修复可表示根认证，限定的级联、反馈和同刻样例已相容。
-[0.5.2 加固](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-timer-hardening-052)
-增加前向误差认证，同时曾因 Spectre 对照差异保守禁止同块 integer 重复写。
-这些旧结果保留原身份，不能当作当前版本的新执行结果。
+同块程序赋值遵守语句顺序，跨块同刻执行遵守前面的联立与写者冲突规则。
+固定 Spectre **21.1.0.509.isr12** 的重复自增诊断曾出现与顺序赋值独立答案不同的输出；
+缩小步长仍存在，插入中间值观测可使现象消失。最小模型没有电压反馈。
+确切内部原因、新版本范围和厂商确认仍未知，见
+[Issue #16 的输入及对照](https://github.com/BucketSran/vaEVAS/issues/16)。
+EVAS 保留合法的顺序赋值，不将特定后端的异常输出设为期望值。
 
-随后 18 个独立诊断配置显示 Spectre **21.1.0.509.isr12** 的相邻重复自增异常同时涉及
-integer 和 real；缩小步长仍存在，插入中间值观测可使现象消失。最小模型无电压反馈，
-预期值由顺序赋值独立确定。0.5.3 据此恢复合法 integer 顺序更新，保持语言语义，
-不复制该版本的异常输出。确切内部原因、新版本范围和厂商确认仍未知，见
-[Issue #16 的可复现输入及对照](https://github.com/BucketSran/vaEVAS/issues/16)。
-
-[0.5.3 回放](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr12-integer-sequence-053)
-区分语言语义与具体后端的一致性；未修改旧检查器、阈值或原条件分母。
-PR13–15 的后续整合和受影响回归见[能力登记表](CAPABILITIES.md)，旧结果不冒充当前分支执行。
-若未来允许 guard 依赖状态或算子，须在变化后重新定位根，不能沿用失效的预计算日程。
+历史 timer 修复和回放保留在[固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/EVENTS.md#timer-与同刻兼容性)。
+旧检查点的成绩不能当作当前版本的新执行。若 guard 依赖会被事件修改的历史，
+须在变化后重新定位根，不能沿用失效的预计算日程；当前这类轨迹仍拒绝。
 
 ## 实现与验证入口
 
@@ -359,6 +346,6 @@ PR13–15 的后续整合和受影响回归见[能力登记表](CAPABILITIES.md)
 - [schedule.rs](../rust_core/src/schedule.rs)、[event_accuracy.rs](../rust_core/src/event_accuracy.rs)：固定日程、根和误差界。
 - [transient.rs](../rust_core/src/transient.rs)：候选帧、原子提交、丢弃及回退测试。
 - [test_settlement.py](../tests/test_settlement.py)、[test_timer.py](../tests/test_timer.py)、[test_event_accuracy.py](../tests/test_event_accuracy.py)：独立开发回归。
-- [Spectre 实验](../../experiments/dvs2-spectre-validation/README.md)与[共同历史协议](../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
+- [Spectre 实验](../../experiments/backends/dvs2-spectre-validation/README.md)与[共同历史协议](../validation/METHOD_QUALIFICATION.md)：判据及观察限制。
 
 这些证据不等于完整 DVS 资格、任意非线性事件支持或其他仿真器内部算法的证明。

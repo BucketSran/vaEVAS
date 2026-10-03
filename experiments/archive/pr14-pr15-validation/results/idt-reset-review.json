@@ -1,0 +1,447 @@
+{
+  "scope": "D1 targeted local rerun only; no new Spectre execution or full 31-condition matrix",
+  "source_commit": "dfe4bd81769d8ad4cc92b73ff7cea07f0e295bf6",
+  "kernel_sha256": "361242cb62cb6c2e8a37838418c3166f434fc031c3fd7ed21484013794192597",
+  "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+  "adapter_sha256": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+  "frozen_source_manifest_sha256": "837787b02fbc503e33108baecb38794d03772fc9e3257e9601c2815b18265421",
+  "raw_artifact_availability": "local ignored runs/idt-reset-fix-20260930-01; bulk waveforms are not published",
+  "formal_dvs_qualification": "I",
+  "records": [
+    {
+      "condition": "d1-free",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "execution": {
+        "argv": [
+          "python3",
+          "-B",
+          "experiments/archive/pr14-pr15-validation/matrix.py",
+          "worker",
+          "--root",
+          "runs/idt-reset-fix-20260930-01/runs/d1-free/base",
+          "--kernel",
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.6217083749361336,
+        "log": "worker.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "condition": "d1-free",
+        "backend": "evas",
+        "source_sha256": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "e5fe5d2afaf1088e4d11f848e4d0fc7a9ef057eedf89f6861609f2ab96d2c279"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 2.7755575615628914e-17,
+            "rst": 0.0
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "max_error_v": 1.6653345369377348e-16
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "max_error_v": 1.6653345369377348e-16
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "events": [],
+          "accepted_steps": 4253,
+          "discarded_trials": 0
+        },
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ]
+      }
+    },
+    {
+      "condition": "d1-free",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "a39b9411ddf0aa1e8363bba47af04e7ed14ec6a7bf9c0682fed00d0bc3a1a8ad",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "requested_settings": {
+        "step": 1e-10,
+        "reltol": 1e-06,
+        "vabstol": 1e-09,
+        "iabstol": 1e-13,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-10,
+        "forced_strobe": false
+      },
+      "execution": {
+        "argv": [
+          "python3",
+          "-B",
+          "experiments/archive/pr14-pr15-validation/matrix.py",
+          "worker",
+          "--root",
+          "runs/idt-reset-fix-20260930-01/runs/d1-free/fine",
+          "--kernel",
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 5.686093250056729,
+        "log": "worker.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "condition": "d1-free",
+        "backend": "evas",
+        "source_sha256": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "84a1e5bde7cd7c3bacccfce0437b2bc8b7c8833a816a3fed84542a4c12143052"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.7755575615628914e-17,
+            "rst": 0.0
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "max_error_v": 2.220446049250313e-16
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "max_error_v": 2.220446049250313e-16
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "events": [],
+          "accepted_steps": 49489,
+          "discarded_trials": 0
+        },
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ]
+      }
+    },
+    {
+      "condition": "d1-reset",
+      "profile": "base",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765",
+        "requested_settings.json": "dfb5fab3dc5087ddbd16611c1841b67b7215509fc045e7ae683a43bb583b74a3"
+      },
+      "requested_settings": {
+        "step": 1e-09,
+        "reltol": 1e-05,
+        "vabstol": 1e-08,
+        "iabstol": 1e-12,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "forced_strobe": false
+      },
+      "execution": {
+        "argv": [
+          "python3",
+          "-B",
+          "experiments/archive/pr14-pr15-validation/matrix.py",
+          "worker",
+          "--root",
+          "runs/idt-reset-fix-20260930-01/runs/d1-reset/base",
+          "--kernel",
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 0.6161305829882622,
+        "log": "worker.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "condition": "d1-reset",
+        "backend": "evas",
+        "source_sha256": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "2a85268855f104ccf81e092a16a595be56cb0dc0a63355c32dc5afba52e1f299"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 4001,
+          "max_gap_s": 1.0000000000004986e-09,
+          "input_max_error_v": {
+            "vin": 2.7755575615628914e-17,
+            "rst": 1.7763568394002505e-15
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "witness_reset_x": 1.5000200000000001,
+            "witness_release_x": 2.50002,
+            "max_error_v": 1.0000200001414328e-06,
+            "reason": "numeric common witness"
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "witness_reset_x": 1.5000200000000001,
+            "witness_release_x": 2.50002,
+            "max_error_v": 1.0000200001414328e-06,
+            "reason": "numeric common witness"
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "effective_settings": {
+        "vabstol": 1e-08,
+        "reltol": 1e-05,
+        "max_step": 1e-09,
+        "output_points": 4001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "events": [
+            {
+              "time": 1.5000000000000002e-06,
+              "event": 0,
+              "origin": "n_v6_02:12:9 (dut)",
+              "kind": "cross",
+              "guard_value": 1.5543122344752192e-15,
+              "before": [
+                0.0
+              ],
+              "after": [
+                1.0
+              ]
+            },
+            {
+              "time": 2.5e-06,
+              "event": 1,
+              "origin": "n_v6_02:13:9 (dut)",
+              "kind": "cross",
+              "guard_value": -1.1102230246251565e-15,
+              "before": [
+                1.0
+              ],
+              "after": [
+                0.0
+              ]
+            }
+          ],
+          "accepted_steps": 4259,
+          "discarded_trials": 2
+        },
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ]
+      }
+    },
+    {
+      "condition": "d1-reset",
+      "profile": "fine",
+      "input_sha256": {
+        "dut.va": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "condition.json": "939a708cb52b32bea20fafe49e10e309d49795a8da9329dfb70c0084ca687765",
+        "requested_settings.json": "2ff558c6049597a8507e4dafb3ede7178df39d6d577de8d9f806594a4d5682ac"
+      },
+      "requested_settings": {
+        "step": 1e-10,
+        "reltol": 1e-06,
+        "vabstol": 1e-09,
+        "iabstol": 1e-13,
+        "method": "traponly",
+        "stop": 4e-06,
+        "maxstep": 1e-10,
+        "forced_strobe": false
+      },
+      "execution": {
+        "argv": [
+          "python3",
+          "-B",
+          "experiments/archive/pr14-pr15-validation/matrix.py",
+          "worker",
+          "--root",
+          "runs/idt-reset-fix-20260930-01/runs/d1-reset/fine",
+          "--kernel",
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_s": 5.187700583017431,
+        "log": "worker.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": {
+        "condition": "d1-reset",
+        "backend": "evas",
+        "source_sha256": "c2d99ded06e8c8da5fb5ddb191fff6a7693507b1c0bd53c35f3183a64094fbc7",
+        "status": "waveform_available",
+        "waveform": "waveform.csv",
+        "waveform_sha256": "07ce64bbc16aa45af39d152d1155bc175806c4eabedacb0b96e8fa0321bddebb"
+      },
+      "analysis": {
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+        "observation": {
+          "sample_count": 40001,
+          "max_gap_s": 1.0000000000021927e-10,
+          "input_max_error_v": {
+            "vin": 2.7755575615628914e-17,
+            "rst": 1.7763568394002505e-15
+          }
+        },
+        "reset_history": {
+          "exact_export_assumption": {
+            "status": "P",
+            "witness_reset_x": 1.5000200000000001,
+            "witness_release_x": 2.50002,
+            "max_error_v": 1.0000200001414328e-06,
+            "reason": "numeric common witness"
+          },
+          "candidate_budget_sensitivity": {
+            "status": "P",
+            "witness_reset_x": 1.5000200000000001,
+            "witness_release_x": 2.50002,
+            "max_error_v": 1.0000200001414328e-06,
+            "reason": "numeric common witness"
+          }
+        },
+        "status": "observations_within_targets"
+      },
+      "effective_settings": {
+        "vabstol": 1e-09,
+        "reltol": 1e-06,
+        "max_step": 1e-10,
+        "output_points": 40001,
+        "stop": 4e-06,
+        "engine": "evas-events-0.9.0",
+        "transient": {
+          "state_names": [
+            "dut:reset_flag"
+          ],
+          "events": [
+            {
+              "time": 1.5000000000000002e-06,
+              "event": 0,
+              "origin": "n_v6_02:12:9 (dut)",
+              "kind": "cross",
+              "guard_value": 1.5543122344752192e-15,
+              "before": [
+                0.0
+              ],
+              "after": [
+                1.0
+              ]
+            },
+            {
+              "time": 2.5e-06,
+              "event": 1,
+              "origin": "n_v6_02:13:9 (dut)",
+              "kind": "cross",
+              "guard_value": -1.1102230246251565e-15,
+              "before": [
+                1.0
+              ],
+              "after": [
+                0.0
+              ]
+            }
+          ],
+          "accepted_steps": 49491,
+          "discarded_trials": 2
+        },
+        "unsupported_spice_controls": [
+          "iabstol",
+          "integration method"
+        ]
+      }
+    }
+  ],
+  "run_id": "idt-reset-fix-20260930-01",
+  "execution_kind": "new local simulation executions",
+  "source_worktree_dirty_at_launch": false,
+  "environment": {
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "build_profile": "debug",
+    "build_command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml"
+  },
+  "verification": {
+    "python_unittest_methods_passed": 277,
+    "rust_tests_passed": 63,
+    "compiler_warnings_check": "RUSTFLAGS=\"-D warnings\" cargo check --locked --manifest-path evas/rust_core/Cargo.toml --all-targets passed",
+    "clippy": "not executed: component unavailable in installed toolchain"
+  }
+}

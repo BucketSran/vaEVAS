@@ -62,7 +62,7 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 观察 allowance 内落入复位后初值采样类；EVAS 六配置均在历史重放一致性检查拒绝。
 这支持下一批采用复位后共同闭包的设计方向，不构成任意事件体的规范证明。
 实验也显示 Spectre 的严格条件为真而 EVAS 为假，二者采样时刻分别位于晚触发点和根附近。
-完整配置、失败与精度限制见[实验收据](../../experiments/parallel-gap-integration/results/shared-lifecycle-review.json)。
+完整配置、失败与精度限制见[实验收据](../../experiments/runs/parallel-gap-integration/results/shared-lifecycle-review.json)。
 
 ### 独立组合反例与误差
 
@@ -85,9 +85,9 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 暂时未知的状态绝对预算、条件相关性及全时域误差义务继续登记为缺口。
 
 纯数学校准：[check_lifecycle_math.py](check_lifecycle_math.py)；有限观测的正反校准与双后端生成器：
-[lifecycle_contract.py](../../experiments/parallel-gap-integration/lifecycle_contract.py)、
-[test_lifecycle_contract.py](../../experiments/parallel-gap-integration/test_lifecycle_contract.py)。
-它们不访问算子内部实现来生成答案。综合收据从[实验入口](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review)进入。
+[lifecycle_contract.py](../../experiments/runs/parallel-gap-integration/lifecycle_contract.py)、
+[test_lifecycle_contract.py](../../experiments/runs/parallel-gap-integration/test_lifecycle_contract.py)。
+它们不访问算子内部实现来生成答案。综合收据从[实验入口](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#shared-lifecycle-review)进入。
 本批有限观测采用明确的观察 allowance，尚没有物理误差上界；事件边界原始导出保留，
 平滑轨迹误差统计排除边界附近点。模型状态、时间见证和复位采样另行检查。
 这些实验不证明真实引擎的回退；已覆盖及仍缺的回退义务见本页后面的历史证据映射。
@@ -125,7 +125,7 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 真实生产 `Controller` 的测试先丢弃成功候选，再用不可满足的精度预算触发 `waveform_accuracy`，
 检查接受时间/状态/包围、历史查询、下一算子截止点、事件记录和日程游标未变；正常预算重试
 与从未试算过的控制组一致，释放后积分为 5/4。此为明确 fixture 的回退证据，不是完整引擎的形式证明。
-全部新旧证据、工具失败和可用性见[实施收据](../../experiments/parallel-gap-integration/results/lifecycle-closure-checks.json)。
+全部新旧证据、工具失败和可用性见[实施收据](../../experiments/runs/parallel-gap-integration/results/lifecycle-closure-checks.json)。
 
 下文维护首版直接输入路径与历史交付契约。IR16 已合并的联合动态范围、数学和独立检查
 见[连续动态章节](../docs/CONTINUOUS.md)，下文首版拒绝项不能当作新范围的语言限制。
@@ -135,7 +135,7 @@ LRM 的积分复位规则本身不足以代替对事件体节点读取阶段的�
 该历史基线没有 `idt`。后续 [PR19](https://github.com/BucketSran/vaEVAS/pull/19) 已交付
 受限二参数积分，[PR26](https://github.com/BucketSran/vaEVAS/pull/26) 已交付三参数复位（IR v11）。
 原 `d1-free`、`d1-reset` 两档均满足有限观测判据，身份及限制见
-[完整对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；正式资格仍 I。
+[完整对照](../../experiments/archive/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)；正式资格仍 I。
 本页开发样例不增加原 31 条件分母，也不替代 D1 原源码、刺激及检查器的回放。
 所有积分答案由下列数学关系重新推导，未使用新旧 EVAS 输出或复制旧探针源码。
 规范要求、实现选择及三类证据的写法沿用[现有合同](../docs/README.md#feature-documentation-contract)。
@@ -222,7 +222,7 @@ z(t_0+h)=z_0+\int_0^h(u_0+ms)\,ds=z_0+u_0h+\tfrac12mh^2.
 | 证据 | 已有覆盖/本轮资产 | 仍不能据此宣称什么 |
 | --- | --- | --- |
 | 独立答案与校准 | [check_dynamics_math.py](check_dynamics_math.py)；上述固定关系与错误控制 | 没有调用 EVAS；不是 idt 仿真通过，也不是回退测试 |
-| D1 原条件回放 | PR26 被测运行时 `edb004d`：`d1-free`、`d1-reset` 各两档，使用未改的原输入与检查器；[收据](../../experiments/pr14-pr15-validation/results/idt-reset-merge-validation.json) | 只满足这四个配置的有限观测；未新增 Spectre 对照，不证明连续积分反馈或全时域精度 |
+| D1 原条件回放 | PR26 被测运行时 `edb004d`：`d1-free`、`d1-reset` 各两档，使用未改的原输入与检查器；[收据](../../experiments/archive/pr14-pr15-validation/results/idt-reset-merge-validation.json) | 只满足这四个配置的有限观测；未新增 Spectre 对照，不证明连续积分反馈或全时域精度 |
 | 适用的不变性 | [test_affine.py](../tests/test_affine.py) 的静态贡献排列；[test_idt.py](../tests/test_idt.py) 的同目标调用点、实例、贡献次序和网格/步长检查；[test_settlement.py](../tests/test_settlement.py) 的依赖赋值顺序 | 独立变化的通过不能替代所有组合验证 |
 | 本轮真实缺口回归 | [test_semantic_invariants.py](../tests/test_semantic_invariants.py)：同目标两个 transition 加仿射输入的贡献全排列；节点/实例/局部标识符重命名；额外输出时刻及无负载观察支路；均另核对手算波形、整数状态及完整事件序列 | 不交换有依赖的 `n=n+1; held=n; n=n+1;`；不要求 IR 编号相同；观察支路适用理想电压、无负载反馈模型，不能推广到任意电路探针 |
 | 同一引擎失败后完整性 | [transient.rs 私有测试](../rust_core/src/transient.rs) 的事件、transition 和 idt 初始帧检查；[idt 非零历史测试](../rust_core/src/transient_idt_tests.rs) 的四调用点/两实例精度失败、丢弃与较早候选重试、仅修正未来输入 | 检查接受帧及返回的批次记录；不构成完整调度器持久游标/已提交记录的失败恢复证明 |

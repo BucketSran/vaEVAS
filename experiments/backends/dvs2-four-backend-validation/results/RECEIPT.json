@@ -1,0 +1,167 @@
+{
+  "run_id": "dvs2-four-backend-20260928-01",
+  "date": "2026-09-28",
+  "host_alias": "thu-sui",
+  "input_manifest_sha256": "c370cb5be8dc38a2d707015f06351efff371895e1d5c108c7c6d2bc3d8d54273",
+  "file_manifest_sha256": "28d7ddbf9afb8d1dfc0952fa3904352eb6f74bf4a2d8bf02504da73092cdb82d",
+  "raw_archive_sha256": "24d66162e7120e22a4b0ae4a863b747e7b97a3a64e2ca5cf7388f2ead4d0a09a",
+  "raw_archive_bytes": 45953489,
+  "verified_archived_files": 1662,
+  "matrix_sha256": "702b29a7748c1090ce0c3d955704f6ff60fc6c8d1a53811dbd54d15a8e4cabb9",
+  "csv_sha256": "91f4d087f2ac03e54815749245b1348792db4d5421c62b71cf7e41950e3ee5da",
+  "table_sha256": "f1d8696abc2e58341927429eb6084440ebe3c7a622d1a7f6e9b70437aff33a4f",
+  "settings_audit_sha256": "3f6ec009ec721baeaeee5d5a158e65bd5353bcbac13899b3f4ee7d4b11b8c305",
+  "auditor_sha256": "e17349f232f50b21793963e514bdb8647000e2eb6bb0532694c1e46d7d4a0e2a",
+  "frozen_sources": {
+    "experiments/backends/dvs2-four-backend-validation/PROTOCOL.md": "901a3cf651694e9347afa8097eae746b55e206b3b6b4aeb12ef4c95f00c83345",
+    "experiments/backends/dvs2-four-backend-validation/build_inputs.py": "180785e3e9b2fa085ecce95fefc7af564cf4499df347a94f116e98ea600f9ea2",
+    "experiments/backends/dvs2-four-backend-validation/matrix.py": "6f3865dc15cff470aa8cfe1ad8cdb4e1b7d24368ae633229b72b00e84ec67f82",
+    "experiments/backends/dvs2-four-backend-validation/remote.py": "a56acc92f487dce2952878a68725b243ca3f90507824d8ec0c099d058d24aaa5",
+    "experiments/backends/dvs2-four-backend-validation/test_adapters.py": "fdfcc0ae4b5af45df03feb70b0992c97382e635306c32f760ccf4215c06334c1",
+    "experiments/archive/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/archive/dvs2-history-validation/recheck.py": "1980b3f74f61939f6abd4ab63695ccb7f14625a53816ba79154aeea3ce205e3a",
+    "experiments/backends/dvs2-spectre-validation/check_results.py": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/backends/dvs2-spectre-validation/results/RECEIPT.json": "62ba4df4110a8afb1ac235400caa87cd04d19550aa9dc9be10413be7144c88bb",
+    "experiments/backends/dvs2-spectre-validation/results/analysis.json": "4e94281a963d98b0b43de6d322e201c1e08820868b8ad7d132d6146061e10ffc",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py": "1656a4481977c1cf24d085cf5e9b3a157227560860c09de2ea5112e778d23da6",
+    "experiments/backends/dvs2-spectre-validation/test_checks.py": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-starter-pilot/results/ARCHIVE_RECEIPT.json": "bd1458b3c5f66325db10e486dd5de004fbac99d1974b46a4b74b9426d23ca1e4",
+    "experiments/archive/dvs2-starter-pilot/results/results.json": "e4e28c45cab73b1da21512335a59b8e4b142bcffaf4ed38b15fa46cb40d944a0",
+    "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "images": {
+    "evas": {
+      "source_ref": "vabench-agent-runtime:0.8.7",
+      "config_id": "sha256:038670652e3dee0bcb7e899714ce5f6def72e4fb494be2642a628338a8fbbacb",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:fe44bb54370160ee99bef939ae67a0ab1f51fb3b9a41d3d0c4cf29e7ea38115b",
+      "platform_manifest_id": "sha256:618dd8d27f9493d4794aa86966f8a4e0827bb9c0ea8d97ab460b0cb3e546f718"
+    },
+    "openvaf_runtime": {
+      "source_ref": "vabench-openvaf-probe:24.0.2mob-ubuntu",
+      "config_id": "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:e39637953f0f7233033e781ec3df6c6d6ecdeff4d4eca4e44c8706688f438c54",
+      "platform_manifest_id": "sha256:c46713d2b1cae8daa6e79f24c731ca4b905e47181bc5000f4d648730fcefc30f"
+    },
+    "ngspice": {
+      "source_ref": "ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+      "config_id": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+      "platform_manifest_id": "sha256:1569ba4635f3160fc23a052ba8753c645e71c9a366fb92b667ebd49ee864d9ef"
+    },
+    "gnucap": {
+      "source_ref": "vabench-gnucap:20260729-final",
+      "config_id": "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+      "architecture": "amd64",
+      "os": "linux",
+      "source_image_id": "sha256:c78bfede9d62a758f491890df05231258bb6de39d057e00a0a19c5cfe0b451e9",
+      "platform_manifest_id": "sha256:78e7b2a836f6447f1cd39c21123b1ac27742b5e65913a4985d0d463afbb5cc2f"
+    }
+  },
+  "version_readbacks": {
+    "version-0": "evas-sim 0.8.7 (rust-core 0.2.4, ABI 20260718, revision unknown, loadable)",
+    "version-1": "OpenVAF-reloaded unknown",
+    "version-2": "******\n** ngspice-46 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2025, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Thu Jul 23 12:10:16 UTC 2026\n******",
+    "version-3": "",
+    "version-4": "cc96c5fca3772f20cd143c38105aa05d97af5bcd661b066bd3abc2d0ece41478  /opt/gnucap/bin/gnucap\nad7a0efcaaa3b0399bd4eafe89d88004c096e15a15d17f9344bf73a59e8a6561  /opt/gnucap/bin/gnucap-mg-vams\n7f1028e75e073eb601e29f68bf9cb84495d90f3e9f15f3ff136ad286ff36ab34  /opt/gnucap/lib/libgnucap.so"
+  },
+  "new_execution_counts": {
+    "evas": {
+      "execution_failed": 8,
+      "waveform_available": 26
+    },
+    "openvaf_ngspice": {
+      "waveform_available": 20,
+      "compile_failed": 14
+    },
+    "gnucap": {
+      "waveform_available": 58,
+      "compile_failed": 4
+    }
+  },
+  "stage_counts": {
+    "compile": 7,
+    "cpp_compile": 13,
+    "modelgen": 14,
+    "simulate": 112,
+    "version-0": 1,
+    "version-1": 1,
+    "version-2": 1,
+    "version-3": 1,
+    "version-4": 1
+  },
+  "timeout_count": 0,
+  "settings_readbacks_checked": {
+    "evas": 26,
+    "openvaf_ngspice": 20,
+    "gnucap": 58
+  },
+  "settings_limitations": "Logged tolerances and selected algorithms only. Backend semantics are not equivalent; EVAS echoes requests. Waveform gap/input checks are in matrix.json. No qualified observation-error bound.",
+  "execution_and_compile_elapsed_sum_s": 250.22081810981035,
+  "merged_summary": {
+    "spectre": {
+      "base": {
+        "observations_within_targets": 31
+      },
+      "fine": {
+        "observations_within_targets": 31
+      }
+    },
+    "evas": {
+      "base": {
+        "observations_within_targets": 18,
+        "execution_failed": 5,
+        "observed_violation": 8
+      },
+      "fine": {
+        "observations_within_targets": 8,
+        "observed_violation": 18,
+        "execution_failed": 5
+      }
+    },
+    "openvaf_ngspice": {
+      "base": {
+        "observations_within_targets": 16,
+        "observed_violation": 5,
+        "compile_failed": 9,
+        "runtime_timeout": 1
+      },
+      "fine": {
+        "observations_within_targets": 16,
+        "observed_violation": 5,
+        "compile_failed": 9,
+        "runtime_timeout": 1
+      }
+    },
+    "gnucap": {
+      "base": {
+        "observations_within_targets": 17,
+        "observed_violation": 12,
+        "compile_failed": 2
+      },
+      "fine": {
+        "observations_within_targets": 16,
+        "observed_violation": 13,
+        "compile_failed": 2
+      }
+    }
+  },
+  "evidence_use": {
+    "reused_analysis": 62,
+    "reused_execution_reanalyzed": 56,
+    "new": 130
+  },
+  "verified_source_file_counts": {
+    "new": 1662,
+    "v1": 1894,
+    "spectre": 1216
+  },
+  "formal_dvs_qualification": "I"
+}

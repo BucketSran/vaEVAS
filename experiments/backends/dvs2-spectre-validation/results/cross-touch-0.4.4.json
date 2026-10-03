@@ -1,0 +1,2026 @@
+{
+  "run_id": "pr7-touch-boundary-20260929-01",
+  "date": "2026-09-29",
+  "base_commit": "e31ba1e5b8097cbbb58505853ef75a9092d66ace",
+  "evas_version": "0.4.4",
+  "spectre_version": "sub-version  21.1.0.509.isr12",
+  "locations": {
+    "evas": "local macOS",
+    "spectre": "thu-sui"
+  },
+  "fixed_scope": {
+    "configurations_per_backend": 12,
+    "monitors_per_configuration": 18,
+    "monitor_histories_per_backend": 216,
+    "spectre_attempts": 12
+  },
+  "input_manifest_sha256": "0073a64253abed0a013626a392881720f82128bc4d492048bce552b648a22a5b",
+  "file_manifest_sha256": "b2a213955a8910ed4d31a1caae5adf3fade7a4c4ee1a5838c5e168186f342f6e",
+  "input_archive": {
+    "file": "inputs.tar.gz",
+    "sha256": "f678f8011b75be7a72582d89e979f6a428c449975d573e14b5f6d72adf28d763"
+  },
+  "raw_spectre_archive": {
+    "file": "spectre-output.tar.gz",
+    "sha256": "7e9b6d6fe43d457a3ea2b09d4dc078eb6e64afd612adbbf1e87bb079515fcd02",
+    "bytes": 2955131,
+    "verified_files": 812
+  },
+  "analysis_sha256": "aaed0398fcfa02c9a3f96921175f6de7199fa5c150631151e482fdbd2d015137",
+  "original_analysis_sha256": "4a4a7c0c832c72509827ad77252d0dc3d8cdb7e2e2fa3544ef5611686ba2e1f2",
+  "metadata_reanalysis": {
+    "original_analysis_sha256": "4a4a7c0c832c72509827ad77252d0dc3d8cdb7e2e2fa3544ef5611686ba2e1f2",
+    "repaired_stop_display_checks": 6,
+    "runner_sha256": "013e3cb8f1727709046a55c5ceb74ab3fc450634ee02d7e5f7d9beda8711b0f3",
+    "frozen_event_and_waveform_checks_unchanged": true,
+    "script_sha256": "750279db7af5f7ea2260c8568f4b6e037b92b750ea35d83088b39e8f9ae61bad"
+  },
+  "checker_identity": {
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py": "c188f0ac473c0b1b1c1eabe670d1f80675bc2c406587e8c9fa8b3de184b08843",
+    "experiments/backends/dvs2-spectre-validation/test_cross_touch.py": "561a74942de42c979ef532193bdc7e4581d9d3846617b63c8602b33b7705c073",
+    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "evas_identity": {
+    "kernel_sha256": "19ee8cdf366310d984568e4fb14f3423ff284c7a0266cc052cd6b1689879acbf",
+    "source_sha256": {
+      "evas/src/evas/lowering.py": "019a3587bd66e8f8f9dfefed7be7431fbf947575cb81da7b200c8415d9a59f22",
+      "evas/src/evas/frontend.py": "eeb7e7f51cef77384ae097de5363fa3b2860ccef9d1c542ec28b3f72aab28e32",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/ir.py": "5e5979e1bc68d63c0bbb7edec9cea0f20950e5e4b3cba669c2603ad374a05aa0",
+      "evas/src/evas/runtime.py": "0838f14ff340bb1b30b17fbec7c9dff7577d2dc1ebc8e844666ff2d25a918c82",
+      "evas/src/evas/syntax.py": "d1cb490b2b24835d8263b1e3b2e6b7f9f43da3fb15b125299e9918738ccb22cc",
+      "evas/src/evas/__main__.py": "5783c0e165a64ad8c2d411f388ffb79f1acdc7f28e50e0f5fe48defe2dd69703",
+      "evas/rust_core/src/ir.rs": "1711c6141d5e15ed1d3592ee0514cd93b0eda52172db79148dffc7e00eac299b",
+      "evas/rust_core/src/linear.rs": "f510fc0427b0393376ae22c87e614f0b2bb10a7809c39495b06abc34d8f783fa",
+      "evas/rust_core/src/events.rs": "37600baf90121185c407496bcda4e815528237d2c7ae9f5aeaeb76b92361ecb2",
+      "evas/rust_core/src/solver.rs": "3ce7df4ed3011d91560c2d9725fa19cb42fa2428fd8708f35fbeafde5d8da94d",
+      "evas/rust_core/src/lib.rs": "326cc6703528f3acfa636e051a988815719aaa0ede732ff3b43d5491e55813b1",
+      "evas/rust_core/src/interval.rs": "67a3330dfb8ee01d621024ec53b8d4f636ae1874bf17afccd9ea2968ee941d2b",
+      "evas/rust_core/src/pwl.rs": "4089736c41b8ac9d48e184899722b4fd045f91f12acc7f689fe578f335e7c2da",
+      "evas/rust_core/src/nonlinear.rs": "3848efed2afd3d86963c21aa5d87584332c6c96e7282ceeaced018e9464d7b51",
+      "evas/rust_core/src/expression.rs": "c70e68284bd3178df0453befa9cb7cd03918a0dadba935750238d47a71126fbf",
+      "evas/rust_core/src/main.rs": "dae830d303cda7c0be22d8daea3315af666abee32cfe0b0700f1d5920a27b876",
+      "evas/rust_core/src/transient.rs": "e90eedb15b81b4c0e2f461d1d8bd33440a861ef8bcde6d74b3d3d7311e3f1f13",
+      "evas/rust_core/src/event_accuracy.rs": "e87ae23adaa5f74e3d7a6a3320affc866bf0247a25fcd83f960d3aa293163637",
+      "evas/rust_core/src/assembly.rs": "99802f75e6b14095c42c67abfe41e8901afbc70b2944e9ad35bf2b4fbca2d122"
+    }
+  },
+  "spectre_identity": {
+    "max_attempts": 12,
+    "timeout_s": 90,
+    "license_timeout_s": 30,
+    "cpu": 0,
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "input_manifest_sha256": "0073a64253abed0a013626a392881720f82128bc4d492048bce552b648a22a5b"
+  },
+  "settings_audited": 12,
+  "exact_stop_log_matches": 6,
+  "rounded_stop_confirmed_by_waveform": 6,
+  "warning_codes": {
+    "VACOMP-2435": 12
+  },
+  "summary": {
+    "evas": {
+      "control_pass": 144,
+      "diagnostic_observation": 72
+    },
+    "spectre": {
+      "control_pass": 144,
+      "diagnostic_observation": 72
+    }
+  },
+  "records": [
+    {
+      "id": "original-coarse-nominal",
+      "phase": "original",
+      "profile": "coarse",
+      "accuracy": "nominal",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "9390186bd8ab3d552ed7199cd1f6940193483acbdf65076415c637c922fc84b7"
+      },
+      "spectre": {
+        "points": 70,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 5.000000000188501e-11,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "e4d7c71a4b98595ead33c1f61a30cc760796eadb52c3a2519ce0f5c3d1d63e4e",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 63.61803704313934
+      }
+    },
+    {
+      "id": "original-coarse-time_tight",
+      "phase": "original",
+      "profile": "coarse",
+      "accuracy": "time_tight",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "9390186bd8ab3d552ed7199cd1f6940193483acbdf65076415c637c922fc84b7"
+      },
+      "spectre": {
+        "points": 70,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 5.000000009612018e-13,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "5917332cbc143f4271723eb6cab234b6309cf5f3d3c0d082d22d01162434fcfc",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.66492169909179
+      }
+    },
+    {
+      "id": "original-coarse-expression_tight",
+      "phase": "original",
+      "profile": "coarse",
+      "accuracy": "expression_tight",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "9390186bd8ab3d552ed7199cd1f6940193483acbdf65076415c637c922fc84b7"
+      },
+      "spectre": {
+        "points": 70,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 7.425742589748633e-13,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "0a345edf08ab22f92e79ed2c522e4131b3d2026a30a6e67bcda13d4e25fc0820",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 63.3087842669338
+      }
+    },
+    {
+      "id": "original-fine-nominal",
+      "phase": "original",
+      "profile": "fine",
+      "accuracy": "nominal",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "40e5da753351dd8d2071cf46f005a412487f5a5852fa2362c2af67198711785f"
+      },
+      "spectre": {
+        "points": 461,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 4.9999999999214206e-11,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "ae1a6dedb6491f2a18fdac0a2568086d4296617682b9902067826f2d1b26c0a3",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.95624290034175
+      }
+    },
+    {
+      "id": "original-fine-time_tight",
+      "phase": "original",
+      "profile": "fine",
+      "accuracy": "time_tight",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "40e5da753351dd8d2071cf46f005a412487f5a5852fa2362c2af67198711785f"
+      },
+      "spectre": {
+        "points": 461,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 4.999999991785761e-13,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "22cea1b5a7e94bf8afdddc51f2a7a098aaab813f20c39b93e7b236d896047781",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.70661534741521
+      }
+    },
+    {
+      "id": "original-fine-expression_tight",
+      "phase": "original",
+      "profile": "fine",
+      "accuracy": "expression_tight",
+      "center": 1.5e-06,
+      "stop": 3e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "evas": {
+        "points": 15,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 4.472236499156645e-22,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "40e5da753351dd8d2071cf46f005a412487f5a5852fa2362c2af67198711785f"
+      },
+      "spectre": {
+        "points": 461,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          0.0,
+          0.0
+        ],
+        "control_max_observed_lateness_s": 7.425742571922375e-13,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "367ddff2a651cbe46cfa2916b326dd64c69446ff02453af6c812cb4183073022",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3e-06,
+          "requested_stop_s": 3e-06,
+          "waveform_stop_s": 3e-06,
+          "log_display_intervals_s": [
+            [
+              2.5e-06,
+              3.5e-06
+            ]
+          ],
+          "exact_log_match": true,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.60222722776234
+      }
+    },
+    {
+      "id": "shifted-coarse-nominal",
+      "phase": "shifted",
+      "profile": "coarse",
+      "accuracy": "nominal",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "881884ff45558e32ecf2adc4e6b4eb7c79b7625cbb9ee090850e5fc525d7038d"
+      },
+      "spectre": {
+        "points": 76,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 5.0000000000265107e-11,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "f126ebd40d56cd63d16ae9f1b502804909650dd12e1965baef4485f7df533526",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.69375784881413
+      }
+    },
+    {
+      "id": "shifted-coarse-time_tight",
+      "phase": "shifted",
+      "profile": "coarse",
+      "accuracy": "time_tight",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "881884ff45558e32ecf2adc4e6b4eb7c79b7625cbb9ee090850e5fc525d7038d"
+      },
+      "spectre": {
+        "points": 76,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 4.999999991192549e-13,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "a7408c00a3c76810354fd3bdb4bc1a42cde15bdb057125b41aee58ad9cf9504f",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.3790102917701
+      }
+    },
+    {
+      "id": "shifted-coarse-expression_tight",
+      "phase": "shifted",
+      "profile": "coarse",
+      "accuracy": "expression_tight",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 1e-07,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "881884ff45558e32ecf2adc4e6b4eb7c79b7625cbb9ee090850e5fc525d7038d"
+      },
+      "spectre": {
+        "points": 76,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 7.425742580258063e-13,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "e58d225989fad143fa809cc98cc62040052501d2cb53a1131a44f5eb6adcbb06",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 1.0000000000000001e-07,
+          "maxstep": 1.0000000000000001e-07,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.62140188738704
+      }
+    },
+    {
+      "id": "shifted-fine-nominal",
+      "phase": "shifted",
+      "profile": "fine",
+      "accuracy": "nominal",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-05,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "becd62b4942a95ea7bb73ff024fc2c35b9efe76c0c62239685ed5c90810419f5"
+      },
+      "spectre": {
+        "points": 466,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 5.000000000004777e-11,
+        "control_event_window_s": 1e-10,
+        "failures": [],
+        "waveform_sha256": "c62e1004a0381f39109fcda9e85e9ec2088fc9aa73287a27eaca0d5f9adcedfb",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.66971268877387
+      }
+    },
+    {
+      "id": "shifted-fine-time_tight",
+      "phase": "shifted",
+      "profile": "fine",
+      "accuracy": "time_tight",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-12,
+      "etol": 1e-05,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "becd62b4942a95ea7bb73ff024fc2c35b9efe76c0c62239685ed5c90810419f5"
+      },
+      "spectre": {
+        "points": 466,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 5.000000000121449e-13,
+        "control_event_window_s": 1e-12,
+        "failures": [],
+        "waveform_sha256": "445c6911f86f38748b3a20703230c1c397e9878f0c250f355663d09d0a3e5bf5",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.422695465385914
+      }
+    },
+    {
+      "id": "shifted-fine-expression_tight",
+      "phase": "shifted",
+      "profile": "fine",
+      "accuracy": "expression_tight",
+      "center": 1.500037e-06,
+      "stop": 3.000037e-06,
+      "maxstep": 7e-09,
+      "ttol": 1e-10,
+      "etol": 1e-07,
+      "evas": {
+        "points": 17,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "no_touch_event",
+          "neg": "no_touch_event"
+        },
+        "touch_sampled_guard_values_v": [],
+        "touch_witness_offset_range_s": null,
+        "control_max_observed_lateness_s": 8.304342825890301e-22,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "becd62b4942a95ea7bb73ff024fc2c35b9efe76c0c62239685ed5c90810419f5"
+      },
+      "spectre": {
+        "points": 466,
+        "monitor_status": {
+          "control_pass": 12,
+          "diagnostic_observation": 6
+        },
+        "counts_order": [
+          "both",
+          "rising",
+          "falling"
+        ],
+        "final_counts": {
+          "above": {
+            "pos": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "neg": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "touch": {
+            "pos": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "neg": [
+              1.0,
+              1.0,
+              0.0
+            ]
+          },
+          "below": {
+            "pos": [
+              2.0,
+              1.0,
+              1.0
+            ],
+            "neg": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "touch_classification": {
+          "pos": "arrival_direction_once",
+          "neg": "arrival_direction_once"
+        },
+        "touch_sampled_guard_values_v": [
+          0.0
+        ],
+        "touch_witness_offset_range_s": [
+          1.6213008999626437e-22,
+          1.6213008999626437e-22
+        ],
+        "control_max_observed_lateness_s": 7.425742571329162e-13,
+        "control_event_window_s": 1.4851485148514854e-12,
+        "failures": [],
+        "waveform_sha256": "9ab6ab766a647865e93d88515aa16efa23bc5ac0ec38fef27d75d8869fbc6ad8",
+        "effective_settings": {
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "reltol": 1e-08,
+          "stop": 3.0000399999999995e-06,
+          "step": 7.000000000000001e-09,
+          "maxstep": 7.000000000000001e-09,
+          "method": "traponly"
+        },
+        "stop_audit": {
+          "log_stop_s": 3.0000399999999995e-06,
+          "requested_stop_s": 3.000037e-06,
+          "waveform_stop_s": 3.000037e-06,
+          "log_display_intervals_s": [
+            [
+              3.000035e-06,
+              3.000045e-06
+            ]
+          ],
+          "exact_log_match": false,
+          "waveform_matches_requested": true
+        },
+        "elapsed_s": 62.4694320037961
+      }
+    }
+  ],
+  "formal_qualification": false,
+  "observation_allowance_v": 1e-08,
+  "limitations": [
+    "Every exact-touch point is an explicit PWL knot; this does not isolate behavior of an unannounced smooth minimum.",
+    "Sampled guard is the value observed in the event block, not an internal root-detector or iteration trace.",
+    "The fixed voltage observation allowance is an assumption, not a proven physical bound.",
+    "No runtime semantics change, no original 31-condition denominator change, no speed comparison."
+  ],
+  "checker_packaging_fix": {
+    "frozen_runner_sha256": "c188f0ac473c0b1b1c1eabe670d1f80675bc2c406587e8c9fa8b3de184b08843",
+    "published_runner_sha256": "013e3cb8f1727709046a55c5ceb74ab3fc450634ee02d7e5f7d9beda8711b0f3",
+    "explanation": "Shared unittest discovery exposed a same-name report.py import collision. The published runner resolves its owning helper by file path. All original function ASTs except the metadata wrapper analyze are identical; all waveform/event checks use the frozen runner. Six stop-setting checks were reanalyzed using the log display interval and the exact waveform endpoint; original failures are retained.",
+    "frozen_calibration_methods": 4,
+    "combined_calibration_methods": 18
+  },
+  "execution_failures": 0,
+  "timeouts": 0
+}

@@ -22,7 +22,7 @@ def main() -> int:
         "inputs",
         nargs="*",
         type=Path,
-        help="manifest files or directories; defaults to evas/examples",
+        help="manifest files or directories; defaults to evas/validation/smoke",
     )
     args = parser.parse_args()
     try:

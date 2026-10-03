@@ -124,18 +124,18 @@ vout - vref = min(0.875, max(-0.75, y0))
 在历史候选 `3fd58da` 上，302 Python / 64 Rust 回归与 Clippy、格式检查通过；原 `v1-main`
 两档专项新执行复用冻结输入及现有 checker，4,001 / 40,001 点均符合有限观测判据，
 最大输出误差约 `6.66×10⁻¹⁶ V`。来源、配置、工件可用性及限制见
-[历史结果](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-review)和
-[收据](../../experiments/pr14-pr15-validation/results/analog-conditions-review.json)。该检查点未新跑完整矩阵或 Spectre。
+[历史结果](../../experiments/archive/pr14-pr15-validation/RESULTS.md#analog-conditions-review)和
+[收据](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-review.json)。该检查点未新跑完整矩阵或 Spectre。
 
 后续历史候选 `9c5d6c5` 修复优化后丢失 `select` 的验收漏洞并收紧两端谓词范围，
 306 Python / 64 Rust 与 Clippy、格式检查通过。原 31×2 全矩阵沿用冻结输入和判据新执行，
 两档各 25/31；原达标 48 份 CSV 哈希与 PR26 收据一致，剩余 6 条明确拒绝。
-详情见[验收修复结果](../../experiments/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)与
-[新收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
+详情见[验收修复结果](../../experiments/archive/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)与
+[新收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
 该轮执行时尚未合入 main，未新执行 Spectre，正式资格仍 I。
 当前联合矩阵与精度链见[最新验证](README.md#latest-evas-checkpoint)，不改写这些历史身份。
 
-后续[缺口与对照](../../experiments/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
+后续[缺口与对照](../../experiments/archive/pr14-pr15-validation/RESULTS.md#analog-gap-spectre-comparison)
 复用该原矩阵 EVAS 执行、新跑 Spectre 31×2，后者两档各 31/31；另对六个独立有理数
 边界案例执行两档对照。源结点等号双方一致；大数消去的点输入谓词体现精确判符号与
 分别舍入表达式的差别；PWL 临界阈值和大增益的过严预算 EVAS 明确拒绝。

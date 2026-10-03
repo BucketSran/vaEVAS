@@ -44,11 +44,12 @@ def manifest(model="dut.va", *, module="m"):
 
 
 class ManifestMigrationTests(unittest.TestCase):
-    def test_default_inventory_uses_repository_examples(self):
+    def test_default_inventory_uses_repository_smoke_set(self):
         manifests = discover_manifests(repo_root=ROOT)
         names = {path.name for path in manifests}
-        self.assertIn("static_sum.json", names)
         self.assertIn("idt.json", names)
+        self.assertIn("cross_counter.json", names)
+        self.assertNotIn("static_sum.json", names)
         self.assertTrue(all(path.suffix == ".json" for path in manifests))
 
     def test_recompiles_current_manifest_and_records_provenance(self):

@@ -7,6 +7,9 @@
 预期结果来自模型声明的方程与状态转移，而非 EVAS 输出或 Spectre 波形。
 跨后端一致性用于诊断；两个实现给出相近结果，并不能单独证明它们正确。
 
+验证目录分两级：[smoke/](smoke/) 是各能力路径的最小可运行冒烟集，
+只验证链路连通，不带期望值；[cases/](cases/) 及各协议文档构成完整验证集。
+
 ## 验证集包含什么
 
 原矩阵固定为 **31 个条件**：14 个不变的 v1 条件、1 个低通标准数组语法修订、
@@ -38,7 +41,7 @@
 
 [PR33](https://github.com/BucketSran/vaEVAS/pull/33) 将 EVAS 0.12.2 / IR16 合并到 main `b4921ca`。
 原矩阵两档各 **31/31**，62 份 CSV 与 PR32 基线逐字节一致。
-[执行证据](../../experiments/parallel-gap-integration/README.md#当前证据)绑定被测运行时
+[执行证据](../../experiments/runs/parallel-gap-integration/README.md#当前证据)绑定被测运行时
 `8618339`、内核和检查器；数学与组合回归另外计数。
 
 <a id="精度方案候选指标不冻结统一阈值"></a>
@@ -61,9 +64,9 @@
 | OpenVAF-R＋ngspice | 16/31 | 16/31 |
 | Gnucap＋modelgen-verilog | 17/31 | 16/31 |
 
-这是固定旧版本的[历史矩阵](../../experiments/dvs2-four-backend-validation/results/MATRIX.md)，
+这是固定旧版本的[历史矩阵](../../experiments/backends/dvs2-four-backend-validation/results/MATRIX.md)，
 不把新版 EVAS 成绩填入旧表。失败、执行身份和设置分别保留。
-IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md)。
+IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md)。
 
 ## 专项契约
 
@@ -115,9 +118,9 @@ python3 -B scripts/verify_validation_version.py
 
 运行时 `d451605bf9991ceea010c68af9cb1143f1b50754`，EVAS 0.9.0 / IR v15。
 普通 analog 条件、一阶滤波、相位与无状态多项式瞬态已联合验证，且保留受限事件与积分复位。
-[精度链 review](../../experiments/parallel-gap-integration/REVIEW.md#precision-chain)、
-[逐配置收据](../../experiments/parallel-gap-integration/results/precision-chain-matrix.json)及
-[开发检查收据](../../experiments/parallel-gap-integration/results/precision-chain-checks.json)绑定实际源码与二进制。
+[精度链 review](../../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)、
+[逐配置收据](../../experiments/runs/parallel-gap-integration/results/precision-chain-matrix.json)及
+[开发检查收据](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json)绑定实际源码与二进制。
 
 | 被测 EVAS 检查点 | 基础档 | 细化档 | 执行身份 |
 | --- | ---: | ---: | --- |
@@ -136,10 +139,10 @@ python3 -B scripts/verify_validation_version.py
 
 ### 历史功能补齐与 PR26 基线
 
-[联合功能记录](../../experiments/parallel-gap-integration/REVIEW.md#gap-completion)固定 `39a4545`：
+[联合功能记录](../../experiments/runs/parallel-gap-integration/REVIEW.md#gap-completion)固定 `39a4545`：
 相对 analog `9c5d6c5` 的各 25/31 新增六条，原达标 50 份 CSV 逐字节一致。
 该轮重新核验上一轮 Spectre 的 62 次结果，各 31/31；没有新启动 Spectre。
-[PR26 复位对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)保留
+[PR26 复位对照](../../experiments/archive/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)保留
 `edb004d` 各 24/31 与 PR25 `6df7f48` 各 22/31 的原执行，不能由新结果覆盖。
 
 <a id="remaining-original-31"></a>

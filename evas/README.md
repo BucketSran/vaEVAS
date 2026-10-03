@@ -43,7 +43,7 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
 
 ```sh
 PYTHONPATH=evas/src python3 -m evas compile evas/examples/static_sum.json
-PYTHONPATH=evas/src python3 -m evas transient evas/examples/idt.json \
+PYTHONPATH=evas/src python3 -m evas transient validation/smoke/idt.json \
   --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
@@ -53,16 +53,19 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/idt.json \
 manifest 声明源文件、实例参数和端口到全局网络的映射。
 静态入口提供驱动节点与样本；瞬态入口提供 PWL 源、观察时间和停止时间。
 `solve` 不推进历史；含状态、事件或历史算子的模型使用 `transient`。
-更多可运行输入在 [examples/](examples/)：
+[examples/](examples/) 仅保留 [static_sum.json](examples/static_sum.json)，
+用来说明 manifest 的数据结构；覆盖各条仿真能力路径的最小冒烟集
+（静态非线性、连续积分、延迟历史、定时/过阈事件、有限边沿）见
+[validation/smoke/](validation/smoke/)：
 
-| 示例 | 说明 |
+| 冒烟输入 | 说明 |
 | --- | --- |
-| [static_nonlinear.json](examples/static_nonlinear.json) | 多项式电压关系的工作点 |
-| [cross_counter.json](examples/cross_counter.json) | 输入过阈值后更新计数状态 |
-| [timer_counter.json](examples/timer_counter.json) | 固定定时事件 |
-| [transition_pulse.json](examples/transition_pulse.json) | 有限上升/下降沿 |
-| [absdelay.json](examples/absdelay.json) | 延迟历史查询 |
-| [idt.json](examples/idt.json) | 连续输入积分 |
+| [static_nonlinear.json](validation/smoke/static_nonlinear.json) | 多项式电压关系的工作点 |
+| [cross_counter.json](validation/smoke/cross_counter.json) | 输入过阈值后更新计数状态 |
+| [timer_counter.json](validation/smoke/timer_counter.json) | 固定定时事件 |
+| [transition_pulse.json](validation/smoke/transition_pulse.json) | 有限上升/下降沿 |
+| [absdelay.json](validation/smoke/absdelay.json) | 延迟历史查询 |
+| [idt.json](validation/smoke/idt.json) | 连续输入积分 |
 
 ## 精度与结果解释
 
@@ -78,7 +81,7 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 ## 验证与开发
 
 [独立验证集](validation/README.md)维护模型契约、数学答案和判据。
-[当前执行证据](../experiments/parallel-gap-integration/README.md#当前证据)记录原 31 条件
+[当前执行证据](../experiments/runs/parallel-gap-integration/README.md#当前证据)记录原 31 条件
 两档回放及实际被测源码/内核身份。有限观测达标不等于完整 Verilog-A 合规、
 连续时间资格或性能领先；详细结果与历史失败分别保留。
 
@@ -133,39 +136,42 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 已有性能检查只覆盖对应历史检查点的 Rust 库内工作点求解，未测 Python/JSON 进程接口的端到端吞吐量。
 
-<details>
-<summary>源码模块职责表</summary>
+<a id="review-map"></a>
 
-| 模块 | 当前文件 | 唯一职责 |
-| --- | --- | --- |
-| 语法解析 | `src/evas/syntax.py` | 完整消费 token，生成带源码位置的语法树 |
-| 语义绑定 | `src/evas/frontend.py` | 绑定参数、实例与节点，建立贡献支路身份 |
-| 表达式转换 | `src/evas/lowering.py` | 常量折叠，生成仿射叶子与多项式表达式 |
-| IR | `src/evas/ir.py`、`rust_core/src/ir.rs` | Python/Rust 之间带版本和源码位置的数据契约 |
-| 方程组装 | `rust_core/src/assembly.rs` | 校验 IR 与驱动配置，累加支路贡献，生成方程系数及节点分区 |
-| 工作点求解 | `rust_core/src/solver.rs` | 代入每个样本的驱动值，求解未知电压，验收原方程残差 |
-| 表达式求值 | `rust_core/src/expression.rs` | 递归校验 IR，计算多项式值与链式法则导数 |
-| 无状态瞬态与普通条件 | `rust_core/src/analog.rs` | 从 PWL 区间认证选支；仿射模型复用原 IR 前向映射，多项式模型使用 Newton，并在规定边界内作根盒认证 |
-| 非线性求解 | `rust_core/src/nonlinear.rs` | 对同一组支路方程执行有界阻尼 Newton 迭代 |
-| 线性代数 | `rust_core/src/linear.rs`、`linear/dense.rs`、`linear/sparse.rs`、`linear/columns.rs` | 稠密/稀疏分流、行缩放、选主元、列排序与多 RHS 求解 |
-| 事件语义 | `rust_core/src/events.rs` | 校验状态/事件身份及依赖，将状态代入方程，准备事件块的状态更新 |
-| 条件执行 | `rust_core/src/event_conditions.rs` | 全路径结构检查、可达谓词认证、选中路径与缓存身份 |
-| 事件误差界 | `rust_core/src/event_accuracy.rs` | 从原 IR 包围仿射网络的传递系数，复核状态独立性及冗余约束 |
-| 区间算术 | `rust_core/src/interval.rs` | 向外舍入的 binary64 四则运算及精确乘积比较 |
-| 连续输入与根 | `rust_core/src/pwl.rs` | 校验连续 PWL、求值、识别方向及区间内孤立根 |
-| 同刻求解 | `rust_core/src/settlement.rs` | 联立仿射事件更新与电压方程，重放原赋值并校验一致性 |
-| 同刻误差认证 | `rust_core/src/settlement_bounds.rs` | 从原 IR 独立包围事件后解，检查电压与状态各自误差预算 |
-| 仿射区间运算 | `rust_core/src/affine_bounds.rs` | 定位与同刻认证共用的向外舍入转换和消元 |
-| 事件日程 | `rust_core/src/schedule.rs` | 生成 cross/timer 统一日程，验证定位误差、同刻关系、次序与事件预算 |
-| 波形算子 | `rust_core/src/operators.rs`、`transition.rs`、`absdelay.rs`、`slew.rs`、`idt.rs`、`laplace.rs`、`idtmod.rs` | 校验独立调用点/输入，保存延迟、边沿、限速、积分/滤波/相位历史；`operators.rs` 计算受限 sin 的值与包络 |
-| 连续动态 | `continuous.rs`、`continuous_runtime.rs`、`continuous_history.rs`、`continuous_derivatives.rs`、`nonlinear_dynamics.rs`、`state_space.rs`（均在 `rust_core/src/`） | 仿射电压关系、导数质量关系、线性/多项式传播和候选历史 |
-| 动态 guard | `rust_core/src/guard_trajectory.rs`、`dynamic_roots.rs` | 连续值/导数包围，区间隔离并认证多项式与算子驱动 cross |
-| IR 重编译 | `src/evas/migrate.py`、`../scripts/recompile_evas_manifests.py` | 从原始 manifest/VA 真正重编译，独占新目录并记录源身份 |
-| 时间推进 | `rust_core/src/transient.rs` | 候选试算、原子提交、输出实际接受的事件记录 |
-| 进程接口 | `src/evas/runtime.py`、Rust `main.rs` | 一个批次一次 JSON 请求，无 Python 求值回调 |
-| 用户入口 | `src/evas/__main__.py` | 读取显式平面电路 manifest，输出 IR 或结果 |
+## 按功能审查
 
-</details>
+源码按下面六组责任阅读。表中列出入口，具体辅助模块由对应章节说明。
+这些是阅读分组，当前文件路径保持原布局。
+
+| 功能与数学入口 | 源码入口及责任 | 独立契约 | 回归入口 |
+| --- | --- | --- | --- |
+| 模型编译与贡献：[参数](#参数绑定契约)、[IR 与贡献](#ir-与贡献契约) | [syntax.py](src/evas/syntax.py) 解析；[frontend.py](src/evas/frontend.py) 绑定；[lowering.py](src/evas/lowering.py) 转换表达式；[Python IR](src/evas/ir.py) / [Rust IR](rust_core/src/ir.rs) 定义传输；[assembly.rs](rust_core/src/assembly.rs) 累加贡献 | 本页接口契约；[起步案例卡](validation/CASE_CARDS.md)的静态关系 | [test_contracts.py](tests/test_contracts.py)、[test_affine.py](tests/test_affine.py) |
+| 电压求解与精度：[NUMERICS](docs/NUMERICS.md) | [solver.rs](rust_core/src/solver.rs) 工作点；[nonlinear.rs](rust_core/src/nonlinear.rs) Newton；[linear.rs](rust_core/src/linear.rs) 稠密/稀疏分流；[analog.rs](rust_core/src/analog.rs) 无状态瞬态与普通条件；[expression.rs](rust_core/src/expression.rs)、[interval.rs](rust_core/src/interval.rs)、[affine_bounds.rs](rust_core/src/affine_bounds.rs) 提供共用运算与认证 | [非线性瞬态](validation/NONLINEAR_TRANSIENT_CONTRACT.md)、[普通条件](validation/ANALOG_CONDITIONS_CONTRACT.md) | [精度](tests/test_accuracy.py)、[稀疏](tests/test_sparse.py)、[普通条件](tests/test_analog_conditions.py)、[非线性瞬态](tests/test_nonlinear_transient.py)、[精度链](tests/test_precision_chain.py) |
+| 事件与同刻关系：[EVENTS](docs/EVENTS.md) | [events.rs](rust_core/src/events.rs) 赋值语义；[event_conditions.rs](rust_core/src/event_conditions.rs) 选支；[pwl.rs](rust_core/src/pwl.rs) 输入与仿射根；[schedule.rs](rust_core/src/schedule.rs) 日程；[event_accuracy.rs](rust_core/src/event_accuracy.rs) 定位认证；[settlement.rs](rust_core/src/settlement.rs) / [settlement_bounds.rs](rust_core/src/settlement_bounds.rs) 联立求解与误差 | [事件条件](validation/EVENT_CONDITIONS_CONTRACT.md)、[定时契约](validation/TIMED_OPERATOR_CONTRACTS.md) | [cross](tests/test_events.py)、[timer](tests/test_timer.py)、[同刻](tests/test_settlement.py)、[条件](tests/test_event_conditions.py)、[OR](tests/test_event_or.py)、[写者冲突](tests/test_event_writers.py) |
+| 独立波形算子：[OPERATORS](docs/OPERATORS.md) | [operators.rs](rust_core/src/operators.rs) 管理调用点、值/区间查询及候选历史；各算子的文件与测试见[算子对应表](docs/OPERATORS.md#operator-map) | [定时算子](validation/TIMED_OPERATOR_CONTRACTS.md)、[积分](validation/DYNAMICS_CONTRACTS.md)、[低通](validation/LAPLACE_CONTRACTS.md) | 各算子回归；[定时组合](tests/test_timed_composition.py)、[语义不变性](tests/test_semantic_invariants.py) |
+| 联合连续动态：[CONTINUOUS](docs/CONTINUOUS.md) | [continuous.rs](rust_core/src/continuous.rs) 关系与 DC；[continuous_derivatives.rs](rust_core/src/continuous_derivatives.rs) 导数；[state_space.rs](rust_core/src/state_space.rs) 线性传播；[nonlinear_dynamics.rs](rust_core/src/nonlinear_dynamics.rs) 多项式传播；[implicit_dynamics.rs](rust_core/src/implicit_dynamics.rs) DAE；[guard_trajectory.rs](rust_core/src/guard_trajectory.rs) / [dynamic_roots.rs](rust_core/src/dynamic_roots.rs) 动态根 | [动态与生命周期](validation/DYNAMICS_CONTRACTS.md) | [连续关系](tests/test_continuous_dynamics.py)、[动态 cross](tests/test_dynamic_cross.py)、[动态组合](tests/test_dynamic_closure.py)、[混合算子](tests/test_mixed_dynamics.py)、[DAE](tests/test_implicit_dynamics.py) |
+| 请求与接受帧：[共同生命周期](docs/CONTINUOUS.md#shared-lifecycle-closure) | [__main__.py](src/evas/__main__.py) / [runtime.py](src/evas/runtime.py) / [main.rs](rust_core/src/main.rs) 处理请求；[transient.rs](rust_core/src/transient.rs) 试算与整批提交；[continuous_runtime.rs](rust_core/src/continuous_runtime.rs) / [continuous_history.rs](rust_core/src/continuous_history.rs) 区分观察与未来历史；[reset_dependencies.rs](rust_core/src/reset_dependencies.rs) 检查复位及瞬时反馈依赖 | [共同生命周期契约](validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract) | [观察闭包](tests/test_lifecycle_closure.py)、[事件时间盒](tests/test_event_window_sampling.py)、[已知事件截止点](tests/test_event_horizons.py)；[真实控制器回退](rust_core/src/transient_lifecycle_tests.rs) |
+
+`tests/` 与 `validation/` 的分工：**[tests/](tests/) 是"改代码时别改坏"的护栏**——
+开发回归套件，随时全量运行，期望值独立于实现但准入跟随开发节奏；
+**[validation/](validation/) 是"证明它本来是对的"的证据**——固定的条件矩阵与协议，
+预期结果来自模型声明的方程与状态转移，可对外引用为验证资格。
+tests 通过的数目不折算为验证条件数；分组与运行方式见
+[tests/README.md](tests/README.md)，两级验证目录见 [validation/README.md](validation/README.md)。
+
+`tests/test_*.py` 从公开编译/运行入口检查行为。Rust 模块中的私有测试检查区间、缓存和候选回退；
+`transient_*_tests.rs` 由 `transient.rs` 加载，部分测试直接检查接受帧，
+`transient_lifecycle_tests.rs` 还检查生产控制器的游标和事件记录。
+[run_static_regression.py](tests/run_static_regression.py) 与 [benchmark_events.py](tests/benchmark_events.py)
+分别用于静态矩阵回放和局部事件计时，不能代替独立答案或完整瞬态验证。
+迁移工具 [migrate.py](src/evas/migrate.py) 与[批量入口](../scripts/recompile_evas_manifests.py)
+的规则见[IR 版本与迁移](#ir-v8-migration)，回归见 [test_migrate.py](tests/test_migrate.py)。
+
+审查一个算子时，先确认输入依赖，再选择路径。例如，直接 PWL 的 `idt` 从
+[解析公式](docs/OPERATORS.md#idt)和 `idt.rs` 开始；带反馈的 `idt` 从
+[联合方程](docs/CONTINUOUS.md#电压关系与积分反馈)和 `continuous.rs` 开始。
+如果改动涉及事件或复位，还需检查共同生命周期与对应的失败后回退测试。
+单项测试通过，不能替代这些组合义务。
 
 <details>
 <summary>参数、贡献与 IR 的详细接口契约</summary>
@@ -232,12 +238,12 @@ Program 和成功 Response 的 `schema_version` 均为 **16**，Python 适配器
 `invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–15 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
 前端与内核须配套使用，旧 IR15 内核不能消费 IR16。
 
-仓库可运行 manifest 的默认范围为 `evas/examples/`。批量工具读取原 VA 和实例参数，写入新的 IR16，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR16，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir16
-python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/examples/idt.json
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 
 输出目录必须不存在；部分失败返回非零，成功项仍保留。没有原始 VA/manifest 的旧 IR 无法凭改版本号迁移。
@@ -245,7 +251,7 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected eva
 更严格的瞬态认证会改变部分接受范围：多项式非方阵在点输入也拒绝；仿射冗余关系必须
 在误差映射的参数域上成立，不能只在某个状态点碰巧一致。通用 `real` 状态目前使用相对误差预算，
 接近零的非点状态可能保守拒绝。静态 `solve` 仍是局部 Newton 验收，没有同等根前向误差证书。
-这些是明确实现边界，详见[精度链与兼容性](../experiments/parallel-gap-integration/REVIEW.md#precision-chain)。
+这些是明确实现边界，详见[精度链与兼容性](../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)。
 旧归档使用对应提交的前端和内核复现；[历史 v9 迁移说明](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#ir-v8-migration)保留原身份。
 
 `Program.states/events/operators` 为空时保持静态语义；省略这些字段也只表示空列表，不推断事件。

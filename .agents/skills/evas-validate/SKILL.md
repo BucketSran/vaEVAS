@@ -76,14 +76,14 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 For the Spectre checkers, the local calibration command is:
 
 ```sh
-python3 -B -m unittest discover -s experiments/dvs2-spectre-validation -p 'test_*.py' -v
+python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v
 ```
 
 For other checker directories, use their README command. When a static change can
 alter the advertised replay support/results, run the [static replay](../../../evas/README.md#构建与运行)
 with a fresh output directory. Backend comparisons use the owning
-[Spectre](../../../experiments/dvs2-spectre-validation/README.md) or
-[four-backend](../../../experiments/dvs2-four-backend-validation/README.md) protocol;
+[Spectre](../../../experiments/backends/dvs2-spectre-validation/README.md) or
+[four-backend](../../../experiments/backends/dvs2-four-backend-validation/README.md) protocol;
 this table does not require a new remote matrix for every edit.
 
 ## Composition triggers

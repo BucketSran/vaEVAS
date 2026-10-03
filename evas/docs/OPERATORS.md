@@ -1,17 +1,28 @@
 # 有历史的波形算子
 
-适用范围：IR16 中的直接输入基础算子路径，并保留各项历史交付身份。
-能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE。
-PR13–15 交付受限 transition、absdelay、slew；PR19 交付二参数 idt，PR26 交付三参数复位。
-实现/证据/审阅状态及固定提交见[能力总表](CAPABILITIES.md)。独立需求、手算样例与 Fraction 核对器
-由[定时算子契约](../validation/TIMED_OPERATOR_CONTRACTS.md)维护，不以实现生成的波形替代标准答案。
+适用范围：IR16 的直接输入基础算子路径。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE；
+支持与缺口见[能力表](CAPABILITIES.md)。独立需求和手算答案由 validation 的专项契约维护。
 
-IR15 保留受限 reset idt，增加一阶 laplace_nd 与受限 idtmod/sin。
-下文单项分支/历史 PR 的版本与测量保留原归属；当前联合身份、原 31 条件与拒绝原因见
-[整合审查](../../experiments/parallel-gap-integration/README.md)。
+积分反馈、联合复位、高阶滤波及内部节点/算子输入的 `ddt` 由[连续动态章节](CONTINUOUS.md)维护。
+本页的直接输入限制不自动推广到联合网络。需要历史的算子按实例与调用点保存历史；
+局部变量只接收结果，sin 这类纯函数不新增物理历史。
 
-联合积分反馈/复位、多项式积分、完整分子的高阶滤波和受限内部/算子输入 `ddt` 由[连续动态章节](CONTINUOUS.md)维护。
-下文直接输入路径及其历史版本不自动推广到新联合网络。
+<a id="operator-map"></a>
+
+## 按算子查找
+
+| 数学章节 | 直接输入实现 | 独立回归 | 联合路径 |
+| --- | --- | --- | --- |
+| [transition](#transition) | [transition.rs](../rust_core/src/transition.rs) | [边沿与队列](../tests/test_transition.py)、[历史精度](../tests/test_transition_accuracy.py) | 事件目标安装与[共同观察](CONTINUOUS.md#lifecycle-observation-review-fixes) |
+| [absdelay](#absdelay) | [absdelay.rs](../rust_core/src/absdelay.rs) | [延迟查询](../tests/test_absdelay.py)、[精度](../tests/test_absdelay_accuracy.py) | 仍限直接输入；非点事件观察明确拒绝 |
+| [idt](#idt) | [idt.rs](../rust_core/src/idt.rs) | [积分与复位](../tests/test_idt.py)、[精度](../tests/test_idt_accuracy.py) | [积分反馈](CONTINUOUS.md#电压关系与积分反馈)、[联合复位](CONTINUOUS.md#事件修改的联合积分与复位) |
+| [laplace_nd](#laplace_nd) | [laplace.rs](../rust_core/src/laplace.rs) | [一阶低通](../tests/test_laplace.py) | [完整状态空间](CONTINUOUS.md#高阶滤波的完整状态空间)、[混合网络](CONTINUOUS.md#多项式积分与滤波的混合网络) |
+| [idtmod / sin](#idtmod-与-sin) | [idtmod.rs](../rust_core/src/idtmod.rs)；sin 在 [operators.rs](../rust_core/src/operators.rs) | [相位与函数](../tests/test_phase.py) | 受限 sin 可供[动态 guard](CONTINUOUS.md#非线性-guard-的根证明)使用；idtmod 的非点事件观察明确拒绝 |
+| [slew](#slew) | [slew.rs](../rust_core/src/slew.rs) | [追赶模式](../tests/test_slew.py)、[精度](../tests/test_slew_accuracy.py) | 仍限直接输入；非点事件观察明确拒绝 |
+
+这些文件维护单项公式。[operators.rs](../rust_core/src/operators.rs) 统一检查调用点与依赖，
+区分只读查询、同刻观察和未来历史。涉及事件的改动还需检查
+[settlement](EVENTS.md#同块顺序赋值与同刻联立求解)与[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
 
 ## 公共执行方法
 
@@ -22,7 +33,7 @@ idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组
 `reset_dependencies.rs` 的结构图包含滤波/相位/正弦输入边，未认证的 reset 固定点反馈环保守拒绝；
 已经交付的受限复位采样闭包见[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
 
-查询优化 `ddfd379` 用临时 `Evaluation` 借用同一个历史基线并固定查询时间。
+临时 `Evaluation` 借用同一个历史基线并固定查询时间。
 同刻候选仍克隆该基线并推进历史；无复位 idt、idtmod、laplace、absdelay、slew
 和直接输入 sin 的查询值/区间可复用。复位 idt、transition 以及沿依赖链消费它们的 sin
 重新求值。每种 Runtime 必须显式分类，新增算子时编译器要求补充该分类。
@@ -30,30 +41,30 @@ idt 复位可能改变当刻输出，须按[积分生命周期](#生命周期组
 原来的同刻权限、第二次求解、历史/值/区间重放一致性检查均保留，不能用复用跳过验收。
 `operators.rs` 的独立回归核对复位后正弦、transition 后正弦，以及弃候选后从原基线重试。
 
-PR13 引入实例与源码调用点身份，算子历史与用户状态分开保存。设 q 为离散状态、H 为已接受历史，
+算子使用实例与源码调用点身份，历史与用户状态分开保存。设 q 为离散状态、H 为已接受历史，
 先求算子值 `z(t;q,H)`，再将它代入限定仿射电压方程 `A v=b(u,q,z)`。
 本页直接输入的独立算子路径与连续联合网络分别维护；后者的电压反馈、导数和非线性积分范围见
 [连续动态](CONTINUOUS.md)，不能把其中一条路径的限制推广到所有调用。
 
-到期目标、边沿端点及追赶交点属于语义断点，输出网格不定义历史。PR13 同步 PR12 后，
+到期目标、边沿端点及追赶交点属于语义断点，输出网格不定义历史。
 在 te 复制历史并推进到期目标，取得当刻算子输出 z_e。显式正边沿使输出在目标变化处连续，
 所以同刻可固定 z_e，求解 `q+=Phi(q-,v+)` 与 `F(v+,q+,z_e,u(te))=0`。
 代入消去 q+ 后解仿射系统，再回放原赋值、电压残差和状态/电压前向误差认证。
 认证矩阵将 z_e 作为参数，复用系数时每次带入新值及其历史区间，不能缓存某次的输出样本。
 随后用 q+ 安装新目标，并核对当刻算子值未变；期限顺序通过后，状态、电压、历史、游标、记录一起提交。
-失败/弃步只丢弃候选。0.6.1 将算子历史和已采样状态的误差区间传入同刻认证，
+失败/弃步只丢弃候选。算子历史和已采样状态的误差区间传入同刻认证，
 参考对象固定为已编译 binary64 IR、实际接受的源事件时刻及驱动输入样本；
 不包含源事件相对理想名义时刻的偏差，也不是连续时间全轨迹的精度证明。
 共同事件顺序及未决兼容性见[事件手册](EVENTS.md#timer-与同刻兼容性)。
 
 实现入口：[operators.rs](../rust_core/src/operators.rs)、[transient.rs](../rust_core/src/transient.rs)、
 [settlement.rs](../rust_core/src/settlement.rs) 与 [settlement_bounds.rs](../rust_core/src/settlement_bounds.rs)。
-IR v6 增加 operators 与调用点引用。结构依赖在数值绑定前检查，零乘数、相消、下溢和跨实例连接
+IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，零乘数、相消、下溢和跨实例连接
 不能隐藏不支持的反馈/guard。当前重绑算子值的路径没有新的矩阵分解复用性能结论。
 
 ## transition
 
-首批接受本实例已提交标量状态与常数的仿射输入；四参数须显式提供，延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。
+接受本实例已提交标量状态与常数的仿射输入；四参数须显式提供，延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。
 初值为已初始化输入，不凭空添加从零开始的边沿。未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则
 
@@ -72,16 +83,16 @@ IR v6 增加 operators 与调用点引用。结构依赖在数值绑定前检查
 验证：[test_transition.py](../tests/test_transition.py)
 包含 TR-EDGE/REVERSE/EXTEND/REPEAT/QUEUE、反射、实例隔离、网格与步长、浮点分辨率及拒绝边界。
 Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化算子值上的缓存回归。
-专属 Spectre 有限对照见[执行记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-061)，不由有限样例宣称通用兼容。
+专属 Spectre 有限对照见[执行记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/backends/dvs2-spectre-validation/README.md#pr13-transition-061)，不由有限样例宣称通用兼容。
 连续电压输入、嵌套、动态参数、缺省/零边沿和算子反馈尚未支持。
 
 ### 历史误差与电压精度
 
-0.6.0 只认证把已舍入算子输出当成精确右端项后的方程。残差为零不能证明历史准确：
+把已舍入算子输出当成精确右端项，只能认证方程求解。残差为零不能证明历史准确：
 源事件发生在 `te=1e12 s`、`d=0.10005 s`、边沿 1 s 时，`te+0.5` 的输出误差约
 `1.6973e-4 V`，旧版仍可在 `vabstol=1e-9` 下接受。
 
-0.6.1 同时保存代表值与向外舍入区间：延迟生效时刻 `T=[te]+[d]`、边沿起点 Y、
+当前同时保存代表值与向外舍入区间：延迟生效时刻 `T=[te]+[d]`、边沿起点 Y、
 历史起点 O、目标 Q、斜率 `M=(Q-O)/[D]`。在上升段，实数参考值包在
 `max(Y,min(Q,Y+M*([t]-T)))` 的区间扩展内；下降段使用相反方向的裁剪。
 中断时用旧波形在 T 上的区间作为新 Y，目标队列与边沿结束后继续保留 Q 的区间。
@@ -90,14 +101,14 @@ Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化�
 同刻系统的区间系数映射再将历史和旧状态区间传到所有电压及新状态，
 验收 `sup(|v_hat-V|) <= vabstol + reltol*|v_hat|`，右侧采用保守下界。
 这同时计入电压网络的放大/消去效应。采样后的 real 状态保存区间供后续事件使用，
-其预算只有相对项；integer 必须精确。不含算子且不含事件体条件的模型仍沿用原条件性事件认证。
+其预算只有相对项；integer 必须精确。无算子事件模型另由[事件输入/状态认证](EVENTS.md#pwl-与事件的执行契约)验收。
 初始化电压也验收；失败返回 `waveform_accuracy`，不提交状态、历史或输出记录。
 不能证明事件次序/方向或同一舍入目标确实未变时返回 `event_resolution`。
 
 这是一种保守验收：没有自动提高运算精度或放宽阈值，区间相关性丢失可能拒绝实际误差很小的模型。
 收紧容差通常不增加输出点或 Newton 次数，而可能使当前算法无法通过认证；区间传播本身增加运算和存储。
-保证仅限成功接受的计算点及上述固定参考，不含源代码到 IR 的常量舍入、驱动 PWL 求值误差、
-名义事件相位或物理模型误差。从 0.8.0 条件实现切片开始，含事件体条件的程序另把直接 PWL 求值包围
+上述历史证书仅针对成功接受的计算点及固定参考，不包含源代码到 IR 的常量舍入、
+驱动 PWL 求值误差、名义事件相位或物理模型误差。事件路径另把直接 PWL 求值包围
 传入状态/电压认证；没有算子时也保留历史状态误差，范围见[事件条件说明](EVENTS.md#event-conditions)。
 不能用此结果宣称与 Spectre 的 reltol/LTE 控制完全相同。
 独立 Fraction 回归见 [test_transition_accuracy.py](../tests/test_transition_accuracy.py)：
@@ -119,7 +130,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 - **规范**：[LRM 2.4 §4.5.8](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
   给出分段线性、纯延迟与中断语义；[LRM 2023 §4.5.8，图4-7至4-12](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)
   进一步展开上升/下降及连续中断的起点和斜率公式。本实现选择固定参数、事件保持输入这个子集。
-- **Spectre**：闭源内核无法据波形推断内部算法；本轮使用相同 VA 与冻结独立折线答案，
+- **Spectre**：闭源内核无法据波形推断内部算法；固定专项实验使用相同 VA 与冻结独立折线答案，
   对照普通边沿、反向/同向中断及下降反射、短脉冲、重复目标和同刻目标。
   具体版本、两档设置及差异写入执行记录，不把波形吻合等同于实现一致。
 - **Gnucap**：检查固定提交 `100e7469fa2f758b4de0492ec1374266820cbfcd` 的
@@ -128,8 +139,9 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
   它生成滤波器设备，`tr_accept` 在输入变化时登记波形历史并请求断点，`tr_advance` 查询历史值；
   最小边沿受 dtmin 约束。EVAS 使用显式正边沿及区间分辨率准入，候选历史随整帧提交。
   这里是源码结构比较，没有执行 Gnucap 对照或评定其数值优劣。
-- **ngspice + OpenVAF**：[OpenVAF 支持说明](https://openvaf.semimod.de/docs/details/verilog-a-standard/)
-  仍列出一般模拟事件控制缺口；因此本轮 timer 驱动的同一 VA 套件不能据该接口直接称为可比。
+- **ngspice + OpenVAF**：历史专项未执行该组合的 timer 驱动 transition 套件，不能称为已完成同模型对照。
+  [OpenVAF 支持说明](https://openvaf.semimod.de/docs/details/verilog-a-standard/)是未固定版本的接口导航，
+  不能据该网页推断所有工具版本的能力。
   这不等于 ngspice 没有断点、行为源或其他实现路线；没有执行其 transition 测试，也不作性能排名。
 
 ## absdelay
@@ -146,7 +158,7 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 实现：[absdelay.rs](../rust_core/src/absdelay.rs)。
 验证：[test_absdelay.py](../tests/test_absdelay.py)
 覆盖非零初值、零/长延迟、大时间低位、双实例、网格/步长及结构拒绝。
-修复后基于 PR13 `9850450`，延迟输出同时返回值和历史区间。源语义拐点并集上的端点 A、B
+延迟输出同时返回值和历史区间。源语义拐点并集上的端点 A、B
 包括原始 binary64 PWL 插值与编译后仿射系数的运算区间。若补偿查询为 q_hi+q_lo，段为 [s,e]，
 则局部比例 `F=([q_hi]-[s]+[q_lo])/([e]-[s])`，历史值包含在 `(1-F)A+FB` 中。
 查询扩展用于精确选择源段，不能先把 q_hi+q_lo 合成一个舍入后的绝对时间。
@@ -158,13 +170,13 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 旧版可在零支路残差下接受，修复后1e-10预算拒绝、1e-6预算接受并核对真实误差。
 这是成功计算点相对编译后 IR 与原始 binary64 源定义的保守认证；不含源代码常量折叠、
 允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
-不可表示或非有限的移位拐点显式失败。[固定检查点专项](../../experiments/pr14-pr15-validation/RESULTS.md)中，PR14 完整前端与内核、Spectre 各 12/12 满足有限观测目标。
+不可表示或非有限的移位拐点显式失败。EVAS/Spectre 的固定专项结果与身份见
+[执行记录](../../experiments/archive/pr14-pr15-validation/RESULTS.md)，有限观测达标不证明通用兼容。
 内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
 
 ## idt
 
-能力 ID：DYNAMICS。EVAS 0.7.0 / IR v7 交付首版受限二参数积分；
-IR v11 首次扩展三参数 reset，IR16 继续保留；检查点与交付状态见能力总表。
+能力 ID：DYNAMICS。本节说明二参数解析积分与受限三参数 reset；支持状态见能力表。
 依据 [Verilog-AMS LRM 2023 §4.5.4，表 4-18](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf)，
 显式初值形式满足 `z(t)=ic+∫₀ᵗ u(s)ds`。本节直接 PWL 解析路径只接受贡献表达式中的
 `idt(direct_affine_input, constant_ic)` 与受限的
@@ -219,7 +231,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 克隆共享。它是输入定义的解析表示，不是提前提交未来求解结果。每次试算从已接受帧取得
 该表示，查询当刻值/区间后重解统一方程；全部验收通过才替换帧、游标和记录。
 查询任意先后顺序不写历史，放弃候选或失败后重试不产生重复积分，输出点和 max_step
-不定义积分段。首版不添加新的可变积分状态或按时间缓存的算子样本。
+不定义积分段。二参数解析路径不添加新的可变积分状态或按时间缓存的算子样本。
 
 同一时刻修正源输入须重建该请求的语义输入和积分表示并重新求解；相同时间不是缓存身份。
 当前公开 API 接受完整源轨迹，没有运行中局部修改 PWL 的接口。事件可采样积分节点，
@@ -231,7 +243,7 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 结构依赖先于数值相消检查；事件修改历史的 guard 需要重定位，当前尚未接入。
 
 没有获得共同闭包认证的“积分器 → 电压网络 → 事件状态赋值 → 该积分器复位”固定点环仍拒绝。
-受限的实际复位后采样已由 PR32 交付；其准入与拒绝见[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)，
+受限的实际复位后采样的准入与拒绝见[共同闭包](CONTINUOUS.md#shared-lifecycle-closure)，
 不能沿用首版的结构限制将所有复位/采样组合统称不支持。
 例如事件后 `q=y`、IC=0、未复位积分值为 1 时无自洽解；`q=1-y` 则有两组自洽解。
 数值试算稳定不能证明解存在或唯一。`reset_dependencies.rs` 复用组装后的未知节点连通组，
@@ -247,54 +259,28 @@ reset 归零后，从 reset 保持解除/释放时刻重新以 IC 为初值积�
 失败、丢弃或重试不修改已接受状态及历史。
 
 
-IR v7 新增 `kind=idt,input,ic,origin`；IR v11 起在 idt 记录中加入可空 `reset` 表达式。
-调用引用仍为 `op=operator,operator=index`。
-Python/Rust 版本同步，旧版本先于载荷解码拒绝，须从 VA 重新编译；缺字段、额外字段、
-错误类型、无效引用/归属和不支持的依赖不可绕过原始 IR 校验。原 IR15 检查点包版本为 0.9.0；包内版本号不代表已发布 tag。
-实现入口：[idt.rs](../rust_core/src/idt.rs)、[operators.rs](../rust_core/src/operators.rs)；
-独立有理数和组合回归：[test_idt.py](../tests/test_idt.py)、
-[test_idt_accuracy.py](../tests/test_idt_accuracy.py)。Rust 另检验查询无副作用及真实候选失败后完整性。
-本检查点新增同刻 post-reset 重解、transition 组合、事件时间区间和弃候选回归；未执行新的远程后端对照。
+IR 的 idt 记录保存 `kind=idt,input,ic,origin` 及可空 `reset` 表达式。
+调用引用为 `op=operator,operator=index`。Python/Rust 同时校验版本、字段、类型、归属和依赖；
+旧 IR 须从原始 VA 重新编译，不能只修改版本号，见[迁移规则](../README.md#ir-v8-migration)。
 
-原开发检查点 `074cde5` 基于 main `5b090571c7de7c6ec08a05c803479505c5d745ee`：
-全量 Python 215 项、Rust 40 项通过，其中新增 20 项 Python、7 项 Rust；
-649 个原始 binary64 输入的 Fraction 答案均落入实际 Rust 积分区间，包含累计段、尺度变化和次正规数。
-[可执行示例](../examples/idt.json)在 0/1/2/3/4 μs 的名义答案为
-0.25/0.40/0.45/0.40/0.25 V，属于两参数直接积分开发例。
-reset 分支早期 targeted smoke 曾报告 D1 两档满足原 checker；旧记录没有整理成矩阵收据，
-不能作为新父提交或本轮修复的验证。基于已合并 PR25 的修复检查点 `dfe4bd8`，
-全量 Python 277 项、Rust 63 项及编译器零警告检查通过；新增复位反馈拒绝、
-原始 IR 绕过检查、正常 post-reset 采样、等值但不同历史及释放区间弃候选/精确重试回归。
-该检查点当时未安装 Clippy 组件，未执行该检查；后续补齐见下文。
+实现入口与独立回归见上方对应表。Rust 另检查查询无副作用、调用点隔离及候选失败后的历史完整性；
+[transient_idt_tests.rs](../rust_core/src/transient_idt_tests.rs) 在非零接受时刻检查失败、弃步、较早重试和未来输入修正。
+该私有入口不覆盖生产控制器的全部游标与 trace；控制器回退另见[共同生命周期](CONTINUOUS.md#shared-lifecycle-closure)。
+[可执行示例](../validation/smoke/idt.json)的名义输出为 0.25/0.40/0.45/0.40/0.25 V，属于二参数直接积分。
 
-[本轮 D1 收据](../../experiments/pr14-pr15-validation/results/idt-reset-review.json)
-记录 4 次新本地执行：原 `d1-free` / `d1-reset` 冻结源码，base/fine 各 4,001/40,001 个观测点，
-均满足未修改的原 checker 的 finite-observation 判据。
-自由积分的最大观测误差约 2.2e-16 V；复位 checker 找到共同 witness
-reset x≈1.50002、release x≈2.50002，对该 witness 的最大电压/flag 误差约 1.0e-6。
-该 witness 是检查器的有限观测搜索结果，不是已证明的精确事件时刻或全时域精度界。
-原矩阵每档分母仍为 31；其他 29 条件、远程 Spectre 和完整后端矩阵未在本轮重跑，
-正式连续时间资格仍为 I。原始波形只在本地 ignored runs 中保留，可用性见收据。
-
-0.7.0 整合 PR18 后重新执行完整 Python 218 项、Rust 42 项及独立数学 9 项，均通过。
-新增的[私有积分恢复测试](../rust_core/src/transient_idt_tests.rs)由 `transient.rs` 的 test-only 模块加载，
-在非零接受时刻核对多实例/调用点失败、弃步、较早重试和未来输入修正；运行时算法未因这次补测修改。
-返回的事件批次记录可核对，`run` 循环持有的完整调度游标/已提交 trace 不在此私有入口内，
-其失败后的继续执行仍未验证；当前公开请求也没有在线改源或恢复执行接口。
-
-PR26 已交付的被测运行时 `edb004d` 完成[合并前完整审查及原 31×2 对照](../../experiments/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)：
-279 项 Python 方法、63 项 Rust 测试、Clippy 零告警及格式检查通过。
-该运行时两档各 24/31，比较基线为 PR25 main `6df7f48` 的各 22/31；新增 D1 free/reset，
-原达标的 44 份 CSV 逐字节一致。该执行补齐上述早期 targeted smoke 的矩阵缺口，
-没有新增远程后端对照或连续时间资格。
+直接积分与复位的旧测试数量、D1 有限观测 witness 和完整矩阵执行分别保留在
+[固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/OPERATORS.md#idt)、
+[D1 收据](../../experiments/archive/pr14-pr15-validation/results/idt-reset-review.json)及
+[复位合并验证](../../experiments/archive/pr14-pr15-validation/RESULTS.md#idt-reset-merge-validation)。
+这些结果绑定原检查点，不证明精确事件时刻或连续时间全轨迹精度。
 
 ## laplace_nd
 
-能力 ID：DYNAMICS + LANG。本分支新增受限 `laplace_nd`：只接受
+能力 ID：DYNAMICS + LANG。本节的直接输入解析路径接受
 `laplace_nd(u, '{b0}, '{d0,d1})`，其中数组是 Verilog-A 标准的前导撇号常量数组，
 系数按升幂顺序解释。`d0,d1` 必须为有限正数，`b0` 为有限常数；输入 `u` 必须是直接驱动
-连续 PWL 电压和常数的仿射组合。高阶系数、动态系数、非标准 `{...}` 数组、内部节点/状态输入、
-嵌套、反馈及算子驱动 `cross` 均明确拒绝，不能截断额外极点后继续执行。
+连续 PWL 电压和常数的仿射组合。此路径拒绝动态系数、非标准 `{...}` 数组和超出该解析形式的依赖，不能截断额外极点后继续执行。
+高阶系数、内部节点、反馈与动态 cross 的联合范围见[连续动态](CONTINUOUS.md#行为与边界)。
 
 令 `tau=d1/d0`、`gain=b0/d0`，本版求解：
 
@@ -331,12 +317,12 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 
 ## idtmod 与 sin
 
-分支限定实现新增相位子集：`idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
+受限相位子集包括 `idtmod(u, ic, modulus, offset)` 与 `sin(x)`，用于 D2 类
 电压域相位模型。依据 Verilog-AMS LRM 2.4 的 `idtmod(expr, ic, modulus, offset)`
 形式，当前只接受显式有限常量初值、显式正有限 modulus 和有限 offset；省略 modulus 的
 无界积分形式不映射到本算子，仍应使用普通 `idt` 或明确拒绝。
 
-`idtmod` 的输入沿用 `idt` 首版边界：直接驱动、连续 PWL 的仿射组合，不接受内部节点、
+`idtmod` 的输入为直接驱动、连续 PWL 的仿射组合，不接受内部节点、
 状态、反馈、嵌套或动态参数。实现先用 [idt](#idt) 的解析积分得到未包裹相位
 `z(t)=ic+∫u(s)ds`，再返回
 
@@ -346,7 +332,7 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 `ic=1/8,u=-1/4,modulus=1,offset=0` 在 `t=1` 得到 `7/8`。每个调用点和实例仍有独立历史；
 查询、输出网格和失败候选不写历史。
 
-`sin` 在本分支是函数型 operator，不引入通用非线性瞬态方程。接受两类输入：
+`sin` 在本页路径中是函数型 operator，不引入通用非线性瞬态方程。接受两类输入：
 直接驱动 PWL 仿射表达式，或 `constant + coefficient * earlier_operator`。后一类覆盖
 ``sin(2*`M_PI*phase)``。运行值可使用已绑定的代表系数，但精度证书重新从原始输入表达式做
 outward affine arithmetic，保留常量和系数折叠、相消及 binary64 运算造成的区间误差；若代表值可能
@@ -367,24 +353,21 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认
 `waveform_accuracy`。这会在严格电压预算下拒绝不确定 wrap 边界；这是 soundness 约束，
 不是连续时间 wrap 轨迹资格。
 
-单项 phase 分支的首版一次赋值别名在本地整合时由统一的顺序 analog lowering 接管。
+局部变量由统一的顺序 analog lowering 转换。
 无事件/初始化的普通 local real 可重复无条件赋值，每条赋值捕获当时表达式；每个动态调用仍有独立身份。
 例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);`` 不创建持久状态。
 条件动态调用仍拒绝；普通条件与动态算子联立也尚未支持。`constants.vams`
 当前只解析窄集合中的 `` `M_PI``，不会执行 include 文件或引入任意宏系统。
 
-验证入口：[test_phase.py](../tests/test_phase.py) 固定常频、chirp、负频率、直接 `sin`、
-Decimal 高精度正弦对照、拒绝边界和 raw IR 畸形字段。分支本地用冻结原矩阵输入重跑
-`d2-constant` 与 `d2-chirp` 两档 EVAS worker，并用独立 checker 复核：四个配置均为
-`observations_within_targets`。针对回归还覆盖同一 phase 的重复仿射引用、隐藏第二 operator 结构依赖拒绝、
-大系数抵消误差拒绝、`sin(idtmod)` 两侧包络、wrapped 电压在近 wrap / exact wrap 的可证通过，以及
-非精确系数边界无法证明时的 `waveform_accuracy`。该证据是本地分支证据，formal qualification 仍为 I，
-未执行 Spectre 或完整 31 条件矩阵。
-此前本地 IR14 联合版本的 30/31 固定证据仍保留在[整合收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/original31.json)；专项新结果不改写旧联合成绩。
+验证入口：[test_phase.py](../tests/test_phase.py) 使用固定常频、chirp、负频率和 Decimal 高精度正弦答案，
+检查仿射重复引用、隐藏依赖、相消误差、wrap 两侧包围、exact wrap 及 raw IR 畸形字段。
+无法证明 wrap 边界时应返回 `waveform_accuracy`，不能用代表值选择一侧。
+专项执行及早期矩阵成绩保留在[固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/OPERATORS.md#idtmod-与-sin)；
+当前联合矩阵的执行身份见[实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)。
 
 ## slew
 
-首批输入为直接驱动连续 PWL 的仿射组合，固定正限速 r+ 和负限速 r-，初态 y(0)=u(0)。
+输入为直接驱动连续 PWL 的仿射组合，固定正限速 r+ 和负限速 r-，初态 y(0)=u(0)。
 三参数须显式提供，`rise>0`、`fall<0` 为有限实例常数，限速单位为输入单位/秒。
 在输入斜率 a 恒定的分段上：y<u 时以 r+ 追赶，y>u 时以 r- 追赶，y=u 时选择
 `clip(a,r-,r+)`；相交后重新判断跟踪或追赶模式。
@@ -400,7 +383,7 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 零起点与乘2^-40的时间尺度也纳入同一个独立回归。
 
 输入端点、局部交点、输出起点和最终保持值同时保存区间；查询落入交点区间时取相邻模式的包围。
-局部表示改善代表值，区间则包围原始 binary64 PWL 和编译后 IR 的实数解，并传入 PR13 的
+局部表示改善代表值，区间则包围原始 binary64 PWL 和编译后 IR 的实数解，并传入共同的
 同刻电压/状态预算。网络增益、相消和后续采样不能把已有误差清零。
 不能证明模式或交点次序时仍拒绝；几何成立但电压预算不足时返回 `waveform_accuracy`。
 [test_slew_accuracy.py](../tests/test_slew_accuracy.py) 检查反向追赶误差放大、初值/输入重采样、
@@ -411,8 +394,8 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 验证：[test_slew.py](../tests/test_slew.py)
 包括独立 SL-CATCH/REVERSE/PASS、反射、SI/二进制尺度、实例与网格变化。
 [联合回归](../tests/test_timed_composition.py)另外检查双实例的三算子与 timer/cross 同刻采样，
-独立公式覆盖两种实例顺序、两种网格和两种步长，共8配置；该结果绑定 PR15 被测实现 `e01fb5b`。
-[专项对照及步长诊断](../../experiments/pr14-pr15-validation/RESULTS.md)中，EVAS 16/16、Spectre 10/16 达到固定有限观测目标。
+独立公式覆盖实例顺序、输出网格和步长变化。
+固定版本的专项结果见[对照及步长诊断](../../experiments/archive/pr14-pr15-validation/RESULTS.md)。
 Spectre 的反向追赶偏差随步长细化下降；这是波形证据，不是私有算法或 LRM 违规的结论。
 内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
 

@@ -56,7 +56,7 @@ def sha256_file(path: Path) -> str:
 
 def discover_manifests(inputs: Sequence[Path] | None = None, *, repo_root: Path | None = None) -> tuple[Path, ...]:
     root = (repo_root or Path.cwd()).resolve()
-    selected = inputs or (root / "evas/examples",)
+    selected = inputs or (root / "evas/validation/smoke",)
     manifests: list[Path] = []
     for item in selected:
         path = item if item.is_absolute() else root / item

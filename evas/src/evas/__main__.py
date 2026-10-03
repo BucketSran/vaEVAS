@@ -1,4 +1,4 @@
-"""Compile or execute an explicit flat circuit manifest (see examples/)."""
+"""Compile or execute an explicit flat circuit manifest (see evas/examples/ and evas/validation/smoke/)."""
 
 import argparse
 import json

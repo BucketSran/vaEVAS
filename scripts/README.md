@@ -19,11 +19,11 @@ python3 -B scripts/verify_validation_version.py
 ```sh
 python3 -B scripts/recompile_evas_manifests.py --output runs/recompile-ir16
 python3 -B scripts/recompile_evas_manifests.py \
-  --output runs/recompile-selected evas/examples/idt.json
+  --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 
 `recompile_evas_manifests.py` 读取 manifest、原始 VA 与实例参数，生成当前版本的 IR
-及逐项来源/失败记录。第一条命令默认处理 `evas/examples/`；第二条只处理指定 manifest。
+及逐项来源/失败记录。第一条命令默认处理 `evas/validation/smoke/`；第二条只处理指定 manifest。
 输出目录必须不存在，便于保留原 IR 和历史结果。
 
 旧 IR 不能通过修改 `schema_version` 迁移；没有对应 VA/manifest 的文件无法由此工具重编译。

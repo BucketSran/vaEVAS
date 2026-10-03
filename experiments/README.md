@@ -18,33 +18,32 @@
 | 想了解什么 | 阅读入口 |
 | --- | --- |
 | 当前支持什么、还有哪些限制？ | [能力表](../evas/docs/CAPABILITIES.md) |
-| 当前版本实际验证了什么？ | [当前执行证据](parallel-gap-integration/README.md#当前证据) |
+| 当前版本实际验证了什么？ | [当前执行证据](runs/parallel-gap-integration/README.md#当前证据) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
-| Spectre 的事件与历史行为有何差异？ | [Spectre 对照](dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
-| 旧四后端的结果与失败是什么？ | [历史矩阵](dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](dvs2-four-backend-validation/DIAGNOSIS.md) |
-| 怎样重新运行或取得原材料？ | [当前复现入口](parallel-gap-integration/README.md#复现入口)及各目录的协议/资产说明 |
+| Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#shared-lifecycle-review) |
+| 旧四后端的结果与失败是什么？ | [历史矩阵](backends/dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](backends/dvs2-four-backend-validation/DIAGNOSIS.md) |
+| 怎样重新运行或取得原材料？ | [当前复现入口](runs/parallel-gap-integration/README.md#复现入口)及各目录的协议/资产说明 |
 
 <a id="checkpoint-evidence"></a>
 
-## 现有目录如何处理
+## 目录结构
 
-这些名称沿用历史批次。以下区分仍在使用的工具、需要保留的比较证据和待归档材料：
+目录名沿用历史批次名（保留原目录名以便历史链接与来源追溯），按职责分为三类：
 
-| 现有目录 | main 需要保留的职责与文件 | 整理方向 |
+| 目录 | 职责 | 内容 |
 | --- | --- | --- |
-| [dvs2-starter-pilot](dvs2-starter-pilot/README.md) | `suite.py` 输入生成、`analyze.py` 波形读取；冻结 v1 的来源与工具身份材料 | 把共享输入/读取工具迁入 validation；试点长报告与一次性诊断从历史提交查阅 |
-| [dvs2-history-validation](dvs2-history-validation/README.md) | `history.py` 精确有理数事件判据、`recheck.py` 中仍被复用的契约、检查器校准 | 共享判据迁入 validation；旧波形重判保持原执行身份并归档 |
-| [dvs2-spectre-validation](dvs2-spectre-validation/README.md) | `run_suite.py`、`check_results.py` 和校准；后端运行/报告工具、协议、31 条件 Spectre 基线及身份收据 | 输入与判据迁入 validation；执行工具继续归 experiments；各旧版本专项报告已改为固定历史链接 |
-| [dvs2-four-backend-validation](dvs2-four-backend-validation/README.md) | 四后端适配工具、共同设置协议、完整分母的矩阵与失败归因 | 精简比较证据留在 main；已结束的一次性诊断可归档，不能以新版结果覆盖旧基线 |
-| [pr14-pr15-validation](pr14-pr15-validation/README.md) | `matrix.py` 仍负责当前 EVAS 矩阵执行；`operators.py` 等独立算子探针与校准 | 将算子判据迁入 validation，矩阵执行工具按职责整理；完成迁移后取消 PR 编号目录 |
-| [parallel-gap-integration](parallel-gap-integration/README.md) | 当前检查点收据、矩阵分析、生命周期验证工具及独立校准 | 当前证据持续维护；阶段叙述已改为历史链接，旧收据按所支撑结论逐项判断保留/归档 |
+| [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：当前检查点收据、矩阵分析、生命周期验证工具及独立校准，持续维护 |
+| [backends/](backends/) | 跨后端对照 | [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
+| [archive/](archive/) | 已结束批次 | [dvs2-starter-pilot](archive/dvs2-starter-pilot/README.md)：试点输入生成与工具身份；[dvs2-history-validation](archive/dvs2-history-validation/README.md)：精确有理数事件判据与旧波形重判；[pr14-pr15-validation](archive/pr14-pr15-validation/README.md)：该批次矩阵与算子探针 |
 
-**为什么目前保留这些路径？** [静态回归](../evas/tests/run_static_regression.py)直接导入
-Spectre 目录的输入与检查器；后者又依赖 starter 和 history。
-[当前矩阵执行器](pr14-pr15-validation/matrix.py)还读取旧工具身份并复用四后端适配工具。
-直接删除这些目录会破坏验证入口；迁移必须同时处理导入、命令、输入生成与身份记录，
+归档目录保持原字节，只读引用；其中 [pr14-pr15-validation/matrix.py](archive/pr14-pr15-validation/matrix.py)
+**目前仍承担当前 EVAS 矩阵执行**，待其职责迁移到 runs/ 后才真正退役。
+
+**工具依赖现状：** [静态回归](../evas/tests/run_static_regression.py)直接导入
+backends 中 Spectre 目录的输入与检查器；后者又依赖 archive 的 starter 和 history。
+当前矩阵执行器还读取旧工具身份并复用四后端适配工具。
+归档目录因此不能删除；迁移必须同时处理导入、命令、输入生成与身份记录，
 对迁移后的工具做校准并产生新的分析身份。历史收据与冻结快照保持原字节。
-本轮保留这些依赖，尚未执行工具迁移。
 
 ## 已归档材料
 

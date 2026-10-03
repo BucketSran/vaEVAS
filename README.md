@@ -37,7 +37,7 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/static_sum.json \
 ```
 
 [示例 manifest](evas/examples/static_sum.json)定义三组输入，所引用的
-[Verilog-A 模型](evas/validation/cases/n_v1_02/dut.va)将三条电压贡献相加。
+[Verilog-A 模型](evas/examples/static_sum.va)将三条电压贡献相加。
 命令输出 JSON，`solutions` 中的电压按 `nodes` 顺序排列；三组输入的 `out` 电压约为
 `0.225 V`、`1.825 V` 和 `-0.325 V`。
 

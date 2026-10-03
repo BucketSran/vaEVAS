@@ -11,7 +11,7 @@
 
 原矩阵由 14 个未改动的 v1 条件、1 个标准低通修订和 16 个补充条件组成。
 [起步案例卡](../CASE_CARDS.md)与[补充案例卡](../NEXT_CASE_CARDS.md)定义独立答案；
-[run_suite.py](../../../experiments/dvs2-spectre-validation/run_suite.py)生成冻结输入与网表外壳。
+[run_suite.py](../../../experiments/backends/dvs2-spectre-validation/run_suite.py)生成冻结输入与网表外壳。
 
 以下源码补充或修订了历史起步模型：
 
@@ -26,12 +26,12 @@
 
 C1 使用两个采样器实例，C2 使用低通与采样器两个模块；构建器按 `source_cards` 打包完整源码。
 新版 EVAS 的验证与历史四后端对照分开记录，分别由[当前证据](../README.md#latest-evas-checkpoint)
-和[历史矩阵](../../../experiments/dvs2-four-backend-validation/results/MATRIX.md)进入。
+和[历史矩阵](../../../experiments/backends/dvs2-four-backend-validation/results/MATRIX.md)进入。
 
 ## 历史起步模型
 
 八个原始 `dut.va` 对应 v1 的八张案例卡、15 个条件；各文件的参数已恢复电压和时间单位。
-刺激与参数展开由 [suite.py](../../../experiments/dvs2-starter-pilot/suite.py)生成。
+刺激与参数展开由 [suite.py](../../../experiments/archive/dvs2-starter-pilot/suite.py)生成。
 
 | 目录 | 行为 | 试点条件数 |
 | --- | --- | ---: |
@@ -45,11 +45,11 @@ C1 使用两个采样器实例，C2 使用低通与采样器两个模块；构�
 | [d2_v7_02](d2_v7_02/dut.va) | 单调三次隐式关系，两组参数 | 2 |
 
 **低通的历史编码问题：** `d2_v6_01/dut.va` 的数组缺少 LRM 2.4 要求的前导撇号。
-该文件保留原字节以核对 v1 历史；[语法诊断修订](../../../experiments/dvs2-starter-pilot/diagnostics/v6-lrm24.va)
-和[归因报告](../../../experiments/dvs2-starter-pilot/DIAGNOSIS.md)单独保存。
+该文件保留原字节以核对 v1 历史；[语法诊断修订](../../../experiments/archive/dvs2-starter-pilot/diagnostics/v6-lrm24.va)
+和[归因报告](../../../experiments/archive/dvs2-starter-pilot/DIAGNOSIS.md)单独保存。
 原 31 条件采用 `d2_v6_01_standard`，没有覆盖旧输入。
 
-历史试点的协议与结果见[试点入口](../../../experiments/dvs2-starter-pilot/README.md)。
+历史试点的协议与结果见[试点入口](../../../experiments/archive/dvs2-starter-pilot/README.md)。
 后端成功执行不等于语言合法性认证，改写后的模型也不能替代旧失败记录。
 
 ## 贡献顺序变体

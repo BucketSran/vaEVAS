@@ -22,10 +22,10 @@ PR26 的历史检查点为 IR v11，当前完整矩阵从[验证集入口](READM
 | e2-low、e2-clock-high、e2-reset-high | [n_v4_02](cases/n_v4_02/dut.va)、[E2 卡](NEXT_CASE_CARDS.md#n-v4-02初始高电平与恢复e2) | 初态、持续复位、释放及恢复 |
 | c1-main、c1-swapped、c1-no-reset-a | 同一 n_v4_02、[C1 卡](NEXT_CASE_CARDS.md#n-v7-03有状态实例隔离c1) | 双实例的参数、状态和算子历史隔离；声明顺序不变性 |
 
-刺激及参数以 [run_suite.conditions](../../experiments/dvs2-spectre-validation/run_suite.py)
-和其引入的 [suite.conditions](../../experiments/dvs2-starter-pilot/suite.py) 为固定入口。
-原判据为 [check_results](../../experiments/dvs2-spectre-validation/check_results.py)、
-[history](../../experiments/dvs2-history-validation/history.py) 及原 v1 checker。
+刺激及参数以 [run_suite.conditions](../../experiments/backends/dvs2-spectre-validation/run_suite.py)
+和其引入的 [suite.conditions](../../experiments/archive/dvs2-starter-pilot/suite.py) 为固定入口。
+原判据为 [check_results](../../experiments/backends/dvs2-spectre-validation/check_results.py)、
+[history](../../experiments/archive/dvs2-history-validation/history.py) 及原 v1 checker。
 保持平台目标仍为 1 mV；原观察误差预算、事件时间允许域、原单位和两档设置全部保留。
 这些原条件没有精确同刻时钟/复位竞争；不能用其通过证明同刻去重或优先级。
 
@@ -304,8 +304,8 @@ EC-WAVE 仅手算这个相等上/下沿的两次目标变化，不另造通用 t
 
 ```sh
 python3 -B evas/validation/check_event_conditions_math.py
-PYTHONPATH=experiments/dvs2-spectre-validation python3 -B -m unittest -v test_checks
-PYTHONPATH=experiments/dvs2-history-validation python3 -B -m unittest -v test_history test_recheck
+PYTHONPATH=experiments/backends/dvs2-spectre-validation python3 -B -m unittest -v test_checks
+PYTHONPATH=experiments/archive/dvs2-history-validation python3 -B -m unittest -v test_history test_recheck
 git diff --check
 ```
 
@@ -367,7 +367,7 @@ PYTHONPATH=evas/src python3 evas/tests/run_static_regression.py --kernel evas/ru
 原 31×2 的新本地 EVAS 执行中，两档均 **21 条观测达标、10 条明确拒绝**；
 本契约目标的 V4 两条、E2 三条、C1 三条全部满足原有限观测判据。
 原条件/阈值/checker 不改，正式资格仍为 I；没有把 8 条单测或静态回放计作矩阵提升。
-[公开整理收据及逐条表](../../experiments/pr14-pr15-validation/RESULTS.md#event-conditions-090)
+[公开整理收据及逐条表](../../experiments/archive/pr14-pr15-validation/RESULTS.md#event-conditions-090)
 记录各身份与复现入口；原始运行材料尚为 local-only。修正输入专项新执行 EVAS 16/16、Spectre 15/16；近邻根粗档差异保留，
 仅细化步长或各自收紧时间/表达式容差均恢复两次计数。另两个诊断双方均 2/2。
 这些只满足候选窗口下的有限观察要求，首次编译失败检查点仍保留。
