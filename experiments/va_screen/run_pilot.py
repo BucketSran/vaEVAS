@@ -6,12 +6,13 @@ import os
 from pathlib import Path
 import subprocess
 import time
+from .identity import snapshot_files, verify_current_inputs
 
 ROOT=Path(__file__).resolve().parents[2]
 
 
 def main():
-    tasks=sorted((ROOT/'benchmark/tasks').glob('va0[1-6]-*'))
+    tasks=sorted(verify_current_inputs())
     assert len(tasks)==6
     for task in tasks:
         r=json.loads((ROOT/'runs/va-screen/calibration'/task.name/'report.json').read_text())
@@ -23,9 +24,7 @@ def main():
     assert len(mutations)==6 and all(m['compiled_and_rejected'] for m in mutations)
     output=ROOT/'runs/va-screen'/time.strftime('pilot-%Y%m%d-%H%M%S')
     output.mkdir(parents=True,exist_ok=False)
-    files=[p for task in tasks for p in task.rglob('*') if p.is_file()]
-    files += [p for p in (ROOT/'experiments/va_screen').glob('*.py')]
-    manifest={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)}
+    manifest=snapshot_files(ROOT,tasks)
     (output/'input-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     metadata=dict(protocol='one-shot-no-tools-no-feedback',models=['glm-5.3','gpt-6.1-sol'],effort='xhigh',harbor='0.23.0',
                   attempts_per_task=1,task_count=6,model_calls_max=12,model_retry=0,

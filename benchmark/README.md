@@ -39,6 +39,17 @@ benchmark/tasks/<task-id>/
 [官方任务说明](https://docs.harborframework.com/core-concepts/tasks/overview)。
 评分程序按 Harbor 约定写入 `/logs/verifier/reward.txt`，或使用其支持的 `reward.json` 格式。
 
+## 共享评分程序
+
+[checkers/spectre_waveform.py](checkers/spectre_waveform.py) 是六题共用的评分源码。
+[任务生成器](../experiments/va_screen/build_tasks.py)将它复制到每题的 `tests/verify.py`；
+任务运行时执行该副本，`tests/cases.json` 保存各题的网表、独立期望值与容差。
+
+修改共享源后，需要同步受影响的执行副本，并重做其参考解和错误版本校准。
+生成器会重建全部六题文件，运行前应保留正在修改的任务。提交前使用
+[身份检查](../experiments/va_screen/README.md#身份与再校准)确认源、副本及校准记录一致。
+校准通过证明这些已测条件，不能证明评分程序覆盖任意错误实现。
+
 ## 环境与结果
 
 每个任务在自己的 `environment/` 中声明运行环境。

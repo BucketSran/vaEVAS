@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "operation": "provenance-reanalysis-no-new-simulation",
+  "recorded_utc": "2026-10-03T17:15:31.526286+00:00",
+  "source_snapshot_commit": "c60cdd4e829670c19269fdea5e9c9b7ead8d5022",
+  "original_run_git_head": "2446668f9063da479d61f12f4737a23cb2a2d657",
+  "frozen_manifest": "FROZEN_INPUTS.json",
+  "frozen_manifest_sha256": "87713d5b4384e1ccedb0508176b847c60ba5179792d6645323fa487759f782cd",
+  "calibration_reports": [
+    {
+      "candidate_sha256": "9e69374b200cbd5ff544116615e84f27465fb3c450858a26b17d7e898043cb92",
+      "cases_sha256": "1a06c76426bd32d1261809e3bf2c1e2a27cd45912811e0f5b310c8f27e830d4c",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "9dbfecbc4c259130dcc60db362d8aaa76098653b90ac71067af87fad036bbbcb",
+      "original_report_sha256": "01c54d1a27106b4ac6ca2139df57e7771a21f2e9feefbdb1897d560e5e9d2178",
+      "cases": [
+        {
+          "name": "levels-delay-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 15,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "b0509b43a51fec3ab6474137be0f72dcf3c9db701a8297f134e7f38af3a05771",
+          "waveform_sha256": "299903c0b372e35612218483ce8a1795964a166ab7bd9013cdb3580351446bae"
+        },
+        {
+          "name": "levels-delay-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 15,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "1b7bbbc012e22691b6b7d3a1d7ae33580ead97efd97832d930aef968cb72b44c",
+          "waveform_sha256": "df7659467c8185e011ef60fc46608129d0610c15e6af87aa46a250e5f82acf94"
+        }
+      ],
+      "task": "va01-and2"
+    },
+    {
+      "candidate_sha256": "ada4977c1ae5509deedb6e1c981685da552cd104a04c64f860bc68b2d7a52a48",
+      "cases_sha256": "09639a1d538230bfae43f573eaea9f82361e4ff33026e463923850c8598d652f",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "045e2765fdbb013cc27021075f18e81f140b036fa507a4ee2cfb6a8cf6c1eb90",
+      "original_report_sha256": "214a67d60ec927a08418526031c904de76625e707fd6136d71817be8c9e22416",
+      "cases": [
+        {
+          "name": "handshake-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 504,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "bd100b34207052475cc8d2a39d46e9851dd9377a2db33b2a1ccebc1582f900d2",
+          "waveform_sha256": "6a4e7c7ffe398b6f55ad03116d8cf31df78dbb4c11271c98bcf17a273aff1a1b"
+        },
+        {
+          "name": "handshake-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 504,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "a6c919baa35373b8113b7eef1914ad34f53cae9a4b136b58142a5ab0891e0fd6",
+          "waveform_sha256": "5edf64c1f75f3f81584851a67324f84e54d633294a91bfd56b31d03e54ff06c5"
+        }
+      ],
+      "task": "va02-sar-handshake"
+    },
+    {
+      "candidate_sha256": "112dafc4f54cc40dc4d0431aac25c59dfda9dc175c11c637d46ee29e2d96191c",
+      "cases_sha256": "7c9ba601c1a7bdb58caf0b5d2f0c48ecf70bf50c384f323639cb2658d5beb844",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "7931c3d4bc0e6bbb5a5de6d4a995f41f93dbf0f4e70ee7f9c6501f73901fd06f",
+      "original_report_sha256": "0fa5c9d75f60f32ca99aa42eb9f07833b721a3904324ff8c211522e5cf67725c",
+      "cases": [
+        {
+          "name": "calendar-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 1758,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "df7ac85b21881dc2f1b0dbb940968acad63261b7b3fcd76d59186dfde4661d3e",
+          "waveform_sha256": "6d67b84ecfd2e8fe31f9f8aa8eaa55223408a5e9de0af2bd4339c68939d8ee38"
+        },
+        {
+          "name": "calendar-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 342,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "723842d824a3a37de9435e4222442b544eba7e9f8db6a1c1c4540ba11854655a",
+          "waveform_sha256": "9554e70d105910fedbbc04b3eb1d4ae0413368ce179e9bc84c6657bf0ce6c6ce"
+        }
+      ],
+      "task": "va03-zoom-timing"
+    },
+    {
+      "candidate_sha256": "a6424342b25d16016c353e61774f358ac9bef8aff17230beb7ac18fcb9a4fc9d",
+      "cases_sha256": "b465a0bba52e9da5c6395669bcb61cceb7ff4811a30d95c8e7f1b48f4bd1d7bd",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "b9885dbadd6ffe6aacdca3198e89d828d4213b4e52d73ca1f052d5f3bf7ca16b",
+      "original_report_sha256": "fd2b4f6de30f4ae7e08aac543392a3b7b792f781f30887bada5627d2dbfb8b72",
+      "cases": [
+        {
+          "name": "updates-clamps-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 375,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "d797b92641be5c072ec591f0c489aca26cc9853cce304ea9810668bfd408babc",
+          "waveform_sha256": "e9e9c6d755b55ad59e7ed0dc1ce8a047b26d6d7d30248ee0f3f1fbedb2407901"
+        },
+        {
+          "name": "updates-clamps-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 375,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "3fda725f32e44ce4141d1571fc76c65ebc471794bd90b6041ebaa769c048738a",
+          "waveform_sha256": "23b695aecc9868a2d8c24a1cccacb7970d022201c95e5e763341924010624f24"
+        }
+      ],
+      "task": "va04-gain-calibration"
+    },
+    {
+      "candidate_sha256": "b2444e31c6915fdf9197bb2c791b0fb8d811fb0ce0c0930c37bd1fcdd4ed7f1d",
+      "cases_sha256": "ed980f5c8ef866074fe56959fc35ad2b515f21e6317051380f42a3ced7b42964",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "3fe432def059ba47c677820b0ee24d4f0b0c95cb39875cc1048b6ecd21b8f51d",
+      "original_report_sha256": "3988a6a83c53942272a3a18b12199e1cee0a86860e7df8cda59b7049421f93fd",
+      "cases": [
+        {
+          "name": "phase-integral-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 48,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "769cd26a19680842ddceed97068d79d891984df047a129a22146e0fa87ecc129",
+          "waveform_sha256": "b358a12c35f5740906f8ff3b2872fb4d3b66ed200464198b0b74f4d5d8ad062f"
+        },
+        {
+          "name": "phase-integral-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 37,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "d10559390c633a9caae430086984e18ec844fcb32fd9898db768d5575e2ff0e6",
+          "waveform_sha256": "87f7f2027ca36c4a5b1d15bab8ed67341e61f08ac6268459909c36172d323290"
+        }
+      ],
+      "task": "va05-dynamic-vco"
+    },
+    {
+      "candidate_sha256": "62ba3f4f1719f6b5918d025546b88554617f387537931853fbc878a3ce69ba95",
+      "cases_sha256": "8eb66fc3b64e1668671a21e0624de9e3ce0a31892f98bce70f635a528d88021b",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 1,
+      "spectre_version": "",
+      "transport_input_sha256": "91258e56e1207d0f39538fc7e3d2d335db08eb6fcf5c1b9a37a05c39b9450354",
+      "original_report_sha256": "a5e06f11b1c0aafc8051b3c96aa9521f9e413d355a6b8dc247b9e1f4731f3e7e",
+      "cases": [
+        {
+          "name": "loaded-ode-0",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 600,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "e5142b7e0077450c8947535e60e16e2f845ca124c69e518093893851b4c3ffd2",
+          "waveform_sha256": "2ffd16faeb6cc12ae0e7d05a96c0e88126fb3e4760edfc54369a3ae832037598"
+        },
+        {
+          "name": "loaded-ode-1",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 600,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "4841c5fa1278ab778f229ef481a9522ee2b8a35c525ec0c43d0eeb6f9d3c352c",
+          "waveform_sha256": "d598be759ffcd54dc66cf96b107d105887943be6aad0cf41d260a0b98277f916"
+        },
+        {
+          "name": "loaded-ode-2",
+          "status": "graded",
+          "passed": true,
+          "sample_count": 600,
+          "bad_samples": 0,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "20c975b7aafbac3383e0c600ea84913bf76f8c0b26bc0023d9b74bded3212269",
+          "waveform_sha256": "48970144eb982152e759d2b33307a6837dadb364c0d77462ee1b1656235d7e19"
+        }
+      ],
+      "task": "va06-loaded-opamp"
+    }
+  ],
+  "mutation_reports": [
+    {
+      "candidate_sha256": "c30814d28cb1867757ba287827d7d748a044b9ef5f8926ced5c5792b82bd9a56",
+      "cases_sha256": "1a06c76426bd32d1261809e3bf2c1e2a27cd45912811e0f5b310c8f27e830d4c",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "5aee7e129acff3dd49a81a8791c9bcc2d117410d73938054cf0287ccba407d38",
+      "original_report_sha256": "e9d67f61d8c0430fad04d2f7033550ee99c74d4173e2c92fa78ab28da4d9e322",
+      "cases": [
+        {
+          "name": "levels-delay-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 15,
+          "bad_samples": 7,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "b0509b43a51fec3ab6474137be0f72dcf3c9db701a8297f134e7f38af3a05771",
+          "waveform_sha256": "f7d8695cec39f29925bfe6af508bf93e92c4d82514b335a4fc91a15b652c24a8"
+        },
+        {
+          "name": "levels-delay-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 15,
+          "bad_samples": 7,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "1b7bbbc012e22691b6b7d3a1d7ae33580ead97efd97832d930aef968cb72b44c",
+          "waveform_sha256": "b2c20ba1077ac2eea6a4f5b9d3d94bfbe305ce3285dae40235b99361b7e68164"
+        }
+      ],
+      "task": "va01-and2"
+    },
+    {
+      "candidate_sha256": "49a68fe0fa2c47652e53c99d4635abcfbe690053bd86bb29ed148f64acae78ff",
+      "cases_sha256": "09639a1d538230bfae43f573eaea9f82361e4ff33026e463923850c8598d652f",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "084e82d4d80fbd37e58efd2da3496cd770e319e6d7e54bdda4463b142ce8bcde",
+      "original_report_sha256": "c2558802a5d61c2a3401b69cafd2412660818baa14f9c23c2d52cb560220d7de",
+      "cases": [
+        {
+          "name": "handshake-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 504,
+          "bad_samples": 162,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "bd100b34207052475cc8d2a39d46e9851dd9377a2db33b2a1ccebc1582f900d2",
+          "waveform_sha256": "b8458f42192744333a240c468fcd5398f60f9a613699f401355b999343d5dd40"
+        },
+        {
+          "name": "handshake-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 504,
+          "bad_samples": 162,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "a6c919baa35373b8113b7eef1914ad34f53cae9a4b136b58142a5ab0891e0fd6",
+          "waveform_sha256": "1c3937bdf935445475df6646ce05613f273c8db1f1886155b9e2899a8a788057"
+        }
+      ],
+      "task": "va02-sar-handshake"
+    },
+    {
+      "candidate_sha256": "e87be04445f410535331b12f6390849b78c874531925de98b2983837ef9c9c38",
+      "cases_sha256": "7c9ba601c1a7bdb58caf0b5d2f0c48ecf70bf50c384f323639cb2658d5beb844",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "b25867b4ed5f8cb9e30f1f453131e4cd0a47732386d80a5681140ce267efd235",
+      "original_report_sha256": "8f9ebef684d876273080c163fe7748fb0489af07b63e9ed6ebc79621a8b8615b",
+      "cases": [
+        {
+          "name": "calendar-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 1758,
+          "bad_samples": 0,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "df7ac85b21881dc2f1b0dbb940968acad63261b7b3fcd76d59186dfde4661d3e",
+          "waveform_sha256": "f9533216832d144f628b90d06dce5f12d184c701ebc109243c3636144c9a649a"
+        },
+        {
+          "name": "calendar-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 342,
+          "bad_samples": 0,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "723842d824a3a37de9435e4222442b544eba7e9f8db6a1c1c4540ba11854655a",
+          "waveform_sha256": "9bbf199f6935253ff312c5154ae5c60f1ec8d60e0397ed5fc68ae14315ac6fbd"
+        }
+      ],
+      "task": "va03-zoom-timing"
+    },
+    {
+      "candidate_sha256": "dce647829c001725e4eb4454c8c033495e96451c00733a185fb0b0ca4ed5f956",
+      "cases_sha256": "b465a0bba52e9da5c6395669bcb61cceb7ff4811a30d95c8e7f1b48f4bd1d7bd",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "03434675aa524e781a473f5fdecfa0f765709d87e4e643bcd781c692aff0155c",
+      "original_report_sha256": "c50bb186117d9408dd13de0f347ef08af4006f47f079e765d4cd1f9828ba7b83",
+      "cases": [
+        {
+          "name": "updates-clamps-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 375,
+          "bad_samples": 60,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "d797b92641be5c072ec591f0c489aca26cc9853cce304ea9810668bfd408babc",
+          "waveform_sha256": "0ad406e57ee25278e25b3ec62f1a55813b059cebee241caa6cefc4747e9eba10"
+        },
+        {
+          "name": "updates-clamps-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 375,
+          "bad_samples": 24,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "3fda725f32e44ce4141d1571fc76c65ebc471794bd90b6041ebaa769c048738a",
+          "waveform_sha256": "2ecb2bdef6a5546a70d36585be644ed443380296d05f6abe1b9cb380e6cb7b68"
+        }
+      ],
+      "task": "va04-gain-calibration"
+    },
+    {
+      "candidate_sha256": "a39d47f1514b658ab8ce0d6acaa9c97e59f8b39e84e08e8d839ad4c5b6ddb6f3",
+      "cases_sha256": "ed980f5c8ef866074fe56959fc35ad2b515f21e6317051380f42a3ced7b42964",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "13cb50bc5ee91b969540ad3d288b90181fc2f61a03aa9301c93d1f60f633af44",
+      "original_report_sha256": "9a78094ce16d9c70c128f6631086191ee588d38e571289b2703f086af4392ebd",
+      "cases": [
+        {
+          "name": "phase-integral-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 48,
+          "bad_samples": 22,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "769cd26a19680842ddceed97068d79d891984df047a129a22146e0fa87ecc129",
+          "waveform_sha256": "3e7051d4e3e794297d341979f029f7f5fb44a5ef1b66c7b8c23da9709dddd510"
+        },
+        {
+          "name": "phase-integral-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 37,
+          "bad_samples": 14,
+          "bad_edge_checks": 1,
+          "netlist_sha256": "d10559390c633a9caae430086984e18ec844fcb32fd9898db768d5575e2ff0e6",
+          "waveform_sha256": "1cedba8af0ca5f32e467c252fe6da10a4d21fdbe0c65044e4bdd172dec6e436a"
+        }
+      ],
+      "task": "va05-dynamic-vco"
+    },
+    {
+      "candidate_sha256": "f01d03e478cc30aeb3ff4ad9882466ec1c2fc5e64f8e2c49866ad85d751c2ead",
+      "cases_sha256": "8eb66fc3b64e1668671a21e0624de9e3ce0a31892f98bce70f635a528d88021b",
+      "checker_sha256": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf",
+      "status": "completed",
+      "reward": 0,
+      "spectre_version": "",
+      "transport_input_sha256": "dacc16a6314b1937553b5b2063398ac7412d612a852d470e1cf127b3a05646b1",
+      "original_report_sha256": "efd09a1b03531c71e76cd757b916b4db1fdb64401f978becbf4ad8abed1ef5dd",
+      "cases": [
+        {
+          "name": "loaded-ode-0",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 600,
+          "bad_samples": 118,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "e5142b7e0077450c8947535e60e16e2f845ca124c69e518093893851b4c3ffd2",
+          "waveform_sha256": "c742473a7eff29d1a068c9040ed2cd71c6cc6325f006dbbb233f921a700c50b4"
+        },
+        {
+          "name": "loaded-ode-1",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 600,
+          "bad_samples": 59,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "4841c5fa1278ab778f229ef481a9522ee2b8a35c525ec0c43d0eeb6f9d3c352c",
+          "waveform_sha256": "9efccf8b2740745887b8ed881b16e9509eed7819f10c8992e731af0495a9f50d"
+        },
+        {
+          "name": "loaded-ode-2",
+          "status": "graded",
+          "passed": false,
+          "sample_count": 600,
+          "bad_samples": 194,
+          "bad_edge_checks": 0,
+          "netlist_sha256": "20c975b7aafbac3383e0c600ea84913bf76f8c0b26bc0023d9b74bded3212269",
+          "waveform_sha256": "f7e0d6fde0b4a2003791568c53bd86d73ef246770c1c51fba641e70083895862"
+        }
+      ],
+      "task": "va06-loaded-opamp"
+    }
+  ],
+  "source_identity_checked_after_run": {
+    "benchmark/checkers/spectre_waveform.py": "461cbef90bebc9f8caa8b93df592f7cc71e4142d1d85a233b686cf9a774fefbf"
+  },
+  "source_identity_note": "The original manifest records six executed verify.py copies. The shared source was checked after the run against those copies, not frozen as a separate entry before the run.",
+  "availability": {
+    "inputs": "repository-contained at source_snapshot_commit",
+    "compact_reports": "repository-contained",
+    "raw_reports_and_model_outputs": "local-only",
+    "remote_waveforms": "local-only",
+    "raw_archive": "2026-10-04-benchmark-publication/raw",
+    "public_download": null
+  },
+  "limits": [
+    "The historical spectre_version report field is empty; the documented version was not independently recovered during this reanalysis.",
+    "No new simulator run or model generation was performed.",
+    "Six targeted semantic mutants do not establish checker completeness."
+  ]
+}

@@ -1148,5 +1148,15 @@
       "passed_conditions": 2,
       "remote_root": "/home/jinzhihong/chips-private/validation/va-screen/va05-dynamic-vco-b3b651e1934e"
     }
-  ]
+  ],
+  "publication_identity": {
+    "operation": "publish-existing-analysis-no-new-generation",
+    "source_snapshot_commit": "c60cdd4e829670c19269fdea5e9c9b7ead8d5022",
+    "original_run_git_head": "2446668f9063da479d61f12f4737a23cb2a2d657",
+    "source_dirty_at_original_run": true,
+    "frozen_manifest": "FROZEN_INPUTS.json",
+    "frozen_manifest_sha256": "87713d5b4384e1ccedb0508176b847c60ba5179792d6645323fa487759f782cd",
+    "analysis_source_at_snapshot": "experiments/va_screen/summarize.py",
+    "availability": "repository-contained inputs and summaries; local-only raw outputs and remote waveforms"
+  }
 }

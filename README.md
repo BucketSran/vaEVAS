@@ -9,8 +9,11 @@ benchmark 组织建模任务与验收要求，EVAS 为支持范围内的模型�
 benchmark 用于评估 Verilog-A 建模能力：给定模型规格，检查所编写的模型是否满足任务要求。
 建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
 
-**当前状态：**[benchmark/](benchmark/README.md) 已建立占位入口，任务格式已确定为 Harbor 原生格式。
-旧 vaBench 任务集尚未迁入。任务加入后放在 `benchmark/tasks/`，共享镜像构建文件放在 `benchmark/containers/`。
+**当前状态：**[benchmark/](benchmark/README.md) 包含六个 Harbor 格式的内部初筛任务，
+覆盖逻辑、SAR 握手、时序、校准、VCO 和带负载运放。任务、环境与评分入口见模块说明；
+[首轮结果](experiments/va_screen/RESULTS.md)记录模型提交、失败原因和验证边界。
+[历史参考资料](benchmark/reference/README.md)包含 vaBench v1/v4 与原始模型来源。
+这批任务作为基线保留，尚未作为正式 benchmark 发布；部分第三方资料仅限内部保存。
 
 ## EVAS 仿真器
 
@@ -42,7 +45,8 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
 `0.225 V`、`1.825 V` 和 `-0.325 V`。
 
 更多非线性与瞬态示例见 [EVAS 使用说明](evas/README.md#构建与运行)。
-benchmark 的运行入口将随任务集补齐，目前可先运行 EVAS 示例。
+benchmark 的校准、身份复核与运行步骤见[初筛说明](experiments/va_screen/README.md)。
+运行需要 Harbor 和已配置的 Spectre 环境；身份复核无需商业仿真器。
 
 ## 验证与实验
 
