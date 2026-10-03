@@ -182,7 +182,7 @@ impl LinearContinuous {
             let spec = &program.operators[operator];
             let origin = spec.origin().clone();
             let (kind, states, input, laplace) = match spec {
-                OperatorSpec::Idt { input, ic: _, .. } => {
+                OperatorSpec::Idt { input, .. } => {
                     let row = affine_for_operator_input(input, program, &origin)?;
                     let state = state_count;
                     state_count += 1;
