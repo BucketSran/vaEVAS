@@ -38,5 +38,5 @@ main 两列复用 0.9.0 历史收据；本地联合两列来自 62 次新 EVAS �
 
 main：各档 21 观测达标、7 编译拒绝、3 内核拒绝。本地联合：各档 30 观测达标、1 内核拒绝。
 
-d2-constant 的 wrapped 输出跨 wrap 区间无法认证；完整诊断与所有记录见 [整理收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/runs/parallel-gap-integration/results/original31.json)。
+d2-constant 的 wrapped 输出跨 wrap 区间无法认证；完整诊断与所有记录见 [整理收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/parallel-gap-integration/results/original31.json)。
 代码身份、已知精度缺口和交付边界见 [总览](../README.md)。

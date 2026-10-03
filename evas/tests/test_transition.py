@@ -5,7 +5,7 @@ an EVAS-generated golden waveform. Binary64 rounding allowance is 2e-12 V.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["TIMED-OPERATOR"]
+GUARDS = ["TRANSITION", "TIMED-OPERATOR"]
 
 import copy
 import json

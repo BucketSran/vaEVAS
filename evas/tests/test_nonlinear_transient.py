@@ -1,7 +1,7 @@
 """Transient entry contracts for state-free polynomial voltage equations."""
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["NONLINEAR-TRANSIENT"]
+GUARDS = ["NONLINEAR", "NONLINEAR-TRANSIENT"]
 
 
 from decimal import Decimal, getcontext

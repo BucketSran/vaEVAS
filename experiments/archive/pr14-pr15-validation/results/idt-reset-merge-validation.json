@@ -76,7 +76,7 @@
       "raw_artifact_availability": "local ignored runs only; waveforms and logs are not published",
       "max_executions": 62,
       "timeout_s": 90,
-      "command_template": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source <frozen-source> --root <fresh-output> --kernel evas/rust_core/target/debug/evas-kernel",
+      "command_template": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source <frozen-source> --root <fresh-output> --kernel evas/rust_core/target/debug/evas-kernel",
       "schema_version": 9
     },
     "candidate": {
@@ -144,7 +144,7 @@
       "raw_artifact_availability": "local ignored runs only; waveforms and logs are not published",
       "max_executions": 62,
       "timeout_s": 90,
-      "command_template": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source <frozen-source> --root <fresh-output> --kernel evas/rust_core/target/debug/evas-kernel",
+      "command_template": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source <frozen-source> --root <fresh-output> --kernel evas/rust_core/target/debug/evas-kernel",
       "source_worktree_dirty_at_launch": false,
       "schema_version": 11
     }

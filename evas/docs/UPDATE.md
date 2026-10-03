@@ -4,12 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
-## 2026-10-03 docs/traceability 重构
+## PR35：docs/traceability 重构（待合并）
 
 - docs/ 重组为 README / UPDATE / PROCESS / CAPABILITIES / math/（四章节迁入）；
-  CAPABILITIES 瘦身为一句话矩阵，证据链接交给自动生成的 TRACEABILITY.md。
-- tests/ 全部 38 个文件挂 GUARDS 守护标签；新增 scripts/traceability.py
-  生成追溯矩阵并报告契约-测试缺口。
+  CAPABILITIES 保留支持边界与证据入口，TRACEABILITY 汇集文件级关联。
+- 测试文件声明 GUARDS；scripts/traceability.py 校验标签、目标及生成物是否同步，
+  不把标签完整当作语义覆盖完整或执行证明。
+- 目录迁移后的冻结清单与历史收据恢复原身份；当前导航与固定历史链接分别维护。
 - 此前文档重构（examples 三课、validation/smoke 分层、experiments 三分类、
   benchmark/reference 迁入）见对应提交 7d0398d / 6d806a0 / 8de77e9。
 

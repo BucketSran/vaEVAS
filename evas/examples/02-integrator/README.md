@@ -10,7 +10,7 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/02-integrator/sim.js
 ## 电路
 
 ```
- input(方波斜坡: +0.2 → −0.2)          output(三角波)
+ input(斜坡: +0.2 → −0.2)              output(抛物线)
   ────────┐                              ▲
           │  V(out,0) = ∫ V(in,0)/1µs dt + 0.25V(初值)
           ▼
@@ -39,4 +39,4 @@ PYTHONPATH=evas/src python3 -m evas transient evas/examples/02-integrator/sim.js
 0 → 0.25    1 → 0.40    2 → 0.45    3 → 0.40    4 → 0.25
 ```
 
-正是三角/抛物线形状：升到中间的峰 0.45 再回落。
+输出沿抛物线上升，到中间的峰 0.45 V 后回落。

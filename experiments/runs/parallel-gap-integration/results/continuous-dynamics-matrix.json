@@ -127,8 +127,8 @@
   "analysis_script_sha256": "56fd5167ec552fa5119236f7d8f5365ee529034928a5182d267d0e396960a5b9",
   "configurations": 62,
   "adapter_sha256": {
-    "experiments/archive/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
-    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8"
+    "experiments/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+    "experiments/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8"
   },
   "summary": {
     "base": {
@@ -206,7 +206,7 @@
   ],
   "compatibility": {
     "baseline_runtime_commit": "d451605bf9991ceea010c68af9cb1143f1b50754",
-    "baseline_receipt": "experiments/runs/parallel-gap-integration/results/precision-chain-matrix.json",
+    "baseline_receipt": "experiments/parallel-gap-integration/results/precision-chain-matrix.json",
     "baseline_receipt_sha256": "010c6c3823238e004c5ae8261a974a675e9b9e4329c301233832fed7fbcc5971",
     "configurations": 62,
     "identical_csv_count": 62,

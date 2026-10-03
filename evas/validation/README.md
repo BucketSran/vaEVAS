@@ -7,7 +7,8 @@
 预期结果来自模型声明的方程与状态转移，而非 EVAS 输出或 Spectre 波形。
 跨后端一致性用于诊断；两个实现给出相近结果，并不能单独证明它们正确。
 
-契约与守护测试、收据的对应关系见[追溯矩阵](../docs/TRACEABILITY.md)（自动生成）。
+测试文件声明的契约关联与能力证据入口见[追溯矩阵](../docs/TRACEABILITY.md)；
+它不证明逐条件覆盖或执行通过。
 验证目录分两级：[smoke/](smoke/) 是各能力路径的最小可运行冒烟集，
 只验证链路连通，不带期望值；[cases/](cases/) 及各协议文档构成完整验证集。
 
@@ -67,7 +68,7 @@
 
 这是固定旧版本的[历史矩阵](../../experiments/backends/dvs2-four-backend-validation/results/MATRIX.md)，
 不把新版 EVAS 成绩填入旧表。失败、执行身份和设置分别保留。
-IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md)。
+IR15 至 IR16 的历次验证见[联合验证记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md)。
 
 ## 专项契约
 

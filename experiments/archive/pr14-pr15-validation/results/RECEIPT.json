@@ -81,12 +81,12 @@
     "all_passed": true
   },
   "source_sha256": {
-    "experiments/archive/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
-    "experiments/archive/pr14-pr15-validation/audit.py": "f85ad6e07252f7828be72de3680d25df4d4f57bf9fb572f0067d8e5b557d0e80",
-    "experiments/archive/pr14-pr15-validation/test_operators.py": "f4fbe02eea13eedf3a08977305e6285a68299ef781ca5e4c1ab76612300eb45a",
-    "experiments/archive/pr14-pr15-validation/test_matrix.py": "eecd7e3cbc9d79f1c87bde897b95392bef825a4b29389cf898ebf05a0c1e881d",
-    "experiments/archive/pr14-pr15-validation/slew_refinement.py": "8914b873ee9e4cd7133f503cfc83aee19dba5344cb6986f2ccd69699b816e522",
-    "experiments/archive/pr14-pr15-validation/operators.py": "29985efe8d9b110288cdf0a4db228636de1d84cb799669b3910a2158788b1a39"
+    "experiments/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+    "experiments/pr14-pr15-validation/audit.py": "f85ad6e07252f7828be72de3680d25df4d4f57bf9fb572f0067d8e5b557d0e80",
+    "experiments/pr14-pr15-validation/test_operators.py": "f4fbe02eea13eedf3a08977305e6285a68299ef781ca5e4c1ab76612300eb45a",
+    "experiments/pr14-pr15-validation/test_matrix.py": "eecd7e3cbc9d79f1c87bde897b95392bef825a4b29389cf898ebf05a0c1e881d",
+    "experiments/pr14-pr15-validation/slew_refinement.py": "8914b873ee9e4cd7133f503cfc83aee19dba5344cb6986f2ccd69699b816e522",
+    "experiments/pr14-pr15-validation/operators.py": "29985efe8d9b110288cdf0a4db228636de1d84cb799669b3910a2158788b1a39"
   },
   "source_archive_sha256": "91a5d06e44a326d89f654ab6c8acf866cb095fd0bd44f2661497ef64f6ae8bf9",
   "kernels": {
@@ -211,7 +211,7 @@
   "full_operator_analysis_sha256": "22c5ec77c34f9277cb61a678992be33121119e02a9b48a0444eb3a31287891b9",
   "refinement_analysis_sha256": "2a970aa1c29b41f1bb533f06f0fe37d53c8b746c1ddd5aa95ac8db5d038cb3e1",
   "availability": {
-    "validation_sources_and_curated_results": "repository-contained in experiments/archive/pr14-pr15-validation; raw artifacts are not publicly archived",
+    "validation_sources_and_curated_results": "repository-contained in experiments/pr14-pr15-validation; raw artifacts are not publicly archived",
     "raw_artifacts": "local ignored run and thu-sui task directory only; no public download",
     "local_run_root": "runs/pr14-pr15-validation-20260929-01",
     "archive_exclusions": "Generated .ahdlSimDB directories, shared objects and AppleDouble metadata. Every retrieved file is hash-verified; full manifests retained. Original remote matrix grading verified full manifests including compiled objects."

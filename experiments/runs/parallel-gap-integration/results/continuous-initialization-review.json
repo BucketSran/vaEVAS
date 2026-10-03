@@ -226,7 +226,7 @@
     },
     {
       "check": "original31_matrix",
-      "command": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-evas --kernel runs/pr30-dc-initialization-20261001T072623Z-e07f69/bin/evas-kernel",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-evas --kernel runs/pr30-dc-initialization-20261001T072623Z-e07f69/bin/evas-kernel",
       "configurations": 62,
       "completed_manifest": "matrix-evas/FILE_MANIFEST.json",
       "completed_manifest_sha256": "8443526a39e0c962b0a23de58b52d2d0fddfc4fee144919ad06acb5e1b8e727a",
@@ -241,7 +241,7 @@
     },
     {
       "check": "matrix_analysis",
-      "command": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-evas --identity runs/pr30-dc-initialization-20261001T072623Z-e07f69/SOURCE_IDENTITY.json --output runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-analysis.json",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-evas --identity runs/pr30-dc-initialization-20261001T072623Z-e07f69/SOURCE_IDENTITY.json --output runs/pr30-dc-initialization-20261001T072623Z-e07f69/matrix-analysis.json",
       "returncode": 0,
       "log": "matrix-analysis.log",
       "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
@@ -377,7 +377,7 @@
         "observations_within_targets": 31
       }
     },
-    "baseline_receipt": "experiments/runs/parallel-gap-integration/results/continuous-dynamics-matrix.json",
+    "baseline_receipt": "experiments/parallel-gap-integration/results/continuous-dynamics-matrix.json",
     "baseline_receipt_sha256": "63818ae388bdb05ee241ba20f48306eb7cac92cac57281dc291c91765872a835",
     "baseline_runtime_commit": "ba5ab46e90ec4769e47478a492b80ab2dc7a09b6",
     "identical_csv": 62,

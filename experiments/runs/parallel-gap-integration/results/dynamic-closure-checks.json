@@ -184,7 +184,7 @@
     },
     {
       "check": "original31",
-      "command": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/dynamic-closure-20261001T082726Z-dc8127/matrix-evas --kernel runs/dynamic-closure-20261001T082726Z-dc8127/bin/evas-kernel",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --root runs/dynamic-closure-20261001T082726Z-dc8127/matrix-evas --kernel runs/dynamic-closure-20261001T082726Z-dc8127/bin/evas-kernel",
       "returncode": 0,
       "log": "matrix.log",
       "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
@@ -193,7 +193,7 @@
     },
     {
       "check": "matrix-analysis",
-      "command": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/dynamic-closure-20261001T082726Z-dc8127/matrix-evas --identity runs/dynamic-closure-20261001T082726Z-dc8127/SOURCE_IDENTITY.json --output runs/dynamic-closure-20261001T082726Z-dc8127/matrix-analysis.json",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/precision-chain-20260930T202707Z-e1c89a/frozen-inputs --run runs/dynamic-closure-20261001T082726Z-dc8127/matrix-evas --identity runs/dynamic-closure-20261001T082726Z-dc8127/SOURCE_IDENTITY.json --output runs/dynamic-closure-20261001T082726Z-dc8127/matrix-analysis.json",
       "returncode": 0,
       "log": "matrix-analysis.log",
       "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
@@ -340,7 +340,7 @@
     "identical_csv": 62,
     "identical_analysis": 62,
     "identical_settings_except_engine": 62,
-    "baseline_receipt": "experiments/runs/parallel-gap-integration/results/continuous-initialization-review.json",
+    "baseline_receipt": "experiments/parallel-gap-integration/results/continuous-initialization-review.json",
     "baseline_receipt_sha256": "5a4a28d854fcaf3213d5dad07f7c6388904da33c660e6d6b34f4488e08a67065",
     "source_input_manifest_sha256": "ca8518198aed16ba02a1efcc967fe9cceeb3d15d1d9dbc0db83ba8d933cedec4",
     "checker_sha256": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",

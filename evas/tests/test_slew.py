@@ -8,7 +8,7 @@ claimed for other inputs.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["TIMED-OPERATOR"]
+GUARDS = ["SLEW", "TIMED-OPERATOR"]
 
 import copy
 from fractions import Fraction as F

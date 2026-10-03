@@ -6,7 +6,7 @@ separate from the historical non-standard brace form.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["LAPLACE"]
+GUARDS = ["DYNAMICS", "LAPLACE"]
 
 import copy
 from decimal import Decimal, getcontext

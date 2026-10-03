@@ -55,7 +55,7 @@
     },
     {
       "check": "matrix_execution",
-      "command": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
+      "command": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source FROZEN_INPUTS --root FRESH_MATRIX --kernel ARCHIVED_KERNEL",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -65,7 +65,7 @@
     },
     {
       "check": "matrix_analysis",
-      "command": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
+      "command": "python3 -B experiments/parallel-gap-integration/analyze.py --source FROZEN_INPUTS --run FRESH_MATRIX --identity SOURCE_IDENTITY --output FRESH_ANALYSIS",
       "exit_code": 0,
       "tests": 62,
       "ignored": 0,
@@ -87,9 +87,9 @@
     "bytes": 265393146,
     "availability": "local-only"
   },
-  "matrix_receipt": "experiments/runs/parallel-gap-integration/results/accuracy-optimization-matrix.json",
+  "matrix_receipt": "experiments/parallel-gap-integration/results/accuracy-optimization-matrix.json",
   "matrix_receipt_sha256": "c4695666fd5a5b7fdb5f86c054cbef48041305db04b1b1ec3044720f940860b3",
-  "performance_receipt": "experiments/runs/parallel-gap-integration/results/accuracy-optimization-profile.json",
+  "performance_receipt": "experiments/parallel-gap-integration/results/accuracy-optimization-profile.json",
   "performance_receipt_sha256": "e818c1ba4c04cb6f1b5b0777f8c1fb58c6a1c97bcfc74640105be8ba45d4e519",
   "formal_dvs_qualification": "I",
   "continuous_time_qualified": false

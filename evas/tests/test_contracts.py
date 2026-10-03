@@ -1,7 +1,7 @@
 """Parameter binding and versioned branch identity contracts, with hand answers."""
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["ANALOG", "LANG"]
+GUARDS = ["LANG", "LIN"]
 
 
 import copy

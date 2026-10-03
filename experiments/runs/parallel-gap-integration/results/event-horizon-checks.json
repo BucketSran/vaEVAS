@@ -245,7 +245,7 @@
         "unittest",
         "discover",
         "-s",
-        "experiments/runs/parallel-gap-integration",
+        "experiments/parallel-gap-integration",
         "-p",
         "test_lifecycle_contract.py",
         "-v"
@@ -260,7 +260,7 @@
       "command": [
         "python3",
         "-B",
-        "experiments/archive/pr14-pr15-validation/matrix.py",
+        "experiments/pr14-pr15-validation/matrix.py",
         "evas",
         "--source",
         "runs/event-horizons-20261002/matrix-inputs",
@@ -298,10 +298,10 @@
     }
   ],
   "checker_sha256": {
-    "experiments/backends/dvs2-spectre-validation/check_results.py": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
-    "experiments/archive/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
+    "experiments/dvs2-spectre-validation/check_results.py": "189f9102244ad2804338a0ac2dc1a030db9dedd6cf1570e273b3622c96454d6b",
+    "experiments/pr14-pr15-validation/matrix.py": "9702f82ae5048f383f83b99b91abe52f7b8a8b41d174f26b44832a5354070a9b",
     "evas/validation/check_lifecycle_math.py": "e2c06a4e2e4428dfbcd0a2cabe46002aa331ddd45c996b801856dbd8e81ebb74",
-    "experiments/runs/parallel-gap-integration/test_lifecycle_contract.py": "d062e251982d3198fcacc9bdf1dc36c292b405b554323f5d52fae3c970a120ef"
+    "experiments/parallel-gap-integration/test_lifecycle_contract.py": "d062e251982d3198fcacc9bdf1dc36c292b405b554323f5d52fae3c970a120ef"
   },
   "new_developer_tests": {
     "python_methods": 9,

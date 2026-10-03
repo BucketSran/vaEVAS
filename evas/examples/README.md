@@ -13,7 +13,7 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
 | 课 | 学什么 | 入口 |
 | --- | --- | --- |
 | 01 | 静态求解；`.va` 模型与 `sim.json` 清单的字段对应 | [01-static-gain/](01-static-gain/README.md) |
-| 02 | 瞬态仿真；`idt` 积分让输出"记住"过去（三角波） | [02-integrator/](02-integrator/README.md) |
+| 02 | 瞬态仿真；`idt` 对斜坡积分，得到抛物线输出 | [02-integrator/](02-integrator/README.md) |
 | 03 | 事件系统；`cross` 过阈检测驱动计数器（阶梯波） | [03-event-counter/](03-event-counter/README.md) |
 
 跑完三课你会理解 EVAS 的两个输入文件如何分工：

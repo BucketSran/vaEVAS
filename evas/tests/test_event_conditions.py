@@ -5,7 +5,7 @@ at the chosen event time. Fraction supplies boundary controls, not EVAS output.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["EVENT-CONDITIONS"]
+GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import copy
 from fractions import Fraction as Q

@@ -5,7 +5,7 @@ regressions, separate from the frozen 31-condition cross-backend suite.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["EVENT-CONDITIONS"]
+GUARDS = ["CROSS"]
 
 from fractions import Fraction as Q
 import copy

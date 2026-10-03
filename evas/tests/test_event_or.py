@@ -5,7 +5,7 @@ EVAS output or a second implementation of its root finder.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["EVENT-CONDITIONS"]
+GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import copy
 import json

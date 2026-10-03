@@ -131,7 +131,7 @@ vout - vref = min(0.875, max(-0.75, y0))
 306 Python / 64 Rust 与 Clippy、格式检查通过。原 31×2 全矩阵沿用冻结输入和判据新执行，
 两档各 25/31；原达标 48 份 CSV 哈希与 PR26 收据一致，剩余 6 条明确拒绝。
 详情见[验收修复结果](../../experiments/archive/pr14-pr15-validation/RESULTS.md#analog-conditions-acceptance-review)与
-[新收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
+[新收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)。
 该轮执行时尚未合入 main，未新执行 Spectre，正式资格仍 I。
 当前联合矩阵与精度链见[最新验证](README.md#latest-evas-checkpoint)，不改写这些历史身份。
 

@@ -101,7 +101,7 @@ EVAS 62 次复用。首轮分析还因 `report.py` 同名导入停止，修复�
 最终新增 Spectre 合计 86 次尝试，其中 74 次成功仿真、12 次夹具编译失败；
 新增 EVAS 合计 36 配置。失败没有被移入数值通过数。
 
-[完整收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/archive/pr14-pr15-validation/results/analog-gap-spectre-comparison.json)记录逐配置答案、请求/生效控制、
+[完整收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-gap-spectre-comparison.json)记录逐配置答案、请求/生效控制、
 源码/内核/检查器身份、重用来源和归档哈希。2,123 份新 raw 工件及复用原始清单均已验证。
 原始数据仅本地 ignored runs / thu-sui 保留，尚无公开下载入口。
 正式资格仍 **I**；本轮没有新 main 执行、联合整合、速度排名、发布或合并。
@@ -133,7 +133,7 @@ PWL 前向误差，不以优化后是否存在 `select` 为开关；Python/Rust 
 首次矩阵因归档内核副本丢失执行权限产生 54 个适配器失败，修复文件模式后使用独立输出目录
 重跑；另一次重试在 JSON 元组/列表预检查时停止，未启动配置。失败记录均保留，未冒充数值结论。
 
-[整理收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)记录被测源码、内核、工具链、
+[整理收据](https://github.com/BucketSran/vaEVAS/blob/a07f401466189324a7e6df0493c6d853f3841102/experiments/pr14-pr15-validation/results/analog-conditions-acceptance-review.json)记录被测源码、内核、工具链、
 冻结输入、请求/生效设置、逐配置结论、失败尝试及工件哈希。原始材料仅本地保留。
 本候选尚未合入 main，也未新执行 Spectre；正式资格仍 I，不声明连续时间精度或最新后端排名。
 

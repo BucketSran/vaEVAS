@@ -17,7 +17,8 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
  ref ─────────────┴── 0 (地)
 ```
 
-三条电压贡献相加：`V(out,ref) = 1.5·V(u) − 0.5·V(v) + 0.125`
+三条电压贡献相加：`V(out,ref) = 1.5·V(u,ref) − 0.5·V(v,ref) + 0.125`。
+本例两个增益之和为 1，因此对地输出为 `V(out) = 1.5·V(u) − 0.5·V(v) + 0.125`。
 
 ## `.va` 与 `sim.json` 的对应
 

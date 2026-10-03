@@ -55,7 +55,13 @@ starting set, not proof of complete coverage or a requirement to run every row.
 | EVAS checker or grading | Owning validation/experiment's `test_*.py`, command below | Accept/reject calibration, then reanalysis of affected archived results. Benchmark grading follows its own task contract. |
 | Frozen validation identity | `python3 -B scripts/verify_validation_version.py` | Hash verification is not simulation validation. |
 
-For a module set from the table, use this command with the listed module arguments:
+For GUARDS tags, capability/evidence navigation or the traceability generator,
+run `python3 -B scripts/traceability.py --check`. Regenerate the matrix after
+reviewing the changed declarations. Generator behavior changes also require
+`python3 -B -m unittest discover -s scripts/tests -v`; this checks the maintenance
+tool, not EVAS semantics or qualification. Preserve frozen identities when moving files.
+
+For a Python module set from the table:
 
 ```sh
 PYTHONPATH=evas/src:evas/tests python3 -m unittest -v test_affine test_contracts

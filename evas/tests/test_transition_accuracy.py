@@ -5,7 +5,7 @@ timer/cross timing window to the voltage budget. No simulator supplies goldens.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["TIMED-OPERATOR"]
+GUARDS = ["TRANSITION", "TIMED-OPERATOR"]
 
 from fractions import Fraction as F
 import unittest

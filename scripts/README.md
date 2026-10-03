@@ -4,6 +4,19 @@
 具体实验的运行器与分析器在 [experiments/](../experiments/README.md)。
 以下命令均从仓库根目录执行，使用 Python 3.10+。
 
+## 生成和检查追溯矩阵
+
+```sh
+python3 -B scripts/traceability.py
+python3 -B scripts/traceability.py --check
+python3 -B -m unittest discover -s scripts/tests -v
+```
+
+`traceability.py` 读取测试 GUARDS 标签、能力表证据入口和 DUT 目录，生成
+[追溯矩阵](../evas/docs/TRACEABILITY.md)。`--check` 不写文件，拒绝无效标签、
+失效本地目标和过期矩阵。它不执行测试，也不证明完整覆盖或验证资格。
+维护工具的回归在 `scripts/tests/`，不计入 EVAS 测试或原矩阵分母。
+
 ## 核验冻结的验证集
 
 ```sh

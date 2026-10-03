@@ -6,7 +6,7 @@ add history contribution permutations, alpha-renaming and observation taps.
 They are development regressions, not new conditions in the fixed DVS set.
 """
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["DYNAMICS", "TIMED-OPERATOR"]
+GUARDS = ["TRANSITION", "TIMED-OPERATOR", "COMPOSE"]
 
 from fractions import Fraction as F
 from itertools import permutations

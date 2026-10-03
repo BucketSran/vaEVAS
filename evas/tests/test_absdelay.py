@@ -6,7 +6,7 @@ construct expected values. Zero delay is an EVAS extension, not an LRM demand.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["TIMED-OPERATOR"]
+GUARDS = ["ABSDELAY", "TIMED-OPERATOR"]
 
 import copy
 from fractions import Fraction

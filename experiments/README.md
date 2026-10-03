@@ -20,7 +20,7 @@
 | 当前支持什么、还有哪些限制？ | [能力表](../evas/docs/CAPABILITIES.md) |
 | 当前版本实际验证了什么？ | [当前执行证据](runs/parallel-gap-integration/README.md#当前证据) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
-| Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/runs/parallel-gap-integration/README.md#shared-lifecycle-review) |
+| Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
 | 旧四后端的结果与失败是什么？ | [历史矩阵](backends/dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](backends/dvs2-four-backend-validation/DIAGNOSIS.md) |
 | 怎样重新运行或取得原材料？ | [当前复现入口](runs/parallel-gap-integration/README.md#复现入口)及各目录的协议/资产说明 |
 
@@ -36,7 +36,8 @@
 | [backends/](backends/) | 跨后端对照 | [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
 | [archive/](archive/) | 已结束批次 | [dvs2-starter-pilot](archive/dvs2-starter-pilot/README.md)：试点输入生成与工具身份；[dvs2-history-validation](archive/dvs2-history-validation/README.md)：精确有理数事件判据与旧波形重判；[pr14-pr15-validation](archive/pr14-pr15-validation/README.md)：该批次矩阵与算子探针 |
 
-归档目录保持原字节，只读引用；其中 [pr14-pr15-validation/matrix.py](archive/pr14-pr15-validation/matrix.py)
+历史收据与冻结输入保持原字节；仍在使用的工具可维护其导入路径。
+其中 [pr14-pr15-validation/matrix.py](archive/pr14-pr15-validation/matrix.py)
 **目前仍承担当前 EVAS 矩阵执行**，待其职责迁移到 runs/ 后才真正退役。
 
 **工具依赖现状：** [静态回归](../evas/tests/run_static_regression.py)直接导入
@@ -44,6 +45,23 @@ backends 中 Spectre 目录的输入与检查器；后者又依赖 archive 的 s
 当前矩阵执行器还读取旧工具身份并复用四后端适配工具。
 归档目录因此不能删除；迁移必须同时处理导入、命令、输入生成与身份记录，
 对迁移后的工具做校准并产生新的分析身份。历史收据与冻结快照保持原字节。
+
+### 旧路径与当前位置
+
+旧收据里的路径属于记录所绑定的提交。查历史时使用原提交和原路径；
+查当前资产时使用下表。此表不改变原哈希或执行命令，也不证明新工具已重跑。
+
+| 历史路径 | 当前目录 |
+| --- | --- |
+| `experiments/dvs2-starter-pilot/` | [archive/dvs2-starter-pilot/](archive/dvs2-starter-pilot/) |
+| `experiments/dvs2-history-validation/` | [archive/dvs2-history-validation/](archive/dvs2-history-validation/) |
+| `experiments/pr14-pr15-validation/` | [archive/pr14-pr15-validation/](archive/pr14-pr15-validation/) |
+| `experiments/dvs2-spectre-validation/` | [backends/dvs2-spectre-validation/](backends/dvs2-spectre-validation/) |
+| `experiments/dvs2-four-backend-validation/` | [backends/dvs2-four-backend-validation/](backends/dvs2-four-backend-validation/) |
+| `experiments/parallel-gap-integration/` | [runs/parallel-gap-integration/](runs/parallel-gap-integration/) |
+
+冻结 v1 的 README 也保留旧上下文；阅读其相对链接时使用
+[迁移前的固定版本](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/validation/versions/v1/README.md)。
 
 ## 已归档材料
 

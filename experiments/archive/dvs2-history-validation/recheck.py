@@ -122,9 +122,12 @@ def recheck(evidence):
     for relative, sha in snapshot['snapshot_files'].items():
         if digest(ROOT / relative) != sha:
             raise ValueError('v1 snapshot artifact drift: ' + relative)
-    for relative in ('experiments/archive/dvs2-starter-pilot/analyze.py', 'experiments/archive/dvs2-starter-pilot/suite.py'):
-        if digest(ROOT / relative) != snapshot['git_files'][relative]:
-            raise ValueError('v1 reader dependency drift: ' + relative)
+    for name in ('analyze.py', 'suite.py'):
+        # The frozen identity names the path at the original run. Only the
+        # maintained reader location moved; the original hash stays unchanged.
+        original = 'experiments/dvs2-starter-pilot/' + name
+        if digest(PILOT / name) != snapshot['git_files'][original]:
+            raise ValueError('v1 reader dependency drift: ' + original)
     records = []
     for backend in BACKENDS:
         for condition_id in CONDITION_IDS:

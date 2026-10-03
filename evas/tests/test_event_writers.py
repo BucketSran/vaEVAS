@@ -6,7 +6,7 @@ Simultaneous selected writers remain an atomic runtime conflict.
 """
 
 # Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
-GUARDS = ["EVENT-CONDITIONS"]
+GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import unittest
 

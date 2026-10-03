@@ -107,7 +107,7 @@
       "elapsed_s": 238.26046454103198,
       "log": "original31_execution.log",
       "log_sha256": "44bc8c17832c7f7a5889a757ee727a6d69709817cf933ee6ebc72987fbde053b",
-      "command_display": "python3 -B experiments/archive/pr14-pr15-validation/matrix.py evas --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --root runs/certified-mixed-review-20261001T121949Z-311235/matrix --kernel runs/certified-mixed-review-20261001T121949Z-311235/bin/evas-kernel"
+      "command_display": "python3 -B experiments/pr14-pr15-validation/matrix.py evas --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --root runs/certified-mixed-review-20261001T121949Z-311235/matrix --kernel runs/certified-mixed-review-20261001T121949Z-311235/bin/evas-kernel"
     },
     {
       "check": "original31_analysis",
@@ -115,7 +115,7 @@
       "elapsed_s": 40.66592237504665,
       "log": "original31_analysis.log",
       "log_sha256": "27d7232e7a8f59040d4d0e673cd36d1e859dd2c5749a74680843ec666fe81803",
-      "command_display": "python3 -B experiments/runs/parallel-gap-integration/analyze.py --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --run runs/certified-mixed-review-20261001T121949Z-311235/matrix --identity runs/certified-mixed-review-20261001T121949Z-311235/SOURCE_IDENTITY.json --output runs/certified-mixed-review-20261001T121949Z-311235/matrix-analysis.json"
+      "command_display": "python3 -B experiments/parallel-gap-integration/analyze.py --source runs/certified-mixed-review-20261001T121949Z-311235/frozen-inputs --run runs/certified-mixed-review-20261001T121949Z-311235/matrix --identity runs/certified-mixed-review-20261001T121949Z-311235/SOURCE_IDENTITY.json --output runs/certified-mixed-review-20261001T121949Z-311235/matrix-analysis.json"
     }
   ],
   "source_identity": {
