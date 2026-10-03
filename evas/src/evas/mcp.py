@@ -111,7 +111,15 @@ class Server:
                 except (ValueError, RecursionError):
                     response = self.error(None, -32700, 'Parse error')
             if response is not None:
-                output_stream.write(json.dumps(response, allow_nan=False, separators=(',', ':')) + '\n')
+                encoded = json.dumps(response, allow_nan=False, separators=(',', ':')) + '\n'
+                # Text content escapes structured JSON again. Bound the actual
+                # wire message rather than assuming twice the payload size.
+                if len(encoded.encode()) > MAX_MESSAGE:
+                    response = dict(jsonrpc='2.0', id=response['id'], result=dict(
+                        content=[dict(type='text', text='Response budget exceeded; request a smaller page')],
+                        isError=True))
+                    encoded = json.dumps(response, separators=(',', ':')) + '\n'
+                output_stream.write(encoded)
                 output_stream.flush()
 
 

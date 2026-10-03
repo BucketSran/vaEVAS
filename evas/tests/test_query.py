@@ -54,3 +54,11 @@ class StaticQueryTests(unittest.TestCase):
         for bad in [0, 1001, True]:
             with self.assertRaises(ValueError):
                 query_static(index, 'nodes', limit=bad)
+
+    def test_split_contributions_preserve_node_dependencies(self):
+        for body in ['V(y,r)<+V(u,r)+2;', 'V(y,r)<+V(u,r); V(y,r)<+2;']:
+            program = compile_sources({'query.va': model(body)}, [instance()])
+            index = static_index(program)
+            dependencies = {program.nodes[n] for c in index['contributions'] for n in c['input_nodes']}
+            self.assertEqual(dependencies, {'0', 'u'})
+            self.assertTrue(all(program.nodes[c['positive']]=='y' for c in index['contributions']))

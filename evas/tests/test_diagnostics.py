@@ -13,6 +13,7 @@ from unittest.mock import patch
 from evas import KernelError
 from evas.diagnostics import Session, capture, canonical, digest
 from evas.mcp import Server
+from evas.mcp import MAX_MESSAGE
 from evas.runtime import _invoke
 from test_affine import KERNEL, model
 
@@ -156,3 +157,16 @@ class DiagnosticTests(unittest.TestCase):
             _invoke(request, KERNEL, diagnostics_path=sidecar)
         self.assertEqual(error.exception.detail['kind'], 'diagnostic_io')
         self.assertEqual(sidecar.read_text(), 'preserve')
+
+    def test_mcp_wire_budget_includes_escaped_text_content(self):
+        class LargeSession:
+            def query(self, *args, **kwargs):
+                return dict(items=['\\'*250000])
+        server = Server(LargeSession())
+        server.phase = 'ready'
+        message = dict(jsonrpc='2.0', id=1, method='tools/call',
+                       params=dict(name='evas_trace', arguments={}))
+        output = io.StringIO()
+        server.serve(io.StringIO(json.dumps(message)+'\n'), output)
+        self.assertLessEqual(len(output.getvalue().encode()), MAX_MESSAGE)
+        self.assertTrue(json.loads(output.getvalue())['result']['isError'])
