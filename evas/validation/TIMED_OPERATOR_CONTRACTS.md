@@ -5,6 +5,8 @@
 以下编号是行为义务和数学样例，尚未冻结成共同 VA 条件，正式样本数 `N=null`。
 样例已公开参与设计，不能称为未见确认集。
 受限 timer、transition、absdelay、slew 后续已由 PR12–15 交付，
+内部电压投影的分支候选见[算子手册](../docs/math/operators.md#absdelay-与-slew-的内部电压投影)；
+旧执行不证明这项扩展。
 实现、实验和已知差异见[能力总表](../docs/CAPABILITIES.md)及[算子手册](../docs/math/operators.md)。
 PR12 已审查合入的同刻联立规则见[事件手册](../docs/math/events.md)；下文保留原候选前态读取规则作为历史，不为适配后端静默改写原答案。
 
@@ -194,3 +196,13 @@ python3 evas/validation/check_timed_operator_math.py
 脚本不是通用算子实现，不读取 EVAS，不编译 VA，不检查后端波形，不执行 Spectre，
 不提供 timer 初始化/终点资格、回退或同刻因果证明。
 通过只说明本页已列数学锚点自洽；后续共同模型、独立观察器和后端执行是不同的交付物。
+
+## 内部仿射输入的分支候选
+
+新增 [projected_history 模型](cases/projected_history/dut.va)与
+[manifest](cases/projected_history/sim.json)。`z=u+.5z` 的独立解为 `2u`。
+刺激为 `u=min(t,2)`、stop=8，delay=1，slew 限速为 `+1/-2`。
+延迟节点应为 `2 min(max(t-1,0),2)`，限速输出应为 `min(t,4)`。
+[开发测试](../tests/test_history_projection.py)检查独立值、等价直接编码和加密观察网格。
+内部关系必须仿射且无离散状态或历史依赖，投影区间不能丢弃；历史反馈仍拒绝。
+该候选未合并，新增开发样例不计入原矩阵或未见确认集，没有新后端对照结果。

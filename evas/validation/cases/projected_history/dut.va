@@ -1,0 +1,9 @@
+module projected_history(u,y,r);
+input u; output y; inout r;
+electrical u,y,r,z,d;
+analog begin
+  V(z,r) <+ V(u,r) + .5*V(z,r);
+  V(d,r) <+ absdelay(V(z,r),1);
+  V(y,r) <+ slew(V(z,r),1,-2);
+end
+endmodule

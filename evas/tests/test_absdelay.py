@@ -156,11 +156,6 @@ class AbsDelayRejections(unittest.TestCase):
 
     def test_internal_state_nested_nonlinear_and_feedback_inputs_rejected(self):
         cases = [
-            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r),1n);", "electrical z;"),
-            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(0*V(z,r)+V(u,r),1n);", "electrical z;"),
-            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)-V(z,r)+V(u,r),1n);", "electrical z;"),
-            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,z)+V(u,r),1n);", "electrical z;"),
-            model("V(z,r)<+V(u,r); V(y,r)<+absdelay(V(z,r)/1e308/1e308+V(u,r),1n);", "electrical z;"),
             model("@(initial_step) q=1; V(y,r)<+absdelay(q,1n);", "real q;"),
             model("V(y,r)<+absdelay(absdelay(V(u,r),1n),1n);"),
             model("V(y,r)<+absdelay(V(u,r)*V(u,r),1n);"),

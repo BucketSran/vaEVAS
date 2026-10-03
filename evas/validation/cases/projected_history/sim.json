@@ -1,0 +1,5 @@
+{
+  "models": ["dut.va"],
+  "instances": [{"name":"dut","module":"projected_history","connections":{"u":"u","y":"y","r":"0"}}],
+  "transient": {"sources":{"u":[[0,0],[2,2],[8,2]]},"output_times":[0,1,2,3,4,5,8],"stop":8,"max_step":8}
+}

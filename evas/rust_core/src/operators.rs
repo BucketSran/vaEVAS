@@ -76,6 +76,68 @@ fn direct_points(
     Ok((points, bounds))
 }
 
+/// Solve a time-invariant affine voltage input before materializing its PWL.
+/// This is algebraic voltage feedback, not feedback through a history state.
+fn projected_points(
+    input: &Expression,
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+    origin: &Origin,
+) -> Result<DirectPoints, Error> {
+    let driven_nodes: BTreeSet<_> = driven
+        .iter()
+        .filter_map(|name| program.nodes.iter().position(|n| n == name))
+        .collect();
+    let dependencies = |expression: &Expression, owner: &str| {
+        let bound = affine(expression, program, owner)?;
+        if !bound.state_dependencies.is_empty() || !bound.operator_dependencies.is_empty() {
+            return Err(Error::new(
+                "unsupported_operator",
+                format!(
+                    "PWL voltage projection cannot depend on event state or operator history at {}",
+                    origin.label()
+                ),
+            ));
+        }
+        Ok(bound.node_dependencies)
+    };
+    let nodes = dependencies(input, &origin.instance)?;
+    if nodes.iter().all(|n| *n == 0 || driven_nodes.contains(n)) {
+        return direct_points(input, program, trajectory, driven, origin);
+    }
+    let mut pending: Vec<_> = nodes.into_iter().collect();
+    let mut seen = BTreeSet::new();
+    while let Some(node) = pending.pop() {
+        if node == 0 || driven_nodes.contains(&node) || !seen.insert(node) {
+            continue;
+        }
+        for c in &program.contributions {
+            if c.positive == node || c.negative == node {
+                pending.extend([c.positive, c.negative]);
+                pending.extend(dependencies(&c.rhs, &c.origin.instance)?);
+            }
+        }
+    }
+    let projection =
+        crate::event_accuracy::GuardBounds::expressions(program, driven, &[Some(input)])?;
+    let mut points = Vec::new();
+    let mut bounds = Vec::new();
+    for &time in &trajectory.knots {
+        let value = projection.values(&trajectory.value_bounds(time))[0];
+        // Choose a finite representative inside the original-IR enclosure.
+        // Keep a point/subnormal intact; halving both ends would lose it.
+        let representative = if value.lo == value.hi {
+            value.lo
+        } else {
+            value.lo * 0.5 + value.hi * 0.5
+        };
+        points.push((time, representative));
+        bounds.push(value);
+    }
+    Ok((points, bounds))
+}
+
 #[derive(Clone)]
 struct DirectInput {
     points: Vec<(f64, f64)>,
@@ -974,7 +1036,7 @@ impl Operators {
                     origin,
                 } => {
                     let (points, bounds) =
-                        direct_points(input, program, trajectory, driven, origin)?;
+                        projected_points(input, program, trajectory, driven, origin)?;
                     entries.push(Runtime::AbsDelay(AbsDelay::enclosed(
                         points, bounds, *delay,
                     )?));
@@ -1036,7 +1098,7 @@ impl Operators {
                     origin,
                 } => {
                     let (points, bounds) =
-                        direct_points(input, program, trajectory, driven, origin)?;
+                        projected_points(input, program, trajectory, driven, origin)?;
                     entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
                 }
             }
