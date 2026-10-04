@@ -1,7 +1,34 @@
 # 诊断与只读查询
 
 诊断说明内核已经做了什么。它不调用模型求值，不定位新事件，也不改变数值验收。
-普通 `solve` / `transient` 的 JSON 格式和 IR16 保持不变。
+普通 `solve` / `transient` 的成功 JSON 格式沿用当前 IR17。
+
+## 编译和执行失败
+
+Python `CompileError.diagnostic` 与 `KernelError.diagnostic` 提供
+`diagnostic_version=1`、`code`、`category`、`stage`、`capability` 和 `message`。
+有准确来源时提供 `location`/`instance`；没有时不猜测。
+CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
+`KernelError.detail` 保留原始信息；内核原有 kind/message/sample 字段继续可用。
+该附加诊断版本独立于求解 IR，不要求迁移 IR17。
+
+登记入口为 [errors.py](../src/evas/errors.py)。当前具名规则包括：
+
+| code | 阶段与原因 |
+| --- | --- |
+| `unsupported_timer_dependency` | lowering：timer 参数依赖连续电压或算子；不会误报未声明节点 |
+| `parameter_type` / `parameter_range` | binding：整数子集限制，或生效值违反范围 |
+| `unsupported_integer_arithmetic` | binding：受限前端入口中的整数除法或溢出不能用实数 IR 代替 |
+| `vector_declaration` / `unsupported_vector` | binding：声明不一致，或超出静态向量子集 |
+| `unsupported_initial_event` | parse：缺少所需分析生命周期或混合全局/监测事件 |
+| `scs_input` / `unsupported_scs` | netlist：非法测试台，或未支持的输入语义 |
+| `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
+
+其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源或
+基础设施归类。`unsupported_*` 标记实现范围，未登记的失败保持 `unknown`。
+自由文本的旧编译出口也可返回 `unknown`；本批没有完成所有出口的细分类、lint 或 benchmark 适配。
+编译成功不意味着执行或精度验收成功。回归见
+[test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。
 
 ## 取得一次运行
 

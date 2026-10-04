@@ -100,7 +100,13 @@ def inline_functions(model: Model) -> Model:
         expand(dummy)
     return replace(model,
                    parameters={n: expand(e) for n,e in model.parameters.items()},
+                   parameter_ranges={n: tuple(replace(r,
+                       lower=expand(r.lower) if isinstance(r.lower,Expr) else r.lower,
+                       upper=expand(r.upper) if isinstance(r.upper,Expr) else r.upper) for r in ranges)
+                                     for n,ranges in model.parameter_ranges.items()},
                    arrays={n: tuple(expand(e) for e in bounds) for n,bounds in model.arrays.items()},
+                   node_ranges={n: tuple(expand(e) for e in bounds) if bounds else None for n,bounds in model.node_ranges.items()},
+                   port_ranges={n: tuple(expand(e) for e in bounds) if bounds else None for n,bounds in model.port_ranges.items()},
                    children=tuple(replace(child, parameters=(tuple(expand(e) for e in child.parameters)
                                                            if isinstance(child.parameters,tuple)
                                                            else {n:expand(e) for n,e in child.parameters.items()}))

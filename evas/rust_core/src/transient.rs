@@ -677,18 +677,15 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         );
     }
     if !request.program.operators.is_empty()
-        && request.program.states.is_empty()
-        && request.program.events.is_empty()
         && request
             .program
             .contributions
             .iter()
             .all(|c| !crate::analog::has_select(&c.rhs))
-        && request
-            .program
-            .contributions
-            .iter()
-            .any(|c| crate::events::affine(&c.rhs, &request.program, &c.origin.instance).is_err())
+        && request.program.contributions.iter().any(|c| {
+            crate::events::affine(&c.rhs, &request.program, &c.origin.instance)
+                .is_err_and(|error| error.kind == "unsupported_transient")
+        })
     {
         return crate::continuous::run_implicit(
             request.program,

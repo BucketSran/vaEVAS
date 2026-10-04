@@ -19,8 +19,8 @@ class Instance:
     parameters: Mapping[str, float] = field(default_factory=dict)
 
 
-def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
-    """Compile source text and explicit flat instances; never import validation data."""
+def parse_sources(sources: Mapping[str, str]):
+    """Shared parsed module inventory, including preprocessing and pure functions."""
     models = {}
     for path, tokens in preprocess_sources(sources):
         for parsed in Parser('', path, tokens=tokens).parse_all():
@@ -28,6 +28,12 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if model.name in models:
                 raise CompileError(f"duplicate module {model.name!r}")
             models[model.name] = model
+    return models
+
+
+def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
+    """Compile source text and explicit flat instances; never import validation data."""
+    models = parse_sources(sources)
     for instance in instances:
         if (not isinstance(instance, Instance) or not isinstance(instance.name, str)
                 or not isinstance(instance.module, str)):

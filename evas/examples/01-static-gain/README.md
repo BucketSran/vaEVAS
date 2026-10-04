@@ -44,3 +44,14 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
 
 `solutions[].voltages` 按 `nodes` 顺序排列，三组的 `out` 应约为
 **0.225 V、1.825 V、−0.325 V**（可自己代入验证另外两组）。
+
+## 可选 `.scs` 入口
+
+同一个模型也可用 [tb.scs](tb.scs) 指定三角波输入并运行瞬态：
+
+```sh
+PYTHONPATH=evas/src python3 -m evas simulate evas/examples/01-static-gain/tb.scs --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+预期关系为 `out = 2*u - 0.125 V`。结果中的 `saved` 是 save 选择的输出列。
+输入范围和不同于 Spectre 的设置约定见[测试台说明](../../README.md#spectre-风格电压测试台)。
