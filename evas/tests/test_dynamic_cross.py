@@ -88,7 +88,7 @@ class DynamicCrossContracts(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run_guard("laplace_nd(ddt(V(u,r)),'{1,1},'{1,1})+.5")
 
-    def test_guard_only_operator_does_not_erase_state_dependency_in_relay(self):
+    def test_guard_only_operator_with_state_dependent_relay_uses_epoch_history(self):
         source = model("""
           @(initial_step) n=0;
           @(cross(idt(V(z,r),0)-.5,1,1e-9,1e-8)) n=n+1;
@@ -96,9 +96,11 @@ class DynamicCrossContracts(unittest.TestCase):
           V(y,r)<+n;
         """, "integer n; electrical z;")
         program = compile_sources({"guard-only.va": source}, [instance()])
-        with self.assertRaisesRegex(KernelError, "unsupported"):
-            transient(program, {"u": [[0, 0], [2, 2]]}, [0, 2],
-                      stop=2, max_step=2, kernel=KERNEL)
+        result = transient(program, {"u": [[0, 0], [2, 2]]}, [0, 2],
+                           stop=2, max_step=2, kernel=KERNEL)
+        events = result['transient']['events']
+        self.assertEqual(len(events), 1)
+        self.assertAlmostEqual(events[0]['time'], 1, delta=1e-9)
 
     def test_uncertifiable_tangent_fails_explicitly(self):
         with self.assertRaisesRegex(KernelError, "event_resolution"):

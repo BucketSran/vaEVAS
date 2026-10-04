@@ -9,7 +9,18 @@
 [reference/](reference/README.md) 保存历史 vaBench 发布包（v1 完整、v4 最新快照+文档），
 以及按来源和功能整理的[原始 Verilog-A 资料](reference/veriloga/README.md)。
 原始资料分为课题组工程模型与 Cadence 安装库模型，仅供内部研究，不对外分发。
+另有一个仓库自有的候选修复题：[积分三角波振荡器](tasks/va07-triangle-repair/instruction.md)。
+它检查双向事件导致的边界反复换向，单独校准，不加入原六题的初筛成绩。
 任务位于 `tasks/`；每题 `SOURCE.md` 说明原始资产和必要改编，原始源码保持不变。
+
+## 从开发问题积累候选
+
+[CANDIDATES.md](CANDIDATES.md) 记录开发中发现的问题及可能形成的建模任务。
+先保留最小触发条件、独立预期、实际失败和证据；后续再集中做题目改造、评分和环境适配。
+记录候选不自动创建 Harbor 目录，不增加正式题目或评分分母。
+已经存在的振荡器题目是候选原型，仍需按登记表完成正式改造审阅。
+开发、验证和 review 入口都执行这项记录规则，具体步骤见
+[协作流程](../CONTRIBUTING.md#development-bench-candidates)。
 
 ## 任务结构
 
@@ -49,6 +60,14 @@ benchmark/tasks/<task-id>/
 生成器会重建全部六题文件，运行前应保留正在修改的任务。提交前使用
 [身份检查](../experiments/va_screen/README.md#身份与再校准)确认源、副本及校准记录一致。
 校准通过证明这些已测条件，不能证明评分程序覆盖任意错误实现。
+
+[checkers/triangle_oscillator.py](checkers/triangle_oscillator.py) 单独负责振荡器修复题。
+它使用正速度的分段解析积分和三角波折返关系；固定题目配置与错误版本校准见
+[来源和验证边界](tasks/va07-triangle-repair/SOURCE.md)。无需 Spectre 的检查器回归：
+
+```sh
+python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p test_triangle_oscillator.py -v
+```
 
 ## 环境与结果
 

@@ -76,10 +76,10 @@ class EventRelocalization(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run(source)
 
-    def test_history_dependent_relocalization_stays_explicit(self):
+    def test_history_dependent_relocalization_updates_the_root(self):
         source = DUT.replace('V(u,r)-threshold', 'idt(V(u,r),0)-threshold')
-        with self.assertRaisesRegex(KernelError, "unsupported_cross"):
-            run(source)
+        result = run(source)
+        self.assertEqual([event['time'] for event in result['transient']['events']], [.25, 1])
 
     def test_relocalization_with_unrelated_history_preserves_joint_frames(self):
         from test_continuous_dynamics import compile_model, run as run_history, values

@@ -12,6 +12,9 @@ use crate::schedule::{
 };
 use crate::solver::Circuit;
 
+#[path = "transient_history_calendar.rs"]
+mod history_calendar;
+
 struct Frame {
     time: f64,
     states: Vec<f64>,
@@ -241,21 +244,11 @@ struct EventMoment<'a> {
 }
 
 fn prediction_end(
-    model: &EventModel,
+    _model: &EventModel,
     trajectory: &Trajectory,
     next: Option<&ScheduledEvent>,
 ) -> f64 {
-    // Dynamic guard calendars still require the full immutable history.
-    // Event-mutated guard relocalization is a separate capability boundary.
-    if model
-        .guard_operators
-        .iter()
-        .any(|operators| !operators.is_empty())
-    {
-        trajectory.config.stop
-    } else {
-        next.map_or(trajectory.config.stop, |event| event.time)
-    }
+    next.map_or(trajectory.config.stop, |event| event.time)
 }
 
 #[cfg(test)]
@@ -699,7 +692,10 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
-    let (operators, mut crossings) = if relocalize {
+    let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
+    let (operators, mut crossings) = if history_calendar {
+        history_calendar::initialize(&model, &trajectory, &initial)?
+    } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
         let crossings = schedule_held(&model, &trajectory, &bounds)?;
         let operators = Operators::new_until(
@@ -779,7 +775,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         if controller.event < crossings.len()
             && crossings[controller.event].time == controller.accepted.time
         {
-            if relocalize {
+            if history_calendar {
+                controller.accept_history_events(&model, &trajectory, &mut crossings)?;
+            } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
                 controller.accept_events(&model, &trajectory, &crossings)?;
@@ -837,7 +835,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                     Some("earlier scheduled event"),
                 );
             }
-            if relocalize {
+            if history_calendar {
+                controller.accept_history_events(&model, &trajectory, &mut crossings)?;
+            } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
                 controller.accept_events(&model, &trajectory, &crossings)?;

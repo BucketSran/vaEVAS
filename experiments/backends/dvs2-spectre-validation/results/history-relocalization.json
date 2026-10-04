@@ -1,0 +1,1166 @@
+{
+  "accuracy_diagnostic": {
+    "analysis_sha256": "aa2c50e21d23457934c1d8566821bdf77727fe3cbe0b34c5868692d4cb065ce9",
+    "conditions": [
+      {
+        "family": "nonexact",
+        "id": "nonexact-tight",
+        "maxstep": 0.002,
+        "roots": [
+          0.3333333333333333
+        ],
+        "slope": null,
+        "spectre": {
+          "iabstol": 1e-16,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-10,
+          "step": 0.002,
+          "vabstol": 1e-12
+        },
+        "stop": 2.0
+      },
+      {
+        "family": "nonexact",
+        "id": "nonexact-tighter",
+        "maxstep": 0.002,
+        "roots": [
+          0.3333333333333333
+        ],
+        "slope": null,
+        "spectre": {
+          "iabstol": 1e-18,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-12,
+          "step": 0.002,
+          "vabstol": 1e-14
+        },
+        "stop": 2.0
+      },
+      {
+        "family": "oscillator",
+        "id": "oscillator-tight",
+        "maxstep": 0.002,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "spectre": {
+          "iabstol": 1e-16,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-10,
+          "step": 0.002,
+          "vabstol": 1e-12
+        },
+        "stop": 3.0
+      },
+      {
+        "family": "oscillator",
+        "id": "oscillator-tighter",
+        "maxstep": 0.002,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "spectre": {
+          "iabstol": 1e-18,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-12,
+          "step": 0.002,
+          "vabstol": 1e-14
+        },
+        "stop": 3.0
+      }
+    ],
+    "contract": {
+      "denominator": 4,
+      "diagnostic": "Nonexact slope change and outward-only oscillator; two tighter Spectre tolerance profiles. Same 1e-6 V / 2e-7 s observation allowances. No replacement of the original 14-case result.",
+      "evas": {
+        "reltol": 0,
+        "vabstol": 1e-08
+      },
+      "event_time_allowance_s": 2e-07,
+      "expected": "Independent piecewise integrals and hand-computed strict crossings.",
+      "license_timeout_s": 30,
+      "limits": "Development evidence at saved points; assumed observation allowances, not continuous-time qualification or performance comparison.",
+      "runner_sha256": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+      "spectre": {
+        "iabstol": 1e-14,
+        "method": "traponly",
+        "reltol": 1e-08,
+        "vabstol": 1e-10
+      },
+      "timeout_s": 90,
+      "wave_allowance_v": 1e-06
+    },
+    "input_manifest_sha256": "37549271cb9ad56e95b2949e771d3f3bfd0bfc161f81630b3591cbdfe42f62fc",
+    "records": [
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-16,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-10,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-12
+        },
+        "events": [
+          0.3333333338333333
+        ],
+        "execution": {
+          "elapsed_s": 8.944686699658632,
+          "returncode": 0,
+          "timeout": false
+        },
+        "id": "nonexact-tight",
+        "max_event_error_s": 4.999999858590343e-10,
+        "max_history_error_v": 6.127828466873098e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1045,
+        "waveform_sha256": "cf0183f5087042061da38551a19e9229069121f3acab3d87cab8e1a1eac692df"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-18,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-12,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-14
+        },
+        "events": [
+          0.3333333338333333
+        ],
+        "execution": {
+          "elapsed_s": 8.766173204407096,
+          "returncode": 0,
+          "timeout": false
+        },
+        "id": "nonexact-tighter",
+        "max_event_error_s": 4.999999858590343e-10,
+        "max_history_error_v": 1.5098886585462878e-09,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1058,
+        "waveform_sha256": "4c6da3af7f515a89b95bff02330a7393fc1d826153319c20bc0b71d49b2e4262"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-16,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-10,
+          "step": 0.002,
+          "stop": 3.0,
+          "vabstol": 1e-12
+        },
+        "events": [
+          0.500000000276799,
+          1.50000005507923,
+          2.500000159686818
+        ],
+        "execution": {
+          "elapsed_s": 8.893327536061406,
+          "returncode": 0,
+          "timeout": false
+        },
+        "id": "oscillator-tight",
+        "max_event_error_s": 1.5968681799094497e-07,
+        "max_history_error_v": 3.110358251512402e-07,
+        "max_input_error_v": 1.1102230246251565e-15,
+        "pass_": true,
+        "rows": 1581,
+        "waveform_sha256": "75961a6f4e32c90713a7c007cb4a534fa335649cdbbbc27c137f0881e27399da"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-18,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-12,
+          "step": 0.002,
+          "stop": 3.0,
+          "vabstol": 1e-14
+        },
+        "events": [
+          0.5000000005208295,
+          1.50000000207662,
+          2.500000004377681
+        ],
+        "execution": {
+          "elapsed_s": 9.143763367086649,
+          "returncode": 0,
+          "timeout": false
+        },
+        "id": "oscillator-tighter",
+        "max_event_error_s": 4.377680884459778e-09,
+        "max_history_error_v": 6.615418324251721e-09,
+        "max_input_error_v": 1.1102230246251565e-15,
+        "pass_": true,
+        "rows": 1606,
+        "waveform_sha256": "1caf28cbbf2c25e513bf6c30096664c2e75c3807199ff1dc19e0a7bc26674859"
+      }
+    ],
+    "run_id": "history-cross-20261004-accuracy"
+  },
+  "availability": {
+    "models": "Generated by repository-contained history_relocalization.py; diagnostic changes are specified in README and conditions.",
+    "prior_logs": "local/remote private run directories; no public raw-data download claim",
+    "successful_raw": "local-only ignored runs/history-cross-20261004-compatible, -outward and -accuracy",
+    "timeout_raw": "remote-only on thu-sui; partial PSF hashes and tails retained above; no completed waveform is claimed"
+  },
+  "base_commit": "d04f2025e5f17cae1d9018a2b84fdd6aff1791cb",
+  "baseline": {
+    "analysis_sha256": "5e39effcfb213c55ca095f3d29948c028ca5d0d5ce6a71b2af30ad08212e2962",
+    "conditions": [
+      {
+        "family": "faster",
+        "id": "faster-base",
+        "maxstep": 0.02,
+        "roots": [
+          0.5
+        ],
+        "slope": 2.0,
+        "stop": 2.0
+      },
+      {
+        "family": "faster",
+        "id": "faster-fine",
+        "maxstep": 0.002,
+        "roots": [
+          0.5
+        ],
+        "slope": 2.0,
+        "stop": 2.0
+      },
+      {
+        "family": "slower",
+        "id": "slower-base",
+        "maxstep": 0.02,
+        "roots": [
+          1.25
+        ],
+        "slope": 0.5,
+        "stop": 2.0
+      },
+      {
+        "family": "slower",
+        "id": "slower-fine",
+        "maxstep": 0.002,
+        "roots": [
+          1.25
+        ],
+        "slope": 0.5,
+        "stop": 2.0
+      },
+      {
+        "family": "stopped",
+        "id": "stopped-base",
+        "maxstep": 0.02,
+        "roots": [],
+        "slope": 0.0,
+        "stop": 2.0
+      },
+      {
+        "family": "stopped",
+        "id": "stopped-fine",
+        "maxstep": 0.002,
+        "roots": [],
+        "slope": 0.0,
+        "stop": 2.0
+      },
+      {
+        "family": "reversed",
+        "id": "reversed-base",
+        "maxstep": 0.02,
+        "roots": [],
+        "slope": -1.0,
+        "stop": 2.0
+      },
+      {
+        "family": "reversed",
+        "id": "reversed-fine",
+        "maxstep": 0.002,
+        "roots": [],
+        "slope": -1.0,
+        "stop": 2.0
+      },
+      {
+        "family": "oscillator",
+        "id": "oscillator-base",
+        "maxstep": 0.02,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "stop": 3.0
+      },
+      {
+        "family": "oscillator",
+        "id": "oscillator-fine",
+        "maxstep": 0.002,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "stop": 3.0
+      },
+      {
+        "family": "nonexact",
+        "id": "nonexact-base",
+        "maxstep": 0.02,
+        "roots": [
+          0.3333333333333333
+        ],
+        "slope": null,
+        "stop": 2.0
+      },
+      {
+        "family": "nonexact",
+        "id": "nonexact-fine",
+        "maxstep": 0.002,
+        "roots": [
+          0.3333333333333333
+        ],
+        "slope": null,
+        "stop": 2.0
+      },
+      {
+        "family": "threshold",
+        "id": "threshold-base",
+        "maxstep": 0.02,
+        "roots": [
+          0.75
+        ],
+        "slope": null,
+        "stop": 2.0
+      },
+      {
+        "family": "threshold",
+        "id": "threshold-fine",
+        "maxstep": 0.002,
+        "roots": [
+          0.75
+        ],
+        "slope": null,
+        "stop": 2.0
+      }
+    ],
+    "contract": {
+      "denominator": 14,
+      "evas": {
+        "reltol": 0,
+        "vabstol": 1e-08
+      },
+      "event_time_allowance_s": 2e-07,
+      "expected": "Independent piecewise integrals and hand-computed strict crossings.",
+      "license_timeout_s": 30,
+      "limits": "Development evidence at saved points; assumed observation allowances, not continuous-time qualification or performance comparison.",
+      "runner_sha256": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+      "spectre": {
+        "iabstol": 1e-14,
+        "method": "traponly",
+        "reltol": 1e-08,
+        "vabstol": 1e-10
+      },
+      "timeout_s": 90,
+      "wave_allowance_v": 1e-06
+    },
+    "input_manifest_sha256": "06a0016ed2983c01be233b41ce7d7b84c05b653ffb6f45d8a1f1433ea2407f34",
+    "records": [
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000009095
+        ],
+        "id": "faster-base",
+        "max_event_error_s": 9.094947017729282e-12,
+        "max_history_error_v": 5.5067062021407764e-14,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 103,
+        "status": "analyzed",
+        "waveform_sha256": "2c583c3f112c16671142e772aae8504ca4770ecfadaf40568af64f45681d1e4e"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.4999999530667478
+        ],
+        "id": "faster-base",
+        "max_event_error_s": 4.693325217353106e-08,
+        "max_history_error_v": 9.486650620615933e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 172,
+        "status": "analyzed",
+        "waveform_sha256": "30c7e470f27cbfd3f88bc03826dde08e75a4403eb43175511a0bf1803cc736de"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000009095
+        ],
+        "id": "faster-fine",
+        "max_event_error_s": 9.094947017729282e-12,
+        "max_history_error_v": 5.551115123125783e-14,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1003,
+        "status": "analyzed",
+        "waveform_sha256": "e8ce4b7de31735dca2a80d6fcfccf6abdb90021b582e343702339834d6ff776a"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.4999999560910661
+        ],
+        "id": "faster-fine",
+        "max_event_error_s": 4.390893387773431e-08,
+        "max_history_error_v": 8.881786905945432e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1057,
+        "status": "analyzed",
+        "waveform_sha256": "d8bdf7f40350d92307dd6b0d56add28b37b065c8bfaf62b61e93963b05a25974"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          1.250000000010914
+        ],
+        "id": "slower-base",
+        "max_event_error_s": 1.0913936421275139e-11,
+        "max_history_error_v": 9.992007221626409e-15,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 103,
+        "status": "analyzed",
+        "waveform_sha256": "e68b6491b1a6faacda348632b676a09fe56848fefc4bf9d18c437f77b9b7ff76"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          1.250000176125941
+        ],
+        "id": "slower-base",
+        "max_event_error_s": 1.761259409427396e-07,
+        "max_history_error_v": 8.781297089477391e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 166,
+        "status": "analyzed",
+        "waveform_sha256": "d14b31904858f6296dbe4ce02716f4a2123df2e22f0580ca33b3fe7af74b9aab"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          1.250000000010914
+        ],
+        "id": "slower-fine",
+        "max_event_error_s": 1.0913936421275139e-11,
+        "max_history_error_v": 1.021405182655144e-14,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1003,
+        "status": "analyzed",
+        "waveform_sha256": "16e6d6a8a41ee05fe41f1ce14516d20384167825a192fb177c5d13165208b581"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          1.250000143289649
+        ],
+        "id": "slower-fine",
+        "max_event_error_s": 1.432896490349833e-07,
+        "max_history_error_v": 7.139482560702959e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1053,
+        "status": "analyzed",
+        "waveform_sha256": "740e7fa3645b333c773eedb966e6532a7d3b2989ba41d0f0531185b07df96aab"
+      },
+      {
+        "backend": "evas",
+        "events": [],
+        "id": "stopped-base",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 2.3869795029440866e-15,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 101,
+        "status": "analyzed",
+        "waveform_sha256": "ef0ea4ee452b0db479d77e65681c14579e1d1889d398601240ee3a965947c23a"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [],
+        "id": "stopped-base",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 9.48798757061109e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 168,
+        "status": "analyzed",
+        "waveform_sha256": "71e1cff85d73430aff117d4ca27db7c9aba3ba106945dc973dcfafeed26680dd"
+      },
+      {
+        "backend": "evas",
+        "events": [],
+        "id": "stopped-fine",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 2.3869795029440866e-15,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1001,
+        "status": "analyzed",
+        "waveform_sha256": "d5f50767b7edaffbe593cddf9c0dcd2f2857ddf1748cd420efcaeb37f1959f95"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [],
+        "id": "stopped-fine",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 8.882399790688389e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1056,
+        "status": "analyzed",
+        "waveform_sha256": "75dabfdc1c11a343b1a1e69cd9c8e6ad3e07b041d0b74a5a1714e9402f9e080e"
+      },
+      {
+        "backend": "evas",
+        "events": [],
+        "id": "reversed-base",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 8.215650382226158e-15,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 101,
+        "status": "analyzed",
+        "waveform_sha256": "aa74d7f0b221d57132adb6842a032fb0ff6ad3e5b72f708785ea73c56e77a089"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [],
+        "id": "reversed-base",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 8.84177302484801e-08,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 170,
+        "status": "analyzed",
+        "waveform_sha256": "d8351d6da2a0d7e2f31eda44bf2a099a2f75f2f8b2de86ff80317ed82c8ec658"
+      },
+      {
+        "backend": "evas",
+        "events": [],
+        "id": "reversed-fine",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 8.659739592076221e-15,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1001,
+        "status": "analyzed",
+        "waveform_sha256": "52c87bd48338a3dea40e75046c622791fc9d58c4db4d283f127dd8d7f667ec90"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [],
+        "id": "reversed-fine",
+        "max_event_error_s": 0.0,
+        "max_history_error_v": 1.025805966836657e-07,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1057,
+        "status": "analyzed",
+        "waveform_sha256": "87c09e583383b63e257125810c364ca402fa4200ee1ab0643a02311ddbb38505"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000003638,
+          1.5000000000072984,
+          2.5000000000292038
+        ],
+        "id": "oscillator-base",
+        "max_event_error_s": 2.920375052894997e-11,
+        "max_history_error_v": 3.636702050613394e-12,
+        "max_input_error_v": 2.220446049250313e-16,
+        "pass_": true,
+        "rows": 157,
+        "status": "analyzed",
+        "waveform_sha256": "3401de17652dd12e1ceae1ce784a081394b28f08a72bbbe56f2d64834af259db"
+      },
+      {
+        "backend": "spectre",
+        "id": "oscillator-base",
+        "pass_": false,
+        "reason": "Spectre execution failed",
+        "status": "failed_or_missing"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000003638,
+          1.5000000000072984,
+          2.5000000000292038
+        ],
+        "id": "oscillator-fine",
+        "max_event_error_s": 2.920375052894997e-11,
+        "max_history_error_v": 3.6367575617646253e-12,
+        "max_input_error_v": 2.220446049250313e-16,
+        "pass_": true,
+        "rows": 1507,
+        "status": "analyzed",
+        "waveform_sha256": "ef49f472e7af719d50cfa910e002ed96c5166b800123296bd730f5e9d15fdf6d"
+      },
+      {
+        "backend": "spectre",
+        "id": "oscillator-fine",
+        "pass_": false,
+        "reason": "Spectre execution failed",
+        "status": "failed_or_missing"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.3333333333430346
+        ],
+        "id": "nonexact-base",
+        "max_event_error_s": 9.701295322628312e-12,
+        "max_history_error_v": 4.8765436133635376e-12,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 103,
+        "status": "analyzed",
+        "waveform_sha256": "1389c728e3179b955a8baae6ed5e358d025e4d3cad5674f14d5b8b8acdcc2c7b"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.3333333338333333
+        ],
+        "id": "nonexact-base",
+        "max_event_error_s": 4.999999858590343e-10,
+        "max_history_error_v": 6.349410916595133e-06,
+        "max_input_error_v": 0.0,
+        "pass_": false,
+        "rows": 138,
+        "status": "analyzed",
+        "waveform_sha256": "624fa1b756d593c9f5d1c01b434fef2798344df0f0f1a3392a8b40d291e4fb3d"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.3333333333430346
+        ],
+        "id": "nonexact-fine",
+        "max_event_error_s": 9.701295322628312e-12,
+        "max_history_error_v": 4.876987702573388e-12,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1003,
+        "status": "analyzed",
+        "waveform_sha256": "5cc0aa82920ed7fd5b850fe35cd2aadce1e08331a4f6e518af6a4a07327a7d2c"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.3333333338333334
+        ],
+        "id": "nonexact-fine",
+        "max_event_error_s": 5.000000968813367e-10,
+        "max_history_error_v": 6.004925837022057e-06,
+        "max_input_error_v": 0.0,
+        "pass_": false,
+        "rows": 1031,
+        "status": "analyzed",
+        "waveform_sha256": "c28948dae3fe5262aa655b47006c1840f5f12be49fa1e3ca03a933fc45898514"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.750000000005457
+        ],
+        "id": "threshold-base",
+        "max_event_error_s": 5.4569682106375694e-12,
+        "max_history_error_v": 0.0,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 103,
+        "status": "analyzed",
+        "waveform_sha256": "d77bf051940295b0c42df5c47d5a28da8662018211755458200e5dc7f6e26a40"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.7499999884673456
+        ],
+        "id": "threshold-base",
+        "max_event_error_s": 1.1532654387025332e-08,
+        "max_history_error_v": 8.662342843024362e-09,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 249,
+        "status": "analyzed",
+        "waveform_sha256": "88434e93bd7d64c02aadee738a84d5d0bbf3e20af7236746574692d6e2283f61"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.750000000005457
+        ],
+        "id": "threshold-fine",
+        "max_event_error_s": 5.4569682106375694e-12,
+        "max_history_error_v": 0.0,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1003,
+        "status": "analyzed",
+        "waveform_sha256": "159aedfa08fc3fbae89c383995815eac65c8ea3746532475c6c1e26e219ccfab"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 2.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.7499999900090186
+        ],
+        "id": "threshold-fine",
+        "max_event_error_s": 9.990981375551655e-09,
+        "max_history_error_v": 7.870337936921601e-09,
+        "max_input_error_v": 0.0,
+        "pass_": true,
+        "rows": 1022,
+        "status": "analyzed",
+        "waveform_sha256": "610bbaf13251f083af93bb0ff0353cf9765c3d412aa2bd7d848d276d5f6f8cb0"
+      }
+    ],
+    "run_id": "history-cross-20261004-compatible"
+  },
+  "branch": "fix/evas-history-cross-relocalization",
+  "capability": "CROSS: event-mutated continuous history epochs",
+  "checker_identity": {
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py": "21dd3c27497447a2a1ee603f96c265515e33aa40abc4adb72fa122482786c26f",
+    "experiments/backends/dvs2-spectre-validation/history_relocalization.py": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+    "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+  },
+  "conclusion": {
+    "accuracy_diagnostic": "4/4 Spectre meet the original allowances after tightening solver tolerances; no rerun of EVAS needed for Spectre-only settings.",
+    "baseline_evas": "14/14 against analytic contract",
+    "baseline_spectre": "10/14; two nonexact-event histories exceed 1e-6 V; two bidirectional oscillator configurations time out with repeated triggers",
+    "causal_limit": "Direction control supports a retrigger-feedback explanation; tolerance controls support numerical integration error. These experiments do not identify proprietary internal algorithms or establish general simulator superiority.",
+    "direction_diagnostic": "2/2 EVAS. Spectre completes with three events each, but 0/2 meet waveform/time allowances."
+  },
+  "date": "2026-10-04",
+  "direction_diagnostic": {
+    "analysis_sha256": "1ed324d228155a646c277ede3873f892c3081f3bbba972ed127d10208b6180a6",
+    "conditions": [
+      {
+        "family": "oscillator",
+        "id": "oscillator-base",
+        "maxstep": 0.02,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "stop": 3.0
+      },
+      {
+        "family": "oscillator",
+        "id": "oscillator-fine",
+        "maxstep": 0.002,
+        "roots": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "slope": null,
+        "stop": 3.0
+      }
+    ],
+    "contract": {
+      "denominator": 2,
+      "diagnostic": "Change only product guard cross direction 0 to +1; same analytic trajectory. Separate from the original 14 configurations.",
+      "evas": {
+        "reltol": 0,
+        "vabstol": 1e-08
+      },
+      "event_time_allowance_s": 2e-07,
+      "expected": "Independent piecewise integrals and hand-computed strict crossings.",
+      "license_timeout_s": 30,
+      "limits": "Development evidence at saved points; assumed observation allowances, not continuous-time qualification or performance comparison.",
+      "runner_sha256": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+      "spectre": {
+        "iabstol": 1e-14,
+        "method": "traponly",
+        "reltol": 1e-08,
+        "vabstol": 1e-10
+      },
+      "timeout_s": 90,
+      "wave_allowance_v": 1e-06
+    },
+    "input_manifest_sha256": "53f5cbf399444dfd2d3a2e4a6c1dca00ae51b3907b36c01feac930f72babab0e",
+    "records": [
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000003638,
+          1.5000000000072984,
+          2.5000000000292038
+        ],
+        "id": "oscillator-base",
+        "max_event_error_s": 2.920375052894997e-11,
+        "max_history_error_v": 3.636702050613394e-12,
+        "max_input_error_v": 2.220446049250313e-16,
+        "pass_": true,
+        "rows": 157,
+        "status": "analyzed",
+        "waveform_sha256": "3401de17652dd12e1ceae1ce784a081394b28f08a72bbbe56f2d64834af259db"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.02,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.02,
+          "stop": 3.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.5000000004915526,
+          1.500005478514752,
+          2.500015508559405
+        ],
+        "id": "oscillator-base",
+        "max_event_error_s": 1.550855940513074e-05,
+        "max_history_error_v": 3.556350690553378e-05,
+        "max_input_error_v": 1.1102230246251565e-15,
+        "pass_": false,
+        "rows": 219,
+        "status": "analyzed",
+        "waveform_sha256": "8b78a8a142b8dead87ff3d973f1b530e5b85bc27724b677f279a80e0e299a841"
+      },
+      {
+        "backend": "evas",
+        "events": [
+          0.500000000003638,
+          1.5000000000072984,
+          2.5000000000292038
+        ],
+        "id": "oscillator-fine",
+        "max_event_error_s": 2.920375052894997e-11,
+        "max_history_error_v": 3.6367575617646253e-12,
+        "max_input_error_v": 2.220446049250313e-16,
+        "pass_": true,
+        "rows": 1507,
+        "status": "analyzed",
+        "waveform_sha256": "ef49f472e7af719d50cfa910e002ed96c5166b800123296bd730f5e9d15fdf6d"
+      },
+      {
+        "backend": "spectre",
+        "effective_settings": {
+          "iabstol": 1e-14,
+          "maxstep": 0.002,
+          "method": "traponly",
+          "reltol": 1e-08,
+          "step": 0.002,
+          "stop": 3.0,
+          "vabstol": 1e-10
+        },
+        "events": [
+          0.5000000005109383,
+          1.500006005303098,
+          2.500016721538038
+        ],
+        "id": "oscillator-fine",
+        "max_event_error_s": 1.6721538037778316e-05,
+        "max_history_error_v": 3.209901293682593e-05,
+        "max_input_error_v": 1.1102230246251565e-15,
+        "pass_": false,
+        "rows": 1553,
+        "status": "analyzed",
+        "waveform_sha256": "c5f7c1b85d8016d3e35a012457c570affbc37114b3c2f7286ad0982e373912cc"
+      }
+    ],
+    "run_id": "history-cross-20261004-outward"
+  },
+  "limits": [
+    "No generally implicit nonlinear guard support",
+    "No uncertain same-time discontinuity/reset guard closure",
+    "Root plateau/tangency and uncertifiable departure stay rejected",
+    "No untouched confirmation set, original 31-matrix rerun, continuous-time qualification or performance ranking"
+  ],
+  "oscillator_timeout_evidence": {
+    "oscillator-base/psf/tran.tran.tran": {
+      "bytes": 547643392,
+      "sha256": "f45b4fcef1ba4312090050f20aa64de76a99b4f4553a25f5efc34313a4457376",
+      "tail": "06\n\"z\" 5.000000005000000e-01\n\"time\" 5.076826031592041e-01\n\"u\" 5.076826031592041e-01\n\"y\" 2.559044000000000e+06\n\"z\" 4.999999995000000e-01\n\"time\" 5.076826051592043e-01\n\"u\" 5.076826051592043e-01\n\"y\" 2.559044000000000e+06\n\"z\" 4.999999995000000e-01\n\"time\" 5.076826061592044e-01\n\"u\" 5.076826061592044e-01\n\"y\" 2.559045000000000e+06\n\"z\" 5.000000005000000e-01\n\"time\" 5.076826081592045e-01\n\"u\" 5.076826081592045e-01\n\"y\" 2.559045000000000e+06\n\"z\" 5.000000005000000e-01\n\"time\" 5.076826091592046e-01\n\"u\" 5.076826091592046e-01\n\"y\" 2.559046000000000e+06\n\"z\" 4.999999995000000e-01\n\"time\" 5.076826111592048e-01\n\"u\" 5.0"
+    },
+    "oscillator-fine/psf/tran.tran.tran": {
+      "bytes": 556810240,
+      "sha256": "e6b722988b0b819dc0e14d53b6c15d98ac20ef4a7d3df5eaa0600d5afd7ba664",
+      "tail": "7969e-01\n\"u\" 5.078113049387969e-01\n\"y\" 2.601769000000000e+06\n\"z\" 5.000000005000000e-01\n\"time\" 5.078113069387971e-01\n\"u\" 5.078113069387971e-01\n\"y\" 2.601769000000000e+06\n\"z\" 5.000000005000000e-01\n\"time\" 5.078113079387971e-01\n\"u\" 5.078113079387971e-01\n\"y\" 2.601770000000000e+06\n\"z\" 4.999999995000000e-01\n\"time\" 5.078113099387973e-01\n\"u\" 5.078113099387973e-01\n\"y\" 2.601770000000000e+06\n\"z\" 4.999999995000000e-01\n\"time\" 5.078113109387974e-01\n\"u\" 5.078113109387974e-01\n\"y\" 2.601771000000000e+06\n\"z\" 5.000000005000000e-01\n\"time\" 5.078113129387976e-01\n\"u\" 5.078113129387976e-01\n\"y\" 2.601771000000000e+06\n\"z\" "
+    }
+  },
+  "prior_attempts": [
+    {
+      "run_id": "history-cross-20261004",
+      "status": "old environment: SPECTRE-209; stopped"
+    },
+    {
+      "run_id": "history-cross-20261004-sui",
+      "status": "incomplete environment: SPECTRE-209; stopped"
+    },
+    {
+      "run_id": "history-cross-20261004-ic6",
+      "status": "correct environment: 12 input syntax failures (leading-dot literals), 2 successful nonexact runs; replaced by a separately frozen compatible-input batch"
+    }
+  ],
+  "source_identity": {
+    "kernel_sha256": "bf09cffa8cd30e534896a7693e6bbf737f73ddc382bd5861bf0a49a7ef936ee6",
+    "source_sha256": {
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "2db6a56832c8d813069e04bee218955ca5e65cc33b2ee38fa4d091dab6a6b153",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "3cb4d4be995698de4473239f727c1f0be75626279af776f91110d685f5c9c150",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "ea3cc5a3736971e92eddbb09207ef27d0b908750f2fa6b79e7a99c12f3d0a935",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "e1610fa5c68266773439f3e8cd2ca806553a6260a0a1dd284ec135159779057b",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "4c251e53174dc503f83741cd1042b974ee5c05d4b921d5391bebfa7d299d58a4",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "801bd02ed0d07a94ea772a9921acef4e089a67bf967661751e3cf8a536afefed",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "3780fcec2ebcb5b0c82b5310aa95084935b5d3d57435a593b46d962ee4b67296",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "b38b71d8223e7c33f43c68cacadf475747037f0b5b834ed10e75e9371532f913",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "38bd73cfb49039831522015bdd41d965aa43f530d52ca1da85b02c6c35146905",
+      "evas/src/evas/array_elaboration.py": "a687c0c8ef62ce97e482582f6f077fbe0e2e6d92c448d8af5c8493ea0f1ab119",
+      "evas/src/evas/diagnostics.py": "4c3e4c493c0c97d72386c972e19ff65491977b7e49e724fe13fa59b54a329702",
+      "evas/src/evas/elaboration.py": "67cd310e0b5623835dac4d890728e849383aeff6966c1589d72e4379ab383dc4",
+      "evas/src/evas/errors.py": "4cd66767c4e6d25c94ce9a2231ee0a82388dac2e73dcd674b0e267047986c805",
+      "evas/src/evas/frontend.py": "a1db72e40ca90e871036a6a1376faa049b03050483d7be2c4e2626d30f21842c",
+      "evas/src/evas/hierarchy.py": "8193b860e8529318c764ff499b033cb983282cbb1c365b56483c68a7cbcf3d36",
+      "evas/src/evas/instance_compiler.py": "085a86e31138b13467eba67590e1c863a8914c30caae51ebbf405f4b3a3cc11f",
+      "evas/src/evas/integer_constants.py": "df6cb3c9994a2296cb076ae77d0cc06d60eaeaa87014680c722b6ad2e1869abc",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/limits.py": "9d75bbf05f9960e3e50580fa3d7e59e537855c356c0ceac2e5259e9e2b2b64ab",
+      "evas/src/evas/lowering.py": "d3b1a58e653ec516a3edbe44af1c2a5c0eda15402b0a0480784d5346e21fffb9",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "6e19fb7f8397b8dfbdee90a6b2c1220bfdd2a60c391a8ccf86604862c4fd3493",
+      "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+      "evas/src/evas/node_elaboration.py": "13adc567543c5c4bde2a30249ad4c093fcaa35f076e9a6e76e1188ea98c2473c",
+      "evas/src/evas/parameters.py": "3cdb30bb3bca87ee714b651daa6f41a3892484f88c323b44ad0d576870d067a8",
+      "evas/src/evas/preprocessor.py": "3bb1cb3b727ded90d58afca3381ec9d7f4ce96ba4a8586641f330121b820b4d5",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/runtime.py": "13dcf6374917c637563092a977d184585c99e7045b4bca6ad963cea54e38562c",
+      "evas/src/evas/scs.py": "d11ef906cebb8a9833abf1f611abfbbf5970cda42304d259bb1557a08b0b97e4",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "8d963edc29f04c1c3976807b4e2a399073be1d5c5fc471c0abd4650f152c8731"
+    }
+  },
+  "spectre_identity": {
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ]
+  },
+  "spectre_version": "sub-version  21.1.0.509.isr12",
+  "status": "local candidate; development evidence; not merged",
+  "verification": {
+    "clippy": "passed with --all-targets -- -D warnings",
+    "design_math": "passed; math only",
+    "final_python": {
+      "command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest test_history_relocalization test_dynamic_cross test_event_relocalization test_dynamic_timer test_event_horizons test_event_window_sampling test_lifecycle_closure test_semantic_invariants test_slew test_event_accuracy test_events test_settlement test_event_conditions test_event_or test_event_writers test_precision_chain -q",
+      "passed": 182
+    },
+    "final_rust": {
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "ignored": 1,
+      "passed": 145
+    },
+    "frozen_validation_identity": "passed; identity only",
+    "full_python_before_final_window_fix": {
+      "passed": 676,
+      "scope": "Prior candidate before the final observation-window jump check. The final change and new rejection regression were checked in the 182-test affected set; do not call this a full-suite run of the final candidate."
+    },
+    "spectre_checker_calibration": {
+      "passed": 74
+    },
+    "traceability": "passed"
+  }
+}

@@ -1,0 +1,3270 @@
+{
+  "backend_contract": "Same VA and stimulus per configuration. Voltage <=1e-6 V, event time <=2e-7 s, exact event sequence/count. Internal tolerances are not equated.",
+  "base_commit": "d04f2025e5f17cae1d9018a2b84fdd6aff1791cb",
+  "benchmark_verifier": {
+    "execution": "Standalone task verifier on thu-sui with licensed Spectre; no complete Harbor container/agent run.",
+    "report": {
+      "candidate_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae",
+      "cases": [
+        {
+          "elapsed_s": 3.1274952031672,
+          "expected_events": [
+            0.5,
+            1.5,
+            2.5
+          ],
+          "max_event_error_s": 1.7107011807127037e-08,
+          "max_voltage_error_v": 3.740004023145005e-08,
+          "name": "constant-tight",
+          "observed_events": [
+            0.50000000005,
+            1.500000006853439,
+            2.500000017107012
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 692,
+          "timeout": false,
+          "waveform_sha256": "917279a88efb1c21d544a1cdf38914cc86a7815aa6e38a90d170b6bdbca85cba"
+        },
+        {
+          "elapsed_s": 3.2268045116215944,
+          "expected_events": [
+            0.5,
+            1.5,
+            2.5
+          ],
+          "max_event_error_s": 1.964265194942527e-09,
+          "max_voltage_error_v": 3.648754021146061e-09,
+          "name": "constant-tighter",
+          "observed_events": [
+            0.5000000000499998,
+            1.500000000721764,
+            2.500000001964265
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 706,
+          "timeout": false,
+          "waveform_sha256": "8f0735516dfe32fbe73622aafdc258b64c071c79335a3ac2bb72b418312f8c61"
+        },
+        {
+          "elapsed_s": 2.976850390434265,
+          "expected_events": [
+            0.75,
+            2.75,
+            4.75
+          ],
+          "max_event_error_s": 3.4288835770723836e-08,
+          "max_voltage_error_v": 3.7412447063955856e-08,
+          "name": "descending-tight",
+          "observed_events": [
+            0.7500000000499998,
+            2.750000013881689,
+            4.750000034288836
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 693,
+          "timeout": false,
+          "waveform_sha256": "27575f9e430a3e639993d5e1993a46ac1d12795194dbb2da67ac49268f2a28f5"
+        },
+        {
+          "elapsed_s": 3.4773247316479683,
+          "expected_events": [
+            0.75,
+            2.75,
+            4.75
+          ],
+          "max_event_error_s": 3.755163291430108e-09,
+          "max_voltage_error_v": 3.435605716584078e-09,
+          "name": "descending-tighter",
+          "observed_events": [
+            0.75000000005,
+            2.750000001252309,
+            4.750000003755163
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 707,
+          "timeout": false,
+          "waveform_sha256": "c7a90fd536f57e29de0f03ff076dc3fe2627a62ec1ccbfecb325bc51a5ed04da"
+        },
+        {
+          "elapsed_s": 3.1259917989373207,
+          "expected_events": [
+            0.4494897427831781,
+            1.162277660168379,
+            1.7416573867739416,
+            2.242640687119285,
+            2.6904157598234293
+          ],
+          "max_event_error_s": 2.461776649198555e-08,
+          "max_voltage_error_v": 9.25576943144879e-08,
+          "name": "ramp-tight",
+          "observed_events": [
+            0.4494897428240609,
+            1.162277664198713,
+            1.741657395984019,
+            2.242640702562245,
+            2.690415784441196
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 985,
+          "timeout": false,
+          "waveform_sha256": "628e412d55d9756977f0061387053433a50fd22b5adf1d8c79cb9f2c774f3172"
+        },
+        {
+          "elapsed_s": 3.0749025996774435,
+          "expected_events": [
+            0.4494897427831781,
+            1.162277660168379,
+            1.7416573867739416,
+            2.242640687119285,
+            2.6904157598234293
+          ],
+          "max_event_error_s": 2.5581967655341487e-09,
+          "max_voltage_error_v": 8.634923786415838e-09,
+          "name": "ramp-tighter",
+          "observed_events": [
+            0.4494897428275879,
+            1.162277660715338,
+            1.74165738788593,
+            2.242640688907966,
+            2.690415762381626
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 1002,
+          "timeout": false,
+          "waveform_sha256": "cf08bbda3fe0ba6d2d9772db0bcd2b8b14148b0e877772d965469bd8969942ae"
+        },
+        {
+          "elapsed_s": 3.0761238373816013,
+          "expected_events": [
+            0.3520303695138075,
+            1.3591663046625437
+          ],
+          "max_event_error_s": 1.4196618325357235e-08,
+          "max_voltage_error_v": 1.8601245686117318e-08,
+          "name": "segments-tight",
+          "observed_events": [
+            0.3520303695626785,
+            1.359166318859162
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 1110,
+          "timeout": false,
+          "waveform_sha256": "91b3eb22441cd9ce26d89067db5faf1edb93bf4c99f185973019d91c3a2e9219"
+        },
+        {
+          "elapsed_s": 3.0766576156020164,
+          "expected_events": [
+            0.3520303695138075,
+            1.3591663046625437
+          ],
+          "max_event_error_s": 1.3009742172442884e-09,
+          "max_voltage_error_v": 1.906949237406863e-09,
+          "name": "segments-tighter",
+          "observed_events": [
+            0.3520303695626785,
+            1.359166305963518
+          ],
+          "passed": true,
+          "returncode": 0,
+          "rows": 1042,
+          "timeout": false,
+          "waveform_sha256": "74f7e02f10b6426f827b26f86182b94508ab2a659bfa24ee2df600d21d950ee6"
+        }
+      ],
+      "cases_sha256": "df84f3123a91a8ef6e70818d5437db8e101c871aba8d5da85c7e8302653417e1",
+      "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+      "reward": 1,
+      "spectre_version": "",
+      "status": "completed"
+    },
+    "report_sha256": "2a2549055e9e5d4d39736174e532583cbf4bd386be51e674e9754c29b8a20e45"
+  },
+  "calibration_history": {
+    "analysis_repair": "First r1 analysis incorrectly expected time inside each EVAS solution; repaired to use transient.times. Original analysis retained, not a DUT failure. Stop-setting audit uses exact PSF endpoint because log display rounds it.",
+    "r1": "Reference 6/8 on Spectre: descending and ramp at reltol=1e-10 exceeded event-time allowance; external limits unchanged.",
+    "r2": "Reference profiles reltol=1e-11 and 1e-12; 8/8 on both backends. Equivalent models 2/2; four deliberate mutants all rejected by Spectre verifier logic.",
+    "superseded_analysis_sha256": "575187152df91105905820983b9724e19321a643863866c60a792ef794fb659c"
+  },
+  "checks": {
+    "checker_tests": "84 passed, including 10 triangle/adapter tests",
+    "clippy": "passed with -D warnings",
+    "python_affected": {
+      "command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -q test_history_relocalization test_dynamic_cross test_event_relocalization test_events test_event_accuracy test_event_horizons test_event_window_sampling test_lifecycle_closure test_semantic_invariants test_precision_chain test_continuous_dynamics test_dynamic_closure test_implicit_dynamics test_mixed_dynamics",
+      "passed": 193
+    },
+    "rust": {
+      "ignored": 1,
+      "passed": 147
+    }
+  },
+  "date": "2026-10-04",
+  "limitations": [
+    "Bidirectional self-reversal with unresolved return/root uncertainty remains explicitly unsupported in EVAS.",
+    "Original bidirectional short-window numerical passes do not establish stable long-run oscillation.",
+    "No universal EVAS/Spectre tolerance mapping, continuous-time qualification or speed claim.",
+    "Raw logs/waveforms and input archives are retained locally and on thu-sui, not publicly downloadable.",
+    "This task is a candidate; no agent benchmark or complete Harbor container execution."
+  ],
+  "previous_evidence": "history-relocalization.json remains unchanged; its 14/14 ideal-triangle verdict is not portable-model evidence.",
+  "runs": [
+    {
+      "analysis_identity": {
+        "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "mode": "new analysis; execution identities unchanged",
+        "runner_sha256": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+        "settings_parser_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+      },
+      "analysis_sha256": "15035e4c2d30f496ff005170afe11e53ef27539f3334c80ff9825f62219e0c6d",
+      "contract": {
+        "cases_sha256": "72e10e255eea0c37009f3414b01ef4a52ad215e7677f5766add3f1d9ff2943ea",
+        "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "denominator": 29,
+        "event_count": "exact",
+        "event_time_allowance_s": 2e-07,
+        "evidence": "Development saved-point and discrete-event evidence; not holdout, continuous-time qualification, or performance comparison.",
+        "groups": {
+          "benchmark": 8,
+          "calibration": 6,
+          "diagnostic": 15
+        },
+        "hypothesis": "Self-reversing bidirectional guards may chatter; solver/cross/step/method sweeps are separate interventions.",
+        "output_limit_per_file_bytes": 16777216,
+        "runner_sha256": "998df33c0bc6b49a722fc1767d85ca7c6007d59ac19bc1c0ccf19eb6fd416d5c",
+        "settings_parser_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+        "timeout_s": 15,
+        "wave_allowance_v": 1e-06
+      },
+      "effective_settings_note": "Spectre log rounds the short stop to 0.5; exact actual_stop_s is checked from the PSF time axis. Other printed settings match the requested values.",
+      "evas_identity_ref": "shared_evas_identity",
+      "id": "oscillator-compatibility-20261004-r1",
+      "input_manifest_sha256": "abcd4aeb60b589678f5e7398f4de9a84266fcf789ab4774bf7940237b541008a",
+      "inputs_archive_sha256": "8816adc83f4be2a17abcbf432143cea7991ec0501d588dd5ae8af619c719d40c",
+      "results": [
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.5000000600000073,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0741301365196705,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_count_changes": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000310000032,
+                  "z": 0.4999999997500004
+                },
+                {
+                  "count": 3.0,
+                  "time": 0.5000000327500056,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 4.0,
+                  "time": 0.500000035250005,
+                  "z": 0.4999999995
+                },
+                {
+                  "count": 5.0,
+                  "time": 0.5000000382500055,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 6.0,
+                  "time": 0.5000000412500057,
+                  "z": 0.4999999995
+                },
+                {
+                  "count": 7.0,
+                  "time": 0.500000044250006,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 8.0,
+                  "time": 0.5000000472500062,
+                  "z": 0.4999999995
+                }
+              ],
+              "observed_count": 12.0,
+              "passed": false,
+              "reason": "incorrect event count",
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 0.50000006,
+                "vabstol": 1e-10
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "0bc5e88a18aad2361aef377aeba783622143c73b9adaeb333b6e429facf21a72"
+            }
+          },
+          "family": "bidirectional",
+          "kind": "diagnostic",
+          "name": "bidirectional-baseline",
+          "netlist_sha256": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+          "source_sha256": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77"
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 1.9230117108672857,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_count_changes": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000037,
+                  "z": 0.5000000005000036
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000015768589,
+                  "z": 0.4999999999221393
+                }
+              ],
+              "observed_count": 2.0,
+              "passed": false,
+              "reason": "incorrect event count",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 0.50000006,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "4789fd6d6d731c127a4f3caba8ebd5434188297e39456c4adcb3ae0770a5a0eb"
+            }
+          },
+          "family": "bidirectional",
+          "kind": "diagnostic",
+          "name": "bidirectional-tight-solver",
+          "netlist_sha256": "c566f57d754cbd758b6deb7ad665e4c17aef573087dd43284c59101c66aabd0c",
+          "source_sha256": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77"
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.5000000600000049,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.123895449563861,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_count_changes": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000000050022,
+                  "z": 0.5000000000050023
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000300100028,
+                  "z": 0.4999999999975007
+                },
+                {
+                  "count": 3.0,
+                  "time": 0.5000000300275043,
+                  "z": 0.5000000000049999
+                },
+                {
+                  "count": 4.0,
+                  "time": 0.5000000300525026,
+                  "z": 0.4999999999949999
+                },
+                {
+                  "count": 5.0,
+                  "time": 0.5000000300825024,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 6.0,
+                  "time": 0.5000000301125024,
+                  "z": 0.499999999995
+                },
+                {
+                  "count": 7.0,
+                  "time": 0.5000000301425024,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 8.0,
+                  "time": 0.5000000301725024,
+                  "z": 0.499999999995
+                }
+              ],
+              "observed_count": 1002.0,
+              "passed": false,
+              "reason": "incorrect event count",
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 0.50000006,
+                "vabstol": 1e-10
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "78a13af398ae7036458ce4672fbb63248055fb9b6d115d704ea634ac16f91dbd"
+            }
+          },
+          "family": "bidirectional",
+          "kind": "diagnostic",
+          "name": "bidirectional-tight-cross",
+          "netlist_sha256": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+          "source_sha256": "a2e54aed749d86b2f8e76e4a06fc8a4d285adbd39debf85577bfc5bbaf31453b"
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.00019999999999999998,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.00019999999999999998,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.87260608561337,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5
+              ],
+              "first_count_changes": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000057,
+                  "z": 0.5000000005000056
+                }
+              ],
+              "max_event_error_s": 5.000057035076111e-10,
+              "max_voltage_error_v": 6.050000567192626e-08,
+              "observed_count": 1.0,
+              "observed_events": [
+                0.5000000005000057
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.0002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 0.50000006,
+                "vabstol": 1e-10
+              },
+              "rows": 2526,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "bdb7f1aaefb2f22353a0d06dde65d59a41ba2252f03f924f1a335423fdaea517"
+            }
+          },
+          "family": "bidirectional",
+          "kind": "diagnostic",
+          "name": "bidirectional-short-step",
+          "netlist_sha256": "f9992d58404de693cc5e8db69a745588db983d41f441a6be96d47e653945688a",
+          "source_sha256": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77"
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.022759359329939,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5
+              ],
+              "first_count_changes": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000068,
+                  "z": 0.5000000005000026
+                }
+              ],
+              "max_event_error_s": 5.000068137306357e-10,
+              "max_voltage_error_v": 2.9512787158569864e-08,
+              "observed_count": 1.0,
+              "observed_events": [
+                0.5000000005000068
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "stop": 0.50000006,
+                "vabstol": 1e-10
+              },
+              "rows": 284,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "ea561324c0ca8b8f690b77868e44a25212aa3fbbebf773bfc3357412c31052c8"
+            }
+          },
+          "family": "bidirectional",
+          "kind": "diagnostic",
+          "name": "bidirectional-gear2",
+          "netlist_sha256": "cf2ed98e06e79e1773b4b8c9b0c80438c65ccca318440890a3663b6ea0e50d48",
+          "source_sha256": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 2.920375052894997e-11,
+              "max_voltage_error_v": 3.6367575617646253e-12,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000003638,
+                1.5000000000072984,
+                2.5000000000292038
+              ],
+              "passed": true,
+              "rows": 1501,
+              "status": "checked",
+              "waveform_sha256": "4d2a121d778bbe25eedb5e1e0f36bdd91518d4ed5042d204427c66162480773b"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.123234398663044,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.6721538037778316e-05,
+              "max_voltage_error_v": 3.209901293682593e-05,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000005109383,
+                1.500006005303098,
+                2.500016721538038
+              ],
+              "passed": false,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1553,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "6c696f276cac0b99fe74758edfe4b49932bf1de830f92a84b35ff66f01de3c93"
+            }
+          },
+          "family": "outward",
+          "kind": "diagnostic",
+          "name": "outward-baseline",
+          "netlist_sha256": "e6b026c3c257cc3ad373c981a9113c8765af797b67dfe8b048db20acc8205b59",
+          "source_sha256": "05bbd8c144d8e406645e681afb15af56f4f8fd5265bd264bd4a60cf3754f827f"
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "waveform_accuracy: cannot certify same-time forward error at z: bound 1.6421036752589657e-10, budget 1e-10",
+              "passed": false,
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 1.9231406543403864,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.377680884459778e-09,
+              "max_voltage_error_v": 6.615418324251721e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000005208295,
+                1.50000000207662,
+                2.500000004377681
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1606,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "0d96ef97971c90fd2922ccd65a5f1f0fe62d2010e6c7e9180d0b4acf216ac60a"
+            }
+          },
+          "family": "outward",
+          "kind": "diagnostic",
+          "name": "outward-tight-solver",
+          "netlist_sha256": "9f479c7e46f4fe6f1662552cb05a1c58a06caeb7ea65ab6f6abb11830c517c97",
+          "source_sha256": "05bbd8c144d8e406645e681afb15af56f4f8fd5265bd264bd4a60cf3754f827f"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 3.8413716652030416e-13,
+              "max_voltage_error_v": 3.416711358283919e-14,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000000568,
+                1.5000000000001361,
+                2.500000000000384
+              ],
+              "passed": true,
+              "rows": 1501,
+              "status": "checked",
+              "waveform_sha256": "c46b0287a0444de29f18e58f693090dd57058a4e0b49e2bffe4676c4ed677440"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0221338905394077,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.6719007041920975e-05,
+              "max_voltage_error_v": 3.2095973964932356e-05,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000004974,
+                1.500006003786021,
+                2.500016719007042
+              ],
+              "passed": false,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1553,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "7faa4cba95d5f93400c0f6d651d7c885b472e202ee618db665b1f2dda9919692"
+            }
+          },
+          "family": "outward",
+          "kind": "diagnostic",
+          "name": "outward-tight-cross",
+          "netlist_sha256": "e6b026c3c257cc3ad373c981a9113c8765af797b67dfe8b048db20acc8205b59",
+          "source_sha256": "8d04f9c7d63d32edba4cfe968a89b266a66d9cb7db9f3d4bcaf299bfe6ebf43d"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 2.920375052894997e-11,
+              "max_voltage_error_v": 3.6367575617646253e-12,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000003638,
+                1.5000000000072984,
+                2.5000000000292038
+              ],
+              "passed": true,
+              "rows": 15001,
+              "status": "checked",
+              "waveform_sha256": "efa8b67eb61d8cf27fe3b1ca5eedf9aa25502632a11ab1c2205646f0ca681ddd"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.00019999999999999998,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.00019999999999999998,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.1231178734451532,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.612587099586449e-05,
+              "max_voltage_error_v": 3.157553470195529e-05,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000004996032,
+                1.500005862201703,
+                2.500016125870996
+              ],
+              "passed": false,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.0002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "rows": 15041,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "4d8fbfad545b9d701f1a0a07acbc62f897586722c5a871e2ccf529696d26a2b0"
+            }
+          },
+          "family": "outward",
+          "kind": "diagnostic",
+          "name": "outward-short-step",
+          "netlist_sha256": "2129a29a94f58ab4a54a0e98e8af901f89abc0bb1c58ad7458839aa45460097c",
+          "source_sha256": "05bbd8c144d8e406645e681afb15af56f4f8fd5265bd264bd4a60cf3754f827f"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 2.920375052894997e-11,
+              "max_voltage_error_v": 3.6367575617646253e-12,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000003638,
+                1.5000000000072984,
+                2.5000000000292038
+              ],
+              "passed": true,
+              "rows": 1501,
+              "status": "checked",
+              "waveform_sha256": "4d2a121d778bbe25eedb5e1e0f36bdd91518d4ed5042d204427c66162480773b"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.873067181557417,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.8589478090191847e-07,
+              "max_voltage_error_v": 3.2157665097454213e-07,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000005109428,
+                1.500000017667728,
+                2.500000185894781
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "stop": 3.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1549,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "8554d57623491148ee7f5ab1f65f91648a1233adc900b609a8284052a80b4489"
+            }
+          },
+          "family": "outward",
+          "kind": "diagnostic",
+          "name": "outward-gear2",
+          "netlist_sha256": "465cfa2535a816424bde66e47b6f04a521f344563dfccf17a6f7dba9fc8f18be",
+          "source_sha256": "05bbd8c144d8e406645e681afb15af56f4f8fd5265bd264bd4a60cf3754f827f"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 2.277733557320971e-12,
+              "max_voltage_error_v": 2.220446049250313e-16,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5,
+                1.5000000000022777
+              ],
+              "passed": true,
+              "rows": 1001,
+              "status": "checked",
+              "waveform_sha256": "ed4f404d070520f4e01a6b8f59d45b801306aaf6676efb66e4e8fd7c1bb540fb"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9231081828474998,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 4.866123060054406e-10,
+              "max_voltage_error_v": 2.4980018054066022e-15,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5000000004866123,
+                1.500000000358859
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1022,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "5f77e98fe50509d3a9c5d4c7d5056bc8d8813a24f5189889bb789022c38cc7f4"
+            }
+          },
+          "family": "passive",
+          "kind": "diagnostic",
+          "name": "passive-baseline",
+          "netlist_sha256": "6f07065b7f7f20dcb49b6692b86e66798e0d09ffa11c19ef57737445156de9f4",
+          "source_sha256": "f8c5cbb310f4d14f5d360e894ddec53a75721383ac987f0605961fca187ab00c"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 2.277733557320971e-12,
+              "max_voltage_error_v": 2.220446049250313e-16,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5,
+                1.5000000000022777
+              ],
+              "passed": true,
+              "rows": 1001,
+              "status": "checked",
+              "waveform_sha256": "ed4f404d070520f4e01a6b8f59d45b801306aaf6676efb66e4e8fd7c1bb540fb"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.073123363777995,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 5.002580572011084e-10,
+              "max_voltage_error_v": 1.519617764955683e-15,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5000000004961977,
+                1.500000000500258
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "rows": 2942,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "427391e65ac1ad0fa6d4001e7609a11b0d7620bdbe157fb44f98c718b500d42a"
+            }
+          },
+          "family": "passive",
+          "kind": "diagnostic",
+          "name": "passive-tight-solver",
+          "netlist_sha256": "e3992244ab125078347fa8b04cb01cb950ed45acb736b13d2b538b7965c3b4a3",
+          "source_sha256": "f8c5cbb310f4d14f5d360e894ddec53a75721383ac987f0605961fca187ab00c"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 3.6415315207705135e-14,
+              "max_voltage_error_v": 2.220446049250313e-16,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5,
+                1.5000000000000364
+              ],
+              "passed": true,
+              "rows": 1001,
+              "status": "checked",
+              "waveform_sha256": "bee99bced8f0652922758d94c5e089ccd53c0c00f242f710511082d50abcf1c6"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.922652905806899,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 4.954925358902074e-12,
+              "max_voltage_error_v": 2.3869795029440866e-15,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5000000000048939,
+                1.500000000004955
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1022,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "d6b51b278bb7e1e74cba054f62c6e307db8cfb1f6daf4538b2eeb223eea38945"
+            }
+          },
+          "family": "passive",
+          "kind": "diagnostic",
+          "name": "passive-tight-cross",
+          "netlist_sha256": "6f07065b7f7f20dcb49b6692b86e66798e0d09ffa11c19ef57737445156de9f4",
+          "source_sha256": "39cd624fc98491530ed54ef1dab4e02396f9ab416d1cab1f2555a907900f15ea"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 2.277733557320971e-12,
+              "max_voltage_error_v": 2.220446049250313e-16,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5,
+                1.5000000000022777
+              ],
+              "passed": true,
+              "rows": 10001,
+              "status": "checked",
+              "waveform_sha256": "9fada1ecf59c64742a1d7ee9864d06883c4c1a1efe58c5684b7be279f31f51ca"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.00019999999999999998,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.00019999999999999998,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.174603309482336,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 4.991821400679441e-10,
+              "max_voltage_error_v": 5.6066262743570405e-15,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5000000004991821,
+                1.50000000049788
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.0002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "rows": 10016,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "38eb0fa3367eb952a44f1a0a439a86c7833064f7285b6a78b271c7f0500b1760"
+            }
+          },
+          "family": "passive",
+          "kind": "diagnostic",
+          "name": "passive-short-step",
+          "netlist_sha256": "859b38c4a808c509991b115ed38c4bc64c38f46c630d4d0ebf6c629dba106f2e",
+          "source_sha256": "f8c5cbb310f4d14f5d360e894ddec53a75721383ac987f0605961fca187ab00c"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 2.277733557320971e-12,
+              "max_voltage_error_v": 2.220446049250313e-16,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5,
+                1.5000000000022777
+              ],
+              "passed": true,
+              "rows": 1001,
+              "status": "checked",
+              "waveform_sha256": "ed4f404d070520f4e01a6b8f59d45b801306aaf6676efb66e4e8fd7c1bb540fb"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.8740287963300943,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5
+              ],
+              "max_event_error_s": 5.134419556185321e-10,
+              "max_voltage_error_v": 6.259229246019515e-14,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.5000000005000291,
+                1.500000000513442
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "stop": 2.0,
+                "vabstol": 1e-10
+              },
+              "rows": 1022,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "718a077f7998327c27aecf1b12859c1e62a886c7522ed19275ec516550d865d5"
+            }
+          },
+          "family": "passive",
+          "kind": "diagnostic",
+          "name": "passive-gear2",
+          "netlist_sha256": "d118e6b3d0dc8b59f73a6ceddb8e181035384b88d3701aee12415f97d7542636",
+          "source_sha256": "f8c5cbb310f4d14f5d360e894ddec53a75721383ac987f0605961fca187ab00c"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.547473508864641e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.500000000001819,
+                2.5000000000045475
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "bc257c7c9e2b69c3017d3a2f0de3231fa39d5d16d2a36c09250cbfc75f0c6abe"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-12
+              },
+              "execution": {
+                "elapsed_s": 3.1779508609324694,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.5306690093197517e-07,
+              "max_voltage_error_v": 3.445636422849674e-07,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000500001,
+                1.500000054224164,
+                2.500000153066901
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "stop": 3.0,
+                "vabstol": 1e-12
+              },
+              "rows": 678,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "c7f4f5000af9c81eea3884ab7726a063c51cee6e2053f90dfcde5cbb5b288ab9"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "constant-tight",
+          "netlist_sha256": "29f16fa5f540712d22a7b63bea5a81d5313a1301391037c54a4610e8faf083be",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.547473508864641e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.500000000001819,
+                2.5000000000045475
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "bc257c7c9e2b69c3017d3a2f0de3231fa39d5d16d2a36c09250cbfc75f0c6abe"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.0760323964059353,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.964265194942527e-09,
+              "max_voltage_error_v": 3.648754021146061e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000499998,
+                1.500000000721764,
+                2.500000001964265
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 706,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "b4938893f562fbf55507299f593a3b609ab82821dd636848f25d8d23c5abbe18"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 6.0,
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 1.4779288903810084e-12,
+              "max_voltage_error_v": 1.425526363618701e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75,
+                2.750000000000739,
+                4.750000000001478
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "13f88061fb5cea0fba32d70eb960868badbfec4804652ac6911db56eff685ebe"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-12
+              },
+              "execution": {
+                "elapsed_s": 3.0761678237468004,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 3.0588380273144367e-07,
+              "max_voltage_error_v": 3.444136425501121e-07,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.7500000000499996,
+                2.750000108298328,
+                4.750000305883803
+              ],
+              "passed": false,
+              "requested_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "stop": 6.0,
+                "vabstol": 1e-12
+              },
+              "rows": 679,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "a19ebd3dd9b8ba982172144947cddaa25a57806348bba39d81f995ad3d4046cf"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "descending-tight",
+          "netlist_sha256": "354e6c7e2b5a6bfd75a788c205f4f5c69d7631e028a90b1ec28436ea902c30f6",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 6.0,
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 1.4779288903810084e-12,
+              "max_voltage_error_v": 1.425526363618701e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75,
+                2.750000000000739,
+                4.750000000001478
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "13f88061fb5cea0fba32d70eb960868badbfec4804652ac6911db56eff685ebe"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.126249246299267,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 3.755163291430108e-09,
+              "max_voltage_error_v": 3.435605716584078e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75000000005,
+                2.750000001252309,
+                4.750000003755163
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "rows": 707,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "b6da67f655634b7b19e0f9d67ceb8e9e3dee95d729a208961e5c1731007d3e81"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "descending-tighter",
+          "netlist_sha256": "9e02f7975684b61996cc277caef00c3971b74ce75bbcabdaf189a3c7629f7717",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 9.373835041515122e-12,
+              "max_voltage_error_v": 6.08013639435967e-13,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.44948974278327114,
+                1.162277660168524,
+                1.741657386774958,
+                2.2426406871225484,
+                2.690415759832803
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "aeca08d71c60e3ab3c5b79fd9e82f6435ea7736bc5cc13cd14c80bfebe5a4cb2"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-12
+              },
+              "execution": {
+                "elapsed_s": 2.97652680426836,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 2.4128111286714216e-07,
+              "max_voltage_error_v": 8.451028165878949e-07,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.4494897428326369,
+                1.162277702095699,
+                1.741657483646884,
+                2.242640846168528,
+                2.690416001104542
+              ],
+              "passed": false,
+              "requested_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "stop": 3.0,
+                "vabstol": 1e-12
+              },
+              "rows": 985,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "a11e43270246d8d8dc333a7f741c6d0f29a27fdd748b7678429fe32ed2f95a7d"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "ramp-tight",
+          "netlist_sha256": "4922f0b5dc0d58108122d3c22b62316cbdd357ea2da1c014706da4dfb10872d3",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 9.373835041515122e-12,
+              "max_voltage_error_v": 6.08013639435967e-13,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.44948974278327114,
+                1.162277660168524,
+                1.741657386774958,
+                2.2426406871225484,
+                2.690415759832803
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "aeca08d71c60e3ab3c5b79fd9e82f6435ea7736bc5cc13cd14c80bfebe5a4cb2"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.0761362053453922,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 2.5581967655341487e-09,
+              "max_voltage_error_v": 8.634923786415838e-09,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.4494897428275879,
+                1.162277660715338,
+                1.74165738788593,
+                2.242640688907966,
+                2.690415762381626
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1002,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "fb22d78bc97946a5050e2fd7b65d3c632d4304a4c5acbaa9e228ede8b3c0b610"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "ramp-tighter",
+          "netlist_sha256": "1e2841ba5bc33a455df797d689745466eabb6099e6ccb5a87461bb0c4e6bab87",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "578514d9eb9058c707b5be8c4bd0fc6ae31a1ba9471546746ad2cf7fbf31cdf2"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-12
+              },
+              "execution": {
+                "elapsed_s": 3.5768744088709354,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.0868412925191251e-07,
+              "max_voltage_error_v": 1.6575206310265322e-07,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695357989,
+                1.359166413346673
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-16,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-10,
+                "stop": 2.0,
+                "vabstol": 1e-12
+              },
+              "rows": 894,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "aac7a198ba884dc7a920ed73e938a33c4d1f071c1d8d0485d0c368a444ccf104"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "segments-tight",
+          "netlist_sha256": "35cbc3d0369d73cbaa0916d4e65ea28cb3454387b05ee12aea51a0319d8cbd63",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "578514d9eb9058c707b5be8c4bd0fc6ae31a1ba9471546746ad2cf7fbf31cdf2"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.076629938557744,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.3009742172442884e-09,
+              "max_voltage_error_v": 1.906949237406863e-09,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695626785,
+                1.359166305963518
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1042,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "c2015ef86f8f118c9ecd95ef8cc48d381726830cc34e29a7347ddcdf68ea15ee"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "segments-tighter",
+          "netlist_sha256": "14e564dafcbc58e1b11fc34deecde05abd30cf9397e435a51531d2cddf2d8d1b",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.548361687284341e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.5000000000018192,
+                2.5000000000045484
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "808ab42026a4e96b77978e45bafaa43a6ddc8f218a6b6f9d9d6be825be319501"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.0253971852362156,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.965562823613709e-09,
+              "max_voltage_error_v": 3.651717483954542e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000048341,
+                1.500000000719922,
+                2.500000001965563
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 706,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "d1951c4a787ff5f1025956e9abcc64064fce2503b43856f10fe6a58bf858626a"
+            }
+          },
+          "family": "equivalent",
+          "kind": "calibration",
+          "name": "equivalent-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "f4bde0a37218bd405602708ed1226a3a303fa61f719d92087e90371d886dec73"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "7bdb9b3bc86291a46db34550edc8166ffb40ba356ba96ee367bb7072cfbd2621"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.97643874399364,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.3816183752624056e-09,
+              "max_voltage_error_v": 1.9293204377851536e-09,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695625489,
+                1.359166306044162
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1039,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "cb38fdc1b1a2dd6b4448cd22f2b639af74060827e78de75f5b463d43ff0e96ef"
+            }
+          },
+          "family": "equivalent",
+          "kind": "calibration",
+          "name": "equivalent-segments-tighter",
+          "netlist_sha256": "14e564dafcbc58e1b11fc34deecde05abd30cf9397e435a51531d2cddf2d8d1b",
+          "source_sha256": "f4bde0a37218bd405602708ed1226a3a303fa61f719d92087e90371d886dec73"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.2280531506985426,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 2.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "cf9b26e3141bbcf972f5e4b6161a40c765146d1438a989307c30443930f7cb68"
+            }
+          },
+          "family": "bidirectional-starter",
+          "kind": "calibration",
+          "name": "bidirectional-starter-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "bd1fa3c6566028a78a6dabd13fefe9aa22c0486b2b9ace8303355618f5d93948"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.1262939795851707,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 1.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "3e3a907bf22a18ebd44f3087274e24cf2cd214a1a24f092b0910b03a58e83b84"
+            }
+          },
+          "family": "wrong-speed",
+          "kind": "calibration",
+          "name": "wrong-speed-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.575425112619996,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 3.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "04f34c3c66bc935a920a0493703fce277dd28845ea626925cb6bf00d2a6e6132"
+            }
+          },
+          "family": "wrong-initial",
+          "kind": "calibration",
+          "name": "wrong-initial-descending-tighter",
+          "netlist_sha256": "9e02f7975684b61996cc277caef00c3971b74ce75bbcabdaf189a3c7629f7717",
+          "source_sha256": "7d68d48ffd3fb4365060a3cdb1c92d01e952d04673033807af45461f277e25bb"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.925852634012699,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 3.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "740085df8cb75ccd9210359ef225a7fd69ebeebdd0ac16a73ef0d9d62e94e3e6"
+            }
+          },
+          "family": "fixed-speed",
+          "kind": "calibration",
+          "name": "fixed-speed-ramp-tighter",
+          "netlist_sha256": "1e2841ba5bc33a455df797d689745466eabb6099e6ccb5a87461bb0c4e6bab87",
+          "source_sha256": "815343bf60120682fe31672a8e7e0a34214cf4843f936eb6747a4d37b5eeeeb8"
+        }
+      ],
+      "spectre_identity": {
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "version": ""
+      }
+    },
+    {
+      "analysis_identity": {
+        "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "mode": "new analysis; execution identities unchanged",
+        "runner_sha256": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+        "settings_parser_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+      },
+      "analysis_sha256": "cb28b87faa641e84b051373189a51673888ba0600635accb88803b42474b6761",
+      "contract": {
+        "cases_sha256": "df84f3123a91a8ef6e70818d5437db8e101c871aba8d5da85c7e8302653417e1",
+        "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "denominator": 14,
+        "evas_timeout_s": 300,
+        "event_count": "exact",
+        "event_time_allowance_s": 2e-07,
+        "evidence": "Development saved-point and discrete-event evidence; not holdout, continuous-time qualification, or performance comparison.",
+        "groups": {
+          "benchmark": 8,
+          "calibration": 6,
+          "diagnostic": 0
+        },
+        "hypothesis": "Self-reversing bidirectional guards may chatter; solver/cross/step/method sweeps are separate interventions.",
+        "output_limit_per_file_bytes": 16777216,
+        "runner_sha256": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+        "settings_parser_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+        "spectre_timeout_s": 15,
+        "timeout_s": 15,
+        "wave_allowance_v": 1e-06
+      },
+      "effective_settings_note": "Spectre log rounds the short stop to 0.5; exact actual_stop_s is checked from the PSF time axis. Other printed settings match the requested values.",
+      "evas_identity_ref": "shared_evas_identity",
+      "id": "oscillator-compatibility-20261004-r2",
+      "input_manifest_sha256": "6d1121ab618a123019388f4cb9c1b490ea3c266d7a906bda78b54395e1347430",
+      "inputs_archive_sha256": "0e5858754363db61724e6580207d1b5b073766b0e0e87c17028a2267dbc84405",
+      "results": [
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.547473508864641e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.500000000001819,
+                2.5000000000045475
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "bc257c7c9e2b69c3017d3a2f0de3231fa39d5d16d2a36c09250cbfc75f0c6abe"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-17,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-13
+              },
+              "execution": {
+                "elapsed_s": 3.1264740973711014,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.7107011807127037e-08,
+              "max_voltage_error_v": 3.740004023145005e-08,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.50000000005,
+                1.500000006853439,
+                2.500000017107012
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 9.999999999999999e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "stop": 3.0,
+                "vabstol": 9.999999999999999e-14
+              },
+              "rows": 692,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "0f2c1853a175ccd4c6daa25ad8f1c57ff60efae040a072c9c93baabd1b7f582c"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "constant-tight",
+          "netlist_sha256": "e1ac230cbb3add6486c30f096753d80dc524902ccc9035bb87810709405cd0f5",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.547473508864641e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.500000000001819,
+                2.5000000000045475
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "bc257c7c9e2b69c3017d3a2f0de3231fa39d5d16d2a36c09250cbfc75f0c6abe"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.975776655599475,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.964265194942527e-09,
+              "max_voltage_error_v": 3.648754021146061e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000499998,
+                1.500000000721764,
+                2.500000001964265
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 706,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "72aa02015f0382115912a7656c5c3be66c1f21f18f3e8af5641d55624ced49dc"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 6.0,
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 1.4779288903810084e-12,
+              "max_voltage_error_v": 1.425526363618701e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75,
+                2.750000000000739,
+                4.750000000001478
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "13f88061fb5cea0fba32d70eb960868badbfec4804652ac6911db56eff685ebe"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-17,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-13
+              },
+              "execution": {
+                "elapsed_s": 3.025330640375614,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 3.4288835770723836e-08,
+              "max_voltage_error_v": 3.7412447063955856e-08,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.7500000000499998,
+                2.750000013881689,
+                4.750000034288836
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 9.999999999999999e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "stop": 6.0,
+                "vabstol": 9.999999999999999e-14
+              },
+              "rows": 693,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "049f715663ee64c2c725e351c45995d0b76c7d542f63c8366feddba3a57b2e9e"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "descending-tight",
+          "netlist_sha256": "d68ade6762cbbebc2a14f035a5b0f6dd7ed5ed0b58f7e454ba7e23653f59b804",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 6.0,
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 1.4779288903810084e-12,
+              "max_voltage_error_v": 1.425526363618701e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75,
+                2.750000000000739,
+                4.750000000001478
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "13f88061fb5cea0fba32d70eb960868badbfec4804652ac6911db56eff685ebe"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.0256553683429956,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.75,
+                2.75,
+                4.75
+              ],
+              "max_event_error_s": 3.755163291430108e-09,
+              "max_voltage_error_v": 3.435605716584078e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.75000000005,
+                2.750000001252309,
+                4.750000003755163
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "rows": 707,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "0837136f590f19df71d577f181cfaf96807cd80bf5aa1b8f058b936e92068727"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "descending-tighter",
+          "netlist_sha256": "9e02f7975684b61996cc277caef00c3971b74ce75bbcabdaf189a3c7629f7717",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 9.373835041515122e-12,
+              "max_voltage_error_v": 6.08013639435967e-13,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.44948974278327114,
+                1.162277660168524,
+                1.741657386774958,
+                2.2426406871225484,
+                2.690415759832803
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "aeca08d71c60e3ab3c5b79fd9e82f6435ea7736bc5cc13cd14c80bfebe5a4cb2"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-17,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-13
+              },
+              "execution": {
+                "elapsed_s": 3.1261432841420174,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 2.461776649198555e-08,
+              "max_voltage_error_v": 9.25576943144879e-08,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.4494897428240609,
+                1.162277664198713,
+                1.741657395984019,
+                2.242640702562245,
+                2.690415784441196
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 9.999999999999999e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "stop": 3.0,
+                "vabstol": 9.999999999999999e-14
+              },
+              "rows": 985,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "b598a08112ad00f129aeee9875214b037d69d55bfbcd7902fe2e93d775a0d021"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "ramp-tight",
+          "netlist_sha256": "81f72727a57ece4077347c107e8c6469f5d327f938b22ee991e4a80a8efa6ab3",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 9.373835041515122e-12,
+              "max_voltage_error_v": 6.08013639435967e-13,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.44948974278327114,
+                1.162277660168524,
+                1.741657386774958,
+                2.2426406871225484,
+                2.690415759832803
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "aeca08d71c60e3ab3c5b79fd9e82f6435ea7736bc5cc13cd14c80bfebe5a4cb2"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.4774284567683935,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.4494897427831781,
+                1.162277660168379,
+                1.7416573867739416,
+                2.242640687119285,
+                2.6904157598234293
+              ],
+              "max_event_error_s": 2.5581967655341487e-09,
+              "max_voltage_error_v": 8.634923786415838e-09,
+              "observed_count": 5.0,
+              "observed_events": [
+                0.4494897428275879,
+                1.162277660715338,
+                1.74165738788593,
+                2.242640688907966,
+                2.690415762381626
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1002,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "12a09c01b5a6427f2cad078f9a3b61aadbc9f89f942e146cb42e44e12f2af50e"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "ramp-tighter",
+          "netlist_sha256": "1e2841ba5bc33a455df797d689745466eabb6099e6ccb5a87461bb0c4e6bab87",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "578514d9eb9058c707b5be8c4bd0fc6ae31a1ba9471546746ad2cf7fbf31cdf2"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-17,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-13
+              },
+              "execution": {
+                "elapsed_s": 3.1254535615444183,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.4196618325357235e-08,
+              "max_voltage_error_v": 1.8601245686117318e-08,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695626785,
+                1.359166318859162
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 9.999999999999999e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-11,
+                "stop": 2.0,
+                "vabstol": 9.999999999999999e-14
+              },
+              "rows": 1110,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "2017e5e8b8d00ea570155d1d157465ef4632decc4cd35b8949738d424d628039"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "segments-tight",
+          "netlist_sha256": "abb67aed930e3b9b31d952b92d4831dbd70b2d07fdca36df577296d2f9c80887",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "578514d9eb9058c707b5be8c4bd0fc6ae31a1ba9471546746ad2cf7fbf31cdf2"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.126485001295805,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.3009742172442884e-09,
+              "max_voltage_error_v": 1.906949237406863e-09,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695626785,
+                1.359166305963518
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1042,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "71a612f4adccc1891bdfe32fbca19f3b11382e17e052e8496ed99c2220eb9814"
+            }
+          },
+          "family": "reference",
+          "kind": "benchmark",
+          "name": "segments-tighter",
+          "netlist_sha256": "14e564dafcbc58e1b11fc34deecde05abd30cf9397e435a51531d2cddf2d8d1b",
+          "source_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 3.0,
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 4.548361687284341e-12,
+              "max_voltage_error_v": 4.549693954913892e-13,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.5000000000009095,
+                1.5000000000018192,
+                2.5000000000045484
+              ],
+              "passed": true,
+              "rows": 601,
+              "status": "checked",
+              "waveform_sha256": "808ab42026a4e96b77978e45bafaa43a6ddc8f218a6b6f9d9d6be825be319501"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.075707346200943,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.5,
+                1.5,
+                2.5
+              ],
+              "max_event_error_s": 1.965562823613709e-09,
+              "max_voltage_error_v": 3.651717483954542e-09,
+              "observed_count": 3.0,
+              "observed_events": [
+                0.500000000048341,
+                1.500000000719922,
+                2.500000001965563
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "rows": 706,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "303458f1f48d7f41c7643cbd1c2dd0736ecbd22c00e941bccd96b26b5a13f0f5"
+            }
+          },
+          "family": "equivalent",
+          "kind": "calibration",
+          "name": "equivalent-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "f4bde0a37218bd405602708ed1226a3a303fa61f719d92087e90371d886dec73"
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 2.0,
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.821653938804957e-12,
+              "max_voltage_error_v": 5.253575352526241e-13,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.35203036951425026,
+                1.3591663046643654
+              ],
+              "passed": true,
+              "rows": 501,
+              "status": "checked",
+              "waveform_sha256": "7bdb9b3bc86291a46db34550edc8166ffb40ba356ba96ee367bb7072cfbd2621"
+            },
+            "spectre": {
+              "actual_stop_s": 2.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.004,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.026550630107522,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_events": [
+                0.3520303695138075,
+                1.3591663046625437
+              ],
+              "max_event_error_s": 1.3816183752624056e-09,
+              "max_voltage_error_v": 1.9293204377851536e-09,
+              "observed_count": 2.0,
+              "observed_events": [
+                0.3520303695625489,
+                1.359166306044162
+              ],
+              "passed": true,
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.004,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 2.0,
+                "vabstol": 1e-14
+              },
+              "rows": 1039,
+              "settings_match": true,
+              "status": "checked",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "766f4ebda0226cb2bea5968f5585c440787d339fd69b3c63d64fdfdb433ca72e"
+            }
+          },
+          "family": "equivalent",
+          "kind": "calibration",
+          "name": "equivalent-segments-tighter",
+          "netlist_sha256": "14e564dafcbc58e1b11fc34deecde05abd30cf9397e435a51531d2cddf2d8d1b",
+          "source_sha256": "f4bde0a37218bd405602708ed1226a3a303fa61f719d92087e90371d886dec73"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.9766480177640915,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 2.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "4789f3c4c8d1e173e3bbcdf991d66a23a73ee678d8b1024088bfd8189441d885"
+            }
+          },
+          "family": "bidirectional-starter",
+          "kind": "calibration",
+          "name": "bidirectional-starter-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "bd1fa3c6566028a78a6dabd13fefe9aa22c0486b2b9ace8303355618f5d93948"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.076047195121646,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 1.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "4ca0c72ce161edfc55b33df0861de36e5224709675ec777d39096f4aad891f48"
+            }
+          },
+          "family": "wrong-speed",
+          "kind": "calibration",
+          "name": "wrong-speed-constant-tighter",
+          "netlist_sha256": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2",
+          "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 6.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.01,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.5287005808204412,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 3.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.01,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 6.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "bbab6b20eac60f05a26429ec1d7ee2edbc88a1dd7f91c45527473933460b4a64"
+            }
+          },
+          "family": "wrong-initial",
+          "kind": "calibration",
+          "name": "wrong-initial-descending-tighter",
+          "netlist_sha256": "9e02f7975684b61996cc277caef00c3971b74ce75bbcabdaf189a3c7629f7717",
+          "source_sha256": "7d68d48ffd3fb4365060a3cdb1c92d01e952d04673033807af45461f277e25bb"
+        },
+        {
+          "backends": {
+            "evas": {
+              "reason": "Negative controls calibrate the Spectre benchmark verifier.",
+              "status": "not_attempted_by_design"
+            },
+            "spectre": {
+              "actual_stop_s": 3.0,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.005,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 3.076746106147766,
+                "returncode": 0,
+                "timeout": false
+              },
+              "observed_count": 3.0,
+              "passed": false,
+              "reason": "incorrect count outside event windows",
+              "requested_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.005,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "stop": 3.0,
+                "vabstol": 1e-14
+              },
+              "settings_match": true,
+              "status": "failed",
+              "stop_audit": "Log stop may be rounded; require final saved time to match requested stop.",
+              "waveform_sha256": "b6e1cd2039465fca097d0e1ca62ee6ba89dcedb83aa5aab277c204eca58ed783"
+            }
+          },
+          "family": "fixed-speed",
+          "kind": "calibration",
+          "name": "fixed-speed-ramp-tighter",
+          "netlist_sha256": "1e2841ba5bc33a455df797d689745466eabb6099e6ccb5a87461bb0c4e6bab87",
+          "source_sha256": "815343bf60120682fe31672a8e7e0a34214cf4843f936eb6747a4d37b5eeeeb8"
+        }
+      ],
+      "spectre_identity": {
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "version": ""
+      }
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Local uncommitted candidate; development and benchmark calibration, not original 31-condition results.",
+  "shared_evas_identity": {
+    "binary_sha256": "15fe484aa2888b8ce79b4b08b32ed6c5063e01d1c1c83e6cd7ba7f4f513725a7",
+    "source_sha256": {
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "3cb4d4be995698de4473239f727c1f0be75626279af776f91110d685f5c9c150",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "ea3cc5a3736971e92eddbb09207ef27d0b908750f2fa6b79e7a99c12f3d0a935",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "e1610fa5c68266773439f3e8cd2ca806553a6260a0a1dd284ec135159779057b",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "b906b67ffe3df4bc186d58d92d46351ebbc6d1e1191fa920357ddefae16e8408",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "801bd02ed0d07a94ea772a9921acef4e089a67bf967661751e3cf8a536afefed",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "b38b71d8223e7c33f43c68cacadf475747037f0b5b834ed10e75e9371532f913",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "38bd73cfb49039831522015bdd41d965aa43f530d52ca1da85b02c6c35146905",
+      "evas/src/evas/array_elaboration.py": "a687c0c8ef62ce97e482582f6f077fbe0e2e6d92c448d8af5c8493ea0f1ab119",
+      "evas/src/evas/diagnostics.py": "4c3e4c493c0c97d72386c972e19ff65491977b7e49e724fe13fa59b54a329702",
+      "evas/src/evas/elaboration.py": "67cd310e0b5623835dac4d890728e849383aeff6966c1589d72e4379ab383dc4",
+      "evas/src/evas/errors.py": "4cd66767c4e6d25c94ce9a2231ee0a82388dac2e73dcd674b0e267047986c805",
+      "evas/src/evas/frontend.py": "a1db72e40ca90e871036a6a1376faa049b03050483d7be2c4e2626d30f21842c",
+      "evas/src/evas/hierarchy.py": "8193b860e8529318c764ff499b033cb983282cbb1c365b56483c68a7cbcf3d36",
+      "evas/src/evas/instance_compiler.py": "085a86e31138b13467eba67590e1c863a8914c30caae51ebbf405f4b3a3cc11f",
+      "evas/src/evas/integer_constants.py": "df6cb3c9994a2296cb076ae77d0cc06d60eaeaa87014680c722b6ad2e1869abc",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/limits.py": "9d75bbf05f9960e3e50580fa3d7e59e537855c356c0ceac2e5259e9e2b2b64ab",
+      "evas/src/evas/lowering.py": "d3b1a58e653ec516a3edbe44af1c2a5c0eda15402b0a0480784d5346e21fffb9",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "6e19fb7f8397b8dfbdee90a6b2c1220bfdd2a60c391a8ccf86604862c4fd3493",
+      "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+      "evas/src/evas/node_elaboration.py": "13adc567543c5c4bde2a30249ad4c093fcaa35f076e9a6e76e1188ea98c2473c",
+      "evas/src/evas/parameters.py": "3cdb30bb3bca87ee714b651daa6f41a3892484f88c323b44ad0d576870d067a8",
+      "evas/src/evas/preprocessor.py": "3bb1cb3b727ded90d58afca3381ec9d7f4ce96ba4a8586641f330121b820b4d5",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/runtime.py": "13dcf6374917c637563092a977d184585c99e7045b4bca6ad963cea54e38562c",
+      "evas/src/evas/scs.py": "d11ef906cebb8a9833abf1f611abfbbf5970cda42304d259bb1557a08b0b97e4",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "8d963edc29f04c1c3976807b4e2a399073be1d5c5fc471c0abd4650f152c8731"
+    }
+  }
+}

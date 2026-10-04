@@ -1,0 +1,3238 @@
+{
+  "analysis_notes": [
+    "EVAS saves requested observation times, not every event time. Native event log used for event sequence and checked against sampled counter. An initial in-memory analysis attempt detected a count jump; no simulator result was changed. Sparse-output calibration now covers this.",
+    "First remote preflight failed before Spectre invocation because Python supplied a relative __file__. Retried with an absolute runner path and unchanged frozen files. Current runner resolves paths explicitly.",
+    "First successful analysis is retained in runs/cross-restart-20261004-r1-analysis.json; v2 adds switch-step measurements, preserving verdicts and executions.",
+    "Controls use a predeclared 1e-10 V diagnostic target, 2e-9 s event target, exact count=2; these are NOT replacements for earlier triangle benchmark criteria.",
+    "Original model has no unique event-count oracle in this experiment. Counts are observations, not pass/fail evidence.",
+    "Observed traponly zero increments across opposite endpoint slopes are consistent with trapezoidal cancellation, not proof of closed-source internal history implementation.",
+    "No cross-backend tolerance mapping, speed ratio, new holdout, or general accuracy qualification claimed."
+  ],
+  "availability": "Inputs, runner, calibration and compact receipt in repository. Raw inputs/outputs and prior runner revisions in ignored local runs archives and authorized thu-sui storage; not publicly downloadable.",
+  "date": "2026-10-04",
+  "executions": [
+    {
+      "analysis_sha256": "a5c957acf71fdf8d3c3da9f5e6fae2fc7fd498b88d84a9303bcda7e0eebdf33d",
+      "analysis_tools": {
+        "benchmark/checkers/triangle_oscillator.py": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "90ba4ced2a3204bca775b089ed1a358c478bb3a730eb3576c2af4a1abf1409cb",
+        "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+        "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+      },
+      "contract": {
+        "control_cross_count": 2,
+        "control_event_limit_s": 2e-09,
+        "control_voltage_limit_v": 1e-10,
+        "count_encoding": "timer marker adds 10; each cross adds 1; no feedback from counter",
+        "denominator": 20,
+        "oracle": "Controls: t before tau, 2*tau-t after; roots .5 and 2*tau-.5. Original: report only.",
+        "output_limit_per_file_bytes": 16777216,
+        "purpose": "Diagnose finite precision and restart; measurements are not an LRM compliance verdict, holdout, or speed comparison.",
+        "timeout_s": 15,
+        "tools": {
+          "benchmark/checkers/triangle_oscillator.py": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+          "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "3f6f9d5088043fc56f7d22d590b4f224269d01eec423d0e8e5ee6b8bb4de5e32",
+          "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+          "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+        }
+      },
+      "input_archive_sha256": "0112d84c413566324f8bd10d02cacac7a5a3f96610664db523db628670b230be",
+      "input_manifest_sha256": "5d3a6cdceb73e2c0d1d7f7ccb16f9c3591b7d7be34e4c2fbc36af862bf2395d1",
+      "inputs": {
+        "conditions.json": "e4bb144524e11ff4067d196cb39a8a350d175b80daa9f5e86d8e9b0b12d56987",
+        "contract.json": "74c76d348d7438da49664260362b2a69fb51f18e7f230f8fa8f0d7af245b6b76",
+        "original-baseline/dut.va": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77",
+        "original-baseline/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "original-gear2/dut.va": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77",
+        "original-gear2/tb.scs": "cf2ed98e06e79e1773b4b8c9b0c80438c65ccca318440890a3663b6ea0e50d48",
+        "original-tight-cross/dut.va": "a2e54aed749d86b2f8e76e4a06fc8a4d285adbd39debf85577bfc5bbaf31453b",
+        "original-tight-cross/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "original-tight-solver/dut.va": "60f5b71752577e814b187a0df6088137fe0b537772e34fe4240f1c827d3f2f77",
+        "original-tight-solver/tb.scs": "c566f57d754cbd758b6deb7ad665e4c17aef573087dd43284c59101c66aabd0c",
+        "pwl-large-baseline/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-large-baseline/tb.scs": "7230d41da3c4b6102050af202fa86188e26620baf55f3efa33da2e7d982258d4",
+        "pwl-large-gear2/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-large-gear2/tb.scs": "4945863c1707ce35d211836f0284f457f2e89ea48dda534e2ffb5c207de34788",
+        "pwl-large-tight-cross/dut.va": "cc81ba81ca3f41c4dd14b140221d364b9580e81c1cf1957d1ff7ff7aaa238d1b",
+        "pwl-large-tight-cross/tb.scs": "7230d41da3c4b6102050af202fa86188e26620baf55f3efa33da2e7d982258d4",
+        "pwl-large-tight-solver/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-large-tight-solver/tb.scs": "e07d73b0818bda862ad0f811b848a8daec96cbee05fbbf9c6d0b60413127d5e7",
+        "pwl-small-baseline/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-small-baseline/tb.scs": "40feedcedc68dfffd3b135657de3cd9a6f7aae88897ee5b1d6083c63c910a942",
+        "pwl-small-gear2/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-small-gear2/tb.scs": "b973ab0387e0f954b40263e0101346ad5cee4f98fdf91b521ac45bf83399221a",
+        "pwl-small-tight-cross/dut.va": "cc81ba81ca3f41c4dd14b140221d364b9580e81c1cf1957d1ff7ff7aaa238d1b",
+        "pwl-small-tight-cross/tb.scs": "40feedcedc68dfffd3b135657de3cd9a6f7aae88897ee5b1d6083c63c910a942",
+        "pwl-small-tight-solver/dut.va": "7fe410c38e2ab1f8e577b9b6d86051b61e5e46295c00a4f3f138bbb8a71f962e",
+        "pwl-small-tight-solver/tb.scs": "bb1727eb99469e8b61eb88b74e1aa61d363a317d9b96a52429676c7a3b678798",
+        "timer-large-baseline/dut.va": "522e4d33d5005902ed9f2409d84e38c00d4e21ade40ebfbc65725dd5a7674e3b",
+        "timer-large-baseline/tb.scs": "d8cc72f557d77502118cc4a405d8343c8835468fdd14a2c9069ac1a829d68b21",
+        "timer-large-gear2/dut.va": "522e4d33d5005902ed9f2409d84e38c00d4e21ade40ebfbc65725dd5a7674e3b",
+        "timer-large-gear2/tb.scs": "3ab5ead849d0b071fac1c0860550f3d5d63df058ee45e1c6c2280f8c4f09cac3",
+        "timer-large-tight-cross/dut.va": "d18c5ada909b310292cc6074435926fbd4f9446cbd1e939e0080d41a698e9a8f",
+        "timer-large-tight-cross/tb.scs": "d8cc72f557d77502118cc4a405d8343c8835468fdd14a2c9069ac1a829d68b21",
+        "timer-large-tight-solver/dut.va": "522e4d33d5005902ed9f2409d84e38c00d4e21ade40ebfbc65725dd5a7674e3b",
+        "timer-large-tight-solver/tb.scs": "6d666de6a5b06b23ea51c0b80c44478ff1f7ee3c7d994ced61358fe23f9e5c57",
+        "timer-small-baseline/dut.va": "7d5f40f65d18601a4e38af677c83f9e8590037a2386af18c34916d9dec8d9fb7",
+        "timer-small-baseline/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "timer-small-gear2/dut.va": "7d5f40f65d18601a4e38af677c83f9e8590037a2386af18c34916d9dec8d9fb7",
+        "timer-small-gear2/tb.scs": "cf2ed98e06e79e1773b4b8c9b0c80438c65ccca318440890a3663b6ea0e50d48",
+        "timer-small-tight-cross/dut.va": "4afc354e5f70561a05a155594933e6964acf752ede1bf00a16ebf3f5aee89079",
+        "timer-small-tight-cross/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "timer-small-tight-solver/dut.va": "7d5f40f65d18601a4e38af677c83f9e8590037a2386af18c34916d9dec8d9fb7",
+        "timer-small-tight-solver/tb.scs": "c566f57d754cbd758b6deb7ad665e4c17aef573087dd43284c59101c66aabd0c"
+      },
+      "remote_archive_sha256": "aeb465f3f32d4f3af81a949254c8ecc0dcf8d27508f006dcd2b1f9626369c1b9",
+      "remote_result_manifest_sha256": "8a69ef3744eff2e6f0effe39eadacd4031c778a8f0817773469a9d7195f561ec",
+      "results": [
+        {
+          "backends": {
+            "evas": {
+              "message": "event_resolution: cannot certify ordering of distinct events with overlapping time bounds",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.7230654079467058,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005,
+                  "z": 0.5000000005
+                }
+              ],
+              "max_cross_time_error_s": null,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": false,
+              "rows": 270,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "4137bbbe186aa1c6eec3bcb1efa20a0012d0cfb6ffcb5649f3bd059f3cf3d523"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.5000000005,
+                0.5000000005
+              ],
+              [
+                0.50000006,
+                0.4999999410000001
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-small-baseline",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "event_resolution: cannot certify ordering of distinct events with overlapping time bounds",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 1.9282367378473282,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005,
+                  "z": 0.5000000005
+                }
+              ],
+              "max_cross_time_error_s": null,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": false,
+              "rows": 289,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "136e88c2623ef7dcfe895c914c4bd9bdde465ae611817aef4a1abd180e62f7b6"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.5000000005,
+                0.5000000005
+              ],
+              [
+                0.50000006,
+                0.4999999410000001
+              ]
+            ],
+            "evas_vabstol": 1e-10,
+            "family": "pwl-small",
+            "iabstol": 1e-18,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-small-tight-solver",
+            "profile": "tight-solver",
+            "reltol": 1e-12,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-14,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0
+                  ],
+                  "before": [
+                    0.0
+                  ],
+                  "event": 0,
+                  "guard_value": 5.2349236057399425e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.49999999999795897,
+                    0.5000000000052349
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000052349
+                },
+                {
+                  "after": [
+                    2.0
+                  ],
+                  "before": [
+                    1.0
+                  ],
+                  "event": 0,
+                  "guard_value": -1.1595724380684002e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000000009938965,
+                    0.5000000010011597
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000010011597
+                }
+              ],
+              "max_cross_time_error_s": 5.234923605712538e-12,
+              "max_voltage_error_v": 0.0,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "ac97244d1aeaaeec5fd36aa0bdc47ac64e8a679b997bd777213fa6514e7762fe"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9755787178874016,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.500000000005,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000010050001,
+                  "z": 0.499999999995
+                }
+              ],
+              "max_cross_time_error_s": 5.000000413701855e-12,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": true,
+              "rows": 302,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "02159511391cb9338003b8aaf4f76a052af716fde80bc901063c035ff2251dfb"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.5000000005,
+                0.5000000005
+              ],
+              [
+                0.50000006,
+                0.4999999410000001
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-small-tight-cross",
+            "profile": "tight-cross",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-11,
+            "vabstol": 1e-10,
+            "vtol": 1e-10
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "event_resolution: cannot certify ordering of distinct events with overlapping time bounds",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.082081286236644,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005,
+                  "z": 0.5000000005
+                }
+              ],
+              "max_cross_time_error_s": null,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": false,
+              "rows": 270,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "0ca5023d6c1329c905908212de5313d8c53e36f94f5c447e247cc35d9242e1ec"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.5000000005,
+                0.5000000005
+              ],
+              [
+                0.50000006,
+                0.4999999410000001
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "gear2only",
+            "name": "pwl-small-gear2",
+            "profile": "gear2",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0
+                  ],
+                  "before": [
+                    0.0
+                  ],
+                  "event": 0,
+                  "guard_value": 6.88878843332841e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.49999999975755444,
+                    0.5000000006888788
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000006888788
+                },
+                {
+                  "after": [
+                    2.0
+                  ],
+                  "before": [
+                    1.0
+                  ],
+                  "event": 0,
+                  "guard_value": -4.882811930176386e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019997558593,
+                    0.5000020004882813
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020004882813
+                }
+              ],
+              "max_cross_time_error_s": 6.88878842858287e-10,
+              "max_voltage_error_v": 0.0,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "c2f291110c42db2cf68ed80f007f48ad30623057bbf84ad8e969f5be7d2f5a02"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9732012543827295,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005004315,
+                  "z": 0.5000000005004315
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000020004997676,
+                  "z": 0.4999999995002324
+                }
+              ],
+              "max_cross_time_error_s": 5.004314740375548e-10,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": true,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "04f3602765c57ec54be3c8abf704f690b00de00bed4004e088f512534d5b5c61"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500001,
+                0.500001
+              ],
+              [
+                0.500004,
+                0.49999800000000005
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-large-baseline",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0
+                  ],
+                  "before": [
+                    0.0
+                  ],
+                  "event": 0,
+                  "guard_value": 6.88878843332841e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.49999999975755444,
+                    0.5000000006888788
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000006888788
+                },
+                {
+                  "after": [
+                    2.0
+                  ],
+                  "before": [
+                    1.0
+                  ],
+                  "event": 0,
+                  "guard_value": -4.882811930176386e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019997558593,
+                    0.5000020004882813
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020004882813
+                }
+              ],
+              "max_cross_time_error_s": 6.88878842858287e-10,
+              "max_voltage_error_v": 0.0,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "c2f291110c42db2cf68ed80f007f48ad30623057bbf84ad8e969f5be7d2f5a02"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 1.9230563212186098,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.500000000500716,
+                  "z": 0.500000000500716
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000020004998933,
+                  "z": 0.4999999995001068
+                }
+              ],
+              "max_cross_time_error_s": 5.007160241987663e-10,
+              "max_voltage_error_v": 1.1102230246251565e-16,
+              "meets_diagnostic_targets": true,
+              "rows": 309,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "3b85d1a9605faacca1f84763e13c1347b90def25d2af8fe0c001abfff759a6c7"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500001,
+                0.500001
+              ],
+              [
+                0.500004,
+                0.49999800000000005
+              ]
+            ],
+            "evas_vabstol": 1e-10,
+            "family": "pwl-large",
+            "iabstol": 1e-18,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-large-tight-solver",
+            "profile": "tight-solver",
+            "reltol": 1e-12,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-14,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0
+                  ],
+                  "before": [
+                    0.0
+                  ],
+                  "event": 0,
+                  "guard_value": 4.937605879742301e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.4999999999976616,
+                    0.5000000000049376
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000049376
+                },
+                {
+                  "after": [
+                    2.0
+                  ],
+                  "before": [
+                    1.0
+                  ],
+                  "event": 0,
+                  "guard_value": -1.907363156302381e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019999961853,
+                    0.5000020000019074
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020000019074
+                }
+              ],
+              "max_cross_time_error_s": 4.937605879717921e-12,
+              "max_voltage_error_v": 0.0,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "4255472fad3eac689b1fd1fdf8eacf6541d75fcc689d606c446a6c7d313ded7b"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0747615434229374,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.500000000005432,
+                  "z": 0.500000000005432
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000020000047676,
+                  "z": 0.4999999999952325
+                }
+              ],
+              "max_cross_time_error_s": 5.4319881925835034e-12,
+              "max_voltage_error_v": 1.1102230246251565e-16,
+              "meets_diagnostic_targets": true,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "ed1ec369f8ad06066de9558d8f3aeef440712fd4a954519f1c220760475b4751"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500001,
+                0.500001
+              ],
+              [
+                0.500004,
+                0.49999800000000005
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "pwl-large-tight-cross",
+            "profile": "tight-cross",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-11,
+            "vabstol": 1e-10,
+            "vtol": 1e-10
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0
+                  ],
+                  "before": [
+                    0.0
+                  ],
+                  "event": 0,
+                  "guard_value": 6.88878843332841e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.49999999975755444,
+                    0.5000000006888788
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000006888788
+                },
+                {
+                  "after": [
+                    2.0
+                  ],
+                  "before": [
+                    1.0
+                  ],
+                  "event": 0,
+                  "guard_value": -4.882811930176386e-10,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019997558593,
+                    0.5000020004882813
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020004882813
+                }
+              ],
+              "max_cross_time_error_s": 6.88878842858287e-10,
+              "max_voltage_error_v": 0.0,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "c2f291110c42db2cf68ed80f007f48ad30623057bbf84ad8e969f5be7d2f5a02"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.980376835912466,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005004315,
+                  "z": 0.5000000005004315
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000020004997676,
+                  "z": 0.4999999995002324
+                }
+              ],
+              "max_cross_time_error_s": 5.004314740375548e-10,
+              "max_voltage_error_v": 5.551115123125783e-17,
+              "meets_diagnostic_targets": true,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_events_s": [],
+              "waveform_sha256": "4230ee592facf3234ba2a865a176a314ca0a47fd2b4b7ddde8870c9c503490ce"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500001,
+                0.500001
+              ],
+              [
+                0.500004,
+                0.49999800000000005
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "pwl-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "gear2only",
+            "name": "pwl-large-gear2",
+            "profile": "gear2",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 5.236033828764579e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.499999999990683,
+                    0.5000000000052349
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000052349
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.45582990105465e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000000009854436,
+                    0.5000000010145602
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000010145602
+                }
+              ],
+              "max_cross_time_error_s": 1.4560130878749078e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "730b174a05929f88c80c2e83dc098a507856de12d033821139c7d8db54945807"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.1821605060249567,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [],
+              "first_switch_step": {
+                "after": {
+                  "count": 10.0,
+                  "ctl": 0.5000000005000192,
+                  "time": 0.5000000005000192,
+                  "z": 0.4999999022118487
+                },
+                "before": {
+                  "count": 0.0,
+                  "ctl": 0.4999999022118488,
+                  "time": 0.4999999022118488,
+                  "z": 0.4999999022118487
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 9.828817043588955e-08
+              },
+              "max_cross_time_error_s": null,
+              "max_error_with_observed_timer_v": 9.828817054691186e-08,
+              "max_voltage_error_v": 9.82881321331952e-08,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 1.9206858326015208e-14,
+              "timer_events_s": [
+                0.5000000005000192
+              ],
+              "waveform_sha256": "870af8062d2ce0a907f1a1298d0705281ca05bc543fa2b2392544967b8b23250"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-small-baseline",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 5.236033828764579e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.499999999990683,
+                    0.5000000000052349
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000052349
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.45582990105465e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000000009854436,
+                    0.5000000010145602
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000010145602
+                }
+              ],
+              "max_cross_time_error_s": 1.4560130878749078e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "730b174a05929f88c80c2e83dc098a507856de12d033821139c7d8db54945807"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 1.928398972377181,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000000381188,
+                  "z": 0.5000000000381188
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.5000000005,
+                  "time": 0.5000000005,
+                  "z": 0.5000000004716906
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000004716906,
+                  "time": 0.5000000004716906,
+                  "z": 0.5000000004716906
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.8309465882614404e-11
+              },
+              "max_cross_time_error_s": null,
+              "max_error_with_observed_timer_v": 2.8309465882614404e-11,
+              "max_voltage_error_v": 2.8309465882614404e-11,
+              "meets_diagnostic_targets": false,
+              "rows": 331,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "49c9632bcf32f79fe432332c8c2bc783cdad288bf0738641d776dcc382f9e961"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-10,
+            "family": "timer-small",
+            "iabstol": 1e-18,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-small-tight-solver",
+            "profile": "tight-solver",
+            "reltol": 1e-12,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-14,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 6.43929354282595e-15,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.49999999999989164,
+                    0.5000000000000053
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000000053
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.2007062011319624e-13,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000000009998818,
+                    0.500000001000122
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.500000001000122
+                }
+              ],
+              "max_cross_time_error_s": 1.219024881038422e-13,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "6189015ab506c68367591e1b569083b3bd7a09ae2188cd8c37c82d7464beaa7b"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9762277230620384,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000000049999,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000000007999766,
+                  "z": 0.4999999999949999
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.5000000005,
+                  "time": 0.5000000005,
+                  "z": 0.5000000002949766
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000002949765,
+                  "time": 0.5000000002949765,
+                  "z": 0.5000000002949766
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.050235536898981e-10
+              },
+              "max_cross_time_error_s": 2.000234422538938e-10,
+              "max_error_with_observed_timer_v": 2.0502360920104934e-10,
+              "max_voltage_error_v": 2.0502360920104934e-10,
+              "meets_diagnostic_targets": false,
+              "rows": 304,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "4273c74d21b2603ea23b2223c849fcc03d4365f454254a2b28fb5c81e3c30134"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-small-tight-cross",
+            "profile": "tight-cross",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-11,
+            "vabstol": 1e-10,
+            "vtol": 1e-10
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 5.236033828764579e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.499999999990683,
+                    0.5000000000052349
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000052349
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.45582990105465e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000000009854436,
+                    0.5000000010145602
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000010145602
+                }
+              ],
+              "max_cross_time_error_s": 1.4560130878749078e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.5000000005
+              ],
+              "waveform_sha256": "730b174a05929f88c80c2e83dc098a507856de12d033821139c7d8db54945807"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0270519629120827,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [],
+              "first_switch_step": {
+                "after": {
+                  "count": 10.0,
+                  "ctl": 0.5000000005000041,
+                  "time": 0.5000000005000041,
+                  "z": 0.4999999819725041
+                },
+                "before": {
+                  "count": 0.0,
+                  "ctl": 0.4999999866043812,
+                  "time": 0.4999999866043812,
+                  "z": 0.4999999866043776
+                },
+                "integral_increment_v": -4.631873495863914e-09,
+                "step_s": 1.3895622930082396e-08
+              },
+              "max_cross_time_error_s": null,
+              "max_error_with_observed_timer_v": 1.852750003417114e-08,
+              "max_voltage_error_v": 1.8527491818520758e-08,
+              "meets_diagnostic_targets": false,
+              "rows": 294,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 4.107825191113079e-15,
+              "timer_events_s": [
+                0.5000000005000041
+              ],
+              "waveform_sha256": "820dbad61743f33d0c81e2bafd820f72c8f9b093e17265066cb9d0aaf0f6e23b"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "gear2only",
+            "name": "timer-small-gear2",
+            "profile": "gear2",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 4.938716102766937e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.4999999999903856,
+                    0.5000000000049376
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000049376
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.4558410032848963e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019999854435,
+                    0.5000020000145603
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020000145603
+                }
+              ],
+              "max_cross_time_error_s": 1.456024190105154e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "f4056666c0e9fbed3c989ed08246340d511187c80198fce945329f4039ba4b95"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.8738153278827667,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005019472,
+                  "z": 0.5000000005019469
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000017334721497,
+                  "z": 0.4999999995000723
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.5000007329722221
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000007329722224,
+                  "time": 0.5000007329722224,
+                  "z": 0.5000007329722221
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.670277776672947e-07
+              },
+              "max_cross_time_error_s": 2.665278503455326e-07,
+              "max_error_with_observed_timer_v": 2.6702777805587274e-07,
+              "max_voltage_error_v": 2.6702777805587274e-07,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "7bf37436a66e3c227f270112b35d18fa19556530e530d14c8531c7be50aa2c6b"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-large-baseline",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 4.938716102766937e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.4999999999903856,
+                    0.5000000000049376
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000049376
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.4558410032848963e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019999854435,
+                    0.5000020000145603
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020000145603
+                }
+              ],
+              "max_cross_time_error_s": 1.456024190105154e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "f4056666c0e9fbed3c989ed08246340d511187c80198fce945329f4039ba4b95"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.2755560260266066,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005012312,
+                  "z": 0.5000000005012312
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000020004687158,
+                  "z": 0.4999999995000824
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.500000999968798
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000009999687981,
+                  "time": 0.5000009999687981,
+                  "z": 0.500000999968798
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 3.1201929928670324e-11
+              },
+              "max_cross_time_error_s": 5.012311676821923e-10,
+              "max_error_with_observed_timer_v": 3.120204095097279e-11,
+              "max_voltage_error_v": 3.120204095097279e-11,
+              "meets_diagnostic_targets": true,
+              "rows": 339,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "f31f7ef12f3d3f59f708c57a274e4b20a32fd3a575931f56b7b75e291cd4e4ed"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "evas_vabstol": 1e-10,
+            "family": "timer-large",
+            "iabstol": 1e-18,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-large-tight-solver",
+            "profile": "tight-solver",
+            "reltol": 1e-12,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-14,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 5.0182080713059594e-14,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.4999999999999354,
+                    0.5000000000000491
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000000491
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.2007062011319624e-13,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019999998818,
+                    0.500002000000122
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.500002000000122
+                }
+              ],
+              "max_cross_time_error_s": 1.219024881038422e-13,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "85b2cbbca9a72fa10587a24cd7db44fdb28c688bf1b2ad2c272d9a25384fbb4b"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.8856873959302902,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.500000000006948,
+                  "z": 0.5000000000069479
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000017327045767,
+                  "z": 0.4999999999950723
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.500000732699649
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000007326996491,
+                  "time": 0.5000007326996491,
+                  "z": 0.500000732699649
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.6730035096456106e-07
+              },
+              "max_cross_time_error_s": 2.6729542335068857e-07,
+              "max_error_with_observed_timer_v": 2.673003511310945e-07,
+              "max_voltage_error_v": 2.673003511310945e-07,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "a1f0a4f16d70ef7c738f3d759ff8b393d219a4f8d31d4f0cd8d86d51223d93fa"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-large-tight-cross",
+            "profile": "tight-cross",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-11,
+            "vabstol": 1e-10,
+            "vtol": 1e-10
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "after": [
+                    1.0,
+                    0.0,
+                    1.0
+                  ],
+                  "before": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "event": 1,
+                  "guard_value": 4.938716102766937e-12,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.4999999999903856,
+                    0.5000000000049376
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000000000049376
+                },
+                {
+                  "after": [
+                    -1.0,
+                    1.0,
+                    2.0
+                  ],
+                  "before": [
+                    -1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "event": 1,
+                  "guard_value": -1.4558410032848963e-11,
+                  "kind": "cross",
+                  "observation_time_bounds": [
+                    0.5000019999854435,
+                    0.5000020000145603
+                  ],
+                  "origin": "dut.va:9:1 (dut)",
+                  "time": 0.5000020000145603
+                }
+              ],
+              "max_cross_time_error_s": 1.456024190105154e-11,
+              "max_error_with_observed_timer_v": 2.1094237467877974e-15,
+              "max_voltage_error_v": 2.1094237467877974e-15,
+              "meets_diagnostic_targets": true,
+              "rows": 252,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "f4056666c0e9fbed3c989ed08246340d511187c80198fce945329f4039ba4b95"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.8738242890685797,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005019494,
+                  "z": 0.5000000005019469
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.50000185805839,
+                  "z": 0.4999999995001918
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.5000008575585819
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000008931689381,
+                  "time": 0.5000008931689381,
+                  "z": 0.5000008931689359
+                },
+                "integral_increment_v": -3.5610353998905e-08,
+                "step_s": 1.0683106188569269e-07
+              },
+              "max_cross_time_error_s": 1.419416100212345e-07,
+              "max_error_with_observed_timer_v": 1.4244141821606604e-07,
+              "max_voltage_error_v": 1.4244141821606604e-07,
+              "meets_diagnostic_targets": false,
+              "rows": 290,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "490c5095b02a66fbf8a42b18e2fda8d8226eceb5f923b56a3df030cb4e7eb49d"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "timer-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "gear2only",
+            "name": "timer-large-gear2",
+            "profile": "gear2",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.5000000600000073,
+              "cross_count": 12,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9739857744425535,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000310000032,
+                  "z": 0.4999999997500004
+                },
+                {
+                  "count": 3.0,
+                  "time": 0.5000000327500056,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 4.0,
+                  "time": 0.500000035250005,
+                  "z": 0.4999999995
+                },
+                {
+                  "count": 5.0,
+                  "time": 0.5000000382500055,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 6.0,
+                  "time": 0.5000000412500057,
+                  "z": 0.4999999995
+                },
+                {
+                  "count": 7.0,
+                  "time": 0.500000044250006,
+                  "z": 0.5000000005
+                },
+                {
+                  "count": 8.0,
+                  "time": 0.5000000472500062,
+                  "z": 0.4999999995
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 1.0,
+                  "ctl": 0.5000000302500012,
+                  "time": 0.5000000302500012,
+                  "z": 0.5000000005000025
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000005000024,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.9749998797790056e-08
+              },
+              "rows": 307,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "daceed44f2b23978cbb1b74c9efc3a679df1d682b28d332180fa6b6c11cf4e71"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "original",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "original-baseline",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-18,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-12,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-14
+              },
+              "execution": {
+                "elapsed_s": 2.033049337565899,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000037,
+                  "z": 0.5000000005000036
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000015768589,
+                  "z": 0.4999999999221393
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 1.0,
+                  "ctl": 0.5000000009989943,
+                  "time": 0.5000000009989943,
+                  "z": 0.5000000005000036
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000005000037,
+                  "time": 0.5000000005000037,
+                  "z": 0.5000000005000036
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 4.989906265961963e-10
+              },
+              "rows": 314,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "c93094de610ed6316101c024b664d4b2e66219186348f8bccec9ec9f414651f5"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-10,
+            "family": "original",
+            "iabstol": 1e-18,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "original-tight-solver",
+            "profile": "tight-solver",
+            "reltol": 1e-12,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-14,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.5000000600000049,
+              "cross_count": 1002,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.876031756401062,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000000050022,
+                  "z": 0.5000000000050023
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000300100028,
+                  "z": 0.4999999999975007
+                },
+                {
+                  "count": 3.0,
+                  "time": 0.5000000300275043,
+                  "z": 0.5000000000049999
+                },
+                {
+                  "count": 4.0,
+                  "time": 0.5000000300525026,
+                  "z": 0.4999999999949999
+                },
+                {
+                  "count": 5.0,
+                  "time": 0.5000000300825024,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 6.0,
+                  "time": 0.5000000301125024,
+                  "z": 0.499999999995
+                },
+                {
+                  "count": 7.0,
+                  "time": 0.5000000301425024,
+                  "z": 0.500000000005
+                },
+                {
+                  "count": 8.0,
+                  "time": 0.5000000301725024,
+                  "z": 0.499999999995
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 1.0,
+                  "ctl": 0.5000000300025012,
+                  "time": 0.5000000300025012,
+                  "z": 0.5000000000050023
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000000050022,
+                  "time": 0.5000000000050022,
+                  "z": 0.5000000000050023
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.99974989292906e-08
+              },
+              "rows": 2287,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "5a7a6fff453f73b8ec7ae82059cbb309e242fb6280a71bb63a301d814c81e165"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "original",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "original-tight-cross",
+            "profile": "tight-cross",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-11,
+            "vabstol": 1e-10,
+            "vtol": 1e-10
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "unsupported_cross: bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty",
+              "status": "rejected",
+              "type": "KernelError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "gear2only",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0771389920264482,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000068,
+                  "z": 0.5000000005000026
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 1.0,
+                  "ctl": 0.5000000302500034,
+                  "time": 0.5000000302500034,
+                  "z": 0.4999999921345892
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000005000068,
+                  "time": 0.5000000005000068,
+                  "z": 0.5000000005000026
+                },
+                "integral_increment_v": -8.365413417532608e-09,
+                "step_s": 2.9749996577344007e-08
+              },
+              "rows": 284,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "b4325893efd3c321dd860401388af58a4a2c1557e7dab8aeea52311db63318cd"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "evas_vabstol": 1e-08,
+            "family": "original",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "gear2only",
+            "name": "original-gear2",
+            "profile": "gear2",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        }
+      ],
+      "run_id": "cross-restart-20261004-r1"
+    },
+    {
+      "analysis_sha256": "a5e36f182c6ec19ad0238a01a5092cc5e1be3f3fba9af0bcd42364f2b5444a29",
+      "analysis_tools": {
+        "benchmark/checkers/triangle_oscillator.py": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+        "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "90ba4ced2a3204bca775b089ed1a358c478bb3a730eb3576c2af4a1abf1409cb",
+        "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+        "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+      },
+      "contract": {
+        "control_cross_count": 2,
+        "control_event_limit_s": 2e-09,
+        "control_voltage_limit_v": 1e-10,
+        "count_encoding": "timer marker adds 10; each cross adds 1; no feedback from counter",
+        "denominator": 6,
+        "oracle": "Controls: t before tau, 2*tau-t after; roots .5 and 2*tau-.5. Original: report only.",
+        "output_limit_per_file_bytes": 16777216,
+        "purpose": "Diagnose finite precision and restart; measurements are not an LRM compliance verdict, holdout, or speed comparison.",
+        "suite": "discontinuity",
+        "timeout_s": 15,
+        "tools": {
+          "benchmark/checkers/triangle_oscillator.py": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+          "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "90ba4ced2a3204bca775b089ed1a358c478bb3a730eb3576c2af4a1abf1409cb",
+          "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+          "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4"
+        }
+      },
+      "input_archive_sha256": "40676302a5167ea5a5798d84e408e5b2451d0faf490fe76b729037ba13f3dc6f",
+      "input_manifest_sha256": "8a036f57c818c713aa5c450c27458a8428a250bfb1a3d572cf0d282b2b778862",
+      "inputs": {
+        "conditions.json": "464e669e60da7a504734bde341122d1d87b91642e1b4bda519417cfa31ea2809",
+        "contract.json": "89d50d3a1d09fbda8d61ea808baedb32cfe1d386bfdb527f1a2cc7d0b288f3bd",
+        "original-baseline-discontinuity0/dut.va": "4a962134d919d4fc6e64f541341c3d54960ab6773efae515610fb9c0ac2ef516",
+        "original-baseline-discontinuity0/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "original-baseline-discontinuity1/dut.va": "eb9f8811787300b7781303d736ec5d0d521f597f345a533a7c9fcf3398e9b1fd",
+        "original-baseline-discontinuity1/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "timer-large-baseline-discontinuity0/dut.va": "c573faec0d2f69420f98c7cdbc907604f0b72f508f9655520247e194c0dbb206",
+        "timer-large-baseline-discontinuity0/tb.scs": "d8cc72f557d77502118cc4a405d8343c8835468fdd14a2c9069ac1a829d68b21",
+        "timer-large-baseline-discontinuity1/dut.va": "f61f665067a92ae01c5de0467d46ad37c6b4820e18ce06840208abdd9d6a757c",
+        "timer-large-baseline-discontinuity1/tb.scs": "d8cc72f557d77502118cc4a405d8343c8835468fdd14a2c9069ac1a829d68b21",
+        "timer-small-baseline-discontinuity0/dut.va": "2c090df7647882400699f4f022c320ffce129231be7c8211dd7a80d7e9cb1f6d",
+        "timer-small-baseline-discontinuity0/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33",
+        "timer-small-baseline-discontinuity1/dut.va": "28819b991f0cd6028d48006b329ec7c0e0fef5ffb4bdf4b6deb9b32261277225",
+        "timer-small-baseline-discontinuity1/tb.scs": "e229a79cdb37d0fc3fe0fc67ee1bc917593d9c6a9052ab16be91bdcb9261db33"
+      },
+      "remote_archive_sha256": "510225f8c4ec7b733d49ca9c9029b84eab64863bf66603e63f20fb673ed7ed7d",
+      "remote_result_manifest_sha256": "dca39d47b5ac22bd92cd85efd64abedd4e812eed36cf687261e34951eb7ee7a3",
+      "results": [
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:7:53: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9237465523183346,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [],
+              "first_switch_step": {
+                "after": {
+                  "count": 10.0,
+                  "ctl": 0.5000000005000196,
+                  "time": 0.5000000005000196,
+                  "z": 0.4999999022118486
+                },
+                "before": {
+                  "count": 0.0,
+                  "ctl": 0.4999999022118488,
+                  "time": 0.4999999022118488,
+                  "z": 0.4999999022118485
+                },
+                "integral_increment_v": 1.1102230246251565e-16,
+                "step_s": 9.828817076895646e-08
+              },
+              "max_cross_time_error_s": null,
+              "max_error_with_observed_timer_v": 9.828817099100107e-08,
+              "max_voltage_error_v": 9.82881319111506e-08,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 1.9539925233402755e-14,
+              "timer_events_s": [
+                0.5000000005000196
+              ],
+              "waveform_sha256": "931cf9607fcef0875927f071b532ebff1530f8c859b1be8ae7d6e24ca3fdaef5"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "discontinuity": 0,
+            "evas_vabstol": 1e-08,
+            "family": "timer-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-small-baseline-discontinuity0",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:7:53: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 0,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0256095845252275,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000000010000001
+              ],
+              "first_cross_events": [],
+              "first_switch_step": {
+                "after": {
+                  "count": 10.0,
+                  "ctl": 0.5000000005000196,
+                  "time": 0.5000000005000196,
+                  "z": 0.4999999022118486
+                },
+                "before": {
+                  "count": 0.0,
+                  "ctl": 0.4999999022118488,
+                  "time": 0.4999999022118488,
+                  "z": 0.4999999022118485
+                },
+                "integral_increment_v": 1.1102230246251565e-16,
+                "step_s": 9.828817076895646e-08
+              },
+              "max_cross_time_error_s": null,
+              "max_error_with_observed_timer_v": 9.828817099100107e-08,
+              "max_voltage_error_v": 9.82881319111506e-08,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 1.9539925233402755e-14,
+              "timer_events_s": [
+                0.5000000005000196
+              ],
+              "waveform_sha256": "157a1973e31e63b035c161cc7488063ea70716afa1c537148706ac3c641011f9"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "discontinuity": 1,
+            "evas_vabstol": 1e-08,
+            "family": "timer-small",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-small-baseline-discontinuity1",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:7:49: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9740944914519787,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005019472,
+                  "z": 0.5000000005019469
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000017334721497,
+                  "z": 0.4999999995000723
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.5000007329722221
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000007329722224,
+                  "time": 0.5000007329722224,
+                  "z": 0.5000007329722221
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.670277776672947e-07
+              },
+              "max_cross_time_error_s": 2.665278503455326e-07,
+              "max_error_with_observed_timer_v": 2.6702777805587274e-07,
+              "max_voltage_error_v": 2.6702777805587274e-07,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "07afff9d72e8836a59bd60dc804e601d8e3644b1980c335313b20c72dba5dcd0"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "discontinuity": 0,
+            "evas_vabstol": 1e-08,
+            "family": "timer-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-large-baseline-discontinuity0",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:7:49: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.500004,
+              "cross_count": 2,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.500004,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.0257069189101458,
+                "returncode": 0,
+                "timeout": false
+              },
+              "expected_cross_s": [
+                0.5,
+                0.5000020000000001
+              ],
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005019472,
+                  "z": 0.5000000005019469
+                },
+                {
+                  "count": 12.0,
+                  "time": 0.5000017334721497,
+                  "z": 0.4999999995000723
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 11.0,
+                  "ctl": 0.500001,
+                  "time": 0.500001,
+                  "z": 0.5000007329722221
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000007329722224,
+                  "time": 0.5000007329722224,
+                  "z": 0.5000007329722221
+                },
+                "integral_increment_v": 0.0,
+                "step_s": 2.670277776672947e-07
+              },
+              "max_cross_time_error_s": 2.665278503455326e-07,
+              "max_error_with_observed_timer_v": 2.6702777805587274e-07,
+              "max_voltage_error_v": 2.6702777805587274e-07,
+              "meets_diagnostic_targets": false,
+              "rows": 288,
+              "settings_match": true,
+              "status": "measured_control",
+              "timer_delay_s": 0.0,
+              "timer_events_s": [
+                0.500001
+              ],
+              "waveform_sha256": "dbb007a295f6076f7f5b4f7d45fac88a544f9ff6e1ab11b4c10c96a2b3fef081"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.500004,
+                0.500004
+              ]
+            ],
+            "discontinuity": 1,
+            "evas_vabstol": 1e-08,
+            "family": "timer-large",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "timer-large-baseline-discontinuity1",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.500004,
+            "tau": 0.500001,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:8:78: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 1,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 1.9252875912934542,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 1.0,
+                  "ctl": 0.5000000079375021,
+                  "time": 0.5000000079375021,
+                  "z": 0.4999999930625028
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000005000024,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                "integral_increment_v": -7.437499671691938e-09,
+                "step_s": 7.43749972720309e-09
+              },
+              "rows": 286,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "0e6328d768ed1b3ea7afde780a743c820e40202b595e46dc78dd6918be81514a"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "discontinuity": 0,
+            "evas_vabstol": 1e-08,
+            "family": "original",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "original-baseline-discontinuity0",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        },
+        {
+          "backends": {
+            "evas": {
+              "message": "dut.va:8:78: expected a non-reserved identifier",
+              "status": "rejected",
+              "type": "CompileError"
+            },
+            "spectre": {
+              "actual_stop_s": 0.50000006,
+              "cross_count": 3,
+              "effective_settings": {
+                "iabstol": 1e-14,
+                "maxstep": 0.002,
+                "method": "traponly",
+                "reltol": 1e-08,
+                "step": 0.002,
+                "stop": 0.5,
+                "vabstol": 1e-10
+              },
+              "execution": {
+                "elapsed_s": 2.080697601661086,
+                "returncode": 0,
+                "timeout": false
+              },
+              "first_cross_events": [
+                {
+                  "count": 1.0,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                {
+                  "count": 2.0,
+                  "time": 0.5000000302500012,
+                  "z": 0.4999999707500037
+                },
+                {
+                  "count": 3.0,
+                  "time": 0.50000006,
+                  "z": 0.5000000005000025
+                }
+              ],
+              "first_switch_step": {
+                "after": {
+                  "count": 2.0,
+                  "ctl": 0.5000000302500012,
+                  "time": 0.5000000302500012,
+                  "z": 0.4999999707500037
+                },
+                "before": {
+                  "count": 1.0,
+                  "ctl": 0.5000000005000024,
+                  "time": 0.5000000005000024,
+                  "z": 0.5000000005000025
+                },
+                "integral_increment_v": -2.9749998797790056e-08,
+                "step_s": 2.9749998797790056e-08
+              },
+              "rows": 284,
+              "settings_match": true,
+              "status": "observed_without_unique_event_oracle",
+              "timer_events_s": [],
+              "waveform_sha256": "d6d0c9d653b86466f3f36c4d41e4b3685fa0c25f3f66668c79838f883de45530"
+            }
+          },
+          "condition": {
+            "control": [
+              [
+                0,
+                0
+              ],
+              [
+                0.50000006,
+                0.50000006
+              ]
+            ],
+            "discontinuity": 1,
+            "evas_vabstol": 1e-08,
+            "family": "original",
+            "iabstol": 1e-14,
+            "maxstep": 0.002,
+            "method": "traponly",
+            "name": "original-baseline-discontinuity1",
+            "profile": "baseline",
+            "reltol": 1e-08,
+            "stop": 0.50000006,
+            "tau": 0.5000000005,
+            "ttol": 1e-09,
+            "vabstol": 1e-10,
+            "vtol": 1e-08
+          }
+        }
+      ],
+      "run_id": "cross-discontinuity-20261004-r1"
+    }
+  ],
+  "identities": {
+    "evas": {
+      "binary_sha256": "15fe484aa2888b8ce79b4b08b32ed6c5063e01d1c1c83e6cd7ba7f4f513725a7",
+      "source_sha256": {
+        "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+        "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+        "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+        "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+        "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+        "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+        "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+        "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+        "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+        "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+        "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+        "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+        "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+        "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+        "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+        "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+        "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+        "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+        "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+        "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+        "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+        "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+        "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+        "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+        "evas/rust_core/src/lib.rs": "3cb4d4be995698de4473239f727c1f0be75626279af776f91110d685f5c9c150",
+        "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+        "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+        "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+        "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+        "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+        "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+        "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+        "evas/rust_core/src/main.rs": "ea3cc5a3736971e92eddbb09207ef27d0b908750f2fa6b79e7a99c12f3d0a935",
+        "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+        "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+        "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+        "evas/rust_core/src/operators.rs": "e1610fa5c68266773439f3e8cd2ca806553a6260a0a1dd284ec135159779057b",
+        "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+        "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+        "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+        "evas/rust_core/src/schedule.rs": "b906b67ffe3df4bc186d58d92d46351ebbc6d1e1191fa920357ddefae16e8408",
+        "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+        "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+        "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+        "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+        "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+        "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+        "evas/rust_core/src/transient.rs": "801bd02ed0d07a94ea772a9921acef4e089a67bf967661751e3cf8a536afefed",
+        "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+        "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+        "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+        "evas/rust_core/src/transient_lifecycle_tests.rs": "b38b71d8223e7c33f43c68cacadf475747037f0b5b834ed10e75e9371532f913",
+        "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+        "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+        "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/src/evas/__main__.py": "38bd73cfb49039831522015bdd41d965aa43f530d52ca1da85b02c6c35146905",
+        "evas/src/evas/array_elaboration.py": "a687c0c8ef62ce97e482582f6f077fbe0e2e6d92c448d8af5c8493ea0f1ab119",
+        "evas/src/evas/diagnostics.py": "4c3e4c493c0c97d72386c972e19ff65491977b7e49e724fe13fa59b54a329702",
+        "evas/src/evas/elaboration.py": "67cd310e0b5623835dac4d890728e849383aeff6966c1589d72e4379ab383dc4",
+        "evas/src/evas/errors.py": "4cd66767c4e6d25c94ce9a2231ee0a82388dac2e73dcd674b0e267047986c805",
+        "evas/src/evas/frontend.py": "a1db72e40ca90e871036a6a1376faa049b03050483d7be2c4e2626d30f21842c",
+        "evas/src/evas/hierarchy.py": "8193b860e8529318c764ff499b033cb983282cbb1c365b56483c68a7cbcf3d36",
+        "evas/src/evas/instance_compiler.py": "085a86e31138b13467eba67590e1c863a8914c30caae51ebbf405f4b3a3cc11f",
+        "evas/src/evas/integer_constants.py": "df6cb3c9994a2296cb076ae77d0cc06d60eaeaa87014680c722b6ad2e1869abc",
+        "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+        "evas/src/evas/limits.py": "9d75bbf05f9960e3e50580fa3d7e59e537855c356c0ceac2e5259e9e2b2b64ab",
+        "evas/src/evas/lowering.py": "d3b1a58e653ec516a3edbe44af1c2a5c0eda15402b0a0480784d5346e21fffb9",
+        "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/src/evas/mcp.py": "6e19fb7f8397b8dfbdee90a6b2c1220bfdd2a60c391a8ccf86604862c4fd3493",
+        "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+        "evas/src/evas/node_elaboration.py": "13adc567543c5c4bde2a30249ad4c093fcaa35f076e9a6e76e1188ea98c2473c",
+        "evas/src/evas/parameters.py": "3cdb30bb3bca87ee714b651daa6f41a3892484f88c323b44ad0d576870d067a8",
+        "evas/src/evas/preprocessor.py": "3bb1cb3b727ded90d58afca3381ec9d7f4ce96ba4a8586641f330121b820b4d5",
+        "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+        "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+        "evas/src/evas/runtime.py": "13dcf6374917c637563092a977d184585c99e7045b4bca6ad963cea54e38562c",
+        "evas/src/evas/scs.py": "d11ef906cebb8a9833abf1f611abfbbf5970cda42304d259bb1557a08b0b97e4",
+        "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/src/evas/syntax.py": "8d963edc29f04c1c3976807b4e2a399073be1d5c5fc471c0abd4650f152c8731"
+      }
+    },
+    "spectre": {
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "version": ""
+    }
+  },
+  "scope": "Development decomposition of the original bidirectional self-reversing oscillator; no production changes in this diagnostic slice.",
+  "source_base": "d04f2025e5f17cae1d9018a2b84fdd6aff1791cb",
+  "source_status": "Uncommitted local candidate; exact simulator source/binary identities below.",
+  "summary": {
+    "checker_tests": 88,
+    "evas_decomposition_completed": 13,
+    "evas_decomposition_explicit_rejections": 7,
+    "evas_discontinuity_compile_rejections": 6,
+    "new_checker_tests": 4,
+    "original_31_matrix": "not rerun; unchanged denominator",
+    "spectre_completed": 26,
+    "spectre_settings_and_stop_audited": 26
+  }
+}

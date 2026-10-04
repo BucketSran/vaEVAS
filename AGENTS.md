@@ -8,8 +8,10 @@ Current user instructions govern scope; support, versions and result counts live
 1. Read the current task, `git status -sb`, and the affected component README. Select the relevant skill below; they are independent entry points.
 2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/CAPABILITIES.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
 3. For edits, reuse a suitable task branch/worktree. New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
-4. Make the smallest coherent change. For EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). For benchmark work, use its component/task contract. Documentation-only changes need no simulator run.
+4. Make the smallest coherent change. Use [behavior-first TDD and test selection](CONTRIBUTING.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
+
+Capture reusable development failures in [benchmark candidates](benchmark/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
 
 Carry authorization forward for the same task, target and action within its resource limits; it does not automatically extend to another PR. Implementation permits necessary local edits/checks; review alone stays read-only. Publishing, merging and cleanup need authorization covering that action. If absent, finish independent work and ask once about the concrete action. See [boundaries and examples](CONTRIBUTING.md#scope-and-authorization).
 

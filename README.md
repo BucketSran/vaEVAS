@@ -1,8 +1,11 @@
 # vaEVAS
 
 vaEVAS 是面向 Verilog-A 建模与评测的研究项目，包含 **benchmark** 和 **EVAS 电压域仿真器**。
-benchmark 组织建模任务与验收要求，EVAS 为支持范围内的模型提供仿真能力，
-便于在同一工作区开展模型编写、仿真和结果检查。
+benchmark 评估行为模型是否满足设计规格；EVAS 支持模型的快速开发与验证。
+
+EVAS 的目标是提供**开源、可审查的仿真能力，在明确支持的电压域范围内优化速度**，
+让经过验证的 Verilog-A 模型能够交给 Spectre 等电路仿真器，与器件级网表一起使用。
+模型在 EVAS 中通过检查后，还需要验证后端兼容性，以及接入实际电路后的行为。
 
 ## Benchmark
 
@@ -14,8 +17,14 @@ benchmark 用于评估 Verilog-A 建模能力：给定模型规格，检查所�
 [首轮结果](experiments/va_screen/RESULTS.md)记录模型提交、失败原因和验证边界。
 [历史参考资料](benchmark/reference/README.md)包含 vaBench v1/v4 与原始模型来源。
 这批任务作为基线保留，尚未作为正式 benchmark 发布；部分第三方资料仅限内部保存。
+另有独立校准的[三角波振荡器修复候选题](benchmark/tasks/va07-triangle-repair/instruction.md)，用于检查事件方向与模型可移植性。
 
 ## EVAS 仿真器
+
+EVAS 将优化集中在行为级电压关系上，服务于模型编写、调试和反复验证。
+源码、数学原理、支持边界和测试依据在仓库中维护，便于审查和改进。
+速度优化必须保持模型语义与误差要求；具体收益见[性能实验](experiments/performance/README.md)，
+现有测量尚不能证明 EVAS 普遍快于 Spectre。
 
 EVAS 将 Verilog-A 中的电压贡献转为方程，由 Rust 内核联立求解节点电压。
 它面向以电压关系描述的行为模型，目前在限定范围内提供：
@@ -26,6 +35,27 @@ EVAS 将 Verilog-A 中的电压贡献转为方程，由 Rust 内核联立求解�
 
 输入由 `.va` 模型和 JSON manifest 组成；manifest 指定实例、节点连接和输入刺激。
 当前不支持电流贡献和器件级电路网表求解，各算子的参数与组合限制见[能力表](evas/docs/CAPABILITIES.md)。
+
+## 从行为建模到电路验证
+
+项目的目标工作流是：
+
+```mermaid
+flowchart LR
+    S[模型规格与测试要求] --> M[Verilog-A 行为模型]
+    M --> E[EVAS：快速迭代与检查]
+    E --> C[同一份模型：Spectre 对照]
+    C --> N[模型与器件网表：电路验证]
+```
+
+移交的核心是同一份 `.va` 模型、参数和接口约定。Spectre 负责模型与器件网表的共同求解，
+进一步检查负载、反馈和初始化等电路行为。输出波形可以作为单向激励；
+需要响应电路反馈时，应移交可重新求解的模型。
+
+当前提供 EVAS 模型仿真、受限 Spectre 风格测试台读取和专项后端对照。
+上述流程是集成方向，尚未形成通用的自动移交或双仿真器同步运行接口。
+已测模型与差异见[实验记录](experiments/README.md)；
+模型移交要求见 [EVAS 使用说明](evas/README.md#model-handoff)。
 
 ## 快速开始
 

@@ -637,3 +637,130 @@ fn nonlinear_horizon_failure_discard_and_retry_preserve_production_controller() 
         controller.accepted.solution.voltages
     );
 }
+
+fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let (base, trajectory, _, _) = relocalization_fixture();
+    let mut program = serde_json::to_value(base.program).unwrap();
+    program["nodes"].as_array_mut().unwrap().push(json!("z"));
+    program["events"][0]["body"][0]["rhs"]["constant"] = json!(0.625);
+    program["events"][1]["trigger"]["guard"]["left"]["terms"][0]["node"] = json!(3);
+    program["operators"] = json!([{"kind":"idt","ic":0,
+        "input":{"op":"affine","constant":1,"terms":[]},
+        "origin":{"source":"relocalization.va","line":2,"column":1,"instance":"dut"}}]);
+    program["contributions"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({
+        "branch":{"instance":"dut","local_positive":"a","local_negative":"r","kind":"voltage"},
+        "positive":3,"negative":0,"rhs":{"op":"operator","operator":0},
+        "origin":{"source":"relocalization.va","line":2,"column":1,"instance":"dut"}}));
+    let model = EventModel::new(
+        serde_json::from_value(program).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    let states = model.initial();
+    let state_bounds = states.iter().copied().map(I::point).collect();
+    let (operators, calendar) = history_calendar::initialize(&model, &trajectory, &states).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time: 0.,
+        solution: circuit.solve(&[0.]).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    (
+        model,
+        trajectory,
+        Controller {
+            accepted,
+            event: 0,
+            records: vec![],
+        },
+        calendar,
+    )
+}
+
+#[test]
+fn history_calendar_failure_preserves_frame_and_retry_matches_clean() {
+    let (model, trajectory, mut controller, mut calendar) = history_guard_fixture();
+    let history = controller.accepted.operators.clone();
+    let voltages = controller.accepted.solution.voltages.clone();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.time, e.event, e.bounds()))
+        .collect();
+    let mut bad = serde_json::to_value(&model.program).unwrap();
+    // At t=.25 the integral is .25. Moving its threshold below .25 jumps
+    // across zero and requires a same-time closure that is intentionally absent.
+    bad["events"][0]["body"][0]["rhs"]["constant"] = json!(0.125);
+    let bad = EventModel::new(
+        serde_json::from_value(bad).unwrap(),
+        model.driven.clone(),
+        model.tolerances.clone(),
+    )
+    .unwrap();
+    for _ in 0..2 {
+        assert_eq!(
+            controller
+                .accept_history_events(&bad, &trajectory, &mut calendar)
+                .unwrap_err()
+                .kind,
+            "unsupported_cross"
+        );
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.accepted.states, [0.75]);
+        assert_eq!(controller.accepted.state_bounds, [I::point(0.75)]);
+        assert_eq!(controller.accepted.solution.voltages, voltages);
+        assert!(controller.accepted.operators.same_reset_history(&history));
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty());
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) = history_guard_fixture();
+    controller
+        .accept_history_events(&model, &trajectory, &mut calendar)
+        .unwrap();
+    clean
+        .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        controller.accepted.solution.voltages,
+        clean.accepted.solution.voltages
+    );
+    assert!(controller
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>(),
+        clean_calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(calendar[0].time, 0.5);
+}

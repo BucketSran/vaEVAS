@@ -1129,17 +1129,52 @@ impl Operators {
         })
     }
 
-    pub(crate) fn range(&self, index: usize, time: I) -> Result<(I, I), Error> {
+    pub(crate) fn check_guard(&self, index: usize) -> Result<(), Error> {
         let entry = self
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] {
-            return Err(Error::new(
-                "unsupported_cross",
-                "cross cannot depend on event-modified operator history",
-            ));
+        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+            return Err(Error::new("unsupported_cross",
+                "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
+        if let Runtime::Continuous(slot) = entry {
+            if !self.continuous.as_ref().unwrap().is_continuous(*slot) {
+                return Err(Error::new("unsupported_cross",
+                    "ddt or its feedthrough can jump at DC/source corners; continuous cross trajectory required"));
+            }
+        }
+        match entry {
+            Runtime::Continuous(_)
+            | Runtime::Idt { .. }
+            | Runtime::LaplaceNd(_)
+            | Runtime::Sin(SinInput::Direct(_)) => {}
+            Runtime::Sin(SinInput::Operator { operator, .. }) => self.check_guard(*operator)?,
+            _ => {
+                return Err(Error::new(
+                    "unsupported_cross",
+                    "operator guard requires a certified continuous trajectory and derivative",
+                ))
+            }
+        }
+        Ok(())
+    }
+
+    pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
+        self.check_guard(index)?;
+        match &self.entries[index] {
+            Runtime::Continuous(slot) => self
+                .continuous
+                .as_ref()
+                .unwrap()
+                .keeps_value_on_event(*slot),
+            _ => Ok(!self.changes_on_advance[index]),
+        }
+    }
+
+    pub(crate) fn range(&self, index: usize, time: I) -> Result<(I, I), Error> {
+        self.check_guard(index)?;
+        let entry = &self.entries[index];
         let result = match entry {
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();

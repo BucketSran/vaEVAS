@@ -1,0 +1,14 @@
+{
+  "models": ["dut.va"],
+  "instances": [{
+    "name": "dut", "module": "triangle",
+    "connections": {"ctl": "ctl", "z": "z", "count": "count", "r": "0"}
+  }],
+  "tolerances": {"vabstol": 1e-8, "reltol": 0},
+  "transient": {
+    "sources": {"ctl": [[0, 1], [3, 1]]},
+    "output_times": [0, 0.25, 0.75, 1, 1.25, 1.75, 2, 2.25, 2.75, 3],
+    "stop": 3,
+    "max_step": 0.005
+  }
+}

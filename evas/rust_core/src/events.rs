@@ -754,14 +754,6 @@ impl EventModel {
                 self.guard_operators.push(BTreeSet::new());
             }
         }
-        if self.relocalized_guards.iter().any(|&held| held)
-            && self.guard_operators.iter().any(|ops| !ops.is_empty())
-        {
-            return Err(Error::new(
-                "unsupported_cross",
-                "held calendar changes with history-driven guards require joint root prediction",
-            ));
-        }
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(
             &self.program,
