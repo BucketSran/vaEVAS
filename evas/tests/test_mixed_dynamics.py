@@ -12,6 +12,39 @@ from test_continuous_dynamics import compile_model, run, rows, values, assert_cl
 
 
 class MixedDynamicsContracts(unittest.TestCase):
+    def test_nonlinear_filter_cold_root_and_event_reset_preserve_history(self):
+        # Cold y=.75+.25y^2 selects the regular local root y=1.
+        # At e=.25, removing the quadratic term gives y'=.75-y,
+        # hence y=.75+.25*exp(-(t-e)); restarting DC would jump to .75.
+        # Only z is reset, held at its explicit IC until release at .5.
+        program=compile_model(
+            '@(initial_step) begin q=.25; rst=0; end '
+            '@(timer(.25,0,1e-12)) begin q=0; rst=1; end '
+            '@(timer(.5,0,1e-12)) rst=0; '
+            "V(y,r)<+laplace_nd(.75+q*pow(V(y,r),2),'{1},'{1,1}); "
+            'V(z,r)<+idt(1,2,rst);','real q; integer rst; electrical z;')
+        sparse=[0,.125,.25,.375,.5,.75,1]
+        first=run(program,times=sparse,vabstol=1e-9,reltol=0)
+        dense=[i/16 for i in range(17)]
+        second=run(program,times=dense,max_step=.0625,vabstol=1e-9,reltol=0)
+        self.assertEqual(values(first),[values(second)[dense.index(t)] for t in sparse])
+        for t,row in zip(sparse,rows(first)):
+            y=1 if t<=.25 else .75+.25*math.exp(-(t-.25))
+            z=2+t if t<.25 else 2 if t<=.5 else 2+t-.5
+            assert_close(self,row['y'],y,delta=1e-9)
+            assert_close(self,row['dut:z'],z,delta=1e-9)
+
+    def test_nonlinear_filter_cold_root_cannot_skip_voltage_accuracy(self):
+        program=compile_model("V(y,r)<+laplace_nd(.75+.25*pow(V(y,r),2),'{1},'{1,1});")
+        with self.assertRaisesRegex(KernelError,'waveform_accuracy'):
+            run(program,times=[0,.5,1],vabstol=1e-20,reltol=0)
+
+    def test_singular_nonlinear_filter_cold_root_is_rejected(self):
+        # DC implies (y-.5)^2=0, so no regular isolated-root proof.
+        program=compile_model("V(y,r)<+laplace_nd(.25+pow(V(y,r),2),'{1},'{1,1});")
+        with self.assertRaises(KernelError):
+            run(program,times=[0,.5,1],vabstol=1e-9,reltol=0)
+
     def test_inactive_reset_preserves_integral_sample_at_uncertain_event(self):
         # tau=sqrt(2); q samples z(tau)=tau. Reset stays zero, so z is
         # continuous and its new slope is tau, irrespective of a reset argument.
@@ -152,10 +185,14 @@ class MixedDynamicsContracts(unittest.TestCase):
         for t,actual in zip(times,values(result)):
             assert_close(self,actual,(1+t)**2+2*math.exp(-t),delta=1e-10)
 
-    def test_nonlinear_filter_dc_feedback_and_feedthrough_are_explicitly_rejected(self):
-        for body in [
-            "V(y,r)<+laplace_nd(pow(V(y,r),2)+1,'{1},'{1,1});",
-            "V(y,r)<+laplace_nd(pow(V(u,r),2),'{1,1},'{1,2});",
+    def test_no_real_filter_dc_root_and_nonlinear_feedthrough_are_rejected(self):
+        for body,reason in [
+            # y^2-y+1 has discriminant -3: support for nonlinear DC
+            # must not manufacture a real initial root for this model.
+            ("V(y,r)<+laplace_nd(pow(V(y,r),2)+1,'{1},'{1,1});",
+             "continuous DC initialization"),
+            ("V(y,r)<+laplace_nd(pow(V(u,r),2),'{1,1},'{1,2});",
+             "strictly proper"),
         ]:
-            with self.subTest(body=body),self.assertRaisesRegex(KernelError,"unsupported_operator"):
+            with self.subTest(body=body),self.assertRaisesRegex(KernelError,reason):
                 run(compile_model(body),times=[0,.5,1],stop=1)

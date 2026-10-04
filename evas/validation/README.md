@@ -167,7 +167,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/math/operators.md#idtmod-与-sin) |
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
-原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后轨迹重定位、非线性滤波初值及验证资格缺口仍见
+原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后历史轨迹重定位及验证资格缺口仍见
 [能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 </details>

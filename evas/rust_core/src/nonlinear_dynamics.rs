@@ -9,6 +9,9 @@ const MAX_STEPS: usize = 16_384;
 const TUBE_ATTEMPTS: usize = 16;
 type Jet = Vec<I>;
 
+#[path = "continuous_initialization.rs"]
+mod initialization;
+
 #[path = "implicit_dynamics.rs"]
 mod implicit;
 pub(crate) use implicit::run as run_implicit;
@@ -367,22 +370,38 @@ impl NonlinearContinuous {
             for slot in &mut known[state_count + driven.len()..] {
                 *slot = Some(I::ZERO);
             }
-            for op in operators
+            let affine_dc = operators
                 .iter()
                 .filter(|op| op.kind == ContinuousKind::LaplaceNd)
-            {
-                for &state in &op.states {
-                    dc_derivatives[state] = functions[state].dc_affine(&known).ok_or_else(||
-                        unsupported(&op.origin, "nonlinear filter DC feedback requires a certified algebraic initialization"))?;
-                }
+                .flat_map(|op| &op.states)
+                .all(|&state| {
+                    if let Some(row) = functions[state].dc_affine(&known) {
+                        dc_derivatives[state] = row;
+                        true
+                    } else {
+                        false
+                    }
+                });
+            if affine_dc {
+                initial_state(
+                    program,
+                    &operators,
+                    &system,
+                    &dc_derivatives,
+                    &context.trajectory,
+                )?
+            } else {
+                // This is still one cold root system, with held parameters
+                // kept as uncertain inputs. Never use it for event restarts.
+                initialization::joint_dc(
+                    program,
+                    &context.driven,
+                    &context.trajectory,
+                    &operators,
+                    &parameters,
+                )?
+                .physical
             }
-            initial_state(
-                program,
-                &operators,
-                &system,
-                &dc_derivatives,
-                &context.trajectory,
-            )?
         };
         for op in &operators {
             if op.held_reset {
@@ -861,6 +880,60 @@ fn collect_structure(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn nonlinear_cold_root_uncertainty_and_failed_restart_preserve_history() {
+        let origin = serde_json::json!({"source":"dc.va","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.75}],
+            "operators":[{"kind":"laplace_nd","numerator":[1],"denominator":[1,1],"origin":origin,
+                "input":{"op":"add","left":{"op":"state","state":0},
+                    "right":{"op":"multiply","left":{"op":"affine","constant":0.25,"terms":[]},
+                        "right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}}}}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"r","local_negative":"y","kind":"voltage"},
+                "positive":0,"negative":1,"origin":origin,
+                "rhs":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},"right":{"op":"operator","operator":0}}}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl: vec![],
+                output_times: vec![0.0, 0.5],
+                stop: 0.5,
+                max_step: 0.5,
+            },
+            0,
+        )
+        .unwrap();
+        let accepted =
+            NonlinearContinuous::new(&program, &trajectory, &[], &[0.75], 0.125).unwrap();
+        let original = accepted.range_bounds(I::point(0.125)).unwrap();
+        // At q=3/4 the selected root y=1 and its stationary trajectory
+        // are exact. A midpoint-only parameter proof would accept this box.
+        assert!(original[0].lo <= 1.0 && original[0].hi >= 1.0);
+        let uncertain = NonlinearContinuous::initialized(
+            accepted.context.clone(),
+            vec![I {
+                lo: 0.7499999,
+                hi: 0.7500001,
+            }],
+            0.0,
+            None,
+        );
+        assert_eq!(uncertain.err().unwrap().kind, "waveform_accuracy");
+        let failed = accepted.restarted(0.125, I::point(0.125), &[I::point(1e300)], 0.5);
+        assert!(failed.is_err());
+        assert_eq!(accepted.range_bounds(I::point(0.125)).unwrap(), original);
+        assert_eq!(accepted.certified_end(), 0.125);
+        let retry = accepted
+            .restarted(0.125, I::point(0.125), &[I::point(0.75)], 0.5)
+            .unwrap();
+        let clean = NonlinearContinuous::new(&program, &trajectory, &[], &[0.75], 0.5).unwrap();
+        assert_eq!(
+            retry.range_bounds(I::point(0.5)).unwrap(),
+            clean.range_bounds(I::point(0.5)).unwrap()
+        );
+    }
 
     fn scalar(quadratic_sign: f64) -> NonlinearContinuous {
         let program = serde_json::from_value(serde_json::json!({
