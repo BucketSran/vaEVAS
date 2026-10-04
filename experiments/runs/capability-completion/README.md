@@ -17,6 +17,7 @@
 | 动态日程与整批提交 | `8d972837`、`63afd040`、`04cb050a` | 新日程先认证，再推进历史；失败不得改写帧、日程和事件记录；最终历史误差仍通过验收。见[定时契约](../../../evas/validation/TIMED_OPERATOR_CONTRACTS.md)、[动态 timer 测试](../../../evas/tests/test_dynamic_timer.py)、Rust Controller 私有回归。 |
 | DAE 与直接 PWL 滤波（前一检查点） | `152a920d` | 滤波 DC 区间是否进入初始根；积分 IC 是否保留；高阶状态数是否与调用数分开；原约束和前向误差是否同时检查。见[共同数学](../../../evas/docs/math/continuous.md#index-one-多项式隐式电压-dae)、[独立开发测试](../../../evas/tests/test_implicit_filters.py)。 |
 | 滤波一致初值与非线性 DC | `6952fb69`、`114d676e` | 原贡献、积分 IC 和滤波 DC 条件是否联合认证；内部节点/算子输入及 proper 直接通路是否完整；事件续算是否绕过冷启动。见[共同初始化数学](../../../evas/docs/math/continuous.md#index-one-多项式隐式电压-dae)、[DAE/滤波测试](../../../evas/tests/test_implicit_filters.py)、[混合动态测试](../../../evas/tests/test_mixed_dynamics.py)和[本轮收据](joint-dc-receipt.json)。 |
+| 审查修复重复包含 | `d68d3db4` | 同一文件多次 include 时，各历史调用是否保留独立身份；包含路径是否与宏和循环路径组合。三个独立解析回归先失败后通过。见[预处理契约](../../../evas/validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)、[开发回归](../../../evas/tests/test_preprocessor.py)和[提交前收据](review-receipt.json)。 |
 
 这些批次都是限定支持。更广的事件驱动历史根重定位、DAE 事件/复位/ddt、
 非线性直接通路、可变/嵌套历史参数及更广语言范围仍有缺口，具体以能力表为准。
@@ -45,6 +46,12 @@ python3 -c 'import gzip,json; print(json.dumps(json.load(gzip.open("experiments/
 [joint-dc-receipt.json](joint-dc-receipt.json)绑定这次检查，
 [joint-dc-matrix-analysis.json.gz](joint-dc-matrix-analysis.json.gz)保存 62 配置的紧凑重判。
 原收据和分析保留；既有七案例确认属于复跑，不增加未见条件数量。
+
+提交前直接审查发现并修复重复 include 的历史身份冲突；未使用独立子审查者。
+修复后的运行时 `d68d3db4` 再次完成全部 Python/Rust 回归、原矩阵和既有确认集。
+[review-receipt.json](review-receipt.json)绑定源码、复用的未改 Rust 构建及检查身份；
+[review-matrix-analysis.json.gz](review-matrix-analysis.json.gz)保存该次矩阵重判。
+此前检查点的收据保持原样。GitHub CI 与外部仿真器对照不在这份本地收据内。
 
 矩阵仍使用既有 [matrix.py](../../archive/pr14-pr15-validation/matrix.py)执行。
 本目录的 [analyze_matrix.py](analyze_matrix.py)复用原检查器，在计数前核对冻结来源、
