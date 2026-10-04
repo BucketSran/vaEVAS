@@ -201,6 +201,13 @@ analog 循环中使用历史算子。[test_loop_histories.py](../tests/test_loop
 检查两个不同 IC/增益的积分、嵌套的四个积分及数组接收者；改变输出网格仍保持解析答案。
 通用数组、运行时循环和层次不由这一切片获得支持。该切片的支持范围如上。
 
+后续静态事件扩展沿用同一次展开：替换 `cross/timer`（含 OR）的参数、事件体条件、
+赋值和静态数组下标。事件与触发叶保留实例、源码位置和 genvar 路径，不把循环顺序
+当作同刻写入的优先级。4096 语句预算同时计算事件声明和体内叶子。
+循环内 `initial_step`、事件体内循环及普通模拟条件下的事件仍明确拒绝。
+独立事件时刻、实例隔离、数组写入、条件赋值、历史调用点和冲突写入见上述开发测试；
+原 ZOOM 两组时序的 EVAS/Spectre 对照见[实验记录](../../experiments/backends/dvs2-spectre-validation/README.md#zoom-static-events)。
+
 
 <a id="variable-arrays"></a>
 

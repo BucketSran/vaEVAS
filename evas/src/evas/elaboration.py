@@ -3,7 +3,7 @@ from dataclasses import replace
 
 from .errors import CompileError
 from .limits import MAX_EXPRESSION_DEPTH, MAX_IR_ITEMS, MAX_SOURCE_NESTING
-from .syntax import Conditional, Expr, Loop, Model, OPERATOR_NAMES
+from .syntax import Conditional, Event, Expr, Loop, Model, OPERATOR_NAMES
 
 
 def inline_functions(model: Model) -> Model:
@@ -82,6 +82,10 @@ def inline_functions(model: Model) -> Model:
             if isinstance(statement, Loop):
                 result.append(replace(statement, start=expand(statement.start), limit=expand(statement.limit),
                                       update=expand(statement.update), body=body(statement.body)))
+            elif isinstance(statement, Event):
+                result.append(replace(statement, body=body(statement.body), triggers=tuple(
+                    replace(leaf, arguments=tuple(expand(arg) if arg is not None else None
+                                                for arg in leaf.arguments)) for leaf in statement.triggers)))
             elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=expand(statement.left), right=expand(statement.right),
                                       then_body=body(statement.then_body), else_body=body(statement.else_body)))
@@ -147,6 +151,12 @@ def unroll_loops(model: Model, parameter):
             fail('expanded call-site identity depth budget exceeded',expr.token)
         return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args), expansion=path)
 
+    def origin(token, indices):
+        path = (*token.expansion, *indices.items())
+        if len(path) > MAX_SOURCE_NESTING:
+            fail('expanded event identity depth budget exceeded', token)
+        return replace(token, expansion=path)
+
     def constant(expr, indices):
         value = lower(substitute(expr,indices), parameter, {}, model.source)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
@@ -181,13 +191,20 @@ def unroll_loops(model: Model, parameter):
             elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=substitute(statement.left,indices), right=substitute(statement.right,indices),
                                       then_body=body(statement.then_body,indices,depth+1),
-                                      else_body=body(statement.else_body,indices,depth+1)))
+                                      else_body=body(statement.else_body,indices,depth+1), token=origin(statement.token,indices)))
             else:
                 if isinstance(statement, Assignment) and statement.name in model.genvars:
                     fail('genvar can only be assigned in its for control',statement.token)
                 count += 1
                 if count > budget:
                     fail('elaborated statement budget (4096) exceeded',statement.token)
+                if isinstance(statement, Event):
+                    result.append(replace(statement, token=origin(statement.token,indices),
+                        body=body(statement.body,indices,depth+1), triggers=tuple(
+                            replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
+                                substitute(arg,indices) if arg is not None else None for arg in leaf.arguments))
+                            for leaf in statement.triggers)))
+                    continue
                 updates = {'rhs': substitute(statement.rhs, indices)}
                 if isinstance(statement, Assignment) and statement.index is not None:
                     updates['index'] = substitute(statement.index, indices)

@@ -381,5 +381,35 @@ r2 的六个 Spectre 案例因模型使用 `.125e-6` 等无前导零写法，在
 不能用于判断 timer 语义。r3 同时修正两端源码为 `0.125e-6` 等写法后重跑；外部判据未放宽。
 
 修复缺省参数后，原 [ZOOM 参考模型](../../../benchmark/tasks/va03-zoom-timing/solution/dut.va)
-编译推进到第 79 行的循环内事件。当前前端尚不支持静态 genvar 循环内的 `@(timer(...))`，
-所以本轮没有宣称该原模型已能运行；下一步应在展开阶段保留每个事件的独立身份，再检查多写者批次。
+在该检查点编译推进到第 79 行的循环内事件。当时尚不支持静态 genvar 循环内的 `@(timer(...))`，
+所以这份 timer 缺省参数收据未证明原模型可运行。后续补齐与新执行见下节。
+
+
+<a id="zoom-static-events"></a>
+
+## ZOOM 静态循环事件对照
+
+2026-10-04 补齐循环内事件展开后，用未改写的
+[ZOOM 参考 VA](../../../benchmark/tasks/va03-zoom-timing/solution/dut.va)分别运行本地 EVAS 候选和
+thu-sui Spectre 21.1.0.509.isr12。两端采用原 [cases.json](../../../benchmark/tasks/va03-zoom-timing/tests/cases.json)
+的两组参数，各跑两个周期。原 checker 的独立脉冲日程、15 mV 采样误差和 90 ps 边沿误差均未修改。
+
+| 原案例 | 展开事件声明 | 两周期边沿总数 | 电压样本 | EVAS / Spectre |
+| --- | ---: | ---: | ---: | --- |
+| calendar-0 | 586 | 1172 | 1758 | 通过 / 通过 |
+| calendar-1 | 114 | 228 | 342 | 通过 / 通过 |
+
+两端的九路边沿数与预期完全一致，所有电压样本和边沿时间检查均通过。
+EVAS 的观察网格在执行前固定：0.25 ns 网格、契约采样点、契约阈值时刻及其前后 20 ps。
+Spectre 使用原网表和原生保存点。检查的是这些有限观察，不是整个连续时间区间的最大误差。
+
+两端请求 `vabstol=1e-8 V、reltol=1e-5、maxstep=0.25 ns`。
+原 Spectre 网表另有 `errpreset=conservative`，日志实际记录 `reltol=1e-6、method=gear2only`；
+EVAS 保持请求值。两端按共同外部判据验收，不声称内部容差等价，也不作速度比较。
+首次汇总因把全局请求值和瞬态实际值混读而停止；按日志作用域重新分析后得到本结果，
+没有重跑后端或改变模型、设置与阈值。
+
+[紧凑收据](results/zoom-static-events.json)保存源码、模型、checker、网表、观察网格与输出哈希及实际设置。
+原始结果和一次性驱动/分析脚本保留在本地 ignored `runs/zoom-static-events-20261004/`；
+Spectre 产物同时保留在 thu-sui。同名本地 evidence 压缩包含完整输入、补丁和原始输出，尚未公开下载。
+这是开发回放，未新增 benchmark 任务，也未重跑或改写原 31 条件矩阵。

@@ -21,6 +21,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 | `unsupported_integer_arithmetic` | binding：受限前端入口中的整数除法或溢出不能用实数 IR 代替 |
 | `vector_declaration` / `unsupported_vector` | binding：声明不一致，或超出静态向量子集 |
 | `unsupported_initial_event` | parse：缺少所需分析生命周期或混合全局/监测事件 |
+| `unsupported_event_context` | binding：事件位于普通模拟条件下，需要尚未支持的运行时激活语义 |
 | `scs_input` / `unsupported_scs` | netlist：非法测试台，或未支持的输入语义 |
 | `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
 
