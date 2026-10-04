@@ -72,20 +72,22 @@ class TimerContracts(unittest.TestCase):
             self.assertEqual(result['transient']['states'][-1], [1,1])
 
     def test_periodic_independent_count_answers_and_typed_records(self):
-        result = run_timer()
-        self.assertEqual(result['schema_version'], SCHEMA_VERSION)
-        self.assertEqual(result['transient']['states'], [[n] for n in [0, 0, 1, 2, 3, 4, 4]])
-        self.assertEqual([e['time'] for e in result['transient']['events']], [2, 7, 12, 17])
-        for event in result['transient']['events']:
-            self.assertEqual(event['kind'], 'timer')
-            self.assertNotIn('guard_value', event)
-        self.assertEqual([s['voltages'][result['nodes'].index('y')] for s in result['solutions']],
-                         [0, 0, 1, 2, 3, 4, 4])
+        for arguments in ['2,5,0.001', '2,5', '2,5,']:
+            with self.subTest(arguments=arguments):
+                result = run_timer(timer_source(arguments))
+                self.assertEqual(result['schema_version'], SCHEMA_VERSION)
+                self.assertEqual(result['transient']['states'], [[n] for n in [0, 0, 1, 2, 3, 4, 4]])
+                self.assertEqual([e['time'] for e in result['transient']['events']], [2, 7, 12, 17])
+                for event in result['transient']['events']:
+                    self.assertEqual(event['kind'], 'timer')
+                    self.assertNotIn('guard_value', event)
+                self.assertEqual([s['voltages'][result['nodes'].index('y')] for s in result['solutions']],
+                                 [0, 0, 1, 2, 3, 4, 4])
 
     def test_absent_zero_and_negative_period_each_fire_once(self):
-        for period in ['', '0', '-5']:
-            with self.subTest(period=period):
-                result = run_timer(timer_source(f'2,{period},0.001'))
+        for arguments in ['2', '2,', '2,,', '2,,0.001', '2,0,0.001', '2,-5,0.001']:
+            with self.subTest(arguments=arguments):
+                result = run_timer(timer_source(arguments))
                 self.assertEqual([e['time'] for e in result['transient']['events']], [2])
                 self.assertEqual(result['transient']['states'][-1], [1])
 
@@ -106,8 +108,9 @@ class TimerContracts(unittest.TestCase):
 
     def test_constant_enable_and_instance_parameter_binding(self):
         for enable, count in [(0, 0), (-2, 4), (0.5, 4)]:
-            result = run_timer(timer_source(f'2,5,0.001,{enable}'))
-            self.assertEqual(len(result['transient']['events']), count)
+            for tolerance in ['0.001', '']:
+                result = run_timer(timer_source(f'2,5,{tolerance},{enable}'))
+                self.assertEqual(len(result['transient']['events']), count)
         source = model('''@(initial_step) n=0;
             @(timer(start,period,tol,enable)) n=n+1; V(y,r)<+n;''',
             'parameter real start=2; parameter real period=5; parameter real tol=0.001; parameter real enable=1; integer n;')
@@ -165,8 +168,22 @@ class TimerContracts(unittest.TestCase):
                 self.assertLessEqual(abs(Q(event['time']) - (Q(start) + k*Q(period))), Q(tolerance))
             self.assertTrue(all(a['time'] < b['time'] for a, b in zip(events, events[1:])))
 
+    def test_timer_representatives_are_not_early(self):
+        # Exact rational clocks expose downward binary64 rounding. Merely
+        # checking an absolute tolerance would miss an early default event.
+        for arguments in ['0.1,0.1,1e-12', '0.1,0.1']:
+            with self.subTest(arguments=arguments):
+                result = run_timer(timer_source(arguments), stop=.95, times=[0, .95])
+                events = result['transient']['events']
+                self.assertEqual(len(events), 9)
+                for k, event in enumerate(events):
+                    delay = Q(event['time']) - (Q(.1) + k*Q(.1))
+                    self.assertGreaterEqual(delay, 0)
+                    self.assertLessEqual(delay, Q(1e-12))
+
     def test_unrepresentable_small_tolerance_and_period_fail(self):
-        for args, stop in [('0.1,0.1,1e-30', 1), ('1e16,0.25,1', 1e16+4)]:
+        for args, stop in [('0.1,0.1,1e-30', 1), ('1e16,0.25,1', 1e16+4),
+                           ('1099511627776,0.0023', 2**40+.01)]:
             with self.subTest(args=args), self.assertRaises(KernelError) as caught:
                 run_timer(timer_source(args), stop=stop, times=[0, stop], step=stop)
             self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
@@ -180,9 +197,20 @@ class TimerContracts(unittest.TestCase):
         result = run_timer(timer_source('1e308,1e308,1'), stop=1.5e308, times=[0, 1.5e308], step=1.5e308)
         self.assertEqual([e['time'] for e in result['transient']['events']], [1e308])
 
-    def test_frontend_rejects_dynamic_default_and_invalid_settings(self):
-        for arguments in ['2', '2,5', '2,5,0', '-1,0,1', 'V(u),0,1',
-                          '0,0,n', '0,0,1,1,1', '0,0,,1', '0,,,1', '0,0,1 or cross(V(u))']:
+    def test_overflowing_time_bound_cannot_silently_drop_a_finite_event(self):
+        stop = float.fromhex('0x1.fffffffffffffp+1023')
+        start = math.nextafter(stop, 0.)
+        period = .75*math.ulp(stop)
+        self.assertLess(Q(start)+Q(period), Q(stop))
+        # The second nominal event is inside the domain, but its outward
+        # upper bound is infinite. This is uncertainty, not a past-stop proof.
+        with self.assertRaisesRegex(KernelError, 'event_resolution'):
+            run_timer(timer_source(f'{start},{period},{math.ulp(stop)}'),
+                      stop=stop, times=[0, stop], step=stop)
+
+    def test_frontend_rejects_invalid_or_unsupported_settings(self):
+        for arguments in ['', ',5', '2,5,0', '-1,0,1', 'V(u)', 'V(u),0,1',
+                          '0,0,n', '0,0,1,1,1', '0,,,', '0,0,1 or cross(V(u))']:
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
 

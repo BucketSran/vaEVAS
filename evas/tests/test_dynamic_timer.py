@@ -13,14 +13,16 @@ from test_timer import run_timer
 
 class DynamicTimer(unittest.TestCase):
     def test_self_scheduled_one_shot_clock_and_query_invariance(self):
-        source=model('''@(initial_step) begin next=.25; n=0; end
-          @(timer(next,0,1e-12)) begin next=next+.25; n=n+1; end
-          V(y,r)<+n;''', 'real next; integer n;')
-        a=run_timer(source,stop=1,times=[0,1],step=1)
-        b=run_timer(source,stop=1,times=[0,.25,.375,.5,.75,1],step=.0625)
-        self.assertEqual(a['transient']['events'], b['transient']['events'])
-        self.assertEqual([e['time'] for e in a['transient']['events']],[.25,.5,.75,1])
-        self.assertEqual(a['transient']['states'][-1],[1.25,4])
+        for arguments in ['next,0,1e-12', 'next', 'next,,,1']:
+            with self.subTest(arguments=arguments):
+                source=model('''@(initial_step) begin next=.25; n=0; end
+                  @(timer('''+arguments+''')) begin next=next+.25; n=n+1; end
+                  V(y,r)<+n;''', 'real next; integer n;')
+                a=run_timer(source,stop=1,times=[0,1],step=1)
+                b=run_timer(source,stop=1,times=[0,.25,.375,.5,.75,1],step=.0625)
+                self.assertEqual(a['transient']['events'], b['transient']['events'])
+                self.assertEqual([e['time'] for e in a['transient']['events']],[.25,.5,.75,1])
+                self.assertEqual(a['transient']['states'][-1],[1.25,4])
 
     def test_start_change_replaces_the_old_future_occurrence(self):
         source=model('''@(initial_step) begin next=.75; n=0; end

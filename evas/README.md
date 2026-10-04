@@ -427,7 +427,9 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected eva
 `state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件为 `trigger/body/origin`。
 body 的 `kind=assign` 含 `state/rhs`；`kind=if` 含 `relation/left/right/then_body/else_body/origin`，
 relation 为 `lt/le/gt/ge`。无 else 序列化为空 body；未知字段、关系或缺失 body 均拒绝。
-trigger 支持 cross、固定 timer 和仅含 cross 叶子的 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。
+trigger 支持 cross、固定及保持状态控制的 timer，以及 cross/timer 混合 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。
+源码 `timer(start)` 为单次事件，`timer(start,period)` 为周期事件；省略的时间容差采用 EVAS 的
+`1e-12 s` 默认值。该值不是与 Spectre 共享的默认设置；规则和拒绝边界见[固定 timer](docs/math/events.md#固定-timer)。
 算子按实例/调用点引用，idt 的可空 reset 字段见[算子手册](docs/math/operators.md#idt)。
 静态入口拒绝含状态、事件或算子的程序；完整字段定义见[Python IR](src/evas/ir.py)与[Rust IR](rust_core/src/ir.rs)。
 

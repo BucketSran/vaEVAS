@@ -186,17 +186,27 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 
 ### 固定 timer
 
-支持 `@(timer(start, period, time_tol[, enable]))`；省略 period 时用
-`timer(start,,time_tol)`，也可用 period=0 或负值表示单次。此空参数形式来自
+支持 `@(timer(start[, period[, time_tol[, enable]]]))`。一个实参表示单次事件，
+两个实参表示起点和周期；period=0 或负值也表示单次。period、time_tol 可留空，
+例如 `timer(start,,time_tol)`、`timer(start,period,)` 或 `timer(start,,,enable)`。
+这些缺省和空参数形式来自
 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-的 `analog_expression_or_null`，不采用两个实参含义不明的重载。
-start 必须为非负有限实例常数，period 为有限实例常数，time_tol 必须显式给出且为正。
+的 `analog_expression_or_null` / `constant_expression_or_null`；start 和显式 enable 不能留空。
+前端把省略的 period 归一化为 0，enable 归一化为 1，time_tol 归一化为 `1e-12 s`，
+再生成已有 IR17，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
+也不代表 Spectre 的缺省值。LRM 允许显式零容差；EVAS 当前仍要求显式容差为正。
+固定日程的 start 必须为非负有限实例常数，period 为有限实例常数。
 enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
-动态参数、缺省/零容差、复合事件仍明确拒绝。
+保持状态控制的参数见[动态 timer](#held-timer)，混合事件见[事件 OR](#event-or)。
 
 周期事件定义为编译后 binary64 数值对应的实数 `t_k=start+k*period`。
 内核由固定起点和精确整数 k 生成每个时刻，并用向外舍入界包围乘加误差；
-实际候选取 fused multiply-add 的可表示结果，须证明 `abs(s_k-t_k)<=time_tol`。
+实际候选取该区间的上界 `s_k`，须证明 `0<=s_k-t_k<=time_tol`。
+这满足缺省容差时“在名义时刻或稍后”的要求；显式正容差也沿用相同选择。
+此前固定日程使用最近舍入的 fused multiply-add，可能略早；现在某些非精确时刻会向后移动几个 ULP。
+选择上界仍必须通过用户预算，过严容差可能被保守拒绝。
+区间上界溢出不表示名义事件已越过 stop；只有参数下界的乘加本身溢出才能作该判断，
+其余不能包围的时间仍返回 `event_resolution`，不能静默丢弃事件。
 不会从上次实际事件时间累加周期，也不按容差合并相邻名义事件。
 同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和批次写者冲突规则与 cross 一致。
 
@@ -213,8 +223,12 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 当前在运行前生成有界的不可变事件日程，并按需推进已接受事件游标；不是惰性队列。
 日程空间随事件数线性增长，最多 1,000,000 条事件，超限返回 `event_budget`；时间推进仍保留独立的 1,000,000 步上限。
 
-后续需要单独扩展：动态 timer、复合事件、状态反馈 guard 的同刻迭代，以及非线性轨迹上的
-通用根定位。现有波形算子及积分的限定能力见[算子手册](operators.md)。
+缺省参数、精确有理数时钟和不能满足默认预算的拒绝由
+[固定 timer 回归](../../tests/test_timer.py)检查；[动态回归](../../tests/test_dynamic_timer.py)
+检查同一默认策略下的自调度与查询不变性。同源 Spectre 对照见
+[缺省参数实验](../../../experiments/backends/dvs2-spectre-validation/README.md#timer-defaults)。
+连续电压参数、动态容差和状态反馈 guard 的通用同刻迭代仍需单独扩展。
+现有波形算子及积分的限定能力见[算子手册](operators.md)。
 
 ## 同块顺序赋值与同刻联立求解
 

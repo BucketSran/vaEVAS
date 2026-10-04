@@ -523,15 +523,13 @@ class Parser:
                         arguments = [self.expression()]
                         while self.token.text == ",":
                             self.take(",")
-                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
-                                arguments.append(None)  # LRM optional period argument
+                            if kind == "timer" and len(arguments) in (1, 2) and self.token.text in (",", ")"):
+                                arguments.append(None)  # LRM optional period/time_tol
                             else:
                                 arguments.append(self.expression())
                         self.take(")")
                         if len(arguments) > 4:
                             self.fail(f"{kind} accepts at most four supported arguments", leaf)
-                        if kind == "timer" and len(arguments) < 3:
-                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
                         triggers.append(Trigger(kind, tuple(arguments), leaf))
                         if self.token.text != "or":
                             break

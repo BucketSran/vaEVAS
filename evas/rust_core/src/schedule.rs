@@ -208,23 +208,19 @@ fn add_timer(
     let mut previous = None;
     for index in 0..=EVENT_BUDGET {
         // index is bounded below 2^53, so its f64 conversion is exact. The
-        // enclosure covers both product and sum; mul_add chooses one rounded
-        // representative of the real start + index * period, not prior time + T.
+        // enclosure covers both product and sum. Choosing its upper endpoint
+        // cannot fire early, including when the source omitted time_tol. The
+        // clock remains start + index * period, never prior accepted time + T.
         let bounds = if index == 0 {
             start
         } else {
             start + I::point(index as f64) * period
         };
-        let time = if held {
-            bounds.hi
-        } else if index == 0 {
-            start.lo
-        } else {
-            (index as f64).mul_add(period.lo, start.lo)
-        };
-        if time == f64::INFINITY {
-            // All operands are nonnegative: this and every later nominal time
-            // are beyond finite stop. No overflowing event is accepted.
+        let time = bounds.hi;
+        if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
+            // The rounded lower-operand sum overflowing proves every possible
+            // nominal time is beyond finite stop. An infinite interval upper
+            // bound alone proves nothing and must reach the rejection below.
             break;
         }
         if !bounds.finite() {
