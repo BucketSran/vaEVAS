@@ -177,7 +177,7 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 [pure_function](cases/pure_function/dut.va)及 [test_user_functions.py](../tests/test_user_functions.py)
 用手算电压、多项式 guard 的两根、局部顺序写与实例参数隔离验证。该切片不新增 IR
-字段、动态状态或历史执行器，也不改变原 31 条件；候选尚未合并，没有新 Spectre 运行。
+字段、动态状态或历史执行器，也不改变原 31 条件；该切片没有新 Spectre 运行。
 
 ## 静态 genvar 循环的分支候选
 
@@ -199,7 +199,7 @@ vout - vref = min(0.875, max(-0.75, y0))
 仍拒绝，接收变量不参与历史所有权。IR17 的普通调用使用空路径。LRM 允许合规的 genvar
 analog 循环中使用历史算子。[test_loop_histories.py](../tests/test_loop_histories.py)
 检查两个不同 IC/增益的积分、嵌套的四个积分及数组接收者；改变输出网格仍保持解析答案。
-通用数组、运行时循环和层次不由这一切片获得支持。候选尚未合并。
+通用数组、运行时循环和层次不由这一切片获得支持。该切片的支持范围如上。
 
 
 <a id="variable-arrays"></a>
@@ -220,7 +220,7 @@ real/integer 变量可以有常量整数范围，范围可以递增、递减并�
 [variable_array](cases/variable_array/dut.va) 和
 [test_variable_arrays.py](../tests/test_variable_arrays.py) 检查手算求和、参数范围、
 负/降序索引、实例隔离、事件顺序、越界和预算拒绝。数组在进入 Rust 前消失，
-不增加 IR 或运行时数组执行器；历史仍属于算子槽。本候选未合并，无新 Spectre 运行。
+不增加 IR 或运行时数组执行器；历史仍属于算子槽。该切片无新 Spectre 运行。
 
 
 <a id="hierarchy"></a>
@@ -242,7 +242,7 @@ electrical 网络；未连接端口、实例数组、generate、层次变量访�
 当 u=t 时 `y=6+2t²`。所有历史与事件仍经过同一候选提交机制。
 [hierarchy](cases/hierarchy/dut.va) 与 [test_hierarchy.py](../tests/test_hierarchy.py)
 检查上述手算答案、参数传播、同刻事件、实例身份、连接错误与预算边界。
-此展开不增加 IR 或第二个运行时；候选未合并，无新 Spectre 对照。
+此展开不增加 IR 或第二个运行时；该切片无新 Spectre 对照。
 
 
 <a id="preprocessing"></a>
@@ -274,4 +274,4 @@ include guard 不受库存顺序影响；条件块须在各文件内配对。
 
 [preprocessor](cases/preprocessor/dut.va) 和 [test_preprocessor.py](../tests/test_preprocessor.py)
 检查手算电压/积分、宏嵌套、复制历史、循环组合、条件/续行、包含位置、预算和失败。
-宏与 include 的失败不能静默变成默认值。本候选未合并，无新 Spectre 对照。
+宏与 include 的失败不能静默变成默认值。该切片无新 Spectre 对照。

@@ -17,7 +17,7 @@
 `@(cross(g0,...) or cross(g1,...) ...)` 表示一个事件体的触发集合
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
 时间容差及表达式容差。依据与首版选择见[独立契约](../../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
-已合并版只接受 cross 叶子；本分支候选扩展为 cross/timer 叶子的并集。
+OR 接受 cross/timer 叶子的并集；每个叶子保留自己的时间证书。
 原始 IR 中的空/单叶/嵌套 OR 仍拒绝。
 
 IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存叶子列表。
@@ -345,7 +345,7 @@ EVAS 保留合法的顺序赋值，不将特定后端的异常输出设为期望
 
 ### 事件修改的仿射 guard 重定位
 
-本分支新增候选能力；尚未合并或取得新的跨后端资格。范围是联合仿射电压网络，
+PR61 支持下述范围，尚未取得新的跨后端资格。范围是联合仿射电压网络，
 guard 不依赖历史算子；无关的积分/滤波历史可以共存。guard 可直接或经内部节点依赖离散状态。状态在事件间保持：
 
 ```text
@@ -399,7 +399,7 @@ Rust 的 [Controller 回退检查](../../rust_core/src/transient_lifecycle_tests
 伪造根证明，失败返回 event_resolution 或明确的同刻闭包拒绝。
 网络贡献仍须联合仿射，guard 须与历史算子独立；这项能力不是隐式非线性网络求解。
 开发检查包括平方根答案、内部节点投影、观察网格不变性、原始算术消去拒绝，
-以及同一 Controller 内的候选跳变失败/重试。候选尚未合并，没有新 Spectre 对照。
+以及同一 Controller 内的候选跳变失败/重试。该切片没有新 Spectre 对照。
 
 <a id="held-timer"></a>
 
@@ -429,4 +429,4 @@ start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时�
 答案在 .5 前为 1/(1−t)，之后为 1/t；不能沿旧增长流场预测到 stop。
 同一 Controller 另检查新日程成功、未来流场失败后的完整回退与修正重试。
 连续电压参数、动态 tolerance、一般非线性参数及事件改变历史驱动 guard 的联合根预测仍需补齐。
-独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。候选尚未合并，无新 Spectre 对照。
+独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。该切片无新 Spectre 对照。

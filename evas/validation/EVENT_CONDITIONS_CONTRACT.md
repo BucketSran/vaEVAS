@@ -426,7 +426,7 @@ Rust `transient_condition_tests.rs` 检查冲突失败后已接受 state、state
 Python 响应校验核对叶子类型与原请求，拒绝虚构 timer guard、错误类型或越界索引。
 独立值、周期/禁用、顺序交换、同刻计数和原始 IR 拒绝见
 [test_event_or.py](../tests/test_event_or.py)，传输故障注入见
-[test_runtime_contracts.py](../tests/test_runtime_contracts.py)。候选尚未合并，没有新 Spectre 对照。
+[test_runtime_contracts.py](../tests/test_runtime_contracts.py)。该切片没有新 Spectre 对照。
 
 ## 多项式保持状态 guard 的分支候选
 

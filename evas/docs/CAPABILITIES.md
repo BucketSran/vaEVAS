@@ -1,11 +1,11 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-10-04。合并基线为 **EVAS 0.12.3 / IR v16**；本分支候选为
-**EVAS 0.13.0 / IR v17**，尚未合并，未发布 tag。
+核对日期：2026-10-04。本源码为 **EVAS 0.13.0 / IR v17**，未发布 tag。
+本轮实现与审查见 [PR61](https://github.com/BucketSran/vaEVAS/pull/61)。
 改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
 矩阵同时展示下表的证据入口，收据各自绑定历史执行，不能自动证明当前代码。
-本分支执行与审查批次见[补齐候选收据](../../experiments/runs/capability-completion/README.md)；
+本轮执行与审查批次见[补齐候选收据](../../experiments/runs/capability-completion/README.md)；
 历史检查点见[原实验入口](../../experiments/runs/parallel-gap-integration/README.md#当前证据)。
 
 ## 状态约定
@@ -23,26 +23,26 @@
 
 | ID / 能力 | 限定支持（摘要） | 数学入口 | 剩余边界（摘要） | 证据入口 |
 | --- | --- | --- | --- | --- |
-| LANG | 标量/参数、有限常量数组、局部顺序赋值与输入 if/else、事件条件与 cross OR；本分支候选新增纯 real 函数内联、静态 genvar 循环（独立历史槽）、一维静态索引变量数组、静态模块层次、对象/函数宏和 include/条件编译，以及 cross/timer 混合 OR | [语法/API](../README.md#实现范围)、[普通条件契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | 受[前端资源预算](../README.md#frontend-boundaries)限制；候选未合并；条件瞬态限分段仿射；普通条件与事件/历史组合、运行时循环、动态索引/多维/参数数组、更广函数、宏拼接/字符串化、其他编译指令、generate 与实例数组尚缺 | [普通条件历史检查](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz)、[函数开发测试](../tests/test_user_functions.py)、[循环开发测试](../tests/test_static_loops.py) |
+| LANG | 标量/参数、有限常量数组、局部顺序赋值与输入 if/else、事件条件与 cross OR；支持纯 real 函数内联、静态 genvar 循环（独立历史槽）、一维静态索引变量数组、静态模块层次、对象/函数宏和 include/条件编译，以及 cross/timer 混合 OR | [语法/API](../README.md#实现范围)、[普通条件契约](../validation/ANALOG_CONDITIONS_CONTRACT.md) | 受[前端资源预算](../README.md#frontend-boundaries)限制；条件瞬态限分段仿射；普通条件与事件/历史组合、运行时循环、动态索引/多维/参数数组、更广函数、宏拼接/字符串化、其他编译指令、generate 与实例数组尚缺 | [普通条件历史检查](../../experiments/archive/pr14-pr15-validation/results/analog-conditions-acceptance-review.json.gz)、[函数开发测试](../tests/test_user_functions.py)、[循环开发测试](../tests/test_static_loops.py) |
 | LIN | 贡献累加、参考节点、稠密/稀疏求解、分解复用与残差失败后的有限精化 | [求解](math/solving.md) | 病态系统与区间保守性；冗余约束须在误差参数域成立 | [原矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json) |
 | NONLINEAR | 静态阻尼 Newton 与受限连续化重试；无状态多项式瞬态根盒证明 | [求解与精度链](math/solving.md#精度链的已修复反例与边界)、[瞬态契约](../validation/NONLINEAR_TRANSIENT_CONTRACT.md) | 瞬态认证限方阵；静态 solve 只保证局部收敛；多解全局选择、更广函数尚缺 | [精度链检查点](../../experiments/runs/parallel-gap-integration/results/precision-chain-checks.json) |
 | SPARSE | n≥32 且 nnz≤0.1mn 时稀疏 LU；减少消元重复查找 | [稀疏分支](math/solving.md#稀疏分支与性能边界) | 认证仍稠密；填充/存储后续 [Issue57](https://github.com/BucketSran/vaEVAS/issues/57) | [当前配对测量](../../experiments/performance/README.md)、[历史 PR8](https://github.com/BucketSran/vaEVAS/pull/8) |
-| CROSS | PWL/仿射/状态独立多项式/连续积分/滤波/受限 sin guard，逐叶认证；本分支候选新增事件修改仿射/多项式阈值及内部节点后的未来根重定位 | [事件数学](math/events.md)、[根证明](math/continuous.md#非线性-guard-的根证明) | 候选未合并；历史轨迹更新、同刻跳变闭包、隐式非线性 guard、切线/平台认证尚缺；混合 OR 为分支候选 | [动态根历史检查点](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[重定位开发测试](../tests/test_event_relocalization.py) |
-| TIMER | 固定单次/周期日程；本分支候选 IR17 新增保持状态控制的 start/period/enable，按新日程截止点推进历史 | [事件手册](math/events.md)、[定时契约](../validation/TIMED_OPERATOR_CONTRACTS.md) | 候选未合并；连续电压参数、动态容差和历史驱动 guard 的联合预测仍缺；不确定边界拒绝 | [动态开发测试](../tests/test_dynamic_timer.py)、[固定时钟测试](../tests/test_timer.py) |
+| CROSS | PWL/仿射/状态独立多项式/连续积分/滤波/受限 sin guard，逐叶认证；支持事件修改仿射/多项式阈值及内部节点后的未来根重定位 | [事件数学](math/events.md)、[根证明](math/continuous.md#非线性-guard-的根证明) | 历史轨迹更新、同刻跳变闭包、隐式非线性 guard、切线/平台认证尚缺 | [动态根历史检查点](../../experiments/runs/parallel-gap-integration/results/dynamic-closure-review-checks.json)、[重定位开发测试](../tests/test_event_relocalization.py) |
+| TIMER | 固定单次/周期日程；IR17 支持保持状态控制的 start/period/enable，按新日程截止点推进历史 | [事件手册](math/events.md)、[定时契约](../validation/TIMED_OPERATOR_CONTRACTS.md) | 连续电压参数、动态容差和历史驱动 guard 的联合预测仍缺；不确定边界拒绝 | [动态开发测试](../tests/test_dynamic_timer.py)、[固定时钟测试](../tests/test_timer.py) |
 | EVENT-ORDER | 同刻联立、程序顺序赋值、单写者、整批提交/回退 | [生命周期](math/events.md) | 同批双写及跨块 state 读取拒绝；real 相对预算在零附近保守；Spectre 差异见 [Issue16](https://github.com/BucketSran/vaEVAS/issues/16) | [事件条件历史对照](../../experiments/archive/pr14-pr15-validation/results/event-conditions-0.9.0.json) |
 | TRANSITION | 固定延迟、显式正边沿、状态仿射输入，历史误差参与验收 | [算子](math/operators.md#transition) | 动态参数、零/省略边沿及更广组合尚缺 | [历史误差修复对照](../../experiments/backends/dvs2-spectre-validation/results/transition-0.6.1.json) |
-| ABSDELAY | 固定非负延迟、直接连续 PWL 仿射输入；本分支候选支持内部仿射电压投影 | [算子](math/operators.md#absdelay) | 候选未合并；可变延迟、状态/跳变、嵌套和历史反馈尚缺 | [专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json)、[投影开发回归](../tests/test_history_projection.py) |
-| SLEW | 固定正/负限速、直接连续 PWL 仿射输入；本分支候选支持内部仿射电压投影 | [算子](math/operators.md#slew) | 候选未合并；动态参数、状态/嵌套和历史反馈尚缺 | [专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json)、[投影开发回归](../tests/test_history_projection.py) |
-| DYNAMICS | idt/idtmod/sin、积分反馈、联合 reset、1–8 阶滤波、受限 ddt、index-one 多项式 DAE；本分支候选新增 DAE 与 proper 滤波联合状态、内部/算子输入及可认证的非线性滤波 DC | [算子](math/operators.md)、[联合数学](math/continuous.md) | 候选未合并；DAE 与事件/复位/ddt、非线性直接通路、通用函数混合等尚缺；DC 证书仅确定局部根 | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json)、[DAE/滤波开发测试](../tests/test_implicit_filters.py) |
-| COMPOSE | 实例隔离（候选新增静态层次）、积分/滤波闭包、DC 与瞬态导数一致求值、事件重启复用物理历史 | [联合数学](math/continuous.md) | 结构依赖不可绕过；非线性混合限积分+proper 滤波 | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
-| QUALIFICATION | 原矩阵两档各 31/31（合并基线 0.12.3 / IR16）；候选 0.13.0 / IR17 重跑仍各 31/31；七个预先冻结确认案例首次及复跑各 14/14 | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；七案例确认限该冻结批次，不覆盖后加 DAE/滤波或一般组合；独立观察误差与一般连续时间资格仍缺 | [提交前审查收据](../../experiments/runs/capability-completion/review-receipt.json)、[一致初值收据](../../experiments/runs/capability-completion/joint-dc-receipt.json)、[前一候选收据](../../experiments/runs/capability-completion/receipt.json)、[合并基线收据](../../experiments/performance/matrix.json) |
+| ABSDELAY | 固定非负延迟、直接连续 PWL 仿射输入；支持内部仿射电压投影 | [算子](math/operators.md#absdelay) | 可变延迟、状态/跳变、嵌套和历史反馈尚缺 | [专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json)、[投影开发回归](../tests/test_history_projection.py) |
+| SLEW | 固定正/负限速、直接连续 PWL 仿射输入；支持内部仿射电压投影 | [算子](math/operators.md#slew) | 动态参数、状态/嵌套和历史反馈尚缺 | [专项历史对照](../../experiments/archive/pr14-pr15-validation/results/operators.json)、[投影开发回归](../tests/test_history_projection.py) |
+| DYNAMICS | idt/idtmod/sin、积分反馈、联合 reset、1–8 阶滤波、受限 ddt、index-one 多项式 DAE；支持 DAE 与 proper 滤波联合状态、内部/算子输入及可认证的非线性滤波 DC | [算子](math/operators.md)、[联合数学](math/continuous.md) | DAE 与事件/复位/ddt、非线性直接通路、通用函数混合等尚缺；DC 证书仅确定局部根 | [截止点与矩阵检查点](../../experiments/runs/parallel-gap-integration/results/event-horizon-checks.json)、[DAE/滤波开发测试](../tests/test_implicit_filters.py) |
+| COMPOSE | 实例隔离（含静态层次）、积分/滤波闭包、DC 与瞬态导数一致求值、事件重启复用物理历史 | [联合数学](math/continuous.md) | 结构依赖不可绕过；非线性混合限积分+proper 滤波 | [观察与依赖修复检查点](../../experiments/runs/parallel-gap-integration/results/lifecycle-observation-review-fixes.json) |
+| QUALIFICATION | 原矩阵两档各 31/31（合并基线 0.12.3 / IR16）；0.13.0 / IR17 检查点重跑仍各 31/31；七个预先冻结确认案例首次及复跑各 14/14 | [验证集](../validation/README.md)、[追溯矩阵](TRACEABILITY.md) | 正式 DVS 资格 I；原矩阵已用于开发；七案例确认限该冻结批次，不覆盖后加 DAE/滤波或一般组合；独立观察误差与一般连续时间资格仍缺 | [提交前审查收据](../../experiments/runs/capability-completion/review-receipt.json)、[一致初值收据](../../experiments/runs/capability-completion/joint-dc-receipt.json)、[前一候选收据](../../experiments/runs/capability-completion/receipt.json)、[合并基线收据](../../experiments/performance/matrix.json) |
 | PERFORMANCE | 稀疏分流、查询复用、标量根证明、独立静态并行；逐位相同的仿射矩阵跨候选复用 LU | [求解手册](math/solving.md#稀疏分支与性能边界)、[只读诊断](diagnostics.md) | 完整请求成本已测；历史/guard 优化见 [Issue58](https://github.com/BucketSran/vaEVAS/issues/58)，长输出协议见 [Issue59](https://github.com/BucketSran/vaEVAS/issues/59)；无 Spectre 同配置加速结论 | [当前库内与进程测量](../../experiments/performance/README.md)、[历史计时](../../experiments/runs/solver-performance.json) |
 
 ## 检查点身份
 
 | 检查点 | 固定执行身份 |
 | --- | --- |
-| 本分支候选 / 0.13.0 / IR17，未合并 | 确认冻结 `5171558c`、首次运行后端 `63afd040`；前一矩阵/确认及整合回归 `152a920d`；一致初值与观察修复 `114d676e`；包含身份审查修复及最终矩阵/确认复跑和回归 `d68d3db4`；见[候选收据](../../experiments/runs/capability-completion/README.md) |
+| PR61 / 0.13.0 / IR17 | 确认冻结 `5171558c`、首次运行后端 `63afd040`；前一矩阵/确认及整合回归 `152a920d`；一致初值与观察修复 `114d676e`；包含身份审查修复及最终矩阵/确认复跑和回归 `d68d3db4`；见[候选收据](../../experiments/runs/capability-completion/README.md) |
 | 诊断与性能 / 0.12.3 / IR16 | 配对基线 `e91cf6ff`、候选 `eb03f94d`；原矩阵运行时 `a388a651`；见[当前收据](../../experiments/performance/README.md) |
 | PR50 / 0.12.3 / IR16：前轮矩阵重跑 | 被测 main `a7a42e17`；运行时、内核及新执行见前轮收据 |
 | PR33 / IR16：事件截止点 | 运行时 `8618339`，合并点 `b4921ca` |

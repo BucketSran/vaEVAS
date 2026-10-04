@@ -78,3 +78,16 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
         transient: None,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fuzz_seed_is_a_runnable_independent_affine_reference() {
+        let request = crate::ir::parse_request(include_str!("../fuzz/seeds/static.json"))
+            .expect("the fuzz seed must use the current IR");
+        let response = super::run(request).expect("the fuzz seed must remain runnable");
+        // The seed contributes y = 1/8 + u/2 at u = 1/4, so y = 1/4.
+        assert_eq!(response.solutions.len(), 1);
+        assert_eq!(response.solutions[0].voltages, [0.0, 0.25, 0.25]);
+    }
+}

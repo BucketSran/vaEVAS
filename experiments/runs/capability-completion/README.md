@@ -1,7 +1,8 @@
 # 功能补齐候选与确认
 
 本批次检验 EVAS 0.13.0 / IR17 候选的语言、事件和动态组合扩展。
-合并基线是 `f1463361` 的 0.12.3 / IR16；本批次未合并、未发布 tag。
+合并基线是 `f1463361` 的 0.12.3 / IR16；这里记录合并前的执行。
+合并状态见 [PR61](https://github.com/BucketSran/vaEVAS/pull/61)，未发布 tag。
 数学含义和拒绝边界归 [能力表](../../../evas/docs/CAPABILITIES.md)及技术手册；
 这里保存执行工具和紧凑收据。原始输出保留在本地忽略的 `runs/capability-completion/`，没有公开下载地址。
 
@@ -21,7 +22,7 @@
 
 这些批次都是限定支持。更广的事件驱动历史根重定位、DAE 事件/复位/ddt、
 非线性直接通路、可变/嵌套历史参数及更广语言范围仍有缺口，具体以能力表为准。
-没有新增 Spectre/ngspice 执行或性能结论。
+这些本地收据没有新增 Spectre/ngspice 执行或性能结论；GitHub CI 对照另行记录。
 
 ## 执行与判定
 
@@ -42,7 +43,7 @@
 python3 -c 'import gzip,json; print(json.dumps(json.load(gzip.open("experiments/runs/capability-completion/matrix-analysis.json.gz")),indent=2))'
 ```
 
-本轮最终运行时 `114d676e` 使用相同冻结输入和原检查器重新执行。
+一致初值检查点运行时 `114d676e` 使用相同冻结输入和原检查器重新执行。
 [joint-dc-receipt.json](joint-dc-receipt.json)绑定这次检查，
 [joint-dc-matrix-analysis.json.gz](joint-dc-matrix-analysis.json.gz)保存 62 配置的紧凑重判。
 原收据和分析保留；既有七案例确认属于复跑，不增加未见条件数量。

@@ -205,7 +205,7 @@ python3 evas/validation/check_timed_operator_math.py
 延迟节点应为 `2 min(max(t-1,0),2)`，限速输出应为 `min(t,4)`。
 [开发测试](../tests/test_history_projection.py)检查独立值、等价直接编码和加密观察网格。
 内部关系必须仿射且无离散状态或历史依赖，投影区间不能丢弃；历史反馈仍拒绝。
-该候选未合并，新增开发样例不计入原矩阵或未见确认集，没有新后端对照结果。
+新增开发样例不计入原矩阵或未见确认集，没有新后端对照结果。
 
 ## 动态 timer 的分支候选
 
@@ -218,4 +218,4 @@ enable 在 .375 打开后，事件为 .5、.75、1，不能补发之前的周期
 原算术参数包围进入时间容差，过严容差、raw IR 的越界状态和零系数电压依赖仍拒绝。
 新测试见 [test_dynamic_timer.py](../tests/test_dynamic_timer.py)，失败回退见
 [Controller 测试](../rust_core/src/transient_lifecycle_tests.rs)。保持状态控制的日程可与积分/滤波/复位历史组合，新日程确定后才推进未来轨迹。
-连续电压参数和历史驱动 guard 的联合根预测未开放，候选尚未合并。
+连续电压参数和历史驱动 guard 的联合根预测未开放，该切片的支持范围如上。

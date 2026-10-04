@@ -303,7 +303,7 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 
 ### 候选 DAE 与滤波一致初值的组合义务
 
-本分支允许无事件 index-one 多项式 DAE 搭配 proper 滤波。输入可来自内部节点或其他算子；
+本实现允许无事件 index-one 多项式 DAE 搭配 proper 滤波。输入可来自内部节点或其他算子；
 严格 proper 可使用多项式输入。原电压关系、积分 IC 与 `d0*h=n0*input` 须联合认证初始根。
 滤波全部物理状态以根盒包围的输入求 `A*x(0)=-B*input(0)`；后续与代数电压一起延续。
 直接通路的算子耦合须先证明可逆；奇异初始根不能因残差为零而通过。
