@@ -1,8 +1,16 @@
 # EVAS：电压域 Verilog-A 仿真器
 
+EVAS 面向 Verilog-A 行为模型的快速开发与验证。它的目标是提供开源、可审查的
+电压域仿真能力，在支持范围内优化运行速度，并帮助模型接入 Spectre 等电路仿真器。
+用户先用 EVAS 迭代模型，再用同一份 VA 验证后端兼容性，最后与实际器件网表共同仿真。
+
 EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解节点电压。
 它适合描述理想电压域行为，例如增益、限幅、采样、事件计数和连续时间算子。
 它不包含晶体管器件模型、电流/电荷方程或完整 SPICE 网表求解。
+
+限定求解范围，为专门的算法和实现优化提供了空间；实际速度仍受模型规模、
+稀疏性、事件密度和精度要求影响。性能结论需要绑定具体模型、误差标准与测量环境。
+优化不能通过改变模型语义、跳过真实事件或放宽验收要求来获得速度收益。
 
 前端使用 Python 解析、绑定并生成 IR，Rust 内核完成求解与时间推进。
 同一支路的多条贡献会相加；程序赋值则保留顺序语义。
@@ -27,6 +35,35 @@ Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数�
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
 当前实现为 **EVAS 0.13.0 / IR v17**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
+
+<a id="model-handoff"></a>
+
+## 与电路仿真配合
+
+模型移交以 `.va` 源码、实例参数、端口定义、初始条件和验证用例为基础。
+模型在 EVAS 中通过后，先在 Spectre 中运行相同源码与等价刺激，再接入器件级网表。
+具体负载、驱动和反馈连接由集成测试台声明，交给 Spectre 共同求解。
+
+这三个层次分别验收：
+
+| 层次 | 检查内容 |
+| --- | --- |
+| 数学正确性 | 根据规格和语言语义建立独立答案，检查电压关系、状态演化与事件 |
+| 后端兼容性 | 同一模型在 EVAS 与 Spectre 中，事件次数、顺序、时刻和波形满足共同判据 |
+| 网表集成 | 接入实际电路后，初始化、负载、反馈和接口假设仍符合模型规格 |
+
+两个后端可以采用不同算法和内部时间步；比较使用事先约定的输出误差与事件要求。
+相同名称的容差参数不保证相同的输出误差。发现差异时，分别检查模型写法、
+语言语义、数值设置和求解器实现；不能仅以任一后端的结果作为正确答案。
+EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验证。
+
+电压域模型还需要说明接口假设。例如，理想电压输出没有自动包含真实的输出阻抗、
+限流和负载效应；这些行为需在模型或外围电路中显式表达，并在集成阶段验证。
+预先计算的波形适合单向激励。存在电路反馈时，需要使用能响应输入变化的行为模型。
+
+当前的[测试台读取](#spectre-testbench)和[后端对照](../experiments/backends/dvs2-spectre-validation/README.md)
+是这条工作流的已有基础。兼容性证据限于已测模型、配置和仿真器版本；
+通用的自动移交与 EVAS/Spectre 运行时同步接口尚未实现。
 
 ## 构建与运行
 
@@ -57,8 +94,8 @@ PYTHONPATH=evas/src python3 -m evas transient evas/validation/smoke/idt.json \
 manifest 声明源文件、实例参数和端口到全局网络的映射。
 静态入口提供驱动节点与样本；瞬态入口提供 PWL 源、观察时间和停止时间。
 `solve` 不推进历史；含状态、事件或历史算子的模型使用 `transient`。
-[examples/](examples/) 按三课组织（静态求解 → 瞬态与历史 → 事件），
-每课自带电路图、va/json 字段对照与期望输出；覆盖各条仿真能力路径的最小冒烟集
+[examples/](examples/) 从静态求解、瞬态历史讲到事件；第 4 课展示当前分支的事件与积分组合候选，
+每课提供模型、运行清单与期望输出；覆盖各条仿真能力路径的最小冒烟集
 （静态非线性、连续积分、延迟历史、定时/过阈事件、有限边沿）见
 [validation/smoke/](validation/smoke/)：
 
@@ -78,6 +115,8 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 不能直接解释为所有输出都具有同样的全时域精度。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
 具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
+
+<a id="spectre-testbench"></a>
 
 ### Spectre 风格电压测试台
 
@@ -194,8 +233,11 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
   [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
 
-同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值和累加贡献。
-总迭代与展开语句各限 4096；运行时循环仍拒绝；每个展开的历史调用分别占用一个算子槽。
+同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值、累加贡献和 `cross/timer` 事件（含 OR）。
+事件参数与体内表达式代入各层循环下标，再进入既有事件内核；不同展开事件保留独立来源，
+同刻冲突写入仍拒绝。事件体内的条件赋值可用；模拟条件下的事件、循环内 `initial_step`
+以及事件体内的循环仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
+总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
 范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
@@ -388,7 +430,9 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected eva
 `state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件为 `trigger/body/origin`。
 body 的 `kind=assign` 含 `state/rhs`；`kind=if` 含 `relation/left/right/then_body/else_body/origin`，
 relation 为 `lt/le/gt/ge`。无 else 序列化为空 body；未知字段、关系或缺失 body 均拒绝。
-trigger 支持 cross、固定 timer 和仅含 cross 叶子的 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。
+trigger 支持 cross、固定及保持状态控制的 timer，以及 cross/timer 混合 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。
+源码 `timer(start)` 为单次事件，`timer(start,period)` 为周期事件；省略的时间容差采用 EVAS 的
+`1e-12 s` 默认值。该值不是与 Spectre 共享的默认设置；规则和拒绝边界见[固定 timer](docs/math/events.md#固定-timer)。
 算子按实例/调用点引用，idt 的可空 reset 字段见[算子手册](docs/math/operators.md#idt)。
 静态入口拒绝含状态、事件或算子的程序；完整字段定义见[Python IR](src/evas/ir.py)与[Rust IR](rust_core/src/ir.rs)。
 

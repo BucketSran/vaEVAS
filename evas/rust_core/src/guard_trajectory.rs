@@ -153,12 +153,12 @@ impl<'a> GuardTrajectory<'a> {
         operators: Option<&'a Operators>,
         states: Option<&'a [I]>,
     ) -> Result<Self, Error> {
-        // A numerically cancelled relay cannot erase a structural dependency
-        // on a discontinuous or event-mutated operator history.
-        for index in model.guard_operators.iter().flat_map(|ops| ops.iter()) {
-            operators
-                .ok_or_else(|| Error::new("unsupported_cross", "guard requires operator history"))?
-                .range(*index, I::ZERO)?;
+        // Validate structural dependencies even if algebraic projection cancels
+        // their coefficients. A history-free calendar pass has no operators.
+        if let Some(operators) = operators {
+            for index in model.guard_operators.iter().flat_map(|ops| ops.iter()) {
+                operators.check_guard(*index)?;
+            }
         }
         Ok(Self {
             model,

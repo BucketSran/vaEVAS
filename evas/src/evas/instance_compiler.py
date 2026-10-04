@@ -212,12 +212,16 @@ class InstanceCompiler:
             result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True),
                                    int(direction), time_tol, expr_tol)
         else:
-            time_tol = setting(leaf.arguments[2])
+            # Lower optional source arguments into the existing explicit IR.
+            # 1 ps is EVAS policy, not a prescribed LRM or Spectre default.
+            arguments = leaf.arguments + (None,) * (4-len(leaf.arguments))
+            start_arg, period_arg, tolerance_arg, enable_arg = arguments
+            time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
             if time_tol <= 0:
                 raise CompileError("timer requires nonnegative start and positive time_tol")
             values = [lower(arg, self.symbol, {}, self.model.source, preserve_structure=True) if arg is not None else Affine(0., ())
-                      for arg in (leaf.arguments[0], leaf.arguments[1], leaf.arguments[3] if len(leaf.arguments) == 4 else None)]
-            if len(leaf.arguments) < 4:
+                      for arg in (start_arg, period_arg, enable_arg)]
+            if enable_arg is None:
                 values[2] = Affine(1., ())
             if all(isinstance(value, Affine) and not value.terms for value in values):
                 start, period, enabled = (value.constant for value in values)

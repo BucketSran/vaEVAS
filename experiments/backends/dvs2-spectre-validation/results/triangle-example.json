@@ -1,0 +1,207 @@
+{
+  "analysis_sha256": "40e481339071f95b158c696eeb8c0f803627e009f1b8e9af1069b4add82a4ce6",
+  "availability": "Example model, manifests and compact receipt in repository. Raw logs, waves and one-run analysis script retained in local ignored runs/ and authorized thu-sui storage, not publicly downloadable.",
+  "commands": {
+    "evas": "PYTHONPATH=evas/src python3 -B -m evas transient runs/triangle-example-20261004-r1/sim.json --kernel evas/rust_core/target/debug/evas-kernel --timeout 15",
+    "spectre": "Bounded existing checker.execute(binary, work, timeout=15), file bound 16 MiB; invocation frozen in input archive"
+  },
+  "contract": {
+    "case": {
+      "control": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "direction": 1,
+      "hi": 0.5,
+      "iabstol": 1e-18,
+      "initial": 0.0,
+      "lo": -0.5,
+      "maxstep": 0.005,
+      "method": "traponly",
+      "name": "constant-tighter",
+      "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 3 1]\nXdut (ctl z count 0) triangle lower=-0.5 upper=0.5 initial_voltage=0.0 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18\ntran tran stop=3.0 step=0.005 maxstep=0.005 method=traponly\nsave ctl z count\n",
+      "reltol": 1e-12,
+      "stop": 3.0,
+      "time_atol": 2e-07,
+      "ttol": 1e-10,
+      "vabstol": 1e-14,
+      "vtol": 1e-10,
+      "wave_atol": 1e-06
+    },
+    "checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+    "expected_events_s": [
+      0.5,
+      1.5,
+      2.5
+    ],
+    "output_limit_per_file_bytes": 16777216,
+    "parser_sha256": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "source": "evas/examples/04-triangle-oscillator",
+    "timeout_s": 15
+  },
+  "date": "2026-10-04",
+  "evas": {
+    "event_times_s": [
+      0.5000000000009095,
+      1.500000000001819,
+      2.5000000000045475
+    ],
+    "max_event_error_s": 4.547473508864641e-12,
+    "max_voltage_error_v": 4.547473508864641e-13,
+    "observations": "Requested output samples; event timing read from native log, counter checked against analytic event sequence.",
+    "passed": true,
+    "saved_points": 10,
+    "waveform_sha256": "c04de0a2878c4ae47a2f0211d7cb9a3cee34a34c7de3388b50c682784d3ff423"
+  },
+  "evas_identity": {
+    "binary_sha256": "15fe484aa2888b8ce79b4b08b32ed6c5063e01d1c1c83e6cd7ba7f4f513725a7",
+    "source_sha256": {
+      "evas/rust_core/src/absdelay.rs": "ae6f418bbd3fe8399d414a23cbf33786db4537af6a4db86da429d4f9bf973caf",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "3cb4d4be995698de4473239f727c1f0be75626279af776f91110d685f5c9c150",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "ea3cc5a3736971e92eddbb09207ef27d0b908750f2fa6b79e7a99c12f3d0a935",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "e1610fa5c68266773439f3e8cd2ca806553a6260a0a1dd284ec135159779057b",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "b906b67ffe3df4bc186d58d92d46351ebbc6d1e1191fa920357ddefae16e8408",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "801bd02ed0d07a94ea772a9921acef4e089a67bf967661751e3cf8a536afefed",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "b38b71d8223e7c33f43c68cacadf475747037f0b5b834ed10e75e9371532f913",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "38bd73cfb49039831522015bdd41d965aa43f530d52ca1da85b02c6c35146905",
+      "evas/src/evas/array_elaboration.py": "a687c0c8ef62ce97e482582f6f077fbe0e2e6d92c448d8af5c8493ea0f1ab119",
+      "evas/src/evas/diagnostics.py": "4c3e4c493c0c97d72386c972e19ff65491977b7e49e724fe13fa59b54a329702",
+      "evas/src/evas/elaboration.py": "67cd310e0b5623835dac4d890728e849383aeff6966c1589d72e4379ab383dc4",
+      "evas/src/evas/errors.py": "4cd66767c4e6d25c94ce9a2231ee0a82388dac2e73dcd674b0e267047986c805",
+      "evas/src/evas/frontend.py": "a1db72e40ca90e871036a6a1376faa049b03050483d7be2c4e2626d30f21842c",
+      "evas/src/evas/hierarchy.py": "8193b860e8529318c764ff499b033cb983282cbb1c365b56483c68a7cbcf3d36",
+      "evas/src/evas/instance_compiler.py": "085a86e31138b13467eba67590e1c863a8914c30caae51ebbf405f4b3a3cc11f",
+      "evas/src/evas/integer_constants.py": "df6cb3c9994a2296cb076ae77d0cc06d60eaeaa87014680c722b6ad2e1869abc",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/limits.py": "9d75bbf05f9960e3e50580fa3d7e59e537855c356c0ceac2e5259e9e2b2b64ab",
+      "evas/src/evas/lowering.py": "d3b1a58e653ec516a3edbe44af1c2a5c0eda15402b0a0480784d5346e21fffb9",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "6e19fb7f8397b8dfbdee90a6b2c1220bfdd2a60c391a8ccf86604862c4fd3493",
+      "evas/src/evas/migrate.py": "20f82146aa78b79791e4b479372a5735b2f6647bb87b7f7c170b9726cfc8227a",
+      "evas/src/evas/node_elaboration.py": "13adc567543c5c4bde2a30249ad4c093fcaa35f076e9a6e76e1188ea98c2473c",
+      "evas/src/evas/parameters.py": "3cdb30bb3bca87ee714b651daa6f41a3892484f88c323b44ad0d576870d067a8",
+      "evas/src/evas/preprocessor.py": "3bb1cb3b727ded90d58afca3381ec9d7f4ce96ba4a8586641f330121b820b4d5",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/runtime.py": "13dcf6374917c637563092a977d184585c99e7045b4bca6ad963cea54e38562c",
+      "evas/src/evas/scs.py": "d11ef906cebb8a9833abf1f611abfbbf5970cda42304d259bb1557a08b0b97e4",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "8d963edc29f04c1c3976807b4e2a399073be1d5c5fc471c0abd4650f152c8731"
+    }
+  },
+  "input_archive_sha256": "974165e4f53fa1216148a8595e7e67eb630c67eb6ecbae18453977d8ffdf29e7",
+  "inputs": {
+    "contract.json": "1ce2ebef3cfe9a4cab873d45ac8d3bcfea227cc0192e097b24553f6a2f8d9cc9",
+    "dut.va": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae",
+    "run_spectre.py": "10614172aeae08a277b4946b25d455e2ebbb78db0c5ed468b5413cb1376b4c3f",
+    "sim.json": "3036d8f45c1a0ad3b356e121dc7b28212de60c9b8f856bcd199425112373b965",
+    "tb.scs": "4f14bb0db290296e64f177d39148c1687622d7aa6f7557b0641387d93861b0b2"
+  },
+  "metadata_revision": {
+    "prior_receipt_sha256": "dfc61238a0dabad8ed4e8818989857e46d350ab8f20732cfdbc0147dc279dd15",
+    "reason": "Add log-derived Spectre version; preserve raw empty version stdout and original receipt."
+  },
+  "regression": {
+    "command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_history_relocalization",
+    "source_sha256": "cc29f799a115bbdc439c40b222a85d5a57e4251a5a0a06ccabf795deacb211e3",
+    "tests_passed": 9
+  },
+  "remote_archive_sha256": "f399878cbd6485730aa63fa092c71c9d59092257b158d9363f3d6f932f4900d4",
+  "remote_manifest_sha256": "fd327a6001f828bcbe617c488d632ff5e5620c567890cdd63d9833d365657508",
+  "run_id": "triangle-example-20261004-r1",
+  "scope": "New execution of the runnable directed-oscillator example, not a repair of the unchanged bidirectional model.",
+  "source_base": "d04f2025e5f17cae1d9018a2b84fdd6aff1791cb",
+  "source_status": "Local uncommitted candidate; simulator code unchanged from decomposition run.",
+  "spectre": {
+    "effective_settings": {
+      "iabstol": 1e-18,
+      "maxstep": 0.005,
+      "method": "traponly",
+      "reltol": 1e-12,
+      "step": 0.005,
+      "stop": 3.0,
+      "vabstol": 1e-14
+    },
+    "execution": {
+      "elapsed_s": 3.127294961363077,
+      "returncode": 0,
+      "timeout": false
+    },
+    "expected_events": [
+      0.5,
+      1.5,
+      2.5
+    ],
+    "identity": {
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "spectre_log_sha256": "380eb81d85c5b12faa6817574709ee66a03550d604405873c396cc0a1c7912a6",
+      "version": "",
+      "version_from_log": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+      "version_note": "Raw version stdout was empty; log header supplies the version. Raw identity file is unchanged."
+    },
+    "max_event_error_s": 1.964265194942527e-09,
+    "max_voltage_error_v": 3.648754021146061e-09,
+    "observed_events": [
+      0.5000000000499998,
+      1.500000000721764,
+      2.500000001964265
+    ],
+    "passed": true,
+    "rows": 706,
+    "waveform_sha256": "bf4d2411fbe89379f2292ff51b6be88edce3055f21f32fa2a3675ddc17f00fce"
+  }
+}

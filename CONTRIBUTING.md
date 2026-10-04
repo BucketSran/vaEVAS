@@ -74,6 +74,58 @@ checks pass. Local installation changes outside the repository must be reported 
 4. Temporary integration work records its component commits and separate evidence; it does not mark components merged or released. Paused work records the remaining question in its existing PR/Issue.
 5. Merge the agreed scope after relevant checks and authorized review; universal simulator support is not a gate. End that task after merge and use a new PR for later work. Apply the retirement checklist separately before cleanup.
 
+<a id="behavior-first-tests"></a>
+
+## Behavior-first tests
+
+Use TDD for behavior changes: choose a contract and observable failure, run the smallest
+meaningful failing test, implement the fix, then refactor within scope. Reuse an existing
+case if it already exposes the defect. Report an observed red run; do not imply tests
+written after the fix were run before it. Independent validation design can precede
+implementation; it is not constrained to one test at a time.
+
+Before adding a test, identify its required behavior, independent answer and distinct
+failure mode in its name/comment or the existing PR. No separate test-plan file is needed.
+
+- Derive expected values from the specification, a worked analytic example, an independent
+  qualified reference or an invariant. Do not call or copy the computation under test to
+  obtain its own expected answer. A literal copied from a current output is not independent.
+- Prefer a stable behavior interface. Keep focused kernel tests when they expose interval
+  enclosure, state isolation or failed-trial retry that a process-level test cannot observe.
+  Do not mock the computation being tested or assert incidental helper layout/call counts.
+- Distinguish tautology from repetition. A tautological oracle needs replacement. Tests with
+  the same model may still protect different layers or failure modes. A source/copy identity
+  check verifies packaging, not mathematical correctness; label that claim accordingly.
+- Reuse or parameterize cases when contract, failure mode, observation boundary and evidence
+  source are the same. Keep distinct sign, scale, boundary, composition and rollback cases
+  when they detect distinct faults; parameterization alone does not reduce execution cost.
+- Before deleting a regression, identify the retained test and show it still catches the
+  original defect or a targeted wrong implementation. If equivalence is uncertain, retain
+  it and report the question. Preserve frozen suites, denominators and historical receipts;
+  update current traceability when test locations change. Never prune solely to cut counts.
+
+This adapts the behavioral and independent-oracle guidance in
+[Matt Pocock's TDD skill](https://github.com/mattpocock/skills/blob/d1caf1e952fe395014ae729445d43ea7c1b40fa0/skills/engineering/tdd/SKILL.md).
+Its mandatory interface confirmations, blanket ban on internal tests and review-only
+refactoring are not repository rules. Existing authorization, numerical evidence and
+independent validation contracts govern those choices here.
+
+<a id="development-bench-candidates"></a>
+
+## Development failures as benchmark candidates
+
+When development exposes a reusable modeling mistake, semantic trap or compatibility
+problem, add or update [the candidate register](benchmark/CANDIDATES.md) before handoff.
+Record the concrete trigger, observed versus required behavior, evidence and proposed
+modeling task. Separate confirmed causes from hypotheses; a simulator bug or infrastructure
+failure must not be mislabeled as a VA model defect. Reuse the existing candidate for the
+same failure family. Link code, Issue/PR and compact receipts instead of copying run logs.
+
+Capture is part of the current work. Formal task design, variant generation, scoring and
+Harbor integration are a separate work item; a new candidate does not trigger them by
+default. Existing prototypes stay labeled as prototypes until that work is reviewed.
+The register owns candidate status; Issues and PRs own implementation work and history.
+
 ## Parallel work
 
 - Before authorized delegation, the coordinator posts each worker's owner, writable paths, base and expected result in task messages. That assignment is the ownership record; no separate lock file is required.
@@ -106,7 +158,7 @@ Each added file must serve a current use, validation obligation or published cla
 | Simulator source, build/dependency files, examples and developer regressions | `evas/` |
 | Current mathematics, behavior, support boundaries and user instructions | `evas/docs/` and component READMEs |
 | Independent models, stimuli, contracts, reusable input generators/checkers and their calibration | `evas/validation/` |
-| Harbor-format benchmark tasks, reference solutions, scoring and shared task environments | `benchmark/` |
+| Benchmark candidate register, Harbor-format tasks, reference solutions, scoring and shared task environments | `benchmark/` |
 | Reusable execution/analysis tools and compact evidence needed for current or published comparisons | `experiments/` |
 | Repository maintenance, contribution instructions and agent/skill entry points | `scripts/`, root files, `.agents/` |
 

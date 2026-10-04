@@ -111,6 +111,64 @@ pub(crate) fn dedup_exact_roots(roots: &mut Vec<CertifiedRoot>) {
     });
 }
 
+/// Leave an already executed root without treating its retained uncertainty as
+/// a new crossing. The caller must prove that the event preserves guard value.
+/// A strictly signed derivative alone proves at most one root, not that this
+/// root is the consumed one. Retain the incoming direction to detect a return
+/// crossing that would be observable after a permitted positive trigger delay.
+pub(crate) fn depart_consumed(
+    start: f64,
+    end: f64,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+    ttol: f64,
+    directions: (i8, i8), // (incoming crossing, requested trigger direction)
+) -> Result<f64, Error> {
+    let (incoming, requested) = directions;
+    if !matches!(incoming, -1 | 1) || !root_matches(requested, incoming) {
+        return Err(unresolved("missing consumed cross direction certificate"));
+    }
+    let value = endpoint_value(start, range)?;
+    if matches!(value.sign(), Some(-1 | 1)) {
+        return Ok(start);
+    }
+    let mut width = ttol
+        .max((end - start) * f64::EPSILON * 8.0)
+        .max(start.abs() * f64::EPSILON * 8.0);
+    for _ in 0..MAX_BISECTIONS {
+        let next = (start + width).min(end);
+        if next <= start {
+            return Err(unresolved("consumed cross departure cannot advance time"));
+        }
+        let slope = derivative_bounds(
+            I {
+                lo: start,
+                hi: next,
+            },
+            derivative,
+        )?;
+        let Some(sign) = slope.sign().filter(|s| *s != 0) else {
+            return Err(unresolved(
+                "consumed cross lacks a transverse post-event departure",
+            ));
+        };
+        if sign != incoming && root_matches(requested, sign) {
+            return Err(Error::new("unsupported_cross",
+                "bidirectional history cross reverses its own flow inside the consumed root window; return crossing cannot be distinguished from root uncertainty"));
+        }
+        if endpoint_value(next, range)?.sign() == Some(sign) {
+            return Ok(next);
+        }
+        if next == end {
+            break;
+        }
+        width *= 2.0;
+    }
+    Err(unresolved(
+        "history uncertainty prevents departure from consumed cross",
+    ))
+}
+
 #[allow(clippy::too_many_arguments)]
 fn bisect_monotone(
     mut lo: f64,
@@ -122,6 +180,7 @@ fn bisect_monotone(
     direction: i8,
     ttol: f64,
     etol: f64,
+    reserve: f64,
 ) -> Result<Option<CertifiedRoot>, Error> {
     if lo_sign == 0 || hi_sign == 0 || lo_sign == hi_sign {
         return Err(unresolved(
@@ -139,7 +198,11 @@ fn bisect_monotone(
                 "dynamic cross derivative is not strictly signed on the root bracket",
             ));
         }
-        if accepted_width(bounds, slope, ttol, etol) {
+        // Leave numerical headroom for this time enclosure to become a later
+        // history initial condition. The public tolerances remain the hard
+        // acceptance limits; existing history uncertainty may prevent reserve.
+        let accepted = accepted_width(bounds, slope, ttol, etol);
+        if accepted && accepted_width(bounds, slope, ttol / reserve, etol / reserve) {
             return Ok(Some(CertifiedRoot {
                 bounds,
                 derivative: slope,
@@ -147,6 +210,12 @@ fn bisect_monotone(
         }
         let mid = lo + (hi - lo) * 0.5;
         if mid <= lo || mid >= hi {
+            if accepted {
+                return Ok(Some(CertifiedRoot {
+                    bounds,
+                    derivative: slope,
+                }));
+            }
             return Err(unresolved(
                 "dynamic cross root bisection stalled at time resolution",
             ));
@@ -161,6 +230,12 @@ fn bisect_monotone(
             let next_lo = lo.max(enclosure.lo);
             let next_hi = hi.min(enclosure.hi);
             if !enclosure.finite() || next_lo > next_hi || (next_lo == lo && next_hi == hi) {
+                if accepted && enclosure.finite() && next_lo <= next_hi {
+                    return Ok(Some(CertifiedRoot {
+                        bounds,
+                        derivative: slope,
+                    }));
+                }
                 return Err(unresolved(
                     "dynamic cross history uncertainty prevents root contraction",
                 ));
@@ -201,6 +276,7 @@ fn isolate_box(
     depth: usize,
     boxes: &mut usize,
     roots: &mut Vec<CertifiedRoot>,
+    reserve: f64,
 ) -> Result<(), Error> {
     *boxes += 1;
     if *boxes > MAX_BOXES {
@@ -262,7 +338,7 @@ fn isolate_box(
     if slope_sign.is_some() && slope_sign != Some(0) {
         if start_sign != end_sign {
             if let Some(root) = bisect_monotone(
-                start, end, start_sign, end_sign, range, derivative, direction, ttol, etol,
+                start, end, start_sign, end_sign, range, derivative, direction, ttol, etol, reserve,
             )? {
                 push_root(roots, root);
             }
@@ -285,6 +361,35 @@ fn isolate_box(
             "dynamic cross interval subdivision stalled at time resolution",
         ));
     }
+    // A root enclosure may straddle the split point. Making it an endpoint
+    // would demand a sign that the certified history deliberately does not
+    // claim. Bracket that point with signed quarter points instead.
+    if endpoint_value(mid, range)?.sign().is_none() {
+        let left = start + (mid - start) * 0.5;
+        let right = mid + (end - mid) * 0.5;
+        if left > start
+            && right < end
+            && endpoint_value(left, range)?.sign().is_some()
+            && endpoint_value(right, range)?.sign().is_some()
+        {
+            for (a, b) in [(start, left), (left, right), (right, end)] {
+                isolate_box(
+                    a,
+                    b,
+                    range,
+                    derivative,
+                    direction,
+                    ttol,
+                    etol,
+                    depth + 1,
+                    boxes,
+                    roots,
+                    reserve,
+                )?;
+            }
+            return Ok(());
+        }
+    }
     isolate_box(
         start,
         mid,
@@ -296,6 +401,7 @@ fn isolate_box(
         depth + 1,
         boxes,
         roots,
+        reserve,
     )?;
     isolate_box(
         mid,
@@ -308,6 +414,7 @@ fn isolate_box(
         depth + 1,
         boxes,
         roots,
+        reserve,
     )
 }
 
@@ -319,6 +426,32 @@ pub(crate) fn isolate(
     direction: i8,
     ttol: f64,
     etol: f64,
+) -> Result<Vec<CertifiedRoot>, Error> {
+    isolate_with_reserve(start, end, range, derivative, direction, ttol, etol, 1.0)
+}
+
+pub(crate) fn isolate_history(
+    start: f64,
+    end: f64,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+    direction: i8,
+    ttol: f64,
+    etol: f64,
+) -> Result<Vec<CertifiedRoot>, Error> {
+    isolate_with_reserve(start, end, range, derivative, direction, ttol, etol, 64.0)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn isolate_with_reserve(
+    start: f64,
+    end: f64,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+    direction: i8,
+    ttol: f64,
+    etol: f64,
+    reserve: f64,
 ) -> Result<Vec<CertifiedRoot>, Error> {
     if !start.is_finite()
         || !end.is_finite()
@@ -337,7 +470,7 @@ pub(crate) fn isolate(
     let mut roots = Vec::new();
     let mut boxes = 0;
     isolate_box(
-        start, end, range, derivative, direction, ttol, etol, 0, &mut boxes, &mut roots,
+        start, end, range, derivative, direction, ttol, etol, 0, &mut boxes, &mut roots, reserve,
     )?;
     dedup_exact_roots(&mut roots);
     Ok(roots)
@@ -443,6 +576,44 @@ mod tests {
                 "event_resolution"
             );
         }
+    }
+
+    #[test]
+    fn consumed_root_departure_requires_monotonicity_and_retains_the_next_root() {
+        // g=t(t-1) has an already consumed root at 0 and another at 1.
+        let mut range = |t: I| Ok(t * (t - I::ONE) + iv(-1e-12, 1e-12));
+        let mut derivative = |t: I| Ok(I::point(2.) * t - I::ONE);
+        let start = depart_consumed(0., 2., &mut range, &mut derivative, 1e-9, (-1, 0)).unwrap();
+        assert!(start > 0. && start < 0.5);
+        let roots = isolate_history(start, 2., &mut range, &mut derivative, 0, 1e-8, 1e-8).unwrap();
+        assert_eq!(roots.len(), 1);
+        assert!(roots[0].bounds.lo <= 1. && roots[0].bounds.hi >= 1.);
+        let error = depart_consumed(0., 2., &mut range, &mut |_| Ok(iv(-1., 1.)), 1e-9, (-1, 0))
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+    }
+
+    #[test]
+    fn uncertain_return_crossing_is_not_silently_consumed() {
+        let mut range = |t: I| Ok(iv(-1e-12, 1e-12) - t);
+        let mut derivative = |_t: I| Ok(-I::ONE);
+        let error = depart_consumed(0., 1., &mut range, &mut derivative, 1e-9, (1, 0)).unwrap_err();
+        assert_eq!(error.kind, "unsupported_cross");
+        // A falling return is not selected by an outward/rising-only guard.
+        assert!(depart_consumed(0., 1., &mut range, &mut derivative, 1e-9, (1, 1)).unwrap() > 0.);
+    }
+
+    #[test]
+    fn resolved_return_crossing_is_preserved_even_inside_time_tolerance() {
+        let root = 1e-10;
+        let mut range = |t: I| Ok(I::point(root) - t);
+        let mut derivative = |_t: I| Ok(-I::ONE);
+        let start = depart_consumed(0., 1e-8, &mut range, &mut derivative, 1e-9, (1, 0)).unwrap();
+        assert_eq!(start, 0.);
+        let roots =
+            isolate_history(start, 1e-8, &mut range, &mut derivative, 0, 1e-12, 1e-12).unwrap();
+        assert_eq!(roots.len(), 1);
+        assert!(roots[0].bounds.lo <= root && roots[0].bounds.hi >= root);
     }
 
     #[test]

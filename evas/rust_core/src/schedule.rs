@@ -19,6 +19,13 @@ impl ScheduledEvent {
     pub(crate) fn bounds(&self) -> I {
         self.moment.bounds()
     }
+
+    pub(crate) fn dynamic_direction(&self) -> Option<i8> {
+        match self.moment {
+            Moment::Dynamic { derivative, .. } => derivative.sign().filter(|&s| s != 0),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -201,23 +208,19 @@ fn add_timer(
     let mut previous = None;
     for index in 0..=EVENT_BUDGET {
         // index is bounded below 2^53, so its f64 conversion is exact. The
-        // enclosure covers both product and sum; mul_add chooses one rounded
-        // representative of the real start + index * period, not prior time + T.
+        // enclosure covers both product and sum. Choosing its upper endpoint
+        // cannot fire early, including when the source omitted time_tol. The
+        // clock remains start + index * period, never prior accepted time + T.
         let bounds = if index == 0 {
             start
         } else {
             start + I::point(index as f64) * period
         };
-        let time = if held {
-            bounds.hi
-        } else if index == 0 {
-            start.lo
-        } else {
-            (index as f64).mul_add(period.lo, start.lo)
-        };
-        if time == f64::INFINITY {
-            // All operands are nonnegative: this and every later nominal time
-            // are beyond finite stop. No overflowing event is accepted.
+        let time = bounds.hi;
+        if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
+            // The rounded lower-operand sum overflowing proves every possible
+            // nominal time is beyond finite stop. An infinite interval upper
+            // bound alone proves nothing and must reach the rejection below.
             break;
         }
         if !bounds.finite() {
@@ -280,7 +283,7 @@ pub(crate) fn schedule(
     trajectory: &Trajectory,
     operators: &Operators,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, Some(operators), None)
+    schedule_with_history(model, trajectory, Some(operators), None, CalendarScope::All)
 }
 
 // Build the complete calendar first when every guard is independent of
@@ -290,7 +293,7 @@ pub(crate) fn independent_schedule(
     model: &EventModel,
     trajectory: &Trajectory,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, None, None)
+    schedule_with_history(model, trajectory, None, None, CalendarScope::All)
 }
 
 pub(crate) fn schedule_held(
@@ -308,6 +311,7 @@ pub(crate) fn schedule_held(
             changed: &[],
             pending: &[],
         }),
+        CalendarScope::All,
     )
 }
 
@@ -329,6 +333,106 @@ pub(crate) fn reschedule_held(
             changed,
             pending,
         }),
+        CalendarScope::All,
+    )
+}
+
+// Calendar passes share the same ordering and tolerance checks. Independent
+// events first bound the immutable future supplied to history-root isolation.
+enum CalendarScope<'a> {
+    All,
+    Independent,
+    History {
+        until: f64,
+        consumed: &'a [(usize, i8)],
+    },
+}
+impl CalendarScope<'_> {
+    fn includes(&self, model: &EventModel, index: usize) -> bool {
+        match self {
+            Self::All => true,
+            Self::Independent => model.guard_operators[index].is_empty(),
+            Self::History { .. } => !model.guard_operators[index].is_empty(),
+        }
+    }
+}
+
+pub(crate) fn independent_epoch(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: Option<f64>,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    let changed = vec![true; model.triggers.len()];
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after,
+            changed: &changed,
+            pending: &[],
+        }),
+        CalendarScope::Independent,
+    )
+}
+
+pub(crate) struct HistoryEpoch<'a> {
+    pub(crate) states: &'a [I],
+    pub(crate) after: Option<f64>,
+    pub(crate) until: f64,
+    pub(crate) consumed: &'a [(usize, i8)],
+    pub(crate) pending: &'a [ScheduledEvent],
+}
+
+pub(crate) fn reschedule_independent(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after: Some(after),
+            changed,
+            pending,
+        }),
+        CalendarScope::Independent,
+    )
+}
+
+pub(crate) fn history_epoch(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    operators: &Operators,
+    epoch: HistoryEpoch<'_>,
+) -> Result<Vec<ScheduledEvent>, Error> {
+    let changed: Vec<_> = model
+        .guard_operators
+        .iter()
+        .map(|ops| !ops.is_empty())
+        .collect();
+    schedule_with_history(
+        model,
+        trajectory,
+        Some(operators),
+        Some(HeldCalendar {
+            states: epoch.states,
+            after: epoch.after,
+            changed: &changed,
+            pending: epoch.pending,
+        }),
+        CalendarScope::History {
+            until: epoch.until,
+            consumed: epoch.consumed,
+        },
     )
 }
 
@@ -344,6 +448,7 @@ fn schedule_with_history(
     trajectory: &Trajectory,
     operators: Option<&Operators>,
     held: Option<HeldCalendar<'_>>,
+    scope: CalendarScope<'_>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
     let _timing = crate::diagnostics::span("event.calendar");
 
@@ -376,7 +481,7 @@ fn schedule_with_history(
             circuit.solve(&trajectory.values(time))?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {
-            if model.dynamic_guards[index] {
+            if !scope.includes(model, index) || model.dynamic_guards[index] {
                 continue;
             }
             if held
@@ -427,7 +532,12 @@ fn schedule_with_history(
             }
         }
     }
-    if model.dynamic_guards.iter().any(|&g| g) {
+    if model
+        .dynamic_guards
+        .iter()
+        .enumerate()
+        .any(|(i, &g)| g && scope.includes(model, i))
+    {
         let guards = if let Some(h) = &held {
             crate::guard_trajectory::GuardTrajectory::new_held(
                 model,
@@ -445,7 +555,7 @@ fn schedule_with_history(
             crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?
         };
         for (index, leaf) in model.triggers.iter().enumerate() {
-            if !model.dynamic_guards[index] {
+            if !scope.includes(model, index) || !model.dynamic_guards[index] {
                 continue;
             }
             if held
@@ -469,16 +579,51 @@ fn schedule_with_history(
                 knots.retain(|t| *t > after);
                 knots.insert(0, after);
             }
+            if let CalendarScope::History { until, consumed } = &scope {
+                let start = held.as_ref().and_then(|h| h.after).unwrap_or(0.0);
+                knots.retain(|&t| t <= *until);
+                if *until > start && knots.last().copied() != Some(*until) {
+                    knots.push(*until);
+                }
+                if let Some((_, incoming)) = consumed
+                    .iter()
+                    .find(|(event, _)| *event == index)
+                    .filter(|_| *until > start)
+                {
+                    let departed = crate::dynamic_roots::depart_consumed(
+                        start,
+                        *until,
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+                        *time_tolerance,
+                        (*incoming, *direction),
+                    )?;
+                    knots.retain(|&t| t > departed);
+                    knots.insert(0, departed);
+                }
+            }
             for segment in knots.windows(2) {
-                let roots = crate::dynamic_roots::isolate(
-                    segment[0],
-                    segment[1],
-                    &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
-                    &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
-                    *direction,
-                    *time_tolerance,
-                    *expression_tolerance,
-                )?;
+                let roots = if !matches!(scope, CalendarScope::All) {
+                    crate::dynamic_roots::isolate_history(
+                        segment[0],
+                        segment[1],
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+                        *direction,
+                        *time_tolerance,
+                        *expression_tolerance,
+                    )?
+                } else {
+                    crate::dynamic_roots::isolate(
+                        segment[0],
+                        segment[1],
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+                        *direction,
+                        *time_tolerance,
+                        *expression_tolerance,
+                    )?
+                };
                 for root in roots {
                     if events.len() >= EVENT_BUDGET {
                         return Err(Error::new(
@@ -500,6 +645,9 @@ fn schedule_with_history(
         }
     }
     for (index, leaf) in model.triggers.iter().enumerate() {
+        if !scope.includes(model, index) {
+            continue;
+        }
         if held
             .as_ref()
             .is_some_and(|h| h.after.is_some() && !h.changed[index])

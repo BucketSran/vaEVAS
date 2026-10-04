@@ -1,0 +1,250 @@
+[
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.5,
+    "iabstol": 9.999999999999999e-18,
+    "initial": 0.0,
+    "lo": -0.5,
+    "maxstep": 0.005,
+    "method": "traponly",
+    "name": "constant-tight",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 3 1]\nXdut (ctl z count 0) triangle lower=-0.5 upper=0.5 initial_voltage=0.0 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-11 vabstol=9.999999999999999e-14 iabstol=9.999999999999999e-18\ntran tran stop=3.0 step=0.005 maxstep=0.005 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-11,
+    "stop": 3.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 9.999999999999999e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.5,
+    "iabstol": 1e-18,
+    "initial": 0.0,
+    "lo": -0.5,
+    "maxstep": 0.005,
+    "method": "traponly",
+    "name": "constant-tighter",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 3 1]\nXdut (ctl z count 0) triangle lower=-0.5 upper=0.5 initial_voltage=0.0 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18\ntran tran stop=3.0 step=0.005 maxstep=0.005 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-12,
+    "stop": 3.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 1e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        0.5
+      ],
+      [
+        6,
+        0.5
+      ]
+    ],
+    "direction": -1,
+    "hi": 0.75,
+    "iabstol": 9.999999999999999e-18,
+    "initial": 0.125,
+    "lo": -0.25,
+    "maxstep": 0.01,
+    "method": "traponly",
+    "name": "descending-tight",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 0.5 6 0.5]\nXdut (ctl z count 0) triangle lower=-0.25 upper=0.75 initial_voltage=0.125 direction=-1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-11 vabstol=9.999999999999999e-14 iabstol=9.999999999999999e-18\ntran tran stop=6.0 step=0.01 maxstep=0.01 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-11,
+    "stop": 6.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 9.999999999999999e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        0.5
+      ],
+      [
+        6,
+        0.5
+      ]
+    ],
+    "direction": -1,
+    "hi": 0.75,
+    "iabstol": 1e-18,
+    "initial": 0.125,
+    "lo": -0.25,
+    "maxstep": 0.01,
+    "method": "traponly",
+    "name": "descending-tighter",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 0.5 6 0.5]\nXdut (ctl z count 0) triangle lower=-0.25 upper=0.75 initial_voltage=0.125 direction=-1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18\ntran tran stop=6.0 step=0.01 maxstep=0.01 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-12,
+    "stop": 6.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 1e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2.5
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.5,
+    "iabstol": 9.999999999999999e-18,
+    "initial": 0.0,
+    "lo": -0.5,
+    "maxstep": 0.005,
+    "method": "traponly",
+    "name": "ramp-tight",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 3 2.5]\nXdut (ctl z count 0) triangle lower=-0.5 upper=0.5 initial_voltage=0.0 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-11 vabstol=9.999999999999999e-14 iabstol=9.999999999999999e-18\ntran tran stop=3.0 step=0.005 maxstep=0.005 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-11,
+    "stop": 3.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 9.999999999999999e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2.5
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.5,
+    "iabstol": 1e-18,
+    "initial": 0.0,
+    "lo": -0.5,
+    "maxstep": 0.005,
+    "method": "traponly",
+    "name": "ramp-tighter",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 3 2.5]\nXdut (ctl z count 0) triangle lower=-0.5 upper=0.5 initial_voltage=0.0 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18\ntran tran stop=3.0 step=0.005 maxstep=0.005 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-12,
+    "stop": 3.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 1e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        0.3,
+        1
+      ],
+      [
+        0.7,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        2,
+        0.8
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.3,
+    "iabstol": 9.999999999999999e-18,
+    "initial": -0.05,
+    "lo": -0.2,
+    "maxstep": 0.004,
+    "method": "traponly",
+    "name": "segments-tight",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 0.3 1 0.7 0.4 1.2 0.4 2 0.8]\nXdut (ctl z count 0) triangle lower=-0.2 upper=0.3 initial_voltage=-0.05 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-11 vabstol=9.999999999999999e-14 iabstol=9.999999999999999e-18\ntran tran stop=2.0 step=0.004 maxstep=0.004 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-11,
+    "stop": 2.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 9.999999999999999e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  },
+  {
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        0.3,
+        1
+      ],
+      [
+        0.7,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        2,
+        0.8
+      ]
+    ],
+    "direction": 1,
+    "hi": 0.3,
+    "iabstol": 1e-18,
+    "initial": -0.05,
+    "lo": -0.2,
+    "maxstep": 0.004,
+    "method": "traponly",
+    "name": "segments-tighter",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVctl (ctl 0) vsource type=pwl wave=[0 1 0.3 1 0.7 0.4 1.2 0.4 2 0.8]\nXdut (ctl z count 0) triangle lower=-0.2 upper=0.3 initial_voltage=-0.05 direction=1 ttol=1e-10 vtol=1e-10\nsimulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18\ntran tran stop=2.0 step=0.004 maxstep=0.004 method=traponly\nsave ctl z count\n",
+    "reltol": 1e-12,
+    "stop": 2.0,
+    "time_atol": 2e-07,
+    "ttol": 1e-10,
+    "vabstol": 1e-14,
+    "vtol": 1e-10,
+    "wave_atol": 1e-06
+  }
+]

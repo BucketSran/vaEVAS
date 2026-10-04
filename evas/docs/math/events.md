@@ -186,17 +186,27 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 
 ### 固定 timer
 
-支持 `@(timer(start, period, time_tol[, enable]))`；省略 period 时用
-`timer(start,,time_tol)`，也可用 period=0 或负值表示单次。此空参数形式来自
+支持 `@(timer(start[, period[, time_tol[, enable]]]))`。一个实参表示单次事件，
+两个实参表示起点和周期；period=0 或负值也表示单次。period、time_tol 可留空，
+例如 `timer(start,,time_tol)`、`timer(start,period,)` 或 `timer(start,,,enable)`。
+这些缺省和空参数形式来自
 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-的 `analog_expression_or_null`，不采用两个实参含义不明的重载。
-start 必须为非负有限实例常数，period 为有限实例常数，time_tol 必须显式给出且为正。
+的 `analog_expression_or_null` / `constant_expression_or_null`；start 和显式 enable 不能留空。
+前端把省略的 period 归一化为 0，enable 归一化为 1，time_tol 归一化为 `1e-12 s`，
+再生成已有 IR17，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
+也不代表 Spectre 的缺省值。LRM 允许显式零容差；EVAS 当前仍要求显式容差为正。
+固定日程的 start 必须为非负有限实例常数，period 为有限实例常数。
 enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
-动态参数、缺省/零容差、复合事件仍明确拒绝。
+保持状态控制的参数见[动态 timer](#held-timer)，混合事件见[事件 OR](#event-or)。
 
 周期事件定义为编译后 binary64 数值对应的实数 `t_k=start+k*period`。
 内核由固定起点和精确整数 k 生成每个时刻，并用向外舍入界包围乘加误差；
-实际候选取 fused multiply-add 的可表示结果，须证明 `abs(s_k-t_k)<=time_tol`。
+实际候选取该区间的上界 `s_k`，须证明 `0<=s_k-t_k<=time_tol`。
+这满足缺省容差时“在名义时刻或稍后”的要求；显式正容差也沿用相同选择。
+此前固定日程使用最近舍入的 fused multiply-add，可能略早；现在某些非精确时刻会向后移动几个 ULP。
+选择上界仍必须通过用户预算，过严容差可能被保守拒绝。
+区间上界溢出不表示名义事件已越过 stop；只有参数下界的乘加本身溢出才能作该判断，
+其余不能包围的时间仍返回 `event_resolution`，不能静默丢弃事件。
 不会从上次实际事件时间累加周期，也不按容差合并相邻名义事件。
 同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和批次写者冲突规则与 cross 一致。
 
@@ -213,8 +223,12 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 当前在运行前生成有界的不可变事件日程，并按需推进已接受事件游标；不是惰性队列。
 日程空间随事件数线性增长，最多 1,000,000 条事件，超限返回 `event_budget`；时间推进仍保留独立的 1,000,000 步上限。
 
-后续需要单独扩展：动态 timer、复合事件、状态反馈 guard 的同刻迭代，以及非线性轨迹上的
-通用根定位。现有波形算子及积分的限定能力见[算子手册](operators.md)。
+缺省参数、精确有理数时钟和不能满足默认预算的拒绝由
+[固定 timer 回归](../../tests/test_timer.py)检查；[动态回归](../../tests/test_dynamic_timer.py)
+检查同一默认策略下的自调度与查询不变性。同源 Spectre 对照见
+[缺省参数实验](../../../experiments/backends/dvs2-spectre-validation/README.md#timer-defaults)。
+连续电压参数、动态容差和状态反馈 guard 的通用同刻迭代仍需单独扩展。
+现有波形算子及积分的限定能力见[算子手册](operators.md)。
 
 ## 同块顺序赋值与同刻联立求解
 
@@ -341,7 +355,7 @@ EVAS 保留合法的顺序赋值，不将特定后端的异常输出设为期望
 
 历史 timer 修复和回放保留在[固定历史章节](https://github.com/BucketSran/vaEVAS/blob/1527502c9affb77fec12aac03adba5446f0f241e/evas/docs/EVENTS.md#timer-与同刻兼容性)。
 旧检查点的成绩不能当作当前版本的新执行。若 guard 依赖会被事件修改的历史，
-须在变化后重新定位根，不能沿用失效的预计算日程；当前这类轨迹仍拒绝。
+须在变化后重新定位根，不能沿用失效的预计算日程；当前受限实现见下节。
 
 ### 事件修改的仿射 guard 重定位
 
@@ -372,6 +386,97 @@ g_j(t) = a_j u(t) + c_j q_k + b_j,  t_k < t <= t_(k+1)
 Rust 的 [Controller 回退检查](../../rust_core/src/transient_lifecycle_tests.rs)故意使新根窗口
 与独立根无法确认先后，检查失败后的状态、区间、日程及记录，并在同一实例重试。
 这些是开发证据；不改变原 31 条件的分母。事件修改历史、隐式非线性 guard 和跳变闭包不由这项切片证明。
+
+### 事件修改积分轨迹后的根重定位
+
+当前候选支持联合仿射电压网络中，事件改变连续积分状态的输入或保持参数后，
+重新计算历史驱动的 `cross`。这不是一般隐式非线性 guard 或同刻跳变闭包。
+
+例如 `z=idt(slope,0)`，`slope` 初值为 1，在 `t=0.25` 改为 2。保持积分状态连续：
+
+```text
+z(t) = t,                     0 <= t <= 0.25
+z(t) = 0.25 + 2(t - 0.25),     t > 0.25
+cross(z - 0.75, +1) 的新根为 t = 0.5，旧预测 t = 0.75 必须作废。
+```
+
+对一般受支持的连续状态，事件前后遵守：
+
+```text
+x'(t) = f(x(t), u(t), q_k)
+x(t_e+) = x(t_e-)                 // 没有复位或跳变时
+q_(k+1) = event_body(q_k, v(t_e))
+g(t) = guard(x(t), u(t), q_(k+1))  // 用新流重新定位未来根
+```
+
+实现由 [history calendar](../../rust_core/src/transient_history_calendar.rs) 管理：
+
+1. 先取得不依赖历史的下一事件，用它限定当前预测区间。
+2. 在该区间内，用既有历史包围和导数证明定位历史 guard 的根。
+3. 到达事件后，在候选中完成赋值、联立求解及历史重启。保留物理状态和已累积误差。
+4. 撤销旧历史根，重建未来历史及根。未改变的独立 guard 和 timer 保留原证书。
+5. 日程顺序、历史和电压精度全部通过后，才一起提交状态、日程与记录。
+
+若事件改变 guard 的保持阈值，旧值和新值必须在**整个事件时间包围**内证明同号。
+连续历史使用旧流在该区间内的状态包围，并代入新保持状态；不能只检查代表时刻。
+复位等不连续历史若还带有事件时间不确定性，则明确拒绝，等待单独的同刻闭包设计。
+
+已经执行的根不会仅凭一个固定时间偏移被丢弃。事件须保持 guard 连续，离根区间的
+导数须严格同号，还须保留进入该根的方向。**局部单调只能证明至多一个根，不能证明
+这个根就是刚执行的根。** 当定位代表时刻略晚于真根，事件换向后可能返回穿越同一阈值。
+
+若当前 guard 包围仍含零，后续导数与进入方向相反，并且 direction 也选择该返回方向，
+当前实现无法区分返回穿越与已消费根的不确定性，返回 `unsupported_cross`。
+它不能宣称这类双向自换向模型兼容 Spectre。只选择向外穿越的有向 guard 可以排除返回方向；
+不改变轨迹的双向计数则保留正常的后续正、负向根。
+若 guard 在重启点已严格位于零的一侧，直接继续根搜索；即使返回根距离小于 `ttol`，
+也不能用固定消抖窗口删除它。导数含零、形成平台或无法证明离根时返回 `event_resolution`。
+
+这是一项明确的支持边界，不能据此断言所有双向 `cross` 不合法或 Spectre 存在缺陷。
+有向振荡器参考写法及容差干预见[兼容性实验](../../../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)。
+后续[拆分诊断](../../../experiments/backends/dvs2-spectre-validation/README.md#cross-restart-diagnostic)
+分别隔离了近距离穿越的分辨能力和换向附近的积分误差；原模型尚无稳定的跨后端事件序列。
+这些观测不支持用固定消抖或模拟某组设置下的积分平台来补齐兼容性。
+接受范围和后续验收由 [Issue #70](https://github.com/BucketSran/vaEVAS/issues/70) 跟踪。
+
+事件时间包围会进入下一段历史。历史日程的动态根优先定位到显式 `ttol` 和 `etol`
+的 1/64，以减少后续历史的不确定度。这个系数只是内部数值余量，不是新的精度承诺。
+若已有历史误差使进一步收缩停滞，只能在原公开容差已经满足时接受；否则拒绝。
+电压与历史认证仍须独立通过，不能用小方程残差替代它们。
+
+边界保持明确：guard 跳过零或落在不确定零附近、激活复位导致当前 guard 跳变、
+`ddt` 等不连续轨迹、未提供可认证轨迹/导数的历史算子，以及隐式非线性网络 guard，
+均未由这次改动补齐。预测区间本身也必须可求解；本实现不是在任意失效轨迹前自动寻找救援事件。
+
+[开发测试](../../tests/test_history_relocalization.py)检查提前、推迟、消失、反向积分、
+阈值变化、非精确根、独立事件与无关历史共存，以及输出采样不改变事件历史。
+[Controller 回退检查](../../rust_core/src/transient_lifecycle_tests.rs)在同一实例中拒绝失败候选后重试。
+[Spectre 专项入口](../../../experiments/backends/dvs2-spectre-validation/README.md#history-relocalization)
+固定 7 类模型、两档步长及独立数学答案；实际后端执行状态以专项收据为准。
+这些案例已用于开发，不是新的独立确认集，也不改变原 31 条件矩阵的历史成绩。
+
+<a id="static-loop-events"></a>
+
+## 静态循环中的事件
+
+实例参数确定后，有限 `genvar` 循环等价于一组独立事件声明。例如
+`for(i=0;i<N;i=i+1) @(timer(a+i*d,T)) ...` 展开为 N 个事件；第 i 个事件的
+名义日程为 `t(i,k)=a+i*d+k*T`，T>0 时 k 为非负整数。非正周期沿用单次 timer 规则。
+嵌套循环对每个下标元组分别代入触发参数和事件体，不在运行时执行循环。
+
+[syntax.py](../../src/evas/syntax.py)保留事件与循环的源码顺序；
+[elaboration.py](../../src/evas/elaboration.py)在实例绑定后替换下标；
+[node_elaboration.py](../../src/evas/node_elaboration.py)再分离事件与连续贡献，展开静态节点访问。
+身份由完整实例名、源码位置和展开路径组成，guard 内的历史调用也各有独立槽。
+所有事件继续经过同一日程、候选求解和整批提交路径。同刻写入同一状态仍报告冲突，
+不能因循环迭代顺序而先后覆盖。
+
+支持 timer/cross 及其 OR、事件体内原有条件赋值、静态数组和向量下标。
+普通模拟条件下的事件需要运行时激活语义，当前拒绝；循环内初始化和事件体内循环也未开放。
+总迭代和展开语句各限 4096，事件及体内叶子分别占用语句预算。
+[开发测试](../../tests/test_static_loops.py)使用手算时刻、计数及积分答案，并检查实例隔离和冲突拒绝。
+[ZOOM 对照](../../../experiments/backends/dvs2-spectre-validation/README.md#zoom-static-events)
+复用原模型及冻结判据，结果不等于任意事件组合或一般连续时间精度资格。
 
 ## 实现与验证入口
 
@@ -428,5 +533,5 @@ start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时�
 例如 y′=q y²、y(0)=1，next 在 .25 从 .75 改为 .5，.5 时令 q=−1：
 答案在 .5 前为 1/(1−t)，之后为 1/t；不能沿旧增长流场预测到 stop。
 同一 Controller 另检查新日程成功、未来流场失败后的完整回退与修正重试。
-连续电压参数、动态 tolerance、一般非线性参数及事件改变历史驱动 guard 的联合根预测仍需补齐。
+连续电压参数、动态 tolerance、一般非线性参数仍需补齐。历史驱动 guard 的受限联合预测见“事件修改积分轨迹后的根重定位”。
 独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。该切片无新 Spectre 对照。

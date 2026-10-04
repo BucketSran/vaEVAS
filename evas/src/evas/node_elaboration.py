@@ -8,7 +8,7 @@ from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
 from .elaboration import unroll_loops
-from .syntax import Assignment, Conditional, ContributionStatement
+from .syntax import Assignment, Conditional, ContributionStatement, Event
 from .integer_constants import check_integer_model, check_integer_expression
 
 
@@ -22,7 +22,9 @@ def scalarize_nodes(model, parameters):
             fail(f'unknown parameter {name!r} in electrical bound/index')
         return parameters[name]
 
-    model = replace(model, analog=list(unroll_loops(model, parameter)))
+    expanded = unroll_loops(model, parameter)
+    model = replace(model, analog=[s for s in expanded if not isinstance(s,Event)],
+                    events=[*model.events, *(s for s in expanded if isinstance(s,Event))])
     # Genvar substitution can expose integer-only arithmetic in both values and
     # node/array indices. Recheck the complete expanded tree before real lowering.
     check_integer_model(model, parameters)
@@ -73,6 +75,9 @@ def scalarize_nodes(model, parameters):
     def body(statements):
         result = []
         for s in statements:
+            if isinstance(s,Event):
+                fail('events under an analog conditional require runtime activation support',
+                     s.token, code='unsupported_event_context')
             if isinstance(s,Conditional):
                 result.append(replace(s,left=expression(s.left),right=expression(s.right),
                                       then_body=body(s.then_body),else_body=body(s.else_body)))

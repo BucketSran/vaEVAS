@@ -67,6 +67,12 @@ rollback before implementation. Do not scaffold an unused state framework.
 
 ## Verify and hand off
 
+Use the repository's [behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
+Start a behavioral fix with an independent failing case; reuse an existing regression
+when it already exposes the fault. Explain the distinct fault a new test detects.
+Do not reproduce the production calculation as its oracle or add duplicate tests just
+to increase counts. Keep internal lifecycle/numerical tests with distinct obligations.
+
 Use independent expected values and the smallest regression that detects the
 changed behavior, including a relevant rejection or compatibility case. Select
 checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
@@ -78,6 +84,10 @@ operator-only pass cannot establish those combinations.
 Update the owning component documentation when behavior or evidence changes;
 keep stage discussion and review history in the PR, preparing text locally when
 publication is outside the task's scope.
+If the failure can become a reusable modeling task, update the
+[benchmark candidate register](../../../benchmark/CANDIDATES.md) with its trigger,
+evidence, proposed task and unresolved questions. Capture first; do not start formal
+benchmark construction unless it is part of the requested scope.
 For semantic/numerical work, update the relevant handbook chapter using the
 [feature documentation contract](../../../evas/docs/README.md#feature-documentation-contract):
 behavior, source/assumption distinction, mathematics, numerical method, code map,

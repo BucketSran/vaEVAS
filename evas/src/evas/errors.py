@@ -15,6 +15,7 @@ RULES = {
     'vector_declaration': ('invalid_input', 'binding', 'LANG', 'Use matching one-dimensional electrical and port ranges.'),
     'unsupported_vector': ('unsupported', 'binding', 'LANG', 'Use static scalar bit connections and instance-constant indices.'),
     'unsupported_initial_event': ('unsupported', 'parse', 'LANG', 'Use a constant initial_step body with an unqualified initialization leaf.'),
+    'unsupported_event_context': ('unsupported', 'binding', 'LANG', 'Declare monitored events unconditionally, at top level or inside static genvar loops.'),
     'scs_input': ('invalid_input', 'netlist', 'LANG', 'Check the netlist statement and its constant values.'),
     'unsupported_scs': ('unsupported', 'netlist', 'LANG', 'Use the documented voltage-testbench subset.'),
     'input_error': ('invalid_input', 'input', None, 'Check the input fields and command arguments.'),

@@ -219,7 +219,7 @@ class EventRejections(unittest.TestCase):
             ('integer n;','@(initial_step) begin n=0; n=1; end V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),2)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1,0)) n=n+1; V(y)<+n;'),
-            ('integer n;','@(initial_step) n=0; @(timer(1n)) n=n+1; V(y)<+n;'),
+            ('integer n;','@(initial_step) n=0; @(timer(V(u))) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1)) n=n+.5; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1)) n=n+1; V(y)<+transition(n,0,1n);'),
         ]

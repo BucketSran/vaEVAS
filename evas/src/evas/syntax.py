@@ -107,8 +107,8 @@ class Conditional:
     relation: str
     left: Expr
     right: Expr
-    then_body: tuple["Assignment | Conditional", ...]
-    else_body: tuple["Assignment | Conditional", ...]
+    then_body: tuple["Assignment | Conditional | ContributionStatement | Loop | Event", ...]
+    else_body: tuple["Assignment | Conditional | ContributionStatement | Loop | Event", ...]
     token: Token
 
 
@@ -126,7 +126,7 @@ class Loop:
     relation: str
     limit: Expr
     update: Expr
-    body: tuple["Assignment | Conditional | ContributionStatement | Loop", ...]
+    body: tuple["Assignment | Conditional | ContributionStatement | Loop | Event", ...]
     token: Token
 
 
@@ -170,7 +170,7 @@ class Model:
     directions: dict[str, str]
     nodes: set[str]
     parameters: dict[str, Expr]
-    analog: list[Assignment | Conditional | ContributionStatement | Loop]
+    analog: list[Assignment | Conditional | ContributionStatement | Loop | Event]
     variables: dict[str, str]
     initial: list[Assignment]
     events: list[Event]
@@ -432,6 +432,10 @@ class Parser:
             update = self.expression()
             self.take(")")
             return (Loop(name, start, relation.text, limit, update, self.statements(True, True), token),)
+        if analog and token.text == "@":
+            self.take("@")
+            self.take("(")
+            return (self.monitored_event(token),)
         if analog and token.text == "V":
             branch = self.expression()
             if branch.op != "voltage":
@@ -478,6 +482,33 @@ class Parser:
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
+    def monitored_event(self, token):
+        """Parse after @(; static loops reuse the same monitored event grammar."""
+        triggers = []
+        while True:
+            leaf = self.take()
+            kind = leaf.text
+            if kind not in ("cross", "timer"):
+                self.fail("only cross and timer events are supported here; initial_step must be top-level", leaf,
+                          code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
+            self.take("(")
+            arguments = [self.expression()]
+            while self.token.text == ",":
+                self.take(",")
+                if kind == "timer" and len(arguments) in (1, 2) and self.token.text in (",", ")"):
+                    arguments.append(None)  # LRM optional period/time_tol
+                else:
+                    arguments.append(self.expression())
+            self.take(")")
+            if len(arguments) > 4:
+                self.fail(f"{kind} accepts at most four supported arguments", leaf)
+            triggers.append(Trigger(kind, tuple(arguments), leaf))
+            if self.token.text != "or":
+                break
+            self.take("or")
+        self.take(")")
+        return Event(tuple(triggers), self.statements(True), token)
+
     def analog_block(self):
         self.take("analog")
         self.take("begin")
@@ -512,32 +543,9 @@ class Parser:
                     self.take(")")
                     initial.extend(self.statements())
                 else:
-                    triggers = []
-                    while True:
-                        leaf = self.take()
-                        kind = leaf.text
-                        if kind not in ("cross", "timer"):
-                            self.fail("only cross and timer events can be combined with monitored events", leaf,
-                                      code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
-                        self.take("(")
-                        arguments = [self.expression()]
-                        while self.token.text == ",":
-                            self.take(",")
-                            if kind == "timer" and len(arguments) == 1 and self.token.text == ",":
-                                arguments.append(None)  # LRM optional period argument
-                            else:
-                                arguments.append(self.expression())
-                        self.take(")")
-                        if len(arguments) > 4:
-                            self.fail(f"{kind} accepts at most four supported arguments", leaf)
-                        if kind == "timer" and len(arguments) < 3:
-                            self.fail("timer requires explicit positive time_tol; use timer(start,0,tol) for one shot", leaf)
-                        triggers.append(Trigger(kind, tuple(arguments), leaf))
-                        if self.token.text != "or":
-                            break
-                        self.take("or")
-                    self.take(")")
-                    events.append(Event(tuple(triggers), self.statements(True), token))
+                    # Keep source order until genvar expansion separates events
+                    # from continuous statements in node_elaboration.
+                    analog.append(self.monitored_event(token))
                 continue
             analog.extend(self.statements(True, True))
         self.take("end")
@@ -705,15 +713,16 @@ class Parser:
         if eof:
             self.take("<eof>")
         pending = list(analog)
-        contributed = False
+        contributed = monitored = False
         while pending:
             statement = pending.pop()
             contributed |= isinstance(statement, ContributionStatement)
+            monitored |= isinstance(statement, Event)
             if isinstance(statement, Loop):
                 pending.extend(statement.body)
             elif isinstance(statement, Conditional):
                 pending.extend((*statement.then_body, *statement.else_body))
-        if not contributed and (not children or initial or events):
+        if not contributed and (not children or initial or events or monitored):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")

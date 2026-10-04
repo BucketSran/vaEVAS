@@ -14,6 +14,10 @@ Match the claim to the check. For simulator behavior, use the relevant sections
 of [EVAS README](../../../evas/README.md) and [validation guidance](../../../evas/validation/README.md).
 For archived evidence or backend comparisons, use [experiment ownership](../../../experiments/README.md)
 and the owning protocol or case cards.
+For test independence and deduplication, use the
+[behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
+Choose tests by the faults they can detect, not test counts; do not remove distinct
+kernel/rollback obligations or rewrite frozen evidence during cleanup.
 The implementation and validation assets may live on development branches.
 Confirm which of the entry points below exist in the current checkout; report
 missing prerequisites without inventing commands or switching branches.
@@ -157,6 +161,9 @@ Keep unsupported cases and compile, runtime, timeout, numerical, and
 infrastructure failures visible. Do not remove them from the fixed denominator
 or substitute missing settings with invented equivalents. A case used for
 debugging is development evidence, not an untouched holdout.
+Record reusable modeling or compatibility discoveries in the
+[candidate register](../../../benchmark/CANDIDATES.md), linking the original failure
+and distinguishing model intent, language semantics and backend observations.
 
 ## Report only the supported conclusion
 
