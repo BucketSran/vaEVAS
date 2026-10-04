@@ -158,12 +158,10 @@ class SlewContracts(unittest.TestCase):
 
     def test_unsupported_inputs_and_operator_uses_are_rejected(self):
         bodies = [
-            'V(z,r)<+V(u,r); V(y,r)<+slew(V(z,r),1,-2);',
             'V(y,r)<+slew(slew(V(u,r),1,-2),1,-2);',
             'V(y,r)<+slew(V(u,r)*V(u,r),1,-2);',
             'V(y,r)<+slew(V(u,r),1,-2)*V(u,r);',
             'V(y,r)<+slew(V(u,r),1,-2)*slew(V(u,r),1,-2);',
-            'V(y,r)<+slew(V(u,r)+0*V(z,r),1,-2); V(z,r)<+V(u,r);',
             '@(initial_step) q=0; V(y,r)<+slew(q,1,-2);',
             '@(initial_step) q=0; @(cross(slew(V(u,r),1,-2))) q=q+1; V(y,r)<+q;',
             '@(initial_step) q=0; @(cross(V(y,r))) q=q+1; V(y,r)<+slew(V(u,r),1,-2);',

@@ -1497,6 +1497,7 @@ mod tests {
             line: 1,
             column: 1,
             instance: "uut".to_string(),
+            expansion: Vec::new(),
         }
     }
 

@@ -105,7 +105,7 @@ fn finite_interval(value: I, what: &str) -> Result<I, Error> {
     }
 }
 
-fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, Error> {
+pub(crate) fn interval_expression(expr: &Expression, values: &[I]) -> Result<I, Error> {
     finite_interval(
         interval_evaluate(expr, values)?.value,
         "waveform expression",

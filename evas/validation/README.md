@@ -34,15 +34,21 @@
 | 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
 | 运行 ngspice 共同子集对照 | [差分验证](differential/README.md) |
+| 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
 
 ## 当前结果与历史比较
 
 <a id="latest-evas-checkpoint"></a>
 
-### 当前已合并 EVAS 检查点
+### 当前源码与执行检查点
 
-本轮重新构建并执行 main `a7a42e17`（[PR50](https://github.com/BucketSran/vaEVAS/pull/50)，
+PR61 的 EVAS 0.13.0 / IR17 检查点 `d68d3db4` 已重跑原矩阵，两档各 **31/31**；
+既有七案例确认复跑共 **14/14**。构建、源码、检查器和有限资格范围见
+[提交前收据](../../experiments/runs/capability-completion/review-receipt.json)。
+这些复跑没有增加未见条件数量。合并身份以 [PR61](https://github.com/BucketSran/vaEVAS/pull/61) 为准。
+
+此前重新构建并执行 main `a7a42e17`（[PR50](https://github.com/BucketSran/vaEVAS/pull/50)，
 EVAS 0.12.3 / IR16）：原矩阵两档各 **31/31**，62 份 CSV 与 PR33 收据中的哈希一致。
 模型、条件与设置也逐文件匹配历史收据。检查器保留原判断公式和阈值；
 目录迁移后的当前文件身份单独记录。源码、内核、逐配置判定及限制见
@@ -56,7 +62,8 @@ PR33 / 0.12.2 的历史结果仍见[原收据](../../experiments/runs/parallel-g
 达标表示满足所列有限观测判据。误差预算与判定依据见
 [精度方案](PROTOCOL.md#精度方案候选指标不冻结统一阈值)。完整观察不确定度与连续时间资格尚未完成，
 **正式 DVS 资格仍为 I（未决）**。这些条件已用于开发，不能再称为未见确认集。
-本轮只有新的本地 EVAS 执行，没有新运行 Spectre，也没有重判旧 Spectre 波形。
+上述矩阵收据只有本地 EVAS 执行，没有新运行 Spectre，也没有重判旧 Spectre 波形。
+GitHub CI 的 ngspice 共同子集是另一项检查，不能替代原矩阵的后端对照。
 
 <a id="historical-four-backend-baseline"></a>
 
@@ -166,7 +173,7 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `d2-constant`、`d2-chirp` | 2 | [idtmod、受限 sin 与相位误差](../docs/math/operators.md#idtmod-与-sin) |
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
-原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后轨迹重定位、非线性滤波初值及验证资格缺口仍见
+原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后历史轨迹重定位及验证资格缺口仍见
 [能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 </details>

@@ -13,7 +13,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 | 功能 | 使用方式与边界 |
 | --- | --- |
 | 静态电压方程 | `solve` 独立求每个样本的工作点；支持仿射关系和受限多项式非线性 |
-| 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定 `timer`、事件体条件与顺序赋值 |
+| 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定及保持状态控制的 `timer`、事件体条件与顺序赋值 |
 | 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd` 和 `ddt` |
 | 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
 | 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
@@ -26,7 +26,7 @@ Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数�
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.12.3 / IR v16**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
+当前实现为 **EVAS 0.13.0 / IR v17**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
 
 ## 构建与运行
 
@@ -79,13 +79,13 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
 具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
 
-旧 IR 1–15 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
+旧 IR 1–16 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
 批量工具和兼容性规则见[IR 版本与迁移](#ir-v8-migration)。
 
 ## 验证与开发
 
 [独立验证集](validation/README.md)维护模型契约、数学答案和判据。
-[当前执行证据](../experiments/runs/parallel-gap-integration/README.md#当前证据)记录原 31 条件
+[当前执行证据](../experiments/runs/capability-completion/README.md)记录原 31 条件
 两档回放及实际被测源码/内核身份。有限观测达标不等于完整 Verilog-A 合规、
 连续时间资格或性能领先；详细结果与历史失败分别保留。
 
@@ -109,22 +109,34 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 ## 实现范围
 
-- 一个源文件一个 module，标量端口及内部 `electrical` 节点，显式方向声明。
-- 文件前部可使用标准 `constants.vams` / `disciplines.vams` include 拼写。
-  本切片把它们视为内建前导声明，不搜索外部文件；当前只识别有限常量 `` `M_PI``，不提供通用宏处理。
+- 允许一个源文件多个 module；标量端口及内部 `electrical` 节点需显式方向声明。
+- 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
+  include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
+  未提供的标准 `constants.vams` / `disciplines.vams` 仍为内建前导，数学常量仅保留 `M_PI`。
+  语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
 - 表达式支持括号、单目正负、加减、乘法及非零常数分母。
 - `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
   该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
   数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
-- manifest 提供平面实例和端口到全局网络的显式映射。内部节点使用实例私有名称。
+- manifest 指定顶层实例和端口到全局网络的映射；可展开模块内层次实例。
+  命名/位置端口及参数覆盖进入同一关系 IR；内部节点与动态身份按完整实例路径隔离。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
+- 支持 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
+  函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
+  [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
+
+同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值和累加贡献。
+总迭代与展开语句各限 4096；运行时循环仍拒绝；每个展开的历史调用分别占用一个算子槽。
+也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
+数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
+范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
 
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
 [事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，
 不应把实现拒绝解释为语言标准禁止。
-仍拒绝超出范围的循环、层次实例、通用数组、命名支路、电流贡献、通用预处理等。
+仍拒绝超出范围的循环、generate/实例数组、通用数组、命名支路、电流贡献、宏拼接/字符串化及其他编译指令等。
 不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
 
 <a id="frontend-boundaries"></a>
@@ -148,7 +160,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 参数按有效依赖图迭代求值，声明顺序不改变依赖链限制。IR 大小检查计入每次引用的展开成本，
 同时缓存子图的计算结果；不会为了估算大小而先复制整个表达式树。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。本版本保持 IR16，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR17，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -170,7 +182,7 @@ Python 的公开接口：`compile_sources(sources, instances) -> Program`，
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-当前实现 Python 前端与 Rust 内核使用 IR v16；版本迁移规则见[下文](#ir-v8-migration)。
+当前实现 Python 前端与 Rust 内核使用 IR v17；版本迁移规则见[下文](#ir-v8-migration)。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
@@ -180,7 +192,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v16，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v17，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
@@ -199,7 +211,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 | 电压求解与精度：[NUMERICS](docs/math/solving.md) | [solver.rs](rust_core/src/solver.rs) 工作点；[nonlinear.rs](rust_core/src/nonlinear.rs) Newton；[linear.rs](rust_core/src/linear.rs) 稠密/稀疏分流；[analog.rs](rust_core/src/analog.rs) 无状态瞬态与普通条件；[expression.rs](rust_core/src/expression.rs)、[interval.rs](rust_core/src/interval.rs)、[affine_bounds.rs](rust_core/src/affine_bounds.rs) 提供共用运算与认证 | [非线性瞬态](validation/NONLINEAR_TRANSIENT_CONTRACT.md)、[普通条件](validation/ANALOG_CONDITIONS_CONTRACT.md) | [精度](tests/test_accuracy.py)、[稀疏](tests/test_sparse.py)、[普通条件](tests/test_analog_conditions.py)、[非线性瞬态](tests/test_nonlinear_transient.py)、[精度链](tests/test_precision_chain.py) |
 | 事件与同刻关系：[EVENTS](docs/math/events.md) | [events.rs](rust_core/src/events.rs) 赋值语义；[event_conditions.rs](rust_core/src/event_conditions.rs) 选支；[pwl.rs](rust_core/src/pwl.rs) 输入与仿射根；[schedule.rs](rust_core/src/schedule.rs) 日程；[event_accuracy.rs](rust_core/src/event_accuracy.rs) 定位认证；[settlement.rs](rust_core/src/settlement.rs) / [settlement_bounds.rs](rust_core/src/settlement_bounds.rs) 联立求解与误差 | [事件条件](validation/EVENT_CONDITIONS_CONTRACT.md)、[定时契约](validation/TIMED_OPERATOR_CONTRACTS.md) | [cross](tests/test_events.py)、[timer](tests/test_timer.py)、[同刻](tests/test_settlement.py)、[条件](tests/test_event_conditions.py)、[OR](tests/test_event_or.py)、[写者冲突](tests/test_event_writers.py) |
 | 独立波形算子：[OPERATORS](docs/math/operators.md) | [operators.rs](rust_core/src/operators.rs) 管理调用点、值/区间查询及候选历史；各算子的文件与测试见[算子对应表](docs/math/operators.md#operator-map) | [定时算子](validation/TIMED_OPERATOR_CONTRACTS.md)、[积分](validation/DYNAMICS_CONTRACTS.md)、[低通](validation/LAPLACE_CONTRACTS.md) | 各算子回归；[定时组合](tests/test_timed_composition.py)、[语义不变性](tests/test_semantic_invariants.py) |
-| 联合连续动态：[CONTINUOUS](docs/math/continuous.md) | [continuous.rs](rust_core/src/continuous.rs) 关系与 DC；[continuous_derivatives.rs](rust_core/src/continuous_derivatives.rs) 导数；[state_space.rs](rust_core/src/state_space.rs) 线性传播；[nonlinear_dynamics.rs](rust_core/src/nonlinear_dynamics.rs) 多项式传播；[implicit_dynamics.rs](rust_core/src/implicit_dynamics.rs) DAE；[guard_trajectory.rs](rust_core/src/guard_trajectory.rs) / [dynamic_roots.rs](rust_core/src/dynamic_roots.rs) 动态根 | [动态与生命周期](validation/DYNAMICS_CONTRACTS.md) | [连续关系](tests/test_continuous_dynamics.py)、[动态 cross](tests/test_dynamic_cross.py)、[动态组合](tests/test_dynamic_closure.py)、[混合算子](tests/test_mixed_dynamics.py)、[DAE](tests/test_implicit_dynamics.py) |
+| 联合连续动态：[CONTINUOUS](docs/math/continuous.md) | [continuous.rs](rust_core/src/continuous.rs) 关系与 DC；[continuous_derivatives.rs](rust_core/src/continuous_derivatives.rs) 导数；[state_space.rs](rust_core/src/state_space.rs) 线性传播；[nonlinear_dynamics.rs](rust_core/src/nonlinear_dynamics.rs) 多项式传播；[implicit_dynamics.rs](rust_core/src/implicit_dynamics.rs) DAE；[continuous_initialization.rs](rust_core/src/continuous_initialization.rs) 联合冷启动；[guard_trajectory.rs](rust_core/src/guard_trajectory.rs) / [dynamic_roots.rs](rust_core/src/dynamic_roots.rs) 动态根 | [动态与生命周期](validation/DYNAMICS_CONTRACTS.md) | [连续关系](tests/test_continuous_dynamics.py)、[动态 cross](tests/test_dynamic_cross.py)、[动态组合](tests/test_dynamic_closure.py)、[混合算子](tests/test_mixed_dynamics.py)、[DAE](tests/test_implicit_dynamics.py) |
 | 请求与接受帧：[共同生命周期](docs/math/continuous.md#shared-lifecycle-closure) | [__main__.py](src/evas/__main__.py) / [manifest.py](src/evas/manifest.py) 校验输入；[runtime.py](src/evas/runtime.py) / [protocol.py](src/evas/protocol.py) 处理进程与响应；[main.rs](rust_core/src/main.rs) 处理请求；[transient.rs](rust_core/src/transient.rs) 试算与整批提交；[continuous_runtime.rs](rust_core/src/continuous_runtime.rs) / [continuous_history.rs](rust_core/src/continuous_history.rs) 区分观察与未来历史；[reset_dependencies.rs](rust_core/src/reset_dependencies.rs) 检查复位及瞬时反馈依赖 | [共同生命周期契约](validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract) | [观察闭包](tests/test_lifecycle_closure.py)、[事件时间盒](tests/test_event_window_sampling.py)、[已知事件截止点](tests/test_event_horizons.py)；[真实控制器回退](rust_core/src/transient_lifecycle_tests.rs) |
 
 `tests/` 与 `validation/` 的分工：**[tests/](tests/) 是"改代码时别改坏"的护栏**——
@@ -247,7 +259,7 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v16，增加 ddt、连续动态网络与动态 guard，延续 v11 的 idt 复位与逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v17，支持保持状态控制的 timer，延续 v16 的 ddt、连续动态网络、动态 guard 及逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；`select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
@@ -266,7 +278,7 @@ RHS 已按规范方向调整符号。`kind` 目前只允许 `voltage`。
 
 Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规范方向。
 同一身份不能绑定不同端点；不同本地贡献支路不能因连接成为同一全局节点对。
-这些检查不扩展端口别名、命名支路、电流贡献或层次结构的支持范围。
+这些检查不扩展端口别名、命名支路、电流贡献或更广层次结构的支持范围。
 
 1. 前端按本地节点名固定支路方向；反向贡献同时翻转 RHS 的符号。
 2. Rust 按结构化支路身份汇总所有贡献，得到一条支路电压方程。
@@ -283,12 +295,13 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **16**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **17**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–15 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用，旧 IR15 内核不能消费 IR16。
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–16 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR17 新增保持状态 timer 表达式；
+IR1–16 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR16，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR17，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh

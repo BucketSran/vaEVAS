@@ -1,0 +1,12 @@
+module histories(u,y,r);
+input u; output y; inout r; electrical u,y,r,a,b;
+integral_child #(.g(.375),.ic(-.5)) left(u,a,r);
+integral_child #(.g(1.625),.ic(.25)) right(u,b,r);
+analog begin V(y,r)<+V(a,r)+V(b,r); end
+endmodule
+module integral_child(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+parameter real g=1;
+parameter real ic=0;
+analog begin V(y,r)<+idt(g*V(u,r),ic); end
+endmodule

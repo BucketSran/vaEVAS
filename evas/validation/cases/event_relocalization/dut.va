@@ -1,0 +1,13 @@
+module event_relocalization(u,y,r);
+input u; output y; inout r;
+electrical u,y,r;
+real threshold;
+integer n;
+analog begin
+  @(initial_step) threshold=.75;
+  @(initial_step) n=0;
+  @(timer(.25,0,1e-12)) threshold=.5;
+  @(cross(V(u,r)-threshold,1,1e-9,1e-8)) n=n+1;
+  V(y,r)<+n;
+end
+endmodule

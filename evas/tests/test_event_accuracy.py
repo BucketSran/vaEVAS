@@ -39,7 +39,9 @@ class EventAccuracy(unittest.TestCase):
                 with self.assertRaises(KernelError) as caught:
                     execute_event(source, sources={'u':[[0,0],[1,1]]},
                                   times=[0,1], stop=1, max_step=1)
-                self.assertEqual(caught.exception.detail['kind'], 'unsupported_cross')
+                # Polynomial held guards are now structurally accepted, but original
+                # arithmetic uncertainty still prevents a root certificate.
+                self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
 
     def test_raw_ir_cannot_hide_voltage_products_in_any_event_expression(self):
         program = compile_event(model('''@(initial_step) held=0;
@@ -195,7 +197,8 @@ class EventAccuracy(unittest.TestCase):
                      'integer n; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source)
-        # Structural state/operator dependencies now reject before interval bounds.
+        # The nonzero interval dependency survives coefficient underflow; the
+        # candidate cannot certify a same-time guard change across its root.
         self.assertEqual(caught.exception.detail['kind'],'unsupported_cross')
         self.assertIn('depend',caught.exception.detail['message'])
 

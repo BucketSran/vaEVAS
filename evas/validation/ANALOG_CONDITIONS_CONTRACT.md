@@ -25,7 +25,7 @@ end
 二次及更高次幂均拒绝，不能靠相消、空分支或不可达分支消除这个限制。这个结构检查
 在 Python 编译端和 Rust 内核分别执行；两侧都检查所有条件臂。分支体目前只允许局部 `real`
 赋值；不支持在普通 analog `if` 内贡献方程、调用动态算子、访问事件状态、数组、
-循环、函数内联或让谓词依赖输出/内部待解电压。手写 IR 若让 `select` 谓词依赖未驱动节点，
+循环或让谓词依赖输出/内部待解电压。纯函数的分支候选见本页末段；手写 IR 若让 `select` 谓词依赖未驱动节点，
 内核也会拒绝。输入选择的分段常数仍按输入依赖处理，暂不允许它作为标量乘另一个
 输入依赖表达式；此限制是本切片的保守边界，不是声称该表达式必然非仿射。
 
@@ -157,3 +157,121 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 条件体中的新动态调用、带 `Select` 的历史/事件方程仍明确拒绝；单个普通条件和单个积分分别支持，
 不表示二者已能联立。验证见 [test_gap_integration.py](../tests/test_gap_integration.py)。
+
+## 纯函数的分支候选
+
+依据 [Verilog-AMS LRM 2.4 §4.7](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的 analog function 作用域及函数返回规则。此分支仅开放 real 返回值和 real input 参数、
+顺序局部赋值、模块参数读取与受限嵌套调用。输出/inout 参数、数组、条件函数和递归
+仍未开放。函数内部禁止电压访问、贡献、事件和历史算子；实参中的历史调用也明确拒绝，
+避免内联复制调用点。函数可接收已经在外部求得的电压表达式。
+
+`elaboration.py::inline_functions` 在实例绑定前以实参替换形参。局部赋值按顺序建立
+表达式环境，返回函数名最后一次赋值：例如 `tmp=gain*x; f=tmp+1` 展开为 `gain*x+1`。
+模块参数仍留给每个实例独立绑定。展开结果进入既有 `lowering.py` 和同一电压方程组，
+`V(y)<+f(V(u))-2*V(y)` 不按语句顺序写节点，而是求 `3y=gain*u+1`。
+
+只允许读取已赋值的局部变量，未知函数、递归和缺少返回值均给出源码诊断。
+表达式深度、调用深度和实际展开大小受前端预算约束；共享实参不能逃过 JSON 树大小
+计数，失败不得变成 Python 的 `RecursionError` 或无限展开。
+
+[pure_function](cases/pure_function/dut.va)及 [test_user_functions.py](../tests/test_user_functions.py)
+用手算电压、多项式 guard 的两根、局部顺序写与实例参数隔离验证。该切片不新增 IR
+字段、动态状态或历史执行器，也不改变原 31 条件；该切片没有新 Spectre 运行。
+
+## 静态 genvar 循环的分支候选
+
+语言依据是 [Verilog-AMS LRM 2.4 §3.5](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的 genvar 与 analog for。该分支只展开标量 genvar、整数实例常量控制的有限循环，
+支持递增、递减、嵌套和零次迭代。更新仅允许写循环头的同一个 genvar；
+重复值、动态电压边界、非整数/超出 32 位控制值、嵌套同名变量和预算超限明确拒绝。
+总迭代数与实际叶子语句各限 4096，空的嵌套循环也不能逃过总工作预算。
+
+`elaboration.py::unroll_loops` 在每个实例参数绑定后替换索引并输出普通语句。
+贡献仍加入同一方程组，局部赋值保留展开后的顺序。对 count=3，
+`sum=Σ(i+1)u=6u`，`y=sum−2y` 应解得 `y=2u`。这不是新增运行时执行器。
+模块参数覆盖必须独立于实例顺序；纯函数先内联，再替换循环索引。
+
+[static_loop](cases/static_loop/dut.va)和 [test_static_loops.py](../tests/test_static_loops.py)
+验证手算求和、非收缩反馈、实例隔离、嵌套/空循环、函数组合及预算拒绝。
+每个展开的历史调用在 lowering 时生成独立 OperatorRef 槽，并携带 `Origin.expansion`
+中的 genvar 名称/值路径。实例、原源码位置和展开路径组成调用点身份；重复身份
+仍拒绝，接收变量不参与历史所有权。IR17 的普通调用使用空路径。LRM 允许合规的 genvar
+analog 循环中使用历史算子。[test_loop_histories.py](../tests/test_loop_histories.py)
+检查两个不同 IC/增益的积分、嵌套的四个积分及数组接收者；改变输出网格仍保持解析答案。
+通用数组、运行时循环和层次不由这一切片获得支持。该切片的支持范围如上。
+
+
+<a id="variable-arrays"></a>
+
+## 变量数组的分支候选
+
+语言依据为 [LRM 2.4 §3.2](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)：
+real/integer 变量可以有常量整数范围，范围可以递增、递减并包含负下标。
+本候选先绑定实例参数，再展开 genvar 循环，最后把一维数组元素改名为独立标量。
+总数组元素限 4096；声明范围和下标必须为有符号 32 位实例常量整数。
+动态索引、多维、参数数组、整数组赋值和函数数组参数仍未开放。
+
+`a[0]=u; a[1]=2*a[0]; y=a[0]+a[1]-2y` 仍求 `3y=3u`，不是顺序写电压。
+事件状态 `a[0]` 与 `a[1]` 分别进入 State 表；事件中先执行 `a[0]=a[0]+1`，
+后执行 `a[1]=a[0]+a[1]`，四次事件后从 `[0,1]` 得到 `[4,11]`。
+每个状态需按既有契约显式初始化；没有赋值的局部元素不能借用其他元素的值。
+
+[variable_array](cases/variable_array/dut.va) 和
+[test_variable_arrays.py](../tests/test_variable_arrays.py) 检查手算求和、参数范围、
+负/降序索引、实例隔离、事件顺序、越界和预算拒绝。数组在进入 Rust 前消失，
+不增加 IR 或运行时数组执行器；历史仍属于算子槽。该切片无新 Spectre 运行。
+
+
+<a id="hierarchy"></a>
+
+## 静态层次的分支候选
+
+依据 [LRM 2.4 §6.2.2–6.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的模块实例、端口连接和参数覆盖规则。候选接受多模块源文件、嵌套的静态实例、
+命名/位置端口与参数覆盖，以及一个声明中的多个实例。端口须完整连接到已声明的
+electrical 网络；未连接端口、实例数组、generate、层次变量访问和递归模块仍未开放。
+
+`hierarchy.py` 在创建全局电压索引前绑定实例树，参数使用与平面入口相同的
+`parameters.py`。子实例身份如 `dut/a/b`，内部网络如 `dut/a:z`；
+电压贡献、事件状态和算子 Origin 都使用该身份。顶层名字与生成路径碰撞时拒绝，
+不能静默覆盖实例。实例总数限 4096，层次深度限 64。
+
+层次不是依次运行多个仿真：若子块 `z=g*u`，父块 `y=z+1`，联合求 `y=g*u+1`。
+两个子块输出积分 `z₁=2+∫u dt`、`z₂=4+∫3u dt`，父块求和；
+当 u=t 时 `y=6+2t²`。所有历史与事件仍经过同一候选提交机制。
+[hierarchy](cases/hierarchy/dut.va) 与 [test_hierarchy.py](../tests/test_hierarchy.py)
+检查上述手算答案、参数传播、同刻事件、实例身份、连接错误与预算边界。
+此展开不增加 IR 或第二个运行时；该切片无新 Spectre 对照。
+
+
+<a id="preprocessing"></a>
+
+## 预处理的分支候选
+
+依据 [LRM 2.4 §10.4–10.5](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+及它引用的 Verilog 文本宏规则。候选支持对象/函数宏、define/undef、续行、
+ifdef/ifndef/elsif/else/endif 和 include。`__VAMS_ENABLE__` 始终定义且不能重定义；
+undef 对它无效。`__LINE__` 和 `__FILE__` 保留调用位置；字符串仍不在电压表达式范围内。
+
+`preprocessor.py` 在语法解析前展开 Token；不加入表达式执行器。sources 是文件库存，
+include 用相对当前文件的规范化路径查找。库存中被 include 引用的文件不再次作为根
+编译；其余根按给定顺序共享宏环境。只处理已提供的文件，无隐式磁盘/网络读取。
+include guard 不受库存顺序影响；条件块须在各文件内配对。
+
+`SCALE(x) = G*(x)`、G=3 应给 `y=3u+1`。复制积分宏
+`TWICE(x) = idt(x,1)+idt(2x,2)` 在 u=t 时应给 `y=3+1.5t²`。
+宏参数先展开，再替换；`F(F(1))` 是有限嵌套，不是递归定义。复制的每个调用
+保留原调用位置和 `_macro_NAME`/Token 序号路径；与 genvar 路径组合，防止历史合并。
+每个 include 边也加入 `_include`/Token 序号路径；重复或嵌套包含同一历史算子时，
+保留不同的调用点身份，源文件及行列仍指向被包含文件。两个 `idt(t,1)` 的贡献
+应共同给出 `y=2+t²`，不能因包含位置相同而共用历史或被当作重复 IR 拒绝。
+
+活动 Token 总展开数限 100000，展开/包含/条件嵌套及完整身份路径限 64。
+递归、缺失文件/宏、参数错配、未知指令、预算超限均给出诊断；不活动分支
+不展开宏或读取 include。宏拼接、字符串化、动态 include 名称、跨文件未配对条件
+及其余编译指令仍未支持。标准内建 include 仍只提供原有有限数学常量。
+
+[preprocessor](cases/preprocessor/dut.va) 和 [test_preprocessor.py](../tests/test_preprocessor.py)
+检查手算电压/积分、宏嵌套、复制历史、循环组合、条件/续行、包含位置、预算和失败。
+宏与 include 的失败不能静默变成默认值。该切片无新 Spectre 对照。

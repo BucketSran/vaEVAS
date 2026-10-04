@@ -1,0 +1,10 @@
+module calendar(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+real next; integer q;
+analog begin
+@(initial_step) begin next=.625; q=1; end
+@(timer(.125,0,1e-12)) next=.375;
+@(timer(next,0,1e-12)) q=-1;
+V(y,r)<+idt(q*pow(V(y,r),2),.75);
+end
+endmodule

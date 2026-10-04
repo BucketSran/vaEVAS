@@ -100,18 +100,39 @@ class EventOrContracts(unittest.TestCase):
                 self.assertEqual(len(result['transient']['events']),1)
                 self.assertEqual(len(result['transient']['events'][0]['fired_triggers']),2)
 
-    def test_timer_or_is_explicitly_outside_scope(self):
-        for trigger in ['timer(.5,0,.001) or cross(V(u,r)-.5)',
-                        'cross(V(u,r)-.5) or timer(.5,0,.001)']:
-            with self.subTest(trigger=trigger), self.assertRaisesRegex(CompileError, 'OR supports only cross'):
-                execute(source('q=q+1;', kind='integer', trigger=trigger))
+    def test_timer_and_cross_or_preserve_typed_proofs_and_execute_once(self):
+        cross = 'cross(V(u,r)-.5,1,.001,.001)'
+        timer = 'timer(.5,0,.001)'
+        for trigger in (timer+' or '+cross, cross+' or '+timer, timer+' or '+timer):
+            with self.subTest(trigger=trigger):
+                result = execute(source('q=q+1;', kind='integer', trigger=trigger))
+                self.assertEqual(states(result), [0,1,1])
+                event, = result['transient']['events']
+                self.assertEqual(event['kind'], 'or')
+                self.assertEqual([leaf['trigger'] for leaf in event['fired_triggers']], [0,1])
+                for leaf in event['fired_triggers']:
+                    self.assertEqual(leaf['time_bounds'], [.5,.5])
+                    if leaf['kind'] == 'timer':
+                        self.assertNotIn('guard_value', leaf)
+                    else:
+                        self.assertEqual(leaf['guard_value'], 0)
 
-    def test_raw_ir_rejects_empty_single_nested_or_and_timer_leaves(self):
+    def test_periodic_timer_union_keeps_distinct_roots_and_disabled_leaves(self):
+        trigger = 'timer(.25,.25,.001) or cross(V(u,r)-.5,1,.001,.001)'
+        result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
+        self.assertEqual(states(result), [0,1,2,3,4])
+        self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.5,.75,1])
+        self.assertEqual(len(result['transient']['events'][1]['fired_triggers']), 2)
+        trigger = 'timer(.5,0,.001,0) or cross(V(u,r)-.75,1,.001,.001)'
+        result = execute(source('q=q+1;',kind='integer',trigger=trigger))
+        self.assertEqual([e['time'] for e in result['transient']['events']], [.75])
+        self.assertEqual(result['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
+
+    def test_raw_ir_rejects_empty_single_nested_or(self):
         trigger = 'cross(V(u,r)-.25,1,.001,.001) or cross(V(u,r)-.75,1,.001,.001)'
         program = compile_sources({'or.va': source('q=q+1;', kind='integer', trigger=trigger)}, [instance()]).to_dict()
         original = program['events'][0]['trigger']
-        variants = [[], original['triggers'][:1], [original, original['triggers'][0]],
-                    [dict(kind='timer',start=.5,period=0,time_tolerance=.001,enabled=True),original['triggers'][0]]]
+        variants = [[], original['triggers'][:1], [original, original['triggers'][0]]]
         for leaves in variants:
             with self.subTest(leaves=leaves):
                 p = copy.deepcopy(program)

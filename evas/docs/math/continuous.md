@@ -9,8 +9,8 @@
 
 | 功能 | 接受范围 | 明确拒绝或保守失败 |
 | --- | --- | --- |
-| `idt(u,ic)` | 常数显式 IC；仿射/多项式积分输入与耦合反馈；proper 滤波混合；受限 index-one 多项式隐式电压 DAE；事件保持参数/联合 reset，根区间采样和稳定条件认证 | 缺省 IC；隐式 DAE 与事件/复位/滤波/ddt 组合；Jacobian 奇异或不能认证；时间盒内部代表时刻；采样误差超预算或条件不确定 |
-| `laplace_nd` | 固定有限常量数组；分母 1–8 阶、常数项和最高阶系数非零，分子阶数不超过分母；仿射输入及电压反馈、与多项式积分混合；严格 proper 时接受多项式输入；完整分子和直接通路 | 动态系数、非 proper 传递函数、非线性直接通路或非线性 DC 滤波反馈；不可唯一确定的 DC 初值；数值范围/包围预算不足 |
+| `idt(u,ic)` | 常数显式 IC；仿射/多项式积分输入与耦合反馈；proper 滤波混合；受限 index-one 多项式隐式电压 DAE（候选含内部/算子输入滤波及一致 DC）；事件保持参数/联合 reset，根区间采样和稳定条件认证 | 缺省 IC；隐式 DAE 与事件/复位/ddt 组合；Jacobian 奇异或不能认证；时间盒内部代表时刻；采样误差超预算或条件不确定 |
+| `laplace_nd` | 固定有限常量数组；分母 1–8 阶、常数项和最高阶系数非零，分子阶数不超过分母；仿射输入及电压反馈、与多项式积分混合；严格 proper 时接受多项式输入；候选支持可认证的非线性 DC 初值；完整分子和直接通路 | 动态系数、非 proper 传递函数、非线性直接通路；不可唯一确定的 DC 初值；数值范围/包围预算不足 |
 | `ddt(u)` | 仿射连续输入，包括内部电压、无复位积分输出和严格 proper 滤波输出；可唯一认证的导数质量关系；DC 为 0 | 输入跳变、直接事件状态/复位、导数链、高指标或奇异关系；直接 ddt 作为连续 cross 轨迹 |
 | 动态 `cross` | 状态独立的多项式 guard，及已认证连续 `idt`、滤波、受限 `sin` 输出；方向与两项容差保留 | 事件修改的历史、状态反馈、切线/平台或无法证明唯一穿越、无法认证事件排序 |
 
@@ -374,7 +374,9 @@ Rust 私有测试检查认证域、前缀不变性和真实 Controller 的重复
 复位只钳位对应积分状态；滤波状态保持事件前历史，不重新取 DC 值。
 
 首次 DC 初始化先代入积分 IC、t=0 的源值与零源导数，再对未知滤波状态检查 `x'=0`。
-代入后的 DC 关系须仍为仿射且有唯一可认证解；首次启动时未知滤波状态之间的非线性反馈明确拒绝。
+仿射 DC 关系继续使用区间消元。本实现对非线性 DC 反馈改用下文的共同初始根证明：
+原电压关系、各积分 IC 和滤波 DC 方程必须在同一局部根盒中成立。
+不能证明局部根存在且唯一时拒绝；Newton 收敛或小残差不能代替这项证明。
 不能把积分导数也强制为零，或在求不出 DC 解时默认滤波状态为零。
 事件后重启已有完整物理状态，是带已知初值的瞬态问题，不重新要求新向量场满足 DC 初始化条件。
 因此启动时可认证、事件后才启用的多项式滤波反馈允许进入同一 Picard/Taylor 传播；
@@ -388,7 +390,8 @@ Rust 私有测试检查认证域、前缀不变性和真实 Controller 的重复
 
 ## Index-one 多项式隐式电压 DAE
 
-接受无事件、无离散状态、无复位、只有显式 IC 积分的网络；积分输入与电压贡献可为多项式。
+接受无事件、无离散状态、无复位、显式 IC 积分的网络；积分输入与电压贡献可为多项式。
+允许下述 proper 滤波及其可认证 DC 反馈；初始根须联合认证。
 设积分调用点状态为 z，未知节点电压为 v，PWL 驱动为 u：
 
 `z'=f(z,v,u)`，`F(v,z,u)=0`，`z(0)=ic`。
@@ -412,10 +415,40 @@ F 来自原始支路的贡献累加，每个未知电压要求一个独立电压
 每一次区间消元都必须证明 J 在整个管/余项参数域可逆；零右端也不能绕过奇异性检查。
 不能证明时缩小试步，持续失败或资源耗尽时拒绝，不允许跳到另一条根分支。
 PWL 折点更新源斜率，电压和积分的完整状态包围继续保留。
-当前拒绝高指标/奇异 DAE、冗余约束、事件/复位或滤波/ddt 与隐式电压 DAE 的组合。
+当前拒绝高指标/奇异 DAE、冗余约束、事件/复位/ddt 与隐式电压 DAE 的组合。
+
+本实现允许 1–8 阶 proper 滤波进入同一 DAE。输入可以来自内部节点或其他积分/滤波输出。
+有直接通路时输入须为仿射；严格 proper 时也接受多项式输入。保持状态、事件、复位和 ddt
+与隐式 DAE 的组合仍拒绝。各滤波满足 `x'=Ax+B*e`，输出 `h=Cx+D*e`。
+
+冷启动联合求解：
+
+`F(v,z,h,u)=0`，`z_i=ic_i`，`d_i0*h_i=n_i0*e_i(v,z,h,u)`。
+
+最后一式是原传递函数的 DC 关系；直接保留分子/分母常数项，不把其比值舍入成模型系数。
+`continuous_initialization.rs` 将算子输出作为临时未知量、保持参数作为区间驱动，复用
+`Circuit` 的 Newton 和 Krawczyk 证明。证书只确定局部根，不宣称全局唯一；例如
+`y=laplace_nd(y,{1},{1,1})-y²` 的 DC 零点是奇异根，必须拒绝。
+这条根证明要求方阵；带冗余约束的初始化可能被此入口拒绝，即使其模型有解。
+完整根盒再包围各滤波输入，以区间消元求 `A*x(0)=-B*e(0)`；积分只采用自己的显式 IC。
+由此得到的物理状态和电压包围一起进入 Picard/Taylor 传播，不能只保存舍入的代表值。
+相同初始根证明也用于共同多项式 ODE 的非线性滤波 DC；仿射 DC 保留原消元路径。
+
+有直接通路的嵌套滤波先联合消去算子输出，形成 `h=Cx+D*e(v,h,u)` 的唯一仿射映射。
+区间消元须证明这组直接通路可逆，随后对原电压约束的完整映射求导；不能依赖调用顺序
+递归代入，也不能丢掉 D 通路。严格 proper 的多项式输入直接进入状态导数。
+`[z,x,v]` 随后共同延续。物理状态数与算子调用数分别计数：一个高阶滤波占多个状态，
+仍对应一个输出和调用点。这项扩展共享 `laplace_system`、初始根证书及 Picard/Taylor 引擎。
+
+事件后的多项式 ODE 续算只接收已接受历史，绕过冷启动根搜索；重做 DC 会使连续滤波
+状态跳变。这项事件续算支持不代表隐式 DAE 已支持事件。
 
 每个观察点使用传播状态的代表值再解原贡献，检查原关系残差，同时要求代表电压到完整历史包围的
 距离满足 vabstol/reltol。低残差不能消去历史误差，输出网格与 max_step 不定义积分历史。
+观察时只固定物理状态的代表输入；`h=Cx+D*e(v,u)` 的内部电压项仍留在联立方程中。
+点求解可使用区间系数的代表值，验收则在原贡献上重放完整系数与历史包围。
+不能冻结含内部电压的滤波输出再求电压：增益 1000 的开发反例在冻结关系下通过
+`10⁻⁷ V` 的预算，真实关系残差却约为 `7.49×10⁻⁵ V`。
 例如 `y+y²=z, z'=1+2y, z(0)=0` 的选定分支为 `y=t, z=t+t²`；
 `y+y²=z, z'=-1` 则在 t=1/4 遇到 Jacobian 为零，不能越过折叠点继续认证。
 这套消元和验证实现由 EVAS 自己维护；[SUNDIALS IDA 的数学说明](https://sundials.readthedocs.io/en/latest/ida/Mathematics_link.html)
@@ -447,7 +480,11 @@ Picard 管和 Taylor 包围的依据可参见
 
 审查联合路径时可依次阅读 [混合算子解析答案](../../tests/test_mixed_dynamics.py)、
 [根盒采样与拒绝反例](../../tests/test_event_window_sampling.py)、
-[隐式 DAE 解析答案](../../tests/test_implicit_dynamics.py)。Rust 私有检查另外覆盖精确有理数包围、
+[隐式 DAE 解析答案](../../tests/test_implicit_dynamics.py)、
+[DAE/滤波组合](../../tests/test_implicit_filters.py)。后者用 `y=t`、两极点 ramp 闭式及
+非零 DC/积分 IC 检查共同状态、直接通路、调用顺序和输出网格不变性；另以内部反馈
+`y=.5+t`、多项式滤波输入和嵌套 proper 滤波闭式检查一致初值，保留奇异根和非线性直接通路的拒绝。
+Rust 私有检查另外覆盖精确有理数包围、
 奇异 Jacobian、查询无副作用与拒绝/丢弃后的重试；这些都是开发证据，不增加原 31 条件的分母。
 
 - [continuous.rs](../../rust_core/src/continuous.rs)：依赖闭包、贡献关系、DC、联合连续状态及 PWL 段。
@@ -455,7 +492,8 @@ Picard 管和 Taylor 包围的依据可参见
 - [continuous_derivatives.rs](../../rust_core/src/continuous_derivatives.rs)：导数质量关系与连续性准入。
 - [continuous_history.rs](../../rust_core/src/continuous_history.rs)：事件后的线性物理状态重建。
 - [nonlinear_dynamics.rs](../../rust_core/src/nonlinear_dynamics.rs)：混合状态网络、Picard 管、区间 Taylor 与非线性候选历史。
-- [implicit_dynamics.rs](../../rust_core/src/implicit_dynamics.rs)：原始约束导数、初始根认证及 index-one 联合延续。
+- [implicit_dynamics.rs](../../rust_core/src/implicit_dynamics.rs)：原始约束导数、算子直接通路映射及 index-one 联合延续。
+- [continuous_initialization.rs](../../rust_core/src/continuous_initialization.rs)：共同冷启动根证明、保持参数包围及全部物理 DC 初值；事件续算绕过此入口。
 - [state_space.rs](../../rust_core/src/state_space.rs)：区间矩阵指数与遗漏项证明。
 - [guard_trajectory.rs](../../rust_core/src/guard_trajectory.rs)、[dynamic_roots.rs](../../rust_core/src/dynamic_roots.rs)：连续值/导数包围和根隔离。
 - [operators.rs](../../rust_core/src/operators.rs)、[schedule.rs](../../rust_core/src/schedule.rs)：算子接入及事件认证。

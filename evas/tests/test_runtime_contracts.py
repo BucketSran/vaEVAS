@@ -11,13 +11,14 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from evas import KernelError, compile_sources, solve, transient
+from evas.ir import SCHEMA_VERSION
 from test_affine import instance, model
 
 
 class RuntimeContracts(unittest.TestCase):
     def setUp(self):
         self.program=compile_sources({'runtime.va':model('V(y,r)<+V(u,r);')},[instance()])
-        self.response=dict(engine='evas-static-0.12.2',schema_version=16,nodes=list(self.program.nodes),
+        self.response=dict(engine='evas-static-0.12.2',schema_version=SCHEMA_VERSION,nodes=list(self.program.nodes),
                            solutions=[dict(voltages=[0,.2,.2],max_residual_v=0,max_residual_ratio=0)])
 
     def invoke(self,response,**kwargs):
@@ -86,6 +87,25 @@ class RuntimeContracts(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     solve(self.program,['u'],[[.2]],kernel='/not-executed',timeout=value)
                 run.assert_not_called()
+
+    def test_mixed_or_records_cannot_fabricate_a_timer_guard_or_leaf_type(self):
+        from evas.protocol import validate_response
+        self.program=compile_sources({'runtime.va':model('''@(initial_step) n=0;
+            @(timer(.5,0,.001) or cross(V(u,r)-.5,1,.001,.001)) n=n+1;
+            V(y,r)<+n;''','integer n;')},[instance()])
+        record=dict(time=.5,event=0,origin='runtime.va',kind='or',before=[0],after=[1],
+                    fired_triggers=[dict(trigger=0,kind='timer',time_bounds=[.5,.5]),
+                                    dict(trigger=1,kind='cross',guard_value=0,time_bounds=[.5,.5])])
+        r=copy.deepcopy(self.response)
+        r['transient']=dict(times=[0],state_names=['dut:n'],states=[[0]],events=[record],
+                            accepted_steps=1,discarded_trials=0)
+        self.assertEqual(validate_response(r,self.program,1,[0]),r)
+        for mutation in (lambda a:a.update(guard_value=0),lambda a:a.update(kind='cross'),
+                         lambda a:a.update(trigger=2)):
+            bad=copy.deepcopy(r)
+            mutation(bad['transient']['events'][0]['fired_triggers'][0])
+            with self.assertRaises(KernelError):
+                validate_response(bad,self.program,1,[0])
 
     def test_timeout_stops_and_reaps_real_child(self):
         with tempfile.TemporaryDirectory() as tmp:

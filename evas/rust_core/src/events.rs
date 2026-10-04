@@ -276,6 +276,7 @@ pub(crate) struct EventModel {
     rhs: Vec<AffineState>,
     pub(crate) guards: Vec<Option<AffineState>>,
     pub(crate) dynamic_guards: Vec<bool>,
+    pub(crate) relocalized_guards: Vec<bool>,
     pub(crate) guard_operators: Vec<BTreeSet<usize>>,
     pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
@@ -375,6 +376,26 @@ impl EventModel {
                         dynamic_guards.push(false);
                         None
                     }
+                    EventTrigger::HeldTimer {
+                        start,
+                        period,
+                        enabled,
+                        time_tolerance,
+                    } => {
+                        if !time_tolerance.is_finite() || *time_tolerance <= 0. {
+                            return Err(Error::new("invalid_ir", "invalid timer tolerance"));
+                        }
+                        for expression in [start, period, enabled] {
+                            let value = affine(expression, &program, &event.origin.instance)?;
+                            if !value.node_dependencies.is_empty()
+                                || !value.operator_dependencies.is_empty()
+                            {
+                                return Err(Error::new("unsupported_timer", "dynamic timer parameters require held-state affine expressions"));
+                            }
+                        }
+                        dynamic_guards.push(false);
+                        None
+                    }
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 };
                 guards.push(guard);
@@ -438,6 +459,7 @@ impl EventModel {
             rhs,
             guards,
             dynamic_guards,
+            relocalized_guards: Vec::new(),
             guard_operators: Vec::new(),
             triggers,
             actions,
@@ -717,18 +739,28 @@ impl EventModel {
                     &self.program,
                     &event.origin.instance,
                 )?;
-                if nodes.iter().any(|node| event_affected[*node]) {
-                    return Err(Error::new("unsupported_cross",format!("cross guard may depend on event state through the voltage network at {}",event.origin.label())));
-                }
                 for node in &nodes {
                     operators.extend(&operator_influence[*node]);
                 }
+                let held = nodes.iter().any(|node| event_affected[*node])
+                    || !crate::guard_trajectory::state_dependencies(guard).is_empty();
+                self.relocalized_guards.push(held);
                 self.dynamic_guards[index] |=
-                    !operators.is_empty() || nodes.iter().any(|node| affected[*node]);
+                    !operators.is_empty() || (!held && nodes.iter().any(|node| affected[*node]));
                 self.guard_operators.push(operators);
             } else {
+                self.relocalized_guards
+                    .push(matches!(leaf.trigger, EventTrigger::HeldTimer { .. }));
                 self.guard_operators.push(BTreeSet::new());
             }
+        }
+        if self.relocalized_guards.iter().any(|&held| held)
+            && self.guard_operators.iter().any(|ops| !ops.is_empty())
+        {
+            return Err(Error::new(
+                "unsupported_cross",
+                "held calendar changes with history-driven guards require joint root prediction",
+            ));
         }
         self.conditions.check_dependencies(&affected)?;
         crate::reset_dependencies::check(

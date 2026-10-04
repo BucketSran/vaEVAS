@@ -1,4 +1,4 @@
-//! Immutable event calendar. Nominal timer times never accumulate accepted steps.
+//! Certified event calendars. Nominal timer times never accumulate accepted steps.
 use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::interval::Interval as I;
@@ -8,6 +8,7 @@ use crate::pwl::{Root, Trajectory};
 
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
 
+#[derive(Clone)]
 pub(crate) struct ScheduledEvent {
     pub(crate) time: f64,
     pub(crate) event: usize,
@@ -20,6 +21,7 @@ impl ScheduledEvent {
     }
 }
 
+#[derive(Clone)]
 enum Moment {
     Cross(Root),
     Dynamic {
@@ -33,6 +35,10 @@ enum Moment {
         period: f64,
         index: usize,
     },
+    HeldTimer {
+        bounds: I,
+        index: usize,
+    },
 }
 
 impl Moment {
@@ -41,6 +47,7 @@ impl Moment {
             Self::Cross(root) => root.bounds,
             Self::Dynamic { bounds, .. } => *bounds,
             Self::Timer { bounds, .. } => *bounds,
+            Self::HeldTimer { bounds, .. } => *bounds,
         }
     }
 
@@ -68,6 +75,16 @@ impl Moment {
                     ..
                 },
             ) => a == b && p == q && k == l,
+            (
+                Self::HeldTimer {
+                    bounds: a,
+                    index: k,
+                },
+                Self::HeldTimer {
+                    bounds: b,
+                    index: l,
+                },
+            ) => same_guard && a == b && k == l,
             _ => false,
         }
     }
@@ -105,6 +122,10 @@ impl Moment {
                 let error = I::point(time) - *bounds;
                 error.finite() && error.magnitude() <= *time_tolerance
             }
+            (Self::HeldTimer { bounds, .. }, EventTrigger::HeldTimer { time_tolerance, .. }) => {
+                let error = I::point(time) - *bounds;
+                error.finite() && error.magnitude() <= *time_tolerance
+            }
             _ => false,
         }
     }
@@ -115,22 +136,61 @@ fn add_timer(
     event: usize,
     trigger: &EventTrigger,
     stop: f64,
+    model: &EventModel,
+    states: Option<&[I]>,
+    after: Option<f64>,
 ) -> Result<(), Error> {
-    let EventTrigger::Timer {
-        start,
-        period,
-        enabled,
-        ..
-    } = trigger
-    else {
-        return Ok(());
+    let (start, period, enabled, held) = match trigger {
+        EventTrigger::Timer {
+            start,
+            period,
+            enabled,
+            ..
+        } => (I::point(*start), I::point(*period), *enabled, false),
+        EventTrigger::HeldTimer {
+            start,
+            period,
+            enabled,
+            ..
+        } => {
+            let states = states.ok_or_else(|| {
+                Error::new("unsupported_timer", "dynamic timer requires a held epoch")
+            })?;
+            let value = |expression: &crate::ir::Expression| -> Result<I, Error> {
+                let row = crate::affine_bounds::affine(expression, &model.program)?;
+                let offset = model.program.nodes.len();
+                let result = states
+                    .iter()
+                    .enumerate()
+                    .fold(*row.last().unwrap(), |sum, (i, &state)| {
+                        sum + row[offset + i] * state
+                    });
+                if !result.finite() {
+                    return Err(unresolved("nonfinite dynamic timer parameter bounds"));
+                }
+                Ok(result)
+            };
+            let start = value(start)?;
+            let period = value(period)?;
+            let enabled = value(enabled)?
+                .sign()
+                .ok_or_else(|| unresolved("cannot certify dynamic timer enable"))?
+                != 0;
+            if start.lo < 0. || period.lo <= 0. && period.hi > 0. {
+                return Err(unresolved(
+                    "cannot certify dynamic timer start or period regime",
+                ));
+            }
+            (start, period, enabled, true)
+        }
+        _ => return Ok(()),
     };
-    if !enabled || *start > stop {
+    if !enabled || start.lo > stop {
         return Ok(());
     }
-    if *period > 0.0 {
+    if period.lo > 0.0 {
         let remaining = EVENT_BUDGET - events.len();
-        let excess = I::point(*start) + I::point(remaining as f64) * I::point(*period);
+        let excess = start + I::point(remaining as f64) * period;
         if excess.finite() && excess.hi <= stop {
             return Err(Error::new(
                 "event_budget",
@@ -144,14 +204,16 @@ fn add_timer(
         // enclosure covers both product and sum; mul_add chooses one rounded
         // representative of the real start + index * period, not prior time + T.
         let bounds = if index == 0 {
-            I::point(*start)
+            start
         } else {
-            I::point(*start) + I::point(index as f64) * I::point(*period)
+            start + I::point(index as f64) * period
         };
-        let time = if index == 0 {
-            *start
+        let time = if held {
+            bounds.hi
+        } else if index == 0 {
+            start.lo
         } else {
-            (index as f64).mul_add(*period, *start)
+            (index as f64).mul_add(period.lo, start.lo)
         };
         if time == f64::INFINITY {
             // All operands are nonnegative: this and every later nominal time
@@ -169,6 +231,19 @@ fn add_timer(
                 "cannot certify timer nominal time relative to stop",
             ));
         }
+        if let Some(after) = after {
+            if bounds.hi <= after {
+                if period.hi <= 0. {
+                    break;
+                }
+                continue;
+            }
+            if bounds.lo <= after {
+                return Err(unresolved(
+                    "dynamic timer window overlaps the accepted boundary",
+                ));
+            }
+        }
         if previous.is_some_and(|last| time <= last) {
             return Err(unresolved("timer period cannot advance representable time"));
         }
@@ -181,15 +256,19 @@ fn add_timer(
         events.push(ScheduledEvent {
             time,
             event,
-            moment: Moment::Timer {
-                bounds,
-                start: *start,
-                period: *period,
-                index,
+            moment: if held {
+                Moment::HeldTimer { bounds, index }
+            } else {
+                Moment::Timer {
+                    bounds,
+                    start: start.lo,
+                    period: period.lo,
+                    index,
+                }
             },
         });
         previous = Some(time);
-        if *period <= 0.0 || bounds == I::point(stop) {
+        if period.hi <= 0.0 || bounds == I::point(stop) {
             break;
         }
     }
@@ -201,7 +280,7 @@ pub(crate) fn schedule(
     trajectory: &Trajectory,
     operators: &Operators,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, Some(operators))
+    schedule_with_history(model, trajectory, Some(operators), None)
 }
 
 // Build the complete calendar first when every guard is independent of
@@ -211,24 +290,82 @@ pub(crate) fn independent_schedule(
     model: &EventModel,
     trajectory: &Trajectory,
 ) -> Result<Vec<ScheduledEvent>, Error> {
-    schedule_with_history(model, trajectory, None)
+    schedule_with_history(model, trajectory, None, None)
+}
+
+pub(crate) fn schedule_held(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after: None,
+            changed: &[],
+            pending: &[],
+        }),
+    )
+}
+
+pub(crate) fn reschedule_held(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_with_history(
+        model,
+        trajectory,
+        None,
+        Some(HeldCalendar {
+            states,
+            after: Some(after),
+            changed,
+            pending,
+        }),
+    )
+}
+
+struct HeldCalendar<'a> {
+    states: &'a [I],
+    after: Option<f64>,
+    changed: &'a [bool],
+    pending: &'a [ScheduledEvent],
 }
 
 fn schedule_with_history(
     model: &EventModel,
     trajectory: &Trajectory,
     operators: Option<&Operators>,
+    held: Option<HeldCalendar<'_>>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
     let _timing = crate::diagnostics::span("event.calendar");
 
-    let mut events = Vec::new();
+    let mut events: Vec<_> = held.as_ref().map_or_else(Vec::new, |h| {
+        h.pending
+            .iter()
+            .filter(|e| !h.changed[e.event])
+            .cloned()
+            .collect()
+    });
     // A timer-only network needs no guard trajectory certification.
     let bounds = if model.guards.iter().any(Option::is_some) {
-        Some(GuardBounds::new(
-            &model.program,
-            &model.driven,
-            &model.dynamic_guards,
-        )?)
+        Some(if let Some(h) = &held {
+            GuardBounds::held(
+                &model.program,
+                &model.driven,
+                &model.dynamic_guards,
+                h.states,
+            )?
+        } else {
+            GuardBounds::new(&model.program, &model.driven, &model.dynamic_guards)?
+        })
     } else {
         None
     };
@@ -242,6 +379,12 @@ fn schedule_with_history(
             if model.dynamic_guards[index] {
                 continue;
             }
+            if held
+                .as_ref()
+                .is_some_and(|h| h.after.is_some() && !h.changed[index])
+            {
+                continue;
+            }
             let event = &model.program.events[leaf.event];
             let EventTrigger::Cross { direction, .. } = &leaf.trigger else {
                 continue;
@@ -249,7 +392,14 @@ fn schedule_with_history(
             // A state-independent guard is affine on the union of the knots
             // of its nonzero input coefficients. Unrelated knots must not
             // introduce artificial near-boundary root uncertainty.
-            let knots = trajectory.input_knots(&bounds.active_inputs(index));
+            let mut knots = trajectory.input_knots(&bounds.active_inputs(index));
+            if let Some(after) = held.as_ref().and_then(|h| h.after) {
+                knots.retain(|t| *t > after);
+                knots.insert(0, after);
+            }
+            if knots.len() < 2 {
+                continue;
+            }
             let values: Vec<_> = knots
                 .iter()
                 .map(|&time| bounds.values(&trajectory.value_bounds(time))[index])
@@ -278,15 +428,30 @@ fn schedule_with_history(
         }
     }
     if model.dynamic_guards.iter().any(|&g| g) {
-        let operators = operators.ok_or_else(|| {
-            Error::new(
-                "unsupported_cross",
-                "history-dependent calendar requires a certified trajectory",
-            )
-        })?;
-        let guards = crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?;
+        let guards = if let Some(h) = &held {
+            crate::guard_trajectory::GuardTrajectory::new_held(
+                model,
+                trajectory,
+                operators,
+                Some(h.states),
+            )?
+        } else {
+            let operators = operators.ok_or_else(|| {
+                Error::new(
+                    "unsupported_cross",
+                    "history-dependent calendar requires a certified trajectory",
+                )
+            })?;
+            crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?
+        };
         for (index, leaf) in model.triggers.iter().enumerate() {
             if !model.dynamic_guards[index] {
+                continue;
+            }
+            if held
+                .as_ref()
+                .is_some_and(|h| h.after.is_some() && !h.changed[index])
+            {
                 continue;
             }
             let EventTrigger::Cross {
@@ -299,7 +464,12 @@ fn schedule_with_history(
                 unreachable!()
             };
             let origin = &model.program.events[leaf.event].origin;
-            for segment in trajectory.knots.windows(2) {
+            let mut knots = trajectory.knots.clone();
+            if let Some(after) = held.as_ref().and_then(|h| h.after) {
+                knots.retain(|t| *t > after);
+                knots.insert(0, after);
+            }
+            for segment in knots.windows(2) {
                 let roots = crate::dynamic_roots::isolate(
                     segment[0],
                     segment[1],
@@ -330,7 +500,28 @@ fn schedule_with_history(
         }
     }
     for (index, leaf) in model.triggers.iter().enumerate() {
-        add_timer(&mut events, index, &leaf.trigger, trajectory.config.stop)?;
+        if held
+            .as_ref()
+            .is_some_and(|h| h.after.is_some() && !h.changed[index])
+        {
+            continue;
+        }
+        add_timer(
+            &mut events,
+            index,
+            &leaf.trigger,
+            trajectory.config.stop,
+            model,
+            held.as_ref().map(|h| h.states),
+            held.as_ref().and_then(|h| h.after),
+        )?;
+    }
+    if let Some(after) = held.as_ref().and_then(|h| h.after) {
+        if events.iter().any(|event| event.bounds().lo <= after) {
+            return Err(unresolved(
+                "future event window overlaps the accepted event boundary",
+            ));
+        }
     }
     events.sort_by(|a, b| {
         a.moment
@@ -360,6 +551,18 @@ fn schedule_with_history(
                                 .as_ref()
                                 .is_some_and(|b| b.same_zero_set(first.event, next.event)))
                 }
+                (
+                    EventTrigger::HeldTimer {
+                        start: a,
+                        period: p,
+                        ..
+                    },
+                    EventTrigger::HeldTimer {
+                        start: b,
+                        period: q,
+                        ..
+                    },
+                ) => a == b && p == q,
                 _ => false,
             };
             if !first.moment.coincides(&next.moment, same_guard) {

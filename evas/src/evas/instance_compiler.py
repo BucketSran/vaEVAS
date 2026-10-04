@@ -7,10 +7,13 @@ from dataclasses import dataclass, field
 import math
 from typing import TYPE_CHECKING
 
-from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, OrTrigger,
+from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
                  Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
 from .lowering import lower, scale
-from .limits import MAX_PARAMETER_DEPTH, check_ir
+from .limits import check_ir
+from .parameters import bind_parameters
+from .elaboration import unroll_loops
+from .array_elaboration import scalarize_arrays
 from .syntax import (CompileError, Model, contains_operator,
                      Conditional as SyntaxConditional, ContributionStatement)
 
@@ -68,25 +71,24 @@ class InstanceCompiler:
         self.compilation = compilation
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
-        self.local_variables = set(model.variables) if not model.initial and not model.events else set()
-        self.preserve_analog_structure = compilation.preserve_structure or bool(self.local_variables)
-        self.state_names = tuple(name for name in model.variables if name not in self.local_variables)
-        self.state_ids = {name: len(compilation.states) + index for index, name in enumerate(self.state_names)}
         self.initials = {}
         self.allowed_condition_nodes = {0} | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
 
     def compile(self):
-        for expr in self.model.parameters.values():
-            self.validate_default(expr)
-        self.bind_parameters()
+        self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
+        self.model = scalarize_arrays(self.model, self.parameter)
+        self.local_variables = set(self.model.variables) if not self.model.initial and not self.model.events else set()
+        self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
+        self.state_names = tuple(name for name in self.model.variables if name not in self.local_variables)
+        self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
         self.initialize_states()
         for event in self.model.events:
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
-            origin = Origin(self.model.source, event.token.line, event.token.column, self.instance.name)
+            origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
             self.compilation.events.append(Event(event_trigger, self.body(event.body), origin))
-        _, contributions = self.execute_analog(self.model.analog, {})
+        _, contributions = self.execute_analog(unroll_loops(self.model, self.parameter), {})
         self.emit_contributions(contributions)
 
     def initialize_states(self):
@@ -105,63 +107,10 @@ class InstanceCompiler:
             raise CompileError(f"{self.model.source}: every state requires one constant initial_step assignment")
         self.compilation.states.extend(State(self.instance.name, name, self.model.variables[name], self.initials[name]) for name in self.state_names)
 
-    def bind_parameters(self):
-        # Overrides remove dependency edges. Evaluate in topological order,
-        # so syntax depth and parameter depth do not multiply the Python stack.
-        dependencies = {}
-        for name, expr in self.model.parameters.items():
-            refs, pending = [], [] if name in self.instance.parameters else [expr]
-            while pending:
-                item = pending.pop()
-                if item.op == "parameter" and item.value not in refs:
-                    refs.append(item.value)
-                pending.extend(reversed(item.args))
-            dependencies[name] = refs
-        active, depths = set(), {}
-        for root in self.model.parameters:
-            pending = [(root, False)]
-            while pending:
-                name, exiting = pending.pop()
-                if name in self.cache:
-                    continue
-                if not exiting:
-                    if name in active:
-                        raise CompileError(f"{self.model.source}: cyclic parameter defaults involving {name!r}")
-                    active.add(name)
-                    pending.append((name, True))
-                    pending.extend((ref, False) for ref in reversed(dependencies[name]))
-                    continue
-                depth = 1 + max((depths[ref] for ref in dependencies[name]), default=0)
-                if depth > MAX_PARAMETER_DEPTH:
-                    token = self.model.parameters[name].token
-                    raise CompileError(f"{self.model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded")
-                if name in self.instance.parameters:
-                    value = self.instance.parameters[name]
-                    if isinstance(value, bool) or not isinstance(value, (int, float)):
-                        raise CompileError(f"{self.instance.name}: parameter {name!r} must be numeric")
-                    try:
-                        value = float(value)
-                    except OverflowError as exc:
-                        raise CompileError(f"{self.instance.name}: nonfinite parameter {name!r}") from exc
-                else:
-                    value = lower(self.model.parameters[name], self.parameter, {}, self.model.source).constant
-                if not math.isfinite(value):
-                    raise CompileError(f"{self.instance.name}: nonfinite parameter {name!r}")
-                self.cache[name] = value
-                depths[name] = depth
-                active.remove(name)
-
     def parameter(self, name):
         if name not in self.model.parameters:
             raise CompileError(f"{self.model.source}: unknown parameter {name!r}")
         return self.cache[name]
-
-    def validate_default(self, expr):
-        # Validate even overridden defaults, but evaluate only effective edges.
-        if expr.op in ("voltage", "array") or contains_operator(expr) or (expr.op == "parameter" and expr.value not in self.model.parameters):
-            raise CompileError(f"{self.model.source}:{expr.token.line}: invalid parameter default")
-        for arg in expr.args:
-            self.validate_default(arg)
 
     def symbol(self, name):
         if name in self.local_variables:
@@ -202,7 +151,7 @@ class InstanceCompiler:
             settings = [lower(arg, self.parameter, {}, self.model.source) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
-        origin = Origin(self.model.source, expr.token.line, expr.token.column, self.instance.name)
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
         index = len(self.compilation.operators)
         if expr.op == "idt":
             reset = lower(expr.args[2], resolve, {}, self.model.source, preserve_structure=True) if len(expr.args) == 3 else None
@@ -254,19 +203,26 @@ class InstanceCompiler:
             result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True),
                                    int(direction), time_tol, expr_tol)
         else:
-            start = setting(leaf.arguments[0])
-            period = 0.0 if leaf.arguments[1] is None else setting(leaf.arguments[1])
             time_tol = setting(leaf.arguments[2])
-            enabled = setting(leaf.arguments[3]) != 0 if len(leaf.arguments) == 4 else True
-            if start < 0 or time_tol <= 0:
+            if time_tol <= 0:
                 raise CompileError("timer requires nonnegative start and positive time_tol")
-            result = TimerTrigger(start, period, time_tol, enabled)
+            values = [lower(arg, self.symbol, {}, self.model.source, preserve_structure=True) if arg is not None else Affine(0., ())
+                      for arg in (leaf.arguments[0], leaf.arguments[1], leaf.arguments[3] if len(leaf.arguments) == 4 else None)]
+            if len(leaf.arguments) < 4:
+                values[2] = Affine(1., ())
+            if all(isinstance(value, Affine) and not value.terms for value in values):
+                start, period, enabled = (value.constant for value in values)
+                if start < 0:
+                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                result = TimerTrigger(start, period, time_tol, enabled != 0)
+            else:
+                result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
         return result
 
     def body(self, statements):
         result = []
         for statement in statements:
-            origin = Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name)
+            origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
             if isinstance(statement, SyntaxConditional):
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
@@ -321,7 +277,7 @@ class InstanceCompiler:
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
-                origin = Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name)
+                origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
                 left = self.lower_local(statement.left, result, preserve_structure=True)
                 right = self.lower_local(statement.right, result, preserve_structure=True)
                 check_ir(left, origin)
@@ -367,6 +323,6 @@ class InstanceCompiler:
                 raise CompileError(f"{self.model.source}:{branch.token.line}: distinct local contribution branches alias after connection; not supported in this slice")
             bound_branches[bound_pair] = pair
             sign = 1.0 if (local_p, local_n) == pair else -1.0
-            origin = Origin(self.model.source, branch.token.line, branch.token.column, self.instance.name)
+            origin = Origin(branch.token.source or self.model.source, branch.token.line, branch.token.column, self.instance.name, branch.expansion)
             identity = BranchIdentity(self.instance.name, *pair)
             self.compilation.contributions.append(Contribution(identity, p, n, scale(expression, sign), origin))

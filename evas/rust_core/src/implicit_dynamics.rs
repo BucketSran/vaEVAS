@@ -1,6 +1,7 @@
 //! Index-one polynomial voltage DAEs, reduced by differentiating F(v,z,u)=0.
 //! Initial roots are certified before continuation. Interval Gaussian solves
 //! must prove F_v invertible throughout every Picard tube and Taylor remainder.
+use super::initialization::{bind, joint_dc, solve};
 use super::*;
 use crate::ir::{Response, Solution, Tolerances, TransientInputs, TransientTrace};
 use crate::solver::Circuit;
@@ -10,27 +11,6 @@ pub(super) struct ImplicitField {
     physical: usize,
     // Derivatives of each original constraint wrt [physical state, voltage, source].
     gradients: Vec<Vec<Polynomial>>,
-}
-
-fn solve(matrix: &[Vec<I>], rhs: &[I]) -> Option<Vec<I>> {
-    let n = matrix.len();
-    if n == 1 {
-        let value = rhs[0] / matrix[0][0];
-        return value.finite().then_some(vec![value]);
-    }
-    let rows = matrix
-        .iter()
-        .zip(rhs)
-        .map(|(a, &b)| {
-            let mut row = a.clone();
-            row.push(b);
-            row
-        })
-        .collect();
-    let eliminated = affine_bounds::eliminate(rows, n, 1).ok()?;
-    let values = back_substitute_eliminated(&eliminated, n, 1).ok()?;
-    let values: Vec<_> = values.into_iter().map(|row| row[0]).collect();
-    values.iter().all(|v| v.finite()).then_some(values)
 }
 
 impl ImplicitField {
@@ -133,45 +113,22 @@ impl Polynomial {
     }
 }
 
-fn bind(expr: &Expression, values: &[f64]) -> Result<Expression, Error> {
-    Ok(match expr {
-        Expression::Operator { operator } => Expression::Affine {
-            constant: *values
-                .get(*operator)
-                .ok_or_else(|| Error::new("invalid_ir", "operator index out of range"))?,
-            terms: vec![],
-        },
-        Expression::Add { left, right } => Expression::Add {
-            left: Box::new(bind(left, values)?),
-            right: Box::new(bind(right, values)?),
-        },
-        Expression::Multiply { left, right } => Expression::Multiply {
-            left: Box::new(bind(left, values)?),
-            right: Box::new(bind(right, values)?),
-        },
-        Expression::Power { base, exponent } => Expression::Power {
-            base: Box::new(bind(base, values)?),
-            exponent: *exponent,
-        },
-        Expression::Affine { .. } => expr.clone(),
-        _ => {
-            return Err(Error::new(
-                "unsupported_implicit_dynamics",
-                "implicit polynomial dynamics cannot contain state or conditional expressions",
-            ))
-        }
-    })
-}
-
 fn circuit(
     program: &Program,
     driven: &[String],
     operators: &[f64],
     tolerances: &Tolerances,
 ) -> Result<Circuit, Error> {
+    let values: Vec<_> = operators
+        .iter()
+        .map(|&constant| Expression::Affine {
+            constant,
+            terms: vec![],
+        })
+        .collect();
     let mut frozen = program.clone();
     for c in &mut frozen.contributions {
-        c.rhs = bind(&c.rhs, operators)?;
+        c.rhs = bind(&c.rhs, &values, &[])?;
     }
     frozen.operators.clear();
     Circuit::new(frozen, driven, tolerances.clone())
@@ -181,14 +138,160 @@ struct Coordinates {
     physical: usize,
     nodes: Vec<Option<usize>>,
     sources: Vec<Option<usize>>,
+    outputs: Vec<Vec<I>>,
     width: usize,
 }
 impl Coordinates {
-    fn variable(&self, index: usize) -> Polynomial {
-        let mut row = vec![I::ZERO; self.width];
-        row[index] = I::ONE;
-        Polynomial::Linear(row)
+    // Freeze only physical history, keeping every live voltage/source term
+    // in the same algebraic solve. Coefficient midpoints are Newton inputs;
+    // the original interval rows remain authoritative for acceptance below.
+    fn point_circuit(
+        &self,
+        program: &Program,
+        driven: &[String],
+        state: &[I],
+        inputs: &[f64],
+        tolerances: &Tolerances,
+    ) -> Result<(Circuit, Vec<f64>), Error> {
+        let mut frozen = program.clone();
+        let mut names = driven.to_vec();
+        let mut inputs = inputs.to_vec();
+        let mut history = Vec::new();
+        for (i, &value) in state[..self.physical].iter().enumerate() {
+            let mut name = format!("$implicit-state:{i}");
+            while frozen.nodes.contains(&name) {
+                name.push('$');
+            }
+            history.push(frozen.nodes.len());
+            names.push(name.clone());
+            frozen.nodes.push(name);
+            inputs.push(point_value(value)?);
+        }
+        let mut outputs = Vec::new();
+        for row in &self.outputs {
+            let mut terms = Vec::new();
+            for (&node, &coefficient) in history.iter().zip(row) {
+                terms.push(crate::ir::Term {
+                    node,
+                    coefficient: point_value(coefficient)?,
+                });
+            }
+            for (node, (&voltage, &source)) in
+                self.nodes.iter().zip(&self.sources).enumerate().skip(1)
+            {
+                let index = voltage.or(source).unwrap();
+                terms.push(crate::ir::Term {
+                    node,
+                    coefficient: point_value(row[index])?,
+                });
+            }
+            outputs.push(Expression::Affine {
+                constant: point_value(*row.last().unwrap())?,
+                terms,
+            });
+        }
+        for c in &mut frozen.contributions {
+            c.rhs = bind(&c.rhs, &outputs, &[])?;
+        }
+        frozen.operators.clear();
+        Ok((Circuit::new(frozen, &names, tolerances.clone())?, inputs))
     }
+
+    fn check_original_relations(
+        &self,
+        program: &Program,
+        state: &[I],
+        input_bounds: &[I],
+        solution: &Solution,
+        tolerances: &Tolerances,
+    ) -> Result<(), Error> {
+        let mut variables: Vec<Jet> = state
+            .iter()
+            .chain(input_bounds)
+            .map(|&value| vec![value])
+            .collect();
+        for (node, index) in self.nodes.iter().enumerate() {
+            if let Some(index) = index {
+                variables[*index][0] = I::point(solution.voltages[node]);
+            }
+        }
+        let node_bound = |node: usize| {
+            if node == 0 {
+                I::ZERO
+            } else {
+                variables[self.nodes[node].or(self.sources[node]).unwrap()][0]
+            }
+        };
+        let mut branches = BTreeMap::new();
+        for c in &program.contributions {
+            let rhs = self
+                .expression(&c.rhs, program, &c.origin.instance)?
+                .jet(&variables, 0)[0];
+            let row = branches.entry(&c.branch).or_insert_with(|| {
+                (
+                    node_bound(c.positive) - node_bound(c.negative),
+                    I::ZERO,
+                    I::point(tolerances.absolute)
+                        + I::point(tolerances.relative)
+                            * I::point(
+                                (solution.voltages[c.positive] - solution.voltages[c.negative])
+                                    .abs(),
+                            ),
+                    c.origin.label(),
+                )
+            });
+            row.1 = row.1 + rhs;
+        }
+        for (lhs, rhs, budget, origin) in branches.into_values() {
+            let residual = lhs - rhs;
+            if !residual.finite() || !budget.finite() || residual.magnitude() > budget.lo {
+                return Err(Error::new("waveform_accuracy",format!(
+                    "implicit original relation residual [{:e},{:e}] exceeds budget {:e} at {origin}",
+                    residual.lo,residual.hi,budget.lo)));
+            }
+        }
+        Ok(())
+    }
+
+    fn build_outputs(
+        &self,
+        program: &Program,
+        operators: &[NetworkOperator],
+    ) -> Result<Vec<Vec<I>>, Error> {
+        let n = operators.len();
+        let mut rows = Vec::new();
+        for op in operators {
+            let mut row = vec![I::ZERO; n + self.width];
+            row[op.operator] = I::ONE;
+            if let Some(filter) = &op.laplace {
+                for (&state, &coefficient) in op.states.iter().zip(&filter.c) {
+                    row[n + state] = coefficient;
+                }
+                if !filter.d.zero() {
+                    let OperatorSpec::LaplaceNd { input, .. } = &program.operators[op.operator]
+                    else {
+                        unreachable!()
+                    };
+                    let input = affine_for_operator_input(input, program, &op.origin)?;
+                    for (node, &coefficient) in
+                        input.iter().take(program.nodes.len()).enumerate().skip(1)
+                    {
+                        let index = self.nodes[node].or(self.sources[node]).unwrap();
+                        row[n + index] = row[n + index] + filter.d * coefficient;
+                    }
+                    for other in 0..n {
+                        row[other] = row[other] - filter.d * input[program.nodes.len() + other];
+                    }
+                    *row.last_mut().unwrap() = filter.d * *input.last().unwrap();
+                }
+            } else {
+                row[n + op.states[0]] = I::ONE;
+            }
+            rows.push(row);
+        }
+        solve_output_rows(rows, n, self.width)
+    }
+
     fn expression(
         &self,
         expr: &Expression,
@@ -208,7 +311,9 @@ impl Coordinates {
             Expression::Power { base, exponent } => {
                 Polynomial::Power(Box::new(self.expression(base, program, owner)?), *exponent)
             }
-            Expression::Operator { operator } => self.variable(*operator),
+            Expression::Operator { operator } => {
+                Polynomial::Linear(self.outputs[*operator].clone())
+            }
             Expression::Affine { constant, terms } => {
                 let mut row = vec![I::ZERO; self.width];
                 *row.last_mut().unwrap() = I::point(*constant);
@@ -233,6 +338,15 @@ impl Coordinates {
     }
 }
 
+fn solve_output_rows(rows: Vec<Vec<I>>, n: usize, width: usize) -> Result<Vec<Vec<I>>, Error> {
+    affine_bounds::eliminate(rows, n, width)
+        .and_then(|rows| back_substitute_eliminated(&rows, n, width))
+        .map_err(|mut error| {
+            error.message = format!("implicit operator feedthrough: {}", error.message);
+            error
+        })
+}
+
 fn initialize(
     program: &Program,
     trajectory: &Trajectory,
@@ -247,23 +361,14 @@ fn initialize(
     let mut initial = Vec::new();
     let mut operators = Vec::new();
     let mut identities = BTreeSet::new();
+    let input_nodes = driven_node_indices(program, driven)?;
     for (i, op) in program.operators.iter().enumerate() {
-        let OperatorSpec::Idt {
-            input,
-            ic,
-            reset: None,
-            origin,
-        } = op
-        else {
-            return Err(unsupported(
-                op.origin(),
-                "implicit polynomial DAE requires explicit-IC unreset integrals",
-            ));
-        };
+        let origin = op.origin();
         if origin.instance.is_empty()
             || origin.source.is_empty()
             || origin.line == 0
             || origin.column == 0
+            || !origin.valid_expansion()
             || !program
                 .contributions
                 .iter()
@@ -271,41 +376,77 @@ fn initialize(
         {
             return Err(Error::new("invalid_ir", "invalid implicit operator origin"));
         }
-        if !ic.is_finite() {
-            return Err(unsupported(origin, "nonfinite implicit integral IC"));
-        }
         if !identities.insert((
             origin.instance.clone(),
             origin.source.clone(),
             origin.line,
             origin.column,
+            origin.expansion.clone(),
         )) {
             return Err(Error::new(
                 "invalid_ir",
                 "duplicate implicit operator call-site identity",
             ));
         }
-        validate(input, program, &origin.instance)?;
-        initial.push(I::point(*ic));
+        let start = initial.len();
+        let (kind, laplace) = match op {
+            OperatorSpec::Idt {
+                input,
+                ic,
+                reset: None,
+                ..
+            } => {
+                validate(input, program, &origin.instance)?;
+                if !ic.is_finite() {
+                    return Err(unsupported(origin, "nonfinite implicit integral IC"));
+                }
+                initial.push(I::point(*ic));
+                (ContinuousKind::Idt, None)
+            }
+            OperatorSpec::LaplaceNd {
+                input,
+                numerator,
+                denominator,
+                ..
+            } => {
+                validate(input, program, &origin.instance)?;
+                let filter = laplace_system(numerator, denominator, origin)?;
+                if !filter.d.zero() && affine_for_operator_input(input, program, origin).is_err() {
+                    return Err(unsupported(origin,
+                        "implicit polynomial filter input requires a strictly proper transfer function"));
+                }
+                // Allocate call-site states first; their joint DC values are
+                // filled only after certifying the complete initial root.
+                initial.extend(vec![I::ZERO; filter.a.len()]);
+                (ContinuousKind::LaplaceNd, Some(filter))
+            }
+            _ => return Err(unsupported(
+                origin,
+                "implicit polynomial DAE supports explicit-IC unreset integrals and proper filters",
+            )),
+        };
         operators.push(NetworkOperator {
             operator: i,
-            kind: ContinuousKind::Idt,
+            kind,
             origin: origin.clone(),
-            states: vec![i],
+            states: (start..initial.len()).collect(),
             input: None,
-            laplace: None,
+            laplace,
             held_reset: false,
         });
     }
     // Validate original node/branch indices before building any coordinate row.
-    let ic: Vec<_> = initial.iter().map(|v| v.lo).collect();
     let root_tolerances = Tolerances {
         absolute: 1e-15,
         relative: 1e-14,
     };
-    let initial_circuit = circuit(program, driven, &ic, &root_tolerances)?;
+    let _ = circuit(
+        program,
+        driven,
+        &vec![0.0; operators.len()],
+        &root_tolerances,
+    )?;
     let physical = initial.len();
-    let input_nodes = driven_node_indices(program, driven)?;
     let unknown: Vec<_> = (1..program.nodes.len())
         .filter(|node| !input_nodes.contains(node))
         .collect();
@@ -320,6 +461,7 @@ fn initialize(
         physical,
         nodes: vec![None; program.nodes.len()],
         sources: vec![None; program.nodes.len()],
+        outputs: vec![vec![]; operators.len()],
         width: count + input_nodes.len() + 1,
     };
     for (i, &node) in unknown.iter().enumerate() {
@@ -328,6 +470,7 @@ fn initialize(
     for (i, &node) in input_nodes.iter().enumerate() {
         coordinates.sources[node] = Some(count + i);
     }
+    coordinates.outputs = coordinates.build_outputs(program, &operators)?;
     let mut constraints = BTreeMap::new();
     for c in &program.contributions {
         let rhs = coordinates.expression(&c.rhs, program, &c.origin.instance)?;
@@ -360,17 +503,10 @@ fn initialize(
     }
     // Newton selects the local initial branch; this separate certificate proves
     // a root within its box. The full box, not the point, enters dynamic history.
-    let solution = initial_circuit.solve(&trajectory.values(0.0))?;
-    initial_circuit.check_waveform_accuracy(&solution, &trajectory.value_bounds(0.0))?;
+    let root = joint_dc(program, driven, trajectory, &operators, &[])?;
+    initial = root.physical;
     for &node in &unknown {
-        let value = solution.voltages[node];
-        let radius = (I::point(root_tolerances.absolute)
-            + I::point(root_tolerances.relative) * I::point(value.abs()))
-        .hi;
-        initial.push(I {
-            lo: (value - radius).next_down(),
-            hi: (value + radius).next_up(),
-        });
+        initial.push(root.voltages[node]);
     }
     let gradients = constraints
         .into_values()
@@ -380,21 +516,42 @@ fn initialize(
                 .collect()
         })
         .collect();
-    let functions = program
-        .operators
+    let mut functions = Vec::new();
+    for op in &operators {
+        match &program.operators[op.operator] {
+            OperatorSpec::Idt { input, .. } => {
+                functions.push(coordinates.expression(input, program, &op.origin.instance)?);
+            }
+            OperatorSpec::LaplaceNd { input, .. } => {
+                let input = coordinates.expression(input, program, &op.origin.instance)?;
+                let filter = op.laplace.as_ref().unwrap();
+                for (local, matrix_row) in filter.a.iter().enumerate() {
+                    let mut row = vec![I::ZERO; coordinates.width];
+                    for (&state, &coefficient) in op.states.iter().zip(matrix_row) {
+                        row[state] = coefficient;
+                    }
+                    let mut gain = vec![I::ZERO; coordinates.width];
+                    *gain.last_mut().unwrap() = filter.b[local];
+                    functions.push(Polynomial::Add(
+                        Box::new(Polynomial::Linear(row)),
+                        Box::new(Polynomial::Multiply(
+                            Box::new(Polynomial::Linear(gain)),
+                            Box::new(input.clone()),
+                        )),
+                    ));
+                }
+            }
+            _ => unreachable!(),
+        }
+    }
+    let values = coordinates
+        .outputs
         .iter()
-        .map(|op| {
-            let OperatorSpec::Idt { input, origin, .. } = op else {
-                unreachable!()
-            };
-            coordinates.expression(input, program, &origin.instance)
-        })
-        .collect::<Result<Vec<_>, _>>()?;
-    let values = (0..physical)
-        .map(|i| {
-            let mut row = vec![I::ZERO; count + 2 * input_nodes.len() + 1];
-            row[i] = I::ONE;
-            row
+        .map(|row| {
+            let mut extended = row[..row.len() - 1].to_vec();
+            extended.extend(vec![I::ZERO; input_nodes.len()]);
+            extended.push(*row.last().unwrap());
+            extended
         })
         .collect();
     let mut flow = NonlinearContinuous {
@@ -422,6 +579,57 @@ fn initialize(
     Ok((flow, coordinates))
 }
 
+fn observe(
+    program: &Program,
+    driven: &[String],
+    coordinates: &Coordinates,
+    state: &[I],
+    inputs: &[f64],
+    input_bounds: &[I],
+    tolerances: &Tolerances,
+) -> Result<Solution, Error> {
+    let (circuit, point_inputs) =
+        coordinates.point_circuit(program, driven, state, inputs, tolerances)?;
+    let mut guess = vec![0.0; circuit.nodes.len()];
+    for (node, index) in coordinates.nodes.iter().enumerate() {
+        if let Some(i) = index {
+            guess[node] = point_value(state[*i])?;
+        }
+    }
+    let mut solution = circuit.solve_with_initial(&point_inputs, Some(&guess))?;
+    solution.voltages.truncate(program.nodes.len());
+    for (node, &actual) in solution.voltages.iter().enumerate() {
+        let exact = if node == 0 {
+            I::ZERO
+        } else if let Some(i) = coordinates.nodes[node] {
+            state[i]
+        } else {
+            input_bounds[driven
+                .iter()
+                .position(|name| *name == program.nodes[node])
+                .unwrap()]
+        };
+        let budget =
+            I::point(tolerances.absolute) + I::point(tolerances.relative) * I::point(actual.abs());
+        let error = I::point(actual) - exact;
+        if !exact.finite() || !error.finite() || !budget.finite() || error.magnitude() > budget.lo {
+            return Err(Error::new(
+                "waveform_accuracy",
+                format!(
+                    "implicit dynamic forward error at {}: bound {:e}, budget {:e}",
+                    program.nodes[node],
+                    error.magnitude(),
+                    budget.lo
+                ),
+            ));
+        }
+    }
+    // Recheck the original simultaneous relations against full histories and
+    // coefficient enclosures, independently of the approximate point solve.
+    coordinates.check_original_relations(program, state, input_bounds, &solution, tolerances)?;
+    Ok(solution)
+}
+
 pub(crate) fn run(
     program: Program,
     driven: Vec<String>,
@@ -434,51 +642,15 @@ pub(crate) fn run(
     for &time in &trajectory.config.output_times {
         let state = flow.state_bounds(I::point(time))?;
         let inputs = trajectory.values(time);
-        let mut guess = vec![0.0; program.nodes.len()];
-        for (node, index) in coordinates.nodes.iter().enumerate() {
-            if let Some(i) = index {
-                guess[node] = point_value(state[*i])?;
-            }
-        }
-        let op: Vec<_> = state[..coordinates.physical]
-            .iter()
-            .map(|&v| point_value(v))
-            .collect::<Result<_, _>>()?;
-        let circuit = circuit(&program, &driven, &op, &tolerances)?;
-        let solution = circuit.solve_with_initial(&inputs, Some(&guess))?;
-        let input_bounds = trajectory.value_bounds(time);
-        for (node, &actual) in solution.voltages.iter().enumerate() {
-            let exact = if node == 0 {
-                I::ZERO
-            } else if let Some(i) = coordinates.nodes[node] {
-                state[i]
-            } else {
-                input_bounds[driven
-                    .iter()
-                    .position(|name| *name == program.nodes[node])
-                    .unwrap()]
-            };
-            let budget = I::point(tolerances.absolute)
-                + I::point(tolerances.relative) * I::point(actual.abs());
-            let error = I::point(actual) - exact;
-            if !exact.finite()
-                || !error.finite()
-                || !budget.finite()
-                || error.magnitude() > budget.lo
-            {
-                return Err(Error::new(
-                    "waveform_accuracy",
-                    format!(
-                        "implicit dynamic forward error at {}: bound {:e}, budget {:e}",
-                        program.nodes[node],
-                        error.magnitude(),
-                        budget.lo
-                    ),
-                ));
-            }
-        }
-        // Circuit solve checks the original (operator-bound) contribution
-        // residuals. Forward history error is checked independently above.
+        let solution = observe(
+            &program,
+            &driven,
+            &coordinates,
+            &state,
+            &inputs,
+            &trajectory.value_bounds(time),
+            &tolerances,
+        )?;
         solutions.push(solution);
     }
     let trace = TransientTrace {
@@ -502,6 +674,84 @@ pub(crate) fn run(
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn observation_must_solve_live_filter_feedthrough_in_original_relation() {
+        let origin = json!({"source":"feedthrough.va","line":1,"column":1,"instance":"dut"});
+        let mut second_origin = origin.clone();
+        second_origin["column"] = json!(2);
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "operators":[
+                {"kind":"idt","ic":0.75,"input":{"op":"affine","constant":0,"terms":[]},"origin":origin},
+                {"kind":"laplace_nd","numerator":[1001,1000],"denominator":[1,1],"origin":second_origin,
+                    "input":{"op":"affine","constant":-0.5,"terms":[{"node":1,"coefficient":1}]}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},
+                "positive":1,"negative":0,"origin":origin,
+                "rhs":{"op":"add","left":{"op":"add","left":{"op":"operator","operator":0},"right":{"op":"operator","operator":1}},
+                    "right":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+                        "right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]}}}}}]
+        })).unwrap();
+        // Valid history enclosure of the stationary selected root y=1/2.
+        // z=3/4, x=0; h=x+1000*(y-1/2), x'=y-1/2-x.
+        // Its asymmetric voltage box is permitted; the midpoint is not history.
+        let state = [
+            I::point(0.75),
+            I::ZERO,
+            I {
+                lo: 0.5 - 0.5e-10,
+                hi: 0.5 + 3.5e-10,
+            },
+        ];
+        let coordinates = Coordinates {
+            physical: 2,
+            nodes: vec![None, Some(2)],
+            sources: vec![None, None],
+            width: 4,
+            outputs: vec![
+                vec![I::ONE, I::ZERO, I::ZERO, I::ZERO],
+                vec![I::ZERO, I::ONE, I::point(1000.0), I::point(-500.0)],
+            ],
+        };
+        let solution = observe(
+            &program,
+            &[],
+            &coordinates,
+            &state,
+            &[],
+            &[],
+            &Tolerances {
+                absolute: 1e-7,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
+        let y = solution.voltages[1];
+        let original_residual = y + y * y - 0.75 - 1000.0 * (y - 0.5);
+        assert!(
+            original_residual.abs() <= 1e-7,
+            "original relation residual {original_residual:e}"
+        );
+        let mut frozen_output_candidate = solution.clone();
+        frozen_output_candidate.voltages[1] = 0.5 + 7.5e-8;
+        assert_eq!(
+            coordinates
+                .check_original_relations(
+                    &program,
+                    &state,
+                    &[],
+                    &frozen_output_candidate,
+                    &Tolerances {
+                        absolute: 1e-7,
+                        relative: 0.0
+                    }
+                )
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+    }
 
     #[test]
     fn singular_implicit_field_rejects_even_zero_flow_and_retry_is_unchanged() {
@@ -563,5 +813,40 @@ mod tests {
         assert!(original[index].lo <= 0.5 && original[index].hi >= 0.5);
         let _ = flow.state_bounds(I { lo: 0.125, hi: 0.5 }).unwrap();
         assert_eq!(flow.state_bounds(I::point(0.75)).unwrap(), original);
+    }
+
+    #[test]
+    fn filter_dc_enclosure_enters_implicit_root_and_failed_query_is_pure() {
+        let origin = json!({"source":"filter.va","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "operators":[{"kind":"laplace_nd","numerator":[1],"denominator":[3,1],
+                "input":{"op":"add","left":{"op":"affine","constant":1,"terms":[]},
+                    "right":{"op":"affine","constant":-1,"terms":[{"node":1,"coefficient":1},{"node":0,"coefficient":-1}]}},"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"origin":origin,
+                "rhs":{"op":"add","left":{"op":"operator","operator":0},
+                    "right":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+                        "right":{"op":"power","exponent":2,"base":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]}}}}}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 2.25], [1.0, 2.25]]],
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            1,
+        )
+        .unwrap();
+        let (flow, coordinates) = initialize(&program, &trajectory, &["u".into()]).unwrap();
+        // f(0)=9/4 / 3=3/4 and y+y^2=3/4 has the selected exact root 1/2.
+        let voltage = coordinates.nodes[2].unwrap();
+        let initial = flow.state_bounds(I::ZERO).unwrap();
+        assert!(initial[voltage].lo <= 0.5 && initial[voltage].hi >= 0.5);
+        let output = flow.range_bounds(I::ZERO).unwrap()[0];
+        assert!(output.lo <= 0.75 && output.hi >= 0.75);
+        let original = flow.state_bounds(I::ONE).unwrap();
+        assert!(flow.state_bounds(I::point(2.0)).is_err());
+        assert_eq!(flow.state_bounds(I::ONE).unwrap(), original);
     }
 }

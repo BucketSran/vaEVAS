@@ -1,6 +1,6 @@
 """Bound recursive compiler work and the size of the expanded wire tree.
 
-IR v16 is a tree on the wire even when Python objects share subexpressions.
+IR is a tree on the wire even when Python objects share subexpressions.
 Measure that expansion with memoized, iterative traversal before allocating it.
 These are implementation budgets, not Verilog-A language restrictions.
 """
@@ -24,7 +24,7 @@ def check_expression(expression, source):
         expr, depth = pending.pop()
         if depth > MAX_EXPRESSION_DEPTH:
             token = expr.token
-            raise CompileError(f"{source}:{token.line}:{token.column}: expression depth limit ({MAX_EXPRESSION_DEPTH}) exceeded")
+            raise CompileError(f"{token.source or source}:{token.line}:{token.column}: expression depth limit ({MAX_EXPRESSION_DEPTH}) exceeded")
         pending.extend((arg, depth + 1) for arg in expr.args)
 
 

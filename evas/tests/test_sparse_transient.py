@@ -134,7 +134,7 @@ class SparseTransientContracts(unittest.TestCase):
                         self.assertLessEqual(abs(F(memory[f'c{i:02}:{name}'])-expected), F(3e-12))
                 self.assertLessEqual(solution['max_residual_ratio'], 1)
 
-    def test_guard_dependency_rejection_survives_sparse_rows_and_cancellation(self):
+    def test_held_guard_and_history_dependency_remain_distinct_in_sparse_networks(self):
         cell = model('V(y,r)<+V(u,r);')
         for expression in ['n', 'n-n', '1e-300*(1e-300*n)']:
             driver = model(f'''@(initial_step) n=0;
@@ -143,6 +143,17 @@ class SparseTransientContracts(unittest.TestCase):
             cells = [instance(f'cell{i:02}', connections=dict(u=f'y{i-1}', y=f'y{i}', r='0'))
                      for i in range(1,40)]
             cells.append(instance('driver', 'driver', dict(u='y39', y='y0', r='0')))
+            program = compile_sources({'cell.va': cell, 'driver.va': driver}, cells)
+            # With no external drive, q stays zero and the held affine guard
+            # remains -.5. The new epoch scheduler correctly has no events.
+            result = transient(program, {}, [0,1], stop=1, max_step=1, kernel=KERNEL)
+            self.assertEqual(result['transient']['events'], [])
+            self.assertEqual(result['transient']['states'], [[0],[0]])
+            self.assertEqual(result['solutions'][-1]['voltages'][result['nodes'].index('y39')],0)
+            # A history relay remains outside the relocalization contract even
+            # when its input cancels or underflows numerically.
+            driver = driver.replace(f'V(y,r)<+{expression};',
+                                    f'V(y,r)<+transition({expression},0,.1,.1);')
             program = compile_sources({'cell.va': cell, 'driver.va': driver}, cells)
             with self.assertRaises(KernelError) as caught:
                 transient(program, {}, [0,1], stop=1, max_step=1, kernel=KERNEL)

@@ -3,6 +3,7 @@ use crate::event_accuracy::unresolved;
 use crate::interval::{equal_products, sum_products_sign, Interval as I};
 use crate::ir::{Error, TransientInputs};
 
+#[derive(Clone)]
 pub(crate) struct Root {
     pub bounds: I,
     slope: I,

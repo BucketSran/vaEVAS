@@ -21,12 +21,16 @@ def scale(expression: Expression, factor: float) -> Expression:
 def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False) -> Expression:
     def fail(message):
-        raise CompileError(f"{source}:{expr.token.line}:{expr.token.column}: {message}")
+        raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}")
 
     if expr.op in OPERATOR_NAMES:
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
         return operators(expr)
+    if expr.op == "call":
+        fail(f"unknown analog function {expr.value!r}")
+    if expr.op == 'index':
+        fail('array index requires scalarization before semantic lowering')
     if expr.op == "array":
         fail("standard array literals are only supported as laplace_nd coefficient lists")
     if expr.op == "number":

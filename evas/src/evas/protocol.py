@@ -2,7 +2,7 @@
 import math
 
 from .errors import KernelError
-from .ir import SCHEMA_VERSION
+from .ir import SCHEMA_VERSION, OrTrigger
 
 
 def _invalid(message):
@@ -77,9 +77,18 @@ def validate_response(response, program, count, output_times=None):
         fired = event.get('fired_triggers', [])
         if not isinstance(fired, list):
             _invalid('fired_triggers must be an array')
+        trigger = program.events[event['event']].trigger
+        leaves = trigger.triggers if isinstance(trigger, OrTrigger) else (trigger,)
         for leaf in fired:
             if (not isinstance(leaf, dict) or not _index(leaf.get('trigger'))
-                    or not _finite(leaf.get('guard_value'))
+                    or leaf['trigger'] >= len(leaves)
                     or 'time_bounds' in leaf and not _bounds(leaf['time_bounds'])):
                 _invalid('invalid fired trigger record')
+            kind = leaves[leaf['trigger']].kind
+            if kind == 'held_timer':
+                kind = 'timer'
+            if (leaf.get('kind', kind) != kind
+                    or kind == 'cross' and not _finite(leaf.get('guard_value'))
+                    or kind == 'timer' and 'guard_value' in leaf):
+                _invalid('fired trigger type or guard value does not match the request')
     return response

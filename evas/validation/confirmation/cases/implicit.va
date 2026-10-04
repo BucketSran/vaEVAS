@@ -1,0 +1,7 @@
+module implicit(u,y,r);
+input u; output y; inout r; electrical u,y,r,z;
+analog begin
+V(y,r)<+V(z,r)-pow(V(y,r),2);
+V(z,r)<+idt((1+2*V(y,r))*V(u,r),.3125);
+end
+endmodule

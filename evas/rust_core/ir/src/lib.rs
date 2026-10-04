@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 16;
+pub const SCHEMA_VERSION: u32 = 17;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -185,9 +185,20 @@ pub struct Origin {
     pub line: usize,
     pub column: usize,
     pub instance: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub expansion: Vec<(String, i32)>,
 }
 
 impl Origin {
+    pub fn valid_expansion(&self) -> bool {
+        self.expansion.len() <= 64
+            && self.expansion.iter().all(|(name, _)| {
+                let mut bytes = name.bytes();
+                bytes.next().is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
+                    && bytes.all(|c| c == b'_' || c.is_ascii_alphanumeric())
+            })
+    }
+
     pub fn label(&self) -> String {
         format!(
             "{}:{}:{} ({})",
@@ -365,17 +376,23 @@ pub enum EventTrigger {
         time_tolerance: f64,
         enabled: bool,
     },
+    HeldTimer {
+        start: Box<Expression>,
+        period: Box<Expression>,
+        time_tolerance: f64,
+        enabled: Box<Expression>,
+    },
 }
 
 impl EventTrigger {
-    /// OR groups share a body but retain independent cross call identities.
+    /// OR groups share a body but retain independent trigger call identities.
     pub fn leaves(&self) -> Result<Vec<&Self>, Error> {
         match self {
             Self::Or { triggers } => {
-                if triggers.len() < 2 || triggers.iter().any(|t| !matches!(t, Self::Cross { .. })) {
+                if triggers.len() < 2 || triggers.iter().any(|t| matches!(t, Self::Or { .. })) {
                     return Err(Error::new(
                         "invalid_ir",
-                        "event OR requires at least two cross leaves",
+                        "event OR requires at least two cross/timer leaves",
                     ));
                 }
                 Ok(triggers.iter().collect())
@@ -415,7 +432,9 @@ pub struct EventRecord {
 #[derive(Debug, Serialize)]
 pub struct FiredTrigger {
     pub trigger: usize,
-    pub guard_value: f64,
+    pub kind: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guard_value: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub time_bounds: Option<[f64; 2]>,
 }

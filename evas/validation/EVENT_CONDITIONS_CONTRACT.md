@@ -10,6 +10,7 @@ PR26 的历史检查点为 IR v11，当前完整矩阵从[验证集入口](READM
 以下完整目标继续约束受限实现及后续扩展；原设计阶段事实和校准结果不当作仿真证据。
 当前实现、数学与精度边界以[事件手册](../docs/math/events.md#event-conditions)为准。
 能力归属为 LANG、CROSS、EVENT-ORDER、COMPOSE；依赖已有 TRANSITION。
+事件修改仿射 guard 的分支候选见 §12，不能用本页旧检查点宣称它已合并。
 本地数学检查的组数不是模型条件数，也不改变原 31 条件的分母。
 
 ## 1. 固定目标与依据
@@ -390,3 +391,50 @@ event block 写入；若两个已选 event block 都写同一 state，即使写�
 Rust `transient_condition_tests.rs` 检查冲突失败后已接受 state、state bounds 和 operator history 均不改变。
 只读复用原 31 源中的 `v3-main` 两档冻结输入，局部 worker 输出均为 `waveform_available`，
 原 checker 均给出 `observations_within_targets`；这不是完整 31×2 矩阵重跑，也不改变历史计数。
+
+## 12. 事件修改仿射 guard：分支候选
+
+不修改原 31 条件，新增 [event_relocalization](cases/event_relocalization/dut.va)
+与 [manifest](cases/event_relocalization/sim.json)。数学和实现边界见
+[事件手册](../docs/math/events.md#事件修改的仿射-guard-重定位)。
+
+固定需求：`u=t`；初始阈值 `.75`；`.25` 的 timer 将阈值改为 `.5`。
+必须保留 timer、在 `.5` 触发一次 cross、取消 `.75` 的旧根。直接状态表达式和内部电压
+投影必须相同。改阈值为 `2` 应取消未来根；改为 `1` 应保留 stop 到达事件。
+`1/3` 根必须保留定位区间并只消费一次。加输出点或缩小 `max_step` 不改变事件记录。
+
+当前接受无历史算子的仿射关系。事件窗口中新旧 guard 不能认证为同号，或新日程与
+保留事件不能认证同根/先后时明确拒绝。拒绝后候选状态、区间、日程、游标与记录
+不得提交；同一 Controller 的有效重试应与没有经历失败的实例一致。
+跳变闭包、事件修改历史和隐式非线性 guard 另列缺口，不把拒绝当作语言非法。
+
+独立答案来自 `check_event_conditions_math.py` 的有理数分段方程。
+`test_event_relocalization.py` 执行内核；`transient_lifecycle_tests.rs` 验证真实提交者的回退。
+这是开发验证，没有新 Spectre 执行，也不是未见确认集或一般连续时间资格。
+
+## 混合 OR 的分支候选
+
+沿用事件集合 `E_B=∪E_j` 的契约，将固定 timer 的名义发生集合纳入同一 OR 块。
+该解释依据 [LRM 2.4 §5.10](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的事件表达式；具体同根证明和观察约定属于 EVAS。
+对 `u=t`，`timer(.25,.25,tol) or cross(u−.5,+1)` 应在 .25、.5、.75、1
+各执行一次，.5 的记录包含两个实际叶子。禁用的 timer 不贡献发生集合。
+
+候选不改各定位器：timer 使用 `start+k*period` 的原时间包围，cross 使用原根包围。
+统一日程先证明先后/同刻，再按块去重；不能按 ttol 聚类，也不能把 timer 当作 guard=0。
+每个 OR 叶子记录 `kind`、索引和时间包围，只有 cross 含 guard 值。
+Python 响应校验核对叶子类型与原请求，拒绝虚构 timer guard、错误类型或越界索引。
+独立值、周期/禁用、顺序交换、同刻计数和原始 IR 拒绝见
+[test_event_or.py](../tests/test_event_or.py)，传输故障注入见
+[test_runtime_contracts.py](../tests/test_runtime_contracts.py)。该切片没有新 Spectre 对照。
+
+## 多项式保持状态 guard 的分支候选
+
+在无历史、联合仿射电压网络中，允许直接或内部节点返回的保持状态进入多项式 guard。
+各事件间状态固定；事件后按新状态重定位，不能读取初始化快照或沿用失效根。
+`u=t`、q 在 .25 从 .75 改为 .5 时，`u²−q` 的唯一 cross 应为 `sqrt(.5)`；
+内部 `z=u+q`、`z²−1`，q 在 .125 从 .75 改为 .5 时，新根为 .5，旧 .25 根作废。
+认证仍检查时间/表达式误差、观察窗口旧/新同号、日程先后和候选原子提交。
+输出网格和 max_step 不改变事件历史；同刻跳变、历史改变与隐式非线性电压网络仍拒绝。
+见 [test_event_relocalization.py](../tests/test_event_relocalization.py) 与
+[Rust 生命周期检查](../rust_core/src/transient_lifecycle_tests.rs)。

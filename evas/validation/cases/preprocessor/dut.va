@@ -1,0 +1,6 @@
+`include "headers/gain.vams"
+module preprocessor(u,y,r);
+input u; output y; inout r;
+electrical u,y,r;
+analog begin V(y,r)<+`SCALE(V(u,r))+1; end
+endmodule

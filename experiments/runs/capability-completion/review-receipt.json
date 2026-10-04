@@ -1,0 +1,271 @@
+{
+  "run_id": "capability-review-d68d3db4-20261004",
+  "receipt_created_utc": "2026-10-04T05:42:37.611149+00:00",
+  "review": {
+    "mode": "direct review; no independent delegated reviewer",
+    "base": "f1463361a50333c8c1c683f3a92602f5ccb5a211",
+    "head": "d68d3db4af171dc8eab7eee540b643ae5ac670cd",
+    "comparison": "merge-base(main, head)..head; clean tracked tree at execution",
+    "status": "repeated-include history identity defect fixed; no further actionable blocker found within documented bounded scope"
+  },
+  "runtime_revision": "d68d3db4af171dc8eab7eee540b643ae5ac670cd",
+  "package_version": "0.13.0",
+  "schema_version": 17,
+  "status": "candidate for GitHub PR; not merged",
+  "review_fix": {
+    "commit": "d68d3db4af171dc8eab7eee540b643ae5ac670cd",
+    "behavior": "include edges join macro/genvar call-site paths while retaining source locations",
+    "independent_answers": [
+      "two idt(t,1) contributions yield 2+t^2",
+      "nested include/macro/loop integrals yield 2+3t^2",
+      "implicit y+y^2=z0+z1, z0prime=z1prime=.5+y yields y=t"
+    ],
+    "red": {
+      "path": "runs/capability-completion/include-review-red.log",
+      "sha256": "a2c7ac4f4fc9bb768199fcf7b66267adc4ad2b449101404be5c4ff1ac74f37f7",
+      "availability": "local-only"
+    },
+    "green": {
+      "path": "runs/capability-completion/include-review-green.log",
+      "sha256": "302eaa3c14058fbe856ff783a01494057fb994afe9be6d561f1be62f35b79f39",
+      "availability": "local-only"
+    }
+  },
+  "execution_identity": {
+    "source_inventory_entries": 78,
+    "source_inventory_location": "review-matrix-analysis.json.gz: execution_started.source_sha256",
+    "source_inventory_checked_against_runtime_revision": true,
+    "release_kernel_sha256": "ccff9793fb1d1139345d4f286e32f3c7727ab240b5ec3456f75f9ba2fa15e35e",
+    "debug_kernel_sha256": "d045475ea7739ffeb6bb290f1d1f858b35e1febfc7458b3516ce285788012a87",
+    "kernel_build_reused_from_runtime": "114d676e23002aeb2a810624d7585b5406fe11e0",
+    "rust_build_inputs_unchanged_and_verified": true,
+    "build_receipt": "joint-dc-receipt.json: build",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  },
+  "verification": {
+    "python": {
+      "passed": 643,
+      "failed": 0,
+      "command": "PYTHONPATH=evas/src:evas/tests python3 -B -c 'from pathlib import Path; import sys,unittest,test_affine; test_affine.KERNEL=Path(\"evas/rust_core/target/release/evas-kernel\").resolve(); result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover(\"evas/tests\")); sys.exit(not result.wasSuccessful())'",
+      "kernel_selection": "shared fixture uses release; CLI/default discovery may use debug; both match the prior unchanged Rust build",
+      "log": {
+        "path": "runs/capability-completion/review-final-python.log",
+        "sha256": "e0077889cee46c1afdf6a70ab4b90c67f21bfa2306fe6f6170356fea04171950",
+        "availability": "local-only"
+      }
+    },
+    "rust": {
+      "passed": 144,
+      "kernel_tests": 142,
+      "ir_tests": 2,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_scope": "existing manual performance probe",
+      "command": "cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml",
+      "log": {
+        "path": "runs/capability-completion/review-final-rust.log",
+        "sha256": "634b8a57abc951cb884344d3ce4c3fc16cac21efe246d16b6bd6505cf3bc0887",
+        "availability": "local-only"
+      }
+    },
+    "clippy": {
+      "status": "pass",
+      "command": "cargo clippy --locked --workspace --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "log": {
+        "path": "runs/capability-completion/review-final-clippy.log",
+        "sha256": "c4eed2901811e72a9f27a7cfcfa6215ef9cbaf1133c99b3d9737acf7d5b58687",
+        "availability": "local-only"
+      }
+    },
+    "fmt": "pass",
+    "diff": "pass",
+    "traceability": "pass; 57 test files",
+    "frozen_validation_identity": "pass; identity only, not simulation",
+    "maintenance": {
+      "passed": 7,
+      "log": {
+        "path": "runs/capability-completion/review-final-maintenance.log",
+        "sha256": "b5f11761bc0030d755f40d561cad6dfd9c2dc5991b478ce3d1939adfc3ad4cb9",
+        "availability": "local-only"
+      }
+    },
+    "contract_checks": {
+      "status": "pass",
+      "scope": "design/timed/dynamics/event mathematics; not simulator qualification",
+      "commands": [
+        "python3 -B evas/validation/check_design_math.py",
+        "python3 -B evas/validation/check_timed_operator_math.py",
+        "python3 -B evas/validation/check_dynamics_math.py",
+        "python3 -B evas/validation/check_event_conditions_math.py"
+      ]
+    }
+  },
+  "matrix": {
+    "evidence_use": "62 new local transient executions, reanalyzed by unchanged original checker",
+    "conditions": 31,
+    "configurations": 62,
+    "summary": {
+      "base": {
+        "observations_within_targets": 31
+      },
+      "fine": {
+        "observations_within_targets": 31
+      }
+    },
+    "source_input_manifest_sha256": "fc1f7ce122865060c956f7dc72754c9d9ca3ed258f98f99a3fbe304b32d02dab",
+    "raw_manifest_sha256": "0d9e776969966f9d3e79967a6486f8215ddfadefe919ffdfcfa146687a96f80b",
+    "analysis": "review-matrix-analysis.json.gz",
+    "analysis_sha256": "2625bc1cf1139bb5191d8406fe7187ae5d7d8880317285ac4763731c2ebb574f",
+    "checker_and_transitive_imports_verified_against": "f1463361a50333c8c1c683f3a92602f5ccb5a211",
+    "raw_path": "runs/capability-completion/matrix-d68d3db4",
+    "raw_availability": "local-only"
+  },
+  "confirmation": {
+    "evidence_use": "rerun of the existing frozen seven cases; no additional untouched conditions",
+    "passed": 14,
+    "attempts": 14,
+    "input_manifest_sha256": "f247cdf66ee7493b76f81a5129938064ae99a5f9d6daf4bbf57e4beb74af9b01",
+    "input_sha256": {
+      "suite.json": "643be57d62f34c2b9425d135885d1cdec0f52f3654d612263bef254162a223e2",
+      "run_confirmation.py": "8f2c0b0ca9ac5c91f6c2e967494309c353f7776d5c9b03db54eb0ffed00a9013",
+      "README.md": "babc8cf7fde259cddb37657eef91d0937a8b920a186874a647787bfabd5382fe",
+      "cases/calendar.va": "1c9458dfe48ada3ae3c7d971dd248f3dc4c382931a872f63082d5e1adcde9536",
+      "cases/gain.vams": "0941fe4eee38eb451953d8abd7e8f3c926421cb48ad3817e799d6ff38d6d5a64",
+      "cases/histories.va": "49b814ef1c9262e9133d46b7e3fd01a5994260f6429c5251e373596bf6e7f30d",
+      "cases/implicit.va": "b73ed537c729e70513f0a3f47ec31dc219a56b529843c521af3735b8de145425",
+      "cases/language.va": "d59f43d0ab739d4f3f2778647d75600b1f61f184e88f8353536c9d4eb714979c",
+      "cases/projected.va": "61da40753cb0fe5541c489fb13d01c055c25d967c030f72c9900a2556ee76188",
+      "cases/reset_filter.va": "d94d65b8d5510b020e856a32710424c52aa9e02cc7e575818374e733370e0f83",
+      "cases/roots.va": "9557e4efc6468f6ae6d3776047c475b8b9e04e78aacd39605840743eac0f168e"
+    },
+    "results_sha256": "d599eda822b06d3561f15f95b1873f021c24234df669a2b5688ef8677cb68288",
+    "raw_manifest_sha256": "06751ba0e654a1f7da78bb1113ae0b4423fa0dac3b73b18e1fea7be9dc17cad7",
+    "records": [
+      {
+        "case": "language",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 6,
+        "events": 0
+      },
+      {
+        "case": "language",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 134,
+        "events": 0
+      },
+      {
+        "case": "histories",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 6,
+        "events": 0
+      },
+      {
+        "case": "histories",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 134,
+        "events": 0
+      },
+      {
+        "case": "calendar",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1.930822651522011374649794205375339673913043488260869565217391304E-16",
+        "observations": 6,
+        "events": 2
+      },
+      {
+        "case": "calendar",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "2.667428348415359818294692893758270561889250824332247557003257329E-16",
+        "observations": 134,
+        "events": 2
+      },
+      {
+        "case": "projected",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1.973729821555833849642011854383680555555555565555555555555555556E-16",
+        "observations": 11,
+        "events": 0
+      },
+      {
+        "case": "projected",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "3.947459643111667699284023708767361111111111121111111111111111111E-16",
+        "observations": 139,
+        "events": 0
+      },
+      {
+        "case": "roots",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 8,
+        "events": 3
+      },
+      {
+        "case": "roots",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "1E-60",
+        "observations": 136,
+        "events": 3
+      },
+      {
+        "case": "implicit",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "5.5511151231257827021181583404541015625000001E-17",
+        "observations": 6,
+        "events": 0
+      },
+      {
+        "case": "implicit",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "5.5511151231257827021181583404541015625000001E-17",
+        "observations": 134,
+        "events": 0
+      },
+      {
+        "case": "reset_filter",
+        "variant": "sparse",
+        "status": "pass",
+        "maximum_voltage_error_bound": "4.160176228503096988639743322773483618095574992199557512804680041E-17",
+        "observations": 7,
+        "events": 2
+      },
+      {
+        "case": "reset_filter",
+        "variant": "dense",
+        "status": "pass",
+        "maximum_voltage_error_bound": "5.527079169071006010503335491274470185113443526286754719644866247E-17",
+        "observations": 135,
+        "events": 2
+      }
+    ],
+    "raw_path": "runs/capability-completion/confirmation-d68d3db4",
+    "raw_availability": "local-only; frozen inputs and checker are repository-contained"
+  },
+  "continuous_time_qualified": false,
+  "formal_dvs_qualification": "I",
+  "limits": [
+    "implicit DAE with events/reset/ddt remains unsupported",
+    "nonlinear direct filter feedthrough remains unsupported",
+    "cold certificates prove local roots, not global branch selection; square root system required",
+    "history-driven cross relocalization after events and wider history parameters remain gaps",
+    "no new Spectre/ngspice or performance execution; new features use independent development answers",
+    "variable/nested histories and wider language combinations remain explicitly bounded",
+    "GitHub CI and fresh external simulator comparisons are not claimed by this local receipt"
+  ]
+}

@@ -164,7 +164,6 @@ class RejectionContracts(unittest.TestCase):
             model("V(y,r)<+1e308*10;"),
             model("V(y,r)<+1;")+" junk",
             "`include \"other.vams\"\n"+model("V(y,r)<+1;"),
-            "`define P 1\n"+model("V(y,r)<+1;"),
             model("V(y,r)<+1;")+" /* unclosed",
             model("V(y,r)<+1;", "parameter real a=b; parameter real b=a;"),
             model("V(y,r)<+1;", "parameter real a=V(u,r);"),

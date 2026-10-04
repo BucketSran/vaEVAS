@@ -1,0 +1,14 @@
+module hierarchy(u,y,r);
+input u; output y; inout r;
+electrical u,y,r,z;
+parameter real gain=3;
+affine_child #(.g(gain)) a(u,z,r);
+affine_child #(.g(.5)) b(z,y,r);
+endmodule
+
+module affine_child(u,y,r);
+input u; output y; inout r;
+electrical u,y,r;
+parameter real g=1;
+analog begin V(y,r)<+g*V(u,r); end
+endmodule

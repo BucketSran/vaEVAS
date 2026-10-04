@@ -1,0 +1,5 @@
+`ifndef EVAS_GAIN_HEADER
+`define EVAS_GAIN_HEADER
+`define GAIN 3
+`define SCALE(x) (`GAIN*(x))
+`endif

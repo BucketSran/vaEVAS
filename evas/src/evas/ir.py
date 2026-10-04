@@ -1,4 +1,4 @@
-"""Version 16: combined voltage/event IR with selects, reset histories and operators.
+"""Version 17: voltage/event IR with held timers and expanded call-site identities.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 
 @dataclass(frozen=True)
@@ -20,6 +20,7 @@ class Origin:
     line: int
     column: int
     instance: str
+    expansion: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -189,14 +190,23 @@ class TimerTrigger:
 
 
 @dataclass(frozen=True)
+class HeldTimerTrigger:
+    start: Expression
+    period: Expression
+    time_tolerance: float
+    enabled: Expression
+    kind: str = field(default="held_timer", init=False)
+
+
+@dataclass(frozen=True)
 class OrTrigger:
-    triggers: tuple[CrossTrigger, ...]
+    triggers: tuple[CrossTrigger | TimerTrigger | HeldTimerTrigger, ...]
     kind: str = field(default="or", init=False)
 
 
 @dataclass(frozen=True)
 class Event:
-    trigger: CrossTrigger | TimerTrigger | OrTrigger
+    trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger
     body: tuple[Assignment | Conditional, ...]
     origin: Origin
 

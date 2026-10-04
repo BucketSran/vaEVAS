@@ -149,6 +149,22 @@ def trace_matches(observed, expected):
 
 
 class EventConditionsMath(unittest.TestCase):
+    def test_event_changes_only_the_future_held_guard(self):
+        """EC-RELOCALIZE: solve u=t against the threshold of each epoch."""
+        # Before .25 the prospective root .75 is outside this epoch. After
+        # the timer the new .5 root lies inside [.25,1], so .75 is invalidated.
+        epochs = ((Q(0), Q(1,4), Q(3,4)), (Q(1,4), Q(1), Q(1,2)))
+        roots = tuple(threshold for start, end, threshold in epochs
+                      if start < threshold <= end)
+        self.assertEqual(roots, (Q(1,2),))
+        for threshold in (Q(1,3), Q(7,8), Q(1), Q(2)):
+            expected = (threshold,) if threshold <= 1 else ()
+            self.assertEqual(tuple(t for t in (threshold,) if Q(1,4) < t <= 1), expected)
+        # A threshold .125 at .25 jumps g from negative to positive. This
+        # needs a same-time closure rule; it is not a continuous PWL root.
+        self.assertLess(Q(1,4)-Q(3,4), 0)
+        self.assertGreater(Q(1,4)-Q(1,8), 0)
+
     def test_or_union_keeps_leaf_provenance(self):
         """EC-OR: one body despite multiple same-root leaves."""
         hits = [Hit("A", "sample", leaf, Q(1)) for leaf in ("clk", "rst", "clk_copy")]

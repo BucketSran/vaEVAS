@@ -300,3 +300,25 @@ cargo test --locked --offline --manifest-path evas/rust_core/Cargo.toml transien
 [nonlinear_dynamics.rs](../rust_core/src/nonlinear_dynamics.rs) 和
 [transient_lifecycle_tests.rs](../rust_core/src/transient_lifecycle_tests.rs)。
 该开发回归不增加原 31 条件分母；未新增跨后端或性能结论。
+
+### 候选 DAE 与滤波一致初值的组合义务
+
+本实现允许无事件 index-one 多项式 DAE 搭配 proper 滤波。输入可来自内部节点或其他算子；
+严格 proper 可使用多项式输入。原电压关系、积分 IC 与 `d0*h=n0*input` 须联合认证初始根。
+滤波全部物理状态以根盒包围的输入求 `A*x(0)=-B*input(0)`；后续与代数电压一起延续。
+直接通路的算子耦合须先证明可逆；奇异初始根不能因残差为零而通过。
+
+[test_implicit_filters.py](../tests/test_implicit_filters.py) 的独立义务包括：
+
+- `f'=u-f` 与 `y+y²=z+f` 给出 `y=t`，滤波 DC 与积分 IC 不互相覆盖。
+- 内部反馈 `f'=u+.5y-f`，`u=.5+t`，`z'=1+2y-f'` 给出 `y=.5+t`，
+  `f=.75+1.5*(t-1+exp(-t))`；增加内部 relay、交换独立贡献次序仍成立。
+- 多项式输入 `f'=y²-f` 与 `z(0)=.5` 给出 `y=.5+t`、`f=t²-t+1.25-exp(-t)`。
+- 积分驱动的嵌套 proper 滤波给出 `f=.5+t-t*exp(-t)`；保留直接通路、加密输出不改变历史。
+- 两极点 ramp 保留全部状态；奇异 DC、非线性直接通路和不可能电压预算拒绝。
+
+共同多项式 ODE 的非线性 DC 使用同一根证明。[test_mixed_dynamics.py](../tests/test_mixed_dynamics.py)
+以 `y=.75+.25y²` 的局部根 y=1 启动，e=.25 移去平方项后得到
+`y=.75+.25*exp(-(t-e))`。同时复位/释放另一积分器，滤波状态不得重做 DC。
+Rust 检查保持参数的整个不确定盒、失败候选后的原历史和相同控制过程的重试。
+这些是开发回归，不改变原 31 条件或升级正式资格。隐式 DAE 的事件/复位/ddt 仍未接入。

@@ -14,11 +14,11 @@
 | 数学章节 | 直接输入实现 | 独立回归 | 联合路径 |
 | --- | --- | --- | --- |
 | [transition](#transition) | [transition.rs](../../rust_core/src/transition.rs) | [边沿与队列](../../tests/test_transition.py)、[历史精度](../../tests/test_transition_accuracy.py) | 事件目标安装与[共同观察](continuous.md#lifecycle-observation-review-fixes) |
-| [absdelay](#absdelay) | [absdelay.rs](../../rust_core/src/absdelay.rs) | [延迟查询](../../tests/test_absdelay.py)、[精度](../../tests/test_absdelay_accuracy.py) | 仍限直接输入；非点事件观察明确拒绝 |
+| [absdelay](#absdelay) | [absdelay.rs](../../rust_core/src/absdelay.rs) | [延迟查询](../../tests/test_absdelay.py)、[精度](../../tests/test_absdelay_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
 | [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs) | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
 | [laplace_nd](#laplace_nd) | [laplace.rs](../../rust_core/src/laplace.rs) | [一阶低通](../../tests/test_laplace.py) | [完整状态空间](continuous.md#高阶滤波的完整状态空间)、[混合网络](continuous.md#多项式积分与滤波的混合网络) |
 | [idtmod / sin](#idtmod-与-sin) | [idtmod.rs](../../rust_core/src/idtmod.rs)；sin 在 [operators.rs](../../rust_core/src/operators.rs) | [相位与函数](../../tests/test_phase.py) | 受限 sin 可供[动态 guard](continuous.md#非线性-guard-的根证明)使用；idtmod 的非点事件观察明确拒绝 |
-| [slew](#slew) | [slew.rs](../../rust_core/src/slew.rs) | [追赶模式](../../tests/test_slew.py)、[精度](../../tests/test_slew_accuracy.py) | 仍限直接输入；非点事件观察明确拒绝 |
+| [slew](#slew) | [slew.rs](../../rust_core/src/slew.rs) | [追赶模式](../../tests/test_slew.py)、[精度](../../tests/test_slew_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
 
 这些文件维护单项公式。[operators.rs](../../rust_core/src/operators.rs) 统一检查调用点与依赖，
 区分只读查询、同刻观察和未来历史。涉及事件的改动还需检查
@@ -172,7 +172,27 @@ Rust 的候选帧克隆历史，所以求解器重试不会产生重复排队；
 允许的事件时间偏移或连续时间全轨迹资格。区间依赖性可能带来保守拒绝。
 不可表示或非有限的移位拐点显式失败。EVAS/Spectre 的固定专项结果与身份见
 [执行记录](../../../experiments/archive/pr14-pr15-validation/RESULTS.md)，有限观测达标不证明通用兼容。
-内部节点/状态输入、嵌套、跳变、动态延迟/maxdelay 和反馈尚未支持。
+本实现允许下述内部仿射电压投影。状态输入、嵌套、跳变、动态延迟/maxdelay 和
+经过历史状态的反馈尚未支持；代数电压反馈可在投影前统一求解。
+
+### absdelay 与 slew 的内部电压投影
+
+直接输入保留原路径；内部输入先对原仿射电压关系作区间投影：
+`A v = B u + d`，从而 `x = c v + e = c A^(-1) B u + c A^(-1) d + e`。
+`operators.rs::projected_points` 使用 `event_accuracy.rs` 与事件共用的原 IR 投影，
+不另写节点赋值执行器。结构检查跟随被读取节点的电压关系，拒绝任何离散状态或
+历史算子依赖，包括 `0*V(z)`、抵消和下溢形式中的历史反馈。
+
+输入必须是已认证的连续 PWL。每个物理输入断点都保留输入区间及有限代表值；区间
+继续进入既有 `AbsDelay::enclosed` / `Slew::enclosed`，输出验收仍考虑误差放大。
+查询不改写历史，输出网格不生成输入历史。奇异或无法认证的投影明确拒绝。
+
+独立例 `z=u+.5z` 给出 `z=2u`。令 `u=min(t,2)`，固定延迟 1 的输出为
+`2 min(max(t-1,0),2)`；限速 `+1/-2` 的输出为 `min(t,4)`。
+[共同模型](../../validation/cases/projected_history/dut.va)与
+[开发回归](../../tests/test_history_projection.py)固定这些答案，并检查直接/内部编码、
+新增输出点、历史反馈拒绝及小残差不能掩盖投影误差。新样例属于开发集，不改变原
+31 条件，也没有新 Spectre 资格结论。
 
 ## idt
 
@@ -397,7 +417,8 @@ r+=1/16、r-=-1/8，交点为 T+192/5；T+40 的正确输出2.2，旧版错误�
 独立公式覆盖实例顺序、输出网格和步长变化。
 固定版本的专项结果见[对照及步长诊断](../../../experiments/archive/pr14-pr15-validation/RESULTS.md)。
 Spectre 的反向追赶偏差随步长细化下降；这是波形证据，不是私有算法或 LRM 违规的结论。
-内部节点/状态输入、嵌套、动态/缺省限速、跳变和反馈尚未支持。
+本实现允许上述内部仿射电压投影。状态输入、嵌套、动态/缺省限速、跳变和
+经过历史状态的反馈尚未支持。
 
 ## 来源与证据限制
 
