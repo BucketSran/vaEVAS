@@ -114,11 +114,12 @@ def preprocess_sources(sources):
                 output.extend(expand(replacement,(*stack,name)))
         return output
 
-    def file_tokens(name, ancestry=()):
+    def file_tokens(name, ancestry=(), include_expansion=()):
         if name in ancestry or len(ancestry) >= MAX_SOURCE_NESTING:
             token = files[name][0] if files[name] else Token('', 'eof',1,1,name)
             fail('recursive or over-budget source include',token)
-        tokens, output, conditional, i = files[name], [], [], 0
+        tokens = [replace(t, expansion=(*include_expansion, *t.expansion)) for t in files[name]]
+        output, conditional, i = [], [], 0
         active = True
         while i < len(tokens):
             token = tokens[i]
@@ -167,7 +168,13 @@ def preprocess_sources(sources):
                     continue
                 if target not in files:
                     fail(f'include source {target!r} was not provided',token)
-                output.extend(file_tokens(target,(*ancestry,name)))
+                # The same source location can occur through several include
+                # edges. Preserve each edge in the instantiated call-site path;
+                # source/line/column still identify the included source itself.
+                path = (*token.expansion, ('_include', i-1))
+                if len(path) > MAX_SOURCE_NESTING:
+                    fail('include call-site identity depth budget exceeded',token)
+                output.extend(file_tokens(target,(*ancestry,name),path))
                 continue
             if name_of in ('define','undef'):
                 i += 1

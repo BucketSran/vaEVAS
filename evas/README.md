@@ -113,7 +113,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 - 候选预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
   include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
   未提供的标准 `constants.vams` / `disciplines.vams` 仍为内建前导，数学常量仅保留 `M_PI`。
-  语法位置及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
+  语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
 - 表达式支持括号、单目正负、加减、乘法及非零常数分母。

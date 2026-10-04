@@ -95,6 +95,43 @@ unsupported $$$ code
         with self.assertRaisesRegex(CompileError,r'bad.vams:1:'):
             self.compile(model('V(y,r)<+1;', '`include "bad.vams"\n'),{'bad.vams':'parameter real x=V(u,r);'})
 
+    def test_repeated_includes_own_distinct_integral_histories(self):
+        source=model('\n`include "hist.vams"\n`include "hist.vams"\n')
+        p=self.compile(source, {'hist.vams':'V(y,r)<+idt(V(u,r),1);'})
+        for times in ([0,.5,1], [0,.125,.25,.5,.75,1]):
+            r=transient(p,{'u':[[0,0],[1,1]]},times,stop=1,max_step=1,kernel=KERNEL)
+            for t,row in zip(times,r['solutions']):
+                # Two separate integrals of u=t, each with IC=1.
+                self.assertAlmostEqual(row['voltages'][p.nodes.index('y')],2+t*t,delta=1e-9)
+        self.assertNotEqual(p.operators[0].origin.expansion,p.operators[1].origin.expansion)
+        self.assertEqual({o.origin.source for o in p.operators},{'hist.vams'})
+
+    def test_nested_includes_macros_and_loops_preserve_every_history(self):
+        source='`define H(x,ic) idt((x),(ic))\n'+model(
+            'for(i=0;i<2;i=i+1) begin\n`include "outer.vams"\nend','genvar i;')
+        inventory={'dut.va':source, 'outer.vams':'`include "inner.vams"\n`include "inner.vams"\n',
+                   'inner.vams':'V(y,r)<+`H((i+1)*V(u,r),i);'}
+        for files in (inventory,dict(reversed(list(inventory.items())))):
+            p=compile_sources(files,[instance()])
+            identities={(o.origin.source,o.origin.line,o.origin.column,o.origin.expansion)
+                        for o in p.operators}
+            self.assertEqual(len(identities),4)
+            r=transient(p,{'u':[[0,0],[1,1]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+            for t,row in zip([0,.5,1],r['solutions']):
+                # Two copies each of IC=0/gain=1 and IC=1/gain=2.
+                self.assertAlmostEqual(row['voltages'][p.nodes.index('y')],2+3*t*t,delta=1e-9)
+
+    def test_repeated_includes_in_implicit_feedback_keep_distinct_histories(self):
+        source=model('\n`include "hist.vams"\n`include "hist.vams"\n'
+                     'V(y,r)<+-pow(V(y,r),2);')
+        p=self.compile(source,{'hist.vams':'V(y,r)<+idt(.5+V(y,r),0);'})
+        times=[0,.25,.5,1]
+        r=transient(p,{'u':[[0,0],[1,0]]},times,stop=1,max_step=1,
+                    kernel=KERNEL,vabstol=1e-10,reltol=0)
+        # y+y^2=z0+z1; z0'=z1'=.5+y, z0(0)=z1(0)=0 => y=t.
+        for t,row in zip(times,r['solutions']):
+            self.assertAlmostEqual(row['voltages'][p.nodes.index('y')],t,delta=1e-10)
+
     def test_missing_recursive_undefined_and_over_budget_inputs_are_diagnostic(self):
         sources=[
             ('`include "missing.vams"\n'+model('V(y,r)<+1;'),{}),
