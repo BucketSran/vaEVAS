@@ -4,6 +4,7 @@ from .errors import CompileError
 from .limits import MAX_PARAMETER_DEPTH
 from .lowering import lower
 from .syntax import contains_operator
+from .integer_constants import check_integer_expression
 
 
 def bind_parameters(model, overrides, instance_name):
@@ -16,6 +17,11 @@ def bind_parameters(model, overrides, instance_name):
 
     for expr in model.parameters.values():
         validate(expr)
+    for ranges in model.parameter_ranges.values():
+        for interval in ranges:
+            for endpoint in (interval.lower, interval.upper):
+                if endpoint is not None and not isinstance(endpoint, float):
+                    validate(endpoint)
     if not set(overrides) <= model.parameters.keys():
         raise CompileError(f'{instance_name}: unknown parameter override')
     dependencies, cache, active, depths = {}, {}, set(), {}
@@ -53,10 +59,32 @@ def bind_parameters(model, overrides, instance_name):
                 except OverflowError as error:
                     raise CompileError(f'{instance_name}: nonfinite parameter {name!r}') from error
             else:
+                check_integer_expression(model.parameters[name], model, cache,
+                                         check_literals=model.parameter_types.get(name) == 'integer')
                 value = lower(model.parameters[name], lambda n: cache[n], {}, model.source).constant
             if not math.isfinite(value):
                 raise CompileError(f'{instance_name}: nonfinite parameter {name!r}')
+            if model.parameter_types.get(name) == 'integer' and not (value.is_integer() and -2147483648 <= value <= 2147483647):
+                raise CompileError(f'{instance_name}: integer parameter {name!r} requires an exact signed 32-bit value; implicit rounding is not supported',
+                                   code='parameter_type', token=model.parameters[name].token, instance=instance_name)
             cache[name] = value
             depths[name] = depth
             active.remove(name)
+    for name, ranges in model.parameter_ranges.items():
+        included, excluded = [], []
+        for interval in ranges:
+            def evaluate(endpoint):
+                if not isinstance(endpoint, float):
+                    check_integer_expression(endpoint, model, cache, check_literals=True)
+                return endpoint if isinstance(endpoint, float) else lower(endpoint, cache.__getitem__, {}, model.source).constant
+            lo = evaluate(interval.lower)
+            hi = lo if interval.upper is None else evaluate(interval.upper)
+            if interval.upper is not None and not lo < hi:
+                raise CompileError(f'{instance_name}: parameter {name!r} range requires lower < upper', code='parameter_range', token=interval.token, instance=instance_name)
+            value = cache[name]
+            inside = (value >= lo if interval.closed_left else value > lo) and (value <= hi if interval.closed_right else value < hi)
+            (included if interval.kind == 'from' else excluded).append(inside)
+        if included and not any(included) or any(excluded):
+            raise CompileError(f'{instance_name}: effective parameter {name!r}={cache[name]} violates its from/exclude range',
+                               code='parameter_range', token=model.parameters[name].token, instance=instance_name)
     return cache

@@ -8,18 +8,24 @@ import sys
 from . import CompileError, Instance, KernelError, compile_sources, solve, transient
 from .manifest import parse_manifest
 from .runtime import DEFAULT_TIMEOUT
+from .errors import diagnostic
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["compile", "solve", "transient"])
+    parser.add_argument("action", choices=["compile", "solve", "transient", "simulate"])
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--kernel", type=Path, help="explicit path to the built evas-kernel executable")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="kernel execution timeout in seconds (default: %(default)s)")
     args = parser.parse_args()
-    if args.action in ("solve", "transient") and args.kernel is None:
+    if args.action in ("solve", "transient", "simulate") and args.kernel is None:
         parser.error("execution requires --kernel; build evas/rust_core first")
     try:
+        if args.action == 'simulate':
+            from .scs import simulate_scs
+            result = simulate_scs(args.manifest, kernel=args.kernel.resolve(), timeout=args.timeout)
+            print(json.dumps(result, indent=2, allow_nan=False))
+            return 0
         manifest = parse_manifest(args.manifest.read_text())
         sources = {(args.manifest.parent / p).resolve(): None for p in manifest["models"]}
         program = compile_sources({str(p): p.read_text() for p in sources},
@@ -34,10 +40,13 @@ def main():
                            kernel=args.kernel.resolve(), timeout=args.timeout, **manifest.get("tolerances", {}))
         print(json.dumps(result, indent=2, allow_nan=False))
     except KernelError as exc:
-        print(json.dumps(exc.detail, allow_nan=False), file=sys.stderr)
+        print(json.dumps(exc.diagnostic, allow_nan=False), file=sys.stderr)
         return 2
-    except (CompileError, OSError, ValueError, KeyError, TypeError) as exc:
-        print(str(exc), file=sys.stderr)
+    except CompileError as exc:
+        print(json.dumps(exc.diagnostic, allow_nan=False), file=sys.stderr)
+        return 2
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc)), allow_nan=False), file=sys.stderr)
         return 2
     return 0
 

@@ -79,6 +79,49 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
 具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
 
+### Spectre 风格电压测试台
+
+`simulate` 将受限 `.scs` 输入转换为已有的实例、PWL 和瞬态请求，再交给同一 Rust 内核：
+
+```sh
+PYTHONPATH=evas/src python3 -m evas simulate evas/examples/01-static-gain/tb.scs --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+[示例测试台](examples/01-static-gain/tb.scs)的独立答案是 `out = 2*u - 0.125 V`。
+API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型文本），
+以及 `simulate_scs(path, kernel=...)`（编译并运行）。`load_scs` 成功只说明已完成输入适配，
+不代表 IR 编译、动态组合或数值验收成功。
+
+| 输入 | 当前接受范围 |
+| --- | --- |
+| 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序连接的标量实例；常量参数覆盖；`global 0` |
+| 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
+| `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop |
+| 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
+| 输出 | `save` 选择标量端口节点；`saved` 输出所选列，原 `solutions` 保留完整求解响应 |
+
+输入允许 `//` 注释、反斜杠续行和跨行括号。所有字段必须被消费。
+未知 options、`iabstol`、`errpreset`、sine、理想跳变、浮动源、R/C/I 器件、
+子电路指令、电流探针和 `.scs` 向量连接均明确拒绝；不把它们当作可忽略的文本。
+VA 的自定义 include 仍使用显式 source 清单；适配器只加载 `ahdl_include` 列出的文件。
+重复源、重复设置、非法源时刻和未知 save 节点在运行前拒绝。
+
+DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的值。
+pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
+`d+kP+r+w`、`d+kP+r+w+f`；要求 `r,f,P>0`、`d,w>=0`、`r+w+f<=P`。
+拐点由已解析的 binary64 参数用有理数计算；非恒定 pulse 的拐点必须能精确表示为 binary64。
+不能精确表示或时刻分辨率不能表示边沿时明确拒绝，等待源时刻不确定性进入全网络误差链。
+这会拒绝部分常用十进制时间组合；不能用很小的电压方程残差掩盖源时刻舍入。
+输出中的 `testbench.pulse_corner_rounding_seconds` 保留源构造的检查结果。
+这不是通过输出网格采样近似 pulse；改变 maxstep 不改变源拐点。
+网表 token、输出点和每个 pulse 点均有 100000 的资源上限。
+
+`testbench` 同时记录测试台/模型 SHA256、生效容差及观察网格约定。
+格式适配不等于完整 Spectre 兼容或对照实验；独立答案与 manifest 等价性由
+[test_scs.py](tests/test_scs.py)检查。网表解析与源构造分别位于
+[scs.py](src/evas/scs.py)和[scs_sources.py](src/evas/scs_sources.py)。
+
 旧 IR 1–16 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
 批量工具和兼容性规则见[IR 版本与迁移](#ir-v8-migration)。
 
@@ -109,7 +152,31 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 ## 实现范围
 
-- 允许一个源文件多个 module；标量端口及内部 `electrical` 节点需显式方向声明。
+新增前端子集在已有 IR17 上展开，不增加第二执行器：
+
+- `parameter integer` 首批接受精确的有符号 32 位值；非整数实数的隐式转换仍明确拒绝。
+  涉及 integer 参数的整数除法和溢出表达式也拒绝，避免把整数语义静默换成实数运算；
+  新增的整数默认值/子实例覆盖、范围约束及电气向量下标也检查只含字面量的整数运算。
+  如需实数除法，显式写 `N/2.0`。已有 real 参数表达式的行为保持不变。
+  `from` 的多个区间取并集，随后扣除 `exclude` 的区间或单值；支持开闭端点、
+  无穷端点及其他参数构成的边界。检查每个实例最终生效的值，覆盖值可以替换越界默认值，
+  但不能掩盖非法的约束表达式。
+- 一维 electrical/端口向量在实例参数绑定后按声明方向展开。Python/manifest 使用
+  `{"u[0]":"a", "u[1]":"b"}` 的显式位连接；模块内部的整向量连接按各自声明顺序配对。
+  `V(bus[index])` 接受实例常量或展开后的 genvar 下标。每个节点与贡献保留独立身份；
+  electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
+- `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
+  归并为一次已有的常量初始化体。重复叶不重复执行，也不生成零时刻 timer。
+  独立的分析限定初始化、初始化与 cross/timer 混合 OR、依赖电压的初始化仍拒绝。
+
+依据是 [Verilog-AMS 2.4 LRM](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
+的参数范围、向量连接和全局事件规则（§3.4、§5.10.2、§6）。整数隐式转换与分析生命周期
+是本子集的限制，不是语言标准禁止。独立回归见
+[参数约束](tests/test_parameter_constraints.py)、[向量端口](tests/test_vector_ports.py)、
+[初始化事件](tests/test_initial_events.py)。参数绑定、节点展开和初始化降低分别位于
+`parameters.py`、`node_elaboration.py` 和 `instance_compiler.py`。
+
+- 允许一个源文件多个 module；端口需显式方向与 electrical 声明，内部节点需 electrical 声明。
 - 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
   include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
   未提供的标准 `constants.vams` / `disciplines.vams` 仍为内建前导，数学常量仅保留 `M_PI`。
@@ -169,7 +236,7 @@ CLI 使用 `--timeout 600` 调整；时间超限会终止并回收内核子进�
 仿真时间 `stop` 与这个墙钟时间上限是两个不同设置。
 
 CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在时的 `sample`；
-成功结果仍输出到 stdout。输入/编译错误仍是可读文本，错误退出码均为 2。
+成功结果仍输出到 stdout。输入/编译错误也输出带 code/阶段的 JSON，错误退出码均为 2。
 适配器验证返回结果的身份、行数、电压/状态维度及有限数值；坏响应为 `invalid_response`，
 无法启动进程或不合格式的进程错误为 `kernel_process`。
 这些检查保护调用边界，不代替内核的电压精度验收。

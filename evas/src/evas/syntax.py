@@ -39,7 +39,7 @@ OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
-             "function", "endfunction", "for", "genvar"}
+             "function", "endfunction", "for", "genvar", "from", "exclude", "inf"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | _BUILTINS
 
@@ -178,6 +178,20 @@ class Model:
     genvars: frozenset[str] = frozenset()
     arrays: dict[str, tuple[Expr, Expr]] = field(default_factory=dict)
     children: tuple[ChildInstance, ...] = ()
+    parameter_types: dict[str, str] = field(default_factory=dict)
+    parameter_ranges: dict[str, tuple["ParameterRange", ...]] = field(default_factory=dict)
+    node_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
+    port_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ParameterRange:
+    kind: str
+    lower: Expr | float
+    upper: Expr | float | None
+    closed_left: bool
+    closed_right: bool
+    token: Token
 
 
 class Parser:
@@ -191,9 +205,9 @@ class Parser:
     def token(self) -> Token:
         return self.tokens[self.index]
 
-    def fail(self, message: str, token: Token | None = None):
+    def fail(self, message: str, token: Token | None = None, *, code='syntax_error'):
         token = token or self.token
-        raise CompileError(f"{token.source or self.source}:{token.line}:{token.column}: {message}")
+        raise CompileError(f"{token.source or self.source}:{token.line}:{token.column}: {message}", code=code, token=token)
 
     def take(self, text: str | None = None) -> Token:
         token = self.token
@@ -215,6 +229,57 @@ class Parser:
         if len(names) != len(set(names)):
             self.fail("duplicate identifier in declaration")
         return names
+
+    def parameter_ranges(self):
+        def bound():
+            if self.token.text == 'inf':
+                self.take()
+                return math.inf
+            if self.token.text in ('+', '-') and self.tokens[self.index+1].text == 'inf':
+                sign = self.take().text
+                self.take('inf')
+                return -math.inf if sign == '-' else math.inf
+            return self.expression()
+
+        ranges = []
+        while self.token.text in ('from', 'exclude'):
+            token = self.take()
+            if self.token.text in ('[', '('):
+                left = self.take().text == '['
+                lower = bound()
+                self.take(':')
+                upper = bound()
+                if self.token.text not in (']', ')'):
+                    self.fail('range requires a closing bracket or parenthesis')
+                right = self.take().text == ']'
+            elif token.text == 'exclude':
+                lower, upper, left, right = self.expression(), None, True, True
+            else:
+                self.fail('from requires an interval', token)
+            ranges.append(ParameterRange(token.text, lower, upper, left, right, token))
+        return tuple(ranges)
+
+    def node(self):
+        token = self.token
+        name = self.take().text if self.token.text == '0' else self.name()
+        args = ()
+        if self.token.text == '[':
+            self.take('[')
+            args = (self.expression(),)
+            self.take(']')
+        return Expr('node', name, args, token)
+
+    def declared_range(self):
+        if self.token.text != '[':
+            return None
+        self.take('[')
+        left = self.expression()
+        self.take(':')
+        right = self.expression()
+        self.take(']')
+        if self.token.text == '[':
+            self.fail('only one-dimensional electrical vectors are supported', code='unsupported_vector')
+        return (left, right)
 
     def expression(self, minimum: int = 0) -> Expr:
         if self.nesting >= MAX_SOURCE_NESTING:
@@ -245,13 +310,13 @@ class Parser:
             left = Expr("number", math.pi, (), token)
         elif token.text == "V":
             self.take("(")
-            p = self.name()
-            n = "0"
+            p = self.node()
+            n = Expr('node', '0', (), token)
             if self.token.text == ",":
                 self.take(",")
-                n = self.take().text if self.token.text == "0" else self.name()
+                n = self.node()
             self.take(")")
-            left = Expr("voltage", None, (Expr("node", p, (), token), Expr("node", n, (), token)), token)
+            left = Expr("voltage", None, (p, n), token)
         elif token.text == "'{":
             arguments = [self.expression()]
             while self.token.text == ",":
@@ -422,7 +487,28 @@ class Parser:
                 token = self.take("@")
                 self.take("(")
                 if self.token.text == "initial_step":
-                    self.take("initial_step")
+                    unqualified = False
+                    while True:
+                        if self.token.text != 'initial_step':
+                            self.fail('initial_step mixed with monitored events requires runtime initialization support', code='unsupported_initial_event')
+                        self.take('initial_step')
+                        if self.token.text == '(':
+                            self.take('(')
+                            while True:
+                                if self.token.text not in ('"dc"', '"tran"'):
+                                    self.fail('only dc/tran analysis labels in a redundant initialization OR are supported', code='unsupported_initial_event')
+                                self.take()
+                                if self.token.text != ',':
+                                    break
+                                self.take(',')
+                            self.take(')')
+                        else:
+                            unqualified = True
+                        if self.token.text != 'or':
+                            break
+                        self.take('or')
+                    if not unqualified:
+                        self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
                     self.take(")")
                     initial.extend(self.statements())
                 else:
@@ -431,7 +517,8 @@ class Parser:
                         leaf = self.take()
                         kind = leaf.text
                         if kind not in ("cross", "timer"):
-                            self.fail("only cross and timer events are supported", leaf)
+                            self.fail("only cross and timer events can be combined with monitored events", leaf,
+                                      code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
                         self.take("(")
                         arguments = [self.expression()]
                         while self.token.text == ",":
@@ -533,6 +620,8 @@ class Parser:
         self.take(")")
         self.take(";")
         directions, nodes, parameters, variables, functions, genvars, arrays = {}, set(), {}, {}, {}, set(), {}
+        parameter_types, parameter_ranges = {}, {}
+        node_ranges, port_ranges = {}, {}
         while (self.token.text in ("input", "output", "inout", "electrical", "parameter", "integer", "real", "genvar")
                or self.token.text == "analog" and self.tokens[self.index+1].text == "function"):
             if self.token.text == "analog":
@@ -543,13 +632,22 @@ class Parser:
                 continue
             kind = self.take().text
             if kind == "parameter":
-                self.take("real")
-                param = self.name()
-                if param in parameters or param in ports or param in nodes or param in variables or param in genvars:
-                    self.fail(f"duplicate parameter/node name {param!r}")
-                self.take("=")
-                parameters[param] = self.expression()
+                if self.token.text not in ('real', 'integer'):
+                    self.fail('parameter requires an explicit real or integer type')
+                parameter_type = self.take().text
+                while True:
+                    param = self.name()
+                    if param in parameters or param in ports or param in nodes or param in variables or param in genvars:
+                        self.fail(f"duplicate parameter/node name {param!r}")
+                    self.take("=")
+                    parameters[param] = self.expression()
+                    parameter_types[param] = parameter_type
+                    parameter_ranges[param] = self.parameter_ranges()
+                    if self.token.text != ',':
+                        break
+                    self.take(',')
             else:
+                declared_range = self.declared_range() if kind in ('input', 'output', 'inout', 'electrical') else None
                 if kind in ("integer", "real"):
                     names = []
                     while True:
@@ -585,10 +683,12 @@ class Parser:
                     if nodes.intersection(names) or (parameters.keys() | variables.keys()) & set(names):
                         self.fail("duplicate electrical/parameter name")
                     nodes.update(names)
+                    node_ranges.update(dict.fromkeys(names, declared_range))
                 else:
                     if directions.keys() & set(names) or not set(names) <= set(ports):
                         self.fail("duplicate direction or direction on a non-port")
                     directions.update(dict.fromkeys(names, kind))
+                    port_ranges.update(dict.fromkeys(names, declared_range))
             self.take(";")
         if set(directions) != set(ports) or not set(ports) <= nodes:
             self.fail("every port must have a direction and an electrical declaration")
@@ -617,4 +717,4 @@ class Parser:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children))
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges)

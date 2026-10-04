@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+Vu (u 0) vsource type=pwl wave=[0 0 500n 1 1u 0]
+Vv (v 0) vsource type=dc dc=250m
+dut (u v out 0) dvs_sum g1=2 g2=-1 bias=125m
+accuracy options reltol=0 vabstol=1n
+tran tran stop=1u maxstep=125n
+save out u

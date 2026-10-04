@@ -37,6 +37,8 @@ docstring 中说明答案来源，不得以"EVAS 当前输出"为期望值。
 | --- | --- |
 | [test_affine.py](test_affine.py) | 公开编译/求解入口的行为契约 |
 | [test_contracts.py](test_contracts.py) | 参数绑定与版本化分支身份契约 |
+| [test_parameter_constraints.py](test_parameter_constraints.py) / [test_vector_ports.py](test_vector_ports.py) / [test_initial_events.py](test_initial_events.py) | 生效参数范围、静态 electrical 位序与初始化 OR |
+| [test_frontend_diagnostics.py](test_frontend_diagnostics.py) / [test_scs.py](test_scs.py) | 具名诊断和受限 `.scs` 到现有请求的适配 |
 | [test_analog_conditions.py](test_analog_conditions.py) | 普通模拟赋值与 if/else |
 | [test_idt.py](test_idt.py) | 首个受限积分（精确分数 oracle） |
 | [test_absdelay.py](test_absdelay.py) / [test_timer.py](test_timer.py) / [test_transition.py](test_transition.py) / [test_slew.py](test_slew.py) | 延迟 / 定时 / 边沿 / 转换速率 |

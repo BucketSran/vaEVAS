@@ -187,6 +187,15 @@ class InstanceCompiler:
         return OperatorRef(index)
 
     def trigger(self, leaf):
+        if leaf.kind == 'timer':
+            pending = [arg for arg in leaf.arguments if arg is not None]
+            while pending:
+                expr = pending.pop()
+                if expr.op == 'voltage' or contains_operator(expr):
+                    raise CompileError(
+                        f'{self.model.source}:{expr.token.line}:{expr.token.column}: timer parameters cannot depend on continuous voltage or operator history',
+                        code='unsupported_timer_dependency', token=expr.token, instance=self.instance.name)
+                pending.extend(expr.args)
         def setting(arg):
             value = lower(arg, self.parameter, {}, self.model.source)
             if not isinstance(value, Affine) or value.terms:
