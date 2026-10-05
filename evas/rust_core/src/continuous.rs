@@ -377,7 +377,7 @@ impl LinearContinuous {
         } else {
             vec![None; self.value_count]
         };
-        for segment in &self.segments {
+        for segment in self.intersecting_segments(time) {
             let lo = time.lo.max(segment.start);
             let hi = time.hi.min(segment.end);
             if lo > hi {
@@ -413,7 +413,7 @@ impl LinearContinuous {
         self.ensure_time(time.lo)?;
         self.ensure_time(time.hi)?;
         let mut out: Vec<Option<I>> = vec![None; self.value_count];
-        for segment in &self.segments {
+        for segment in self.intersecting_segments(time) {
             let lo = time.lo.max(segment.start);
             let hi = time.hi.min(segment.end);
             if lo > hi {
@@ -437,6 +437,21 @@ impl LinearContinuous {
                 })
             })
             .collect()
+    }
+
+    fn intersecting_segments(&self, time: I) -> &[Segment] {
+        // build_segments emits chronological knot windows, so both boundaries
+        // are nondecreasing, including the degenerate terminal epoch. Closed
+        // queries retain end == lo and start == hi, hence both sides of a knot.
+        // Slicing keeps the full traversal's hull order without evaluating any
+        // new segment or changing elapsed-time/error arithmetic.
+        let first = self
+            .segments
+            .partition_point(|segment| segment.end < time.lo);
+        let past_last = self
+            .segments
+            .partition_point(|segment| segment.start <= time.hi);
+        &self.segments[first..past_last]
     }
 
     pub(crate) fn next_breakpoint(&self, after: f64) -> Option<f64> {
@@ -1685,6 +1700,202 @@ mod tests {
         continuous.values(1.0).unwrap();
         assert_eq!(continuous.bounds(0.0).unwrap(), initial);
         assert_eq!(continuous.bounds(0.25).unwrap(), positive);
+    }
+
+    // Independent fixture: y = u + integral(u), u = 0 up to t=1,
+    // then u = 2(t-1). The identity filter exposes y as an operator slot.
+    fn feedthrough_fixture() -> LinearContinuous {
+        let mut program = ramp_filter_program(1.0);
+        let source = Expression::Affine {
+            constant: 0.0,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.0,
+            }],
+        };
+        program.operators = vec![
+            OperatorSpec::Idt {
+                input: source.clone(),
+                ic: 0.0,
+                reset: None,
+                origin: origin(),
+            },
+            OperatorSpec::LaplaceNd {
+                input: Expression::Add {
+                    left: Box::new(source),
+                    right: Box::new(Expression::Operator { operator: 0 }),
+                },
+                numerator: vec![1.0, 1.0],
+                denominator: vec![1.0, 1.0],
+                origin: origin(),
+            },
+        ];
+        program.contributions[0].rhs = Expression::Operator { operator: 1 };
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 0.0], [1.0, 0.0], [1.5, 1.0], [2.0, 2.0]]],
+                output_times: vec![0.0, 1.0, 1.5, 2.0],
+                stop: 2.0,
+                max_step: 2.0,
+            },
+            1,
+        )
+        .unwrap();
+        LinearContinuous::new(&program, &trajectory, &["u".to_string()], &[])
+            .unwrap()
+            .unwrap()
+    }
+
+    #[test]
+    fn closed_history_windows_keep_both_knot_derivatives_and_analytic_values() {
+        let continuous = feedthrough_fixture();
+        let slot = continuous
+            .slots
+            .iter()
+            .find(|slot| slot.operator == 1)
+            .unwrap()
+            .value;
+        let at_knot = continuous.derivative_bounds(I::point(1.0)).unwrap()[slot];
+        assert!(at_knot.lo <= 0.0 && at_knot.hi >= 2.0, "{at_knot:?}");
+        for time in [0.0, 0.5, 1.0, 1.25, 1.5, 2.0] {
+            let x = f64::max(time - 1.0, 0.0);
+            let expected = 2.0 * x + x * x;
+            let value = continuous.range_bounds(I::point(time)).unwrap()[slot];
+            assert!(
+                value.lo <= expected && expected <= value.hi,
+                "{time}: {value:?}"
+            );
+            assert!(value.hi - value.lo < 1e-10, "{time}: {value:?}");
+        }
+        for (time, left, right) in [
+            (I { lo: 0.5, hi: 1.5 }, 0.0, 3.0),
+            (I { lo: 1.25, hi: 1.5 }, 2.5, 3.0),
+            (I { lo: 0.0, hi: 2.0 }, 0.0, 4.0),
+        ] {
+            let derivative = continuous.derivative_bounds(time).unwrap()[slot];
+            assert!(
+                derivative.lo <= left && derivative.hi >= right,
+                "{time:?}: {derivative:?}"
+            );
+        }
+        // Secondary equivalence oracle preserves the old full traversal and hull order.
+        for lo in [0.0, 0.5, 1.0, 1.25, 1.5, 2.0] {
+            for hi in [0.0, 0.5, 1.0, 1.25, 1.5, 2.0]
+                .into_iter()
+                .filter(|hi| *hi >= lo)
+            {
+                let time = I { lo, hi };
+                for query in [Query::Value, Query::Derivative] {
+                    let mut expected: Vec<Option<I>> = if matches!(query, Query::Value) && lo == 0.0
+                    {
+                        continuous.dc_values.iter().copied().map(Some).collect()
+                    } else {
+                        vec![None; continuous.value_count]
+                    };
+                    if !(matches!(query, Query::Value) && time == I::ZERO) {
+                        for segment in &continuous.segments {
+                            let (lo, hi) = (lo.max(segment.start), hi.min(segment.end));
+                            if lo > hi {
+                                continue;
+                            }
+                            for (out, value) in expected.iter_mut().zip(
+                                continuous
+                                    .eval_segment_rows(segment, I { lo, hi }, query)
+                                    .unwrap(),
+                            ) {
+                                *out = Some(out.map_or(value, |current| current.hull(value)));
+                            }
+                        }
+                    }
+                    let expected: Vec<_> = expected.into_iter().map(Option::unwrap).collect();
+                    let actual = match query {
+                        Query::Value => continuous.range_bounds(time).unwrap(),
+                        Query::Derivative => continuous.derivative_bounds(time).unwrap(),
+                    };
+                    assert_eq!(actual, expected, "[{lo},{hi}]");
+                }
+            }
+        }
+        // Queries are observations: a later query cannot change a prior answer.
+        let before = continuous.derivative_bounds(I::point(1.0)).unwrap();
+        continuous.range_bounds(I { lo: 0.0, hi: 2.0 }).unwrap();
+        assert_eq!(before, continuous.derivative_bounds(I::point(1.0)).unwrap());
+        let unchanged = continuous
+            .restarted(1.0, I::point(1.0), &continuous.parameters)
+            .unwrap();
+        assert_eq!(before, unchanged.derivative_bounds(I::point(1.0)).unwrap());
+        let physical = continuous
+            .segment_state(continuous.segment_at(1.0).unwrap(), I::point(1.0))
+            .unwrap();
+        let restarted = LinearContinuous::build(
+            continuous.context.clone(),
+            continuous.parameters.clone(),
+            1.0,
+            Some(physical[..continuous.initial.len()].to_vec()),
+        )
+        .unwrap()
+        .unwrap();
+        let after = restarted.derivative_bounds(I::point(1.0)).unwrap()[slot];
+        assert!(
+            after.lo <= 2.0 && after.hi >= 2.0 && after.lo > 0.0,
+            "{after:?}"
+        );
+        assert_eq!(
+            restarted.range_bounds(I::point(0.5)).unwrap_err().kind,
+            "event_resolution"
+        );
+    }
+
+    #[test]
+    fn closed_history_terminal_epoch_and_invalid_windows_keep_existing_contract() {
+        let continuous = feedthrough_fixture();
+        let physical = continuous
+            .segment_state(continuous.segment_at(2.0).unwrap(), I::point(2.0))
+            .unwrap();
+        let terminal = LinearContinuous::build(
+            continuous.context.clone(),
+            continuous.parameters.clone(),
+            2.0,
+            Some(physical[..continuous.initial.len()].to_vec()),
+        )
+        .unwrap()
+        .unwrap();
+        let slot = terminal.operator_value_index(1).unwrap();
+        let value = terminal.range_bounds(I::point(2.0)).unwrap()[slot];
+        assert!(
+            value.lo <= 3.0 && value.hi >= 3.0 && value.hi - value.lo < 1e-10,
+            "{value:?}"
+        );
+        assert_eq!(
+            terminal.range_bounds(I::point(1.0)).unwrap_err().kind,
+            "event_resolution"
+        );
+        for time in [
+            I { lo: 1.0, hi: 0.0 },
+            I {
+                lo: f64::NAN,
+                hi: 1.0,
+            },
+        ] {
+            assert_eq!(
+                continuous.range_bounds(time).unwrap_err().kind,
+                "event_resolution"
+            );
+            assert_eq!(
+                continuous.derivative_bounds(time).unwrap_err().kind,
+                "event_resolution"
+            );
+        }
+        for time in [I::point(-1.0), I::point(3.0)] {
+            assert_eq!(
+                continuous.range_bounds(time).unwrap_err().kind,
+                "invalid_inputs"
+            );
+            assert_eq!(
+                continuous.derivative_bounds(time).unwrap_err().kind,
+                "invalid_inputs"
+            );
+        }
     }
 
     #[test]

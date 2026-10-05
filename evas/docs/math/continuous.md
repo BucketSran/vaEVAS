@@ -112,6 +112,21 @@ DC 的 `t=0` 观察与 `t=0+` 的瞬态右侧极限分别求值：前者在整�
 解为 `w(t)=exp(G*(t-ta))*w(ta)`。输入断点更换斜率；上一段终点的完整区间进入下一段。
 输出网格与 max_step 不定义积分历史，也不改变分段初值。
 
+连续值/导数的区间查询使用闭区间相交条件。`Trajectory::new` 将有限源断点排序、去重，
+`build_segments` 依次构造 `[a_i,b_i]`，所以起点和终点均非递减。查询 `[lo,hi]` 的候选段为
+`first = partition_point(b_i < lo)` 到 `past_last = partition_point(a_i <= hi)` 的原数组切片。
+它与逐段保留 `max(lo,a_i) <= min(hi,b_i)` 等价，且保持原来的 hull 次序。
+边界相等时保留相邻两段；不能以单点所在段代替闭区间查询。零时刻的 DC 值与
+右侧瞬态值仍分别处理，非零重启和退化的停止时刻段也遵守同一规则。
+
+独立反例是 `y=u+idt(u,0)`，其中 `u=0` 至 t=1，之后 `u=2(t-1)`。
+右侧 `y=2(t-1)+(t-1)^2`，在 `[1,1]` 上的导数包围必须同时包含 0 和 2。
+Rust `closed_history_windows_keep_both_knot_derivatives_and_analytic_values` 检查此答案、
+跨多断点查询、DC、停止时刻、非零历史起点及只读查询，并以原全遍历作次级等价核查。
+本索引只减少线性连续查询的段筛选，传播和区间运算保持不变；单点 lookup、
+非线性源内部断点遍历和事件调度没有变化。成本证据见
+[历史窗口测量](../../../experiments/performance/history-windows.md)。
+
 `state_space.rs` 使用向外舍入区间 Taylor、缩放和平方。把 `G*h` 缩放到无穷范数
 不超过 1/16，累加至 40 阶；第一遗漏项以其后项比上界形成几何级数尾界，
 再逐次区间平方。Taylor 除数、范数求和、尾项与时间差也必须向外包围，不能把

@@ -1,0 +1,466 @@
+{
+  "verdict": "inconclusive",
+  "acceptance": "partial: equivalent evaluated segments and focused correctness passed; complete five-success repetitions per side and end-to-end performance benefit unproved",
+  "base_revision": "d06581f92628ab9e94a2d16bf600b0225174bb6d",
+  "production_kernel_sha256": {
+    "baseline": "f49440a4658f5781578f3c7eafcb873b62f93cd31592f7a09d2229ff09850dd1",
+    "candidate": "bf8e9b05df8e098c4833c95a665f1d3c5ffb55d5e9deed82cdc1eca09a62b4cb"
+  },
+  "measured_continuous_source_sha256": "c2cd44426fb475aba21233b9c1d9b669d804cb08aa293162774476db8a66121e",
+  "baseline_source_sha256": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+  "executed_joint_tool_sha256": "b527ed1465e4744ca745fcba87c5646f47dabdc40fdbfd66f1c88fc4ee3bcdfa",
+  "profile_source_sha256": {
+    "baseline": "c34f24d1e78e5fcc8d6c88d753ba9971d6e8f77b1689d206355e737c55fe21cd",
+    "candidate": "c09397ef4cd1d48732ea5f084d6f430128ee2a30d10f48cecdce2f12852c5eae"
+  },
+  "profile_kernel_sha256": {
+    "baseline": "162be5b45d598f575173b13b6bb62991692b651b5ecb64c87051345714b7df10",
+    "candidate": "b6d5bd40448b0021bfa9be4b52c5dccf3700fac156b061de80ea534e5dec7f84"
+  },
+  "settings": {
+    "build": "cargo build --release --locked",
+    "timeout_seconds": 30,
+    "repeats": 5,
+    "threads": 1,
+    "absolute": 1e-08,
+    "relative": 0.0,
+    "max_step": 0.0009765625
+  },
+  "boundary": "spawn + child read/decode/run/encode + Python response parse; frozen input encoding excluded",
+  "host": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "logical_cpus": 10,
+  "timed_launch_budget": 30,
+  "timed_launches": 30,
+  "timed_successes": 29,
+  "timed_failures": 1,
+  "timing_batches": [
+    {
+      "name": "initial unrelated path",
+      "status": "complete",
+      "wall_seconds": 16.319228291045874,
+      "summary": {
+        "many-segments": {
+          "baseline": {
+            "median": 1.0334579998161644,
+            "minimum": 1.0083639998920262,
+            "maximum": 2.2501076669432223,
+            "count": 5
+          },
+          "candidate": {
+            "median": 1.0031327500473708,
+            "minimum": 0.9981180001050234,
+            "maximum": 1.701627500122413,
+            "count": 5
+          }
+        },
+        "ordinary-control": {
+          "baseline": {
+            "median": 0.031873707892373204,
+            "minimum": 0.030565541936084628,
+            "maximum": 0.03275029198266566,
+            "count": 5
+          },
+          "candidate": {
+            "median": 0.0319129170384258,
+            "minimum": 0.03040187479928136,
+            "maximum": 0.03260070807300508,
+            "count": 5
+          }
+        }
+      },
+      "observations": "No F2 query counters. Direct-source idt bypassed linear continuous range/derivative. Control retained as regression only."
+    },
+    {
+      "name": "joint-history-offset",
+      "status": "failed",
+      "wall_seconds": 256.51150870812126,
+      "records": [
+        {
+          "case": "joint-history-offset",
+          "repeat": 0,
+          "side": "baseline",
+          "seconds": 25.43836041679606,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 0,
+          "side": "candidate",
+          "seconds": 24.494660707889125,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 1,
+          "side": "candidate",
+          "seconds": 25.258791624801233,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 1,
+          "side": "baseline",
+          "seconds": 24.621205958072096,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 2,
+          "side": "baseline",
+          "seconds": 25.56047737505287,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 2,
+          "side": "candidate",
+          "seconds": 24.535679416032508,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 3,
+          "side": "candidate",
+          "seconds": 25.36069787479937,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 3,
+          "side": "baseline",
+          "seconds": 25.34861983312294,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        },
+        {
+          "case": "joint-history-offset",
+          "repeat": 4,
+          "side": "baseline",
+          "seconds": 25.869723750045523,
+          "stdout_sha256": "0ba212ef5f8214fdca185aa7ffc399ab6ec81a1612bd53b37cb694b981e21bd3",
+          "returncode": 0,
+          "correctness": {
+            "outputs": 1025,
+            "events": 1,
+            "maximum_error": 1.4432899320127035e-14
+          }
+        }
+      ],
+      "failed_launch": {
+        "side": "candidate",
+        "repeat": 4,
+        "kind": "timeout",
+        "timeout_seconds": 30,
+        "partial_streams": "not retained by original runner"
+      },
+      "observations": "All nine successful outputs byte-identical; failed attempt remains in 5-per-side denominator. No successful-only speedup claim."
+    }
+  ],
+  "request_sha256": {
+    "joint-profile-2048.json": "d45aee39bdf822c18d247e4c859bae5da2b464b8f2dec4de8b7286ef5753fb35",
+    "joint-history.json": "36ca8dffb0755a13767260cc1df25d82328807a036a0b654dfc28ec199fcf539",
+    "many-segments.json": "b228d2678d6b9e33b5fad10df1b49d54da057dd9c87088f90ac3bced6fb6b309",
+    "joint-history-offset.json": "f3be3330e5da3c07d6e3085e601b82fc546c1cdcf0d038c71b2735041780cf95",
+    "ordinary-control.json": "9e1090f74804daa1f0f4c38394f004c700abf22e03bb147a536398643e06e0c5"
+  },
+  "profiling": [
+    {
+      "case": "joint-profile-2048",
+      "side": "baseline",
+      "reported_timing": false,
+      "diagnostic_sha256": "ecd3645e6b7e9a255ffd9d31168bc737a3ae00ea4a36ef54f9fcdcf423484146",
+      "stdout_sha256": "0b1696a98fe3de84d8f19b9eb4572932fd551df141c57eac534984d390311ee3",
+      "counters": {
+        "f2_history_queries": 6462,
+        "f2_segments_evaluated": 18518,
+        "f2_segments_examined": 13234176
+      },
+      "stages": {
+        "circuit.prepare": {
+          "calls": 8201,
+          "nanos": 41239316
+        },
+        "circuit.solve": {
+          "calls": 16393,
+          "nanos": 7069504
+        },
+        "controller.prepare_candidate": {
+          "calls": 2049,
+          "nanos": 1915733079
+        },
+        "event.calendar": {
+          "calls": 4,
+          "nanos": 693510042
+        },
+        "event.certificate": {
+          "calls": 4099,
+          "nanos": 4345480
+        },
+        "event.state_certificate": {
+          "calls": 2,
+          "nanos": 21208
+        },
+        "f2_derivative_bounds": {
+          "calls": 3230,
+          "nanos": 331387377
+        },
+        "f2_range_bounds": {
+          "calls": 3232,
+          "nanos": 331488138
+        },
+        "factor.back_substitution": {
+          "calls": 16393,
+          "nanos": 2275604
+        },
+        "factor.dense": {
+          "calls": 5,
+          "nanos": 3001
+        },
+        "factor.total": {
+          "calls": 5,
+          "nanos": 26707
+        },
+        "history.advance": {
+          "calls": 6148,
+          "nanos": 1116604
+        },
+        "history.advance_candidate": {
+          "calls": 4099,
+          "nanos": 2849298
+        },
+        "history.bounds_query": {
+          "calls": 6149,
+          "nanos": 6360662
+        },
+        "history.clone": {
+          "calls": 6148,
+          "nanos": 1059211
+        },
+        "history.nominal_query": {
+          "calls": 2052,
+          "nanos": 3147361
+        },
+        "history.prepare": {
+          "calls": 1,
+          "nanos": 104206000
+        },
+        "kernel.run": {
+          "calls": 1,
+          "nanos": 2725847084
+        },
+        "output.collect": {
+          "calls": 1025,
+          "nanos": 218669
+        },
+        "protocol.decode": {
+          "calls": 1,
+          "nanos": 2051791
+        },
+        "protocol.encode": {
+          "calls": 1,
+          "nanos": 1169834
+        },
+        "protocol.read": {
+          "calls": 1,
+          "nanos": 1298667
+        },
+        "voltage.original_residual": {
+          "calls": 16393,
+          "nanos": 702696
+        }
+      }
+    },
+    {
+      "case": "joint-profile-2048",
+      "side": "candidate",
+      "reported_timing": false,
+      "diagnostic_sha256": "f83549efccd1f3d49c017d07f5570976f99ee843c936db9f9a37113a0c63c361",
+      "stdout_sha256": "0b1696a98fe3de84d8f19b9eb4572932fd551df141c57eac534984d390311ee3",
+      "counters": {
+        "f2_history_queries": 6462,
+        "f2_segments_evaluated": 18518,
+        "f2_segments_examined": 18518
+      },
+      "stages": {
+        "circuit.prepare": {
+          "calls": 8201,
+          "nanos": 28673124
+        },
+        "circuit.solve": {
+          "calls": 16393,
+          "nanos": 4959955
+        },
+        "controller.prepare_candidate": {
+          "calls": 2049,
+          "nanos": 1377073343
+        },
+        "event.calendar": {
+          "calls": 4,
+          "nanos": 435263207
+        },
+        "event.certificate": {
+          "calls": 4099,
+          "nanos": 2981911
+        },
+        "event.state_certificate": {
+          "calls": 2,
+          "nanos": 14750
+        },
+        "f2_derivative_bounds": {
+          "calls": 3230,
+          "nanos": 207571173
+        },
+        "f2_range_bounds": {
+          "calls": 3232,
+          "nanos": 207599833
+        },
+        "factor.back_substitution": {
+          "calls": 16393,
+          "nanos": 1521566
+        },
+        "factor.dense": {
+          "calls": 5,
+          "nanos": 2500
+        },
+        "factor.total": {
+          "calls": 5,
+          "nanos": 41042
+        },
+        "history.advance": {
+          "calls": 6148,
+          "nanos": 1008405
+        },
+        "history.advance_candidate": {
+          "calls": 4099,
+          "nanos": 2015449
+        },
+        "history.bounds_query": {
+          "calls": 6149,
+          "nanos": 5150561
+        },
+        "history.clone": {
+          "calls": 6148,
+          "nanos": 631395
+        },
+        "history.nominal_query": {
+          "calls": 2052,
+          "nanos": 3290711
+        },
+        "history.prepare": {
+          "calls": 1,
+          "nanos": 68707708
+        },
+        "kernel.run": {
+          "calls": 1,
+          "nanos": 1888538208
+        },
+        "output.collect": {
+          "calls": 1025,
+          "nanos": 149028
+        },
+        "protocol.decode": {
+          "calls": 1,
+          "nanos": 1403292
+        },
+        "protocol.encode": {
+          "calls": 1,
+          "nanos": 1191083
+        },
+        "protocol.read": {
+          "calls": 1,
+          "nanos": 1054083
+        },
+        "voltage.original_residual": {
+          "calls": 16393,
+          "nanos": 541950
+        }
+      }
+    }
+  ],
+  "load_before": "4:09  up 12 days, 16:33, 6 users, load averages: 12.56 16.06 11.15",
+  "load_during": [
+    " 4:12  up 12 days, 16:36, 6 users, load averages: 2.60 9.77 9.43",
+    " 4:13  up 12 days, 16:37, 6 users, load averages: 2.60 8.97 9.15",
+    " 4:13  up 12 days, 16:38, 6 users, load averages: 1.93 7.90 8.75",
+    " 4:14  up 12 days, 16:38, 6 users, load averages: 2.05 7.27 8.48",
+    " 4:15  up 12 days, 16:39, 6 users, load averages: 2.62 6.45 8.09",
+    " 4:15  up 12 days, 16:40, 6 users, load averages: 4.16 6.55 8.09",
+    " 4:16  up 12 days, 16:40, 6 users, load averages: 7.60 7.11 8.25",
+    " 4:16  up 12 days, 16:40, 6 users, load averages: 10.23 7.80 8.47"
+  ],
+  "external_contention": "Initial Spotlight mds/mdworker and npm ccstatusline; task heavy jobs paused. Load receded then rose to 7.6 on 10 logical CPUs before the last timed launch. Causality for timeout not established.",
+  "negative_case": {
+    "case": "joint root at source knot",
+    "expected_and_observed": "event_resolution: cannot determine dynamic cross sign at interval end",
+    "baseline_candidate_stderr_equal": true
+  },
+  "checks": {
+    "rust": "149 passed, 1 existing ignored",
+    "python": "95 passed",
+    "python_modules": [
+      "test_continuous_dynamics",
+      "test_dynamic_closure",
+      "test_dynamic_cross",
+      "test_event_window_sampling",
+      "test_lifecycle_closure",
+      "test_semantic_invariants"
+    ],
+    "measurement_checker": "3 passed",
+    "workspace_visibility": "PASS",
+    "diff_and_markdown_file_links": "PASS"
+  },
+  "availability": "Summary and generation/profile tools are repository-contained. Raw outputs, diagnostics, historical executable/source snapshots and process/load receipts are local-only under ignored runs/f2. Hashes do not establish downloadable/public raw evidence.",
+  "checker_reanalysis": {
+    "status": "all29complete timed responses passed; prior timeout unchanged",
+    "calibration": "3 passed, including known-bad voltage/root/grid/truncated controls",
+    "checker_sha256": "1ad2478454fd3d1b373eac7ded031254d9e669964687e179ad97e67d8cac69cb",
+    "previous_execution_tool_sha256": "b527ed1465e4744ca745fcba87c5646f47dabdc40fdbfd66f1c88fc4ee3bcdfa"
+  }
+}
