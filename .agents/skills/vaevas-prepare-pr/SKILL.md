@@ -26,6 +26,9 @@ existing PR for review fixes and related documentation/evidence. Record the
 current parent/base and exact checkpoint; include capability IDs only for EVAS
 behavior or support/evidence changes. Do not create an extra branch solely for
 a review round, test report or commit.
+Run the [workspace check](../../../scripts/README.md#本地工作区检查) when entering this
+stage and at handoff. Resolve navigation gaps and report local changes and retained
+evidence under the [workspace policy](../../../CONTRIBUTING.md#workspace-visibility-and-handoff).
 
 Include only work belonging to the request. If commits are authorized, stage
 explicit paths or hunks and inspect the staged diff. Do not split or commit
@@ -47,17 +50,43 @@ another contributor's in-progress work merely to tidy history.
 - Inspect the final diff and check formatting and links. Apply the
   [review format and publication dependency checks](../../../CONTRIBUTING.md#reviewing-diffs).
   Report checks not run or failures honestly; never present an old result as
-  verification of this diff.
+  verification of this diff. Identify the revision or local diff actually checked
+  and reviewed. Reuse matching review; after a change, identify affected claims
+  and any review or verification still needed before calling the result ready.
 - For EVAS behavior or support/evidence changes, verify that affected
   [capability rows](../../../evas/docs/CAPABILITIES.md), mathematical explanations
   and evidence links agree. Separate implementation,
   verification and review/release status. Link existing Issues for deferred work;
   avoid duplicating the register in a new progress document.
 
-Write a title and body about the final change: the concrete problem, resulting
-behavior, meaningful design or compatibility decisions, actual checks and their
-outcomes, and remaining limits. Link the relevant contracts and evidence. Use the
-repository template if one exists; omit abandoned approaches and stale counts.
+For work that used `show-me-your-work`, let that skill own the canonical decision
+trail, its format and audit requirements. Link the existing trail and relevant
+evidence instead of creating a second log or copying the trail into the PR body.
+Keep its evidence accessible and follow the retention rules above when deciding
+whether it belongs in the commit. Use [vaevas-review-pr](../vaevas-review-pr/SKILL.md)
+to cover any required trail review together with the change review. The trail
+supports review; it does not replace observed checks or independent review.
+
+## Draft the PR description
+
+When writing a PR body, load the shared `pr` skill for presentation. This skill
+owns vaEVAS scope, evidence and publication requirements. Apply these project
+adaptations to the generic `pr` template:
+
+- Use the repository PR template when one exists; otherwise select useful sections
+  from `pr`. A short PR can combine or omit headings while retaining the problem,
+  resulting behavior, actual checks and material limits.
+- Include a diagram, tree or diff sketch only when it helps explain the change.
+- For a behavior fix, show observed before/after evidence when available. If the
+  baseline was not run, say so and distinguish the reported or inferred prior
+  behavior from observations.
+- Describe affected callers and rollback constraints when material. Simple document
+  changes need document checks, not a new simulator experiment to fill the template.
+
+Write the title and body about the final change, including meaningful design or
+compatibility decisions. Link the relevant contracts and evidence; omit abandoned
+approaches and stale counts. Use the full skill names: `pr` formats the description;
+`show-me-your-work` records decisions during execution.
 
 Describe the component's changed behavior and actual checks. Benchmark-only work
 and documentation edits that leave EVAS behavior, support and evidence claims
@@ -70,14 +99,12 @@ For EVAS semantic/numerical changes, answer these questions as applicable:
 - Which equation, state transition or ordering rule explains the implementation?
   Use a small equation, diagram or pseudocode when useful and link the owning handbook.
 - Which independent expected result and observed check demonstrate the behavior?
-  Show actual before/after evidence for a fix when available; never invent a baseline run.
 - What compatibility, precision, performance or composition limits remain, and which
   callers are affected? Describe material rollback constraints when they exist.
 
 Keep the reviewed revision, effective settings and evidence identity clear. Distinguish
 equation residual from output/timing error, and support speed claims with comparable
-measurements. Documentation-only changes need document checks. A short PR need not
-have a diagram, every section, or a new experiment; reuse existing valid evidence links.
+measurements. Reuse existing valid evidence links.
 
 ## Publish only within the requested scope
 
@@ -91,6 +118,9 @@ authorize merging, reviewer messages, or unrelated repository changes.
 Report what was actually prepared, committed, pushed, or opened. Include commit
 identity and PR URL when applicable, the review base, verification limits, and
 any relevant work still left locally.
+Distinguish target-branch integration from synchronization of the daily checkout.
+Keep temporary work discoverable until retired; record any pending integration or
+retention reason and next action in its existing navigation entry.
 After an authorized merge, account for unique commits, dirty files, running jobs
 and ignored evidence before cleanup; a merged PR alone does not retire a worktree.
 Dependent PRs need coordinated synchronization and affected checks before their

@@ -27,15 +27,33 @@ Follow [asset ownership](../../../CONTRIBUTING.md#evidence-and-assets); use the
 [receipt fields](../../../CONTRIBUTING.md#execution-receipts) for experiment evidence.
 Documentation changes only need relevant link/consistency/diff checks.
 
+## Match the requested operation
+
+Use the request and existing authorization to choose the operation; a known mode
+does not require another confirmation.
+
+- **Select checks:** inspect contracts and affected consumers, then return the
+  proposed commands, prerequisites and reasons. Stop with that plan; selection
+  alone does not authorize building or running the checks.
+- **Execute checks:** run the selected checks within the agreed resources and
+  report observed outcomes, identities and limits.
+- **Reanalyze evidence:** inspect the archived inputs, outputs and checker identity
+  before deciding what can be reused. Recalibrate a changed checker and record the
+  new analysis identity. Execute again only when needed observations are missing
+  and the run is within the task's resource authorization; otherwise report the gap.
+
 ## Select the necessary checks
 
-Run commands from the repository root. For simulator tests, first rebuild the debug
-kernel using the [build command](../../../evas/README.md#构建与运行); tests use that binary.
 Select rows by changed behavior and affected consumers, not just the edited file.
-Run their relevant modules, then add the smallest regression that detects the fix
-independently. For broad shared changes, run the listed module sets; a narrow fix
-may use focused test classes/methods with its scope stated. This mapping is a
+For broad shared changes, select the listed module sets; a narrow fix may use
+focused test classes/methods with its scope stated. Behavioral changes follow
+the [behavior-first test order](../../../CONTRIBUTING.md#behavior-first-tests);
+this mapping selects coverage, not when to write the failing case. It is a
 starting set, not proof of complete coverage or a requirement to run every row.
+
+When executing, run commands from the repository root. Before simulator tests,
+rebuild the debug kernel using the [build command](../../../evas/README.md#构建与运行);
+those tests use that binary. Checks that do not invoke the kernel need no build.
 
 | Changed area | Python test modules / check | Additional requirement |
 | --- | --- | --- |
@@ -159,7 +177,10 @@ affected checks and state which historical evidence is still being reused.
 
 Keep unsupported cases and compile, runtime, timeout, numerical, and
 infrastructure failures visible. Do not remove them from the fixed denominator
-or substitute missing settings with invented equivalents. A case used for
+or substitute missing settings with invented equivalents. A reference pass does
+not complete negative-control calibration. If the contract requires a scored
+waveform, an engine diagnostic without that waveform leaves the check incomplete;
+an expected rejection needs the contract's specified rejection evidence. A case used for
 debugging is development evidence, not an untouched holdout.
 Record reusable modeling or compatibility discoveries in the
 [candidate register](../../../benchmark/CANDIDATES.md), linking the original failure

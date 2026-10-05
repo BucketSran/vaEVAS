@@ -27,10 +27,19 @@ in-progress work; when parallel work is authorized, agree file ownership and a
 single owner for shared IR, scheduling and version changes before editing them.
 
 For the requested change, identify accepted inputs, rejected inputs, observable
-results, and compatibility implications. For new semantics, establish an
-independent expected answer using the applicable language specification or
-the validation contracts under `evas/validation/`, when present in this checkout.
+results, and compatibility implications. For new or disputed semantics, distinguish
+the intended engineering behavior from what the supplied VA program expresses.
+Derive the expected answer from the applicable language specification or independent
+validation contract. Preserve the original model and verdict when proposing a
+corrected model; a correction answers a different compatibility question.
 Resolve only material ambiguities; use existing contracts for routine choices.
+
+Before changing behavior, follow the [behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
+Use an independent failing case, reusing an existing regression when it exposes
+the fault. Trace the affected public entry through its actual compiler/kernel path;
+a Python helper result alone does not establish the default Rust path's behavior.
+Distinguish inspected code from an observed run and keep an unexecuted baseline
+unconfirmed. Preserve focused lifecycle/numerical tests with distinct obligations.
 
 ## Change the owning layer
 
@@ -67,14 +76,9 @@ rollback before implementation. Do not scaffold an unused state framework.
 
 ## Verify and hand off
 
-Use the repository's [behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
-Start a behavioral fix with an independent failing case; reuse an existing regression
-when it already exposes the fault. Explain the distinct fault a new test detects.
-Do not reproduce the production calculation as its oracle or add duplicate tests just
-to increase counts. Keep internal lifecycle/numerical tests with distinct obligations.
-
-Use independent expected values and the smallest regression that detects the
-changed behavior, including a relevant rejection or compatibility case. Select
+Rerun the independent case through the affected path after the change and explain
+the distinct fault each added regression detects. Include a relevant rejection or
+compatibility case. Select
 checks from [the validation mapping](../evas-validate/SKILL.md#select-the-necessary-checks); static replay cannot establish transient
 or event correctness. Preserve the original validation cases and thresholds.
 When a shared mechanism changes, use the [composition triggers](../evas-validate/SKILL.md#composition-triggers)
@@ -93,6 +97,8 @@ For semantic/numerical work, update the relevant handbook chapter using the
 behavior, source/assumption distinction, mathematics, numerical method, code map,
 independent evidence and limits. Update only affected capability rows; do not
 promote branch work to merged support or an old run to verification of a new base.
+Hand off the requirements, actual diff and evidence for the independent review
+required by the [review policy](../../../CONTRIBUTING.md#reviewing-diffs).
 Report changed behavior, affected modules, observed verification, unsupported
 scope, and remaining risks. Stop at an explicitly requested review boundary;
 otherwise finish the requested implementation and checks without adding a new

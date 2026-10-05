@@ -48,6 +48,13 @@ findings first, ordered by severity. For each finding, give the location, trigge
 supporting evidence and focused repair. Label confirmed defects, inferences and pending checks.
 State the reviewed scope, actual checks and remaining limits; do not invent findings to fill a format.
 
+Use a fresh-context independent review for new numerical mechanisms, semantic behavior and grading
+logic. Give the reviewer the agreed requirements, exact revision or local diff, and evidence to inspect.
+The coordinator verifies findings, organizes fixes and reruns affected checks. New changes or unresolved
+findings determine follow-up review; a fixed number of clean rounds is not required. Describe any missing
+independent review as a limitation. Involve the user when scope changes, acceptance criteria are disputed,
+an algorithm choice needs a research trade-off, or evidence overturns the agreed research direction.
+
 Explain each material change with its before/after behavior, reason, observed verification and
 limits. Scale detail to the change; a formatting-only diff does not need a mathematical explanation.
 
@@ -73,6 +80,38 @@ checks pass. Local installation changes outside the repository must be reported 
 3. For dependent PRs, record parent PR and exact base/head. The coordinator updates the child after the parent lands, retargets it to `main`, and selects [affected checks](.agents/skills/evas-validate/SKILL.md#revalidation-triggers). Preserve published checkpoints; prefer merges over rewriting shared history.
 4. Temporary integration work records its component commits and separate evidence; it does not mark components merged or released. Paused work records the remaining question in its existing PR/Issue.
 5. Merge the agreed scope after relevant checks and authorized review; universal simulator support is not a gate. End that task after merge and use a new PR for later work. Apply the retirement checklist separately before cleanup.
+
+## Workspace visibility and handoff
+
+The primary checkout is the daily human entry, named `current` in this local workspace.
+Temporary worktrees isolate conflicting or parallel work; their results must remain discoverable
+from that entry's project directory. Reuse a suitable checkout before creating another one.
+Keep concurrent writes in the primary checkout within the [ownership rules](#parallel-work).
+
+Place temporary checkouts under the primary checkout's sibling `worktrees/` directory when the
+host supports that location. For a host-managed checkout elsewhere, create a visible directory
+symlink there pointing to the actual checkout; keep the host's managed path intact. In the local
+`worktrees/README.md`, link each entry using a relative path and record its purpose, current
+handoff state and next action. Link this index from the surrounding project README. This is local
+workspace navigation, not a second issue tracker; link the existing task record when available.
+
+Run `python3 -B scripts/check_workspaces.py` at the checkpoints in AGENTS.md. The check discovers
+the primary checkout through Git, then inspects its linked worktrees. Resolve missing or stale
+navigation before continuing ordinary edits. It reports tracked/untracked changes, ignored paths
+and commits not reachable from the selected local base. A passing visibility check does not mean
+the work is integrated or safe to delete. See [commands and limits](scripts/README.md#本地工作区检查).
+
+At handoff, distinguish implementation, review, integration into the target branch, and visibility
+in the daily checkout. If integration or cleanup is pending, keep the visible entry with the reason
+and next action. Complete already-authorized integration and retirement when their conditions are
+met; otherwise report the concrete remaining step without treating local work as merged support.
+After [preserving needed material](#retiring-work) and retiring a worktree, remove its navigation
+entry and rerun the check. Changing the index never authorizes merging or deleting files.
+
+The sibling `local/` directory holds archived evidence, recovery snapshots and local presentation
+materials; it is not an active development checkout. Archive records keep their source identities.
+Maintain current source and contracts in the repository, and use Git's worktree inventory to
+identify active checkouts rather than recursively treating archived code copies as live projects.
 
 <a id="behavior-first-tests"></a>
 
