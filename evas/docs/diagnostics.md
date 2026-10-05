@@ -64,7 +64,7 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 
 ## 本批来源盘点与覆盖边界
 
-以下为 2026-10-06 分支候选代码的静态来源观察，不是执行退出覆盖率。按直接
+以下为 2026-10-06 分支候选代码（含 lint 执行选项拒绝修复）的静态来源观察，不是执行退出覆盖率。按直接
 `CompileError` / `diagnostic` / `KernelError` 构造、`fail` 包装候选与 Rust
 `Error::new` 位置统计。排除 Python 登记/适配器自身与 Rust 测试文件、
 `#[cfg(test)]` 尾部；没有解析出明确 code 的包装默认值不猜测。扫描包括编译器、
@@ -72,7 +72,7 @@ CLI 和内核中的候选出口，不证明每个候选都在用户输入下可�
 
 | 来源观察 | 发现位置 | 匹配登记 | 有稳定分类 | 未细分或待解析 |
 | --- | ---: | ---: | ---: | ---: |
-| Python 编译/CLI 直接构造 | 81 | 76 | 18 | 63 |
+| Python 编译/CLI 直接构造 | 82 | 77 | 19 | 63 |
 | Python 内核适配构造 | 10 | 9 | 9 | 1 |
 | Python `fail` 包装候选 | 159 | 10 | 8 | 151 |
 | Rust 生产 `Error::new` 候选 | 255 | 191 | 191 | 64 |
@@ -84,6 +84,7 @@ Rust 已有 `unsupported_analysis`、`unsupported_condition`、`unsupported_oper
 `unsupported_transient`、`unsupported_cross`、`unsupported_timer` 和
 `unsupported_implicit_dynamics` 从明确的生产构造位置登记，保留已有分类。
 未登记的未来 `unsupported_*` 仍为 `unknown`。
+未登记 Python code 的 `stage` 为 null；已登记的旧 `compile_error` 仍保留 compile 阶段。
 
 本批实际执行的验收案例包括无内核 affine lint、清单/源访问与编码失败、必需清单
 结构错误、未知参数覆盖、非数值覆盖、循环默认依赖、参数依赖深度预算、实际展开 IR
@@ -174,3 +175,6 @@ PYTHONPATH=evas/src python3 -B -m evas.mcp runs/session.json
 [Tencent wave-mcp](https://github.com/Tencent/wave-mcp)提供了静态结构与运行数据分开查询的参考；
 本实现不沿用其 RTL 波形逻辑，也不据此声称连续时间根或精度正确。
 验证入口为 `test_query.py`、`test_diagnostics.py` 及 Rust 收集器/缓存测试。
+
+`lint` 明确拒绝执行选项 `--kernel` 与 `--timeout`，返回 `input_error`；
+不把这些选项静默忽略，也不把仅编译通过当作内核检查成功。

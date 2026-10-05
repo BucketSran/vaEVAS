@@ -48,7 +48,7 @@ _KERNEL_CAPABILITIES = {'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROS
 
 
 def diagnostic(code, message, *, token=None, instance=None):
-    category, stage, capability, hint = RULES.get(code, ('unknown', 'compile', None, None))
+    category, stage, capability, hint = RULES.get(code, ('unknown', None, None, None))
     result = dict(diagnostic_version=1, kind='compile_error', code=code,
                   category=category, stage=stage, capability=capability,
                   message=message, hint=hint)
