@@ -64,7 +64,8 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 
 ## 本批来源盘点与覆盖边界
 
-以下为 2026-10-06 分支候选代码（含 lint 执行选项拒绝修复）的静态来源观察，不是执行退出覆盖率。按直接
+以下为 2026-10-06 DIAG 独立候选 `c3a4d72a`（含 lint 执行选项拒绝修复）的静态来源观察，
+不是整合树的重新盘点，也不是执行退出覆盖率。按直接
 `CompileError` / `diagnostic` / `KernelError` 构造、`fail` 包装候选与 Rust
 `Error::new` 位置统计。排除 Python 登记/适配器自身与 Rust 测试文件、
 `#[cfg(test)]` 尾部；没有解析出明确 code 的包装默认值不猜测。扫描包括编译器、
