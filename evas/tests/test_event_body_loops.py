@@ -79,7 +79,7 @@ class EventBodyLoops(unittest.TestCase):
             ('for(i=0;i<2;i=i) n=i;', 'nonterminating'),
             ('for(i=0;i<2;i=i-1) n=i;', 'budget'),
             ('for(i=0;i<V(u,r);i=i+1) n=i;', 'instance-constant'),
-            ('for(i=0;i<n;i=i+1) n=i;', 'cannot depend on state'),
+            ('for(i=0;i<n;i=i+1) n=i;', 'instance-constant'),
             ('for(k=0;k<2;k=k+1) n=k;', 'declared genvar'),
             ('for(i=0;i<2;i=i+1) for(i=0;i<2;i=i+1) n=i;', 'unshadowed'),
             ('for(i=0;i<2;i=i+1) i=1;', 'for control'),
@@ -110,6 +110,45 @@ class EventBodyLoops(unittest.TestCase):
             with self.subTest(body=body), self.assertRaises(CompileError):
                 compile_loop(f'''@(initial_step) n=0;
                   @(timer(1)) for(i=0;i<0;i=i+1) {body} V(y,r)<+n;''')
+
+    def test_empty_outer_loop_cannot_hide_invalid_nested_controls_or_predicates(self):
+        for body in (
+            'if(V(u,r)*V(u,r)>0) n=1;',
+            'if(V(y,r)>0) n=1;',
+            'for(j=0;j<2;j=V(u,r)) n=1;',
+            'for(j=0;j<2;j=j+.5) n=1;',
+        ):
+            for count in (0, 1):
+                with self.subTest(body=body, count=count), self.assertRaises((CompileError, KernelError)):
+                    run(compile_loop(f'''@(initial_step) n=0;
+                      @(timer(1)) for(i=0;i<{count};i=i+1) {body} V(y,r)<+n;''',
+                                     'genvar i,j; integer n;'))
+
+    def test_affine_input_and_stateless_output_conditions_remain_supported(self):
+        for predicate in ('2*V(u,r)-1', 'V(y,r)'):
+            for count in (0, 1):
+                program = compile_loop(f'''@(initial_step) n=0;
+                  @(timer(1)) for(i=0;i<{count};i=i+1) if({predicate}>.5) n=n+1;
+                  V(y,r)<+V(u,r);''')
+                result = run(program, sources={'u': [[0, 1], [2.5, 1]]})
+                self.assertEqual(result['transient']['states'][-1], [count])
+
+    def test_vector_predicate_dependencies_keep_stateless_bits_separate(self):
+        for count in (0, 1):
+            program = compile_loop(f'''@(initial_step) n=0;
+              @(timer(1)) for(i=0;i<{count};i=i+1) if(V(bus[1],r)>.5) n=1;
+              V(bus[0],r)<+n; V(bus[1],r)<+V(u,r); V(y,r)<+n;''',
+                                   'genvar i; integer n; electrical [0:1] bus;')
+            result = run(program, sources={'u': [[0, 1], [2.5, 1]]})
+            self.assertEqual(result['transient']['states'][-1], [count])
+
+    def test_erased_predicates_retain_indirect_and_cancelled_feedback_dependencies(self):
+        for rhs in ('V(y,r)', 'V(y,r)-V(y,r)', '0*V(y,r)'):
+            with self.subTest(rhs=rhs), self.assertRaises(CompileError):
+                compile_loop(f'''@(initial_step) n=0;
+                  @(timer(1)) for(i=0;i<0;i=i+1) if(V(z,r)>0) n=1;
+                  V(z,r)<+{rhs}; V(y,r)<+n;''',
+                             'genvar i; integer n; electrical z;')
 
     def test_runtime_integer_overflow_and_same_time_conflicts_remain_errors(self):
         for body, diagnostic in (
