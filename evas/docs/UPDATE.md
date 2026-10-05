@@ -16,6 +16,12 @@
 - 三项 Spectre 准入探针和公共 EVAS 入口回归验证降/升序及实例宽度；总线文本语法仍拒绝。
 - 此为 #63 的输入切片，未合并，包版本与 IR17 均未变。证据与边界见 [契约](../validation/SCS_VECTOR_CONTRACT.md)。
 
+## 未合并候选：显式身份查询（PKG-ID）
+
+- Python 与 Rust CLI 可在无 manifest、无 stdin 数据时查询实际包/内核身份。
+- 绑定所选二进制哈希与报告的 IR schema；无来源或请求协议元数据时保留未知。
+- 不改变 IR17、数值请求协议或包版本，详见[身份接口](identity.md)。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。

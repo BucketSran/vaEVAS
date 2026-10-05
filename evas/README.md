@@ -23,7 +23,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 
 ## 当前整合候选范围
 
-本地 overnight-integration 暂仅整合已接受的 L3 事件体静态循环与 S1 SCS 静态向量端口连接。
+本地 overnight-integration 暂仅整合已接受的 L3 事件体静态循环、S1 SCS 静态向量端口连接与 PKG-ID 显式身份查询。
 包版本和 IR17 保持不变；其他夜间候选尚未纳入，本分支不构成发布或完整工程模型支持声明。
 
 ## 可以做什么
@@ -74,6 +74,14 @@ EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验
 当前的[测试台读取](#spectre-testbench)和[后端对照](../experiments/backends/dvs2-spectre-validation/README.md)
 是这条工作流的已有基础。兼容性证据限于已测模型、配置和仿真器版本；
 通用的自动移交与 EVAS/Spectre 运行时同步接口尚未实现。
+
+## 查询实际包与内核身份
+
+`PYTHONPATH=evas/src python3 -m evas version --json --kernel /path/to/evas-kernel`
+查询所选二进制的身份、SHA-256 与 IR 版本；省略 `--kernel` 时只查询 Python 包。
+内核可直接运行 `evas-kernel --version --json`，无需 manifest 或标准输入。
+缺少构建来源和独立请求协议元数据时明确返回 null；IR 匹配不等于全部运行兼容。
+字段及失败行为见[身份接口](docs/identity.md)。
 
 ## 构建与运行
 
