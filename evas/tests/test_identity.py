@@ -130,7 +130,7 @@ class IdentityCLI(unittest.TestCase):
                                     cwd=directory, capture_output=True, text=True, timeout=3,
                                     env=dict(os.environ, PYTHONPATH=str(site)))
             self.assertEqual(result.returncode, 2, result.stderr)
-            self.assertEqual(json.loads(result.stderr)['kind'], 'input_error')
+            self.assertEqual(json.loads(result.stderr)['code'], 'input_error')
             self.assertNotIn('Traceback', result.stderr)
 
     def test_source_identity_does_not_borrow_another_installed_distribution(self):
