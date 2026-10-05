@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "independent pre-run kernel identity supplement; not a runner query",
+  "identity": {
+    "path": "experiments/backends/comparison/evidence/integration-e154d08c/pre-run-kernel-identity.json",
+    "sha256": "81d761e2af8d3b2c097ab6075416e1c01f6a69de147e1f0c776f2bbbe69ec7b1",
+    "bytes": 757
+  },
+  "original_identity_file": "runs/integration/final-identity-lintfix.json",
+  "command": "PYTHONPATH=evas/src python3 -B -m evas version --json --kernel evas/rust_core/target/debug/evas-kernel",
+  "command_record": {
+    "path": "runs/integration/final-check-commands.txt",
+    "sha256": "c7651621565a254dd930b522fe9a9e05a8090acdef45b597a71b036ef216eaff"
+  },
+  "measurement_source_revision": "e154d08c43cedafddefcc7f34b899a2ba70c1e0b",
+  "kernel_sha256": "73fe23f54d8ddc8e5a13896a32323e6dbf33278b426d814bfa5c1f4bbba532de",
+  "reported_version": "0.13.0",
+  "ir_schema_version": 17,
+  "runner_query_during_evas8": false,
+  "unchanged_original_run_fields": [
+    "raw.tool",
+    "receipt.tool",
+    "measurement.version"
+  ],
+  "limitation": "Original runner did not query identity; its baseline/no-handshake wording is obsolete. Original run/receipt/version fields remain unknown and unchanged."
+}

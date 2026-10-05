@@ -1,0 +1,24 @@
+import sys, os, json, subprocess
+from pathlib import Path
+from argparse import Namespace
+root=Path.cwd()
+sys.path.insert(0,str(root/'experiments/backends/comparison'))
+import runner
+from records import sha
+os.environ['EVAS_STATIC_THREADS']='1'
+original=runner.execute
+count=0
+def observed(argv,work,stage,cleanup=None,timeout=90):
+ global count
+ assert stage=='simulate' and timeout==90 and count<8
+ assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()=='e154d08c43cedafddefcc7f34b899a2ba70c1e0b'
+ assert sha(root/'evas/rust_core/target/debug/evas-kernel')=='73fe23f54d8ddc8e5a13896a32323e6dbf33278b426d814bfa5c1f4bbba532de'
+ count+=1
+ event={'launch':count,'case':work.parent.name,'backend':'evas','stage':stage,'timeout_s':timeout,'EVAS_STATIC_THREADS':'1','argv':argv}
+ with (root/'runs/cmp-final/launches.jsonl').open('a') as stream:stream.write(json.dumps(event)+'\n')
+ print('LAUNCH',count,work.parent.name,flush=True)
+ return original(argv,work,stage,cleanup,timeout)
+runner.execute=observed
+runner.run(Namespace(inputs=root/'runs/cmp-final/inputs',output=root/'runs/cmp-final/evas8',backend='evas',allocation='overnight-20261006-final-evas8-8configs-no-retry',kernel=root/'evas/rust_core/target/debug/evas-kernel',spectre_profile=None,environment=None,resume_finished_spectre=False))
+assert count==8
+print('COMPLETE exactly',count,'configuration launches; no retry',flush=True)

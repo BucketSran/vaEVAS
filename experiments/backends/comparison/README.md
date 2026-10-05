@@ -1,9 +1,11 @@
 # 四后端比较记录
 
 [维护契约](../../../evas/docs/COMPARISON.md)定义数据集、身份与复验规则。
-[当前结果表](TABLE.md)由[snapshot-20261006-accounted-v2.json](snapshot-20261006-accounted-v2.json)
-生成。今晚固定8条件、基础档、四后端共32配置：Spectre和当前EVAS各8项有新有限观察P；
-OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未取得观察。
+[当前结果表](TABLE.md)由[snapshot-20261006-integration-e154d08c.json](snapshot-20261006-integration-e154d08c.json)
+生成。固定8条件、基础档、四后端共32配置：EVAS8在本地integration源码
+`e154d08c43cedafddefcc7f34b899a2ba70c1e0b`取得新有限观察P；Spectre8复用原有效观察P。
+OpenVAF/ngspice与Gnucap各8项保持T，共16项仅保留原容器预检失败理由，本轮未启动或重验外部环境。
+候选尚未合并，最终GLM复核pending；正式连续时间资格仍I。数据/工具元数据提交不是测量源码版本。
 不得将32项完整记账称为32项已完成实验。历史31条件、两档开发回放另列，新论文集N仍unknown。
 [原计划](PLANNED.md)及[EVAS先行快照](EVAS8.md)保留，不用最新结果回填旧记录。
 
@@ -36,7 +38,7 @@ V2归一化结果。旧快照仍可校验和阅读；旧格式其他有效观察
 ```sh
 python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
 python3 -B experiments/backends/comparison/records.py \
-  experiments/backends/comparison/snapshot-20261006-accounted-v2.json \
+  experiments/backends/comparison/snapshot-20261006-integration-e154d08c.json \
   --output experiments/backends/comparison/TABLE.md --check
 ```
 
@@ -137,3 +139,26 @@ python3 -B experiments/backends/comparison/records.py NEW_SNAPSHOT --output NEW_
 这两个静态命令不授权build或simulation。一般ingest仍拒绝覆写已测配置；fresh执行必须由新的
 run/receipt生成，不以换一个revision字段冒充实测。所有旧snapshot/receipt文件保留原字节，
 新维护snapshot以path/SHA绑定parent和fresh；工具新增本身不表示最终integration EVAS8已运行。
+
+## 本次 integration 实测身份
+
+实际8次串行worker启动使用allocation `overnight-20261006-final-evas8-8configs-no-retry`，
+每项90秒上限、`EVAS_STATIC_THREADS=1`，0重试、0超时、0外部启动。
+kernel SHA为 `73fe23f54d8ddc8e5a13896a32323e6dbf33278b426d814bfa5c1f4bbba532de`，
+runtime为 `d7b51319037eb31dd9c8ea22ef4641ec665d947cd195f9077f9cb6d37ba8f493`。
+原raw/receipt/measurement.version仍为unknown：runner当次没有查询版本，旧baseline无CLI
+握手文案过期。它不表示当前kernel缺少查询能力；新文案修复只影响未来记录。
+
+[执行前独立身份原字节](evidence/integration-e154d08c/pre-run-kernel-identity.json)，
+SHA `81d761e2af8d3b2c097ab6075416e1c01f6a69de147e1f0c776f2bbbe69ec7b1`，
+绑定同一kernel并报告0.13.0/IR17；[补充来源与精确命令](evidence/integration-e154d08c/identity-supplement.json)
+SHA `45d5237de501c2d02bcbb104d505f759183775b7c7da985c25ddd2ee36fbd877`。
+此查询在执行前独立进行，不追改这8项原run字段，也不新增仿真。
+
+[511母本](evidence/integration-e154d08c/parent-511.json)和
+[新EVAS8独立快照](evidence/integration-e154d08c/fresh-executed.json)由新维护快照以path/SHA绑定。
+Spectre的receipt/input/runtime/checker及metric沿用原字节，16T原理由保留，其他历史及application
+候选不改。工具组件附录是母本冻结清单；其中58de31是母本目标源hash，不能当成当前kernel，
+历史0.8.7属于旧matrix回放。本轮当前EVAS身份以上述实测及独立附件为准。
+原56文件中仅维护入口TABLE显式更新，旧snapshot/receipt保持不变；raw仍local-only，
+不宣称公开原波形重放。

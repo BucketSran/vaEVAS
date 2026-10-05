@@ -1,0 +1,19 @@
+{
+  "backend": "evas",
+  "input_manifest_sha256": "1b7eca6433ffb0da049d46269b4c96e5294c65f0f5ec012d6d8bb902a9a8be18",
+  "plan_sha256": "6bb21a6342b2ea2e67e613588fcf70c65bead8f62597dab4b0cc1b9ffe43a5db",
+  "configurations": 8,
+  "max_simulations": 8,
+  "max_compilations": 8,
+  "stage_timeout_s": 90,
+  "license_timeout_s": 30,
+  "tool": {
+    "revision": "e154d08c43cedafddefcc7f34b899a2ba70c1e0b",
+    "runtime_identity": "d7b51319037eb31dd9c8ea22ef4641ec665d947cd195f9077f9cb6d37ba8f493",
+    "kernel_sha256": "73fe23f54d8ddc8e5a13896a32323e6dbf33278b426d814bfa5c1f4bbba532de",
+    "kernel_version": "unknown",
+    "version_note": "This baseline kernel has no CLI version handshake; retain actual binary hash and response engine identity."
+  },
+  "runner_sha256": "b738d42f39c500075af4f6046fec76327f28b6ad2f2d7ee6aaf3357174e1ea2b",
+  "allocation": "overnight-20261006-final-evas8-8configs-no-retry"
+}
