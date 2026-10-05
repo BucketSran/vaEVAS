@@ -97,7 +97,11 @@ class InstanceCompiler:
         for statement in self.model.initial:
             if statement.name not in self.state_ids or statement.name in self.initials:
                 raise CompileError(f"{self.model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
-            value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            try:
+                value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            except CompileError as exc:
+                raise CompileError(f'initial_step values must be instance constants: {exc}',
+                                   code='unsupported_initial_event', token=statement.token) from exc
             if not isinstance(value, Affine) or value.terms:
                 raise CompileError("initial_step values must be instance constants")
             if self.model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
