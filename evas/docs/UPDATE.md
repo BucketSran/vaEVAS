@@ -4,6 +4,12 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 分支候选：SCS 静态向量端口
+
+- `.scs` 实例先绑定参数，再按声明方向展开 VA 向量端口并与标量列表配对。
+- 三项 Spectre 准入探针和公共 EVAS 入口回归验证降/升序及实例宽度；总线文本语法仍拒绝。
+- 此为 #63 的输入切片，未合并，包版本与 IR17 均未变。证据与边界见 [契约](../validation/SCS_VECTOR_CONTRACT.md)。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
