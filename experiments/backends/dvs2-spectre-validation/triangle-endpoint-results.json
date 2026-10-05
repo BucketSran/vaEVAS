@@ -466,5 +466,16 @@
     "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
     "python": "Python 3.14.6"
   },
-  "production_snapshot_comparison": "All snapshot runtime/IR/Cargo files match final bytes except dynamic_roots.rs cfg(test) section; its production prefix is byte-identical."
+  "production_snapshot_comparison": "All snapshot runtime/IR/Cargo files match final bytes except dynamic_roots.rs cfg(test) section; its production prefix is byte-identical.",
+  "review_corrections": [
+    {
+      "scope": "probe-single-arrival interpretation",
+      "reason": "The frozen manifest overrides source upper=1.5 with upper=0.5; the observed event is near 1 s, not stop=3 s.",
+      "observed_event_time_s": 1.0000000000004547,
+      "effective_upper_v": 0.5,
+      "stop_s": 3.0,
+      "conclusion": "This run only demonstrates completion after removing the lower guard. It does not test first arrival at stop or exclude that hypothesis.",
+      "new_execution": false
+    }
+  ]
 }
