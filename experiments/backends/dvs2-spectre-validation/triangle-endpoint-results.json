@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "purpose": "directed VA07 original-stop numerical diagnosis",
+  "availability": "local-only raw; repository-contained compact summary and regressions",
+  "base": "1006c3d59e404cf307ee83c21e93178151257f40",
+  "candidate_grid_launches": {
+    "limit": 12,
+    "timeout_seconds": 60,
+    "max_output_bytes": 16777216,
+    "launches": [
+      {
+        "number": 1,
+        "started_unix": 1791232022.419613,
+        "candidate": "benchmark/tasks/va07-triangle-repair/solution/dut.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/baseline-reference/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+        "execution": "ok"
+      },
+      {
+        "number": 2,
+        "started_unix": 1791232025.552864,
+        "candidate": "benchmark/tasks/va07-triangle-repair/solution/dut.va",
+        "grid": "observation.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/baseline-reference/observation",
+        "points": 607,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+        "execution": "ok"
+      },
+      {
+        "number": 3,
+        "started_unix": 1791232030.825238,
+        "candidate": "runs/d7/wrong-speed.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/baseline-wrong-speed/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+        "execution": "backend_error"
+      },
+      {
+        "number": 4,
+        "started_unix": 1791232232.457634,
+        "candidate": "runs/d7/wrong-speed-minimal.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/probe-minimal/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "0ccf6faa84f83251934dabb14962199c42f7ead79d7522a45b65037295ce92bf",
+        "execution": "backend_error"
+      },
+      {
+        "number": 5,
+        "started_unix": 1791232287.386778,
+        "candidate": "runs/d7/single-arrival.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/probe-single-arrival/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "508c7bff227d948d71df8899535ce4e6389ae5ef5b1abfb0244ab01e4dc49889",
+        "execution": "ok"
+      },
+      {
+        "number": 6,
+        "started_unix": 1791232292.227733,
+        "candidate": "runs/d7/single-arrival.va",
+        "grid": "observation.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/probe-single-arrival/observation",
+        "points": 607,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "508c7bff227d948d71df8899535ce4e6389ae5ef5b1abfb0244ab01e4dc49889",
+        "execution": "ok"
+      },
+      {
+        "number": 7,
+        "started_unix": 1791232357.576766,
+        "candidate": "runs/d7/wrong-speed.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/probe-original/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "9be8fae918ffb59735327f6715b59dc7af1d8a880504398a6893055ae69fe077",
+        "execution": "backend_error"
+      },
+      {
+        "number": 8,
+        "started_unix": 1791232458.4314282,
+        "candidate": "runs/d7/wrong-speed.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/candidate-wrong-speed/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+        "execution": "ok"
+      },
+      {
+        "number": 9,
+        "started_unix": 1791232463.201687,
+        "candidate": "runs/d7/wrong-speed.va",
+        "grid": "observation.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/candidate-wrong-speed/observation",
+        "points": 607,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+        "execution": "ok"
+      },
+      {
+        "number": 10,
+        "started_unix": 1791232468.1846569,
+        "candidate": "benchmark/tasks/va07-triangle-repair/solution/dut.va",
+        "grid": "baseline.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/candidate-reference/baseline",
+        "points": 601,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+        "execution": "ok"
+      },
+      {
+        "number": 11,
+        "started_unix": 1791232471.4796019,
+        "candidate": "benchmark/tasks/va07-triangle-repair/solution/dut.va",
+        "grid": "observation.json",
+        "output": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7/candidate-reference/observation",
+        "points": 607,
+        "stop": 3.0,
+        "timeout_s": 60,
+        "max_output_bytes": 16777216,
+        "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+        "execution": "ok"
+      }
+    ],
+    "start_observed_utc": "2026-10-05 20:26:07 UTC",
+    "conservative_deadline_local": "2026-10-06 06:24:00 Asia/Shanghai"
+  },
+  "execution_limits": {
+    "timeout_seconds": 60,
+    "max_output_bytes": 16777216,
+    "max_candidate_grid_executions": 12
+  },
+  "focused_unit_tests": "Separate internal checks allowed by D7; new public fixture run red on saved baseline kernel, green on acceptance kernel; existing regression suites also execute fixtures.",
+  "adapter_sha256": "a3efe0afc85e67109f948265bbd3016e77087dce2faa008f9da7d4f14fd5766b",
+  "canonical_checker_sha256": "46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd",
+  "harness_adapter_sha256": "b2114bb8ad6d391e326a32e53bb31a7e13db90bbeebfafcad574254257c0e77b",
+  "settings": {
+    "stop": 3,
+    "control": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "max_step": 0.005,
+    "ttol": 1e-10,
+    "vtol": 1e-10,
+    "vabstol": 1e-08,
+    "reltol": 0,
+    "points": [
+      601,
+      607
+    ],
+    "effective_settings_independent_echo": "unavailable; fixed mapping and captured CLI/runtime forward the request",
+    "spectre_unmapped": [
+      "iabstol",
+      "method"
+    ]
+  },
+  "production_dynamic_roots_prefix_sha256": "0be767ecb02a0c248e9d1403599bd66d1bc5f59d5847721c5a29194cb9aa91a6",
+  "final_kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+  "acceptance_kernel_note": "Final source differs from acceptance snapshot only in cfg(test) section and its formatting; all production source files match. Final rebuilt debug binary has a different identity and its four candidate/grids were not rerun.",
+  "records": {
+    "baseline-reference": {
+      "execution": "ok",
+      "verdict": "pass",
+      "candidate_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae",
+      "baseline": {
+        "passed": false,
+        "max_voltage_error_v": 4.549693954913892e-13,
+        "max_event_error_s": 0.0050000000000001155,
+        "expected_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "observed_events": [
+          0.505,
+          1.5050000000000001,
+          2.505
+        ],
+        "rows": 601
+      },
+      "observation": {
+        "passed": true,
+        "max_voltage_error_v": 4.549693954913892e-13,
+        "max_event_error_s": 1.0000000005838672e-07,
+        "expected_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "observed_events": [
+          0.5000001,
+          1.5000001,
+          2.5000001
+        ],
+        "rows": 607
+      },
+      "common_grid_max_voltage_difference_v": 0.0,
+      "baseline_waveform_and_count_passed": true,
+      "observation_waveform_and_count_passed": true,
+      "report_sha256": "174d6127aab9359b88b72717542c15889f626235a66ed87d237530efe7b574da",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+          "receipt_sha256": "5329818abfbd1a63d070482e7b3686d9094ca95c6361fc5ae259ae1a6ea2e2b5",
+          "raw_sha256": "99e4f0092668601bdc53361ff6a9d659fd46068c3fcef36f60028c7af91b3b5d",
+          "raw_bytes": 137541,
+          "event_times": [
+            0.5000000000009095,
+            1.500000000001819,
+            2.5000000000045475
+          ]
+        },
+        "observation": {
+          "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+          "receipt_sha256": "bd45736304bb58c8b5b8db151c9c82a6be8148ffb1de746326c6288fa629c06f",
+          "raw_sha256": "975d545bc1127b94074eb36bca06c023f53c273983b7f88599be3073ad20b3d8",
+          "raw_bytes": 138914,
+          "event_times": [
+            0.5000000000009095,
+            1.500000000001819,
+            2.5000000000045475
+          ]
+        }
+      }
+    },
+    "baseline-wrong-speed": {
+      "execution": "backend_error",
+      "verdict": "not_evaluated",
+      "candidate_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+      "report_sha256": "12e4bf977f83bcb8f9cb6e8e08704edb0f9093f2cfe751ea56b1da296cc625ee",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "54945aa28de122bf3d537a0b51f0e82ae49e599d23a8d6bfd41acf37739ca0cb",
+          "receipt_sha256": "f91ea0d938d7ecd9eae3c9c6729aaed49cc0c3a14d894d9fc2ca1dcf67e92255",
+          "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw_bytes": 0
+        }
+      }
+    },
+    "probe-minimal": {
+      "execution": "backend_error",
+      "verdict": "not_evaluated",
+      "candidate_sha256": "d2b6995776f1d487a7230962c0a1d438c5c4386c7ff9c7ca8f4cc0ef04ccbaaa",
+      "report_sha256": "4764a902723dc3fe67e8c3cd7c59a9d527853f5eb48065ebb032c2a63126c7f1",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "0ccf6faa84f83251934dabb14962199c42f7ead79d7522a45b65037295ce92bf",
+          "receipt_sha256": "0725907173e42c014acc965af05b68fc902d9b39255e613a77173d207916c977",
+          "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw_bytes": 0
+        }
+      }
+    },
+    "probe-single-arrival": {
+      "execution": "ok",
+      "verdict": "fail",
+      "candidate_sha256": "c9a76864500d9382c53daf64c8f5a1d05912c4e812153ac2558c77e19f4a1a84",
+      "baseline": {
+        "passed": false,
+        "reason": "incorrect count outside event windows"
+      },
+      "observation": {
+        "passed": false,
+        "reason": "incorrect count outside event windows"
+      },
+      "common_grid_max_voltage_difference_v": 0.0,
+      "baseline_waveform_and_count_passed": false,
+      "observation_waveform_and_count_passed": false,
+      "report_sha256": "43a4a52b9a00f12b27284029f3b5eaf78f424fea516d168e1434b1dd1ef595ad",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "508c7bff227d948d71df8899535ce4e6389ae5ef5b1abfb0244ab01e4dc49889",
+          "receipt_sha256": "d181d5f89064e29f872fc01c30d3e6a35fd5b6688002b70f4acc993e2efebd57",
+          "raw_sha256": "d23932da611c500d994538d622f2d9fb10989e9bef26e4edaf576f1e426971b0",
+          "raw_bytes": 126954,
+          "event_times": [
+            1.0000000000004547
+          ]
+        },
+        "observation": {
+          "kernel_sha256": "508c7bff227d948d71df8899535ce4e6389ae5ef5b1abfb0244ab01e4dc49889",
+          "receipt_sha256": "98f3da27a1fb8665846ee676c66219c00ceb8325d8ea0b5509108617a5725010",
+          "raw_sha256": "904446b5e74c1df9ad2adc1a955d26749906f51754a24bf0ede1ef5a626b37b0",
+          "raw_bytes": 128239,
+          "event_times": [
+            1.0000000000004547
+          ]
+        }
+      }
+    },
+    "probe-original": {
+      "execution": "backend_error",
+      "verdict": "not_evaluated",
+      "candidate_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+      "report_sha256": "cf5d908baba90621fcc789bf05bf9eaeaeda8bda55ffb8268139c04e72209316",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "9be8fae918ffb59735327f6715b59dc7af1d8a880504398a6893055ae69fe077",
+          "receipt_sha256": "55c7f5384503a44489e2fc3bd12137a617566b66a53172a34c210c2922d5e16b",
+          "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw_bytes": 0
+        }
+      }
+    },
+    "candidate-reference": {
+      "execution": "ok",
+      "verdict": "pass",
+      "candidate_sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae",
+      "baseline": {
+        "passed": true,
+        "max_voltage_error_v": 2.220446049250313e-16,
+        "max_event_error_s": 0.0,
+        "expected_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "observed_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "rows": 601
+      },
+      "observation": {
+        "passed": true,
+        "max_voltage_error_v": 2.220446049250313e-16,
+        "max_event_error_s": 0.0,
+        "expected_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "observed_events": [
+          0.5,
+          1.5,
+          2.5
+        ],
+        "rows": 607
+      },
+      "common_grid_max_voltage_difference_v": 0.0,
+      "baseline_waveform_and_count_passed": true,
+      "observation_waveform_and_count_passed": true,
+      "report_sha256": "170aa47c1b281e5d5edd4729540f6390f2c47034f297ab8ead884c4946b0c673",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+          "receipt_sha256": "11104c78b1463ff3a68d7517989fd59a26faae1cc0449e78d7e8a182151a3ec9",
+          "raw_sha256": "98f845490d3e6c7c6e6ff8726b6f2b7e2f43f148558d14d240552c0a60ce47f8",
+          "raw_bytes": 135879,
+          "event_times": [
+            0.5,
+            1.5,
+            2.5
+          ]
+        },
+        "observation": {
+          "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+          "receipt_sha256": "48bd44e5969008e5c9c2af8d50250f50b03930a74109679abab35be828727948",
+          "raw_sha256": "cd13d75bd721d3e54908a9ee1290cb577fa66244f1fcb4e4251d51b6f755a559",
+          "raw_bytes": 137257,
+          "event_times": [
+            0.5,
+            1.5,
+            2.5
+          ]
+        }
+      }
+    },
+    "candidate-wrong-speed": {
+      "execution": "ok",
+      "verdict": "fail",
+      "candidate_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+      "baseline": {
+        "passed": false,
+        "reason": "incorrect count outside event windows"
+      },
+      "observation": {
+        "passed": false,
+        "reason": "incorrect count outside event windows"
+      },
+      "common_grid_max_voltage_difference_v": 0.0,
+      "baseline_waveform_and_count_passed": false,
+      "observation_waveform_and_count_passed": false,
+      "report_sha256": "65be98d32ee199b90da3ad88546bf2068b4050ea3f84f3a891116f6260505313",
+      "grids": {
+        "baseline": {
+          "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+          "receipt_sha256": "57157aa6f1312c90a652763e5ea5fed2315ae31605230b2aaaff8f5fc98e25e8",
+          "raw_sha256": "3d8797b531958834d84ba540633b6eeef3af5ebb81010e42ae8099485654c8a7",
+          "raw_bytes": 134119,
+          "event_times": [
+            1.0,
+            3.0
+          ],
+          "independent_half_speed_max_voltage_error": 0.0,
+          "independent_half_speed_count_matches": true,
+          "stop_voltage": -0.5,
+          "stop_count": 2.0
+        },
+        "observation": {
+          "kernel_sha256": "d3abc8612956f75ae329ba10ac4ad0b13df1ebfc5313e02cba10cde157c7f329",
+          "receipt_sha256": "2a970457f43d98ec1d1d05663bc1b8f106c10902e7e92c3e77894beb1dc852f9",
+          "raw_sha256": "99279b29dd9e100d1fd20d45e1f7da9c2bad2e5a4f734c564f99bdfa1756056b",
+          "raw_bytes": 135486,
+          "event_times": [
+            1.0,
+            3.0
+          ],
+          "independent_half_speed_max_voltage_error": 0.0,
+          "independent_half_speed_count_matches": true,
+          "stop_voltage": -0.5,
+          "stop_count": 2.0
+        }
+      }
+    }
+  },
+  "checks": {
+    "rust": "149 passed, 1 existing ignored",
+    "public_path": "1 red on baseline event_resolution; 1 green on acceptance kernel",
+    "python_affected": "113 passed",
+    "python_endpoint": "55 passed",
+    "triangle_adapter": "11 passed, zero skips with explicit preserved harness",
+    "initial_python_command": "113 passed plus one missing-module import error; corrected invocation saved",
+    "workspace": "D7 visible; initial global check failed only for unrelated overnight-integration missing index entry; root registered it. Final check failed only for newly created overnight-o2 missing index entry."
+  },
+  "toolchain": {
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14) binary: rustc commit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860 commit-date: 2026-04-14 host: aarch64-apple-darwin release: 1.95.0 LLVM version: 22.1.2",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "python": "Python 3.14.6"
+  },
+  "production_snapshot_comparison": "All snapshot runtime/IR/Cargo files match final bytes except dynamic_roots.rs cfg(test) section; its production prefix is byte-identical.",
+  "review_corrections": [
+    {
+      "scope": "probe-single-arrival interpretation",
+      "reason": "The frozen manifest overrides source upper=1.5 with upper=0.5; the observed event is near 1 s, not stop=3 s.",
+      "observed_event_time_s": 1.0000000000004547,
+      "effective_upper_v": 0.5,
+      "stop_s": 3.0,
+      "conclusion": "This run only demonstrates completion after removing the lower guard. It does not test first arrival at stop or exclude that hypothesis.",
+      "new_execution": false
+    }
+  ]
+}

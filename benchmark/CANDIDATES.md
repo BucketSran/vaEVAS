@@ -71,7 +71,7 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 补跑了此前 EVAS 批次跳过的 wrong-speed 负控。`constant-tighter` 参考模型通过补充波形观测，
 但 wrong-speed 在 EVAS 0.13.0 返回区间端点 `event_resolution`，未进入独立评分。
 这一数值拒绝与候选模型的速度错误分别记录；不能把拒绝当作评分器检出了错误模型。
-仍需单独定位引擎接受范围并重跑同配置负控，不以改变 stop 或容差补记校准通过。
+后续 D7 [端点诊断](../experiments/backends/dvs2-spectre-validation/triangle-endpoint-diagnosis.md)已在原 stop/容差和两个固定网格完成该负控，原 checker 明确判错；历史拒绝保留，候选尚待审查和合并。
 
 **待改造事项。** 独立审阅题意与评分覆盖，确定正式变体及评测隔离，完成 Harbor 环境执行
 检查，再决定是否纳入正式任务。当前独立 verifier 的通过不等于完整 Harbor/agent 运行。
