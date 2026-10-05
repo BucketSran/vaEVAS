@@ -1,4 +1,6 @@
 """Identity queries cross the public Python and executable CLI boundaries."""
+GUARDS = ["DEV:package-identity"]
+
 import hashlib
 import json
 import os
@@ -84,6 +86,22 @@ class IdentityCLI(unittest.TestCase):
                     self.assertEqual(identity['kernel']['sha256'] is not None, content is not None)
                     if label == 'mismatch':
                         self.assertEqual(identity['kernel']['reported']['ir_schema_version'], 16)
+
+    def test_nonregular_kernel_is_rejected_before_opening_or_hashing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fifo = Path(directory) / 'kernel-fifo'
+            os.mkfifo(fifo)
+            for path in (Path('/dev/zero'), fifo, Path(directory)):
+                with self.subTest(path=path):
+                    result = subprocess.run(
+                        [sys.executable, '-B', '-m', 'evas', 'version', '--json', '--kernel', str(path)],
+                        capture_output=True, text=True, timeout=2,
+                        env=dict(os.environ, PYTHONPATH=str(ROOT / 'src')))
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    identity = json.loads(result.stdout)
+                    self.assertIsNone(identity['kernel']['sha256'])
+                    self.assertEqual(identity['kernel']['status'], 'error')
+                    self.assertEqual(json.loads(result.stderr)['kind'], 'kernel_process')
 
     def test_matching_pair_compiles_and_runs_independent_integral_smoke(self):
         def invoke(*args):

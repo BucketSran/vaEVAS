@@ -52,3 +52,5 @@ Implementation is in `src/evas/identity.py`, the early Python CLI dispatch in
 `src/evas/__main__.py`, and the early Rust CLI dispatch in `rust_core/src/main.rs`.
 The public CLI regressions are in `tests/test_identity.py`; real compile and
 transient smoke results belong to each execution receipt.
+
+Special files, including devices and FIFOs, are rejected before hashing. The kernel query timeout applies after the finite regular-file hash is computed.
