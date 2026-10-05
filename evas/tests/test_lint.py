@@ -99,6 +99,25 @@ raise SystemExit(main())
         for kind in ('unsupported_analysis','unsupported_condition','unsupported_operator','unsupported_transient','unsupported_cross','unsupported_timer','unsupported_implicit_dynamics'):
             self.assertEqual(KernelError(dict(kind=kind,message='typed origin')).diagnostic['category'],'unsupported')
 
+    def test_unregistered_stage_is_unknown_but_registered_legacy_stage_survives(self):
+        from evas.errors import diagnostic
+        detail = diagnostic('future_parse_reason', 'raw message')
+        self.assertIsNone(detail['stage'])
+        self.assertEqual(detail['category'], 'unknown')
+        self.assertEqual(detail['message'], 'raw message')
+        self.assertEqual(diagnostic('compile_error', 'legacy')['stage'], 'compile')
+        self.assertEqual(diagnostic('syntax_error', 'syntax')['stage'], 'parse')
+
+    def test_lint_rejects_explicit_execution_options(self):
+        for option in (['--kernel', '/missing/kernel'], ['--timeout', '3'], ['--timeout=3']):
+            with self.subTest(option=option):
+                result = self.cli('lint', self.path, *option)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(result.stdout, '')
+                detail = json.loads(result.stderr)
+                self.assertEqual(detail['code'], 'input_error')
+                self.assertEqual(detail['message'], 'lint does not accept --kernel or --timeout; no kernel is checked or executed')
+
     def test_api_lint_then_real_kernel_rejects_frozen_dynamic_limitation(self):
         from evas.lint import lint_manifest
         self.source.write_text(model('''@(initial_step) q=1;

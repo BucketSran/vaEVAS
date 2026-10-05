@@ -90,7 +90,7 @@ PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
 ```
 
 `lint` 检查 manifest 编译字段、源文件读取、参数绑定、受支持源码编译及 IR 资源预算，
-输出 JSON，不查找或启动内核。`lint_passed` 不检查数值请求内容、动态组合支持、
+输出 JSON，不查找或启动内核，并明确拒绝 `--kernel` / `--timeout` 执行选项。`lint_passed` 不检查数值请求内容、动态组合支持、
 数值精度或外部仿真器兼容性。例如可编译的 timer/多项式 DAE 组合仍可能在瞬态执行时拒绝。
 诊断只为已登记的 manifest/source I/O、参数依赖/覆盖和资源来源补充分类；
 未登记的 code/kind 保留原消息、位置与额外字段，类别为 `unknown`，不按前缀或消息猜测。
