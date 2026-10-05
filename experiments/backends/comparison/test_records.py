@@ -16,7 +16,7 @@ class RecordControls(unittest.TestCase):
         self.root = Path(self.temp.name)
         evidence = self.root / 'receipt.json'
         evidence.write_text('{"synthetic":true}\n')
-        self.case = {'id': 'control', 'group': 'V1', 'tags': [], 'input_identity': 'input-identity'}
+        self.case = {'id': 'v1-main', 'group': 'V1', 'tags': [], 'input_identity': 'input-identity'}
         target = {b: {'revision': 'rev', 'runtime_identity': 'binary'} for b in BACKENDS}
         self.data = {'schema_version': 1, 'updated': '2026-10-06', 'targets': target,
             'datasets': [{'id': 'test', 'label': 'synthetic only', 'state': 'frozen', 'scope': 'finite control',
@@ -26,12 +26,25 @@ class RecordControls(unittest.TestCase):
                           'cases': None, 'denominator': None, 'profiles': ['base']}],
             'coverage': {g: {'capabilities': ['LIN'], 'issues': [], 'boundary': 'boundary',
                             'independent_answer': 'independent algebra'} for g in GROUPS},
-            'records': [dict(dataset='test', case='control', backend=b, profile='base', input_identity='input-identity',
-                verdict='P', stage='analysis', reason='synthetic accepted', accounting='reused',
-                measurement={'revision': 'rev', 'runtime_identity': 'binary'}, checker_identity='checker',
+            'records': [dict(dataset='test', case='v1-main', backend=b, profile='base', input_identity='input-identity',
+                verdict='P', stage='analysis', reason='observations_within_targets', accounting='reused',
+                measurement={'revision': 'rev', 'runtime_identity': 'binary', 'run_id': 'synthetic-run'}, checker_identity='checker',
                 evidence=[{'path': 'receipt.json', 'sha256': sha(evidence), 'kind': 'receipt'}],
-                metrics={'voltage': {'property': 'absolute-voltage', 'unit': 'V', 'observed': .0002, 'budget': .001}})
+                metrics={'voltage': {'property': 'maximum absolute exported output voltage error', 'unit': 'V', 'observed': .0002, 'budget': .001}})
                 for b in BACKENDS]}
+
+        self.matrix_path = self.root / 'matrix.json'
+        self.matrix = {'records': [{'backend': b, 'condition': 'v1-main', 'profile': 'base',
+            'source_run_id': 'synthetic-run', 'analysis': {'status': 'observations_within_targets',
+                'v1_screen': {'max_observed_error': {'y': {'error_v': .0002}}}}} for b in BACKENDS]}
+        self.write_matrix()
+
+    def write_matrix(self):
+        self.matrix_path.write_text(json.dumps(self.matrix))
+        for r in self.data['records']:
+            r['observation_binding'] = {'path': 'matrix.json', 'sha256': sha(self.matrix_path),
+                'format': 'matrix', 'selector': {'backend': r['backend'], 'condition': r['case'],
+                'profile': r['profile'], 'source_run_id': r['measurement']['run_id']}}
 
     def test_counts_round_trip_and_pending_unknown(self):
         validate(self.data, self.root)
@@ -63,7 +76,7 @@ class RecordControls(unittest.TestCase):
             validate(self.data, self.root)
         candidate['case_sha256'] = identity(case)
         source.write_text('changed')
-        with self.assertRaisesRegex(ValueError, 'changed compact evidence'):
+        with self.assertRaisesRegex(ValueError, 'fixed 40-hex revision|changed compact evidence'):
             validate(self.data, self.root)
 
     def test_duplicate_case_assignment_rejected(self):
@@ -109,11 +122,12 @@ class RecordControls(unittest.TestCase):
         result = common_errors(self.data, 'test', 'base', 'voltage')
         self.assertEqual(result['cases'], [])
         self.assertTrue(all(v is None for v in result['maxima'].values()))
-        self.assertIn('无数值比较', render(self.data, self.root))
+        with self.assertRaisesRegex(ValueError, 'metric'):
+            render(self.data, self.root)
 
     def test_common_subset_units_and_budget_retained(self):
         result = common_errors(self.data, 'test', 'base', 'voltage')
-        self.assertEqual(result['cases'], ['control'])
+        self.assertEqual(result['cases'], ['v1-main'])
         for value in result['maxima'].values():
             self.assertAlmostEqual(value['normalized'], .2)
             self.assertEqual(value['original'][0]['unit'], 'V')
@@ -126,7 +140,7 @@ class RecordControls(unittest.TestCase):
         for value in (0, float('nan'), float('inf')):
             with self.subTest(value=value):
                 self.data['records'][0]['metrics']['voltage']['budget'] = value
-                with self.assertRaisesRegex(ValueError, 'invalid observed'):
+                with self.assertRaisesRegex(ValueError, 'invalid observed|metric'):
                     validate(self.data, self.root)
 
     def test_raw_absence_does_not_invalidate_compact_receipt(self):
@@ -147,9 +161,9 @@ class RecordControls(unittest.TestCase):
     def execution_receipt(self):
         r = self.data['records'][-1]
         observation = self.root / 'observation.json'
-        observation.write_text('{"status":"observations_within_targets"}\n')
+        observation.write_text(json.dumps({'status': 'observations_within_targets', 'v1_screen': {'max_observed_error': {'y': {'error_v': .0002}}}}))
         receipt = self.root / 'execution.json'
-        value = {'backend': 'evas', 'condition': 'control', 'profile': 'base',
+        value = {'backend': 'evas', 'condition': 'v1-main', 'profile': 'base',
                  'input_identity': 'input-identity', 'source_revision': 'rev', 'runtime_identity': 'binary',
                  'checker_identity': 'checker', 'commands': [{'stage': 'simulate', 'exit_code': 0}],
                  'input_manifest_sha256': 'manifest', 'kernel_sha256': 'actual-kernel',
@@ -186,6 +200,11 @@ class RecordControls(unittest.TestCase):
         for r, verdict in zip(self.data['records'], ('F', 'U', 'I', 'X'), strict=True):
             r['verdict'] = verdict
             r['reason'] = 'synthetic ' + verdict
+        statuses = {'F': 'observed_violation', 'U': 'confirmed_unsupported', 'I': 'unresolved', 'X': 'execution_failed'}
+        for r, observed in zip(self.data['records'], self.matrix['records'], strict=True):
+            r['reason'] = statuses[r['verdict']]
+            observed['analysis']['status'] = r['reason']
+        self.write_matrix()
         text = render(self.data, self.root)
         self.assertIn('F1', text)
         self.assertIn('U1', text)
