@@ -103,7 +103,7 @@ def metric_components(value):
 
 
 def bound_observation(record, root, schema_version):
-    if record['accounting'] == 'executed':
+    if record['accounting'] == 'executed' or (record['accounting'] == 'reused' and record.get('execution_receipt')):
         receipt = load(root / record['execution_receipt']['path'])
         ref = receipt.get('observation')
         if not ref:
@@ -145,6 +145,7 @@ def bound_observation(record, root, schema_version):
         raise ValueError('verdict/reason differs from bound observation')
     if record.get('metrics', {}) != voltage_metrics(record['case'], observation, schema_version):
         raise ValueError('metric differs from bound observation or property budget')
+    return observation
 
 
 def freshness(record, target):
@@ -183,6 +184,9 @@ def validate(data, root=ROOT, target=None):
         for row in data['records']:
             if any(row.get(k) != old_rows[key(row)].get(k) for k in fields):
                 raise ValueError('static derivation changed historical execution identity or verdict')
+    if data.get('refresh'):
+        from refresh import check_refresh
+        check_refresh(data, root)
     datasets = {d['id']: d for d in data['datasets']}
     if len(datasets) != len(data['datasets']):
         raise ValueError('duplicate dataset')
@@ -252,7 +256,9 @@ def validate(data, root=ROOT, target=None):
                 raise ValueError('pass requires independent checker identity')
             if r['verdict'] == 'P' and r['stage'] != 'analysis':
                 raise ValueError('incomplete evidence cannot be a pass')
-            if r['accounting'] == 'executed':
+            if r['accounting'] == 'reused' and r.get('execution_receipt') and not data.get('refresh'):
+                raise ValueError('receipt reuse requires a bound finite refresh parent')
+            if r['accounting'] == 'executed' or r.get('execution_receipt'):
                 ref = r.get('execution_receipt')
                 if not ref:
                     raise ValueError('new observation requires execution receipt')
@@ -263,6 +269,8 @@ def validate(data, root=ROOT, target=None):
                 bindings = {'backend': r['backend'], 'condition': r['case'], 'profile': r['profile'],
                             'input_identity': r['input_identity'], 'source_revision': m['revision'],
                             'runtime_identity': m['runtime_identity'], 'checker_identity': r['checker_identity']}
+                if data.get('refresh') and receipt.get('run_id') != m.get('run_id'):
+                    raise ValueError('execution receipt run identity mismatch')
                 if any(receipt.get(k) != v for k, v in bindings.items()):
                     raise ValueError('execution receipt identity mismatch')
                 if not receipt.get('commands') or not receipt.get('input_manifest_sha256'):
@@ -343,6 +351,9 @@ def render(data, root=ROOT, target=None):
     lines = ['# 四后端行为证据', '', f"记录更新 {data['updated']}; 目标 EVAS {targets['evas']['revision']}。",
              '', 'P=限定性质通过，F=性质失败，U=确认不支持，X=执行失败，I=未决，T=未运行。',
              '正式连续时间资格另列，历史有限观测 P 不代表完整 DVS 资格。无耗时排名。', '']
+    if data.get('refresh'):
+        parent = data['refresh']['parent']
+        lines += [f"integration 刷新：新 EVAS8 实测，Spectre8 复用原收据；另外16项T仅引用原未运行/失败预检，本轮无外部启动或环境重验。原快照 [{parent['path']}]({'../../../' + parent['path']})，SHA {parent['sha256']}。", '']
     if data['schema_version'] == 1:
         lines += ['历史 schema1：V2 单端1mV归一化指标已失效，明确排除B；本表不追认旧指标。新结论请使用 schema2 派生快照。', '']
     header = '| 组 | ' + ' | '.join(LABELS) + ' |'

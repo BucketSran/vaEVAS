@@ -112,3 +112,27 @@ Spectre首项仿真后，设置审计误导入旧同名模块；修复为精确�
 `ingest.py`验证返回工件清单及冻结输入，再把执行收据或失败预检导入一个新快照。
 预检失败保留T、基础设施阶段和原错误，不记为模型不支持。修改目标runtime时旧结果自动标stale；
 新实验需另行分配资源，不使用维护命令隐式重试。
+
+## integration EVAS8 刷新
+
+`refresh.py` 只做固定 `cmp8-base` 的静态合并，不启动后端。先在获授权的最终integration
+版本生成独立fresh快照：8个EVAS/base是真实新执行，外部24项未执行；随后与parent快照合并。
+维护表的EVAS8指向fresh实际receipt，Spectre8标reused并绑定原receipt，其他16项保持T/unrun。
+这些T的环境失败理由来自原预检，本轮没有外部启动、安装环境或重新确认可用性。
+
+schema2的receipt复用只允许在有界refresh中使用。两份小输入manifest/provenance归档到新的
+证据目录；物理condition、DUT、设置、Spectre deck、checker及外部runtime均须匹配。
+整份manifest因EVAS runtime/provenance变化可以不同，原Spectre receipt的manifest身份不改。
+原measurement/run_id、observation、waveform/metrics、原32分母以及无关历史/application
+候选保持。新EVAS的八项必须属于一个新执行身份，失败/timeout仍按X/I进入同一分母。
+旧schema1/schema2、matrix复用及静态derive保持兼容。
+
+```sh
+python3 -B experiments/backends/comparison/refresh.py PARENT_SNAPSHOT FRESH_SNAPSHOT OLD_INPUTS NEW_INPUTS NEW_SNAPSHOT --evidence NEW_COMPACT_PROOF_DIR
+python3 -B experiments/backends/comparison/records.py NEW_SNAPSHOT --output NEW_TABLE.md
+```
+
+输出文件必须不存在；检查新表后，将维护入口 `TABLE.md` 更新为该内容并绑定新快照。
+这两个静态命令不授权build或simulation。一般ingest仍拒绝覆写已测配置；fresh执行必须由新的
+run/receipt生成，不以换一个revision字段冒充实测。所有旧snapshot/receipt文件保留原字节，
+新维护snapshot以path/SHA绑定parent和fresh；工具新增本身不表示最终integration EVAS8已运行。
