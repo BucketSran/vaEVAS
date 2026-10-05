@@ -5,13 +5,9 @@ import copy
 import subprocess
 from pathlib import Path
 
-from records import ROOT, BACKENDS, identity, load, sha, validate, voltage_metrics
+from records import ROOT, BACKENDS, STATUS, identity, load, sha, validate, voltage_metrics
 from freeze import SELECTED, save
 from runner import verify
-
-STATUS = {'observations_within_targets': 'P', 'observed_violation': 'F', 'unresolved': 'I',
-          'observation_invalid': 'I', 'compile_failed': 'X', 'execution_failed': 'X', 'timeout': 'X',
-          'missing_waveform': 'I', 'missing_compile_artifact': 'X'}
 
 
 def verify_output(output):
@@ -87,7 +83,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                 'commands': result['commands'], 'execution_status': result['status'],
                 'waveform_sha256': result.get('waveform_sha256'),
                 'raw_file_manifest_sha256': sha(output / 'FILE_MANIFEST.json'),
-                'raw_availability': 'task-local; original waveforms/logs not committed',
+                'raw_availability': 'local-only',
+                'raw_availability_note': 'task-local; original waveforms/logs not committed',
                 'observation': {'path': str((directory / 'observation.json').relative_to(ROOT)), 'sha256': sha(directory / 'observation.json')}}
             save(directory / 'receipt.json', receipt)
             verdict = STATUS[analysis['status']]
@@ -105,7 +102,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                           evidence=[{'path': receipt['observation']['path'], 'sha256': receipt['observation']['sha256'], 'kind': 'analysis'},
                                     {'path': str((directory / 'receipt.json').relative_to(ROOT)), 'sha256': sha(directory / 'receipt.json'), 'kind': 'receipt'}],
                           execution_receipt={'path': str((directory / 'receipt.json').relative_to(ROOT)), 'sha256': sha(directory / 'receipt.json')},
-                          availability={'compact': 'repository-contained', 'raw': receipt['raw_availability']})
+                          availability={'compact': 'repository-contained', 'raw': receipt['raw_availability'],
+                                        'raw_note': receipt['raw_availability_note']})
             record['metrics'] = voltage_metrics(condition, analysis, data['schema_version'])
     for output in blocked:
         started = load(output / 'STARTED.json')
