@@ -4,6 +4,14 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 未合并候选：常量初始化与 cross 共用事件体（L2a）
+
+- 一个无分析限定 `initial_step` 可与 cross 叶子 OR，共享无条件实例常量赋值体。
+  初始化通过已有路径安装一次；后续穿越执行同一体，不伪造初始化事件记录。
+- timer 混合、重复/分析限定初始化叶、动态初值及条件初始化仍拒绝；
+  同刻写者冲突和 t=0 初始化先于 timer 的顺序保持不变。
+- 不改变 IR17 或内核协议；有限验收与完整模型缺口见[事件手册](math/events.md#initial-cross)。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
