@@ -6,7 +6,7 @@ import hashlib
 import subprocess
 from pathlib import Path
 
-from records import ROOT, load, sha, source_bytes, validate, voltage_metrics
+from records import ROOT, load, sha, source_bytes, validate, voltage_metrics, bound_observation
 from freeze import save
 
 
@@ -69,21 +69,14 @@ def derive(snapshot, root=ROOT):
     for row in data['records']:
         if row['accounting']=='unrun':
             continue
-        if row['accounting']=='reused':
-            refs=[r for r in row['evidence'] if r['kind']=='analysis']
+        observation=bound_observation(row,root,original['schema_version'])
+        if row['accounting']=='reused' and not row.get('execution_receipt') and not row.get('observation_binding'):
+            refs=[ref for ref in row['evidence'] if ref['kind']=='analysis']
             if len(refs)!=1:
                 raise ValueError('one historical named matrix required')
-            ref=refs[0]
             selector={'backend':row['backend'],'condition':row['case'],'profile':row['profile'],
                       'source_run_id':row['measurement']['run_id']}
-            row['observation_binding']=dict(ref,format='matrix',selector=selector)
-            matched=[r for r in load(root/ref['path'])['records'] if all(r.get(k)==v for k,v in selector.items())]
-            if len(matched)!=1:
-                raise ValueError('named historical observation missing')
-            observation=matched[0]['analysis']
-        else:
-            receipt=load(root/row['execution_receipt']['path'])
-            observation=load(root/receipt['observation']['path'])
+            row['observation_binding']=dict(refs[0],format='matrix',selector=selector)
         row['metrics']=voltage_metrics(row['case'],observation,2)
     freeze_candidates(data,root)
     freeze_metric_contract(data, root, subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip())
