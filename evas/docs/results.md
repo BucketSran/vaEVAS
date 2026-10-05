@@ -44,3 +44,5 @@ stderr 保留额外写入错误，完成标记仍为缺失或 `running`。
 瞬态 `idt(1,0.25)` 在 `t=0,0.25,0.5 s` 的答案为 `0.25,0.5,0.75 V`，
 采用 `reltol=0,vabstol=1e-9 V`，外部绝对容差 `1e-9 V`。
 这些是本地产物序列化检查，不是仿真器资格或已发表后端证据。
+
+完整运行记录与比较/benchmark 收据的区别见[执行收据规则](../../docs/contributing/evidence.md#complete-local-run-bundles)。
