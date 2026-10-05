@@ -291,7 +291,12 @@ def run(args):
         elif result['status'] == 'waveform_available' and not (work / result['waveform']).is_file():
             result = {'status': 'missing_waveform', 'failure_stage': 'export'}
         elif result['status'] == 'not_run':
-            result = {'status': 'missing_compile_artifact', 'failure_stage': 'compile'}
+            # A successful EVAS worker must return its result; it does not
+            # produce a separately compiled library artifact.
+            result = ({'status': 'execution_failed', 'failure_stage': 'worker',
+                       'reason': 'successful EVAS worker did not write worker-result.json'}
+                      if args.backend == 'evas' else
+                      {'status': 'missing_compile_artifact', 'failure_stage': 'compile'})
         if result.get('waveform'):
             result['waveform_sha256'] = sha(work / result['waveform'])
         result['compiled_artifacts'] = {name: sha(work / name) for name in ('dut.osdi', 'dut.cc', 'dut.so') if (work / name).is_file()}

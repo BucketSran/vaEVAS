@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import subprocess
-from records import ROOT, BACKENDS, identity, load, sha, voltage_metrics
+from records import ROOT, BACKENDS, STATUS, identity, load, sha, voltage_metrics
 from freeze import SELECTED, conditions, input_identity, runtime_identity, save
 
 HISTORICAL = 'experiments/backends/dvs2-four-backend-validation/results/matrix.json'
@@ -49,15 +49,12 @@ def create():
                         '固定8条件×4后端，基础档；未执行不得继承旧矩阵分数。'),
                 {'id': 'application-reference', 'label': 'C 固定正确参考应用回放', 'state': 'pending', 'denominator': None,
                  'cases': None, 'profiles': ['base'], 'scope': '应用回放条件及同源四后端编码尚未冻结。错误候选仅用于校准，分母 unknown。'}]
-    mapping = {'observations_within_targets': 'P', 'observed_violation': 'F', 'unresolved': 'I',
-               'observation_invalid': 'I', 'compile_failed': 'X', 'compile_timeout': 'X',
-               'execution_failed': 'X', 'runtime_timeout': 'X', 'missing_waveform': 'I'}
     records = []
     for old in historical['records']:
         status = old['analysis']['status']
         records.append({'dataset': 'development31-20260928', 'case': old['condition'], 'backend': old['backend'],
                         'profile': old['profile'], 'input_identity': next(c['input_identity'] for c in frozen if c['id'] == old['condition']),
-                        'verdict': mapping[status], 'qualification': 'I', 'stage': 'analysis' if status in
+                        'verdict': STATUS[status], 'qualification': 'I', 'stage': 'analysis' if status in
                         ('observations_within_targets', 'observed_violation', 'unresolved', 'observation_invalid') else old.get('failure_stage', 'execute'),
                         'reason': status, 'accounting': 'reused', 'reuse_justification': 'Historical summary retained with original input/runtime/checker identities; no rerun or raw reanalysis.',
                         'measurement': {'revision': 'unknown', 'runtime_identity': ids[old['backend']],
@@ -66,7 +63,8 @@ def create():
                         'checker_identity': receipt['frozen_sources']['experiments/dvs2-spectre-validation/check_results.py'],
                         'evidence': [{'path': HISTORICAL, 'sha256': sha(ROOT / HISTORICAL), 'kind': 'analysis'},
                                      {'path': RECEIPT, 'sha256': sha(ROOT / RECEIPT), 'kind': 'receipt'}],
-                        'availability': {'compact': 'repository-contained', 'raw': 'private historical archive; local presence not assumed'},
+                        'availability': {'compact': 'repository-contained', 'raw': 'local-only',
+                                         'raw_note': 'private historical archive; local presence not assumed'},
                         'metrics': {}})
         records[-1]['observation_binding'] = {'path': HISTORICAL, 'sha256': sha(ROOT / HISTORICAL),
             'format': 'matrix', 'selector': {k: old[k] for k in ('backend', 'condition', 'profile', 'source_run_id')}}
