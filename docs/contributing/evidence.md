@@ -73,3 +73,25 @@ Label availability as **repository-contained**, **public archive**, or **local-o
 a working retrieval address and inventory/hash; machine paths and checksums alone are not download links.
 Publication still requires task authorization. Before workspace cleanup, preserve needed ignored evidence
 and its verified old-to-new path mapping. Package versions alone do not identify development branches.
+
+### Complete local run bundles
+
+The [results command](../../evas/docs/results.md) writes a local execution bundle.
+Treat `manifest.json` with `status=complete` as the completion marker, then verify
+its recorded file sizes and hashes before reanalysis. `running`, `failed`, a missing
+marker, or `manifest.tmp` does not establish complete observations.
+
+The bundle records the exact input/source snapshots, decoded kernel request and
+response, frontend content identity and selected kernel identity. The request
+contains forwarded tolerance settings; it is not an independent backend echo of
+effective settings. Unknown build revision or protocol metadata stays unknown.
+Package and IR agreement alone do not identify a release or establish correctness.
+
+The bundle is evidence for execution and serialization. A comparison or benchmark
+receipt must additionally identify its case contract, independent checker/version,
+external budgets, verdict, source revision and artifact availability as applicable
+under the requirements above. Do not infer a passing task or public reproducibility
+from `complete`. Retain raw bundles in the owning project's ignored output area;
+publish curated summaries and necessary provenance without customer source or bulk
+artifacts. Reanalysis produces a new analysis identity and preserves the original
+execution and failure records.

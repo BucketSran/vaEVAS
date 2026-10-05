@@ -23,7 +23,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 
 ## 当前整合候选范围
 
-本地 overnight-integration 暂仅整合已接受的 L3 事件体静态循环、S1 SCS 静态向量端口连接与 PKG-ID 显式身份查询。
+本地 overnight-integration 暂仅整合已接受的 L3 事件体静态循环、S1 SCS 静态向量端口连接、PKG-ID 显式身份查询与 PKG-OUT 完整运行产物。
 包版本和 IR17 保持不变；其他夜间候选尚未纳入，本分支不构成发布或完整工程模型支持声明。
 
 ## 可以做什么
@@ -484,3 +484,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 不代表当前版本、首次求解、瞬态或跨后端速度。
 
 </details>
+
+## 保存完整运行结果
+
+使用 `python3 -m evas.results run MANIFEST --kernel PATH --out NEW_DIR` 保存带身份的完整 JSON、CSV 和源码快照。只有最后写入的 `manifest.json` 标记为 `complete` 才表示完整产物；失败保留诊断与部分文件。单位、精度、失败处理和使用示例见[运行产物契约](docs/results.md)。
