@@ -1,4 +1,6 @@
 """Static event-body iteration through the public compiler and Rust runtime."""
+GUARDS = ["LANG", "COMPOSE", "TIMER", "CROSS", "EVENT-ORDER", "EVENT-CONDITIONS", "case:static_loop", "case:variable_array"]
+
 import unittest
 
 from evas import CompileError, KernelError, compile_sources, transient
