@@ -108,7 +108,7 @@ def main(argv):
     args = parser.parse_args(argv)
     try:
         result, error = inspect_identity(args.kernel)
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, metadata.PackageNotFoundError) as exc:
         from .errors import diagnostic
         print(json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc))), file=sys.stderr)
         return 2
