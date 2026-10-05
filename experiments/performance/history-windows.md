@@ -15,6 +15,10 @@
 [紧凑收据](history-windows-results.json)记录实际二进制、请求与来源哈希、逐次成功时长、
 超时分母、独立答案、profile 计数和负载。历史二进制、完整 stdout、diagnostics、
 源快照与负载记录留在 ignored `runs/f2/`；它们为本地证据，哈希不代表公开下载。
+两份原始收据的 `candidate_revision` 记录的是检出 HEAD d06581f9；候选包含当时未提交的源码改动，
+不能读作干净基线。紧凑收据的 `review_corrections` 明示该 dirty 状态、实际源码 SHA 和原收据 SHA。
+原始收据不改写，已提交候选的生产前缀与测量快照相同，后续新增的是测试断言。
+计时脚本身份以 `executed_joint_tool_sha256` 为准，后加的失败处理不追记为当时已执行。
 
 第一组固定请求使用 `u=t, y=u+idt(u,0)`，8192 段、1025 输出，加上 2 段、129 输出的控制请求。
 两边各五次，完整结果逐字节一致。然而 profile 没有 F2 query 计数，证实它经过直接源积分路径，

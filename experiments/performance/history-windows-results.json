@@ -469,5 +469,28 @@
     "python": "3.14.6",
     "target": "aarch64-apple-darwin",
     "cargo_lock_sha256": "ca69517478900f0ebdec3118312b7b58cd6edb68f78973649136bd78b8a514ea"
-  }
+  },
+  "review_corrections": [
+    {
+      "recorded_at_utc": "2026-10-05T21:25:03.140067+00:00",
+      "type": "source_provenance_clarification",
+      "measured_checkout_head": "d06581f92628ab9e94a2d16bf600b0225174bb6d",
+      "candidate_had_uncommitted_changes": true,
+      "measured_source_sha256": "c2cd44426fb475aba21233b9c1d9b669d804cb08aa293162774476db8a66121e",
+      "raw_receipts_unchanged": {
+        "runs/f2/paired/receipt.json": {
+          "sha256": "d8faf5ebba75fee654c247944c0ca15d36cbc1dd15be3e92c1cd809ced26ee99",
+          "recorded_candidate_revision": "d06581f92628ab9e94a2d16bf600b0225174bb6d",
+          "source_state": "uncommitted candidate changes on the recorded base checkout; not a clean baseline measurement"
+        },
+        "runs/f2/joint-paired/receipt.json": {
+          "sha256": "7cbd0464c4daf3ed3d19345c75e4e33e5a4f5e8dc464de9f30913c1f169ff912",
+          "recorded_candidate_revision": "d06581f92628ab9e94a2d16bf600b0225174bb6d",
+          "source_state": "uncommitted candidate changes on the recorded base checkout; not a clean baseline measurement"
+        }
+      },
+      "meaning": "candidate_revision in the historical raw receipts is the checkout HEAD, not a claim of clean committed candidate source. Preserved source SHA and snapshot/diff identify the uncommitted production code. Final e2ae9722 adds cfg(test) assertions; its production prefix is unchanged. This correction records no new measurement.",
+      "script_scope": "executed_joint_tool_sha256 identifies the actual timed script. The committed tool contains later failure-handling repairs that were not used for these measurements."
+    }
+  ]
 }
