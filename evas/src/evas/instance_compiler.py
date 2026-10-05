@@ -127,8 +127,12 @@ class InstanceCompiler:
 
     def waveform(self, expr, resolve):
         input_nodes = {} if expr.op == "transition" else self.node_ids
+        def nested_delay(nested):
+            if nested.op != "absdelay":
+                raise CompileError("absdelay nesting is limited to fixed absdelay stages")
+            return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "ddt") else None,
+                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "ddt") else nested_delay if expr.op == "absdelay" else None,
                       preserve_structure=True)
         if expr.op == "laplace_nd":
             def coefficients(array):
