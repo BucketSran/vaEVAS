@@ -200,6 +200,7 @@ class Parser:
         self.tokens = _tokens(source, name) if tokens is None else tokens
         self.index = 0
         self.nesting = 0
+        self.mixed_initial_body = False
 
     @property
     def token(self) -> Token:
@@ -388,6 +389,9 @@ class Parser:
 
     def _statements(self, conditional=False, analog=False):
         token = self.token
+        if token.text == '@' and self.mixed_initial_body:
+            self.fail('nested events are not supported in a mixed initial_step body',
+                      token, code='unsupported_initial_event')
         if token.text == ";":
             self.take(";")
             return ()
@@ -531,13 +535,12 @@ class Parser:
                 self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
             if triggers and (qualified or initial_count != 1 or any(leaf.kind != 'cross' for leaf in triggers)):
                 self.fail('mixed initialization requires one unqualified initial_step and only cross leaves', token, code='unsupported_initial_event')
+            previous_context = self.mixed_initial_body
+            self.mixed_initial_body = bool(triggers)
             try:
                 body = self.statements(bool(triggers))
-            except CompileError as exc:
-                if triggers and self.token.text == '@' and exc.diagnostic['code'] == 'syntax_error':
-                    self.fail('nested events are not supported in a mixed initial_step body',
-                              self.token, code='unsupported_initial_event')
-                raise
+            finally:
+                self.mixed_initial_body = previous_context
             if any(not isinstance(statement, Assignment) for statement in body):
                 self.fail('mixed initial_step body requires unconditional instance-constant assignments', token, code='unsupported_initial_event')
             initial.extend(body)
