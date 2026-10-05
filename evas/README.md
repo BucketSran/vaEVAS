@@ -227,6 +227,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
+- 当前分支候选支持无状态电压表达式中的 `< <= > >= && || ! ?:`，比较返回 0/1，有限非零值为真。
+  所有分支先检查支持范围，数值认证只访问选中路径。谓词限外部输入仿射电压，分支限分段仿射；
+  历史、事件状态、输出反馈谓词与非线性结构仍拒绝。见[普通条件契约](validation/ANALOG_CONDITIONS_CONTRACT.md)。
 - 表达式支持括号、单目正负、加减、乘法及非零常数分母。
 - `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
   该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。

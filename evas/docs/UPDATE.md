@@ -4,6 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 未合并候选：无状态比较与逻辑表达式
+
+- 以既有 Select IR 表达关系、逻辑和三元运算，保留源码身份与原精度判据。
+- 隐藏分支中的非法结构仍拒绝；合法但未选中的条件不触发数值判定。
+- 有限输入表、条件边界和实际 Rust 入口回归见[表达式测试](../tests/test_stateless_expressions.py)。
+  本切片未执行完整 AND2 应用或新增 Spectre 对照，也不开放事件/历史中的一般逻辑。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
