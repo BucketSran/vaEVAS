@@ -86,7 +86,8 @@ python3 -B experiments/backends/comparison/runner.py runs/cmp/fresh-inputs \
 ```
 
 EVAS使用当前 `compile_sources`/`transient` API和明确选择的内核，不调用历史容器EVAS。
-基线内核没有CLI版本握手，版本为unknown，工件哈希与响应中的 engine身份单独保存。
+本runner不查询内核版本，因此 `kernel_version` 记录为 `unknown`；
+内核二进制SHA与响应中的engine身份单独保存，实际内核身份可另行查询。
 Spectre参数为 `--backend spectre --spectre-profile EXISTING_PROFILE`；
 其余后端为 `--backend openvaf_ngspice` 或 `--backend gnucap`，并提供
 `--environment EXISTING_ACTIVE_ENVIRONMENT`。服务器Python须用 `-X utf8`。
