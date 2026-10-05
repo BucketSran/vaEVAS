@@ -4,6 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 未合并候选：两级固定 absdelay
+
+- 从原始 PWL 结点导出整段历史包围，保留移位时间误差、每级调用点和补偿查询。
+- 仅接收直接嵌套或同实例单位内部别名；结构依赖检查与最终节点预算继续生效。
+- 独立 Fraction 答案、放大/大时间拒绝与真实 Frame 回退检查见[算子手册](math/operators.md#两级固定-absdelay-的移位历史包围)。
+  冻结放大对照的 1e-6 预算仍拒绝，未宣称一般组合或新增 Spectre 资格。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
