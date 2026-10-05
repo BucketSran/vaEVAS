@@ -6,6 +6,8 @@ use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::sync::Arc;
 
+type HistoryTube = (Vec<(f64, f64)>, Vec<I>);
+
 #[derive(Clone)]
 pub(crate) struct AbsDelay {
     points: Arc<[(f64, f64)]>,
@@ -73,7 +75,7 @@ impl AbsDelay {
     /// Convex interpolation of B_i=A_i+[-L*|s_i-h_i|,L*|s_i-h_i|]
     /// therefore encloses f(t) everywhere, including a displaced true corner.
     /// Only a second delay may consume this tube; it is not a derivative PWL.
-    pub(crate) fn shifted_tube(&self) -> Result<(Vec<(f64, f64)>, Vec<I>), Error> {
+    pub(crate) fn shifted_tube(&self) -> Result<HistoryTube, Error> {
         let mut lipschitz: f64 = 0.0;
         for (k, pair) in self.points.windows(2).enumerate() {
             let slope =

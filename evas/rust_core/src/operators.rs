@@ -204,7 +204,9 @@ fn delay_parent(
     let variables = expression.len() - 1;
     let width = driven.len() + program.states.len() + program.operators.len() + 1;
     let slot = driven.len() + program.states.len() + parent;
-    for k in 0..width {
+    // node_map rows all have width columns; iterate columns without changing
+    // the original per-column accumulation order. Valid IR has a ground node.
+    for (k, _) in map[0].iter().enumerate().take(width) {
         let base = if k == width - 1 {
             expression[variables]
         } else {
