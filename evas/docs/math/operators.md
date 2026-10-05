@@ -17,6 +17,7 @@
 | [absdelay](#absdelay) | [absdelay.rs](../../rust_core/src/absdelay.rs) | [延迟查询](../../tests/test_absdelay.py)、[精度](../../tests/test_absdelay_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
 | [idt](#idt) | [idt.rs](../../rust_core/src/idt.rs) | [积分与复位](../../tests/test_idt.py)、[精度](../../tests/test_idt_accuracy.py) | [积分反馈](continuous.md#电压关系与积分反馈)、[联合复位](continuous.md#事件修改的联合积分与复位) |
 | [laplace_nd](#laplace_nd) | [laplace.rs](../../rust_core/src/laplace.rs) | [一阶低通](../../tests/test_laplace.py) | [完整状态空间](continuous.md#高阶滤波的完整状态空间)、[混合网络](continuous.md#多项式积分与滤波的混合网络) |
+| [laplace_np](#laplace_np) | [编译转换](../../src/evas/instance_compiler.py)，复用 laplace_nd | [实极点与独立答案](../../tests/test_laplace_np.py) | 本批验证直接连续 PWL；不扩大联合依赖范围 |
 | [idtmod / sin](#idtmod-与-sin) | [idtmod.rs](../../rust_core/src/idtmod.rs)；sin 在 [operators.rs](../../rust_core/src/operators.rs) | [相位与函数](../../tests/test_phase.py) | 受限 sin 可供[动态 guard](continuous.md#非线性-guard-的根证明)使用；idtmod 的非点事件观察明确拒绝 |
 | [slew](#slew) | [slew.rs](../../rust_core/src/slew.rs) | [追赶模式](../../tests/test_slew.py)、[精度](../../tests/test_slew_accuracy.py) | 分支候选支持内部仿射电压投影；非点事件观察明确拒绝 |
 
@@ -334,6 +335,45 @@ DC 初始化、阶跃/斜坡/拐点、小/普通/大指数权重、小时间尺�
 当前误差区间复用直接 PWL 输入包围，并用原始系数/时间点外向算术和上述级数/倍角权重包围滤波历史，
 再传入现有电压验收。这仍只证明成功计算点相对编译后 IR 和 binary64 PWL 源的预算；不能据此宣称连续时间全轨迹资格
 或 Spectre LTE 控制等价。
+
+## laplace_np
+
+能力 ID：LANG + DYNAMICS。本批接受
+`laplace_np(u, '{b0}, '{p,0})`：一个有限、实例常量的分子系数 `b0`，
+一个有限负实极点 `p`，虚部为零，省略 epsilon，且 `-1/p` 可精确表示为有限正 binary64。
+系数须使用标准常量数组；零、正、复数或多个极点、动态系数、多项分子、
+非精确倒数及显式 epsilon 均明确拒绝。有限 `b0` 可为零或负数，
+但零分子不会取消对极点、转换精度或输入依赖的检查。
+
+依据 [Verilog-AMS LRM 2.4 §4.5.11.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf#page=92)，
+单个实极点的传递关系是 `H(s)=b0/(1-s/p)`。编译器保持分子不变，
+转换为升幂分母 `[1,-1/p]`。不能改为 `[−p,1]`，否则 DC 增益会从 `b0`
+变成 `b0/(-p)`。例如 `p=-4` 时应求解 `y+y'/4=b0*u`，
+DC 初值为 `b0*u(0)`；对从零开始的斜坡 `u=t`，独立答案为
+`y=b0*(t-(1-exp(-4*t))/4)`。
+LRM §4.5.11 的 epsilon 用于绝对容差，当前没有该参数的映射；
+即使提供常量 epsilon 也拒绝，不能悄悄忽略它。
+
+精确性以编译后的原始 binary64 实例常量为参照，不把十进制源码或先前常量折叠
+重新解释为精确实数。先计算候选 `c=-1/p`，再用原始浮点值的整数比检查
+`Fraction(c) == -1/Fraction(p)`；候选必须有限且为正。
+只检查浮点乘积 `c*p==-1` 不够：`p=-3` 与舍入的 `c=1/3` 可满足该乘积检查，
+有理数仍不相等，必须拒绝。因此通过域内的 `[1,c]` 与原极点关系严格相同，
+不会向现有滤波误差链引入遗漏的系数转换误差。
+
+[syntax.py](../../src/evas/syntax.py)识别算子；
+[instance_compiler.py](../../src/evas/instance_compiler.py)验证并转换常量，
+保留原输入表达式、实例、源码位置及展开身份，向共同列表追加既有 `LaplaceNd`。
+没有新增 IR 或运行时历史类型。DC/PWL 初始化、不可变接受历史、候选回退、
+系数与时间区间及电压误差验收均由上节的既有路径维护。
+转换不扩大输入或下游依赖权限；例如滤波输出再供给 `absdelay` 的未认证历史依赖仍拒绝。
+本批不声称一般极点形式、其他 #66 算子、联合网络的新组合或连续时间全轨迹资格。
+
+独立回归 [test_laplace_np.py](../../tests/test_laplace_np.py)通过公开 `compile_sources`/`transient`
+入口，在 `p=-4`、查询 `0,0.125,0.25,0.5,1 s`、`reltol=0`、`vabstol=1e-8` 下，
+以 90 位 Decimal 计算原极点解析答案并检查 `1e-6 V` 外部预算。
+覆盖单位输入 DC、斜坡、分子 2、实例与多调用点隔离、查询网格不变性、
+无效域及下游历史拒绝；等价 `laplace_nd` 结果只作为转换的辅助证据。
 
 ## idtmod 与 sin
 
