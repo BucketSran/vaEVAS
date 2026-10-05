@@ -109,6 +109,31 @@ class InitialCross(unittest.TestCase):
             self.assertIn('nested events are not supported in a mixed initial_step body', str(caught.exception))
             self.assertGreater(caught.exception.diagnostic['location']['column'], 0)
 
+    def test_malformed_assignment_preserves_original_error_before_next_event(self):
+        for body, message in (('n=;', "unsupported expression ';'"),
+                              ('n=7', "expected ';', got '@'")):
+            text = source().replace('n=7;', body, 1)
+            with self.subTest(body=body), self.assertRaises(CompileError) as caught:
+                compiled(text)
+            detail = caught.exception.diagnostic
+            self.assertEqual(detail['code'], 'syntax_error')
+            self.assertIn(message, str(caught.exception))
+            if body == 'n=;':
+                prefix = text[:text.index('n=;') + 2]
+                self.assertEqual(detail['location']['line'], prefix.count('\n') + 1)
+                self.assertEqual(detail['location']['column'], len(prefix.rsplit('\n', 1)[-1]) + 1)
+
+    def test_macro_same_origin_does_not_turn_expression_error_into_nested_event(self):
+        text = '`define BODY n=; @(cross(V(u,r)-1)) n=7;\n' + source().replace('n=7;', '`BODY', 1)
+        with self.assertRaises(CompileError) as caught:
+            compiled(text)
+        self.assertEqual(caught.exception.diagnostic['code'], 'syntax_error')
+        self.assertIn("unsupported expression ';'", str(caught.exception))
+        nested = '`define BODY @(timer(1)) n=7;\n' + source().replace('n=7;', '`BODY', 1)
+        with self.assertRaises(CompileError) as caught:
+            compiled(nested)
+        self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
+
     def test_empty_mixed_body_is_noop_initialization_with_existing_cross(self):
         text = model('''@(initial_step or cross(V(u,r)-2,1,1e-12,1e-9)) ;
           V(y,r)<+V(u,r);''', ports='u,v,y,r',
