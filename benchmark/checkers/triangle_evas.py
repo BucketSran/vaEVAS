@@ -206,7 +206,7 @@ def assess(baseline, observation, case):
                 verdict="inconclusive",
                 reason="sampled count does not bound event timing within time_atol",
             )
-    if discrepancy > case["wave_atol"]:
+    if discrepancy > case["wave_atol"] and result["verdict"] != "fail":
         result.update(
             verdict="inconclusive",
             reason="observation-grid change altered shared waveform samples beyond wave_atol",
