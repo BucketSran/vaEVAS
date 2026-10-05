@@ -70,6 +70,14 @@ EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验
 是这条工作流的已有基础。兼容性证据限于已测模型、配置和仿真器版本；
 通用的自动移交与 EVAS/Spectre 运行时同步接口尚未实现。
 
+## 查询实际包与内核身份
+
+`PYTHONPATH=evas/src python3 -m evas version --json --kernel /path/to/evas-kernel`
+查询所选二进制的身份、SHA-256 与 IR 版本；省略 `--kernel` 时只查询 Python 包。
+内核可直接运行 `evas-kernel --version --json`，无需 manifest 或标准输入。
+缺少构建来源和独立请求协议元数据时明确返回 null；IR 匹配不等于全部运行兼容。
+字段及失败行为见[身份接口](docs/identity.md)。
+
 ## 构建与运行
 
 需要 Python 3.10+ 和 Rust/Cargo。以下命令从仓库根目录运行。
