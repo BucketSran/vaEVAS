@@ -279,6 +279,12 @@ def validate(data, root=ROOT, target=None):
                     raise ValueError('source-only identity is not measured EVAS kernel evidence')
                 if m.get('kernel_sha256') != receipt.get('kernel_sha256'):
                     raise ValueError('measured kernel hash differs from execution receipt')
+                tool = receipt.get('tool')
+                tool_bindings = {'revision': m['revision'], 'runtime_identity': m['runtime_identity']}
+                if r['backend'] == 'evas':
+                    tool_bindings['kernel_sha256'] = m['kernel_sha256']
+                if not isinstance(tool, dict) or any(tool.get(k) != v for k, v in tool_bindings.items()):
+                    raise ValueError('execution receipt tool identity differs from measured identity')
                 if r['verdict'] == 'P':
                     observation = receipt.get('observation')
                     if not observation or not receipt.get('waveform_sha256') or not receipt.get('effective_settings'):

@@ -159,6 +159,7 @@ class RecordControls(unittest.TestCase):
             validate(self.data, self.root)
 
     def execution_receipt(self):
+        # Synthetic identities exercise validation; this fixture runs no simulator.
         r = self.data['records'][-1]
         observation = self.root / 'observation.json'
         observation.write_text(json.dumps({'status': 'observations_within_targets', 'v1_screen': {'max_observed_error': {'y': {'error_v': .0002}}}}))
@@ -167,6 +168,7 @@ class RecordControls(unittest.TestCase):
                  'input_identity': 'input-identity', 'source_revision': 'rev', 'runtime_identity': 'binary',
                  'checker_identity': 'checker', 'commands': [{'stage': 'simulate', 'exit_code': 0}],
                  'input_manifest_sha256': 'manifest', 'kernel_sha256': 'actual-kernel',
+                 'tool': {'revision': 'rev', 'runtime_identity': 'binary', 'kernel_sha256': 'actual-kernel'},
                  'waveform_sha256': 'actual-output', 'effective_settings': {'stop': 1},
                  'execution_status': 'waveform_available',
                  'observation': {'path': 'observation.json', 'sha256': sha(observation)}}
@@ -175,6 +177,23 @@ class RecordControls(unittest.TestCase):
         r['measurement'].update(kernel_sha256='actual-kernel', output_sha256='actual-output')
         r['execution_receipt'] = {'path': 'execution.json', 'sha256': sha(receipt)}
         return r, value, receipt
+
+    def test_receipt_tool_identity_must_match_measured_identity(self):
+        r, value, path = self.execution_receipt()
+        for key in ('revision', 'runtime_identity', 'kernel_sha256'):
+            with self.subTest(key=key):
+                original = value['tool'][key]
+                value['tool'][key] = 'different-tool'
+                path.write_text(json.dumps(value))
+                r['execution_receipt']['sha256'] = sha(path)
+                with self.assertRaisesRegex(ValueError, 'tool identity'):
+                    validate(self.data, self.root)
+                value['tool'][key] = original
+        value.pop('tool')
+        path.write_text(json.dumps(value))
+        r['execution_receipt']['sha256'] = sha(path)
+        with self.assertRaisesRegex(ValueError, 'tool identity'):
+            validate(self.data, self.root)
 
     def test_new_observation_requires_real_receipt_and_kernel(self):
         self.data['records'][-1]['accounting'] = 'executed'
