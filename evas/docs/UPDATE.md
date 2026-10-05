@@ -4,6 +4,12 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 完整运行产物（未合并候选）
+
+- 新增显式 `evas.results run`，保存生效请求、完整响应和无展示舍入的 CSV。
+- 只有全部必需文件完成与校验后才原子写入完成状态，失败保留版本化诊断。
+- 依赖包/内核身份接口，不改变原 JSON API 或数值内核。见[契约](results.md)。
+
 ## 未合并候选：显式身份查询（PKG-ID）
 
 - Python 与 Rust CLI 可在无 manifest、无 stdin 数据时查询实际包/内核身份。

@@ -471,3 +471,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 不代表当前版本、首次求解、瞬态或跨后端速度。
 
 </details>
+
+## 保存完整运行结果
+
+使用 `python3 -m evas.results run MANIFEST --kernel PATH --out NEW_DIR` 保存带身份的完整 JSON、CSV 和源码快照。只有最后写入的 `manifest.json` 标记为 `complete` 才表示完整产物；失败保留诊断与部分文件。单位、精度、失败处理和使用示例见[运行产物契约](docs/results.md)。
