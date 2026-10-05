@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import subprocess
-from records import ROOT, BACKENDS, identity, load, sha
+from records import ROOT, BACKENDS, identity, load, sha, voltage_metrics
 from freeze import SELECTED, conditions, input_identity, runtime_identity, save
 
 HISTORICAL = 'experiments/backends/dvs2-four-backend-validation/results/matrix.json'
@@ -68,13 +68,9 @@ def create():
                                      {'path': RECEIPT, 'sha256': sha(ROOT / RECEIPT), 'kind': 'receipt'}],
                         'availability': {'compact': 'repository-contained', 'raw': 'private historical archive; local presence not assumed'},
                         'metrics': {}})
-        # Re-aggregate published analysis only; do not reanalyze absent raw waves.
-        # These two static cases have identical declared voltage-error contracts.
-        screen = old['analysis'].get('v1_screen', {})
-        if old['condition'] in ('v1-main', 'v2-main') and screen.get('max_observed_error'):
-            records[-1]['metrics'] = {'voltage': {'property': 'maximum absolute exported output voltage error',
-                'unit': 'V', 'observed': max(v['error_v'] for v in screen['max_observed_error'].values()),
-                'budget': .001}}
+        records[-1]['observation_binding'] = {'path': HISTORICAL, 'sha256': sha(ROOT / HISTORICAL),
+            'format': 'matrix', 'selector': {k: old[k] for k in ('backend', 'condition', 'profile', 'source_run_id')}}
+        records[-1]['metrics'] = voltage_metrics(old['condition'], old['analysis'], 2)
     for c in batch:
         for b in BACKENDS:
             records.append({'dataset': 'cmp8-base', 'case': c['id'], 'backend': b, 'profile': 'base',
@@ -111,11 +107,15 @@ def create():
         {'name': 'EVAS', 'version': 'current source target 0.13.0; measured historical 0.8.7',
          'artifact': targets['evas']['runtime_identity'], 'upstream_license': 'unknown', 'license_source': None,
          'verification': 'no explicit license file located in this checkout; target source hash is not a measured kernel'}]
-    return {'schema_version': 1, 'updated': '2026-10-06', 'targets': targets, 'datasets': datasets,
+    data = {'schema_version': 2, 'updated': '2026-10-06', 'targets': targets, 'datasets': datasets,
             'records': records, 'coverage': {g: dict(zip(('capabilities', 'issues', 'boundary', 'independent_answer'), values)) for g, values in gaps.items()},
             'tools': tools, 'components': components, 'candidate_links': [],
-            'limits': ['Voltage common subset is restricted to v1-main/v2-main with the published 1mV static contract; no common measured timing property is declared.',
+            'limits': ['Voltage common subset is restricted to V1 absolute-output 1mV and V2 differential 2mV/common-mode 1mV contracts; no common measured timing property is declared.',
                        'The maintained current EVAS source is a target, not new simulator evidence.']}
+
+    from derive import freeze_metric_contract
+    freeze_metric_contract(data, ROOT, revision)
+    return data
 
 
 if __name__ == '__main__':

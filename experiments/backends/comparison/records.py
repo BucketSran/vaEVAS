@@ -6,6 +6,8 @@ from collections import Counter
 import hashlib
 import json
 import math
+import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -36,6 +38,115 @@ def evidence_ok(ref, root: Path):
         raise ValueError('missing or changed compact evidence: ' + ref['path'])
 
 
+STATUS = {'observations_within_targets': 'P', 'observed_violation': 'F', 'unresolved': 'I',
+          'observation_invalid': 'I', 'compile_failed': 'X', 'compile_timeout': 'X',
+          'execution_failed': 'X', 'runtime_timeout': 'X', 'timeout': 'X',
+          'missing_waveform': 'I', 'missing_compile_artifact': 'X', 'confirmed_unsupported': 'U'}
+HISTORICAL = 'experiments/backends/dvs2-four-backend-validation/results/matrix.json'
+
+
+def source_bytes(ref, root, revision):
+    """Read a frozen source. Legacy mutable paths resolve at their fixed commit."""
+    path = (root / ref['path']).resolve()
+    if 'original_path' in ref:
+        evidence_ok(ref, root)
+    if not path.is_relative_to(root.resolve()):
+        raise ValueError('source path escapes repository')
+    if path.is_file() and sha(path) == ref['sha256']:
+        content = path.read_bytes()
+    else:
+        if not re.fullmatch(r'[0-9a-f]{40}', revision or ''):
+            raise ValueError('frozen source requires a fixed 40-hex revision')
+        relative = Path(ref.get('original_path', ref['path']))
+        if relative.is_absolute() or '..' in relative.parts:
+            raise ValueError('source path escapes repository')
+        try:
+            content = subprocess.check_output(['git', 'show', revision + ':' + relative.as_posix()],
+                                              cwd=root, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as error:
+            raise ValueError('missing frozen source blob') from error
+    if hashlib.sha256(content).hexdigest() != ref['sha256']:
+        raise ValueError('missing or changed compact evidence: ' + ref['path'])
+    if 'original_path' in ref:
+        if not re.fullmatch(r'[0-9a-f]{40}', revision or ''):
+            raise ValueError('frozen source requires a fixed 40-hex revision')
+        relative = Path(ref['original_path'])
+        if relative.is_absolute() or '..' in relative.parts:
+            raise ValueError('source path escapes repository')
+        try:
+            blob = subprocess.check_output(['git', 'show', revision + ':' + relative.as_posix()],
+                                           cwd=root, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as error:
+            raise ValueError('missing frozen source blob') from error
+        if blob != content:
+            raise ValueError('archive source differs from fixed revision blob')
+    return content
+
+
+def voltage_metrics(case, analysis, schema_version=2):
+    screen = analysis.get('v1_screen', {})
+    if case not in ('v1-main', 'v2-main') or not screen.get('max_observed_error'):
+        return {}
+    if schema_version == 1 or case == 'v1-main':
+        value = {'property': 'maximum absolute exported output voltage error', 'unit': 'V',
+                 'observed': max(v['error_v'] for v in screen['max_observed_error'].values()), 'budget': .001}
+        return {'voltage': value if schema_version == 1 else [value]}
+    return {'voltage': [
+        {'property': 'maximum absolute differential output voltage error', 'unit': 'V',
+         'observed': screen['differential_error_v'], 'budget': .002},
+        {'property': 'maximum absolute common-mode output voltage error', 'unit': 'V',
+         'observed': screen['common_mode_error_v'], 'budget': .001}]}
+
+
+def metric_components(value):
+    return value if isinstance(value, list) else [value]
+
+
+def bound_observation(record, root, schema_version):
+    if record['accounting'] == 'executed':
+        receipt = load(root / record['execution_receipt']['path'])
+        ref = receipt.get('observation')
+        if not ref:
+            raise ValueError('execution receipt lacks named observation')
+        evidence_ok(ref, root)
+        observation = load(root / ref['path'])
+    else:
+        ref = record.get('observation_binding')
+        if not ref and schema_version == 1 and record['dataset'] == 'development31-20260928':
+            matches = [r for r in record['evidence'] if r['path'] == HISTORICAL]
+            if len(matches) != 1:
+                raise ValueError('historical observation binding missing')
+            ref = dict(matches[0], format='matrix')
+        if not ref or ref.get('format') != 'matrix':
+            raise ValueError('reused record requires named matrix observation binding')
+        evidence_ok(ref, root)
+        matrix = load(root / ref['path'])
+        selector = {'backend': record['backend'], 'condition': record['case'], 'profile': record['profile'],
+                    'source_run_id': record['measurement']['run_id']}
+        if 'selector' in ref and ref['selector'] != selector:
+            raise ValueError('observation selector differs from record identity')
+        matches = [r for r in matrix['records'] if all(r.get(k) == v for k, v in selector.items())]
+        if len(matches) != 1:
+            raise ValueError('named observation not unique or missing')
+        observation = matches[0]['analysis']
+        if record['dataset'] == 'development31-20260928':
+            receipts = [load(root / r['path']) for r in record['evidence'] if r['kind'] == 'receipt']
+            if len(receipts) != 1 or receipts[0].get('matrix_sha256') != ref['sha256']:
+                raise ValueError('historical observation differs from matrix receipt')
+            expected_input = identity({'historical_input_manifest': receipts[0]['input_manifest_sha256'], 'case': record['case']})
+            if record['input_identity'] != expected_input:
+                raise ValueError('historical observation input identity mismatch')
+            frozen = receipts[0].get('frozen_sources', {})
+            checker = frozen.get('experiments/dvs2-spectre-validation/check_results.py')
+            if checker != record['checker_identity']:
+                raise ValueError('historical observation checker identity mismatch')
+    status = observation.get('status')
+    if STATUS.get(status) != record['verdict'] or status != record['reason']:
+        raise ValueError('verdict/reason differs from bound observation')
+    if record.get('metrics', {}) != voltage_metrics(record['case'], observation, schema_version):
+        raise ValueError('metric differs from bound observation or property budget')
+
+
 def freshness(record, target):
     measured = record.get('measurement')
     if measured is None:
@@ -49,11 +160,29 @@ def freshness(record, target):
 
 
 def validate(data, root=ROOT, target=None):
-    if data['schema_version'] != 1:
+    if data['schema_version'] not in (1, 2):
         raise ValueError('unsupported schema version')
+    if data['schema_version'] == 2:
+        contract = data.get('metric_contract')
+        if not contract or contract.get('original_path') != 'evas/validation/PROTOCOL.md':
+            raise ValueError('metric property/budget contract source required')
+        source_bytes(contract, root, contract.get('revision'))
     target = target or data['targets']
     if set(target) != set(BACKENDS):
         raise ValueError('exactly four backend targets required')
+    if data.get('derivation'):
+        parent_ref = data['derivation']['parent']
+        evidence_ok(parent_ref, root)
+        parent = load(root / parent_ref['path'])
+        key = lambda row: tuple(row[k] for k in ('dataset', 'case', 'backend', 'profile'))
+        old_rows = {key(r): r for r in parent['records']}
+        if set(old_rows) != {key(r) for r in data['records']}:
+            raise ValueError('static derivation changed configuration denominator')
+        fields = ('verdict', 'qualification', 'stage', 'reason', 'accounting', 'measurement',
+                  'checker_identity', 'input_identity', 'evidence', 'execution_receipt')
+        for row in data['records']:
+            if any(row.get(k) != old_rows[key(row)].get(k) for k in fields):
+                raise ValueError('static derivation changed historical execution identity or verdict')
     datasets = {d['id']: d for d in data['datasets']}
     if len(datasets) != len(data['datasets']):
         raise ValueError('duplicate dataset')
@@ -61,15 +190,21 @@ def validate(data, root=ROOT, target=None):
     cases_by_dataset = {}
     for d in data['datasets']:
         for candidate in d.get('candidates', []):
+            if data['schema_version'] == 2 and any('original_path' not in r for r in candidate['sources']):
+                raise ValueError('schema2 candidate requires immutable source archive')
             for ref in candidate['sources']:
-                evidence_ok(ref, root)
+                source_bytes(ref, root, candidate.get('revision'))
             refs = {ref['path']: ref['sha256'] for ref in candidate['sources']}
             if candidate['source_sha256'] not in refs.values() or candidate['checker_sha256'] not in refs.values():
                 raise ValueError('application source/checker identity mismatch')
-            case_refs = [ref for ref in candidate['sources'] if ref['path'].endswith('/cases.json')]
+            if 'adapter_checker_sha256' in candidate:
+                adapters = [r for r in candidate['sources'] if r.get('original_path', r['path']).endswith('/triangle_evas.py')]
+                if len(adapters) != 1 or adapters[0]['sha256'] != candidate['adapter_checker_sha256']:
+                    raise ValueError('application adapter checker identity mismatch')
+            case_refs = [ref for ref in candidate['sources'] if ref.get('original_path', ref['path']).endswith('/cases.json')]
             if len(case_refs) != 1:
                 raise ValueError('application case source required')
-            cases = [c for c in load(root / case_refs[0]['path']) if c['name'] == candidate['case_name']]
+            cases = [c for c in json.loads(source_bytes(case_refs[0], root, candidate.get('revision'))) if c['name'] == candidate['case_name']]
             if len(cases) != 1 or identity(cases[0]) != candidate['case_sha256']:
                 raise ValueError('application frozen case identity mismatch')
         if d['state'] == 'pending':
@@ -148,9 +283,10 @@ def validate(data, root=ROOT, target=None):
                         raise ValueError('failed execution cannot pass')
                     if m.get('output_sha256') != receipt['waveform_sha256']:
                         raise ValueError('measured output hash differs from execution receipt')
+            bound_observation(r, root, data['schema_version'])
         if r.get('claimed_freshness') == 'current' and freshness(r, target) != 'current':
             raise ValueError('old measurement claimed as new revision')
-        for metric in r.get('metrics', {}).values():
+        for metric in [m for value in r.get('metrics', {}).values() for m in metric_components(value)]:
             if metric['unit'] not in ('V', 's') or not metric['property']:
                 raise ValueError('declared metric property and original unit required')
             if any(not isinstance(metric[k], (int, float)) or not math.isfinite(metric[k])
@@ -177,17 +313,19 @@ def common_errors(data, dataset, profile, metric_name):
         if any(r is None or r['verdict'] != 'P' or metric_name not in r.get('metrics', {}) for r in rows):
             excluded[case['id']] = 'not all backends have passed with this measured property'
             continue
-        specs = {(r['metrics'][metric_name]['property'], r['metrics'][metric_name]['unit'],
-                  r['metrics'][metric_name]['budget']) for r in rows}
+        if data['schema_version'] == 1 and case['id'] == 'v2-main':
+            excluded[case['id']] = 'legacy schema1 V2 metric invalid: single-ended 1mV is not differential/common-mode budget'
+            continue
+        specs = {tuple((m['property'], m['unit'], m['budget']) for m in metric_components(r['metrics'][metric_name])) for r in rows}
         if len(specs) != 1:
             raise ValueError('unequal common-subset metric definitions')
         included.append(case['id'])
     maxima = {}
     for backend in BACKENDS:
-        values = [records[c, backend]['metrics'][metric_name] for c in included]
+        values = [m for c in included for m in metric_components(records[c, backend]['metrics'][metric_name])]
         maxima[backend] = None if not values else {
             'normalized': max(m['observed'] / m['budget'] for m in values),
-            'original': [{'case': c, **records[c, backend]['metrics'][metric_name]} for c in included]}
+            'original': [{'case': c, **m} for c in included for m in metric_components(records[c, backend]['metrics'][metric_name])]}
     return {'cases': included, 'excluded': excluded, 'maxima': maxima}
 
 
@@ -205,6 +343,8 @@ def render(data, root=ROOT, target=None):
     lines = ['# 四后端行为证据', '', f"记录更新 {data['updated']}; 目标 EVAS {targets['evas']['revision']}。",
              '', 'P=限定性质通过，F=性质失败，U=确认不支持，X=执行失败，I=未决，T=未运行。',
              '正式连续时间资格另列，历史有限观测 P 不代表完整 DVS 资格。无耗时排名。', '']
+    if data['schema_version'] == 1:
+        lines += ['历史 schema1：V2 单端1mV归一化指标已失效，明确排除B；本表不追认旧指标。新结论请使用 schema2 派生快照。', '']
     header = '| 组 | ' + ' | '.join(LABELS) + ' |'
     divider = '| --- | ' + ' | '.join('---' for _ in BACKENDS) + ' |'
     for d in data['datasets']:

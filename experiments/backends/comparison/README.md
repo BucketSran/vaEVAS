@@ -1,7 +1,7 @@
 # 四后端比较记录
 
 [维护契约](../../../evas/docs/COMPARISON.md)定义数据集、身份与复验规则。
-[当前结果表](TABLE.md)由[snapshot-20261006-accounted.json](snapshot-20261006-accounted.json)
+[当前结果表](TABLE.md)由[snapshot-20261006-accounted-v2.json](snapshot-20261006-accounted-v2.json)
 生成。今晚固定8条件、基础档、四后端共32配置：Spectre和当前EVAS各8项有新有限观察P；
 OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未取得观察。
 不得将32项完整记账称为32项已完成实验。历史31条件、两档开发回放另列，新论文集N仍unknown。
@@ -10,6 +10,25 @@ OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未�
 表C固定了va07的正确参考源码、constant-tighter条件和checker身份；四后端公共外壳、
 精度映射与连续时间资格仍待冻结。原EVAS单后端历史回放不进入四方C分母。
 
+## 历史格式与派生快照
+
+schema2 从原具名观察静态重聚合，不增加仿真次数。V1 保存最大绝对输出误差及1mV预算；
+V2 分别保存差模误差及2mV预算、共模误差及1mV预算，B取各物理性质的归一化最大值。
+物理量、单位和预算逐项保留；预算来源以固定revision及内容寻址的PROTOCOL源码归档绑定。
+历史248行的判定、指标绑定到matrix中唯一backend/condition/profile/source_run_id及其receipt；
+今晚16项观察绑定到各执行receipt里的observation。改判定、指标、预算或选择器会拒绝。
+
+三个schema1旧快照保持原字节。它们的V2指标把单端误差除以1mV，数学解释失效；
+新版渲染器明确标注并排除该项B比较。旧PLANNED.md、EVAS8.md是原历史表，不能作为修正后的
+V2归一化结果。旧快照仍可校验和阅读；旧格式其他有效观察和A计数没有被弃用。
+[新派生快照](snapshot-20261006-accounted-v2.json)保留父快照SHA及静态重聚合边界。
+旧格式不能用于新执行导入，先显式派生到schema2。
+
+应用候选的原revision/source/checker身份不变。新快照保存内容寻址源码、原仓库相对path和固定
+40hex revision；校验归档SHA及该revision的Git blob，不执行源码或访问网络。旧格式的可变源码
+引用如与当前工作树不同，则按其固定revision的本地Git blob解释；本地缺少该blob会明确失败。
+1006 checker修复不改变历史候选；若使用新checker执行，需要新候选和新验证，不能修改旧SHA冒充。
+
 ## 检查与生成
 
 从仓库根目录执行：
@@ -17,7 +36,7 @@ OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未�
 ```sh
 python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
 python3 -B experiments/backends/comparison/records.py \
-  experiments/backends/comparison/snapshot-20261006-accounted.json \
+  experiments/backends/comparison/snapshot-20261006-accounted-v2.json \
   --output experiments/backends/comparison/TABLE.md --check
 ```
 
@@ -26,9 +45,11 @@ python3 -B experiments/backends/comparison/records.py \
 精简分析则不能声称本地复验。重复配置、删掉失败、把旧工件称为当前工件均会拒绝。
 同一组在当前子集没有条件时显示“不适用 N=0”；待冻结集显示 pending 和 N=unknown。
 
-不覆盖既有快照和表。新文件可用下列命令生成：
+不覆盖既有快照。维护的TABLE指向当前派生快照；历史表保留。新文件可用下列命令生成：
 
 ```sh
+python3 -B experiments/backends/comparison/derive.py \
+  experiments/backends/comparison/snapshot-20261006-accounted.json runs/cmp/new-derived.json
 python3 -B experiments/backends/comparison/seed.py runs/cmp/new-planned.json
 python3 -B experiments/backends/comparison/records.py runs/cmp/new-planned.json \
   --output runs/cmp/new-planned.md

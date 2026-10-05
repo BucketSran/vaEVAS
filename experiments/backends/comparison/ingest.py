@@ -2,9 +2,10 @@
 from __future__ import annotations
 import argparse
 import copy
+import subprocess
 from pathlib import Path
 
-from records import ROOT, BACKENDS, identity, load, sha, validate
+from records import ROOT, BACKENDS, identity, load, sha, validate, voltage_metrics
 from freeze import SELECTED, save
 from runner import verify
 
@@ -33,6 +34,10 @@ def runner_sources(hashes):
 def ingest(snapshot, inputs, executions, compact, blocked=()):
     compact = compact.resolve()
     data = copy.deepcopy(load(snapshot))
+    if data['schema_version'] != 2:
+        raise ValueError('derive legacy snapshot to schema2 before new ingestion')
+    if 'derivation' in data:
+        data['prior_static_derivation'] = data.pop('derivation')
     verify(inputs)
     if not compact.resolve().is_relative_to(ROOT):
         raise ValueError('retrievable compact evidence belongs inside owning repository')
@@ -101,10 +106,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                                     {'path': str((directory / 'receipt.json').relative_to(ROOT)), 'sha256': sha(directory / 'receipt.json'), 'kind': 'receipt'}],
                           execution_receipt={'path': str((directory / 'receipt.json').relative_to(ROOT)), 'sha256': sha(directory / 'receipt.json')},
                           availability={'compact': 'repository-contained', 'raw': receipt['raw_availability']})
-            screen = analysis.get('v1_screen', {})
-            if condition in ('v1-main', 'v2-main') and screen.get('max_observed_error'):
-                record['metrics'] = {'voltage': {'property': 'maximum absolute exported output voltage error',
-                    'unit': 'V', 'observed': max(v['error_v'] for v in screen['max_observed_error'].values()), 'budget': .001}}
+            record['metrics'] = voltage_metrics(condition, analysis, data['schema_version'])
     for output in blocked:
         started = load(output / 'STARTED.json')
         backend = started['backend']
@@ -136,7 +138,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
     case = next(c for c in load(task / 'tests/cases.json') if c['name'] == 'constant-tighter')
     application['scope'] = '正确参考候选已固定，四后端公共回放合同尚未冻结；原本地EVAS结果仅为单后端历史开发回放。'
     application['candidates'] = [{'id': 'va07-correct-reference', 'case_name': 'constant-tighter',
-        'revision': data['targets']['evas']['revision'], 'source_sha256': sha(task / 'solution/dut.va'),
+        'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'source_sha256': sha(task / 'solution/dut.va'),
         'case_sha256': identity(case), 'checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_oscillator.py'),
         'adapter_checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_evas.py'),
         'history_path': 'benchmark/tasks/va07-triangle-repair/SOURCE.md#通过-harness-调用本地-evas',
@@ -144,6 +146,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
         'sources': [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p), 'kind': 'application source'} for p in
                     (task / 'solution/dut.va', task / 'tests/cases.json', ROOT / 'benchmark/checkers/triangle_oscillator.py',
                      ROOT / 'benchmark/checkers/triangle_evas.py')]}]
+    from derive import freeze_candidates
+    freeze_candidates(data, ROOT)
     validate(data)
     return data
 
