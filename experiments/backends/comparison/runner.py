@@ -166,7 +166,7 @@ def run(args):
             raise ValueError('EVAS source changed since input freeze; use a new batch identity')
         tool = {'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                 'runtime_identity': runtime_identity(), 'kernel_sha256': sha(args.kernel),
-                'kernel_version': 'unknown', 'version_note': 'This baseline kernel has no CLI version handshake; retain actual binary hash and response engine identity.'}
+                'kernel_version': 'unknown', 'version_note': 'This runner does not query the kernel version; retain actual binary hash and response engine identity. Query kernel identity separately when needed.'}
     elif args.backend == 'spectre':
         if not args.spectre_profile:
             raise ValueError('existing Spectre profile required')
