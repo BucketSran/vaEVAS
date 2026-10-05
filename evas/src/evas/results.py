@@ -2,6 +2,7 @@
 import argparse
 import csv
 import hashlib
+from importlib import metadata
 import json
 import math
 import os
@@ -127,11 +128,11 @@ def run(manifest_path, *, kernel, out, timeout=DEFAULT_TIMEOUT):
         state['identity'] = identity
         if identity_error is not None:
             raise identity_error
-        response = _invoke(request, Path(kernel).resolve(), timeout)
+        selected = Path(identity['kernel']['path'])
+        response = _invoke(request, selected, timeout)
         # Preserve the original decoded machine response even if it is incomplete.
         save('result.json', _json(response))
         validate_response(response, program, count, times)
-        selected = Path(identity['kernel']['path'])
         if not selected.is_file() or _digest(selected.read_bytes()) != identity['kernel']['sha256']:
             raise KernelError(dict(kind='kernel_process', message='selected kernel changed during run'))
         first = dict(name='sample_index', unit='1') if times is None else dict(name='time_s', unit='s')
@@ -154,7 +155,8 @@ def run(manifest_path, *, kernel, out, timeout=DEFAULT_TIMEOUT):
         state['status'] = 'complete'
         _status(marker, state)
         return state
-    except (CompileError, KernelError, OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
+    except (CompileError, KernelError, OSError, ValueError, KeyError, TypeError,
+            OverflowError, metadata.PackageNotFoundError) as exc:
         detail = exc.diagnostic if isinstance(exc, (CompileError, KernelError)) else diagnostic(
             'input_io' if isinstance(exc, OSError) else 'input_error', str(exc))
         state.update(status='failed', error=detail)

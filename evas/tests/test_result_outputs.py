@@ -4,6 +4,7 @@ GUARDS = ['DEV:complete-run-output']
 import csv
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -115,6 +116,53 @@ class ResultOutputs(unittest.TestCase):
         self.assertEqual(result.returncode,2,result.stderr)
         self.assertEqual(sentinel.read_text(),'previous bundle')
         self.assertEqual(list(self.out.iterdir()),[sentinel])
+
+    def test_retargeted_kernel_alias_cannot_change_the_inspected_executable(self):
+        alias = self.root / 'selected-kernel'
+        alias.symlink_to(KERNEL)
+        other = self.root / 'other-kernel'
+        other.write_text('#!/bin/sh\nexit 9\n')
+        other.chmod(0o700)
+        script = '''
+import sys
+from pathlib import Path
+import evas.results as results
+alias, other = map(Path, sys.argv[1:3])
+inspect = results.inspect_identity
+def retarget(selected):
+    identity = inspect(selected)
+    alias.unlink()
+    alias.symlink_to(other)
+    return identity
+results.inspect_identity = retarget
+raise SystemExit(results.main(sys.argv[3:]))
+'''
+        result = subprocess.run([sys.executable, '-B', '-c', script, str(alias), str(other),
+                                 'run', str(self.path), '--kernel', str(alias), '--out', str(self.out)],
+                                capture_output=True, text=True, timeout=12,
+                                env=dict(os.environ, PYTHONPATH=str(ROOT / 'src')))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(alias.resolve(), other.resolve())
+        state = json.loads((self.out / 'manifest.json').read_text())
+        self.assertEqual(state['status'], 'complete')
+        self.assertEqual(state['identity']['kernel']['path'], str(KERNEL.resolve()))
+        response = json.loads((self.out / 'result.json').read_text())
+        column = response['nodes'].index('y')
+        self.assertEqual([row['voltages'][column] for row in response['solutions']], [-.75, .25, 1.75])
+
+    def test_missing_installed_metadata_saves_structured_failure(self):
+        site = self.root / 'site'
+        shutil.copytree(ROOT / 'src/evas', site / 'evas', ignore=shutil.ignore_patterns('__pycache__'))
+        result = subprocess.run([sys.executable, '-S', '-B', '-m', 'evas.results', 'run', str(self.path),
+                                 '--kernel', str(KERNEL), '--out', str(self.out)],
+                                cwd=self.root, capture_output=True, text=True, timeout=12,
+                                env=dict(os.environ, PYTHONPATH=str(site)))
+        self.assertEqual(result.returncode, 2, result.stderr)
+        detail = json.loads(result.stderr)
+        self.assertEqual(detail['code'], 'input_error')
+        state = json.loads((self.out / 'manifest.json').read_text())
+        self.assertEqual(state['status'], 'failed')
+        self.assertEqual(state['error'], detail)
 
     def fixture_kernel(self, body):
         path=self.root/'fixture'
