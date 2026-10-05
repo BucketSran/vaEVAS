@@ -436,6 +436,9 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected eva
 body 的 `kind=assign` 含 `state/rhs`；`kind=if` 含 `relation/left/right/then_body/else_body/origin`，
 relation 为 `lt/le/gt/ge`。无 else 序列化为空 body；未知字段、关系或缺失 body 均拒绝。
 trigger 支持 cross、固定及保持状态控制的 timer，以及 cross/timer 混合 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。
+严格单调变号包围中，常导数可产生精确可表示的点根；候选保留该证书以免引入可消除的事件时间宽度。
+原 va07 half-speed 的有限验收与仍拒绝的情形见[端点诊断](../experiments/backends/dvs2-spectre-validation/triangle-endpoint-diagnosis.md)。
+
 源码 `timer(start)` 为单次事件，`timer(start,period)` 为周期事件；省略的时间容差采用 EVAS 的
 `1e-12 s` 默认值。该值不是与 Spectre 共享的默认设置；规则和拒绝边界见[固定 timer](docs/math/events.md#固定-timer)。
 算子按实例/调用点引用，idt 的可空 reset 字段见[算子手册](docs/math/operators.md#idt)。

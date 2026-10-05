@@ -101,3 +101,10 @@ harness 基于 `c292140d` 的本地改动；两边均未发布本次接入。
 审查修复后的重跑保存在 `final/` 和 `final-v2/` 下的同名目录；`final-v2/`
 包含最后的依赖缓存修复，记录输入、源码和产物摘要。
 这些原始材料为 local-only，不是公开下载数据；本次没有执行 Spectre、SSH 或模型实验。
+
+### D7 原端点后续候选
+
+2026-10-06 的[端点诊断与紧凑收据](../../../experiments/backends/dvs2-spectre-validation/triangle-endpoint-diagnosis.md)
+保留上述历史失败。仅改进严格常导数的精确点根证书后，原 stop=3 s、601/607 网格下的
+reference 均通过，wrong-speed 均完整执行并被未改动的 checker 判错。
+这是局部未合并候选；验收构建、最终构建和只读本地 harness 的身份区别见报告，不代表正式 benchmark 或 #70 完成。

@@ -4,6 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 未合并候选：有向 cross 的精确常导数点根（D7）
+
+- 现有严格变号包围内，常导数的向外舍入根表达式若为包围内单点，保留该精确证书。
+- 原 va07 half-speed 在 stop=3 s 的两个固定网格完整运行，原 checker 明确判错；参考模型仍通过。
+- 不清零历史误差、不放宽端点或方向规则；非点根和 #70 双向自换向仍按原契约处理。
+- [诊断与身份边界](../../experiments/backends/dvs2-spectre-validation/triangle-endpoint-diagnosis.md)区分验收内核与仅测试代码改变后的构建。未发布新版本或一般资格。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
