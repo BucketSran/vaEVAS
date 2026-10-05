@@ -1,0 +1,100 @@
+{
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+  "observation": {
+    "sample_count": 4170,
+    "max_gap_s": 1.0000000000009222e-09,
+    "input_max_error_v": {
+      "vina": 2.220446049250313e-16,
+      "clka": 1.3156142841808105e-14,
+      "rsta": 8.2340547141041e-15,
+      "vinb": 2.220446049250313e-16,
+      "clkb": 1.176836406102666e-14,
+      "rstb": 0.0
+    }
+  },
+  "history": {
+    "outa": {
+      "exact_export_assumption": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "1/50000",
+          "1/50000",
+          "1/100000",
+          "1/50000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4170,
+        "constraint_count": 109,
+        "epsilon": "1/1000",
+        "uncertainty": "0"
+      },
+      "candidate_budget_sensitivity": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "1/50000",
+          "1/50000",
+          "1/100000",
+          "1/50000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4170,
+        "constraint_count": 109,
+        "epsilon": "1/1000",
+        "uncertainty": "1/4000"
+      }
+    },
+    "outb": {
+      "exact_export_assumption": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "1/50000",
+          "1/50000",
+          "1/50000",
+          "1/50000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4170,
+        "constraint_count": 189,
+        "epsilon": "1/1000",
+        "uncertainty": "0"
+      },
+      "candidate_budget_sensitivity": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "1/50000",
+          "1/50000",
+          "1/50000",
+          "1/50000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4170,
+        "constraint_count": 189,
+        "epsilon": "1/1000",
+        "uncertainty": "1/4000"
+      }
+    }
+  },
+  "status": "observations_within_targets"
+}

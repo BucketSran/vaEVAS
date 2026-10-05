@@ -43,6 +43,29 @@ class RecordControls(unittest.TestCase):
         for group in GROUPS:
             self.assertIn('| ' + group + ' |', text)
 
+    def test_pending_application_candidate_still_checks_frozen_source(self):
+        source = self.root / 'dut.va'
+        checker = self.root / 'checker.py'
+        cases = self.root / 'task/cases.json'
+        cases.parent.mkdir()
+        source.write_text('correct reference')
+        checker.write_text('independent checker')
+        case = {'name': 'fixed', 'input': 3}
+        cases.write_text(json.dumps([case]))
+        candidate = {'case_name': 'fixed', 'case_sha256': identity(case),
+                     'source_sha256': sha(source), 'checker_sha256': sha(checker),
+                     'sources': [{'path': str(p.relative_to(self.root)), 'sha256': sha(p)}
+                                 for p in (source, checker, cases)]}
+        self.data['datasets'][1]['candidates'] = [candidate]
+        validate(self.data, self.root)
+        candidate['case_sha256'] = 'different case'
+        with self.assertRaisesRegex(ValueError, 'frozen case identity'):
+            validate(self.data, self.root)
+        candidate['case_sha256'] = identity(case)
+        source.write_text('changed')
+        with self.assertRaisesRegex(ValueError, 'changed compact evidence'):
+            validate(self.data, self.root)
+
     def test_duplicate_case_assignment_rejected(self):
         self.data['datasets'][0]['cases'].append(copy.deepcopy(self.case))
         with self.assertRaisesRegex(ValueError, 'duplicate case'):

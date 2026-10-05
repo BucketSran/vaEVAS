@@ -1,9 +1,14 @@
 # 四后端比较记录
 
 [维护契约](../../../evas/docs/COMPARISON.md)定义数据集、身份与复验规则。
-[当前计划表](PLANNED.md)由[snapshot-20261006-planned.json](snapshot-20261006-planned.json)
-生成。它含历史31条件的两档记录和今晚8条件的32项计划，不是新论文集。
-当前32项均为 T。待服务器/本地资源协调完成后，新观察进入新快照。
+[当前结果表](TABLE.md)由[snapshot-20261006-accounted.json](snapshot-20261006-accounted.json)
+生成。今晚固定8条件、基础档、四后端共32配置：Spectre和当前EVAS各8项有新有限观察P；
+OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未取得观察。
+不得将32项完整记账称为32项已完成实验。历史31条件、两档开发回放另列，新论文集N仍unknown。
+[原计划](PLANNED.md)及[EVAS先行快照](EVAS8.md)保留，不用最新结果回填旧记录。
+
+表C固定了va07的正确参考源码、constant-tighter条件和checker身份；四后端公共外壳、
+精度映射与连续时间资格仍待冻结。原EVAS单后端历史回放不进入四方C分母。
 
 ## 检查与生成
 
@@ -12,8 +17,8 @@
 ```sh
 python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
 python3 -B experiments/backends/comparison/records.py \
-  experiments/backends/comparison/snapshot-20261006-planned.json \
-  --output experiments/backends/comparison/PLANNED.md --check
+  experiments/backends/comparison/snapshot-20261006-accounted.json \
+  --output experiments/backends/comparison/TABLE.md --check
 ```
 
 渲染器校验固定分母、逐配置唯一性、输入身份、独立 checker、证据文件哈希、
@@ -73,3 +78,16 @@ Spectre参数为 `--backend spectre --spectre-profile EXISTING_PROFILE`；
 OpenVAF-R自己的版本回显仍为unknown，不能用发布包标签替代。
 历史精简分析/收据在仓库内可取得；历史原始归档仍为私有材料。
 许可证来源链接保存在同一结构化快照中，不声称上游当前文件证明旧二进制的完整许可。
+
+## 本次执行与复用边界
+
+本次启动16个仿真配置，无重复仿真；两个容器身份预检失败，未启动其16个配置的编译或仿真。
+Spectre首项仿真后，设置审计误导入旧同名模块；修复为精确模块路径后复用已有首项波形，
+再执行剩余7项。阶段命令/日志保持原哈希，收据同时保存初始及分析脚本身份。
+[evidence/sources](evidence/sources/)保留实际执行版本源码，含初始、恢复及失败预检版本。
+当前runner是维护入口，其哈希不替代实际运行脚本。原始波形与完整阶段日志仅在本任务runs/cmp保留；
+仓库内精简收据和分析可独立校验身份，但没有原始波形时不能声称重新执行。
+
+`ingest.py`验证返回工件清单及冻结输入，再把执行收据或失败预检导入一个新快照。
+预检失败保留T、基础设施阶段和原错误，不记为模型不支持。修改目标runtime时旧结果自动标stale；
+新实验需另行分配资源，不使用维护命令隐式重试。
