@@ -81,6 +81,36 @@ checks pass. Local installation changes outside the repository must be reported 
 4. Temporary integration work records its component commits and separate evidence; it does not mark components merged or released. Paused work records the remaining question in its existing PR/Issue.
 5. Merge the agreed scope after relevant checks and authorized review; universal simulator support is not a gate. End that task after merge and use a new PR for later work. Apply the retirement checklist separately before cleanup.
 
+## Spec delivery and unattended work
+
+At task start, recover the agreed scope and delivery endpoint: verified local changes,
+local commits, a reviewable PR, or integration into the target branch and daily checkout.
+Carry existing authorization forward; ask only when a missing decision affects the next
+action. A named skill supplies a procedure, not additional publication or cleanup authority.
+Use the [workflow routing](.agents/skills/vaevas-workflow/SKILL.md#use-shared-skills-when-needed)
+for implementation, audit trails, review and PR preparation.
+
+Choose PR boundaries by independently verifiable outcomes. A spec whose tickets jointly
+deliver one outcome can use one integration branch and PR. Several independent specs normally
+use separate PRs; record real dependencies and merge order under the branch lifecycle above.
+Do not combine all specs merely because they were planned together or assigned for one night.
+
+A spec is implemented when every required acceptance criterion has observed evidence,
+the necessary tests and contracts are current, and required review findings are resolved.
+Record any user-accepted scope change explicitly. Remaining required criteria keep the spec
+incomplete; code written, tickets attempted or a passing test count alone does not finish it.
+Report implementation and the requested delivery endpoint separately. PR bodies follow
+`pr` through [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md); a decision trail
+links the evidence and does not replace the PR explanation or acceptance checks.
+
+For authorized overnight or unattended execution, record the bounded scope, available
+resources, agreed time/cost/tool budgets, delivery endpoint and stop conditions in the
+existing task record. Reuse supplied limits and task context; clarify materially missing
+limits before costly or remote execution. Use `show-me-your-work` throughout execution and audit its single trail
+at handoff. Finish at the agreed outcome or resource limit; when a decision or dependency
+blocks part of the work, record it and continue independent authorized work within the budget.
+Scheduling a later run or recurring work is a separate request from running the present task.
+
 ## Workspace visibility and handoff
 
 The primary checkout is the daily human entry, named `current` in this local workspace.

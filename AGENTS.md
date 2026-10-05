@@ -29,6 +29,9 @@ Carry authorization forward for the same task, target and action within its reso
 | Prepare/publish a checkpoint | [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md) |
 
 Use the project entry and shared skills on demand; known component tasks can enter directly.
+For spec implementation, unattended work and PR delivery, follow the
+[skill routing](.agents/skills/vaevas-workflow/SKILL.md#use-shared-skills-when-needed) and
+[delivery criteria](CONTRIBUTING.md#spec-delivery-and-unattended-work).
 Shared planning skills use the [issue tracker](docs/agents/issue-tracker.md) and
 [domain documentation](docs/agents/domain.md). A full interview/spec/ticket sequence is not mandatory.
 Global vaEvas skills route here; legacy interview, KPI and multi-repository workflows do not apply.

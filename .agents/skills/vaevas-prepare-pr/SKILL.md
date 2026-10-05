@@ -33,6 +33,9 @@ evidence under the [workspace policy](../../../CONTRIBUTING.md#workspace-visibil
 Include only work belonging to the request. If commits are authorized, stage
 explicit paths or hunks and inspect the staged diff. Do not split or commit
 another contributor's in-progress work merely to tidy history.
+For spec-driven delivery, check the [spec completion and PR boundaries](../../../CONTRIBUTING.md#spec-delivery-and-unattended-work).
+Bind the PR's acceptance evidence to the included spec/tickets and reviewed head;
+identify remaining criteria without presenting a partial implementation as complete.
 
 ## Make the evidence reviewable
 

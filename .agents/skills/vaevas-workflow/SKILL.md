@@ -58,6 +58,8 @@ gap; do not claim the skill ran or require a library-wide setup for a small task
 | Write technical docs for people / agent instructions | `technical-writing` / `writing-for-agents` |
 | Unsettled goals or acceptance need discussion | `grilling`; use `grill-with-docs` when requested, with `domain-modeling` for resolved terms or decisions |
 | An agreed design needs a specification or dependent work needs tickets | `to-spec` / `to-tickets` when requested; reuse existing records and the project adaptations below |
+| The user invokes `implement` for a single bounded task | `implement`, with the owning component entry |
+| The user invokes `implement-spec` for a spec with dependent tickets | `implement-spec` for the task graph and integration; component entries own implementation and acceptance |
 | Authorized long-running, unattended or multi-phase execution | `show-me-your-work`; maintain one canonical decision trail during execution |
 | Diagnose a failure / evaluate a consequential shared change | `diagnosing-bugs` / `blast-radius` |
 | Measure or report performance / prevent an evidenced recurring error | `benchmark-checklist` / `correct` |
@@ -69,6 +71,27 @@ acceptance criteria instead of filling an exhaustive template. Follow the
 independent numerical answers and distinct kernel checks. Reuse agreed test
 boundaries; take unresolved choices back to the user. Publishing specs or tickets
 uses the tracker conventions and existing task authorization.
+
+When `implement` or `implement-spec` is invoked, apply these project adaptations:
+
+- Reuse the spec, tickets and configured tracker. Resolve missing acceptance or
+  blocking relationships before dependent work; a small task need not acquire
+  artificial tickets or subagents to fit a template.
+- Use the [spec delivery criteria](../../../CONTRIBUTING.md#spec-delivery-and-unattended-work)
+  to choose integration/PR boundaries and the requested endpoint. Commit, PR,
+  issue closure, merge and cleanup steps remain within that authorization.
+- Reuse a suitable branch and visible worktrees under the project ownership rules.
+  Inspect an unexpected base or existing changes before reconciliation; a shared
+  recipe's reset step does not permit discarding work. Keep research notes and
+  task evidence in the owning project's existing output area.
+- Component contracts and the project test mapping select checks. A generic
+  full-suite step does not require an unrelated simulator/backend matrix.
+  Reuse matching independent review through `vaevas-review-pr`.
+
+For overnight or unattended work, establish the bounds in the linked delivery
+policy before execution. `show-me-your-work` records the run; it does not schedule
+another run. Preparation and publication continue through `vaevas-prepare-pr`,
+with `pr` formatting the PR body and the canonical trail linked where needed.
 
 Use the project review skill for the required review scope, including any
 decision-trail review. Reuse review of the same requirements and evidence;
