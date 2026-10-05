@@ -28,6 +28,9 @@ def check_integer_expression(expr, model, values, *, check_literals=False):
         if e.op == 'parameter':
             return int(values[e.value]) if e.value in names and e.value in values else None
         args = [visit(a) for a in e.args]
+        if e.op == 'checked':
+            # Visit every obligation, but retain the actual return's type.
+            return args[0]
         if not args or None in args:
             return None
         if e.op == '/':

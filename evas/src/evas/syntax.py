@@ -79,7 +79,7 @@ class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "idtmod", "ddt", "call", "index",
-                "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"]
+                "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token

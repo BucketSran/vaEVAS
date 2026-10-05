@@ -124,7 +124,7 @@ class StatelessExpressionContracts(unittest.TestCase):
             compile_expr('alias*V(b)','alias=V(a)>0;','real alias;')
         with self.assertRaises(CompileError):
             compile_expr('0?alias:0','alias=idt(V(u),0);','real alias;')
-        function='analog function real sign_value; input x; real x; begin sign_value=x>0?2:-1; end endfunction'
+        function='analog function real sign_value; input x; real x; begin sign_value=x>0?2:-1; end endfunction '
         result=solve(compile_expr('sign_value(V(a))',declarations=function),list(INPUTS),
                      [[-1,0,0,0],[1,0,0,0]],kernel=KERNEL)
         self.assertEqual(values(result),[-1,2])
@@ -135,6 +135,77 @@ class StatelessExpressionContracts(unittest.TestCase):
         result=solve(compile_expr('alias','alias=V(a)>0; if(alias>0) alias=3;','real alias;'),
                      list(INPUTS),[[-1,0,0,0],[1,0,0,0]],kernel=KERNEL)
         self.assertEqual(values(result),[0,3])
+
+    def test_unused_function_arguments_and_overwritten_rhs_keep_source_checks(self):
+        discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
+        overwritten='analog function real overwrite; input x; real x,tmp; begin tmp=x>0; tmp=1; overwrite=1; end endfunction '
+        for expression in ('discard(V(y)>0)', '0?discard(V(y)>0):2',
+                           'discard(V(u)*V(u)>0)', 'discard(0*V(y)>0)',
+                           'discard((V(a)>0?1:0)*V(b))', '0?discard(V(u)*V(u)):2',
+                           'overwrite(V(y))', 'overwrite(V(u)*V(u))'):
+            with self.subTest(expression=expression), self.assertRaises(CompileError):
+                compile_expr(expression,declarations=discard+overwritten)
+        for declaration,prefix,expression in ((discard+' real alias;', 'alias=V(y);', 'discard(alias>0)'),
+                                              (discard+' real z[0:0];','z[0]=V(y);','discard(z[0]>0)'),
+                                              (discard+' genvar i;', '', 'discard(0*V(y)>0)')):
+            if 'genvar' in declaration:
+                prefix='for(i=0;i<1;i=i+1) V(y,r)<+discard(0*V(y)>0);'
+                expression='0'
+            with self.subTest(prefix=prefix), self.assertRaises(CompileError):
+                compile_expr(expression,prefix,declaration)
+
+    def test_discarded_decisions_remain_rejected_in_closed_contexts(self):
+        discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
+        fixtures=[
+            ('0','','parameter real k=discard(1>0);'),
+            ('q','@(initial_step) q=discard(1>0);','real q;'),
+            ('q','@(initial_step) q=0; @(timer(1,0,1e-12)) q=discard(1>0);','real q;'),
+            ('q','@(initial_step) q=0; @(cross(discard(V(a)>0),1,1e-9,1e-8)) q=1;','real q;'),
+            ('idt(discard(V(a)>0),0)','',''),
+            ('0','for(i=discard(1>0);i<2;i=i+1) V(y,r)<+0;','genvar i;'),
+            ('0','for(i=0;i<discard(1>0);i=i+1) V(y,r)<+0;','genvar i;'),
+            ('0','for(i=0;i<2;i=i+discard(1>0)) V(y,r)<+0;','genvar i;'),
+            ('0','','real z[0:discard(1>0)];'),
+            ('z[discard(1>0)]','z[0]=0; z[1]=0;','real z[0:1];'),
+        ]
+        for expression,prefix,declaration in fixtures:
+            with self.subTest(expression=expression,prefix=prefix,declaration=declaration),self.assertRaises(CompileError):
+                compile_expr(expression,prefix,discard+declaration)
+        source='module m(a,y,r); input a; output y; inout r; electrical a,y,r; '+discard+' parameter real k=discard(1>0); analog begin V(y,r)<+k; end endmodule'
+        with self.assertRaises(CompileError):
+            compile_sources({'closed.va':source},[Instance('dut','m',{'a':'a','y':'y','r':'0'},{'k':2})])
+
+    def test_validation_obligations_do_not_add_runtime_decisions(self):
+        from evas.ir import Affine
+        discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
+        overwrite='analog function real overwrite; input x; real x,tmp; begin tmp=x>0; overwrite=1; end endfunction '
+        for expression in ('discard(V(a)>0)','overwrite(V(a))',
+                           'discard(V(u)>0.3333333333333333)',
+                           '0?discard(V(u)>0.3333333333333333):1'):
+            with self.subTest(expression=expression):
+                program=compile_expr(expression,declarations=discard+overwrite)
+                if not expression.startswith('0?'):
+                    self.assertIsInstance(program.contributions[0].rhs,Affine)
+                sources={'u':[[0,0],[3,1]],'a':[[0,0],[3,0]],'b':[[0,0],[3,0]],'c':[[0,0],[3,0]]}
+                result=transient(program,sources,[1.],stop=3,max_step=3,kernel=KERNEL,vabstol=1e-9,reltol=0)
+                self.assertEqual(values(result),[1])
+        # A discarded ordinary nonlinear argument stays valid outside decisions.
+        self.assertEqual(values(solve(compile_expr('discard(V(u)*V(u))',declarations=discard),
+                                    list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1])
+
+    def test_function_obligations_use_the_existing_expansion_budget(self):
+        function='analog function real discard; input x; real x,tmp; begin tmp=x+x; discard=1; end endfunction '
+        expression='V(a)'
+        for _ in range(20):expression='discard('+expression+')'
+        with self.assertRaisesRegex(CompileError,'budget'):
+            compile_expr(expression,declarations=function)
+
+    def test_transparent_function_result_retains_integer_checks(self):
+        function='analog function real identity; input x; real x; begin identity=x; end endfunction '
+        with self.assertRaisesRegex(CompileError,'integer parameter arithmetic'):
+            compile_expr('0',declarations=function+'parameter integer n=identity(2)/2;')
+        p=compile_expr('V(a)>n',declarations=function+'parameter integer n=identity(2);')
+        self.assertEqual(values(solve(p,list(INPUTS),[[1,0,0,0],[3,0,0,0]],kernel=KERNEL)),[0,1])
 
     def test_generated_wire_tree_budget_is_preserved(self):
         with self.assertRaisesRegex(CompileError,'(generated|expanded) IR .*limit'):
