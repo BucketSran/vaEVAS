@@ -198,6 +198,20 @@ fn bisect_monotone(
                 "dynamic cross derivative is not strictly signed on the root bracket",
             ));
         }
+        // A strictly signed constant derivative makes the mean-value root
+        // enclosure exact when outward arithmetic returns a point. Preserve
+        // that proof before accepting a wider bisection box: unnecessary root
+        // width would become uncertainty in every subsequent history epoch.
+        if slope.lo == slope.hi {
+            let enclosure = I::point(lo) - endpoint_value(lo, range)? / slope;
+            if enclosure.finite()
+                && enclosure.lo == enclosure.hi
+                && enclosure.lo >= lo
+                && enclosure.hi <= hi
+            {
+                return Ok(Some(certified_root(enclosure, slope, ttol, etol)?));
+            }
+        }
         // Leave numerical headroom for this time enclosure to become a later
         // history initial condition. The public tolerances remain the hard
         // acceptance limits; existing history uncertainty may prevent reserve.
@@ -479,6 +493,59 @@ fn isolate_with_reserve(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn exact_constant_derivative_contracts_non_dyadic_bisection_root_to_point() {
+        let roots = isolate_history(
+            0.0,
+            3.0,
+            &mut |time| Ok(time * I::point(0.5) - I::point(0.5)),
+            &mut |_| Ok(I::point(0.5)),
+            1,
+            1e-10,
+            1e-10,
+        )
+        .unwrap();
+        assert_eq!(roots.len(), 1);
+        assert_eq!(roots[0].bounds, I::point(1.0));
+        assert_eq!(roots[0].derivative, I::point(0.5));
+    }
+
+    #[test]
+    fn constant_derivative_does_not_erase_history_or_rounding_uncertainty() {
+        let roots = isolate_history(
+            0.0,
+            1.0,
+            &mut |time| Ok(time - I::point(1.0) / I::point(3.0)),
+            &mut |_| Ok(I::ONE),
+            1,
+            1e-10,
+            1e-10,
+        )
+        .unwrap();
+        assert_eq!(roots.len(), 1);
+        assert!(roots[0].bounds.lo < roots[0].bounds.hi);
+        assert!(roots[0].bounds.lo <= 1.0 / 3.0 && roots[0].bounds.hi >= 1.0 / 3.0);
+
+        let error = isolate_history(
+            0.0,
+            3.0,
+            &mut |time| {
+                Ok(I::point(1.5) - time * I::point(0.5)
+                    + I {
+                        lo: -1e-12,
+                        hi: 1e-12,
+                    })
+            },
+            &mut |_| Ok(I::point(-0.5)),
+            -1,
+            1e-10,
+            1e-10,
+        )
+        .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        assert!(error.message.contains("sign at interval end"));
+    }
 
     fn iv(lo: f64, hi: f64) -> I {
         I { lo, hi }
