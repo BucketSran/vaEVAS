@@ -27,7 +27,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 | --- | --- |
 | 静态电压方程 | `solve` 独立求每个样本的工作点；支持仿射关系和受限多项式非线性 |
 | 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定及保持状态控制的 `timer`、事件体条件与顺序赋值 |
-| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd` 和 `ddt` |
+| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd`、有限单实极点 `laplace_np` 和 `ddt` |
 | 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
 | 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
 | 诊断与来源查询 | 可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
@@ -246,6 +246,10 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
 范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
+
+`laplace_np` 当前只接受常量单项分子、一个有限负实极点、零虚部且不提供 epsilon。
+只有 `-1/p` 能精确表示为 binary64 才转换为既有 `laplace_nd`；其余域明确拒绝。
+独立解析答案、调用点隔离和未扩大的依赖限制见[单极点契约](docs/math/operators.md#laplace_np)。
 
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
 [事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，
