@@ -16,7 +16,7 @@ def main():
         from .identity import main as identity_main
         return identity_main(sys.argv[2:])
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["compile", "solve", "transient", "simulate"])
+    parser.add_argument("action", choices=["compile", "solve", "transient", "simulate", "lint"])
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--kernel", type=Path, help="explicit path to the built evas-kernel executable")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="kernel execution timeout in seconds (default: %(default)s)")
@@ -24,6 +24,10 @@ def main():
     if args.action in ("solve", "transient", "simulate") and args.kernel is None:
         parser.error("execution requires --kernel; build evas/rust_core first")
     try:
+        if args.action == 'lint':
+            from .lint import lint_manifest
+            print(json.dumps(lint_manifest(args.manifest), allow_nan=False))
+            return 0
         if args.action == 'simulate':
             from .scs import simulate_scs
             result = simulate_scs(args.manifest, kernel=args.kernel.resolve(), timeout=args.timeout)
