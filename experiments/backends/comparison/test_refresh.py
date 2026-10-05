@@ -43,6 +43,7 @@ class RefreshControls(unittest.TestCase):
                 row['checker_identity']=receipt['checker_identity']
                 if label=='fresh':
                     receipt.update(source_revision='f'*40,runtime_identity='synthetic-new-runtime',kernel_sha256='synthetic-new-kernel',run_id='synthetic-refresh')
+                    receipt['tool'].update(revision='f'*40,runtime_identity='synthetic-new-runtime',kernel_sha256='synthetic-new-kernel')
                     row['measurement'].update(revision='f'*40,runtime_identity='synthetic-new-runtime',kernel_sha256='synthetic-new-kernel',run_id='synthetic-refresh')
                 p=self.work/(label+'-'+row['backend']+'-'+row['case']+'-receipt.json');save(p,receipt)
                 ref={'path':str(p.relative_to(ROOT)),'sha256':sha(p)}
@@ -73,6 +74,18 @@ class RefreshControls(unittest.TestCase):
     def make(self):
         from refresh import refresh
         return refresh(self.parent_path,self.fresh_path,self.old,self.new,self.work/'proof')
+
+    def test_outer_new_identity_cannot_hide_old_executed_tool(self):
+        row=next(r for r in self.fresh['records'] if r['dataset']=='cmp8-base' and r['backend']=='evas')
+        old=next(r for r in self.parent['records'] if tuple(r[k] for k in ('dataset','backend','case','profile'))==tuple(row[k] for k in ('dataset','backend','case','profile')))
+        path=ROOT/row['execution_receipt']['path']
+        receipt=load(path);receipt['tool']=load(ROOT/old['execution_receipt']['path'])['tool']
+        path.write_text(json.dumps(receipt))
+        ref={'path':str(path.relative_to(ROOT)),'sha256':sha(path)}
+        row['execution_receipt']=ref
+        row['evidence']=[e for e in row['evidence'] if e['kind']!='receipt']+[dict(ref,kind='receipt')]
+        self.fresh_path.write_text(json.dumps(self.fresh))
+        with self.assertRaisesRegex(ValueError,'tool identity'):self.make()
 
     def test_new_receipt_reuse_and_current_evas_render_and_derive(self):
         from derive import derive
