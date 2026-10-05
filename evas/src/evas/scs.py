@@ -249,8 +249,14 @@ def load_scs(path: str | Path) -> ScsTestbench:
         if name not in models:
             _fail(f'unknown VA module or unsupported device {name!r}',token,unsupported=True)
         module=models[name]
-        parameters=bind_parameters(module,settings,token.text)
-        expanded,_=scalarize_nodes(module,parameters)
+        try:
+            parameters=bind_parameters(module,settings,token.text)
+            expanded,_=scalarize_nodes(module,parameters)
+        except CompileError as exc:
+            # Preserve a more precise VA origin, otherwise identify the SCS instance.
+            exc.diagnostic.setdefault('location', dict(source=token.source, line=token.line, column=token.column))
+            exc.diagnostic.setdefault('instance', token.text)
+            raise
         if len(nodes)!=len(expanded.ports):
             _fail(f'instance {token.text!r} requires {len(expanded.ports)} scalar ports in declared order',token)
         instances.append(dict(name=token.text,module=name,connections=dict(zip(expanded.ports,nodes)),parameters=settings))

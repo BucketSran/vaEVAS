@@ -114,8 +114,13 @@ class ScsVectors(unittest.TestCase):
                  (no_loop.replace('from [1:4096]', ''), 'DUT (a b c d) bus N=4097', 'element budget'),
                  (width, 'DUT (a b c d) bus N=2050', 'total electrical node budget')]
         for source, device, diagnostic in cases:
-            with self.subTest(device=device, diagnostic=diagnostic), self.assertRaisesRegex(CompileError, diagnostic):
+            with self.subTest(device=device, diagnostic=diagnostic), self.assertRaisesRegex(CompileError, diagnostic) as caught:
                 load_scs(self.deck(source, device))
+            detail = caught.exception.diagnostic
+            self.assertIn('location', detail)
+            self.assertEqual(detail['instance'], 'DUT')
+            if diagnostic in ('mismatch', 'total electrical node budget'):
+                self.assertEqual(detail['location'], dict(source=str(self.path.resolve()), line=4, column=1))
 
     def test_bus_tokens_in_connections_sources_and_save_remain_rejected(self):
         cases = [dict(devices='DUT (a[1] b c d) bus'),
