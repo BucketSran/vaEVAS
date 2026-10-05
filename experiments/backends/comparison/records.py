@@ -360,6 +360,9 @@ def render(data, root=ROOT, target=None):
     if data.get('refresh'):
         parent = data['refresh']['parent']
         lines += [f"integration 刷新：新 EVAS8 实测，Spectre8 复用原收据；另外16项T仅引用原未运行/失败预检，本轮无外部启动或环境重验。原快照 [{parent['path']}]({'../../../' + parent['path']})，SHA {parent['sha256']}。", '']
+        lines += ['## 本次刷新限制与身份补充', '']
+        for limit in data.get('limits', []):
+            lines += [limit, '']
     if data['schema_version'] == 1:
         lines += ['历史 schema1：V2 单端1mV归一化指标已失效，明确排除B；本表不追认旧指标。新结论请使用 schema2 派生快照。', '']
     header = '| 组 | ' + ' | '.join(LABELS) + ' |'
@@ -412,7 +415,10 @@ def render(data, root=ROOT, target=None):
         refs = ', '.join(f"[{ref['kind']}]({ '../../../' + ref['path'] })" for ref in r.get('evidence', []))
         state = freshness(r, targets)
         lines.append(f"| {r['dataset']} / {r['case']} / {r['profile']} | {r['backend']} | {r['verdict']} | {r['stage']} | {state}; {r['accounting']} | {refs}; {r['reason']} |")
-    lines += ['', '## 工具组成与许可证核实', '', '| 组件 | 实测版本/工件 | 上游声明 | 对实际组件的核实 |', '| --- | --- | --- | --- |']
+    lines += ['', '## 工具组成与许可证核实', '']
+    if data.get('refresh'):
+        lines += ['以下为冻结的parent组件清单；其中EVAS source hash表示历史目标源码身份。当前EVAS实测与独立版本补充见上方。', '']
+    lines += ['| 组件 | 实测版本/工件 | 上游声明 | 对实际组件的核实 |', '| --- | --- | --- | --- |']
     for component in data.get('components', []):
         link = component.get('license_source')
         declared = f"[{component['upstream_license']}]({link})" if link else component['upstream_license']
