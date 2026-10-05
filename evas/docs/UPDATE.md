@@ -4,6 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 未合并候选：仅编译预检与有限诊断登记（DIAG）
+
+- 新增 `python -m evas lint manifest.json`，不查找或启动内核；成功仅表示编译检查通过。
+- 在 manifest/source I/O、参数依赖/覆盖和编译资源预算来源登记稳定分类。
+  未登记的诊断保留原 payload，类别为 `unknown`；来源盘点与实际执行检查分别计数。
+- 不改变 IR17、数值行为或包版本；接口、已测边界与剩余缺口见[诊断说明](diagnostics.md)。
+
 ## 未合并候选：显式身份查询（PKG-ID）
 
 - Python 与 Rust CLI 可在无 manifest、无 stdin 数据时查询实际包/内核身份。
