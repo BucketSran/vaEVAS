@@ -20,8 +20,9 @@ def freeze_candidates(data, root):
                     source_bytes(original,root,candidate['revision'])
                     refs.append(original)
                     continue
-                original=dict(original,original_path=original['path'])
+                # Resolve the legacy path at its fixed revision before requiring an archive.
                 content=source_bytes(original,root,candidate['revision'])
+                original=dict(original,original_path=original['path'])
                 digest=hashlib.sha256(content).hexdigest()
                 directory.mkdir(parents=True,exist_ok=True)
                 path=directory/(digest+'-'+Path(original['original_path']).name)

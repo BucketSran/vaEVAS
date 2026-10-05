@@ -146,3 +146,16 @@ class ReviewControls(unittest.TestCase):
         row['measurement']['revision']='new-candidate'
         with self.assertRaisesRegex(ValueError,'static derivation changed historical execution identity'):
             validate(data)
+
+    def test_deriving_old_snapshot_survives_real_base1006_checker_drift(self):
+        from derive import derive
+        target=ROOT/'benchmark/checkers/triangle_evas.py'
+        changed=hashlib.sha256(subprocess.check_output(['git','show','1006c3d5:benchmark/checkers/triangle_evas.py'],cwd=ROOT)).hexdigest()
+        original=records.sha
+        with patch('records.sha',side_effect=lambda p:changed if p.resolve()==target.resolve() else original(p)):
+            data=derive(SNAPSHOT)
+            validate(data)
+        candidate=next(d for d in data['datasets'] if d['id']=='application-reference')['candidates'][0]
+        self.assertEqual(candidate['adapter_checker_sha256'],'31ac5dc08fd1a7fd308fc2f5f4d7ffde1a3f412959daa3c281036835903fa403')
+        self.assertEqual(candidate['revision'],'d06581f92628ab9e94a2d16bf600b0225174bb6d')
+        self.assertNotEqual(candidate['adapter_checker_sha256'],changed)
