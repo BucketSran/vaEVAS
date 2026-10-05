@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from freeze import freeze
-from runner import execute, verify
+from runner import execute, effective_settings, verify
 
 
 class RunnerControls(unittest.TestCase):
@@ -29,6 +29,20 @@ class RunnerControls(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'checker changed'):
                     verify(root)
                 launch.assert_not_called()
+
+    def test_spectre_settings_uses_exact_module_despite_name_collision(self):
+        import json
+        import types
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            requested = {'vabstol': 1e-8, 'iabstol': 1e-12, 'reltol': 1e-5, 'stop': 4e-6,
+                         'step': 1e-9, 'maxstep': 1e-9, 'method': 'traponly'}
+            (root / 'requested_settings.json').write_text(json.dumps(requested))
+            (root / 'spectre.log').write_text('\n'.join(f'{k} = {v}' for k, v in requested.items()) + '\n')
+            with patch.dict('sys.modules', {'report': types.ModuleType('wrong_historical_report')}):
+                actual = effective_settings(root, 'spectre')
+            self.assertTrue(actual['requested_values_match'])
+            self.assertEqual(actual['actual']['stop'], 4e-6)
 
     def test_timeout_records_failure_and_never_retries(self):
         with tempfile.TemporaryDirectory() as directory:

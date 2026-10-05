@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "run_id": "spectre-base",
+  "backend": "spectre",
+  "condition": "c1-main",
+  "profile": "base",
+  "source_revision": "unknown",
+  "runtime_identity": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "kernel_sha256": null,
+  "tool": {
+    "revision": "unknown",
+    "runtime_identity": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "version": "sub-version  21.1.0.509.isr12",
+    "version_probe": {
+      "argv": [
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "stage": "version",
+      "started_utc": "2026-10-05T20:22:29Z",
+      "timeout_s": 30,
+      "thread_request": 1,
+      "exit_code": 0,
+      "timed_out": false,
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+    }
+  },
+  "input_identity": "906e430e4173669c0215d9f48c050f13a5040d56e98f505503905ab9fa38b6fe",
+  "input_manifest_sha256": "a809f443ca64f54b9d72efb1b506dcca056bb827b2e244d5ed75f8ce7e11a811",
+  "source_sha256": "3d09d54fc1319f99d39825195986b4f35c96b1210bc61120286cbe1d773ddff7",
+  "checker_identity": "d6cc34bf0ef9a0d70e235772cdedba6ee28faa30d03835edb0e4f145e1931a2c",
+  "initial_runner_sha256": "1de5b21ebb9488c59db3b4337fdc2ae72920576f3e39613bc734823bd1b6d808",
+  "analysis_runner_sha256": "6b4af0b4f8fd5d2360de3e0b1a82da57532ba7c4ce717f1cdbab11371fbb4bc1",
+  "runner_sources": [
+    {
+      "path": "experiments/backends/comparison/evidence/sources/spectre-initial-runner-1de5b21ebb9488c59db3b4337fdc2ae72920576f3e39613bc734823bd1b6d808.py.txt",
+      "sha256": "1de5b21ebb9488c59db3b4337fdc2ae72920576f3e39613bc734823bd1b6d808",
+      "kind": "actual runner source"
+    },
+    {
+      "path": "experiments/backends/comparison/evidence/sources/spectre-recovery-runner-6b4af0b4f8fd5d2360de3e0b1a82da57532ba7c4ce717f1cdbab11371fbb4bc1.py.txt",
+      "sha256": "6b4af0b4f8fd5d2360de3e0b1a82da57532ba7c4ce717f1cdbab11371fbb4bc1",
+      "kind": "actual runner source"
+    }
+  ],
+  "continuation": {
+    "old_started_sha256": "7669b4c44baa4d7638b4ec782e18cc6468ad5831e2d703ab1ec48517ff930e5f",
+    "runner_sha256": "6b4af0b4f8fd5d2360de3e0b1a82da57532ba7c4ce717f1cdbab11371fbb4bc1",
+    "reason": "Explicit module-path repair; completed simulations are analyzed without replay."
+  },
+  "allocation": "root-cmp-remote24-20261006",
+  "requested_settings": {
+    "step": 1e-09,
+    "reltol": 1e-05,
+    "vabstol": 1e-08,
+    "iabstol": 1e-12,
+    "stop": 4e-06,
+    "maxstep": 1e-09,
+    "method": "traponly",
+    "forced_strobe": false
+  },
+  "effective_settings": {
+    "actual": {
+      "vabstol": 1e-08,
+      "iabstol": 1e-12,
+      "reltol": 1e-05,
+      "stop": 4e-06,
+      "step": 1e-09,
+      "maxstep": 1e-09,
+      "method": "traponly"
+    },
+    "requested_values_match": true,
+    "interpretation": "logged tool settings; equal names do not imply equivalent error control"
+  },
+  "commands": [
+    {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "/bin/csh",
+        "-f",
+        "run.csh"
+      ],
+      "stage": "simulate",
+      "started_utc": "2026-10-05T20:25:07Z",
+      "timeout_s": 90,
+      "thread_request": 1,
+      "exit_code": 0,
+      "timed_out": false,
+      "log_sha256": "d4089575a8d34910d9e023c28590b9aefed6f3ba693ed5d335772864a670c2b7"
+    }
+  ],
+  "execution_status": "waveform_available",
+  "waveform_sha256": "f04e32f23f43076c88abd5f9ef81ad35c3a7d7bcc91541cab7aa7607e56bae42",
+  "raw_file_manifest_sha256": "20196edf85db877d9af5f604a3b4c0b1168699eef22968a5b8088ec3a81e530d",
+  "raw_availability": "task-local; original waveforms/logs not committed",
+  "observation": {
+    "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/c1-main/observation.json",
+    "sha256": "5cddce14cbf68bb65dab17a23ecb31241f66a1753932d53c43c200c35fad2d7f"
+  }
+}

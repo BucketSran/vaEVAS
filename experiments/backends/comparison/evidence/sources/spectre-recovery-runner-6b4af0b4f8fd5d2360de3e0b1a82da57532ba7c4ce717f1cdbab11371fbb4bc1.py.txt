@@ -200,11 +200,7 @@ def run(args):
         if any(images[n]['config_id'] != expected[n]['config_id'] for n in names):
             raise ValueError('pinned container identity drift')
         tool = {'revision': 'unknown', 'runtime_identity': identity({n: images[n]['config_id'] for n in names}),
-                'images': {n: images[n] for n in names}, 'environment_sha256': sha(path),
-                'environment_input_manifest_sha256': sha(args.environment / 'INPUT_MANIFEST.json')}
-        if args.backend == 'openvaf_ngspice':
-            compiler = env.PACKAGE / 'backend-semantics-v1/tools/reloaded/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r'
-            tool['openvaf_artifact_sha256'] = sha(compiler)
+                'images': {n: images[n] for n in names}, 'environment_sha256': sha(path)}
     started = {'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
          'plan_sha256': sha(source / 'RUN_PLAN.json'), 'configurations': 8, 'max_simulations': 8,
          'max_compilations': 8, 'stage_timeout_s': 90, 'license_timeout_s': 30, 'tool': tool,
@@ -257,12 +253,7 @@ def run(args):
             if (work / 'worker-result.json').exists():
                 result = load(work / 'worker-result.json')
         elif args.backend == 'spectre':
-            script = setup + binary + ' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n'
-            if (work / 'run.csh').exists():
-                if (work / 'run.csh').read_text() != script:
-                    raise ValueError('completed Spectre invocation script drift')
-            else:
-                (work / 'run.csh').write_text(script)
+            (work / 'run.csh').write_text(setup + binary + ' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n')
             if args.resume_finished_spectre and (work / 'simulate.json').is_file():
                 stage = load(work / 'simulate.json')
                 if sha(work / 'simulate.log') != stage['log_sha256']:
@@ -294,7 +285,6 @@ def run(args):
             result = {'status': 'missing_compile_artifact', 'failure_stage': 'compile'}
         if result.get('waveform'):
             result['waveform_sha256'] = sha(work / result['waveform'])
-        result['compiled_artifacts'] = {name: sha(work / name) for name in ('dut.osdi', 'dut.cc', 'dut.so') if (work / name).is_file()}
         result.update(item, tool=tool, commands=stages, analysis=analyze(work, args.backend, result))
         result['runner_sha256'] = sha(Path(__file__))
         if result['status'] == 'waveform_available':

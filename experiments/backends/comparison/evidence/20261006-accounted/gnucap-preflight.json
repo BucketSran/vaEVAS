@@ -1,0 +1,85 @@
+{
+  "backend": "gnucap",
+  "input_manifest_sha256": "a809f443ca64f54b9d72efb1b506dcca056bb827b2e244d5ed75f8ce7e11a811",
+  "allocation": "root-cmp-remote24-20261006",
+  "tool": {
+    "revision": "unknown",
+    "runtime_identity": "90f0f237d4b94a9b0c17cf8ed42883d1a516ea90f26def9a5c70f02f4ffa0dec",
+    "images": {
+      "gnucap": {
+        "source_ref": "vabench-gnucap:20260729-final",
+        "config_id": "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:c78bfede9d62a758f491890df05231258bb6de39d057e00a0a19c5cfe0b451e9",
+        "platform_manifest_id": "sha256:78e7b2a836f6447f1cd39c21123b1ac27742b5e65913a4985d0d463afbb5cc2f"
+      }
+    },
+    "environment_sha256": "3b85fddd09d943b331b0f6ca1b8d687c5932d6f2e2ec7683133f418e4901edba",
+    "environment_input_manifest_sha256": "208aa10ecf466c138ed11c76d057a75fa35006012ded363cade951686ca790d7"
+  },
+  "probe": {
+    "argv": [
+      "podman",
+      "--root",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/storage",
+      "--runroot",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/runroot",
+      "--storage-driver",
+      "overlay",
+      "--storage-opt",
+      "ignore_chown_errors=true",
+      "run",
+      "--rm",
+      "--name",
+      "evas-env-d66456228425",
+      "--pull=never",
+      "--network=none",
+      "--user=0:0",
+      "--cgroups=disabled",
+      "--security-opt",
+      "label=disable",
+      "--cap-drop=ALL",
+      "--read-only",
+      "--tmpfs",
+      "/tmp:rw,nosuid,size=512m",
+      "--env",
+      "OMP_NUM_THREADS=1",
+      "--env",
+      "OPENBLAS_NUM_THREADS=1",
+      "--volume",
+      "/tmp/chips-jinzhihong/cmp-20261006-01/gnucap-base:/work:rw",
+      "--workdir",
+      "/work",
+      "--volume",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/package/backend-semantics-v1/tools/reloaded:/compiler:ro",
+      "--entrypoint",
+      "/bin/sh",
+      "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+      "-c",
+      "ulimit -v 4194304 || exit 70; exec /usr/bin/taskset -c \"$@\"",
+      "env-run",
+      "0",
+      "/opt/gnucap/bin/gnucap-mg-vams",
+      "--version"
+    ],
+    "stage": "version-gnucap",
+    "started_utc": "2026-10-05T20:27:23Z",
+    "timeout_s": 90,
+    "thread_request": 1,
+    "exit_code": 125,
+    "timed_out": false,
+    "log_sha256": "d2c8cbc5e9c70c1ea4e58ab82351cf649943d83952c693a38c8fe6a3ca764000"
+  },
+  "runner_sources": [
+    {
+      "path": "experiments/backends/comparison/evidence/sources/preflight-runner-a3423b6a82f9742ad35e65c8c6034362951682ade4f9689837668aab40fb1041.py.txt",
+      "sha256": "a3423b6a82f9742ad35e65c8c6034362951682ade4f9689837668aab40fb1041",
+      "kind": "actual runner source"
+    }
+  ],
+  "failure_log": "Error: creating container storage: creating read-write layer with ID \"ee460e31b4fcf7e94e145264f68d7b02fe1d59cd7359d636b54a7a3e2e634823\": Stat /tmp/chips-jinzhihong/evas-comparison-20260925/storage/overlay/b10d4abd98d26b5c30aa967545194de14a9d95fef173956803b33c9708bc6908/diff: no such file or directory\n",
+  "case_compilation_launches": 0,
+  "case_simulation_launches": 0,
+  "reason": "Existing pinned container layer is missing; no backend case was launched. No restore or retry."
+}

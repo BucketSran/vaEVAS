@@ -60,6 +60,18 @@ def validate(data, root=ROOT, target=None):
     expected = set()
     cases_by_dataset = {}
     for d in data['datasets']:
+        for candidate in d.get('candidates', []):
+            for ref in candidate['sources']:
+                evidence_ok(ref, root)
+            refs = {ref['path']: ref['sha256'] for ref in candidate['sources']}
+            if candidate['source_sha256'] not in refs.values() or candidate['checker_sha256'] not in refs.values():
+                raise ValueError('application source/checker identity mismatch')
+            case_refs = [ref for ref in candidate['sources'] if ref['path'].endswith('/cases.json')]
+            if len(case_refs) != 1:
+                raise ValueError('application case source required')
+            cases = [c for c in load(root / case_refs[0]['path']) if c['name'] == candidate['case_name']]
+            if len(cases) != 1 or identity(cases[0]) != candidate['case_sha256']:
+                raise ValueError('application frozen case identity mismatch')
         if d['state'] == 'pending':
             if d['cases'] is not None or d['denominator'] is not None:
                 raise ValueError('pending denominator must be unknown')
@@ -90,6 +102,8 @@ def validate(data, root=ROOT, target=None):
             raise ValueError('unknown accounting state')
         if not r['stage'] or not r['reason']:
             raise ValueError('stage and interpretation required')
+        for ref in r.get('evidence', []):
+            evidence_ok(ref, root)
         if r['verdict'] == 'T':
             if r['accounting'] != 'unrun' or r.get('measurement') is not None or r.get('metrics'):
                 raise ValueError('unrun record cannot contain observations')
@@ -99,8 +113,6 @@ def validate(data, root=ROOT, target=None):
                 raise ValueError('observed record needs measured identity')
             if not r.get('evidence'):
                 raise ValueError('missing evidence for observation or pass')
-            for ref in r['evidence']:
-                evidence_ok(ref, root)
             if r['verdict'] == 'P' and not r.get('checker_identity'):
                 raise ValueError('pass requires independent checker identity')
             if r['verdict'] == 'P' and r['stage'] != 'analysis':
@@ -111,6 +123,8 @@ def validate(data, root=ROOT, target=None):
                     raise ValueError('new observation requires execution receipt')
                 evidence_ok(ref, root)
                 receipt = load(root / ref['path'])
+                for source in receipt.get('runner_sources', []):
+                    evidence_ok(source, root)
                 bindings = {'backend': r['backend'], 'condition': r['case'], 'profile': r['profile'],
                             'input_identity': r['input_identity'], 'source_revision': m['revision'],
                             'runtime_identity': m['runtime_identity'], 'checker_identity': r['checker_identity']}
@@ -200,6 +214,10 @@ def render(data, root=ROOT, target=None):
             for group in GROUPS:
                 lines.append('| ' + group + ' | ' + ' | '.join('pending' for _ in BACKENDS) + ' |')
             lines.append('')
+            for candidate in d.get('candidates', []):
+                lines += [f"固定正确参考候选 {candidate['id']}，case={candidate['case_name']}，source revision={candidate['revision']}。",
+                          f"源码 SHA={candidate['source_sha256']}；case SHA={candidate['case_sha256']}；checker SHA={candidate['checker_sha256']}。",
+                          f"公共合同待冻结: {candidate['pending_contract']}。历史单后端开发入口 [{candidate['id']}]({ '../../../' + candidate['history_path'] })，不填四方分母。", '']
             continue
         for profile in d['profiles']:
             lines += [f"A 行为计数，profile={profile}，各后端 N={d['denominator']}。", '', header, divider]

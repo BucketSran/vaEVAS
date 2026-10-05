@@ -80,11 +80,7 @@ def worker(work, kernel):
                              kernel=kernel, vabstol=settings['vabstol'], reltol=settings['reltol'])
         save(work / 'effective.json', {'vabstol': settings['vabstol'], 'reltol': settings['reltol'],
              'max_step': settings['maxstep'], 'stop': settings['stop'], 'output_points': len(times),
-             'engine': response['engine'], 'transient_summary': {
-                 'accepted_steps': response['transient'].get('accepted_steps'),
-                 'discarded_trials': response['transient'].get('discarded_trials'),
-                 'state_names': response['transient'].get('state_names'),
-                 'event_count': len(response['transient'].get('events', []))},
+             'engine': response['engine'], 'transient': response['transient'],
              'unsupported_spice_controls': ['iabstol', 'integration method']})
         with (work / 'waveform.csv').open('x') as stream:
             writer = csv.writer(stream)
@@ -118,19 +114,13 @@ def effective_settings(work, backend):
     if backend == 'evas':
         return load(work / 'effective.json')
     if backend == 'spectre':
-        path = ROOT / 'experiments/backends/dvs2-spectre-validation/report.py'
-        spec = importlib.util.spec_from_file_location('cmp_spectre_report', path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        actual = module.settings((work / 'spectre.log').read_text())
+        from report import settings
+        actual = settings((work / 'spectre.log').read_text())
         mapping = {k: k for k in actual}
     else:
         sys.path.insert(0, str(ROOT / 'experiments/backends/dvs2-four-backend-validation'))
-        path = ROOT / 'experiments/backends/dvs2-four-backend-validation/audit.py'
-        spec = importlib.util.spec_from_file_location('cmp_four_backend_audit', path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        actual, mapping = module.setting_readback(backend, (work / 'simulate.log').read_text())
+        from audit import setting_readback
+        actual, mapping = setting_readback(backend, (work / 'simulate.log').read_text())
     for name, request in mapping.items():
         if isinstance(actual[name], str):
             matches = actual[name] == requested[request]
@@ -148,14 +138,7 @@ def run(args):
     output = args.output.resolve()
     if output.is_relative_to(source):
         raise ValueError('output must be outside frozen inputs')
-    if args.resume_finished_spectre:
-        if args.backend != 'spectre' or not output.is_dir():
-            raise ValueError('recovery only accepts an existing Spectre batch')
-        previous = load(output / 'STARTED.json')
-        if previous['backend'] != 'spectre' or previous['input_manifest_sha256'] != sha(source / 'INPUT_MANIFEST.json'):
-            raise ValueError('recovery batch identity mismatch')
-    else:
-        output.mkdir(parents=True, exist_ok=False)
+    output.mkdir(parents=True, exist_ok=False)
     selected = [p for p in plan if p['backend'] == args.backend]
     tool = {}
     env = None
@@ -175,18 +158,13 @@ def run(args):
         if any(not re.fullmatch(r'/[A-Za-z0-9_./-]+', p) for p in [binary, *scripts]):
             raise ValueError('unsupported tool path')
         setup = '\n'.join('source ' + p for p in scripts) + '\n'
-        if args.resume_finished_spectre:
-            tool = previous['tool']
-            if sha(Path(binary)) != tool['binary_sha256'] or [sha(Path(p)) for p in scripts] != tool['setup_sha256']:
-                raise ValueError('Spectre identity changed during recovery')
-        else:
-            (output / 'version.csh').write_text(setup + binary + ' -W\nexit $status\n')
-            probe = execute(['/bin/csh', '-f', 'version.csh'], output, 'version', timeout=30)
-            if probe['exit_code'] or probe['timed_out']:
-                raise RuntimeError('Spectre tool identity failed; no cases launched')
-            tool = {'revision': 'unknown', 'runtime_identity': sha(Path(binary)),
-                    'binary_sha256': sha(Path(binary)), 'setup_sha256': [sha(Path(p)) for p in scripts],
-                    'version': (output / 'version.log').read_text().strip(), 'version_probe': probe}
+        (output / 'version.csh').write_text(setup + binary + ' -W\nexit $status\n')
+        probe = execute(['/bin/csh', '-f', 'version.csh'], output, 'version', timeout=30)
+        if probe['exit_code'] or probe['timed_out']:
+            raise RuntimeError('Spectre tool identity failed; no cases launched')
+        tool = {'revision': 'unknown', 'runtime_identity': sha(Path(binary)),
+                'binary_sha256': sha(Path(binary)), 'setup_sha256': [sha(Path(p)) for p in scripts],
+                'version': (output / 'version.log').read_text().strip(), 'version_probe': probe}
     else:
         if not args.environment:
             raise ValueError('existing pinned container environment required')
@@ -200,20 +178,11 @@ def run(args):
         if any(images[n]['config_id'] != expected[n]['config_id'] for n in names):
             raise ValueError('pinned container identity drift')
         tool = {'revision': 'unknown', 'runtime_identity': identity({n: images[n]['config_id'] for n in names}),
-                'images': {n: images[n] for n in names}, 'environment_sha256': sha(path),
-                'environment_input_manifest_sha256': sha(args.environment / 'INPUT_MANIFEST.json')}
-        if args.backend == 'openvaf_ngspice':
-            compiler = env.PACKAGE / 'backend-semantics-v1/tools/reloaded/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r'
-            tool['openvaf_artifact_sha256'] = sha(compiler)
-    started = {'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
+                'images': {n: images[n] for n in names}, 'environment_sha256': sha(path)}
+    save(output / 'STARTED.json', {'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
          'plan_sha256': sha(source / 'RUN_PLAN.json'), 'configurations': 8, 'max_simulations': 8,
          'max_compilations': 8, 'stage_timeout_s': 90, 'license_timeout_s': 30, 'tool': tool,
-         'runner_sha256': sha(Path(__file__)), 'allocation': args.allocation}
-    if args.resume_finished_spectre:
-        save(output / 'CONTINUATION.json', {'old_started_sha256': sha(output / 'STARTED.json'),
-             'runner_sha256': sha(Path(__file__)), 'reason': 'Explicit module-path repair; completed simulations are analyzed without replay.'})
-    else:
-        save(output / 'STARTED.json', started)
+         'runner_sha256': sha(Path(__file__)), 'allocation': args.allocation})
 
     def container(image, executable, argv, work, stage):
         command, name = env.container(tool['images'][image]['config_id'], executable, argv, work)
@@ -241,14 +210,7 @@ def run(args):
     results = []
     for item in selected:
         work = output / 'runs' / item['condition'] / 'base'
-        if work.exists() and args.resume_finished_spectre:
-            for frozen in (source / item['work']).iterdir():
-                if frozen.is_file() and sha(work / frozen.name) != sha(frozen):
-                    raise ValueError('completed-case input drift')
-            if not (work / 'simulate.json').is_file():
-                raise ValueError('existing partial Spectre stage cannot be silently relaunched')
-        else:
-            shutil.copytree(source / item['work'], work)
+        shutil.copytree(source / item['work'], work)
         stages = []
         result = {'status': 'not_run'}
         if args.backend == 'evas':
@@ -257,19 +219,8 @@ def run(args):
             if (work / 'worker-result.json').exists():
                 result = load(work / 'worker-result.json')
         elif args.backend == 'spectre':
-            script = setup + binary + ' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n'
-            if (work / 'run.csh').exists():
-                if (work / 'run.csh').read_text() != script:
-                    raise ValueError('completed Spectre invocation script drift')
-            else:
-                (work / 'run.csh').write_text(script)
-            if args.resume_finished_spectre and (work / 'simulate.json').is_file():
-                stage = load(work / 'simulate.json')
-                if sha(work / 'simulate.log') != stage['log_sha256']:
-                    raise ValueError('completed stage log drift')
-                stages.append(stage)
-            else:
-                stages.append(execute(['taskset', '-c', str(min(os.sched_getaffinity(0))), '/bin/csh', '-f', 'run.csh'], work, 'simulate'))
+            (work / 'run.csh').write_text(setup + binary + ' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n')
+            stages.append(execute(['taskset', '-c', str(min(os.sched_getaffinity(0))), '/bin/csh', '-f', 'run.csh'], work, 'simulate'))
             result = {'status': 'waveform_available', 'waveform': 'psf/tran.tran.tran'}
         elif args.backend == 'openvaf_ngspice':
             stages.append(container('openvaf_runtime', '/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r',
@@ -294,9 +245,7 @@ def run(args):
             result = {'status': 'missing_compile_artifact', 'failure_stage': 'compile'}
         if result.get('waveform'):
             result['waveform_sha256'] = sha(work / result['waveform'])
-        result['compiled_artifacts'] = {name: sha(work / name) for name in ('dut.osdi', 'dut.cc', 'dut.so') if (work / name).is_file()}
         result.update(item, tool=tool, commands=stages, analysis=analyze(work, args.backend, result))
-        result['runner_sha256'] = sha(Path(__file__))
         if result['status'] == 'waveform_available':
             try:
                 result['effective_settings'] = effective_settings(work, args.backend)
@@ -326,8 +275,6 @@ def main():
     parser.add_argument('--kernel', type=Path)
     parser.add_argument('--spectre-profile', type=Path)
     parser.add_argument('--environment', type=Path)
-    parser.add_argument('--resume-finished-spectre', action='store_true',
-                        help='recover a finished Spectre stage after analysis failure; never replay an existing stage')
     run(parser.parse_args())
 
 

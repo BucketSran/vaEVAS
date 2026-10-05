@@ -20,7 +20,17 @@ def verify_output(output):
             raise ValueError('execution artifact drift: ' + rel)
 
 
-def ingest(snapshot, inputs, executions, compact):
+def runner_sources(hashes):
+    refs = []
+    for digest in sorted(set(hashes)):
+        paths = list((ROOT / 'experiments/backends/comparison/evidence/sources').glob('*-' + digest + '.py.txt'))
+        if len(paths) != 1 or sha(paths[0]) != digest:
+            raise ValueError('actual runner source is not retrievable: ' + digest)
+        refs.append({'path': str(paths[0].relative_to(ROOT)), 'sha256': digest, 'kind': 'actual runner source'})
+    return refs
+
+
+def ingest(snapshot, inputs, executions, compact, blocked=()):
     compact = compact.resolve()
     data = copy.deepcopy(load(snapshot))
     verify(inputs)
@@ -62,7 +72,11 @@ def ingest(snapshot, inputs, executions, compact):
                 'kernel_sha256': tool.get('kernel_sha256'), 'tool': tool,
                 'input_identity': result['input_identity'], 'input_manifest_sha256': started['input_manifest_sha256'],
                 'source_sha256': result['source_sha256'], 'checker_identity': load(inputs / 'provenance.json')['checker_identity'],
-                'runner_sha256': started['runner_sha256'], 'allocation': started['allocation'],
+                'initial_runner_sha256': started['runner_sha256'],
+                'analysis_runner_sha256': result.get('runner_sha256', started['runner_sha256']),
+                'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])]),
+                'continuation': load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None,
+                'allocation': started['allocation'],
                 'requested_settings': load(output / 'runs' / condition / 'base' / 'requested_settings.json'),
                 'effective_settings': effective,
                 'commands': result['commands'], 'execution_status': result['status'],
@@ -91,6 +105,45 @@ def ingest(snapshot, inputs, executions, compact):
             if condition in ('v1-main', 'v2-main') and screen.get('max_observed_error'):
                 record['metrics'] = {'voltage': {'property': 'maximum absolute exported output voltage error',
                     'unit': 'V', 'observed': max(v['error_v'] for v in screen['max_observed_error'].values()), 'budget': .001}}
+    for output in blocked:
+        started = load(output / 'STARTED.json')
+        backend = started['backend']
+        if backend in seen or backend not in BACKENDS or started['input_manifest_sha256'] != sha(inputs / 'INPUT_MANIFEST.json'):
+            raise ValueError('duplicate or mismatched blocked backend')
+        seen.add(backend)
+        probes = list(output.glob('version-*.json'))
+        if len(probes) != 1:
+            raise ValueError('blocked evidence must identify one failed tool preflight')
+        probe = load(probes[0])
+        log = probes[0].with_suffix('.log')
+        if probe['exit_code'] == 0 and not probe['timed_out'] or sha(log) != probe['log_sha256']:
+            raise ValueError('failed preflight/log identity mismatch')
+        receipt = {'backend': backend, 'input_manifest_sha256': started['input_manifest_sha256'],
+                   'allocation': started['allocation'], 'tool': started['tool'], 'probe': probe,
+                   'runner_sources': runner_sources([started['runner_sha256']]),
+                   'failure_log': log.read_text(), 'case_compilation_launches': 0, 'case_simulation_launches': 0,
+                   'reason': 'Existing pinned container layer is missing; no backend case was launched. No restore or retry.'}
+        path = compact / (backend + '-preflight.json')
+        save(path, receipt)
+        for record in data['records']:
+            if record['dataset'] == 'cmp8-base' and record['backend'] == backend:
+                if record['accounting'] != 'unrun':
+                    raise ValueError('cannot replace an actual observation with unrun')
+                record.update(stage='infrastructure', reason=receipt['reason'],
+                              evidence=[{'path': str(path.relative_to(ROOT)), 'sha256': sha(path), 'kind': 'failed preflight'}])
+    application = next(d for d in data['datasets'] if d['id'] == 'application-reference')
+    task = ROOT / 'benchmark/tasks/va07-triangle-repair'
+    case = next(c for c in load(task / 'tests/cases.json') if c['name'] == 'constant-tighter')
+    application['scope'] = '正确参考候选已固定，四后端公共回放合同尚未冻结；原本地EVAS结果仅为单后端历史开发回放。'
+    application['candidates'] = [{'id': 'va07-correct-reference', 'case_name': 'constant-tighter',
+        'revision': data['targets']['evas']['revision'], 'source_sha256': sha(task / 'solution/dut.va'),
+        'case_sha256': identity(case), 'checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_oscillator.py'),
+        'adapter_checker_sha256': sha(ROOT / 'benchmark/checkers/triangle_evas.py'),
+        'history_path': 'benchmark/tasks/va07-triangle-repair/SOURCE.md#通过-harness-调用本地-evas',
+        'pending_contract': '同源后端外壳、精度设置映射、601/607查询的公平观察与独立时间区间资格',
+        'sources': [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p), 'kind': 'application source'} for p in
+                    (task / 'solution/dut.va', task / 'tests/cases.json', ROOT / 'benchmark/checkers/triangle_oscillator.py',
+                     ROOT / 'benchmark/checkers/triangle_evas.py')]}]
     validate(data)
     return data
 
@@ -102,5 +155,6 @@ if __name__ == '__main__':
     parser.add_argument('output', type=Path)
     parser.add_argument('--execution', type=Path, action='append', required=True)
     parser.add_argument('--compact', type=Path, required=True)
+    parser.add_argument('--blocked', type=Path, action='append', default=[])
     args = parser.parse_args()
-    save(args.output, ingest(args.snapshot, args.inputs, args.execution, args.compact))
+    save(args.output, ingest(args.snapshot, args.inputs, args.execution, args.compact, args.blocked))
