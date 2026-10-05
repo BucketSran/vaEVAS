@@ -18,6 +18,35 @@ def scale(expression: Expression, factor: float) -> Expression:
     return Binary("multiply", Affine(factor, ()), expression)
 
 
+def _has_bound_decision(expr: Expr, parameters) -> bool:
+    """Inspect current bindings before a constant function result drops them."""
+    def has_select(value):
+        pending, seen = [value], set()
+        while pending:
+            item = pending.pop()
+            if id(item) in seen:
+                continue
+            seen.add(id(item))
+            if isinstance(item, Select):
+                return True
+            if isinstance(item, Binary):
+                pending.extend((item.left, item.right))
+            elif isinstance(item, Power):
+                pending.append(item.base)
+        return False
+
+    pending, seen = [expr], set()
+    while pending:
+        item = pending.pop()
+        if id(item) in seen:
+            continue
+        seen.add(id(item))
+        if item.op == "parameter" and has_select(parameters(str(item.value))):
+            return True
+        pending.extend(item.args)
+    return False
+
+
 def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
@@ -27,7 +56,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}")
 
     if expr.op == "checked":
-        scope = decision_scope or contains_decision(expr)
+        scope = decision_scope or contains_decision(expr) or _has_bound_decision(expr, parameters)
         if scope and decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         values = [lower(arg, parameters, nodes, source, operators,
