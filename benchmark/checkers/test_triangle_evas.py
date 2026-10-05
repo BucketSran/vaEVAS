@@ -78,14 +78,24 @@ class TaskAdapter(unittest.TestCase):
             self.assertEqual(result["verdict"], verdict)
             self.assertEqual(result["timing_authority"], "sampled_count")
 
-    def test_late_count_cannot_be_rescued_by_engine_event_times(self):
+    def test_late_count_requires_a_timing_upper_bound(self):
         requests, _ = adapter.prepare_requests(case())
-        results = {name: waveform(r["transient"]["output_times"]) for name, r in requests.items()}
-        for data in results.values():
-            for t, row in zip(data["transient"]["times"], data["solutions"], strict=True):
-                row["voltages"][1] = sum(t >= root + 1e-6 for root in [0.5, 1.5, 2.5])
-        result = adapter.assess(results["baseline"], results["observation"], case())
-        self.assertEqual(result["verdict"], "fail")
+        sampled = []
+        for delay, verdict in [(150e-9, "inconclusive"), (1e-6, "inconclusive"), (0.006, "fail")]:
+            with self.subTest(delay=delay):
+                results = {
+                    name: waveform(r["transient"]["output_times"]) for name, r in requests.items()
+                }
+                for data in results.values():
+                    for t, row in zip(data["transient"]["times"], data["solutions"], strict=True):
+                        row["voltages"][1] = sum(t >= root + delay for root in [0.5, 1.5, 2.5])
+                sampled.append(results)
+                result = adapter.assess(results["baseline"], results["observation"], case())
+                self.assertEqual(result["verdict"], verdict)
+                # The original point-based timing result remains visible, even
+                # when the sampled interval cannot establish a model failure.
+                self.assertFalse(result["observation"]["passed"])
+        self.assertEqual(sampled[0], sampled[1])
 
     def test_incomplete_results_are_not_model_failures(self):
         requests, _ = adapter.prepare_requests(case())

@@ -174,17 +174,21 @@ def assess(baseline, observation, case):
     common = {r["time"]: r for r in obs_rows}
     discrepancy = max(abs(r["z"] - common[r["time"]]["z"]) for r in base_rows)
     result["common_grid_max_voltage_difference_v"] = discrepancy
-    result["baseline_waveform_and_count_passed"] = (
-        result["baseline"].get("max_voltage_error_v", math.inf) <= case["wave_atol"]
-    )
+    for label in ("baseline", "observation"):
+        # evaluate returns these metrics only after validating the count contract.
+        result[f"{label}_waveform_and_count_passed"] = (
+            result[label].get("max_voltage_error_v", math.inf) <= case["wave_atol"]
+        )
     result["verdict"] = (
         "pass"
-        if (result["baseline_waveform_and_count_passed"] and result["observation"]["passed"])
+        if (result["baseline_waveform_and_count_passed"]
+            and result["observation_waveform_and_count_passed"])
         else "fail"
     )
     # A first changed sample is an upper bound, not the event's exact time. Its
     # preceding old-count sample supplies the lower bound. Sparse evidence can
-    # confuse a legal 150ns lead with an illegal 1us lead, so keep it inconclusive.
+    # confuse a legal 150ns shift with an illegal 1us shift in either direction.
+    # Keep the oracle's point-based timing result, but decide using both bounds.
     if result["verdict"] == "pass":
         brackets = [
             [a["time"], b["time"]]

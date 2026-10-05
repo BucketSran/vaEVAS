@@ -10,7 +10,7 @@ Start from current code and component contracts; read historical material when i
 
 1. Read the current task, `git status -sb`, and the affected component README. Select the relevant skill below; they are independent entry points.
 2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/CAPABILITIES.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
-3. For edits, reuse a suitable task branch/worktree. New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
+3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Reuse a suitable task branch/worktree; temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](CONTRIBUTING.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
 4. Make the smallest coherent change. Use [behavior-first TDD and test selection](CONTRIBUTING.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
 
@@ -22,11 +22,15 @@ Carry authorization forward for the same task, target and action within its reso
 
 | Task | Repository entry |
 | --- | --- |
+| Select/resume work across components or stages | [vaevas-workflow](.agents/skills/vaevas-workflow/SKILL.md) |
 | Implement/refactor EVAS behavior | [evas-develop](.agents/skills/evas-develop/SKILL.md) |
 | Check EVAS behavior/evidence | [evas-validate](.agents/skills/evas-validate/SKILL.md) |
 | Review | [vaevas-review-pr](.agents/skills/vaevas-review-pr/SKILL.md) |
 | Prepare/publish a checkpoint | [vaevas-prepare-pr](.agents/skills/vaevas-prepare-pr/SKILL.md) |
 
+Use the project entry and shared skills on demand; known component tasks can enter directly.
+Shared planning skills use the [issue tracker](docs/agents/issue-tracker.md) and
+[domain documentation](docs/agents/domain.md). A full interview/spec/ticket sequence is not mandatory.
 Global vaEvas skills route here; legacy interview, KPI and multi-repository workflows do not apply.
 Use the actual checkout as the command working directory. If the host session points to another
 project and these skills are absent from its catalog, read the relevant declared `SKILL.md` through
@@ -70,6 +74,7 @@ Run the relevant regression after a behavioral fix; do not substitute static rep
 - Do not commit credentials, machine-private configuration, raw bulk runs or build products.
 - Keep main assets within the [retention rules](CONTRIBUTING.md#main-branch-contents); link completed reports to fixed published history.
 - Do not retire a checkout before completing the [preservation checklist](CONTRIBUTING.md#retiring-work).
+- Report integration and worktree retention separately from implementation completion; keep unfinished integration visible at the project entry.
 
 ## Detailed references
 
