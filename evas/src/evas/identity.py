@@ -3,6 +3,8 @@ import ast
 import hashlib
 from importlib import metadata
 import json
+import os
+import stat
 from pathlib import Path
 import platform
 import re
@@ -51,7 +53,12 @@ def inspect_identity(kernel=None):
     result['kernel'] = facts
     try:
         digest = hashlib.sha256()
-        with selected.open('rb') as artifact:
+        # Nonblocking open prevents a FIFO from waiting for a writer. Check the
+        # opened object itself before reading; special devices may never reach EOF.
+        descriptor = os.open(selected, os.O_RDONLY | os.O_NONBLOCK)
+        with os.fdopen(descriptor, 'rb') as artifact:
+            if not stat.S_ISREG(os.fstat(artifact.fileno()).st_mode):
+                raise OSError('selected kernel must be a regular file')
             for chunk in iter(lambda: artifact.read(1024 * 1024), b''):
                 digest.update(chunk)
         facts['sha256'] = digest.hexdigest()
