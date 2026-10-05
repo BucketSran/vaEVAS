@@ -131,6 +131,7 @@ def unroll_loops(model: Model, parameter):
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
                    and (has_loop(statement.then_body) or has_loop(statement.else_body))
+                   or isinstance(statement, Event) and has_loop(statement.body)
                    for statement in statements)
 
     if not has_loop(model.analog):
@@ -158,10 +159,44 @@ def unroll_loops(model: Model, parameter):
         return replace(token, expansion=path)
 
     def constant(expr, indices):
-        value = lower(substitute(expr,indices), parameter, {}, model.source)
+        try:
+            value = lower(substitute(expr,indices), parameter, {}, model.source)
+        except CompileError as exc:
+            fail(f'genvar control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
             fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
         return int(value.constant)
+
+    def validate_event_body(statements, active=frozenset()):
+        # Empty static loops must not erase unsupported event-body structure.
+        def expression(expr, predicate=False):
+            if expr.op in OPERATOR_NAMES:
+                fail('event bodies do not support history/operator calls', expr.token)
+            if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
+                fail('event conditions and loop controls cannot depend on state', expr.token)
+            for arg in expr.args:
+                expression(arg, predicate)
+
+        for statement in statements:
+            if isinstance(statement, Loop):
+                if statement.name not in model.genvars or statement.name in active:
+                    fail('static for requires an unshadowed declared genvar', statement.token)
+                for expr in (statement.start, statement.limit, statement.update):
+                    expression(expr, True)
+                validate_event_body(statement.body, active | {statement.name})
+            elif isinstance(statement, Conditional):
+                expression(statement.left, True)
+                expression(statement.right, True)
+                validate_event_body(statement.then_body, active)
+                validate_event_body(statement.else_body, active)
+            else:
+                if not isinstance(statement, Assignment):
+                    fail('event bodies require assignments or supported conditionals', statement.token)
+                if statement.name in model.genvars:
+                    fail('genvar can only be assigned in its for control', statement.token)
+                expression(statement.rhs)
+                if statement.index is not None:
+                    expression(statement.index, True)
 
     def body(statements, indices, depth=0):
         nonlocal count, iterations
@@ -199,6 +234,7 @@ def unroll_loops(model: Model, parameter):
                 if count > budget:
                     fail('elaborated statement budget (4096) exceeded',statement.token)
                 if isinstance(statement, Event):
+                    validate_event_body(statement.body, frozenset(indices))
                     result.append(replace(statement, token=origin(statement.token,indices),
                         body=body(statement.body,indices,depth+1), triggers=tuple(
                             replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
