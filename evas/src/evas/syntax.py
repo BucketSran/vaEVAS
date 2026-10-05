@@ -35,7 +35,7 @@ _TOKEN = re.compile(
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
-                    "idt": (2, 3), "laplace_nd": (3,), "idtmod": (4,), "ddt": (1,)}
+                    "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
@@ -77,7 +77,7 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
-                "idt", "laplace_nd", "idtmod", "ddt", "call", "index"]
+                "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
