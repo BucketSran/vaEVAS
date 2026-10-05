@@ -21,6 +21,11 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 同一支路的多条贡献会相加；程序赋值则保留顺序语义。
 瞬态试算从已接受历史出发，电压、状态和误差检查通过后一起提交。
 
+## 当前整合候选范围
+
+本地 overnight-integration 暂仅整合已接受的 L3 事件体静态循环与 S1 SCS 静态向量端口连接。
+包版本和 IR17 保持不变；其他夜间候选尚未纳入，本分支不构成发布或完整工程模型支持声明。
+
 ## 可以做什么
 
 | 功能 | 使用方式与边界 |
@@ -138,7 +143,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 
 | 输入 | 当前接受范围 |
 | --- | --- |
-| 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序连接的标量实例；常量参数覆盖；`global 0` |
+| 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
 | 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop |
@@ -147,9 +152,16 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 
 输入允许 `//` 注释、反斜杠续行和跨行括号。所有字段必须被消费。
 未知 options、`iabstol`、`errpreset`、sine、理想跳变、浮动源、R/C/I 器件、
-子电路指令、电流探针和 `.scs` 向量连接均明确拒绝；不把它们当作可忽略的文本。
+子电路指令、电流探针、总线名/范围/拼接/切片等连接语法均明确拒绝；不把它们当作可忽略的文本。
 VA 的自定义 include 仍使用显式 source 清单；适配器只加载 `ahdl_include` 列出的文件。
 重复源、重复设置、非法源时刻和未知 save 节点在运行前拒绝。
+
+静态向量端口按每个实例的有效参数展开，索引按声明方向依次连接。
+例如 `input [1:0] u; output [0:1] y;` 的 `DUT (a b c d) bus`
+对应 `u[1]=a,u[0]=b,y[0]=c,y[1]=d`；列表长度必须与展开后的端口数相同。
+参数宽度、负/非零索引和单元素范围复用已有 VA 绑定规则。
+见[输入契约与 Spectre 准入证据](validation/SCS_VECTOR_CONTRACT.md)及
+[公共入口回归](tests/test_scs_vectors.py)。
 
 DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的值。
 pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
