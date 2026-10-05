@@ -4,6 +4,7 @@ GUARDS = ["DEV:package-identity"]
 import hashlib
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -120,6 +121,17 @@ class IdentityCLI(unittest.TestCase):
         # Integral of the documented linear input, with initial value 0.25 V.
         for row, expected in zip(response['solutions'], [0.25, 0.4, 0.45, 0.4, 0.25]):
             self.assertAlmostEqual(row['voltages'][index], expected, delta=1e-9)
+
+    def test_missing_installed_metadata_returns_structured_diagnostic(self):
+        with tempfile.TemporaryDirectory() as directory:
+            site = Path(directory) / 'site'
+            shutil.copytree(ROOT / 'src/evas', site / 'evas', ignore=shutil.ignore_patterns('__pycache__'))
+            result = subprocess.run([sys.executable, '-S', '-B', '-m', 'evas', 'version', '--json'],
+                                    cwd=directory, capture_output=True, text=True, timeout=3,
+                                    env=dict(os.environ, PYTHONPATH=str(site)))
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(json.loads(result.stderr)['kind'], 'input_error')
+            self.assertNotIn('Traceback', result.stderr)
 
     def test_source_identity_does_not_borrow_another_installed_distribution(self):
         with tempfile.TemporaryDirectory() as directory:
