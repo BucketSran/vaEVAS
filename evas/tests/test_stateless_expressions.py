@@ -207,6 +207,36 @@ class StatelessExpressionContracts(unittest.TestCase):
         p=compile_expr('V(a)>n',declarations=function+'parameter integer n=identity(2);')
         self.assertEqual(values(solve(p,list(INPUTS),[[1,0,0,0],[3,0,0,0]],kernel=KERNEL)),[0,1])
 
+    def test_bound_decision_aliases_cannot_hide_in_function_obligations(self):
+        functions=('analog function real discard; input x; real x; begin discard=1; end endfunction '
+                   'analog function real overwrite; input x; real x,tmp; begin tmp=x*x; tmp=1; overwrite=1; end endfunction '
+                   'analog function real pair; input x,z; real x,z; begin pair=1; end endfunction ')
+        for expression,prefix,declaration in (
+            ('discard(alias*V(b))','alias=V(a)>0;','real alias;'),
+            ('discard(pow(alias,2))','alias=V(a)>0;','real alias;'),
+            ('discard(other*V(b))','alias=V(a)>0; other=alias;','real alias,other;'),
+            ('overwrite(alias)','alias=V(a)>0;','real alias;'),
+            ('discard(z[0]*V(b))','z[0]=V(a)>0;','real z[0:0];'),
+            ('0','for(i=0;i<1;i=i+1) begin z[i]=V(a)>0; V(y,r)<+discard(pow(z[i],2)); end','real z[0:0]; genvar i;'),
+            ('pair(alias,discard(V(b)*V(b)))','alias=V(a)>0;','real alias;'),
+            ('transition(discard(alias),0,1,1)','alias=V(a)>0;','real alias;'),
+        ):
+            with self.subTest(expression=expression,prefix=prefix),self.assertRaises(CompileError):
+                compile_expr(expression,prefix,functions+declaration)
+
+    def test_bound_alias_controls_keep_plain_polynomials_and_skipped_precision(self):
+        discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
+        result=solve(compile_expr('discard(alias*V(b))','alias=V(a);',discard+'real alias;'),
+                     list(INPUTS),[[1,2,0,0]],kernel=KERNEL)
+        self.assertEqual(values(result),[1])
+        program=compile_expr('discard(other)','alias=V(u)>0.3333333333333333; other=alias;',
+                             discard+'real alias,other;')
+        from evas.ir import Affine
+        self.assertIsInstance(program.contributions[0].rhs,Affine)
+        sources={'u':[[0,0],[3,1]],'a':[[0,0],[3,0]],'b':[[0,0],[3,0]],'c':[[0,0],[3,0]]}
+        self.assertEqual(values(transient(program,sources,[1.],stop=3,max_step=3,kernel=KERNEL,
+                                         vabstol=1e-9,reltol=0)),[1])
+
     def test_generated_wire_tree_budget_is_preserved(self):
         with self.assertRaisesRegex(CompileError,'(generated|expanded) IR .*limit'):
             compile_expr('!'*60+'V(a)')
