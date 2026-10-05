@@ -67,6 +67,12 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 [校准收据](../experiments/backends/dvs2-spectre-validation/results/oscillator-compatibility.json)。
 这些是开发和校准证据；代码为未合并的本地候选，原始波形为本地/thu-sui 保留材料。
 
+2026-10-05 的[本地 harness 接入](tasks/va07-triangle-repair/SOURCE.md#local-evas)
+补跑了此前 EVAS 批次跳过的 wrong-speed 负控。`constant-tighter` 参考模型通过补充波形观测，
+但 wrong-speed 在 EVAS 0.13.0 返回区间端点 `event_resolution`，未进入独立评分。
+这一数值拒绝与候选模型的速度错误分别记录；不能把拒绝当作评分器检出了错误模型。
+仍需单独定位引擎接受范围并重跑同配置负控，不以改变 stop 或容差补记校准通过。
+
 **待改造事项。** 独立审阅题意与评分覆盖，确定正式变体及评测隔离，完成 Harbor 环境执行
 检查，再决定是否纳入正式任务。当前独立 verifier 的通过不等于完整 Harbor/agent 运行。
 保留现有原型，不因为记入本表而加入原六题初筛或 EVAS 原 31 条件的分母。

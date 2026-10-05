@@ -22,6 +22,10 @@
 开发、验证和 review 入口都执行这项记录规则，具体步骤见
 [协作流程](../CONTRIBUTING.md#development-bench-candidates)。
 
+[任务设计稿](examples/README.md) 给出六类方向：真实电路闭环校准、从数据建立模型、
+故障修复、功能扩展、测量工具及仿真优化。每份说明题面、输入材料、交付物、
+独立 checker 和落地缺口；这些设计稿尚未实现与验证，不计入当前六道可运行初筛题。
+
 ## 任务结构
 
 任务放在 `benchmark/tasks/<task-id>/`。每个任务使用以下结构：
@@ -68,6 +72,11 @@ benchmark/tasks/<task-id>/
 ```sh
 python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p test_triangle_oscillator.py -v
 ```
+
+当前 EVAS 的本地接入验收入口是 [triangle_evas.py](checkers/triangle_evas.py)，
+通过操作者指定的 circuit harness 执行，仅覆盖 `constant-tighter` 开发配置。
+[调用方式、配置映射与未完成的负例验收](tasks/va07-triangle-repair/SOURCE.md#local-evas)
+由该任务维护；原 Spectre verifier 和正式评分入口保持不变。
 
 ## 环境与结果
 

@@ -133,6 +133,26 @@ The register owns candidate status; Issues and PRs own implementation work and h
 - One coordinator controls shared IR/scheduler interfaces, versions, integration and publication. Only the coordinator stages/commits in a shared checkout; independent worktrees have separate indexes.
 - Explicitly hand off a path before changing writers. Inspect status before integration; assignments coordinate people/agents but are not OS locks against uncoordinated processes.
 
+<a id="cross-repository-work"></a>
+
+## Cross-repository work
+
+For a task involving vaEVAS and the circuit harness, one coordinator records both actual checkouts,
+source revisions, existing local changes and the shared acceptance outcome. Explicitly read each
+repository's `AGENTS.md` and relevant skills; attaching another folder does not automatically load
+its project instructions. Apply each repository's rules to its own files.
+
+Keep engine algorithms and independent validation in `evas/`, task definitions and scoring in
+`benchmark/`, and reusable execution/job/evidence collection in the harness. Preserve pinned historical
+backends; a new engine adapter must identify the current source and kernel it actually executes.
+Record the request/result/error contract with its owner and verify a complete consumer-to-backend run
+in addition to component checks. Integration success does not establish a published benchmark score.
+
+Use the ownership rules above for each checkout. A worktree for one repository does not isolate the
+other. Keep commits and PRs separate, linking their exact dependencies and merge order. Handoffs carry
+the outcome, identities, checks, limits and remaining work through the existing task record; start the
+next independent task in a new conversation rather than replaying the full implementation discussion.
+
 ## Evidence and assets
 
 For EVAS behavior or support/evidence changes, use stable capability IDs and update affected rows.

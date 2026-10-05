@@ -2,6 +2,9 @@
 
 This repository contains a Verilog-A benchmark and the EVAS voltage-domain simulator.
 Current user instructions govern scope; support, versions and result counts live in component docs.
+EVAS and benchmark development share this repository; circuit execution orchestration belongs
+to the separate circuit harness. Course content and prior-stage papers are external references.
+Start from current code and component contracts; read historical material when its evidence is needed.
 
 ## Quick workflow
 
@@ -71,6 +74,7 @@ Run the relevant regression after a behavioral fix; do not substitute static rep
 ## Detailed references
 
 - [CONTRIBUTING](CONTRIBUTING.md): task scope, branch dependencies, coordination, cleanup and [documentation language](CONTRIBUTING.md#documentation-language).
+- [Cross-repository work](CONTRIBUTING.md#cross-repository-work): explicit checkout/instruction loading, ownership and end-to-end acceptance for harness integration.
 - [Diff review format](CONTRIBUTING.md#reviewing-diffs): separate review questions, plain-language explanations and publication dependencies.
 - [Technical handbook](evas/docs/README.md#feature-documentation-contract): behavior, mathematics, references, implementation and limits.
 - [Execution receipts](CONTRIBUTING.md#execution-receipts): source/input/checker identities, reanalysis and artifact availability; [experiment index](experiments/README.md): current and archived assets.

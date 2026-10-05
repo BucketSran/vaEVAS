@@ -91,6 +91,14 @@ main 保留持续维护的工具与支撑公开结论的精简证据；已结束
 
 ## 仓库导航
 
+本仓库是 EVAS 与 benchmark 的共同开发入口。两条线各按可验收结果建立任务；
+EVAS 从[能力表](evas/docs/CAPABILITIES.md)选择问题，benchmark 从[候选登记](benchmark/CANDIDATES.md)
+和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
+
+共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。
+涉及两仓修改时，按[跨仓库协作](CONTRIBUTING.md#cross-repository-work)加载各自指引、约定归属并完成联调。
+EVAS 算法与评分规则仍在本仓库维护；模拟电路课程和上一阶段论文按需作为外部材料查阅。
+
 | 目录 | 内容 |
 | --- | --- |
 | [benchmark/](benchmark/README.md) | Harbor 格式的任务、参考解、评分程序与运行环境入口 |
