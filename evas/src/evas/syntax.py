@@ -531,7 +531,13 @@ class Parser:
                 self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
             if triggers and (qualified or initial_count != 1 or any(leaf.kind != 'cross' for leaf in triggers)):
                 self.fail('mixed initialization requires one unqualified initial_step and only cross leaves', token, code='unsupported_initial_event')
-            body = self.statements(bool(triggers))
+            try:
+                body = self.statements(bool(triggers))
+            except CompileError as exc:
+                if triggers and self.token.text == '@' and exc.diagnostic['code'] == 'syntax_error':
+                    self.fail('nested events are not supported in a mixed initial_step body',
+                              self.token, code='unsupported_initial_event')
+                raise
             if any(not isinstance(statement, Assignment) for statement in body):
                 self.fail('mixed initial_step body requires unconditional instance-constant assignments', token, code='unsupported_initial_event')
             initial.extend(body)

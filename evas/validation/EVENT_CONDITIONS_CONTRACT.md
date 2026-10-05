@@ -102,6 +102,7 @@ n_v4_02/dut.va:16:30: unsupported or invalid token '>= 0.5)…'
   初始化不会增加 cross/timer 记录，也不变成 timer(0)。纯 initial_step 和已有冗余
   初始化 OR 保持原有规则；混合体不接受多个 initial_step、分析限定叶子或 timer。
   输入电压、状态或历史相关初值、条件初始化和嵌套事件仍拒绝。
+  无状态模型的空体 `;` 保留与纯初始化一致的 no-op；初始化无记录，cross 仍独立监测和记录。
   不同块同刻写者冲突及 t=0 初始化先于已有 timer 的规则保持不变。
   [test_initial_cross.py](../tests/test_initial_cross.py) 用两次孤立穿越给出
   `7,7,2,7` 的独立平台答案，并检查重复仿真、参数化实例交换、数组常量体、

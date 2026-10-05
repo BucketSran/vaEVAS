@@ -100,6 +100,25 @@ class InitialCross(unittest.TestCase):
                 compiled(source(initial=trigger))
             self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
 
+    def test_nested_event_in_mixed_body_has_initialization_diagnostic(self):
+        for body in ('@(timer(1)) n=7;', 'begin n=7; @(cross(V(u,r)-1)) n=7; end',
+                     'if(V(u,r)>0) @(timer(1)) n=7;'):
+            with self.subTest(body=body), self.assertRaises(CompileError) as caught:
+                compiled(source().replace('n=7;', body, 1))
+            self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
+            self.assertIn('nested events are not supported in a mixed initial_step body', str(caught.exception))
+            self.assertGreater(caught.exception.diagnostic['location']['column'], 0)
+
+    def test_empty_mixed_body_is_noop_initialization_with_existing_cross(self):
+        text = model('''@(initial_step or cross(V(u,r)-2,1,1e-12,1e-9)) ;
+          V(y,r)<+V(u,r);''', ports='u,v,y,r',
+          directions='input u,v; output y; inout r;')
+        result = run(compiled(text))
+        self.assertEqual(values(result), [0, .5, 1.5, 2.5])
+        self.assertEqual(len(result['transient']['events']), 1)
+        self.assertAlmostEqual(result['transient']['events'][0]['time'], 2, delta=1e-9)
+        self.assertEqual(result['transient']['events'][0]['kind'], 'cross')
+
     def test_mixed_body_preserves_unique_complete_unconditional_initialization(self):
         valid = source()
         invalid = [
