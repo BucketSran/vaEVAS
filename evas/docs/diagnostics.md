@@ -1,6 +1,7 @@
 # 诊断与只读查询
 
-诊断说明内核已经做了什么。它不调用模型求值，不定位新事件，也不改变数值验收。
+执行诊断说明内核已经做了什么。只读查询不调用模型求值，不定位新事件，也不改变数值验收。
+编译预检查单独报告已完成的静态检查，不表示执行受支持。
 普通 `solve` / `transient` 的成功 JSON 格式沿用当前 IR17。
 
 ## 编译和执行失败
@@ -17,6 +18,10 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 | code | 阶段与原因 |
 | --- | --- |
 | `unsupported_timer_dependency` | lowering：timer 参数依赖连续电压或算子；不会误报未声明节点 |
+| `manifest_input` / `manifest_io` | input：清单结构或编码错误；清单文件访问失败 |
+| `source_input` / `source_io` | input：源文本编码错误；源文件访问失败 |
+| `parameter_dependency` / `parameter_override` | binding：无效或循环参数默认值；未知、非数值或非有限的覆盖值 |
+| `resource_budget` | compile：表达式、参数依赖或展开 IR 达到实现预算，不作为语言非法判断 |
 | `parameter_type` / `parameter_range` | binding：整数子集限制，或生效值违反范围 |
 | `unsupported_integer_arithmetic` | binding：受限前端入口中的整数除法或溢出不能用实数 IR 代替 |
 | `vector_declaration` / `unsupported_vector` | binding：声明不一致，或超出静态向量子集 |
@@ -26,10 +31,66 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 | `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
 
 其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源或
-基础设施归类。`unsupported_*` 标记实现范围，未登记的失败保持 `unknown`。
-自由文本的旧编译出口也可返回 `unknown`；本批没有完成所有出口的细分类、lint 或 benchmark 适配。
+基础设施归类。已登记的具体原因保留已有分类，未登记的失败保持 `unknown`。
+不会从 `unsupported_` 前缀或错误文字猜测分类。自由文本的旧编译出口也可返回
+`unknown`；本批没有完成所有出口的细分类或外部 benchmark 适配。
 编译成功不意味着执行或精度验收成功。回归见
 [test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。
+
+## 只编译的预检查
+
+```sh
+PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
+```
+
+API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查编译所需结构，
+绑定参数并编译当前支持的源码，还检查展开 IR 的资源预算。它不发现、查询或
+启动内核，机器没有安装内核也能运行。编译入口为
+[evas/lint.py](../src/evas/lint.py)，CLI 分派为
+[__main__.py](../src/evas/__main__.py)。
+
+成功 JSON 使用 `lint_version=1` 和 `status=lint_passed`，`checks` 列出实际完成的
+编译检查；`not_checked` 明示尚未检查数值请求有效性、动态执行支持、数值验收和
+外部仿真器兼容性。刺激字段仍通过清单的基础结构解析，但 lint 不验证驱动节点、
+样本数值或瞬态设置是否满足内核的数值请求契约。不会输出“仿真有效”或 benchmark 分数。
+
+预检查成功可以随后执行失败。例如带 timer 修改状态的多项式 DAE 能完成编译，
+当前内核仍返回 `unsupported_implicit_dynamics`，原因为
+`index-one polynomial DAE currently requires an event-free network`。
+该案例在改诊断前以现有真实内核冻结并验证，回归见
+[test_lint.py](../tests/test_lint.py) 与已有 #69
+[test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。timer 连续依赖
+与 DAE/事件组合保留原来的 `unsupported` 分类和对应能力；其他额外内核载荷字段也保留。
+
+## 本批来源盘点与覆盖边界
+
+以下为 2026-10-06 分支候选代码的静态来源观察，不是执行退出覆盖率。按直接
+`CompileError` / `diagnostic` / `KernelError` 构造、`fail` 包装候选与 Rust
+`Error::new` 位置统计。排除 Python 登记/适配器自身与 Rust 测试文件、
+`#[cfg(test)]` 尾部；没有解析出明确 code 的包装默认值不猜测。扫描包括编译器、
+CLI 和内核中的候选出口，不证明每个候选都在用户输入下可达，也不声称穷尽所有包装路径。
+
+| 来源观察 | 发现位置 | 匹配登记 | 有稳定分类 | 未细分或待解析 |
+| --- | ---: | ---: | ---: | ---: |
+| Python 编译/CLI 直接构造 | 81 | 76 | 18 | 63 |
+| Python 内核适配构造 | 10 | 9 | 9 | 1 |
+| Python `fail` 包装候选 | 159 | 10 | 8 | 151 |
+| Rust 生产 `Error::new` 候选 | 255 | 191 | 191 | 64 |
+
+登记表共 21 个 Python code 和 19 个内核 kind，其中 Python 的通用
+`compile_error` 与 `syntax_error` 登记保留 `unknown`，因此“匹配登记”不等于
+“已细分”。同一原因可有多个来源位置；表中的位置数也不是不同诊断原因数。
+Rust 已有 `unsupported_analysis`、`unsupported_condition`、`unsupported_operator`、
+`unsupported_transient`、`unsupported_cross`、`unsupported_timer` 和
+`unsupported_implicit_dynamics` 从明确的生产构造位置登记，保留已有分类。
+未登记的未来 `unsupported_*` 仍为 `unknown`。
+
+本批实际执行的验收案例包括无内核 affine lint、清单/源访问与编码失败、必需清单
+结构错误、未知参数覆盖、非数值覆盖、循环默认依赖、参数依赖深度预算、实际展开 IR
+过预算、无效数值请求仍只通过编译，以及 lint 成功后真实 DAE 瞬态拒绝。
+这些案例的执行结果与源枚举分开记录；不会由源扫描推断未执行出口的分类正确性。
+未登记的宏/语法/循环等预算包装、其他旧编译原因、剩余内核原因，以及 #64 的完整
+退出登记和外部 benchmark 消费端仍待处理。循环展开算法与预算没有在本批改动。
 
 ## 取得一次运行
 
