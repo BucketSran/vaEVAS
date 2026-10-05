@@ -140,7 +140,7 @@ class Trigger:
 @dataclass(frozen=True)
 class Event:
     triggers: tuple[Trigger, ...]
-    body: tuple[Assignment | Conditional, ...]
+    body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
 
 
@@ -413,7 +413,7 @@ class Parser:
                 self.take("else")
                 else_body = self.statements(True, analog)
             return (Conditional(relation.text, left, right, then_body, else_body, token),)
-        if analog and token.text == "for":
+        if (analog or conditional) and token.text == "for":
             self.take("for")
             self.take("(")
             name = self.name()
@@ -431,7 +431,7 @@ class Parser:
             self.take("=")
             update = self.expression()
             self.take(")")
-            return (Loop(name, start, relation.text, limit, update, self.statements(True, True), token),)
+            return (Loop(name, start, relation.text, limit, update, self.statements(True, analog), token),)
         if analog and token.text == "@":
             self.take("@")
             self.take("(")
