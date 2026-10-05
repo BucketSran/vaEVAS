@@ -35,7 +35,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 | 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd`、有限单实极点 `laplace_np` 和 `ddt` |
 | 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
 | 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
-| 诊断与来源查询 | 可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
+| 诊断与来源查询 | manifest 仅编译预检；可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
 
 查询入口和身份/截断规则见[诊断说明](docs/diagnostics.md)。
 Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数值与历史仍由一个内核统一管理。
@@ -82,6 +82,19 @@ EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验
 内核可直接运行 `evas-kernel --version --json`，无需 manifest 或标准输入。
 缺少构建来源和独立请求协议元数据时明确返回 null；IR 匹配不等于全部运行兼容。
 字段及失败行为见[身份接口](docs/identity.md)。
+
+## 仅编译预检
+
+```sh
+PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
+```
+
+`lint` 检查 manifest 编译字段、源文件读取、参数绑定、受支持源码编译及 IR 资源预算，
+输出 JSON，不查找或启动内核。`lint_passed` 不检查数值请求内容、动态组合支持、
+数值精度或外部仿真器兼容性。例如可编译的 timer/多项式 DAE 组合仍可能在瞬态执行时拒绝。
+诊断只为已登记的 manifest/source I/O、参数依赖/覆盖和资源来源补充分类；
+未登记的 code/kind 保留原消息、位置与额外字段，类别为 `unknown`，不按前缀或消息猜测。
+接口与来源盘点边界见[诊断说明](docs/diagnostics.md)。
 
 ## 构建与运行
 
@@ -315,7 +328,8 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 
 ## 模块与接口
 
-Python 的公开接口：`compile_sources(sources, instances) -> Program`，
+仅编译预检接口为 `evas.lint.lint_manifest(path) -> dict`。
+Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
