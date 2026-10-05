@@ -3,7 +3,7 @@ import math
 from typing import Callable, Mapping
 
 from .ir import Affine, Binary, Expression, OperatorRef, Power, Select, StateRef, Term
-from .syntax import CompileError, Expr, OPERATOR_NAMES, DECISION_NAMES, contains_operator
+from .syntax import CompileError, Expr, OPERATOR_NAMES, DECISION_NAMES, contains_operator, contains_decision
 
 
 def affine(constant, terms):
@@ -20,16 +20,31 @@ def scale(expression: Expression, factor: float) -> Expression:
 
 def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Mapping[str, int],
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
-          decisions: Callable[..., Select] | None = None) -> Expression:
+          decisions: Callable[..., Select] | None = None,
+          validate_decision: Callable[[Expr, Expression], None] | None = None,
+          decision_scope: bool = False) -> Expression:
     def fail(message):
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}")
+
+    if expr.op == "checked":
+        scope = decision_scope or contains_decision(expr)
+        if scope and decisions is None:
+            fail("decision expressions are only supported in stateless ordinary analog expressions")
+        values = [lower(arg, parameters, nodes, source, operators,
+                        preserve_structure or scope, decisions, validate_decision, scope)
+                  for arg in expr.args]
+        if scope and validate_decision is not None:
+            for arg, value in zip(expr.args, values):
+                validate_decision(arg, value)
+        # Obligations are compile-time structure checks, never runtime Selects.
+        return values[0]
 
     if expr.op in DECISION_NAMES:
         if decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         if contains_operator(expr):
             fail("decision expressions do not support waveform operators in any operand or arm")
-        values = [lower(arg, parameters, nodes, source, operators, True, decisions) for arg in expr.args]
+        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True) for arg in expr.args]
         zero, one = Affine(0.0, ()), Affine(1.0, ())
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
@@ -68,7 +83,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
             return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
                           Affine(0.0, (Term(nodes[n], -1.0),)))
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
-    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions) for arg in expr.args]
+    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope) for arg in expr.args]
     a = values[0]
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)

@@ -64,6 +64,7 @@ def inline_functions(model: Model) -> Model:
             pending.extend(item.args)
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
+        obligations = list(args)
         for statement in function.body:
             if statement.index is not None:
                 fail('pure analog function assignments require scalar targets', statement.token)
@@ -71,10 +72,16 @@ def inline_functions(model: Model) -> Model:
                 fail('function assignments must target its local variables or return value', statement.token)
             local[statement.name] = expand(statement.rhs, local, names, (*stack, name), depth+1)
             bounded(local[statement.name])
+            obligations.append(local[statement.name])
         if name not in local:
             fail('function must assign its return value', function.token)
-        bounded(local[name])
-        return local[name]
+        # Retain evaluated arguments and every expanded RHS until instance
+        # binding, even if the function result no longer refers to them.
+        # All existing AST traversals and expansion budgets see these args.
+        result = Expr('checked', None, (local[name], *obligations), expr.token,
+                      expansion=expr.expansion)
+        bounded(result)
+        return result
 
     def body(statements):
         result = []

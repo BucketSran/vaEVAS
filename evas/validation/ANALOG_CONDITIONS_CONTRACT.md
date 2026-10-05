@@ -61,6 +61,15 @@ end
 原始 PWL 区间认证，否则报 `condition_precision`。这不引入带副作用的短路语义。
 选中的电压关系保留原误差预算，不能认证输出误差仍报 `waveform_accuracy`。
 
+纯函数内联保留全部实参和每条已展开赋值 RHS 的源验证义务，包括未使用的实参和
+后来被覆盖的中间值。这些义务沿用 AST 参数树的深度/大小预算、静态替换、数组
+标量化和每实例参数/局部环境绑定，不能因函数返回常量而消失。含决策的义务检查
+原上下文权限、全部谓词和分段仿射结构；参数默认值即使被实例覆盖也不能隐藏决策。
+检查完成后只保留函数实际返回值 IR，义务不传给内核、不增加运行期数值判断。
+例如常量返回的 `discard(V(input)>threshold)` 仍检查输入谓词是否合法，但不会认证
+已经丢弃的比较真值；同一函数接收 `V(output)>0` 或非线性谓词仍在编译时拒绝。
+不含决策的合法纯函数及其既有多项式使用保持原范围。
+
 开发验证见 [test_stateless_expressions.py](../tests/test_stateless_expressions.py)。
 [44 项冻结 Fraction 答案](../tests/fixtures/l1a_expected.json)及
 [独立答案生成源码](../tests/fixtures/l1a_oracle.py.txt)不调用 EVAS 解析或降低函数。
@@ -201,8 +210,8 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 依据 [Verilog-AMS LRM 2.4 §4.7](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的 analog function 作用域及函数返回规则。此分支仅开放 real 返回值和 real input 参数、
-顺序局部赋值、模块参数读取与受限嵌套调用。输出/inout 参数、数组、条件函数和递归
-仍未开放。函数内部禁止电压访问、贡献、事件和历史算子；实参中的历史调用也明确拒绝，
+顺序局部赋值、模块参数读取与受限嵌套调用。输出/inout 参数、数组、函数体中的条件语句和递归
+仍未开放；纯决策表达式沿用上文的限定上下文。函数内部禁止电压访问、贡献、事件和历史算子；实参中的历史调用也明确拒绝，
 避免内联复制调用点。函数可接收已经在外部求得的电压表达式。
 
 `elaboration.py::inline_functions` 在实例绑定前以实参替换形参。局部赋值按顺序建立

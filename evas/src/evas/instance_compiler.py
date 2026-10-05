@@ -297,6 +297,13 @@ class InstanceCompiler:
             return self.symbol(name)
         return resolve
 
+    def validate_decision_expression(self, expr, value):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        check_ir(value, origin)
+        if _predicate_degree(value) is None:
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected expression and function validation obligations must remain piecewise-affine")
+
     def expression_select(self, expr, relation, left, right, then_value, else_value):
         origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
                         self.instance.name, expr.expansion)
@@ -317,7 +324,7 @@ class InstanceCompiler:
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
         factory = self.expression_select if not self.model.initial and not self.model.events else None
         value = lower(expr, resolve, self.node_ids, self.model.source,
-                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory)
+                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision)
         # Validate the enclosing arithmetic too: an input-selected scalar must
         # not become a coefficient multiplying another input dependency.
         def has_expression_decision(item):
