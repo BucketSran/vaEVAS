@@ -97,7 +97,7 @@ Assess whether a test could detect the relevant bug independently of the
 implementation. Expected answers should come from a justified analytic or worked
 reference, a qualified independent oracle, or a specified invariant. Preserve focused
 kernel and rollback tests when they protect properties that outer tests do not expose.
-Apply the [test selection rules](../../../CONTRIBUTING.md#behavior-first-tests): flag
+Apply the [test selection rules](../../../docs/contributing/validation.md#behavior-first-tests): flag
 self-derived oracles and duplicated fault coverage, but require a retained detector
 before recommending regression deletion. For reusable development failures, check the
 [candidate entry](../../../benchmark/CANDIDATES.md); recording one does not require

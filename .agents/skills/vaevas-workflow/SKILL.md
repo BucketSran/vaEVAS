@@ -20,7 +20,7 @@ component contract linked from [AGENTS.md](../../../AGENTS.md). For resumed work
 read its existing Issue/PR and relevant evidence before asking for missing context.
 When starting/resuming edits or creating a worktree, run the
 [workspace check](../../../scripts/README.md#本地工作区检查) and resolve missing visible
-entries under the [workspace policy](../../../CONTRIBUTING.md#workspace-visibility-and-handoff).
+entries under the [workspace policy](../../../docs/contributing/workspaces.md#workspace-visibility-and-handoff).
 Identify the requested operation, deliverable, owning component and acceptance
 checks. Discussion, review, check selection and execution have different outcomes;
 carry forward the user's scope and [authorization](../../../CONTRIBUTING.md#scope-and-authorization).
@@ -42,7 +42,7 @@ decisions that affect the requested outcome; inspect available facts yourself.
 
 For work crossing components, state each component's deliverable and the check
 that connects them. Benchmark-only work does not inherit EVAS capability gates.
-Record reusable failures through the [candidate policy](../../../CONTRIBUTING.md#development-bench-candidates);
+Record reusable failures through the [candidate policy](../../../docs/contributing/validation.md#development-bench-candidates);
 formal task construction remains a separate scope decision.
 
 ## Use shared skills when needed
@@ -67,7 +67,7 @@ gap; do not claim the skill ran or require a library-wide setup for a small task
 
 For shared planning skills, scale the specification to the agreed behavior and
 acceptance criteria instead of filling an exhaustive template. Follow the
-[project test policy](../../../CONTRIBUTING.md#behavior-first-tests), including
+[project test policy](../../../docs/contributing/validation.md#behavior-first-tests), including
 independent numerical answers and distinct kernel checks. Reuse agreed test
 boundaries; take unresolved choices back to the user. Publishing specs or tickets
 uses the tracker conventions and existing task authorization.

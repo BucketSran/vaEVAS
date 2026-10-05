@@ -10,8 +10,8 @@ Start from current code and component contracts; read historical material when i
 
 1. Read the current task, `git status -sb`, and the affected component README. Select the relevant skill below; they are independent entry points.
 2. Identify the outcome, owning component and acceptance checks. For EVAS behavior or support/evidence changes, identify affected [capability IDs](evas/docs/CAPABILITIES.md). For work spanning sessions or handoffs, persist scope/dependencies in the existing PR/Issue; one-turn work may stay in the conversation. No mandatory plan/KPI/task file.
-3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Reuse a suitable task branch/worktree; temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](CONTRIBUTING.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
-4. Make the smallest coherent change. Use [behavior-first TDD and test selection](CONTRIBUTING.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
+3. For edits, keep the primary checkout (`current` in this workspace) as the daily entry. Reuse a suitable task branch/worktree; temporary checkouts need a visible project entry. Run `python3 -B scripts/check_workspaces.py` when starting/resuming edits, after creating a worktree, and at handoff; follow [workspace visibility](docs/contributing/workspaces.md#workspace-visibility-and-handoff). New independent work starts from reviewed `main`; use a parent branch only for an actual dependency. Keep review fixes in the existing open PR.
+4. Make the smallest coherent change. Use [behavior-first TDD and test selection](docs/contributing/validation.md#behavior-first-tests); for EVAS, select checks and revalidation triggers from [evas-validate](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks). Documentation-only changes need no simulator run.
 5. Update affected component contracts and evidence links; update capability rows only when EVAS support/evidence changes. Report the reviewed revision or local diff, checks, failures and limits; prepare/publish through the PR skill within the requested scope.
 
 Capture reusable development failures in [benchmark candidates](benchmark/CANDIDATES.md), linking existing evidence. Recording a candidate does not add a scored task or authorize benchmark construction.
@@ -50,39 +50,26 @@ When using a skill, name it briefly and report the checks actually run; no separ
 
 ## Build and checks
 
-Use Python 3.10+ and Rust/Cargo. From the repository root, build the kernel when needed:
-
-```sh
-cargo build --locked --manifest-path evas/rust_core/Cargo.toml
-```
-
-Validation-only Python entries need no kernel:
-
-```sh
-python3 -B evas/validation/check_design_math.py
-python3 -B scripts/verify_validation_version.py
-```
-
-These check draft mathematics and frozen artifact identity, respectively; neither runs a simulator.
-Then use [compile/solve/transient smoke commands](evas/README.md#构建与运行) or the
-[change-to-check mapping](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks).
+When building or running EVAS, use Python 3.10+, Rust/Cargo and the
+[build and smoke commands](evas/README.md#构建与运行). Select validation with the
+[change-to-check mapping](.agents/skills/evas-validate/SKILL.md#select-the-necessary-checks);
+static mathematics and artifact-identity checks do not run a simulator.
 Run the relevant regression after a behavioral fix; do not substitute static replay for event validation.
 
 ## Guardrails
 
 - Do not rebase/force-push shared history, merge, or delete branches as incidental cleanup.
-- Do not overwrite another contributor's work or share file/index writes concurrently; [assign ownership first](CONTRIBUTING.md#parallel-work).
+- Do not overwrite another contributor's work or share file/index writes concurrently; [assign ownership first](docs/contributing/workspaces.md#parallel-work).
 - Do not weaken a checker or remove failures from the denominator to improve results.
 - Do not invent receipt fields, claim unrun checks, or treat branch/local evidence as merged support or public reproducibility.
 - Do not commit credentials, machine-private configuration, raw bulk runs or build products.
-- Keep main assets within the [retention rules](CONTRIBUTING.md#main-branch-contents); link completed reports to fixed published history.
-- Do not retire a checkout before completing the [preservation checklist](CONTRIBUTING.md#retiring-work).
+- Keep main assets within the [retention rules](docs/contributing/evidence.md#main-branch-contents); link completed reports to fixed published history.
+- Do not retire a checkout before completing the [preservation checklist](docs/contributing/workspaces.md#retiring-work).
 - Report integration and worktree retention separately from implementation completion; keep unfinished integration visible at the project entry.
 
 ## Detailed references
 
-- [CONTRIBUTING](CONTRIBUTING.md): task scope, branch dependencies, coordination, cleanup and [documentation language](CONTRIBUTING.md#documentation-language).
-- [Cross-repository work](CONTRIBUTING.md#cross-repository-work): explicit checkout/instruction loading, ownership and end-to-end acceptance for harness integration.
-- [Diff review format](CONTRIBUTING.md#reviewing-diffs): separate review questions, plain-language explanations and publication dependencies.
-- [Technical handbook](evas/docs/README.md#feature-documentation-contract): behavior, mathematics, references, implementation and limits.
-- [Execution receipts](CONTRIBUTING.md#execution-receipts): source/input/checker identities, reanalysis and artifact availability; [experiment index](experiments/README.md): current and archived assets.
+Read only the sections needed for the task. [CONTRIBUTING](CONTRIBUTING.md#find-the-relevant-rules)
+routes to collaboration, test and evidence rules. For EVAS behavior documentation, use the
+[technical handbook contract](evas/docs/README.md#feature-documentation-contract);
+for retained experiment material, use the [experiment index](experiments/README.md).

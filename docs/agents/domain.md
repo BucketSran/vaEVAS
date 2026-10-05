@@ -9,7 +9,7 @@ to match a shared skill's default layout.
 - [Benchmark](../../benchmark/README.md#目标与边界) owns task scope, grading and reproduction requirements.
 - [EVAS](../../evas/README.md) and its [handbook](../../evas/docs/README.md) own simulator behavior and mathematics.
 - [EVAS architecture decisions](../../evas/docs/DECISIONS.md) explain existing product and compatibility choices.
-- [CONTRIBUTING](../../CONTRIBUTING.md) owns collaboration, tests, evidence and publication procedures.
+- [CONTRIBUTING](../../CONTRIBUTING.md#find-the-relevant-rules) owns scope, review and delivery rules and routes to the relevant test, workspace and evidence procedures.
 
 Use glossary terms in task descriptions, technical explanations and tests. When
 `domain-modeling` resolves a new term, update the existing glossary. Keep behavior

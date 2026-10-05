@@ -110,7 +110,7 @@ benchmark 的校准、身份复核与运行步骤见[初筛说明](experiments/v
 [实验记录](experiments/README.md)提供当前 EVAS 的验证结果、Spectre 等后端的历史对照和复现入口。
 各轮结果绑定实际源码、输入和检查器；有限测试的通过范围与剩余验证限制在对应记录中说明。
 main 保留持续维护的工具与支撑公开结论的精简证据；已结束的审查和阶段报告从固定历史提交查阅。
-具体资产去向见[实验索引](experiments/README.md#目录结构)，保留规则见[贡献指南](CONTRIBUTING.md#main-branch-contents)。
+具体资产去向见[实验索引](experiments/README.md#目录结构)，保留规则见[贡献指南](docs/contributing/evidence.md#main-branch-contents)。
 
 ## 仓库导航
 
@@ -119,7 +119,7 @@ EVAS 从[能力表](evas/docs/CAPABILITIES.md)选择问题，benchmark 从[候�
 和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
 
 共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。
-涉及两仓修改时，按[跨仓库协作](CONTRIBUTING.md#cross-repository-work)加载各自指引、约定归属并完成联调。
+涉及两仓修改时，按[跨仓库协作](docs/contributing/workspaces.md#cross-repository-work)加载各自指引、约定归属并完成联调。
 EVAS 算法与评分规则仍在本仓库维护；模拟电路课程和上一阶段论文按需作为外部材料查阅。
 
 | 目录 | 内容 |

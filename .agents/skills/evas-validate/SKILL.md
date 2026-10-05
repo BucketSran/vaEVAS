@@ -15,7 +15,7 @@ of [EVAS README](../../../evas/README.md) and [validation guidance](../../../eva
 For archived evidence or backend comparisons, use [experiment ownership](../../../experiments/README.md)
 and the owning protocol or case cards.
 For test independence and deduplication, use the
-[behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
+[behavior-first test rules](../../../docs/contributing/validation.md#behavior-first-tests).
 Choose tests by the faults they can detect, not test counts; do not remove distinct
 kernel/rollback obligations or rewrite frozen evidence during cleanup.
 The implementation and validation assets may live on development branches.
@@ -23,8 +23,8 @@ Confirm which of the entry points below exist in the current checkout; report
 missing prerequisites without inventing commands or switching branches.
 Resolve the claim being checked and, for EVAS behavior or support/evidence
 changes, the affected [capability IDs](../../../evas/docs/CAPABILITIES.md).
-Follow [asset ownership](../../../CONTRIBUTING.md#evidence-and-assets); use the
-[receipt fields](../../../CONTRIBUTING.md#execution-receipts) for experiment evidence.
+Follow [asset ownership](../../../docs/contributing/evidence.md#evidence-and-assets); use the
+[receipt fields](../../../docs/contributing/evidence.md#execution-receipts) for experiment evidence.
 Documentation changes only need relevant link/consistency/diff checks.
 
 ## Match the requested operation
@@ -47,7 +47,7 @@ does not require another confirmation.
 Select rows by changed behavior and affected consumers, not just the edited file.
 For broad shared changes, select the listed module sets; a narrow fix may use
 focused test classes/methods with its scope stated. Behavioral changes follow
-the [behavior-first test order](../../../CONTRIBUTING.md#behavior-first-tests);
+the [behavior-first test order](../../../docs/contributing/validation.md#behavior-first-tests);
 this mapping selects coverage, not when to write the failing case. It is a
 starting set, not proof of complete coverage or a requirement to run every row.
 

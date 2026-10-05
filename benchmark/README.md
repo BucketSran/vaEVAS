@@ -87,7 +87,7 @@ EVAS 将相关缺口纳入候选需求，按影响的任务类别、工程使用
 记录候选不自动创建 Harbor 目录，不增加正式题目或评分分母。
 已经存在的振荡器题目是候选原型，仍需按登记表完成正式改造审阅。
 开发、验证和 review 入口都执行这项记录规则，具体步骤见
-[协作流程](../CONTRIBUTING.md#development-bench-candidates)。
+[协作流程](../docs/contributing/validation.md#development-bench-candidates)。
 
 [任务设计稿](examples/README.md) 给出六类方向：真实电路闭环校准、从数据建立模型、
 故障修复、功能扩展、测量工具及仿真优化。每份说明题面、输入材料、交付物、

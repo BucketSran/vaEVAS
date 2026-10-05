@@ -22,7 +22,7 @@ Separate current behavior from proposals and historical verification.
 
 Use the stable IDs in the [capability register](../../../evas/docs/CAPABILITIES.md)
 to identify the change and its dependencies. Follow [repository coordination
-policy](../../../CONTRIBUTING.md#parallel-work). Reuse suitable
+policy](../../../docs/contributing/workspaces.md#parallel-work). Reuse suitable
 in-progress work; when parallel work is authorized, agree file ownership and a
 single owner for shared IR, scheduling and version changes before editing them.
 
@@ -34,7 +34,7 @@ validation contract. Preserve the original model and verdict when proposing a
 corrected model; a correction answers a different compatibility question.
 Resolve only material ambiguities; use existing contracts for routine choices.
 
-Before changing behavior, follow the [behavior-first test rules](../../../CONTRIBUTING.md#behavior-first-tests).
+Before changing behavior, follow the [behavior-first test rules](../../../docs/contributing/validation.md#behavior-first-tests).
 Use an independent failing case, reusing an existing regression when it exposes
 the fault. Trace the affected public entry through its actual compiler/kernel path;
 a Python helper result alone does not establish the default Rust path's behavior.

@@ -34,7 +34,7 @@ python3 -B scripts/check_workspaces.py --repo /path/to/checkout --base main
 
 索引还应写明用途、交接状态和下一步，这些内容的准确性由交接审查负责。检查器不证明
 任务已经完成、目标分支已更新或清理已获授权，也不会验证是否仍有程序在使用工作区。
-规则和收尾要求见 [CONTRIBUTING](../CONTRIBUTING.md#workspace-visibility-and-handoff)。
+规则和收尾要求见 [CONTRIBUTING](../docs/contributing/workspaces.md#workspace-visibility-and-handoff)。
 `local/` 历史快照通过目录索引查找，不作为活动 worktree 递归扫描。
 
 机制回归使用真实临时 Git 仓库，覆盖隐藏入口被拒绝、可见入口修复、过期链接、改动与

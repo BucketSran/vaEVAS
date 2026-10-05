@@ -28,7 +28,7 @@ behavior or support/evidence changes. Do not create an extra branch solely for
 a review round, test report or commit.
 Run the [workspace check](../../../scripts/README.md#本地工作区检查) when entering this
 stage and at handoff. Resolve navigation gaps and report local changes and retained
-evidence under the [workspace policy](../../../CONTRIBUTING.md#workspace-visibility-and-handoff).
+evidence under the [workspace policy](../../../docs/contributing/workspaces.md#workspace-visibility-and-handoff).
 
 Include only work belonging to the request. If commits are authorized, stage
 explicit paths or hunks and inspect the staged diff. Do not split or commit
@@ -46,7 +46,7 @@ identify remaining criteria without presenting a partial implementation as compl
   EVAS regressions do not establish benchmark grading correctness. Do not rerun
   a full backend matrix solely to prepare a PR.
 - Keep curated summaries and provenance according to
-  [main retention rules](../../../CONTRIBUTING.md#main-branch-contents) and the
+  [main retention rules](../../../docs/contributing/evidence.md#main-branch-contents) and the
   [experiment index](../../../experiments/README.md). Exclude raw waveforms,
   build products, credentials, and machine-specific configuration. An ignored
   directory is not proof that the files selected for commit are appropriate.
