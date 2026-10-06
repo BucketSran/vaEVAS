@@ -15,7 +15,7 @@ from .limits import check_ir
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays
-from .syntax import (CompileError, Model, contains_operator,
+from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Conditional as SyntaxConditional, ContributionStatement)
 
 if TYPE_CHECKING:
@@ -73,6 +73,7 @@ class InstanceCompiler:
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
         self.initials = {}
+        self.expression_decision_origins = set()
         self.allowed_condition_nodes = {0} | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
 
@@ -264,8 +265,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
-                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
+                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
+                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
@@ -300,10 +301,61 @@ class InstanceCompiler:
             return self.symbol(name)
         return resolve
 
+    def validate_decision_expression(self, expr, value):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        check_ir(value, origin)
+        if _predicate_degree(value) is None:
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected expression and function validation obligations must remain piecewise-affine")
+
+    def expression_select(self, expr, relation, left, right, then_value, else_value):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        result = Select(relation, left, right, then_value, else_value, origin)
+        check_ir(result, origin)
+        if (_predicate_degree(left) is None or _predicate_degree(right) is None or
+                _predicate_degree(result) is None):
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
+        if not (self.expression_nodes(left) | self.expression_nodes(right)).issubset(self.allowed_condition_nodes):
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates must depend only on input/inout ports")
+        self.expression_decision_origins.add(origin)
+        return result
+
     def lower_local(self, expr, env, *, preserve_structure=False):
         resolve = self.local_symbol(env)
-        return lower(expr, resolve, self.node_ids, self.model.source,
-                     lambda op: self.waveform(op, resolve), preserve_structure)
+        decision = contains_decision(expr)
+        if decision and contains_operator(expr):
+            raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
+        factory = self.expression_select if not self.model.initial and not self.model.events else None
+        value = lower(expr, resolve, self.node_ids, self.model.source,
+                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision)
+        # Validate the enclosing arithmetic too: an input-selected scalar must
+        # not become a coefficient multiplying another input dependency.
+        def has_expression_decision(item):
+            pending, seen = [item], set()
+            while pending:
+                part = pending.pop()
+                if id(part) in seen:
+                    continue
+                seen.add(id(part))
+                if isinstance(part, Select):
+                    if part.origin in self.expression_decision_origins:
+                        return True
+                    pending.extend((part.left, part.right, part.then_value, part.else_value))
+                elif isinstance(part, Binary):
+                    pending.extend((part.left, part.right))
+                elif isinstance(part, Power):
+                    pending.append(part.base)
+            return False
+        # Existing statement-if rejection remains at its original owning stage.
+        # Apply the new source-arm check only to new expression decisions,
+        # including ones read back through local aliases.
+        if has_expression_decision(value):
+            origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+            check_ir(value, origin)
+            if _predicate_degree(value) is None:
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected expression must remain piecewise-affine")
+        return value
 
     def execute_analog(self, statements, env, conditional=False):
         result = dict(env)

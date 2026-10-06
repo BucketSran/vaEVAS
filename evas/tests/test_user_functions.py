@@ -59,6 +59,40 @@ input x; real x; begin twice=transfer(transfer(x)); end endfunction
             v=dict(zip(r['nodes'],r['solutions'][0]['voltages']))
             self.assertEqual((v['a'],v['b']),(7,13))
 
+    def test_scalarization_and_loop_substitution_preserve_function_ast_sharing(self):
+        from evas.frontend import parse_sources
+        from evas.node_elaboration import scalarize_nodes
+        from evas.array_elaboration import scalarize_arrays
+        from evas.elaboration import unroll_loops
+        def node_count(root):
+            seen,pending=set(),[root]
+            while pending:
+                item=pending.pop()
+                if id(item) in seen: continue
+                seen.add(id(item));pending.extend(item.args)
+            return len(seen)
+        names=['t'+str(i) for i in range(1,15)]
+        body='t1=x+x;'+''.join('t'+str(i)+'=t'+str(i-1)+'+t'+str(i-1)+';' for i in range(2,15))
+        prefix=('module m(u,y,r); input u; output y; inout r; electrical u,y,r; '
+                'genvar i; parameter real count=2; analog function real f; input x; '
+                'real x,'+','.join(names)+'; begin '+body+'f=1; end endfunction ')
+        source=prefix+'analog begin for(i=0;i<count;i=i+1) V(y,r)<+f(V(u,r))+i; end endmodule'
+        model=parse_sources({'sharing.va':source})['m']
+        original=node_count(model.analog[0].body[0].rhs)
+        parameter=lambda name: {'count':2}[name]
+        expanded=unroll_loops(model,parameter)
+        self.assertEqual([node_count(s.rhs) for s in expanded],[original,original])
+        nodes,_=scalarize_nodes(model,{'count':2})
+        self.assertEqual([node_count(s.rhs) for s in nodes.analog],[original,original])
+        arrays=scalarize_arrays(nodes,parameter)
+        self.assertEqual([node_count(s.rhs) for s in arrays.analog],[original,original])
+        # The same parsed model is bound anew for each instance and iteration.
+        instances=[instance('a',connections={'u':'u','y':'a','r':'0'}),
+                   instance('b',connections={'u':'u','y':'b','r':'0'},parameters={'count':3})]
+        result=solve(compile_sources({'sharing.va':source},instances),['u'],[[2]],kernel=KERNEL)
+        values=dict(zip(result['nodes'],result['solutions'][0]['voltages']))
+        self.assertEqual((values['a'],values['b']),(3,6))
+
     def test_rejected_scope_and_uninitialized_locals(self):
         for definition,call in (
             ('input x; real x; begin transfer=transfer(x); end','transfer(1)'),

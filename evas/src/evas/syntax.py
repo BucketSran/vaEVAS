@@ -30,13 +30,14 @@ _TOKEN = re.compile(
     r"|(?P<macro>`M_PI\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@#.\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|&&|\|\||'\{|[\[\]:<>(){}+*/;,=@#.?!\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
                     "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
+DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf"}
@@ -77,7 +78,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
-                "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index"]
+                "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
+                "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
@@ -85,10 +87,26 @@ class Expr:
 
 
 def contains_operator(expr: Expr) -> bool:
-    pending = [expr]
+    pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
         if current.op in OPERATOR_NAMES:
+            return True
+        pending.extend(current.args)
+    return False
+
+
+def contains_decision(expr: Expr) -> bool:
+    pending, seen = [expr], set()
+    while pending:
+        current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        if current.op in DECISION_NAMES:
             return True
         pending.extend(current.args)
     return False
@@ -295,7 +313,7 @@ class Parser:
 
     def _expression(self, minimum: int = 0) -> Expr:
         token = self.take()
-        if token.text in ("+", "-"):
+        if token.text in ("+", "-", "!"):
             left = Expr("unary" + token.text, None, (self.expression(30),), token)
         elif token.text == "(":
             left = self.expression()
@@ -369,13 +387,23 @@ class Parser:
                 left = Expr("parameter", token.text, (), token)
         else:
             self.fail(f"unsupported expression {token.text!r}", token)
-        while self.token.text in ("+", "-", "*", "/"):
+        precedence_table = {"||": 1, "&&": 2, "<": 3, "<=": 3, ">": 3, ">=": 3,
+                            "+": 10, "-": 10, "*": 20, "/": 20}
+        while self.token.text in precedence_table or self.token.text == "?":
             op = self.token
-            precedence = 10 if op.text in ("+", "-") else 20
-            if precedence < minimum:
-                break
-            self.take()
-            left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
+            if op.text == "?":
+                if minimum > 0:
+                    break
+                self.take()
+                then_value = self.expression()
+                self.take(":")
+                left = Expr("ternary", None, (left, then_value, self.expression()), op)
+            else:
+                precedence = precedence_table[op.text]
+                if precedence < minimum:
+                    break
+                self.take()
+                left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return replace(left, expansion=left.token.expansion)
 
     def statements(self, conditional=False, analog=False):
@@ -405,11 +433,11 @@ class Parser:
         if token.text == "if" and conditional:
             self.take("if")
             self.take("(")
-            left = self.expression()
+            left = self.expression(4)
             relation = self.take()
             if relation.text not in ("<", "<=", ">", ">="):
                 self.fail("event condition requires <, <=, > or >=", relation)
-            right = self.expression()
+            right = self.expression(4)
             self.take(")")
             then_body = self.statements(True, analog)
             else_body = ()
@@ -424,11 +452,11 @@ class Parser:
             self.take("=")
             start = self.expression()
             self.take(";")
-            left = self.expression()
+            left = self.expression(4)
             relation = self.take()
             if left.op != "parameter" or left.value != name or relation.text not in ("<", "<=", ">", ">="):
                 self.fail("static for condition requires its genvar and <, <=, > or >=", relation)
-            limit = self.expression()
+            limit = self.expression(4)
             self.take(";")
             if self.name() != name:
                 self.fail("for initialization and update must write the same genvar", token)

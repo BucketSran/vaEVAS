@@ -22,6 +22,50 @@ def values(result, node='y'):
 
 
 class EventBodyLoops(unittest.TestCase):
+    def test_discarded_function_dag_in_event_predicate_keeps_binding_and_validation(self):
+        from unittest.mock import patch
+        import evas.elaboration as elaboration
+        lines = ['t0=x+x;'] + [f't{i}=t{i-1}+t{i-1};' for i in range(1, 14)]
+        lines += [f'w{i}=t13+0;' for i in range(100)] + ['f=OFFSET;']
+        names = ','.join([f't{i}' for i in range(14)] + [f'w{i}' for i in range(100)])
+        function = (f'parameter real OFFSET=1; analog function real f; input x; '
+                    f'real x,{names}; begin ' + ''.join(lines) + ' end endfunction')
+        source = model('''@(initial_step) n=0;
+          @(timer(1)) for(i=0;i<1;i=i+1) if(f(V(u,r))>0) n=1;
+          V(y,r)<+n;''', 'genvar i; real n; ' + function)
+        a = instance('a', connections={'u':'u','y':'a','r':'0'}, parameters={'OFFSET':-1})
+        b = instance('b', connections={'u':'u','y':'b','r':'0'}, parameters={'OFFSET':1})
+        with patch.object(elaboration, 'replace', wraps=elaboration.replace) as copies:
+            program = compile_sources({'dag.va':source}, [a,b])
+        # A small source DAG must not be copied into its exponential tree.
+        self.assertLess(copies.call_count, 20_000)
+        result = run(program)
+        self.assertEqual(values(result,'a'), [0,0,0,0])
+        self.assertEqual(values(result,'b'), [0,0,1,1])
+        for rhs in ('x>0', 'idt(x,0)'):
+            bad = source.replace('w99=t13+0;', f'w99={rhs};')
+            with self.subTest(discarded=rhs), self.assertRaises(CompileError):
+                compile_sources({'dag.va':bad}, [a,b])
+        with self.assertRaises(CompileError):
+            compile_sources({'dag.va':source.replace('f=OFFSET;', 'f=x*x;')}, [a,b])
+
+    def test_predicate_lower_memo_is_local_and_rejects_callbacks(self):
+        from evas.lowering import lower
+        from evas.syntax import Expr, Token
+        expr = Expr('parameter','p',(),Token('p','name',1,1))
+        self.assertEqual(lower(expr, lambda _: 2, {}, 'memo.va', memo={}).constant, 2)
+        self.assertEqual(lower(expr, lambda _: 3, {}, 'memo.va', memo={}).constant, 3)
+        for callback in ('operators','decisions','validate_decision'):
+            with self.subTest(callback=callback), self.assertRaises(ValueError):
+                lower(expr, lambda _: 2, {}, 'memo.va', memo={}, **{callback:lambda *args:None})
+        memo = {}
+        def missing(name):
+            raise CompileError('missing parameter')
+        with self.assertRaises(CompileError):
+            lower(expr, missing, {}, 'memo.va', memo=memo)
+        self.assertEqual(memo,{})
+        self.assertEqual(lower(expr, lambda _: 4, {}, 'memo.va', memo=memo).constant, 4)
+
     def test_periodic_timer_preserves_iteration_order_and_current_state(self):
         program = compile_loop('''@(initial_step) n=0;
           @(timer(1,1,1e-12)) for(i=0;i<N;i=i+1) n=10*n+i+1;

@@ -14,7 +14,10 @@ def inline_functions(model: Model) -> Model:
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def bounded(expr):
-        # Shared AST arguments still expand at every use on the JSON wire.
+        # Preserve the original budget at function RHS/return boundaries.
+        # checked carries compile-time obligations; only its value substitutes
+        # into the computation. Ordinary caller expressions keep their existing
+        # source and final IR limits, rather than gaining a new AST tree limit.
         memo, pending = {}, [(expr, False)]
         while pending:
             item, exiting = pending.pop()
@@ -22,13 +25,33 @@ def inline_functions(model: Model) -> Model:
                 continue
             if not exiting:
                 pending.append((item, True))
-                pending.extend((a, False) for a in item.args)
+                args = item.args[:1] if item.op == 'checked' else item.args
+                pending.extend((a, False) for a in args)
                 continue
-            depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
-            size = 1 + sum(memo[id(a)][1] for a in item.args)
+            if item.op == 'checked':
+                depth, size = memo[id(item.args[0])]
+            else:
+                depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
+                size = 1 + sum(memo[id(a)][1] for a in item.args)
             if depth > MAX_EXPRESSION_DEPTH or size > MAX_IR_ITEMS:
                 fail('function expansion exceeds expression depth/size budget', expr.token)
             memo[id(item)] = depth, size
+
+    def unpack(expr, obligations):
+        if expr.op == 'checked':
+            obligations.extend(expr.args[1:])
+            return expr.args[0]
+        return expr
+
+    def checked(value, obligations, origin):
+        # Hoist obligations out of substituted values. Repeated uses of a
+        # function argument must duplicate its computation, not its checks.
+        unique = {id(item): item for item in obligations}
+        if not unique:
+            return value
+        result = Expr('checked', None, (value, *unique.values()), origin.token,
+                      expansion=origin.expansion)
+        return result
 
     def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
         if depth > MAX_EXPRESSION_DEPTH:
@@ -44,10 +67,15 @@ def inline_functions(model: Model) -> Model:
             return expr
         if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES):
             fail('pure analog functions cannot use voltage access or history operators', expr.token)
-        args = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        expanded = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        # Index evaluation and waveform arguments have their own closed
+        # contexts. Their obligations must be checked at that entry point.
+        if expr.op in ('node', 'index', 'array') or expr.op in OPERATOR_NAMES:
+            return replace(expr, args=expanded)
+        obligations = []
+        args = tuple(unpack(a, obligations) for a in expanded)
         if expr.op != 'call':
-            result = replace(expr, args=args)
-            return result
+            return checked(replace(expr, args=args), obligations, expr)
         name = str(expr.value)
         if name not in model.functions:
             fail(f'unknown analog function {name!r}', expr.token)
@@ -64,17 +92,22 @@ def inline_functions(model: Model) -> Model:
             pending.extend(item.args)
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
+        obligations.extend(args)
         for statement in function.body:
             if statement.index is not None:
                 fail('pure analog function assignments require scalar targets', statement.token)
             if statement.name not in names:
                 fail('function assignments must target its local variables or return value', statement.token)
-            local[statement.name] = expand(statement.rhs, local, names, (*stack, name), depth+1)
+            local[statement.name] = unpack(expand(statement.rhs, local, names, (*stack, name), depth+1), obligations)
             bounded(local[statement.name])
+            obligations.append(local[statement.name])
         if name not in local:
             fail('function must assign its return value', function.token)
+        # Retain every argument and RHS through instance binding, including
+        # discarded decisions and aliases. Only the real result is substituted
+        # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return local[name]
+        return checked(local[name], obligations, expr)
 
     def body(statements):
         result = []
@@ -144,13 +177,23 @@ def unroll_loops(model: Model, parameter):
     def fail(message, token):
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
-    def substitute(expr, indices):
+    def substitute(expr, indices, memo=None):
+        # One fixed loop-index environment per root substitution. Never share
+        # replacements across iterations, statements or instance bindings.
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key not in memo:
+            memo[key] = (expr, substitute_value(expr, indices, memo))
+        return memo[key][1]
+
+    def substitute_value(expr, indices, memo):
         if expr.op == 'parameter' and expr.value in indices:
             return Expr('number', float(indices[expr.value]), (), expr.token)
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
             fail('expanded call-site identity depth budget exceeded',expr.token)
-        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args), expansion=path)
+        return replace(expr, args=tuple(substitute(arg,indices,memo) for arg in expr.args), expansion=path)
 
     def origin(token, indices):
         path = (*token.expansion, *indices.items())
@@ -171,27 +214,42 @@ def unroll_loops(model: Model, parameter):
         return (f'{expr.value}[{constant(expr.args[0], indices)}]'
                 if expr.args else str(expr.value))
 
-    def dependencies(expr, indices):
+    def dependencies(expr, indices, memo=None):
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key in memo:
+            return memo[key][1]
+        result = dependency_value(expr, indices, memo)
+        memo[key] = (expr, result)
+        return result
+
+    def dependency_value(expr, indices, memo):
         nodes, held = set(), False
         if expr.op == 'voltage':
             return {node_name(arg, indices) for arg in expr.args}, False
         if expr.op in OPERATOR_NAMES or expr.op in ('parameter', 'index') and expr.value in model.variables:
             held = True
         for arg in expr.args:
-            child_nodes, child_held = dependencies(arg, indices)
+            child_nodes, child_held = dependencies(arg, indices, memo)
             nodes |= child_nodes
             held |= child_held
         return nodes, held
 
     def validate_event_body(statements, active, affected):
         # Empty static loops must not erase unsupported event-body structure.
-        def expression(expr, predicate=False):
+        def expression(expr, predicate=False, seen=None):
+            if seen is None:
+                seen = set()
+            if id(expr) in seen:
+                return
+            seen.add(id(expr))
             if expr.op in OPERATOR_NAMES:
                 fail('event bodies do not support history/operator calls', expr.token)
             if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
                 fail('event conditions and loop controls cannot depend on state', expr.token)
             for arg in expr.args:
-                expression(arg, predicate)
+                expression(arg, predicate, seen)
 
         for statement in statements:
             if isinstance(statement, Loop):
@@ -211,15 +269,25 @@ def unroll_loops(model: Model, parameter):
                 # dependencies that numeric cancellation must not erase.
                 from .instance_compiler import _predicate_degree
                 nodes = {}
-                def scalar(expr):
+                def scalar(expr, memo=None):
+                    # One predicate root with fixed active indices and node map.
+                    # Keep original objects alive; never share across loop scopes.
+                    if memo is None:
+                        memo = {}
+                    key = id(expr)
+                    if key in memo:
+                        return memo[key][1]
                     if expr.op == 'node':
                         name = node_name(expr, active)
                         nodes.setdefault(name, len(nodes))
-                        return replace(expr, value=name, args=())
-                    return replace(expr, args=tuple(scalar(arg) for arg in expr.args))
+                        result = replace(expr, value=name, args=())
+                    else:
+                        result = replace(expr, args=tuple(scalar(arg, memo) for arg in expr.args))
+                    memo[key] = (expr, result)
+                    return result
                 for expr in (statement.left, statement.right):
                     value = lower(scalar(substitute(expr, active)), parameter, nodes,
-                                  model.source, preserve_structure=True)
+                                  model.source, preserve_structure=True, memo={})
                     if _predicate_degree(value) is None:
                         fail('event conditions require affine voltage predicates', expr.token)
                     if dependencies(expr, active)[0] & affected:

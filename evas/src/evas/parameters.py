@@ -3,12 +3,14 @@ import math
 from .errors import CompileError
 from .limits import MAX_PARAMETER_DEPTH
 from .lowering import lower
-from .syntax import contains_operator
+from .syntax import contains_operator, contains_decision
 from .integer_constants import check_integer_expression
 
 
 def bind_parameters(model, overrides, instance_name):
     def validate(expr):
+        if contains_decision(expr):
+            raise CompileError(f'{expr.token.source or model.source}:{expr.token.line}: decision expressions are not supported in parameter defaults or ranges')
         if (expr.op in ('voltage', 'array', 'index') or contains_operator(expr)
                 or expr.op == 'parameter' and expr.value not in model.parameters):
             raise CompileError(f'{expr.token.source or model.source}:{expr.token.line}: invalid parameter default',

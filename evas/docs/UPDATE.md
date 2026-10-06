@@ -67,6 +67,15 @@
 - 独立 Fraction 答案、放大/大时间拒绝与真实 Frame 回退检查见[算子手册](math/operators.md#两级固定-absdelay-的移位历史包围)。
   冻结放大对照的 1e-6 预算仍拒绝，未宣称一般组合或新增 Spectre 资格。
 
+## 2026-10-06：无状态比较与逻辑表达式（L1a）
+
+源码行为与验证范围见 [PR85](https://github.com/BucketSran/vaEVAS/pull/85)，不据此宣称合并或发布。
+
+- 以既有 Select IR 表达关系、逻辑和三元运算，保留源码身份与原精度判据。
+- 隐藏分支中的非法结构仍拒绝；合法但未选中的条件不触发数值判定。
+- 有限输入表、条件边界和实际 Rust 入口回归见[表达式测试](../tests/test_stateless_expressions.py)。
+  本切片未执行完整 AND2 应用或新增 Spectre 对照，也不开放事件/历史中的一般逻辑。
+
 ## EVAS 0.13.0 / IR17（PR61；未发布 tag）
 
 - 合并前 CI 修复 fuzz 种子的 IR16/17 不一致，并在常规 Rust 回归中检验种子及解析电压答案。
