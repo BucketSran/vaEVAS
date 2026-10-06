@@ -360,7 +360,10 @@ def run(args):
         tool,env=preflight(args.backend,profile,output,a)
     except Exception as exc:
         save(output/'PREFLIGHT_FAILED.json',{'reason':str(exc),'status':'preflight_failed','cases_launched':0})
-        save(output/'EXECUTION.json',[{**r,'status':'not_run','reason':'preflight failed: '+str(exc) if r['condition'] in selected_ids else 'not_selected_in_allocation'} for r in fixed])
+        final=[{**r,'status':'not_run','reason':'preflight failed: '+str(exc) if r['condition'] in selected_ids else 'not_selected_in_allocation'} for r in fixed]
+        save(output/'EXECUTION.json',final)
+        for record in final:
+            save(output/('final-record-'+record['condition']+'.json'),record)
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
                                           for p in sorted(output.rglob('*')) if p.is_file()})
         raise
@@ -475,6 +478,8 @@ def run(args):
             abort['unrun']=[r['condition'] for r in results if r['status']=='not_run']
             save(output/'BATCH_ABORTED.json',abort)
         save(output/'EXECUTION.json',results)
+        for record in results:
+            save(output/('final-record-'+record['condition']+'.json'),record)
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
                                           for p in sorted(output.rglob('*')) if p.is_file()})
 

@@ -197,11 +197,12 @@ class RunnerContracts(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); inputs=root/'inputs';inputs.mkdir()
             (inputs/'INPUT_MANIFEST.json').write_text('{}')
-            (inputs/'core.json').write_text(json.dumps({'units':{'T_s':1e-6},'shared_contract':{}}))
+            (inputs/'core.json').write_text(json.dumps({'units':{'T_s':1e-6},'shared_contract':{'sample_gap_s':2e-10,'input_error_V':1e-5,'required_observation_error':{'time_s':1e-11,'voltage_V':5e-5}}}))
             plan=[]
             for i in range(12):
                 name=f'fixture-{i}';work=inputs/name;work.mkdir()
                 (work/'dut.va').write_text('fixture');(work/'request.json').write_text('{}')
+                (work/'condition.json').write_text(json.dumps({'id':name,'observables':['out'],'stop_T':1,'observation_windows':[]}))
                 plan.append({'backend':'evas','condition':name,'work':name,'deck':'request.json'})
             profile=root/'profile';profile.write_text('{"backend":"evas"}')
             allocation=root/'allocation';allocation.write_text(json.dumps({'backend':'evas',
@@ -219,16 +220,39 @@ class RunnerContracts(unittest.TestCase):
             self.assertEqual(launched,['fixture-1','fixture-8'])
             self.assertEqual(len(records),12)
             self.assertEqual(sum(r.get('reason')=='not_selected_in_allocation' for r in records),10)
+            for record in records:
+                final=json.loads((args.output/('final-record-'+record['condition']+'.json')).read_text())
+                self.assertEqual(final,record)
+                manifest=json.loads((args.output/'FILE_MANIFEST.json').read_text())
+                self.assertEqual(manifest['final-record-'+record['condition']+'.json']['sha256'],sha(args.output/('final-record-'+record['condition']+'.json')))
             self.assertEqual(len(json.loads((args.output/'DIRECTORY_BUDGETS.json').read_text())),2)
             from runner import directory_budget
+            def successful_stage(argv,work,name,a):
+                (work/'waveform.csv').write_text('time,out\n0,0\n1e-6,1\n')
+                (work/'worker-result.json').write_text('{"status":"waveform_available"}')
+                return {'stage':name,'status':'completed','returncode':0,'timeout':False,'cleanup':{'complete':True}}
             args.output=root/'overbudget-output'
-            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.verify_tool'),patch('runner.preflight',return_value=({'kernel':'fixture'},None)),patch('runner.stage',side_effect=stage),patch('runner.directory_budget',side_effect=lambda w:directory_budget(w,limit=1)):
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.verify_tool'),patch('runner.preflight',return_value=({'kernel':'fixture'},None)),patch('runner.stage',side_effect=successful_stage),patch('runner.directory_budget',side_effect=lambda w:directory_budget(w,limit=1)):
                 run(args)
             excess=json.loads((args.output/'EXECUTION.json').read_text())
             failures=[r for r in excess if r['status']=='condition_directory_limit_exceeded']
             self.assertEqual(len(failures),2)
-            self.assertTrue(all(r['execution_status_before_budget']=='execution_failed' for r in failures))
+            self.assertTrue(all(r['execution_status_before_budget']=='waveform_available' for r in failures))
             self.assertTrue(all(r['directory_budget']['actual_bytes']>1 for r in failures))
+            for record in excess:
+                self.assertEqual(json.loads((args.output/('final-record-'+record['condition']+'.json')).read_text()),record)
+            for record in failures:
+                snapshot=json.loads((args.output/'runs'/record['condition']/'RESULT.json').read_text())
+                self.assertEqual(snapshot['status'],'waveform_available')
+                self.assertNotIn('directory_budget',snapshot)
+            args.output=root/'preflight-failed-output'
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.preflight',side_effect=RuntimeError('fixture preflight failure')):
+                with self.assertRaises(RuntimeError): run(args)
+            final_rows=json.loads((args.output/'EXECUTION.json').read_text())
+            self.assertEqual(len(final_rows),12)
+            self.assertTrue(all(r['status']=='not_run' for r in final_rows))
+            for record in final_rows:
+                self.assertEqual(json.loads((args.output/('final-record-'+record['condition']+'.json')).read_text()),record)
             with self.assertRaises(FileExistsError):
                 with patch('runner.verify',return_value=plan),patch('runner.verify_sources'):
                     run(args)
