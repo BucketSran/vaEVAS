@@ -29,8 +29,8 @@ def preprocess_sources(sources):
               '__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
     count = 0
 
-    def fail(message, token):
-        raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def include_path(token):
         match = re.fullmatch(r'`include[ \t]+"([^"\n]+)"', token.text)
@@ -48,7 +48,7 @@ def preprocess_sources(sources):
     def expand(tokens, stack=()):
         nonlocal count
         if len(stack) >= MAX_SOURCE_NESTING:
-            fail('macro expansion depth budget exceeded', tokens[0])
+            fail('macro expansion depth budget exceeded', tokens[0], code="resource_budget")
         output, i = [], 0
         while i < len(tokens):
             token = tokens[i]
@@ -56,7 +56,7 @@ def preprocess_sources(sources):
             if token.kind not in ('directive','macro'):
                 count += 1
                 if count > MAX_IR_ITEMS:
-                    fail('preprocessor token expansion budget exceeded',token)
+                    fail('preprocessor token expansion budget exceeded', token, code="resource_budget")
                 output.append(token)
                 continue
             name = token.text[1:]
@@ -104,11 +104,11 @@ def preprocess_sources(sources):
                     for arg in arguments[item.text]:
                         identity = (*arg.expansion,*path)
                         if len(identity) > MAX_SOURCE_NESTING:
-                            fail('macro call-site identity depth budget exceeded',token)
+                            fail('macro call-site identity depth budget exceeded', token, code="resource_budget")
                         replacement.append(replace(arg, expansion=identity))
                 else:
                     if len(path) > MAX_SOURCE_NESTING:
-                        fail('macro call-site identity depth budget exceeded',token)
+                        fail('macro call-site identity depth budget exceeded', token, code="resource_budget")
                     replacement.append(replace(item,source=token.source,line=token.line,column=token.column,expansion=path))
             if replacement:
                 output.extend(expand(replacement,(*stack,name)))
@@ -117,7 +117,8 @@ def preprocess_sources(sources):
     def file_tokens(name, ancestry=(), include_expansion=()):
         if name in ancestry or len(ancestry) >= MAX_SOURCE_NESTING:
             token = files[name][0] if files[name] else Token('', 'eof',1,1,name)
-            fail('recursive or over-budget source include',token)
+            fail('recursive or over-budget source include', token,
+                 code='compile_error' if name in ancestry else 'resource_budget')
         tokens = [replace(t, expansion=(*include_expansion, *t.expansion)) for t in files[name]]
         output, conditional, i = [], [], 0
         active = True
@@ -134,7 +135,7 @@ def preprocess_sources(sources):
                     if name_of == 'ifndef': selected = not selected
                 if name_of in ('ifdef','ifndef'):
                     if len(conditional) >= MAX_SOURCE_NESTING:
-                        fail('conditional directive nesting budget exceeded',token)
+                        fail('conditional directive nesting budget exceeded', token, code="resource_budget")
                     conditional.append([active,selected,False])
                     active = active and selected
                 else:
@@ -173,7 +174,7 @@ def preprocess_sources(sources):
                 # source/line/column still identify the included source itself.
                 path = (*token.expansion, ('_include', i-1))
                 if len(path) > MAX_SOURCE_NESTING:
-                    fail('include call-site identity depth budget exceeded',token)
+                    fail('include call-site identity depth budget exceeded', token, code="resource_budget")
                 output.extend(file_tokens(target,(*ancestry,name),path))
                 continue
             if name_of in ('define','undef'):

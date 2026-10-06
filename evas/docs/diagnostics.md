@@ -17,6 +17,8 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 
 | code | 阶段与原因 |
 | --- | --- |
+| `undeclared_node` | lowering：电压访问引用确实未声明的电气节点，保留原 token 与绑定实例 |
+| `duplicate_module` / `connection_mismatch` | parse/binding：重复模块定义，或实例端口/电气连接与声明不符 |
 | `unsupported_timer_dependency` | lowering：timer 参数依赖连续电压或算子；不会误报未声明节点 |
 | `manifest_input` / `manifest_io` | input：清单结构或编码错误；清单文件访问失败 |
 | `source_input` / `source_io` | input：源文本编码错误；源文件访问失败 |
@@ -29,6 +31,12 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 | `unsupported_event_context` | binding：事件位于普通模拟条件下，需要尚未支持的运行时激活语义 |
 | `scs_input` / `unsupported_scs` | netlist：非法测试台，或未支持的输入语义 |
 | `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
+
+本 E1 切片把已审计的 token、宏/函数、genvar、层级与数组预算来源映射到已有
+`resource_budget`；递归/未确定原因继续 unknown。内核 `nonconvergence` 为 numerical，
+`event_budget` 为 resource，`input_io`、`diagnostic_io`、`worker_start` 为 infrastructure。
+来源、实际触发与仅源码审计的边界见[有限来源登记](diagnostic-sources.md)。
+这不是所有出口登记完成，也没有交付外部 benchmark 消费适配。
 
 其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源或
 基础设施归类。已登记的具体原因保留已有分类，未登记的失败保持 `unknown`。
@@ -64,7 +72,8 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 
 ## 本批来源盘点与覆盖边界
 
-以下为 2026-10-06 分支候选代码（含 lint 执行选项拒绝修复）的静态来源观察，不是执行退出覆盖率。按直接
+以下保留 PR #83 的 2026-10-06 lint 候选代码来源观察，含执行选项拒绝修复。
+它是该检查点的静态快照，不是本 E1 切片后的当前位置计数，也不是执行退出覆盖率。按直接
 `CompileError` / `diagnostic` / `KernelError` 构造、`fail` 包装候选与 Rust
 `Error::new` 位置统计。排除 Python 登记/适配器自身与 Rust 测试文件、
 `#[cfg(test)]` 尾部；没有解析出明确 code 的包装默认值不猜测。扫描包括编译器、

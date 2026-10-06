@@ -55,7 +55,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
                 raise CompileError(f"{name}:{line}:{column}: unsupported or invalid token {source[offset:offset+20]!r}")
             result.append(Token(source[offset], 'unsupported', line, column, name))
             if len(result) > 100_000:
-                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded',
+                                   code='resource_budget', token=result[-1])
             offset += 1
             column += 1
             continue
@@ -63,7 +64,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
         if kind not in ("space", "comment"):
             result.append(Token(text, kind, line, column, name))
             if len(result) > 100_000:
-                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded',
+                                   code='resource_budget', token=result[-1])
         if "\n" in text:
             line += text.count("\n")
             column = len(text.rsplit("\n", 1)[1]) + 1
@@ -200,6 +202,7 @@ class Model:
     parameter_ranges: dict[str, tuple["ParameterRange", ...]] = field(default_factory=dict)
     node_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
     port_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
+    declaration_token: Token | None = None
 
 
 @dataclass(frozen=True)
@@ -302,7 +305,7 @@ class Parser:
 
     def expression(self, minimum: int = 0) -> Expr:
         if self.nesting >= MAX_SOURCE_NESTING:
-            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded", code="resource_budget")
         self.nesting += 1
         try:
             result = self._expression(minimum)
@@ -408,7 +411,7 @@ class Parser:
 
     def statements(self, conditional=False, analog=False):
         if self.nesting >= MAX_SOURCE_NESTING:
-            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded", code="resource_budget")
         self.nesting += 1
         try:
             return self._statements(conditional, analog)
@@ -768,4 +771,4 @@ class Parser:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges)
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token)

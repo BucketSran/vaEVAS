@@ -69,8 +69,9 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
            decisions, validate_decision, decision_scope, memo):
-    def fail(message):
-        raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}")
+    def fail(message, *, code="compile_error"):
+        raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
+                           code=code, token=expr.token)
 
     if expr.op == "checked":
         scope = decision_scope or contains_decision(expr) or _has_bound_decision(expr, parameters)
@@ -124,7 +125,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:
-            fail(f"undeclared electrical node in V({p},{n})")
+            fail(f"undeclared electrical node in V({p},{n})", code="undeclared_node")
         if preserve_structure and nodes[p] == nodes[n]:
             return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
                           Affine(0.0, (Term(nodes[n], -1.0),)))

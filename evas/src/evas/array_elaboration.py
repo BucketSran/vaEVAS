@@ -10,8 +10,8 @@ ARRAY_BUDGET = 4096
 
 
 def scalarize_arrays(model, parameter):
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def integer(expr):
         try:
@@ -33,7 +33,7 @@ def scalarize_arrays(model, parameter):
         first, last = integer(left), integer(right)
         count = abs(last-first)+1
         if count + sum(len(indices) for indices in ranges.values()) > ARRAY_BUDGET:
-            fail('total array element budget (4096) exceeded', left.token)
+            fail('total array element budget (4096) exceeded', left.token, code="resource_budget")
         indices = range(first, last + (1 if last >= first else -1), 1 if last >= first else -1)
         ranges[name] = indices
         for index in indices:
