@@ -90,7 +90,7 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
     uncertainty_ok = all(bounded(q.get(k)) for k in ('time_error_s','voltage_error_V','input_error_V'))
     uncertainty_ok = uncertainty_ok and q['time_error_s']<=contract['required_observation_error']['time_s'] and q['voltage_error_V']<=contract['required_observation_error']['voltage_V'] and q['input_error_V']<=contract['input_error_V']
     certificates = q.get('qualification_evidence', {})
-    required_roles = ['source','time','voltage','inputs']
+    required_roles = ['source','time','voltage','inputs','native_initial']
     if any(p in ('count','na','nb') for p in card['observables']):
         required_roles.append('native_counters')
     if card['id'] in ('CP-02','CO-VCO-01'):
@@ -112,6 +112,7 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
         'source_validated':q.get('source_validated') is True,
         'input_bounds_qualified':q.get('input_bounds_qualified') is True and evidence_ok and bounded(q.get('input_error_V')),
         'native_counters':native,'native_phase':native,
+        'native_initial':bool(times) and bool(origins) and origins[0]=='accepted' and times[0]==0 and q.get('native_initial') is True and valid_certificate('native_initial'),
         'exact_time_qualified':native and q.get('exact_time_qualified') is True and evidence_ok,
         'global_gap_qualified':gap_ok,'local_gap_qualified':local_ok}
     return {'schema_version':1,'condition':card['id'],'backend':backend,

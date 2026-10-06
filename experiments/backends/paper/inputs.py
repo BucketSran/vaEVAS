@@ -56,7 +56,7 @@ def requested_times(card, contract, T):
     return sorted(times)
 
 
-def decks(card, settings, bind):
+def decks(card, settings, bind, times):
     ports = ' '.join(bind['ports'])
     params = ' '.join(f'{k}={v:.17g}' for k, v in bind['parameters'].items())
     spice_sources, spectre_sources = [], []
@@ -67,24 +67,26 @@ def decks(card, settings, bind):
         spectre_sources.append(f'V{name} ({name} 0) vsource type=pwl wave=[{wave}]')
     signals = ' '.join(f'v({p})' for p in bind['ports'])
     stop, step = settings['stop_s'], settings['maxstep_s']
+    spice_step = settings['spice_maxstep_s']
+    strobes = ' '.join(f'{t:.17g}' for t in times)
     options = f"reltol={settings['reltol']:.17g} vntol={settings['vabstol_V']:.17g} abstol={settings['iabstol_A']:.17g}"
     spectre = '\n'.join(['simulator lang=spectre','ahdl_include "dut.va"', *spectre_sources,
         f"dut ({ports}) {bind['top_module']} {params}",
         f"simulatorOptions options reltol={settings['reltol']:.17g} vabstol={settings['vabstol_V']:.17g} iabstol={settings['iabstol_A']:.17g}",
-        f'tran tran stop={stop:.17g} maxstep={step:.17g} errpreset=conservative method=traponly',
+        f'tran tran stop={stop:.17g} maxstep={step:.17g} errpreset=conservative method=traponly strobetimes=[{strobes}] strobeoutput=all',
         'save ' + ' '.join(bind['ports'])])+'\n'
     ng = '\n'.join(['Paper '+card['id'], *spice_sources,
         f"N0 {ports} model0",f".model model0 {bind['top_module']} {params}",
         '.options '+options+' method=trap','.control','pre_osdi dut.osdi',
         'set filetype=ascii','set wr_singlescale','set wr_vecnames','set numdgt=17','option',
-        f'tran {step:.17g} {stop:.17g} 0 {step:.17g}',
+        f'tran {spice_step:.17g} {stop:.17g} 0 {spice_step:.17g}',
         'wrdata waveform.txt '+signals,'option','quit','.endc','.end'])+'\n'
     override = ' #('+', '.join(f'.{k}({v:.17g})' for k,v in bind['parameters'].items())+')' if params else ''
     gc = '\n'.join(['load mgsim','load ./dut.so','verilog',
         f"\\{bind['top_module']}{override} dut({','.join(bind['ports'])});",'spice',
         'Vbench_ref bench_ref 0 0',*spice_sources,'.options numdgt=17 short=1e-9 '+options,
         '.options','.print tran '+signals+' v(bench_ref)',
-        f'.tran {step:.17g} {stop:.17g} 0 {step:.17g} > waveform.txt','.end'])+'\n'
+        f'.tran {spice_step:.17g} {stop:.17g} 0 {spice_step:.17g} > waveform.txt','.end'])+'\n'
     evas = json.dumps({'source': 'dut.va','instances': [{'name':'dut','module':bind['top_module'],
         'ports':{p:p for p in bind['ports']},'parameters':bind['parameters']}],
         'inputs':{n:s['points_s_V'] for n,s in card['stimulus'].items()},
@@ -106,14 +108,23 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
     plan = []
     for card in cards:
         bind = binding(card)
-        settings = {'stop_s':card['stop_T']*data['units']['T_s'], 'maxstep_s':2e-11,
+        settings = {'stop_s':card['stop_T']*data['units']['T_s'], 'maxstep_s':2e-10,
                     'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,
                     'output_request':'native records plus prescribed exact centers; requested grid does not qualify interpolation',
                     'integration_method':'traponly/trap for SPICE; unsupported by EVAS'}
         physical = {**card, 'stimulus':{n:{'points_s_V':[[t*data['units']['T_s'],v] for t,v in s['points_T_V']]}
                                          for n,s in card['stimulus'].items()}}
         times = requested_times(card,data['shared_contract'],data['units']['T_s'])
-        generated = decks(physical,settings,bind)
+        # Upper planning estimate with 32 bytes per token and 20% file headroom.
+        # Adaptive accepted steps may exceed it, so the runtime cap still applies.
+        fields = len(bind['ports'])+2  # time plus Gnucap ground alias
+        dense_bytes = (math.ceil(settings['stop_s']/2e-11)+1)*fields*32
+        fallback = bool(card['observation_windows']) and dense_bytes <= 32*1024**2*0.8
+        settings.update(spice_maxstep_s=2e-11 if fallback else 2e-10,
+                        spice_output_estimate_bytes=dense_bytes if fallback else (math.ceil(settings['stop_s']/2e-10)+1)*fields*32,
+                        spice_observation_strategy='bounded global 20ps fallback' if fallback else 'global 200ps; local/exact observation pending',
+                        spectral_strobe_strategy='prescribed times; strobeoutput=all; actual origin qualification pending')
+        generated = decks(physical,settings,bind,times)
         for backend in BACKENDS:
             work = output/'runs'/backend/card['id']
             work.mkdir(parents=True)
@@ -138,8 +149,10 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
                          'deck':filename,'source_sha256':sha(work/'dut.va'),
                          'condition_identity':identity(card),'status':'not_run'})
     source_paths = [Path(__file__), Path(__file__).with_name('observations.py'),
+                    Path(__file__).with_name('runner.py'), Path(__file__).with_name('process.py'),
                     ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
-                    ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']
+                    ROOT/'experiments/archive/dvs2-starter-pilot/suite.py',
+                    ROOT/'experiments/backends/dvs2-spectre-validation/report.py']
     source_identity = {}
     for path in source_paths:
         relative = str(path.relative_to(ROOT))
@@ -148,11 +161,19 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
         target.write_bytes(path.read_bytes())
         source_identity[relative] = sha(path)
     save(output/'ADAPTER_IDENTITY.json',source_identity)
+    runtime_paths = sorted(p for directory in ('evas/src','evas/rust_core') for p in (ROOT/directory).rglob('*')
+                           if p.is_file() and (p.suffix in ('.py','.rs','.toml') or p.name=='Cargo.lock')
+                           and 'target' not in p.parts and '__pycache__' not in p.parts)
+    runtime_paths.append(ROOT/'evas/pyproject.toml')
+    save(output/'RUNTIME_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in runtime_paths})
+    checker_paths = sorted((ROOT/'evas/validation/paper').glob('*.py'))
+    save(output/'CHECKER_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in checker_paths})
     save(output/'RUN_PLAN.json',plan)
     save(output/'provenance.json',{'batch_id':data['batch_id'],'configurations':48,
         'simulations_per_backend':12,'max_simulation_launches':48,'automatic_retries':0,
         'stage_timeout_s':stage_timeout_s,'license_timeout_s':license_timeout_s,
-        'cards_sha256':sha(cards_path),'freeze_status':'prepared; coordinator approval required before execution',
+        'memory_limit_bytes':4*1024**3,'file_limit_bytes':32*1024**2,'threads':1,
+        'cards_sha256':sha(cards_path),'checker_status':'frozen' if checker_paths else 'pending checker integration','freeze_status':'prepared; coordinator approval required before execution',
         'tool_identity_requirement':'version, binary hash, compiler/build flags and pinned environment before actual results'})
     save(output/'INPUT_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
                                       for p in sorted(output.rglob('*')) if p.is_file()})

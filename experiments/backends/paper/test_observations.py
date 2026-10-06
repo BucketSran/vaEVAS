@@ -61,8 +61,8 @@ class ObservationContracts(unittest.TestCase):
             certificate={'method':'exact fixture construction','artifact_path':str(path),
                          'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
             q={'time_error_s':0,'voltage_error_V':0,'input_error_V':0,'qualified':True,
-               'source_validated':True,'input_bounds_qualified':True,
-               'qualification_evidence':{r:certificate for r in ('source','time','voltage','inputs','native_counters')}}
+               'source_validated':True,'input_bounds_qualified':True,'native_initial':True,
+               'qualification_evidence':{r:certificate for r in ('source','time','voltage','inputs','native_counters','native_initial')}}
             result=normalize_observation(CARD,'evas',rows,['accepted']*5,q,contract=CONTRACT)
             self.assertTrue(result['qualification']['qualified'])
             path.write_text('Changed proof')
