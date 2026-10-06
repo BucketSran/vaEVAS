@@ -14,19 +14,19 @@ def inline_functions(model: Model) -> Model:
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def bounded(expr):
-        # Each computational RHS retains the original expanded-tree limit.
-        # Compile-time obligations share an AST graph, not a JSON wire tree.
-        # Source token/nesting and each RHS bound still constrain elaboration;
-        # do not introduce a total check-graph cap that shrinks pure functions.
-        roots = expr.args if expr.op == 'checked' else (expr,)
-        memo, pending = {}, [(root, False) for root in roots]
+        # Preserve the original budget at function RHS/return boundaries.
+        # checked carries compile-time obligations; only its value substitutes
+        # into the computation. Ordinary caller expressions keep their existing
+        # source and final IR limits, rather than gaining a new AST tree limit.
+        memo, pending = {}, [(expr, False)]
         while pending:
             item, exiting = pending.pop()
             if id(item) in memo:
                 continue
             if not exiting:
                 pending.append((item, True))
-                pending.extend((a, False) for a in item.args)
+                args = item.args[:1] if item.op == 'checked' else item.args
+                pending.extend((a, False) for a in args)
                 continue
             if item.op == 'checked':
                 depth, size = memo[id(item.args[0])]
@@ -51,7 +51,6 @@ def inline_functions(model: Model) -> Model:
             return value
         result = Expr('checked', None, (value, *unique.values()), origin.token,
                       expansion=origin.expansion)
-        bounded(result)
         return result
 
     def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
@@ -107,6 +106,7 @@ def inline_functions(model: Model) -> Model:
         # Retain every argument and RHS through instance binding, including
         # discarded decisions and aliases. Only the real result is substituted
         # into the caller's computation; closed index/operator contexts stay local.
+        bounded(local[name])
         return checked(local[name], obligations, expr)
 
     def body(statements):

@@ -215,6 +215,21 @@ class StatelessExpressionContracts(unittest.TestCase):
         with self.assertRaisesRegex(CompileError,'budget'):
             compile_expr(expression,declarations=function)
 
+    def test_caller_arithmetic_keeps_original_function_budget_boundaries(self):
+        function=('analog function real twice; input x; real x; '
+                  'begin twice=x+x; end endfunction '
+                  'analog function real discard; input x; real x; '
+                  'begin discard=1; end endfunction ')
+        expression='V(u)'
+        for _ in range(14): expression='twice('+expression+')'
+        siblings='('+expression+'+'+expression+')'
+        # Each function result is in budget. The ordinary parent previously
+        # folded to affine IR, and must not acquire a function AST tree limit.
+        for value,expected in ((siblings,65536),('discard('+siblings+')',1)):
+            with self.subTest(value=value):
+                program=compile_expr(value,declarations=function)
+                self.assertEqual(values(solve(program,list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[expected])
+
     def test_sibling_function_checks_preserve_existing_acceptance(self):
         function=('analog function real discard; input x; real x,tmp; begin '
                   +'tmp=x+1;'*32+' discard=1; end endfunction ')
