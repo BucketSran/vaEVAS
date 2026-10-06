@@ -1,0 +1,59 @@
+{
+  "frozen_utc": "2026-10-06T08:02:02.358823+00:00",
+  "case": "function-probe",
+  "fixed_evas_head": "4e9051dffcc05b6f94e8e31a5f9f4da9ab90f6a8",
+  "independent_answer": {
+    "u": "2^-16*(2*t-1)",
+    "discarded": "1: each pure f returns1, so all seven layers return1 independent of 12-leaf input",
+    "gain": "(2^14+2^14)*u=32768*u=t-.5",
+    "ydecision": "0 when t<=.5, 1 when t>.5; exact .5 expected0 under strict > comparator"
+  },
+  "observations_s": [
+    0,
+    0.25,
+    0.49999995,
+    0.5,
+    0.50000005,
+    0.75,
+    1.0
+  ],
+  "stimulus": {
+    "u": [
+      [
+        0,
+        -1.52587890625e-05
+      ],
+      [
+        1,
+        1.52587890625e-05
+      ]
+    ]
+  },
+  "single_backend_voltage_abs_v": 1e-06,
+  "paired_voltage_abs_v": 2e-06,
+  "event_export_bracket_abs_s": 1e-07,
+  "discrete_logic_error": 0,
+  "critical_observation_policy": "true raw t=0/.5/1 and sides\u00b15e-8; no logic interpolation; missing exact .5 is inconclusive, mismatch is FAIL",
+  "spectre_requested": {
+    "reltol": 1e-12,
+    "vabstol": 1e-14,
+    "iabstol": 1e-18,
+    "step": 0.001,
+    "maxstep": 0.001,
+    "method": "traponly",
+    "stop": 1
+  },
+  "spectre_resource_scope": {
+    "configs": 1,
+    "cpu": 1,
+    "memory_GiB": 4,
+    "single_file_MiB": 32,
+    "timeout_s": 90,
+    "license_wait_s": 30,
+    "serial": true,
+    "retry": false
+  },
+  "preflight": "public EVAS compile + transient + independent analytic check must pass before sole Spectre run; bounded grammar is same supported analog-function constructs without recursion, only28 nested twice calls across two sibling expressions and7 f layers; Spectre compile itself remains part of one actual execution",
+  "correction": "Only port identifier logic renamed ydecision; original syntax FAIL retained; one separate additionally authorized Spectre configuration; no automatic retry",
+  "parent_contract_sha256": "131125ff796eadbd6f2f37245f12269469e88be2c9fc11ab7426e50d6b073c81"
+}

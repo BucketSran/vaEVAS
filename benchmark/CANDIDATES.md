@@ -91,6 +91,8 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 
 ## BC-0002：嵌套纯函数的计算与校验义务
 
+固定 4e9051df/0425728a 的[函数路径实际对照](../experiments/backends/dvs2-spectre-validation/l1a-function-alignment-20261006/function-path-report.md)覆盖原十二叶常量返回、两个十四层函数结果相加和比较条件；它不绑定后续合并源码。
+
 来自 [PR #85](https://github.com/BucketSran/vaEVAS/pull/85) 的兼容性审查。
 函数 `t=a+a; f=1` 接收十二个 `V(u)` 叶子的平衡求和，外包七层相同函数。
 其独立答案是 `V(y)=1`，不含决策、历史或状态。旧提交
