@@ -89,8 +89,11 @@ Python `instance_compiler.py` 独立 lowering 初值并保留结构/来源，IR1
 [公开行为回归](../../tests/test_input_initialization.py)保留原 EV-HC-02 源码，
 独立检查高/低启动、精确 tie、两个实例、后续迟滞计数、t=0 timer、
 算子初态和 held timer 守卫；Rust 私有回归检查不确定区间拒绝与重试。
-这些是开发控制，未更改论文源卡、阈值或分母。本分支尚待实际 Spectre 对齐，
-本地回归不能替代商业后端证据。
+这些是开发控制，未更改论文源卡、阈值或分母。
+[八例实际 Spectre 配对](../../../experiments/backends/input-initialization/README.md)
+覆盖高低启动、四种关系的精确 tie 与 real/integer 异刻共享计数，均满足预先固定的有限观测预算。
+一般仿射组合、同批冲突/回退和 t=0 timer/算子顺序仍未由这八例建立商业后端对齐；
+原 HC01/HC02 的严格终点、导出和输入误差资格尚缺，论文状态保持 I。
 
 <a id="initial-cross"></a>
 

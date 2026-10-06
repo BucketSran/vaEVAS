@@ -17,13 +17,13 @@
 | HC02 `<=` exact tie | `(0.9,0)` | `0` | 同上 |
 | HC01 整数共享计数变体 | `(0.1,0)` | `0→1→2` | 原 HC01 物理答案与窗口，0.001 V |
 
-六个开发变体独立列出，原论文 DUT、卡、阈值和 N 保持原字节。上述 allowance 是预先固定的开发比较预算，不能充当求解器或导出的数学误差证明。恒定控制最大输出观测差不超过 `2.78e-17 V`，均低于原 `1e-7 V` 预算；三个动态例的最大输出观测差为 `1.11e-16 V`。
+六个开发变体独立列出，原论文 DUT、卡、阈值和 N 保持原字节。上述 allowance 是预先固定的开发比较预算，不能充当求解器或导出的数学误差证明。恒定控制最大输出观测差不超过 `2.78e-17 V`，均低于原 `1e-7 V` 预算；三个动态例的最大输出观测差为 `1.11e-16 V`；重新读取实际 raw 后，三个动态例的计数标记最大观测差均为 `0 V`（按原 criteria 的 `abs(count-round(count))` 定义），低于原 `0.001 V` 预算。
 
 ## 判断来源与方法
 
-唯一科学判断来源是已发布提交 [`cf14a9e654668b027d02413d774f11627cfe7ba0`](https://github.com/BucketSran/vaEVAS/tree/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper) 的 [原卡](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/core-v1.json)、[oracle](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/oracle.py) 和 [criteria](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/criteria.py)。分析时核验这些文件与固定提交一致，直接调用原 `event_limits`、`values`、`pwl`；这里没有复制新的科学 checker。恒定 tie 答案在执行前按实际关系运算固定，整数变体沿用 HC01 的同一物理答案。
+唯一科学判断来源是已发布提交 [`cf14a9e654668b027d02413d774f11627cfe7ba0`](https://github.com/BucketSran/vaEVAS/tree/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper) 的 [原卡](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/core-v1.json)、[oracle](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/oracle.py) 和 [criteria](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/criteria.py)。分析时核验这些文件与固定提交一致，直接调用原 `event_limits`、`values`、`pwl`；这里没有复制新的科学 checker。恒定 tie 答案在执行前按实际关系运算固定，整数变体沿用 HC01 的同一物理答案。证据中的 `construction` 是冻结期望；`all_native_records_constant=true` 表示数学期望恒定，不声明实际记录逐 bit 恒定。观测差另列并按原预算判断。
 
-原生 `count` 初始为 0，每次只增加 1，最终为 2；相邻实际记录夹住每次变化，括定须与原单向合法窗口相交。输出再共用这一个计数历史，不能逐端口挑不同 callback 时刻。两后端分别检查独立答案，Spectre 不作为 EVAS 的 oracle。跳变中的精确时刻和左右记录可不同；没有跨跳变插值或强迫两个后端在中心具有相同 stage。原卡窗口、anchors、未裁切括定及原始请求／响应 SHA 均保留在证据中。
+原生 `count` 初始为 0，每次只增加 1，最终为 2；相邻实际记录夹住每次变化，括定须与原单向合法窗口相交。输出再共用这一个计数历史，不能逐端口挑不同 callback 时刻。两后端分别检查独立答案，Spectre 不作为 EVAS 的 oracle。跳变中的精确时刻和左右记录可不同；没有跨跳变插值或强迫两个后端在中心具有相同 stage。原卡窗口、anchors、未裁切括定及原始请求／响应 SHA 均保留在证据中。原 HC01 第一次变化与合法窗口仅在 `T=1.375` 单点接触；原 HC02 第一次变化仅在 `T=2.75` 单点接触。它们没有正宽度重叠，属于当前解析数值的有限边界相容，不构成严格 timing 证书。
 
 实际 Spectre 为 `21.1.0.509.isr12`。保留 global `reltol=1e-5`、`vabstol=1e-7`、`iabstol=1e-12`、`maxstep=200ps`、`traponly`；conservative 分析的 effective `reltol=1e-6` 按已安装合同解释，旧收据的 inconsistent/I 不覆盖。EVAS 沿用冻结公开开发请求 `absolute=1e-12`、`relative=1e-10`，不宣称两者误差控制等效。
 
@@ -37,8 +37,10 @@
 
 ## 身份与材料可用性
 
-`evidence.json` 是 **repository-contained** 摘要，含八份完整 DUT 文本与源码 SHA、deck／输入／期望／checker 身份、EVAS 源码闭包与 kernel SHA、实际 Spectre 版本／二进制／setup SHA、请求及响应、执行命令、原生波形／收据和三批归档／清单身份。EVAS CLI 的 `build_revision=null` 原样保留，不伪造发布构建身份。
+`evidence.json` 的 `record_schema_notes` 说明不同批次 native audit 键的统一语义及 requested／effective settings 的区别；每条动态事件都显式记录交集派生的 `compatible`、宽度及单点接触。它是 **repository-contained** 摘要，含八份完整 DUT 文本与源码 SHA、deck／输入／期望／checker 身份、EVAS 源码闭包与 kernel SHA、实际 Spectre 版本／二进制／setup SHA、请求及响应、执行命令、原生波形／收据和三批归档／清单身份。EVAS CLI 的 `build_revision=null` 原样保留，不伪造发布构建身份。
 
 大波形、完整请求／响应、安装文档和一次性分析脚本均为 **local-only**，在证据中以 vaEVAS 工作区相对路径和 SHA 识别；它们不是下载链接。三份 raw 归档的清单已核验，分别为 104、92、92 文件；原批次还包含本报告以外的科学执行，不将这些额外条件计入本报告八例。取得持有人授权的原材料与相应 Spectre 工具／license／setup 后，才能核验或重新运行。仅有这份摘要不能宣称完整公开复现。
 
 本地分析命令和脚本身份已记录：先 `cargo build --locked`（`evas/rust_core`），公开编译 DUT 后向 Rust kernel 传递冻结 JSON；五例运行最终源码，追加三例在核验相同 kernel／源码闭包后复用已冻结 EVAS raw。实际 Spectre 由已有 runner 的有界 stage 执行，本分析不启动远端、不重试、不更改 source 或 tolerance。
+
+冻结顺序依据本次会话实际的本地准备／执行记录：各例期望在对应 Spectre dispatch 前固定，第一批恒定控制的 `INPUT_IDENTITY.json` 绑定 expected、请求／响应及准备清单；五例 METHOD 在实际数值重分析前固定，不声称它早于此前的 Spectre 执行。追加批次另绑定此前 METHOD／REPORT。对应清单、dispatch 身份和执行收据路径／SHA 在 `method.freeze_sequence_evidence` 中保留。公开摘要不提供第三方预注册或独立时间戳证明；材料的 local-only 可用性限制外部核验。
