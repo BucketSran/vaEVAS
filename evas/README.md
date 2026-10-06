@@ -282,6 +282,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   命名/位置端口及参数覆盖进入同一关系 IR；内部节点与动态身份按完整实例路径隔离。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
 - 支持 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
+  当前开发切片另支持 `< <= > >=` 谓词的有限 if/else 分支，保留条件进入时的局部值及所有支路结构校验。
   函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
   [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
 

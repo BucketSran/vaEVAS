@@ -3,7 +3,7 @@ from dataclasses import replace
 
 from .errors import CompileError
 from .limits import MAX_EXPRESSION_DEPTH, MAX_IR_ITEMS, MAX_SOURCE_NESTING
-from .syntax import Conditional, Event, Expr, Loop, Model, OPERATOR_NAMES
+from .syntax import Assignment, Conditional, Event, Expr, Loop, Model, OPERATOR_NAMES
 
 
 def inline_functions(model: Model) -> Model:
@@ -94,14 +94,40 @@ def inline_functions(model: Model) -> Model:
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
         obligations.extend(args)
-        for statement in function.body:
-            if statement.index is not None:
-                fail('pure analog function assignments require scalar targets', statement.token)
-            if statement.name not in names:
-                fail('function assignments must target its local variables or return value', statement.token)
-            local[statement.name] = unpack(expand(statement.rhs, local, names, (*stack, name), depth+1), obligations)
-            bounded(local[statement.name])
-            obligations.append(local[statement.name])
+        def statements(body, bindings):
+            for statement in body:
+                if isinstance(statement, Conditional):
+                    # Capture the predicate before either branch changes locals.
+                    # The immutable expression keeps VA's sequential semantics.
+                    predicate = Expr(statement.relation, None,
+                        (statement.left, statement.right), statement.token)
+                    predicate = unpack(expand(predicate, bindings, names, (*stack, name), depth+1), obligations)
+                    bounded(predicate)
+                    obligations.append(predicate)
+                    then_values = statements(statement.then_body, dict(bindings))
+                    else_values = statements(statement.else_body, dict(bindings))
+                    merged = {}
+                    for target in then_values:
+                        if target not in else_values:
+                            continue
+                        yes, no = then_values[target], else_values[target]
+                        value = yes if yes is no else Expr('ternary', None,
+                            (predicate, yes, no), statement.token)
+                        bounded(value)
+                        merged[target] = value
+                    bindings = merged
+                    continue
+                if not isinstance(statement, Assignment):
+                    fail('pure analog functions require scalar assignments and finite if/else branches', statement.token)
+                if statement.index is not None:
+                    fail('pure analog function assignments require scalar targets', statement.token)
+                if statement.name not in names:
+                    fail('function assignments must target its local variables or return value', statement.token)
+                bindings[statement.name] = unpack(expand(statement.rhs, bindings, names, (*stack, name), depth+1), obligations)
+                bounded(bindings[statement.name])
+                obligations.append(bindings[statement.name])
+            return bindings
+        local = statements(function.body, local)
         if name not in local:
             fail('function must assign its return value', function.token)
         # Retain every argument and RHS through instance binding, including

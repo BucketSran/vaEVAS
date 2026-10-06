@@ -513,7 +513,7 @@ class Parser:
             self.take(";")
         if not inputs or not set(inputs) <= variables:
             self.fail("function requires typed real input arguments", token)
-        body = self.statements()
+        body = self.statements(conditional=True)
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
