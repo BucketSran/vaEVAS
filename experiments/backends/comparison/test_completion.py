@@ -79,6 +79,31 @@ class CompletionControls(unittest.TestCase):
                          [r for r in self.parent['records'] if r['dataset']!='cmp8-base'])
         self.assertEqual(before,{p:sha(p) for p in before})
 
+    def test_fixed_checker_reanalysis_bridge_keeps_old_receipts(self):
+        from completion import complete
+        proof=load(ROOT/'experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/proof.json')
+        parent_path=ROOT/proof['parent']['path']
+        for name in ('INPUT_MANIFEST.json','provenance.json'):
+            (self.old/name).write_bytes((ROOT/proof['inputs']['old_'+name]['path']).read_bytes())
+            new_path=self.new/name
+            proof['inputs']['new_'+name]={'path':str(new_path.relative_to(ROOT)),'sha256':sha(new_path)}
+        bridge=self.work/'checker-reanalysis.json';save(bridge,proof)
+        with self.assertRaisesRegex(ValueError,'checker changed without'):
+            complete(parent_path,self.fresh_path,self.old,self.new,self.work/'unbridged')
+        result=complete(parent_path,self.fresh_path,self.old,self.new,self.work/'bridged',checker_reanalysis=bridge)
+        validate(result)
+        originals={r['case']:r for r in load(parent_path)['records'] if r['dataset']=='cmp8-base' and r['backend']=='spectre'}
+        for row in result['records']:
+            if row['dataset']=='cmp8-base' and row['backend']=='spectre':
+                self.assertEqual(row['execution_receipt'],originals[row['case']]['execution_receipt'])
+                self.assertEqual(row['checker_identity'],proof['old_checker_identity'])
+        # Even a coherently rehashed proof cannot invent a changed assessment.
+        proof['rows'][0]['waveform_sha256']='0'*64
+        bridge.write_text(json.dumps(proof))
+        result['completion']['checker_reanalysis']['sha256']=sha(bridge)
+        with self.assertRaisesRegex(ValueError,'raw or assessment'):
+            validate(result)
+
     def test_incomplete_new_batch_is_rejected(self):
         self.fresh['records'].pop(next(i for i,r in enumerate(self.fresh['records']) if r['dataset']=='cmp8-base' and r['backend']=='gnucap'))
         self.fresh_path.write_text(json.dumps(self.fresh))
@@ -113,3 +138,24 @@ class CompletionControls(unittest.TestCase):
         failed=next(r for r in result['records'] if r['dataset']=='cmp8-base' and r['verdict']=='X')
         failed.update(verdict='P',stage='analysis',reason='observations_within_targets')
         with self.assertRaises(ValueError): validate(result)
+
+
+class CheckerReanalysisControls(unittest.TestCase):
+    """Actual archived Spectre observations; no simulator or synthetic grading."""
+    def test_frozen_bridge_and_tampering(self):
+        from completion import check_checker_reanalysis
+        proof_path=ROOT/'experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/proof.json'
+        proof=load(proof_path)
+        parent=load(ROOT/'experiments/backends/comparison/snapshot-20261006-accounted-v2.json')
+        old=load(ROOT/proof['inputs']['old_INPUT_MANIFEST.json']['path'])
+        new=load(ROOT/proof['inputs']['new_INPUT_MANIFEST.json']['path'])
+        check_checker_reanalysis(proof,parent,old,new,ROOT)
+        for mutation in ('raw','assessment','dependency','revision','missing_case'):
+            bad=copy.deepcopy(proof)
+            if mutation=='raw':bad['rows'][0]['waveform_sha256']='0'*64
+            if mutation=='assessment':bad['rows'][0]['assessment_sha256']='0'*64
+            if mutation=='dependency':bad['new_sources']['experiments/backends/dvs2-spectre-validation/check_results.py']='0'*64
+            if mutation=='revision':bad['new_revision']='0'*40
+            if mutation=='missing_case':bad['rows'].pop()
+            with self.subTest(mutation=mutation),self.assertRaises(ValueError):
+                check_checker_reanalysis(bad,parent,old,new,ROOT)

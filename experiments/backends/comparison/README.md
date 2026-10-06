@@ -162,3 +162,17 @@ python3 -B experiments/backends/comparison/completion.py PARENT_SNAPSHOT FRESH_S
 该命令只验证和组合已取得的执行收据，不启动仿真，不授予资源，也不修改旧快照或TABLE。
 FRESH_SNAPSHOT的EVAS目标必须是实际冻结执行的source/runtime；最新源有变化时须另建新执行，
 不能仅替换目标提交号。新源码批次的有限观测与其后集成、审查、发布状态分别报告。
+
+## CMP8 的固定 checker 重分析桥接
+
+PR87 只改变聚合身份中的 `test_triangle_oscillator.py`，CMP8 读取与数学检查的六文件
+依赖闭包字节保持相同。`completion.py --checker-reanalysis PROOF` 只接受已检查的
+固定 `66173cfc` 到 `d4b41c79` 转换及该文件的两份精确 blob；其他依赖或修订变化拒绝。
+它不按测试文件名推断代码不会执行，也不修改旧输入/checker 的新鲜度保护。
+
+桥接证明保存两个完整 checker 源码映射、原输入 manifest/provenance、原 Spectre8
+执行收据和 waveform SHA，以及新分析的八份观察。实际分析调用维护 runner 的
+独立 checker，重新分析前检查原 raw manifest、波形和物理输入。新观察必须与旧观察
+完全相同。原执行、原判定和原 checker 身份继续保留，重分析具有单独证明身份；
+它不增加 Spectre 仿真数。证明篡改、未知依赖变化、缺观察或变化的判定均拒绝。
+该入口用于此开发批次的明确转换，不构成一般 checker 升级或新的论文集。
