@@ -3,13 +3,35 @@ import math
 import unittest
 import hashlib
 from pathlib import Path
-from criteria import assess
+from criteria import assess as raw_assess
 
 Q = {'time_unit': 's', 'voltage_unit': 'V', 'time_error_s': 1e-11,
      'voltage_error_V': 5e-5, 'input_error_V': 1e-5,
      'qualified': True, 'native_counters': True, 'native_phase': True, 'source_validated': True,
      'input_bounds_qualified': True, 'native_initial': True,
      'qualification_evidence': {role: {'method':'Independent analytical calibration control', 'artifact_path':str(Path(__file__).resolve()), 'sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()} for role in ('source','time','voltage','inputs','native_initial','native_counters','native_phase')}}
+
+
+CENTERS={'EV-SH-01':[2,4,6,8], 'EV-HC-01':[1.375,3.375],
+         'EV-HC-02':[2.75,5.375], 'TM-01':[2,6], 'SI-01':[2,3,4,6],
+         'CO-SH-01':[2,3,4,6,8], 'CO-HC-01':[1.375,3.375],
+         'CP-02':[7/6,2.5,23/6,31/6],
+         'CO-VCO-01':[2+(-.4+math.sqrt(.555))/.5,3.755,4.755,6+(.4-math.sqrt(.1025))/.25]}
+
+
+def cohort_qualification(name, rows, q=Q):
+    evidence=dict(q.get('qualification_evidence',{}))
+    evidence['boundary_cohort']=Q['qualification_evidence']['time']
+    records=[]
+    for j,x in enumerate(CENTERS.get(name,[])):
+        matches=[i for i,r in enumerate(rows) if r.get('time_s') is not None and abs(r['time_s']-x*1e-6)<=1e-18]
+        if matches:records.append({'nominal_time_s':x*1e-6,'row_index':matches[0],'request_id':'independent-center-'+str(j)})
+    return dict(q, qualification_evidence=evidence,
+                boundary_cohort={'serialization_error_s':1e-18,'records':records})
+
+
+def assess(name, rows, q, execution_state='completed'):
+    return raw_assess(name, rows, cohort_qualification(name, rows, q), execution_state)
 
 
 def rows_for(name, event_shift=0):
@@ -82,7 +104,7 @@ class Calibration(unittest.TestCase):
             with self.subTest(case=name): self.assertEqual(assess(name,rows_for(name),Q)['status'],'P')
 
     def test_legal_common_event_shifts(self):
-        for name, shift in [('EV-SH-01',-.0005),('EV-SH-01',.0005),('EV-HC-01',.00025),('CO-SH-01',.00004),('CO-HC-01',.00025)]:
+        for name, shift in [('EV-SH-01',-.0005),('EV-SH-01',.0005),('EV-HC-01',.00025),('EV-HC-02',.0005),('TM-01',-.0005),('TM-01',.0005),('SI-01',-.0005),('SI-01',.0005),('CO-SH-01',.00004),('CO-HC-01',.00025)]:
             with self.subTest(case=name,shift=shift): self.assertEqual(assess(name,rows_for(name,shift),Q)['status'],'P')
 
     def test_distinct_voltage_and_history_faults(self):
@@ -220,6 +242,93 @@ class Calibration(unittest.TestCase):
         self.assertEqual(assess_observation(envelope)['status'],'P')
         del native[5]['time']
         self.assertEqual(assess_observation(envelope)['status'],'I')
+
+    def test_row_paired_error_bounds_do_not_hide_failure(self):
+        rows=rows_for('CP-01')
+        for r in rows:r['phase']+=.0011 if r['time_s']<=2e-6 else .001005
+        answer=assess('CP-01',rows,Q)
+        self.assertEqual(answer['status'],'F')
+        phase=next(p for p in answer['properties'] if p['name']=='voltage:phase')
+        self.assertGreater(phase['max_error_lower_bound'],.001)
+
+    def test_invalid_saved_input_is_observation_not_dut_failure(self):
+        rows=rows_for('VR-01')
+        for r in rows:r['ip']+=.0002
+        answer=assess('VR-01',rows,Q)
+        self.assertEqual(answer['status'],'I')
+        p=next(p for p in answer['properties'] if p['name']=='input_consistency:ip')
+        self.assertEqual(p['status'],'I');self.assertGreater(p['max_observed_error'],.0001)
+        self.assertFalse(any(p['name'].startswith('voltage:') for p in answer['properties']))
+
+    def test_boundary_cohort_missing_cannot_use_nearest_grid(self):
+        rows=rows_for('CP-02')
+        rows=[r for r in rows if abs(r['time_s']-2.5e-6)>1e-18]
+        for x in (2.5-.000005,2.5+.000005):
+            p=.125+.75*x;rows.append({'time_s':x*1e-6,'phase':p%1,'out':math.sin(2*math.pi*p)})
+        rows.sort(key=lambda r:r['time_s'])
+        answer=assess('CP-02',rows,Q)
+        self.assertEqual(answer['status'],'I')
+        self.assertFalse(any(r.get('raw_phase') is not None and r['nominal_T']==2.5 for r in answer.get('exact_boundary_observations',[])))
+
+    def test_boundary_serialization_requires_bound_and_provenance(self):
+        rows=rows_for('CP-02')
+        x=2.49999;p=.125+.75*x
+        rows.append({'time_s':x*1e-6,'phase':p%1,'out':math.sin(2*math.pi*p)})
+        rows.sort(key=lambda r:r['time_s']);q=cohort_qualification('CP-02',rows)
+        record=q['boundary_cohort']['records'][1];i=record['row_index']
+        rows[i]=dict(rows[i],time_s=rows[i]['time_s']+1e-15)
+        q['boundary_cohort']['serialization_error_s']=2e-15
+        self.assertEqual(raw_assess('CP-02',rows,q)['status'],'P')
+        q['boundary_cohort']['serialization_error_s']=1e-18
+        self.assertEqual(raw_assess('CP-02',rows,q)['status'],'I')
+        q=cohort_qualification('CP-02',rows);q['qualification_evidence'].pop('boundary_cohort')
+        self.assertEqual(raw_assess('CP-02',rows,q)['status'],'I')
+
+    def test_cross_limits_derive_from_source_stimulus(self):
+        import copy
+        from criteria import CARDS, event_limits
+        card=copy.deepcopy(CARDS['EV-HC-01'])
+        card['source']=card['source'].replace('2e-4','1e-4')
+        for e in card['event_contract']:e['window_T'][1]=.00025
+        limits=event_limits(card,'count')
+        self.assertAlmostEqual(limits[0]['slope_V_per_T'],.4)
+        self.assertAlmostEqual(limits[0]['window_T'][1],.00025)
+        card['event_contract'][0]['window_T'][1]=.0005
+        with self.assertRaises(ValueError):event_limits(card,'count')
+
+    def test_independent_si_instance_shifts(self):
+        rows=rows_for('SI-01')
+        for r in rows:
+            x=r['time_s']/1e-6;ea=[2-.0005,4-.0005,6-.0005];eb=[3+.0005,6+.0005]
+            na=sum(x>=e for e in ea);nb=sum(x>=e for e in eb)
+            r.update(na=na,nb=nb,oa=-.25 if na==0 else .1*ea[na-1],ob=.75 if nb==0 else 1-.1*eb[nb-1])
+        self.assertEqual(assess('SI-01',rows,Q)['status'],'P')
+
+    def test_history_pass_is_compatible_existence_not_actual_time_bound(self):
+        answer=assess('EV-SH-01',rows_for('EV-SH-01',.001005),Q)
+        self.assertEqual(answer['status'],'P')
+        history=next(p for p in answer['properties'] if p['name']=='event_history')
+        self.assertGreater(history['native_brackets_T'][0][1],history['legal_windows_T'][0][1])
+        self.assertLessEqual(history['intervals_T'][0][1],history['legal_windows_T'][0][1])
+        self.assertIn('Exists',history['rule'])
+
+    def test_all_saved_values_reject_bool(self):
+        rows=rows_for('VR-01');rows[5]['out']=True
+        self.assertEqual(assess('VR-01',rows,Q)['status'],'I')
+        with self.assertRaisesRegex(ValueError,'Unknown condition'):raw_assess('not-a-condition',[],Q)
+
+    def test_legal_small_wrap_displacements(self):
+        for name in ('CP-02','CO-VCO-01'):
+            for displacement in (-.00003,.00003):
+                rows=rows_for(name)
+                # Independent perturbation: fixed roots move by local phase-rate
+                # times 30 ps. The numerical phase deviation stays in budget.
+                for r in rows:
+                    x=r['time_s']/1e-6
+                    rate=.75 if name=='CP-02' else min(1,max(.2,.4+.5*((-1+x/2) if x<=2 else x-2 if x<=4 else 6-x if x<=6 else -(x-6)/2)))
+                    r['phase']=(r['phase']-rate*displacement)%1
+                    r['out']=math.sin(2*math.pi*r['phase'])
+                with self.subTest(case=name,shift=displacement):self.assertEqual(assess(name,rows,Q)['status'],'P')
 
     def test_freeze_refuses_dependency_replacement(self):
         import tempfile
