@@ -354,7 +354,7 @@
       "oracle": {
         "formula": "q=-0.25 before e1; q=u(ek) for ek<=t<e(k+1); n=k, k=1..4",
         "units": "q V; count port 1 V/callback",
-        "construction": "PWL lookup at one shared event sequence e=[2,4,6,8]T with allowed one-sided timer windows."
+        "construction": "PWL lookup at one shared event sequence e=[2,4,6,8]T with allowed symmetric explicit-tolerance timer windows."
       },
       "event_contract": [
         {
@@ -1780,6 +1780,14 @@
           "include_exact_center": true
         }
       ]
+    }
+  ],
+  "draft_revisions": [
+    {
+      "revision": "A0-review-1",
+      "basis": "Independent Astra review before new backend results",
+      "change": "Correct stale EV-SH-01 construction prose to symmetric explicit timer tolerance; source, stimulus, numerical windows and budgets unchanged.",
+      "previous_commit": "2599a4c6"
     }
   ]
 }
