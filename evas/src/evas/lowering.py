@@ -51,7 +51,11 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
           validate_decision: Callable[[Expr, Expression], None] | None = None,
-          decision_scope: bool = False, *, memo: dict | None = None) -> Expression:
+          decision_scope: bool = False, *, memo: dict | None = None,
+          node_declarations: bool = False) -> Expression:
+    # Only a caller with the complete declared electrical environment may label
+    # a missing voltage node invalid. Closed constant/state contexts stay unknown.
+    # This flag changes failure metadata only, never voltage acceptance or IR.
     # Opt-in reuse for one fixed parameter/node binding without registration
     # callbacks. Callers own the lifetime and must not share across contexts.
     if memo is not None:
@@ -60,15 +64,15 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
         key = (id(expr), preserve_structure, decision_scope)
         if key not in memo:
             value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
-                           decisions, validate_decision, decision_scope, memo)
+                           decisions, validate_decision, decision_scope, memo, node_declarations)
             memo[key] = (expr, value)
         return memo[key][1]
     return _lower(expr, parameters, nodes, source, operators, preserve_structure,
-                  decisions, validate_decision, decision_scope, None)
+                  decisions, validate_decision, decision_scope, None, node_declarations)
 
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
-           decisions, validate_decision, decision_scope, memo):
+           decisions, validate_decision, decision_scope, memo, node_declarations):
     def fail(message, *, code="compile_error"):
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
@@ -78,7 +82,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         if scope and decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         values = [lower(arg, parameters, nodes, source, operators,
-                        preserve_structure or scope, decisions, validate_decision, scope, memo=memo)
+                        preserve_structure or scope, decisions, validate_decision, scope, memo=memo, node_declarations=node_declarations)
                   for arg in expr.args]
         if scope and validate_decision is not None:
             for arg, value in zip(expr.args, values):
@@ -91,7 +95,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         if contains_operator(expr):
             fail("decision expressions do not support waveform operators in any operand or arm")
-        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, memo=memo) for arg in expr.args]
+        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, memo=memo, node_declarations=node_declarations) for arg in expr.args]
         zero, one = Affine(0.0, ()), Affine(1.0, ())
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
@@ -125,12 +129,13 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:
-            fail(f"undeclared electrical node in V({p},{n})", code="undeclared_node")
+            fail(f"undeclared electrical node in V({p},{n})",
+                 code="undeclared_node" if node_declarations else "compile_error")
         if preserve_structure and nodes[p] == nodes[n]:
             return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
                           Affine(0.0, (Term(nodes[n], -1.0),)))
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
-    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope, memo=memo) for arg in expr.args]
+    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope, memo=memo, node_declarations=node_declarations) for arg in expr.args]
     a = values[0]
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)

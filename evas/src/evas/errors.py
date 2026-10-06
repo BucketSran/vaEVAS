@@ -7,7 +7,7 @@ not become claims about language validity, numerical accuracy or implementation 
 # code -> category, owning stage, capability, actionable scope
 RULES = {
     'duplicate_module': ('invalid_input', 'parse', 'LANG', 'Provide each module definition once.'),
-    'connection_mismatch': ('invalid_input', 'binding', 'LANG', 'Connect every declared port to a declared electrical net.'),
+    'connection_mismatch': ('invalid_input', 'binding', 'LANG', 'Match every top-level port key; child connections must use declared electrical nets.'),
     'undeclared_node': ('invalid_input', 'lowering', 'LANG', 'Declare the electrical nodes used by voltage access.'),
     'manifest_input': ('invalid_input', 'input', None, 'Check the manifest compilation fields.'),
     'manifest_io': ('infrastructure', 'input', None, 'Check the manifest path and access.'),

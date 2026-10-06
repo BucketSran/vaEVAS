@@ -71,8 +71,10 @@ class DiagnosticSources(unittest.TestCase):
                 self.assertEqual(error['code'], 'resource_budget')
                 self.assertEqual(error['category'], 'resource')
                 self.assertEqual(error['capability'], 'LANG')
-                if name != 'hierarchy':
-                    self.assertIn(error['location']['source'], sources)
+                self.assertIn(error['location']['source'], sources)
+                if name == 'hierarchy':
+                    self.assertEqual(error['location']['source'], 'top.va')
+                    self.assertEqual(error['instance'], 'dut/a4095')
 
     def test_nonconvergence_keeps_the_kernel_reason(self):
         from evas import KernelError, solve
@@ -208,3 +210,62 @@ class DiagnosticSources(unittest.TestCase):
                     self.assertEqual(result.returncode, 2)
                     self.assertEqual(result.stdout, '')
                     self.assertEqual(json.loads(result.stderr), caught.exception.diagnostic)
+
+    def test_declared_voltage_in_restricted_contexts_stays_unknown(self):
+        import json
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+        bodies = [
+            'V(y,r)<+transition(V(u,r),0,1,1);',
+            'V(y,r)<+absdelay(V(u,r),V(u,r));',
+            'V(y,r)<+idt(V(u,r),0,V(u,r));',
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            source_path = root / 'declared.va'
+            manifest = root / 'sim.json'
+            manifest.write_text(json.dumps(dict(models=['declared.va'], instances=[dict(name='dut', module='m', connections=dict(u='u', y='y', r='0'))])))
+            for body in bodies:
+                with self.subTest(body=body):
+                    source = model(body)
+                    source_path.write_text(source)
+                    with self.assertRaises(CompileError) as caught:
+                        compile_sources({str(source_path): source}, [instance()])
+                    diagnostic = caught.exception.diagnostic
+                    result = subprocess.run([sys.executable, '-B', '-m', 'evas', 'compile', str(manifest)], capture_output=True, text=True, timeout=15)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertEqual(result.stdout, '')
+                    self.assertEqual(json.loads(result.stderr), diagnostic)
+                    self.assertEqual(diagnostic['category'], 'unknown')
+                    self.assertEqual(diagnostic['code'], 'compile_error')
+                    self.assertIsNone(diagnostic['hint'])
+                    self.assertEqual(diagnostic['instance'], 'dut')
+                    self.assertEqual(diagnostic['location']['source'], str(source_path))
+                    self.assertEqual(diagnostic['message'], str(caught.exception))
+
+    def test_real_missing_node_in_nested_live_input_remains_invalid(self):
+        for body in ('V(y,r)<+2*V(missing,r);', 'V(y,r)<+absdelay(V(missing,r),0);', 'V(missing,r)<+1;'):
+            with self.subTest(body=body), self.assertRaises(CompileError) as caught:
+                compile_sources({'missing.va': model(body)}, [instance()])
+            error = caught.exception.diagnostic
+            self.assertEqual(error['code'], 'undeclared_node')
+            self.assertEqual(error['category'], 'invalid_input')
+            self.assertEqual(error['location']['source'], 'missing.va')
+            self.assertEqual(error['instance'], 'dut')
+
+    def test_closed_child_parameters_and_cross_settings_stay_unknown(self):
+        from test_hierarchy import top, LEAF
+        cases = [
+            ({'top.va': top('gain #(.g(V(u,r))) child(u,y,r);'), 'gain.va': LEAF}, instance(module='top'), 'top.va'),
+            ({'cross.va': model('@(initial_step) n=0; @(cross(V(u,r),V(u,r),1e-9,1e-9)) n=n+1; V(y,r)<+n;', 'integer n;')}, instance(), 'cross.va'),
+        ]
+        for sources, inst, source_name in cases:
+            with self.subTest(source=source_name), self.assertRaises(CompileError) as caught:
+                compile_sources(sources, [inst])
+            error = caught.exception.diagnostic
+            self.assertEqual(error['category'], 'unknown')
+            self.assertEqual(error['code'], 'compile_error')
+            self.assertIsNone(error['hint'])
+            self.assertEqual(error['location']['source'], source_name)

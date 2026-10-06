@@ -9,7 +9,7 @@
 
 | 来源身份 | 条件与出口 | 分类、阶段、能力 | 来源及验收 |
 | --- | --- | --- | --- |
-| `lowering.voltage.undeclared` | 电压访问引用未声明电气节点；`undeclared_node` | invalid_input / lowering / LANG | 原电压表达式 token；绑定实例上下文。实际 API/CLI 触发并断言原文本、行列与实例 |
+| `lowering.voltage.undeclared` | 完整电气声明环境中，电压访问引用未声明节点；`undeclared_node` | invalid_input / lowering / LANG | 原电压表达式 token；绑定实例上下文。实际 API/CLI 触发并断言原文本、行列与实例 |
 | `frontend.module.duplicate` | 源库存第二份同名模块；`duplicate_module` | invalid_input / parse / LANG | 第二份模块的原声明 token。实际 API 触发，不改变旧重复模块文本 |
 | `hierarchy.connections.top` | 顶层 manifest 端口键集合与声明不符；`connection_mismatch` | invalid_input / binding / LANG | 实际实例名；manifest 无 VA token，不补行列。实际 API 触发 |
 | `hierarchy.connections.child` | 子实例有序端口数错误，或命名端口/电气连接不符；`connection_mismatch` | invalid_input / binding / LANG | 实际 child token 与层级实例名。实际 API 触发有序端口数错误；命名连接分支复用既有层级回归并由源码审计确认 |
@@ -17,10 +17,19 @@
 `Model.declaration_token` 仅保留解析器已取得的模块 token，不进入求解 IR。
 在已绑定的 `InstanceCompiler` 返回 CompileError 时，前端补缺失的实际实例名；已有实例信息优先。
 
+lowering 的 `node_declarations` 仅描述诊断来源：只有实际完整声明环境才标 true，
+递归表达式保留该标记；默认 false，不从字典是否为空或 message 推断声明有效性。
+transition 输入、absdelay 设置、idt reset 等调用故意不给电压映射。已声明的 `V(u,r)`
+在这些上下文中仍被原边界拒绝，保留旧文本与真实 token，code 为 compile_error，
+category 为 unknown，hint 为 null。三例都经 API/CLI 实际验证；这不把上下文限制归因于
+缺少节点声明，也不新增连续电压支持。普通/嵌套表达式、可读电压的 waveform 输入和贡献
+目标中确实缺声明的节点，仍为 invalid_input。
+
 ## 编译资源
 
 以下来源均保留原阈值、控制流和错误文本，code 为已有 `resource_budget`，分类为 resource，
-阶段为 compile，能力为 LANG。包装函数不按文字分类，调用来源显式传入 code。
+阶段为 compile，能力为 LANG。resource_budget 沿用 v1 的编译资源阶段，覆盖词法/解析与
+展开预算；更细阶段由来源身份说明，不在本批改变 schema。包装函数不按文字分类，调用来源显式传入 code。
 原 token 提供来源；层级预算由实际 child token/实例上下文提供，顶层实例无 token 时仍不补猜。
 
 | 来源身份 | 实际触发 fixture | 其他已审计同组分支 |
