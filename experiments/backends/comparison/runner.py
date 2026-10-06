@@ -164,9 +164,16 @@ def run(args):
             raise ValueError('explicit current kernel required')
         if runtime_identity() != load(source / 'provenance.json')['evas_runtime_identity']:
             raise ValueError('EVAS source changed since input freeze; use a new batch identity')
+        sys.path.insert(0, str(ROOT / 'evas/src'))
+        from evas.identity import inspect_identity
+        facts, error = inspect_identity(args.kernel)
+        save(output / 'KERNEL_IDENTITY.json', facts)
+        if error is not None:
+            raise error
         tool = {'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-                'runtime_identity': runtime_identity(), 'kernel_sha256': sha(args.kernel),
-                'kernel_version': 'unknown', 'version_note': 'This runner does not query the kernel version; retain actual binary hash and response engine identity. Query kernel identity separately when needed.'}
+                'runtime_identity': runtime_identity(), 'kernel_sha256': facts['kernel']['sha256'],
+                'kernel_version': facts['kernel']['reported']['version'], 'identity': facts,
+                'version_note': 'Selected kernel identity queried before execution; an IR match does not establish full runtime compatibility.'}
     elif args.backend == 'spectre':
         if not args.spectre_profile:
             raise ValueError('existing Spectre profile required')

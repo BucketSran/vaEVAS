@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from freeze import freeze
-from runner import execute, effective_settings, verify
+from runner import execute, effective_settings, verify, run
 
 
 class RunnerControls(unittest.TestCase):
@@ -43,6 +43,58 @@ class RunnerControls(unittest.TestCase):
                 actual = effective_settings(root, 'spectre')
             self.assertTrue(actual['requested_values_match'])
             self.assertEqual(actual['actual']['stop'], 4e-6)
+
+    def test_selected_kernel_identity_is_recorded_before_simulation(self):
+        import json
+        import sys
+        from argparse import Namespace
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            inputs = root / 'inputs'
+            freeze(inputs)
+            kernel = root / 'kernel'
+            reported = {'identity_version': 1, 'name': 'evas-kernel', 'version': '0.13.0',
+                        'ir_schema_version': 17, 'build_revision': 'frozen-build',
+                        'request_protocol_version': None, 'platform': {'os': 'test', 'arch': 'test'}}
+            kernel.write_text('#!' + sys.executable + '\nimport json\nprint(' + repr(json.dumps(reported)) + ')\n')
+            kernel.chmod(0o755)
+            output = root / 'output'
+            args = Namespace(inputs=inputs, output=output, backend='evas', kernel=kernel,
+                             allocation='local-test-only', resume_finished_spectre=False)
+            with patch('runner.execute', side_effect=RuntimeError('simulation seam')) as launch:
+                with self.assertRaisesRegex(RuntimeError, 'simulation seam'):
+                    run(args)
+            launch.assert_called_once()
+            started = json.loads((output / 'STARTED.json').read_text())
+            self.assertEqual(started['tool']['kernel_version'], '0.13.0')
+            self.assertEqual(started['tool']['identity']['kernel']['reported'], reported)
+            self.assertEqual(started['tool']['kernel_sha256'], started['tool']['identity']['kernel']['sha256'])
+            self.assertEqual(json.loads((output / 'KERNEL_IDENTITY.json').read_text()), started['tool']['identity'])
+
+    def test_invalid_selected_kernel_identity_prevents_simulation(self):
+        import json
+        import sys
+        from argparse import Namespace
+        sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'evas/src'))
+        from evas import KernelError
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            inputs = root / 'inputs'
+            freeze(inputs)
+            kernel = root / 'kernel'
+            kernel.write_text('#!' + sys.executable + '\nprint("not identity JSON")\n')
+            kernel.chmod(0o755)
+            output = root / 'output'
+            args = Namespace(inputs=inputs, output=output, backend='evas', kernel=kernel,
+                             allocation='local-test-only', resume_finished_spectre=False)
+            with patch('runner.execute', side_effect=AssertionError('invalid identity launched simulation')) as launch:
+                with self.assertRaises(KernelError):
+                    run(args)
+            launch.assert_not_called()
+            self.assertFalse((output / 'STARTED.json').exists())
+            facts = json.loads((output / 'KERNEL_IDENTITY.json').read_text())
+            self.assertEqual(facts['kernel']['status'], 'error')
+            self.assertIsNotNone(facts['kernel']['sha256'])
 
     def test_timeout_records_failure_and_never_retries(self):
         with tempfile.TemporaryDirectory() as directory:
