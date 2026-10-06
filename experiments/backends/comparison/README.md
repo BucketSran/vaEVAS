@@ -143,7 +143,10 @@ run/receipt生成，不以换一个revision字段冒充实测。所有旧snapsho
 
 新收据的 `run_id` 由运行目录名和实际 `STARTED.json` 的完整SHA构成。
 收据保存目录名、STARTED归档及SHA；校验器绑定backend、输入manifest、实际工具身份和初始runner。
-新runner记录启动纳秒时间，避免同配置、同目录名的独立批次身份相同。旧收据不补字段、不改字节。
+新runner记录启动纳秒时间，该字段参与STARTED哈希，区分独立批次。早于该字段的实际STARTED仍按原字节归档和绑定，
+例如c7执行后新ingest的收据不补造时间戳。哈希绑定不证明每个历史运行都有纳秒字段；
+字节相同的STARTED会生成相同run_id，completion另行拒绝重复身份。
+含started_sha256的新收据在纯ingest、refresh或completion中均须与measurement.run_id一致。旧收据不补字段、不改字节。
 
 `completion.py` 与只刷新EVAS的 `refresh.py` 合同分开：只接受固定cmp8/base的EVAS、
 OpenVAF/ngspice、Gnucap三个完整8项新执行批次，共24项；失败属于完整分母，不能只导入通过项。

@@ -272,7 +272,8 @@ def validate(data, root=ROOT, target=None):
                 bindings = {'backend': r['backend'], 'condition': r['case'], 'profile': r['profile'],
                             'input_identity': r['input_identity'], 'source_revision': m['revision'],
                             'runtime_identity': m['runtime_identity'], 'checker_identity': r['checker_identity']}
-                if (data.get('refresh') or data.get('completion')) and receipt.get('run_id') != m.get('run_id'):
+                if ((data.get('refresh') or data.get('completion') or 'started_sha256' in receipt)
+                        and receipt.get('run_id') != m.get('run_id')):
                     raise ValueError('execution receipt run identity mismatch')
                 if any(receipt.get(k) != v for k, v in bindings.items()):
                     raise ValueError('execution receipt identity mismatch')
