@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vinput (u 0) vsource type=pwl wave=[0 -1.52587890625e-05 1 1.52587890625e-05]
+dut (u discarded gain ydecision) function_probe
+simulatorOptions options reltol=1e-12 vabstol=1e-14 iabstol=1e-18
+tran tran stop=1 step=.001 maxstep=.001 method=traponly strobetimes=[0 0.25 0.49999995000000003 0.5 0.50000005000000003 0.75 1] strobeoutput=all
+save u discarded gain ydecision

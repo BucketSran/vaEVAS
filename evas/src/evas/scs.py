@@ -12,6 +12,8 @@ import re
 
 from .errors import CompileError
 from .frontend import Instance, compile_sources, parse_sources
+from .node_elaboration import scalarize_nodes
+from .parameters import bind_parameters
 from .runtime import DEFAULT_TIMEOUT, transient
 from .scs_sources import POINT_BUDGET, voltage_points
 from .syntax import Token, _SUFFIX
@@ -247,11 +249,17 @@ def load_scs(path: str | Path) -> ScsTestbench:
         if name not in models:
             _fail(f'unknown VA module or unsupported device {name!r}',token,unsupported=True)
         module=models[name]
-        if any(module.node_ranges.get(p) is not None for p in module.ports):
-            _fail('scs instance connections currently require scalar ports; use explicit bit mappings in the Python API',token,unsupported=True)
-        if len(nodes)!=len(module.ports):
-            _fail(f'instance {token.text!r} requires {len(module.ports)} ports in declared order',token)
-        instances.append(dict(name=token.text,module=name,connections=dict(zip(module.ports,nodes)),parameters=settings))
+        try:
+            parameters=bind_parameters(module,settings,token.text)
+            expanded,_=scalarize_nodes(module,parameters)
+        except CompileError as exc:
+            # Preserve a more precise VA origin, otherwise identify the SCS instance.
+            exc.diagnostic.setdefault('location', dict(source=token.source, line=token.line, column=token.column))
+            exc.diagnostic.setdefault('instance', token.text)
+            raise
+        if len(nodes)!=len(expanded.ports):
+            _fail(f'instance {token.text!r} requires {len(expanded.ports)} scalar ports in declared order',token)
+        instances.append(dict(name=token.text,module=name,connections=dict(zip(expanded.ports,nodes)),parameters=settings))
     available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()]}
     if not set(saved)<=available:
         fail(f'save names unknown scalar nodes: {sorted(set(saved)-available)}')
@@ -268,7 +276,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     return ScsTestbench(sources,manifest,saved,metadata)
 
 
-def simulate_scs(path: str | Path, *, kernel, timeout=DEFAULT_TIMEOUT):
+def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
     bench=load_scs(path)
     program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']])
     result=transient(program,kernel=kernel,timeout=timeout,

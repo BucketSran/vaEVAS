@@ -30,13 +30,14 @@ _TOKEN = re.compile(
     r"|(?P<macro>`M_PI\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|'\{|[\[\]:<>(){}+*/;,=@#.\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|&&|\|\||'\{|[\[\]:<>(){}+*/;,=@#.?!\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (4,), "absdelay": (2,), "slew": (3,),
-                    "idt": (2, 3), "laplace_nd": (3,), "idtmod": (4,), "ddt": (1,)}
+                    "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
+DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf"}
@@ -54,7 +55,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
                 raise CompileError(f"{name}:{line}:{column}: unsupported or invalid token {source[offset:offset+20]!r}")
             result.append(Token(source[offset], 'unsupported', line, column, name))
             if len(result) > 100_000:
-                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded',
+                                   code='resource_budget', token=result[-1])
             offset += 1
             column += 1
             continue
@@ -62,7 +64,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
         if kind not in ("space", "comment"):
             result.append(Token(text, kind, line, column, name))
             if len(result) > 100_000:
-                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded')
+                raise CompileError(f'{name}:{line}:{column}: source token budget exceeded',
+                                   code='resource_budget', token=result[-1])
         if "\n" in text:
             line += text.count("\n")
             column = len(text.rsplit("\n", 1)[1]) + 1
@@ -77,7 +80,8 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
                 "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
-                "idt", "laplace_nd", "idtmod", "ddt", "call", "index"]
+                "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
+                "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
@@ -85,10 +89,26 @@ class Expr:
 
 
 def contains_operator(expr: Expr) -> bool:
-    pending = [expr]
+    pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
         if current.op in OPERATOR_NAMES:
+            return True
+        pending.extend(current.args)
+    return False
+
+
+def contains_decision(expr: Expr) -> bool:
+    pending, seen = [expr], set()
+    while pending:
+        current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        if current.op in DECISION_NAMES:
             return True
         pending.extend(current.args)
     return False
@@ -140,7 +160,7 @@ class Trigger:
 @dataclass(frozen=True)
 class Event:
     triggers: tuple[Trigger, ...]
-    body: tuple[Assignment | Conditional, ...]
+    body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
 
 
@@ -182,6 +202,7 @@ class Model:
     parameter_ranges: dict[str, tuple["ParameterRange", ...]] = field(default_factory=dict)
     node_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
     port_ranges: dict[str, tuple[Expr, Expr] | None] = field(default_factory=dict)
+    declaration_token: Token | None = None
 
 
 @dataclass(frozen=True)
@@ -200,6 +221,7 @@ class Parser:
         self.tokens = _tokens(source, name) if tokens is None else tokens
         self.index = 0
         self.nesting = 0
+        self.mixed_initial_body = False
 
     @property
     def token(self) -> Token:
@@ -283,7 +305,7 @@ class Parser:
 
     def expression(self, minimum: int = 0) -> Expr:
         if self.nesting >= MAX_SOURCE_NESTING:
-            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded", code="resource_budget")
         self.nesting += 1
         try:
             result = self._expression(minimum)
@@ -294,7 +316,7 @@ class Parser:
 
     def _expression(self, minimum: int = 0) -> Expr:
         token = self.take()
-        if token.text in ("+", "-"):
+        if token.text in ("+", "-", "!"):
             left = Expr("unary" + token.text, None, (self.expression(30),), token)
         elif token.text == "(":
             left = self.expression()
@@ -368,18 +390,28 @@ class Parser:
                 left = Expr("parameter", token.text, (), token)
         else:
             self.fail(f"unsupported expression {token.text!r}", token)
-        while self.token.text in ("+", "-", "*", "/"):
+        precedence_table = {"||": 1, "&&": 2, "<": 3, "<=": 3, ">": 3, ">=": 3,
+                            "+": 10, "-": 10, "*": 20, "/": 20}
+        while self.token.text in precedence_table or self.token.text == "?":
             op = self.token
-            precedence = 10 if op.text in ("+", "-") else 20
-            if precedence < minimum:
-                break
-            self.take()
-            left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
+            if op.text == "?":
+                if minimum > 0:
+                    break
+                self.take()
+                then_value = self.expression()
+                self.take(":")
+                left = Expr("ternary", None, (left, then_value, self.expression()), op)
+            else:
+                precedence = precedence_table[op.text]
+                if precedence < minimum:
+                    break
+                self.take()
+                left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return replace(left, expansion=left.token.expansion)
 
     def statements(self, conditional=False, analog=False):
         if self.nesting >= MAX_SOURCE_NESTING:
-            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded")
+            self.fail(f"syntax nesting limit ({MAX_SOURCE_NESTING}) exceeded", code="resource_budget")
         self.nesting += 1
         try:
             return self._statements(conditional, analog)
@@ -388,6 +420,9 @@ class Parser:
 
     def _statements(self, conditional=False, analog=False):
         token = self.token
+        if token.text == '@' and self.mixed_initial_body:
+            self.fail('nested events are not supported in a mixed initial_step body',
+                      token, code='unsupported_initial_event')
         if token.text == ";":
             self.take(";")
             return ()
@@ -401,11 +436,11 @@ class Parser:
         if token.text == "if" and conditional:
             self.take("if")
             self.take("(")
-            left = self.expression()
+            left = self.expression(4)
             relation = self.take()
             if relation.text not in ("<", "<=", ">", ">="):
                 self.fail("event condition requires <, <=, > or >=", relation)
-            right = self.expression()
+            right = self.expression(4)
             self.take(")")
             then_body = self.statements(True, analog)
             else_body = ()
@@ -413,25 +448,25 @@ class Parser:
                 self.take("else")
                 else_body = self.statements(True, analog)
             return (Conditional(relation.text, left, right, then_body, else_body, token),)
-        if analog and token.text == "for":
+        if (analog or conditional) and token.text == "for":
             self.take("for")
             self.take("(")
             name = self.name()
             self.take("=")
             start = self.expression()
             self.take(";")
-            left = self.expression()
+            left = self.expression(4)
             relation = self.take()
             if left.op != "parameter" or left.value != name or relation.text not in ("<", "<=", ">", ">="):
                 self.fail("static for condition requires its genvar and <, <=, > or >=", relation)
-            limit = self.expression()
+            limit = self.expression(4)
             self.take(";")
             if self.name() != name:
                 self.fail("for initialization and update must write the same genvar", token)
             self.take("=")
             update = self.expression()
             self.take(")")
-            return (Loop(name, start, relation.text, limit, update, self.statements(True, True), token),)
+            return (Loop(name, start, relation.text, limit, update, self.statements(True, analog), token),)
         if analog and token.text == "@":
             self.take("@")
             self.take("(")
@@ -482,12 +517,31 @@ class Parser:
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
-    def monitored_event(self, token):
-        """Parse after @(; static loops reuse the same monitored event grammar."""
-        triggers = []
+    def monitored_event(self, token, initial=None):
+        """Parse after @(; only top-level callers can split initialization."""
+        triggers, initial_count, unqualified, qualified = [], 0, False, False
         while True:
             leaf = self.take()
             kind = leaf.text
+            if kind == 'initial_step' and initial is not None:
+                initial_count += 1
+                if self.token.text == '(':
+                    qualified = True
+                    self.take('(')
+                    while True:
+                        if self.token.text not in ('"dc"', '"tran"'):
+                            self.fail('only dc/tran analysis labels in a redundant initialization OR are supported', code='unsupported_initial_event')
+                        self.take()
+                        if self.token.text != ',':
+                            break
+                        self.take(',')
+                    self.take(')')
+                else:
+                    unqualified = True
+                if self.token.text != 'or':
+                    break
+                self.take('or')
+                continue
             if kind not in ("cross", "timer"):
                 self.fail("only cross and timer events are supported here; initial_step must be top-level", leaf,
                           code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
@@ -507,6 +561,21 @@ class Parser:
                 break
             self.take("or")
         self.take(")")
+        if initial_count:
+            if not unqualified:
+                self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
+            if triggers and (qualified or initial_count != 1 or any(leaf.kind != 'cross' for leaf in triggers)):
+                self.fail('mixed initialization requires one unqualified initial_step and only cross leaves', token, code='unsupported_initial_event')
+            previous_context = self.mixed_initial_body
+            self.mixed_initial_body = bool(triggers)
+            try:
+                body = self.statements(bool(triggers))
+            finally:
+                self.mixed_initial_body = previous_context
+            if any(not isinstance(statement, Assignment) for statement in body):
+                self.fail('mixed initial_step body requires unconditional instance-constant assignments', token, code='unsupported_initial_event')
+            initial.extend(body)
+            return Event(tuple(triggers), body, token) if triggers else None
         return Event(tuple(triggers), self.statements(True), token)
 
     def analog_block(self):
@@ -517,35 +586,11 @@ class Parser:
             if self.token.text == "@":
                 token = self.take("@")
                 self.take("(")
-                if self.token.text == "initial_step":
-                    unqualified = False
-                    while True:
-                        if self.token.text != 'initial_step':
-                            self.fail('initial_step mixed with monitored events requires runtime initialization support', code='unsupported_initial_event')
-                        self.take('initial_step')
-                        if self.token.text == '(':
-                            self.take('(')
-                            while True:
-                                if self.token.text not in ('"dc"', '"tran"'):
-                                    self.fail('only dc/tran analysis labels in a redundant initialization OR are supported', code='unsupported_initial_event')
-                                self.take()
-                                if self.token.text != ',':
-                                    break
-                                self.take(',')
-                            self.take(')')
-                        else:
-                            unqualified = True
-                        if self.token.text != 'or':
-                            break
-                        self.take('or')
-                    if not unqualified:
-                        self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
-                    self.take(")")
-                    initial.extend(self.statements())
-                else:
-                    # Keep source order until genvar expansion separates events
-                    # from continuous statements in node_elaboration.
-                    analog.append(self.monitored_event(token))
+                # Initialization is installed once by the existing state path;
+                # only monitored leaves become runtime events.
+                event = self.monitored_event(token, initial)
+                if event is not None:
+                    analog.append(event)
                 continue
             analog.extend(self.statements(True, True))
         self.take("end")
@@ -726,4 +771,4 @@ class Parser:
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
-        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges)
+        return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token)

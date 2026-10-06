@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+module function_probe(u,discarded,gain,ydecision);
+input u; output discarded,gain,ydecision; electrical u,discarded,gain,ydecision;
+analog function real f; input a; real a,t; begin t=a+a; f=1; end endfunction
+analog function real twice; input x; real x; begin twice=x+x; end endfunction
+analog function real positive; input x; real x; begin positive=x>0?1:0; end endfunction
+analog begin
+ V(discarded)<+f(f(f(f(f(f(f((((V(u)+(V(u)+V(u)))+(V(u)+(V(u)+V(u))))+((V(u)+(V(u)+V(u)))+(V(u)+(V(u)+V(u))))))))))));
+ V(gain)<+(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(V(u)))))))))))))))+twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(twice(V(u))))))))))))))));
+ V(ydecision)<+positive(V(u));
+end
+endmodule

@@ -10,8 +10,8 @@ ARRAY_BUDGET = 4096
 
 
 def scalarize_arrays(model, parameter):
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def integer(expr):
         try:
@@ -33,7 +33,7 @@ def scalarize_arrays(model, parameter):
         first, last = integer(left), integer(right)
         count = abs(last-first)+1
         if count + sum(len(indices) for indices in ranges.values()) > ARRAY_BUDGET:
-            fail('total array element budget (4096) exceeded', left.token)
+            fail('total array element budget (4096) exceeded', left.token, code="resource_budget")
         indices = range(first, last + (1 if last >= first else -1), 1 if last >= first else -1)
         ranges[name] = indices
         for index in indices:
@@ -47,7 +47,16 @@ def scalarize_arrays(model, parameter):
             fail(f'array index {value} is outside {name!r} declaration', index.token)
         return f'{name}[{value}]'
 
+    # This cache belongs to one instance's scalarization, with fixed bounds.
+    # Keep the input alive as well as its replacement to avoid ID reuse.
+    expressions = {}
     def expression(expr):
+        key = id(expr)
+        if key not in expressions:
+            expressions[key] = (expr, transform_expression(expr))
+        return expressions[key][1]
+
+    def transform_expression(expr):
         if expr.op == 'index':
             return Expr('parameter', element(expr.value, expr.args[0], expr.token), (), expr.token)
         if expr.op == 'parameter' and expr.value in ranges:

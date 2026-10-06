@@ -1,0 +1,10 @@
+include setup.py
+include rust_core/Cargo.toml rust_core/Cargo.lock
+recursive-include rust_core/src *.rs
+recursive-include rust_core/benches *.rs
+include rust_core/ir/Cargo.toml
+recursive-include rust_core/ir/src *.rs
+prune rust_core/target
+prune build
+recursive-exclude src/evas/_bin *
+include rust_core/fuzz/seeds/static.json

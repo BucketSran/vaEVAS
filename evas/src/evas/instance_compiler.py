@@ -5,6 +5,7 @@ operator/state IDs and output order belong to Compilation; no loop-captured stat
 """
 from dataclasses import dataclass, field
 import math
+from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
@@ -14,7 +15,7 @@ from .limits import check_ir
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays
-from .syntax import (CompileError, Model, contains_operator,
+from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Conditional as SyntaxConditional, ContributionStatement)
 
 if TYPE_CHECKING:
@@ -72,6 +73,7 @@ class InstanceCompiler:
         self.cache: dict[str, float] = {}
         self.node_ids = {name: compilation.indices[net] for name, net in nets.items()}
         self.initials = {}
+        self.expression_decision_origins = set()
         self.allowed_condition_nodes = {0} | {self.node_ids[port] for port, direction in model.directions.items()
                                              if direction in ("input", "inout")}
 
@@ -97,7 +99,11 @@ class InstanceCompiler:
         for statement in self.model.initial:
             if statement.name not in self.state_ids or statement.name in self.initials:
                 raise CompileError(f"{self.model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
-            value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            try:
+                value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            except CompileError as exc:
+                raise CompileError(f'initial_step values must be instance constants: {exc}',
+                                   code='unsupported_initial_event', token=statement.token) from exc
             if not isinstance(value, Affine) or value.terms:
                 raise CompileError("initial_step values must be instance constants")
             if self.model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
@@ -126,24 +132,43 @@ class InstanceCompiler:
         return isinstance(expression, Binary) and self.integral(expression.left) and self.integral(expression.right)
 
     def waveform(self, expr, resolve):
+        if expr.op == "laplace_np" and len(expr.args) != 3:
+            raise CompileError(f"{self.model.source}:{expr.token.line}:{expr.token.column}: laplace_np epsilon is unsupported; omit the tolerance argument")
         input_nodes = {} if expr.op == "transition" else self.node_ids
+        def nested_delay(nested):
+            if nested.op != "absdelay":
+                raise CompileError("absdelay nesting is limited to fixed absdelay stages")
+            return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "ddt") else None,
-                      preserve_structure=True)
-        if expr.op == "laplace_nd":
+                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_delay if expr.op == "absdelay" else None,
+                      preserve_structure=True, node_declarations=expr.op != "transition")
+        if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):
                 if array.op != "array":
-                    raise CompileError(f"{self.model.source}:{array.token.line}:{array.token.column}: laplace_nd coefficients must use standard constant array literals")
+                    raise CompileError(f"{self.model.source}:{array.token.line}:{array.token.column}: {expr.op} coefficients must use standard constant array literals")
                 result = []
                 for item in array.args:
                     value = lower(item, self.parameter, {}, self.model.source)
                     if not isinstance(value, Affine) or value.terms:
-                        raise CompileError(f"{self.model.source}:{item.token.line}:{item.token.column}: laplace_nd coefficients must be instance constants")
+                        raise CompileError(f"{self.model.source}:{item.token.line}:{item.token.column}: {expr.op} coefficients must be instance constants")
                     result.append(value.constant)
                 return tuple(result)
             numerator = coefficients(expr.args[1])
             denominator = coefficients(expr.args[2])
-            if not numerator or not 2 <= len(denominator) <= 9 or len(numerator) > len(denominator):
+            if expr.op == "laplace_np":
+                if len(numerator) != 1 or len(denominator) != 2:
+                    raise CompileError("laplace_np supports one constant numerator and one real pole pair")
+                pole, imaginary = denominator
+                if not math.isfinite(numerator[0]) or not math.isfinite(pole) or pole >= 0 or imaginary != 0:
+                    raise CompileError("laplace_np requires a finite numerator and one finite negative real pole with zero imaginary part")
+                coefficient = -1.0 / pole
+                # A rounded product can equal -1 even for an inexact reciprocal
+                # (e.g. pole=-3). Compare the original binary64 rationals.
+                if (not math.isfinite(coefficient) or coefficient <= 0 or
+                        Fraction(coefficient) != -1 / Fraction(pole)):
+                    raise CompileError("laplace_np reciprocal coefficient must be exactly representable as finite positive binary64")
+                denominator = (1.0, coefficient)
+            elif not numerator or not 2 <= len(denominator) <= 9 or len(numerator) > len(denominator):
                 raise CompileError("laplace_nd requires a proper rational filter of order 1 through 8")
             settings = ()
         else:
@@ -158,7 +183,7 @@ class InstanceCompiler:
             self.compilation.operators.append(Idt(value, settings[0].constant, origin, reset))
         elif expr.op == "ddt":
             self.compilation.operators.append(Ddt(value, origin))
-        elif expr.op == "laplace_nd":
+        elif expr.op in ("laplace_nd", "laplace_np"):
             self.compilation.operators.append(LaplaceNd(value, numerator, denominator, origin))
         elif expr.op == "idtmod":
             ic, modulus, offset = (v.constant for v in settings)
@@ -209,7 +234,7 @@ class InstanceCompiler:
             direction, time_tol, expr_tol = settings
             if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                 raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-            result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True),
+            result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
                                    int(direction), time_tol, expr_tol)
         else:
             # Lower optional source arguments into the existing explicit IR.
@@ -240,8 +265,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
-                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
+                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
+                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
@@ -249,7 +274,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
                 # Reset feedback checks need voltage dependencies even
                 # when a coefficient cancels or underflows to zero.
-                value = lower(statement.rhs, self.symbol, self.node_ids, self.model.source, preserve_structure=True)
+                value = lower(statement.rhs, self.symbol, self.node_ids, self.model.source, preserve_structure=True, node_declarations=True)
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")
                 result.append(Assignment(self.state_ids[statement.name], value))
@@ -276,10 +301,61 @@ class InstanceCompiler:
             return self.symbol(name)
         return resolve
 
+    def validate_decision_expression(self, expr, value):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        check_ir(value, origin)
+        if _predicate_degree(value) is None:
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected expression and function validation obligations must remain piecewise-affine")
+
+    def expression_select(self, expr, relation, left, right, then_value, else_value):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        result = Select(relation, left, right, then_value, else_value, origin)
+        check_ir(result, origin)
+        if (_predicate_degree(left) is None or _predicate_degree(right) is None or
+                _predicate_degree(result) is None):
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates and every arm must be affine or input-selected piecewise-affine")
+        if not (self.expression_nodes(left) | self.expression_nodes(right)).issubset(self.allowed_condition_nodes):
+            raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: decision predicates must depend only on input/inout ports")
+        self.expression_decision_origins.add(origin)
+        return result
+
     def lower_local(self, expr, env, *, preserve_structure=False):
         resolve = self.local_symbol(env)
-        return lower(expr, resolve, self.node_ids, self.model.source,
-                     lambda op: self.waveform(op, resolve), preserve_structure)
+        decision = contains_decision(expr)
+        if decision and contains_operator(expr):
+            raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
+        factory = self.expression_select if not self.model.initial and not self.model.events else None
+        value = lower(expr, resolve, self.node_ids, self.model.source,
+                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision, node_declarations=True)
+        # Validate the enclosing arithmetic too: an input-selected scalar must
+        # not become a coefficient multiplying another input dependency.
+        def has_expression_decision(item):
+            pending, seen = [item], set()
+            while pending:
+                part = pending.pop()
+                if id(part) in seen:
+                    continue
+                seen.add(id(part))
+                if isinstance(part, Select):
+                    if part.origin in self.expression_decision_origins:
+                        return True
+                    pending.extend((part.left, part.right, part.then_value, part.else_value))
+                elif isinstance(part, Binary):
+                    pending.extend((part.left, part.right))
+                elif isinstance(part, Power):
+                    pending.append(part.base)
+            return False
+        # Existing statement-if rejection remains at its original owning stage.
+        # Apply the new source-arm check only to new expression decisions,
+        # including ones read back through local aliases.
+        if has_expression_decision(value):
+            origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
+            check_ir(value, origin)
+            if _predicate_degree(value) is None:
+                raise CompileError(f"{origin.source}:{origin.line}:{origin.column}: selected expression must remain piecewise-affine")
+        return value
 
     def execute_analog(self, statements, env, conditional=False):
         result = dict(env)
@@ -327,7 +403,7 @@ class InstanceCompiler:
         bound_branches = {}
         for branch_statement, expression in analog_contributions:
             branch = branch_statement.branch
-            lower(branch, self.parameter, self.node_ids, self.model.source)  # validates both target nodes
+            lower(branch, self.parameter, self.node_ids, self.model.source, node_declarations=True)  # validates both target nodes
             local_p, local_n = (str(arg.value) for arg in branch.args)
             pair = tuple(sorted((local_p, local_n)))
             p, n = (self.node_ids[name] for name in pair)

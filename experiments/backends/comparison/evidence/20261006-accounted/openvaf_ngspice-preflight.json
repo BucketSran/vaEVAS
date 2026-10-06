@@ -1,0 +1,94 @@
+{
+  "backend": "openvaf_ngspice",
+  "input_manifest_sha256": "a809f443ca64f54b9d72efb1b506dcca056bb827b2e244d5ed75f8ce7e11a811",
+  "allocation": "root-cmp-remote24-20261006",
+  "tool": {
+    "revision": "unknown",
+    "runtime_identity": "bfc1b4a5b6deb2279d9e59ad864bbfad3988c0a7aacc7f4d0eb29e35d74fd69a",
+    "images": {
+      "openvaf_runtime": {
+        "source_ref": "vabench-openvaf-probe:24.0.2mob-ubuntu",
+        "config_id": "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:e39637953f0f7233033e781ec3df6c6d6ecdeff4d4eca4e44c8706688f438c54",
+        "platform_manifest_id": "sha256:c46713d2b1cae8daa6e79f24c731ca4b905e47181bc5000f4d648730fcefc30f"
+      },
+      "ngspice": {
+        "source_ref": "ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+        "config_id": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+        "platform_manifest_id": "sha256:1569ba4635f3160fc23a052ba8753c645e71c9a366fb92b667ebd49ee864d9ef"
+      }
+    },
+    "environment_sha256": "3b85fddd09d943b331b0f6ca1b8d687c5932d6f2e2ec7683133f418e4901edba",
+    "environment_input_manifest_sha256": "208aa10ecf466c138ed11c76d057a75fa35006012ded363cade951686ca790d7",
+    "openvaf_artifact_sha256": "ca1037be094cbfecb1249a1f220c9c390bc265015dd177ec27800ed365d6ef3a"
+  },
+  "probe": {
+    "argv": [
+      "podman",
+      "--root",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/storage",
+      "--runroot",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/runroot",
+      "--storage-driver",
+      "overlay",
+      "--storage-opt",
+      "ignore_chown_errors=true",
+      "run",
+      "--rm",
+      "--name",
+      "evas-env-32f2773b470a",
+      "--pull=never",
+      "--network=none",
+      "--user=0:0",
+      "--cgroups=disabled",
+      "--security-opt",
+      "label=disable",
+      "--cap-drop=ALL",
+      "--read-only",
+      "--tmpfs",
+      "/tmp:rw,nosuid,size=512m",
+      "--env",
+      "OMP_NUM_THREADS=1",
+      "--env",
+      "OPENBLAS_NUM_THREADS=1",
+      "--volume",
+      "/tmp/chips-jinzhihong/cmp-20261006-01/openvaf-ngspice-base:/work:rw",
+      "--workdir",
+      "/work",
+      "--volume",
+      "/tmp/chips-jinzhihong/evas-comparison-20260925/package/backend-semantics-v1/tools/reloaded:/compiler:ro",
+      "--entrypoint",
+      "/bin/sh",
+      "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+      "-c",
+      "ulimit -v 4194304 || exit 70; exec /usr/bin/taskset -c \"$@\"",
+      "env-run",
+      "0",
+      "/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r",
+      "--version"
+    ],
+    "stage": "version-openvaf_runtime",
+    "started_utc": "2026-10-05T20:26:07Z",
+    "timeout_s": 90,
+    "thread_request": 1,
+    "exit_code": 125,
+    "timed_out": false,
+    "log_sha256": "6ae8f5653f2d048662849c116bd439a78029cb7276c6c0aa8f1f212f5ca7a023"
+  },
+  "runner_sources": [
+    {
+      "path": "experiments/backends/comparison/evidence/sources/preflight-runner-a3423b6a82f9742ad35e65c8c6034362951682ade4f9689837668aab40fb1041.py.txt",
+      "sha256": "a3423b6a82f9742ad35e65c8c6034362951682ade4f9689837668aab40fb1041",
+      "kind": "actual runner source"
+    }
+  ],
+  "failure_log": "Error: creating container storage: creating read-write layer with ID \"566f4805e4b70e17e102a972349a4f7206f4108f385460f998f118095ecb7162\": Stat /tmp/chips-jinzhihong/evas-comparison-20260925/storage/overlay/be422a5543d81598d1a1690ea4136fbe5e8d4a61af6903ed14c2174c62f978ba/diff: no such file or directory\n",
+  "case_compilation_launches": 0,
+  "case_simulation_launches": 0,
+  "reason": "Existing pinned container layer is missing; no backend case was launched. No restore or retry."
+}

@@ -10,11 +10,14 @@ def inline_functions(model: Model) -> Model:
     """Substitute real input-only functions; never duplicate history call sites."""
     if not model.functions:
         return model
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def bounded(expr):
-        # Shared AST arguments still expand at every use on the JSON wire.
+        # Preserve the original budget at function RHS/return boundaries.
+        # checked carries compile-time obligations; only its value substitutes
+        # into the computation. Ordinary caller expressions keep their existing
+        # source and final IR limits, rather than gaining a new AST tree limit.
         memo, pending = {}, [(expr, False)]
         while pending:
             item, exiting = pending.pop()
@@ -22,17 +25,37 @@ def inline_functions(model: Model) -> Model:
                 continue
             if not exiting:
                 pending.append((item, True))
-                pending.extend((a, False) for a in item.args)
+                args = item.args[:1] if item.op == 'checked' else item.args
+                pending.extend((a, False) for a in args)
                 continue
-            depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
-            size = 1 + sum(memo[id(a)][1] for a in item.args)
+            if item.op == 'checked':
+                depth, size = memo[id(item.args[0])]
+            else:
+                depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
+                size = 1 + sum(memo[id(a)][1] for a in item.args)
             if depth > MAX_EXPRESSION_DEPTH or size > MAX_IR_ITEMS:
-                fail('function expansion exceeds expression depth/size budget', expr.token)
+                fail('function expansion exceeds expression depth/size budget', expr.token, code="resource_budget")
             memo[id(item)] = depth, size
+
+    def unpack(expr, obligations):
+        if expr.op == 'checked':
+            obligations.extend(expr.args[1:])
+            return expr.args[0]
+        return expr
+
+    def checked(value, obligations, origin):
+        # Hoist obligations out of substituted values. Repeated uses of a
+        # function argument must duplicate its computation, not its checks.
+        unique = {id(item): item for item in obligations}
+        if not unique:
+            return value
+        result = Expr('checked', None, (value, *unique.values()), origin.token,
+                      expansion=origin.expansion)
+        return result
 
     def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
         if depth > MAX_EXPRESSION_DEPTH:
-            fail('function expansion exceeds expression depth budget', expr.token)
+            fail('function expansion exceeds expression depth budget', expr.token, code="resource_budget")
         env = env or {}
         if expr.op == 'parameter':
             if expr.value in env:
@@ -44,15 +67,21 @@ def inline_functions(model: Model) -> Model:
             return expr
         if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES):
             fail('pure analog functions cannot use voltage access or history operators', expr.token)
-        args = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        expanded = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        # Index evaluation and waveform arguments have their own closed
+        # contexts. Their obligations must be checked at that entry point.
+        if expr.op in ('node', 'index', 'array') or expr.op in OPERATOR_NAMES:
+            return replace(expr, args=expanded)
+        obligations = []
+        args = tuple(unpack(a, obligations) for a in expanded)
         if expr.op != 'call':
-            result = replace(expr, args=args)
-            return result
+            return checked(replace(expr, args=args), obligations, expr)
         name = str(expr.value)
         if name not in model.functions:
             fail(f'unknown analog function {name!r}', expr.token)
         if name in stack or len(stack) >= MAX_SOURCE_NESTING:
-            fail('recursive or excessively nested analog function calls are unsupported', expr.token)
+            fail('recursive or excessively nested analog function calls are unsupported', expr.token,
+                 code='compile_error' if name in stack else 'resource_budget')
         function = model.functions[name]
         if len(args) != len(function.inputs):
             fail(f'function {name!r} requires {len(function.inputs)} inputs', expr.token)
@@ -64,17 +93,22 @@ def inline_functions(model: Model) -> Model:
             pending.extend(item.args)
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
+        obligations.extend(args)
         for statement in function.body:
             if statement.index is not None:
                 fail('pure analog function assignments require scalar targets', statement.token)
             if statement.name not in names:
                 fail('function assignments must target its local variables or return value', statement.token)
-            local[statement.name] = expand(statement.rhs, local, names, (*stack, name), depth+1)
+            local[statement.name] = unpack(expand(statement.rhs, local, names, (*stack, name), depth+1), obligations)
             bounded(local[statement.name])
+            obligations.append(local[statement.name])
         if name not in local:
             fail('function must assign its return value', function.token)
+        # Retain every argument and RHS through instance binding, including
+        # discarded decisions and aliases. Only the real result is substituted
+        # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return local[name]
+        return checked(local[name], obligations, expr)
 
     def body(statements):
         result = []
@@ -131,6 +165,7 @@ def unroll_loops(model: Model, parameter):
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
                    and (has_loop(statement.then_body) or has_loop(statement.else_body))
+                   or isinstance(statement, Event) and has_loop(statement.body)
                    for statement in statements)
 
     if not has_loop(model.analog):
@@ -140,33 +175,141 @@ def unroll_loops(model: Model, parameter):
     count = 0
     iterations = 0
 
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
-    def substitute(expr, indices):
+    def substitute(expr, indices, memo=None):
+        # One fixed loop-index environment per root substitution. Never share
+        # replacements across iterations, statements or instance bindings.
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key not in memo:
+            memo[key] = (expr, substitute_value(expr, indices, memo))
+        return memo[key][1]
+
+    def substitute_value(expr, indices, memo):
         if expr.op == 'parameter' and expr.value in indices:
             return Expr('number', float(indices[expr.value]), (), expr.token)
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
-            fail('expanded call-site identity depth budget exceeded',expr.token)
-        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args), expansion=path)
+            fail('expanded call-site identity depth budget exceeded', expr.token, code="resource_budget")
+        return replace(expr, args=tuple(substitute(arg,indices,memo) for arg in expr.args), expansion=path)
 
     def origin(token, indices):
         path = (*token.expansion, *indices.items())
         if len(path) > MAX_SOURCE_NESTING:
-            fail('expanded event identity depth budget exceeded', token)
+            fail('expanded event identity depth budget exceeded', token, code="resource_budget")
         return replace(token, expansion=path)
 
     def constant(expr, indices):
-        value = lower(substitute(expr,indices), parameter, {}, model.source)
+        try:
+            value = lower(substitute(expr,indices), parameter, {}, model.source)
+        except CompileError as exc:
+            fail(f'genvar control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
             fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
         return int(value.constant)
 
+    def node_name(expr, indices):
+        return (f'{expr.value}[{constant(expr.args[0], indices)}]'
+                if expr.args else str(expr.value))
+
+    def dependencies(expr, indices, memo=None):
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key in memo:
+            return memo[key][1]
+        result = dependency_value(expr, indices, memo)
+        memo[key] = (expr, result)
+        return result
+
+    def dependency_value(expr, indices, memo):
+        nodes, held = set(), False
+        if expr.op == 'voltage':
+            return {node_name(arg, indices) for arg in expr.args}, False
+        if expr.op in OPERATOR_NAMES or expr.op in ('parameter', 'index') and expr.value in model.variables:
+            held = True
+        for arg in expr.args:
+            child_nodes, child_held = dependencies(arg, indices, memo)
+            nodes |= child_nodes
+            held |= child_held
+        return nodes, held
+
+    def validate_event_body(statements, active, affected):
+        # Empty static loops must not erase unsupported event-body structure.
+        def expression(expr, predicate=False, seen=None):
+            if seen is None:
+                seen = set()
+            if id(expr) in seen:
+                return
+            seen.add(id(expr))
+            if expr.op in OPERATOR_NAMES:
+                fail('event bodies do not support history/operator calls', expr.token)
+            if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
+                fail('event conditions and loop controls cannot depend on state', expr.token)
+            for arg in expr.args:
+                expression(arg, predicate, seen)
+
+        for statement in statements:
+            if isinstance(statement, Loop):
+                if statement.name not in model.genvars or statement.name in active:
+                    fail('static for requires an unshadowed declared genvar', statement.token)
+                for expr in (statement.start, statement.limit, statement.update):
+                    expression(expr, True)
+                start = constant(statement.start, active)
+                scope = {**active, statement.name: start}
+                constant(statement.limit, scope)
+                constant(statement.update, scope)
+                validate_event_body(statement.body, scope, affected)
+            elif isinstance(statement, Conditional):
+                expression(statement.left, True)
+                expression(statement.right, True)
+                # Reuse the existing IR predicate boundary, including structural
+                # dependencies that numeric cancellation must not erase.
+                from .instance_compiler import _predicate_degree
+                nodes = {}
+                def scalar(expr, memo=None):
+                    # One predicate root with fixed active indices and node map.
+                    # Keep original objects alive; never share across loop scopes.
+                    if memo is None:
+                        memo = {}
+                    key = id(expr)
+                    if key in memo:
+                        return memo[key][1]
+                    if expr.op == 'node':
+                        name = node_name(expr, active)
+                        nodes.setdefault(name, len(nodes))
+                        result = replace(expr, value=name, args=())
+                    else:
+                        result = replace(expr, args=tuple(scalar(arg, memo) for arg in expr.args))
+                    memo[key] = (expr, result)
+                    return result
+                for expr in (statement.left, statement.right):
+                    value = lower(scalar(substitute(expr, active)), parameter, nodes,
+                                  model.source, preserve_structure=True, memo={})
+                    if _predicate_degree(value) is None:
+                        fail('event conditions require affine voltage predicates', expr.token)
+                    if dependencies(expr, active)[0] & affected:
+                        fail('event condition may depend on state through the voltage network', expr.token)
+                validate_event_body(statement.then_body, active, affected)
+                validate_event_body(statement.else_body, active, affected)
+            else:
+                if not isinstance(statement, Assignment):
+                    fail('event bodies require assignments or supported conditionals', statement.token)
+                if statement.name in model.genvars:
+                    fail('genvar can only be assigned in its for control', statement.token)
+                expression(statement.rhs)
+                if statement.index is not None:
+                    expression(statement.index, True)
+
+    event_bodies = []
+
     def body(statements, indices, depth=0):
         nonlocal count, iterations
         if depth > MAX_SOURCE_NESTING:
-            fail('static loop nesting budget exceeded', statements[0].token)
+            fail('static loop nesting budget exceeded', statements[0].token, code="resource_budget")
         result = []
         for statement in statements:
             if isinstance(statement, Loop):
@@ -181,10 +324,11 @@ def unroll_loops(model: Model, parameter):
                     if not active:
                         break
                     if value in seen or len(seen) == budget:
-                        fail('nonterminating or over-budget static loop', statement.token)
+                        fail('nonterminating or over-budget static loop', statement.token,
+                             code='compile_error' if value in seen else 'resource_budget')
                     iterations += 1
                     if iterations > budget:
-                        fail('total static iteration budget (4096) exceeded', statement.token)
+                        fail('total static iteration budget (4096) exceeded', statement.token, code="resource_budget")
                     seen.add(value)
                     result.extend(body(statement.body, scope, depth+1))
                     value = constant(statement.update, scope)
@@ -197,8 +341,9 @@ def unroll_loops(model: Model, parameter):
                     fail('genvar can only be assigned in its for control',statement.token)
                 count += 1
                 if count > budget:
-                    fail('elaborated statement budget (4096) exceeded',statement.token)
+                    fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
                 if isinstance(statement, Event):
+                    event_bodies.append((statement.body, indices))
                     result.append(replace(statement, token=origin(statement.token,indices),
                         body=body(statement.body,indices,depth+1), triggers=tuple(
                             replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
@@ -213,4 +358,29 @@ def unroll_loops(model: Model, parameter):
                 result.append(replace(statement, **updates))
         return tuple(result)
 
-    return body(model.analog,{})
+    expanded = body(model.analog,{})
+    # Inspect already-expanded continuous relations, so separate static vector
+    # bits retain their dependencies when validating an erased event body.
+    relations, affected = [], set()
+    pending = list(expanded)
+    while pending:
+        statement = pending.pop()
+        if isinstance(statement, Conditional):
+            pending.extend((*statement.then_body, *statement.else_body))
+        elif isinstance(statement, ContributionStatement):
+            targets = {node_name(arg, {}) for arg in statement.branch.args
+                       if model.directions.get(str(arg.value).split('[')[0]) not in ('input', 'inout')
+                       and arg.value != '0'}
+            reads, held = dependencies(statement.rhs, {})
+            relations.append((targets, reads))
+            if held:
+                affected |= targets
+    while True:
+        propagated = affected | {target for targets, reads in relations
+                                 if (targets | reads) & affected for target in targets}
+        if propagated == affected:
+            break
+        affected = propagated
+    for statements, indices in event_bodies:
+        validate_event_body(statements, indices, affected)
+    return expanded
