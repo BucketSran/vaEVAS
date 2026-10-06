@@ -20,7 +20,8 @@
 - 支持 `< <= > >=` 谓词的 if/else 与局部顺序赋值；条件使用进入支路前捕获的值。
 - 两路均定义才形成汇合值，无 else 保留已有值；所有支路保留结构校验，原精度拒绝边界不变。
 - 真实 PA clip 函数、独立限幅/实例/顺序答案和拒绝边界见[函数合同](../validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
-  不代表完整 PA 模型或更广函数语义支持；尚无新 Spectre 执行。
+  不代表完整 PA 模型或更广函数语义支持；[两个有限 Spectre 配对](../../experiments/backends/function-branches/README.md)通过，
+  原数字写法造成的两次编译失败保持可见。
 
 ## 2026-10-06：事件体静态循环（L3）
 

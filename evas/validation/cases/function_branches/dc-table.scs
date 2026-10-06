@@ -1,0 +1,16 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+options1 options reltol=1e-6 vabstol=1e-9
+V0 (u0 0) vsource dc=-0.25
+X0 (u0 y0 z0) function_branches vss=0 vdd=.9
+V1 (u1 0) vsource dc=0
+X1 (u1 y1 z1) function_branches vss=0 vdd=.9
+V2 (u2 0) vsource dc=0.25
+X2 (u2 y2 z2) function_branches vss=0 vdd=.9
+V3 (u3 0) vsource dc=0.9
+X3 (u3 y3 z3) function_branches vss=0 vdd=.9
+V4 (u4 0) vsource dc=1.25
+X4 (u4 y4 z4) function_branches vss=0 vdd=.9
+tran tran stop=2 maxstep=.125 strobeperiod=.015625 strobedelay=0 strobeoutput=all errpreset=conservative
+save y0 z0 y1 z1 y2 z2 y3 z3 y4 z4
