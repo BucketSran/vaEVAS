@@ -239,7 +239,10 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
   归并为一次已有的常量初始化体。重复叶不重复执行，也不生成零时刻 timer。
-  独立的分析限定初始化、初始化与 cross/timer 混合 OR、依赖电压的初始化仍拒绝。
+  另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
+  后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
+  混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
+  纯初始化 OR 保持已有规则；详见[初始化/cross 契约](docs/math/events.md#initial-cross)。
 
 依据是 [Verilog-AMS 2.4 LRM](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的参数范围、向量连接和全局事件规则（§3.4、§5.10.2、§6）。整数隐式转换与分析生命周期
