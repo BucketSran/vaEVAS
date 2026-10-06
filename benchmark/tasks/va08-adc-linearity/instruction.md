@@ -25,6 +25,7 @@ ADC 是单调、无噪声的八位量化器，码为 `sum_j [vin >= threshold_j]
 公开开发器件与网表在 `/work/public/`。完整仿真依赖外部 Spectre；任务镜像不提供商业工具。
 
 结果目录 `/work/output` 已创建。写以下两个文件，仅允许对这两个固定路径使用写模式，
+路径与写模式必须直接写为 `$fopen("/work/output/文件名","w")` 中的字符串字面量，不能计算或拼接路径。
 不允许读取外部文件、调用系统命令或引入其他 VA 文件。可包含 `disciplines.vams` 与 `constants.vams`。
 
 - `samples.csv` 标题为 `index,time,code`，随后恰好 4096 行。按实际读取次序输出
