@@ -240,8 +240,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值、累加贡献和 `cross/timer` 事件（含 OR）。
 事件参数与体内表达式代入各层循环下标，再进入既有事件内核；不同展开事件保留独立来源，
-同刻冲突写入仍拒绝。事件体内的条件赋值可用；模拟条件下的事件、循环内 `initial_step`
-以及事件体内的循环仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
+同刻冲突写入仍拒绝。监测事件体内支持实例常量控制的静态 `genvar for`，
+保持顺序赋值与实例隔离；条件赋值可用。事件体贡献、历史调用、嵌套事件和运行时循环
+仍拒绝，空循环不隐藏非法事件体。模拟条件下的事件及循环内 `initial_step` 仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
 总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
