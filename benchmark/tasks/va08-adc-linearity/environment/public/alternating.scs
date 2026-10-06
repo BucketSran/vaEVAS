@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "/work/dut.va"
+ahdl_include "/work/public/alternating_adc.va"
+tester (vin clk d7 d6 d5 d4 d3 d2 d1 d0 done) adc_linearity_tester
+adc (vin clk d7 d6 d5 d4 d3 d2 d1 d0) fixture_adc
+options reltol=1e-6 vabstol=1e-9 iabstol=1e-12
+tran tran stop=4.102m maxstep=20n errpreset=conservative
+save vin clk done d0 d1 d2 d3 d4 d5 d6 d7

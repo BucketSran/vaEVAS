@@ -1,0 +1,614 @@
+{
+  "label": "Actual private Spectre calibration; local unpublished PR94 evidence",
+  "task_version": "adc-linearity-v2-local-candidate",
+  "source_revision": "c826fd17f259d625c4f79408a1f7295e02b03fae",
+  "harness_revision": "c80ac7afaaeb2701ab3d1abc1b8c50a101c7f598",
+  "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+  "original_syntax_failure": {
+    "main_attempts": 1,
+    "main_transients_completed": 0,
+    "probe_attempts": 1,
+    "probe_transients_completed": 1,
+    "reason": "SFE-709 uninstantiated options statement",
+    "retained": true,
+    "retrieved_output_sizes": {
+      "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+      "main_psf_bytes": 0,
+      "main_waveform_bytes": 0,
+      "preflight_psf_bytes": 4464,
+      "run_payload_regular_file_bytes": 182372,
+      "all_archive_payload_regular_file_bytes": 352884,
+      "archive_compressed_bytes": 182035,
+      "archive_sha256": "86030cf0b2fcd3a1a63f916ec34d2dd975c0348d14651b17c805482d89ec2ec0",
+      "output_limit_event_observed": false,
+      "peak_monitored_output_bytes": null,
+      "output_limit_termination_exercised": false
+    }
+  },
+  "corrected_original_calibration": {
+    "main_attempts": 10,
+    "main_transients_completed": 10,
+    "probe_attempts": 10,
+    "probe_transients_completed": 10,
+    "version_queries": 10,
+    "reference_pass": 4,
+    "negative_valid_rejections": 6,
+    "negative_targeted_evidence": 5,
+    "jobs": [
+      {
+        "job_id": "adc-fcf8b37ee394295e-endpoint-shift",
+        "condition": "endpoint-shift",
+        "execution": "ok",
+        "score": 1,
+        "candidate_sha256": "1e5b435eedb5347891962ed9c7570405da4baef6445a6d367f1f6c7f463c0675",
+        "task_package_sha256": "3be8f6c9cde6691e9ce6b5354eb6387c7b8c45b1c700e3e0b56847811eee1630",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [],
+        "archive_sha256": "2a3b9cfafb28f0596b6e9b47a0447c5d5252960949a59baa1c319cf63825a546",
+        "archive_bytes": 1560276,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86337145,
+          "all_archive_payload_regular_file_bytes": 86518760,
+          "archive_compressed_bytes": 1560276,
+          "archive_sha256": "2a3b9cfafb28f0596b6e9b47a0447c5d5252960949a59baa1c319cf63825a546",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-fcf8b37ee394295e-alternating-slow",
+        "condition": "alternating-slow",
+        "execution": "ok",
+        "score": 1,
+        "candidate_sha256": "1e5b435eedb5347891962ed9c7570405da4baef6445a6d367f1f6c7f463c0675",
+        "task_package_sha256": "bda8b69daa43183c143e91a8ff642411aa01b859a8c6f02a4efdb299ebafc6d0",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [],
+        "archive_sha256": "a100bedefeb3d65be3044943272783fa0c8f91586e62af01aa9e95714a164e23",
+        "archive_bytes": 1558614,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86336856,
+          "all_archive_payload_regular_file_bytes": 86518383,
+          "archive_compressed_bytes": 1558614,
+          "archive_sha256": "a100bedefeb3d65be3044943272783fa0c8f91586e62af01aa9e95714a164e23",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-fcf8b37ee394295e-ideal-fast",
+        "condition": "ideal-fast",
+        "execution": "ok",
+        "score": 1,
+        "candidate_sha256": "1e5b435eedb5347891962ed9c7570405da4baef6445a6d367f1f6c7f463c0675",
+        "task_package_sha256": "4532e96fddac9dd231ede559ec4b6f284dc21fa6b9a006cfb573984cca9a86e9",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [],
+        "archive_sha256": "c78a6e16a07a213d550d664f86c1d66ddd9b369c9f4148f0dcfd67ea85fee905",
+        "archive_bytes": 1560521,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86317700,
+          "all_archive_payload_regular_file_bytes": 86499292,
+          "archive_compressed_bytes": 1560521,
+          "archive_sha256": "c78a6e16a07a213d550d664f86c1d66ddd9b369c9f4148f0dcfd67ea85fee905",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-fcf8b37ee394295e-missing-code",
+        "condition": "missing-code",
+        "execution": "ok",
+        "score": 1,
+        "candidate_sha256": "1e5b435eedb5347891962ed9c7570405da4baef6445a6d367f1f6c7f463c0675",
+        "task_package_sha256": "d62ff06d274ba011db641f91acce4d1bf8d18d048673908da402d33ea2d9f09f",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [],
+        "archive_sha256": "1200172cc71a292c76ee5beb2d2a5a432ae5fab6661e6cc962ef9bcb00b09658",
+        "archive_bytes": 1557768,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85594572,
+          "main_waveform_bytes": 85593906,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86316302,
+          "all_archive_payload_regular_file_bytes": 86497784,
+          "archive_compressed_bytes": 1557768,
+          "archive_sha256": "1200172cc71a292c76ee5beb2d2a5a432ae5fab6661e6cc962ef9bcb00b09658",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-all-samples-endpoint-shift",
+        "condition": "endpoint-shift",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "8a1939d11ece4475d9b1b80a329ae4e73d0df86cdc565ae944d0cec460ed9dad",
+        "task_package_sha256": "3be8f6c9cde6691e9ce6b5354eb6387c7b8c45b1c700e3e0b56847811eee1630",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "result",
+            "reason": "DNL/INL mismatch at code 1"
+          }
+        ],
+        "archive_sha256": "7d8de14c05d12509d84759e962df14937d5654368c7769141f82de07af903e3c",
+        "archive_bytes": 1559175,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86328896,
+          "all_archive_payload_regular_file_bytes": 86510489,
+          "archive_compressed_bytes": 1559175,
+          "archive_sha256": "7d8de14c05d12509d84759e962df14937d5654368c7769141f82de07af903e3c",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-reversed-bits-alternating-slow",
+        "condition": "alternating-slow",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "2b48ef4f82f09b9d1238707b4ce938459ba859a95819f97cf92d91072a4998b6",
+        "task_package_sha256": "bda8b69daa43183c143e91a8ff642411aa01b859a8c6f02a4efdb299ebafc6d0",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "result",
+            "reason": "code/hits mismatch at code 1"
+          }
+        ],
+        "archive_sha256": "60dfde0c17386b6de8370e5d836d1fef02088675c8df0c3947bfbb78f2cc2cf6",
+        "archive_bytes": 1559412,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86334679,
+          "all_archive_payload_regular_file_bytes": 86516204,
+          "archive_compressed_bytes": 1559412,
+          "archive_sha256": "60dfde0c17386b6de8370e5d836d1fef02088675c8df0c3947bfbb78f2cc2cf6",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-missing-first-ideal-fast",
+        "condition": "ideal-fast",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "1d0a9f9d8ccb134adaa7252e93a0aebc6e55d372f1923d53e866e78a5ad4d9ed",
+        "task_package_sha256": "4532e96fddac9dd231ede559ec4b6f284dc21fa6b9a006cfb573984cca9a86e9",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "result",
+            "reason": "expected 4096 sample records"
+          }
+        ],
+        "archive_sha256": "299b6ea019c09c41c48fd3a81b006f147a4904a48aa0290e7cf24c576ba1d238",
+        "archive_bytes": 1560362,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86317410,
+          "all_archive_payload_regular_file_bytes": 86499016,
+          "archive_compressed_bytes": 1560362,
+          "archive_sha256": "299b6ea019c09c41c48fd3a81b006f147a4904a48aa0290e7cf24c576ba1d238",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-old-code-ideal-fast",
+        "condition": "ideal-fast",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "d16d547d1af41b51b666fdb532773f327984742625cd6431e33fbba9f19b0374",
+        "task_package_sha256": "4532e96fddac9dd231ede559ec4b6f284dc21fa6b9a006cfb573984cca9a86e9",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "edge_count",
+            "node": "clk",
+            "up": false,
+            "expected": 4096,
+            "actual": 4095
+          },
+          {
+            "kind": "edge_time",
+            "node": "done",
+            "up": true
+          },
+          {
+            "kind": "edge_count",
+            "node": "clk",
+            "up": false,
+            "expected": 4096,
+            "actual": 4095
+          },
+          {
+            "kind": "edge_time",
+            "node": "done",
+            "up": true
+          },
+          {
+            "kind": "edge_count",
+            "node": "clk",
+            "up": false,
+            "expected": 4096,
+            "actual": 4095
+          },
+          {
+            "kind": "edge_time",
+            "node": "done",
+            "up": true
+          },
+          {
+            "kind": "clock_level",
+            "index": 4095,
+            "phase": 0.6
+          },
+          {
+            "kind": "clock_level",
+            "index": 4095,
+            "phase": 0.9
+          },
+          {
+            "kind": "final_hold"
+          }
+        ],
+        "archive_sha256": "981499f6c56f32cb5b8c24a9476cf5b2ecf9d7b44b3fb7507097c09920a29f9b",
+        "archive_bytes": 1557891,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85593252,
+          "main_waveform_bytes": 85592586,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86306639,
+          "all_archive_payload_regular_file_bytes": 86488198,
+          "archive_compressed_bytes": 1557891,
+          "archive_sha256": "981499f6c56f32cb5b8c24a9476cf5b2ecf9d7b44b3fb7507097c09920a29f9b",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-missing-last-ideal-fast",
+        "condition": "ideal-fast",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "4491f031ab755bc629b4dd428d45c34ad8a722eef9630cce13fb41c4773eb03d",
+        "task_package_sha256": "4532e96fddac9dd231ede559ec4b6f284dc21fa6b9a006cfb573984cca9a86e9",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "result",
+            "reason": "expected 4096 sample records"
+          }
+        ],
+        "archive_sha256": "57357d95245e3065acfeae5023ca330e52e7a81caaba8ee47e387e02455f4bdf",
+        "archive_bytes": 1560547,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86317630,
+          "all_archive_payload_regular_file_bytes": 86499238,
+          "archive_compressed_bytes": 1560547,
+          "archive_sha256": "57357d95245e3065acfeae5023ca330e52e7a81caaba8ee47e387e02455f4bdf",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      },
+      {
+        "job_id": "adc-v5-ideal-only-alternating-slow",
+        "condition": "alternating-slow",
+        "execution": "ok",
+        "score": 0,
+        "candidate_sha256": "ca8664013abd8fd2a690a16b7deffccbffeb4e4de367a905a5ab8f372a5c4074",
+        "task_package_sha256": "bda8b69daa43183c143e91a8ff642411aa01b859a8c6f02a4efdb299ebafc6d0",
+        "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+        "spectre_version": "sub-version  21.1.0.509.isr12",
+        "main_returncode": 0,
+        "preflight_returncode": 0,
+        "cleanup_confirmed": true,
+        "failures": [
+          {
+            "kind": "result",
+            "reason": "DNL/INL mismatch at code 1"
+          }
+        ],
+        "archive_sha256": "49c0f2fbf27eea3d14abdfc63135e76ca87f5b894e344ba96902305bc8ccb9b2",
+        "archive_bytes": 1556274,
+        "retrieved_output_sizes": {
+          "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+          "main_psf_bytes": 85595892,
+          "main_waveform_bytes": 85595226,
+          "preflight_psf_bytes": 4464,
+          "run_payload_regular_file_bytes": 86317042,
+          "all_archive_payload_regular_file_bytes": 86498514,
+          "archive_compressed_bytes": 1556274,
+          "archive_sha256": "49c0f2fbf27eea3d14abdfc63135e76ca87f5b894e344ba96902305bc8ccb9b2",
+          "output_limit_event_observed": false,
+          "peak_monitored_output_bytes": null,
+          "output_limit_termination_exercised": false
+        }
+      }
+    ]
+  },
+  "isolated_early_read": {
+    "lane": "root-approved-adc-isolated-early-read-20261007",
+    "job_id": "adc-v6-isolated-early-read-ideal-fast",
+    "execution": "ok",
+    "score": 0,
+    "archive": {
+      "state": "verified",
+      "updated_at": 1791315522.5186088,
+      "timings_s": {
+        "verify_source": 0.17162027209997177,
+        "pack": 2.8676013965159655,
+        "copy_fsync": 0.05561796575784683,
+        "verify_copy": 0.46640413254499435,
+        "publish_package": 0.0029021576046943665,
+        "attempt_elapsed": 3.5780301988124847
+      },
+      "package": {
+        "sha256": "883359469ca30a413e0f39e00deaee2b91eee045e03144ae394fa870f8697272",
+        "bytes": 1561137
+      }
+    },
+    "candidate_sha256": "6dec640079204dff8aa1cf65c373a33b65670569a08361ad72da3bdb0e820323",
+    "task_package_sha256": "4532e96fddac9dd231ede559ec4b6f284dc21fa6b9a006cfb573984cca9a86e9",
+    "criteria_sha256": "672b3258178b26d255c8775811185e412faa26372a82de9e9b0fc23793106c27",
+    "main_attempts": 1,
+    "main_transients_completed": 1,
+    "probe_attempts": 1,
+    "probe_transients_completed": 1,
+    "version_queries": 1,
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "failures": [
+      {
+        "kind": "result",
+        "reason": "sample time mismatch"
+      }
+    ],
+    "waveform_and_quantizer_and_linearity_csv_passed": true,
+    "waveform_evidence_basis": "Actual checker evaluates waveform contract, raw quantizer and linearity CSV before sample trace time; only result sample time mismatch returned.",
+    "cleanup_receipt_confirmed": true,
+    "owned_proc_audit_confirmed": true,
+    "models_generated": 0,
+    "original_ten_results_unchanged": true,
+    "retrieved_output_sizes": {
+      "measurement": "Retrieved tar regular-member logical size (uncompressed), plus local archive stat; not remote peak/disk-allocated size",
+      "main_psf_bytes": 85595892,
+      "main_waveform_bytes": 85595226,
+      "preflight_psf_bytes": 4464,
+      "run_payload_regular_file_bytes": 86309872,
+      "all_archive_payload_regular_file_bytes": 86491721,
+      "archive_compressed_bytes": 1561137,
+      "archive_sha256": "883359469ca30a413e0f39e00deaee2b91eee045e03144ae394fa870f8697272",
+      "output_limit_event_observed": false,
+      "peak_monitored_output_bytes": null,
+      "output_limit_termination_exercised": false
+    }
+  },
+  "harbor_oracle": {
+    "reward": 1,
+    "exception": null,
+    "private_checker_cases_host_config_not_visible": true,
+    "reference_presence": "Oracle uploads solution intentionally; not model isolation proof",
+    "resource_readback": {
+      "NanoCpus": 1000000000,
+      "Memory": 1073741824,
+      "MemorySwap": 2147483648,
+      "StorageOpt": null,
+      "meaning": "Memory1GiB and configured memory+swap2GiB readback; no observation of actual swap usage, total RSS2GiB, or remote Spectre host limit"
+    }
+  },
+  "cleanup": {
+    "receipts_confirmed": true,
+    "owned_raw_proc_live_matches": 0
+  },
+  "scope": "No model difficulty claim, no public reproducibility claim, no EVAS support claim; raw archives retained ignored locally.",
+  "model_prototype": {
+    "scope": "Two authorized instruction-only one-shot local generation attempts, not agentic evaluation or difficulty claim",
+    "calls": 2,
+    "retries": 0,
+    "feedback": 0,
+    "model_remote_calls": 0,
+    "codex": {
+      "requested_model": "gpt-6.1-sol",
+      "actual_model": null,
+      "qualification": "served_identity_missing_unscored",
+      "terminal": "turn.completed",
+      "cli_returncode": 0,
+      "turns": 1,
+      "tool_events": 0,
+      "elapsed_s": 140.20932841696776,
+      "usage": {
+        "input_tokens": 20508,
+        "cached_input_tokens": 2304,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4887,
+        "reasoning_output_tokens": 3657
+      },
+      "candidate_file_sha256": "33a1df23c5112180850e0dc59082ab84c0247dc02974eec236d3b47d743975ba"
+    },
+    "glm": {
+      "requested_model": "glm-5.3",
+      "actual_cli_reported_model": "glm-5.3",
+      "identity_basis": "modelUsage canonicalModel; CLI report, not independent backend attestation",
+      "terminal": {
+        "type": "result",
+        "subtype": "success",
+        "is_error": false,
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "num_turns": 1
+      },
+      "usage": {
+        "input_tokens": 1103,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 768,
+        "output_tokens": 19002,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "cost_usd": 0.480949,
+      "elapsed_s": 250.0402660840191,
+      "candidate_file_sha256": "05a55c29bcd85d7cee2709877015f1ccc8dfc8732e5137fd0c42af336cde1b46",
+      "candidate_bundle_sha256": "e75db59a7c8ae83f130b37bb1db2c559d6850c1bee6fbf4fc7d3f96af4387ef8",
+      "candidate_bytes": 189,
+      "local_structural_assessment": {
+        "label": "ACTUAL CHECKER CLI; LOCAL STRUCTURAL ASSESSMENT, NOT SPECTRE/HARBOR",
+        "argv": [
+          "python3",
+          "-B",
+          "benchmark/tasks/va08-adc-linearity/tests/verify.py",
+          "--candidate",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-s1/runs/adc-linearity/night-20261007/model-prototype-prepared/glm-5.3/dut.va",
+          "--output",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-s1/runs/adc-linearity/night-20261007/model-prototype-prepared/glm-5.3/local-structural-assessment"
+        ],
+        "started_epoch": 1791317413.4028502,
+        "returncode": 0,
+        "candidate_file_sha256": "05a55c29bcd85d7cee2709877015f1ccc8dfc8732e5137fd0c42af336cde1b46",
+        "candidate_bytes": 189,
+        "instruction_sha256": "10302ee9cf9f874fe0e6cffe06c8d908eaab5729e6400274a14903643e76a4d3",
+        "checker_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "cases_sha256": "40858036d6f1c68b14d80c27ecf587b1e434c912c6e0a2cbd06d430f504f344c",
+        "report_sha256": "2f4d0e626de80542b4c3976bd1ad382b35d12a7278d0b69c5f0b10917e46414d",
+        "reward_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "stdout_sha256": "95b842e3e5ce87942429124d8c5daae6d9aa33fd15f76110c5685fe9ed0e1352",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "report": {
+          "candidate_sha256": "05a55c29bcd85d7cee2709877015f1ccc8dfc8732e5137fd0c42af336cde1b46",
+          "checker_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+          "cases_sha256": "40858036d6f1c68b14d80c27ecf587b1e434c912c6e0a2cbd06d430f504f344c",
+          "cases": [],
+          "status": "submission_contract_violation",
+          "reward": 0,
+          "reason": "only standard includes are supported; macros are prohibited"
+        },
+        "main_solves": 0,
+        "preflight_solves": 0,
+        "version_queries": 0,
+        "remote_calls": 0,
+        "model_calls_added": 0,
+        "source_branch": "source_contract fails before shutil.which(binary), version subprocess or case solver subprocess"
+      },
+      "token_accounting": {
+        "cli_reported_output_tokens": 19002,
+        "cli_reported_thinking_tokens": 0,
+        "visible_result_utf8_bytes": 188,
+        "frozen_candidate_bytes": 189,
+        "candidate_delta": "Existing extract_source strips response then appends newline",
+        "unaccounted_output_token_destination": "unknown; no hidden reasoning/intermediate message/billing explanation inferred",
+        "model_identity": "Request/modelUsage/canonicalModel consistency remains reported fact; usage discrepancy does not independently attest service identity"
+      },
+      "author_helper_failure": {
+        "location": "Author Python helper directly called checker.source_contract((p / dut.va).read_text()) with str, not full verify CLI",
+        "exception": "TypeError: a bytes-like object is required, not str",
+        "retention": "Original function-call error remains in ignored qualification.json / MODEL-STAGE-RESULT.json and conversation tool result. Original full argv/hash/traceback were not separately captured; no reconstruction claimed.",
+        "known_import_path": "benchmark/tasks/va08-adc-linearity/tests/verify.py",
+        "later_successful_cli_checker_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "early_failure_checker_sha256_captured": null,
+        "source_changes_between_assessments": false,
+        "correction": "Author helper changed read_text to read_bytes; production checker unchanged. Later actual verify CLI separately documented."
+      }
+    },
+    "successful_model_harbor_end_to_end_trials": 0,
+    "limitations": "Codex named served identity unresolved; GLM returned narration, local submission contract score0, no numerical model score."
+  },
+  "output_size_summary": {
+    "corrected_ten_uncompressed_all_payload_bytes": 865045878,
+    "corrected_ten_compressed_archive_bytes": 15590840,
+    "planning_estimate": "60-150 MB per numerical condition, 0.6-1.5 GB for ten, remains an estimate; measured uncompressed PSF ~85.6MB per condition and full archive payload ~86.5MB",
+    "limit": "268435456 regular-file size polling ~50ms; payload sums below threshold do not establish transient peak, allocated disk size, hard quota or empirical overlimit cancellation coverage"
+  },
+  "review_adjudication": {
+    "F-01": "Accepted provenance clarification: real error was author direct-helper str input, not failed full verify CLI. Retained known error without inventing uncaptured argv/hash/stack; production source unchanged.",
+    "F-02": "Accepted discrepancy disclosure: CLI reports19002 output tokens; visible result188B/frozen candidate189B; destination unknown. modelUsage/canonicalModel consistency retained, no hidden-thinking claim.",
+    "F-03": "Accepted actual sizing: each retrieved raw archive regular-member sizes and compressed stat bound to archive SHA; estimated and measured quantities distinguished, no new remote or peak/overlimit claim.",
+    "F-04": "Accepted readback precision: Memory1GiB and MemorySwap2GiB together, not claimed actual2GiB RSS/swap use."
+  }
+}
