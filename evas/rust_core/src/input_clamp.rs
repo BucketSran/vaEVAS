@@ -348,9 +348,8 @@ pub(crate) fn lower(
         lowering.expression(&mut c.rhs)?;
     }
     for o in &mut candidate.operators {
-        match o {
-            OperatorSpec::IdtMod { input, .. } => lowering.expression(input)?,
-            _ => {}
+        if let OperatorSpec::IdtMod { input, .. } = o {
+            lowering.expression(input)?;
         }
     }
     let sources = lowering.sources;

@@ -2,7 +2,7 @@
 
 CO-VCO-01 检查输入仿射频率限幅后，`idtmod` 是否积分限幅后的分段面积，
 以及 `sin(2πphase)` 是否使用同一历史。[精简证据](evidence.json)记录实际
-Spectre 与最终分支内核的同刻开发对齐，同时保留未完成的边界查询和观察资格。
+Spectre 与冻结修复内核的同刻开发对齐，同时保留未完成的边界查询和观察资格。
 
 原始卡与独立答案固定于已发布的
 [core-v1](https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/core-v1.json) 和
@@ -42,3 +42,16 @@ Spectre是`21.1.0.509.isr12 64bit`。两边请求`maxstep=200ps`、`reltol=1e-5`
 `913a17abb151e881c0f7e068c1759f0d29c2d73174415480247dbe5498e15910`。
 哈希不是公共下载地址。取得这些原材料、固定源码closure及工具后，才能复查原始分析；
 仅靠本摘要不能宣称公开原始数据复现。实现、审查和集成状态由根任务/PR维护。
+
+
+## CI 写法修正后的复验
+
+`6d328f31` 的全量 Rust/Python CI 通过后，clippy 要求将单分支 `match` 改为
+等价 `if let`。同时重新生成诊断源码清单，补入原限幅实现的19个源码记录；
+这些记录不代表实际错误覆盖。没有改变方程、容差、分支顺序或输入。
+
+重建内核的 SHA 已改变。使用原 ordinary/boundary 两份请求重新执行后，两份 stdout、
+stderr 都与原始实际对照逐字节相同。普通点仍成功，中心 batch 仍以原错误退出。
+[增量身份](lint-followup.json)分别保留旧内核、新内核和请求 SHA；原证据不覆盖。
+此复验复用原 Spectre 参考，没有新增远端仿真。clippy、fmt、5项相关 Rust 和
+8项公开入口测试通过；新提交的完整 CI 状态由 PR 记录。
