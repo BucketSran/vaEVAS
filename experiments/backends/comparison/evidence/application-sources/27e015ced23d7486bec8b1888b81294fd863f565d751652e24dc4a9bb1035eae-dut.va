@@ -1,0 +1,17 @@
+`include "disciplines.vams"
+module triangle(ctl,z,count,r);
+input ctl; output z,count; inout r;
+electrical ctl,z,count,r;
+parameter real lower=-0.5, upper=0.5, initial_voltage=0.0, direction=1.0;
+parameter real ttol=1e-10, vtol=1e-10;
+real sign; integer n;
+analog begin
+  @(initial_step) begin sign=direction; n=0; end
+  V(z,r) <+ idt(sign*V(ctl,r), initial_voltage);
+  @(cross(V(z,r)-upper,+1,ttol,vtol) or cross(V(z,r)-lower,-1,ttol,vtol)) begin
+    sign=-sign;
+    n=n+1;
+  end
+  V(count,r) <+ n;
+end
+endmodule

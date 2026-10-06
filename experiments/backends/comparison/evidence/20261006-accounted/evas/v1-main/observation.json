@@ -1,0 +1,36 @@
+{
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+  "observation": {
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000004986e-09,
+    "input_max_error_v": {
+      "vin": 4.440892098500626e-16
+    }
+  },
+  "v1_screen": {
+    "status": "observations_within_targets",
+    "formal_dvs_qualification": "I",
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000004986e-09,
+    "input_max_error_v": {
+      "vin": 4.440892098500626e-16
+    },
+    "max_observed_error": {
+      "vout": {
+        "error_v": 6.661338147750939e-16,
+        "time_s": 2.8189999999999996e-06
+      }
+    },
+    "violating_sample_count": 0,
+    "plateau_error_v": null,
+    "waveform_excess_over_nominal_event_allowance_v": null,
+    "differential_error_v": null,
+    "common_mode_error_v": null,
+    "max_relationship_residual_v": null,
+    "edges": [],
+    "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+  },
+  "status": "observations_within_targets"
+}
