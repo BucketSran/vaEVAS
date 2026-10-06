@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+options1 options reltol=1e-6 vabstol=1e-9
+V0 (u 0) vsource type=pwl wave=[0 0 2 1]
+Xa (u ya za) function_branches vss=0 vdd=.9
+Xb (u yb zb) function_branches vss=.25 vdd=.5
+tran tran stop=2 maxstep=.03125 strobeperiod=.015625 strobedelay=0 strobeoutput=all errpreset=conservative
+save ya za yb zb

@@ -217,7 +217,8 @@ vout - vref = min(0.875, max(-0.75, y0))
 
 依据 [Verilog-AMS LRM 2.4 §4.7](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的 analog function 作用域及函数返回规则。此分支仅开放 real 返回值和 real input 参数、
-顺序局部赋值、模块参数读取与受限嵌套调用。输出/inout 参数、数组、函数体中的条件语句和递归
+顺序局部赋值、模块参数读取与受限嵌套调用。当前开发切片另支持由 `< <= > >=` 构成谓词的有限
+`if/else` 与 `else if`，条件在支路写局部变量前捕获。输出/inout 参数、数组、函数体循环和递归
 仍未开放；纯决策表达式沿用上文的限定上下文。函数内部禁止电压访问、贡献、事件和历史算子；实参中的历史调用也明确拒绝，
 避免内联复制调用点。函数可接收已经在外部求得的电压表达式。
 
@@ -225,6 +226,21 @@ vout - vref = min(0.875, max(-0.75, y0))
 表达式环境，返回函数名最后一次赋值：例如 `tmp=gain*x; f=tmp+1` 展开为 `gain*x+1`。
 模块参数仍留给每个实例独立绑定。展开结果进入既有 `lowering.py` 和同一电压方程组，
 `V(y)<+f(V(u))-2*V(y)` 不按语句顺序写节点，而是求 `3y=gain*u+1`。
+
+条件支路分别从进入时的同一局部环境展开，并把两路都已定义的值合并为既有 Select。
+例如 `t=x; f=0; if(t>0.5) begin t=-t; f=1; end f=f+t` 对 `x=0.75` 返回 `0.25`；
+后续写入 `t=-t` 不改变进入支路时已求出的条件。无 `else` 保留进入时已定义的值；
+只在一路新定义的局部变量在汇合后仍视为未定义，不能作为隐式零初始化。
+所有支路的谓词与 RHS 保留 checked 结构验证义务，常量或未选支路不能隐藏非法名称、
+电压访问或历史调用。决策仍只限普通无状态模拟表达式；参数、事件、历史上下文不扩大。
+现有不确定 PWL 谓词的 `condition_precision` 拒绝继续生效。
+
+真实需求来自保留的 [PA 限幅函数](../../benchmark/reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/339-pa-ampm-memory-tap-macro/evaluator/solution/pa_ampm_memory_tap_macro.va)。
+本切片只补原 `clip` 函数语义，不修改模型或声称完整 PA 模型已可运行。
+[冻结函数输入](cases/function_branches/dut.va)与[独立电压/顺序赋值测试](../tests/test_function_branches.py)
+通过公开编译、solve 和实际 Rust 瞬态入口验证。
+[两个有限 Spectre 配对](../../experiments/backends/function-branches/README.md)在修正模型数字前导零后通过，
+原两个编译失败仍保留；刺激、独立答案与 `1e-8 V` 判据未改变，不是完整函数/PA 支持证明。
 
 只允许读取已赋值的局部变量，未知函数、递归和缺少返回值均给出源码诊断。
 表达式深度、调用深度和实际展开大小受前端预算约束；共享实参不能逃过 JSON 树大小
