@@ -260,7 +260,7 @@ mod tests {
             };
             *r = relation;
             // 2*u - u is exactly u at the original binary64 input.
-            *left = Box::new(Expression::Add {
+            **left = Expression::Add {
                 left: Box::new(Expression::Affine {
                     constant: 0.,
                     terms: vec![Term {
@@ -275,7 +275,7 @@ mod tests {
                         coefficient: -1.,
                     }],
                 }),
-            });
+            };
             let answer = resolve(p, &driven, &[I::point(0.65)]).unwrap().states[0]
                 .initial
                 .constant()
@@ -298,13 +298,13 @@ mod tests {
         else {
             panic!()
         };
-        *left = Box::new(Expression::Affine {
+        **left = Expression::Affine {
             constant: 1.,
             terms: vec![Term {
                 node: 2,
                 coefficient: 0.,
             }],
-        });
+        };
         assert_eq!(
             resolve(p, &["u".into()], &[I::point(0.9)])
                 .unwrap_err()
