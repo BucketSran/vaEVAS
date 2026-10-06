@@ -6,6 +6,8 @@ use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::sync::Arc;
 
+type HistoryTube = (Vec<(f64, f64)>, Vec<I>);
+
 #[derive(Clone)]
 pub(crate) struct AbsDelay {
     points: Arc<[(f64, f64)]>,
@@ -65,6 +67,52 @@ impl AbsDelay {
             delay,
             breakpoints: breakpoints.into(),
         })
+    }
+
+    /// Export a pointwise tube, not an assertion that the true shifted corners
+    /// occur at the rounded knots. For t between h_i and h_(i+1), map its
+    /// fraction to the exact shifted knots s_i: |f(t)-f(tau)| <= L|t-tau|.
+    /// Convex interpolation of B_i=A_i+[-L*|s_i-h_i|,L*|s_i-h_i|]
+    /// therefore encloses f(t) everywhere, including a displaced true corner.
+    /// Only a second delay may consume this tube; it is not a derivative PWL.
+    pub(crate) fn shifted_tube(&self) -> Result<HistoryTube, Error> {
+        let mut lipschitz: f64 = 0.0;
+        for (k, pair) in self.points.windows(2).enumerate() {
+            let slope =
+                (self.bounds[k + 1] - self.bounds[k]) / (I::point(pair[1].0) - I::point(pair[0].0));
+            if !slope.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "cannot certify delayed history slope",
+                ));
+            }
+            lipschitz = lipschitz.max(slope.magnitude());
+        }
+        let mut points = Vec::new();
+        let mut bounds = Vec::new();
+        if self.delay > 0.0 {
+            points.push((0.0, self.points[0].1));
+            bounds.push(self.bounds[0]);
+        }
+        for (k, &(time, value)) in self.points.iter().enumerate() {
+            let shifted = self.breakpoints[k];
+            let error = (I::point(time) + I::point(self.delay) - I::point(shifted)).magnitude();
+            let margin = (I::point(lipschitz) * I::point(error)).hi;
+            let enclosure = self.bounds[k]
+                + I {
+                    lo: -margin,
+                    hi: margin,
+                };
+            if !enclosure.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite delayed history tube",
+                ));
+            }
+            points.push((shifted, value));
+            bounds.push(enclosure);
+        }
+        Ok((points, bounds))
     }
 
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
@@ -220,6 +268,29 @@ mod tests {
         )
         .unwrap();
         assert_eq!(falling.value(offset + 4.0).unwrap(), 0.75);
+    }
+
+    #[test]
+    fn shifted_tube_encloses_displaced_true_corner_through_second_delay() {
+        let a = 2.0_f64.powi(54);
+        let first = AbsDelay::new(
+            vec![(0.0, 0.0), (a, 0.0), (a + 4.0, 1.0), (a + 8.0, 1.0)],
+            3.0,
+        )
+        .unwrap();
+        let (points, bounds) = first.shifted_tube().unwrap();
+        let second = AbsDelay::enclosed(points, bounds, 3.0).unwrap();
+        // Exact-rational physical answer: x((A+8)-3-3)=x(A+2)=1/2.
+        // This must remain inside the tube despite rounded exported corners.
+        let bound = second.value_bounds(a + 8.0);
+        assert!(bound.lo <= 0.5 && bound.hi >= 0.5);
+        assert_ne!(second.value(a + 8.0).unwrap(), 0.5);
+        let accepted = second.clone();
+        let candidate = accepted.clone();
+        let saved = accepted.value_bounds(a + 8.0);
+        candidate.value(a + 4.0).unwrap();
+        drop(candidate);
+        assert_eq!(accepted.value_bounds(a + 8.0), saved);
     }
 
     #[test]

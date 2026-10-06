@@ -46,7 +46,7 @@ class HistoryProjection(unittest.TestCase):
         for call in ('absdelay', 'slew'):
             args = '1' if call == 'absdelay' else '1,-2'
             for body in (f'V(y,r)<+{call}(V(y,r),{args});',
-                         f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+{call}(V(z,r),{args});'):
+                         (f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+absdelay(absdelay(V(z,r),1),1);' if call == 'absdelay' else f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+{call}(V(z,r),{args});')):
                 with self.subTest(body=body), self.assertRaises(KernelError):
                     execute(body)
 
