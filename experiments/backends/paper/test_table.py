@@ -28,12 +28,24 @@ class TableControls(unittest.TestCase):
 
     def report(self, records, *args, **kwargs):
         # Reproduce runner's output manifest producer for each synthetic lane.
+        final_rows = kwargs.pop('final_rows', None)
+        if final_rows is None:
+            unique = {}
+            for record in records:
+                if record.get('identity', {}).get('lane_started'):
+                    row = json.loads(Path(record['execution']['path']).read_text())
+                    unique[row['condition'], row['backend']] = row
+            final_rows = list(unique.values())
+        execution_path = self.root / 'EXECUTION.json'
+        execution_path.write_text(json.dumps(final_rows))
+        execution_sha = hashlib.sha256(execution_path.read_bytes()).hexdigest()
         for record in records:
             identity = record.get('identity', {})
             if not identity.get('lane_started'):
                 continue
             refs = [record.get('execution'), *[identity.get(k) for k in ('tool', 'lane_started', 'condition_started', 'observation')]]
             entries = {str(Path(ref['path']).relative_to(self.root)): {'sha256': ref['sha256']} for ref in refs if ref}
+            entries['EXECUTION.json'] = {'sha256': execution_sha}
             work = Path(identity['condition_started']['path']).parent
             for name in ('dut.va', 'tb.deck'):
                 if (work / name).is_file():
@@ -309,6 +321,44 @@ class TableControls(unittest.TestCase):
         del selected['selection_reason']
         with self.assertRaisesRegex(ValueError, 'selection_reason'):
             self.report([selected], allow_pending=True)
+
+    def test_terminal_budget_failure_rejects_earlier_waveform_snapshot(self):
+        record = self.record()
+        earlier = json.loads(Path(record['execution']['path']).read_text())
+        final = {**earlier, 'status': 'condition_directory_limit_exceeded',
+                 'failure_stage': 'terminal_directory_budget',
+                 'directory_budget': {'actual_bytes': 256 * 1024**2 + 1,
+                     'limit_bytes': 256 * 1024**2, 'status': 'condition_directory_limit_exceeded',
+                     'measurement': 'terminal directory files; not an active disk quota', 'runtime_hard_quota': False}}
+        with self.assertRaisesRegex(ValueError, 'Final EXECUTION row'):
+            self.report([record], allow_pending=True, final_rows=[final])
+        record['execution'] = self.artifact('final-record-VR-01.json', final)
+        assessment = json.loads(Path(record['assessment']['path']).read_text())
+        assessment.update(status='X', execution_state='X', execution_sha256=record['execution']['sha256'])
+        record['assessment'] = self.artifact('final-assessment.json', assessment)
+        report = self.report([record], allow_pending=True, final_rows=[final])
+        self.assertIn('| Total | 12 | 0/0/0/1/0/11 |', report)
+
+    def test_final_lane_requires_unique_identical_row_and_unchanged_artifact(self):
+        record = self.record()
+        execution = json.loads(Path(record['execution']['path']).read_text())
+        for final_rows in ([], [execution, execution], [{**execution, 'directory_budget': {'status': 'within_limit'}}]):
+            with self.subTest(final_rows=final_rows), self.assertRaisesRegex(ValueError, 'Final EXECUTION row'):
+                self.report([record], allow_pending=True, final_rows=final_rows)
+        self.report([record], allow_pending=True)
+        (self.root / 'EXECUTION.json').write_text('[]')
+        with self.assertRaisesRegex(ValueError, 'hash'):
+            table.render([record], allow_pending=True)
+        # A preflight not_run result has no condition STARTED or TOOL identity.
+        not_run = {'condition': 'VR-01', 'backend': 'evas', 'status': 'not_run', 'reason': 'preflight failed'}
+        execution = self.artifact('final-record-VR-01.json', not_run)
+        (self.root / 'EXECUTION.json').write_text(json.dumps([not_run]))
+        manifest = self.artifact('FILE_MANIFEST.json', {
+            'EXECUTION.json': {'sha256': hashlib.sha256((self.root / 'EXECUTION.json').read_bytes()).hexdigest()},
+            Path(execution['path']).name: {'sha256': execution['sha256']}})
+        pending = {'condition_id': 'VR-01', 'backend': 'evas', 'status': 'T', 'execution': execution,
+                   'identity': {'execution_manifest': manifest}}
+        self.assertIn('| Total | 12 | 0/0/0/0/0/12 |', table.render([pending], allow_pending=True))
 
     def test_all_six_statuses_are_retained(self):
         records = []

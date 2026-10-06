@@ -205,3 +205,18 @@ collector 须在该槽追加 prior_attempts 的执行 artifact path/sha256 数�
 方法的科学误差界。availability 可为 local-only、restricted 或 public，
 public 另需 `public_url`，其含义仅为声明的发布链接。本地 raw 路径不等于
 公开可复现证据，发布链接本身也不代表通过可复现性审查。
+
+
+实际汇总应引用 lane 的 `final-record-<condition>.json`。其 JSON 内容必须
+与该 lane 最终 `EXECUTION.json` 中唯一的 condition/backend 行完全相同，
+assessment.execution_sha256 也须绑定这一终态文件。表格通过
+FILE_MANIFEST 的哈希读取 EXECUTION.json，比较完整行，不只比较状态名。
+晚于早期 RESULT 的目录预算裁定可能将 waveform_available 改为
+condition_directory_limit_exceeded，必须汇总为 X；即使早期 RESULT 有合法
+观测与 assessment，也不能覆盖终态。原 RESULT、record、日志和波形仍保留
+为同次执行的早期快照，不增加 attempt 数。真正的先前运行继续通过
+prior_attempts 与外部运行索引保留。
+
+裸 T 仍表示明确的未执行占位，不要求不存在的 condition STARTED；
+preflight 失败的 not_run 若附 execution_manifest，核验相同的最终行，
+无需借工具/源码 STARTED 冒充实际启动。此规则不构造新的执行或复测框架。

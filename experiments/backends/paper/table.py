@@ -17,7 +17,8 @@ STATUSES = 'PFUXIT'
 # Runner's explicit failure states. This is a report consistency check, not scoring.
 EXECUTION_FAILURES = frozenset(('compile_failed', 'compile_timeout', 'runtime_timeout',
     'execution_failed', 'execution_error', 'cancelled', 'cleanup_incomplete',
-    'missing_compile_artifact', 'missing_waveform', 'observation_invalid'))
+    'missing_compile_artifact', 'missing_waveform', 'observation_invalid',
+    'condition_directory_limit_exceeded'))
 
 
 def artifact_bytes(ref):
@@ -62,6 +63,27 @@ def stable_tool(tool):
     return stable
 
 
+def final_execution(record, execution, manifest=None):
+    ref = record['identity']['execution_manifest']
+    if manifest is None:
+        manifest = read_artifact(ref)
+    root = Path(ref['path']).parent.resolve()
+    try:
+        selected_path = str(Path(record['execution']['path']).resolve().relative_to(root))
+    except ValueError:
+        raise ValueError('Selected execution outside its final lane') from None
+    if manifest.get(selected_path, {}).get('sha256') != record['execution']['sha256']:
+        raise ValueError('Final execution artifact missing from FILE_MANIFEST')
+    final_ref = {'path': str(root / 'EXECUTION.json'),
+                 'sha256': manifest.get('EXECUTION.json', {}).get('sha256')}
+    rows = read_artifact(final_ref)
+    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+        raise ValueError('Final EXECUTION row must come from a valid lane array')
+    matches = [row for row in rows if row.get('condition') == record['condition_id'] and row.get('backend') == record['backend']]
+    if len(matches) != 1 or matches[0] != execution:
+        raise ValueError('Final EXECUTION row must be unique and identical to selected execution')
+
+
 def execution_files(record, execution, started):
     identity = record['identity']
     lane = read_artifact(identity['lane_started'])
@@ -70,6 +92,9 @@ def execution_files(record, execution, started):
     if lane.get('backend') != record['backend'] or lane.get('input_manifest_sha256') != identity['input_manifest']['sha256'] or lane.get('fixed_conditions') != [c['id'] for c in BATCH['cards']] or inputs.get('core.json', {}).get('sha256') != CARDS_SHA:
         raise ValueError('Frozen input/lane identity mismatch')
     lane_root = Path(identity['lane_started']['path']).parent
+    if Path(identity['execution_manifest']['path']).parent.resolve() != lane_root.resolve():
+        raise ValueError('Execution FILE_MANIFEST must belong to its lane')
+    final_execution(record, execution, manifest)
     refs = [record['execution'], *[identity[k] for k in ('tool', 'condition_started', 'lane_started')]]
     if identity.get('observation'):
         refs.append(identity['observation'])
@@ -117,6 +142,8 @@ def validate(record):
             execution = read_artifact(record['execution'])
             if execution.get('condition') != record['condition_id'] or execution.get('backend') != record['backend'] or execution.get('status') != 'not_run':
                 raise ValueError('T execution status must be not_run for this condition/backend')
+            if record.get('identity', {}).get('execution_manifest'):
+                final_execution(record, execution)
         return 'T', None, None
     identity = record.get('identity', {})
     if not all(identity.get(k) for k in ('source_revision', 'tool', 'condition_started', 'lane_started', 'input_manifest', 'execution_manifest', 'method', 'availability')):
