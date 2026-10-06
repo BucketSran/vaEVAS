@@ -19,7 +19,8 @@ Python API 的 `solve(..., kernel=None)`、`transient(..., kernel=None)`、
 默认选择检查构建记录、文件 SHA256、内核实际报告、IR17、包版本和 OS/架构。
 macOS 的 arm64 映射到 Rust 的 aarch64，darwin 映射到 macos。
 
-显式 `--kernel PATH` 或 API `kernel=PATH` 始终选择该文件。缺失、不可执行或运行失败
+显式 `--kernel PATH` 始终选择该路径；API 的显式参数原样传给子进程，
+裸命令名保留已有 PATH 查找语义。CLI、身份查询和 results 的显式参数继续按文件路径解析。缺失、不可执行或运行失败
 不会切换至包内核。显式路径保留已有请求/响应协议验证，不要求旧内核新增身份元数据；
 results 仍需已有身份查询合同。请求协议没有独立版本，字段继续为 null，不能解释为已确认
 全部协议兼容。IR 不匹配需用配套前端/内核重新编译原模型。

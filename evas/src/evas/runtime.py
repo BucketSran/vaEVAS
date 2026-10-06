@@ -59,7 +59,7 @@ def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT, *, diagnostics_path=None):
             valid = False
         if not valid:
             raise ValueError("timeout must be a positive finite number of seconds or None")
-    kernel = select_kernel(kernel)
+    kernel = select_kernel() if kernel is None else kernel
     try:
         # subprocess.run kills and waits for its child before TimeoutExpired
         # escapes. No abandoned kernel can keep writing after this diagnostic.
