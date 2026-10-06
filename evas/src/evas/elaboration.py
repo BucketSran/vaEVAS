@@ -94,18 +94,23 @@ def inline_functions(model: Model) -> Model:
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
         obligations.extend(args)
-        def statements(body, bindings):
+        def statements(body, bindings, expansion_depth):
             for statement in body:
+                # Branch descent and calls share a budget: separately bounded
+                # source nesting and call chains can multiply Python stack use.
+                if expansion_depth > MAX_EXPRESSION_DEPTH:
+                    fail('function expansion exceeds combined branch/call depth budget',
+                         statement.token, code="resource_budget")
                 if isinstance(statement, Conditional):
                     # Capture the predicate before either branch changes locals.
                     # The immutable expression keeps VA's sequential semantics.
                     predicate = Expr(statement.relation, None,
                         (statement.left, statement.right), statement.token)
-                    predicate = unpack(expand(predicate, bindings, names, (*stack, name), depth+1), obligations)
+                    predicate = unpack(expand(predicate, bindings, names, (*stack, name), expansion_depth+1), obligations)
                     bounded(predicate)
                     obligations.append(predicate)
-                    then_values = statements(statement.then_body, dict(bindings))
-                    else_values = statements(statement.else_body, dict(bindings))
+                    then_values = statements(statement.then_body, dict(bindings), expansion_depth+1)
+                    else_values = statements(statement.else_body, dict(bindings), expansion_depth+1)
                     merged = {}
                     for target in then_values:
                         if target not in else_values:
@@ -123,11 +128,11 @@ def inline_functions(model: Model) -> Model:
                     fail('pure analog function assignments require scalar targets', statement.token)
                 if statement.name not in names:
                     fail('function assignments must target its local variables or return value', statement.token)
-                bindings[statement.name] = unpack(expand(statement.rhs, bindings, names, (*stack, name), depth+1), obligations)
+                bindings[statement.name] = unpack(expand(statement.rhs, bindings, names, (*stack, name), expansion_depth+1), obligations)
                 bounded(bindings[statement.name])
                 obligations.append(bindings[statement.name])
             return bindings
-        local = statements(function.body, local)
+        local = statements(function.body, local, depth)
         if name not in local:
             fail('function must assign its return value', function.token)
         # Retain every argument and RHS through instance binding, including

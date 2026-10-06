@@ -23,6 +23,30 @@ def program(prefix=PREFIX, body='V(y,r)<+clip(V(u,r));', instances=None):
 
 
 class FunctionBranches(unittest.TestCase):
+    def test_combined_branch_and_function_depth_is_a_structured_budget(self):
+        definitions = []
+        for i in range(16):
+            value = f'f{i+1}(x)' if i < 15 else 'x'
+            definitions.append(
+                f'analog function real f{i}; input x; real x; begin f{i}=0; '
+                + 'if(x>0) ' * 60 + f'f{i}={value}; end endfunction')
+        prefix = PREFIX[:PREFIX.index('analog function')]+ '\n'.join(definitions)+'\n'
+        with self.assertRaises(CompileError) as caught:
+            program(prefix, 'V(y,r)<+f0(V(u,r));')
+        self.assertEqual(caught.exception.diagnostic['code'], 'resource_budget')
+        self.assertEqual(caught.exception.diagnostic['location']['source'], 'function-branches.va')
+
+    def test_shallow_combined_branch_and_call_has_independent_answer(self):
+        prefix = PREFIX[:PREFIX.index('analog function')]
+        for i in range(2):
+            value = 'f1(x)' if i == 0 else 'x'
+            prefix += (f'analog function real f{i}; input x; real x; begin f{i}=0; '
+                       + 'if(x>0) '*3 + f'f{i}={value}; end endfunction\n')
+        p = program(prefix, 'V(y,r)<+f0(V(u,r));')
+        result = solve(p, ['u'], [[-1], [0], [.25], [1]], kernel=KERNEL)
+        self.assertEqual([row['voltages'][p.nodes.index('y')] for row in result['solutions']],
+                         [0, 0, .25, 1])
+
     def test_real_clip_function_has_independent_voltage_table(self):
         result = solve(program(), ['u'], [[-.25], [0], [.25], [.9], [1.25]], kernel=KERNEL)
         values = [row['voltages'][result['nodes'].index('y')] for row in result['solutions']]
