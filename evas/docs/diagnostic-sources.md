@@ -85,8 +85,12 @@ Rust Error 由 IR crate 的 `Error::new` 构造。当前返回 Error 的额外�
 continuous.unsupported 明确构造 unsupported_operator；event_accuracy.unresolved、
 dynamic_roots.unresolved 和 transition.invalid 明确构造 event_resolution。
 event_accuracy.unresolved 还被 affine_bounds、pwl、schedule、slew 导入使用。
-当前包装调用数为 continuous 11、dynamic_roots 20、event_accuracy 2、transition 13、
-affine_bounds 7、pwl 2、schedule 10、slew 7，共 72 个。逐项源码计数与机器清单核对；
+当前这四个函数的包装调用数为 continuous 11、continuous_derivatives 2、
+continuous_initialization 1、implicit_dynamics 3、nonlinear_dynamics 4、dynamic_roots 20、
+event_accuracy 2、transition 13、affine_bounds 7、pwl 2、schedule 10、slew 7，共 82 个。
+另有两个直接返回 Error 的具名局部闭包：continuous_derivatives 的 reject 委托
+continuous.unsupported，pwl 的 invalid 构造 invalid_inputs；各调用两次。合计 86 个包装调用。
+逐项源码计数与机器清单核对；
 slew 在生产实现中间有 cfg(test) 构造器，不能在首个 cfg(test) 处截掉整个文件。
 当前没有 Error 类型别名或其他 Error 结构体直接初始化；扫描器同时验收导入别名与限定调用。
 未来引入新的类型、间接函数值或条件编译约定，需要同步扩展扫描和源码审计。
@@ -101,27 +105,29 @@ python3 -B scripts/diagnostic_inventory.py --check
 CI 检查新清单，不能只更新数字。所有条目的 evidence 都是 source_audit，执行覆盖另由本页
 行为表及开发测试说明。动态 reason/code 为 null，category 为 unknown；不靠 message 或名称前缀
 猜测，包装默认 code 从声明读取，显式实参优先。已有登记的 stage/capability 同步写入；
-Rust 包装由显式返回 Error 的函数签名发现，调用按本模块、导入项/别名与限定路径解析；
-factory 字段保留解析到的来源。只有整个函数体是唯一直接 constructor 返回时读取字面 kind；
-条件/委托/动态返回为 null，不从其中一个分支推断整体 reason。它不是完整 Rust 编译器，
-当前闭集另外通过源码审计确认；普通同名函数、测试工厂和混合返回有维护负控。
+Rust 函数包装由显式返回 Error 的签名发现，模块身份按 mod 声明及 #[path] 解析，
+调用按本模块、导入项/别名、限定路径与传递的 super::* 解析；factory 字段保留解析到的来源。
+只有整个函数体是唯一直接 constructor 返回时读取字面 kind；条件/委托/动态函数返回为 null，
+不从其中一个分支推断整体 reason。具名局部闭包只在完整表达式直接构造 Error 或调用已确认
+工厂时登记，调用限制在声明后的词法作用域内。它不是完整 Rust 编译器，当前闭集另外通过
+源码审计确认；普通同名函数/闭包、测试工厂、混合返回、导入遮蔽有维护负控。
 来源位置是否可提供仍由构造表达式中的原 token/instance 决定，工具不补运行时位置。
 
 | 源码观察 | Python | Rust | 合计 |
 | --- | ---: | ---: | ---: |
 | CompileError 及其子类构造 | 94 | 0 | 94 |
 | KernelError / Error::new 构造 | 13 | 314 | 327 |
-| fail/_fail / Rust 返回 Error 包装调用 | 172 | 72 | 244 |
+| fail/_fail / Rust 返回 Error 包装调用 | 172 | 86 | 258 |
 | metadata 构造 | 9 | 0 | 9 |
-| Python 异常类 / Rust 返回 Error 函数定义 | 3 | 4 | 7 |
+| Python 异常类 / Rust 返回 Error 函数或闭包定义 | 3 | 6 | 9 |
 | 错误处理器 | 36 | 0 | 36 |
 | map_err 转换 | 0 | 31 | 31 |
 | 元数据改写 | 8 | 5 | 13 |
 | 具名重抛 | 3 | 0 | 3 |
-| 全部观察 | 338 | 426 | 764 |
+| 全部观察 | 338 | 442 | 780 |
 
 其中 372 条观察为 unknown，包括未解析动态 reason、宽泛处理器及明确保持 unknown 的
-旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；764 不是独立错误种类数，
+旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；780 不是独立错误种类数，
 不是失败执行次数，也不是覆盖率。词法函数身份不推导 Rust trait/impl 类型身份。
 Rust map_err 包括保留/转换错误的包装；analog 的 event_accuracy→waveform_accuracy、
 batch/transient 的 sample 赋值及初始化上下文 message 改写单独登记。转换不修改本批 Rust 源码。

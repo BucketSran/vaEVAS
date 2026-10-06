@@ -75,7 +75,7 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 完整源码观察存于 [diagnostic-inventory.json](diagnostic-inventory.json)，由
 `scripts/diagnostic_inventory.py` 生成并由 CI 检查新鲜度。它包含 Python 前端/CLI、Rust
 生产源码和 IR 子 crate 的构造、包装、转换、处理器与元数据改写；以源码结构而非行号标识。
-当前共 764 条源码观察，372 条仍为 unknown；这些数包括同一路径的多个观察，不是错误
+当前共 780 条源码观察，372 条仍为 unknown；这些数包括同一路径的多个观察，不是错误
 种类数或执行覆盖率。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](diagnostic-sources.md)。
 
 普通 manifest CLI、lint、results/capture 使用同一输入来源诊断。results 的 API、CLI 与失败

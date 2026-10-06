@@ -168,7 +168,7 @@ def rust_source(path):
             if start < len(tokens) and tokens[start] == '{':
                 functions.append(dict(start=start, end=closing(tokens, start), name=tokens[i+1],
                                       signature=tokens[i:start], index=i))
-    imports, import_tokens = {}, set()
+    imports, import_tokens, globs = {}, set(), []
     def leaves(tree, prefix=()):
         parts = []
         for token in tree:
@@ -195,10 +195,14 @@ def rust_source(path):
     for i, token in enumerate(tokens):
         if token == 'use' and i not in ignored:
             end = next(j for j in range(i+1, len(tokens)) if tokens[j] == ';')
-            imports.update(leaves(tokens[i+1:end]))
+            for alias, target in leaves(tokens[i+1:end]):
+                if alias == '*':
+                    globs.append(target[:-1])
+                else:
+                    imports[alias] = target
             import_tokens.update(range(i, end+1))
     return dict(tokens=tokens, ignored=ignored, functions=functions,
-                imports=imports, import_tokens=import_tokens)
+                imports=imports, import_tokens=import_tokens, globs=globs)
 
 
 def rust_module(path, rust):
@@ -214,6 +218,38 @@ def rust_module(path, rust):
     return crate, tuple(module)
 
 
+def rust_module_graph(sources, rust):
+    """Use declarations, including #[path], before fallback file identities."""
+    assigned = {}
+    def visit(path, crate, module):
+        if path not in sources or path in assigned:
+            return
+        assigned[path] = (crate, module)
+        source = sources[path]
+        tokens = source['tokens']
+        for i in range(len(tokens)-2):
+            if i in source['ignored'] or tokens[i] != 'mod' or tokens[i+2] != ';':
+                continue
+            attribute = None
+            for j in range(max(0, i-8), i):
+                if tokens[j:j+4] == ['#', '[', 'path', '='] and tokens[j+4].startswith('"'):
+                    attribute = json.loads(tokens[j+4])
+            directory = path.parent if path.stem in ('lib', 'main', 'mod') else path.parent / path.stem
+            candidates = [path.parent / attribute] if attribute is not None else [
+                directory / (tokens[i+1] + '.rs'), directory / tokens[i+1] / 'mod.rs']
+            for child in candidates:
+                if child in sources:
+                    visit(child, crate, module + (tokens[i+1],))
+                    break
+    for path in sources:
+        if path.name in ('lib.rs', 'main.rs'):
+            crate, module = rust_module(path, rust)
+            visit(path, crate, module)
+    for path, source in sources.items():
+        source['module'] = assigned.get(path, rust_module(path, rust))
+    return {source['module']: source for source in sources.values()}
+
+
 def resolve_rust(target, module, imports):
     if target[0] in imports:
         target = imports[target[0]] + target[1:]
@@ -222,14 +258,17 @@ def resolve_rust(target, module, imports):
     if target[0] == 'self':
         return module + target[1:]
     if target[0] == 'super':
-        return module[:-1] + target[1:]
+        count = 0
+        while count < len(target) and target[count] == 'super':
+            count += 1
+        return module[:-count] + target[count:]
     return module + target
 
 
 def rust_factories(sources, rust):
     factories = {}
     for path, source in sources.items():
-        crate, module = rust_module(path, rust)
+        crate, module = source['module']
         aliases = {'Error'} | {alias for alias, target in source['imports'].items() if target[-1] == 'Error'}
         source['error_aliases'] = aliases
         tokens = source['tokens']
@@ -252,9 +291,111 @@ def rust_factories(sources, rust):
     return factories
 
 
-def rust_entries(path, source, factories, rust):
+def rust_factory_target(target, source, factories, modules, visited=None):
+    if not target:
+        return None
+    crate, module = source['module']
+    visited = set() if visited is None else visited
+    identity = (crate, module, target)
+    if identity in visited:
+        return None
+    visited = visited | {identity}
+    # An ordinary local function shadows an imported glob factory.
+    if len(target) == 1 and any(function['name'] == target[0] for function in source['functions']):
+        key = (crate, module + target)
+        return key if key in factories else None
+    canonical = resolve_rust(target, module, source['imports'])
+    key = (crate, canonical)
+    if key in factories:
+        return key
+    # Qualified access may name an import re-exported by another module.
+    owner = modules.get((crate, canonical[:-1]))
+    if owner is not None and (crate, canonical[:-1], (canonical[-1],)) != identity:
+        result = rust_factory_target((canonical[-1],), owner, factories, modules, visited)
+        if result is not None:
+            return result
+    if len(target) == 1 and target[0] not in source['imports']:
+        matches = set()
+        for glob in source['globs']:
+            parent = modules.get((crate, resolve_rust(glob, module, source['imports'])))
+            if parent is not None:
+                result = rust_factory_target(target, parent, factories, modules, visited)
+                if result is not None:
+                    matches.add(result)
+        if len(matches) == 1:
+            return next(iter(matches))
+    return None
+
+
+def rust_error_expression(body, source, factories, modules):
+    """Prove only a complete direct factory expression, never a branch fragment."""
+    if body[:1] == ['return']:
+        body = body[1:]
+    if body[-1:] == [';']:
+        body = body[:-1]
+    if len(body) < 4:
+        return False, None
+    if body[0] in source['error_aliases'] and body[1:4] == ['::', 'new', '('] and closing(body, 3) == len(body)-1:
+        return True, json.loads(body[4]) if body[4].startswith('"') else None
+    opening = next((i for i, token in enumerate(body) if token == '('), None)
+    if opening is not None and closing(body, opening) == len(body)-1:
+        target = tuple(token for token in body[:opening] if token != '::')
+        key = rust_factory_target(target, source, factories, modules)
+        if key is not None:
+            return True, factories[key]
+    return False, None
+
+
+def rust_closures(source, factories, modules):
+    tokens = source['tokens']
+    closures = []
+    for i in range(len(tokens)-4):
+        if i in source['ignored'] or tokens[i] != 'let':
+            continue
+        name_index = i+2 if tokens[i+1] == 'mut' else i+1
+        opening = name_index+2
+        if tokens[name_index+1] != '=':
+            continue
+        if tokens[opening] == 'move':
+            opening += 1
+        if tokens[opening] == '||':
+            body_start = opening+1
+        elif tokens[opening] == '|':
+            body_start = next((j+1 for j in range(opening+1, len(tokens)) if tokens[j] == '|'), None)
+            if body_start is None:
+                continue
+        else:
+            continue
+        if tokens[body_start:body_start+2] == ['-', '>']:
+            body_start = next(j for j in range(body_start+2, len(tokens)) if tokens[j] == '{')
+        if tokens[body_start] == '{':
+            body_end = closing(tokens, body_start)
+            body = tokens[body_start+1:body_end]
+        else:
+            body_end = body_start
+            while tokens[body_end] != ';':
+                body_end = closing(tokens, body_end)+1 if tokens[body_end] in ('(', '[', '{') else body_end+1
+            body = tokens[body_start:body_end]
+        owner = min((fn for fn in source['functions'] if fn['start'] < i < fn['end']),
+                    key=lambda fn: fn['end']-fn['start'], default=None)
+        if owner is None:
+            continue
+        # Closures remain local to their lexical block and declaration point.
+        block = max(j for j in range(owner['start'], i) if tokens[j] == '{' and closing(tokens, j) > i)
+        produces_error, reason = rust_error_expression(body, source, factories, modules)
+        closures.append(dict(name=tokens[name_index], owner=owner['name'], index=i, end=body_end,
+                             scope_end=closing(tokens, block), produces_error=produces_error, reason=reason))
+    source['closures'] = closures
+
+
+def rust_entries(path, source, factories, modules):
     tokens, ignored, functions = source['tokens'], source['ignored'], source['functions']
-    crate, module = rust_module(path, rust)
+    crate, module = source['module']
+    for closure in source['closures']:
+        if closure['produces_error']:
+            yield dict(function=closure['owner'], form='factory_definition', reason=closure['reason'],
+                       expression=' '.join(tokens[closure['index']:closure['end']+1]),
+                       factory='::'.join(('crate', *module, closure['owner'], closure['name'])))
     for function in functions:
         key = (crate, module + (function['name'],))
         if key in factories:
@@ -275,12 +416,16 @@ def rust_entries(path, source, factories, rust):
             while begin >= 2 and tokens[begin-1] == '::':
                 begin -= 2
             target = tuple(part for part in tokens[begin:i+1] if part != '::')
-            key = (crate, resolve_rust(target, module, source['imports']))
-            if key in factories:
+            local = [closure for closure in source['closures'] if len(target) == 1 and closure['name'] == target[0]
+                     and closure['end'] < i < closure['scope_end']]
+            closure = max(local, key=lambda item: item['index'], default=None)
+            key = None if closure is not None else rust_factory_target(target, source, factories, modules)
+            if closure is not None and closure['produces_error'] or key is not None:
                 end = closing(tokens, i+1)
-                form, reason = 'wrapper_call', factories[key]
+                form, reason = 'wrapper_call', closure['reason'] if closure is not None else factories[key]
                 expression_start = begin
-                factory = '::'.join(('crate', *key[1]))
+                target_factory = module + (closure['owner'], closure['name']) if closure is not None else key[1]
+                factory = '::'.join(('crate', *target_factory))
         elif tokens[i:i+2] == ['map_err', '(']:
             end = closing(tokens, i+1)
             form = 'conversion'
@@ -308,9 +453,12 @@ def inventory(root):
                     if 'target' not in path.relative_to(rust).parts and 'src' in path.relative_to(rust).parts)
     paths = [path for path in paths if not path.name.endswith('_tests.rs') and path.name != 'tests.rs']
     sources = {path: rust_source(path) for path in paths if path.suffix == '.rs'}
+    modules = rust_module_graph(sources, rust)
     factories = rust_factories(sources, rust)
+    for source in sources.values():
+        rust_closures(source, factories, modules)
     for path in paths:
-        for row in python_entries(path) if path.suffix == '.py' else rust_entries(path, sources[path], factories, rust):
+        for row in python_entries(path) if path.suffix == '.py' else rust_entries(path, sources[path], factories, modules):
             relative = path.relative_to(root).as_posix()
             kernel_reason = path.suffix == '.rs' or row['form'] == 'kernel_constructor'
             row['category'] = kernel.get(row['reason'], 'unknown') if kernel_reason else rules.get(row['reason'], ('unknown',))[0]

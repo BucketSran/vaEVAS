@@ -115,3 +115,53 @@ fn run() { mixed(false, existing); }
             self.assertEqual(len(rows), 1)
             self.assertIsNone(rows[0]['reason'])
             self.assertEqual(rows[0]['category'], 'unknown')
+
+    def test_current_path_modules_and_named_error_closures_are_registered(self):
+        result = subprocess.run([sys.executable, '-B', str(SCRIPT)], capture_output=True,
+                                text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        rows = json.loads(result.stdout)['entries']
+        for module, token, count in [('continuous_derivatives', 'unsupported', 2),
+                                     ('continuous_initialization', 'unsupported', 1),
+                                     ('implicit_dynamics', 'unsupported', 3),
+                                     ('nonlinear_dynamics', 'unsupported', 4),
+                                     ('continuous_derivatives', 'reject', 2), ('pwl', 'invalid', 2)]:
+            actual = [row for row in rows if row['path'] == f'evas/rust_core/src/{module}.rs'
+                      and row['form'] == 'wrapper_call' and row['expression'].startswith(token + ' (')]
+            self.assertEqual(len(actual), count, (module, token))
+
+    def test_path_modules_super_glob_closure_scope_and_shadowing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rust = root / 'evas/rust_core/src'
+            rust.mkdir(parents=True)
+            (rust / 'lib.rs').write_text('mod parent;')
+            (rust / 'parent.rs').write_text('''fn factory(message: &str) -> Error {
+Error::new("unsupported_operator", message)
+}
+#[path="odd_name.rs"] mod child;
+#[path="shadow.rs"] mod shadow;
+''')
+            (rust / 'odd_name.rs').write_text('''use super::*;
+#[path="leaf.rs"] mod nested;
+fn one() { let deny = || { factory("supported provenance") }; deny(); }
+fn unrelated() { let deny = || true; deny(); let value = || (1 + 2); value(); }
+''')
+            (rust / 'leaf.rs').write_text('''use super::*;
+fn run() { factory("transitive glob"); }
+''')
+            (rust / 'shadow.rs').write_text('''use super::*;
+fn factory(message: &str) -> bool { false }
+fn run() { factory("local ordinary function shadows inherited factory"); }
+''')
+            result = subprocess.run([sys.executable, '-B', str(SCRIPT), '--root', str(root)],
+                                    capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            rows = json.loads(result.stdout)['entries']
+            calls = [row for row in rows if row['form'] == 'wrapper_call']
+            self.assertEqual(len(calls), 3)
+            self.assertTrue(all(row['reason'] == 'unsupported_operator' for row in calls))
+            self.assertFalse(any(row['function'] == 'unrelated' or row['path'].endswith('shadow.rs') for row in calls))
+            deny = next(row for row in calls if row['expression'].startswith('deny ('))
+            self.assertEqual(deny['factory'], 'crate::parent::child::one::deny')
+            self.assertTrue(any(row['path'].endswith('leaf.rs') and row['factory'] == 'crate::parent::factory' for row in calls))
