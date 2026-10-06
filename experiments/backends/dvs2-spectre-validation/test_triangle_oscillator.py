@@ -1,9 +1,14 @@
 """Independent oracle and grading controls, with no simulator required."""
+import hashlib
 import importlib.util
+import json
+import os
+import sys
 import math
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[3]
 spec=importlib.util.spec_from_file_location('triangle',ROOT/'benchmark/checkers/triangle_oscillator.py')
@@ -75,6 +80,139 @@ class TriangleOracle(unittest.TestCase):
 
     def test_task_checker_is_identical(self):
         self.assertEqual((ROOT/'benchmark/checkers/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/tasks/va07-triangle-repair/tests/verify.py').read_bytes())
+
+
+class TriangleVerifier(unittest.TestCase):
+    """The public verifier grades supplied PSF; the external simulator is a fixture."""
+
+    def verify_waveform(self, waveform, case_count=1):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            candidate = root/'dut.va'
+            candidate.write_text('module dut; endmodule\n')
+            cases_path = root/'cases.json'
+            cases_path.write_text(json.dumps([
+                dict(case(), name=f'constant-{i}', netlist='fixture')
+                for i in range(case_count)
+            ]))
+            binary = root/'fixture-spectre'
+            binary.write_text(
+                f'#!{sys.executable}\n'
+                'import pathlib, shutil, sys\n'
+                'if "-W" in sys.argv:\n'
+                '    print("fixture simulator, no physical execution")\n'
+                'else:\n'
+                '    pathlib.Path("psf").mkdir()\n'
+                '    source = pathlib.Path(__file__).with_name("waveform")\n'
+                '    if source.exists(): shutil.copyfile(source, "psf/tran.tran.tran")\n'
+            )
+            binary.chmod(0o755)
+            if waveform is not None:
+                (root/'waveform').write_text(waveform)
+            output = root/'output'
+            with patch.dict(os.environ, SPECTRE=str(binary)):
+                report = m.verify(candidate, output, cases_path)
+            self.assertEqual(report, json.loads((output/'report.json').read_text()))
+            if report['reward'] is None:
+                self.assertFalse((output/'reward.txt').exists())
+            else:
+                self.assertEqual((output/'reward.txt').read_text(), str(report['reward'])+'\n')
+            return report
+
+    @staticmethod
+    def psf(wave_rows):
+        return 'VALUE\n' + ''.join(
+            f'"{key}" {value}\n' for row in wave_rows for key, value in row.items()
+        ) + 'END\n'
+
+    def test_complete_wrong_count_is_graded_failure_with_waveform_identity(self):
+        # A stalled counter on a complete analytic waveform is a behavioral failure.
+        wave_rows = rows()
+        for row in wave_rows:
+            row['count'] = 0
+        waveform = self.psf(wave_rows)
+        report = self.verify_waveform(waveform)
+        self.assertEqual(report['status'], 'completed')
+        self.assertEqual(report['reward'], 0)
+        record = report['cases'][0]
+        self.assertFalse(record['passed'])
+        self.assertEqual(record['reason'], 'incorrect count outside event windows')
+        self.assertEqual(record.get('status'), 'graded')
+        self.assertEqual(record.get('waveform_sha256'), hashlib.sha256(waveform.encode()).hexdigest())
+
+
+    def test_complete_reference_is_graded_pass(self):
+        report = self.verify_waveform(self.psf(rows()))
+        self.assertEqual(report['status'], 'completed')
+        self.assertEqual(report['reward'], 1)
+        self.assertTrue(report['cases'][0]['passed'])
+        self.assertEqual(report['cases'][0]['status'], 'graded')
+
+    def test_complete_semantic_rejections_remain_zero_score(self):
+        for index, count, reason in [
+            (4, .5, 'noninteger count'),
+            (6, 3, 'missing, grouped or reversed count'),
+            (5, 0, 'missing, grouped or reversed count'),
+        ]:
+            with self.subTest(reason=reason, index=index):
+                wave_rows = rows()
+                wave_rows[index]['count'] = count
+                report = self.verify_waveform(self.psf(wave_rows))
+                self.assertEqual(report['reward'], 0)
+                record = report['cases'][0]
+                self.assertFalse(record['passed'])
+                self.assertEqual(record['reason'], reason)
+                self.assertEqual(record['status'], 'graded')
+                self.assertIn('waveform_sha256', record)
+
+    def test_complete_voltage_error_remains_graded_failure(self):
+        wave_rows = rows()
+        wave_rows[4]['z'] += 2e-6
+        report = self.verify_waveform(self.psf(wave_rows))
+        self.assertEqual(report['reward'], 0)
+        self.assertFalse(report['cases'][0]['passed'])
+        self.assertEqual(report['cases'][0]['status'], 'graded')
+
+    def test_graded_failures_keep_every_case_in_the_report(self):
+        wave_rows = rows()
+        for row in wave_rows:
+            row['count'] = 0
+        report = self.verify_waveform(self.psf(wave_rows), case_count=8)
+        self.assertEqual(report['reward'], 0)
+        self.assertEqual([record['name'] for record in report['cases']],
+                         [f'constant-{i}' for i in range(8)])
+        self.assertTrue(all(record['status'] == 'graded' and not record['passed']
+                            for record in report['cases']))
+
+    def test_corrupt_or_incomplete_waveform_has_no_grade_or_reward(self):
+        missing_signal = rows()
+        del missing_signal[4]['z']
+        nonfinite = rows()
+        nonfinite[4]['z'] = float('nan')
+        unordered = rows()
+        unordered[4]['time'] = .1
+        variants = {
+            'missing_file': None,
+            'missing_value': 'END\n',
+            'missing_end': self.psf(rows()).removesuffix('END\n'),
+            'duplicate_signal': 'VALUE\n"time" 0\n"z" 0\n"z" 1\nEND\n',
+            'missing_signal': self.psf(missing_signal),
+            'nonfinite': self.psf(nonfinite),
+            'incomplete_interval': self.psf(rows()[:-1]),
+            'sparse': self.psf(rows()[::2]),
+            'unordered': self.psf(unordered),
+        }
+        for name, waveform in variants.items():
+            with self.subTest(name=name):
+                report = self.verify_waveform(waveform)
+                self.assertEqual(report['status'], 'checker_error')
+                self.assertIsNone(report['reward'])
+                record = report['cases'][0]
+                self.assertEqual(record.get('status'), 'checker_error')
+                self.assertFalse(record['passed'])
+                self.assertNotIn('waveform_sha256', record)
+                self.assertTrue(record['reason'])
+
 
 class ExperimentAdapter(unittest.TestCase):
     def test_evas_uses_transient_time_axis(self):
