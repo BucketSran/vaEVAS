@@ -24,7 +24,8 @@ def check_expression(expression, source):
         expr, depth = pending.pop()
         if depth > MAX_EXPRESSION_DEPTH:
             token = expr.token
-            raise CompileError(f"{token.source or source}:{token.line}:{token.column}: expression depth limit ({MAX_EXPRESSION_DEPTH}) exceeded")
+            raise CompileError(f"{token.source or source}:{token.line}:{token.column}: expression depth limit ({MAX_EXPRESSION_DEPTH}) exceeded",
+                               code="resource_budget", token=token)
         pending.extend((arg, depth + 1) for arg in expr.args)
 
 
@@ -50,8 +51,8 @@ def check_ir(value, origin=None):
         origin = contributions[0].origin if contributions else getattr(value, 'origin', None)
     location = f"{origin.source}:{origin.line}:{origin.column}" if origin else '<IR>:1:1'
 
-    def fail(message):
-        raise CompileError(f"{location}: {message}")
+    def fail(message, code="compile_error"):
+        raise CompileError(f"{location}: {message}", code=code, token=origin)
 
     memo, active = {}, set()
     pending = [(value, False)]
@@ -66,7 +67,7 @@ def check_ir(value, origin=None):
             continue
         if not exiting:
             if identity in active:
-                fail('cyclic IR exceeds the tree serialization limit')
+                fail('cyclic IR exceeds the tree serialization limit', code='compile_error')
             active.add(identity)
             pending.append((item, True))
             pending.extend((child, False) for child in reversed(children))
@@ -74,8 +75,8 @@ def check_ir(value, origin=None):
         depth = 1 + max((memo[id(child)][0] for child in children), default=0)
         size = 1 + sum(memo[id(child)][1] for child in children)
         if depth > MAX_IR_DEPTH:
-            fail(f'generated IR depth limit ({MAX_IR_DEPTH}) exceeded')
+            fail(f'generated IR depth limit ({MAX_IR_DEPTH}) exceeded', code='resource_budget')
         if size > MAX_IR_ITEMS:
-            fail(f'expanded IR size limit ({MAX_IR_ITEMS} values/containers) exceeded')
+            fail(f'expanded IR size limit ({MAX_IR_ITEMS} values/containers) exceeded', code='resource_budget')
         memo[identity] = (depth, size)
         active.remove(identity)

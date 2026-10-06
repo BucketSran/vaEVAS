@@ -6,6 +6,13 @@ not become claims about language validity, numerical accuracy or implementation 
 
 # code -> category, owning stage, capability, actionable scope
 RULES = {
+    'manifest_input': ('invalid_input', 'input', None, 'Check the manifest compilation fields.'),
+    'manifest_io': ('infrastructure', 'input', None, 'Check the manifest path and access.'),
+    'source_io': ('infrastructure', 'input', 'LANG', 'Check the source path and access.'),
+    'source_input': ('invalid_input', 'input', 'LANG', 'Use UTF-8 source text.'),
+    'parameter_dependency': ('invalid_input', 'binding', 'LANG', 'Use declared, acyclic constant parameter defaults.'),
+    'parameter_override': ('invalid_input', 'binding', 'LANG', 'Override declared parameters with finite numeric values.'),
+    'resource_budget': ('resource', 'compile', 'LANG', 'Reduce compiler expansion or depth; this is an implementation budget.'),
     'compile_error': ('unknown', 'compile', None, None),
     'syntax_error': ('unknown', 'parse', 'LANG', 'Check the supported syntax and the source location.'),
     'unsupported_timer_dependency': ('unsupported', 'lowering', 'TIMER', 'Use constant or held-state timer start/period/enable and constant time_tol.'),
@@ -23,6 +30,12 @@ RULES = {
 }
 
 _KERNEL_CATEGORIES = {
+    # These existing typed Rust origins retain their prior categories. No
+    # prefix or message inference classifies an unseen future reason.
+    'unsupported_analysis': 'unsupported', 'unsupported_condition': 'unsupported',
+    'unsupported_operator': 'unsupported', 'unsupported_transient': 'unsupported',
+    'unsupported_cross': 'unsupported', 'unsupported_timer': 'unsupported',
+    'unsupported_implicit_dynamics': 'unsupported',
     'invalid_request': 'invalid_input', 'invalid_ir': 'invalid_input',
     'invalid_inputs': 'invalid_input', 'invalid_config': 'invalid_input',
     'unsupported_ir_version': 'version', 'kernel_process': 'infrastructure',
@@ -35,7 +48,7 @@ _KERNEL_CAPABILITIES = {'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROS
 
 
 def diagnostic(code, message, *, token=None, instance=None):
-    category, stage, capability, hint = RULES[code]
+    category, stage, capability, hint = RULES.get(code, ('unknown', None, None, None))
     result = dict(diagnostic_version=1, kind='compile_error', code=code,
                   category=category, stage=stage, capability=capability,
                   message=message, hint=hint)
@@ -62,5 +75,5 @@ class KernelError(RuntimeError):
         kind = self.detail['kind']
         return dict(self.detail, diagnostic_version=1, code=f'kernel.{kind}',
                     stage='kernel', category=_KERNEL_CATEGORIES.get(
-                        kind, 'unsupported' if kind.startswith('unsupported_') else 'unknown'),
+                        kind, 'unknown'),
                     capability=_KERNEL_CAPABILITIES.get(kind))
