@@ -1,0 +1,167 @@
+{
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+  "observation": {
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000004986e-09,
+    "input_max_error_v": {}
+  },
+  "v1_screen": {
+    "status": "observations_within_targets",
+    "formal_dvs_qualification": "I",
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000004986e-09,
+    "input_max_error_v": {},
+    "max_observed_error": {
+      "vout": {
+        "error_v": 6.8833827526759706e-15,
+        "time_s": 2.7449999999999996e-06
+      }
+    },
+    "violating_sample_count": 0,
+    "plateau_error_v": 0.0,
+    "waveform_excess_over_nominal_event_allowance_v": 0.0,
+    "differential_error_v": null,
+    "common_mode_error_v": null,
+    "max_relationship_residual_v": null,
+    "edges": [
+      {
+        "nominal_start_s": 4.7499999999999995e-07,
+        "status": "joint_brackets_overlap",
+        "output_50_time_s": 5.75e-07,
+        "inferred_start_error_s": 5.293955920339377e-23,
+        "full_edge_estimate_s": 1.9999999999999994e-07,
+        "nominal_full_edge_s": 2e-07,
+        "max_crossing_bracket_s": 1.0000000000000751e-09,
+        "joint_start_interval_s": [
+          4.749999999999999e-07,
+          4.7599999999999987e-07
+        ],
+        "allowed_start_interval_s": [
+          4.7489999999999994e-07,
+          4.7509999999999996e-07
+        ],
+        "internal_event_observed": false
+      },
+      {
+        "nominal_start_s": 1.2250000000000001e-06,
+        "status": "joint_brackets_overlap",
+        "output_50_time_s": 1.2750000000000003e-06,
+        "inferred_start_error_s": 2.117582368135751e-22,
+        "full_edge_estimate_s": 1.000000000000001e-07,
+        "nominal_full_edge_s": 1e-07,
+        "max_crossing_bracket_s": 1.0000000000000751e-09,
+        "joint_start_interval_s": [
+          1.225e-06,
+          1.2259999999999998e-06
+        ],
+        "allowed_start_interval_s": [
+          1.2249000000000001e-06,
+          1.2251000000000001e-06
+        ],
+        "internal_event_observed": false
+      },
+      {
+        "nominal_start_s": 1.975e-06,
+        "status": "joint_brackets_overlap",
+        "output_50_time_s": 2.0750000000000005e-06,
+        "inferred_start_error_s": 4.235164736271502e-22,
+        "full_edge_estimate_s": 2.000000000000002e-07,
+        "nominal_full_edge_s": 2e-07,
+        "max_crossing_bracket_s": 1.0000000000000751e-09,
+        "joint_start_interval_s": [
+          1.9749999999999997e-06,
+          1.976e-06
+        ],
+        "allowed_start_interval_s": [
+          1.9749000000000004e-06,
+          1.9751e-06
+        ],
+        "internal_event_observed": false
+      },
+      {
+        "nominal_start_s": 2.725e-06,
+        "status": "joint_brackets_overlap",
+        "output_50_time_s": 2.775000000000001e-06,
+        "inferred_start_error_s": 8.470329472543003e-22,
+        "full_edge_estimate_s": 1.000000000000001e-07,
+        "nominal_full_edge_s": 1e-07,
+        "max_crossing_bracket_s": 1.0000000000000751e-09,
+        "joint_start_interval_s": [
+          2.7249999999999997e-06,
+          2.726e-06
+        ],
+        "allowed_start_interval_s": [
+          2.7249000000000004e-06,
+          2.7251e-06
+        ],
+        "internal_event_observed": false
+      },
+      {
+        "nominal_start_s": 3.4749999999999998e-06,
+        "status": "joint_brackets_overlap",
+        "output_50_time_s": 3.5750000000000005e-06,
+        "inferred_start_error_s": 8.470329472543003e-22,
+        "full_edge_estimate_s": 2.000000000000002e-07,
+        "nominal_full_edge_s": 2e-07,
+        "max_crossing_bracket_s": 1.0000000000000751e-09,
+        "joint_start_interval_s": [
+          3.4749999999999998e-06,
+          3.4759999999999994e-06
+        ],
+        "allowed_start_interval_s": [
+          3.4749e-06,
+          3.4750999999999996e-06
+        ],
+        "internal_event_observed": false
+      }
+    ],
+    "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+  },
+  "history": {
+    "vout": {
+      "exact_export_assumption": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "0",
+          "7/20000000000000000",
+          "23/40000000000000000",
+          "81/80000000000000000",
+          "3/5000000000000000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4001,
+        "constraint_count": 811,
+        "epsilon": "1/1000",
+        "uncertainty": "0"
+      },
+      "candidate_budget_sensitivity": {
+        "status": "P",
+        "reason": "verified_common_inner_witness",
+        "witness_offsets": [
+          "0",
+          "7/20000000000000000",
+          "23/40000000000000000",
+          "81/80000000000000000",
+          "3/5000000000000000"
+        ],
+        "boxes_examined": 1,
+        "boxes_excluded": 0,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4001,
+        "constraint_count": 811,
+        "epsilon": "1/1000",
+        "uncertainty": "1/4000"
+      }
+    }
+  },
+  "status": "observations_within_targets"
+}

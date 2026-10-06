@@ -96,6 +96,32 @@ class RunnerControls(unittest.TestCase):
             self.assertEqual(facts['kernel']['status'], 'error')
             self.assertIsNotNone(facts['kernel']['sha256'])
 
+    def test_environment_image_inspection_has_bounded_timeout(self):
+        import json
+        from argparse import Namespace
+        from records import ROOT, load
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            inputs = root / 'inputs'
+            freeze(inputs)
+            environment = root / 'environment'
+            environment.mkdir()
+            images = load(ROOT / 'experiments/archive/dvs2-starter-pilot/results/TOOL_IDENTITIES.json')['images']
+            (environment / 'INPUT_MANIFEST.json').write_text('{}')
+            compiler = environment / 'backend-semantics-v1/tools/reloaded/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r'
+            compiler.parent.mkdir(parents=True)
+            compiler.write_text('synthetic compiler; never launched')
+            (environment / 'environment.py').write_text(
+                'from pathlib import Path\nimport subprocess\nPACKAGE=Path(__file__).parent\n'
+                + 'def check_inputs():\n subprocess.check_output(["synthetic-image-inspect"])\n return ' + repr(images) + '\n'
+                + 'def container(*args): return ["synthetic-container"], "owned-test"\n')
+            args = Namespace(inputs=inputs, output=root/'output', backend='openvaf_ngspice',
+                             environment=environment, allocation='synthetic-only', resume_finished_spectre=False)
+            with patch('runner.subprocess.check_output', return_value=b'{}') as inspect, patch('runner.execute', side_effect=RuntimeError('version boundary')):
+                with self.assertRaisesRegex(RuntimeError, 'version boundary'):
+                    run(args)
+            self.assertEqual(inspect.call_args.kwargs.get('timeout'), 30)
+
     def test_timeout_records_failure_and_never_retries(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

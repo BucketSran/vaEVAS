@@ -138,3 +138,24 @@ python3 -B experiments/backends/comparison/records.py NEW_SNAPSHOT --output NEW_
 这两个静态命令不授权build或simulation。一般ingest仍拒绝覆写已测配置；fresh执行必须由新的
 run/receipt生成，不以换一个revision字段冒充实测。所有旧snapshot/receipt文件保留原字节，
 新维护snapshot以path/SHA绑定parent和fresh；工具新增本身不表示最终integration EVAS8已运行。
+
+## 补齐开源后端的静态组合
+
+新收据的 `run_id` 由运行目录名和实际 `STARTED.json` 的完整SHA构成。
+收据保存目录名、STARTED归档及SHA；校验器绑定backend、输入manifest、实际工具身份和初始runner。
+新runner记录启动纳秒时间，避免同配置、同目录名的独立批次身份相同。旧收据不补字段、不改字节。
+
+`completion.py` 与只刷新EVAS的 `refresh.py` 合同分开：只接受固定cmp8/base的EVAS、
+OpenVAF/ngspice、Gnucap三个完整8项新执行批次，共24项；失败属于完整分母，不能只导入通过项。
+Spectre只复用原8份收据，逐项绑定原runtime、独立checker和两份manifest中的同源DUT、
+condition、精度设置与网表字节。三个新批次的run_id须各自唯一且不同于parent已有执行。
+历史31条件、pending论文集、C候选与冻结组件清单不改变，正式连续时间资格仍I。
+未取得三个完整批次时不生成completion快照；预检失败和部分结果仍保留，缺口保持可见。
+
+```sh
+python3 -B experiments/backends/comparison/completion.py PARENT_SNAPSHOT FRESH_SNAPSHOT OLD_INPUTS NEW_INPUTS NEW_SNAPSHOT --evidence NEW_COMPACT_PROOF_DIR
+```
+
+该命令只验证和组合已取得的执行收据，不启动仿真，不授予资源，也不修改旧快照或TABLE。
+FRESH_SNAPSHOT的EVAS目标必须是实际冻结执行的source/runtime；最新源有变化时须另建新执行，
+不能仅替换目标提交号。新源码批次的有限观测与其后集成、审查、发布状态分别报告。

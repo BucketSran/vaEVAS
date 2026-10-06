@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
+import sys
+import shutil
 import unittest
 from unittest.mock import patch
 
@@ -22,7 +24,11 @@ class GlmControls(unittest.TestCase):
                 inputs=root/'inputs'
                 freeze(inputs)
                 kernel=root/'fake-kernel'
-                kernel.write_text('not executable; no subprocess is launched')
+                reported={'identity_version':1,'name':'evas-kernel','version':'0.13.0',
+                          'ir_schema_version':17,'build_revision':None,'request_protocol_version':None,
+                          'platform':{'os':'test','arch':'test'}}
+                kernel.write_text('#!'+sys.executable+'\nprint('+repr(json.dumps(reported))+')\n')
+                kernel.chmod(0o755)  # Identity query only; numerical worker remains mocked.
                 args=SimpleNamespace(inputs=inputs,output=root/'output',backend='evas',kernel=kernel,
                                      allocation='synthetic-control',resume_finished_spectre=False)
                 stage={'stage':'simulate','exit_code':code,'timed_out':False}
@@ -77,10 +83,24 @@ class GlmControls(unittest.TestCase):
             self.assertEqual([r['verdict'] for r in actual],['U']+['X']*7)
             for r in actual:
                 receipt=load(ROOT/r['execution_receipt']['path'])
+                self.assertNotEqual(receipt['run_id'], output.name)
+                self.assertEqual(receipt['run_directory'], output.name)
+                self.assertEqual(receipt['started_sha256'], sha(output/'STARTED.json'))
+                self.assertEqual(r['measurement']['run_id'], receipt['run_id'])
                 self.assertEqual(receipt['raw_availability'],'local-only')
                 self.assertTrue(receipt['raw_availability_note'])
                 self.assertEqual(r['availability']['raw'],'local-only')
                 self.assertEqual(r['availability']['raw_note'],receipt['raw_availability_note'])
+            other = root/'another-task'/output.name
+            shutil.copytree(output, other)
+            started = load(other/'STARTED.json')
+            started['allocation'] = 'distinct-synthetic-execution'
+            (other/'STARTED.json').write_text(json.dumps(started))
+            with patch('ingest.runner_sources',return_value=[]),patch('derive.freeze_candidates'),patch('ingest.validate'):
+                second = ingest.ingest(snapshot, inputs, [other], root/'second-compact')
+            ids = {r['measurement']['run_id'] for r in actual}
+            second_ids = {r['measurement']['run_id'] for r in second['records'] if r['dataset']=='cmp8-base' and r['backend']=='evas'}
+            self.assertTrue(ids.isdisjoint(second_ids), 'same directory basename must not collapse distinct STARTED identities')
 
 
 if __name__=='__main__':
