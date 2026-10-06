@@ -45,3 +45,73 @@ fn after_test() { Error::new("invalid_ir", "actual"); }
             (py / 'probe.py').write_text('\n\n' + source)
             second = inventory()
             self.assertEqual([row['id'] for row in first], [row['id'] for row in second])
+
+    def test_rust_error_factories_local_import_alias_and_qualified_calls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rust = root / 'evas/rust_core/src'
+            rust.mkdir(parents=True)
+            (rust / 'event_accuracy.rs').write_text('''pub(crate) fn unresolved(message: &str) -> Error {
+    Error::new("event_resolution", message)
+}
+fn live() { unresolved("direct"); }
+#[cfg(test)] fn absent(message: &str) -> Error { Error::new("invalid_ir", message) }
+''')
+            (rust / 'consumer.rs').write_text('''use crate::event_accuracy::{unresolved as uncertain};
+use crate::event_accuracy as accuracy;
+fn run() { uncertain("alias"); accuracy::unresolved("module alias");
+crate::event_accuracy::unresolved("qualified"); }
+fn invalid(message: &str) -> bool { false }
+fn negative() { invalid("ordinary function is not an Error factory"); }
+fn transport() { input.map_err(|error| error); }
+''')
+            (rust / 'future.rs').write_text('''use crate::ir::Error as Failure;
+fn construct(message: &str) -> Failure { Failure::new("future_resolution", message) }
+fn run() { construct("unknown reason stays unknown"); }
+''')
+            result = subprocess.run([sys.executable, '-B', str(SCRIPT), '--root', str(root)],
+                                    capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            entries = json.loads(result.stdout)['entries']
+            self.assertEqual(sum(row['form'] == 'conversion' for row in entries), 1)
+            calls = [row for row in entries if row['form'] == 'wrapper_call']
+            self.assertEqual(len(calls), 5)
+            self.assertEqual([row['reason'] for row in calls].count('event_resolution'), 4)
+            future = [row for row in calls if row['reason'] == 'future_resolution']
+            self.assertEqual(len(future), 1)
+            self.assertEqual(future[0]['category'], 'unknown')
+            self.assertTrue(all('ordinary function' not in row['expression'] for row in calls))
+            self.assertTrue(all('absent' not in row['function'] for row in entries))
+
+    def test_current_audited_rust_wrapper_callers_are_in_the_public_inventory(self):
+        result = subprocess.run([sys.executable, '-B', str(SCRIPT)], capture_output=True,
+                                text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        entries = json.loads(result.stdout)['entries']
+        for module in ('event_accuracy', 'dynamic_roots', 'transition', 'schedule',
+                       'pwl', 'slew', 'affine_bounds', 'continuous'):
+            rows = [row for row in entries if row['path'] == f'evas/rust_core/src/{module}.rs'
+                    and row['form'] == 'wrapper_call']
+            self.assertTrue(rows, module)
+        for module, function in (('dynamic_roots', 'strict_sign'), ('transition', 'deadline')):
+            self.assertTrue(any(row['path'] == f'evas/rust_core/src/{module}.rs'
+                                and row['function'] == function and row['form'] == 'wrapper_call'
+                                for row in entries), (module, function))
+
+    def test_conditional_factory_does_not_borrow_its_only_literal_branch_reason(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rust = root / 'evas/rust_core/src'
+            rust.mkdir(parents=True)
+            (rust / 'mixed.rs').write_text('''fn mixed(flag: bool, existing: Error) -> Error {
+if flag { Error::new("invalid_ir", "one branch") } else { existing }
+}
+fn run() { mixed(false, existing); }
+''')
+            result = subprocess.run([sys.executable, '-B', str(SCRIPT), '--root', str(root)],
+                                    capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            rows = [row for row in json.loads(result.stdout)['entries'] if row['form'] == 'wrapper_call']
+            self.assertEqual(len(rows), 1)
+            self.assertIsNone(rows[0]['reason'])
+            self.assertEqual(rows[0]['category'], 'unknown')

@@ -141,3 +141,10 @@ class ConsumerContracts(unittest.TestCase):
         self.assertEqual(legacy['status'], 'failed')
         self.assertEqual(legacy['error'], raw)
         self.assertIsNone(legacy['error_diagnostic'])
+
+    def test_public_sha256_file_retains_valid_file_call(self):
+        from evas.migrate import sha256_file
+        # Independently known SHA-256 for UTF-8 'abc'.
+        self.source.write_bytes(b'abc')
+        self.assertEqual(sha256_file(self.source),
+                         'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')

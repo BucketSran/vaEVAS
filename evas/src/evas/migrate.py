@@ -53,7 +53,7 @@ class RecompileBatch:
 
 
 def sha256_file(path: Path) -> str:
-    return _read_text_with_hash(path)[0]
+    return _read_text_with_hash(path, 'input_io', 'input_error')[0]
 
 
 def discover_manifests(inputs: Sequence[Path] | None = None, *, repo_root: Path | None = None) -> tuple[Path, ...]:

@@ -81,9 +81,15 @@ code 仍为 `kernel.<kind>`，stage 为 kernel，未有特定能力归因时 cap
 [diagnostic-inventory.json](diagnostic-inventory.json) 枚举本库 Python 前端/CLI 与 Rust workspace
 生产源码，包括 `ir` 子 crate；排除构建产物、测试文件与 `cfg(test)` 项。当前源码审计确认
 Python 工厂为 CompileError、KernelError 及迁移编码子类；错误包装为各模块的 fail/_fail。
-Rust Error 由 IR crate 的 `Error::new` 构造；唯一返回 Error 的额外包装是
-continuous.unsupported，它在源码明确构造 unsupported_operator。没有工厂别名或其他
-Error 结构体直接初始化。未来引入新工厂/别名/条件编译约定，需要同步扩展扫描和审计。
+Rust Error 由 IR crate 的 `Error::new` 构造。当前返回 Error 的额外包装有四个：
+continuous.unsupported 明确构造 unsupported_operator；event_accuracy.unresolved、
+dynamic_roots.unresolved 和 transition.invalid 明确构造 event_resolution。
+event_accuracy.unresolved 还被 affine_bounds、pwl、schedule、slew 导入使用。
+当前包装调用数为 continuous 11、dynamic_roots 20、event_accuracy 2、transition 13、
+affine_bounds 7、pwl 2、schedule 10、slew 7，共 72 个。逐项源码计数与机器清单核对；
+slew 在生产实现中间有 cfg(test) 构造器，不能在首个 cfg(test) 处截掉整个文件。
+当前没有 Error 类型别名或其他 Error 结构体直接初始化；扫描器同时验收导入别名与限定调用。
+未来引入新的类型、间接函数值或条件编译约定，需要同步扩展扫描和源码审计。
 
 ```sh
 python3 -B scripts/diagnostic_inventory.py --write
@@ -95,23 +101,27 @@ python3 -B scripts/diagnostic_inventory.py --check
 CI 检查新清单，不能只更新数字。所有条目的 evidence 都是 source_audit，执行覆盖另由本页
 行为表及开发测试说明。动态 reason/code 为 null，category 为 unknown；不靠 message 或名称前缀
 猜测，包装默认 code 从声明读取，显式实参优先。已有登记的 stage/capability 同步写入；
+Rust 包装由显式返回 Error 的函数签名发现，调用按本模块、导入项/别名与限定路径解析；
+factory 字段保留解析到的来源。只有整个函数体是唯一直接 constructor 返回时读取字面 kind；
+条件/委托/动态返回为 null，不从其中一个分支推断整体 reason。它不是完整 Rust 编译器，
+当前闭集另外通过源码审计确认；普通同名函数、测试工厂和混合返回有维护负控。
 来源位置是否可提供仍由构造表达式中的原 token/instance 决定，工具不补运行时位置。
 
 | 源码观察 | Python | Rust | 合计 |
 | --- | ---: | ---: | ---: |
 | CompileError 及其子类构造 | 94 | 0 | 94 |
 | KernelError / Error::new 构造 | 13 | 314 | 327 |
-| fail/_fail / continuous.unsupported 调用 | 172 | 11 | 183 |
+| fail/_fail / Rust 返回 Error 包装调用 | 172 | 72 | 244 |
 | metadata 构造 | 9 | 0 | 9 |
-| 工厂定义 | 3 | 0 | 3 |
+| Python 异常类 / Rust 返回 Error 函数定义 | 3 | 4 | 7 |
 | 错误处理器 | 36 | 0 | 36 |
 | map_err 转换 | 0 | 31 | 31 |
 | 元数据改写 | 8 | 5 | 13 |
 | 具名重抛 | 3 | 0 | 3 |
-| 全部观察 | 338 | 361 | 699 |
+| 全部观察 | 338 | 426 | 764 |
 
 其中 372 条观察为 unknown，包括未解析动态 reason、宽泛处理器及明确保持 unknown 的
-旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；699 不是独立错误种类数，
+旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；764 不是独立错误种类数，
 不是失败执行次数，也不是覆盖率。词法函数身份不推导 Rust trait/impl 类型身份。
 Rust map_err 包括保留/转换错误的包装；analog 的 event_accuracy→waveform_accuracy、
 batch/transient 的 sample 赋值及初始化上下文 message 改写单独登记。转换不修改本批 Rust 源码。
@@ -131,7 +141,8 @@ MCP 运行中的 JSON-RPC 方法/工具错误仍遵守既有 JSON-RPC 与 isErro
 results 在拥有新输出目录后的普通输入异常转为 CompileError，API diagnostic 与失败 marker、
 CLI 一致；不再转成 kernel.input_error unknown。现有输出目录在取得所有权前仍抛 OSError，
 CLI 转为 input_io，保留不触碰已有目录的契约。迁移结果新增可选 error 字段，同时保留旧
-自由文本 diagnostic 与源哈希；成功为 error=null，failure 不改变批次失败分母。
+自由文本 diagnostic 与源哈希；sha256_file(path) 保留原有效 UTF-8 文件调用和返回哈希。
+成功为 error=null，failure 不改变批次失败分母。
 
 capture 保留 payload.error 原内核载荷，新增 error_diagnostic，status 查询（及 MCP status）
 一同传递；旧会话没有附加字段时返回 null，不能把缺字段解释为成功。会话版本仍为 1，哈希

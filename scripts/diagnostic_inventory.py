@@ -149,11 +149,11 @@ def closing(tokens, index):
     raise ValueError('unbalanced Rust source')
 
 
-def rust_entries(path):
+def rust_source(path):
     tokens = rust_tokens(path.read_text())
     ignored = set()
     for i in range(len(tokens) - 7):
-        if tokens[i:i+8] == ['#', '[', 'cfg', '(', 'test', ')', ']', 'mod'] or tokens[i:i+7] == ['#', '[', 'cfg', '(', 'test', ')', ']']:
+        if tokens[i:i+7] == ['#', '[', 'cfg', '(', 'test', ')', ']']:
             start = next((j for j in range(i+7, len(tokens)) if tokens[j] in ('{', ';')), None)
             if start is not None:
                 end = closing(tokens, start) if tokens[start] == '{' else start
@@ -161,23 +161,126 @@ def rust_entries(path):
     functions = []
     for i in range(len(tokens)-1):
         if tokens[i] == 'fn' and i not in ignored:
-            start = next((j for j in range(i+2, len(tokens)) if tokens[j] in ('{', ';')), None)
-            if start is not None and tokens[start] == '{':
-                functions.append((start, closing(tokens, start), tokens[i+1]))
+            arguments = next(j for j in range(i+2, len(tokens)) if tokens[j] == '(')
+            start = closing(tokens, arguments) + 1
+            while start < len(tokens) and tokens[start] not in ('{', ';'):
+                start = closing(tokens, start) + 1 if tokens[start] in ('[', '(') else start + 1
+            if start < len(tokens) and tokens[start] == '{':
+                functions.append(dict(start=start, end=closing(tokens, start), name=tokens[i+1],
+                                      signature=tokens[i:start], index=i))
+    imports, import_tokens = {}, set()
+    def leaves(tree, prefix=()):
+        parts = []
+        for token in tree:
+            if token == '{':
+                break
+            parts.append(token)
+        if '{' in tree:
+            opening = tree.index('{')
+            end = closing(tree, opening)
+            base = prefix + tuple(token for token in parts if token != '::')
+            begin = opening+1
+            depth = 0
+            for index in range(begin, end+1):
+                if tree[index] == '{': depth += 1
+                if tree[index] == '}': depth -= 1
+                if index == end or tree[index] == ',' and depth == 0:
+                    yield from leaves(tree[begin:index], base)
+                    begin = index+1
+        elif tree:
+            split = tree.index('as') if 'as' in tree else len(tree)
+            target = prefix + tuple(token for token in tree[:split] if token != '::')
+            alias = tree[split+1] if split < len(tree) else target[-1]
+            yield alias, target
+    for i, token in enumerate(tokens):
+        if token == 'use' and i not in ignored:
+            end = next(j for j in range(i+1, len(tokens)) if tokens[j] == ';')
+            imports.update(leaves(tokens[i+1:end]))
+            import_tokens.update(range(i, end+1))
+    return dict(tokens=tokens, ignored=ignored, functions=functions,
+                imports=imports, import_tokens=import_tokens)
+
+
+def rust_module(path, rust):
+    relative = path.relative_to(rust)
+    index = relative.parts.index('src')
+    module = relative.parts[index+1:]
+    if module[-1] in ('lib.rs', 'main.rs', 'mod.rs'):
+        module = module[:-1]
+    else:
+        module = (*module[:-1], path.stem)
+    # Keep the workspace's separate IR crate out of kernel crate lookup.
+    crate = tuple(relative.parts[:index])
+    return crate, tuple(module)
+
+
+def resolve_rust(target, module, imports):
+    if target[0] in imports:
+        target = imports[target[0]] + target[1:]
+    if target[0] == 'crate':
+        return target[1:]
+    if target[0] == 'self':
+        return module + target[1:]
+    if target[0] == 'super':
+        return module[:-1] + target[1:]
+    return module + target
+
+
+def rust_factories(sources, rust):
+    factories = {}
+    for path, source in sources.items():
+        crate, module = rust_module(path, rust)
+        aliases = {'Error'} | {alias for alias, target in source['imports'].items() if target[-1] == 'Error'}
+        source['error_aliases'] = aliases
+        tokens = source['tokens']
+        for function in source['functions']:
+            signature = function['signature']
+            if len(signature) < 3 or signature[-3:-1] != ['-', '>'] or signature[-1] not in aliases:
+                continue
+            # Resolve only explicit constructor literals. Delegating/conditional
+            # factory reasons remain unresolved instead of being guessed.
+            body = tokens[function['start']+1:function['end']]
+            if body[:1] == ['return']:
+                body = body[1:]
+            if body[-1:] == [';']:
+                body = body[:-1]
+            reason = None
+            if (len(body) > 4 and body[0] in aliases and body[1:4] == ['::', 'new', '(']
+                    and closing(body, 3) == len(body)-1 and body[4].startswith('"')):
+                reason = json.loads(body[4])
+            factories[(crate, module + (function['name'],))] = reason
+    return factories
+
+
+def rust_entries(path, source, factories, rust):
+    tokens, ignored, functions = source['tokens'], source['ignored'], source['functions']
+    crate, module = rust_module(path, rust)
+    for function in functions:
+        key = (crate, module + (function['name'],))
+        if key in factories:
+            yield dict(function=function['name'], form='factory_definition', reason=factories[key],
+                       expression=' '.join(tokens[function['index']:function['end']+1]),
+                       factory='::'.join(('crate', *module, function['name'])))
     for i, token in enumerate(tokens):
         if i in ignored:
             continue
-        form, reason, end = None, None, i
-        if tokens[i:i+4] == ['Error', '::', 'new', '(']:
+        form, reason, end, expression_start, factory = None, None, i, i, None
+        if token in source['error_aliases'] and tokens[i+1:i+4] == ['::', 'new', '(']:
             end = closing(tokens, i+3)
             form = 'kernel_constructor'
             if tokens[i+4].startswith('"'):
                 reason = json.loads(tokens[i+4])
-        elif token == 'unsupported' and i+1 < len(tokens) and tokens[i+1] == '(' and path.stem == 'continuous':
-            # The sole audited Rust error-returning helper. No general name/prefix inference.
-            if i > 0 and tokens[i-1] != 'fn':
+        elif token != 'map_err' and i+1 < len(tokens) and tokens[i+1] == '(' and i not in source['import_tokens'] and (i == 0 or tokens[i-1] != 'fn'):
+            begin = i
+            while begin >= 2 and tokens[begin-1] == '::':
+                begin -= 2
+            target = tuple(part for part in tokens[begin:i+1] if part != '::')
+            key = (crate, resolve_rust(target, module, source['imports']))
+            if key in factories:
                 end = closing(tokens, i+1)
-                form, reason = 'wrapper_call', 'unsupported_operator'
+                form, reason = 'wrapper_call', factories[key]
+                expression_start = begin
+                factory = '::'.join(('crate', *key[1]))
         elif tokens[i:i+2] == ['map_err', '(']:
             end = closing(tokens, i+1)
             form = 'conversion'
@@ -187,10 +290,13 @@ def rust_entries(path):
             if tokens[i+2] == 'kind' and tokens[i+4].startswith('"'):
                 reason = json.loads(tokens[i+4])
         if form:
-            containing = [item for item in functions if item[0] < i < item[1]]
-            function = min(containing, key=lambda item: item[1]-item[0])[2] if containing else '<module>'
-            yield dict(function=function, form=form, reason=reason,
-                       expression=' '.join(tokens[i:end+1]))
+            containing = [item for item in functions if item['start'] < i < item['end']]
+            function = min(containing, key=lambda item: item['end']-item['start'])['name'] if containing else '<module>'
+            row = dict(function=function, form=form, reason=reason,
+                       expression=' '.join(tokens[expression_start:end+1]))
+            if factory is not None:
+                row['factory'] = factory
+            yield row
 
 
 def inventory(root):
@@ -200,10 +306,11 @@ def inventory(root):
     rust = root/'evas/rust_core'
     paths += sorted(path for path in rust.rglob('*.rs')
                     if 'target' not in path.relative_to(rust).parts and 'src' in path.relative_to(rust).parts)
+    paths = [path for path in paths if not path.name.endswith('_tests.rs') and path.name != 'tests.rs']
+    sources = {path: rust_source(path) for path in paths if path.suffix == '.rs'}
+    factories = rust_factories(sources, rust)
     for path in paths:
-        if path.name.endswith('_tests.rs') or path.name == 'tests.rs':
-            continue
-        for row in python_entries(path) if path.suffix == '.py' else rust_entries(path):
+        for row in python_entries(path) if path.suffix == '.py' else rust_entries(path, sources[path], factories, rust):
             relative = path.relative_to(root).as_posix()
             kernel_reason = path.suffix == '.rs' or row['form'] == 'kernel_constructor'
             row['category'] = kernel.get(row['reason'], 'unknown') if kernel_reason else rules.get(row['reason'], ('unknown',))[0]
