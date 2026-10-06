@@ -41,6 +41,7 @@
 
 | 目的 | 入口 |
 | --- | --- |
+| 查看新论文集的特性映射、有限首批和独立条件卡 | [论文比较设计](paper/README.md)，A0设计材料，尚无新的四后端成绩 |
 | 查看模型源码与条件对应关系 | [共同 DUT](cases/README.md) |
 | 理解原条件的刺激、答案与错误对照 | [起步案例卡](CASE_CARDS.md)、[补充案例卡](NEXT_CASE_CARDS.md) |
 | 理解误差、事件历史与正式资格 | [范围与判定协议](PROTOCOL.md)、[观察资格协议](METHOD_QUALIFICATION.md) |

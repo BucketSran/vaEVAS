@@ -1,0 +1,1785 @@
+{
+  "schema_version": 1,
+  "batch_id": "paper-a1-core-v1",
+  "design_status": "A0-cards-ready-for-A1-source-and-observation-qualification",
+  "baseline": "d4b41c797840f17222121592b9fa6f16e11e2c2b",
+  "units": {
+    "T_s": 1e-06,
+    "voltage": "V",
+    "time": "s",
+    "phase": "cycle"
+  },
+  "primary_groups": [
+    "voltage",
+    "expression",
+    "event",
+    "history",
+    "continuous",
+    "structure",
+    "combination"
+  ],
+  "counting": {
+    "declared_N": 12,
+    "rule": "Exactly one primary group per condition; all backend outcomes retained; properties, source variants, profiles and calibration controls do not increase N.",
+    "paper_frozen": false,
+    "old31": "development cohort only, excluded",
+    "V1_V7": "secondary behavioral traceability tags only"
+  },
+  "shared_contract": {
+    "source_status": "Exact source templates fixed here before results. A1 must materialize byte-identical files, check LRM legality and tool/deck validity, and freeze input hashes before execution. Any substantive source amendment creates a new card identity.",
+    "language_basis": "LRM2.4 sections4.4,4.5,5.6,5.10,8.2; existing project operator/event contracts, not backend waveforms.",
+    "observation": "Every required electrical port exports absolute node voltage in V and time in s. Also verify actual driven PWL values. Marker ports encode states/callbacks/phase as specified; they are read-only contributions with no loads.",
+    "sample_gap_s": 2e-10,
+    "required_observation_error": {
+      "time_s": 1e-11,
+      "voltage_V": 5e-05
+    },
+    "input_error_V": 1e-05,
+    "acceptance_budgets": {
+      "static_voltage_V": 0.001,
+      "held_voltage_V": 0.001,
+      "edge_voltage_V": 0.003,
+      "phase_cycles": 0.001,
+      "sine_voltage_V": 0.003,
+      "counter_voltage_V": 0.001
+    },
+    "budget_rule": "Add independently bounded observation and actual-input uncertainty to measured error. P when upper bound <=budget; F when lower bound >budget; I on overlap or unqualified observations. Source event tolerance permits temporal waveform variation, not extra free voltage tolerance.",
+    "event_rule": "One allowed event sequence per condition must explain counts, order, held sample values and every edge. cross window is one-sided min(time_tol,expr_tol/abs(slope)); input and export-time uncertainty expand it independently. Explicit timer time_tol admits [nominal-time_tol,nominal+time_tol] under LRM2.4 section5.10.3.3; non-early wording applies only to unspecified tolerance.",
+    "timer_boundary": "No terminal timer event at stop; first event separated from initial_step. No unspecified default timer tolerance.",
+    "phase_rule": "Ordinary abs phase error only away from wrap windows. Everywhere, circular distance min_k abs(p_expected-p_actual+k) <=phase budget. Require p in [0,1] within observation uncertainty. Sine compared to continuous unwrapped analytic phase. Separate exact-wrap observations and left/right limits; wrap count inferred from qualified bracketing records, not a DUT last_crossing report.",
+    "claim_limit": "Maximum observed error on fixed required observations; no general continuous-time guarantee or invisible narrow-pulse detection. Qualified gap/rounding metadata is required; absence leaves relevant properties I.",
+    "calibration_required": [
+      "Independent legal nominal traces",
+      "Shared legal event-time variations across all ports",
+      "Omitted/duplicate/reordered callbacks",
+      "Case-specific listed faults",
+      "Between-sample short pulse: recognize observation limit or refine",
+      "Individually valid points with no common event history",
+      "Exact-wrap, wrong modulo/phase and offset cases",
+      "Missing columns, NaN, wrong units, non-monotone time, truncation",
+      "Two backends agreeing on the same incorrect analytic trace"
+    ],
+    "execution_profiles": "A1 freezes concrete backend settings and bounded run list; no source/tolerance adjustment after inspecting scores.",
+    "local_observation_rule": "All required ports have qualified records with maximum gap20ps inside each prescribed window [nominal-2ns,nominal+2ns]; outside windows maximum gap200ps. Include exact nominal center rows as a separately labelled boundary cohort, and retain actual accepted-point versus interpolated-output semantics. An adapter unable to obtain this evidence marks affected properties I before scoring. Grids alone do not bound output interpolation error; qualify it separately.",
+    "sources": [
+      {
+        "reference": "LRM2.4 section5.10.3.1, printed pp122-123",
+        "claim": "cross after actual crossing and satisfying both time/expr tolerances",
+        "url": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf#page=137"
+      },
+      {
+        "reference": "LRM2.4 section5.10.3.3, printed p125",
+        "claim": "Explicit timer tolerance requires within time_tol; at-or-just-beyond wording applies to absent time_tol",
+        "url": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf#page=140"
+      },
+      {
+        "reference": "TIMED_OPERATOR_CONTRACTS.md transition section and LRM2.4 section4.5.8 pp71-74",
+        "claim": "Uninterrupted transition has finite linear rise/fall with full edge duration",
+        "path": "evas/validation/TIMED_OPERATOR_CONTRACTS.md"
+      }
+    ],
+    "exact_boundary_rule": "Preserve all exact-nominal-wrap rows with raw phase value, ordinary scalar endpoint error, circular error, export-time uncertainty and accepted/interpolated identity. Endpoint expectation from mathematical modulo is0; a near1 value explained by timing uncertainty must be distinguished from a verified wrong endpoint. Do not erase raw endpoint discrepancies when circular distance is small. Without exact-time qualification endpoint semantics remain I, separately from qualified off-boundary phase/sine properties."
+  },
+  "cards": [
+    {
+      "id": "VR-01",
+      "primary_group": "voltage",
+      "scenario": "sample_hold",
+      "requirements": [
+        "R-VR"
+      ],
+      "features": [
+        "voltage_access",
+        "voltage_contribution"
+      ],
+      "legacy_tags": [
+        "V2"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_vr(ip, im, ref, out);\n inout ip, im, ref, out;\n electrical ip, im, ref, out;\n\n analog begin\n  V(out,ref) <+ 1.5*V(ip,im)-0.125;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "ref": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.2
+            ],
+            [
+              2,
+              0.4
+            ],
+            [
+              4,
+              -0.1
+            ],
+            [
+              6,
+              0.3
+            ]
+          ]
+        },
+        "ip": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.6
+            ],
+            [
+              2,
+              0.8
+            ],
+            [
+              4,
+              0.8
+            ],
+            [
+              6,
+              0.1
+            ]
+          ]
+        },
+        "im": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.2
+            ],
+            [
+              2,
+              0.2
+            ],
+            [
+              4,
+              0.5
+            ],
+            [
+              6,
+              0.3
+            ]
+          ]
+        }
+      },
+      "initial_state": "No discrete state. Ideal inputs set all absolute voltages.",
+      "stop_T": 6,
+      "observables": [
+        "ip",
+        "im",
+        "ref",
+        "out"
+      ],
+      "oracle": {
+        "formula": "Vout=Vref+1.5*(Vip-Vim)-0.125",
+        "units": "V",
+        "construction": "Independent segment-wise affine substitution; stimulus channels vary independently."
+      },
+      "event_contract": [],
+      "anchors": [
+        {
+          "t_T": 0,
+          "out_V": 0.675
+        },
+        {
+          "t_T": 2,
+          "out_V": 1.175
+        },
+        {
+          "t_T": 4,
+          "out_V": 0.225
+        },
+        {
+          "t_T": 6,
+          "out_V": -0.125
+        }
+      ],
+      "distinguishable_faults": [
+        "Use Vip as a single-ended input: at 2T error is 0.3 V.",
+        "Drop ref: at 2T error is 0.4 V.",
+        "Invert differential sign or freeze input."
+      ],
+      "uncovered": [
+        "Supply-dependent transfer",
+        "Multiple contributions",
+        "Finite load and output impedance"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": []
+    },
+    {
+      "id": "EX-01",
+      "primary_group": "expression",
+      "scenario": "vco",
+      "requirements": [
+        "R-EX"
+      ],
+      "features": [
+        "if_else",
+        "sequential_assignment",
+        "arithmetic"
+      ],
+      "legacy_tags": [
+        "V1",
+        "V6"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_ex(ctl, freq);\n inout ctl, freq;\n electrical ctl, freq;\n real f;\n analog begin\n  f=0.4+0.5*V(ctl);\n  if (f<0.2) f=0.2;\n  else if (f>1.0) f=1.0;\n  V(freq) <+ f;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "ctl": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              -1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              -1
+            ]
+          ]
+        }
+      },
+      "initial_state": "Stateless, evaluate on every analog solution.",
+      "stop_T": 8,
+      "observables": [
+        "ctl",
+        "freq"
+      ],
+      "oracle": {
+        "formula": "F(x)=min(1,max(0.2,0.4+0.5*u(x))); freq port encodes F cycles/T as F V",
+        "units": "freq marker V; physical f=F/T Hz",
+        "construction": "Solve u=-0.4 and u=1.2 for branch boundaries independently; continuous values at equality."
+      },
+      "event_contract": [],
+      "anchors": [
+        {
+          "t_T": 0,
+          "freq_V": 0.2
+        },
+        {
+          "t_T": 2,
+          "freq_V": 0.4
+        },
+        {
+          "t_T": 4,
+          "freq_V": 1
+        },
+        {
+          "t_T": 6,
+          "freq_V": 0.4
+        }
+      ],
+      "distinguishable_faults": [
+        "Skip upper clamp: output at 4T becomes 1.4.",
+        "Skip lower clamp: output at 0 becomes -0.1.",
+        "Reverse sequential assignment or evaluate only at startup."
+      ],
+      "uncovered": [
+        "Boolean and ternary encoding",
+        "Runtime loops/functions",
+        "State-dependent analog branches"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": []
+    },
+    {
+      "id": "EV-SH-01",
+      "primary_group": "event",
+      "scenario": "sample_hold",
+      "requirements": [
+        "R-SH"
+      ],
+      "features": [
+        "initial_step",
+        "timer",
+        "event_assignment"
+      ],
+      "legacy_tags": [
+        "V4",
+        "V5"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_sh_timer(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=-0.25; n=0; end\n  @(timer(2e-6,2e-6,1e-9)) begin q=V(in); n=n+1; end\n  V(out)<+q;\n  V(count)<+n;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "in": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              -0.4
+            ],
+            [
+              6,
+              0.8
+            ],
+            [
+              9,
+              -0.1
+            ]
+          ]
+        }
+      },
+      "initial_state": "q=-0.25 V, count=0. First sample at 2T, periodic at 2T.",
+      "stop_T": 9,
+      "observables": [
+        "in",
+        "out",
+        "count"
+      ],
+      "oracle": {
+        "formula": "q=-0.25 before e1; q=u(ek) for ek<=t<e(k+1); n=k, k=1..4",
+        "units": "q V; count port 1 V/callback",
+        "construction": "PWL lookup at one shared event sequence e=[2,4,6,8]T with allowed one-sided timer windows."
+      },
+      "event_contract": [
+        {
+          "kind": "timer",
+          "nominal_T": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "window_T": [
+            -0.001,
+            0.001
+          ],
+          "expected_count": 4,
+          "order": "strictly increasing"
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "out_V": -0.25,
+          "count_V": 0
+        },
+        {
+          "t_T": 3,
+          "out_V": 0,
+          "count_V": 1
+        },
+        {
+          "t_T": 5,
+          "out_V": 0.4,
+          "count_V": 2
+        },
+        {
+          "t_T": 7,
+          "out_V": 0.8,
+          "count_V": 3
+        },
+        {
+          "t_T": 8.5,
+          "out_V": 0.2,
+          "count_V": 4
+        }
+      ],
+      "distinguishable_faults": [
+        "Continuous tracking instead of held samples.",
+        "Wrong timer start/period; omitted or repeated callback.",
+        "Wrong first-state output."
+      ],
+      "uncovered": [
+        "Cross sampling",
+        "Reset and simultaneous priorities",
+        "Dynamic timer scheduling"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 8,
+          "start_T": 7.998,
+          "end_T": 8.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "EV-HC-01",
+      "primary_group": "event",
+      "scenario": "hysteresis",
+      "requirements": [
+        "R-HC"
+      ],
+      "features": [
+        "cross",
+        "event_assignment",
+        "initial_step"
+      ],
+      "legacy_tags": [
+        "V3"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=0; n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "in": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.1
+            ],
+            [
+              2,
+              0.9
+            ],
+            [
+              4,
+              0.1
+            ]
+          ]
+        }
+      },
+      "initial_state": "q=0, n=0; input=0.1 V below L=0.35 V.",
+      "stop_T": 4,
+      "observables": [
+        "in",
+        "out",
+        "count"
+      ],
+      "oracle": {
+        "formula": "q=0 for x<1.375; q=1 for 1.375<x<3.375; q=0 thereafter; y=0.1+0.8q; n=0/1/2",
+        "units": "V, callbacks",
+        "construction": "Solve triangular PWL against H=0.65 and L=0.35. Maintain one history for q and n."
+      },
+      "event_contract": [
+        {
+          "kind": "cross",
+          "direction": 1,
+          "nominal_T": [
+            1.375
+          ],
+          "window_T": [
+            0,
+            0.0005
+          ]
+        },
+        {
+          "kind": "cross",
+          "direction": -1,
+          "nominal_T": [
+            3.375
+          ],
+          "window_T": [
+            0,
+            0.0005
+          ],
+          "total_count": 2
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "out_V": 0.1,
+          "count_V": 0
+        },
+        {
+          "t_T": 2,
+          "out_V": 0.9,
+          "count_V": 1
+        },
+        {
+          "t_T": 3,
+          "out_V": 0.9,
+          "count_V": 1
+        },
+        {
+          "t_T": 4,
+          "out_V": 0.1,
+          "count_V": 2
+        }
+      ],
+      "distinguishable_faults": [
+        "Single threshold loses different outputs at u(1T)=u(3T)=0.5.",
+        "Wrong cross direction or threshold.",
+        "Duplicate same-value callback is visible on count."
+      ],
+      "uncovered": [
+        "Tangency/plateau crossing",
+        "above and last_crossing",
+        "Conditional event enable",
+        "Simultaneous event closure"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 1.375,
+          "start_T": 1.373,
+          "end_T": 1.377,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3.375,
+          "start_T": 3.373,
+          "end_T": 3.377,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "EV-HC-02",
+      "primary_group": "event",
+      "scenario": "hysteresis",
+      "requirements": [
+        "R-HC-START"
+      ],
+      "features": [
+        "initial_step",
+        "input_dependent_initialization",
+        "cross"
+      ],
+      "legacy_tags": [
+        "V3"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)>0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "in": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.9
+            ],
+            [
+              2,
+              0.5
+            ],
+            [
+              4,
+              0.1
+            ],
+            [
+              6,
+              0.9
+            ]
+          ]
+        }
+      },
+      "initial_state": "initial_step sets q from input>H; q=1 at t=0. n=0. No crossing event at startup.",
+      "stop_T": 6,
+      "observables": [
+        "in",
+        "out",
+        "count"
+      ],
+      "oracle": {
+        "formula": "q initially 1; set 0 at x=2.75; set 1 at x=5.375; y=0.1+0.8q; n=0/1/2",
+        "units": "V, callbacks",
+        "construction": "Explicit source initialization is the contract; cross alone does not imply high-start assignment."
+      },
+      "event_contract": [
+        {
+          "kind": "cross",
+          "direction": -1,
+          "nominal_T": [
+            2.75
+          ],
+          "window_T": [
+            0,
+            0.001
+          ]
+        },
+        {
+          "kind": "cross",
+          "direction": 1,
+          "nominal_T": [
+            5.375
+          ],
+          "window_T": [
+            0,
+            0.0005
+          ],
+          "total_count": 2
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 0,
+          "out_V": 0.9,
+          "count_V": 0
+        },
+        {
+          "t_T": 2,
+          "out_V": 0.9,
+          "count_V": 0
+        },
+        {
+          "t_T": 4,
+          "out_V": 0.1,
+          "count_V": 1
+        },
+        {
+          "t_T": 6,
+          "out_V": 0.9,
+          "count_V": 2
+        }
+      ],
+      "distinguishable_faults": [
+        "Constant-zero initialization misses initial high interval despite later correct events.",
+        "Invented initial cross increments callback counter."
+      ],
+      "uncovered": [
+        "Initial input exactly H or within hysteresis band",
+        "Analysis-qualified initialization",
+        "Dynamic cross/initial_step shared body"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2.75,
+          "start_T": 2.748,
+          "end_T": 2.752,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 5.375,
+          "start_T": 5.373,
+          "end_T": 5.377,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "TM-01",
+      "primary_group": "history",
+      "scenario": "sample_hold",
+      "requirements": [
+        "R-EDGE"
+      ],
+      "features": [
+        "timer",
+        "transition"
+      ],
+      "legacy_tags": [
+        "V5"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_edge(out, state, count);\n inout out, state, count;\n electrical out, state, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=0; n=0; end\n  @(timer(2e-6,4e-6,1e-9)) begin q=1-q; n=n+1; end\n  V(out)<+transition(q,0.25e-6,0.5e-6,1e-6);\n  V(state)<+q;\n  V(count)<+n;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {},
+      "initial_state": "q=0, n=0; transition starts at initialized input 0.",
+      "stop_T": 8,
+      "observables": [
+        "out",
+        "state",
+        "count"
+      ],
+      "oracle": {
+        "formula": "For event e1~2T rise starts e1+0.25T, y=(t-e1-0.25T)/(0.5T) clipped to [0,1]; for e2~6T fall y=1-(t-e2-0.25T)/T clipped to [0,1].",
+        "units": "V, s",
+        "construction": "Uninterrupted finite linear transition; same e1/e2 explain state, count and all edge samples."
+      },
+      "event_contract": [
+        {
+          "kind": "timer",
+          "nominal_T": [
+            2,
+            6
+          ],
+          "window_T": [
+            -0.001,
+            0.001
+          ],
+          "expected_count": 2
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "out_V": 0
+        },
+        {
+          "t_T": 2.5,
+          "out_V": 0.5
+        },
+        {
+          "t_T": 4,
+          "out_V": 1
+        },
+        {
+          "t_T": 6.75,
+          "out_V": 0.5
+        },
+        {
+          "t_T": 8,
+          "out_V": 0
+        }
+      ],
+      "distinguishable_faults": [
+        "Ignore delay shifts both full edges.",
+        "Use equal rise/fall duration changes fall slope.",
+        "Step directly to final target omits full finite edge and fails interior anchors."
+      ],
+      "uncovered": [
+        "Interrupted edge/transport queue",
+        "Dynamic transition parameters",
+        "Zero or omitted edge durations"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "CP-01",
+      "primary_group": "continuous",
+      "scenario": "vco",
+      "requirements": [
+        "R-PHASE"
+      ],
+      "features": [
+        "idt"
+      ],
+      "legacy_tags": [
+        "V6"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_idt(ctl, phase);\n inout ctl, phase;\n electrical ctl, phase;\n real p;\n analog begin\n  p=idt(V(ctl)/1e-6,0.125);\n  V(phase)<+p;\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "ctl": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.3
+            ],
+            [
+              2,
+              0.3
+            ],
+            [
+              4,
+              0.9
+            ],
+            [
+              6,
+              0.9
+            ]
+          ]
+        }
+      },
+      "initial_state": "Unwrapped integral initial phase=0.125 cycles.",
+      "stop_T": 6,
+      "observables": [
+        "ctl",
+        "phase"
+      ],
+      "oracle": {
+        "formula": "p(x)=0.125+0.3x for 0<=x<=2; p(x)=0.725+0.3z+0.15z^2 for z=x-2 in [0,2]; p(x)=1.925+0.9*(x-4) for x>=4",
+        "units": "phase port V represents cycles; input V maps to cycles/T",
+        "construction": "Analytical segment integrals and continuity at x=2,4. No simulated reference."
+      },
+      "event_contract": [],
+      "anchors": [
+        {
+          "t_T": 0,
+          "phase_V": 0.125
+        },
+        {
+          "t_T": 2,
+          "phase_V": 0.725
+        },
+        {
+          "t_T": 3,
+          "phase_V": 1.175
+        },
+        {
+          "t_T": 4,
+          "phase_V": 1.925
+        },
+        {
+          "t_T": 6,
+          "phase_V": 3.725
+        }
+      ],
+      "distinguishable_faults": [
+        "Drop nonzero initial phase.",
+        "Integrate frequency only at startup or use endpoint rectangular integration.",
+        "Reset phase at each PWL knot."
+      ],
+      "uncovered": [
+        "Integral reset",
+        "Implicit feedback",
+        "Negative frequency",
+        "Long-time drift beyond 6T"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": []
+    },
+    {
+      "id": "CP-02",
+      "primary_group": "continuous",
+      "scenario": "vco",
+      "requirements": [
+        "R-WRAP"
+      ],
+      "features": [
+        "idtmod",
+        "sin"
+      ],
+      "legacy_tags": [
+        "V6"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_wrap(phase, out);\n inout phase, out;\n electrical phase, out;\n real p;\n analog begin\n  p=idtmod(0.75/1e-6,0.125,1.0,0.0);\n  V(phase)<+p;\n  V(out)<+sin(2*`M_PI*p);\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {},
+      "initial_state": "p0=0.125 cycles, modulus=1 cycle, offset=0 cycles.",
+      "stop_T": 6,
+      "observables": [
+        "phase",
+        "out"
+      ],
+      "oracle": {
+        "formula": "a(x)=0.125+0.75x; p=a-floor(a); y=sin(2*pi*a)",
+        "units": "phase marker V represents cycles; out V",
+        "construction": "Continuous unwrapped phase drives analytic sine; independent modulo projection only for phase marker."
+      },
+      "event_contract": [
+        {
+          "kind": "wrap",
+          "nominal_T": [
+            1.1666666666666667,
+            2.5,
+            3.8333333333333335,
+            5.166666666666667
+          ],
+          "window_T": [
+            -0.0001,
+            0.0001
+          ],
+          "expected_count": 4,
+          "boundary_rule": "Exact wrap rows are separate observations. Circular phase error and sine use the same unwrapped a. Left limit p=1, right limit p=0; do not apply ordinary absolute phase error within the wrap window."
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 0,
+          "phase_V": 0.125,
+          "out_V": 0.7071067811865476
+        },
+        {
+          "t_T": 1,
+          "phase_V": 0.875,
+          "out_V": -0.7071067811865476
+        },
+        {
+          "t_T": 2,
+          "phase_V": 0.625,
+          "out_V": -0.7071067811865476
+        },
+        {
+          "t_T": 4,
+          "phase_V": 0.125,
+          "out_V": 0.7071067811865476
+        },
+        {
+          "t_T": 6,
+          "phase_V": 0.625,
+          "out_V": -0.7071067811865476
+        }
+      ],
+      "distinguishable_faults": [
+        "Wrong modulus/offset changes phase modulo even when sine aliases.",
+        "Wrap clamp rather than modulo loses future cycles.",
+        "Missing 2*pi factor changes waveform."
+      ],
+      "uncovered": [
+        "Reset/wrap collision",
+        "Negative phase/frequency",
+        "idtmod used as cross guard",
+        "Exact-boundary callback semantics"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 1.1666666666666667,
+          "start_T": 1.1646666666666667,
+          "end_T": 1.1686666666666667,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 2.5,
+          "start_T": 2.498,
+          "end_T": 2.502,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3.8333333333333335,
+          "start_T": 3.8313333333333337,
+          "end_T": 3.8353333333333333,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 5.166666666666667,
+          "start_T": 5.164666666666667,
+          "end_T": 5.168666666666667,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "SI-01",
+      "primary_group": "structure",
+      "scenario": "sample_hold",
+      "requirements": [
+        "R-ISOLATION"
+      ],
+      "features": [
+        "module_instances",
+        "instance_state",
+        "timer"
+      ],
+      "legacy_tags": [
+        "V4",
+        "V7"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_cell(in,out,count);\n inout in,out,count; electrical in,out,count;\n parameter real start=2e-6; parameter real period=2e-6; parameter real q0=-0.25;\n real q,n;\n analog begin\n @(initial_step) begin q=q0; n=0; end\n @(timer(start,period,1e-9)) begin q=V(in); n=n+1; end\n V(out)<+q; V(count)<+n;\n end\nendmodule\nmodule paper_isolation(a,b,oa,ob,na,nb);\n inout a,b,oa,ob,na,nb; electrical a,b,oa,ob,na,nb;\n paper_cell #(.start(2e-6),.period(2e-6),.q0(-0.25)) A(a,oa,na);\n paper_cell #(.start(3e-6),.period(3e-6),.q0(0.75)) B(b,ob,nb);\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "a": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0
+            ],
+            [
+              7,
+              0.7
+            ]
+          ]
+        },
+        "b": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              1
+            ],
+            [
+              7,
+              0.3
+            ]
+          ]
+        }
+      },
+      "initial_state": "A q=-0.25,n=0, events 2,4,6T; B q=0.75,n=0, events 3,6T.",
+      "stop_T": 7,
+      "observables": [
+        "a",
+        "b",
+        "oa",
+        "ob",
+        "na",
+        "nb"
+      ],
+      "oracle": {
+        "formula": "A holds 0.1*eA/T at events [2,4,6]T; B holds 1-0.1*eB/T at [3,6]T; independent counters. At 6T both events are independent disjoint writes.",
+        "units": "V, callbacks",
+        "construction": "Two independent recurrences; changing A cannot alter B state or schedule."
+      },
+      "event_contract": [
+        {
+          "kind": "timer",
+          "instance": "A",
+          "nominal_T": [
+            2,
+            4,
+            6
+          ],
+          "window_T": [
+            -0.001,
+            0.001
+          ],
+          "expected_count": 3
+        },
+        {
+          "kind": "timer",
+          "instance": "B",
+          "nominal_T": [
+            3,
+            6
+          ],
+          "window_T": [
+            -0.001,
+            0.001
+          ],
+          "expected_count": 2
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "oa_V": -0.25,
+          "ob_V": 0.75,
+          "na_V": 0,
+          "nb_V": 0
+        },
+        {
+          "t_T": 2.5,
+          "oa_V": 0.2,
+          "ob_V": 0.75,
+          "na_V": 1,
+          "nb_V": 0
+        },
+        {
+          "t_T": 3.5,
+          "oa_V": 0.2,
+          "ob_V": 0.7,
+          "na_V": 1,
+          "nb_V": 1
+        },
+        {
+          "t_T": 4.5,
+          "oa_V": 0.4,
+          "ob_V": 0.7,
+          "na_V": 2,
+          "nb_V": 1
+        },
+        {
+          "t_T": 7,
+          "oa_V": 0.6,
+          "ob_V": 0.4,
+          "na_V": 3,
+          "nb_V": 2
+        }
+      ],
+      "distinguishable_faults": [
+        "Shared state slot makes oa and ob overwrite each other.",
+        "Instance parameter leakage merges timer schedules.",
+        "Simultaneous disjoint events at 6T drop one instance update."
+      ],
+      "uncovered": [
+        "Cascades and feedback",
+        "Instance arrays/genvar",
+        "Shared-state same-time writes"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3,
+          "start_T": 2.998,
+          "end_T": 3.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "CO-SH-01",
+      "primary_group": "combination",
+      "scenario": "sample_hold",
+      "requirements": [
+        "R-SH-RESET"
+      ],
+      "features": [
+        "cross_or",
+        "if_else",
+        "initial_step",
+        "transition",
+        "event_assignment"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V4",
+        "V5",
+        "V7"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_sh_reset(in, clk, reset, out, state, count);\n inout in, clk, reset, out, state, count;\n electrical in, clk, reset, out, state, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=-0.25; n=0; end\n  @(cross(V(clk)-0.5,+1,1e-9,2e-4) or cross(V(reset)-0.5,+1,1e-9,2e-4)) begin\n    n=n+1;\n    if(V(reset)>0.25) q=-0.25; else q=V(in);\n  end\n  V(state)<+q; V(count)<+n;\n  V(out)<+transition(q,0,0.1e-6,0.1e-6);\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "in": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              -0.4
+            ],
+            [
+              9,
+              1.4
+            ]
+          ]
+        },
+        "clk": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0
+            ],
+            [
+              1.8,
+              0
+            ],
+            [
+              2.2,
+              1
+            ],
+            [
+              2.5,
+              1
+            ],
+            [
+              2.9,
+              0
+            ],
+            [
+              3.8,
+              0
+            ],
+            [
+              4.2,
+              1
+            ],
+            [
+              4.5,
+              1
+            ],
+            [
+              4.9,
+              0
+            ],
+            [
+              5.8,
+              0
+            ],
+            [
+              6.2,
+              1
+            ],
+            [
+              6.5,
+              1
+            ],
+            [
+              6.9,
+              0
+            ],
+            [
+              7.8,
+              0
+            ],
+            [
+              8.2,
+              1
+            ],
+            [
+              8.5,
+              1
+            ],
+            [
+              8.9,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ]
+        },
+        "reset": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0
+            ],
+            [
+              2.8,
+              0
+            ],
+            [
+              3.2,
+              1
+            ],
+            [
+              4.8,
+              1
+            ],
+            [
+              5.2,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ]
+        }
+      },
+      "initial_state": "q=-0.25,n=0; reset initially low. Clock events 2,4,6,8T; reset rise 3T, release5T.",
+      "stop_T": 9,
+      "observables": [
+        "in",
+        "clk",
+        "reset",
+        "out",
+        "state",
+        "count"
+      ],
+      "oracle": {
+        "formula": "q=-0.25 initially; sample u(e2)=0 near 2T; reset q=-0.25 near3T; clock4T inhibited; release5T does not sample; sample near6T ->0.8 and near8T ->1.2. n increments on every OR callback, including inhibited clock; final n=5. Output ramps to each new q over0.1T.",
+        "units": "V, callbacks, s",
+        "construction": "Explicit single writer and reset-level priority; events separated by >=1T. One shared timeline explains sampled q, count and all output edges. Reset callback trigger is rising0.5 V; body predicate is reset>0.25 V. At every allowed reset event the predicate is unambiguously true. At clock events reset is exactly0 or1. This encoding deliberately avoids equality-sensitive root predicates; clocks during reset ramps remain uncovered."
+      },
+      "event_contract": [
+        {
+          "kind": "cross",
+          "channel": "clk",
+          "nominal_T": [
+            2,
+            4,
+            6,
+            8
+          ],
+          "window_T": [
+            0,
+            8e-05
+          ]
+        },
+        {
+          "kind": "cross",
+          "channel": "reset",
+          "nominal_T": [
+            3
+          ],
+          "window_T": [
+            0,
+            8e-05
+          ],
+          "total_count": 5
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "state_V": -0.25,
+          "out_V": -0.25,
+          "count_V": 0
+        },
+        {
+          "t_T": 2.5,
+          "state_V": 0,
+          "out_V": 0,
+          "count_V": 1
+        },
+        {
+          "t_T": 3.5,
+          "state_V": -0.25,
+          "out_V": -0.25,
+          "count_V": 2
+        },
+        {
+          "t_T": 4.5,
+          "state_V": -0.25,
+          "out_V": -0.25,
+          "count_V": 3
+        },
+        {
+          "t_T": 5.5,
+          "state_V": -0.25,
+          "out_V": -0.25,
+          "count_V": 3
+        },
+        {
+          "t_T": 6.5,
+          "state_V": 0.8,
+          "out_V": 0.8,
+          "count_V": 4
+        },
+        {
+          "t_T": 8.5,
+          "state_V": 1.2,
+          "out_V": 1.2,
+          "count_V": 5
+        }
+      ],
+      "distinguishable_faults": [
+        "Clock during reset samples input.",
+        "Reset release creates an unintended sample.",
+        "Sample at falling clock instead of rising.",
+        "Output transition follows continuous input instead of held q."
+      ],
+      "uncovered": [
+        "Simultaneous reset/clock explicitly deferred; no inferred race semantics",
+        "Reset initially high",
+        "Interrupted transition",
+        "Dynamic reset/edge parameters",
+        "Clock event during reset rise/fall ramp; body predicate threshold0.25 V is not an asserted generic reset threshold contract"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3,
+          "start_T": 2.998,
+          "end_T": 3.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 8,
+          "start_T": 7.998,
+          "end_T": 8.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "CO-HC-01",
+      "primary_group": "combination",
+      "scenario": "hysteresis",
+      "requirements": [
+        "R-HC-EDGE"
+      ],
+      "features": [
+        "cross",
+        "transition",
+        "event_assignment"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V5",
+        "V7"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_edge(in, out, state, count);\n inout in, out, state, count;\n electrical in, out, state, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=0; n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(state)<+q; V(count)<+n;\n  V(out)<+0.1+0.8*transition(q,0.125e-6,0.25e-6,0.5e-6);\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "in": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              0.1
+            ],
+            [
+              2,
+              0.9
+            ],
+            [
+              4,
+              0.1
+            ]
+          ]
+        }
+      },
+      "initial_state": "q=0,n=0; transition output initially0.",
+      "stop_T": 4,
+      "observables": [
+        "in",
+        "out",
+        "state",
+        "count"
+      ],
+      "oracle": {
+        "formula": "Same q/event contract as EV-HC-01. Rise starts eH+0.125T, duration0.25T, y=0.1+0.8r. Fall starts eL+0.125T, duration0.5T, y=0.1+0.8r.",
+        "units": "V, s, callbacks",
+        "construction": "Known cross history composed with uninterrupted linear transition. Independent state/count ports prevent compensating event-time/edge-delay errors."
+      },
+      "event_contract": [
+        {
+          "kind": "cross",
+          "direction": 1,
+          "nominal_T": [
+            1.375
+          ],
+          "window_T": [
+            0,
+            0.0005
+          ]
+        },
+        {
+          "kind": "cross",
+          "direction": -1,
+          "nominal_T": [
+            3.375
+          ],
+          "window_T": [
+            0,
+            0.0005
+          ],
+          "total_count": 2
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 1,
+          "out_V": 0.1
+        },
+        {
+          "t_T": 1.625,
+          "out_V": 0.5
+        },
+        {
+          "t_T": 2,
+          "out_V": 0.9
+        },
+        {
+          "t_T": 3,
+          "out_V": 0.9
+        },
+        {
+          "t_T": 3.75,
+          "out_V": 0.5
+        },
+        {
+          "t_T": 4,
+          "out_V": 0.1
+        }
+      ],
+      "distinguishable_faults": [
+        "Cancel cross offset with opposite edge-delay error: state/count ports and one history expose it.",
+        "Repeated analog evaluation restarts finite edge.",
+        "Apply rise duration to falling edge."
+      ],
+      "uncovered": [
+        "Supply modulation of transition",
+        "Rapid threshold recrossing/interruption",
+        "Multiple event writers"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 1.375,
+          "start_T": 1.373,
+          "end_T": 1.377,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3.375,
+          "start_T": 3.373,
+          "end_T": 3.377,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    },
+    {
+      "id": "CO-VCO-01",
+      "primary_group": "combination",
+      "scenario": "vco",
+      "requirements": [
+        "R-VCO"
+      ],
+      "features": [
+        "if_else",
+        "sequential_assignment",
+        "idtmod",
+        "sin"
+      ],
+      "legacy_tags": [
+        "V1",
+        "V6",
+        "V7"
+      ],
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_vco(ctl, freq, phase, out);\n inout ctl, freq, phase, out;\n electrical ctl, freq, phase, out;\n real f,p;\n analog begin\n  f=0.4+0.5*V(ctl);\n  if(f<0.2) f=0.2; else if(f>1.0) f=1.0;\n  p=idtmod(f/1e-6,0.125,1.0,0.0);\n  V(freq)<+f; V(phase)<+p;\n  V(out)<+sin(2*`M_PI*p);\n end\nendmodule\n",
+      "parameters": {},
+      "stimulus": {
+        "ctl": {
+          "kind": "pwl",
+          "points_T_V": [
+            [
+              0,
+              -1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              -1
+            ]
+          ]
+        }
+      },
+      "initial_state": "p0=0.125 cycles; frequency starts at lower clamp0.2/T Hz.",
+      "stop_T": 8,
+      "observables": [
+        "ctl",
+        "freq",
+        "phase",
+        "out"
+      ],
+      "oracle": {
+        "formula": "F=min(1,max(0.2,0.4+0.5*u)); a(x)=0.125+integral_0^x F(s)ds; p=a-floor(a), y=sin(2*pi*a)",
+        "units": "F marker V represents cycles/T; phase marker V represents cycles; out V",
+        "construction": "Split PWL segments at u=-0.4 and u=1.2, integrate affine or constant F exactly. Breakpoints x=[0,1.2,2,3.2,4,4.8,6,6.8,8]. Prefix phase a at these points=[0.125,0.365,0.605,1.445,2.245,3.045,3.885,4.125,4.365]. Solve a(x)=integer within each monotone segment for wraps; positive derivative gives one root per integer. Exact wrap roots: 2+(-0.4+sqrt(0.555))/0.5, 3.755, 4.755, 6+(0.4-sqrt(0.1025))/0.25."
+      },
+      "event_contract": [
+        {
+          "kind": "wrap",
+          "unwrapped_integer_levels": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "window_T": [
+            -0.0001,
+            0.0001
+          ],
+          "expected_count": 4,
+          "boundary_rule": "Derive roots from analytical prefix-integral polynomial before results. Exact-boundary rows separate; apply circular phase distance; coherent unwrapped phase and sine required.",
+          "nominal_T": [
+            2.689966442575134,
+            3.755,
+            4.755,
+            6.31937515251343
+          ]
+        }
+      ],
+      "anchors": [
+        {
+          "t_T": 0,
+          "freq_V": 0.2,
+          "phase_V": 0.125
+        },
+        {
+          "t_T": 2,
+          "freq_V": 0.4,
+          "phase_V": 0.605
+        },
+        {
+          "t_T": 4,
+          "freq_V": 1,
+          "phase_V": 0.245
+        },
+        {
+          "t_T": 6,
+          "freq_V": 0.4,
+          "phase_V": 0.885
+        },
+        {
+          "t_T": 8,
+          "freq_V": 0.2,
+          "phase_V": 0.365
+        }
+      ],
+      "distinguishable_faults": [
+        "Integrate raw unclamped frequency.",
+        "Clamp instantaneous phase instead of frequency.",
+        "Reinitialize idtmod at branch changes.",
+        "Use f(t)*t instead of accumulated phase."
+      ],
+      "uncovered": [
+        "VCO reset/gating",
+        "Negative frequency",
+        "Feedback controlled frequency",
+        "Long-run phase accuracy beyond8T"
+      ],
+      "status_by_backend": {
+        "spectre": "T",
+        "evas": "T",
+        "openvaf_r_ngspice": "T",
+        "gnucap_modelgen": "T"
+      },
+      "provenance": "development-informed; selected before new results; not untouched confirmation data",
+      "observation_windows": [
+        {
+          "center_T": 2.689966442575134,
+          "start_T": 2.687966442575134,
+          "end_T": 2.6919664425751337,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3.755,
+          "start_T": 3.753,
+          "end_T": 3.7569999999999997,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4.755,
+          "start_T": 4.753,
+          "end_T": 4.757,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6.31937515251343,
+          "start_T": 6.3173751525134305,
+          "end_T": 6.32137515251343,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ]
+    }
+  ]
+}
