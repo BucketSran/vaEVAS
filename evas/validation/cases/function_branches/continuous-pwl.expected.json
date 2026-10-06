@@ -1,0 +1,56 @@
+{
+  "times": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1,
+    1.75,
+    1.875,
+    2
+  ],
+  "node_voltages_V": {
+    "ya": [
+      0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.875,
+      0.9,
+      0.9
+    ],
+    "za": [
+      0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.125,
+      0.0625,
+      0
+    ],
+    "yb": [
+      0.25,
+      0.25,
+      0.25,
+      0.375,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "zb": [
+      0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.125,
+      0.0625,
+      0
+    ]
+  },
+  "absolute_tolerance_V": 1e-08,
+  "derivation": "clip clamps voltage to stated rails; sequenced is x for x<=.5 and 1-x for x>.5; literal expected tables independently worked from these branch statements, not EVAS or Spectre outputs"
+}

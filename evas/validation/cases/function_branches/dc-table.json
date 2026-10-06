@@ -1,0 +1,137 @@
+{
+  "models": [
+    "dut.va"
+  ],
+  "instances": [
+    {
+      "name": "row0",
+      "module": "function_branches",
+      "connections": {
+        "u": "u0",
+        "y": "y0",
+        "z": "z0"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    },
+    {
+      "name": "row1",
+      "module": "function_branches",
+      "connections": {
+        "u": "u1",
+        "y": "y1",
+        "z": "z1"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    },
+    {
+      "name": "row2",
+      "module": "function_branches",
+      "connections": {
+        "u": "u2",
+        "y": "y2",
+        "z": "z2"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    },
+    {
+      "name": "row3",
+      "module": "function_branches",
+      "connections": {
+        "u": "u3",
+        "y": "y3",
+        "z": "z3"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    },
+    {
+      "name": "row4",
+      "module": "function_branches",
+      "connections": {
+        "u": "u4",
+        "y": "y4",
+        "z": "z4"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    }
+  ],
+  "transient": {
+    "sources": {
+      "u0": [
+        [
+          0,
+          -0.25
+        ],
+        [
+          2,
+          -0.25
+        ]
+      ],
+      "u1": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "u2": [
+        [
+          0,
+          0.25
+        ],
+        [
+          2,
+          0.25
+        ]
+      ],
+      "u3": [
+        [
+          0,
+          0.9
+        ],
+        [
+          2,
+          0.9
+        ]
+      ],
+      "u4": [
+        [
+          0,
+          1.25
+        ],
+        [
+          2,
+          1.25
+        ]
+      ]
+    },
+    "output_times": [
+      0,
+      1,
+      2
+    ],
+    "stop": 2,
+    "max_step": 0.125
+  },
+  "tolerances": {
+    "vabstol": 1e-09,
+    "reltol": 1e-06
+  }
+}

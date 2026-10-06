@@ -169,7 +169,7 @@ class Function:
     name: str
     inputs: tuple[str, ...]
     variables: frozenset[str]
-    body: tuple[Assignment, ...]
+    body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
 
 
@@ -513,7 +513,7 @@ class Parser:
             self.take(";")
         if not inputs or not set(inputs) <= variables:
             self.fail("function requires typed real input arguments", token)
-        body = self.statements()
+        body = self.statements(conditional=True)
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
