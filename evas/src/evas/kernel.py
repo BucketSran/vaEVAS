@@ -1,5 +1,6 @@
 """Select an explicit executable or verify this distribution's bundled kernel."""
 import hashlib
+from importlib import metadata
 import json
 import os
 from pathlib import Path
@@ -44,7 +45,7 @@ def select_kernel(kernel=None):
                 or reported['platform'] != _platform()
                 or reported['version'] != package_identity()['version']):
             raise ValueError('bundled kernel identity does not match this distribution/platform')
-    except (OSError, ValueError, KeyError, KernelError) as exc:
+    except (OSError, ValueError, KeyError, KernelError, metadata.PackageNotFoundError) as exc:
         detail = exc.diagnostic if isinstance(exc, KernelError) else dict(kind='kernel_process', message=str(exc))
         raise KernelError(dict(detail, message=f"{detail['message']}; selected {selected}. {remedy}")) from exc
     return selected

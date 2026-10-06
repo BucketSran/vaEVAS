@@ -108,6 +108,8 @@ from pathlib import Path
 import subprocess
 import sys
 import evas
+import shutil
+import os
 
 folder = Path(evas.__file__).resolve().parent/'_bin'
 kernel = folder/'evas-kernel'
@@ -166,11 +168,30 @@ try:
     data['sha256'] = hashlib.sha256(kernel.read_bytes()).hexdigest()
     receipt.write_text(json.dumps(data))
     rejection('Exec format')
+    kernel.write_bytes(original)
+    kernel.chmod(original_mode)
+    receipt.write_bytes(raw_receipt)
+    # A copied/damaged installation may retain package files but lose metadata.
+    metadata_folder = next(folder.parent.parent.glob('evas_rebuild-*.dist-info'))
+    displaced = Path.cwd()/'displaced-distribution-metadata'
+    shutil.move(str(metadata_folder), displaced)
+    try:
+        rejection('metadata')
+    finally:
+        shutil.move(str(displaced), metadata_folder)
+    copied = Path.cwd()/'copied-package'
+    shutil.copytree(folder.parent, copied/'evas')
+    copied_environment = dict(os.environ, PYTHONPATH=str(copied))
+    copied_environment.pop('PYTHONHOME', None)
+    result = subprocess.run([sys.executable,'-S','-m','evas','solve','static.json'],
+                            env=copied_environment,text=True,capture_output=True,timeout=30)
+    assert result.returncode == 2 and 'Traceback' not in result.stderr, result.stderr
+    assert 'metadata' in json.loads(result.stderr)['message'], result.stderr
 finally:
     kernel.write_bytes(original)
     kernel.chmod(original_mode)
     receipt.write_bytes(raw_receipt)
-print(json.dumps(dict(checks='missing/corrupt/nonexecutable/platform/IR/explicit-no-fallback')))
+print(json.dumps(dict(checks='missing/corrupt/nonexecutable/platform/IR/explicit-no-fallback/missing-metadata/copied-package')))
 '''
 
 
@@ -185,7 +206,8 @@ def main():
         names = archive.getnames()
         for required in ('setup.py', 'pyproject.toml', 'rust_core/Cargo.toml',
                          'rust_core/Cargo.lock', 'rust_core/src/main.rs',
-                         'rust_core/ir/Cargo.toml', 'rust_core/ir/src/lib.rs'):
+                         'rust_core/ir/Cargo.toml', 'rust_core/ir/src/lib.rs',
+                         'rust_core/fuzz/seeds/static.json'):
             assert any(name.endswith('/'+required) for name in names), required
         assert not any('/target/' in name or '/_bin/' in name or '/build/' in name for name in names), names
     args.out.mkdir(parents=True, exist_ok=False)
@@ -211,6 +233,17 @@ def main():
             if result.returncode:
                 raise RuntimeError(f'{command} exited {result.returncode}; see {args.out}/commands.log')
             return result.stdout
+        source_folder = directory/'source'
+        source_folder.mkdir()
+        with tarfile.open(args.sdist.resolve()) as archive:
+            for member in archive.getmembers():
+                destination = (source_folder/member.name).resolve()
+                if not destination.is_relative_to(source_folder.resolve()) or not (member.isfile() or member.isdir()):
+                    raise ValueError('sdist contains an unsafe path or nonregular input')
+            archive.extractall(source_folder)
+        source_manifest = next(source_folder.glob('*/rust_core/Cargo.toml'))
+        # Compile test-only include_str inputs too. No numerical test is run.
+        invoke('cargo', 'test', '--locked', '--no-run', '--manifest-path', str(source_manifest))
         invoke(str(python), '-m','pip','install','--no-index','--no-deps',str(wheel))
         for round_name in ('initial','reinstalled'):
             work = directory/round_name

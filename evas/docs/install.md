@@ -59,7 +59,7 @@ python3 scripts/check_installed_evas.py --wheel runs/package-dist/*.whl \
 
 从 sdist 解包后的项目也可运行 `python3 -m build --wheel`。
 sdist 包含 Cargo.toml、Cargo.lock、内核及独立 IR crate 的 Rust 源码和构建配置；
-不包含 target、包内二进制或旧构建目录。构建钩子执行 `cargo build --locked --release`，
+包含测试编译所需的固定 static fuzz seed，不包含 target、包内二进制或旧构建目录。构建钩子执行 `cargo build --locked --release`，
 显式选择 rustc 的原生 host target，再把新内核和真实身份/哈希记录写入 wheel。
 不支持用这个钩子交叉编译或手工伪造 wheel 平台标签。
 
@@ -76,12 +76,13 @@ editable 安装保留这条显式内核路径，不在源码目录生成二进�
 ## 安装验收
 
 [check_installed_evas.py](../../scripts/check_installed_evas.py) 检查 wheel 标签与 sdist 构建输入，
-在仓库外创建新 venv、移除 PYTHONPATH/PYTHONHOME，然后从真实安装路径执行 API 和 CLI。
+在仓库外解包 sdist，以 `cargo test --locked --no-run` 验证测试构建输入完整，
+再创建新 venv、移除 PYTHONPATH/PYTHONHOME，从真实安装路径执行 API 和 CLI。
 静态独立答案为 `2*u+0.25` 在 `u=-0.5,0,0.75 V` 的 `-0.75,0.25,1.75 V`。
 瞬态独立答案为 `idt(1,0.25)` 在 `t=0,0.25,0.5 s` 的 `0.25,0.5,0.75 V`，外部绝对误差限 `1e-9 V`。
 验收还覆盖 SCS、CSV 列/单位/时间/行数/数值、文件哈希、完成标记、卸载后无残留及重装。
 
-负向验收覆盖缺包内核、损坏二进制/构建记录、不可执行、错误平台记录、错误 IR 身份、
+负向验收覆盖缺包内核、损坏二进制/构建记录、不可执行、发行元数据缺失、错误平台记录、错误 IR 身份、
 失败产物和显式路径失败不回退。错误平台记录和假内核是独立边界测试，
 不能替代真实异架构二进制的执行证据。验收另用损坏但可执行的文件观察实际 OS 拒绝执行。
 不把安装通过算为新增数值能力或 Spectre 对齐证据。
