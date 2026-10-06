@@ -1,0 +1,1139 @@
+{
+  "schema": 3,
+  "scope": "six additional single-variable D7 diagnostics; original 24 executions/denominators unchanged",
+  "spectre_version": "21.1.0.509.isr12 64bit",
+  "spectre_identity_scope": "launcher SHA, setup SHA, version preflight and six actual case logs; no new per-case /proc executable image observation",
+  "launcher_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "runner_sha256": "5dd50e9c519f945c68e4bdaa92109241c4c1aabf9f5dc7f3524506a1ddccf0f9",
+  "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+  "analysis_sha256": "119bc815f95f906d61349759e019ec84af453acc75069583466d0e551d152225",
+  "parent_checker_sha256": "06e8c0e53aa85fe2067906f23e980068eafa3d283e2bc4b0a9df2074bb3f98ea",
+  "collection": {
+    "sha256": "134ab3efbbe43e852c44ee626f63b8af09eae376cb50ed7bec2cae0e320f8e36",
+    "verified_file_hashes": 74,
+    "archive_id": "d7-alignment-followup-20261006-073301/results.tar.gz",
+    "local_only_receipt": "collection.json",
+    "local_only_receipt_sha256": "2f67794412166b822330f09731ac1e019c9093f52bb5b5fff2118fb4015ecc28"
+  },
+  "availability": "raw local-only; retained on authorized server; hashes do not provide public raw retrieval",
+  "resource_limits": {
+    "cases": 6,
+    "serial": true,
+    "retries": 0,
+    "cpu": 1,
+    "memory_bytes": 4294967296,
+    "single_file_bytes": 33554432,
+    "timeout_s": 90,
+    "license_wait_s": 30
+  },
+  "independent_contract": {
+    "events_s": [
+      1,
+      3
+    ],
+    "count_at_exact_events": [
+      1,
+      2
+    ],
+    "voltage_abs_v_per_backend": 1e-06,
+    "paired_voltage_abs_v": 2e-06,
+    "event_bracket_abs_s": 2e-07,
+    "count_error": 0,
+    "count_error_scope": "zero error on each comparison actually scored; ordinary paired count omits event windows, exact event state is a separate zero-error FAIL and is never covered by pair PASS"
+  },
+  "calibration": {
+    "new_simulator_execution": false,
+    "wide_bracket_reject": true,
+    "wrong_transition_count_reject": true,
+    "exact_count_mismatch_reject": true,
+    "missing_exact_event_reject": true,
+    "positive_accept": true,
+    "checker_sha256": "119bc815f95f906d61349759e019ec84af453acc75069583466d0e551d152225"
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "changed_setting": {
+        "from": null,
+        "to": null
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 674,
+      "brackets": [
+        {
+          "before": 0.99999995,
+          "after": 1.0,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000001250754,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.499999975,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.5,
+          "actual_time": 1.0,
+          "exact": true
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999756003771,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999743996227,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999993996228,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999761775755,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999511775757,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 1.1775758146370663e-09,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "PASS",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [],
+      "representation_count": 573,
+      "max_representation_voltage_bound_v": 2.1094237467877974e-14,
+      "hashes": {
+        "psf": "3423b54c71ff042b3560e8fe0ae18b78c4b018de6e9033545db93fa9bcced3e8",
+        "result": "502031c96dc05d454a93bc53ff8de0f5c058580911a3d42544ccefd38f776d6d",
+        "contract": "bcb66cf6c491b49aa6897f2968f17c8bcceed20c62ad2619c9dce7f119ef648b"
+      },
+      "evas": {
+        "reused": true,
+        "receipt_sha256": "c3aea39024b20c257bf0e7268904043f2b94c4df8b98becdf933e498656bae31",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 1.1775755925924614e-09
+        },
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        }
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.269103657454252,
+        "completed_utc": "2026-10-06T07:33:25Z",
+        "log": "stdout.log",
+        "log_sha256": "553263b025f3fa91b62ff9996911d32f9ad4277da6ef4bdf07341a74c54bfff8",
+        "case": "baseline",
+        "started_utc": "2026-10-06T07:33:10Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "2eb980ebf360a986c21dbc7949fb14abe346cf3fb7cd9ffdb30caa8746921001",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-10,
+          "vtol": 1e-10
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "e85439c99e1bc67d52cbe52c332e0145610bd46b9f36927d92197fe74b9c7b67"
+    },
+    {
+      "case": "maxstep",
+      "changed_setting": {
+        "from": "maxstep=0.0050000000000000001",
+        "to": "maxstep=0.001"
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.001,
+        "method": "traponly"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 3081,
+      "brackets": [
+        {
+          "before": 1.0,
+          "after": 1.00000000005,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000000250001,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.4999999749999999,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.4999999999999999,
+          "actual_time": 1.0,
+          "exact": true
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999751000005,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999748999994,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999998999995,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999754000011,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999504000013,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 4.000015874083829e-10,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "PASS",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [],
+      "representation_count": 595,
+      "max_representation_voltage_bound_v": 1.0946799022804043e-13,
+      "hashes": {
+        "psf": "425af75eef916b57f5a1126f3c2b2f54aab27dfd0816d9d5a8279adfa4f19f88",
+        "result": "7eb14a262d91de01ad8a9dc20407bf83084f3b8e964fffd86472e8aa0783043a",
+        "contract": "58e1395f222ace3d06f548373e96b565e8b705742139a57a157bf84f25208d46"
+      },
+      "evas": {
+        "reused": true,
+        "receipt_sha256": "c3aea39024b20c257bf0e7268904043f2b94c4df8b98becdf933e498656bae31",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 4.0000119883032426e-10
+        },
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        }
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.110180743038654,
+        "completed_utc": "2026-10-06T07:33:41Z",
+        "log": "stdout.log",
+        "log_sha256": "b4f62a31c6834b33d61a5be470c65b1e937ef12dd87a5e4367eb7d5c0d5fbc69",
+        "case": "maxstep",
+        "started_utc": "2026-10-06T07:33:26Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "13c180bd748ea10333f76b52e553348193cf151929a41e2853600383f781a261",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-10,
+          "vtol": 1e-10
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "a685efaeb6df56f1fc026d5fad0a382c93aa2fcf36fa72a03e872b5405ac151c"
+    },
+    {
+      "case": "method",
+      "changed_setting": {
+        "from": "method=traponly",
+        "to": "method=gear2only"
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "gear2only"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 676,
+      "brackets": [
+        {
+          "before": 0.99999995,
+          "after": 1.0,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000000067259,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.4999999750000043,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.5000000000000042,
+          "actual_time": 1.0,
+          "exact": true
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999750085964,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999749913707,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999999913707,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999751226919,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.499999950122703,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 1.227029033934457e-10,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "PASS",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [],
+      "representation_count": 573,
+      "max_representation_voltage_bound_v": 2.1094237467877974e-14,
+      "hashes": {
+        "psf": "99e311dbb534ddc7e432dcb66f986616eecd1c865cefb34da722c6154f9c3102",
+        "result": "d3c95d5346300200d816e0a3e8d312a66a30f53b7152766a4653bdfb6beabbcb",
+        "contract": "e5ef340893a06ba8e6affa99e492f94187e7f71bfd443d8947f7a34cf8b68bfb"
+      },
+      "evas": {
+        "reused": true,
+        "receipt_sha256": "c3aea39024b20c257bf0e7268904043f2b94c4df8b98becdf933e498656bae31",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 1.227029033934457e-10
+        },
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        }
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.610874282196164,
+        "completed_utc": "2026-10-06T07:33:56Z",
+        "log": "stdout.log",
+        "log_sha256": "30d0d0966f06727e1bed94912942972705722269083f2482b961f032a6ec8c5f",
+        "case": "method",
+        "started_utc": "2026-10-06T07:33:41Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "c5668a6945ee0dff241bd1965399c073a3945ca980f822ebc16f4e23bc0c36d3",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-10,
+          "vtol": 1e-10
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "63d3f448b9dd1a8abda7b88ea7330e0a6c3e80583b6a2434eaec2597d61f3e0f"
+    },
+    {
+      "case": "vtol",
+      "changed_setting": {
+        "from": "vtol=1e-10",
+        "to": "vtol=1e-12"
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 674,
+      "brackets": [
+        {
+          "before": 0.99999995,
+          "after": 1.000000000001,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000001203749,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.499999975,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.5000000000004999,
+          "actual_time": 1.000000000001,
+          "exact": false
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999756013741,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999743986256,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999993986257,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999761288807,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999511288808,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 1.128880988687797e-09,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "INCONCLUSIVE",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [
+        1.0
+      ],
+      "representation_count": 573,
+      "max_representation_voltage_bound_v": 2.1094237467877974e-14,
+      "hashes": {
+        "psf": "45bd45cf9aa87b74ee6ad41e3dc791232e2e7c37c71b62268f198748f34af125",
+        "result": "e121c9b6744b8383825bef6151c727461cfe353981e51b6d8fdb0812473312bb",
+        "contract": "3773173a569026ee2e44e44c316101099e64cecf598e66c8cc263a96957dd3b4"
+      },
+      "evas": {
+        "reused": false,
+        "receipt_sha256": "fbabae6211a27b111786575f3e7d1ac1b48515d58950d87cd0dd4df6985fbf73",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 1.1288807666431921e-09
+        },
+        "input_sha256": {
+          "dut.va": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+          "tb.scs": "82aa0d502cd86a5bc4282ec025ead942d512271eef3de54b083c4fecbc12ddd7",
+          "sim.json": "f930510b806acbadf732859a7725b393af4e096ed14631dda6aff260a1a0ea91",
+          "contract.json": "3773173a569026ee2e44e44c316101099e64cecf598e66c8cc263a96957dd3b4"
+        },
+        "stdout_sha256": "45663dfae3540e2f48541ea72eb21151caf33095830f90d0e342541e25ae2fb6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        },
+        "source_identity_kind": "reused fixed-head build identity linked above; fresh input/output receipts; run-time dirty/snapshot fields absent"
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.276553735136986,
+        "completed_utc": "2026-10-06T07:34:12Z",
+        "log": "stdout.log",
+        "log_sha256": "e4ef4b4d9884214abb991b3d22bada6ece5bf9dd97579abfc90b5b106b55ec89",
+        "case": "vtol",
+        "started_utc": "2026-10-06T07:33:56Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "82aa0d502cd86a5bc4282ec025ead942d512271eef3de54b083c4fecbc12ddd7",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-10,
+          "vtol": 1e-12
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "579b3eac50e3aba837f7e52e0110f27635e40dd75eeb205093d1459c98d00f54"
+    },
+    {
+      "case": "ttol",
+      "changed_setting": {
+        "from": "ttol=1e-10",
+        "to": "ttol=1e-12"
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-14,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 674,
+      "brackets": [
+        {
+          "before": 0.99999995,
+          "after": 1.0000000000005,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000001202251,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.499999975,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.5000000000002499,
+          "actual_time": 1.0000000000005,
+          "exact": false
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999756008754,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999743991245,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999993991245,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999761278602,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999511278603,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 1.127860305150108e-09,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "INCONCLUSIVE",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [
+        1.0
+      ],
+      "representation_count": 573,
+      "max_representation_voltage_bound_v": 2.1094237467877974e-14,
+      "hashes": {
+        "psf": "3f0d70bc797003b71d00772d0006654894c08af2ab94fa09ac11f51d952ff65f",
+        "result": "45b2b4820ac6e042e4f2f1d0f0726ae9c1f7cfb00d6ee03ddab779fc057cc58c",
+        "contract": "65ac1b1fb745d443d7cb9ece27f522e205cf95af88d4af5027213d08c1ecbac8"
+      },
+      "evas": {
+        "reused": false,
+        "receipt_sha256": "7f707a67e5d117cf785f22b088cdc239e0d05fec7d9cc6c30d7324d0fe6f9450",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 1.1278602496389567e-09
+        },
+        "input_sha256": {
+          "dut.va": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+          "tb.scs": "f9c1ed1624fa0232d4d05114b79b9ef05139cd7537fac633616d3b2e8e94d014",
+          "sim.json": "0a20ae0664b861a66e68c1ff65dc7091a1951a98632b7a845e00bbfc9b8f7912",
+          "contract.json": "65ac1b1fb745d443d7cb9ece27f522e205cf95af88d4af5027213d08c1ecbac8"
+        },
+        "stdout_sha256": "b52cdebe61e565afa3bd2779b665cf1611a6ef25f2d34768a0fcb4cc0ded48cf",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        },
+        "source_identity_kind": "reused fixed-head build identity linked above; fresh input/output receipts; run-time dirty/snapshot fields absent"
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.461147628724575,
+        "completed_utc": "2026-10-06T07:34:27Z",
+        "log": "stdout.log",
+        "log_sha256": "0d2f81b0feb71f180f16a3b4df468064a910d91db574f03bb4d65545c01d50f1",
+        "case": "ttol",
+        "started_utc": "2026-10-06T07:34:12Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "f9c1ed1624fa0232d4d05114b79b9ef05139cd7537fac633616d3b2e8e94d014",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-12,
+          "vtol": 1e-10
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "9307dc636ae5f92b33c92f8f12fb864e520c82680ee0d54ee089fbaef6309648"
+    },
+    {
+      "case": "vabstol",
+      "changed_setting": {
+        "from": "vabstol=1e-14",
+        "to": "vabstol=1e-16"
+      },
+      "receipt_gate": "PASS",
+      "effective_settings": {
+        "vabstol": 1e-16,
+        "iabstol": 1e-18,
+        "reltol": 1e-12,
+        "step": 0.005,
+        "maxstep": 0.005,
+        "method": "traponly"
+      },
+      "stop_verification": {
+        "log_summary": 3.0,
+        "raw_exact": 3.0000001,
+        "requested": 3.0000001,
+        "independent_full_precision_effective_echo": null,
+        "scope": "rounded log summary plus exact raw terminal export; no full-precision log echo"
+      },
+      "points": 674,
+      "brackets": [
+        {
+          "before": 0.99999995,
+          "after": 1.0,
+          "old_count": 0.0,
+          "new_count": 1.0
+        },
+        {
+          "before": 3.0,
+          "after": 3.000000001241916,
+          "old_count": 1.0,
+          "new_count": 2.0
+        }
+      ],
+      "observations": {
+        "0.0": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.0,
+          "actual_time": 0.0,
+          "exact": true
+        },
+        "0.99999995": {
+          "count": 0.0,
+          "u": 1.0,
+          "z": 0.499999975,
+          "actual_time": 0.99999995,
+          "exact": true
+        },
+        "1.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.5,
+          "actual_time": 1.0,
+          "exact": true
+        },
+        "1.00000005": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": 0.4999999755959578,
+          "actual_time": 1.00000005,
+          "exact": true
+        },
+        "2.99999995": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999744040421,
+          "actual_time": 2.99999995,
+          "exact": true
+        },
+        "3.0": {
+          "count": 1.0,
+          "u": 1.0,
+          "z": -0.4999999994040422,
+          "actual_time": 3.0,
+          "exact": true
+        },
+        "3.00000005": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999761717268,
+          "actual_time": 3.00000005,
+          "exact": true
+        },
+        "3.0000001": {
+          "count": 2.0,
+          "u": 1.0,
+          "z": -0.4999999511717271,
+          "actual_time": 3.0000001,
+          "exact": true
+        }
+      },
+      "max_voltage_oracle_error_v": 1.171727159743341e-09,
+      "timing": "PASS",
+      "plateau_count": "PASS",
+      "exact_event_count": "FAIL",
+      "engineering_exported_observations": "PASS",
+      "scheduled_observation_coverage": "PASS",
+      "overall": "EXACT_EVENT_STATE_DIFFERENCE",
+      "missing_scheduled_observations": [],
+      "representation_count": 573,
+      "max_representation_voltage_bound_v": 2.1094237467877974e-14,
+      "hashes": {
+        "psf": "0fbb946e29476cad8551dfc3d62908d266b06711d6bcf7185c000f14df1a8ce1",
+        "result": "edb7de22a9fdfca33f3543974b92c2bb61a46c40e4297978306ef08176cc32da",
+        "contract": "df4352d985cda915c82fbb51310128c68a63c96ecc93daecdaf03d429f182dea"
+      },
+      "evas": {
+        "reused": true,
+        "receipt_sha256": "c3aea39024b20c257bf0e7268904043f2b94c4df8b98becdf933e498656bae31",
+        "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+        "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+        "independent_status": "PASS",
+        "pair_status": "PASS",
+        "max_voltage_difference_upper_bound_v": {
+          "z": 1.1717269932098873e-09
+        },
+        "pair_scope": {
+          "continuous_voltage_points": 609,
+          "ordinary_count_points": 600,
+          "requested_observations": 609,
+          "omitted_count_times_s": [
+            0.9999999,
+            0.99999995,
+            1.0,
+            1.00000005,
+            1.0000001,
+            2.9999999,
+            2.99999995,
+            3.0,
+            3.00000005
+          ],
+          "count_rule": "omit |t-1|<=2e-7 or |t-3|<=2e-7 unless t is stop=3.0000001; use previous Spectre export, never count interpolation",
+          "budget": {
+            "voltage_v": 2e-06,
+            "count_error": 0
+          },
+          "exact_event_count_status": "FAIL",
+          "overall_status": "EXACT_EVENT_STATE_DIFFERENCE",
+          "meaning": "pair PASS covers bounded continuous voltage plus 600 ordinary count observations, not exact-event count agreement or all 609 count points"
+        }
+      },
+      "spectre_result": {
+        "returncode": 0,
+        "timeout": false,
+        "elapsed_seconds": 15.360926799476147,
+        "completed_utc": "2026-10-06T07:34:43Z",
+        "log": "stdout.log",
+        "log_sha256": "5fd7bd2deacda1dd268d38dcba95b29fd86d246f34a7f84f7a06a71a7dd5b96e",
+        "case": "vabstol",
+        "started_utc": "2026-10-06T07:34:27Z",
+        "input_manifest_sha256": "e131697768d05b81ea149d9cc61ea2913ef5f3e080139ffb3f9194330c271927",
+        "tool_identity_sha256": "1ee0a3b894b957ff4e607442962cb82a46ce8950ee7bd3aa59a4a43cb0a9405d",
+        "source_sha256": "7767c435a6d3bcb8e025fbca9b4d70e0e24b9a63db51385e5352b800fc945b21",
+        "netlist_sha256": "a9e3042c6eaeb470a229ae87fa49ea92a9223cd284efc330b0faab3844a46554",
+        "spectre_command_template": "${SPECTRE_BIN} -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1"
+      },
+      "effective_settings_scope": "only six solver fields independently echoed in actual log: vabstol/iabstol/reltol/step/maxstep/method",
+      "cross_parameter_settings": {
+        "requested": {
+          "ttol": 1e-10,
+          "vtol": 1e-10
+        },
+        "effective_independent_echo": null,
+        "evidence": "frozen hashed tb.scs instance parameters; actual logs contain no independent ttol/vtol echo; observed changes do not establish a separate effective-setting receipt"
+      },
+      "spectre_log_sha256": "939c4415c6372c2a2396b9ef7c0a114c7eaa869a520d6abf1c2d469e04d6217d"
+    }
+  ],
+  "public_capsule_redaction": {
+    "source_capsule_commit": "4c157503",
+    "archive_reference": "archive_id is a logical identifier; original host location stays in the local-only collection receipt",
+    "command_reference": "spectre_command_template is a portable template, not the exact executed argv; exact command and installed path stay in each local-only RESULT.json",
+    "raw_result_identity": "original RESULT.json SHA256 remains in cases[].hashes.result; original collection/archive/input/output digests unchanged",
+    "new_simulator_execution": false
+  },
+  "evas_build_reuse_chain": {
+    "original_build_identity_id": "spectre-alignment-20261006/numerical/identity-d7.json",
+    "original_build_identity_sha256": "dd9b30fba8dd50e943e094ea04bfc5569ab5f597423c4bf6efc21099cefc8b79",
+    "head": "ffc602cb82445617599e62cb3ac0f7b85f8dced6",
+    "build_git_status": "",
+    "build_command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--manifest-path",
+      "evas/rust_core/Cargo.toml"
+    ],
+    "build_log_sha256": "97c47db6ff69c41e3775c0a6055b5acb5d265902a442e784bbe5c08ec9dd7e41",
+    "kernel_sha256": "48ad82b0948efc9e03a6d7e5cba11c94fa43a233169affbe1ce8b9f2e3329ac5",
+    "source_snapshot": "published Git snapshot at fixed head; all original source_sha256 entries checked against Git bytes and current files after execution",
+    "source_manifest_sha256": "45b07c99c6a4f35347d6ab58fcfe9390da301b231790ace0886c04b404f47e8e",
+    "verified_source_file_count": 85,
+    "full_dynamic_roots_sha256": "347f537d44c275e9666102a1a44549e8d477b5b3b92e8aa84f899c6c49790241",
+    "post_execution_source_diff_from_head": "empty",
+    "new_run_receipt_dirty_snapshot_capture": "not captured in either original ttol/vtol receipt; no retrospective receipt fields added",
+    "execution_context": "entry git status was clean; model-parameter executions preceded documentation writes; no production source write was made in this task. This is session context, not a contemporaneous per-run dirty snapshot.",
+    "reuse_basis": "two new receipts reference exactly the original fixed-head build kernel SHA; post-execution source comparison supports reuse, not retroactive per-run source capture"
+  },
+  "interpretation_revision": {
+    "type": "post-execution evidence clarification, no original receipt or analysis/raw mutation",
+    "original_analysis_sha256": "d224a0d2f73ef977e517f162b69f4369c0c04bbdec88d3bf531f68b25d012806",
+    "source_chain_addendum_sha256": "7ff17ef111486ff93157786c91987ef44e3a758d6eec7a4e5b93d9767212be20",
+    "new_simulator_execution": false
+  }
+}

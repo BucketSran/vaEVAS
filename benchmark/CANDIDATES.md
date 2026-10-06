@@ -73,6 +73,13 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 这一数值拒绝与候选模型的速度错误分别记录；不能把拒绝当作评分器检出了错误模型。
 后续 D7 [端点诊断](../experiments/backends/dvs2-spectre-validation/triangle-endpoint-diagnosis.md)已在原 stop/容差和两个固定网格完成该负控，原 checker 明确判错；历史拒绝保留，候选尚待审查和合并。
 
+2026-10-06 的 D7 [六项单变量定位](../experiments/backends/dvs2-spectre-validation/d7-alignment-followup.md)
+确认半速有向积分在 Spectre 21.1.0.509.isr12 的精确 t=3 仍读到旧计数1，EVAS为2。
+减小步长或改积分方法减小偏移，未恢复精确边界状态一致；maxstep=.001在真实精确t=1还读到count0，
+与独立期望1和EVAS观察不同。两项模型参数控制另保留缺精确t=1观察。
+这是特定版本的轨迹与事件观察兼容差异，不能归为模型速度错误、将count判据放宽到1，
+或硬编码延迟以拟合Spectre。原失败/未决和原分母保持，raw明确为本地及授权服务器保留材料。
+
 **待改造事项。** 独立审阅题意与评分覆盖，确定正式变体及评测隔离，完成 Harbor 环境执行
 检查，再决定是否纳入正式任务。当前独立 verifier 的通过不等于完整 Harbor/agent 运行。
 保留现有原型，不因为记入本表而加入原六题初筛或 EVAS 原 31 条件的分母。
