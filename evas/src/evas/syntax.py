@@ -169,7 +169,7 @@ class Function:
     name: str
     inputs: tuple[str, ...]
     variables: frozenset[str]
-    body: tuple[Assignment, ...]
+    body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
 
 
