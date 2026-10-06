@@ -59,6 +59,18 @@ def write_csv(path, hits, mode='correct'):
 
 
 class Contract(unittest.TestCase):
+    def test_generated_netlist_has_named_options_analysis_and_fixed_numeric_settings(self):
+        # Actual Spectre SFE-709 rejected bare "options reltol=..." as an
+        # instance without a master. Spectre options analysis needs a name.
+        lines=adc.netlist().splitlines()
+        options=[line.split() for line in lines if 'reltol=' in line]
+        self.assertEqual(len(options),1)
+        self.assertGreaterEqual(len(options[0]),5)
+        self.assertEqual(options[0][1],'options')
+        self.assertNotEqual(options[0][0],'options')
+        self.assertEqual(options[0][2:],['reltol=1e-6','vabstol=1e-9','iabstol=1e-12'])
+        self.assertIn('tran tran stop=4.102m maxstep=20n errpreset=conservative',lines)
+
     def evaluate(self, mode='correct', mutate=None, trace_mutate=None, case=None):
         case, hits, rows = fixture(case)
         if mode == 'old_code':

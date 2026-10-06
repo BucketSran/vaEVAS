@@ -4,7 +4,10 @@
 确定工程用途及有限扫描定义。没有复制、改写或分发 Cadence 安装库源码。
 参考测量器、合成 ADC、开发网表和 checker 均在本次实现中独立编写。
 
-状态是首题本地原型，实际 Spectre 校准、Harbor 容器运行和强模型试跑尚未完成。
+状态是首题本地原型。首次实际 Harbor oracle 已启动，Spectre 许可证/标准 include
+探针通过；首个参考的主网表因未命名的 `options` 语句触发 SFE-709，保持未评分。
+已将该语句修正为命名的 `simulatorOptions options`，不改变容差与扫描设置，
+本地回归通过；新冻结包的实际 Spectre 校准、完整 Harbor Trial 和强模型试跑仍待完成。
 因此不计入原六题初筛分母，不宣称公开主集、开源复现或 EVAS 支持。
 完整验收目前依赖 Spectre，应按 Spectre 扩展集候选处理。
 
@@ -31,7 +34,8 @@ python3 -B experiments/adc_linearity/prepare.py --output runs/adc-linearity/prep
 [接入说明](../../../experiments/adc_linearity/REMOTE_PLAN.md)记录冻结包、私有profile及Harbor入口。
 `harness_adapter.py`生成每场景一个私有task manifest，并用harness实际API核验候选与包身份；
 `harbor_adapter.ADCHarnessVerifier`下载原始候选，调用既有持久job协议并回收校验过的归档。
-这些本地接口已做package/transfer校验，实际SSH和Harbor Trial仍未运行。
+这些接口已做package/transfer校验；首次实际SSH、Harbor容器、预检及归档回收已执行，
+首个参考未完成数值仿真，完整 Trial 仍未通过。
 
 候选写文件的两处固定 `$fopen` 路径，由受信checker重定位到各场景私有 `output/`。
 原始候选完整字节及SHA保持不变，实际执行源另存完整文件和SHA，记录 `adc-output-paths-v2`
