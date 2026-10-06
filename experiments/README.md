@@ -37,6 +37,7 @@
 | 目录 | 职责 | 内容 |
 | --- | --- | --- |
 | [va_screen/](va_screen/README.md) | Benchmark 初筛 | 六题构建、校准与模型评测工具，冻结输入身份和首轮精简结果 |
+| [adc_linearity/](adc_linearity/REMOTE_PLAN.md) | Benchmark 首题校准 | 原创ADC测量器的本地行为校准、冻结输入生成与待执行Spectre定向计划 |
 | [performance/](performance/README.md) | 成本测量 | 固定请求配对、构建基线、紧凑收据；数学与支持范围仍归 EVAS 手册 |
 | [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：合并检查点收据、矩阵分析、生命周期验证工具及独立校准；[capability-completion](runs/capability-completion/README.md)：本分支 0.13.0 候选、原矩阵重跑和冻结确认集的收据及审查入口 |
 | [backends/](backends/) | 跨后端对照 | [function-branches](backends/function-branches/README.md)：纯 real 函数两例有限观测与原编译失败； [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
