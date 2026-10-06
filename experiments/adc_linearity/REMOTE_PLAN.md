@@ -35,7 +35,7 @@ PSF ASCII保存13个字段，约205k基础时间点另加边沿点，预计单�
 每job使用场景私有输出目录，首批调度仍串行。记录 `spectre -W` 实际输出、输入身份、完整日志、
 退出码与波形身份。目录中有旧产物时换新目录，不能据此复用reward。
 
-本地 Python 语法、渲染身份和24项checker/接入行为回归（另有1项安装Harbor依赖后执行）可执行；本机没有 Spectre/openvaf。
+本地 Python 语法、渲染身份和24项checker/接入行为回归（另有2项安装Harbor依赖后执行）可执行；本机没有 Spectre/openvaf。
 Icarus Verilog 不接受 Verilog-A，不能充当VA语法验收。
 VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I/O须由首个reference病例检查，
 仅静态阅读网表和原创VA不能证明框架可执行。
@@ -64,6 +64,8 @@ python3 -B experiments/adc_linearity/harness_adapter.py   --harness-checkout /pa
 `private_root` 是预先创建、当前用户拥有且权限0700的持久宿主目录。配置与该目录必须位于
 task/trial及所有Harbor绑定挂载之外；adapter对原路径和解析symlink后的路径双向检查交叉。
 每次运行在其中创建新的私有子目录，保存候选、任务包、传输归档、完整报告和异常。
+本题仅接受本task的Dockerfile入口，拒绝额外Compose overlay、task docker-compose.yaml
+及预构建docker_image入口；这些路径可能添加不反写Harbor `_mounts` 的宿主绑定。
 Harbor verifier日志目录默认仍挂给agent，只写 `status`、`reward` 的最终投射；不能放隐藏包。
 `remote` 显式包含harness既有host/python/bundle/profile/run_root/archive_root/upload_root路径。
 配置内容不进入候选镜像，也不把它复制到任务源码。

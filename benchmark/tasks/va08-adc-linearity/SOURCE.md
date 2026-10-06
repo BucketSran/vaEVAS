@@ -55,5 +55,6 @@ runner记录 `spectre -W` 实际输出与返回码，非零或空版本输出停
 checker拒绝其他文件打开与非标准include。运行器还必须保证task目录不挂载给candidate。
 Harbor默认verifier日志目录仍对活着的agent可见，不能用它保存私有资产。adapter要求
 配置指定task/trial及所有绑定挂载之外的0700持久 `private_root`，包括symlink解析校验；
-仅最终status/reward投射到日志目录。该隔离仍需实际Harbor运行验证。
+仅最终status/reward投射到日志目录。
+adapter还拒绝额外Compose overlay、task Compose与预构建镜像入口，避免挂载清单之外的绑定。该隔离仍需实际Harbor运行验证。
 四个计分阈值数组均与public开发器件不同，task版本为 `adc-linearity-v2-local-candidate`。

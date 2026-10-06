@@ -32,6 +32,19 @@ def validate_private_location(path,visible_paths,*,directory=True):
 
 def visible_mount_roots(environment,task_directory,trial_directory):
     """Consume Harbor 0.23's actual mount inventory; unknown backends fail closed."""
+    extras=getattr(environment,'extra_docker_compose_paths',None)
+    if not isinstance(extras,list) or extras:
+        raise ValueError('ADC requires no extra Docker Compose overlays')
+    envdir=Path(getattr(environment,'environment_dir','')).resolve()
+    if envdir!=(Path(task_directory)/'environment').resolve():
+        raise ValueError('ADC requires the task Dockerfile environment')
+    if not (envdir/'Dockerfile').is_file() or (envdir/'Dockerfile').is_symlink():
+        raise ValueError('ADC requires a regular Dockerfile')
+    if (envdir/'docker-compose.yaml').exists() or (envdir/'docker-compose.yaml').is_symlink():
+        raise ValueError('ADC does not support task Docker Compose definitions')
+    config=getattr(environment,'task_env_config',None)
+    if config is None or getattr(config,'docker_image',None) is not None:
+        raise ValueError('ADC does not support prebuilt environment entrypoints')
     mounts=getattr(environment,'_mounts',None)
     if not isinstance(mounts,list): raise ValueError('candidate host mount inventory unavailable')
     visible=[Path(task_directory),Path(trial_directory)]
