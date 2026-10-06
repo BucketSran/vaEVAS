@@ -149,3 +149,19 @@ class RunnerContracts(unittest.TestCase):
                 self.assertEqual(abort['failure_stage'],phase)
                 self.assertEqual(len(abort['unrun']),11)
                 self.assertTrue((output/'FILE_MANIFEST.json').is_file())
+
+    def test_selected_plan_is_checked_against_actual_allocation_before_preflight(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        from runner import run
+        a={'backend':'spectre','input_manifest_sha256':'digest','tool_profile_sha256':'digest',
+           'max_simulation_launches':12,'max_compilation_launches':12,'stage_timeout_s':90,
+           'license_timeout_s':30,'memory_limit_bytes':4*1024**3,'file_limit_bytes':32*1024**2,'threads':1}
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); args=SimpleNamespace(inputs=root/'inputs',output=root/'output',backend='spectre',tool_profile=root/'profile',allocation=root/'allocation')
+            plan=[{'backend':'spectre','condition':str(i)} for i in range(13)]
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.sha',return_value='digest'),patch('runner.load',side_effect=[{},a]),patch('runner.preflight') as probe:
+                with self.assertRaisesRegex(ValueError,'twelve distinct'):
+                    run(args)
+                probe.assert_not_called()
+                self.assertFalse(args.output.exists())

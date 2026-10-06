@@ -18,12 +18,15 @@ SI-01 原源码中的 `paper_isolation` 顶层包含 A/B 两个真实实例，�
 请求网格包含全局最多 200 ps、规定窗口内最多 20 ps 间隔、所有名义中心和
 anchor。Spectre 请求 200 ps 全局步长，加共同网格的 `strobetimes` 和
 `strobeoutput=all`。EVAS 请求同一网格和 200 ps 最大步长。ngspice/Gnucap
-没有已核验的局部控制接口；仅在 32 byte/token 保守输出估算及 20% 文件余量
-允许时采用全局 20 ps 备用步长，否则保留 200 ps 并声明局部/中心资格缺口。
-当前 12 条件均未通过该备用输出规模门槛。实际原生记录可能因自适应加密
-超过估算，执行器仍实施文件上限，超限失败保留。
-`requested_times.json` 是共同的观测义务；deck 尚未证明能产生每一个精确中心。
-后续执行必须核验实际输出来源、时间/电压误差、局部间隔和中心行。
+增加与 DUT 断开的理想 PWL 辅助源：只共享 ground，不连接 DUT 端口或刺激；
+在规定窗口点、名义中心和 anchors 请求时间断点。全局 maxstep 保持 200 ps，
+Gnucap 额外请求 `trace alltime` 保存内部接受步。辅助源属于新 deck/输入冻结，
+不增加条件数量。`breakpoint_requests.json` 保存有 ID 的请求和两倍行数规划估算，
+当前全部 12 条件的估算在 32 MiB/文件、256 MiB/条件内；自适应步数可能超过估算。
+实际输出大小、安装版断点与保存语义仍须小型 preflight 核验，再由协调者决定矩阵。
+`requested_times.json` 是共同观测义务；请求文件不能证明 accepted 或准确中心。
+[观察方法与运行前资格路径](OBSERVATION_METHODS.md) 列出 primary 源码依据、
+原始证据与未知项，准备状态不代表后端比较完成。
 编译器是否接受原源、deck 是否有效、工具版本/二进制/镜像身份及有效设置
 在准备阶段均未知。`qualification_requirements.json` 保留这些待办。
 准备文件不是实际比较证据，实际执行须先由协调者批准冻结批次并绑定工具身份。
@@ -40,6 +43,8 @@ anchor。Spectre 请求 200 ps 全局步长，加共同网格的 `strobetimes` �
 和 native_initial
 及适用的 native_counters/native_phase 角色记录 `{method, artifact_path, sha256}`。
 适配器只核验可读取证据的哈希及声明，科学误差界仍需审查 method 报告。
+哈希是证据绑定；调用方是受信任的资格审查入口，不是任意证书的认证器。
+synthetic 测试只校准这个传输合同，不能成为实际后端资格。
 缺证据时 `qualified=false`。密集网格、solver tolerance 与相互一致的后端
 不能建立误差界。插值误差须单独有界并包含在总导出误差内；插值/未知记录
 不会成为原生计数/phase 或精确端点证据。

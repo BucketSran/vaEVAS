@@ -82,11 +82,12 @@ def verify_sources(inputs):
     if not checker:
         raise ValueError('checker integration was not frozen')
     for relative,digest in checker.items():
-        if sha(ROOT/relative)!=digest:
+        path=ROOT/relative
+        if not path.resolve().is_relative_to(ROOT.resolve()) or not path.is_file() or sha(path)!=digest:
             raise ValueError('checker differs from freeze: '+relative)
     for relative,digest in load(inputs/'RUNTIME_IDENTITY.json').items():
         path=ROOT/relative
-        if not path.resolve().is_relative_to(ROOT.resolve()) or sha(path)!=digest:
+        if not path.resolve().is_relative_to(ROOT.resolve()) or not path.is_file() or sha(path)!=digest:
             raise ValueError('EVAS runtime differs from freeze: '+relative)
 
 
@@ -177,7 +178,10 @@ def preflight(backend, profile, output, a):
         raise ValueError('pinned environment source/manifest drift')
     # Inspect package hashes before importing its code. Never trust a nearby
     # environment solely because its path was used by an earlier run.
-    for relative,digest in load(directory/'INPUT_MANIFEST.json').items():
+    package_manifest=load(directory/'INPUT_MANIFEST.json')
+    if 'IMAGE_IDENTITIES.json' not in package_manifest:
+        raise ValueError('image identity file not bound by pinned manifest')
+    for relative,digest in package_manifest.items():
         file=(directory/'package'/relative).resolve()
         if not file.is_relative_to((directory/'package').resolve()) or sha(file)!=digest:
             raise ValueError('pinned package drift')
@@ -251,6 +255,7 @@ def worker(work, kernel):
         times=load(work/request['requested_times'])
         response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
                            kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
+        save(work/'raw-response.json',response)
         # Owned outer stage kills the complete worker/kernel group at its limit.
         with (work/'waveform.csv').open('x') as f:
             writer=csv.writer(f)
@@ -267,6 +272,8 @@ def worker(work, kernel):
         result={'status':'compile_failed','failure_stage':'compile','reason':str(exc)}
     except KernelError as exc:
         result={'status':'execution_failed','failure_stage':'kernel','reason':str(exc),'detail':exc.detail}
+    except Exception as exc:
+        result={'status':'execution_failed','failure_stage':'worker','exception_type':type(exc).__name__,'reason':str(exc)}
     save(work/'worker-result.json',result)
 
 
@@ -299,8 +306,8 @@ def effective_settings(work, backend):
             # Reuse the parser's calibrated SPICE numeric suffix conversion.
             from observations import READER_DIR
             old=sys.modules.get('suite')
-            sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
             try:
+                sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
                 reader=module(READER_DIR/'analyze.py','paper_setting_number')
                 actual[target]=reader.number(token)
             finally:
@@ -324,6 +331,8 @@ def run(args):
     if output.is_relative_to(inputs):
         raise ValueError('output must be outside frozen inputs')
     selected=[r for r in plan if r['backend']==args.backend]
+    if len(selected)!=12 or len({r['condition'] for r in selected})!=12 or len(selected)>a['max_simulation_launches'] or len(selected)>a['max_compilation_launches']:
+        raise ValueError('selected paper plan exceeds allocated twelve distinct conditions')
     output.mkdir(parents=True,exist_ok=False)
     save(output/'STARTED.json',{'backend':args.backend,'allocation':a,'input_manifest_sha256':sha(inputs/'INPUT_MANIFEST.json'),
          'tool_profile_sha256':sha(args.tool_profile),'runner_sha256':sha(Path(__file__)),

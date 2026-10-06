@@ -25,9 +25,9 @@ def read_native(path, backend):
     old_suite = sys.modules.get('suite')
     spec = importlib.util.spec_from_file_location('suite',READER_DIR/'suite.py')
     suite = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(suite)
-    sys.modules['suite'] = suite
     try:
+        sys.modules['suite'] = suite
+        spec.loader.exec_module(suite)
         spec = importlib.util.spec_from_file_location('paper_native_reader',READER_DIR/'analyze.py')
         reader = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(reader)
@@ -58,7 +58,7 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
     if not rows:
         issues.append('missing rows')
     for row in rows:
-        if any(not isinstance(row.get(p),(int,float)) or not math.isfinite(row[p])
+        if any(not isinstance(row.get(p),(int,float)) or isinstance(row.get(p),bool) or not math.isfinite(row[p])
                for p in ['time',*card['observables']]):
             issues.append('missing or nonfinite required column')
             break
@@ -68,27 +68,6 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
         times = []
     gap = max((b-a for a,b in zip(times,times[1:])),default=None)
     coverage = bool(times) and times[0] == 0 and times[-1] >= card['stop_T']*T
-    windows = []
-    exact = []
-    for w in card['observation_windows']:
-        start,end,center = w['start_T']*T,w['end_T']*T,w['center_T']*T
-        # Intersect every interval with the window, including intervals crossing
-        # its edges. Looking only at contained rows hides an empty window.
-        gaps = [min(b,end)-max(a,start) for a,b in zip(times,times[1:]) if a<end and b>start]
-        local = max(gaps,default=None)
-        indices = [i for i,t in enumerate(times) if t==center]
-        exact.extend(indices)
-        windows.append({'start_s':start,'end_s':end,'center_s':center,
-                        'max_gap_s':local,'required_max_gap_s':w['max_gap_s'],
-                        'exact_center_rows':indices,
-                        'coverage':bool(times) and times[0]<=start and times[-1]>=end})
-    # Small relative allowance handles binary time differences, not physical error.
-    gap_ok = coverage and gap is not None and gap <= contract['sample_gap_s']*(1+1e-10)
-    local_ok = all(w['coverage'] and w['max_gap_s'] is not None and
-                   w['max_gap_s']<=w['required_max_gap_s']*(1+1e-10) and w['exact_center_rows'] for w in windows)
-    native = len(origins)==len(rows) and bool(rows) and all(o=='accepted' for o in origins)
-    uncertainty_ok = all(bounded(q.get(k)) for k in ('time_error_s','voltage_error_V','input_error_V'))
-    uncertainty_ok = uncertainty_ok and q['time_error_s']<=contract['required_observation_error']['time_s'] and q['voltage_error_V']<=contract['required_observation_error']['voltage_V'] and q['input_error_V']<=contract['input_error_V']
     certificates = q.get('qualification_evidence', {})
     required_roles = ['source','time','voltage','inputs','native_initial']
     if any(p in ('count','na','nb') for p in card['observables']):
@@ -103,6 +82,38 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
             return hashlib.sha256(Path(entry['artifact_path']).read_bytes()).hexdigest()==entry['sha256']
         except (OSError,TypeError,ValueError):
             return False
+    cohort=q.get('boundary_cohort',{})
+    boundary_rows={}
+    if isinstance(cohort,dict) and valid_certificate('boundary_cohort') and bounded(cohort.get('serialization_error_s')) and cohort['serialization_error_s']<=contract['required_observation_error']['time_s']:
+        for record in cohort.get('records',[]):
+            if not isinstance(record,dict): continue
+            index=record.get('row_index'); nominal=record.get('nominal_time_s')
+            if (isinstance(index,int) and not isinstance(index,bool) and 0<=index<len(times)
+                and bounded(nominal) and isinstance(record.get('request_id'),str) and record['request_id']
+                and index<len(origins) and origins[index]=='accepted'
+                and abs(times[index]-nominal)<=cohort['serialization_error_s']):
+                boundary_rows.setdefault(nominal,[]).append(index)
+    windows = []
+    exact = []
+    for w in card['observation_windows']:
+        start,end,center = w['start_T']*T,w['end_T']*T,w['center_T']*T
+        # Intersect every interval with the window, including intervals crossing
+        # its edges. Looking only at contained rows hides an empty window.
+        gaps = [min(b,end)-max(a,start) for a,b in zip(times,times[1:]) if a<end and b>start]
+        local = max(gaps,default=None)
+        indices = [i for i,t in enumerate(times) if t==center]
+        exact.extend(indices)
+        windows.append({'start_s':start,'end_s':end,'center_s':center,
+                        'max_gap_s':local,'required_max_gap_s':w['max_gap_s'],
+                        'exact_center_rows':indices,'proved_center_rows':boundary_rows.get(center,[]),
+                        'coverage':bool(times) and times[0]<=start and times[-1]>=end})
+    # Small relative allowance handles binary time differences, not physical error.
+    gap_ok = coverage and gap is not None and gap <= contract['sample_gap_s']*(1+1e-10)
+    local_ok = all(w['coverage'] and w['max_gap_s'] is not None and
+                   w['max_gap_s']<=w['required_max_gap_s']*(1+1e-10) and (w['exact_center_rows'] or w['proved_center_rows']) for w in windows)
+    native = len(origins)==len(rows) and bool(rows) and all(o=='accepted' for o in origins)
+    uncertainty_ok = all(bounded(q.get(k)) for k in ('time_error_s','voltage_error_V','input_error_V'))
+    uncertainty_ok = uncertainty_ok and q['time_error_s']<=contract['required_observation_error']['time_s'] and q['voltage_error_V']<=contract['required_observation_error']['voltage_V'] and q['input_error_V']<=contract['input_error_V']
     evidence_ok = all(valid_certificate(role) for role in required_roles)
     interpolation_ok = native or (all(o!='unknown' for o in origins) and bounded(q.get('interpolation_error_bound_V')) and bounded(q.get('voltage_error_V')) and q['interpolation_error_bound_V']<=q['voltage_error_V'] and evidence_ok)
     qualified = not issues and bool(q.get('qualified')) and uncertainty_ok and evidence_ok and gap_ok and local_ok and interpolation_ok
