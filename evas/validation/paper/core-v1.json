@@ -46,7 +46,7 @@
     "budget_rule": "Add independently bounded observation and actual-input uncertainty to measured error. P when upper bound <=budget; F when lower bound >budget; I on overlap or unqualified observations. Source event tolerance permits temporal waveform variation, not extra free voltage tolerance.",
     "event_rule": "One allowed event sequence per condition must explain counts, order, held sample values and every edge. cross window is one-sided min(time_tol,expr_tol/abs(slope)); input and export-time uncertainty expand it independently. Explicit timer time_tol admits [nominal-time_tol,nominal+time_tol] under LRM2.4 section5.10.3.3; non-early wording applies only to unspecified tolerance.",
     "timer_boundary": "No terminal timer event at stop; first event separated from initial_step. No unspecified default timer tolerance.",
-    "phase_rule": "Ordinary abs phase error only away from wrap windows. Everywhere, circular distance min_k abs(p_expected-p_actual+k) <=phase budget. Require p in [0,1] within observation uncertainty. Sine compared to continuous unwrapped analytic phase. Separate exact-wrap observations and left/right limits; wrap count inferred from qualified bracketing records, not a DUT last_crossing report.",
+    "phase_rule": "Applies only to idtmod cards CP-02 and CO-VCO-01. Ordinary abs phase error only away from wrap windows. Everywhere, circular distance min_k abs(p_expected-p_actual+k) <=phase budget. Require modulo phase in [0,1] within observation uncertainty. Sine compared to continuous unwrapped analytic phase. Separate exact-wrap observations and left/right limits; wrap count inferred from qualified bracketing records, not a DUT last_crossing report. CP-01 uses ordinary unwrapped integral error; no modulo range or wrap requirement.",
     "claim_limit": "Maximum observed error on fixed required observations; no general continuous-time guarantee or invisible narrow-pulse detection. Qualified gap/rounding metadata is required; absence leaves relevant properties I.",
     "calibration_required": [
       "Independent legal nominal traces",
@@ -1788,6 +1788,12 @@
       "basis": "Independent Astra review before new backend results",
       "change": "Correct stale EV-SH-01 construction prose to symmetric explicit timer tolerance; source, stimulus, numerical windows and budgets unchanged.",
       "previous_commit": "2599a4c6"
+    },
+    {
+      "revision": "A0-review-2",
+      "basis": "Independent Astra review of original2599 before backend results",
+      "change": "Scope modulo-phase rule to CP-02 and CO-VCO-01; CP-01 remains unwrapped. Mathematical answers and source unchanged.",
+      "previous_commit": "c00e664a"
     }
   ]
 }
