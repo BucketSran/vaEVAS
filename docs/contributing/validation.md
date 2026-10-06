@@ -40,6 +40,47 @@ Its mandatory interface confirmations, blanket ban on internal tests and review-
 refactoring are not repository rules. Existing authorization, numerical evidence and
 independent validation contracts govern those choices here.
 
+## Spectre alignment acceptance
+
+For changes to accepted VA/SCS behavior, initialization, events, history operators or
+numerical execution, identify the changed observable behavior and compare it with actual
+Spectre execution before recommending merge or claiming alignment. Select the smallest
+cases that expose that behavior and its affected consumers; a full backend matrix is not
+required. Documentation, packaging identity, result storage and diagnostics alone need no
+new Spectre run when they leave simulated behavior unchanged.
+
+Use the same physical model, instance parameters, stimulus and initial conditions. Preserve
+each backend's requested/effective settings, observation conventions and relevant version
+identity. Solver controls need not have identical names or values; explain their mapping
+and choose voltage/time tolerances from the contract before inspecting results. Include
+initial values and relevant event boundaries, signs, instance isolation or compositions,
+not only a DC point when the changed behavior is dynamic.
+
+Link retrievable inputs, both backend outputs, commands and source/kernel/Spectre identities
+to the actual comparison and its tolerances. Separate EVAS-to-Spectre agreement from each
+backend's independent analytical/invariant checks; local unit tests, an nd equivalent of
+an np operator, model reviews or an unrelated comparison-table row do not establish the
+new behavior's Spectre compatibility. A Spectre-only probe supports only its stated scope.
+
+Reuse an existing Spectre execution when its physical inputs and relevant semantics match;
+link its frozen identity and explain applicability to the changed implementation. Rebuild
+and recheck the affected EVAS behavior at the new head. State whether a change was newly
+paired, compared against reusable reference data, or remains without alignment evidence.
+Do not require re-execution just to replace a valid evidence link with a newer timestamp.
+
+Spectre remains the project's compatibility reference, while independent contracts still
+check mathematical correctness. Investigate disagreement before accepting a result:
+distinguish VA semantics, settings, tolerances, simulator-version behavior and EVAS defects.
+Retain a justified, version-specific exception explicitly; do not change the model or widen
+tolerances merely to conceal disagreement. An unavailable run or unexplained discrepancy
+keeps the affected alignment/merge recommendation pending unless the user accepts that
+specific partial scope. Record the gap in the existing PR/capability evidence, independently
+of GitHub's ready flag or the code-review outcome.
+
+These are acceptance requirements, not additional resource authorization. Prepare missing
+cases and commands using existing tools, and run within the current task's server/time/case
+budget. An expired run's unused allocation does not authorize a fresh remote experiment.
+
 ## Development failures as benchmark candidates
 
 <a id="development-bench-candidates"></a>
