@@ -78,7 +78,8 @@
         "path": "evas/validation/TIMED_OPERATOR_CONTRACTS.md"
       }
     ],
-    "exact_boundary_rule": "Preserve all exact-nominal-wrap rows with raw phase value, ordinary scalar endpoint error, circular error, export-time uncertainty and accepted/interpolated identity. Endpoint expectation from mathematical modulo is0; a near1 value explained by timing uncertainty must be distinguished from a verified wrong endpoint. Do not erase raw endpoint discrepancies when circular distance is small. Without exact-time qualification endpoint semantics remain I, separately from qualified off-boundary phase/sine properties."
+    "exact_boundary_rule": "Preserve all exact-nominal-wrap rows with raw phase value, ordinary scalar endpoint error, circular error, export-time uncertainty and accepted/interpolated identity. Endpoint expectation from mathematical modulo is0; a near1 value explained by timing uncertainty must be distinguished from a verified wrong endpoint. Do not erase raw endpoint discrepancies when circular distance is small. Without exact-time qualification endpoint semantics remain I, separately from qualified off-boundary phase/sine properties.",
+    "count_schema": "Each event_contract entry expected_count belongs only to that event kind/channel/instance. card.callback_counts maps observed native counter ports to total callbacks across their declared event sources. CO-SH-01 clk expected_count4 + reset expected_count1 produce count total5. Wrap counts are phase discontinuities, not callbacks."
   },
   "cards": [
     {
@@ -211,7 +212,8 @@
         "gnucap_modelgen": "T"
       },
       "provenance": "development-informed; selected before new results; not untouched confirmation data",
-      "observation_windows": []
+      "observation_windows": [],
+      "callback_counts": {}
     },
     {
       "id": "EX-01",
@@ -305,7 +307,8 @@
         "gnucap_modelgen": "T"
       },
       "provenance": "development-informed; selected before new results; not untouched confirmation data",
-      "observation_windows": []
+      "observation_windows": [],
+      "callback_counts": {}
     },
     {
       "id": "EV-SH-01",
@@ -446,7 +449,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 4
+      }
     },
     {
       "id": "EV-HC-01",
@@ -506,7 +512,8 @@
           "window_T": [
             0,
             0.0005
-          ]
+          ],
+          "expected_count": 1
         },
         {
           "kind": "cross",
@@ -518,7 +525,7 @@
             0,
             0.0005
           ],
-          "total_count": 2
+          "expected_count": 1
         }
       ],
       "anchors": [
@@ -576,7 +583,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 2
+      }
     },
     {
       "id": "EV-HC-02",
@@ -640,7 +650,8 @@
           "window_T": [
             0,
             0.001
-          ]
+          ],
+          "expected_count": 1
         },
         {
           "kind": "cross",
@@ -652,7 +663,7 @@
             0,
             0.0005
           ],
-          "total_count": 2
+          "expected_count": 1
         }
       ],
       "anchors": [
@@ -708,7 +719,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 2
+      }
     },
     {
       "id": "TM-01",
@@ -807,7 +821,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 2
+      }
     },
     {
       "id": "CP-01",
@@ -899,7 +916,8 @@
         "gnucap_modelgen": "T"
       },
       "provenance": "development-informed; selected before new results; not untouched confirmation data",
-      "observation_windows": []
+      "observation_windows": [],
+      "callback_counts": {}
     },
     {
       "id": "CP-02",
@@ -1020,7 +1038,8 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {}
     },
     {
       "id": "SI-01",
@@ -1195,7 +1214,11 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "na": 3,
+        "nb": 2
+      }
     },
     {
       "id": "CO-SH-01",
@@ -1368,7 +1391,8 @@
           "window_T": [
             0,
             8e-05
-          ]
+          ],
+          "expected_count": 4
         },
         {
           "kind": "cross",
@@ -1380,7 +1404,7 @@
             0,
             8e-05
           ],
-          "total_count": 5
+          "expected_count": 1
         }
       ],
       "anchors": [
@@ -1483,7 +1507,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 5
+      }
     },
     {
       "id": "CO-HC-01",
@@ -1546,7 +1573,8 @@
           "window_T": [
             0,
             0.0005
-          ]
+          ],
+          "expected_count": 1
         },
         {
           "kind": "cross",
@@ -1558,7 +1586,7 @@
             0,
             0.0005
           ],
-          "total_count": 2
+          "expected_count": 1
         }
       ],
       "anchors": [
@@ -1619,7 +1647,10 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {
+        "count": 2
+      }
     },
     {
       "id": "CO-VCO-01",
@@ -1779,7 +1810,8 @@
           "max_gap_s": 2e-11,
           "include_exact_center": true
         }
-      ]
+      ],
+      "callback_counts": {}
     }
   ],
   "draft_revisions": [
@@ -1794,6 +1826,12 @@
       "basis": "Independent Astra review of original2599 before backend results",
       "change": "Scope modulo-phase rule to CP-02 and CO-VCO-01; CP-01 remains unwrapped. Mathematical answers and source unchanged.",
       "previous_commit": "c00e664a"
+    },
+    {
+      "revision": "A0-review-3",
+      "basis": "Verified count-field ambiguity from incomplete GLM fragment; no new backend results",
+      "change": "Make event-entry counts local and observed callback totals card-level. Sources, stimuli, answers, windows and budgets unchanged.",
+      "previous_commit": "9932ee4f"
     }
   ]
 }
