@@ -27,7 +27,7 @@ python3 -B benchmark/checkers/build_triangle_evas_replay.py \
 
 ## 离线固定镜像
 
-[Dockerfile](va07-evas-runtime.Dockerfile) 只复制已保存产物，没有 pip、Cargo 或在线安装。私有 build context 的 `runtime/` 应包含对应源码的 `evas/` Python 包、已有 Linux `evas-kernel`，以及实际来源/构建记录 `source-identity.json`。源记录至少保存源码 revision、Python 逐文件摘要、内核摘要、架构和原构建收据位置。使用获准且身份对应的既有内核，不能把本机 macOS 二进制放入 Linux 镜像。
+[Dockerfile](va07-evas-runtime.Dockerfile) 只复制已保存产物，没有 pip、Cargo 或在线安装。私有 build context 的 `runtime/` 应包含对应源码的 `evas/` Python 包、已有 Linux `evas-kernel`，以及实际来源/构建记录 `source-identity.json`。源记录至少保存源码 revision、Python 逐文件摘要、内核摘要、架构和原构建收据位置。使用获准且身份对应的既有内核，不能把本机 macOS 二进制放入 Linux 镜像。context 排除 `__pycache__` 与 `.pyc`；recipe 还会离线清除继承的 Python bytecode，因为 `-B` 只阻止写入缓存，并不禁止读取旧缓存。
 
 ```sh
 # BASE_DIGEST 是已安装 Python 3.10+ Linux 镜像的实际 repo@sha256 摘要。
