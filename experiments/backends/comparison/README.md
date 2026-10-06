@@ -1,11 +1,14 @@
 # 四后端比较记录
 
 [维护契约](../../../evas/docs/COMPARISON.md)定义数据集、身份与复验规则。
-[当前结果表](TABLE.md)由[snapshot-20261006-accounted-v2.json](snapshot-20261006-accounted-v2.json)
-生成。今晚固定8条件、基础档、四后端共32配置：Spectre和当前EVAS各8项有新有限观察P；
-OpenVAF/ngspice与Gnucap各8项因既有容器层缺失保持T，共16项尚未取得观察。
-不得将32项完整记账称为32项已完成实验。历史31条件、两档开发回放另列，新论文集N仍unknown。
-[原计划](PLANNED.md)及[EVAS先行快照](EVAS8.md)保留，不用最新结果回填旧记录。
+[当前结果表](TABLE.md)由[snapshot-20261007-issue95-completed.json](snapshot-20261007-issue95-completed.json)
+生成。固定8开发条件、基础档、四后端共32配置。Spectre原8项在当前checker下重分析并复用；
+受审main `d4b41c79` 的EVAS8、OpenVAF/ngspice8与Gnucap8有24项新执行结果，包含失败。
+有限观察分别为Spectre8P、EVAS8P、OpenVAF/ngspice4P1F3X、Gnucap5P3F；正式资格32项均I。
+OpenVAF的3X是两项编译失败和一项90秒仿真超时，保留在固定分母。此次实际新增8个本地EVAS
+求解、14个开源后端主仿真阶段、16个开源编译阶段，未重试、未新增Spectre求解。
+该表为CMP8开发批次，不是新论文评价集；新集N仍unknown。
+[原计划](PLANNED.md)、[EVAS先行快照](EVAS8.md)及全部旧快照保持原字节。
 
 表C固定了va07的正确参考源码、constant-tighter条件和checker身份；四后端公共外壳、
 精度映射与连续时间资格仍待冻结。原EVAS单后端历史回放不进入四方C分母。
@@ -16,7 +19,7 @@ schema2 从原具名观察静态重聚合，不增加仿真次数。V1 保存最
 V2 分别保存差模误差及2mV预算、共模误差及1mV预算，B取各物理性质的归一化最大值。
 物理量、单位和预算逐项保留；预算来源以固定revision及内容寻址的PROTOCOL源码归档绑定。
 历史248行的判定、指标绑定到matrix中唯一backend/condition/profile/source_run_id及其receipt；
-今晚16项观察绑定到各执行receipt里的observation。改判定、指标、预算或选择器会拒绝。
+2026-10-06快照的16项观察绑定到各执行receipt里的observation。改判定、指标、预算或选择器会拒绝。
 
 三个schema1旧快照保持原字节。它们的V2指标把单端误差除以1mV，数学解释失效；
 新版渲染器明确标注并排除该项B比较。旧PLANNED.md、EVAS8.md是原历史表，不能作为修正后的
@@ -36,7 +39,7 @@ V2归一化结果。旧快照仍可校验和阅读；旧格式其他有效观察
 ```sh
 python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
 python3 -B experiments/backends/comparison/records.py \
-  experiments/backends/comparison/snapshot-20261006-accounted-v2.json \
+  experiments/backends/comparison/snapshot-20261007-issue95-completed.json \
   --output experiments/backends/comparison/TABLE.md --check
 ```
 
@@ -45,7 +48,7 @@ python3 -B experiments/backends/comparison/records.py \
 精简分析则不能声称本地复验。重复配置、删掉失败、把旧工件称为当前工件均会拒绝。
 同一组在当前子集没有条件时显示“不适用 N=0”；待冻结集显示 pending 和 N=unknown。
 
-不覆盖既有快照。维护的TABLE指向当前派生快照；历史表保留。新文件可用下列命令生成：
+不覆盖既有快照。维护的TABLE指向本次完成快照；历史派生快照与表保留。新文件可用下列命令生成：
 
 ```sh
 python3 -B experiments/backends/comparison/derive.py \
@@ -102,9 +105,9 @@ OpenVAF-R自己的版本回显仍为unknown，不能用发布包标签替代。
 历史精简分析/收据在仓库内可取得；历史原始归档仍为私有材料。
 许可证来源链接保存在同一结构化快照中，不声称上游当前文件证明旧二进制的完整许可。
 
-## 本次执行与复用边界
+## 2026-10-06原执行与复用边界
 
-本次启动16个仿真配置，无重复仿真；两个容器身份预检失败，未启动其16个配置的编译或仿真。
+该原批次启动16个仿真配置，无重复仿真；两个容器身份预检失败，未启动其16个配置的编译或仿真。
 Spectre首项仿真后，设置审计误导入旧同名模块；修复为精确模块路径后复用已有首项波形，
 再执行剩余7项。阶段命令/日志保持原哈希，收据同时保存初始及分析脚本身份。
 [evidence/sources](evidence/sources/)保留实际执行版本源码，含初始、恢复及失败预检版本。
@@ -115,11 +118,11 @@ Spectre首项仿真后，设置审计误导入旧同名模块；修复为精确�
 预检失败保留T、基础设施阶段和原错误，不记为模型不支持。修改目标runtime时旧结果自动标stale；
 新实验需另行分配资源，不使用维护命令隐式重试。
 
-## integration EVAS8 刷新
+## 已保留的 integration EVAS8 刷新
 
 `refresh.py` 只做固定 `cmp8-base` 的静态合并，不启动后端。先在获授权的最终integration
 版本生成独立fresh快照：8个EVAS/base是真实新执行，外部24项未执行；随后与parent快照合并。
-维护表的EVAS8指向fresh实际receipt，Spectre8标reused并绑定原receipt，其他16项保持T/unrun。
+该刷新快照的EVAS8指向fresh实际receipt，Spectre8标reused并绑定原receipt，其他16项保持T/unrun。
 这些T的环境失败理由来自原预检，本轮没有外部启动、安装环境或重新确认可用性。
 
 schema2的receipt复用只允许在有界refresh中使用。两份小输入manifest/provenance归档到新的
@@ -176,3 +179,17 @@ PR87 只改变聚合身份中的 `test_triangle_oscillator.py`，CMP8 读取与�
 完全相同。原执行、原判定和原 checker 身份继续保留，重分析具有单独证明身份；
 它不增加 Spectre 仿真数。证明篡改、未知依赖变化、缺观察或变化的判定均拒绝。
 该入口用于此开发批次的明确转换，不构成一般 checker 升级或新的论文集。
+
+本次[重分析证明](evidence/cmp-actual-95-20261007/checker-reanalysis/proof.json)及其所有引用
+必须位于保留的比较目录并通过SHA验证；`runs/`或冻结输入目录内的临时证明拒绝。
+该窄桥接还要求本地Git可取得两个固定修订及其源码blob。对象缺失会以明确的
+`missing fixed checker Git blob`拒绝，不以当前工作树或其他修订替代。
+
+[新24项独立执行快照](snapshot-20261007-issue95-fresh-os16.json)绑定实际STARTED与收据，
+[完成快照](snapshot-20261007-issue95-completed.json)保留原Spectre执行与单独重分析证明。
+[执行边界收据](evidence/cmp-actual-95-20261007/operators/execution-boundaries.json)记录部署、
+独立output wrapper及实际阶段数量。runner源码字节保持受审d4版本。输出wrapper补充host子进程
+32MiB RLIMIT_FSIZE和每case目录256MiB、1秒轮询监控；后者可在检测前越界，不是硬磁盘配额。
+两批均未触发输出cap。原隔离镜像store仅复用，没有再次恢复、导入镜像或修改共享store。
+OpenVAF的v5-main超时走原runner的owned-container清理；最终operator inventory没有残留。
+全部raw波形/日志在任务本地，仓库保留精简收据、分析与源码，不能声称公开raw可复跑。

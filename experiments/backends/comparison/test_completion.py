@@ -1,6 +1,7 @@
 """Synthetic receipt batches test static completion; no backend is launched."""
 import copy
 import json
+import tempfile
 from pathlib import Path
 import unittest
 
@@ -83,11 +84,18 @@ class CompletionControls(unittest.TestCase):
         from completion import complete
         proof=load(ROOT/'experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/proof.json')
         parent_path=ROOT/proof['parent']['path']
+        retained=tempfile.TemporaryDirectory(dir=ROOT/'experiments/backends/comparison/evidence')
+        self.addCleanup(retained.cleanup)
+        retained_path=Path(retained.name)
         for name in ('INPUT_MANIFEST.json','provenance.json'):
             (self.old/name).write_bytes((ROOT/proof['inputs']['old_'+name]['path']).read_bytes())
-            new_path=self.new/name
+            new_path=retained_path/name
+            new_path.write_bytes((self.new/name).read_bytes())
             proof['inputs']['new_'+name]={'path':str(new_path.relative_to(ROOT)),'sha256':sha(new_path)}
-        bridge=self.work/'checker-reanalysis.json';save(bridge,proof)
+        bridge=retained_path/'checker-reanalysis.json';save(bridge,proof)
+        transient=self.work/'checker-reanalysis.json';save(transient,proof)
+        with self.assertRaisesRegex(ValueError,'retained comparison evidence'):
+            complete(parent_path,self.fresh_path,self.old,self.new,self.work/'transient',checker_reanalysis=transient)
         with self.assertRaisesRegex(ValueError,'checker changed without'):
             complete(parent_path,self.fresh_path,self.old,self.new,self.work/'unbridged')
         result=complete(parent_path,self.fresh_path,self.old,self.new,self.work/'bridged',checker_reanalysis=bridge)
@@ -159,3 +167,9 @@ class CheckerReanalysisControls(unittest.TestCase):
             if mutation=='missing_case':bad['rows'].pop()
             with self.subTest(mutation=mutation),self.assertRaises(ValueError):
                 check_checker_reanalysis(bad,parent,old,new,ROOT)
+
+    def test_missing_fixed_git_objects_are_clear_rejections(self):
+        from completion import checker_sources, BRIDGE_REVISIONS
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ValueError,'missing fixed checker Git blob'):
+                checker_sources(BRIDGE_REVISIONS[0],Path(directory))

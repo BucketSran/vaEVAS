@@ -35,13 +35,26 @@ CHECKER_CLOSURE = ('experiments/backends/dvs2-spectre-validation/check_results.p
                    'experiments/archive/dvs2-history-validation/recheck.py')
 
 
+def fixed_git(arguments, root):
+    try:
+        return subprocess.check_output(['git', *arguments], cwd=root, stderr=subprocess.DEVNULL)
+    except (subprocess.CalledProcessError, OSError) as exc:
+        raise ValueError('missing fixed checker Git blob: ' + ' '.join(arguments)) from exc
+
+
+def retained_reference(ref, root):
+    evidence_ok(ref, root)
+    prefix = (root / 'experiments/backends/comparison').resolve()
+    if not (root / ref['path']).resolve().is_relative_to(prefix):
+        raise ValueError('checker reanalysis requires retained comparison evidence')
+
+
 def checker_sources(revision, root=ROOT):
     paths = []
     for directory in CHECKER_DIRECTORIES:
-        listed = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', revision, '--', directory],
-                                         cwd=root, text=True).splitlines()
+        listed = fixed_git(['ls-tree', '-r', '--name-only', revision, '--', directory], root).decode().splitlines()
         paths.extend(p for p in listed if p.endswith('.py') and Path(p).parent == Path(directory))
-    return {p: hashlib.sha256(subprocess.check_output(['git', 'show', revision + ':' + p], cwd=root)).hexdigest()
+    return {p: hashlib.sha256(fixed_git(['show', revision + ':' + p], root)).hexdigest()
             for p in sorted(paths)}
 
 
@@ -51,10 +64,13 @@ def check_checker_reanalysis(proof, parent, old_manifest, new_manifest, root=ROO
             (proof.get('old_revision'), proof.get('new_revision')) != BRIDGE_REVISIONS or
             proof.get('simulation_launches') != 0):
         raise ValueError('unknown checker reanalysis boundary')
-    evidence_ok(proof['analysis_driver'], root)
-    evidence_ok(proof['analysis_runner'], root)
-    expected_runner = hashlib.sha256(subprocess.check_output(['git', 'show',
-        BRIDGE_REVISIONS[1] + ':experiments/backends/comparison/runner.py'], cwd=root)).hexdigest()
+    for ref in [proof['parent'], proof['analysis_driver'], proof['analysis_runner'],
+                *proof['inputs'].values(),
+                *(r['old_receipt'] for r in proof.get('rows', [])),
+                *(r['assessment'] for r in proof.get('rows', []))]:
+        retained_reference(ref, root)
+    expected_runner = hashlib.sha256(fixed_git(['show',
+        BRIDGE_REVISIONS[1] + ':experiments/backends/comparison/runner.py'], root)).hexdigest()
     if proof['analysis_runner']['sha256'] != expected_runner or proof['analysis_runner_sha256'] != expected_runner:
         raise ValueError('checker reanalysis runner identity mismatch')
     sources = [checker_sources(rev, root) for rev in BRIDGE_REVISIONS]
@@ -134,6 +150,7 @@ def check_completion(data, root=ROOT):
     if checker != provenance['old']['checker_identity']:
         if 'checker_reanalysis' not in proof:
             raise ValueError('completion checker changed without bounded reanalysis')
+        retained_reference(proof['checker_reanalysis'], root)
         bridge = read(proof['checker_reanalysis'], root)
         check_checker_reanalysis(bridge, parent, manifests['old'], manifests['new'], root)
         if (bridge['old_checker_identity'] != provenance['old']['checker_identity'] or
@@ -211,6 +228,7 @@ def complete(parent_snapshot, fresh_snapshot, old_inputs, new_inputs, evidence, 
     validate(parent, root)
     validate(fresh, root)
     data = copy.deepcopy(parent)
+    data['updated'] = fresh['updated']
     for name in ('derivation', 'refresh', 'completion'):
         if name in data:
             data['prior_' + name] = data.pop(name)
