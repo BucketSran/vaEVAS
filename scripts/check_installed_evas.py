@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import shutil
+import struct
 import tempfile
 import tarfile
 import venv
@@ -195,6 +196,72 @@ print(json.dumps(dict(checks='missing/corrupt/nonexecutable/platform/IR/explicit
 '''
 
 
+
+def check_wheel_payload(wheel):
+    """Check distribution tags against executable bytes, independently of setup.py."""
+    with zipfile.ZipFile(wheel) as archive:
+        names = archive.namelist()
+        metadata_file = next(name for name in names if name.endswith('.dist-info/WHEEL'))
+        metadata = archive.read(metadata_file).decode()
+        assert 'Root-Is-Purelib: false' in metadata, metadata
+        tags = [line.removeprefix('Tag: ') for line in metadata.splitlines() if line.startswith('Tag: ')]
+        filename_tag = '-'.join(Path(wheel).stem.split('-')[-3:])
+        assert tags == [filename_tag], 'WHEEL tags do not match filename tags'
+        prefix = 'py3-none-'
+        assert filename_tag.startswith(prefix) and filename_tag != prefix+'any', filename_tag
+        tag = filename_tag[len(prefix):]
+        executable_name = next(name for name in names if name.endswith('evas/_bin/evas-kernel'))
+        receipt_name = next(name for name in names if name.endswith('evas/_bin/kernel.json'))
+        binary = archive.read(executable_name)
+        receipt = json.loads(archive.read(receipt_name))
+        assert __import__('hashlib').sha256(binary).hexdigest() == receipt['sha256'], 'kernel receipt hash mismatch'
+        if binary[:4] == b'\xcf\xfa\xed\xfe':
+            # Apple mach-o/loader.h: thin mach_header_64 and LC_BUILD_VERSION.
+            assert len(binary) >= 32, 'truncated Mach-O header'
+            cpu = struct.unpack_from('<I', binary, 4)[0]
+            architecture = {0x0100000c: 'arm64', 0x01000007: 'x86_64'}.get(cpu)
+            assert architecture == 'arm64', 'only native arm64 macOS wheels are supported'
+            count, size = struct.unpack_from('<II', binary, 16)
+            assert size <= len(binary)-32, 'truncated Mach-O load commands'
+            offset = 32
+            minimum = None
+            for _ in range(count):
+                assert offset+8 <= 32+size, 'truncated Mach-O command'
+                command, length = struct.unpack_from('<II', binary, offset)
+                assert length >= 8 and offset+length <= 32+size, 'invalid Mach-O command size'
+                if command == 0x32:
+                    assert length >= 24, 'truncated LC_BUILD_VERSION'
+                    system, version = struct.unpack_from('<II', binary, offset+8)
+                    assert system == 1, 'kernel was not linked for macOS'
+                    assert minimum is None, 'duplicate macOS build version'
+                    minimum = (version >> 16, (version >> 8) & 255, version & 255)
+                offset += length
+            assert offset == 32+size and minimum is not None, 'missing Mach-O macOS build version'
+            parts = tag.split('_')
+            assert len(parts) == 4 and parts[0] == 'macosx' and parts[3] == architecture, 'wheel architecture does not match thin Mach-O kernel'
+            declared = (int(parts[1]), int(parts[2]), 0)
+            assert declared >= minimum, f'wheel minimum macOS {declared} is older than linked kernel {minimum}'
+            assert receipt.get('macos_deployment_target') == f'{declared[0]}.{declared[1]}' and declared == minimum, 'receipt deployment target does not match linked macOS minimum/tag'
+            expected_rust_target = 'aarch64-apple-darwin'
+            actual_platform = dict(os='macos', arch='aarch64')
+            facts = dict(architecture=architecture, minimum_macos=list(minimum))
+        elif binary[:6] == b'\x7fELF\x02\x01':
+            assert len(binary) >= 64, 'truncated ELF64 header'
+            assert struct.unpack_from('<H', binary, 18)[0] == 62, 'kernel is not ELF x86_64'
+            assert tag == 'linux_x86_64', 'Linux wheel tag does not match ELF x86_64 kernel'
+            expected_rust_target = 'x86_64-unknown-linux-gnu'
+            actual_platform = dict(os='linux', arch='x86_64')
+            facts = dict(architecture='x86_64')
+        else:
+            raise AssertionError('unsupported executable architecture/format; universal binaries are not supported')
+        assert receipt['platform'] == actual_platform, 'kernel receipt platform does not match executable'
+        assert receipt['reported']['platform'] == actual_platform, 'reported kernel platform does not match executable'
+        assert receipt.get('wheel_platform') == tag, 'kernel receipt wheel platform does not match tags'
+        assert receipt.get('rust_target') == expected_rust_target, 'kernel Rust target does not match executable'
+        assert not any('rust_core/target/' in name for name in names)
+        return dict(filename_tag=filename_tag, executable=facts, receipt=receipt)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--wheel', type=Path, required=True)
@@ -211,15 +278,8 @@ def main():
             assert any(name.endswith('/'+required) for name in names), required
         assert not any('/target/' in name or '/_bin/' in name or '/build/' in name for name in names), names
     args.out.mkdir(parents=True, exist_ok=False)
-    with zipfile.ZipFile(wheel) as archive:
-        names = archive.namelist()
-        metadata_file = next(name for name in names if name.endswith('.dist-info/WHEEL'))
-        tags = archive.read(metadata_file).decode()
-        assert 'Root-Is-Purelib: false' in tags, tags
-        assert 'Tag: py3-none-' in tags and 'none-any' not in tags, tags
-        assert any(name.endswith('evas/_bin/evas-kernel') for name in names), names
-        assert any(name.endswith('evas/_bin/kernel.json') for name in names), names
-        assert not any('rust_core/target/' in name for name in names)
+    facts = check_wheel_payload(wheel)
+    (args.out/'wheel-payload.json').write_text(json.dumps(facts, indent=2)+'\n')
     environment = {key:value for key,value in os.environ.items() if key not in ('PYTHONPATH','PYTHONHOME')}
     with tempfile.TemporaryDirectory(prefix='evas-installed-') as directory:
         directory = Path(directory)

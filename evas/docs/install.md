@@ -40,8 +40,12 @@ results 仍需已有身份查询合同。请求协议没有独立版本，字段
 
 Linux 构建生成本机 `linux_x86_64` 标签，没有声明 manylinux、musllinux 或任意 Linux 发行版兼容。
 Ubuntu 24.04 的 glibc/链接环境是本批 CI 边界；在不同 libc 或旧系统上需独立构建和验收。
-macOS wheel 保留构建环境产生的系统版本/架构标签，不声明 universal2、Intel 或更旧系统支持。
-其他平台可以采用下面的源码路径，源码能构建也不代表已通过该平台安装验证。
+macOS wheel 使用真实 Rust 原生 arm64 目标，不继承 Python 发行物可能带有的 universal2 标签。
+构建策略明确把当前主机的主 OS 版本 `major.0` 作为 deployment target，并将同一值传给 Cargo。
+构建后用 lipo/otool 核对真实单架构和链接最小系统，再写入标签与内核构建记录。
+这是首批保守构建策略，不是对任意旧二进制最早兼容系统的推测。不声明 universal2、Intel 或旧主版本支持。
+wheel 构建钩子只支持 Linux x86_64 GNU 和 macOS arm64 原生 Rust 工具链；
+其他平台可用仓库源码和显式内核路径，源码能构建也不代表已通过该平台安装验证。
 
 ## 从源码构建
 
@@ -61,7 +65,8 @@ python3 scripts/check_installed_evas.py --wheel runs/package-dist/*.whl \
 sdist 包含 Cargo.toml、Cargo.lock、内核及独立 IR crate 的 Rust 源码和构建配置；
 包含测试编译所需的固定 static fuzz seed，不包含 target、包内二进制或旧构建目录。构建钩子执行 `cargo build --locked --release`，
 显式选择 rustc 的原生 host target，再把新内核和真实身份/哈希记录写入 wheel。
-不支持用这个钩子交叉编译或手工伪造 wheel 平台标签。
+Rust host、实际内核身份与本机架构必须匹配。该钩子拒绝不同 CARGO_BUILD_TARGET、
+手工 plat-name / _PYTHON_HOST_PLATFORM 与 skip-build，不支持交叉编译或伪造平台标签。
 
 已有源码使用方法保持可用：
 
@@ -75,7 +80,10 @@ editable 安装保留这条显式内核路径，不在源码目录生成二进�
 
 ## 安装验收
 
-[check_installed_evas.py](../../scripts/check_installed_evas.py) 检查 wheel 标签与 sdist 构建输入，
+[check_installed_evas.py](../../scripts/check_installed_evas.py) 独立比较文件名与 WHEEL 标签、
+receipt 和真实 Mach-O/ELF 头，并检查 macOS 架构与 LC_BUILD_VERSION 最小系统。
+thin arm64 冒充 universal2、声明比内核更旧的系统、标签/receipt/目标不一致均拒绝。
+该检查不调用构建钩子的判据代码。随后检查 sdist 构建输入，
 在仓库外解包 sdist，以 `cargo test --locked --no-run` 验证测试构建输入完整，
 再创建新 venv、移除 PYTHONPATH/PYTHONHOME，从真实安装路径执行 API 和 CLI。
 静态独立答案为 `2*u+0.25` 在 `u=-0.5,0,0.75 V` 的 `-0.75,0.25,1.75 V`。
@@ -89,3 +97,6 @@ editable 安装保留这条显式内核路径，不在源码目录生成二进�
 
 构建扩展依据 [setuptools 命令扩展合同](https://setuptools.pypa.io/en/latest/userguide/extension.html)，
 wheel 标签依据 [Python 包平台标签规范](https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/)。
+
+旧 `70891d79` CI 曾通过安装，但未检查 Python universal2 标签与 thin arm64 内核及 macOS 最小系统的矛盾。
+该次绿色安装不能作为平台发行验收。新增二进制与标签交叉检查以修复后的具名 CI revision 为准。
