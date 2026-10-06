@@ -361,6 +361,7 @@ def run(args):
     except Exception as exc:
         save(output/'PREFLIGHT_FAILED.json',{'reason':str(exc),'status':'preflight_failed','cases_launched':0})
         final=[{**r,'status':'not_run','reason':'preflight failed: '+str(exc) if r['condition'] in selected_ids else 'not_selected_in_allocation'} for r in fixed]
+        save(output/'DIRECTORY_BUDGETS.json',{})
         save(output/'EXECUTION.json',final)
         for record in final:
             save(output/('final-record-'+record['condition']+'.json'),record)
@@ -475,7 +476,8 @@ def run(args):
                     record.update(status='condition_directory_limit_exceeded',failure_stage='terminal_directory_budget')
         save(output/'DIRECTORY_BUDGETS.json',budgets)
         if abort:
-            abort['unrun']=[r['condition'] for r in results if r['status']=='not_run']
+            abort['unrun']=[r['condition'] for r in results if r['status']=='not_run' and r['condition'] in selected_ids]
+            abort['not_selected_in_allocation']=[r['condition'] for r in results if r['condition'] not in selected_ids]
             save(output/'BATCH_ABORTED.json',abort)
         save(output/'EXECUTION.json',results)
         for record in results:

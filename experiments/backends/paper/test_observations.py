@@ -126,3 +126,22 @@ class ObservationContracts(unittest.TestCase):
             result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
             self.assertFalse(result['qualification']['local_gap_qualified'])
             self.assertEqual(result['metadata']['unmatched_boundary_records'][0]['record'],record)
+
+    def test_malformed_boundary_nominals_remain_diagnosed(self):
+        import tempfile,hashlib
+        from pathlib import Path
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,2e-10,2.2e-10,4e-10)]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/'proof';p.write_text('synthetic only')
+            proof={'method':'synthetic','artifact_path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+            for nominal in ([2e-10],{'time':2e-10},True,None):
+                with self.subTest(nominal=nominal):
+                    item={'nominal_time_s':nominal,'row_index':2,'request_id':'malformed'}
+                    q={'boundary_cohort':{'serialization_error_s':0,'records':[item]},'qualification_evidence':{'boundary_cohort':proof}}
+                    result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+                    self.assertEqual(result['metadata']['unmatched_boundary_records'][0]['record'],item)
+                    self.assertFalse(result['qualification']['qualified'])
+            q={'boundary_cohort':{'serialization_error_s':0,'records':[{'nominal_time_s':2e-10,'row_index':2,'request_id':'missing-proof'}]}}
+            result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+            self.assertEqual(result['metadata']['boundary_cohort_rejection'],'missing or invalid certificate/serialization bound')
+            self.assertEqual(result['qualification']['boundary_cohort'],q['boundary_cohort'])

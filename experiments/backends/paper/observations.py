@@ -85,13 +85,14 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
     cohort=q.get('boundary_cohort',{})
     boundary_rows={}
     unmatched=[]
+    cohort_rejection=None
     known_centers={w['center_T']*T for w in card['observation_windows']}
     if isinstance(cohort,dict) and valid_certificate('boundary_cohort') and bounded(cohort.get('serialization_error_s')) and cohort['serialization_error_s']<=contract['required_observation_error']['time_s']:
         for record in cohort.get('records',[]):
             if not isinstance(record,dict):
                 unmatched.append({'record':record,'reason':'invalid cohort record'})
                 continue
-            if record.get('nominal_time_s') not in known_centers:
+            if not bounded(record.get('nominal_time_s')) or record['nominal_time_s'] not in known_centers:
                 unmatched.append({'record':record,'reason':'nominal identity does not match any card center'})
                 continue
             index=record.get('row_index'); nominal=record.get('nominal_time_s')
@@ -102,6 +103,8 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
                 boundary_rows.setdefault(nominal,[]).append(index)
             else:
                 unmatched.append({'record':record,'reason':'invalid accepted row/request or outside proved serialization bound'})
+    elif 'boundary_cohort' in q:
+        cohort_rejection='missing or invalid certificate/serialization bound'
     windows = []
     exact = []
     for w in card['observation_windows']:
@@ -139,5 +142,5 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
         'status':'observation_invalid' if issues else 'observation_available',
         'units':{'time':'s','voltage':'V'},'rows':rows,'qualification':qualification_out,
         'metadata':{'sample_origins':origins,'actual_max_gap_s':gap,'coverage':coverage,
-                    'local_windows':windows,'unmatched_boundary_records':unmatched,'exact_boundary_rows':sorted(set(exact)),
+                    'local_windows':windows,'unmatched_boundary_records':unmatched,'boundary_cohort_rejection':cohort_rejection,'exact_boundary_rows':sorted(set(exact)),
                     'issues':issues,'claim':'fixed observations only; no continuous-time guarantee'}}

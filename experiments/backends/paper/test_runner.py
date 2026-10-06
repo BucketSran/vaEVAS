@@ -248,6 +248,7 @@ class RunnerContracts(unittest.TestCase):
             args.output=root/'preflight-failed-output'
             with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.preflight',side_effect=RuntimeError('fixture preflight failure')):
                 with self.assertRaises(RuntimeError): run(args)
+            self.assertEqual(json.loads((args.output/'DIRECTORY_BUDGETS.json').read_text()),{})
             final_rows=json.loads((args.output/'EXECUTION.json').read_text())
             self.assertEqual(len(final_rows),12)
             self.assertTrue(all(r['status']=='not_run' for r in final_rows))
@@ -256,3 +257,12 @@ class RunnerContracts(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 with patch('runner.verify',return_value=plan),patch('runner.verify_sources'):
                     run(args)
+
+            args.output=root/'abort-selected-output'
+            def failed_stage(argv,work,name,a):
+                return {'stage':name,'status':'cleanup_incomplete','returncode':2,'timeout':False,'cleanup':{'complete':False}}
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.verify_tool'),patch('runner.preflight',return_value=({'kernel':'fixture'},None)),patch('runner.stage',side_effect=failed_stage):
+                run(args)
+            abort=json.loads((args.output/'BATCH_ABORTED.json').read_text())
+            self.assertEqual(abort['unrun'],['fixture-8'])
+            self.assertEqual(len(abort['not_selected_in_allocation']),10)
