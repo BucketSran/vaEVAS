@@ -1,5 +1,7 @@
 """Public execution boundaries reject missing or incompatible selected kernels."""
 from pathlib import Path
+GUARDS = ['DEV:installed-kernel-selection']
+
 import tempfile
 import unittest
 
