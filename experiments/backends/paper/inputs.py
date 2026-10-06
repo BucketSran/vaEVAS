@@ -201,6 +201,7 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
                          'condition_identity':identity(card),'status':'not_run'})
     source_paths = [Path(__file__), Path(__file__).with_name('observations.py'),
                     Path(__file__).with_name('runner.py'), Path(__file__).with_name('process.py'),
+                    Path(__file__).with_name('settings_readback.py'),
                     Path(__file__).with_name('OBSERVATION_METHODS.md'),
                     ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
                     ROOT/'experiments/archive/dvs2-starter-pilot/suite.py',

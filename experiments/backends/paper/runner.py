@@ -18,6 +18,7 @@ import sys
 from inputs import ROOT, BACKENDS, identity, save, sha, verify
 from observations import read_native, normalize_observation
 from process import execute
+from settings_readback import spectre as spectre_readback, ngspice as ngspice_readback
 
 
 def load(path):
@@ -318,17 +319,31 @@ def effective_settings(work, backend):
                 'request_echo':record.get('request_echo',{k:record[k] for k in ('reltol','vabstol','stop','maxstep') if k in record}),
                 'observed_response':record.get('observed_response',{k:record[k] for k in ('engine','accepted_steps') if k in record}),
                 'claim':'current EVAS response does not establish effective settings; request echo is not readback'}
-    elif backend=='spectre':
-        reader=module(ROOT/'experiments/backends/dvs2-spectre-validation/report.py','paper_spectre_settings')
-        actual=reader.settings((work/'spectre.log').read_text())
-        names=tuple(expected)
+    elif backend in ('spectre','openvaf_r_ngspice'):
+        if backend=='spectre':
+            scoped=spectre_readback((work/'spectre.log').read_text(),
+                                   (work/'psf/tran.tran.tran').read_text())
+        else:
+            scoped=ngspice_readback((work/'simulate.log').read_text(),(work/'tb.cir').read_text())
+        keymap={'reltol':'reltol','vabstol':'vabstol_V','iabstol':'iabstol_A',
+                'stop':'stop_s','maxstep':'maxstep_s'}
+        actual={k:scoped['effective'][v]['value'] if v in scoped['effective'] else
+                'unknown; deck invocation is not runtime setting readback' for k,v in keymap.items()}
+        actual['method']=scoped['effective']['method']['value']
+        names=tuple(k for k in expected if isinstance(actual[k],(int,float)))
+        mismatches=[k for k in names if not math.isclose(actual[k],expected[k],rel_tol=1e-12,abs_tol=0)]
+        return {'actual':actual,'requested':expected,'mismatches':mismatches,'scoped_readback':scoped,
+                'status':'I' if mismatches or backend=='openvaf_r_ngspice' else 'readback_matches',
+                'claim':'scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain'}
     else:
         # Preserve logged actual settings without the historical audit's fixed
         # numdgt=16 assert. Paper uses17digits, so this has its own settings parser.
         log=(work/'simulate.log').read_text()
+        if re.search(r'^\s*\^\s*\?\s*',log,re.M):
+            raise ValueError('Gnucap deck parse error; settings are not qualified')
         actual={}
         for name,target in [('reltol','reltol'),('vntol','vabstol'),('abstol','iabstol')]:
-            pattern=(r'^'+name+r'\s+\([^)]+\)\s*=\s*(\S+)' if backend=='openvaf_r_ngspice' else r'\b'+name+r'=\s*(\S+)')
+            pattern=r'\b'+name+r'=\s*(\S+)'
             matches=re.findall(pattern,log,re.M)
             if not matches:
                 raise ValueError('missing effective setting: '+name)

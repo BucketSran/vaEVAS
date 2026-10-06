@@ -91,7 +91,14 @@ profile.backend 必须匹配分配后端。各 profile 的必需工具身份字�
 成功退出但缺编译产物/波形、编译失败、运行超时、解析失败均分别记录。
 不从错误文本自动推定 confirmed_unsupported；确认 U 需要后续具体证据。
 编译/执行接受记录不替代 LRM 合法性资格。原始结果、命令、哈希与来源保留。
-Spectre 有效设置 readback 检查请求值。EVAS 当前响应没有应用设置读回，
+Spectre 使用 [settings_readback.py](settings_readback.py) 按单一具名 transient 的 Important
+块与 PSF header 交叉回读；global user 和 tolerance.relative 另存，实际与请求差异
+保留为 mismatch、状态 I。ngspice 要求单一 control/analysis、option→tran→wrdata→option
+且中途没有可变设置命令，读取后 options；前默认快照另存。stop/maxstep 仅有 deck
+调用证据，继续标为 unknown。读取器拒绝缺失、歧义、非法数值/量纲和多分析，
+不会使用 requested 值回填。Gnucap 有 deck parse 错误时拒绝设置资格。
+这些控制值不证明数学精度或 native provenance。历史 reader 和冻结结果保留原身份。
+EVAS 当前响应没有应用设置读回，
 只保留 request_echo 与真正 observed_response 的 engine/accepted_steps，实际
 容差/maxstep/stop 标为 unknown，状态 I。ngspice/Gnucap 尚无最大步长与
 stop readback 资格，会保存 available 实际读数及未知项、状态 I。
