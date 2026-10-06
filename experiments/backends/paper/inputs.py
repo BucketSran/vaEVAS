@@ -1,0 +1,184 @@
+"""Materialize a new paper batch without compiling or launching a backend.
+
+Historical comparison plans and contracts are not imported or modified.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+
+ROOT = Path(__file__).resolve().parents[3]
+BACKENDS = ('spectre', 'evas', 'openvaf_r_ngspice', 'gnucap_modelgen')
+
+
+def identity(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(path, value):
+    with path.open('x') as f:
+        json.dump(value, f, indent=2, ensure_ascii=False, allow_nan=False)
+        f.write('\n')
+
+
+def binding(card):
+    """Select the last declared module, preserving the card's actual hierarchy."""
+    modules = re.findall(r'\bmodule\s+(\w+)\s*\(([^)]*)\)\s*;', card['source'])
+    if not modules:
+        raise ValueError('no explicit module ports')
+    module, ports = modules[-1]
+    ports = [p.strip() for p in ports.split(',')]
+    if set(ports) != set(card['observables']):
+        raise ValueError('top module ports differ from observables')
+    return {'top_module': module, 'instance': 'dut', 'ports': ports,
+            'parameters': card['parameters'], 'hierarchy': 'preserve exact VA source',
+            'source_legality': 'pending actual source and backend qualification'}
+
+
+def requested_times(card, contract, T):
+    """Requested output times, never a certificate of accepted-step accuracy."""
+    stop = card['stop_T'] * T
+    count = math.ceil(stop / contract['sample_gap_s'])
+    times = {i * stop / count for i in range(count + 1)}
+    for window in card['observation_windows']:
+        start, end = window['start_T'] * T, window['end_T'] * T
+        count = math.ceil((end-start) / window['max_gap_s'])
+        times.update(start + i*(end-start)/count for i in range(count+1))
+        times.add(window['center_T'] * T)
+    times.update(a['t_T'] * T for a in card['anchors'])
+    return sorted(times)
+
+
+def decks(card, settings, bind):
+    ports = ' '.join(bind['ports'])
+    params = ' '.join(f'{k}={v:.17g}' for k, v in bind['parameters'].items())
+    spice_sources, spectre_sources = [], []
+    for name, stimulus in card['stimulus'].items():
+        points = stimulus['points_s_V']
+        wave = ' '.join(f'{t:.17g} {v:.17g}' for t,v in points)
+        spice_sources.append(f'V{name} {name} 0 PWL({wave})')
+        spectre_sources.append(f'V{name} ({name} 0) vsource type=pwl wave=[{wave}]')
+    signals = ' '.join(f'v({p})' for p in bind['ports'])
+    stop, step = settings['stop_s'], settings['maxstep_s']
+    options = f"reltol={settings['reltol']:.17g} vntol={settings['vabstol_V']:.17g} abstol={settings['iabstol_A']:.17g}"
+    spectre = '\n'.join(['simulator lang=spectre','ahdl_include "dut.va"', *spectre_sources,
+        f"dut ({ports}) {bind['top_module']} {params}",
+        f"simulatorOptions options reltol={settings['reltol']:.17g} vabstol={settings['vabstol_V']:.17g} iabstol={settings['iabstol_A']:.17g}",
+        f'tran tran stop={stop:.17g} maxstep={step:.17g} errpreset=conservative method=traponly',
+        'save ' + ' '.join(bind['ports'])])+'\n'
+    ng = '\n'.join(['Paper '+card['id'], *spice_sources,
+        f"N0 {ports} model0",f".model model0 {bind['top_module']} {params}",
+        '.options '+options+' method=trap','.control','pre_osdi dut.osdi',
+        'set filetype=ascii','set wr_singlescale','set wr_vecnames','set numdgt=17','option',
+        f'tran {step:.17g} {stop:.17g} 0 {step:.17g}',
+        'wrdata waveform.txt '+signals,'option','quit','.endc','.end'])+'\n'
+    override = ' #('+', '.join(f'.{k}({v:.17g})' for k,v in bind['parameters'].items())+')' if params else ''
+    gc = '\n'.join(['load mgsim','load ./dut.so','verilog',
+        f"\\{bind['top_module']}{override} dut({','.join(bind['ports'])});",'spice',
+        'Vbench_ref bench_ref 0 0',*spice_sources,'.options numdgt=17 short=1e-9 '+options,
+        '.options','.print tran '+signals+' v(bench_ref)',
+        f'.tran {step:.17g} {stop:.17g} 0 {step:.17g} > waveform.txt','.end'])+'\n'
+    evas = json.dumps({'source': 'dut.va','instances': [{'name':'dut','module':bind['top_module'],
+        'ports':{p:p for p in bind['ports']},'parameters':bind['parameters']}],
+        'inputs':{n:s['points_s_V'] for n,s in card['stimulus'].items()},
+        'requested_times': 'requested_times.json','stop':stop,'max_step':step,
+        'reltol':settings['reltol'],'vabstol':settings['vabstol_V']},indent=2)+'\n'
+    return {'spectre': ('tb.scs',spectre),'evas':('request.json',evas),
+            'openvaf_r_ngspice':('tb.cir',ng),'gnucap_modelgen':('tb.gc',gc)}
+
+
+def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
+    data = json.loads(cards_path.read_text())
+    cards = data['cards']
+    if len(cards) != 12 or len({c['id'] for c in cards}) != 12:
+        raise ValueError('paper A1 requires twelve distinct frozen cards')
+    if not 0 < license_timeout_s <= stage_timeout_s <= 900:
+        raise ValueError('bounded timeout required')
+    output.mkdir(parents=True, exist_ok=False)
+    (output/'core.json').write_bytes(cards_path.read_bytes())
+    plan = []
+    for card in cards:
+        bind = binding(card)
+        settings = {'stop_s':card['stop_T']*data['units']['T_s'], 'maxstep_s':2e-11,
+                    'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,
+                    'output_request':'native records plus prescribed exact centers; requested grid does not qualify interpolation',
+                    'integration_method':'traponly/trap for SPICE; unsupported by EVAS'}
+        physical = {**card, 'stimulus':{n:{'points_s_V':[[t*data['units']['T_s'],v] for t,v in s['points_T_V']]}
+                                         for n,s in card['stimulus'].items()}}
+        times = requested_times(card,data['shared_contract'],data['units']['T_s'])
+        generated = decks(physical,settings,bind)
+        for backend in BACKENDS:
+            work = output/'runs'/backend/card['id']
+            work.mkdir(parents=True)
+            (work/'dut.va').write_bytes(card['source'].encode())
+            save(work/'condition.json',card)
+            save(work/'binding.json',bind)
+            save(work/'requested_settings.json',settings)
+            save(work/'requested_times.json',times)
+            filename, text = generated[backend]
+            (work/filename).write_text(text)
+            save(work/'qualification_requirements.json',{
+                'source_validated':False,'deck_validated':False,'native_counters_required':True,
+                'native_phase_required':card['id'] in ('CP-02','CO-VCO-01'),
+                'global_max_gap_s':data['shared_contract']['sample_gap_s'],
+                'local_windows':card['observation_windows'],'time_unit':'s','voltage_unit':'V',
+                'input_error_V':data['shared_contract']['input_error_V'],
+                'independent_input_bounds_required':True,
+                'observation_error_targets':data['shared_contract']['required_observation_error'],
+                'exact_centers_required':True,'interpolation_bounds_required':True,
+                'effective_settings':'unknown until tool readback','tool_identity':'unknown until explicit tool probe'})
+            plan.append({'backend':backend,'condition':card['id'],'work':str(work.relative_to(output)),
+                         'deck':filename,'source_sha256':sha(work/'dut.va'),
+                         'condition_identity':identity(card),'status':'not_run'})
+    source_paths = [Path(__file__), Path(__file__).with_name('observations.py'),
+                    ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',
+                    ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']
+    source_identity = {}
+    for path in source_paths:
+        relative = str(path.relative_to(ROOT))
+        target = output/'adapter_sources'/relative
+        target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_bytes(path.read_bytes())
+        source_identity[relative] = sha(path)
+    save(output/'ADAPTER_IDENTITY.json',source_identity)
+    save(output/'RUN_PLAN.json',plan)
+    save(output/'provenance.json',{'batch_id':data['batch_id'],'configurations':48,
+        'simulations_per_backend':12,'max_simulation_launches':48,'automatic_retries':0,
+        'stage_timeout_s':stage_timeout_s,'license_timeout_s':license_timeout_s,
+        'cards_sha256':sha(cards_path),'freeze_status':'prepared; coordinator approval required before execution',
+        'tool_identity_requirement':'version, binary hash, compiler/build flags and pinned environment before actual results'})
+    save(output/'INPUT_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
+                                      for p in sorted(output.rglob('*')) if p.is_file()})
+    return plan
+
+
+def verify(root):
+    manifest = json.loads((root/'INPUT_MANIFEST.json').read_text())
+    files = {str(p.relative_to(root)) for p in root.rglob('*') if p.is_file() and p.name != 'INPUT_MANIFEST.json'}
+    if files != set(manifest):
+        raise ValueError('frozen file set drift')
+    for rel, entry in manifest.items():
+        p = (root/rel).resolve()
+        if not p.is_relative_to(root.resolve()) or sha(p)!=entry['sha256'] or p.stat().st_size!=entry['bytes']:
+            raise ValueError('frozen input drift: '+rel)
+    plan = json.loads((root/'RUN_PLAN.json').read_text())
+    cards = json.loads((root/'core.json').read_text())['cards']
+    expected = {(b,c['id']) for b in BACKENDS for c in cards}
+    if len(plan)!=48 or {(r['backend'],r['condition']) for r in plan}!=expected:
+        raise ValueError('paper plan drift')
+    return plan
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('output',type=Path)
+    parser.add_argument('--cards',type=Path,default=ROOT/'evas/validation/paper/core-v1.json')
+    args = parser.parse_args()
+    print(f'Prepared {len(freeze(args.cards,args.output))} configurations; no backend launched')
