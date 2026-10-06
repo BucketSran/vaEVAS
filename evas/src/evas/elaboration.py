@@ -16,6 +16,8 @@ def inline_functions(model: Model) -> Model:
     def bounded(expr):
         # Each computational RHS retains the original expanded-tree limit.
         # Compile-time obligations share an AST graph, not a JSON wire tree.
+        # Source token/nesting and each RHS bound still constrain elaboration;
+        # do not introduce a total check-graph cap that shrinks pure functions.
         roots = expr.args if expr.op == 'checked' else (expr,)
         memo, pending = {}, [(root, False) for root in roots]
         while pending:
@@ -34,8 +36,6 @@ def inline_functions(model: Model) -> Model:
             if depth > MAX_EXPRESSION_DEPTH or size > MAX_IR_ITEMS:
                 fail('function expansion exceeds expression depth/size budget', expr.token)
             memo[id(item)] = depth, size
-            if len(memo) > MAX_IR_ITEMS:
-                fail('function validation graph exceeds expression size budget', expr.token)
 
     def unpack(expr, obligations):
         if expr.op == 'checked':
@@ -71,7 +71,7 @@ def inline_functions(model: Model) -> Model:
         expanded = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
         # Index evaluation and waveform arguments have their own closed
         # contexts. Their obligations must be checked at that entry point.
-        if expr.op in ('index', 'array') or expr.op in OPERATOR_NAMES:
+        if expr.op in ('node', 'index', 'array') or expr.op in OPERATOR_NAMES:
             return replace(expr, args=expanded)
         obligations = []
         args = tuple(unpack(a, obligations) for a in expanded)

@@ -215,15 +215,28 @@ class StatelessExpressionContracts(unittest.TestCase):
         with self.assertRaisesRegex(CompileError,'budget'):
             compile_expr(expression,declarations=function)
 
-    def test_distinct_function_validation_graph_is_bounded(self):
+    def test_sibling_function_checks_preserve_existing_acceptance(self):
         function=('analog function real discard; input x; real x,tmp; begin '
                   +'tmp=x+1;'*32+' discard=1; end endfunction ')
         def balanced(calls):
             if calls == 1: return 'discard(V(u))'
             left=calls//2
             return '('+balanced(left)+'+'+balanced(calls-left)+')'
-        with self.assertRaisesRegex(CompileError,'validation graph.*budget'):
-            compile_expr(balanced(1600),declarations=function)
+        program=compile_expr(balanced(1600),declarations=function)
+        self.assertEqual(values(solve(program,list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1600])
+
+    def test_discarded_decisions_cannot_escape_electrical_node_indices(self):
+        source=('module m(u,y); input u; output y; electrical u,y; electrical [1:0] bus; '
+                'analog function real discard; input x; real x,tmp; '
+                'begin tmp=x+x; discard=1; end endfunction '
+                'analog begin V(bus[0])<+0; V(bus[1])<+1; '
+                'V(y)<+V(bus[discard(V(u)>0)]); end endmodule')
+        with self.assertRaisesRegex(CompileError,'electrical bound/index must be instance-constant'):
+            compile_sources({'node-index.va':source},[Instance('dut','m',{'u':'u','y':'y'})])
+        # A non-decision constant-return index keeps the existing acceptance.
+        program=compile_sources({'node-index.va':source.replace('discard(V(u)>0)','discard(1)')},
+                                [Instance('dut','m',{'u':'u','y':'y'})])
+        self.assertEqual(values(solve(program,['u'],[[2]],kernel=KERNEL)),[1])
 
     def test_function_checks_bind_independently_in_each_instance(self):
         source=('module m(u,y); input u; output y; electrical u,y; parameter real degree=1; '
