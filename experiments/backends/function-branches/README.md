@@ -12,10 +12,13 @@
 固定绝对判据是 `1e-8 V`。每个查询点在 Spectre 原始 PSF 中恰有一个实际样本，
 没有跨限幅拐点插值。EVAS 在同样的查询网格分别执行真实 CLI 和 Rust 内核。
 这些是两个已使用的开发用例，不能折算为无条件函数支持或连续全时域验证，
-也不表明完整 PA 模型已经可运行。
+也不表明完整 PA 模型已经可运行。等值边界两臂输出相同，
+这些观测不区分严格与非严格比较；精确查询只指实际样本覆盖。
 
 EVAS 来源为 `44089f7fad5b692906f668dcf3b770900ed64b45`，内核 SHA、IR17 和未知的
-嵌入构建修订见 JSON。Spectre 是 `21.1.0.509.isr12 64bit`。
+嵌入构建修订见 JSON；IR 字段来自保留的实际内核身份查询。
+`evas_commit` 与 `production_source_dirty` 只描述生产编译器/内核代码，
+配对模型的修正身份由各例 `source_sha256` 单独绑定，与当前维护 fixture 字节一致。Spectre 是 `21.1.0.509.isr12 64bit`。
 请求全局 `reltol=1e-6`、`vabstol=1e-9 V`；实际瞬态日志显示 conservative 将
 瞬态 `reltol` 设为 `1e-7`，`abstol(V)=1e-9 V`、`gear2only`，最大步长分别为
 `0.125 s` 和 `0.03125 s`。CPU0 亲和性在日志中可见，命令请求 `+mt=1`，
@@ -38,10 +41,14 @@ EVAS 来源为 `44089f7fad5b692906f668dcf3b770900ed64b45`，内核 SHA、IR17 �
 
 ```sh
 python3 -B experiments/backends/function-branches/check.py /path/to/spectre-raw-normalized
+python3 -B experiments/backends/function-branches/check.py --compact experiments/backends/function-branches/comparison.json
 PYTHONPATH=evas/src python3 -m evas transient evas/validation/cases/function_branches/dc-table.json --kernel evas/rust_core/target/debug/evas-kernel
 PYTHONPATH=evas/src python3 -m evas transient evas/validation/cases/function_branches/continuous-pwl.json --kernel evas/rust_core/target/debug/evas-kernel
 ```
 
-检查器自带独立接受/拒绝校准，要求原始查询覆盖、唯一信号、有限数值和完整 PSF；
-错值、缺查询、重复查询/信号及截断会拒绝。Spectre 使用同目录对应 `.scs`，
+原始数据入口只检查 Spectre PSF；`--compact` 对仓库保留的双方数值分别重算独立答案误差及双方差值，
+并核对已记录最大值。它验证摘要的算术一致性，不能替代 local-only 原始文件的身份核验。
+本次检查器修改仅重新分析已有数据，没有新增仿真。
+检查器自带独立接受/拒绝校准，要求非空契约、原始查询覆盖、唯一信号、有限数值和完整 PSF；
+错值、缺查询、重复/倒序时间、坏行、重复信号、第二个 VALUE 段及截断会拒绝。Spectre 使用同目录对应 `.scs`，
 源码与期望值均保持固定身份。当前证据属于未合并分支，发布与合并状态由 PR 管理。

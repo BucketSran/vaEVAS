@@ -1,13 +1,13 @@
 {
-  "analysis_id": "function-branches-normalized-20261007",
-  "execution_kind": "new EVAS CLI and new Spectre execution",
+  "analysis_id": "function-branches-normalized-reanalysis-20261007-r2",
+  "execution_kind": "reanalysis of retained EVAS CLI and Spectre executions; no new solver invocation",
   "evas_commit": "44089f7fad5b692906f668dcf3b770900ed64b45",
   "production_source_dirty": false,
   "kernel_sha256": "cb20427a5dfe29e4b812eea3c821bf24735d0b0fc2f274cb4c872c0c80ea376f",
   "embedded_build_revision": null,
   "request_protocol_version": null,
   "runner_sha256": "bf06821a6ee34594109dd37ce0bfca9f59864972989f44cba049aeb8ccfc68ad",
-  "checker_sha256": "e5b6a9d2bdf34decb075f597924fffc3741a127e1963839d01768924dd613372",
+  "checker_sha256": "739163eb8986a4575b3a020955bf46ac5bc7c1a5e0ca836fd3df3d354778724a",
   "spectre_version": "21.1.0.509.isr12 64bit",
   "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
   "setup_sha256": [
@@ -68,7 +68,11 @@
       "duplicate exact query reject",
       "missing output reject",
       "raw PSF accept",
-      "truncated/nonfinite/duplicate-signal PSF reject"
+      "truncated/nonfinite/duplicate-signal PSF reject",
+      "nonincreasing-time PSF reject",
+      "bad PSF row and second VALUE reject",
+      "empty times/nodes contract reject",
+      "compact both-backend accept and changed EVAS value reject"
     ]
   },
   "cases": {
@@ -435,5 +439,19 @@
     "finite observations of two development cases, not continuous-time or unconditional feature qualification",
     "does not establish complete PA model support",
     "source branch and evidence are not a merged release"
-  ]
+  ],
+  "original_execution_analysis_id": "function-branches-normalized-20261007",
+  "ir_schema_version": 17,
+  "ir_identity_receipt": {
+    "availability": "local-only",
+    "path_within_execution_bundle": "local-pair-normalized/tool-identity.json",
+    "sha256": "1935cd8be3dcaaf636389ebd8c0055258b3ce0ba1aad178c84c49beb3ffe2a00",
+    "reported_kernel_field": "kernel.reported.ir_schema_version"
+  },
+  "production_identity_scope": {
+    "evas_commit": "production Python compiler and Rust kernel code, not a claim that the normalized model existed in that Git tree",
+    "production_source_dirty": "production source/build inputs unmodified; model input snapshots are separately identified by cases[*].source_sha256",
+    "fixture_identity": "normalized source snapshot used for both paired backends; maintained fixture was subsequently corrected with the same bytes"
+  },
+  "compact_arithmetic_recheck": "both retained backend values independently checked against maintained expected contracts and reported maxima; does not authenticate local-only raw provenance"
 }
