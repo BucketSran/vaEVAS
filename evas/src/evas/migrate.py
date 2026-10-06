@@ -16,12 +16,13 @@ from typing import Mapping, Sequence
 from .frontend import CompileError, Instance, compile_sources
 
 
-from .manifest import parse_manifest
+from .lint import read_input_bytes, parse_manifest_input
+from .errors import diagnostic
 
 
-class _TextDecodeError(ValueError):
-    def __init__(self, digest: str, message: str):
-        super().__init__(message)
+class _TextDecodeError(CompileError):
+    def __init__(self, digest: str, message: str, code: str):
+        super().__init__(message, code=code)
         self.digest = digest
 
 
@@ -34,6 +35,7 @@ class RecompileResult:
     output: str | None = None
     schema_version: int | None = None
     diagnostic: str | None = None
+    error: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -78,11 +80,11 @@ def recompile_manifest(manifest_path: Path, output_path: Path, *, repo_root: Pat
     source_hashes: dict[str, str] = {}
     try:
         try:
-            manifest_hash, manifest_text = _read_text_with_hash(manifest_path)
+            manifest_hash, manifest_text = _read_text_with_hash(manifest_path, 'manifest_io', 'manifest_input')
         except _TextDecodeError as exc:
             manifest_hash = exc.digest
-            raise ValueError(str(exc)) from exc
-        manifest = parse_manifest(manifest_text)
+            raise
+        manifest = parse_manifest_input(manifest_text)
         model_paths = []
         for declared in manifest["models"]:
             if not isinstance(declared, str):
@@ -91,10 +93,10 @@ def recompile_manifest(manifest_path: Path, output_path: Path, *, repo_root: Pat
         sources = {}
         for declared, source_path in model_paths:
             try:
-                source_hashes[declared], sources[str(source_path)] = _read_text_with_hash(source_path)
+                source_hashes[declared], sources[str(source_path)] = _read_text_with_hash(source_path, 'source_io', 'source_input')
             except _TextDecodeError as exc:
                 source_hashes[declared] = exc.digest
-                raise ValueError(str(exc)) from exc
+                raise
         program = compile_sources(sources, [Instance(**instance) for instance in manifest["instances"]])
         output_path.parent.mkdir(parents=True, exist_ok=True)
         payload = program.to_dict()
@@ -115,6 +117,8 @@ def recompile_manifest(manifest_path: Path, output_path: Path, *, repo_root: Pat
             source_sha256=source_hashes,
             status="failure",
             diagnostic=str(exc),
+            error=exc.diagnostic if isinstance(exc, CompileError) else diagnostic(
+                'input_io' if isinstance(exc, OSError) else 'input_error', str(exc)),
         )
 
 
@@ -174,10 +178,10 @@ def _path_digest(path: Path) -> str:
     return hashlib.sha256(str(path).encode("utf-8")).hexdigest()[:16]
 
 
-def _read_text_with_hash(path: Path) -> tuple[str, str]:
-    data = path.read_bytes()
+def _read_text_with_hash(path: Path, io_code: str, input_code: str) -> tuple[str, str]:
+    data = read_input_bytes(path, io_code)
     digest = hashlib.sha256(data).hexdigest()
     try:
         return digest, data.decode("utf-8")
     except UnicodeDecodeError as exc:
-        raise _TextDecodeError(digest, str(exc)) from exc
+        raise _TextDecodeError(digest, str(exc), input_code) from exc

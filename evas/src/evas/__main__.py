@@ -1,21 +1,19 @@
 """Compile or execute an explicit flat circuit manifest (see evas/examples/ and evas/validation/smoke/)."""
 
-import argparse
 import json
 from pathlib import Path
 import sys
 
 from . import CompileError, Instance, KernelError, compile_sources, solve, transient
-from .manifest import parse_manifest
 from .runtime import DEFAULT_TIMEOUT
-from .errors import diagnostic
+from .errors import DiagnosticArgumentParser, diagnostic
 
 
 def main():
     if sys.argv[1:2] == ['version']:
         from .identity import main as identity_main
         return identity_main(sys.argv[2:])
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["compile", "solve", "transient", "simulate", "lint"])
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--kernel", type=Path, help="override the bundled evas-kernel with an explicit executable")
@@ -35,10 +33,9 @@ def main():
             result = simulate_scs(args.manifest, kernel=args.kernel.resolve() if args.kernel is not None else None, timeout=args.timeout)
             print(json.dumps(result, indent=2, allow_nan=False))
             return 0
-        manifest = parse_manifest(args.manifest.read_text())
-        sources = {(args.manifest.parent / p).resolve(): None for p in manifest["models"]}
-        program = compile_sources({str(p): p.read_text() for p in sources},
-                                  [Instance(**i) for i in manifest["instances"]])
+        from .lint import load_manifest
+        manifest, sources = load_manifest(args.manifest)
+        program = compile_sources(sources, [Instance(**i) for i in manifest['instances']])
         if args.action == "compile":
             result = program.to_dict()
         elif args.action == "transient":

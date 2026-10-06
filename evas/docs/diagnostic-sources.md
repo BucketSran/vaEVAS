@@ -1,7 +1,8 @@
-# 已审计的诊断来源切片
+# 诊断来源与出口登记
 
-本表记录 #64 的有限 E1 切片，承接 [诊断合同](diagnostics.md)。身份由模块与触发条件组成，
-不依赖行号。它不是所有 CompileError/KernelError 出口的完整清单，也不代表 E3 消费适配完成。
+本页承接 [诊断合同](diagnostics.md)：下方行为表记录已实际验证的有限来源，
+完整源码观察见 [机器清单](diagnostic-inventory.json)。身份由模块、函数和源码结构组成，
+不依赖行号。源码登记不表示所有出口都已实际触发，也不代表外部 E3 消费适配完成。
 “实际触发”指经过公开编译/执行入口得到该失败；“源码审计”只确认构造分支的条件与类别。
 后者不计为实际执行覆盖。没有可靠归因的出口仍为 `unknown`。
 
@@ -75,13 +76,79 @@ code 仍为 `kernel.<kind>`，stage 为 kernel，未有特定能力归因时 cap
 `condition_precision`、`numerical_failure` 等尚未在本切片细分类。
 它们有多种来源或尚缺明确受审合同，仍为 unknown；未来 `unsupported_*` 也不会由前缀自动分类。
 
+## 完整源码观察与维护
+
+[diagnostic-inventory.json](diagnostic-inventory.json) 枚举本库 Python 前端/CLI 与 Rust workspace
+生产源码，包括 `ir` 子 crate；排除构建产物、测试文件与 `cfg(test)` 项。当前源码审计确认
+Python 工厂为 CompileError、KernelError 及迁移编码子类；错误包装为各模块的 fail/_fail。
+Rust Error 由 IR crate 的 `Error::new` 构造；唯一返回 Error 的额外包装是
+continuous.unsupported，它在源码明确构造 unsupported_operator。没有工厂别名或其他
+Error 结构体直接初始化。未来引入新工厂/别名/条件编译约定，需要同步扩展扫描和审计。
+
+```sh
+python3 -B scripts/diagnostic_inventory.py --write
+python3 -B scripts/diagnostic_inventory.py --check
+```
+
+工具使用 Python AST 和 Rust token/平衡项边界，过滤注释、字符串与测试项；保留完整归一化
+构造表达式，id 由路径、词法函数、表达式哈希及同表达式重复序号组成。源码改动后重新生成；
+CI 检查新清单，不能只更新数字。所有条目的 evidence 都是 source_audit，执行覆盖另由本页
+行为表及开发测试说明。动态 reason/code 为 null，category 为 unknown；不靠 message 或名称前缀
+猜测，包装默认 code 从声明读取，显式实参优先。已有登记的 stage/capability 同步写入；
+来源位置是否可提供仍由构造表达式中的原 token/instance 决定，工具不补运行时位置。
+
+| 源码观察 | Python | Rust | 合计 |
+| --- | ---: | ---: | ---: |
+| CompileError 及其子类构造 | 94 | 0 | 94 |
+| KernelError / Error::new 构造 | 13 | 314 | 327 |
+| fail/_fail / continuous.unsupported 调用 | 172 | 11 | 183 |
+| metadata 构造 | 9 | 0 | 9 |
+| 工厂定义 | 3 | 0 | 3 |
+| 错误处理器 | 36 | 0 | 36 |
+| map_err 转换 | 0 | 31 | 31 |
+| 元数据改写 | 8 | 5 | 13 |
+| 具名重抛 | 3 | 0 | 3 |
+| 全部观察 | 338 | 361 | 699 |
+
+其中 372 条观察为 unknown，包括未解析动态 reason、宽泛处理器及明确保持 unknown 的
+旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；699 不是独立错误种类数，
+不是失败执行次数，也不是覆盖率。词法函数身份不推导 Rust trait/impl 类型身份。
+Rust map_err 包括保留/转换错误的包装；analog 的 event_accuracy→waveform_accuracy、
+batch/transient 的 sample 赋值及初始化上下文 message 改写单独登记。转换不修改本批 Rust 源码。
+
+## 本库消费者与兼容
+
+实际文件/API/CLI 验收见 [test_diagnostic_consumers.py](../tests/test_diagnostic_consumers.py)。
+compile/solve/transient 与 lint 共用 manifest/source 读取及结构校验，因此同一输入来源的
+编码/I/O/结构错误保持 manifest_input/manifest_io/source_input/source_io。results 和 capture
+复用同一字节读取、解码、解析边界；原文件哈希、快照和编译/求解输入不变。
+
+命令参数失败通过共用 ArgumentParser 在 stderr 输出 input_error JSON，返回 2；帮助仍是
+argparse 的帮助文本与成功退出。compile、results、identity、diagnostics 和 MCP 启动入口采用
+该边界。diagnostics CLI 优先处理 CompileError/KernelError，保留实际 message/token/instance；
+MCP 运行中的 JSON-RPC 方法/工具错误仍遵守既有 JSON-RPC 与 isError 协议，不当成编译异常。
+
+results 在拥有新输出目录后的普通输入异常转为 CompileError，API diagnostic 与失败 marker、
+CLI 一致；不再转成 kernel.input_error unknown。现有输出目录在取得所有权前仍抛 OSError，
+CLI 转为 input_io，保留不触碰已有目录的契约。迁移结果新增可选 error 字段，同时保留旧
+自由文本 diagnostic 与源哈希；成功为 error=null，failure 不改变批次失败分母。
+
+capture 保留 payload.error 原内核载荷，新增 error_diagnostic，status 查询（及 MCP status）
+一同传递；旧会话没有附加字段时返回 null，不能把缺字段解释为成功。会话版本仍为 1，哈希
+覆盖实际完整 payload，旧会话仍按原哈希校验。内核未给诊断版本的旧 kind/message 载荷按旧
+兼容边界适配为 v1；明确给非 v1 版本时保留原版本/载荷，分类 unknown、capability=null，
+不能用已知 kind 反向套 v1 规则。真实子进程负例保留 sample 与未知附加字段。
+
 ## 剩余范围与证据复用
 
-#64 仍需要所有直接出口/包装调用/错误转换的完整清单，以及实际 CLI/API/benchmark 消费适配。
-本切片没有改 argparse 文本错误、运行产物/身份入口、外部 harness、benchmark 评分或协议。
-lint_passed 仍只表示既有静态检查通过。diagnostic_version 仍为 1，支持范围与精度资格没有升级。
+#64 外部 benchmark/harness 的分类读取与评分分母验收仍待其拥有者交付，不能据本库清单
+关闭总 Issue。PR87/88 是并行用户工作，本批未改其文件或接口。旧 Python API 的普通
+ValueError/OSError（如 query 校验、输出目录所有权、数值请求参数校验）继续保留原异常类别；
+调用者可选择现有 CLI 取得结构化边界诊断。完整源码清单不把这些异常猜成新的 CompileError
+原因，也不声称所有出口已做实际执行覆盖或所有 unknown 已细分类。
+lint_passed 仍只表示既有静态检查通过；支持范围与精度资格没有升级。
 
-此修改只改变失败元数据，新增声明 token 不参与数值 IR；所有拒绝条件、预算、Rust 数值源码均未改。
-因此不要求重跑 Spectre 来验证本切片的元数据。原基线已记录的 Spectre 对比可用于其原有数值结论，
-不据此声称本批新做了 Spectre、扩大了动态支持或通过了新精度资格。若后续修改数值/事件控制流，
-必须重新选择相关实际 Spectre 对比。源审与本地失败回归不替代行为对齐证据。
+此修改只改变输入失败与诊断运输元数据，新增声明 token 不参与数值 IR；所有 VA 拒绝条件、
+编译预算、Rust 数值源码和求解控制流均未改。沿用原基线的实际 Spectre 对比所支持的原有
+数值结论，不据此声称新做 Spectre、扩大动态支持或通过新精度资格。相关本地 timer/DAE/vector
+回归用于守住此边界。若后续改变数值/事件控制流，必须重新选择相关实际 Spectre 对比。

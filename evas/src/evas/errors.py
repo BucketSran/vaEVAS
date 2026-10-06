@@ -4,6 +4,8 @@ Only registered reasons have a category/capability. Unknown legacy failures do
 not become claims about language validity, numerical accuracy or implementation bugs.
 """
 
+import argparse
+
 # code -> category, owning stage, capability, actionable scope
 RULES = {
     'duplicate_module': ('invalid_input', 'parse', 'LANG', 'Provide each module definition once.'),
@@ -79,7 +81,16 @@ class KernelError(RuntimeError):
     @property
     def diagnostic(self):
         kind = self.detail['kind']
-        return dict(self.detail, diagnostic_version=1, code=f'kernel.{kind}',
+        version = self.detail.get('diagnostic_version', 1)
+        known_version = type(version) is int and version == 1
+        return dict(self.detail, diagnostic_version=version, code=f'kernel.{kind}',
                     stage='kernel', category=_KERNEL_CATEGORIES.get(
-                        kind, 'unknown'),
-                    capability=_KERNEL_CAPABILITIES.get(kind))
+                        kind, 'unknown') if known_version else 'unknown',
+                    capability=_KERNEL_CAPABILITIES.get(kind) if known_version else None)
+
+
+class DiagnosticArgumentParser(argparse.ArgumentParser):
+    """Keep argparse's help/exit behavior, with machine-readable bad arguments."""
+    def error(self, message):
+        import json
+        self.exit(2, json.dumps(diagnostic('input_error', message), allow_nan=False) + '\n')
