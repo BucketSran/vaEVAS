@@ -10,12 +10,13 @@ from .ir import Program
 from .errors import KernelError
 from .manifest import finite_float, reject_constant, unique_object
 from .protocol import validate_response
+from .kernel import select_kernel
 
 DEFAULT_TIMEOUT = 300.0
 
 
 def solve(program: Program, driven: list[str], samples: list[list[float]], *,
-          kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
+          kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
           absolute: float | None = None, relative: float | None = None,
           timeout: float | None = DEFAULT_TIMEOUT) -> dict:
     """Solve with voltage tolerances; absolute/relative are legacy aliases."""
@@ -27,7 +28,7 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
-              kernel: str | Path, vabstol: float | None = None, reltol: float | None = None,
+              kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
               absolute: float | None = None, relative: float | None = None,
               timeout: float | None = DEFAULT_TIMEOUT) -> dict:
     """Advance PWL physical inputs in Rust; observations are post-event values."""
@@ -58,6 +59,7 @@ def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT, *, diagnostics_path=None):
             valid = False
         if not valid:
             raise ValueError("timeout must be a positive finite number of seconds or None")
+    kernel = select_kernel(kernel)
     try:
         # subprocess.run kills and waits for its child before TimeoutExpired
         # escapes. No abandoned kernel can keep writing after this diagnostic.
@@ -69,7 +71,7 @@ def _invoke(request, kernel, timeout=DEFAULT_TIMEOUT, *, diagnostics_path=None):
     except subprocess.TimeoutExpired as exc:
         raise KernelError(dict(kind="kernel_timeout", message=f"kernel exceeded execution timeout ({timeout} s)", timeout_seconds=timeout)) from exc
     except (OSError, UnicodeError) as exc:
-        raise KernelError(dict(kind="kernel_process", message=str(exc))) from exc
+        raise KernelError(dict(kind="kernel_process", message=f"cannot execute selected kernel {kernel}: {exc}; install the matching platform wheel or rebuild and pass --kernel PATH")) from exc
     if result.returncode:
         try:
             detail = json.loads(result.stderr, object_pairs_hook=unique_object,

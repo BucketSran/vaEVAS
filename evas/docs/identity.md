@@ -22,7 +22,9 @@ Python 响应采用 `identity_version=1`。`package` 给出发行名称、版本
 当前构建没有记录源码 revision，因此 `build_revision` 为 null。
 `platform` 描述运行 Python 的主机。
 
-不传 `--kernel` 时，`kernel.status=not_requested`。显式指定后记录解析后的
+不传内核选择选项时，`kernel.status=not_requested`。
+新增 `--bundled-kernel` 明确校验并查询安装包内核，与 `--kernel` 互斥；包内核缺失或身份校验失败时，返回退出码 2 和结构化诊断。
+显式指定后记录解析后的
 `path`、文件 `sha256`、内核 `reported` 身份。查询成功时状态为 `queried`，失败为 `error`。
 SHA256 来自所选文件，不根据名称或当前 checkout 推断。
 内核报告 `identity_version=1`、`name`、Cargo 包 `version`、`build_revision`、
@@ -40,7 +42,7 @@ stdout 保留可取得的身份及 `kernel.status=error`，stderr 输出已有�
 设备、命名管道和其他非普通文件在哈希前拒绝，避免读取无 EOF 的对象。
 普通文件哈希完成后，身份子进程查询有五秒超时；失败不会另选二进制。
 直接内核查询不含工件哈希，选择文件和计算哈希由 Python 调用者负责。
-本接口不提供平台 wheel、发布 tag、内核自动发现或安装保证。
+配套 wheel、默认内核选择和安装验证边界见[安装合同](install.md)。
 
 实现见 [identity.py](../src/evas/identity.py)、
 [Python CLI](../src/evas/__main__.py) 和 [Rust CLI](../rust_core/src/main.rs)。

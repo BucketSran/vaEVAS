@@ -76,7 +76,7 @@ def _binary64(value):
     return repr(converted)
 
 
-def run(manifest_path, *, kernel, out, timeout=DEFAULT_TIMEOUT):
+def run(manifest_path, *, kernel=None, out, timeout=DEFAULT_TIMEOUT):
     """Return the final bundle manifest or raise an error with failed state saved.
 
     A pre-existing directory is never owned or changed by this call. In a new
@@ -124,6 +124,8 @@ def run(manifest_path, *, kernel, out, timeout=DEFAULT_TIMEOUT):
         mode, request, count, times = _request(manifest, program)
         state.update(mode=mode, observations=count, timeout_seconds=timeout)
         save('request.json', _json(request))
+        from .kernel import select_kernel
+        kernel = select_kernel(kernel)
         identity, identity_error = inspect_identity(kernel)
         state['identity'] = identity
         if identity_error is not None:
@@ -178,7 +180,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=['run'])
     parser.add_argument('manifest', type=Path)
-    parser.add_argument('--kernel', type=Path, required=True)
+    parser.add_argument('--kernel', type=Path, help='override the bundled kernel')
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--timeout', type=float, default=DEFAULT_TIMEOUT)
     args = parser.parse_args(argv)

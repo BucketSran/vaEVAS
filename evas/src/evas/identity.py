@@ -104,10 +104,18 @@ def main(argv):
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--json', action='store_true', required=True)
-    parser.add_argument('--kernel', type=Path)
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument('--kernel', type=Path)
+    selection.add_argument('--bundled-kernel', action='store_true', help='verify and query the installed bundled executable')
     args = parser.parse_args(argv)
     try:
+        if args.bundled_kernel:
+            from .kernel import select_kernel
+            args.kernel = select_kernel()
         result, error = inspect_identity(args.kernel)
+    except KernelError as exc:
+        print(json.dumps(exc.diagnostic, allow_nan=False), file=sys.stderr)
+        return 2
     except (OSError, ValueError, metadata.PackageNotFoundError) as exc:
         from .errors import diagnostic
         print(json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc))), file=sys.stderr)
