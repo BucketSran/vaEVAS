@@ -26,15 +26,22 @@ class ADCHarnessVerifier(BaseVerifier):
         if self.task.paths.task_dir.name!=TASK.name: raise ValueError('ADC verifier requires the ADC task')
         output=self.trial_paths.verifier_dir.absolute()
         prefix='adc-'+hashlib.sha256(str(self.trial_paths.trial_dir.resolve()).encode()).hexdigest()[:16]
-        self.visible=visible_mount_roots(self.environment,self.task.paths.task_dir,self.trial_paths.trial_dir)
-        private=private_workspace(self.config['private_root'],self.visible,prefix)
+        private=None
         try:
+            self.visible=visible_mount_roots(self.environment,self.task.paths.task_dir,self.trial_paths.trial_dir)
+            private=private_workspace(self.config['private_root'],self.visible,prefix)
             report=await self._evaluate(private,prefix)
+            publish_result(output,report)
         except Exception:
-            (private/'failure.txt').write_text(traceback.format_exc())
-            publish_result(output,{'status':'infrastructure_error','reward':None})
-            raise RuntimeError('ADC harness execution failed; private operator evidence retained') from None
-        publish_result(output,report)
+            # Error handling must never expose the original exception chain if
+            # private evidence or candidate-visible projection writes also fail.
+            failure=traceback.format_exc()
+            if private is not None:
+                try: (private/'failure.txt').write_text(failure)
+                except Exception: pass
+            try: publish_result(output,{'status':'infrastructure_error','reward':None})
+            except Exception: pass
+            raise RuntimeError('ADC harness execution failed; no task score') from None
         score=report['reward']
         if score is None or not math.isfinite(score): raise RuntimeError('ADC harness execution incomplete; no task score')
         return VerifierResult(rewards={'reward':score})

@@ -35,7 +35,7 @@ PSF ASCII保存13个字段，约205k基础时间点另加边沿点，预计单�
 每job使用场景私有输出目录，首批调度仍串行。记录 `spectre -W` 实际输出、输入身份、完整日志、
 退出码与波形身份。目录中有旧产物时换新目录，不能据此复用reward。
 
-本地 Python 语法、渲染身份和24项checker/接入行为回归（另有2项安装Harbor依赖后执行）可执行；本机没有 Spectre/openvaf。
+本地 Python 语法、渲染身份和24项checker/接入行为回归（另有3项安装Harbor依赖后执行）可执行；本机没有 Spectre/openvaf。
 Icarus Verilog 不接受 Verilog-A，不能充当VA语法验收。
 VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I/O须由首个reference病例检查，
 仅静态阅读网表和原创VA不能证明框架可执行。
@@ -82,3 +82,6 @@ checker每场景失败只有在实际波形完整且完成独立判据后才标�
 本地进程接入夹具使用明确标为 `PROCESS FIXTURE, NOT SPECTRE` 的独立进程返回人工PSF，
 核对私有路径写入与原件/执行件身份；原harness project_report判定另作可选集成检查。它验证文件接入，
 不执行VA，也不提供真实Spectre语法或数值证据。
+
+私有目录创建、运行与结果投射共用受控错误边界。目录已存在时拒绝并保留旧证据；
+候选造成公开输出写入失败时，仍只返回通用错误且不附原异常链，不自动换job重跑。
