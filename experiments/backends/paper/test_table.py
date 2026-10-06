@@ -61,7 +61,7 @@ class TableControls(unittest.TestCase):
             entries = {str(Path(ref['path']).relative_to(self.root)): {'sha256': ref['sha256']} for ref in refs if ref}
             entries['EXECUTION.json'] = {'sha256': execution_sha}
             work = Path(identity['condition_started']['path']).parent
-            for name in ('dut.va', 'tb.deck', 'waveform.csv', 'psf/tran.tran.tran'):
+            for name in ('dut.va', 'tb.deck', 'waveform.csv', 'psf/tran.tran.tran', 'simulate.log'):
                 if (work / name).is_file():
                     entries[str((work / name).relative_to(self.root))] = {'sha256': hashlib.sha256((work / name).read_bytes()).hexdigest()}
             identity['execution_manifest'] = self.artifact('FILE_MANIFEST.json', entries)
@@ -501,6 +501,11 @@ class TableControls(unittest.TestCase):
         earlier_ref=record['execution'];earlier_bytes=Path(earlier_ref['path']).read_bytes()
         earlier=json.loads(earlier_bytes)
         final={k:v for k,v in earlier.items() if k not in ('waveform','waveform_sha256','observation')}
+        work=Path(record['identity']['condition_started']['path']).parent
+        log=work/'simulate.log'; log.write_text('fixture context\n'*41+'    ^ ? need )\n')
+        log_sha=hashlib.sha256(log.read_bytes()).hexdigest()
+        final['stages']=[{'stage':'simulate','returncode':0,'log':'simulate.log','log_sha256':log_sha}]
+        final['diagnostic_log_sha256']=log_sha
         final.update(status='deck_parse_error',failure_stage='deck_parse',abort_batch=False,
                      diagnostics=[{'line_number':42,'text':'    ^ ? need )'}],
                      rejected_waveform={'path':earlier['waveform'],'sha256':earlier['waveform_sha256']})
@@ -518,6 +523,72 @@ class TableControls(unittest.TestCase):
         Path(record['execution']['path']).write_text('{}')
         with self.assertRaisesRegex(ValueError,'hash'):
             table.render([record],allow_pending=True)
+
+    def deck_parse_record(self, change=None):
+        record=self.record(condition='EV-SH-01',backend='gnucap_modelgen')
+        previous=json.loads(Path(record['execution']['path']).read_text())
+        work=Path(record['identity']['condition_started']['path']).parent
+        log=work/'simulate.log'; log.write_text('fixture context\n    ^ ? need )\n')
+        log_sha=hashlib.sha256(log.read_bytes()).hexdigest()
+        final={k:v for k,v in previous.items() if k not in ('waveform','waveform_sha256','observation')}
+        final.update(status='deck_parse_error',failure_stage='deck_parse',abort_batch=False,
+                     diagnostic_log_sha256=log_sha,
+                     diagnostics=[{'line_number':2,'text':'    ^ ? need )'}],
+                     stages=[{'stage':'simulate','returncode':0,'log':'simulate.log','log_sha256':log_sha}],
+                     rejected_waveform={'path':previous['waveform'],'sha256':previous['waveform_sha256']})
+        if change: change(final,work)
+        record['execution']=self.artifact('bound-deck-parse-final.json',final)
+        assessment=json.loads(Path(record['assessment']['path']).read_text())
+        assessment.update(status='X',execution_state='X',execution_sha256=record['execution']['sha256'])
+        record['assessment']=self.artifact('bound-deck-parse-assessment.json',assessment)
+        return record
+
+    def test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence(self):
+        changes={
+            'wrong diagnostic sha': lambda f,w:f.update(diagnostic_log_sha256='0'*64),
+            'wrong stage sha': lambda f,w:f['stages'][0].update(log_sha256='0'*64),
+            'no simulate stage': lambda f,w:f.update(stages=[]),
+            'wrong stage log': lambda f,w:f['stages'][0].update(log='other.log'),
+            'wrong line number': lambda f,w:f['diagnostics'][0].update(line_number=1),
+            'wrong line text': lambda f,w:f['diagnostics'][0].update(text='    ^ ? made up'),
+            'no diagnostics': lambda f,w:f.update(diagnostics=[]),
+            'missing rejected raw': lambda f,w:(w/f['rejected_waveform']['path']).unlink(),
+            'wrong rejected raw sha': lambda f,w:f['rejected_waveform'].update(sha256='0'*64),
+            'outside rejected raw': lambda f,w:f['rejected_waveform'].update(path='../waveform.csv'),
+        }
+        for name,change in changes.items():
+            with self.subTest(name=name):
+                record=self.deck_parse_record(change)
+                with self.assertRaises((ValueError,FileNotFoundError)):
+                    self.report([record],allow_pending=True)
+
+    def test_deck_parse_X_requires_manifest_bound_diagnostic_log(self):
+        record=self.deck_parse_record()
+        self.report([record],allow_pending=True)
+        ref=record['identity']['execution_manifest'];manifest=json.loads(Path(ref['path']).read_text())
+        relative=next(k for k in manifest if k.endswith('/simulate.log'))
+        manifest[relative]['sha256']='0'*64
+        record['identity']['execution_manifest']=self.artifact('bad-log-manifest.json',manifest)
+        with self.assertRaisesRegex(ValueError,'FILE_MANIFEST'):
+            table.render([record],allow_pending=True)
+
+    def test_deck_parse_X_requires_manifest_bound_rejected_raw(self):
+        record=self.deck_parse_record()
+        self.report([record],allow_pending=True)
+        ref=record['identity']['execution_manifest'];manifest=json.loads(Path(ref['path']).read_text())
+        relative=next(k for k in manifest if k.endswith('/waveform.csv'))
+        manifest[relative]['sha256']='0'*64
+        record['identity']['execution_manifest']=self.artifact('bad-rejected-raw-manifest.json',manifest)
+        with self.assertRaisesRegex(ValueError,'FILE_MANIFEST'):
+            table.render([record],allow_pending=True)
+
+    def test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created(self):
+        def no_raw(final,work):
+            (work/final['rejected_waveform']['path']).unlink()
+            final['rejected_waveform']=None
+        record=self.deck_parse_record(no_raw)
+        report=self.report([record],allow_pending=True)
+        self.assertIn('0/0/0/1/0/11',report)
 
 
 if __name__ == '__main__':

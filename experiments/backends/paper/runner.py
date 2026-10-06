@@ -18,7 +18,7 @@ import sys
 from inputs import ROOT, BACKENDS, identity, save, sha, verify
 from observations import read_native, normalize_observation
 from process import execute
-from settings_readback import spectre as spectre_readback, ngspice as ngspice_readback
+from settings_readback import spectre as spectre_readback, ngspice as ngspice_readback, gnucap as gnucap_readback
 
 
 def load(path):
@@ -341,28 +341,23 @@ def effective_settings(work, backend):
         log=(work/'simulate.log').read_text()
         if re.search(r'^\s*\^\s*\?\s*',log,re.M):
             raise ValueError('Gnucap deck parse error; settings are not qualified')
-        actual={}
-        for name,target in [('reltol','reltol'),('vntol','vabstol'),('abstol','iabstol')]:
-            pattern=r'\b'+name+r'=\s*(\S+)'
-            matches=re.findall(pattern,log,re.M)
-            if not matches:
-                raise ValueError('missing effective setting: '+name)
-            token=matches[-1]
-            # Reuse the parser's calibrated SPICE numeric suffix conversion.
-            from observations import READER_DIR
-            old=sys.modules.get('suite')
-            try:
-                sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
-                reader=module(READER_DIR/'analyze.py','paper_setting_number')
-                actual[target]=reader.number(token)
-            finally:
-                if old is None: sys.modules.pop('suite',None)
-                else: sys.modules['suite']=old
+        # The historical SPICE number parser is reused without modifying its
+        # frozen identity. Ambiguous repeated values no longer use last-wins.
+        from observations import READER_DIR
+        old=sys.modules.get('suite')
+        try:
+            sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
+            reader=module(READER_DIR/'analyze.py','paper_setting_number')
+            scoped=gnucap_readback(log,reader.number)
+            actual=dict(scoped['actual'])
+        finally:
+            if old is None: sys.modules.pop('suite',None)
+            else: sys.modules['suite']=old
         names=('reltol','vabstol','iabstol')
         actual['stop']='unknown; waveform extent is not setting readback'
         actual['maxstep']='unknown; requested deck is not setting readback'
     mismatches=[k for k in names if not math.isclose(actual[k],expected[k],rel_tol=1e-12,abs_tol=0)]
-    return {'actual':actual,'requested':expected,'mismatches':mismatches,
+    return {'actual':actual,'requested':expected,'mismatches':mismatches,'scoped_readback':scoped,
             'status':'I' if mismatches or backend in ('gnucap_modelgen','openvaf_r_ngspice') else 'readback_matches',
             'claim':'setting equality does not establish equivalent backend error control'}
 
