@@ -2,6 +2,7 @@
 import hashlib
 import json
 import math
+import re
 from collections import Counter
 from fractions import Fraction
 from pathlib import Path
@@ -94,7 +95,7 @@ def expected(card, t):
         return {"state_V": q, "out_V": q, "count_V": n}
     if name == "CO-VCO-01":
         u = pwl(card["stimulus"]["ctl"]["points_T_V"], x)
-        return {"freq_V": min(1, max(Fraction(1, 5), Fraction(2, 5)+u/2)), "phase_V": phase_integral(x) % 1}
+        return {"freq_V": min(1, max(Fraction(1, 5), Fraction(2, 5)+u/2)), "phase_V": phase_integral(x) % 1, "out_V": math.sin(2*math.pi*float(phase_integral(x)))}
     raise ValueError(name)
 
 
@@ -108,6 +109,8 @@ def main():
     assert {c["primary_group"] for c in cards} == GROUPS
     assert len({c["id"] for c in candidates}) == len(candidates)
     for candidate in candidates:
+        for key in ("capability_entry", "contract", "historical_navigation"):
+            assert (HERE.parents[2]/candidate["current_evidence"][key]).is_file()
         assert candidate["classification"] in {"selected", "deferred", "outside"}
         assert candidate["reason"] and candidate["engineering_purpose"]
         assert set(candidate["condition_ids"]) <= ids
@@ -135,15 +138,31 @@ def main():
         for window in card["observation_windows"]:
             assert window["start_T"] < window["center_T"] < window["end_T"]
             assert window["max_gap_s"] <= 2e-11 and window["include_exact_center"]
+        assert sum(card["callback_counts"].values()) == sum(e["expected_count"] for e in card["event_contract"] if e["kind"] != "wrap")
+        guards = re.findall(r"cross\(V\((\w+)\)-([0-9.]+),([+-]1),([^,]+),([^)]+)\)", card["source"])
         for event in card["event_contract"]:
+            assert event["expected_count"] == len(event["nominal_T"])
             assert event["window_T"][0] <= event["window_T"][1]
             assert all(0 < t < card["stop_T"] for t in event.get("nominal_T", []))
             if event["kind"] == "timer":
                 assert event["window_T"] == [-.001, .001]
             if event["kind"] == "cross":
                 assert event["window_T"][0] == 0
+                matched = [g for g in guards if ("channel" not in event or g[0] == event["channel"]) and ("direction" not in event or int(g[2]) == event["direction"])]
+                assert len(matched) == 1, (card["id"], event, guards)
+                node, threshold, direction, time_tol, expr_tol = matched[0]
+                points = card["stimulus"][node]["points_T_V"]
+                for root in event["nominal_T"]:
+                    assert pwl(points, root) == fraction(threshold)
+                    segment = next((a,va,b,vb) for (a,va),(b,vb) in zip(points,points[1:]) if fraction(a) < fraction(root) < fraction(b))
+                    a,va,b,vb = map(fraction,segment)
+                    slope = (vb-va)/(b-a)
+                    assert (slope > 0) == (int(direction) > 0)
+                    width = min(fraction(time_tol)/fraction(batch["units"]["T_s"]),fraction(expr_tol)/abs(slope))
+                    assert abs(float(width)-event["window_T"][1]) < 1e-15
             if event["kind"] == "wrap":
-                for level, t in enumerate(event["nominal_T"], 1):
+                assert len(event["unwrapped_integer_levels"]) == len(event["nominal_T"])
+                for level, t in zip(event["unwrapped_integer_levels"], event["nominal_T"]):
                     phase = phase_integral(t) if card["id"] == "CO-VCO-01" else Fraction(1, 8)+Fraction(3, 4)*fraction(t)
                     assert abs(float(phase)-level) < 1e-12
         for anchor in card["anchors"]:

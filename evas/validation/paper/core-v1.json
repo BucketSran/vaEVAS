@@ -79,7 +79,10 @@
       }
     ],
     "exact_boundary_rule": "Preserve all exact-nominal-wrap rows with raw phase value, ordinary scalar endpoint error, circular error, export-time uncertainty and accepted/interpolated identity. Endpoint expectation from mathematical modulo is0; a near1 value explained by timing uncertainty must be distinguished from a verified wrong endpoint. Do not erase raw endpoint discrepancies when circular distance is small. Without exact-time qualification endpoint semantics remain I, separately from qualified off-boundary phase/sine properties.",
-    "count_schema": "Each event_contract entry expected_count belongs only to that event kind/channel/instance. card.callback_counts maps observed native counter ports to total callbacks across their declared event sources. CO-SH-01 clk expected_count4 + reset expected_count1 produce count total5. Wrap counts are phase discontinuities, not callbacks."
+    "count_schema": "Each event_contract entry expected_count belongs only to that event kind/channel/instance. card.callback_counts maps observed native counter ports to total callbacks across their declared event sources. CO-SH-01 clk expected_count4 + reset expected_count1 produce count total5. Wrap counts are phase discontinuities, not callbacks.",
+    "initial_observation_rule": "Required first row is native accepted t=0 after initial_step settles and before the first timed/cross callback; it must have source, time and voltage qualification plus native_initial evidence. Do not extrapolate, interpolate or use a later steady row as initialization evidence. Missing/unqualified first row makes the initial-state requirement I.",
+    "event_boundary_rule": "Preserve raw nominal timer/cross-center rows and sample origin/time uncertainty. Do not force pre/post state solely from nominal time: explicit timer may trigger before or after nominal; cross plus actual-input/time uncertainty may bracket nominal. Infer one native counter-bracketed latent event history, then use observed callback stage consistently for held state and the same latent times for continuous edges. Ambiguous native endpoint identity is a separate I diagnostic, not proof of a specific callback tie convention. Static nominal anchor arithmetic in check_design is only asserted at listed non-event anchors.",
+    "result_identity_rule": "status_by_backend=T in these immutable design cards is permanent A0 design provenance. Actual execution and per-property results live in separate identity-bound records; never update cards to insert actual scores."
   },
   "cards": [
     {
@@ -183,6 +186,10 @@
           "out_V": 0.675
         },
         {
+          "t_T": 1,
+          "out_V": 0.925
+        },
+        {
           "t_T": 2,
           "out_V": 1.175
         },
@@ -282,12 +289,20 @@
           "freq_V": 0.4
         },
         {
+          "t_T": 3,
+          "freq_V": 0.9
+        },
+        {
           "t_T": 4,
           "freq_V": 1
         },
         {
           "t_T": 6,
           "freq_V": 0.4
+        },
+        {
+          "t_T": 8,
+          "freq_V": 0.2
         }
       ],
       "distinguishable_faults": [
@@ -961,7 +976,13 @@
             0.0001
           ],
           "expected_count": 4,
-          "boundary_rule": "Exact wrap rows are separate observations. Circular phase error and sine use the same unwrapped a. Left limit p=1, right limit p=0; do not apply ordinary absolute phase error within the wrap window."
+          "boundary_rule": "Exact wrap rows are separate observations. Circular phase error and sine use the same unwrapped a. Left limit p=1, right limit p=0; do not apply ordinary absolute phase error within the wrap window.",
+          "unwrapped_integer_levels": [
+            1,
+            2,
+            3,
+            4
+          ]
         }
       ],
       "anchors": [
@@ -1739,34 +1760,40 @@
         {
           "t_T": 0,
           "freq_V": 0.2,
-          "phase_V": 0.125
+          "phase_V": 0.125,
+          "out_V": 0.7071067811865475
         },
         {
           "t_T": 2,
           "freq_V": 0.4,
-          "phase_V": 0.605
+          "phase_V": 0.605,
+          "out_V": -0.6129070536529763
         },
         {
           "t_T": 4,
           "freq_V": 1,
-          "phase_V": 0.245
+          "phase_V": 0.245,
+          "out_V": 0.9995065603657316
         },
         {
           "t_T": 6,
           "freq_V": 0.4,
-          "phase_V": 0.885
+          "phase_V": 0.885,
+          "out_V": -0.6613118653236523
         },
         {
           "t_T": 8,
           "freq_V": 0.2,
-          "phase_V": 0.365
+          "phase_V": 0.365,
+          "out_V": 0.7501110696304597
         }
       ],
       "distinguishable_faults": [
         "Integrate raw unclamped frequency.",
         "Clamp instantaneous phase instead of frequency.",
         "Reinitialize idtmod at branch changes.",
-        "Use f(t)*t instead of accumulated phase."
+        "Use f(t)*t instead of accumulated phase.",
+        "Missing 2*pi in the composed sine path disagrees with the independently accumulated phase and fixed out anchors."
       ],
       "uncovered": [
         "VCO reset/gating",
@@ -1832,6 +1859,18 @@
       "basis": "Verified count-field ambiguity from incomplete GLM fragment; no new backend results",
       "change": "Make event-entry counts local and observed callback totals card-level. Sources, stimuli, answers, windows and budgets unchanged.",
       "previous_commit": "9932ee4f"
+    },
+    {
+      "revision": "A0-review-4",
+      "basis": "Complete GLM event review F2/F3/F4/F6 triage before backend execution",
+      "change": "Add native settled t0 and common-latent-history nominal endpoint rules, preserve immutable T design records, and add slope-derived cross-window checks. No source/stimulus/numerical answer/acceptance-budget change.",
+      "previous_commit": "02b4c830"
+    },
+    {
+      "revision": "A0-review-5",
+      "basis": "Complete GLM continuous review independently checked before backend results",
+      "change": "Fieldize CP-02 unwrapped integer wrap levels; add sine, segment-interior and tail anchors already implied by unchanged analytic answers. Independently correct reviewer sine example; no new condition/source/stimulus/budget.",
+      "previous_commit": "02b4c830"
     }
   ]
 }
