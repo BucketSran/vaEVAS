@@ -182,6 +182,8 @@ PR87 只改变聚合身份中的 `test_triangle_oscillator.py`，CMP8 读取与�
 
 本次[重分析证明](evidence/cmp-actual-95-20261007/checker-reanalysis/proof.json)及其所有引用
 必须位于保留的比较目录并通过SHA验证；`runs/`或冻结输入目录内的临时证明拒绝。
+完成快照的四份manifest/provenance归档也必须位于保留的比较目录，并通过SHA验证；
+生成入口拒绝将证据目录置于`runs/`。完成日期必须等于其fresh快照的`updated`，篡改会拒绝。
 该窄桥接还要求本地Git可取得两个固定修订及其源码blob。对象缺失会以明确的
 `missing fixed checker Git blob`拒绝，不以当前工作树或其他修订替代。
 

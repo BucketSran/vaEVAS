@@ -13,6 +13,10 @@ from freeze import save
 class CompletionControls(unittest.TestCase):
     def setUp(self):
         test_refresh.RefreshControls.setUp(self)
+        retained=tempfile.TemporaryDirectory(dir=ROOT/'experiments/backends/comparison/evidence')
+        self.addCleanup(retained.cleanup)
+        self.retained=Path(retained.name)
+        self.archive_count=0
         self.original = copy.deepcopy(self.fresh)
         evas = {r['case']: r for r in self.fresh['records'] if r['dataset']=='cmp8-base' and r['backend']=='evas'}
         for backend in ('evas', 'openvaf_ngspice', 'gnucap'):
@@ -58,7 +62,8 @@ class CompletionControls(unittest.TestCase):
 
     def make(self):
         from completion import complete
-        return complete(self.parent_path,self.fresh_path,self.old,self.new,self.work/'completion-proof')
+        self.archive_count+=1
+        return complete(self.parent_path,self.fresh_path,self.old,self.new,self.retained/('completion-proof-'+str(self.archive_count)))
 
     def test_three_full_batches_retain_failed_case_and_parent_evidence(self):
         before={p:sha(p) for p in (self.parent_path,self.fresh_path)}
@@ -95,10 +100,10 @@ class CompletionControls(unittest.TestCase):
         bridge=retained_path/'checker-reanalysis.json';save(bridge,proof)
         transient=self.work/'checker-reanalysis.json';save(transient,proof)
         with self.assertRaisesRegex(ValueError,'retained comparison evidence'):
-            complete(parent_path,self.fresh_path,self.old,self.new,self.work/'transient',checker_reanalysis=transient)
+            complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'transient',checker_reanalysis=transient)
         with self.assertRaisesRegex(ValueError,'checker changed without'):
-            complete(parent_path,self.fresh_path,self.old,self.new,self.work/'unbridged')
-        result=complete(parent_path,self.fresh_path,self.old,self.new,self.work/'bridged',checker_reanalysis=bridge)
+            complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'unbridged')
+        result=complete(parent_path,self.fresh_path,self.old,self.new,self.retained/'bridged',checker_reanalysis=bridge)
         validate(result)
         originals={r['case']:r for r in load(parent_path)['records'] if r['dataset']=='cmp8-base' and r['backend']=='spectre'}
         for row in result['records']:
@@ -140,6 +145,28 @@ class CompletionControls(unittest.TestCase):
                     self.rebind(row,receipt)
                 self.fresh_path.write_text(json.dumps(self.fresh))
                 with self.assertRaises(ValueError): self.make()
+
+    def test_transient_completion_archive_and_references_are_rejected(self):
+        from completion import complete
+        with self.assertRaisesRegex(ValueError,'retained comparison'):
+            complete(self.parent_path,self.fresh_path,self.old,self.new,self.work/'transient-archive')
+        result=self.make()
+        for name in ('old_manifest','new_manifest','old_provenance','new_provenance'):
+            with self.subTest(reference=name):
+                changed=copy.deepcopy(result)
+                original=ROOT/result['completion'][name]['path']
+                transient=self.work/(name+'-copied.json')
+                transient.write_bytes(original.read_bytes())
+                changed['completion'][name]={'path':str(transient.relative_to(ROOT)),'sha256':sha(transient)}
+                with self.assertRaisesRegex(ValueError,'retained comparison'):
+                    validate(changed)
+
+    def test_completion_updated_is_bound_to_fresh(self):
+        result=self.make()
+        self.assertEqual(result['updated'],self.fresh['updated'])
+        result['updated']='2099-01-01'
+        with self.assertRaisesRegex(ValueError,'completion updated'):
+            validate(result)
 
     def test_complete_failure_cannot_be_renamed_as_pass(self):
         result=self.make()

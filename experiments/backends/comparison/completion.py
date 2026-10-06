@@ -125,6 +125,10 @@ def check_completion(data, root=ROOT):
         raise ValueError('completion requires schema2 and a separate fresh execution snapshot')
     validate(parent, root)
     validate(fresh, root)
+    if data['updated'] != fresh['updated']:
+        raise ValueError('completion updated differs from fresh snapshot')
+    for name in ('old_manifest', 'new_manifest', 'old_provenance', 'new_provenance'):
+        retained_reference(proof[name], root)
     for name in ('datasets', 'coverage', 'tools', 'components', 'candidate_links'):
         if data.get(name) != parent.get(name):
             raise ValueError('completion changed an unrelated dataset, component or candidate')
@@ -223,6 +227,10 @@ def check_completion(data, root=ROOT):
 
 
 def complete(parent_snapshot, fresh_snapshot, old_inputs, new_inputs, evidence, root=ROOT, checker_reanalysis=None):
+    evidence = evidence.resolve()
+    if (not evidence.is_relative_to((root / 'experiments/backends/comparison').resolve()) or
+            any(evidence.is_relative_to(p.resolve()) for p in (old_inputs, new_inputs))):
+        raise ValueError('completion archive requires retained comparison evidence outside frozen inputs')
     parent = load(parent_snapshot)
     fresh = load(fresh_snapshot)
     validate(parent, root)
@@ -248,15 +256,12 @@ def complete(parent_snapshot, fresh_snapshot, old_inputs, new_inputs, evidence, 
     data['completion'] = {name: reference(path, root) for name, path in sources.items()}
     if checker_reanalysis is not None:
         data['completion']['checker_reanalysis'] = reference(checker_reanalysis, root)
-    check_completion(data, root)
-    evidence = evidence.resolve()
-    if not evidence.is_relative_to(root.resolve()) or any(evidence.is_relative_to(p.resolve()) for p in (old_inputs, new_inputs)):
-        raise ValueError('completion archive must stay in repository and outside frozen inputs')
     evidence.mkdir(parents=True, exist_ok=False)
     for name in ('old_manifest', 'new_manifest', 'old_provenance', 'new_provenance'):
         path = evidence / (name + '.json')
         shutil.copyfile(sources[name], path)
         data['completion'][name] = reference(path, root)
+    check_completion(data, root)
     data['limits'] = ['Frozen parent limitation: ' + line for line in parent.get('limits', [])] + [
         'Three backend batches have new finite execution outcomes, including any failures; Spectre is reused. Formal qualification remains I.']
     if checker_reanalysis is not None:
