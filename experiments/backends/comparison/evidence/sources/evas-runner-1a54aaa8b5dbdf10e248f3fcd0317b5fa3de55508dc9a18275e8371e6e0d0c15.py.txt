@@ -1,0 +1,282 @@
+"""Execute one allocated backend's eight frozen base cases, serially, without retries.
+
+Remote launches require the coordinator's resource allocation. No CLI default
+selects a backend or a historical runtime. Each output directory is new.
+"""
+from __future__ import annotations
+import argparse
+import csv
+import importlib.util
+import json
+import math
+import os
+from pathlib import Path
+import re
+import shutil
+import signal
+import subprocess
+import sys
+import time
+
+from records import ROOT, BACKENDS, identity, load, sha
+from freeze import SELECTED, checker_identity, runtime_identity, save
+
+
+def verify(root):
+    for rel, entry in load(root / 'INPUT_MANIFEST.json').items():
+        path = (root / rel).resolve()
+        if not path.is_relative_to(root.resolve()) or sha(path) != entry['sha256'] or path.stat().st_size != entry['bytes']:
+            raise ValueError('frozen input drift: ' + rel)
+    plan = load(root / 'RUN_PLAN.json')
+    if checker_identity() != load(root / 'provenance.json')['checker_identity']:
+        raise ValueError('checker changed since input freeze')
+    if len(plan) != 32 or {(p['backend'], p['condition'], p['profile']) for p in plan} != {
+            (b, c, 'base') for b in BACKENDS for c in SELECTED}:
+        raise ValueError('runner only accepts the approved 32 configuration plan')
+    return plan
+
+
+def execute(argv, work, stage, cleanup=None, timeout=90):
+    record = {'argv': argv, 'stage': stage, 'started_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+              'timeout_s': timeout, 'thread_request': 1}
+    with (work / (stage + '.log')).open('x') as log:
+        process = subprocess.Popen(argv, cwd=work, stdout=log, stderr=subprocess.STDOUT, start_new_session=True,
+                                   env=dict(os.environ, OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1'))
+        try:
+            record.update(exit_code=process.wait(timeout=timeout), timed_out=False)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=5)
+            record.update(exit_code=process.returncode, timed_out=True)
+            if cleanup:
+                cleanup()
+    record['log_sha256'] = sha(work / (stage + '.log'))
+    save(work / (stage + '.json'), record)
+    return record
+
+
+def worker(work, kernel):
+    """Current Python compiler + current transient API, explicitly selected kernel."""
+    sys.path.insert(0, str(ROOT / 'evas/src'))
+    from evas import CompileError, KernelError, Instance, compile_sources, transient
+    from evas.syntax import Parser
+    c = load(work / 'condition.json')
+    settings = load(work / 'requested_settings.json')
+    sources = {card: (ROOT / 'evas/validation/cases' / card / 'dut.va').read_text() for card in c['source_cards']}
+    if '\n'.join(sources.values()) != (work / 'dut.va').read_text():
+        raise ValueError('current module bytes differ from frozen DUT')
+    result = {'status': 'not_run'}
+    try:
+        ports = {m.name: m.ports for card, text in sources.items() for m in [Parser(text, card).parse()]}
+        instances = [Instance(i['name'], i.get('module', c.get('module')),
+                     dict(zip(ports[i.get('module', c.get('module'))], i['ports'], strict=True)), i['params'])
+                     for i in c['instances']]
+        program = compile_sources(sources, instances)
+        save(work / 'program.json', program.to_dict())
+        count = round(settings['stop'] / settings['step'])
+        times = [i * (settings['stop'] / count) for i in range(count + 1)]
+        inputs = {n: [[t * 1e-6, v] for t, v in points] for n, points in c['inputs'].items()}
+        response = transient(program, inputs, times, stop=settings['stop'], max_step=settings['maxstep'],
+                             kernel=kernel, vabstol=settings['vabstol'], reltol=settings['reltol'])
+        save(work / 'effective.json', {'vabstol': settings['vabstol'], 'reltol': settings['reltol'],
+             'max_step': settings['maxstep'], 'stop': settings['stop'], 'output_points': len(times),
+             'engine': response['engine'], 'transient': response['transient'],
+             'unsupported_spice_controls': ['iabstol', 'integration method']})
+        with (work / 'waveform.csv').open('x') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['time', *response['nodes']])
+            writer.writerows([t, *s['voltages']] for t, s in zip(times, response['solutions'], strict=True))
+        result = {'status': 'waveform_available', 'waveform': 'waveform.csv'}
+    except CompileError as exc:
+        result = {'status': 'compile_failed', 'failure_stage': 'compile', 'reason': str(exc)}
+    except KernelError as exc:
+        result = {'status': 'execution_failed', 'failure_stage': 'kernel', 'reason': str(exc), 'detail': exc.detail}
+    save(work / 'worker-result.json', result)
+
+
+def analyze(work, backend, result):
+    if result['status'] != 'waveform_available':
+        return {'status': result['status'], 'formal_dvs_qualification': 'I'}
+    sys.path.insert(0, str(ROOT / 'experiments/backends/dvs2-spectre-validation'))
+    from check_results import check, read_waveform
+    try:
+        rows = read_waveform(work / result['waveform'], backend)
+        if backend == 'gnucap' and (not rows or any('bench_ref' not in r or not math.isfinite(r['bench_ref'])
+                                                   or abs(r['bench_ref']) > 1e-7 for r in rows)):
+            raise ValueError('ground alias observation invalid')
+        return check(rows, load(work / 'condition.json'))
+    except (ValueError, KeyError, TypeError, IndexError) as exc:
+        return {'status': 'observation_invalid', 'reason': str(exc), 'formal_dvs_qualification': 'I'}
+
+
+def effective_settings(work, backend):
+    requested = load(work / 'requested_settings.json')
+    if backend == 'evas':
+        return load(work / 'effective.json')
+    if backend == 'spectre':
+        from report import settings
+        actual = settings((work / 'spectre.log').read_text())
+        mapping = {k: k for k in actual}
+    else:
+        sys.path.insert(0, str(ROOT / 'experiments/backends/dvs2-four-backend-validation'))
+        from audit import setting_readback
+        actual, mapping = setting_readback(backend, (work / 'simulate.log').read_text())
+    for name, request in mapping.items():
+        if isinstance(actual[name], str):
+            matches = actual[name] == requested[request]
+        else:
+            matches = math.isclose(actual[name], requested[request], rel_tol=1e-12, abs_tol=0)
+        if not matches:
+            raise ValueError('effective setting mismatch: ' + name)
+    return {'actual': actual, 'requested_values_match': True,
+            'interpretation': 'logged tool settings; equal names do not imply equivalent error control'}
+
+
+def run(args):
+    source = args.inputs.resolve()
+    plan = verify(source)
+    output = args.output.resolve()
+    if output.is_relative_to(source):
+        raise ValueError('output must be outside frozen inputs')
+    output.mkdir(parents=True, exist_ok=False)
+    selected = [p for p in plan if p['backend'] == args.backend]
+    tool = {}
+    env = None
+    if args.backend == 'evas':
+        if not args.kernel or not args.kernel.is_file():
+            raise ValueError('explicit current kernel required')
+        if runtime_identity() != load(source / 'provenance.json')['evas_runtime_identity']:
+            raise ValueError('EVAS source changed since input freeze; use a new batch identity')
+        tool = {'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+                'runtime_identity': runtime_identity(), 'kernel_sha256': sha(args.kernel),
+                'kernel_version': 'unknown', 'version_note': 'This baseline kernel has no CLI version handshake; retain actual binary hash and response engine identity.'}
+    elif args.backend == 'spectre':
+        if not args.spectre_profile:
+            raise ValueError('existing Spectre profile required')
+        profile = load(args.spectre_profile)
+        binary, scripts = profile['spectre'], profile['setup_scripts']
+        if any(not re.fullmatch(r'/[A-Za-z0-9_./-]+', p) for p in [binary, *scripts]):
+            raise ValueError('unsupported tool path')
+        setup = '\n'.join('source ' + p for p in scripts) + '\n'
+        (output / 'version.csh').write_text(setup + binary + ' -W\nexit $status\n')
+        probe = execute(['/bin/csh', '-f', 'version.csh'], output, 'version', timeout=30)
+        if probe['exit_code'] or probe['timed_out']:
+            raise RuntimeError('Spectre tool identity failed; no cases launched')
+        tool = {'revision': 'unknown', 'runtime_identity': sha(Path(binary)),
+                'binary_sha256': sha(Path(binary)), 'setup_sha256': [sha(Path(p)) for p in scripts],
+                'version': (output / 'version.log').read_text().strip(), 'version_probe': probe}
+    else:
+        if not args.environment:
+            raise ValueError('existing pinned container environment required')
+        path = args.environment / 'environment.py'
+        spec = importlib.util.spec_from_file_location('cmp_environment', path)
+        env = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(env)
+        images = env.check_inputs()
+        expected = load(ROOT / 'experiments/archive/dvs2-starter-pilot/results/TOOL_IDENTITIES.json')['images']
+        names = ['openvaf_runtime', 'ngspice'] if args.backend == 'openvaf_ngspice' else ['gnucap']
+        if any(images[n]['config_id'] != expected[n]['config_id'] for n in names):
+            raise ValueError('pinned container identity drift')
+        tool = {'revision': 'unknown', 'runtime_identity': identity({n: images[n]['config_id'] for n in names}),
+                'images': {n: images[n] for n in names}, 'environment_sha256': sha(path)}
+    save(output / 'STARTED.json', {'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
+         'plan_sha256': sha(source / 'RUN_PLAN.json'), 'configurations': 8, 'max_simulations': 8,
+         'max_compilations': 8, 'stage_timeout_s': 90, 'license_timeout_s': 30, 'tool': tool,
+         'runner_sha256': sha(Path(__file__)), 'allocation': args.allocation})
+
+    def container(image, executable, argv, work, stage):
+        command, name = env.container(tool['images'][image]['config_id'], executable, argv, work)
+        def cleanup():
+            subprocess.run(env.podman() + ['rm', '-f', name], capture_output=True, timeout=15, check=True)
+            absent = subprocess.run(env.podman() + ['container', 'exists', name], capture_output=True, timeout=5)
+            if absent.returncode != 1:
+                raise RuntimeError('owned timed-out container cleanup not confirmed')
+        return execute(command, work, stage, cleanup)
+
+    if env:
+        components = [('openvaf_runtime', '/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r'),
+                      ('ngspice', '/opt/ngspice/bin/ngspice')] if args.backend == 'openvaf_ngspice' else [
+                          ('gnucap', '/opt/gnucap/bin/gnucap-mg-vams')]
+        versions = {}
+        for image, executable in components:
+            version = container(image, executable, ['--version'], output, 'version-' + image)
+            if version['exit_code'] or version['timed_out']:
+                raise RuntimeError('component identity probe failed; no cases launched')
+            text = (output / ('version-' + image + '.log')).read_text().strip()
+            versions[image] = {'self_report': text or 'unknown', 'probe': version}
+        save(output / 'COMPONENT_IDENTITIES.json', versions)
+        tool['components'] = versions
+
+    results = []
+    for item in selected:
+        work = output / 'runs' / item['condition'] / 'base'
+        shutil.copytree(source / item['work'], work)
+        stages = []
+        result = {'status': 'not_run'}
+        if args.backend == 'evas':
+            command = [sys.executable, '-B', str(Path(__file__).resolve()), 'worker', str(work), str(args.kernel.resolve())]
+            stages.append(execute(command, work, 'simulate'))
+            if (work / 'worker-result.json').exists():
+                result = load(work / 'worker-result.json')
+        elif args.backend == 'spectre':
+            (work / 'run.csh').write_text(setup + binary + ' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n')
+            stages.append(execute(['taskset', '-c', str(min(os.sched_getaffinity(0))), '/bin/csh', '-f', 'run.csh'], work, 'simulate'))
+            result = {'status': 'waveform_available', 'waveform': 'psf/tran.tran.tran'}
+        elif args.backend == 'openvaf_ngspice':
+            stages.append(container('openvaf_runtime', '/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r',
+                                    ['dut.va', '-o', 'dut.osdi'], work, 'compile'))
+            if stages[-1]['exit_code'] == 0 and not stages[-1]['timed_out'] and (work / 'dut.osdi').exists():
+                stages.append(container('ngspice', '/opt/ngspice/bin/ngspice', ['-b', 'tb.cir'], work, 'simulate'))
+                result = {'status': 'waveform_available', 'waveform': 'waveform.txt'}
+        else:
+            # One compilation launch, one 90s cap, modelgen then C++ with fail-fast.
+            compile_command = '/opt/gnucap/bin/gnucap-mg-vams -I /opt/gnucap/include/gnucap -o dut.cc --cc dut.va && /usr/bin/c++ -std=c++14 -I /opt/gnucap/include/gnucap -fPIC -shared dut.cc -o dut.so'
+            stages.append(container('gnucap', '/bin/sh', ['-c', compile_command], work, 'compile'))
+            if stages[-1]['exit_code'] == 0 and not stages[-1]['timed_out'] and (work / 'dut.so').exists():
+                stages.append(container('gnucap', '/opt/gnucap/bin/gnucap', ['tb.gc'], work, 'simulate'))
+                result = {'status': 'waveform_available', 'waveform': 'waveform.txt'}
+        failed = next((s for s in stages if s['exit_code'] or s['timed_out']), None)
+        if failed:
+            result = {'status': 'timeout' if failed['timed_out'] else 'compile_failed' if failed['stage'] == 'compile' else 'execution_failed',
+                      'failure_stage': failed['stage']}
+        elif result['status'] == 'waveform_available' and not (work / result['waveform']).is_file():
+            result = {'status': 'missing_waveform', 'failure_stage': 'export'}
+        elif result['status'] == 'not_run':
+            result = {'status': 'missing_compile_artifact', 'failure_stage': 'compile'}
+        if result.get('waveform'):
+            result['waveform_sha256'] = sha(work / result['waveform'])
+        result.update(item, tool=tool, commands=stages, analysis=analyze(work, args.backend, result))
+        if result['status'] == 'waveform_available':
+            try:
+                result['effective_settings'] = effective_settings(work, args.backend)
+            except (ValueError, KeyError, AssertionError) as exc:
+                result['settings_audit'] = {'status': 'I', 'reason': str(exc)}
+                result['analysis']['numerical_status_before_settings_audit'] = result['analysis']['status']
+                result['analysis']['status'] = 'unresolved'
+        save(work / 'result.json', result)
+        results.append(result)
+        with (output / 'EXECUTION.jsonl').open('a') as stream:
+            stream.write(json.dumps(result, ensure_ascii=False) + '\n')
+        print(item['condition'], result['status'], result['analysis']['status'], flush=True)
+    save(output / 'EXECUTION.json', results)
+    save(output / 'FILE_MANIFEST.json', {str(p.relative_to(output)): {'sha256': sha(p), 'bytes': p.stat().st_size}
+                                       for p in sorted(output.rglob('*')) if p.is_file()})
+
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == 'worker':
+        worker(Path(sys.argv[2]), Path(sys.argv[3]))
+        return
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('inputs', type=Path)
+    parser.add_argument('output', type=Path)
+    parser.add_argument('--backend', choices=BACKENDS, required=True)
+    parser.add_argument('--allocation', required=True, help='coordinator allocation id; receipt only, not additional permission')
+    parser.add_argument('--kernel', type=Path)
+    parser.add_argument('--spectre-profile', type=Path)
+    parser.add_argument('--environment', type=Path)
+    run(parser.parse_args())
+
+
+if __name__ == '__main__':
+    main()

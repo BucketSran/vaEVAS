@@ -1,5 +1,7 @@
 # EVAS：电压域 Verilog-A 仿真器
 
+四后端的行为与误差比较见[比较表](../experiments/backends/comparison/README.md)及[维护契约](docs/COMPARISON.md)。新论文集尚未冻结，既有开发集与候选分支证据分别标记；本轮不统计耗时。
+
 EVAS 面向 Verilog-A 行为模型的开发与验证。首要目标是提供开源、可审查的电压域仿真环境，
 让使用者不依赖商业仿真器也能运行和验证目标模型，为 benchmark 提供开源复现路径。
 EVAS 有独立的使用者、验收标准和交付成果；速度优化须保持模型语义和误差要求。
