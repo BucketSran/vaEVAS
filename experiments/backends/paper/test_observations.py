@@ -68,3 +68,61 @@ class ObservationContracts(unittest.TestCase):
             path.write_text('Changed proof')
             result=normalize_observation(CARD,'evas',rows,['accepted']*5,q,contract=CONTRACT)
             self.assertFalse(result['qualification']['qualified'])
+
+    def test_boundary_request_provenance_is_preserved_without_qualification(self):
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,2e-10,2.2e-10,4e-10)]
+        cohort={'serialization_error_s':1e-22,'records':[{'nominal_time_s':2e-10,'row_index':2,'request_id':'fixture-request'}]}
+        result=normalize_observation(CARD,'spectre',rows,['unknown']*5,{'boundary_cohort':cohort},contract=CONTRACT)
+        self.assertEqual(result['qualification']['boundary_cohort'],cohort)
+        self.assertFalse(result['qualification']['qualified'])
+        self.assertEqual(result['metadata']['sample_origins'],['unknown']*5)
+        self.assertNotIn('qualification_evidence',result['qualification'])
+
+    def test_boolean_is_not_a_physical_sample(self):
+        rows=[{'time':0,'in':True,'count':0}]
+        result=normalize_observation(CARD,'evas',rows,['accepted'],contract=CONTRACT)
+        self.assertEqual(result['status'],'observation_invalid')
+
+    def test_reader_restores_suite_even_when_suite_execution_raises(self):
+        import sys
+        from unittest.mock import patch
+        from observations import read_native
+        from pathlib import Path
+        previous=object()
+        def fail(module):
+            sys.modules['suite']=module
+            raise RuntimeError('fixture import failure')
+        with patch.dict(sys.modules,{'suite':previous}):
+            with patch('importlib.machinery.SourceFileLoader.exec_module',side_effect=fail):
+                with self.assertRaises(RuntimeError):
+                    read_native(Path('unused'),'evas')
+            self.assertIs(sys.modules['suite'],previous)
+
+    def test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate(self):
+        import tempfile,hashlib
+        from pathlib import Path
+        center=2e-10
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,center+1e-23,2.2e-10,4e-10)]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/'synthetic-proof';p.write_text('Synthetic serialization fixture, never backend qualification')
+            proof={'method':'synthetic fixture','artifact_path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+            q={'boundary_cohort':{'serialization_error_s':2e-23,'records':[{'nominal_time_s':center,'row_index':2,'request_id':'fixture-center'}]},'qualification_evidence':{'boundary_cohort':proof}}
+            result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+            self.assertTrue(result['qualification']['local_gap_qualified'])
+            self.assertFalse(result['qualification']['qualified'])
+            p.write_text('changed')
+            result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+            self.assertFalse(result['qualification']['local_gap_qualified'])
+
+    def test_different_nominal_identity_is_diagnosed_not_tolerance_matched(self):
+        import tempfile,hashlib
+        from pathlib import Path
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,2e-10+1e-23,2.2e-10,4e-10)]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/'synthetic-proof';p.write_text('Synthetic fixture only')
+            proof={'method':'synthetic','artifact_path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+            record={'nominal_time_s':2e-10+1e-23,'row_index':2,'request_id':'different-nominal'}
+            q={'boundary_cohort':{'serialization_error_s':2e-23,'records':[record]},'qualification_evidence':{'boundary_cohort':proof}}
+            result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+            self.assertFalse(result['qualification']['local_gap_qualified'])
+            self.assertEqual(result['metadata']['unmatched_boundary_records'][0]['record'],record)

@@ -18,12 +18,15 @@ SI-01 原源码中的 `paper_isolation` 顶层包含 A/B 两个真实实例，�
 请求网格包含全局最多 200 ps、规定窗口内最多 20 ps 间隔、所有名义中心和
 anchor。Spectre 请求 200 ps 全局步长，加共同网格的 `strobetimes` 和
 `strobeoutput=all`。EVAS 请求同一网格和 200 ps 最大步长。ngspice/Gnucap
-没有已核验的局部控制接口；仅在 32 byte/token 保守输出估算及 20% 文件余量
-允许时采用全局 20 ps 备用步长，否则保留 200 ps 并声明局部/中心资格缺口。
-当前 12 条件均未通过该备用输出规模门槛。实际原生记录可能因自适应加密
-超过估算，执行器仍实施文件上限，超限失败保留。
-`requested_times.json` 是共同的观测义务；deck 尚未证明能产生每一个精确中心。
-后续执行必须核验实际输出来源、时间/电压误差、局部间隔和中心行。
+增加与 DUT 断开的理想 PWL 辅助源：只共享 ground，不连接 DUT 端口或刺激；
+在规定窗口点、名义中心和 anchors 请求时间断点。全局 maxstep 保持 200 ps，
+Gnucap 额外请求 `trace alltime` 保存内部接受步。辅助源属于新 deck/输入冻结，
+不增加条件数量。`breakpoint_requests.json` 保存有 ID 的请求和两倍行数规划估算，
+当前全部 12 条件的估算在 32 MiB/文件、256 MiB/条件内；自适应步数可能超过估算。
+实际输出大小、安装版断点与保存语义仍须小型 preflight 核验，再由协调者决定矩阵。
+`requested_times.json` 是共同观测义务；请求文件不能证明 accepted 或准确中心。
+[观察方法与运行前资格路径](OBSERVATION_METHODS.md) 列出 primary 源码依据、
+原始证据与未知项，准备状态不代表后端比较完成。
 编译器是否接受原源、deck 是否有效、工具版本/二进制/镜像身份及有效设置
 在准备阶段均未知。`qualification_requirements.json` 保留这些待办。
 准备文件不是实际比较证据，实际执行须先由协调者批准冻结批次并绑定工具身份。
@@ -40,13 +43,19 @@ anchor。Spectre 请求 200 ps 全局步长，加共同网格的 `strobetimes` �
 和 native_initial
 及适用的 native_counters/native_phase 角色记录 `{method, artifact_path, sha256}`。
 适配器只核验可读取证据的哈希及声明，科学误差界仍需审查 method 报告。
+哈希是证据绑定；调用方是受信任的资格审查入口，不是任意证书的认证器。
+synthetic 测试只校准这个传输合同，不能成为实际后端资格。
 缺证据时 `qualified=false`。密集网格、solver tolerance 与相互一致的后端
 不能建立误差界。插值误差须单独有界并包含在总导出误差内；插值/未知记录
 不会成为原生计数/phase 或精确端点证据。
 
-`runner.py` 只执行经协调者分配的单后端 12 条件，输出目录必须新建，零自动
+`runner.py` 保留单后端固定 12 条件分母，只执行 allocation 明确选择的条件，输出目录必须新建，零自动
 重试。`--tool-profile` 与 `--allocation` 都是必需的 JSON 文件，并由 allocation
 绑定 INPUT_MANIFEST 和 profile 的 SHA256。实际运行要求 Linux、taskset/prlimit。
+首轮可选 EV-SH-01/CP-02（各 launch cap=2），后续由协调者新 allocation 选择
+此前未 launch 的其余 10 条，在新 output 执行。没有 resume 或自动 repeat；旧失败
+不能被新输出替换。每份 EXECUTION 始终 12 项，其余明确 not_selected_in_allocation。
+协调者与汇总器核对两份真实身份和累计授权，保持同一输入/tool/checker 分母。
 此实现轮次没有调用后端或远程资源；以下接口供批准冻结后的执行阶段使用。
 
 ```sh
@@ -55,9 +64,11 @@ python3 -B experiments/backends/paper/runner.py INPUTS OUTPUT \
 ```
 
 allocation 必需字段为 backend、input_manifest_sha256、tool_profile_sha256、
-max_simulation_launches=12、max_compilation_launches=12、stage_timeout_s<=90、
+selected_condition_ids（非空、不重复、卡片中存在）、
+max_simulation_launches/max_compilation_launches 均等于选择数且 <=12、stage_timeout_s<=90、
 license_timeout_s<=30、memory_limit_bytes<=4294967296、file_limit_bytes<=33554432、
-threads=1，所有上限必须正整数。字段记录既有授权，不新增授权。
+threads=1，所有上限必须正整数。容器后端因固定 factory 需恰好 4 GiB，
+拒绝更低的分配，避免将 host client 上限误称为容器内存上限。字段记录既有授权，不新增授权。
 profile.backend 必须匹配分配后端。各 profile 的必需工具身份字段：
 
 - EVAS：kernel、kernel_sha256。版本/IR 通过真实有界 version query 核验；
@@ -72,13 +83,22 @@ profile.backend 必须匹配分配后端。各 profile 的必需工具身份字�
 `process.py` 复用 bf06821a L3 的已审阅进程组生命周期：leader 在 TERM/KILL
 前不 reap，每个退出路径清理后代；容器额外始终删除自有名称并核验不存在。
 清理不完整或取消会终止该 lane，其余未执行条件显式保存 not_run。
+逐条件源/工具/冻结输入身份核验异常也通过 finally 写出完整 12 项分母、
+既有结果、真实 failure_stage 和 BATCH_ABORTED；容器清单每次先核验冻结 SHA，
+不能通过同时更新包文件与清单绕过 preflight 身份。
 容器设置实际 OCI fsize 限制，不把 host podman client 上限误称为容器上限。
 
 成功退出但缺编译产物/波形、编译失败、运行超时、解析失败均分别记录。
 不从错误文本自动推定 confirmed_unsupported；确认 U 需要后续具体证据。
 编译/执行接受记录不替代 LRM 合法性资格。原始结果、命令、哈希与来源保留。
-EVAS/Spectre 有效设置 readback 检查请求值；ngspice/Gnucap 尚无最大步长与
+Spectre 有效设置 readback 检查请求值。EVAS 当前响应没有应用设置读回，
+只保留 request_echo 与真正 observed_response 的 engine/accepted_steps，实际
+容差/maxstep/stop 标为 unknown，状态 I。ngspice/Gnucap 尚无最大步长与
 stop readback 资格，会保存 available 实际读数及未知项、状态 I。
+收尾 `DIRECTORY_BUDGETS.json` 与最终 `EXECUTION.json` 保存实际每条件文件字节数，
+超过 256 MiB 标记 condition_directory_limit_exceeded 并保留此前执行状态。
+RESULT/record 是收尾前执行快照，最终目录预算以 EXECUTION 和 DIRECTORY_BUDGETS 为准。
+这只是终态检查，不是运行期间硬磁盘配额；单文件仍由 FSIZE 限制。
 所有输出行来源初始为 unknown，独立误差/native_initial/native_phase/计数
 证书必须由后续实际资格证据补齐。普通 t=0 插值不能冒充 initial_step 已 settled
 的原生初始值。历史失败与新结果分别保留；具体远程分配由协调者管理。

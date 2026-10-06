@@ -36,3 +36,37 @@ class InputContracts(unittest.TestCase):
             self.assertIn(center,times)
             inside=[t for t in times if window['start_T']*1e-6<=t<=window['end_T']*1e-6]
             self.assertLessEqual(max(b-a for a,b in zip(inside,inside[1:])),2e-11*(1+1e-10))
+
+    def test_nested_manifest_named_file_cannot_evade_frozen_file_set(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'freeze'
+            plan=freeze(CARDS,out)
+            (out/plan[0]['work']/'INPUT_MANIFEST.json').write_text('{}')
+            with self.assertRaisesRegex(ValueError,'file set drift'):
+                verify(out)
+
+    def test_freeze_cannot_exceed_authorized_stage_limit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                freeze(CARDS,Path(tmp)/'freeze',stage_timeout_s=91)
+
+    def test_spice_local_requests_are_decoupled_and_fit_frozen_budget(self):
+        import re
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'freeze'
+            plan=freeze(CARDS,out)
+            for row in plan:
+                if row['backend'] not in ('openvaf_r_ngspice','gnucap_modelgen'): continue
+                work=out/row['work']
+                request=json.loads((work/'breakpoint_requests.json').read_text())
+                card=json.loads((work/'condition.json').read_text())
+                points=[r['time_s'] for r in request['records']]
+                for window in card['observation_windows']:
+                    self.assertIn(window['center_T']*1e-6,points)
+                    inside=[t for t in points if window['start_T']*1e-6<=t<=window['end_T']*1e-6]
+                    self.assertLessEqual(max(b-a for a,b in zip(inside,inside[1:])),2e-11)
+                deck=(work/row['deck']).read_text()
+                self.assertEqual(deck.count('Vpaper_observer paper_observer 0 PWL('),1)
+                self.assertNotIn('paper_observer',json.loads((work/'binding.json').read_text())['ports'])
+                self.assertLess(request['estimated_waveform_bytes'],32*1024**2*.8)
+                self.assertLess(request['estimated_condition_bytes'],256*1024**2)

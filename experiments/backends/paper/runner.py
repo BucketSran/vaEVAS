@@ -31,8 +31,29 @@ def allocation_check(a, backend, inputs_sha, profile_sha):
           'license_timeout_s':30,'memory_limit_bytes':4*1024**3,'file_limit_bytes':32*1024**2,'threads':1}
     if any(type(a.get(k)) is not int or a[k]<=0 or a[k]>cap for k,cap in caps.items()):
         raise ValueError('missing or excessive allocation bound')
-    if a['max_simulation_launches']!=12 or a['max_compilation_launches']!=12:
-        raise ValueError('paper lane requires twelve fixed configurations')
+    if backend in ('openvaf_r_ngspice','gnucap_modelgen') and a['memory_limit_bytes']!=4*1024**3:
+        raise ValueError('pinned container factory requires fixed 4GiB allocation')
+
+
+def select_conditions(plan, allocation, backend):
+    fixed=[r for r in plan if r['backend']==backend]
+    if len(fixed)!=12 or len({r['condition'] for r in fixed})!=12:
+        raise ValueError('paper plan requires twelve distinct conditions')
+    ids=allocation.get('selected_condition_ids')
+    known={r['condition'] for r in fixed}
+    if (not isinstance(ids,list) or not ids or any(type(c) is not str for c in ids)
+        or len(ids)!=len(set(ids)) or not set(ids)<=known):
+        raise ValueError('allocation requires known distinct selected_condition_ids')
+    if any(allocation[k]!=len(ids) for k in ('max_simulation_launches','max_compilation_launches')):
+        raise ValueError('selected conditions differ from allocated launch counts')
+    return [r for r in fixed if r['condition'] in ids]
+
+
+def directory_budget(work, *, limit=256*1024**2):
+    actual=sum(p.stat().st_size for p in work.rglob('*') if p.is_file())
+    return {'actual_bytes':actual,'limit_bytes':limit,
+            'status':'within_limit' if actual<=limit else 'condition_directory_limit_exceeded',
+            'measurement':'terminal directory files; not an active disk quota','runtime_hard_quota':False}
 
 
 def stage_failure(stage):
@@ -80,11 +101,12 @@ def verify_sources(inputs):
     if not checker:
         raise ValueError('checker integration was not frozen')
     for relative,digest in checker.items():
-        if sha(ROOT/relative)!=digest:
+        path=ROOT/relative
+        if not path.resolve().is_relative_to(ROOT.resolve()) or not path.is_file() or sha(path)!=digest:
             raise ValueError('checker differs from freeze: '+relative)
     for relative,digest in load(inputs/'RUNTIME_IDENTITY.json').items():
         path=ROOT/relative
-        if not path.resolve().is_relative_to(ROOT.resolve()) or sha(path)!=digest:
+        if not path.resolve().is_relative_to(ROOT.resolve()) or not path.is_file() or sha(path)!=digest:
             raise ValueError('EVAS runtime differs from freeze: '+relative)
 
 
@@ -175,7 +197,10 @@ def preflight(backend, profile, output, a):
         raise ValueError('pinned environment source/manifest drift')
     # Inspect package hashes before importing its code. Never trust a nearby
     # environment solely because its path was used by an earlier run.
-    for relative,digest in load(directory/'INPUT_MANIFEST.json').items():
+    package_manifest=load(directory/'INPUT_MANIFEST.json')
+    if 'IMAGE_IDENTITIES.json' not in package_manifest:
+        raise ValueError('image identity file not bound by pinned manifest')
+    for relative,digest in package_manifest.items():
         file=(directory/'package'/relative).resolve()
         if not file.is_relative_to((directory/'package').resolve()) or sha(file)!=digest:
             raise ValueError('pinned package drift')
@@ -224,7 +249,10 @@ def verify_tool(tool, profile, env):
     else:
         if sha(Path(profile['environment'])/'environment.py')!=tool['environment_sha256']:
             raise ValueError('container environment changed after preflight')
-        for relative,digest in load(Path(profile['environment'])/'INPUT_MANIFEST.json').items():
+        manifest=Path(profile['environment'])/'INPUT_MANIFEST.json'
+        if sha(manifest)!=tool['environment_manifest_sha256']:
+            raise ValueError('pinned container manifest changed after preflight')
+        for relative,digest in load(manifest).items():
             if sha(env.PACKAGE/relative)!=digest:
                 raise ValueError('pinned container package changed after preflight')
         if backend=='openvaf_r_ngspice':
@@ -246,21 +274,25 @@ def worker(work, kernel):
         times=load(work/request['requested_times'])
         response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
                            kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
+        save(work/'raw-response.json',response)
         # Owned outer stage kills the complete worker/kernel group at its limit.
         with (work/'waveform.csv').open('x') as f:
             writer=csv.writer(f)
             writer.writerow(['time',*response['nodes']])
             writer.writerows([t,*r['voltages']] for t,r in zip(times,response['solutions'],strict=True))
-        save(work/'effective.json',{'reltol':request['reltol'],'vabstol':request['vabstol'],
-            'stop':request['stop'],'maxstep':request['max_step'],'engine':response['engine'],
+        save(work/'effective.json',{'request_echo':{'reltol':request['reltol'],'vabstol':request['vabstol'],
+            'stop':request['stop'],'maxstep':request['max_step']},
+            'observed_response':{'engine':response['engine'],'accepted_steps':response['transient'].get('accepted_steps')},
             'unsupported_controls':['iabstol','integration_method'],
             'sample_origin':'unknown; output query is not automatically an accepted step',
-            'accepted_steps':response['transient'].get('accepted_steps')})
+            'settings_readback':'unknown; current response does not report applied tolerances/maxstep/stop'})
         result={'status':'waveform_available','waveform':'waveform.csv'}
     except CompileError as exc:
         result={'status':'compile_failed','failure_stage':'compile','reason':str(exc)}
     except KernelError as exc:
         result={'status':'execution_failed','failure_stage':'kernel','reason':str(exc),'detail':exc.detail}
+    except Exception as exc:
+        result={'status':'execution_failed','failure_stage':'worker','exception_type':type(exc).__name__,'reason':str(exc)}
     save(work/'worker-result.json',result)
 
 
@@ -270,8 +302,11 @@ def effective_settings(work, backend):
               'iabstol':request['iabstol_A'],'stop':request['stop_s'],
               'maxstep':request['maxstep_s'] if backend in ('evas','spectre') else request['spice_maxstep_s']}
     if backend=='evas':
-        actual=load(work/'effective.json')
-        names=('reltol','vabstol','stop','maxstep')
+        record=load(work/'effective.json')
+        return {'status':'I','actual':{k:'unknown' for k in expected},'requested':expected,
+                'request_echo':record.get('request_echo',{k:record[k] for k in ('reltol','vabstol','stop','maxstep') if k in record}),
+                'observed_response':record.get('observed_response',{k:record[k] for k in ('engine','accepted_steps') if k in record}),
+                'claim':'current EVAS response does not establish effective settings; request echo is not readback'}
     elif backend=='spectre':
         reader=module(ROOT/'experiments/backends/dvs2-spectre-validation/report.py','paper_spectre_settings')
         actual=reader.settings((work/'spectre.log').read_text())
@@ -290,8 +325,8 @@ def effective_settings(work, backend):
             # Reuse the parser's calibrated SPICE numeric suffix conversion.
             from observations import READER_DIR
             old=sys.modules.get('suite')
-            sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
             try:
+                sys.modules['suite']=module(READER_DIR/'suite.py','paper_setting_suite')
                 reader=module(READER_DIR/'analyze.py','paper_setting_number')
                 actual[target]=reader.number(token)
             finally:
@@ -314,85 +349,135 @@ def run(args):
     allocation_check(a,args.backend,sha(inputs/'INPUT_MANIFEST.json'),sha(args.tool_profile))
     if output.is_relative_to(inputs):
         raise ValueError('output must be outside frozen inputs')
-    selected=[r for r in plan if r['backend']==args.backend]
+    fixed=[r for r in plan if r['backend']==args.backend]
+    selected=select_conditions(plan,a,args.backend)
+    selected_ids={r['condition'] for r in selected}
     output.mkdir(parents=True,exist_ok=False)
     save(output/'STARTED.json',{'backend':args.backend,'allocation':a,'input_manifest_sha256':sha(inputs/'INPUT_MANIFEST.json'),
          'tool_profile_sha256':sha(args.tool_profile),'runner_sha256':sha(Path(__file__)),
-         'fixed_conditions':[r['condition'] for r in selected],'speed_comparison':False})
+         'fixed_conditions':[r['condition'] for r in fixed],'selected_condition_ids':[r['condition'] for r in selected],'speed_comparison':False})
     try:
         tool,env=preflight(args.backend,profile,output,a)
     except Exception as exc:
         save(output/'PREFLIGHT_FAILED.json',{'reason':str(exc),'status':'preflight_failed','cases_launched':0})
-        save(output/'EXECUTION.json',[{**r,'status':'not_run','reason':'preflight failed: '+str(exc)} for r in selected])
+        save(output/'EXECUTION.json',[{**r,'status':'not_run','reason':'preflight failed: '+str(exc) if r['condition'] in selected_ids else 'not_selected_in_allocation'} for r in fixed])
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
                                           for p in sorted(output.rglob('*')) if p.is_file()})
         raise
     save(output/'TOOL_IDENTITY.json',tool)
     data=load(inputs/'core.json'); results=[]
-    for row in selected:
-        verify_sources(inputs)
-        verify_tool(tool,profile,env)
-        # No retry/recovery switch exists. A partial output requires explicit new
-        # allocation and new identity, not replay of an already owned condition.
-        work=output/'runs'/row['condition']
-        shutil.copytree(inputs/row['work'],work)
-        save(work/'STARTED.json',{'condition':row['condition'],'tool_identity_sha256':sha(output/'TOOL_IDENTITY.json'),
-             'source_sha256':sha(work/'dut.va'),'deck_sha256':sha(work/row['deck'])})
-        stages=[]; compiled=None; worker_result=None
-        if args.backend=='evas':
-            waveform='waveform.csv'
-            stages.append(stage([sys.executable,'-B',str(Path(__file__).resolve()),'worker',str(work),tool['kernel']],work,'simulate',a))
-            worker_result=load(work/'worker-result.json') if (work/'worker-result.json').is_file() else {'status':'execution_failed','failure_stage':'worker','reason':'missing worker result'}
-        elif args.backend=='spectre':
-            waveform='psf/tran.tran.tran'
-            command=tool['setup']+tool['binary']+' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout '+str(a['license_timeout_s'])+' +mt=1\nexit $status\n'
-            (work/'run.csh').write_text(command)
-            stages.append(stage(['/bin/csh','-f','run.csh'],work,'simulate',a))
-        else:
-            waveform='waveform.txt'
-            if args.backend=='openvaf_r_ngspice':
-                compiled='dut.osdi'
-                stages.append(container_stage(env,tool['images']['openvaf_runtime']['config_id'],
-                    '/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r',['dut.va','-o',compiled],work,'compile',a))
-                image=tool['images']['ngspice']['config_id']; executable='/opt/ngspice/bin/ngspice'; arguments=['-b','tb.cir']
+    active=None; work=None; stages=[]; launched=False; abort=None; failure_stage='batch_setup'
+    try:
+        for row in selected:
+            active=row; work=None; stages=[]; launched=False
+            failure_stage='source_identity'
+            verify_sources(inputs)
+            failure_stage='tool_identity'
+            verify_tool(tool,profile,env)
+            failure_stage='input_identity'
+            if sha(inputs/'INPUT_MANIFEST.json')!=a['input_manifest_sha256']:
+                raise ValueError('input manifest changed after allocation')
+            verify(inputs)
+            failure_stage='prepare'
+            # Every allocation creates a new output. The coordinator may select
+            # previously unlaunched conditions under the same frozen identity.
+            # This runner never resumes or retries an existing result.
+            work=output/'runs'/row['condition']
+            shutil.copytree(inputs/row['work'],work)
+            save(work/'STARTED.json',{'condition':row['condition'],'tool_identity_sha256':sha(output/'TOOL_IDENTITY.json'),
+                 'source_sha256':sha(work/'dut.va'),'deck_sha256':sha(work/row['deck'])})
+            stages=[]; compiled=None; worker_result=None
+            if args.backend=='evas':
+                waveform='waveform.csv'
+                failure_stage='simulate'; launched=True
+                stages.append(stage([sys.executable,'-B',str(Path(__file__).resolve()),'worker',str(work),tool['kernel']],work,'simulate',a))
+                worker_result=load(work/'worker-result.json') if (work/'worker-result.json').is_file() else {'status':'execution_failed','failure_stage':'worker','reason':'missing worker result'}
+            elif args.backend=='spectre':
+                waveform='psf/tran.tran.tran'
+                command=tool['setup']+tool['binary']+' -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout '+str(a['license_timeout_s'])+' +mt=1\nexit $status\n'
+                (work/'run.csh').write_text(command)
+                failure_stage='simulate'; launched=True
+                stages.append(stage(['/bin/csh','-f','run.csh'],work,'simulate',a))
             else:
-                compiled='dut.so'; image=tool['images']['gnucap']['config_id']
-                compile_command='/opt/gnucap/bin/gnucap-mg-vams -I /opt/gnucap/include/gnucap -o dut.cc --cc dut.va && /usr/bin/c++ -std=c++14 -I /opt/gnucap/include/gnucap -fPIC -shared dut.cc -o dut.so'
-                stages.append(container_stage(env,image,'/bin/sh',['-c',compile_command],work,'compile',a))
-                executable='/opt/gnucap/bin/gnucap'; arguments=['tb.gc']
-            if not stage_failure(stages[-1]) and (work/compiled).is_file():
-                stages.append(container_stage(env,image,executable,arguments,work,'simulate',a))
-        result={**row,**result_state(stages,work,waveform,compiled,worker_result),'stages':stages,
-                'compiled_artifacts':{n:sha(work/n) for n in ('dut.osdi','dut.so','dut.cc') if (work/n).is_file()}}
-        if result['status']=='waveform_available':
-            try:
-                rows=read_native(work/waveform,args.backend)
-                if args.backend=='gnucap_modelgen' and any(not math.isfinite(r.get('bench_ref',math.nan)) or abs(r['bench_ref'])>1e-7 for r in rows):
-                    raise ValueError('unqualified Gnucap ground alias')
-                card=load(work/'condition.json')
-                observation=normalize_observation(card,args.backend,rows,['unknown']*len(rows),contract=data['shared_contract'],T=data['units']['T_s'])
-                save(work/'observation.json',observation)
-                result['observation']={'path':str((work/'observation.json').relative_to(output)),
-                    'sha256':sha(work/'observation.json'),'status':observation['status'],
-                    'qualification':'I; actual origins and independent error certificates pending'}
-                result['source_deck_acceptance']='tool accepted execution; LRM/source qualification still requires independent evidence'
-            except (ValueError,KeyError,TypeError,IndexError,OSError) as exc:
-                result.update(status='observation_invalid',observation_error=str(exc))
-            try:
-                result['effective_settings']=effective_settings(work,args.backend)
-            except (ValueError,KeyError,TypeError,OSError) as exc:
-                result['effective_settings']={'status':'I','reason':str(exc)}
-        save(work/'RESULT.json',result)
-        results.append(result)
-        save(output/('record-'+row['condition']+'.json'),result)
-        if result['abort_batch']:
-            save(output/'BATCH_ABORTED.json',{'condition':row['condition'],'reason':result['status'],
-                 'unrun':[r['condition'] for r in selected[len(results):]]})
-            break
-    results.extend({**r,'status':'not_run','reason':'batch aborted before this condition'} for r in selected[len(results):])
-    save(output/'EXECUTION.json',results)
-    save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
-                                      for p in sorted(output.rglob('*')) if p.is_file()})
+                waveform='waveform.txt'
+                if args.backend=='openvaf_r_ngspice':
+                    compiled='dut.osdi'
+                    failure_stage='compile'; launched=True
+                    stages.append(container_stage(env,tool['images']['openvaf_runtime']['config_id'],
+                        '/compiler/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r',['dut.va','-o',compiled],work,'compile',a))
+                    image=tool['images']['ngspice']['config_id']; executable='/opt/ngspice/bin/ngspice'; arguments=['-b','tb.cir']
+                else:
+                    compiled='dut.so'; image=tool['images']['gnucap']['config_id']
+                    compile_command='/opt/gnucap/bin/gnucap-mg-vams -I /opt/gnucap/include/gnucap -o dut.cc --cc dut.va && /usr/bin/c++ -std=c++14 -I /opt/gnucap/include/gnucap -fPIC -shared dut.cc -o dut.so'
+                    failure_stage='compile'; launched=True
+                    stages.append(container_stage(env,image,'/bin/sh',['-c',compile_command],work,'compile',a))
+                    executable='/opt/gnucap/bin/gnucap'; arguments=['tb.gc']
+                if not stage_failure(stages[-1]) and (work/compiled).is_file():
+                    failure_stage='simulate'; launched=True
+                    stages.append(container_stage(env,image,executable,arguments,work,'simulate',a))
+            failure_stage='result_collection'
+            result={**row,**result_state(stages,work,waveform,compiled,worker_result),'stages':stages,
+                    'compiled_artifacts':{n:sha(work/n) for n in ('dut.osdi','dut.so','dut.cc') if (work/n).is_file()}}
+            failure_stage='observation'
+            if result['status']=='waveform_available':
+                try:
+                    rows=read_native(work/waveform,args.backend)
+                    if args.backend=='gnucap_modelgen' and any(not math.isfinite(r.get('bench_ref',math.nan)) or abs(r['bench_ref'])>1e-7 for r in rows):
+                        raise ValueError('unqualified Gnucap ground alias')
+                    card=load(work/'condition.json')
+                    observation=normalize_observation(card,args.backend,rows,['unknown']*len(rows),contract=data['shared_contract'],T=data['units']['T_s'])
+                    save(work/'observation.json',observation)
+                    result['observation']={'path':str((work/'observation.json').relative_to(output)),
+                        'sha256':sha(work/'observation.json'),'status':observation['status'],
+                        'qualification':'I; actual origins and independent error certificates pending'}
+                    result['source_deck_acceptance']='tool accepted execution; LRM/source qualification still requires independent evidence'
+                except (ValueError,KeyError,TypeError,IndexError,OSError) as exc:
+                    result.update(status='observation_invalid',observation_error=str(exc))
+                try:
+                    result['effective_settings']=effective_settings(work,args.backend)
+                except (ValueError,KeyError,TypeError,OSError) as exc:
+                    result['effective_settings']={'status':'I','reason':str(exc)}
+            failure_stage='result_receipt'
+            save(work/'RESULT.json',result)
+            results.append(result)
+            save(output/('record-'+row['condition']+'.json'),result)
+            if result['abort_batch']:
+                abort={'condition':row['condition'],'reason':result['status'],
+                       'failure_stage':result.get('failure_stage',failure_stage)}
+                break
+    except BaseException as exc:
+        abort={'condition':active['condition'] if active else None,'reason':str(exc),
+               'failure_stage':failure_stage,'exception_type':type(exc).__name__}
+        if active and not any(r['condition']==active['condition'] for r in results):
+            failed={**active,'status':'execution_error' if launched else 'not_run',
+                    'failure_stage':failure_stage,'reason':str(exc),'abort_batch':True,'stages':stages}
+            results.append(failed)
+            save(output/('record-'+active['condition']+'.json'),failed)
+        raise
+    finally:
+        recorded={r['condition'] for r in results}
+        results.extend({**r,'status':'not_run','reason':'batch aborted before this condition'}
+                       for r in fixed if r['condition'] not in recorded and r['condition'] in selected_ids)
+        results.extend({**r,'status':'not_run','reason':'not_selected_in_allocation'}
+                       for r in fixed if r['condition'] not in selected_ids)
+        budgets={}
+        for record in results:
+            directory=output/'runs'/record['condition']
+            if directory.is_dir():
+                budget=directory_budget(directory)
+                budgets[record['condition']]=budget
+                record['directory_budget']=budget
+                if budget['status']!='within_limit':
+                    record['execution_status_before_budget']=record['status']
+                    record.update(status='condition_directory_limit_exceeded',failure_stage='terminal_directory_budget')
+        save(output/'DIRECTORY_BUDGETS.json',budgets)
+        if abort:
+            abort['unrun']=[r['condition'] for r in results if r['status']=='not_run']
+            save(output/'BATCH_ABORTED.json',abort)
+        save(output/'EXECUTION.json',results)
+        save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
+                                          for p in sorted(output.rglob('*')) if p.is_file()})
+
 
 
 if __name__=='__main__':
