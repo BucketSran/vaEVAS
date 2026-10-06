@@ -1,7 +1,8 @@
 # ADC 首题 Spectre 首批校准计划
 
-状态是准备完成，未启动远程仿真。本计划冻结输入与资源，在实际运行前由协调者核对
-Spectre实际版本和资源。它不记录第二份任务进度。
+状态是本地准备完成，尚未获得本轮远程资源批准，也未启动部署或仿真。输入已冻结；
+部署计划中的资源请求与有效限制须分别记录，实际运行前由协调者核对版本、授权和资源。
+它不记录第二份任务进度。
 
 输入是 `benchmark/tasks/va08-adc-linearity/tests/cases.json`、原创reference与
 `prepare.py`产生的六个错版。`prepare.py`生成各ADC、网表和candidate的 SHA256 manifest，
@@ -23,12 +24,26 @@ Spectre实际版本和资源。它不记录第二份任务进度。
 若真实ADC不符独立真值，停止判候选并保留环境错误。非目标编译错误也不能证明该错误类别
 被checker拒绝，需要修复校准资产后重跑受影响病例。
 
-每场景固定 stop=4.102ms、maxstep=20ns、单线程、conservative、reltol=1e-6、vabstol=1e-9。
-每场景timeout90秒，总仿真上限900秒，10个独立job各做版本查询，最多300秒，另需明确部署preflight所占预算。
-调度上限1 CPU、1 GiB内存、2 GiB总磁盘，单文件256 MiB。
-PSF ASCII保存13个字段，约205k基础时间点另加边沿点，预计单场景60至150 MB。
-必须在调度端显式设置足够文件上限，不能使用32 MiB默认上限后悄悄调整。
-保留10场景波形预计0.6至1.5 GB，实际超过2 GiB时停止并交接资源问题。
+每场景固定 stop=4.102ms、maxstep=20ns、conservative、reltol=1e-6、vabstol=1e-9。
+[task.toml](../../benchmark/tasks/va08-adc-linearity/task.toml) 请求的1 CPU、1 GiB内存、2 GiB磁盘
+属于Harbor容器环境；远端Spectre在宿主运行，是另一层。requested字段不能证明宿主硬限制，
+当前计划不宣称宿主CPU quota、总RSS上限或cgroup隔离。
+
+远端按既有harness串行提交，每个job终止且取回收据后才提交下一个。Spectre的 `+mt=1`
+是线程请求；[checker](../../benchmark/checkers/adc_linearity.py) 对单次主求解设置90秒timeout，
+每job的实际license/标准include preflight探针等待上限15秒，版本查询上限30秒。
+部署profile的180秒单调时钟deadline由preflight与checker共享，不提高主求解90秒上限。
+本题计划10次主求解加10次preflight求解；10次版本查询另计时间，不算求解。
+原900秒只是10次主求解的名义上限，不包括preflight、版本查询、解析及cleanup开销。
+
+固定c80 harness的 `max_output_bytes=268435456` 检查job目录内regular files的大小总和，
+约每50毫秒轮询，发现超限后清理它拥有的进程组。它不是硬磁盘quota或单文件256 MiB限制，
+可能暂时超限，也不限制目录外文件。PSF ASCII保存13个字段，约205k基础时间点另加边沿点，
+预计单场景60至150 MB，10场景约0.6至1.5 GB；这是估算，不是实际大小或宿主quota证据。
+正式profile需显式配置该256 MiB轮询阈值，不能使用32 MiB默认值后在运行中悄悄调整。
+
+Harbor verifier当前600秒预算保持原样，是否足够尚未实测。授权后的完整Harbor Trial
+将记录实际端到端时间及失败；不能用主求解名义上限推断该预算已经足够。
 
 参考解执行 `tests/test.sh` 全四场景；各错版执行 `tests/test.sh --case <表中场景>`。
 每次设置独立 `VERIFY_OUTPUT`，设置 `CANDIDATE` 与 `SPECTRE`绝对路径。checker仅重定位两个固定文件输出路径到场景私有目录，保留原件/执行件及映射。
@@ -45,8 +60,8 @@ VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I
 使用 `alphaapollo.common.execution.chips.benchmark_remote.RemoteBenchmarkSpectre`，
 由原harness负责SSH、job去重、preflight、进程预算、归档和artifact回收。
 本仓adapter只声明任务包及汇总任务分数，不替换或修改harness。
-每job单场景，因为现有host profile的 `max_output_bytes` 对整个目录的硬上限是256 MiB。
-四场景PSF在同job内可能超过该上限。
+每job单场景，避免四场景PSF在同job内累计超过上述256 MiB regular-file总大小轮询阈值。
+该阈值触发后的清理不是硬quota；保留实际输出大小、超限与cleanup收据。
 
 本地准备命令：
 
