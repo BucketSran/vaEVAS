@@ -1,6 +1,6 @@
 # ADC 首题 Spectre 首批校准计划
 
-状态是本地准备完成，尚未获得本轮远程资源批准，也未启动部署或仿真。输入已冻结；
+状态已由实际校准更新，结果与限制见[校准证据](CALIBRATION-20261007.md)。以下保留调度合同。输入已冻结；
 部署计划中的资源请求与有效限制须分别记录，实际运行前由协调者核对版本、授权和资源。
 它不记录第二份任务进度。
 
@@ -40,10 +40,12 @@
 约每50毫秒轮询，发现超限后清理它拥有的进程组。它不是硬磁盘quota或单文件256 MiB限制，
 可能暂时超限，也不限制目录外文件。PSF ASCII保存13个字段，约205k基础时间点另加边沿点，
 预计单场景60至150 MB，10场景约0.6至1.5 GB；这是估算，不是实际大小或宿主quota证据。
+修正后实测取回主PSF约85.6MB/场景、全部payload约86.5MB/场景，gzip归档约1.56MB；
+逐job精确stat/tar logical bytes见校准JSON，不等于运行中峰值，本轮未触发或实测输出超限取消。
 正式profile需显式配置该256 MiB轮询阈值，不能使用32 MiB默认值后在运行中悄悄调整。
 
-Harbor verifier当前600秒预算保持原样，是否足够尚未实测。授权后的完整Harbor Trial
-将记录实际端到端时间及失败；不能用主求解名义上限推断该预算已经足够。
+Harbor verifier保持600秒预算；实际四场景oracle Trial约147秒完成。这仅证明本次参考
+可在预算内完成，不能用该结果推断后续所有候选均足够。
 
 参考解执行 `tests/test.sh` 全四场景；各错版执行 `tests/test.sh --case <表中场景>`。
 每次设置独立 `VERIFY_OUTPUT`，设置 `CANDIDATE` 与 `SPECTRE`绝对路径。checker仅重定位两个固定文件输出路径到场景私有目录，保留原件/执行件及映射。
@@ -89,8 +91,8 @@ Harbor verifier日志目录默认仍挂给agent，只写 `status`、`reward` 的
 PYTHONPATH="$PWD" uvx --from harbor==0.23.0 harbor run   --path benchmark/tasks/va08-adc-linearity --agent oracle   --verifier experiments.adc_linearity.harbor_adapter:ADCHarnessVerifier   --verifier-kwarg config_path=/operator/private/adc-harness.json   --jobs-dir "$PWD/runs/adc-linearity/harbor" --job-name oracle-integration -n 1 -r 0
 ```
 
-这是待实际运行命令。Harbor0.23.0的adapter类import已使用本机cached依赖实测；
-真实Docker、SSH、preflight、Spectre及artifact取回仍未观察。
+这是既有实际入口。Harbor0.23.0、Docker、SSH、实际preflight、Spectre及artifact取回
+已完成参考Trial；固定输入和执行身份见校准证据。
 checker每场景失败只有在实际波形完整且完成独立判据后才标为graded。
 编译失败或timeout经harness保持未评分，并保留首个失败，不能把该失败视为错版校准通过。
 
@@ -100,3 +102,16 @@ checker每场景失败只有在实际波形完整且完成独立判据后才标�
 
 私有目录创建、运行与结果投射共用受控错误边界。目录已存在时拒绝并保留旧证据；
 候选造成公开输出写入失败时，仍只返回通用错误且不附原异常链，不自动换job重跑。
+
+## 本轮已观察的边界
+
+原10项实际校准为4参考通过、6错版有效拒绝；原old-code非专项目标另由仅提前读取的
+独立负例补证，不替换原结果。完整oracle Trial通过、private路径与挂载审计通过；
+oracle预期上传reference，不能当模型reference隔离证明。模型只完成两个本地one-shot
+attempt，GLM原189字节提交由现有checker在Spectre之前判提交合同0分，Codex因实际
+身份缺失保持未评分。模型阶段无remote、无求解/探针/版本查询，也未运行四次远端探针。
+详细身份与证据见校准报告；没有两个模型端到端、Agentic能力或任务难度结论。
+
+Harbor资源读回包括Memory=1GiB与MemorySwap=2GiB（配置memory+swap），不代表实际swap
+用量或2GiB总RSS，也不约束远端Spectre宿主。GLM报告token usage与可见result长度不等，
+差额去向unknown；作者str传source_contract的早期辅助TypeError与后续真实verify CLI分别记录。
