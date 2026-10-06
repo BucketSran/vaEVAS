@@ -95,6 +95,7 @@ impl Root {
 pub(crate) struct Trajectory {
     pub(crate) config: TransientInputs,
     pub(crate) knots: Vec<f64>,
+    source_errors: Vec<f64>,
 }
 
 impl Trajectory {
@@ -122,7 +123,13 @@ impl Trajectory {
             }
             for &[t, v] in source {
                 if t > time.lo && t < time.hi {
-                    values[k] = values[k].hull(I::point(v));
+                    values[k] = values[k].hull(
+                        I::point(v)
+                            + I {
+                                lo: -self.source_errors[k],
+                                hi: self.source_errors[k],
+                            },
+                    );
                 }
             }
             derivatives.push(slope.unwrap_or(I::ZERO));
@@ -161,7 +168,43 @@ impl Trajectory {
         }
         knots.sort_by(f64::total_cmp);
         knots.dedup();
-        Ok(Self { config, knots })
+        let source_errors = vec![0.0; config.pwl.len()];
+        Ok(Self {
+            config,
+            knots,
+            source_errors,
+        })
+    }
+
+    pub(crate) fn add_enclosed_source(
+        &mut self,
+        points: Vec<[f64; 2]>,
+        error: f64,
+    ) -> Result<(), Error> {
+        if !error.is_finite()
+            || error < 0.0
+            || points.len() < 2
+            || points[0][0] != 0.0
+            || points.last().unwrap()[0] < self.config.stop
+            || points.iter().flatten().any(|v| !v.is_finite())
+            || points.windows(2).any(|p| p[0][0] >= p[1][0])
+        {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "invalid enclosed clamp source",
+            ));
+        }
+        self.knots.extend(
+            points
+                .iter()
+                .map(|p| p[0])
+                .filter(|t| *t < self.config.stop),
+        );
+        self.knots.sort_by(f64::total_cmp);
+        self.knots.dedup();
+        self.config.pwl.push(points);
+        self.source_errors.push(error);
+        Ok(())
     }
 
     pub(crate) fn values(&self, time: f64) -> Vec<f64> {
@@ -258,16 +301,26 @@ impl Trajectory {
         self.config
             .pwl
             .iter()
-            .map(|source| {
+            .zip(&self.source_errors)
+            .map(|(source, &error)| {
                 let index = source.partition_point(|p| p[0] < time);
                 if source[index][0] == time {
-                    return I::point(source[index][1]);
+                    return I::point(source[index][1])
+                        + I {
+                            lo: -error,
+                            hi: error,
+                        };
                 }
                 let [start, a] = source[index - 1];
                 let [end, b] = source[index];
                 let fraction =
                     (I::point(time) - I::point(start)) / (I::point(end) - I::point(start));
-                I::point(a) + (I::point(b) - I::point(a)) * fraction
+                I::point(a)
+                    + (I::point(b) - I::point(a)) * fraction
+                    + I {
+                        lo: -error,
+                        hi: error,
+                    }
             })
             .collect()
     }

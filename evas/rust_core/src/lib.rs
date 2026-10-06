@@ -13,6 +13,7 @@ mod expression;
 mod guard_trajectory;
 mod idt;
 mod idtmod;
+mod input_clamp;
 mod interval;
 pub mod ir;
 mod laplace;

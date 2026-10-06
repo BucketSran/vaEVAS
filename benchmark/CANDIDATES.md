@@ -26,6 +26,7 @@
 
 | ID | 开发问题 | 候选能力 | 状态 |
 | --- | --- | --- | --- |
+| [BC-0003](#bc-0003) | 输入限幅编码与相位积分组合被仿射历史路径拒绝 | 连续 clamp、独立相位面积、包裹与观察来源 | 待改造，分支开发中 |
 | [BC-0002](#bc-0002) | 合法常量返回纯函数的嵌套被校验义务预算误拒绝 | 保持函数替换与丢弃表达式校验的边界 | 待改造，已有开发回归 |
 | [BC-0001](#bc-0001) | 积分振荡器换向后，双向 cross 再次选择返回穿越 | 用事件方向稳健表达上下限换向；支持变化的速度输入 | 待改造，已有校准原型 |
 
@@ -111,3 +112,23 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 又拒绝隐藏的非法谓词、下标和算子上下文逃逸。评分应分别固定计算结果及拒绝诊断，
 并校准真实计算膨胀、既有前端资源界限与实例隔离。尚未改造成正式 benchmark，
 不增加题目或成绩分母；现有开发反例也不能作为未见确认集。
+
+<a id="bc-0003"></a>
+
+## BC-0003：输入限幅与 VCO 相位历史
+
+来源为 [Spec A / Issue96](https://github.com/BucketSran/vaEVAS/issues/96) 的 CO-VCO-01。
+[原 VA](../evas/tests/fixtures/input_clamp_vco.va)先计算 `f=0.4+0.5V(ctl)`，
+再限到 [0.2,1]，送入 `idtmod(f/1us,0.125,1,0)` 与 `sin(2πphase)`。
+reviewed main 4368a890 的正常 public compile/Rust 路径实际返回
+`unsupported_transient: ordinary analog conditionals are not supported in transient event equations`。
+开发失败原件与身份在拥有 worktree 的 ignored `runs/clamp/red.log` 及根任务预检中保留，
+这些本地路径不是公开复现收据。
+
+独立预期为 clip 后的分段面积；[开发回归](../evas/tests/test_input_clamp.py)核对频率、
+wrapped phase、正弦、不同观测网格和实例隔离。该失败属于既有仿射历史路径的能力限制，
+不能据此说合法源非法。候选任务可以考察夹限、初相位和包裹观测，但不得通过替换
+为已有支持编码隐藏原失败，或把开发用例重新称为未见确认集。
+
+当前只记录候选；有界无事件 input-only clamp 修复在分支验证，实际 Spectre 与独立审查
+待根任务补齐。本条没有新增正式 benchmark 题目或论文分母。
