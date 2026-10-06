@@ -97,7 +97,10 @@ Spectre 有效设置 readback 检查请求值。EVAS 当前响应没有应用设
 stop readback 资格，会保存 available 实际读数及未知项、状态 I。
 收尾 `DIRECTORY_BUDGETS.json` 与最终 `EXECUTION.json` 保存实际每条件文件字节数，
 超过 256 MiB 标记 condition_directory_limit_exceeded 并保留此前执行状态。
-RESULT/record 是收尾前执行快照，最终目录预算以 EXECUTION 和 DIRECTORY_BUDGETS 为准。
+RESULT/record 是收尾前执行快照。汇总器入口为收尾后不可变的
+`final-record-<condition>.json`，完整12项（含 preflight fail 与未选择条件），逐项内容
+与最终 EXECUTION slot 完全一致并由 FILE_MANIFEST 绑定 SHA。旧 RESULT/record 保留
+原状态，不能代替 final-record；最终目录预算以 EXECUTION 和 DIRECTORY_BUDGETS 为准。
 这只是终态检查，不是运行期间硬磁盘配额；单文件仍由 FSIZE 限制。
 所有输出行来源初始为 unknown，独立误差/native_initial/native_phase/计数
 证书必须由后续实际资格证据补齐。普通 t=0 插值不能冒充 initial_step 已 settled
