@@ -82,3 +82,106 @@ stop readback 资格，会保存 available 实际读数及未知项、状态 I�
 所有输出行来源初始为 unknown，独立误差/native_initial/native_phase/计数
 证书必须由后续实际资格证据补齐。普通 t=0 插值不能冒充 initial_step 已 settled
 的原生初始值。历史失败与新结果分别保留；具体远程分配由协调者管理。
+
+## 生成论文和 README 的结果表
+
+`table.py` 只汇总实际 assessment，不执行后端或评分。主组来自 core-v1 的
+`primary_group`，每条件仅计一次，固定 N=12、四后端 48 槽。structure 中的
+SI-01 和 combination 均保留独立主组。设计卡的状态与本批实际结果分别显示。
+每后端完整列出 P/F/U/X/I/T，细项链接保留 checker 原有误差、不确定度和
+claim limit，不计算跨性质的最大误差比或计时。
+
+先调用 `criteria.assess` 或 `assess_observation`，collector 在其返回字典
+外层追加 `execution_sha256`，P/F/I 还须追加 `input_observation_sha256`，
+分别为此次实际读取的 RESULT.json 和 observation.json 原字节哈希，再保存
+assessment JSON。不得用新文件哈希给旧 assessment 重新贴身份。criteria 本体
+不生成这些执行来源字段，也不需修改。再建立 records.json 数组。每个已评估条目使用以下结构；`path` 相对
+records.json，`sha256` 必须是对应实际文件的 SHA256。哈希占位符不能运行。
+
+```json
+[
+  {
+    "condition_id": "VR-01",
+    "backend": "evas",
+    "assessment": {"path": "assessment/VR-01.json", "sha256": "ACTUAL_SHA256"},
+    "execution": {"path": "evas/runs/VR-01/RESULT.json", "sha256": "ACTUAL_SHA256"},
+    "identity": {
+      "source_revision": "ACTUAL_EVAS_SOURCE_HEAD_OR_unknown",
+      "tool": {"path": "evas/TOOL_IDENTITY.json", "sha256": "ACTUAL_SHA256"},
+      "condition_started": {"path": "evas/runs/VR-01/STARTED.json", "sha256": "ACTUAL_SHA256"},
+      "lane_started": {"path": "evas/STARTED.json", "sha256": "ACTUAL_SHA256"},
+      "execution_manifest": {"path": "evas/FILE_MANIFEST.json", "sha256": "ACTUAL_SHA256"},
+      "input_manifest": {"path": "frozen-inputs/INPUT_MANIFEST.json", "sha256": "ACTUAL_SHA256"},
+      "observation": {"path": "evas/runs/VR-01/observation.json", "sha256": "ACTUAL_SHA256"},
+      "method": "实际资格方法与报告路径，未知项须明确写出",
+      "availability": "local-only"
+    }
+  }
+]
+```
+
+```sh
+python3 -B experiments/backends/paper/table.py runs/BATCH/records.json \
+  --allow-pending > runs/BATCH/table.md
+python3 -B -m unittest discover -s experiments/backends/paper -p test_table.py -v
+```
+
+默认要求全部 48 槽，缺失、重复或未知条件/后端报错。只有显式
+`--allow-pending` 才将缺槽补为 T，可用于全 T 设计表或部分执行批次。
+也可显式写 `{"condition_id":"VR-01","backend":"evas","status":"T"}`，
+表示尚无执行结果的占位槽。若同时附 execution 引用，其实际状态必须为
+not_run，不能将已有执行结果替换为 T。
+P/F/I 必须来自 completed assessment 和 waveform_available execution，
+且 assessment 的 input_observation_sha256、execution 的 observation 引用
+和实际 observation 三方哈希一致，execution_sha256 与实际执行文件一致，
+checker 绑定此卡片原字节。同条件的新执行不能套用旧 assessment。
+无法从成功退出或波形存在推导 P。
+
+U/X/T 使用 checker 的显式 execution_state，并核验实际 execution 状态。
+X 仅接受 runner 的 compile_failed、compile_timeout、runtime_timeout、
+execution_failed、execution_error、cancelled、cleanup_incomplete、
+missing_compile_artifact、missing_waveform、observation_invalid。
+T 仅接受 not_run。U 必须为 failure_stage=compile 的 compile_failed，
+另在 assessment 外层追加 unsupported_evidence 的 path/sha256 引用，
+指向人工审查后的确认 JSON。确认内容为 status=confirmed_unsupported、
+failure_stage=compile、execution_sha256、具体 reason 和 diagnostic 的
+path/sha256。diagnostic 须为 execution.stages 中非零退出 compile 阶段的
+实际 log，哈希必须匹配；嵌套引用路径相对其所在 JSON 文件。一般编译失败
+保留 X，不能从错误文本自动推定 U。成功波形不能配 U/X/T。
+
+同一后端的已执行条件必须具有相同的生产源码 revision、稳定工具身份、
+完整 checker identity 和输入冻结 manifest 身份；所有后端使用同一 checker。
+2+10 可分批，但不能拼接不同实现/判据/冻结输入的有利结果。工具身份投影
+使用 runner 已保存的 profile_identity、kernel/binary/image 身份、实际版本、
+interpreter、环境身份和 compiler flags；版本 probe 的时戳、argv、日志收据
+不参与工具相等判断。各次 TOOL_IDENTITY 原字节哈希仍分别保留在表中。
+
+condition STARTED、TOOL_IDENTITY、RESULT 和原始 source/deck 必须属于
+该 lane 的 FILE_MANIFEST；源码还须与 RESULT.source_sha256、card.source
+原字节及冻结输入清单一致，deck 须与冻结清单和实际执行目录原字节一致。
+RESULT 的 work/deck/condition_identity 使用 inputs/runner 已产生的字段，
+汇总器不要求 runner 增加新来源字段。缺真实执行文件不能用自洽的标签代替。
+
+每个 condition/backend 只能有一个主结果，重复主槽仍报错。若已有复测，
+collector 须在该槽追加 prior_attempts 的执行 artifact path/sha256 数组，
+并给出具体 selection_reason；这些路径相对 records.json。例如：
+
+```json
+{
+  "prior_attempts": [{"path": "previous-evas/runs/VR-01/RESULT.json", "sha256": "ACTUAL_SHA256"}],
+  "selection_reason": "批准的复测采用此结果，先前超时原记录保留"
+}
+```
+
+这两个字段追加到主条目，不替代其 assessment/execution。表格核验先前
+记录的哈希、condition/backend/status，链接全部已声明 prior attempts，
+不自动取最好结果，也不增加 N。collector 仍需在外部实际运行索引保留
+全部尝试；此接口不能证明 prior_attempts 已穷尽所有执行，不宣称已解决
+复测谱系的完整性审计。未执行占位与真实启动应分别保留。
+
+表格验证 artifact 哈希与条件、源码/deck/tool 绑定，展示工具实际版本、
+已声明源码 revision、方法和公开程度。源码 revision 须据真实构建来源填写，
+未知则写 unknown；源树 head 不能替代工具 build_revision。表格不独立认证
+方法的科学误差界。availability 可为 local-only、restricted 或 public，
+public 另需 `public_url`，其含义仅为声明的发布链接。本地 raw 路径不等于
+公开可复现证据，发布链接本身也不代表通过可复现性审查。
