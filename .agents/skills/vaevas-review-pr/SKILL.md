@@ -21,6 +21,19 @@ those endpoints. For local work, include the requested staged, unstaged and rele
 untracked files as well as any committed range. A diff ending at HEAD alone does
 not review uncommitted work; an empty committed diff does not end a local review.
 
+Use the [project review policy](../../../CONTRIBUTING.md#reviewing-diffs) to determine
+when a fresh-context independent review is required. The reviewer receives the
+requirements, resolved diff and evidence, and checks relevant sources rather than
+adopting the implementer's conclusions. An already independent reviewer performs
+that review directly; this rule does not create recursive review delegation.
+
+When the work used `show-me-your-work`, load its trail-review guidance and inspect
+the existing canonical log and accessible evidence. Combine the applicable project
+and trail-review requirements in one independent review when both are required.
+Reuse an existing review only for the requirements, diff, evidence and trail it
+actually covered; review any uncovered or changed scope. Keep the log format and
+audit procedure in `show-me-your-work` rather than creating a second review log.
+
 ## Assess the relevant contracts
 
 Use [workspace ownership](../../../README.md) and the affected component's contract:
@@ -65,7 +78,11 @@ to identify evidence invalidated by changed code, inputs, checkers or measuremen
   exist at that stage; a placeholder does not demonstrate executable tasks.
 - For validation changes, compare case contracts, independent expected answers,
   checker calibration, fixed denominators, and requested versus effective
-  settings. Use `evas/validation/METHOD_QUALIFICATION.md` when present and a
+  settings. Inspect the source or derivation supporting a disputed expected answer,
+  and distinguish the original program from a proposed corrected model. Follow
+  the [evidence rules](../evas-validate/SKILL.md#preserve-independent-evidence) when
+  interpreting negative controls or incomplete runs.
+  Use `evas/validation/METHOD_QUALIFICATION.md` when present and a
   claim depends on it; missing qualification evidence remains a review gap.
 - For documentation or reports, check that claims refer to the actual revision,
   build, and observations. Historical passes and static replay do not certify new
@@ -80,7 +97,7 @@ Assess whether a test could detect the relevant bug independently of the
 implementation. Expected answers should come from a justified analytic or worked
 reference, a qualified independent oracle, or a specified invariant. Preserve focused
 kernel and rollback tests when they protect properties that outer tests do not expose.
-Apply the [test selection rules](../../../CONTRIBUTING.md#behavior-first-tests): flag
+Apply the [test selection rules](../../../docs/contributing/validation.md#behavior-first-tests): flag
 self-derived oracles and duplicated fault coverage, but require a retained detector
 before recommending regression deletion. For reusable development failures, check the
 [candidate entry](../../../benchmark/CANDIDATES.md); recording one does not require
@@ -96,10 +113,15 @@ plain-language rules and publication dependency checks. Lead with actionable
 findings ordered by severity. Identify which review question each finding concerns;
 one passing category cannot hide a failure in another.
 Avoid speculative architecture preferences and unrelated pre-existing issues.
+Use this review format for findings; the shared `pr` skill applies when writing
+a PR body, not when reporting a review. Include actionable trail findings and any
+missing trail-review coverage in the same report when applicable.
 
 If no actionable defects are found, say so and describe the review scope and
 material verification limits. Complete one review unless new changes, a specific
-unresolved question, or the user's request warrants another pass. No fixed
-reviewer count, clean-round quota, or external reviewer is required.
+unresolved question, or the user's request warrants another pass. Reuse review
+that covers the same requirements and diff; changed behavior, dependencies or
+claims require checking the affected scope again. There is no fixed reviewer
+count or clean-round quota.
 Describe direct and independently delegated review accurately; a readiness assessment
 does not authorize merge or claim an independent review that did not happen.

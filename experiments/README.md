@@ -12,7 +12,7 @@
 原理与支持范围归 [evas/docs/](../evas/docs/README.md)。
 已有工具尚有历史路径依赖，暂按下表保留，迁移时一起更新调用者。
 已结束的审查和逐轮开发叙述通过固定 Git 提交归档，大波形与日志保存在 ignored `runs/` 或外部归档。
-详细标准见[贡献指南](../CONTRIBUTING.md#main-branch-contents)。
+详细标准见[贡献指南](../docs/contributing/evidence.md#main-branch-contents)。
 
 ## 从哪里开始
 
@@ -88,6 +88,6 @@ Spectre 专项和联合开发阶段的完整报告也链接到该固定提交，
 
 <a id="experiment-receipts"></a>
 
-收据字段与可用性要求统一见[贡献指南：执行收据](../CONTRIBUTING.md#execution-receipts)。
+收据字段与可用性要求统一见[贡献指南：执行收据](../docs/contributing/evidence.md#execution-receipts)。
 README 说明研究问题、结果入口、复现条件和材料可用性；收据绑定源码、输入、检查器与实际设置。
 公开摘要、旧波形重判和新仿真分别报告；取得仅本地保留的原始材料之前，不能宣称已完整复现。
