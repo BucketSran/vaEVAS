@@ -68,3 +68,12 @@ class ObservationContracts(unittest.TestCase):
             path.write_text('Changed proof')
             result=normalize_observation(CARD,'evas',rows,['accepted']*5,q,contract=CONTRACT)
             self.assertFalse(result['qualification']['qualified'])
+
+    def test_boundary_request_provenance_is_preserved_without_qualification(self):
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,2e-10,2.2e-10,4e-10)]
+        cohort={'serialization_error_s':1e-22,'records':[{'nominal_time_s':2e-10,'row_index':2,'request_id':'fixture-request'}]}
+        result=normalize_observation(CARD,'spectre',rows,['unknown']*5,{'boundary_cohort':cohort},contract=CONTRACT)
+        self.assertEqual(result['qualification']['boundary_cohort'],cohort)
+        self.assertFalse(result['qualification']['qualified'])
+        self.assertEqual(result['metadata']['sample_origins'],['unknown']*5)
+        self.assertNotIn('qualification_evidence',result['qualification'])

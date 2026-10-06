@@ -57,7 +57,8 @@ python3 -B experiments/backends/paper/runner.py INPUTS OUTPUT \
 allocation 必需字段为 backend、input_manifest_sha256、tool_profile_sha256、
 max_simulation_launches=12、max_compilation_launches=12、stage_timeout_s<=90、
 license_timeout_s<=30、memory_limit_bytes<=4294967296、file_limit_bytes<=33554432、
-threads=1，所有上限必须正整数。字段记录既有授权，不新增授权。
+threads=1，所有上限必须正整数。容器后端因固定 factory 需恰好 4 GiB，
+拒绝更低的分配，避免将 host client 上限误称为容器内存上限。字段记录既有授权，不新增授权。
 profile.backend 必须匹配分配后端。各 profile 的必需工具身份字段：
 
 - EVAS：kernel、kernel_sha256。版本/IR 通过真实有界 version query 核验；
@@ -72,12 +73,17 @@ profile.backend 必须匹配分配后端。各 profile 的必需工具身份字�
 `process.py` 复用 bf06821a L3 的已审阅进程组生命周期：leader 在 TERM/KILL
 前不 reap，每个退出路径清理后代；容器额外始终删除自有名称并核验不存在。
 清理不完整或取消会终止该 lane，其余未执行条件显式保存 not_run。
+逐条件源/工具/冻结输入身份核验异常也通过 finally 写出完整 12 项分母、
+既有结果、真实 failure_stage 和 BATCH_ABORTED；容器清单每次先核验冻结 SHA，
+不能通过同时更新包文件与清单绕过 preflight 身份。
 容器设置实际 OCI fsize 限制，不把 host podman client 上限误称为容器上限。
 
 成功退出但缺编译产物/波形、编译失败、运行超时、解析失败均分别记录。
 不从错误文本自动推定 confirmed_unsupported；确认 U 需要后续具体证据。
 编译/执行接受记录不替代 LRM 合法性资格。原始结果、命令、哈希与来源保留。
-EVAS/Spectre 有效设置 readback 检查请求值；ngspice/Gnucap 尚无最大步长与
+Spectre 有效设置 readback 检查请求值。EVAS 当前响应没有应用设置读回，
+只保留 request_echo 与真正 observed_response 的 engine/accepted_steps，实际
+容差/maxstep/stop 标为 unknown，状态 I。ngspice/Gnucap 尚无最大步长与
 stop readback 资格，会保存 available 实际读数及未知项、状态 I。
 所有输出行来源初始为 unknown，独立误差/native_initial/native_phase/计数
 证书必须由后续实际资格证据补齐。普通 t=0 插值不能冒充 initial_step 已 settled
