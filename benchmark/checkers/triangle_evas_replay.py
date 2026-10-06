@@ -10,8 +10,14 @@ import subprocess
 import sys
 import types
 
+SUPPORTED_ORACLES = {
+    '46a5342f52b4add0df50ef6d4b28d6ed7761303bfa4f5d04dffc2fc53c73d8dd': 'cc386977 original canonical checker',
+    '9e38eb5abcf0db2122355415b50904c9a4a8d01cf0e2b243861d83d9600171ea': '862d3fbb report-only classification fix',
+}
 ORACLE_PATH = Path(__file__).with_name('triangle_oscillator.py')
 ORACLE_BYTES = ORACLE_PATH.read_bytes()
+if hashlib.sha256(ORACLE_BYTES).hexdigest() not in SUPPORTED_ORACLES:
+    raise ValueError('canonical oracle is not an explicitly calibrated full source file')
 oracle = types.ModuleType('_va07_replay_oracle')
 exec(compile(ORACLE_BYTES, str(ORACLE_PATH), 'exec'), oracle.__dict__)
 SOLVER_OPTIONS = {'vabstol': 1e-8, 'reltol': 0}
@@ -105,10 +111,12 @@ def assess_case(case, baseline, observation):
 def runtime_identity(kernel):
     import importlib.util
     spec=importlib.util.find_spec('evas')
-    if spec is None or spec.origin is None:
+    if spec is None or spec.origin is None or spec.submodule_search_locations is None or not Path(spec.origin).is_file():
         raise RuntimeError('EVAS Python package unavailable')
-    root=Path(spec.origin).parent
-    return dict(kernel_sha256=digest(kernel),python_sha256=digest(sys.executable),
+    root=Path(spec.origin).resolve().parent
+    if any(root.rglob('*.pyc')) or any(root.rglob('*.pyo')):
+        raise RuntimeError('EVAS bytecode caches are forbidden; provide source-only runtime')
+    return dict(package_root=str(root),kernel_sha256=digest(kernel),python_sha256=digest(sys.executable),
         evas_python={str(p.relative_to(root)):digest(p) for p in sorted(root.rglob('*.py'))})
 
 
@@ -116,13 +124,18 @@ def execute_request(request, work, kernel, timeout_s):
     """Bound the external CLI process group and both log files."""
     import resource
     import signal
+    identity=runtime_identity(kernel)
+    cache=work/'.python-cache'
+    cache.mkdir()
+    environment=dict(os.environ,PYTHONPYCACHEPREFIX=str(cache),PYTHONDONTWRITEBYTECODE='1')
+    bootstrap="import runpy,sys;sys.path.insert(0,sys.argv.pop(1));sys.argv[0]='evas';runpy.run_module('evas',run_name='__main__')"
     dump(work/'request.json',request)
     def limits():
         resource.setrlimit(resource.RLIMIT_FSIZE,(16*1024*1024,16*1024*1024))
     with (work/'raw.json').open('w') as stdout,(work/'stderr.log').open('w') as stderr:
-        process=subprocess.Popen([sys.executable,'-B','-m','evas','transient',str(work/'request.json'),
+        process=subprocess.Popen([sys.executable,'-B','-c',bootstrap,str(Path(identity['package_root']).parent),'transient',str(work/'request.json'),
             '--kernel',str(kernel),'--timeout',str(timeout_s)],stdout=stdout,stderr=stderr,
-            start_new_session=True,preexec_fn=limits)
+            start_new_session=True,preexec_fn=limits,env=environment)
         try:
             code=process.wait(timeout=timeout_s)
         except subprocess.TimeoutExpired:

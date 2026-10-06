@@ -1,6 +1,5 @@
 """Freeze the original VA07 eight-case EVAS checker package for Harness replay."""
 import argparse
-import ast
 import json
 from pathlib import Path
 import shutil
@@ -17,27 +16,8 @@ def build_package(output, oracle_path=None):
         raise ValueError('original VA07 cases changed')
     cases=json.loads(cases_path.read_text())
     selected=Path(oracle_path or adapter.ORACLE_PATH)
-    def behavior(path):
-        tree=ast.parse(path.read_text())
-        classes=[n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='BehavioralRejection']
-        if classes and (len(classes)!=1 or len(classes[0].bases)!=1
-            or not isinstance(classes[0].bases[0],ast.Name) or classes[0].bases[0].id!='ValueError'
-            or any(not isinstance(n,ast.Expr) or not isinstance(n.value,ast.Constant) or not isinstance(n.value.value,str) for n in classes[0].body)):
-            raise ValueError('BehavioralRejection must remain a report-only ValueError subclass')
-        messages={'noninteger count','missing, grouped or reversed count','incorrect count outside event windows','incorrect event count'}
-        class ReportingExceptions(ast.NodeTransformer):
-            def visit_Raise(self,node):
-                call=node.exc
-                if (classes and isinstance(call,ast.Call) and isinstance(call.func,ast.Name)
-                    and call.func.id=='BehavioralRejection' and len(call.args)==1
-                    and isinstance(call.args[0],ast.Constant) and call.args[0].value in messages):
-                    call.func.id='ValueError'
-                return node
-        tree=ReportingExceptions().visit(tree)
-        return [ast.dump(n,include_attributes=False) for n in tree.body
-                if isinstance(n,ast.FunctionDef) and n.name in {'area','reference','roots','evaluate'}]
-    if behavior(selected)!=behavior(adapter.ORACLE_PATH):
-        raise ValueError('selected canonical oracle changes the original behavior criteria')
+    if adapter.digest(selected) not in adapter.SUPPORTED_ORACLES:
+        raise ValueError('selected canonical oracle is not an explicitly calibrated full source file')
     output=Path(output)
     output.mkdir(parents=True,exist_ok=False)
     shutil.copyfile(cases_path,output/'cases.json')

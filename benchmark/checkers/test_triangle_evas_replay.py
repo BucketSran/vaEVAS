@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import unittest
 import tempfile
+import py_compile
+import subprocess
 import sys
 import os
 from unittest.mock import patch
@@ -138,19 +140,20 @@ class MappingRejections(unittest.TestCase):
             self.assertIn('mapping',report['reason'])
 
 class OracleIdentity(unittest.TestCase):
-    def test_report_only_oracle_copy_is_allowed_but_behavior_changes_are_rejected(self):
+    def test_only_exact_calibrated_oracle_files_are_allowed(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp); oracle=root/'oracle.py'
             original=adapter.ORACLE_PATH.read_text()
-            oracle.write_text(original+'\n# report-only source annotation\n')
+            oracle.write_text(original)
             builder.build_package(root/'allowed',oracle)
             reported=original.replace('def evaluate(rows, case, event_times=None):', 'class BehavioralRejection(ValueError):\n    \"Report classification only.\"\n\ndef evaluate(rows, case, event_times=None):')
             for message in ['noninteger count','missing, grouped or reversed count','incorrect count outside event windows','incorrect event count']:
                 reported=reported.replace(f"raise ValueError('{message}')",f"raise BehavioralRejection('{message}')")
             oracle.write_text(reported)
-            builder.build_package(root/'classified',oracle)
+            with self.assertRaisesRegex(ValueError,'canonical'):
+                builder.build_package(root/'unrecognized-report-copy',oracle)
             oracle.write_text(original.replace("wave_atol'] and time_error", "wave_atol']*2 and time_error"))
-            with self.assertRaisesRegex(ValueError,'behavior criteria'):
+            with self.assertRaisesRegex(ValueError,'canonical'):
                 builder.build_package(root/'rejected',oracle)
 
 class HarnessPackageBoundary(unittest.TestCase):
@@ -163,6 +166,59 @@ class HarnessPackageBoundary(unittest.TestCase):
             identity=package_identity(root,purpose='final')
             self.assertEqual(identity['manifest']['task_set'],'extension')
             self.assertEqual(len(identity['files']),6)
+
+class ActualLoadedSource(unittest.TestCase):
+    def test_existing_timestamp_bytecode_is_rejected_even_when_source_hash_is_new(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp); pkg=root/'evas'; pkg.mkdir(); (pkg/'__init__.py').write_text('')
+            main=pkg/'__main__.py'; main.write_text('print("old")\n'); stamp=main.stat().st_mtime
+            py_compile.compile(str(main),doraise=True)
+            main.write_text('print("new")\n'); os.utime(main,(stamp,stamp))
+            kernel=root/'kernel'; kernel.write_text('constructed identity only')
+            with patch.dict(os.environ,{'PYTHONPATH':str(root)}), patch.object(sys,'path',[str(root),*sys.path]):
+                observed=subprocess.run([sys.executable,'-B','-m','evas'],capture_output=True,text=True,check=True)
+                self.assertEqual(observed.stdout.strip(),'old')
+                with self.assertRaisesRegex(RuntimeError,'bytecode'):
+                    adapter.runtime_identity(kernel)
+
+    def test_inherited_external_cache_prefix_cannot_select_old_cli_code(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp); pkg=root/'evas'; pkg.mkdir(); (pkg/'__init__.py').write_text('')
+            main=pkg/'__main__.py'; main.write_text('print(\'{"marker":"old"}\')\n');stamp=main.stat().st_mtime
+            external=root/'external-cache'
+            with patch.object(sys,'pycache_prefix',str(external)):
+                py_compile.compile(str(main),doraise=True)
+            main.write_text('print(\'{"marker":"new"}\')\n');os.utime(main,(stamp,stamp))
+            kernel=root/'kernel';kernel.write_text('constructed identity only');work=root/'work';work.mkdir()
+            with patch.dict(os.environ,{'PYTHONPATH':str(root),'PYTHONPYCACHEPREFIX':str(external)}),patch.object(sys,'path',[str(root),*sys.path]):
+                stale=subprocess.run([sys.executable,'-B','-m','evas'],capture_output=True,text=True,check=True)
+                self.assertEqual(json.loads(stale.stdout)['marker'],'old')
+                result=adapter.execute_request({},work,kernel,1)
+                self.assertEqual(result['data']['marker'],'new')
+
+    def test_cli_executes_the_same_package_that_supplied_runtime_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)
+            for label in ['A','B']:
+                pkg=root/label/'evas'; pkg.mkdir(parents=True); (pkg/'__init__.py').write_text('')
+                (pkg/'__main__.py').write_text('print(\'{"marker":"'+label+'"}\')\n')
+            kernel=root/'kernel'; kernel.write_text('constructed identity only')
+            work=root/'work';work.mkdir()
+            previous=Path.cwd()
+            try:
+                os.chdir(root/'B')
+                with patch.dict(os.environ,{'PYTHONPATH':str(root/'A')}),patch.object(sys,'path',[str(root/'A'),*sys.path]):
+                    result=adapter.execute_request({},work,kernel,1)
+                self.assertEqual(result['data']['marker'],'A')
+            finally:
+                os.chdir(previous)
+
+    def test_oracle_assignment_override_cannot_reuse_original_criteria_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp); oracle=root/'oracle.py'
+            oracle.write_text(adapter.ORACLE_PATH.read_text()+'\nevaluate=lambda *args, **kwargs: {"passed": True}\n')
+            with self.assertRaisesRegex(ValueError,'canonical'):
+                builder.build_package(root/'rejected',oracle)
 
 if __name__ == '__main__':
     unittest.main()

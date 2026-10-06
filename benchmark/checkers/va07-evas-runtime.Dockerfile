@@ -1,4 +1,4 @@
-# Offline runtime assembly. PYTHON_BASE must name an already-installed digest.
+# Offline runtime assembly. PYTHON_BASE must name an installed base; record and verify its image ID.
 ARG PYTHON_BASE
 FROM ${PYTHON_BASE}
 COPY runtime/evas/ /opt/evas/src/evas/
