@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import copy
 import subprocess
+import shutil
 from pathlib import Path
 
 from records import ROOT, BACKENDS, STATUS, identity, load, sha, validate, voltage_metrics
@@ -46,6 +47,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
         started = load(output / 'STARTED.json')
         if started['input_manifest_sha256'] != sha(inputs / 'INPUT_MANIFEST.json'):
             raise ValueError('execution used another frozen input manifest')
+        started_sha256 = sha(output / 'STARTED.json')
+        run_id = output.name + '-' + started_sha256
         results = load(output / 'EXECUTION.json')
         backend = started['backend']
         if backend not in BACKENDS or len(results) != 8 or {r['condition'] for r in results} != set(SELECTED):
@@ -53,6 +56,9 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
         if backend in seen:
             raise ValueError('duplicate backend execution; retries need a distinct dataset')
         seen.add(backend)
+        started_archive = compact / backend / 'STARTED.json'
+        started_archive.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(output / 'STARTED.json', started_archive)
         for result in results:
             condition = result['condition']
             if result['backend'] != backend or result['profile'] != 'base' or result['input_identity'] != case_ids[condition]:
@@ -68,7 +74,9 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                 effective['transient_summary'] = {'accepted_steps': transient.get('accepted_steps'),
                     'discarded_trials': transient.get('discarded_trials'), 'state_names': transient.get('state_names'),
                     'event_count': len(transient.get('events', []))}
-            receipt = {'schema_version': 1, 'run_id': output.name, 'backend': backend, 'condition': condition,
+            receipt = {'schema_version': 1, 'run_id': run_id, 'run_directory': output.name,
+                'started_sha256': started_sha256,
+                'started': {'path': str(started_archive.relative_to(ROOT)), 'sha256': started_sha256}, 'backend': backend, 'condition': condition,
                 'profile': 'base', 'source_revision': tool['revision'], 'runtime_identity': tool['runtime_identity'],
                 'kernel_sha256': tool.get('kernel_sha256'), 'tool': tool,
                 'input_identity': result['input_identity'], 'input_manifest_sha256': started['input_manifest_sha256'],
@@ -89,7 +97,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
             save(directory / 'receipt.json', receipt)
             verdict = STATUS[analysis['status']]
             measured = {'revision': tool['revision'], 'runtime_identity': tool['runtime_identity'],
-                        'run_id': output.name, 'kernel_sha256': tool.get('kernel_sha256'),
+                        'run_id': run_id, 'kernel_sha256': tool.get('kernel_sha256'),
                         'output_sha256': result.get('waveform_sha256'), 'version': tool.get('version', tool.get('kernel_version', 'unknown'))}
             record = next(r for r in data['records'] if r['dataset'] == 'cmp8-base' and r['backend'] == backend and r['case'] == condition)
             if record['accounting'] != 'unrun':

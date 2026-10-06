@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "run_id": "evas-current-770656c4354ba2993940b0d29c04f9036108eed0c48e1d137d232c76a20bebfc",
+  "run_directory": "evas-current",
+  "started_sha256": "770656c4354ba2993940b0d29c04f9036108eed0c48e1d137d232c76a20bebfc",
+  "started": {
+    "path": "experiments/backends/comparison/evidence/cmp-completion-evas-20261006-v3/evas/STARTED.json",
+    "sha256": "770656c4354ba2993940b0d29c04f9036108eed0c48e1d137d232c76a20bebfc"
+  },
+  "backend": "evas",
+  "condition": "v6-standard",
+  "profile": "base",
+  "source_revision": "c7baed1ba4e28f5961e61a7035027ec61340607b",
+  "runtime_identity": "e328fdef81692edbc460aa691a08ebd479151a214d39d30fa0989dabbc229b30",
+  "kernel_sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+  "tool": {
+    "revision": "c7baed1ba4e28f5961e61a7035027ec61340607b",
+    "runtime_identity": "e328fdef81692edbc460aa691a08ebd479151a214d39d30fa0989dabbc229b30",
+    "kernel_sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+    "kernel_version": "0.13.0",
+    "identity": {
+      "identity_version": 1,
+      "package": {
+        "name": "evas-rebuild",
+        "version": "0.13.0",
+        "metadata_source": "source_pyproject",
+        "build_revision": null
+      },
+      "platform": {
+        "os": "darwin",
+        "arch": "arm64"
+      },
+      "compatibility": {
+        "ir_schema_version": 17,
+        "request_protocol_version": null,
+        "status": "ir_matched"
+      },
+      "kernel": {
+        "status": "queried",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/evas/rust_core/target/debug/evas-kernel",
+        "sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+        "reported": {
+          "build_revision": null,
+          "identity_version": 1,
+          "ir_schema_version": 17,
+          "name": "evas-kernel",
+          "platform": {
+            "arch": "aarch64",
+            "os": "macos"
+          },
+          "request_protocol_version": null,
+          "version": "0.13.0"
+        }
+      }
+    },
+    "version_note": "Selected kernel identity queried before execution; an IR match does not establish full runtime compatibility."
+  },
+  "input_identity": "9fd9e4456bb5af01cc3e6c0ae95af032d1b8ba98d5c28cc735dc2a7eca232b4c",
+  "input_manifest_sha256": "f2fb0eddbe388f8aa2d361760e76892c7b59bf34a9a221ec8c2dea23bd68dbba",
+  "source_sha256": "eaa93def8728bdb42e36e59992a0ccfb6acbe6fae33b16d4720c23da53326ac2",
+  "checker_identity": "d6cc34bf0ef9a0d70e235772cdedba6ee28faa30d03835edb0e4f145e1931a2c",
+  "initial_runner_sha256": "cfefc4f9e08e3865cbd821e371bfad306407d35d8aaa0b4aa28b9a27457669ab",
+  "analysis_runner_sha256": "cfefc4f9e08e3865cbd821e371bfad306407d35d8aaa0b4aa28b9a27457669ab",
+  "runner_sources": [
+    {
+      "path": "experiments/backends/comparison/evidence/sources/runner-cfefc4f9e08e3865cbd821e371bfad306407d35d8aaa0b4aa28b9a27457669ab.py.txt",
+      "sha256": "cfefc4f9e08e3865cbd821e371bfad306407d35d8aaa0b4aa28b9a27457669ab",
+      "kind": "actual runner source"
+    }
+  ],
+  "continuation": null,
+  "allocation": "root-local-current-evas8-20261006",
+  "requested_settings": {
+    "step": 1e-09,
+    "reltol": 1e-05,
+    "vabstol": 1e-08,
+    "iabstol": 1e-12,
+    "stop": 4e-06,
+    "maxstep": 1e-09,
+    "method": "traponly",
+    "forced_strobe": false
+  },
+  "effective_settings": {
+    "vabstol": 1e-08,
+    "reltol": 1e-05,
+    "max_step": 1e-09,
+    "stop": 4e-06,
+    "output_points": 4001,
+    "engine": "evas-events-0.13.0",
+    "transient_summary": {
+      "accepted_steps": 4253,
+      "discarded_trials": 0,
+      "state_names": [],
+      "event_count": 0
+    },
+    "unsupported_spice_controls": [
+      "iabstol",
+      "integration method"
+    ]
+  },
+  "commands": [
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/experiments/backends/comparison/runner.py",
+        "worker",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/runs/cmp-completion/evas-current/runs/v6-standard/base",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/evas/rust_core/target/debug/evas-kernel"
+      ],
+      "stage": "simulate",
+      "started_utc": "2026-10-06T12:38:03Z",
+      "timeout_s": 90,
+      "thread_request": 1,
+      "exit_code": 0,
+      "timed_out": false,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "execution_status": "waveform_available",
+  "waveform_sha256": "ff9dde8edbc3c9839e623602be6760eeac24e0c97ea3c7bf1c3efecea0741581",
+  "raw_file_manifest_sha256": "b90a8e27b1939d59065ffad7d828319c45cea96419d96ddbf90c335576611347",
+  "raw_availability": "local-only",
+  "raw_availability_note": "task-local; original waveforms/logs not committed",
+  "observation": {
+    "path": "experiments/backends/comparison/evidence/cmp-completion-evas-20261006-v3/evas/v6-standard/observation.json",
+    "sha256": "8bf3737334810644098f9aa52542d0e0b90dbcb3823ea4cef3ba536ef50c4e59"
+  }
+}

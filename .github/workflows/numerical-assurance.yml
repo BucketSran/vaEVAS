@@ -39,6 +39,7 @@ jobs:
       - name: Traceability and frozen validation identities
         run: |
           python3 -B scripts/traceability.py --check
+          python3 -B scripts/diagnostic_inventory.py --check
           python3 -B scripts/verify_validation_version.py
           python3 -B -m unittest discover -s scripts/tests -v
       - name: Independent mathematics and checker calibration

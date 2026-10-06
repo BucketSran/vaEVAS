@@ -187,6 +187,9 @@ def validate(data, root=ROOT, target=None):
     if data.get('refresh'):
         from refresh import check_refresh
         check_refresh(data, root)
+    if data.get('completion'):
+        from completion import check_completion
+        check_completion(data, root)
     datasets = {d['id']: d for d in data['datasets']}
     if len(datasets) != len(data['datasets']):
         raise ValueError('duplicate dataset')
@@ -256,8 +259,8 @@ def validate(data, root=ROOT, target=None):
                 raise ValueError('pass requires independent checker identity')
             if r['verdict'] == 'P' and r['stage'] != 'analysis':
                 raise ValueError('incomplete evidence cannot be a pass')
-            if r['accounting'] == 'reused' and r.get('execution_receipt') and not data.get('refresh'):
-                raise ValueError('receipt reuse requires a bound finite refresh parent')
+            if r['accounting'] == 'reused' and r.get('execution_receipt') and not (data.get('refresh') or data.get('completion')):
+                raise ValueError('receipt reuse requires a bound finite refresh or completion parent')
             if r['accounting'] == 'executed' or r.get('execution_receipt'):
                 ref = r.get('execution_receipt')
                 if not ref:
@@ -269,7 +272,8 @@ def validate(data, root=ROOT, target=None):
                 bindings = {'backend': r['backend'], 'condition': r['case'], 'profile': r['profile'],
                             'input_identity': r['input_identity'], 'source_revision': m['revision'],
                             'runtime_identity': m['runtime_identity'], 'checker_identity': r['checker_identity']}
-                if data.get('refresh') and receipt.get('run_id') != m.get('run_id'):
+                if ((data.get('refresh') or data.get('completion') or 'started_sha256' in receipt)
+                        and receipt.get('run_id') != m.get('run_id')):
                     raise ValueError('execution receipt run identity mismatch')
                 if any(receipt.get(k) != v for k, v in bindings.items()):
                     raise ValueError('execution receipt identity mismatch')
@@ -279,12 +283,27 @@ def validate(data, root=ROOT, target=None):
                     raise ValueError('source-only identity is not measured EVAS kernel evidence')
                 if m.get('kernel_sha256') != receipt.get('kernel_sha256'):
                     raise ValueError('measured kernel hash differs from execution receipt')
+                if 'started_sha256' in receipt:
+                    started_ref = receipt.get('started')
+                    if not started_ref or started_ref.get('sha256') != receipt['started_sha256']:
+                        raise ValueError('new execution lacks bound STARTED archive')
+                    evidence_ok(started_ref, root)
+                    started = load(root / started_ref['path'])
+                    if (receipt['run_id'] != receipt.get('run_directory', '') + '-' + receipt['started_sha256'] or
+                        started.get('backend') != r['backend'] or
+                        started.get('input_manifest_sha256') != receipt['input_manifest_sha256']):
+                        raise ValueError('execution run identity differs from STARTED archive')
                 tool = receipt.get('tool')
                 tool_bindings = {'revision': m['revision'], 'runtime_identity': m['runtime_identity']}
                 if r['backend'] == 'evas':
                     tool_bindings['kernel_sha256'] = m['kernel_sha256']
                 if not isinstance(tool, dict) or any(tool.get(k) != v for k, v in tool_bindings.items()):
                     raise ValueError('execution receipt tool identity differs from measured identity')
+                if 'started_sha256' in receipt and (
+                    not isinstance(started.get('tool'), dict) or
+                    any(started['tool'].get(k) != v for k, v in tool_bindings.items()) or
+                    started.get('runner_sha256') != receipt['initial_runner_sha256']):
+                    raise ValueError('execution receipt tool identity differs from STARTED archive')
                 if r['verdict'] == 'P':
                     observation = receipt.get('observation')
                     if not observation or not receipt.get('waveform_sha256') or not receipt.get('effective_settings'):
@@ -363,6 +382,12 @@ def render(data, root=ROOT, target=None):
         lines += ['## 本次刷新限制与身份补充', '']
         for limit in data.get('limits', []):
             lines += [limit, '']
+    if data.get('completion'):
+        parent = data['completion']['parent']
+        lines += [f"CMP补测：三后端共24项新执行结果（含失败），Spectre8复用原收据；固定32分母，正式资格仍I。原快照 [{parent['path']}]({'../../../' + parent['path']})，SHA {parent['sha256']}。", '',
+                  '## 本次补测限制与身份补充', '']
+        for limit in data.get('limits', []):
+            lines += [limit, '']
     if data['schema_version'] == 1:
         lines += ['历史 schema1：V2 单端1mV归一化指标已失效，明确排除B；本表不追认旧指标。新结论请使用 schema2 派生快照。', '']
     header = '| 组 | ' + ' | '.join(LABELS) + ' |'
@@ -416,7 +441,7 @@ def render(data, root=ROOT, target=None):
         state = freshness(r, targets)
         lines.append(f"| {r['dataset']} / {r['case']} / {r['profile']} | {r['backend']} | {r['verdict']} | {r['stage']} | {state}; {r['accounting']} | {refs}; {r['reason']} |")
     lines += ['', '## 工具组成与许可证核实', '']
-    if data.get('refresh'):
+    if data.get('refresh') or data.get('completion'):
         lines += ['以下为冻结的parent组件清单；其中EVAS source hash表示历史目标源码身份。当前EVAS实测与独立版本补充见上方。', '']
     lines += ['| 组件 | 实测版本/工件 | 上游声明 | 对实际组件的核实 |', '| --- | --- | --- | --- |']
     for component in data.get('components', []):
