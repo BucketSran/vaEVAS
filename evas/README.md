@@ -98,6 +98,12 @@ PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
 未登记的 code/kind 保留原消息、位置与额外字段，类别为 `unknown`，不按前缀或消息猜测。
 接口与来源盘点边界见[诊断说明](docs/diagnostics.md)。
 
+## 安装配套发行包
+
+平台 wheel 可携带独立 Rust 内核，安装后 `evas-rebuild solve MANIFEST` 无需 PYTHONPATH 或显式内核。
+默认选择校验包内核身份；显式 `--kernel` 保持可用，失败不回退。
+构建、安装、平台证据边界和源码方式见[安装合同](docs/install.md)。尚未发布到公共索引或打 tag。
+
 ## 构建与运行
 
 需要 Python 3.10+ 和 Rust/Cargo。以下命令从仓库根目录运行。

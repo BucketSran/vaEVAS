@@ -276,7 +276,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     return ScsTestbench(sources,manifest,saved,metadata)
 
 
-def simulate_scs(path: str | Path, *, kernel, timeout=DEFAULT_TIMEOUT):
+def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
     bench=load_scs(path)
     program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']])
     result=transient(program,kernel=kernel,timeout=timeout,

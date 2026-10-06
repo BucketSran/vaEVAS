@@ -8,6 +8,9 @@ PYTHONPATH=evas/src python3 -m evas.results run evas/validation/smoke/idt.json \
   --kernel evas/rust_core/target/debug/evas-kernel --out runs/idt-output
 ```
 
+安装平台 wheel 后可以省略 `--kernel`，使用经校验的包内核；显式路径失败不会回退。
+源码调用继续指定已构建内核，见[安装合同](install.md)。
+
 `--out` 指定的路径必须不存在，已有文件或目录不会被覆盖或删除。
 `--timeout` 设置数值执行的秒数上限，默认值沿用 runtime；内核身份查询另有五秒上限。
 静态模式要求 `driven` 和 `samples`，瞬态模式要求 `transient`；缺少或混用模式均拒绝。
@@ -36,7 +39,7 @@ stderr 保留额外写入错误，完成标记仍为缺失或 `running`。
 `manifest.tmp` 不是完成标记。读取者还应核验记录中的文件哈希。
 
 原有 JSON API 和 CLI 命令保持可用。本接口不提供流式输出、SCS save/export、分块取消、
-打包或发布安装。源码快照可能包含客户数据，运行目录应留在所属客户/项目位置，不提交原始批量产物。
+发布安装。源码快照可能包含客户数据，运行目录应留在所属客户/项目位置，不提交原始批量产物。
 
 实现见 [results.py](../src/evas/results.py)，公共入口和文件写入失败回归见
 [test_result_outputs.py](../tests/test_result_outputs.py)。独立静态答案为
