@@ -200,6 +200,7 @@ class Parser:
         self.tokens = _tokens(source, name) if tokens is None else tokens
         self.index = 0
         self.nesting = 0
+        self.mixed_initial_body = False
 
     @property
     def token(self) -> Token:
@@ -388,6 +389,9 @@ class Parser:
 
     def _statements(self, conditional=False, analog=False):
         token = self.token
+        if token.text == '@' and self.mixed_initial_body:
+            self.fail('nested events are not supported in a mixed initial_step body',
+                      token, code='unsupported_initial_event')
         if token.text == ";":
             self.take(";")
             return ()
@@ -482,12 +486,31 @@ class Parser:
         self.take("endfunction")
         return Function(name, tuple(inputs), frozenset(variables), body, token)
 
-    def monitored_event(self, token):
-        """Parse after @(; static loops reuse the same monitored event grammar."""
-        triggers = []
+    def monitored_event(self, token, initial=None):
+        """Parse after @(; only top-level callers can split initialization."""
+        triggers, initial_count, unqualified, qualified = [], 0, False, False
         while True:
             leaf = self.take()
             kind = leaf.text
+            if kind == 'initial_step' and initial is not None:
+                initial_count += 1
+                if self.token.text == '(':
+                    qualified = True
+                    self.take('(')
+                    while True:
+                        if self.token.text not in ('"dc"', '"tran"'):
+                            self.fail('only dc/tran analysis labels in a redundant initialization OR are supported', code='unsupported_initial_event')
+                        self.take()
+                        if self.token.text != ',':
+                            break
+                        self.take(',')
+                    self.take(')')
+                else:
+                    unqualified = True
+                if self.token.text != 'or':
+                    break
+                self.take('or')
+                continue
             if kind not in ("cross", "timer"):
                 self.fail("only cross and timer events are supported here; initial_step must be top-level", leaf,
                           code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
@@ -507,6 +530,21 @@ class Parser:
                 break
             self.take("or")
         self.take(")")
+        if initial_count:
+            if not unqualified:
+                self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
+            if triggers and (qualified or initial_count != 1 or any(leaf.kind != 'cross' for leaf in triggers)):
+                self.fail('mixed initialization requires one unqualified initial_step and only cross leaves', token, code='unsupported_initial_event')
+            previous_context = self.mixed_initial_body
+            self.mixed_initial_body = bool(triggers)
+            try:
+                body = self.statements(bool(triggers))
+            finally:
+                self.mixed_initial_body = previous_context
+            if any(not isinstance(statement, Assignment) for statement in body):
+                self.fail('mixed initial_step body requires unconditional instance-constant assignments', token, code='unsupported_initial_event')
+            initial.extend(body)
+            return Event(tuple(triggers), body, token) if triggers else None
         return Event(tuple(triggers), self.statements(True), token)
 
     def analog_block(self):
@@ -517,35 +555,11 @@ class Parser:
             if self.token.text == "@":
                 token = self.take("@")
                 self.take("(")
-                if self.token.text == "initial_step":
-                    unqualified = False
-                    while True:
-                        if self.token.text != 'initial_step':
-                            self.fail('initial_step mixed with monitored events requires runtime initialization support', code='unsupported_initial_event')
-                        self.take('initial_step')
-                        if self.token.text == '(':
-                            self.take('(')
-                            while True:
-                                if self.token.text not in ('"dc"', '"tran"'):
-                                    self.fail('only dc/tran analysis labels in a redundant initialization OR are supported', code='unsupported_initial_event')
-                                self.take()
-                                if self.token.text != ',':
-                                    break
-                                self.take(',')
-                            self.take(')')
-                        else:
-                            unqualified = True
-                        if self.token.text != 'or':
-                            break
-                        self.take('or')
-                    if not unqualified:
-                        self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
-                    self.take(")")
-                    initial.extend(self.statements())
-                else:
-                    # Keep source order until genvar expansion separates events
-                    # from continuous statements in node_elaboration.
-                    analog.append(self.monitored_event(token))
+                # Initialization is installed once by the existing state path;
+                # only monitored leaves become runtime events.
+                event = self.monitored_event(token, initial)
+                if event is not None:
+                    analog.append(event)
                 continue
             analog.extend(self.statements(True, True))
         self.take("end")

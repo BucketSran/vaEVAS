@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：IR16 的 `cross`、固定 `timer`、受限事件体条件、cross OR 与多事件写者。
+适用范围：IR17 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR 与多事件写者。
 能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](../CAPABILITIES.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
@@ -56,6 +56,36 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 动态 guard 的范围见下节，多块写同一状态的规则见
 [写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
+<a id="initial-cross"></a>
+
+## 常量初始化与 cross 共用体
+
+本地 L2a 候选接受 `@(initial_step or cross(g,...)) n=seed;`，也可先写 cross 叶子。
+这是受限的源码展开：恰好一个无分析限定初始化叶，其余叶子均为已有 cross，
+body 只能包含无条件赋值。它与其他初始化体合起来，仍须使每个状态恰好初始化一次，
+初值是绑定后的实例常量，可以引用参数，不能引用电压、状态或历史。
+标量和已支持的一维静态索引变量数组沿用同一检查。无状态模型的空体 `;`
+沿用纯初始化的 no-op，仍保留已有 cross 的监测和记录。
+
+对上述单状态例子，初始化给出 `n(0)=seed`；以后该块的穿越给出 `n(tau+)=seed`。
+初始化在每次新仿真首次求解前安装一次，没有 cross/timer 事件记录，也不变成 timer(0)。
+同刻 cross OR 叶子仍按块执行一次，保留实际触发叶子；不同块写同一状态仍服从
+[写者检查](#multiple-event-writers)。已有 t=0 timer 在初始化安装后执行。
+重新运行或不同参数实例不共享状态。
+
+`syntax.py` 的 `monitored_event`/`analog_block` 把常量初始化送入已有 `Model.initial`，
+把 cross 叶子及相同 body 留作运行时事件；`instance_compiler.py` 验证绑定后的初始化常量。
+Rust 继续使用已有初始化和事件路径，IR17 与数值算法不变。
+这项限定支持不扩展到 timer 混合、多个或分析限定初始化叶、动态初值、
+条件初始化、嵌套事件或冲突写者。纯 initial_step 及已有冗余纯初始化 OR 保持原规则。
+
+[独立契约](../../validation/EVENT_CONDITIONS_CONTRACT.md#3-触发集合初始化与观察)与
+[test_initial_cross.py](../../tests/test_initial_cross.py) 检查独立答案：参数为 7，
+在 t=1 的另一个 cross 块写 2，t=2 的共享块恢复 7，观察点 0、0.5、1.5、2.5 得到
+`[7,7,2,7]`；参数 9 得到 `[9,9,2,9]`。还检查数组、重复运行、叶子顺序/去重、
+t=0 顺序、同刻冲突与明确拒绝边界。有限开发检查不证明完整 SAR/va04 支持，
+也不替代外部仿真器对照或任意动态组合验收。
+
 ## 连续动态与多项式 guard
 
 IR16 已合并状态独立多项式及受限连续算子驱动 cross；值/导数区间隔离根，
@@ -102,7 +132,8 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 
 - 声明标量 `integer` / `real` 状态，每个状态必须恰有一次 `@(initial_step)` 常数赋值，
   可以引用有效实例参数；暂不接受依赖电压或其他状态的初始化。初始化常数在绑定时确定，
-  Rust 在 t=0 的首次求解前安装一次。初始高电平、初始零值的离开本身不产生 `cross`。
+  Rust 在 t=0 的首次求解前安装一次；[共享初始化/cross 体](#initial-cross)也须满足此契约。
+  初始高电平、初始零值的离开本身不产生 `cross`。
 - `@(cross(g[, direction[, ttol[, tol]]]))` 接受空语句、顺序赋值或下述受限 if/else 块。方向为 -1/0/+1，默认 0；
   两项容差必须为正的有限实例常数，默认分别为 1 ps 和 1e-9 表达式单位。不支持 cross enable；cross 的受限 `or` 见[OR 规则](#event-or)。
 - 事件同刻贡献及赋值表达式仍须对电压和状态联合仿射；更广连续多项式贡献、积分和 guard
