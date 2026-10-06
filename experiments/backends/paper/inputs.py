@@ -86,7 +86,7 @@ def breakpoint_requests(card, T):
             'gnucap_requested_dtmin_s':1e-15,'critical_coalescing_s':3e-15,
             'records':[{'request_id':f"{card['id']}:breakpoint:{i}",'time_s':t} for i,t in enumerate(ordered)],
             'estimated_rows':estimated_rows,'estimated_waveform_bytes':waveform_bytes,
-            'estimated_condition_bytes':waveform_bytes+2*1024**2,
+            'estimated_condition_bytes':2*waveform_bytes+2*1024**2,
             'file_limit_bytes':32*1024**2,'condition_limit_bytes':256*1024**2,
             'estimate_claim':'planning only; actual output size and native origins must be measured'}
 

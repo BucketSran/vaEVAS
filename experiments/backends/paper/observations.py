@@ -84,15 +84,24 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
             return False
     cohort=q.get('boundary_cohort',{})
     boundary_rows={}
+    unmatched=[]
+    known_centers={w['center_T']*T for w in card['observation_windows']}
     if isinstance(cohort,dict) and valid_certificate('boundary_cohort') and bounded(cohort.get('serialization_error_s')) and cohort['serialization_error_s']<=contract['required_observation_error']['time_s']:
         for record in cohort.get('records',[]):
-            if not isinstance(record,dict): continue
+            if not isinstance(record,dict):
+                unmatched.append({'record':record,'reason':'invalid cohort record'})
+                continue
+            if record.get('nominal_time_s') not in known_centers:
+                unmatched.append({'record':record,'reason':'nominal identity does not match any card center'})
+                continue
             index=record.get('row_index'); nominal=record.get('nominal_time_s')
             if (isinstance(index,int) and not isinstance(index,bool) and 0<=index<len(times)
                 and bounded(nominal) and isinstance(record.get('request_id'),str) and record['request_id']
                 and index<len(origins) and origins[index]=='accepted'
                 and abs(times[index]-nominal)<=cohort['serialization_error_s']):
                 boundary_rows.setdefault(nominal,[]).append(index)
+            else:
+                unmatched.append({'record':record,'reason':'invalid accepted row/request or outside proved serialization bound'})
     windows = []
     exact = []
     for w in card['observation_windows']:
@@ -130,5 +139,5 @@ def normalize_observation(card, backend, rows, origins, qualification=None, *, c
         'status':'observation_invalid' if issues else 'observation_available',
         'units':{'time':'s','voltage':'V'},'rows':rows,'qualification':qualification_out,
         'metadata':{'sample_origins':origins,'actual_max_gap_s':gap,'coverage':coverage,
-                    'local_windows':windows,'exact_boundary_rows':sorted(set(exact)),
+                    'local_windows':windows,'unmatched_boundary_records':unmatched,'exact_boundary_rows':sorted(set(exact)),
                     'issues':issues,'claim':'fixed observations only; no continuous-time guarantee'}}

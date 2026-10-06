@@ -33,8 +33,27 @@ def allocation_check(a, backend, inputs_sha, profile_sha):
         raise ValueError('missing or excessive allocation bound')
     if backend in ('openvaf_r_ngspice','gnucap_modelgen') and a['memory_limit_bytes']!=4*1024**3:
         raise ValueError('pinned container factory requires fixed 4GiB allocation')
-    if a['max_simulation_launches']!=12 or a['max_compilation_launches']!=12:
-        raise ValueError('paper lane requires twelve fixed configurations')
+
+
+def select_conditions(plan, allocation, backend):
+    fixed=[r for r in plan if r['backend']==backend]
+    if len(fixed)!=12 or len({r['condition'] for r in fixed})!=12:
+        raise ValueError('paper plan requires twelve distinct conditions')
+    ids=allocation.get('selected_condition_ids')
+    known={r['condition'] for r in fixed}
+    if (not isinstance(ids,list) or not ids or any(type(c) is not str for c in ids)
+        or len(ids)!=len(set(ids)) or not set(ids)<=known):
+        raise ValueError('allocation requires known distinct selected_condition_ids')
+    if any(allocation[k]!=len(ids) for k in ('max_simulation_launches','max_compilation_launches')):
+        raise ValueError('selected conditions differ from allocated launch counts')
+    return [r for r in fixed if r['condition'] in ids]
+
+
+def directory_budget(work, *, limit=256*1024**2):
+    actual=sum(p.stat().st_size for p in work.rglob('*') if p.is_file())
+    return {'actual_bytes':actual,'limit_bytes':limit,
+            'status':'within_limit' if actual<=limit else 'condition_directory_limit_exceeded',
+            'measurement':'terminal directory files; not an active disk quota','runtime_hard_quota':False}
 
 
 def stage_failure(stage):
@@ -330,18 +349,18 @@ def run(args):
     allocation_check(a,args.backend,sha(inputs/'INPUT_MANIFEST.json'),sha(args.tool_profile))
     if output.is_relative_to(inputs):
         raise ValueError('output must be outside frozen inputs')
-    selected=[r for r in plan if r['backend']==args.backend]
-    if len(selected)!=12 or len({r['condition'] for r in selected})!=12 or len(selected)>a['max_simulation_launches'] or len(selected)>a['max_compilation_launches']:
-        raise ValueError('selected paper plan exceeds allocated twelve distinct conditions')
+    fixed=[r for r in plan if r['backend']==args.backend]
+    selected=select_conditions(plan,a,args.backend)
+    selected_ids={r['condition'] for r in selected}
     output.mkdir(parents=True,exist_ok=False)
     save(output/'STARTED.json',{'backend':args.backend,'allocation':a,'input_manifest_sha256':sha(inputs/'INPUT_MANIFEST.json'),
          'tool_profile_sha256':sha(args.tool_profile),'runner_sha256':sha(Path(__file__)),
-         'fixed_conditions':[r['condition'] for r in selected],'speed_comparison':False})
+         'fixed_conditions':[r['condition'] for r in fixed],'selected_condition_ids':[r['condition'] for r in selected],'speed_comparison':False})
     try:
         tool,env=preflight(args.backend,profile,output,a)
     except Exception as exc:
         save(output/'PREFLIGHT_FAILED.json',{'reason':str(exc),'status':'preflight_failed','cases_launched':0})
-        save(output/'EXECUTION.json',[{**r,'status':'not_run','reason':'preflight failed: '+str(exc)} for r in selected])
+        save(output/'EXECUTION.json',[{**r,'status':'not_run','reason':'preflight failed: '+str(exc) if r['condition'] in selected_ids else 'not_selected_in_allocation'} for r in fixed])
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
                                           for p in sorted(output.rglob('*')) if p.is_file()})
         raise
@@ -360,8 +379,9 @@ def run(args):
                 raise ValueError('input manifest changed after allocation')
             verify(inputs)
             failure_stage='prepare'
-            # No retry/recovery switch exists. A partial output requires explicit new
-            # allocation and new identity, not replay of an already owned condition.
+            # Every allocation creates a new output. The coordinator may select
+            # previously unlaunched conditions under the same frozen identity.
+            # This runner never resumes or retries an existing result.
             work=output/'runs'/row['condition']
             shutil.copytree(inputs/row['work'],work)
             save(work/'STARTED.json',{'condition':row['condition'],'tool_identity_sha256':sha(output/'TOOL_IDENTITY.json'),
@@ -437,7 +457,20 @@ def run(args):
     finally:
         recorded={r['condition'] for r in results}
         results.extend({**r,'status':'not_run','reason':'batch aborted before this condition'}
-                       for r in selected if r['condition'] not in recorded)
+                       for r in fixed if r['condition'] not in recorded and r['condition'] in selected_ids)
+        results.extend({**r,'status':'not_run','reason':'not_selected_in_allocation'}
+                       for r in fixed if r['condition'] not in selected_ids)
+        budgets={}
+        for record in results:
+            directory=output/'runs'/record['condition']
+            if directory.is_dir():
+                budget=directory_budget(directory)
+                budgets[record['condition']]=budget
+                record['directory_budget']=budget
+                if budget['status']!='within_limit':
+                    record['execution_status_before_budget']=record['status']
+                    record.update(status='condition_directory_limit_exceeded',failure_stage='terminal_directory_budget')
+        save(output/'DIRECTORY_BUDGETS.json',budgets)
         if abort:
             abort['unrun']=[r['condition'] for r in results if r['status']=='not_run']
             save(output/'BATCH_ABORTED.json',abort)

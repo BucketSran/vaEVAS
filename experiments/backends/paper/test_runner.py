@@ -125,6 +125,7 @@ class RunnerContracts(unittest.TestCase):
                 profile=root/'profile.json'; profile.write_text('{"backend":"evas"}')
                 allocation=root/'allocation.json'; allocation.write_text(json.dumps({'backend':'evas',
                     'input_manifest_sha256':sha(inputs/'INPUT_MANIFEST.json'),'tool_profile_sha256':sha(profile),
+                    'selected_condition_ids':[f'fixture-{i}' for i in range(12)],
                     'max_simulation_launches':12,'max_compilation_launches':12,'stage_timeout_s':90,'license_timeout_s':30,
                     'memory_limit_bytes':4*1024**3,'file_limit_bytes':32*1024**2,'threads':1}))
                 def fixture_stage(argv,work,name,a):
@@ -165,3 +166,69 @@ class RunnerContracts(unittest.TestCase):
                     run(args)
                 probe.assert_not_called()
                 self.assertFalse(args.output.exists())
+
+    def test_subset_selection_requires_known_distinct_ids_and_matching_grants(self):
+        import runner
+        plan=[{'backend':'evas','condition':str(i)} for i in range(12)]
+        a={'selected_condition_ids':['1','8'],'max_simulation_launches':2,'max_compilation_launches':2}
+        chosen=runner.select_conditions(plan,a,'evas')
+        self.assertEqual([r['condition'] for r in chosen],['1','8'])
+        for ids in ([],['1','1'],['unknown'],[True]):
+            with self.assertRaises(ValueError):
+                runner.select_conditions(plan,{**a,'selected_condition_ids':ids},'evas')
+        with self.assertRaises(ValueError):
+            runner.select_conditions(plan,{**a,'max_simulation_launches':12},'evas')
+
+    def test_terminal_directory_budget_is_actual_and_excess_is_explicit(self):
+        import runner
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp); (work/'raw').write_bytes(b'a'*11)
+            result=runner.directory_budget(work,limit=10)
+            self.assertEqual(result['actual_bytes'],11)
+            self.assertEqual(result['status'],'condition_directory_limit_exceeded')
+            self.assertFalse(result['runtime_hard_quota'])
+
+    def test_two_selected_conditions_keep_twelve_records_without_launching_others(self):
+        import json
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from runner import run
+        from inputs import sha
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); inputs=root/'inputs';inputs.mkdir()
+            (inputs/'INPUT_MANIFEST.json').write_text('{}')
+            (inputs/'core.json').write_text(json.dumps({'units':{'T_s':1e-6},'shared_contract':{}}))
+            plan=[]
+            for i in range(12):
+                name=f'fixture-{i}';work=inputs/name;work.mkdir()
+                (work/'dut.va').write_text('fixture');(work/'request.json').write_text('{}')
+                plan.append({'backend':'evas','condition':name,'work':name,'deck':'request.json'})
+            profile=root/'profile';profile.write_text('{"backend":"evas"}')
+            allocation=root/'allocation';allocation.write_text(json.dumps({'backend':'evas',
+                'input_manifest_sha256':sha(inputs/'INPUT_MANIFEST.json'),'tool_profile_sha256':sha(profile),
+                'selected_condition_ids':['fixture-1','fixture-8'],'max_simulation_launches':2,'max_compilation_launches':2,
+                'stage_timeout_s':90,'license_timeout_s':30,'memory_limit_bytes':4*1024**3,'file_limit_bytes':32*1024**2,'threads':1}))
+            launched=[]
+            def stage(argv,work,name,a):
+                launched.append(work.name)
+                return {'stage':name,'status':'completed','returncode':2,'timeout':False,'cleanup':{'complete':True}}
+            args=SimpleNamespace(inputs=inputs,output=root/'output',backend='evas',tool_profile=profile,allocation=allocation)
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.verify_tool'),patch('runner.preflight',return_value=({'kernel':'fixture'},None)),patch('runner.stage',side_effect=stage):
+                run(args)
+            records=json.loads((args.output/'EXECUTION.json').read_text())
+            self.assertEqual(launched,['fixture-1','fixture-8'])
+            self.assertEqual(len(records),12)
+            self.assertEqual(sum(r.get('reason')=='not_selected_in_allocation' for r in records),10)
+            self.assertEqual(len(json.loads((args.output/'DIRECTORY_BUDGETS.json').read_text())),2)
+            from runner import directory_budget
+            args.output=root/'overbudget-output'
+            with patch('runner.verify',return_value=plan),patch('runner.verify_sources'),patch('runner.verify_tool'),patch('runner.preflight',return_value=({'kernel':'fixture'},None)),patch('runner.stage',side_effect=stage),patch('runner.directory_budget',side_effect=lambda w:directory_budget(w,limit=1)):
+                run(args)
+            excess=json.loads((args.output/'EXECUTION.json').read_text())
+            failures=[r for r in excess if r['status']=='condition_directory_limit_exceeded']
+            self.assertEqual(len(failures),2)
+            self.assertTrue(all(r['execution_status_before_budget']=='execution_failed' for r in failures))
+            self.assertTrue(all(r['directory_budget']['actual_bytes']>1 for r in failures))
+            with self.assertRaises(FileExistsError):
+                with patch('runner.verify',return_value=plan),patch('runner.verify_sources'):
+                    run(args)

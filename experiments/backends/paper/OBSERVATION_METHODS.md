@@ -28,15 +28,20 @@ deck 请求 dtmin=1fs，普通点距关键中心不到 3fs 时合并。
 [官方 transient 文档](https://gnucap.org/dokuwiki/doku.php/gnucap:manual:commands:transient)
 描述 trace alltime 显示所有接受的内部步。deck 明确请求该选项；语法与版本对应
 仍需安装版日志、源码映射和 raw 输出检查。禁止把 rejected steps 用作原生值。
+当前辅助源实际最多1024点、单行25479 bytes；全局200ps网格未放进辅助源。
+安装版必须证明完整读取源角点，角点数/时刻与 breakpoint_requests 一致，实际输出
+格式能被 reader 解析。没有已确认行长限制时，不凭约1MB的错误估算折行。
 以上网页在 2026-10-07 核对；网页分支不是安装版本身份证明。
 
 ## 预算与 preflight 闸门
 
 规划行数为 2*(全局 200ps 区间数 + 局部断点数 + 1)，每列按 32 byte 估计。
-估算须低于文件上限的 80%，并在 condition 的 256 MiB 内。
+波形估算须低于文件上限的 80%；条件估算至少计两份波形与 2MiB 产物余量，
+以反映 CSV/raw JSON 复制，并须在 condition 的 256 MiB 内。
 这是规划余量；无法约束自适应步数、编译产物或日志。实际进程文件上限仍为
 32 MiB，90 s、4 GiB、CPU1、零自动重试均不变。真实 size/间隔/中心缺口失败
-须保留，不能在看到结果后放宽判据。协调者须先核验每条件总目录 256 MiB。
+须保留，不能在看到结果后放宽判据。runner 收尾机器核验每条件实际总目录 256 MiB，保存 DIRECTORY_BUDGETS 与最终
+EXECUTION，超限显式保留失败。终态 size 检查不是活动期间硬quota。
 
 优先用已冻结事件条件与 wrap 条件做小型 preflight。保存完整 tool/version/image
 身份、source/deck/request manifest、命令、日志与 raw 波形。核验辅助节点的独立
@@ -60,7 +65,8 @@ artifact hash 只确认内容未变，不证明报告科学结论正确。不存
   initial_step settled 后，以及后续保存原生状态。实际接受日志/内部 raw 与导出
   逐行对应；不能以解析 DUT 答案或 counter 数值吻合代替来源证明。
 - boundary_cohort：给出请求 ID、卡片名义时间、raw 行号与证明的 serialization_error_s。
-  仅这一界内的已证请求行可成为中心诊断，普通邻近点和人工插值不可冒充。
+  仅这一界内的已证请求行可成为中心诊断，普通邻近点和人工插值不可冒充。nominal必须精确对应卡片中心身份，
+  serialization界只用于该请求的raw行时刻，不用于合并不同nominal；未匹配记录有诊断。
 - EVAS：保存 raw-response.json 与 IR/runtime/kernel 身份，核验 response times 与
   requests 的真实关系。stateless working-point 分支与 transient 接受步分支分别
   说明来源；accepted_steps=0 本身不证明插值，也不证明 native_initial settled。

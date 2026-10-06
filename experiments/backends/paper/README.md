@@ -49,9 +49,13 @@ synthetic 测试只校准这个传输合同，不能成为实际后端资格。
 不能建立误差界。插值误差须单独有界并包含在总导出误差内；插值/未知记录
 不会成为原生计数/phase 或精确端点证据。
 
-`runner.py` 只执行经协调者分配的单后端 12 条件，输出目录必须新建，零自动
+`runner.py` 保留单后端固定 12 条件分母，只执行 allocation 明确选择的条件，输出目录必须新建，零自动
 重试。`--tool-profile` 与 `--allocation` 都是必需的 JSON 文件，并由 allocation
 绑定 INPUT_MANIFEST 和 profile 的 SHA256。实际运行要求 Linux、taskset/prlimit。
+首轮可选 EV-SH-01/CP-02（各 launch cap=2），后续由协调者新 allocation 选择
+此前未 launch 的其余 10 条，在新 output 执行。没有 resume 或自动 repeat；旧失败
+不能被新输出替换。每份 EXECUTION 始终 12 项，其余明确 not_selected_in_allocation。
+协调者与汇总器核对两份真实身份和累计授权，保持同一输入/tool/checker 分母。
 此实现轮次没有调用后端或远程资源；以下接口供批准冻结后的执行阶段使用。
 
 ```sh
@@ -60,7 +64,8 @@ python3 -B experiments/backends/paper/runner.py INPUTS OUTPUT \
 ```
 
 allocation 必需字段为 backend、input_manifest_sha256、tool_profile_sha256、
-max_simulation_launches=12、max_compilation_launches=12、stage_timeout_s<=90、
+selected_condition_ids（非空、不重复、卡片中存在）、
+max_simulation_launches/max_compilation_launches 均等于选择数且 <=12、stage_timeout_s<=90、
 license_timeout_s<=30、memory_limit_bytes<=4294967296、file_limit_bytes<=33554432、
 threads=1，所有上限必须正整数。容器后端因固定 factory 需恰好 4 GiB，
 拒绝更低的分配，避免将 host client 上限误称为容器内存上限。字段记录既有授权，不新增授权。
@@ -90,6 +95,10 @@ Spectre 有效设置 readback 检查请求值。EVAS 当前响应没有应用设
 只保留 request_echo 与真正 observed_response 的 engine/accepted_steps，实际
 容差/maxstep/stop 标为 unknown，状态 I。ngspice/Gnucap 尚无最大步长与
 stop readback 资格，会保存 available 实际读数及未知项、状态 I。
+收尾 `DIRECTORY_BUDGETS.json` 与最终 `EXECUTION.json` 保存实际每条件文件字节数，
+超过 256 MiB 标记 condition_directory_limit_exceeded 并保留此前执行状态。
+RESULT/record 是收尾前执行快照，最终目录预算以 EXECUTION 和 DIRECTORY_BUDGETS 为准。
+这只是终态检查，不是运行期间硬磁盘配额；单文件仍由 FSIZE 限制。
 所有输出行来源初始为 unknown，独立误差/native_initial/native_phase/计数
 证书必须由后续实际资格证据补齐。普通 t=0 插值不能冒充 initial_step 已 settled
 的原生初始值。历史失败与新结果分别保留；具体远程分配由协调者管理。

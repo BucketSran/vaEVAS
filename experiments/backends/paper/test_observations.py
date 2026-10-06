@@ -113,3 +113,16 @@ class ObservationContracts(unittest.TestCase):
             p.write_text('changed')
             result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
             self.assertFalse(result['qualification']['local_gap_qualified'])
+
+    def test_different_nominal_identity_is_diagnosed_not_tolerance_matched(self):
+        import tempfile,hashlib
+        from pathlib import Path
+        rows=[{'time':t,'in':0.4,'count':1} for t in (0,1.8e-10,2e-10+1e-23,2.2e-10,4e-10)]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/'synthetic-proof';p.write_text('Synthetic fixture only')
+            proof={'method':'synthetic','artifact_path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+            record={'nominal_time_s':2e-10+1e-23,'row_index':2,'request_id':'different-nominal'}
+            q={'boundary_cohort':{'serialization_error_s':2e-23,'records':[record]},'qualification_evidence':{'boundary_cohort':proof}}
+            result=normalize_observation(CARD,'spectre',rows,['accepted']*5,q,contract=CONTRACT)
+            self.assertFalse(result['qualification']['local_gap_qualified'])
+            self.assertEqual(result['metadata']['unmatched_boundary_records'][0]['record'],record)
