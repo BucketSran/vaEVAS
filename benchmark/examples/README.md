@@ -8,7 +8,7 @@
 | 从数据建立模型 | [运放宏模型提取](opamp-from-characterization.md) | 根据表征数据建立的宏模型 | 未公开激励和负载下的端口响应及闭环建立误差 | 范围外储备；有 Cadence 结构参考，真实电路数据待取得 |
 | 故障诊断与修复 | [ZOOM 九路时序修复](zoom-timing-repair.md) | 修复后的已有 VA | 所有时钟的边沿、脉宽、周期和参数回归 | 有首轮真实生成故障与人工诊断，修复任务尚未封装 |
 | 扩展已有模型 | [ADC 复位与掉电扩展](adc-reset-powerdown-extension.md) | 保留原量化行为的扩展模型 | 正常量化回归、取消待发布结果、唤醒后重新采样 | 有课题组 ADC；新增模式是拟议需求 |
-| 测量与测试工具 | [ADC DNL/INL 测量](adc-linearity-measurement.md) | VA 激励、采样和统计模块 | 独立码流重算与已知阈值的被测 ADC | 有 Cadence 测量源码，环境与 checker 待制作 |
+| 测量与测试工具 | [ADC DNL/INL 测量](adc-linearity-measurement.md) | VA 激励、采样和统计模块 | 独立码流重算与已知阈值的被测 ADC | 已有原创首题及本地checker校准，实际 Spectre/Harbor 待运行 |
 | 数值与仿真改进 | [运放宏模型仿真优化](opamp-simulation-optimization.md) | 行为保持的优化模型 | 精度先通过，再评价固定环境下的稳定性与耗时 | 范围外储备；有初筛参考模型，性能瓶颈尚未证实 |
 
 规格到代码的基础方向已有完整例题，例如 [VCO 题面](../tasks/va05-dynamic-vco/instruction.md)及其 [Harbor 任务说明](../../experiments/va_screen/README.md)。它作为基线保留，不再复制一份设计稿。旧的单次生成协议和成绩见[首轮报告](../../experiments/va_screen/RESULTS.md)，不能当作本目录新任务的运行结果。
