@@ -150,5 +150,30 @@ def ngspice(log, deck):
     final=snapshot(heads[1],len(lines),'post_analysis_loaded_circuit')
     return {'effective':final,'initial_snapshot':initial,'invocation_controls':{'stop_s':fact(stop,*commands[trans[0]],'deck_invocation_only'),'maxstep_s':fact(maxstep,*commands[trans[0]],'deck_invocation_only')},'limit':'maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run'}
 
+def gnucap(log, parse_number):
+    """Conservative global readback. Conflicting repeated values are ambiguous.
+
+    Only the calibrated caret-question diagnostic format is recognized here.
+    Its absence does not establish acceptance of every possible parser format.
+    """
+    if re.search(r'^\s*\^\s*\?\s*',log,re.M):
+        raise ReadbackError('Gnucap deck parse error; settings are not qualified')
+    actual={}; evidence={}
+    for source,key in [('reltol','reltol'),('vntol','vabstol'),('abstol','iabstol')]:
+        occurrences=[]
+        for line,raw in enumerate(log.splitlines(),1):
+            for match in re.finditer(r'\b'+source+r'=\s*(\S+)',raw):
+                value=parse_number(match[1])
+                if not math.isfinite(value) or value<=0:
+                    raise ReadbackError('invalid Gnucap setting: '+source)
+                occurrences.append(fact(value,line,raw,'global_options_occurrence'))
+        if not occurrences:
+            raise ReadbackError('missing effective setting: '+source)
+        values=[item['value'] for item in occurrences]
+        if any(not math.isclose(v,values[0],rel_tol=1e-12,abs_tol=0) for v in values):
+            raise ReadbackError('ambiguous Gnucap setting: '+source)
+        actual[key]=values[0]; evidence[key]=occurrences
+    return {'actual':actual,'occurrences':evidence}
+
 def file_identity(path):
     return {'path':str(path.resolve()),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}

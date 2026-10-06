@@ -134,4 +134,60 @@ class Calibration(unittest.TestCase):
    (work/'requested_settings.json').write_text(json.dumps({'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,'stop_s':6e-6,'maxstep_s':2e-10,'spice_maxstep_s':2e-10}))
    (work/'simulate.log').write_text("^ ? need )\n.options reltol=10.u vntol=100.n abstol=1.p\n")
    with self.assertRaises(ValueError): effective_settings(work,'gnucap_modelgen')
+ def test_gnucap_conflicting_parsed_settings_are_rejected(self):
+  import json
+  import tempfile
+  from pathlib import Path
+  from runner import effective_settings
+  request={'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,'stop_s':6e-6,'maxstep_s':2e-10,'spice_maxstep_s':2e-10}
+  with tempfile.TemporaryDirectory() as tmp:
+   work=Path(tmp); (work/'requested_settings.json').write_text(json.dumps(request))
+   for key in ['reltol','vntol','abstol']:
+    (work/'simulate.log').write_text('.options '+key+'=1e-3\n.options reltol=10.u vntol=100.n abstol=1.p\n')
+    with self.subTest(key=key),self.assertRaisesRegex(ValueError,'ambiguous'): effective_settings(work,'gnucap_modelgen')
+ def test_gnucap_identical_repeated_settings_are_preserved(self):
+  import json
+  import tempfile
+  from pathlib import Path
+  from runner import effective_settings
+  with tempfile.TemporaryDirectory() as tmp:
+   work=Path(tmp)
+   (work/'requested_settings.json').write_text(json.dumps({'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,'stop_s':6e-6,'maxstep_s':2e-10,'spice_maxstep_s':2e-10}))
+   (work/'simulate.log').write_text('.options reltol=10.u vntol=100.n abstol=1.p\n'*2)
+   result=effective_settings(work,'gnucap_modelgen')
+   self.assertAlmostEqual(result['actual']['reltol'],1e-5)
+   self.assertEqual(result['status'],'I')
+   self.assertEqual(set(result['scoped_readback']['actual']),{'reltol','vabstol','iabstol'})
+   self.assertTrue(result['actual']['stop'].startswith('unknown'))
+   self.assertTrue(result['actual']['maxstep'].startswith('unknown'))
+   raw='.options reltol=10.u vntol=100.n abstol=1.p'
+   for key in ['reltol','vabstol','iabstol']:
+    occurrences=result['scoped_readback']['occurrences'][key]
+    self.assertEqual([item['line'] for item in occurrences],[1,2])
+    self.assertEqual([item['raw'] for item in occurrences],[raw,raw])
+    self.assertEqual([item['value'] for item in occurrences],[result['actual'][key]]*2)
+ def test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted(self):
+  import json
+  import tempfile
+  from pathlib import Path
+  from runner import effective_settings
+  raw1='.options reltol=10.u vntol=100.n abstol=1.p'
+  raw2='.options reltol=1e-5 vntol=1e-7 abstol=1e-12'
+  with tempfile.TemporaryDirectory() as tmp:
+   work=Path(tmp)
+   (work/'requested_settings.json').write_text(json.dumps({'reltol':1e-5,'vabstol_V':1e-7,'iabstol_A':1e-12,'stop_s':6e-6,'maxstep_s':2e-10,'spice_maxstep_s':2e-10}))
+   (work/'simulate.log').write_text(raw1+'\n'+raw2+'\n')
+   result=effective_settings(work,'gnucap_modelgen')
+   self.assertAlmostEqual(result['actual']['reltol'],1e-5)
+   self.assertEqual(result['status'],'I')
+   self.assertEqual(set(result['scoped_readback']['actual']),{'reltol','vabstol','iabstol'})
+   for key,first,second in [('reltol',10.*1e-6,1e-5),('vabstol',100.*1e-9,1e-7),('iabstol',1.*1e-12,1e-12)]:
+    occurrences=result['scoped_readback']['occurrences'][key]
+    self.assertEqual([item['line'] for item in occurrences],[1,2])
+    self.assertEqual([item['raw'] for item in occurrences],[raw1,raw2])
+    self.assertEqual([item['value'] for item in occurrences],[first,second])
+   self.assertTrue(result['actual']['stop'].startswith('unknown'))
+   self.assertTrue(result['actual']['maxstep'].startswith('unknown'))
+   (work/'simulate.log').write_text('.options reltol=1e-3\n'+raw1+'\n')
+   with self.assertRaisesRegex(ValueError,'ambiguous'): effective_settings(work,'gnucap_modelgen')
 if __name__=='__main__': unittest.main()

@@ -96,7 +96,9 @@ Spectre 使用 [settings_readback.py](settings_readback.py) 按单一具名 tran
 保留为 mismatch、状态 I。ngspice 要求单一 control/analysis、option→tran→wrdata→option
 且中途没有可变设置命令，读取后 options；前默认快照另存。stop/maxstep 仅有 deck
 调用证据，继续标为 unknown。读取器拒绝缺失、歧义、非法数值/量纲和多分析，
-不会使用 requested 值回填。Gnucap 有 deck parse 错误时拒绝设置资格。
+不会使用 requested 值回填。Gnucap 回读出现多个不同 parsed 值时保守拒绝，
+不能用最后值替代歧义。解析错误防护只覆盖已校准的 `^ ?` caret 格式；
+没有该诊断不能证明其他格式已覆盖。识别到该格式时拒绝设置资格。
 这些控制值不证明数学精度或 native provenance。历史 reader 和冻结结果保留原身份。
 EVAS 当前响应没有应用设置读回，
 只保留 request_echo 与真正 observed_response 的 engine/accepted_steps，实际
@@ -171,14 +173,18 @@ checker 绑定此卡片原字节。同条件的新执行不能套用旧 assessme
 U/X/T 使用 checker 的显式 execution_state，并核验实际 execution 状态。
 X 仅接受 runner 的 compile_failed、compile_timeout、runtime_timeout、
 execution_failed、execution_error、cancelled、cleanup_incomplete、
-missing_compile_artifact、missing_waveform、observation_invalid。
+missing_compile_artifact、missing_waveform、observation_invalid、deck_parse_error、
+condition_directory_limit_exceeded。
 T 仅接受 not_run。U 必须为 failure_stage=compile 的 compile_failed，
 另在 assessment 外层追加 unsupported_evidence 的 path/sha256 引用，
 指向人工审查后的确认 JSON。确认内容为 status=confirmed_unsupported、
 failure_stage=compile、execution_sha256、具体 reason 和 diagnostic 的
 path/sha256。diagnostic 须为 execution.stages 中非零退出 compile 阶段的
 实际 log，哈希必须匹配；嵌套引用路径相对其所在 JSON 文件。一般编译失败
-保留 X，不能从错误文本自动推定 U。成功波形不能配 U/X/T。
+保留 X，不能从错误文本自动推定 U。deck_parse_error 的 X 必须绑定
+diagnostic_log_sha256 与实际 simulate stage/log、逐行 diagnostics 的编号/文本，
+以及保留的 rejected_waveform 与 lane FILE_MANIFEST/实际 raw 的 SHA。
+没有产生 raw 时 rejected_waveform 可为空。成功波形不能配 U/X/T。
 
 同一后端的已执行条件必须具有相同的生产源码 revision、稳定工具身份、
 完整 checker identity 和输入冻结 manifest 身份；所有后端使用同一 checker。

@@ -84,6 +84,43 @@ def final_execution(record, execution, manifest=None):
         raise ValueError('Final EXECUTION row must be unique and identical to selected execution')
 
 
+def deck_parse_evidence(record, execution, work):
+    """Bind the calibrated caret diagnostics and retained raw to real artifacts."""
+    if record['backend']!='gnucap_modelgen' or execution.get('failure_stage')!='deck_parse':
+        raise ValueError('Deck parse failure must belong to Gnucap deck_parse stage')
+    stages=[stage for stage in execution.get('stages',[]) if stage.get('stage')=='simulate']
+    if (len(stages)!=1 or stages[0].get('log')!='simulate.log'
+            or type(stages[0].get('returncode')) is not int or stages[0]['returncode']!=0
+            or stages[0].get('log_sha256')!=execution.get('diagnostic_log_sha256')):
+        raise ValueError('Deck parse diagnostic must bind actual simulate stage/log')
+    log_path=(work/'simulate.log').resolve()
+    if not log_path.is_relative_to(work.resolve()):
+        raise ValueError('Deck parse diagnostic log outside its condition directory')
+    log_ref={'path':str(log_path),'sha256':execution.get('diagnostic_log_sha256')}
+    lines=artifact_bytes(log_ref).decode(errors='replace').splitlines()
+    expected=[{'line_number':i,'text':line} for i,line in enumerate(lines,1)
+              if re.match(r'^\s*\^\s*\?\s*',line)]
+    diagnostics=execution.get('diagnostics')
+    if (not expected or not isinstance(diagnostics,list)
+            or any(not isinstance(item,dict) or type(item.get('line_number')) is not int
+                   or not isinstance(item.get('text'),str) for item in diagnostics)
+            or diagnostics!=expected):
+        raise ValueError('Deck parse diagnostics must match actual log lines')
+    refs=[log_ref]
+    rejected=execution.get('rejected_waveform')
+    if rejected is not None:
+        if (not isinstance(rejected,dict) or not isinstance(rejected.get('path'),str)
+                or not rejected['path'] or Path(rejected['path']).is_absolute()
+                or '..' in Path(rejected['path']).parts):
+            raise ValueError('Rejected waveform must stay within its condition directory')
+        path=(work/rejected['path']).resolve()
+        if not path.is_relative_to(work.resolve()):
+            raise ValueError('Rejected waveform outside its condition directory')
+        ref={'path':str(path),'sha256':rejected.get('sha256')}
+        artifact_bytes(ref)
+        refs.append(ref)
+    return refs
+
 def execution_files(record, execution, started, checker):
     identity = record['identity']
     lane = read_artifact(identity['lane_started'])
@@ -113,6 +150,8 @@ def execution_files(record, execution, started, checker):
     if identity.get('observation'):
         refs.append(identity['observation'])
     work = Path(identity['condition_started']['path']).parent
+    if execution.get('status')=='deck_parse_error':
+        refs.extend(deck_parse_evidence(record,execution,work))
     if execution.get('waveform') or execution.get('status') == 'waveform_available':
         waveform = execution.get('waveform')
         if not isinstance(waveform, str) or not waveform or Path(waveform).is_absolute() or '..' in Path(waveform).parts:
