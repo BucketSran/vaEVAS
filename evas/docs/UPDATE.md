@@ -4,6 +4,69 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+以下 2026-10-06 检查点描述各 PR 引入的源码行为，合并状态见
+[PR74](https://github.com/BucketSran/vaEVAS/pull/74)、
+[PR75](https://github.com/BucketSran/vaEVAS/pull/75)、
+[PR76](https://github.com/BucketSran/vaEVAS/pull/76)、
+[PR78](https://github.com/BucketSran/vaEVAS/pull/78)、
+[PR80](https://github.com/BucketSran/vaEVAS/pull/80)、
+[PR82](https://github.com/BucketSran/vaEVAS/pull/82)、
+[PR83](https://github.com/BucketSran/vaEVAS/pull/83) 和
+[PR86](https://github.com/BucketSran/vaEVAS/pull/86)。
+各项验证仍绑定各自执行版本，合并不会把旧收据重标为新版本，也不代表发布了 tag。
+
+## 2026-10-06：事件体静态循环（L3）
+
+- 监测事件体中的静态 genvar 循环沿用现有顺序赋值内核；实例参数、数组和循环预算分别检查。
+- 动态控制、历史调用和嵌套事件等边界继续拒绝；零次循环不能隐藏不支持的事件体。
+- 不改变 IR17 或包版本，不代表原工程模型已完整支持；开发验收见 LANG 的对应测试。
+
+## 2026-10-06：SCS 静态向量端口
+
+- `.scs` 实例先绑定参数，再按声明方向展开 VA 向量端口并与标量列表配对。
+- 三项 Spectre 准入探针和公共 EVAS 入口回归验证降/升序及实例宽度；总线文本语法仍拒绝。
+- 此为 #63 的输入切片，包版本与 IR17 均未变。证据与边界见 [契约](../validation/SCS_VECTOR_CONTRACT.md)。
+
+## 2026-10-06：完整运行产物
+
+- 新增显式 `evas.results run`，保存生效请求、完整响应和无展示舍入的 CSV。
+- 只有全部必需文件完成与校验后才原子写入完成状态，失败保留版本化诊断。
+- 依赖包/内核身份接口，不改变原 JSON API 或数值内核。见[契约](results.md)。
+
+## 2026-10-06：仅编译预检与有限诊断登记（DIAG）
+
+- 新增 `python -m evas lint manifest.json`，不查找或启动内核；成功仅表示编译检查通过。
+- 在 manifest/source I/O、参数依赖/覆盖和编译资源预算来源登记稳定分类。
+  未登记的诊断保留原 payload，类别为 `unknown`；来源盘点与实际执行检查分别计数。
+- 不改变 IR17、数值行为或包版本；接口、已测边界与剩余缺口见[诊断说明](diagnostics.md)。
+
+## 2026-10-06：显式身份查询（PKG-ID）
+
+- Python 与 Rust CLI 可在无 manifest、无 stdin 数据时查询实际包/内核身份。
+- 绑定所选二进制哈希与报告的 IR schema；无来源或请求协议元数据时保留未知。
+- 不改变 IR17、数值请求协议或包版本，详见[身份接口](identity.md)。
+
+## 2026-10-06：有限单极点 laplace_np（O2）
+
+- 单项常量分子与一个负实极点在倒数系数可精确表示时转换为 `[b0]/[1,-1/p]`，保留 DC 增益。
+- 复用原调用点、IR17 与滤波历史/误差机制，不增加 Rust 数值路径；epsilon、复杂/多极点和非精确转换拒绝。
+- 独立高精度解析 DC/PWL 答案及实例/调用点回归支持这一有限范围，不代表 #66 全部能力完成。
+
+## 2026-10-06：常量初始化与 cross 共用事件体（L2a）
+
+- 一个无分析限定 `initial_step` 可与 cross 叶子 OR，共享无条件实例常量赋值体。
+  初始化通过已有路径安装一次；后续穿越执行同一体，不伪造初始化事件记录。
+- timer 混合、重复/分析限定初始化叶、动态初值及条件初始化仍拒绝；
+  同刻写者冲突和 t=0 初始化先于 timer 的顺序保持不变。
+- 不改变 IR17 或内核协议；有限验收与完整模型缺口见[事件手册](math/events.md#initial-cross)。
+
+## 2026-10-06：两级固定 absdelay
+
+- 从原始 PWL 结点导出整段历史包围，保留移位时间误差、每级调用点和补偿查询。
+- 仅接收直接嵌套或同实例单位内部别名；结构依赖检查与最终节点预算继续生效。
+- 独立 Fraction 答案、放大/大时间拒绝与真实 Frame 回退检查见[算子手册](math/operators.md#两级固定-absdelay-的移位历史包围)。
+  冻结放大对照的 1e-6 预算仍拒绝，未宣称一般组合或新增 Spectre 资格。
+
 ## 未合并候选：无状态比较与逻辑表达式
 
 - 以既有 Select IR 表达关系、逻辑和三元运算，保留源码身份与原精度判据。

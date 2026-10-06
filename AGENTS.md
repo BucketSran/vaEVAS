@@ -40,6 +40,20 @@ project and these skills are absent from its catalog, read the relevant declared
 the resolved checkout path; this is manual loading, not confirmation of automatic discovery.
 When using a skill, name it briefly and report the checks actually run; no separate usage log is required.
 
+For GLM reviews, prioritize a complete, scoped report; the user has ample GLM quota.
+Default to USD 5 per CLI call, process-local `CLAUDE_CODE_MAX_OUTPUT_TOKENS=32000`
+and a 15-minute timeout; size the task total to its review obligations. A user's explicit ceiling prevails.
+Retain complete changed functions, relevant callers and evidence when reducing duplicate
+context. After budget/output truncation, adjust the limiting resource before retrying;
+count actual reported turns and preserve failed responses. Archived USD 1/call and fixed
+call-count limits are historical run settings, not project defaults. A missing report stays pending.
+
+For EVAS behavior changes, require relevant actual Spectre comparisons before recommending
+merge or claiming behavioral alignment. Record a justified reuse or explicit alignment gap;
+local regressions, analytical answers and model reviews do not replace this evidence.
+Follow [Spectre alignment acceptance](docs/contributing/validation.md#spectre-alignment-acceptance)
+for scope, tolerances, version identity and exceptions.
+
 ## Ownership
 
 - `evas/`: simulator code, build and developer tests.

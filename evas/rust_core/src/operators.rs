@@ -138,6 +138,125 @@ fn projected_points(
     Ok((points, bounds))
 }
 
+/// Find structural history dependencies before numerical projection. This is
+/// local to absdelay: ordinary PWL projection and every other operator retain
+/// their existing history rejection. Zero weights/cancellation do not erase
+/// state or another operator from this closure.
+fn delay_parent(
+    input: &Expression,
+    program: &Program,
+    driven: &[String],
+    origin: &Origin,
+) -> Result<Option<usize>, Error> {
+    let driven_nodes: BTreeSet<_> = driven
+        .iter()
+        .filter_map(|name| program.nodes.iter().position(|n| n == name))
+        .collect();
+    let initial = affine(input, program, &origin.instance)?;
+    if !initial.state_dependencies.is_empty() {
+        return Err(Error::new(
+            "unsupported_operator",
+            "absdelay cannot depend on event state",
+        ));
+    }
+    let mut pending: Vec<_> = initial.node_dependencies.into_iter().collect();
+    let mut seen = BTreeSet::new();
+    let mut operators = initial.operator_dependencies;
+    while let Some(node) = pending.pop() {
+        if node == 0 || driven_nodes.contains(&node) || !seen.insert(node) {
+            continue;
+        }
+        for c in &program.contributions {
+            if c.positive == node || c.negative == node {
+                let bound = affine(&c.rhs, program, &c.origin.instance)?;
+                if !bound.state_dependencies.is_empty() {
+                    return Err(Error::new(
+                        "unsupported_operator",
+                        "absdelay cannot depend on event state",
+                    ));
+                }
+                operators.extend(bound.operator_dependencies);
+                pending.extend(bound.node_dependencies);
+                pending.extend([c.positive, c.negative]);
+            }
+        }
+    }
+    if operators.is_empty() {
+        return Ok(None);
+    }
+    if operators.len() != 1 {
+        return Err(Error::new(
+            "unsupported_operator",
+            "absdelay requires exactly one first-stage history",
+        ));
+    }
+    let parent = *operators.iter().next().unwrap();
+    if program.operators[parent].origin().instance != origin.instance
+        || !matches!(program.operators[parent], OperatorSpec::AbsDelay { .. })
+    {
+        return Err(Error::new(
+            "unsupported_operator",
+            "absdelay history must be a same-instance absdelay",
+        ));
+    }
+    let map = crate::affine_bounds::node_map(program, driven)?;
+    let expression = crate::affine_bounds::affine(input, program)?;
+    let variables = expression.len() - 1;
+    let width = driven.len() + program.states.len() + program.operators.len() + 1;
+    let slot = driven.len() + program.states.len() + parent;
+    // node_map rows all have width columns; iterate columns without changing
+    // the original per-column accumulation order. Valid IR has a ground node.
+    for (k, _) in map[0].iter().enumerate().take(width) {
+        let base = if k == width - 1 {
+            expression[variables]
+        } else {
+            I::ZERO
+        };
+        let coefficient = (0..variables).fold(base, |sum, j| sum + expression[j] * map[j][k]);
+        if coefficient != if k == slot { I::ONE } else { I::ZERO } {
+            return Err(Error::new(
+                "unsupported_operator",
+                "second absdelay input must be a certified unit, zero-offset first-stage alias",
+            ));
+        }
+    }
+    Ok(Some(parent))
+}
+
+/// Resolve at most two immutable histories independent of contribution order.
+/// No cache answers, new IR, accepted-state mutation or third-stage admission.
+fn build_delay(
+    index: usize,
+    program: &Program,
+    trajectory: &Trajectory,
+    driven: &[String],
+    depth: usize,
+) -> Result<AbsDelay, Error> {
+    if depth > 2 {
+        return Err(Error::new(
+            "unsupported_operator",
+            "absdelay composition is limited to two stages; cycles are unsupported",
+        ));
+    }
+    let OperatorSpec::AbsDelay {
+        input,
+        delay,
+        origin,
+    } = &program.operators[index]
+    else {
+        return Err(Error::new(
+            "unsupported_operator",
+            "absdelay parent is not a fixed delay",
+        ));
+    };
+    let (points, bounds) = if let Some(parent) = delay_parent(input, program, driven, origin)? {
+        build_delay(parent, program, trajectory, driven, depth + 1)?.shifted_tube()?
+    } else {
+        projected_points(input, program, trajectory, driven, origin)?
+    };
+    AbsDelay::enclosed(points, bounds, *delay)
+}
+
 #[derive(Clone)]
 struct DirectInput {
     points: Vec<(f64, f64)>,
@@ -1032,15 +1151,9 @@ impl Operators {
                     };
                     entries.push(Runtime::Sin(sin_input));
                 }
-                OperatorSpec::AbsDelay {
-                    input,
-                    delay,
-                    origin,
-                } => {
-                    let (points, bounds) =
-                        projected_points(input, program, trajectory, driven, origin)?;
-                    entries.push(Runtime::AbsDelay(AbsDelay::enclosed(
-                        points, bounds, *delay,
+                OperatorSpec::AbsDelay { .. } => {
+                    entries.push(Runtime::AbsDelay(build_delay(
+                        index, program, trajectory, driven, 1,
                     )?));
                 }
                 OperatorSpec::LaplaceNd {

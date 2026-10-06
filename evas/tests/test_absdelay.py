@@ -157,7 +157,7 @@ class AbsDelayRejections(unittest.TestCase):
     def test_internal_state_nested_nonlinear_and_feedback_inputs_rejected(self):
         cases = [
             model("@(initial_step) q=1; V(y,r)<+absdelay(q,1n);", "real q;"),
-            model("V(y,r)<+absdelay(absdelay(V(u,r),1n),1n);"),
+            model("V(y,r)<+absdelay(absdelay(absdelay(V(u,r),1n),1n),1n);"),
             model("V(y,r)<+absdelay(V(u,r)*V(u,r),1n);"),
             model("V(y,r)<+absdelay(V(y,r),1n);"),
             model("V(y,r)<+absdelay(V(u,r),1n)*V(u,r);"),

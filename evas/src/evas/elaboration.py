@@ -164,6 +164,7 @@ def unroll_loops(model: Model, parameter):
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
                    and (has_loop(statement.then_body) or has_loop(statement.else_body))
+                   or isinstance(statement, Event) and has_loop(statement.body)
                    for statement in statements)
 
     if not has_loop(model.analog):
@@ -201,10 +202,83 @@ def unroll_loops(model: Model, parameter):
         return replace(token, expansion=path)
 
     def constant(expr, indices):
-        value = lower(substitute(expr,indices), parameter, {}, model.source)
+        try:
+            value = lower(substitute(expr,indices), parameter, {}, model.source)
+        except CompileError as exc:
+            fail(f'genvar control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
             fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
         return int(value.constant)
+
+    def node_name(expr, indices):
+        return (f'{expr.value}[{constant(expr.args[0], indices)}]'
+                if expr.args else str(expr.value))
+
+    def dependencies(expr, indices):
+        nodes, held = set(), False
+        if expr.op == 'voltage':
+            return {node_name(arg, indices) for arg in expr.args}, False
+        if expr.op in OPERATOR_NAMES or expr.op in ('parameter', 'index') and expr.value in model.variables:
+            held = True
+        for arg in expr.args:
+            child_nodes, child_held = dependencies(arg, indices)
+            nodes |= child_nodes
+            held |= child_held
+        return nodes, held
+
+    def validate_event_body(statements, active, affected):
+        # Empty static loops must not erase unsupported event-body structure.
+        def expression(expr, predicate=False):
+            if expr.op in OPERATOR_NAMES:
+                fail('event bodies do not support history/operator calls', expr.token)
+            if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
+                fail('event conditions and loop controls cannot depend on state', expr.token)
+            for arg in expr.args:
+                expression(arg, predicate)
+
+        for statement in statements:
+            if isinstance(statement, Loop):
+                if statement.name not in model.genvars or statement.name in active:
+                    fail('static for requires an unshadowed declared genvar', statement.token)
+                for expr in (statement.start, statement.limit, statement.update):
+                    expression(expr, True)
+                start = constant(statement.start, active)
+                scope = {**active, statement.name: start}
+                constant(statement.limit, scope)
+                constant(statement.update, scope)
+                validate_event_body(statement.body, scope, affected)
+            elif isinstance(statement, Conditional):
+                expression(statement.left, True)
+                expression(statement.right, True)
+                # Reuse the existing IR predicate boundary, including structural
+                # dependencies that numeric cancellation must not erase.
+                from .instance_compiler import _predicate_degree
+                nodes = {}
+                def scalar(expr):
+                    if expr.op == 'node':
+                        name = node_name(expr, active)
+                        nodes.setdefault(name, len(nodes))
+                        return replace(expr, value=name, args=())
+                    return replace(expr, args=tuple(scalar(arg) for arg in expr.args))
+                for expr in (statement.left, statement.right):
+                    value = lower(scalar(substitute(expr, active)), parameter, nodes,
+                                  model.source, preserve_structure=True)
+                    if _predicate_degree(value) is None:
+                        fail('event conditions require affine voltage predicates', expr.token)
+                    if dependencies(expr, active)[0] & affected:
+                        fail('event condition may depend on state through the voltage network', expr.token)
+                validate_event_body(statement.then_body, active, affected)
+                validate_event_body(statement.else_body, active, affected)
+            else:
+                if not isinstance(statement, Assignment):
+                    fail('event bodies require assignments or supported conditionals', statement.token)
+                if statement.name in model.genvars:
+                    fail('genvar can only be assigned in its for control', statement.token)
+                expression(statement.rhs)
+                if statement.index is not None:
+                    expression(statement.index, True)
+
+    event_bodies = []
 
     def body(statements, indices, depth=0):
         nonlocal count, iterations
@@ -242,6 +316,7 @@ def unroll_loops(model: Model, parameter):
                 if count > budget:
                     fail('elaborated statement budget (4096) exceeded',statement.token)
                 if isinstance(statement, Event):
+                    event_bodies.append((statement.body, indices))
                     result.append(replace(statement, token=origin(statement.token,indices),
                         body=body(statement.body,indices,depth+1), triggers=tuple(
                             replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
@@ -256,4 +331,29 @@ def unroll_loops(model: Model, parameter):
                 result.append(replace(statement, **updates))
         return tuple(result)
 
-    return body(model.analog,{})
+    expanded = body(model.analog,{})
+    # Inspect already-expanded continuous relations, so separate static vector
+    # bits retain their dependencies when validating an erased event body.
+    relations, affected = [], set()
+    pending = list(expanded)
+    while pending:
+        statement = pending.pop()
+        if isinstance(statement, Conditional):
+            pending.extend((*statement.then_body, *statement.else_body))
+        elif isinstance(statement, ContributionStatement):
+            targets = {node_name(arg, {}) for arg in statement.branch.args
+                       if model.directions.get(str(arg.value).split('[')[0]) not in ('input', 'inout')
+                       and arg.value != '0'}
+            reads, held = dependencies(statement.rhs, {})
+            relations.append((targets, reads))
+            if held:
+                affected |= targets
+    while True:
+        propagated = affected | {target for targets, reads in relations
+                                 if (targets | reads) & affected for target in targets}
+        if propagated == affected:
+            break
+        affected = propagated
+    for statements, indices in event_bodies:
+        validate_event_body(statements, indices, affected)
+    return expanded

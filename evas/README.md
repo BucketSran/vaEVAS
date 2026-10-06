@@ -1,5 +1,7 @@
 # EVAS：电压域 Verilog-A 仿真器
 
+四后端的行为与误差比较见[比较表](../experiments/backends/comparison/README.md)及[维护契约](docs/COMPARISON.md)。新论文集尚未冻结，既有开发集与候选分支证据分别标记；本轮不统计耗时。
+
 EVAS 面向 Verilog-A 行为模型的开发与验证。首要目标是提供开源、可审查的电压域仿真环境，
 让使用者不依赖商业仿真器也能运行和验证目标模型，为 benchmark 提供开源复现路径。
 EVAS 有独立的使用者、验收标准和交付成果；速度优化须保持模型语义和误差要求。
@@ -27,10 +29,15 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 | --- | --- |
 | 静态电压方程 | `solve` 独立求每个样本的工作点；支持仿射关系和受限多项式非线性 |
 | 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定及保持状态控制的 `timer`、事件体条件与顺序赋值 |
-| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd` 和 `ddt` |
+| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd`、有限单实极点 `laplace_np` 和 `ddt` |
 | 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
 | 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
-| 诊断与来源查询 | 可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
+| 诊断与来源查询 | manifest 仅编译预检；可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
+
+当前分支的 `absdelay` 候选可组合两级固定延迟，第一级输入限外部连续 PWL。
+第二级可直接嵌套，或读取同实例的单位增益、零偏置内部别名。
+移位时间误差保留在整段历史的电压包围中，仍受最终节点预算约束；第三层、其他历史组合和历史反馈继续拒绝。
+数学与保守拒绝边界见[两级固定延迟说明](docs/math/operators.md#两级固定-absdelay-的移位历史包围)。
 
 查询入口和身份/截断规则见[诊断说明](docs/diagnostics.md)。
 Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数值与历史仍由一个内核统一管理。
@@ -69,6 +76,27 @@ EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验
 当前的[测试台读取](#spectre-testbench)和[后端对照](../experiments/backends/dvs2-spectre-validation/README.md)
 是这条工作流的已有基础。兼容性证据限于已测模型、配置和仿真器版本；
 通用的自动移交与 EVAS/Spectre 运行时同步接口尚未实现。
+
+## 查询实际包与内核身份
+
+`PYTHONPATH=evas/src python3 -m evas version --json --kernel /path/to/evas-kernel`
+查询所选二进制的身份、SHA-256 与 IR 版本；省略 `--kernel` 时只查询 Python 包。
+内核可直接运行 `evas-kernel --version --json`，无需 manifest 或标准输入。
+缺少构建来源和独立请求协议元数据时明确返回 null；IR 匹配不等于全部运行兼容。
+字段及失败行为见[身份接口](docs/identity.md)。
+
+## 仅编译预检
+
+```sh
+PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
+```
+
+`lint` 检查 manifest 编译字段、源文件读取、参数绑定、受支持源码编译及 IR 资源预算，
+输出 JSON，不查找或启动内核，并明确拒绝 `--kernel` / `--timeout` 执行选项。`lint_passed` 不检查数值请求内容、动态组合支持、
+数值精度或外部仿真器兼容性。例如可编译的 timer/多项式 DAE 组合仍可能在瞬态执行时拒绝。
+诊断只为已登记的 manifest/source I/O、参数依赖/覆盖和资源来源补充分类；
+未登记的 code/kind 保留原消息、位置与额外字段，类别为 `unknown`，不按前缀或消息猜测。
+接口与来源盘点边界见[诊断说明](docs/diagnostics.md)。
 
 ## 构建与运行
 
@@ -138,7 +166,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 
 | 输入 | 当前接受范围 |
 | --- | --- |
-| 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序连接的标量实例；常量参数覆盖；`global 0` |
+| 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
 | 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop |
@@ -147,9 +175,16 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 
 输入允许 `//` 注释、反斜杠续行和跨行括号。所有字段必须被消费。
 未知 options、`iabstol`、`errpreset`、sine、理想跳变、浮动源、R/C/I 器件、
-子电路指令、电流探针和 `.scs` 向量连接均明确拒绝；不把它们当作可忽略的文本。
+子电路指令、电流探针、总线名/范围/拼接/切片等连接语法均明确拒绝；不把它们当作可忽略的文本。
 VA 的自定义 include 仍使用显式 source 清单；适配器只加载 `ahdl_include` 列出的文件。
 重复源、重复设置、非法源时刻和未知 save 节点在运行前拒绝。
+
+静态向量端口按每个实例的有效参数展开，索引按声明方向依次连接。
+例如 `input [1:0] u; output [0:1] y;` 的 `DUT (a b c d) bus`
+对应 `u[1]=a,u[0]=b,y[0]=c,y[1]=d`；列表长度必须与展开后的端口数相同。
+参数宽度、负/非零索引和单元素范围复用已有 VA 绑定规则。
+见[输入契约与 Spectre 准入证据](validation/SCS_VECTOR_CONTRACT.md)及
+[公共入口回归](tests/test_scs_vectors.py)。
 
 DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的值。
 pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
@@ -211,7 +246,10 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
   归并为一次已有的常量初始化体。重复叶不重复执行，也不生成零时刻 timer。
-  独立的分析限定初始化、初始化与 cross/timer 混合 OR、依赖电压的初始化仍拒绝。
+  另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
+  后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
+  混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
+  纯初始化 OR 保持已有规则；详见[初始化/cross 契约](docs/math/events.md#initial-cross)。
 
 依据是 [Verilog-AMS 2.4 LRM](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的参数范围、向量连接和全局事件规则（§3.4、§5.10.2、§6）。整数隐式转换与分析生命周期
@@ -243,12 +281,17 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值、累加贡献和 `cross/timer` 事件（含 OR）。
 事件参数与体内表达式代入各层循环下标，再进入既有事件内核；不同展开事件保留独立来源，
-同刻冲突写入仍拒绝。事件体内的条件赋值可用；模拟条件下的事件、循环内 `initial_step`
-以及事件体内的循环仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
+同刻冲突写入仍拒绝。监测事件体内支持实例常量控制的静态 `genvar for`，
+保持顺序赋值与实例隔离；条件赋值可用。事件体贡献、历史调用、嵌套事件和运行时循环
+仍拒绝，空循环不隐藏非法事件体。模拟条件下的事件及循环内 `initial_step` 仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
 总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
 范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
+
+`laplace_np` 当前只接受常量单项分子、一个有限负实极点、零虚部且不提供 epsilon。
+只有 `-1/p` 能精确表示为 binary64 才转换为既有 `laplace_nd`；其余域明确拒绝。
+独立解析答案、调用点隔离和未扩大的依赖限制见[单极点契约](docs/math/operators.md#laplace_np)。
 
 动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
 [事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，
@@ -296,7 +339,8 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 
 ## 模块与接口
 
-Python 的公开接口：`compile_sources(sources, instances) -> Program`，
+仅编译预检接口为 `evas.lint.lint_manifest(path) -> dict`。
+Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
@@ -469,3 +513,7 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 不代表当前版本、首次求解、瞬态或跨后端速度。
 
 </details>
+
+## 保存完整运行结果
+
+使用 `python3 -m evas.results run MANIFEST --kernel PATH --out NEW_DIR` 保存带身份的完整 JSON、CSV 和源码快照。只有最后写入的 `manifest.json` 标记为 `complete` 才表示完整产物；失败保留诊断与部分文件。单位、精度、失败处理和使用示例见[运行产物契约](docs/results.md)。

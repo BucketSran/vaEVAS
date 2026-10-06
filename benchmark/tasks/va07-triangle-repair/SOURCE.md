@@ -39,6 +39,7 @@ python3 -B benchmark/checkers/triangle_evas.py \
 ```
 
 harness checkout 需要包含 `alphaapollo/common/execution/chips/current_evas.py`。
+普通主 checkout 不一定含该未发布接口；执行前核对实际路径与源码身份，不能只根据目录名推定可用。
 首次执行前保留构建命令、输出与 Rust/Cargo 版本。程序分别给原网格和补充网格
 60 秒执行预算；前一轮执行故障时停止，整题不会被记为模型失败。
 退出码 `0` 为本配置开发验收通过，`1` 为独立判据检出的模型失败，`2` 为执行故障或未决。

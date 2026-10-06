@@ -60,6 +60,22 @@ fn diagnostic_budget(name: &str, default: usize) -> Result<usize, Error> {
 }
 
 fn main() {
+    if std::env::args().skip(1).collect::<Vec<_>>() == ["--version", "--json"] {
+        let identity = serde_json::json!({
+            "identity_version": 1,
+            "name": env!("CARGO_PKG_NAME"),
+            "version": env!("CARGO_PKG_VERSION"),
+            "build_revision": null,
+            "ir_schema_version": evas_kernel::ir::SCHEMA_VERSION,
+            "request_protocol_version": null,
+            "platform": {"os": std::env::consts::OS, "arch": std::env::consts::ARCH}
+        });
+        if serde_json::to_writer(io::stdout().lock(), &identity).is_err() {
+            eprintln!("failed to write kernel identity");
+            std::process::exit(1);
+        }
+        return;
+    }
     let path = std::env::var_os("EVAS_DIAGNOSTICS_PATH");
     let (result, mut report) = if path.is_some() {
         let options = (|| {

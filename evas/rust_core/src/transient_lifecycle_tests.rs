@@ -764,3 +764,66 @@ fn history_calendar_failure_preserves_frame_and_retry_matches_clean() {
     );
     assert_eq!(calendar[0].time, 0.5);
 }
+
+#[test]
+fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
+    let origin = |column| json!({"source":"cascade.va","line":1,"column":column,"instance":"dut"});
+    let program: Program = serde_json::from_value(json!({
+        "schema_version":SCHEMA_VERSION,"nodes":["0","u","y"],
+        "operators":[
+            {"kind":"abs_delay","input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},"delay":0.1,"origin":origin(1)},
+            {"kind":"abs_delay","input":{"op":"operator","operator":0},"delay":0.2,"origin":origin(2)}],
+        "contributions":[{"branch":{"instance":"dut","local_positive":"p","local_negative":"r","kind":"voltage"},
+            "positive":2,"negative":0,"rhs":{"op":"multiply","left":{"op":"affine","constant":1073741824.0,"terms":[]},"right":{"op":"operator","operator":1}},"origin":origin(3)}]
+    })).unwrap();
+    let model = EventModel::new(
+        program,
+        vec!["u".into()],
+        Tolerances {
+            absolute: 1e-10,
+            relative: 0.0,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
+            output_times: vec![0.0, 3.0],
+            stop: 3.0,
+            max_step: 3.0,
+        },
+        1,
+    )
+    .unwrap();
+    let operators = Operators::new(&model.program, &trajectory, &model.driven, &[]).unwrap();
+    let circuit = model
+        .circuit_with(&[], &operators.values(0.0).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time: 0.0,
+        solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
+        circuit,
+        operators,
+        states: vec![],
+        state_bounds: vec![],
+    };
+    let original = accepted.operators.bounds(1.0).unwrap();
+    let voltages = accepted.solution.voltages.clone();
+    assert_eq!(
+        prepare_event(&model, &trajectory, &accepted, 1.0, &[])
+            .err()
+            .unwrap()
+            .kind,
+        "waveform_accuracy"
+    );
+    let discarded = prepare_event(&model, &trajectory, &accepted, 0.25, &[]).unwrap();
+    assert_eq!(discarded.solution.voltages[2], 0.0);
+    drop(discarded);
+    let retry = prepare_event(&model, &trajectory, &accepted, 0.25, &[]).unwrap();
+    assert_eq!(retry.solution.voltages[2], 0.0);
+    assert_eq!(retry.operators.bounds(1.0).unwrap(), original);
+    assert_eq!(accepted.time, 0.0);
+    assert_eq!(accepted.solution.voltages, voltages);
+    assert_eq!(accepted.operators.bounds(1.0).unwrap(), original);
+    assert_eq!(accepted.operators.values(0.0).unwrap(), [0.0, 0.0]);
+}

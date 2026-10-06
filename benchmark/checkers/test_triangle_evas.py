@@ -97,6 +97,25 @@ class TaskAdapter(unittest.TestCase):
                 self.assertFalse(result["observation"]["passed"])
         self.assertEqual(sampled[0], sampled[1])
 
+    def test_grid_discrepancy_does_not_hide_proved_waveform_failure(self):
+        requests, _ = adapter.prepare_requests(case())
+        for base_shift, obs_shift, expected in [
+            (0.1, 0, "fail"),
+            (0, 0.1, "fail"),
+            (0.6e-6, -0.6e-6, "inconclusive"),
+        ]:
+            with self.subTest(base_shift=base_shift, obs_shift=obs_shift):
+                results = {
+                    name: waveform(r["transient"]["output_times"])
+                    for name, r in requests.items()
+                }
+                for name, shift in [("baseline", base_shift), ("observation", obs_shift)]:
+                    for row in results[name]["solutions"]:
+                        row["voltages"][0] += shift
+                result = adapter.assess(results["baseline"], results["observation"], case())
+                self.assertGreater(result["common_grid_max_voltage_difference_v"], case()["wave_atol"])
+                self.assertEqual(result["verdict"], expected)
+
     def test_incomplete_results_are_not_model_failures(self):
         requests, _ = adapter.prepare_requests(case())
         baseline = waveform(requests["baseline"]["transient"]["output_times"])

@@ -5,6 +5,7 @@ operator/state IDs and output order belong to Compilation; no loop-captured stat
 """
 from dataclasses import dataclass, field
 import math
+from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
@@ -98,7 +99,11 @@ class InstanceCompiler:
         for statement in self.model.initial:
             if statement.name not in self.state_ids or statement.name in self.initials:
                 raise CompileError(f"{self.model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
-            value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            try:
+                value = lower(statement.rhs, self.parameter, {}, self.model.source)
+            except CompileError as exc:
+                raise CompileError(f'initial_step values must be instance constants: {exc}',
+                                   code='unsupported_initial_event', token=statement.token) from exc
             if not isinstance(value, Affine) or value.terms:
                 raise CompileError("initial_step values must be instance constants")
             if self.model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
@@ -127,24 +132,43 @@ class InstanceCompiler:
         return isinstance(expression, Binary) and self.integral(expression.left) and self.integral(expression.right)
 
     def waveform(self, expr, resolve):
+        if expr.op == "laplace_np" and len(expr.args) != 3:
+            raise CompileError(f"{self.model.source}:{expr.token.line}:{expr.token.column}: laplace_np epsilon is unsupported; omit the tolerance argument")
         input_nodes = {} if expr.op == "transition" else self.node_ids
+        def nested_delay(nested):
+            if nested.op != "absdelay":
+                raise CompileError("absdelay nesting is limited to fixed absdelay stages")
+            return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "ddt") else None,
+                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_delay if expr.op == "absdelay" else None,
                       preserve_structure=True)
-        if expr.op == "laplace_nd":
+        if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):
                 if array.op != "array":
-                    raise CompileError(f"{self.model.source}:{array.token.line}:{array.token.column}: laplace_nd coefficients must use standard constant array literals")
+                    raise CompileError(f"{self.model.source}:{array.token.line}:{array.token.column}: {expr.op} coefficients must use standard constant array literals")
                 result = []
                 for item in array.args:
                     value = lower(item, self.parameter, {}, self.model.source)
                     if not isinstance(value, Affine) or value.terms:
-                        raise CompileError(f"{self.model.source}:{item.token.line}:{item.token.column}: laplace_nd coefficients must be instance constants")
+                        raise CompileError(f"{self.model.source}:{item.token.line}:{item.token.column}: {expr.op} coefficients must be instance constants")
                     result.append(value.constant)
                 return tuple(result)
             numerator = coefficients(expr.args[1])
             denominator = coefficients(expr.args[2])
-            if not numerator or not 2 <= len(denominator) <= 9 or len(numerator) > len(denominator):
+            if expr.op == "laplace_np":
+                if len(numerator) != 1 or len(denominator) != 2:
+                    raise CompileError("laplace_np supports one constant numerator and one real pole pair")
+                pole, imaginary = denominator
+                if not math.isfinite(numerator[0]) or not math.isfinite(pole) or pole >= 0 or imaginary != 0:
+                    raise CompileError("laplace_np requires a finite numerator and one finite negative real pole with zero imaginary part")
+                coefficient = -1.0 / pole
+                # A rounded product can equal -1 even for an inexact reciprocal
+                # (e.g. pole=-3). Compare the original binary64 rationals.
+                if (not math.isfinite(coefficient) or coefficient <= 0 or
+                        Fraction(coefficient) != -1 / Fraction(pole)):
+                    raise CompileError("laplace_np reciprocal coefficient must be exactly representable as finite positive binary64")
+                denominator = (1.0, coefficient)
+            elif not numerator or not 2 <= len(denominator) <= 9 or len(numerator) > len(denominator):
                 raise CompileError("laplace_nd requires a proper rational filter of order 1 through 8")
             settings = ()
         else:
@@ -159,7 +183,7 @@ class InstanceCompiler:
             self.compilation.operators.append(Idt(value, settings[0].constant, origin, reset))
         elif expr.op == "ddt":
             self.compilation.operators.append(Ddt(value, origin))
-        elif expr.op == "laplace_nd":
+        elif expr.op in ("laplace_nd", "laplace_np"):
             self.compilation.operators.append(LaplaceNd(value, numerator, denominator, origin))
         elif expr.op == "idtmod":
             ic, modulus, offset = (v.constant for v in settings)
