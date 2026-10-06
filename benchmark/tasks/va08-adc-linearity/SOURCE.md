@@ -52,7 +52,8 @@ runner记录 `spectre -W` 实际输出与返回码，非零或空版本输出停
 两份源码身份、输入/波形身份和逐场景判分。PSF逐行解析并复用signal key，不驻留全文及splitlines副本。
 缺许可证、原始总线不符合同、checker错误、编译或超时导致未完成仿真均保持未评分。
 完整仿真后格式、激励及统计不符产生有结构化证据的candidate失败。
-版本尚未实际运行核验，不能把准备文件当执行证据。
+首次实际执行已记录 `spectre -W` 的 `21.1.0.509.isr12` 与返回码0；
+该身份仅绑定保留的失败参考job，不能把新修正包的准备文件当执行证据。
 
 私有 `tests/cases.json`、checker、reference 不复制进候选 Docker 镜像。
 候选仅获得 `environment/public` 开发器件。Spectre执行时使用受控写文件合同，
