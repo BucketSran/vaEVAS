@@ -58,7 +58,16 @@ def scalarize_nodes(model, parameters):
         fail('total electrical node budget (4096) exceeded')
     groups['0'] = ('0',)
 
+    # This cache belongs to one instance's scalarization, with fixed bounds.
+    # Keep the input alive as well as its replacement to avoid ID reuse.
+    expressions = {}
     def expression(expr):
+        key = id(expr)
+        if key not in expressions:
+            expressions[key] = (expr, transform_expression(expr))
+        return expressions[key][1]
+
+    def transform_expression(expr):
         if expr.op == 'node':
             bits = ranges.get(expr.value)
             if expr.args:

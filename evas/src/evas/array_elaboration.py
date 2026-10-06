@@ -47,7 +47,16 @@ def scalarize_arrays(model, parameter):
             fail(f'array index {value} is outside {name!r} declaration', index.token)
         return f'{name}[{value}]'
 
+    # This cache belongs to one instance's scalarization, with fixed bounds.
+    # Keep the input alive as well as its replacement to avoid ID reuse.
+    expressions = {}
     def expression(expr):
+        key = id(expr)
+        if key not in expressions:
+            expressions[key] = (expr, transform_expression(expr))
+        return expressions[key][1]
+
+    def transform_expression(expr):
         if expr.op == 'index':
             return Expr('parameter', element(expr.value, expr.args[0], expr.token), (), expr.token)
         if expr.op == 'parameter' and expr.value in ranges:

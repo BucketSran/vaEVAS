@@ -176,13 +176,23 @@ def unroll_loops(model: Model, parameter):
     def fail(message, token):
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
-    def substitute(expr, indices):
+    def substitute(expr, indices, memo=None):
+        # One fixed loop-index environment per root substitution. Never share
+        # replacements across iterations, statements or instance bindings.
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key not in memo:
+            memo[key] = (expr, substitute_value(expr, indices, memo))
+        return memo[key][1]
+
+    def substitute_value(expr, indices, memo):
         if expr.op == 'parameter' and expr.value in indices:
             return Expr('number', float(indices[expr.value]), (), expr.token)
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
             fail('expanded call-site identity depth budget exceeded',expr.token)
-        return replace(expr, args=tuple(substitute(arg,indices) for arg in expr.args), expansion=path)
+        return replace(expr, args=tuple(substitute(arg,indices,memo) for arg in expr.args), expansion=path)
 
     def origin(token, indices):
         path = (*token.expansion, *indices.items())

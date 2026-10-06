@@ -87,9 +87,12 @@ class Expr:
 
 
 def contains_operator(expr: Expr) -> bool:
-    pending = [expr]
+    pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
         if current.op in OPERATOR_NAMES:
             return True
         pending.extend(current.args)
@@ -97,9 +100,12 @@ def contains_operator(expr: Expr) -> bool:
 
 
 def contains_decision(expr: Expr) -> bool:
-    pending = [expr]
+    pending, seen = [expr], set()
     while pending:
         current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
         if current.op in DECISION_NAMES:
             return True
         pending.extend(current.args)
