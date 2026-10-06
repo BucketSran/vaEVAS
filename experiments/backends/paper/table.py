@@ -84,13 +84,27 @@ def final_execution(record, execution, manifest=None):
         raise ValueError('Final EXECUTION row must be unique and identical to selected execution')
 
 
-def execution_files(record, execution, started):
+def execution_files(record, execution, started, checker):
     identity = record['identity']
     lane = read_artifact(identity['lane_started'])
     inputs = read_artifact(identity['input_manifest'])
     manifest = read_artifact(identity['execution_manifest'])
     if lane.get('backend') != record['backend'] or lane.get('input_manifest_sha256') != identity['input_manifest']['sha256'] or lane.get('fixed_conditions') != [c['id'] for c in BATCH['cards']] or inputs.get('core.json', {}).get('sha256') != CARDS_SHA:
         raise ValueError('Frozen input/lane identity mismatch')
+    input_root = Path(identity['input_manifest']['path']).parent
+    frozen = {}
+    for name in ('ADAPTER_IDENTITY.json', 'CHECKER_IDENTITY.json'):
+        frozen[name] = read_artifact({'path': str(input_root / name),
+                                     'sha256': inputs.get(name, {}).get('sha256')})
+        if not isinstance(frozen[name], dict):
+            raise ValueError('Frozen identity must be an object: ' + name)
+    runner_sha = frozen['ADAPTER_IDENTITY.json'].get('experiments/backends/paper/runner.py')
+    if not re.fullmatch('[0-9a-f]{64}', str(runner_sha or '')) or lane.get('runner_sha256') != runner_sha:
+        raise ValueError('Lane runner identity differs from frozen adapter')
+    for name in ('criteria.py', 'oracle.py'):
+        digest = frozen['CHECKER_IDENTITY.json'].get('evas/validation/paper/' + name)
+        if not re.fullmatch('[0-9a-f]{64}', str(digest or '')) or checker['files'].get(name) != digest:
+            raise ValueError('Assessment checker differs from frozen checker: ' + name)
     lane_root = Path(identity['lane_started']['path']).parent
     if Path(identity['execution_manifest']['path']).parent.resolve() != lane_root.resolve():
         raise ValueError('Execution FILE_MANIFEST must belong to its lane')
@@ -99,6 +113,18 @@ def execution_files(record, execution, started):
     if identity.get('observation'):
         refs.append(identity['observation'])
     work = Path(identity['condition_started']['path']).parent
+    if execution.get('waveform') or execution.get('status') == 'waveform_available':
+        waveform = execution.get('waveform')
+        if not isinstance(waveform, str) or not waveform or Path(waveform).is_absolute() or '..' in Path(waveform).parts:
+            raise ValueError('Waveform must be a relative path within its condition directory')
+        waveform_path = (work / waveform).resolve()
+        try:
+            waveform_path.relative_to(work.resolve())
+        except ValueError:
+            raise ValueError('Waveform outside its condition directory') from None
+        waveform_ref = {'path': str(waveform_path), 'sha256': execution.get('waveform_sha256')}
+        artifact_bytes(waveform_ref)
+        refs.append(waveform_ref)
     card = next(c for c in BATCH['cards'] if c['id'] == record['condition_id'])
     source_sha = hashlib.sha256(card['source'].encode()).hexdigest()
     expected_work = 'runs/' + record['backend'] + '/' + record['condition_id']
@@ -150,7 +176,7 @@ def validate(record):
         raise ValueError('Execution identity requires source_revision/tool/condition_started/lane_started/input_manifest/execution_manifest/method/availability')
     if identity['availability'] not in ('local-only', 'restricted', 'public'):
         raise ValueError('Unknown availability')
-    if identity['availability'] == 'public' and not identity.get('public_url', '').startswith('https://'):
+    if identity['availability'] == 'public' and (not isinstance(identity.get('public_url'), str) or not identity['public_url'].startswith('https://')):
         raise ValueError('Public availability requires public_url')
     assessment = read_artifact(record.get('assessment'))
     execution = read_artifact(record.get('execution'))
@@ -163,10 +189,15 @@ def validate(record):
     if assessment.get('execution_sha256') != record['execution']['sha256']:
         raise ValueError('Assessment execution hash mismatch')
     checker = assessment.get('checker_identity', {})
-    if checker.get('files', {}).get('core-v1.json') != CARDS_SHA:
+    if not isinstance(checker, dict) or not isinstance(checker.get('files'), dict) or not isinstance(checker.get('runtime'), dict):
+        raise ValueError('Missing checker files/runtime identity')
+    if checker['files'].get('core-v1.json') != CARDS_SHA:
         raise ValueError('Assessment card identity mismatch')
     if not re.fullmatch('[0-9a-f]{64}', str(checker.get('sha256', ''))):
         raise ValueError('Missing checker identity')
+    dependency = {key: checker[key] for key in ('files', 'runtime')}
+    if hashlib.sha256(json.dumps(dependency, sort_keys=True).encode()).hexdigest() != checker['sha256']:
+        raise ValueError('Checker dependency digest mismatch')
     status = assessment.get('status')
     if not isinstance(status, str) or len(status) != 1 or status not in STATUSES:
         raise ValueError('Unknown assessment status')
@@ -193,7 +224,7 @@ def validate(record):
             raise ValueError('Completed assessment requires waveform execution')
         observation = identity.get('observation')
         read_artifact(observation)
-        if execution.get('observation', {}).get('sha256') != observation['sha256']:
+        if not isinstance(execution.get('observation'), dict) or execution['observation'].get('sha256') != observation['sha256']:
             raise ValueError('Execution/assessment observation hash mismatch')
         if assessment.get('input_observation_sha256') != observation['sha256']:
             raise ValueError('Assessment input observation hash mismatch')
@@ -204,11 +235,13 @@ def validate(record):
         expected = 'F' if 'F' in states else 'I' if 'I' in states else 'P'
         if status != expected:
             raise ValueError('Assessment/property status mismatch')
-    execution_files(record, execution, started)
+    execution_files(record, execution, started, checker)
     return status, assessment, tool
 
 
 def render(records, allow_pending=False):
+    if not isinstance(records, list) or any(not isinstance(record, dict) for record in records):
+        raise ValueError('Records must be an array of objects')
     cards = {card['id']: card for card in BATCH['cards']}
     if len(BATCH['cards']) != 12 or len(cards) != 12 or BATCH['counting']['declared_N'] != 12:
         raise ValueError('Expected fixed N=12 design')

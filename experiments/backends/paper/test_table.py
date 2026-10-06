@@ -13,13 +13,27 @@ class TableControls(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
+        self.runner_sha = '7' * 64
+        self.checker_files = {'criteria.py': '8' * 64, 'oracle.py': '9' * 64, 'core-v1.json': table.CARDS_SHA}
         self.manifest = {'core.json': {'sha256': table.CARDS_SHA}}
+        for name, content in (
+                ('ADAPTER_IDENTITY.json', {'experiments/backends/paper/runner.py': self.runner_sha}),
+                ('CHECKER_IDENTITY.json', {'evas/validation/paper/' + key: value for key, value in self.checker_files.items() if key != 'core-v1.json'})):
+            path = self.root / name
+            path.write_text(json.dumps(content))
+            self.manifest[name] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
         for backend in table.BACKENDS:
             for card in table.BATCH['cards']:
                 work = 'runs/' + backend + '/' + card['id']
                 self.manifest[work + '/dut.va'] = {'sha256': hashlib.sha256(card['source'].encode()).hexdigest()}
                 self.manifest[work + '/tb.deck'] = {'sha256': hashlib.sha256(('fixture deck ' + work).encode()).hexdigest()}
         self.input_manifest = self.artifact('INPUT_MANIFEST.json', self.manifest)
+
+    def checker(self, **changes):
+        dependency = {'files': self.checker_files, 'runtime': {'python': 'historical-fixture', 'math_sha256': '6' * 64}}
+        dependency.update(changes)
+        return {'version': 'paper-criteria-v1', **dependency,
+                'sha256': hashlib.sha256(json.dumps(dependency, sort_keys=True).encode()).hexdigest()}
 
     def artifact(self, name, content):
         path = self.root / (str(len(list(self.root.iterdir()))) + '-' + name)
@@ -47,7 +61,7 @@ class TableControls(unittest.TestCase):
             entries = {str(Path(ref['path']).relative_to(self.root)): {'sha256': ref['sha256']} for ref in refs if ref}
             entries['EXECUTION.json'] = {'sha256': execution_sha}
             work = Path(identity['condition_started']['path']).parent
-            for name in ('dut.va', 'tb.deck'):
+            for name in ('dut.va', 'tb.deck', 'waveform.csv', 'psf/tran.tran.tran'):
                 if (work / name).is_file():
                     entries[str((work / name).relative_to(self.root))] = {'sha256': hashlib.sha256((work / name).read_bytes()).hexdigest()}
             identity['execution_manifest'] = self.artifact('FILE_MANIFEST.json', entries)
@@ -62,12 +76,15 @@ class TableControls(unittest.TestCase):
         run.mkdir(parents=True)
         (run / 'dut.va').write_text(card['source'])
         (run / 'tb.deck').write_text('fixture deck ' + work)
+        waveform = run / 'waveform.csv'
+        waveform.write_text('time,out\n0,1\n')
         observation = self.artifact('observation.json', {'condition_id': condition})
         diagnostic = self.artifact('compiler-diagnostic.json', {'stderr': 'fixture compiler: operator unsupported'}) if status == 'U' else None
         execution_status = {'U': 'compile_failed', 'X': 'runtime_timeout', 'T': 'not_run'}.get(status, 'waveform_available')
         execution = self.artifact('RESULT.json', {
             'condition': condition, 'backend': backend, 'status': execution_status,
             'source_sha256': source_sha, 'work': work, 'deck': 'tb.deck',
+            'waveform': 'waveform.csv', 'waveform_sha256': hashlib.sha256(waveform.read_bytes()).hexdigest(),
             'condition_identity': hashlib.sha256(json.dumps(card, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
             'failure_stage': 'compile' if status == 'U' else 'simulate',
             'stages': [{'stage': 'compile', 'returncode': 1, 'log_sha256': diagnostic['sha256']}] if diagnostic else [],
@@ -76,7 +93,7 @@ class TableControls(unittest.TestCase):
         assessment_data = {
             'condition_id': condition, 'execution_state': status if status in 'UXT' else 'completed', 'status': status,
             'properties': [{'name': 'voltage:out', 'status': status}],
-            'checker_identity': {'sha256': 'a' * 64, 'files': {'core-v1.json': table.CARDS_SHA}},
+            'checker_identity': self.checker(),
             'input_observation_sha256': observation['sha256'] if status not in 'UXT' else None,
             'execution_sha256': execution['sha256'],
         }
@@ -92,7 +109,7 @@ class TableControls(unittest.TestCase):
         started_path = run / 'STARTED.json'
         started_path.write_text(json.dumps(started_data))
         started = {'path': str(started_path), 'sha256': hashlib.sha256(started_path.read_bytes()).hexdigest()}
-        lane_started = self.artifact('lane-STARTED.json', {'backend': backend,
+        lane_started = self.artifact('lane-STARTED.json', {'backend': backend, 'runner_sha256': self.runner_sha,
             'input_manifest_sha256': self.input_manifest['sha256'],
             'fixed_conditions': [c['id'] for c in table.BATCH['cards']]})
         return {'condition_id': condition, 'backend': backend, 'assessment': assessment,
@@ -100,6 +117,113 @@ class TableControls(unittest.TestCase):
                 'tool': tool, 'condition_started': started, 'lane_started': lane_started,
                 'input_manifest': self.input_manifest, 'observation': observation, 'method': 'synthetic control only',
                 'availability': 'local-only'}}
+
+    def test_frozen_runner_checker_and_dependency_digest_are_bound(self):
+        for change in ('runner', 'criteria.py', 'oracle.py', 'digest'):
+            with self.subTest(change=change):
+                record = self.record()
+                if change == 'runner':
+                    lane = json.loads(Path(record['identity']['lane_started']['path']).read_text())
+                    lane['runner_sha256'] = 'b' * 64
+                    record['identity']['lane_started'] = self.artifact('mixed-runner-STARTED.json', lane)
+                else:
+                    assessment = json.loads(Path(record['assessment']['path']).read_text())
+                    if change == 'digest':
+                        assessment['checker_identity']['sha256'] = 'b' * 64
+                    else:
+                        assessment['checker_identity'] = self.checker(files={**self.checker_files, change: 'b' * 64})
+                    record['assessment'] = self.artifact('mixed-checker.json', assessment)
+                with self.assertRaises(ValueError):
+                    self.report([record], allow_pending=True)
+
+    def test_frozen_identity_json_bytes_are_verified(self):
+        for name in ('ADAPTER_IDENTITY.json', 'CHECKER_IDENTITY.json'):
+            with self.subTest(name=name):
+                record = self.record()
+                path = self.root / name
+                original = path.read_bytes()
+                path.write_text('{}')
+                with self.assertRaises(ValueError):
+                    self.report([record], allow_pending=True)
+                path.write_bytes(original)
+
+    def test_historical_valid_frozen_checker_is_accepted(self):
+        # These fixture hashes and runtime intentionally differ from this checkout.
+        self.assertIn('1/0/0/0/0/11', self.report([self.record()], allow_pending=True))
+
+    def test_malformed_record_public_url_and_observation_are_ValueError(self):
+        for bad in ({}, [None]):
+            with self.assertRaises(ValueError):
+                table.render(bad, allow_pending=True)
+        record = self.record()
+        record['identity'].update(availability='public', public_url=[])
+        with self.assertRaises(ValueError):
+            self.report([record], allow_pending=True)
+        record = self.record()
+        execution = json.loads(Path(record['execution']['path']).read_text())
+        execution['observation'] = 'not an object'
+        record['execution'] = self.artifact('bad-observation-record.json', execution)
+        assessment = json.loads(Path(record['assessment']['path']).read_text())
+        assessment['execution_sha256'] = record['execution']['sha256']
+        record['assessment'] = self.artifact('assessment.json', assessment)
+        with self.assertRaises(ValueError):
+            self.report([record], allow_pending=True)
+
+    def test_frozen_waveform_deleted_or_changed_is_rejected(self):
+        for change in ('delete', 'bytes'):
+            with self.subTest(change=change):
+                record = self.record()
+                self.report([record], allow_pending=True)
+                waveform = Path(record['identity']['condition_started']['path']).parent / 'waveform.csv'
+                if change == 'delete':
+                    waveform.unlink()
+                else:
+                    waveform.write_text('changed raw output')
+                with self.assertRaises((ValueError, FileNotFoundError)):
+                    table.render([record], allow_pending=True)
+
+    def test_waveform_digest_and_condition_path_are_checked(self):
+        for change in ('digest', 'escape', 'absolute', 'manifest'):
+            with self.subTest(change=change):
+                record = self.record()
+                execution = json.loads(Path(record['execution']['path']).read_text())
+                work = Path(record['identity']['condition_started']['path']).parent
+                if change == 'digest':
+                    execution['waveform_sha256'] = 'b' * 64
+                elif change == 'escape':
+                    execution['waveform'] = '../waveform.csv'
+                    (work.parent / 'waveform.csv').write_bytes((work / 'waveform.csv').read_bytes())
+                elif change == 'absolute':
+                    execution['waveform'] = str(work / 'waveform.csv')
+                record['execution'] = self.artifact('final-record.json', execution)
+                assessment = json.loads(Path(record['assessment']['path']).read_text())
+                assessment['execution_sha256'] = record['execution']['sha256']
+                record['assessment'] = self.artifact('assessment.json', assessment)
+                if change == 'manifest':
+                    self.report([record], allow_pending=True)
+                    ref = record['identity']['execution_manifest']
+                    manifest = json.loads(Path(ref['path']).read_text())
+                    del manifest[str((work / 'waveform.csv').relative_to(self.root))]
+                    record['identity']['execution_manifest'] = self.artifact('bad-manifest.json', manifest)
+                    call = lambda: table.render([record], allow_pending=True)
+                else:
+                    call = lambda: self.report([record], allow_pending=True)
+                with self.assertRaises(ValueError):
+                    call()
+
+    def test_spectre_nested_waveform_is_accepted(self):
+        record = self.record(backend='spectre')
+        work = Path(record['identity']['condition_started']['path']).parent
+        waveform = work / 'psf/tran.tran.tran'
+        waveform.parent.mkdir()
+        waveform.write_bytes((work / 'waveform.csv').read_bytes())
+        execution = json.loads(Path(record['execution']['path']).read_text())
+        execution['waveform'] = 'psf/tran.tran.tran'
+        record['execution'] = self.artifact('final-record.json', execution)
+        assessment = json.loads(Path(record['assessment']['path']).read_text())
+        assessment['execution_sha256'] = record['execution']['sha256']
+        record['assessment'] = self.artifact('assessment.json', assessment)
+        self.assertIn('0/0/0/0/0/12 | 1/0/0/0/0/11', self.report([record], allow_pending=True))
 
     def test_partial_batch_keeps_all_denominators_and_card_design_separate(self):
         all_pending = self.report([], allow_pending=True)
@@ -230,7 +354,7 @@ class TableControls(unittest.TestCase):
                     second['identity']['condition_started']['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
                 elif changed == 'checker':
                     assessment = json.loads(Path(second['assessment']['path']).read_text())
-                    assessment['checker_identity']['sha256'] = 'b' * 64
+                    assessment['checker_identity'] = self.checker(runtime={'python': 'different-runtime'})
                     second['assessment'] = self.artifact('different-checker.json', assessment)
                 else:
                     second['identity']['input_manifest'] = self.artifact('different-input-manifest.json', {**self.manifest, 'new-file': {'sha256': 'c' * 64}})

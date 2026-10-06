@@ -114,9 +114,10 @@ SI-01 和 combination 均保留独立主组。设计卡的状态与本批实际�
 每后端完整列出 P/F/U/X/I/T，细项链接保留 checker 原有误差、不确定度和
 claim limit，不计算跨性质的最大误差比或计时。
 
-先调用 `criteria.assess` 或 `assess_observation`，collector 在其返回字典
+先等待 lane 完成收尾，取得 `final-record-<condition>.json` 与 FILE_MANIFEST，
+再调用 `criteria.assess` 或 `assess_observation`，collector 在其返回字典
 外层追加 `execution_sha256`，P/F/I 还须追加 `input_observation_sha256`，
-分别为此次实际读取的 RESULT.json 和 observation.json 原字节哈希，再保存
+分别为此次终态 final-record 和实际读取的 observation.json 原字节哈希，再保存
 assessment JSON。不得用新文件哈希给旧 assessment 重新贴身份。criteria 本体
 不生成这些执行来源字段，也不需修改。再建立 records.json 数组。每个已评估条目使用以下结构；`path` 相对
 records.json，`sha256` 必须是对应实际文件的 SHA256。哈希占位符不能运行。
@@ -127,7 +128,7 @@ records.json，`sha256` 必须是对应实际文件的 SHA256。哈希占位符�
     "condition_id": "VR-01",
     "backend": "evas",
     "assessment": {"path": "assessment/VR-01.json", "sha256": "ACTUAL_SHA256"},
-    "execution": {"path": "evas/runs/VR-01/RESULT.json", "sha256": "ACTUAL_SHA256"},
+    "execution": {"path": "evas/final-record-VR-01.json", "sha256": "ACTUAL_SHA256"},
     "identity": {
       "source_revision": "ACTUAL_EVAS_SOURCE_HEAD_OR_unknown",
       "tool": {"path": "evas/TOOL_IDENTITY.json", "sha256": "ACTUAL_SHA256"},
@@ -174,16 +175,25 @@ path/sha256。diagnostic 须为 execution.stages 中非零退出 compile 阶段�
 
 同一后端的已执行条件必须具有相同的生产源码 revision、稳定工具身份、
 完整 checker identity 和输入冻结 manifest 身份；所有后端使用同一 checker。
-2+10 可分批，但不能拼接不同实现/判据/冻结输入的有利结果。工具身份投影
+2+10 可分批，但不能拼接不同实现/判据/冻结输入的有利结果。
+汇总器先按 INPUT_MANIFEST 核验冻结 ADAPTER_IDENTITY.json 和
+CHECKER_IDENTITY.json 的原字节；lane.runner_sha256 须匹配冻结的 runner.py，
+assessment 的 criteria.py/oracle.py 摘要须匹配该冻结 checker，并按
+criteria.identity 的 `json.dumps({files, runtime}, sort_keys=True)` 重算顶层摘要。
+此处核验历史冻结快照，不要求 checker 与当前工作区版本相同；不认证 collector
+提供字段的真实性，也不防止 collector 全部重造证据。工具身份投影
 使用 runner 已保存的 profile_identity、kernel/binary/image 身份、实际版本、
 interpreter、环境身份和 compiler flags；版本 probe 的时戳、argv、日志收据
 不参与工具相等判断。各次 TOOL_IDENTITY 原字节哈希仍分别保留在表中。
 
-condition STARTED、TOOL_IDENTITY、RESULT 和原始 source/deck 必须属于
-该 lane 的 FILE_MANIFEST；源码还须与 RESULT.source_sha256、card.source
+condition STARTED、TOOL_IDENTITY、final-record 和原始 source/deck 必须属于
+该 lane 的 FILE_MANIFEST；源码还须与 execution.source_sha256、card.source
 原字节及冻结输入清单一致，deck 须与冻结清单和实际执行目录原字节一致。
-RESULT 的 work/deck/condition_identity 使用 inputs/runner 已产生的字段，
+终态 execution 的 work/deck/condition_identity 使用 inputs/runner 已产生的字段，
 汇总器不要求 runner 增加新来源字段。缺真实执行文件不能用自洽的标签代替。
+已声明 waveform 的真实字节须与 execution.waveform_sha256 及 FILE_MANIFEST
+三方一致；路径必须在 condition 目录内，可为 Spectre 的 psf/tran.tran.tran。
+该核验涵盖这些已引用文件，不宣称遍历核验清单的全部 retained artifacts。
 
 每个 condition/backend 只能有一个主结果，重复主槽仍报错。若已有复测，
 collector 须在该槽追加 prior_attempts 的执行 artifact path/sha256 数组，
@@ -191,7 +201,7 @@ collector 须在该槽追加 prior_attempts 的执行 artifact path/sha256 数�
 
 ```json
 {
-  "prior_attempts": [{"path": "previous-evas/runs/VR-01/RESULT.json", "sha256": "ACTUAL_SHA256"}],
+  "prior_attempts": [{"path": "previous-evas/final-record-VR-01.json", "sha256": "ACTUAL_SHA256"}],
   "selection_reason": "批准的复测采用此结果，先前超时原记录保留"
 }
 ```
