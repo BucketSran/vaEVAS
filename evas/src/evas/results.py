@@ -1,5 +1,4 @@
 """Run an explicit manifest into a new, complete JSON/CSV output directory."""
-import argparse
 import csv
 import hashlib
 from importlib import metadata
@@ -10,9 +9,9 @@ from pathlib import Path
 import sys
 
 from . import CompileError, Instance, KernelError, compile_sources
-from .errors import diagnostic
+from .errors import DiagnosticArgumentParser, diagnostic
 from .identity import inspect_identity
-from .manifest import parse_manifest
+from .lint import read_input_bytes, decode_input, parse_manifest_input
 from .protocol import validate_response
 from .runtime import DEFAULT_TIMEOUT, _invoke, _tolerances
 
@@ -99,23 +98,19 @@ def run(manifest_path, *, kernel=None, out, timeout=DEFAULT_TIMEOUT):
                                     or not math.isfinite(timeout) or timeout <= 0):
             raise ValueError('timeout must be positive finite seconds or None')
         manifest_path = Path(manifest_path).resolve()
-        if not manifest_path.is_file():
-            raise OSError(f'manifest must be a regular file: {manifest_path}')
-        raw = manifest_path.read_bytes()
+        raw = read_input_bytes(manifest_path, 'manifest_io')
         save('input.json', raw)
         state['input'] = dict(path=str(manifest_path), sha256=_digest(raw))
-        manifest = parse_manifest(raw.decode())
+        manifest = parse_manifest_input(decode_input(raw, 'manifest_input'))
         sources = {}
         source_records = []
         for index, name in enumerate(manifest['models']):
             path = (manifest_path.parent / name).resolve()
-            if not path.is_file():
-                raise OSError(f'source must be a regular file: {path}')
-            data = path.read_bytes()
+            data = read_input_bytes(path, 'source_io')
             snapshot = f'source-{index}.va'
             save(snapshot, data)
             source_records.append(dict(path=str(path), sha256=_digest(data), snapshot=snapshot))
-            sources[str(path)] = data.decode()
+            sources[str(path)] = decode_input(data, 'source_input')
         state['sources'] = source_records
         state['frontend_sha256'] = _digest(_json({
             path.name: _digest(path.read_bytes())
@@ -171,13 +166,13 @@ def run(manifest_path, *, kernel=None, out, timeout=DEFAULT_TIMEOUT):
         if isinstance(exc, (CompileError, KernelError)):
             exc.bundle_diagnostic = detail
             raise
-        error = KernelError(dict(kind=detail['code'], message=str(exc)))
+        error = CompileError(str(exc), code=detail['code'])
         error.bundle_diagnostic = detail
         raise error from exc
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__)
     parser.add_argument('action', choices=['run'])
     parser.add_argument('manifest', type=Path)
     parser.add_argument('--kernel', type=Path, help='override the bundled kernel')

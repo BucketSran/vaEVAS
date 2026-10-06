@@ -7,31 +7,51 @@ from . import CompileError, Instance, compile_sources
 from .manifest import parse_manifest
 
 
-def _read_text(path, io_code, input_code):
+def read_input_bytes(path, io_code):
+    """Read a regular input file without hanging on a FIFO."""
     try:
         descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
         with os.fdopen(descriptor, 'rb') as file:
             if not stat.S_ISREG(os.fstat(file.fileno()).st_mode):
                 raise OSError(f'input must be a regular file: {path}')
-            return file.read().decode('utf-8')
+            return file.read()
     except OSError as exc:
         raise CompileError(str(exc), code=io_code) from exc
-    except UnicodeError as exc:
-        raise CompileError(str(exc), code=input_code) from exc
 
 
-def compile_manifest(path):
-    """Load compilation fields and return the supported source's bound program."""
-    path = Path(path)
-    text = _read_text(path, 'manifest_io', 'manifest_input')
+def decode_input(data, code):
     try:
-        manifest = parse_manifest(text)
+        return data.decode('utf-8')
+    except UnicodeError as exc:
+        raise CompileError(str(exc), code=code) from exc
+
+
+def parse_manifest_input(text):
+    try:
+        return parse_manifest(text)
     except (ValueError, KeyError, TypeError) as exc:
         raise CompileError(str(exc), code='manifest_input') from exc
+
+
+def _read_text(path, io_code, input_code):
+    return decode_input(read_input_bytes(path, io_code), input_code)
+
+
+def load_manifest(path):
+    """Return parsed manifest and decoded sources with input-origin diagnostics."""
+    path = Path(path)
+    text = _read_text(path, 'manifest_io', 'manifest_input')
+    manifest = parse_manifest_input(text)
     sources = {}
     for name in manifest['models']:
         source = (path.parent / name).resolve()
         sources[str(source)] = _read_text(source, 'source_io', 'source_input')
+    return manifest, sources
+
+
+def compile_manifest(path):
+    """Load compilation fields and return the supported source's bound program."""
+    manifest, sources = load_manifest(path)
     return compile_sources(sources, [Instance(**row) for row in manifest['instances']])
 
 
