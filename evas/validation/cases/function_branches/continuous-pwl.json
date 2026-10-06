@@ -1,0 +1,63 @@
+{
+  "models": [
+    "dut.va"
+  ],
+  "instances": [
+    {
+      "name": "a",
+      "module": "function_branches",
+      "connections": {
+        "u": "u",
+        "y": "ya",
+        "z": "za"
+      },
+      "parameters": {
+        "vss": 0,
+        "vdd": 0.9
+      }
+    },
+    {
+      "name": "b",
+      "module": "function_branches",
+      "connections": {
+        "u": "u",
+        "y": "yb",
+        "z": "zb"
+      },
+      "parameters": {
+        "vss": 0.25,
+        "vdd": 0.5
+      }
+    }
+  ],
+  "transient": {
+    "sources": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1,
+      1.75,
+      1.875,
+      2
+    ],
+    "stop": 2,
+    "max_step": 0.03125
+  },
+  "tolerances": {
+    "vabstol": 1e-09,
+    "reltol": 1e-06
+  }
+}

@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+module function_branches(u,y,z);
+input u; output y,z; electrical u,y,z;
+parameter real vss=0, vdd=0.9;
+// The clip body is retained from the PA AM/PM memory-tap benchmark function.
+analog function real clip;
+input x; real x;
+begin if(x<vss) clip=vss; else if(x>vdd) clip=vdd; else clip=x; end
+endfunction
+// A condition must capture t before the selected branch changes it.
+analog function real sequenced;
+input x; real x,t;
+begin
+  t=x; sequenced=0;
+  if(t>0.5) begin t=-t; sequenced=1; end
+  sequenced=sequenced+t;
+end endfunction
+analog begin
+V(y)<+clip(V(u));
+V(z)<+sequenced(V(u));
+end
+endmodule

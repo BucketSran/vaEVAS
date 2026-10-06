@@ -1,0 +1,457 @@
+{
+  "analysis_id": "function-branches-normalized-reanalysis-20261007-r2",
+  "execution_kind": "reanalysis of retained EVAS CLI and Spectre executions; no new solver invocation",
+  "evas_commit": "44089f7fad5b692906f668dcf3b770900ed64b45",
+  "production_source_dirty": false,
+  "kernel_sha256": "cb20427a5dfe29e4b812eea3c821bf24735d0b0fc2f274cb4c872c0c80ea376f",
+  "embedded_build_revision": null,
+  "request_protocol_version": null,
+  "runner_sha256": "bf06821a6ee34594109dd37ce0bfca9f59864972989f44cba049aeb8ccfc68ad",
+  "checker_sha256": "739163eb8986a4575b3a020955bf46ac5bc7c1a5e0ca836fd3df3d354778724a",
+  "spectre_version": "21.1.0.509.isr12 64bit",
+  "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "setup_sha256": [
+    "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+    "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+  ],
+  "comparison_absolute_tolerance_V": 1e-08,
+  "settings": {
+    "requested_reltol": 1e-06,
+    "effective_transient_reltol": 1e-07,
+    "requested_and_observed_vabstol_V": 1e-09,
+    "observed_method": "gear2only",
+    "observed_errpreset": "conservative",
+    "requested_strobe_period_s": 0.015625,
+    "actual_exact_query_coverage": true,
+    "single_cpu_affinity_observed": 0,
+    "threads_requested": 1,
+    "threads_effective_independent_readback": null,
+    "combined_compile_and_simulate_cap_s": 90,
+    "license_wait_cap_s": 30,
+    "address_space_cap_bytes": 4294967296,
+    "file_cap_bytes": 33554432
+  },
+  "attempts": {
+    "original_input_identity": {
+      "case_count": 2,
+      "completed_process_count": 2,
+      "compile_failures": 2,
+      "numerical_evaluable": 0,
+      "reason": "VACOMP-1795, DUT leading-dot VA real constants .9 and .5 rejected",
+      "original_model_sha256": "2fb748adc2b113f53eae2d4dbf15e8638048b0a013ad44ced5fd6e9c88740b2c",
+      "raw_archive_sha256": "3c7c3aef0898b248667a7b43cb799027c3b4c0f542ed7cd91761bd695047353c"
+    },
+    "normalized_input_identity": {
+      "case_count": 2,
+      "completed_process_count": 2,
+      "compile_failures": 0,
+      "finite_contract_passes": 2
+    },
+    "total_spectre_invocations": 4,
+    "blind_retries": 0
+  },
+  "normalization": {
+    "changes": [
+      "vdd=.9 to vdd=0.9",
+      "if(t>.5) to if(t>0.5)"
+    ],
+    "production_behavior_change": false,
+    "physical_decks_and_contracts_changed": false,
+    "compiled_IR_equal_except_source_origins": true
+  },
+  "calibration": {
+    "status": "PASS",
+    "controls": [
+      "exact observations accept",
+      "wrong voltage reject",
+      "missing query reject",
+      "duplicate exact query reject",
+      "missing output reject",
+      "raw PSF accept",
+      "truncated/nonfinite/duplicate-signal PSF reject",
+      "nonincreasing-time PSF reject",
+      "bad PSF row and second VALUE reject",
+      "empty times/nodes contract reject",
+      "compact both-backend accept and changed EVAS value reject"
+    ]
+  },
+  "cases": {
+    "dc-table": {
+      "status": "PASS",
+      "query_count": 3,
+      "scalar_observation_count": 30,
+      "source_sha256": "a66cba63ad0c9fcaecbd92c03bf0ec64ced1b304aaa10559e1e16b297bff6de0",
+      "deck_sha256": "899f9a30412b67825024e633fb25318fb8ad5580ebab2ed63c948ee7f65293ee",
+      "contract_sha256": "8c1f5ecf1b2ef21fb48265044d129b78696085e89c75433e5efe534159967e25",
+      "raw_waveform_sha256": "2dbc75b89ec5e4900f5e2112baa4663adaec23c10e5209175f03cb64c13b648f",
+      "spectre_log_sha256": "d973be62886ab07445437ba6411f18ad05be14648689db288d66d4dd4edcfce6",
+      "max_Spectre_expected_error_V": 2.7755575615628914e-17,
+      "max_EVAS_expected_error_V": 2.7755575615628914e-17,
+      "max_EVAS_Spectre_difference_V": 0.0,
+      "observed_maxstep_s": 0.125,
+      "original_attempt_returncode": 2,
+      "corrected_attempt_returncode": 0,
+      "corrected_attempt_timeout": false,
+      "observations": [
+        {
+          "time_s": 0,
+          "actual_V": {
+            "y0": 0.0,
+            "z0": -0.25,
+            "y1": 0.0,
+            "z1": 0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "expected_V": {
+            "y0": 0,
+            "z0": -0.25,
+            "y1": 0,
+            "z1": 0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.1,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "max_abs_error_V": 2.7755575615628914e-17,
+          "EVAS_V": {
+            "y0": -0.0,
+            "z0": -0.25,
+            "y1": -0.0,
+            "z1": -0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 1,
+          "actual_V": {
+            "y0": 0.0,
+            "z0": -0.25,
+            "y1": 0.0,
+            "z1": 0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "expected_V": {
+            "y0": 0,
+            "z0": -0.25,
+            "y1": 0,
+            "z1": 0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.1,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "max_abs_error_V": 2.7755575615628914e-17,
+          "EVAS_V": {
+            "y0": -0.0,
+            "z0": -0.25,
+            "y1": -0.0,
+            "z1": -0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 2,
+          "actual_V": {
+            "y0": 0.0,
+            "z0": -0.25,
+            "y1": 0.0,
+            "z1": 0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "expected_V": {
+            "y0": 0,
+            "z0": -0.25,
+            "y1": 0,
+            "z1": 0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.1,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "max_abs_error_V": 2.7755575615628914e-17,
+          "EVAS_V": {
+            "y0": -0.0,
+            "z0": -0.25,
+            "y1": -0.0,
+            "z1": -0.0,
+            "y2": 0.25,
+            "z2": 0.25,
+            "y3": 0.9,
+            "z3": 0.09999999999999998,
+            "y4": 0.9,
+            "z4": -0.25
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        }
+      ]
+    },
+    "continuous-pwl": {
+      "status": "PASS",
+      "query_count": 8,
+      "scalar_observation_count": 32,
+      "source_sha256": "a66cba63ad0c9fcaecbd92c03bf0ec64ced1b304aaa10559e1e16b297bff6de0",
+      "deck_sha256": "2eb2576c86d0c68410f4d034664fdffb5c3dcc4f9faf502938bca9032d732a13",
+      "contract_sha256": "3be9d5074266fa7fab7b51b0c1c480bf4941957d4a9e362a32f52aed35a4aa20",
+      "raw_waveform_sha256": "b7ca5674e38fd425c4a5aa112012b946f1d2ddbde34f23fdf4a8c91c4b94be44",
+      "spectre_log_sha256": "d8323ebc2206d58365eb6d179f6207d7fdda7f99d0b1e1e27815668d374236e6",
+      "max_Spectre_expected_error_V": 0.0,
+      "max_EVAS_expected_error_V": 0.0,
+      "max_EVAS_Spectre_difference_V": 0.0,
+      "observed_maxstep_s": 0.03125,
+      "original_attempt_returncode": 2,
+      "corrected_attempt_returncode": 0,
+      "corrected_attempt_timeout": false,
+      "observations": [
+        {
+          "time_s": 0,
+          "actual_V": {
+            "ya": 0.0,
+            "za": 0.0,
+            "yb": 0.25,
+            "zb": 0.0
+          },
+          "expected_V": {
+            "ya": 0,
+            "za": 0,
+            "yb": 0.25,
+            "zb": 0
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": -0.0,
+            "za": -0.0,
+            "yb": 0.25,
+            "zb": -0.0
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 0.25,
+          "actual_V": {
+            "ya": 0.125,
+            "za": 0.125,
+            "yb": 0.25,
+            "zb": 0.125
+          },
+          "expected_V": {
+            "ya": 0.125,
+            "za": 0.125,
+            "yb": 0.25,
+            "zb": 0.125
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.125,
+            "za": 0.125,
+            "yb": 0.25,
+            "zb": 0.125
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 0.5,
+          "actual_V": {
+            "ya": 0.25,
+            "za": 0.25,
+            "yb": 0.25,
+            "zb": 0.25
+          },
+          "expected_V": {
+            "ya": 0.25,
+            "za": 0.25,
+            "yb": 0.25,
+            "zb": 0.25
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.25,
+            "za": 0.25,
+            "yb": 0.25,
+            "zb": 0.25
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 0.75,
+          "actual_V": {
+            "ya": 0.375,
+            "za": 0.375,
+            "yb": 0.375,
+            "zb": 0.375
+          },
+          "expected_V": {
+            "ya": 0.375,
+            "za": 0.375,
+            "yb": 0.375,
+            "zb": 0.375
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.375,
+            "za": 0.375,
+            "yb": 0.375,
+            "zb": 0.375
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 1,
+          "actual_V": {
+            "ya": 0.5,
+            "za": 0.5,
+            "yb": 0.5,
+            "zb": 0.5
+          },
+          "expected_V": {
+            "ya": 0.5,
+            "za": 0.5,
+            "yb": 0.5,
+            "zb": 0.5
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.5,
+            "za": 0.5,
+            "yb": 0.5,
+            "zb": 0.5
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 1.75,
+          "actual_V": {
+            "ya": 0.875,
+            "za": 0.125,
+            "yb": 0.5,
+            "zb": 0.125
+          },
+          "expected_V": {
+            "ya": 0.875,
+            "za": 0.125,
+            "yb": 0.5,
+            "zb": 0.125
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.875,
+            "za": 0.125,
+            "yb": 0.5,
+            "zb": 0.125
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 1.875,
+          "actual_V": {
+            "ya": 0.9,
+            "za": 0.0625,
+            "yb": 0.5,
+            "zb": 0.0625
+          },
+          "expected_V": {
+            "ya": 0.9,
+            "za": 0.0625,
+            "yb": 0.5,
+            "zb": 0.0625
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.9,
+            "za": 0.0625,
+            "yb": 0.5,
+            "zb": 0.0625
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        },
+        {
+          "time_s": 2,
+          "actual_V": {
+            "ya": 0.9,
+            "za": 0.0,
+            "yb": 0.5,
+            "zb": 0.0
+          },
+          "expected_V": {
+            "ya": 0.9,
+            "za": 0,
+            "yb": 0.5,
+            "zb": 0
+          },
+          "max_abs_error_V": 0.0,
+          "EVAS_V": {
+            "ya": 0.9,
+            "za": -0.0,
+            "yb": 0.5,
+            "zb": -0.0
+          },
+          "EVAS_Spectre_max_abs_difference_V": 0.0
+        }
+      ]
+    }
+  },
+  "availability": {
+    "maintained_inputs_expected_checker_and_sample_summary": "repository-contained",
+    "full_raw_EVAS_and_Spectre": "local-only, owning worktree runs/function-branches/night-20261007; no public retrieval link",
+    "normalized_raw_archive_sha256": "12c306a14367583fff293858b04a4585b7da682b1b65c174c40b3f511fc0cf10",
+    "normalized_raw_verified_regular_files": 55,
+    "raw_manifest_sha256": "69d860f84392e4b339a331a7d674571db33634af5204ba13ad28c4ca5832df2a"
+  },
+  "cleanup": {
+    "owned_process_matches": 0,
+    "unknown_new_same_account_processes": 0,
+    "preexisting_inaccessible_cwd_excluded_by_observed_start_time": true,
+    "remote_lane_released": true
+  },
+  "limits": [
+    "finite observations of two development cases, not continuous-time or unconditional feature qualification",
+    "does not establish complete PA model support",
+    "source branch and evidence are not a merged release"
+  ],
+  "original_execution_analysis_id": "function-branches-normalized-20261007",
+  "ir_schema_version": 17,
+  "ir_identity_receipt": {
+    "availability": "local-only",
+    "path_within_execution_bundle": "local-pair-normalized/tool-identity.json",
+    "sha256": "1935cd8be3dcaaf636389ebd8c0055258b3ce0ba1aad178c84c49beb3ffe2a00",
+    "reported_kernel_field": "kernel.reported.ir_schema_version"
+  },
+  "production_identity_scope": {
+    "evas_commit": "production Python compiler and Rust kernel code, not a claim that the normalized model existed in that Git tree",
+    "production_source_dirty": "production source/build inputs unmodified; model input snapshots are separately identified by cases[*].source_sha256",
+    "fixture_identity": "normalized source snapshot used for both paired backends; maintained fixture was subsequently corrected with the same bytes"
+  },
+  "compact_arithmetic_recheck": "both retained backend values independently checked against maintained expected contracts and reported maxima; does not authenticate local-only raw provenance"
+}

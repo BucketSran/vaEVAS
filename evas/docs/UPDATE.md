@@ -15,6 +15,14 @@
 [PR86](https://github.com/BucketSran/vaEVAS/pull/86)。
 各项验证仍绑定各自执行版本，合并不会把旧收据重标为新版本，也不代表发布了 tag。
 
+## 未合并开发切片：纯 real 函数有限分支（#65）
+
+- 支持 `< <= > >=` 谓词的 if/else 与局部顺序赋值；条件使用进入支路前捕获的值。
+- 两路均定义才形成汇合值，无 else 保留已有值；所有支路保留结构校验，原精度拒绝边界不变。
+- 真实 PA clip 函数、独立限幅/实例/顺序答案和拒绝边界见[函数合同](../validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
+  不代表完整 PA 模型或更广函数语义支持；[两个有限 Spectre 配对](../../experiments/backends/function-branches/README.md)通过，
+  原数字写法造成的两次编译失败保持可见。
+
 ## 2026-10-06：事件体静态循环（L3）
 
 - 监测事件体中的静态 genvar 循环沿用现有顺序赋值内核；实例参数、数组和循环预算分别检查。
