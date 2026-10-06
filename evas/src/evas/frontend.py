@@ -26,7 +26,8 @@ def parse_sources(sources: Mapping[str, str]):
         for parsed in Parser('', path, tokens=tokens).parse_all():
             model = inline_functions(parsed)
             if model.name in models:
-                raise CompileError(f"duplicate module {model.name!r}")
+                raise CompileError(f"duplicate module {model.name!r}", code="duplicate_module",
+                                   token=model.declaration_token)
             models[model.name] = model
     return models
 
@@ -73,5 +74,9 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
     names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
     compilation = Compilation(names, has_operators or has_conditions)
     for instance, model, nets in bindings:
-        InstanceCompiler(instance, model, nets, compilation).compile()
+        try:
+            InstanceCompiler(instance, model, nets, compilation).compile()
+        except CompileError as error:
+            error.diagnostic.setdefault("instance", instance.name)
+            raise
     return compilation.program()
