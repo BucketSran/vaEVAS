@@ -51,7 +51,24 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
           validate_decision: Callable[[Expr, Expression], None] | None = None,
-          decision_scope: bool = False) -> Expression:
+          decision_scope: bool = False, *, memo: dict | None = None) -> Expression:
+    # Opt-in reuse for one fixed parameter/node binding without registration
+    # callbacks. Callers own the lifetime and must not share across contexts.
+    if memo is not None:
+        if operators is not None or decisions is not None or validate_decision is not None:
+            raise ValueError("lower memo cannot be used with semantic callbacks")
+        key = (id(expr), preserve_structure, decision_scope)
+        if key not in memo:
+            value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
+                           decisions, validate_decision, decision_scope, memo)
+            memo[key] = (expr, value)
+        return memo[key][1]
+    return _lower(expr, parameters, nodes, source, operators, preserve_structure,
+                  decisions, validate_decision, decision_scope, None)
+
+
+def _lower(expr, parameters, nodes, source, operators, preserve_structure,
+           decisions, validate_decision, decision_scope, memo):
     def fail(message):
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}")
 
@@ -60,7 +77,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
         if scope and decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         values = [lower(arg, parameters, nodes, source, operators,
-                        preserve_structure or scope, decisions, validate_decision, scope)
+                        preserve_structure or scope, decisions, validate_decision, scope, memo=memo)
                   for arg in expr.args]
         if scope and validate_decision is not None:
             for arg, value in zip(expr.args, values):
@@ -73,7 +90,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         if contains_operator(expr):
             fail("decision expressions do not support waveform operators in any operand or arm")
-        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True) for arg in expr.args]
+        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, memo=memo) for arg in expr.args]
         zero, one = Affine(0.0, ()), Affine(1.0, ())
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
@@ -112,7 +129,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
             return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
                           Affine(0.0, (Term(nodes[n], -1.0),)))
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
-    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope) for arg in expr.args]
+    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope, memo=memo) for arg in expr.args]
     a = values[0]
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)

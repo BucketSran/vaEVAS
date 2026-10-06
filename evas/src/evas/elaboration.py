@@ -214,27 +214,42 @@ def unroll_loops(model: Model, parameter):
         return (f'{expr.value}[{constant(expr.args[0], indices)}]'
                 if expr.args else str(expr.value))
 
-    def dependencies(expr, indices):
+    def dependencies(expr, indices, memo=None):
+        if memo is None:
+            memo = {}
+        key = id(expr)
+        if key in memo:
+            return memo[key][1]
+        result = dependency_value(expr, indices, memo)
+        memo[key] = (expr, result)
+        return result
+
+    def dependency_value(expr, indices, memo):
         nodes, held = set(), False
         if expr.op == 'voltage':
             return {node_name(arg, indices) for arg in expr.args}, False
         if expr.op in OPERATOR_NAMES or expr.op in ('parameter', 'index') and expr.value in model.variables:
             held = True
         for arg in expr.args:
-            child_nodes, child_held = dependencies(arg, indices)
+            child_nodes, child_held = dependencies(arg, indices, memo)
             nodes |= child_nodes
             held |= child_held
         return nodes, held
 
     def validate_event_body(statements, active, affected):
         # Empty static loops must not erase unsupported event-body structure.
-        def expression(expr, predicate=False):
+        def expression(expr, predicate=False, seen=None):
+            if seen is None:
+                seen = set()
+            if id(expr) in seen:
+                return
+            seen.add(id(expr))
             if expr.op in OPERATOR_NAMES:
                 fail('event bodies do not support history/operator calls', expr.token)
             if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
                 fail('event conditions and loop controls cannot depend on state', expr.token)
             for arg in expr.args:
-                expression(arg, predicate)
+                expression(arg, predicate, seen)
 
         for statement in statements:
             if isinstance(statement, Loop):
@@ -254,15 +269,25 @@ def unroll_loops(model: Model, parameter):
                 # dependencies that numeric cancellation must not erase.
                 from .instance_compiler import _predicate_degree
                 nodes = {}
-                def scalar(expr):
+                def scalar(expr, memo=None):
+                    # One predicate root with fixed active indices and node map.
+                    # Keep original objects alive; never share across loop scopes.
+                    if memo is None:
+                        memo = {}
+                    key = id(expr)
+                    if key in memo:
+                        return memo[key][1]
                     if expr.op == 'node':
                         name = node_name(expr, active)
                         nodes.setdefault(name, len(nodes))
-                        return replace(expr, value=name, args=())
-                    return replace(expr, args=tuple(scalar(arg) for arg in expr.args))
+                        result = replace(expr, value=name, args=())
+                    else:
+                        result = replace(expr, args=tuple(scalar(arg, memo) for arg in expr.args))
+                    memo[key] = (expr, result)
+                    return result
                 for expr in (statement.left, statement.right):
                     value = lower(scalar(substitute(expr, active)), parameter, nodes,
-                                  model.source, preserve_structure=True)
+                                  model.source, preserve_structure=True, memo={})
                     if _predicate_degree(value) is None:
                         fail('event conditions require affine voltage predicates', expr.token)
                     if dependencies(expr, active)[0] & affected:

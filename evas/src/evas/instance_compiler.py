@@ -265,8 +265,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
-                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True)
+                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
+                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
