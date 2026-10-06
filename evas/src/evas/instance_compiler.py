@@ -141,7 +141,7 @@ class InstanceCompiler:
             return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
                       (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_delay if expr.op == "absdelay" else None,
-                      preserve_structure=True)
+                      preserve_structure=True, node_declarations=expr.op != "transition")
         if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):
                 if array.op != "array":
@@ -234,7 +234,7 @@ class InstanceCompiler:
             direction, time_tol, expr_tol = settings
             if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                 raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-            result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True),
+            result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
                                    int(direction), time_tol, expr_tol)
         else:
             # Lower optional source arguments into the existing explicit IR.
@@ -265,8 +265,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
-                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={})
+                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
+                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
@@ -274,7 +274,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
                 # Reset feedback checks need voltage dependencies even
                 # when a coefficient cancels or underflows to zero.
-                value = lower(statement.rhs, self.symbol, self.node_ids, self.model.source, preserve_structure=True)
+                value = lower(statement.rhs, self.symbol, self.node_ids, self.model.source, preserve_structure=True, node_declarations=True)
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")
                 result.append(Assignment(self.state_ids[statement.name], value))
@@ -328,7 +328,7 @@ class InstanceCompiler:
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
         factory = self.expression_select if not self.model.initial and not self.model.events else None
         value = lower(expr, resolve, self.node_ids, self.model.source,
-                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision)
+                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision, node_declarations=True)
         # Validate the enclosing arithmetic too: an input-selected scalar must
         # not become a coefficient multiplying another input dependency.
         def has_expression_decision(item):
@@ -403,7 +403,7 @@ class InstanceCompiler:
         bound_branches = {}
         for branch_statement, expression in analog_contributions:
             branch = branch_statement.branch
-            lower(branch, self.parameter, self.node_ids, self.model.source)  # validates both target nodes
+            lower(branch, self.parameter, self.node_ids, self.model.source, node_declarations=True)  # validates both target nodes
             local_p, local_n = (str(arg.value) for arg in branch.args)
             pair = tuple(sorted((local_p, local_n)))
             p, n = (self.node_ids[name] for name in pair)

@@ -13,12 +13,13 @@ DEPTH_BUDGET = 64
 def bind_hierarchy(models, instances, instance_type):
     bindings, identities = [], set()
 
-    def visit(instance, ancestry=(), port_nets=None):
+    def visit(instance, ancestry=(), port_nets=None, token=None):
         if instance.name in identities:
             raise CompileError(f'duplicate hierarchical instance identity {instance.name!r}')
         identities.add(instance.name)
         if len(identities) > INSTANCE_BUDGET or len(ancestry) >= DEPTH_BUDGET:
-            raise CompileError('hierarchical instance count/depth budget exceeded')
+            raise CompileError('hierarchical instance count/depth budget exceeded',
+                               code='resource_budget', token=token, instance=instance.name)
         if instance.module not in models:
             raise CompileError(f'{instance.name}: unknown module {instance.module!r}')
         if instance.module in ancestry:
@@ -27,7 +28,8 @@ def bind_hierarchy(models, instances, instance_type):
         parameters = bind_parameters(model, instance.parameters, instance.name)
         model, groups = scalarize_nodes(model, parameters)
         if set(instance.connections) != set(model.ports):
-            raise CompileError(f'{instance.name}: connections must exactly match {model.ports}')
+            raise CompileError(f'{instance.name}: connections must exactly match {model.ports}',
+                               code='connection_mismatch', instance=instance.name)
         if port_nets is None:
             if any(not isinstance(n,str) or not n or ':' in n for n in instance.connections.values()):
                 raise CompileError("net names must be nonempty strings without ':' (reserved for internal nodes)")
@@ -67,10 +69,12 @@ def bind_hierarchy(models, instances, instance_type):
             ports = child.connections
             if isinstance(ports,tuple):
                 if len(ports) != len(target.ports):
-                    raise CompileError(f'{model.source}:{child.token.line}: child port count mismatch')
+                    raise CompileError(f'{model.source}:{child.token.line}: child port count mismatch',
+                                       code='connection_mismatch', token=child.token, instance=f'{instance.name}/{child.name}')
                 ports = dict(zip(target.ports, ports))
             if set(ports) != set(target.ports) or not set(ports.values()) <= groups.keys():
-                raise CompileError(f'{model.source}:{child.token.line}: child connections must name every port and declared electrical nets')
+                raise CompileError(f'{model.source}:{child.token.line}: child connections must name every port and declared electrical nets',
+                                   code='connection_mismatch', token=child.token, instance=f'{instance.name}/{child.name}')
             expanded = {}
             for port, net in ports.items():
                 if len(target_groups[port]) != len(groups[net]):
@@ -79,7 +83,7 @@ def bind_hierarchy(models, instances, instance_type):
             ports = expanded
             connections = {port: nets[node] for port,node in ports.items()}
             bound = instance_type(f'{instance.name}/{child.name}',child.module,connections,overrides)
-            visit(bound, (*ancestry, instance.module), connections)
+            visit(bound, (*ancestry, instance.module), connections, child.token)
 
     for instance in instances:
         if not instance.name or not instance.module:

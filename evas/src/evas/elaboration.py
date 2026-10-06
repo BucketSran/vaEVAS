@@ -10,8 +10,8 @@ def inline_functions(model: Model) -> Model:
     """Substitute real input-only functions; never duplicate history call sites."""
     if not model.functions:
         return model
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def bounded(expr):
         # Preserve the original budget at function RHS/return boundaries.
@@ -34,7 +34,7 @@ def inline_functions(model: Model) -> Model:
                 depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
                 size = 1 + sum(memo[id(a)][1] for a in item.args)
             if depth > MAX_EXPRESSION_DEPTH or size > MAX_IR_ITEMS:
-                fail('function expansion exceeds expression depth/size budget', expr.token)
+                fail('function expansion exceeds expression depth/size budget', expr.token, code="resource_budget")
             memo[id(item)] = depth, size
 
     def unpack(expr, obligations):
@@ -55,7 +55,7 @@ def inline_functions(model: Model) -> Model:
 
     def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
         if depth > MAX_EXPRESSION_DEPTH:
-            fail('function expansion exceeds expression depth budget', expr.token)
+            fail('function expansion exceeds expression depth budget', expr.token, code="resource_budget")
         env = env or {}
         if expr.op == 'parameter':
             if expr.value in env:
@@ -80,7 +80,8 @@ def inline_functions(model: Model) -> Model:
         if name not in model.functions:
             fail(f'unknown analog function {name!r}', expr.token)
         if name in stack or len(stack) >= MAX_SOURCE_NESTING:
-            fail('recursive or excessively nested analog function calls are unsupported', expr.token)
+            fail('recursive or excessively nested analog function calls are unsupported', expr.token,
+                 code='compile_error' if name in stack else 'resource_budget')
         function = model.functions[name]
         if len(args) != len(function.inputs):
             fail(f'function {name!r} requires {len(function.inputs)} inputs', expr.token)
@@ -174,8 +175,8 @@ def unroll_loops(model: Model, parameter):
     count = 0
     iterations = 0
 
-    def fail(message, token):
-        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
+    def fail(message, token, *, code="compile_error"):
+        raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}', code=code, token=token)
 
     def substitute(expr, indices, memo=None):
         # One fixed loop-index environment per root substitution. Never share
@@ -192,13 +193,13 @@ def unroll_loops(model: Model, parameter):
             return Expr('number', float(indices[expr.value]), (), expr.token)
         path = (*expr.expansion,*indices.items())
         if len(path) > MAX_SOURCE_NESTING:
-            fail('expanded call-site identity depth budget exceeded',expr.token)
+            fail('expanded call-site identity depth budget exceeded', expr.token, code="resource_budget")
         return replace(expr, args=tuple(substitute(arg,indices,memo) for arg in expr.args), expansion=path)
 
     def origin(token, indices):
         path = (*token.expansion, *indices.items())
         if len(path) > MAX_SOURCE_NESTING:
-            fail('expanded event identity depth budget exceeded', token)
+            fail('expanded event identity depth budget exceeded', token, code="resource_budget")
         return replace(token, expansion=path)
 
     def constant(expr, indices):
@@ -308,7 +309,7 @@ def unroll_loops(model: Model, parameter):
     def body(statements, indices, depth=0):
         nonlocal count, iterations
         if depth > MAX_SOURCE_NESTING:
-            fail('static loop nesting budget exceeded', statements[0].token)
+            fail('static loop nesting budget exceeded', statements[0].token, code="resource_budget")
         result = []
         for statement in statements:
             if isinstance(statement, Loop):
@@ -323,10 +324,11 @@ def unroll_loops(model: Model, parameter):
                     if not active:
                         break
                     if value in seen or len(seen) == budget:
-                        fail('nonterminating or over-budget static loop', statement.token)
+                        fail('nonterminating or over-budget static loop', statement.token,
+                             code='compile_error' if value in seen else 'resource_budget')
                     iterations += 1
                     if iterations > budget:
-                        fail('total static iteration budget (4096) exceeded', statement.token)
+                        fail('total static iteration budget (4096) exceeded', statement.token, code="resource_budget")
                     seen.add(value)
                     result.extend(body(statement.body, scope, depth+1))
                     value = constant(statement.update, scope)
@@ -339,7 +341,7 @@ def unroll_loops(model: Model, parameter):
                     fail('genvar can only be assigned in its for control',statement.token)
                 count += 1
                 if count > budget:
-                    fail('elaborated statement budget (4096) exceeded',statement.token)
+                    fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
                 if isinstance(statement, Event):
                     event_bodies.append((statement.body, indices))
                     result.append(replace(statement, token=origin(statement.token,indices),
