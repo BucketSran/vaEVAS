@@ -14,8 +14,10 @@ def inline_functions(model: Model) -> Model:
         raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}')
 
     def bounded(expr):
-        # Shared AST arguments still expand at every use on the JSON wire.
-        memo, pending = {}, [(expr, False)]
+        # Each computational RHS retains the original expanded-tree limit.
+        # Compile-time obligations share an AST graph, not a JSON wire tree.
+        roots = expr.args if expr.op == 'checked' else (expr,)
+        memo, pending = {}, [(root, False) for root in roots]
         while pending:
             item, exiting = pending.pop()
             if id(item) in memo:
@@ -24,11 +26,33 @@ def inline_functions(model: Model) -> Model:
                 pending.append((item, True))
                 pending.extend((a, False) for a in item.args)
                 continue
-            depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
-            size = 1 + sum(memo[id(a)][1] for a in item.args)
+            if item.op == 'checked':
+                depth, size = memo[id(item.args[0])]
+            else:
+                depth = 1 + max((memo[id(a)][0] for a in item.args), default=0)
+                size = 1 + sum(memo[id(a)][1] for a in item.args)
             if depth > MAX_EXPRESSION_DEPTH or size > MAX_IR_ITEMS:
                 fail('function expansion exceeds expression depth/size budget', expr.token)
             memo[id(item)] = depth, size
+            if len(memo) > MAX_IR_ITEMS:
+                fail('function validation graph exceeds expression size budget', expr.token)
+
+    def unpack(expr, obligations):
+        if expr.op == 'checked':
+            obligations.extend(expr.args[1:])
+            return expr.args[0]
+        return expr
+
+    def checked(value, obligations, origin):
+        # Hoist obligations out of substituted values. Repeated uses of a
+        # function argument must duplicate its computation, not its checks.
+        unique = {id(item): item for item in obligations}
+        if not unique:
+            return value
+        result = Expr('checked', None, (value, *unique.values()), origin.token,
+                      expansion=origin.expansion)
+        bounded(result)
+        return result
 
     def expand(expr, env=None, local_names=frozenset(), stack=(), depth=0):
         if depth > MAX_EXPRESSION_DEPTH:
@@ -44,10 +68,15 @@ def inline_functions(model: Model) -> Model:
             return expr
         if stack and (expr.op in ('voltage', 'index') or expr.op in OPERATOR_NAMES):
             fail('pure analog functions cannot use voltage access or history operators', expr.token)
-        args = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        expanded = tuple(expand(a, env, local_names, stack, depth+1) for a in expr.args)
+        # Index evaluation and waveform arguments have their own closed
+        # contexts. Their obligations must be checked at that entry point.
+        if expr.op in ('index', 'array') or expr.op in OPERATOR_NAMES:
+            return replace(expr, args=expanded)
+        obligations = []
+        args = tuple(unpack(a, obligations) for a in expanded)
         if expr.op != 'call':
-            result = replace(expr, args=args)
-            return result
+            return checked(replace(expr, args=args), obligations, expr)
         name = str(expr.value)
         if name not in model.functions:
             fail(f'unknown analog function {name!r}', expr.token)
@@ -64,24 +93,21 @@ def inline_functions(model: Model) -> Model:
             pending.extend(item.args)
         local = dict(zip(function.inputs, args))
         names = function.variables | {name}
-        obligations = list(args)
+        obligations.extend(args)
         for statement in function.body:
             if statement.index is not None:
                 fail('pure analog function assignments require scalar targets', statement.token)
             if statement.name not in names:
                 fail('function assignments must target its local variables or return value', statement.token)
-            local[statement.name] = expand(statement.rhs, local, names, (*stack, name), depth+1)
+            local[statement.name] = unpack(expand(statement.rhs, local, names, (*stack, name), depth+1), obligations)
             bounded(local[statement.name])
             obligations.append(local[statement.name])
         if name not in local:
             fail('function must assign its return value', function.token)
-        # Retain evaluated arguments and every expanded RHS until instance
-        # binding, even if the function result no longer refers to them.
-        # All existing AST traversals and expansion budgets see these args.
-        result = Expr('checked', None, (local[name], *obligations), expr.token,
-                      expansion=expr.expansion)
-        bounded(result)
-        return result
+        # Retain every argument and RHS through instance binding, including
+        # discarded decisions and aliases. Only the real result is substituted
+        # into the caller's computation; closed index/operator contexts stay local.
+        return checked(local[name], obligations, expr)
 
     def body(statements):
         result = []

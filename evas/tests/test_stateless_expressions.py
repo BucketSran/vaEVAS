@@ -193,12 +193,63 @@ class StatelessExpressionContracts(unittest.TestCase):
         self.assertEqual(values(solve(compile_expr('discard(V(u)*V(u))',declarations=discard),
                                     list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1])
 
-    def test_function_obligations_use_the_existing_expansion_budget(self):
+    def test_discarded_function_checks_preserve_pure_function_acceptance(self):
         function='analog function real discard; input x; real x,tmp; begin tmp=x+x; discard=1; end endfunction '
+        def balanced(count):
+            if count == 1: return 'V(u)'
+            left = count // 2
+            return '('+balanced(left)+'+'+balanced(count-left)+')'
+        for leaves, layers in ((11,7),(12,7),(32,7),(1,20)):
+            expression=balanced(leaves)
+            for _ in range(layers): expression='discard('+expression+')'
+            with self.subTest(leaves=leaves,layers=layers):
+                program=compile_expr(expression,declarations=function)
+                from evas.ir import Affine
+                self.assertIsInstance(program.contributions[0].rhs,Affine)
+                self.assertEqual(values(solve(program,list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1])
+
+    def test_real_function_expansion_still_uses_the_tree_budget(self):
+        function='analog function real twice; input x; real x; begin twice=x+x; end endfunction '
         expression='V(a)'
-        for _ in range(20):expression='discard('+expression+')'
+        for _ in range(20): expression='twice('+expression+')'
         with self.assertRaisesRegex(CompileError,'budget'):
             compile_expr(expression,declarations=function)
+
+    def test_distinct_function_validation_graph_is_bounded(self):
+        function=('analog function real discard; input x; real x,tmp; begin '
+                  +'tmp=x+1;'*32+' discard=1; end endfunction ')
+        def balanced(calls):
+            if calls == 1: return 'discard(V(u))'
+            left=calls//2
+            return '('+balanced(left)+'+'+balanced(calls-left)+')'
+        with self.assertRaisesRegex(CompileError,'validation graph.*budget'):
+            compile_expr(balanced(1600),declarations=function)
+
+    def test_function_checks_bind_independently_in_each_instance(self):
+        source=('module m(u,y); input u; output y; electrical u,y; parameter real degree=1; '
+                'analog function real discard; input x; real x; begin discard=1; end endfunction '
+                'analog begin V(y)<+discard((V(u)>0)+pow(V(u),degree)); end endmodule')
+        good=Instance('good','m',{'u':'u','y':'good_y'},{'degree':1})
+        bad=Instance('bad','m',{'u':'u','y':'bad_y'},{'degree':2})
+        compile_sources({'instances.va':source},[good])
+        for instances in ([good,bad],[bad,good]):
+            with self.subTest(order=[i.name for i in instances]),self.assertRaises(CompileError):
+                compile_sources({'instances.va':source},instances)
+
+    def test_nested_discard_keeps_decision_alias_and_context_checks(self):
+        function='analog function real discard; input x; real x,tmp; begin tmp=x+x; discard=1; end endfunction '
+        for expression,prefix,declaration in (
+            ('V(y)>0','',''),
+            ('alias*V(b)','alias=V(a)>0;','real alias;'),
+            ('pow(alias,2)','alias=V(a)>0;','real alias;'),
+            ('1>0','','parameter real k=VALUE;'),
+        ):
+            for _ in range(7): expression='discard('+expression+')'
+            if 'VALUE' in declaration:
+                declaration=declaration.replace('VALUE',expression)
+                expression='k'
+            with self.subTest(prefix=prefix,declaration=declaration),self.assertRaises(CompileError):
+                compile_expr(expression,prefix,function+declaration)
 
     def test_transparent_function_result_retains_integer_checks(self):
         function='analog function real identity; input x; real x; begin identity=x; end endfunction '
