@@ -214,7 +214,7 @@ def rust_module(path, rust):
     else:
         module = (*module[:-1], path.stem)
     # Keep the workspace's separate IR crate out of kernel crate lookup.
-    crate = tuple(relative.parts[:index])
+    crate = tuple(relative.parts[:index]) + (('bin',) if path.name == 'main.rs' else ('lib',))
     return crate, tuple(module)
 
 
@@ -395,13 +395,15 @@ def rust_entries(path, source, factories, modules):
         if closure['produces_error']:
             yield dict(function=closure['owner'], form='factory_definition', reason=closure['reason'],
                        expression=' '.join(tokens[closure['index']:closure['end']+1]),
-                       factory='::'.join(('crate', *module, closure['owner'], closure['name'])))
+                       factory='::'.join(('crate', *module, closure['owner'], closure['name'])),
+                       factory_crate='/'.join(crate))
     for function in functions:
         key = (crate, module + (function['name'],))
         if key in factories:
             yield dict(function=function['name'], form='factory_definition', reason=factories[key],
                        expression=' '.join(tokens[function['index']:function['end']+1]),
-                       factory='::'.join(('crate', *module, function['name'])))
+                       factory='::'.join(('crate', *module, function['name'])),
+                       factory_crate='/'.join(crate))
     for i, token in enumerate(tokens):
         if i in ignored:
             continue
@@ -441,6 +443,7 @@ def rust_entries(path, source, factories, modules):
                        expression=' '.join(tokens[expression_start:end+1]))
             if factory is not None:
                 row['factory'] = factory
+                row['factory_crate'] = '/'.join(crate)
             yield row
 
 

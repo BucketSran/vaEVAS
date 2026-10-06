@@ -106,7 +106,8 @@ CI 检查新清单，不能只更新数字。所有条目的 evidence 都是 sou
 行为表及开发测试说明。动态 reason/code 为 null，category 为 unknown；不靠 message 或名称前缀
 猜测，包装默认 code 从声明读取，显式实参优先。已有登记的 stage/capability 同步写入；
 Rust 函数包装由显式返回 Error 的签名发现，模块身份按 mod 声明及 #[path] 解析，
-调用按本模块、导入项/别名、限定路径与传递的 super::* 解析；factory 字段保留解析到的来源。
+调用按本模块、导入项/别名、限定路径与传递的 super::* 解析；lib/bin 根使用独立命名空间。
+factory 字段保留解析到的路径，factory_crate 标明所属 lib/bin（IR 子 crate 带 ir/ 前缀）。
 只有整个函数体是唯一直接 constructor 返回时读取字面 kind；条件/委托/动态函数返回为 null，
 不从其中一个分支推断整体 reason。具名局部闭包只在完整表达式直接构造 Error 或调用已确认
 工厂时登记，调用限制在声明后的词法作用域内。它不是完整 Rust 编译器，当前闭集另外通过
@@ -155,6 +156,11 @@ capture 保留 payload.error 原内核载荷，新增 error_diagnostic，status 
 覆盖实际完整 payload，旧会话仍按原哈希校验。内核未给诊断版本的旧 kind/message 载荷按旧
 兼容边界适配为 v1；明确给非 v1 版本时保留原版本/载荷，分类 unknown、capability=null，
 不能用已知 kind 反向套 v1 规则。真实子进程负例保留 sample 与未知附加字段。
+
+内核 diagnostic 的 code/stage/category/capability 由适配器登记表或 unknown 规则生成，
+不能直接信任未来载荷同名值。原载荷值与规范元数据冲突时，diagnostic.raw_payload 保存
+完整原载荷，包括原载荷自身的 raw_payload 字段；KernelError.detail 继续原样保留。
+没有冲突时不新增此包装字段。
 
 ## 剩余范围与证据复用
 

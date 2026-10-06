@@ -96,7 +96,9 @@ class ConsumerContracts(unittest.TestCase):
         from evas import KernelError, Instance, compile_sources, solve
         executable = self.root / 'future-kernel'
         detail = dict(kind='unsupported_timer', message='future contract', diagnostic_version=2,
-                      sample=3, future_field=42)
+                      sample=3, future_field=42, code='future.code', stage='future_stage',
+                      category='unsupported', capability='future_capability',
+                      raw_payload={'original': 'payload already uses envelope key'})
         executable.write_text('#!' + sys.executable + '\nimport sys\nsys.stderr.write(' +
                               repr(json.dumps(detail)) + ')\nraise SystemExit(2)\n')
         executable.chmod(0o755)
@@ -111,6 +113,9 @@ class ConsumerContracts(unittest.TestCase):
         self.assertIsNone(report['capability'])
         self.assertEqual(report['sample'], 3)
         self.assertEqual(report['future_field'], 42)
+        self.assertEqual(report['code'], 'kernel.unsupported_timer')
+        self.assertEqual(report['stage'], 'kernel')
+        self.assertEqual(report['raw_payload'], detail)
 
     def test_failed_session_status_exposes_category_and_retains_raw_kernel_error(self):
         from evas.diagnostics import capture, Session

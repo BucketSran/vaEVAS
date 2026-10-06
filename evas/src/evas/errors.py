@@ -83,10 +83,16 @@ class KernelError(RuntimeError):
         kind = self.detail['kind']
         version = self.detail.get('diagnostic_version', 1)
         known_version = type(version) is int and version == 1
-        return dict(self.detail, diagnostic_version=version, code=f'kernel.{kind}',
-                    stage='kernel', category=_KERNEL_CATEGORIES.get(
-                        kind, 'unknown') if known_version else 'unknown',
-                    capability=_KERNEL_CAPABILITIES.get(kind) if known_version else None)
+        metadata = dict(diagnostic_version=version, code=f'kernel.{kind}',
+                        stage='kernel', category=_KERNEL_CATEGORIES.get(
+                            kind, 'unknown') if known_version else 'unknown',
+                        capability=_KERNEL_CAPABILITIES.get(kind) if known_version else None)
+        report = dict(self.detail)
+        if any(key in self.detail and self.detail[key] != value for key, value in metadata.items()):
+            # Nest the complete original, including an original raw_payload key.
+            report['raw_payload'] = dict(self.detail)
+        report.update(metadata)
+        return report
 
 
 class DiagnosticArgumentParser(argparse.ArgumentParser):

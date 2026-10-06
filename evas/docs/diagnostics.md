@@ -11,6 +11,8 @@ Python `CompileError.diagnostic` 与 `KernelError.diagnostic` 提供
 有准确来源时提供 `location`/`instance`；没有时不猜测。
 CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此边界，帮助文本保留 argparse 的成功退出。旧 `str(CompileError)` 及
 `KernelError.detail` 保留原始信息；内核原有 kind/message/sample 字段继续可用。
+诊断规范元数据覆盖同名载荷值时，`diagnostic.raw_payload` 保存完整原载荷，
+包括载荷自己已有的 raw_payload 字段；规范 category/capability 仍按登记表或 unknown 生成。
 该附加诊断版本独立于求解 IR，不要求迁移 IR17。
 
 登记入口为 [errors.py](../src/evas/errors.py)。当前具名规则包括：

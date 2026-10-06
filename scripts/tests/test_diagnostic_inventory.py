@@ -165,3 +165,21 @@ fn run() { factory("local ordinary function shadows inherited factory"); }
             deny = next(row for row in calls if row['expression'].startswith('deny ('))
             self.assertEqual(deny['factory'], 'crate::parent::child::one::deny')
             self.assertTrue(any(row['path'].endswith('leaf.rs') and row['factory'] == 'crate::parent::factory' for row in calls))
+
+    def test_library_and_binary_roots_have_independent_factory_namespaces(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            rust = root / 'evas/rust_core/src'
+            rust.mkdir(parents=True)
+            (rust / 'lib.rs').write_text('fn same() -> Error { Error::new("invalid_ir", "library") }\nfn only_lib() -> Error { Error::new("invalid_inputs", "library only") }\nfn run() { crate::same(); }')
+            (rust / 'main.rs').write_text('fn same() -> Error { Error::new("event_resolution", "binary") }\nfn run() { crate::same(); crate::only_lib(); }')
+            result = subprocess.run([sys.executable, '-B', str(SCRIPT), '--root', str(root)],
+                                    capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            calls = [row for row in json.loads(result.stdout)['entries'] if row['form'] == 'wrapper_call']
+            self.assertEqual(len(calls), 2)
+            by_path = {Path(row['path']).name: row for row in calls}
+            self.assertEqual(by_path['lib.rs']['reason'], 'invalid_ir')
+            self.assertEqual(by_path['main.rs']['reason'], 'event_resolution')
+            self.assertEqual(by_path['lib.rs']['factory_crate'], 'lib')
+            self.assertEqual(by_path['main.rs']['factory_crate'], 'bin')
