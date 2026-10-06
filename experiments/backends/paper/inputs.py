@@ -91,6 +91,23 @@ def breakpoint_requests(card, T):
             'estimate_claim':'planning only; actual output size and native origins must be measured'}
 
 
+def gnucap_observer(records):
+    """SPICE + continuation avoids the snapshot's 4096-byte physical read buffer.
+
+    Only complete time/value pairs are moved; decimal tokens and order are exact.
+    The logical source still has one independent node and ground connection.
+    """
+    lines=[]
+    line='Vpaper_observer paper_observer 0 PWL('
+    for i,record in enumerate(records):
+        pair=f"{record['time_s']:.17g} {i%2}"
+        if len(line)+1+len(pair)+1>240:
+            lines.append(line)
+            line='+'
+        line+=' '+pair
+    return '\n'.join([*lines,line+')'])
+
+
 def decks(card, settings, bind, times, breakpoints):
     ports = ' '.join(bind['ports'])
     params = ' '.join(f'{k}={v:.17g}' for k, v in bind['parameters'].items())
@@ -121,7 +138,7 @@ def decks(card, settings, bind, times, breakpoints):
     override = ' #('+', '.join(f'.{k}({v:.17g})' for k,v in bind['parameters'].items())+')' if params else ''
     gc = '\n'.join(['load mgsim','load ./dut.so','verilog',
         f"\\{bind['top_module']}{override} dut({','.join(bind['ports'])});",'spice',
-        'Vbench_ref bench_ref 0 0',*spice_sources,'.options numdgt=17 dtmin=1e-15 short=1e-9 '+options,
+        'Vbench_ref bench_ref 0 0',*spice_sources[:-1],gnucap_observer(breakpoints['records']),'.options numdgt=17 dtmin=1e-15 short=1e-9 '+options,
         '.options','.print tran '+signals+' v(bench_ref)',
         f'.tran {spice_step:.17g} {stop:.17g} 0 {spice_step:.17g} trace alltime > waveform.txt','.end'])+'\n'
     evas = json.dumps({'source': 'dut.va','instances': [{'name':'dut','module':bind['top_module'],

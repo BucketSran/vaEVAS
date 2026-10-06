@@ -71,7 +71,7 @@ def stage_failure(stage):
     return None
 
 
-def result_state(stages, work, waveform, compiled=None, worker_result=None):
+def result_state(stages, work, waveform, compiled=None, worker_result=None, *, backend=None):
     for stage in stages:
         failure=stage_failure(stage)
         if failure:
@@ -80,6 +80,17 @@ def result_state(stages, work, waveform, compiled=None, worker_result=None):
         return {'status':'missing_compile_artifact','failure_stage':'compile','abort_batch':False}
     if worker_result and worker_result.get('status')!='waveform_available':
         return {**worker_result,'abort_batch':False}
+    if backend=='gnucap_modelgen' and (work/'simulate.log').is_file():
+        # Gnucap can report deck parse failures, continue simulation and exit 0.
+        # A raw file from that altered topology is retained, never accepted.
+        diagnostics=[{'line_number':i,'text':line} for i,line in enumerate(
+            (work/'simulate.log').read_text(errors='replace').splitlines(),1)
+            if re.match(r"^\s*\^\s*\?\s*",line)]
+        if diagnostics:
+            rejected={'path':waveform,'sha256':sha(work/waveform)} if (work/waveform).is_file() else None
+            return {'status':'deck_parse_error','failure_stage':'deck_parse','abort_batch':False,
+                    'diagnostics':diagnostics,'diagnostic_log_sha256':sha(work/'simulate.log'),
+                    'rejected_waveform':rejected}
     if not (work/waveform).is_file():
         return {'status':'missing_waveform','failure_stage':'export','abort_batch':False}
     return {'status':'waveform_available','waveform':waveform,'waveform_sha256':sha(work/waveform),'abort_batch':False}
@@ -420,7 +431,7 @@ def run(args):
                     failure_stage='simulate'; launched=True
                     stages.append(container_stage(env,image,executable,arguments,work,'simulate',a))
             failure_stage='result_collection'
-            result={**row,**result_state(stages,work,waveform,compiled,worker_result),'stages':stages,
+            result={**row,**result_state(stages,work,waveform,compiled,worker_result,backend=args.backend),'stages':stages,
                     'compiled_artifacts':{n:sha(work/n) for n in ('dut.osdi','dut.so','dut.cc') if (work/n).is_file()}}
             failure_stage='observation'
             if result['status']=='waveform_available':

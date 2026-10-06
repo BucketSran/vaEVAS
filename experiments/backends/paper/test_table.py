@@ -496,6 +496,29 @@ class TableControls(unittest.TestCase):
         self.assertIn('| Total | 12 | 1/1/1/1/1/7 |', report)
         self.assertIn('P/F/U/X/I/T', report)
 
+    def test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X(self):
+        record=self.record(condition='EV-SH-01',backend='gnucap_modelgen')
+        earlier_ref=record['execution'];earlier_bytes=Path(earlier_ref['path']).read_bytes()
+        earlier=json.loads(earlier_bytes)
+        final={k:v for k,v in earlier.items() if k not in ('waveform','waveform_sha256','observation')}
+        final.update(status='deck_parse_error',failure_stage='deck_parse',abort_batch=False,
+                     diagnostics=[{'line_number':42,'text':'    ^ ? need )'}],
+                     rejected_waveform={'path':earlier['waveform'],'sha256':earlier['waveform_sha256']})
+        with self.assertRaisesRegex(ValueError,'Final EXECUTION row'):
+            self.report([record],allow_pending=True,final_rows=[final])
+        record['execution']=self.artifact('final-record-EV-SH-01.json',final)
+        assessment=json.loads(Path(record['assessment']['path']).read_text())
+        assessment.update(status='X',execution_state='X',execution_sha256=record['execution']['sha256'])
+        record['assessment']=self.artifact('final-deck-parse-assessment.json',assessment)
+        report=self.report([record],allow_pending=True,final_rows=[final])
+        self.assertIn('| Total | 12 |',report)
+        self.assertIn('0/0/0/1/0/11',report)
+        self.assertEqual(Path(earlier_ref['path']).read_bytes(),earlier_bytes)
+        self.assertEqual(json.loads(earlier_bytes)['status'],'waveform_available')
+        Path(record['execution']['path']).write_text('{}')
+        with self.assertRaisesRegex(ValueError,'hash'):
+            table.render([record],allow_pending=True)
+
 
 if __name__ == '__main__':
     unittest.main()

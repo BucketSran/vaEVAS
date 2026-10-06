@@ -70,3 +70,31 @@ class InputContracts(unittest.TestCase):
                 self.assertNotIn('paper_observer',json.loads((work/'binding.json').read_text())['ports'])
                 self.assertLess(request['estimated_waveform_bytes'],32*1024**2*.8)
                 self.assertLess(request['estimated_condition_bytes'],256*1024**2)
+
+    def test_gnucap_observer_continuations_preserve_all_ordered_corners(self):
+        import re
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'freeze'
+            plan=freeze(CARDS,out)
+            for row in plan:
+                if row['backend']!='gnucap_modelgen':continue
+                work=out/row['work'];lines=(work/'tb.gc').read_text().splitlines()
+                start=next(i for i,line in enumerate(lines) if line.startswith('Vpaper_observer '))
+                physical=[lines[start]]
+                for line in lines[start+1:]:
+                    if not line.startswith('+'):break
+                    physical.append(line)
+                if row['condition']=='EV-SH-01':self.assertGreater(len(physical),1)
+                self.assertTrue(all(len(line.encode())<=240 for line in physical))
+                logical=' '.join(line[1:] if line.startswith('+') else line for line in physical)
+                match=re.fullmatch(r'Vpaper_observer paper_observer 0 PWL\((.*)\)',logical)
+                self.assertIsNotNone(match)
+                tokens=match[1].split()
+                request=json.loads((work/'breakpoint_requests.json').read_text())
+                expected=[token for i,r in enumerate(request['records']) for token in (format(r['time_s'],'.17g'),str(i%2))]
+                self.assertEqual(tokens,expected)
+                # Other backend/source topology remains independent of folding.
+                self.assertEqual((work/'tb.gc').read_text().count('paper_observer'),2)
+                ng=out/'runs/openvaf_r_ngspice'/row['condition']/'tb.cir'
+                ngline=next(line for line in ng.read_text().splitlines() if line.startswith('Vpaper_observer '))
+                self.assertEqual(ngline.split('PWL(',1)[1][:-1].split(),expected)

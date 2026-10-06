@@ -18,7 +18,7 @@ STATUSES = 'PFUXIT'
 EXECUTION_FAILURES = frozenset(('compile_failed', 'compile_timeout', 'runtime_timeout',
     'execution_failed', 'execution_error', 'cancelled', 'cleanup_incomplete',
     'missing_compile_artifact', 'missing_waveform', 'observation_invalid',
-    'condition_directory_limit_exceeded'))
+    'condition_directory_limit_exceeded', 'deck_parse_error'))
 
 
 def artifact_bytes(ref):
