@@ -64,14 +64,14 @@ def evaluate(rows, case, csv_path, trace_path=None):
         i=max(0,min(bisect.bisect_right(ts,t)-1,len(rows)-2))
         a,b=rows[i],rows[i+1]
         return a[node]+(b[node]-a[node])*(t-ts[i])/(ts[i+1]-ts[i])
-    def crossings(node,up):
+    def crossings(node,up,level=.5):
         found=[]
         for a,b in zip(rows,rows[1:]):
-            if (a[node]<.5<=b[node]) if up else (a[node]>.5>=b[node]):
-                found.append(a['time']+(b['time']-a['time'])*(.5-a[node])/(b[node]-a[node]))
+            if (a[node]<level<=b[node]) if up else (a[node]>level>=b[node]):
+                found.append(a['time']+(b['time']-a['time'])*(level-a[node])/(b[node]-a[node]))
         return found
-    def check_edges(node,up,expected):
-        actual=crossings(node,up)
+    def check_edges(node,up,expected,level=.5):
+        actual=crossings(node,up,level)
         if len(actual)!=len(expected): fail('edge_count',node=node,up=up,expected=len(expected),actual=len(actual))
         elif any(abs(a-b)>TIME_ATOL for a,b in zip(actual,expected)):
             fail('edge_time',node=node,up=up)
@@ -79,6 +79,13 @@ def evaluate(rows, case, csv_path, trace_path=None):
     check_edges('clk',False,[T0+n*T+.50*T+.5*EDGE for n in range(M)])
     check_edges('done',True,[T0+(M-1)*T+.75*T+.5*EDGE])
     check_edges('done',False,[])
+    # The 10% and 90% crossings distinguish 1 ns finite edges from sharp edges
+    # with the same 50% crossing. The 0.2 ns envelope permits solver interpolation.
+    for level in [.1,.9]:
+        check_edges('clk',True,[T0+n*T+.25*T+level*EDGE for n in range(M)],level)
+        check_edges('clk',False,[T0+n*T+.5*T+(1-level)*EDGE for n in range(M)],level)
+        check_edges('done',True,[T0+(M-1)*T+.75*T+level*EDGE],level)
+
     for node,expected in [('vin',.5/M),('clk',0),('done',0)]:
         if abs(rows[0][node]-expected)>V_ATOL: fail('initial',node=node)
     # Check every saved input/logic point, including holding after completion.
@@ -91,6 +98,22 @@ def evaluate(rows, case, csv_path, trace_path=None):
         elif abs(row['vin']-expected)>V_ATOL: fail('input_hold',time=t)
         for node in ['clk','done']:
             if not (-V_ATOL<=row[node]<=1+V_ATOL): fail('logic_range',node=node)
+    # Each input increment has its own relative 10%/90% crossing. Use a
+    # running maximum only to ignore solver jitter within the voltage tolerance.
+    input_values=[]; held=-math.inf
+    for row in rows:
+        if row['vin']<held-V_ATOL: fail('input_not_monotonic')
+        held=max(held,row['vin']); input_values.append(held)
+    for n in range(1,M):
+        for level in [.1,.9]:
+            threshold=(n-.5+level)/M
+            i=bisect.bisect_right(input_values,threshold)-1
+            if i<0 or i>=len(rows)-1 or input_values[i+1]==input_values[i]:
+                fail('input_edge_missing',index=n)
+            else:
+                crossing=ts[i]+(ts[i+1]-ts[i])*(threshold-input_values[i])/(input_values[i+1]-input_values[i])
+                if abs(crossing-(T0+n*T+level*EDGE))>TIME_ATOL:
+                    fail('input_edge_time',index=n,level=level)
     for n in range(M):
         for phase in [.01,.25,.75]:
             if abs(value(T0+(n+phase)*T,'vin')-(n+.5)/M)>V_ATOL: fail('scan_point',index=n)
@@ -130,7 +153,7 @@ def evaluate(rows, case, csv_path, trace_path=None):
         if trace_path is not None:
             with Path(trace_path).open(newline='') as f:
                 trace=list(csv.reader(f))
-            if trace[0] != ['index','time','code'] or len(trace)!=M+1:
+            if len(trace)!=M+1 or trace[0] != ['index','time','code']:
                 raise ValueError('expected 4096 sample records')
             for n,record in enumerate(trace[1:]):
                 if len(record)!=3 or record[0]!=str(n): raise ValueError('sample index mismatch')

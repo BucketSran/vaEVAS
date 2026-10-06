@@ -51,7 +51,7 @@ def write_csv(path, hits, mode='correct'):
 
 
 class Contract(unittest.TestCase):
-    def evaluate(self, mode='correct', mutate=None):
+    def evaluate(self, mode='correct', mutate=None, trace_mutate=None):
         case, hits, rows = fixture()
         if mode == 'old_code':
             # ADC raw data stays correct; candidate reports immediately sampled old codes.
@@ -77,7 +77,45 @@ class Contract(unittest.TestCase):
                     if mode=='old_code': k=0 if n==0 else original_codes[n-1]
                     if mode=='reversed_bits': k=int(f'{k:08b}'[::-1],2)
                     writer.writerow([n,adc.T0+(n+.25 if mode=='old_code' else n+.75)*adc.T,k])
+            if trace_mutate: trace_mutate(trace)
             return adc.evaluate(rows,case,path,trace)
+
+    def test_duplicate_index_and_nonfinite_csv_are_rejected(self):
+        def duplicate(path):
+            text=path.read_text(); path.write_text(text.replace('1,','0,',1))
+        self.assertFalse(self.evaluate(trace_mutate=duplicate)['passed'])
+        def nonfinite(path):
+            text=path.read_text(); lines=text.splitlines(); fields=lines[1].split(',')
+            fields[1]='nan'; lines[1]=','.join(fields); path.write_text('\n'.join(lines)+'\n')
+        self.assertFalse(self.evaluate(trace_mutate=nonfinite)['passed'])
+
+    def test_waveform_nonfinite_or_wrong_endpoint_is_not_scored(self):
+        with self.assertRaises(ValueError):
+            self.evaluate(mutate=lambda rows: rows[-1].update(time=adc.STOP-adc.T))
+        with self.assertRaises(ValueError):
+            self.evaluate(mutate=lambda rows: rows[0].update(vin=float('nan')))
+
+    def test_empty_sample_file_is_candidate_failure(self):
+        result=self.evaluate(trace_mutate=lambda path: path.write_text(''))
+        self.assertEqual(result['status'],'candidate_failure')
+
+    def test_short_input_edges_are_rejected(self):
+        def shorten(rows):
+            for row in rows:
+                t=row['time']; phase=(t-adc.T0)%adc.T
+                if adc.T0+adc.T<t<adc.T0+4096*adc.T:
+                    if abs(phase)<1e-15 or abs(phase-adc.T)<1e-15: row['time']+=.45e-9
+                    elif abs(phase-adc.EDGE)<1e-15: row['time']-=.45e-9
+        self.assertFalse(self.evaluate(mutate=shorten)['passed'])
+
+    def test_short_clock_edges_with_correct_midpoints_are_rejected(self):
+        def shorten(rows):
+            for row in rows:
+                t=row['time']; phase=(t-adc.T0)%adc.T
+                for start in [.25*adc.T,.5*adc.T]:
+                    if abs(phase-start)<1e-15: row['time']+=.45e-9
+                    elif abs(phase-start-adc.EDGE)<1e-15: row['time']-=.45e-9
+        self.assertFalse(self.evaluate(mutate=shorten)['passed'])
 
     def test_original_csv_contract_cannot_observe_endpoint_loss(self):
         case,hits,rows=fixture()

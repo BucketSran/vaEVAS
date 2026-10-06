@@ -33,7 +33,7 @@ PSF ASCII保存13个字段，约205k基础时间点另加边沿点，预计单�
 候选输出固定目录意味着这些运行须串行。记录 `spectre -W` 实际输出、输入身份、完整日志、
 退出码与波形身份。目录中有旧产物时换新目录，不能据此复用reward。
 
-本地 Python 语法、渲染身份和6项checker行为回归可执行；本机没有 Spectre/openvaf。
+本地 Python 语法、渲染身份和11项checker行为回归可执行；本机没有 Spectre/openvaf。
 Icarus Verilog 不接受 Verilog-A，不能充当VA语法验收。
 VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I/O须由首个reference病例检查，
 仅静态阅读网表和原创VA不能证明框架可执行。
