@@ -1,0 +1,54 @@
+`include "disciplines.vams"
+module adc_linearity_tester(vin,clk,dout,done);
+output vin,clk,done;
+input [7:0] dout;
+electrical vin,clk,done;
+electrical [7:0] dout;
+integer hits[0:255];
+integer n,k,code,internal_count,result_file,sample_file;
+real vin_target,clk_target,done_target,dnl,inl;
+analog begin
+    @(initial_step) begin
+        for (k=0;k<256;k=k+1) hits[k]=0;
+        n=0; vin_target=0.5/4096.0; clk_target=0; done_target=0;
+        sample_file=$fopen("/work/output/samples.csv","w");
+        $fwrite(sample_file,"index,time,code\n");
+    end
+    // Four absolute timer phases; guard every event after the last read.
+    @(timer(5u,1u)) if (n<4096) vin_target=(n+0.5)/4096.0;
+    @(timer(5.25u,1u)) if (n<4096) clk_target=1;
+    @(timer(5.50u,1u)) if (n<4096) clk_target=0;
+    @(timer(5.75u,1u)) if (n<4096) begin
+        code=0;
+        if (V(dout[0])>=0.5) code=code+1;
+        if (V(dout[1])>=0.5) code=code+2;
+        if (V(dout[2])>=0.5) code=code+4;
+        if (V(dout[3])>=0.5) code=code+8;
+        if (V(dout[4])>=0.5) code=code+16;
+        if (V(dout[5])>=0.5) code=code+32;
+        if (V(dout[6])>=0.5) code=code+64;
+        if (V(dout[7])>=0.5) code=code+128;
+        hits[code]=hits[code]+1;
+        $fwrite(sample_file,"%d,%.17g,%d\n",n,$abstime,code);
+        n=n+1;
+        if (n==4096) begin
+            $fclose(sample_file);
+            internal_count=0;
+            for (k=1;k<=254;k=k+1) internal_count=internal_count+hits[k];
+            result_file=$fopen("/work/output/linearity.csv","w");
+            $fwrite(result_file,"code,hits,dnl,inl\n");
+            inl=0;
+            for (k=1;k<=254;k=k+1) begin
+                dnl=254.0*hits[k]/internal_count-1.0;
+                inl=inl+dnl;
+                $fwrite(result_file,"%d,%d,%.17g,%.17g\n",k,hits[k],dnl,inl);
+            end
+            $fclose(result_file);
+            done_target=1;
+        end
+    end
+    V(vin) <+ transition(vin_target,0,1n,1n);
+    V(clk) <+ transition(clk_target,0,1n,1n);
+    V(done) <+ transition(done_target,0,1n,1n);
+end
+endmodule

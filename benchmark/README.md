@@ -11,6 +11,7 @@
 原始资料分为课题组工程模型与 Cadence 安装库模型，仅供内部研究，不对外分发。
 另有一个仓库自有的候选修复题：[积分三角波振荡器](tasks/va07-triangle-repair/instruction.md)。
 它检查双向事件导致的边界反复换向，单独校准，不加入原六题的初筛成绩。
+原创 [ADC DNL/INL测量首题](tasks/va08-adc-linearity/SOURCE.md) 已有本地checker校准与任务资产，实际 Spectre/Harbor 校准及模型试跑待完成，也不加入原六题分母。
 任务位于 `tasks/`；每题 `SOURCE.md` 说明原始资产和必要改编，原始源码保持不变。
 
 ## 目标与边界
