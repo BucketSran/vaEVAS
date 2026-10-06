@@ -26,3 +26,5 @@ jobs:
         run: python3 -B -m experiments.va_screen.identity --historical
       - name: Identity and result reporting regressions
         run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
+      - name: Saved-candidate EVAS replay regressions
+        run: python3 -B -m unittest discover -s benchmark/checkers -p test_triangle_evas_replay.py -v

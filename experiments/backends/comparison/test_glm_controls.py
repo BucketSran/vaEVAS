@@ -4,13 +4,15 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
+import sys
+import shutil
 import unittest
 from unittest.mock import patch
 
 import ingest
 import runner
 import seed
-from records import ROOT, load, sha
+from records import ROOT, load, sha, validate
 from freeze import freeze, save
 
 
@@ -22,7 +24,11 @@ class GlmControls(unittest.TestCase):
                 inputs=root/'inputs'
                 freeze(inputs)
                 kernel=root/'fake-kernel'
-                kernel.write_text('not executable; no subprocess is launched')
+                reported={'identity_version':1,'name':'evas-kernel','version':'0.13.0',
+                          'ir_schema_version':17,'build_revision':None,'request_protocol_version':None,
+                          'platform':{'os':'test','arch':'test'}}
+                kernel.write_text('#!'+sys.executable+'\nprint('+repr(json.dumps(reported))+')\n')
+                kernel.chmod(0o755)  # Identity query only; numerical worker remains mocked.
                 args=SimpleNamespace(inputs=inputs,output=root/'output',backend='evas',kernel=kernel,
                                      allocation='synthetic-control',resume_finished_spectre=False)
                 stage={'stage':'simulate','exit_code':code,'timed_out':False}
@@ -47,6 +53,28 @@ class GlmControls(unittest.TestCase):
         self.assertEqual([r['verdict'] for r in rows[:2]],['U','X'])
         self.assertTrue(all(r['availability']['raw']=='local-only' for r in rows))
         self.assertTrue(all(r['availability']['raw_note'] for r in rows))
+
+    def test_plain_ingest_measurement_run_id_is_bound_to_started_receipt(self):
+        data = load(ROOT / 'experiments/backends/comparison/snapshot-20261006-cmp-completion-evas-v3.json')
+        self.assertFalse(data.get('refresh') or data.get('completion'))
+        validate(data)
+        row = next(r for r in data['records'] if r['dataset'] == 'cmp8-base' and r['backend'] == 'evas')
+        self.assertIn('started_sha256', load(ROOT / row['execution_receipt']['path']))
+        row['measurement']['run_id'] = 'controlled-unbound-measurement-id'
+        with self.assertRaisesRegex(ValueError, 'run identity mismatch'):
+            validate(data)
+
+    def test_actual_c7_started_without_nanoseconds_remains_valid(self):
+        data = load(ROOT / 'experiments/backends/comparison/snapshot-20261006-cmp-completion-evas-v3.json')
+        rows = [r for r in data['records'] if r['dataset'] == 'cmp8-base' and r['backend'] == 'evas']
+        self.assertEqual(len(rows), 8)
+        for row in rows:
+            receipt = load(ROOT / row['execution_receipt']['path'])
+            started = load(ROOT / receipt['started']['path'])
+            self.assertNotIn('started_unix_ns', started)
+            self.assertEqual(receipt['started_sha256'], sha(ROOT / receipt['started']['path']))
+            self.assertEqual(row['measurement']['run_id'], receipt['run_id'])
+        validate(data)  # Re-ingesting historical bytes must not invent timestamps.
 
     def test_ingest_new_receipts_preserve_status_and_canonical_raw_availability(self):
         # Exercise actual new receipt/record writes using a synthetic execution,
@@ -77,10 +105,24 @@ class GlmControls(unittest.TestCase):
             self.assertEqual([r['verdict'] for r in actual],['U']+['X']*7)
             for r in actual:
                 receipt=load(ROOT/r['execution_receipt']['path'])
+                self.assertNotEqual(receipt['run_id'], output.name)
+                self.assertEqual(receipt['run_directory'], output.name)
+                self.assertEqual(receipt['started_sha256'], sha(output/'STARTED.json'))
+                self.assertEqual(r['measurement']['run_id'], receipt['run_id'])
                 self.assertEqual(receipt['raw_availability'],'local-only')
                 self.assertTrue(receipt['raw_availability_note'])
                 self.assertEqual(r['availability']['raw'],'local-only')
                 self.assertEqual(r['availability']['raw_note'],receipt['raw_availability_note'])
+            other = root/'another-task'/output.name
+            shutil.copytree(output, other)
+            started = load(other/'STARTED.json')
+            started['allocation'] = 'distinct-synthetic-execution'
+            (other/'STARTED.json').write_text(json.dumps(started))
+            with patch('ingest.runner_sources',return_value=[]),patch('derive.freeze_candidates'),patch('ingest.validate'):
+                second = ingest.ingest(snapshot, inputs, [other], root/'second-compact')
+            ids = {r['measurement']['run_id'] for r in actual}
+            second_ids = {r['measurement']['run_id'] for r in second['records'] if r['dataset']=='cmp8-base' and r['backend']=='evas'}
+            self.assertTrue(ids.isdisjoint(second_ids), 'same directory basename must not collapse distinct STARTED identities')
 
 
 if __name__=='__main__':

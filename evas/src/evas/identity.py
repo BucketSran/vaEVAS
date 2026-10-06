@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 
-from .errors import KernelError
+from .errors import DiagnosticArgumentParser, KernelError
 from .ir import SCHEMA_VERSION
 from .manifest import finite_float, reject_constant, unique_object
 
@@ -101,8 +101,7 @@ def inspect_identity(kernel=None):
 
 
 def main(argv):
-    import argparse
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__)
     parser.add_argument('--json', action='store_true', required=True)
     selection = parser.add_mutually_exclusive_group()
     selection.add_argument('--kernel', type=Path)

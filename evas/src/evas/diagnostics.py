@@ -1,13 +1,14 @@
 """Capture and query a bound diagnostic artifact; queries never run the kernel."""
-import argparse
 import hashlib
 import json
 from pathlib import Path
 import tempfile
 
-from . import Instance, KernelError, compile_sources
+from .errors import DiagnosticArgumentParser
+from . import CompileError, Instance, KernelError, compile_sources
 from .ir import SCHEMA_VERSION
-from .manifest import parse_manifest, unique_object, reject_constant, finite_float
+from .manifest import unique_object, reject_constant, finite_float
+from .lint import read_input_bytes, decode_input, parse_manifest_input
 from .protocol import validate_response
 from .query import static_index, query_static
 from .runtime import _invoke, _tolerances, DEFAULT_TIMEOUT
@@ -34,11 +35,11 @@ def frontend_identity():
 def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
     """Return a complete or failed run artifact. A timeout has no complete trace."""
     manifest_path, kernel = Path(manifest_path).resolve(), Path(kernel).resolve()
-    manifest_bytes = manifest_path.read_bytes()
-    manifest = parse_manifest(manifest_bytes.decode())
+    manifest_bytes = read_input_bytes(manifest_path, 'manifest_io')
+    manifest = parse_manifest_input(decode_input(manifest_bytes, 'manifest_input'))
     paths = [(manifest_path.parent / name).resolve() for name in manifest['models']]
-    source_bytes = {str(path): path.read_bytes() for path in paths}
-    sources = {path: data.decode() for path, data in source_bytes.items()}
+    source_bytes = {str(path): read_input_bytes(path, 'source_io') for path in paths}
+    sources = {path: decode_input(data, 'source_input') for path, data in source_bytes.items()}
     identities = dict(manifest=dict(path=str(manifest_path), sha256=digest(manifest_bytes)),
                       sources=[dict(path=path, sha256=digest(data)) for path, data in source_bytes.items()],
                       kernel=dict(path=str(kernel), sha256=digest(kernel.read_bytes())),
@@ -66,7 +67,7 @@ def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
     if set(manifest.get('tolerances', {})) - {'vabstol', 'reltol', 'absolute', 'relative'}:
         raise ValueError('unknown voltage tolerance')
     identities.update(ir_sha256=digest(canonical(request['program'])), request_sha256=digest(canonical(request)))
-    response, error, diagnostic = None, None, None
+    response, error, diagnostic, error_diagnostic = None, None, None, None
     with tempfile.TemporaryDirectory(prefix='evas-diagnostic-') as directory:
         sidecar = Path(directory) / 'kernel.json'
         try:
@@ -74,6 +75,7 @@ def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
             validate_response(response, program, count, times)
         except KernelError as exc:
             error = exc.detail
+            error_diagnostic = exc.diagnostic
         if sidecar.exists():
             diagnostic = load_json(sidecar.read_text())
     # A binary/source replaced during execution cannot be bound to this session.
@@ -87,7 +89,7 @@ def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
         if status == 'failed' and diagnostic.get('error') != error:
             raise ValueError('diagnostic error mismatch')
     payload = dict(request=request, static=static_index(program, instances, sources),
-                   status=status, response=response, error=error, diagnostics=diagnostic)
+                   status=status, response=response, error=error, error_diagnostic=error_diagnostic, diagnostics=diagnostic)
     return dict(session_version=1, identity=identities,
                 payload=payload, payload_sha256=digest(canonical(payload)))
 
@@ -128,6 +130,7 @@ class Session:
         if section == 'status':
             report = payload['diagnostics']
             return dict(status=payload['status'], error=payload['error'],
+                        error_diagnostic=payload.get('error_diagnostic'),
                         diagnostic_available=report is not None,
                         trace_truncated=report['truncated'] if report else None,
                         identity=self.artifact['identity'])
@@ -177,7 +180,7 @@ class Session:
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='action', required=True)
     record = sub.add_parser('capture')
     record.add_argument('manifest', type=Path)
@@ -198,8 +201,11 @@ def main():
             print(json.dumps(dict(status=result['payload']['status'], session=str(args.out))))
         else:
             print(json.dumps(Session(args.session).query(args.section, start=args.start, limit=args.limit), allow_nan=False))
+    except (CompileError, KernelError) as exc:
+        parser.exit(2, json.dumps(exc.diagnostic, allow_nan=False) + '\n')
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        parser.exit(2, f'{exc}\n')
+        from .errors import diagnostic
+        parser.exit(2, json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc)), allow_nan=False) + '\n')
 
 
 if __name__ == '__main__':

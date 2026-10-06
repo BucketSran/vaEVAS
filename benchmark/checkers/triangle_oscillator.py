@@ -96,6 +96,10 @@ def read_psf(path):
     return rows
 
 
+class BehavioralRejection(ValueError):
+    """A structurally complete waveform violates the task behavior."""
+
+
 def evaluate(rows, case, event_times=None):
     expected = roots(case)
     if len(rows) < 3 or any(not {'time','z','count'} <= r.keys() for r in rows):
@@ -113,18 +117,18 @@ def evaluate(rows, case, event_times=None):
     for row in rows:
         n = round(row['count'])
         if n < 0 or abs(row['count']-n) > case['wave_atol']:
-            raise ValueError('noninteger count')
+            raise BehavioralRejection('noninteger count')
         if n != old:
             if n != old+1:
-                raise ValueError('missing, grouped or reversed count')
+                raise BehavioralRejection('missing, grouped or reversed count')
             observed.append(row['time'])
             old = n
         if all(abs(row['time']-t) > case['time_atol'] for t in expected):
             if n != sum(row['time'] > t for t in expected):
-                raise ValueError('incorrect count outside event windows')
+                raise BehavioralRejection('incorrect count outside event windows')
     actual = observed if event_times is None else event_times
     if len(observed) != len(expected) or len(actual) != len(expected):
-        raise ValueError('incorrect event count')
+        raise BehavioralRejection('incorrect event count')
     voltage_error = max(abs(r['z']-reference(case,r['time'])) for r in rows)
     time_error = max((abs(a-b) for a,b in zip(actual,expected)), default=0.)
     return dict(passed=voltage_error <= case['wave_atol'] and time_error <= case['time_atol'],
@@ -180,11 +184,20 @@ def verify(candidate, output, cases_path):
                 if record['returncode'] == 0 and not record['timeout']:
                     path = work/'psf/tran.tran.tran'
                     try:
-                        record.update(evaluate(read_psf(path),case), waveform_sha256=sha(path))
+                        try:
+                            record.update(evaluate(read_psf(path),case))
+                        except BehavioralRejection as error:
+                            record['reason'] = str(error)
+                        # Only successful evaluation or a semantic rejection establishes
+                        # that the waveform is structurally complete and can be graded.
+                        record.update(status='graded', waveform_sha256=sha(path))
                     except (ValueError,KeyError,OSError) as error:
-                        record['reason'] = str(error)
+                        record.update(status='checker_error', passed=False, reason=str(error))
                 report['cases'].append(record)
-            report['reward'] = int(all(c['passed'] for c in report['cases']))
+            if any(c.get('status') == 'checker_error' for c in report['cases']):
+                report['status'] = 'checker_error'
+            else:
+                report['reward'] = int(all(c['passed'] for c in report['cases']))
         except (OSError, subprocess.SubprocessError, RuntimeError) as error:
             report.update(status='infrastructure_error', reason=str(error))
     dump(output/'report.json', report)

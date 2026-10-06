@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import csv
 import importlib.util
+from functools import partial
 import json
 import math
 import os
@@ -17,6 +18,7 @@ import signal
 import subprocess
 import sys
 import time
+from types import SimpleNamespace
 
 from records import ROOT, BACKENDS, identity, load, sha
 from freeze import SELECTED, checker_identity, runtime_identity, save
@@ -164,9 +166,16 @@ def run(args):
             raise ValueError('explicit current kernel required')
         if runtime_identity() != load(source / 'provenance.json')['evas_runtime_identity']:
             raise ValueError('EVAS source changed since input freeze; use a new batch identity')
+        sys.path.insert(0, str(ROOT / 'evas/src'))
+        from evas.identity import inspect_identity
+        facts, error = inspect_identity(args.kernel)
+        save(output / 'KERNEL_IDENTITY.json', facts)
+        if error is not None:
+            raise error
         tool = {'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-                'runtime_identity': runtime_identity(), 'kernel_sha256': sha(args.kernel),
-                'kernel_version': 'unknown', 'version_note': 'This runner does not query the kernel version; retain actual binary hash and response engine identity. Query kernel identity separately when needed.'}
+                'runtime_identity': runtime_identity(), 'kernel_sha256': facts['kernel']['sha256'],
+                'kernel_version': facts['kernel']['reported']['version'], 'identity': facts,
+                'version_note': 'Selected kernel identity queried before execution; an IR match does not establish full runtime compatibility.'}
     elif args.backend == 'spectre':
         if not args.spectre_profile:
             raise ValueError('existing Spectre profile required')
@@ -194,6 +203,9 @@ def run(args):
         spec = importlib.util.spec_from_file_location('cmp_environment', path)
         env = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(env)
+        # The pinned profile inspects images via check_output; bound that preflight.
+        env.subprocess = SimpleNamespace(**vars(subprocess))
+        env.subprocess.check_output = partial(subprocess.check_output, timeout=30)
         images = env.check_inputs()
         expected = load(ROOT / 'experiments/archive/dvs2-starter-pilot/results/TOOL_IDENTITIES.json')['images']
         names = ['openvaf_runtime', 'ngspice'] if args.backend == 'openvaf_ngspice' else ['gnucap']
@@ -205,7 +217,7 @@ def run(args):
         if args.backend == 'openvaf_ngspice':
             compiler = env.PACKAGE / 'backend-semantics-v1/tools/reloaded/openvaf-r-v24.0.2mob-linux-x86_64/bin/openvaf-r'
             tool['openvaf_artifact_sha256'] = sha(compiler)
-    started = {'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
+    started = {'started_unix_ns': time.time_ns(), 'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
          'plan_sha256': sha(source / 'RUN_PLAN.json'), 'configurations': 8, 'max_simulations': 8,
          'max_compilations': 8, 'stage_timeout_s': 90, 'license_timeout_s': 30, 'tool': tool,
          'runner_sha256': sha(Path(__file__)), 'allocation': args.allocation}
