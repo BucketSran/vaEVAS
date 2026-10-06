@@ -60,3 +60,7 @@ V1–V7的覆盖/缺口映射位于生成表，链接能力ID和现有Issue，�
 本次固定32配置的[结果与收据](../../experiments/backends/comparison/TABLE.md)已完整记账，
 其中16配置有新观察、16因既有容器层缺失未运行。表C记录va07正确参考候选及独立checker身份，
 四后端公共回放合同仍pending；候选身份不等于跨后端资格或新论文数据集。
+
+补齐现有8条件开发表使用[completion静态合同](../../experiments/backends/comparison/README.md#补齐开源后端的静态组合)：
+三个完整8项新执行批次加原Spectre8复用；所有失败仍在32分母中。它与仅刷新EVAS的旧合同分开，
+不改变历史收据或正式资格。论文集和C跨后端合同仍待冻结，不能将开发补测称为新独立评估。

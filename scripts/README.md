@@ -80,3 +80,15 @@ python3 -B scripts/recompile_evas_manifests.py \
 旧 IR 不能通过修改 `schema_version` 迁移；没有对应 VA/manifest 的文件无法由此工具重编译。
 脚本不会启动 Rust 内核。部分模型失败时返回非零状态，成功项仍保留在新输出目录中。
 兼容性与错误分类见 [IR 版本与迁移](../evas/README.md#ir-v8-migration)。
+
+## 诊断源码清单
+
+```sh
+python3 -B scripts/diagnostic_inventory.py --write
+python3 -B scripts/diagnostic_inventory.py --check
+```
+
+生成 [diagnostic-inventory.json](../evas/docs/diagnostic-inventory.json)，记录 Python/Rust
+生产源码的诊断构造、包装、转换和处理器。条目都是源码观察，不能作为实际触发覆盖率；
+维护范围、动态原因与消费者兼容边界见 [诊断来源](../evas/docs/diagnostic-sources.md)。
+修改相关源码或登记后重新生成；CI 拒绝旧清单。

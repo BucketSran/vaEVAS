@@ -1,8 +1,8 @@
 """Single-session read-only MCP stdio server. No kernel execution in tool calls."""
-import argparse
 import json
 import sys
 
+from .errors import DiagnosticArgumentParser
 from .diagnostics import Session, load_json
 
 VERSION = '2025-11-25'
@@ -124,13 +124,14 @@ class Server:
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = DiagnosticArgumentParser(description=__doc__)
     parser.add_argument('session', type=str)
     args = parser.parse_args()
     try:
         Server(Session(args.session)).serve(sys.stdin, sys.stdout)
     except (OSError, ValueError, KeyError, TypeError, UnicodeError) as exc:
-        parser.exit(2, f'{exc}\n')
+        from .errors import diagnostic
+        parser.exit(2, json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc)), allow_nan=False) + '\n')
 
 
 if __name__ == '__main__':

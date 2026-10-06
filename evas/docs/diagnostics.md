@@ -9,8 +9,10 @@
 Python `CompileError.diagnostic` 与 `KernelError.diagnostic` 提供
 `diagnostic_version=1`、`code`、`category`、`stage`、`capability` 和 `message`。
 有准确来源时提供 `location`/`instance`；没有时不猜测。
-CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
+CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此边界，帮助文本保留 argparse 的成功退出。旧 `str(CompileError)` 及
 `KernelError.detail` 保留原始信息；内核原有 kind/message/sample 字段继续可用。
+诊断规范元数据覆盖同名载荷值时，`diagnostic.raw_payload` 保存完整原载荷，
+包括载荷自己已有的 raw_payload 字段；规范 category/capability 仍按登记表或 unknown 生成。
 该附加诊断版本独立于求解 IR，不要求迁移 IR17。
 
 登记入口为 [errors.py](../src/evas/errors.py)。当前具名规则包括：
@@ -35,8 +37,8 @@ CLI 在 stderr 输出同样的 JSON 并返回 2。旧 `str(CompileError)` 及
 本 E1 切片把已审计的 token、宏/函数、genvar、层级与数组预算来源映射到已有
 `resource_budget`；递归/未确定原因继续 unknown。内核 `nonconvergence` 为 numerical，
 `event_budget` 为 resource，`input_io`、`diagnostic_io`、`worker_start` 为 infrastructure。
-来源、实际触发与仅源码审计的边界见[有限来源登记](diagnostic-sources.md)。
-这不是所有出口登记完成，也没有交付外部 benchmark 消费适配。
+来源、实际触发、全源码观察与消费者兼容见[来源登记](diagnostic-sources.md)。
+完整机器清单覆盖已审计工厂/包装/转换；不表示所有出口都实际触发，也没有交付外部 benchmark 消费适配。
 
 其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源或
 基础设施归类。已登记的具体原因保留已有分类，未登记的失败保持 `unknown`。
@@ -70,37 +72,22 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 [test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。timer 连续依赖
 与 DAE/事件组合保留原来的 `unsupported` 分类和对应能力；其他额外内核载荷字段也保留。
 
-## 本批来源盘点与覆盖边界
+## 来源盘点与覆盖边界
 
-以下保留 PR #83 的 2026-10-06 lint 候选代码来源观察，含执行选项拒绝修复。
-它是该检查点的静态快照，不是本 E1 切片后的当前位置计数，也不是执行退出覆盖率。按直接
-`CompileError` / `diagnostic` / `KernelError` 构造、`fail` 包装候选与 Rust
-`Error::new` 位置统计。排除 Python 登记/适配器自身与 Rust 测试文件、
-`#[cfg(test)]` 尾部；没有解析出明确 code 的包装默认值不猜测。扫描包括编译器、
-CLI 和内核中的候选出口，不证明每个候选都在用户输入下可达，也不声称穷尽所有包装路径。
+完整源码观察存于 [diagnostic-inventory.json](diagnostic-inventory.json)，由
+`scripts/diagnostic_inventory.py` 生成并由 CI 检查新鲜度。它包含 Python 前端/CLI、Rust
+生产源码和 IR 子 crate 的构造、包装、转换、处理器与元数据改写；以源码结构而非行号标识。
+当前共 780 条源码观察，372 条仍为 unknown；这些数包括同一路径的多个观察，不是错误
+种类数或执行覆盖率。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](diagnostic-sources.md)。
 
-| 来源观察 | 发现位置 | 匹配登记 | 有稳定分类 | 未细分或待解析 |
-| --- | ---: | ---: | ---: | ---: |
-| Python 编译/CLI 直接构造 | 82 | 77 | 19 | 63 |
-| Python 内核适配构造 | 10 | 9 | 9 | 1 |
-| Python `fail` 包装候选 | 159 | 10 | 8 | 151 |
-| Rust 生产 `Error::new` 候选 | 255 | 191 | 191 | 64 |
+普通 manifest CLI、lint、results/capture 使用同一输入来源诊断。results 的 API、CLI 与失败
+marker 保持相同 diagnostic；迁移结果保留旧文本 diagnostic，并附加 error。捕获会话保留
+原内核 payload.error，另含 error_diagnostic；status/MCP status 传递两者。旧会话缺附加字段
+时返回 null，不能解释为执行成功。明确非 v1 的内核诊断保留原版本和载荷，按 unknown
+处理，不根据已知 kind 套当前类别。回归见 [消费者测试](../tests/test_diagnostic_consumers.py)。
 
-登记表共 21 个 Python code 和 19 个内核 kind，其中 Python 的通用
-`compile_error` 与 `syntax_error` 登记保留 `unknown`，因此“匹配登记”不等于
-“已细分”。同一原因可有多个来源位置；表中的位置数也不是不同诊断原因数。
-Rust 已有 `unsupported_analysis`、`unsupported_condition`、`unsupported_operator`、
-`unsupported_transient`、`unsupported_cross`、`unsupported_timer` 和
-`unsupported_implicit_dynamics` 从明确的生产构造位置登记，保留已有分类。
-未登记的未来 `unsupported_*` 仍为 `unknown`。
-未登记 Python code 的 `stage` 为 null；已登记的旧 `compile_error` 仍保留 compile 阶段。
-
-本批实际执行的验收案例包括无内核 affine lint、清单/源访问与编码失败、必需清单
-结构错误、未知参数覆盖、非数值覆盖、循环默认依赖、参数依赖深度预算、实际展开 IR
-过预算、无效数值请求仍只通过编译，以及 lint 成功后真实 DAE 瞬态拒绝。
-这些案例的执行结果与源枚举分开记录；不会由源扫描推断未执行出口的分类正确性。
-未登记的宏/语法/循环等预算包装、其他旧编译原因、剩余内核原因，以及 #64 的完整
-退出登记和外部 benchmark 消费端仍待处理。循环展开算法与预算没有在本批改动。
+已执行的来源负例与源码盘点分开报告；unknown 不表示候选模型非法，也不表示实现缺陷。
+外部 benchmark/harness 的读取及评分分母验收仍待完成，因此 #64 总项继续开放。
 
 ## 取得一次运行
 
