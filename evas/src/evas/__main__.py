@@ -12,6 +12,9 @@ from .errors import diagnostic
 
 
 def main():
+    if sys.argv[1:2] == ['version']:
+        from .identity import main as identity_main
+        return identity_main(sys.argv[2:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["compile", "solve", "transient", "simulate"])
     parser.add_argument("manifest", type=Path)
