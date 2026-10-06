@@ -11,7 +11,8 @@ def bind_parameters(model, overrides, instance_name):
     def validate(expr):
         if (expr.op in ('voltage', 'array', 'index') or contains_operator(expr)
                 or expr.op == 'parameter' and expr.value not in model.parameters):
-            raise CompileError(f'{expr.token.source or model.source}:{expr.token.line}: invalid parameter default')
+            raise CompileError(f'{expr.token.source or model.source}:{expr.token.line}: invalid parameter default',
+                               code='parameter_dependency', token=expr.token, instance=instance_name)
         for arg in expr.args:
             validate(arg)
 
@@ -23,7 +24,8 @@ def bind_parameters(model, overrides, instance_name):
                 if endpoint is not None and not isinstance(endpoint, float):
                     validate(endpoint)
     if not set(overrides) <= model.parameters.keys():
-        raise CompileError(f'{instance_name}: unknown parameter override')
+        raise CompileError(f'{instance_name}: unknown parameter override',
+                           code='parameter_override', instance=instance_name)
     dependencies, cache, active, depths = {}, {}, set(), {}
     for name, expr in model.parameters.items():
         refs, pending = [], [] if name in overrides else [expr]
@@ -41,7 +43,8 @@ def bind_parameters(model, overrides, instance_name):
                 continue
             if not exiting:
                 if name in active:
-                    raise CompileError(f'{model.source}: cyclic parameter defaults involving {name!r}')
+                    raise CompileError(f'{model.source}: cyclic parameter defaults involving {name!r}',
+                                       code='parameter_dependency', token=model.parameters[name].token, instance=instance_name)
                 active.add(name)
                 pending.append((name, True))
                 pending.extend((ref, False) for ref in reversed(dependencies[name]))
@@ -49,21 +52,26 @@ def bind_parameters(model, overrides, instance_name):
             depth = 1 + max((depths[ref] for ref in dependencies[name]), default=0)
             if depth > MAX_PARAMETER_DEPTH:
                 token = model.parameters[name].token
-                raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded')
+                raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: parameter dependency depth limit ({MAX_PARAMETER_DEPTH}) exceeded',
+                                   code='resource_budget', token=token, instance=instance_name)
             if name in overrides:
                 value = overrides[name]
                 if isinstance(value, bool) or not isinstance(value, (int, float)):
-                    raise CompileError(f'{instance_name}: parameter {name!r} must be numeric')
+                    raise CompileError(f'{instance_name}: parameter {name!r} must be numeric',
+                                       code='parameter_override', token=model.parameters[name].token, instance=instance_name)
                 try:
                     value = float(value)
                 except OverflowError as error:
-                    raise CompileError(f'{instance_name}: nonfinite parameter {name!r}') from error
+                    raise CompileError(f'{instance_name}: nonfinite parameter {name!r}',
+                                       code='parameter_override', token=model.parameters[name].token, instance=instance_name) from error
             else:
                 check_integer_expression(model.parameters[name], model, cache,
                                          check_literals=model.parameter_types.get(name) == 'integer')
                 value = lower(model.parameters[name], lambda n: cache[n], {}, model.source).constant
             if not math.isfinite(value):
-                raise CompileError(f'{instance_name}: nonfinite parameter {name!r}')
+                raise CompileError(f'{instance_name}: nonfinite parameter {name!r}',
+                                   code='parameter_override' if name in overrides else 'parameter_dependency',
+                                   token=model.parameters[name].token, instance=instance_name)
             if model.parameter_types.get(name) == 'integer' and not (value.is_integer() and -2147483648 <= value <= 2147483647):
                 raise CompileError(f'{instance_name}: integer parameter {name!r} requires an exact signed 32-bit value; implicit rounding is not supported',
                                    code='parameter_type', token=model.parameters[name].token, instance=instance_name)
