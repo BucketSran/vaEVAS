@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：IR17 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR 与多事件写者。
+适用范围：IR18 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR 与多事件写者。
 能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](../CAPABILITIES.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
@@ -56,6 +56,42 @@ cross 叶子保留 `guard_value`；timer 叶子不伪造 guard 值，只保留�
 动态 guard 的范围见下节，多块写同一状态的规则见
 [写者检查](#multiple-event-writers)。全部故障点的系统性注入和完整连续时间误差资格仍是验证缺口。
 
+<a id="input-initialization"></a>
+
+## 实际驱动输入的比较初值
+
+本分支新增 `@(initial_step) q=(V(in)>H);` 的受限支持。`q` 必须为 real；
+常量初值仍适用于 real/integer。Verilog-A 比较结果为 0/1；这里实现的是外部输入
+在 t=0 已由理想源确定的情形，不求内部电路与状态的初始化固定点。
+这是 EVAS 的能力边界，不表示其他合法 initial_step 写法违反语言标准。
+
+比较关系限 `<`、`<=`、`>`、`>=`。两侧可含已绑定参数与仿射电压运算，
+前端只允许 input/inout 端口或 ground。Rust 还核对所有节点都属于本次请求的
+实际 driven 集或 ground，inout 声明本身不能证明它由外部源驱动。
+内部节点、未驱动端口、其他实例输出、状态与算子依赖均拒绝；
+零系数、代数抵消和未走分支不能隐藏依赖。嵌套决策、逻辑/三元初值、
+一般采样实数、条件初始化和分析专属生命周期仍不支持。
+
+令输入仿射谓词为 `d=a(v(0))-b(v(0))`。`>` 在 `d=0` 返回 0，`>=` 返回 1，
+不设置 epsilon。单点输入复用 binary64 乘积和的精确符号证明；
+非点输入复用向外舍入区间证明。区间横跨分支边界且无法证明时返回
+`initialization_precision`，附源码及状态身份，不猜测初值。
+选择后的初值是精确 0/1 单点，不引入一般初值算术的误差传播。
+
+Python `instance_compiler.py` 独立 lowering 初值并保留结构/来源，IR18 的
+`State.initial` 为 number 或 `op=select` 对象。Rust `initialization.rs::resolve`
+从 `Trajectory.value_bounds(0)` 解析整个候选集，成功后才安装常数。
+`EventModel.initial()`、算子构造和守卫调度使用同一组结果；
+之后才建立完整接受帧，执行合法 timer(0) 并输出首行。
+失败路径没有模型、日程、历史、接受帧或 trace 可提交。
+旧 schema 和畸形字段分别由版本/请求校验拒绝。
+
+[公开行为回归](../../tests/test_input_initialization.py)保留原 EV-HC-02 源码，
+独立检查高/低启动、精确 tie、两个实例、后续迟滞计数、t=0 timer、
+算子初态和 held timer 守卫；Rust 私有回归检查不确定区间拒绝与重试。
+这些是开发控制，未更改论文源卡、阈值或分母。本分支尚待实际 Spectre 对齐，
+本地回归不能替代商业后端证据。
+
 <a id="initial-cross"></a>
 
 ## 常量初始化与 cross 共用体
@@ -75,7 +111,7 @@ body 只能包含无条件赋值。它与其他初始化体合起来，仍须使
 
 `syntax.py` 的 `monitored_event`/`analog_block` 把常量初始化送入已有 `Model.initial`，
 把 cross 叶子及相同 body 留作运行时事件；`instance_compiler.py` 验证绑定后的初始化常量。
-Rust 继续使用已有初始化和事件路径，IR17 与数值算法不变。
+常量共享体继续使用已有事件路径；当前 IR18 的输入比较初始化见[下文](#input-initialization)。
 这项限定支持不扩展到 timer 混合、多个或分析限定初始化叶、动态初值、
 条件初始化、嵌套事件或冲突写者。纯 initial_step 及已有冗余纯初始化 OR 保持原规则。
 
@@ -130,9 +166,9 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 [LRM 2.4](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) 和
 [事件语句参考](https://verilogams.org/refman/modules/analog-procedural/timing.html)。
 
-- 声明标量 `integer` / `real` 状态，每个状态必须恰有一次 `@(initial_step)` 常数赋值，
-  可以引用有效实例参数；暂不接受依赖电压或其他状态的初始化。初始化常数在绑定时确定，
-  Rust 在 t=0 的首次求解前安装一次；[共享初始化/cross 体](#initial-cross)也须满足此契约。
+- 声明标量 `integer` / `real` 状态，每个状态必须恰有一次 `@(initial_step)` 赋值。
+  常数可以引用有效实例参数；real 状态还接受[受限 driven 输入比较](#input-initialization)。
+  Rust 在 t=0 的首次求解前安装一次；[共享初始化/cross 体](#initial-cross)仍限常量体。
   初始高电平、初始零值的离开本身不产生 `cross`。
 - `@(cross(g[, direction[, ttol[, tol]]]))` 接受空语句、顺序赋值或下述受限 if/else 块。方向为 -1/0/+1，默认 0；
   两项容差必须为正的有限实例常数，默认分别为 1 ps 和 1e-9 表达式单位。不支持 cross enable；cross 的受限 `or` 见[OR 规则](#event-or)。
@@ -145,7 +181,7 @@ Spectre 的闭源实现不能由波形反推出完整算法；固定 V3 实验�
 - 每个实际候选批次中，每个状态最多由一个 cross 或 timer 事件块写入。
   不同事件块可以在可证明不同批次触发时写同一状态；若同一批次实际选中的两个块写同一状态，
   返回 `event_conflict`，不按声明顺序、源码位置或事件类型决定胜负。
-  构建期仍拒绝事件块直接读取另一个事件块也可能写入的状态，避免隐藏的跨块顺序依赖。
+  构建期仍拒绝事件块读取其他块可能写入的状态，下面的受限自增/自减除外。
   同块语句依次看到自己的更新。
   支持同块对同一 integer 状态重复赋值，和 real 一样逐句更新局部状态。
   每次 integer 赋值都检查精确整数及 signed 32-bit 范围，后续写回合法值不能掩盖中间越界。
@@ -224,7 +260,7 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的 `analog_expression_or_null` / `constant_expression_or_null`；start 和显式 enable 不能留空。
 前端把省略的 period 归一化为 0，enable 归一化为 1，time_tol 归一化为 `1e-12 s`，
-再生成已有 IR17，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
+再生成当前 IR18，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
 也不代表 Spectre 的缺省值。LRM 允许显式零容差；EVAS 当前仍要求显式容差为正。
 固定日程的 start 必须为非负有限实例常数，period 为有限实例常数。
 enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
@@ -241,7 +277,7 @@ enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型�
 不会从上次实际事件时间累加周期，也不按容差合并相邻名义事件。
 同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和批次写者冲突规则与 cross 一致。
 
-t=0 时先安装 initial_step 常量并求初始电压，再原子执行 timer(0)，最后输出初始观测。
+t=0 时先解析并安装 initial_step 初值，再求初始电压，再原子执行 timer(0)，最后输出初始观测。
 名义事件恰为 stop 时照常提交，即使未请求 stop 输出也保留事件记录；名义时刻超出
 stop 的事件不调度。这是 EVAS 的确定性边界策略，其他后端仍应按完整允许窗口验收。
 计时误差、与 stop 的关系、相邻事件次序不能证明，或周期不能推进可表示时间时，
@@ -288,13 +324,18 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 ### 多事件块写同一状态
 
 写者检查按实际候选批次执行。
-构建期允许不同事件块潜在写同一 state，但仍拒绝事件块读取另一个事件块也可能写入的 state。
+构建期允许不同事件块潜在写同一 state。读取其他块也可能写的状态时，
+仅允许 `n=n+c` 的受限自增/自减：完整结构状态依赖集恰为赋值目标 `n`，
+其仿射系数恰为 1，常数有限，且没有电压或算子依赖。integer 仍需每句通过整型/范围检查。
+例如两个异刻迟滞块都执行 `n=n+1`，各自读取同一份已接受历史并逐句更新。
+依赖另一个状态、`n-n`、`0*n`、舍入下溢或非 1 系数不会获得此例外。
 每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
 只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
-独立冲突与互斥批次回归见 [test_event_writers.py](../../tests/test_event_writers.py)；
+独立冲突与互斥批次回归见 [test_event_writers.py](../../tests/test_event_writers.py)，
+共享自增/自减及原常量初值迟滞计数见 [test_shared_counter.py](../../tests/test_shared_counter.py)；
 真实帧回退由 Rust 私有测试检查。固定 V3 的 EVAS/Spectre 对照见
 [对照收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-spectre-v3.json)，
 定位差异见[诊断收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)及
@@ -327,7 +368,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 例如 `@(timer(.5,.5,.001)) if (V(rst)>=.5) held=0; else held=V(vin);` 在每次实际事件时间
 读取 rst 并选择复位或采样。所有分支都做静态合法性检查，执行时只判断沿路径实际到达的条件。
-`initial_step` 仍为常量初始化；条件不能依赖离散状态、历史算子或经电压网络返回的状态。
+`initial_step` 的比较初始化只读实际 driven 输入；事件条件仍不能依赖离散状态、历史算子或经电压网络返回的状态。
 结构依赖先检查，再作区间消元；`0*q`、`q-q`、下溢系数均不能作为独立性证明。
 内部无状态网络如 `z=2*rst-1/4` 可以作为谓词来源。
 

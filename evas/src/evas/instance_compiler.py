@@ -100,18 +100,42 @@ class InstanceCompiler:
             if statement.name not in self.state_ids or statement.name in self.initials:
                 raise CompileError(f"{self.model.source}:{statement.token.line}: initial_step must initialize each declared state exactly once")
             try:
-                value = lower(statement.rhs, self.parameter, {}, self.model.source)
+                value = lower(statement.rhs, self.parameter, self.node_ids, self.model.source,
+                              preserve_structure=True, decisions=self.initial_select,
+                              validate_decision=self.validate_initial_operand,
+                              node_declarations=True)
+                if isinstance(value, Affine) and not value.terms:
+                    value = value.constant
+                elif not isinstance(value, Select) or self.model.variables[statement.name] != "real":
+                    raise CompileError("initial_step requires a constant or a real input comparison")
             except CompileError as exc:
-                raise CompileError(f'initial_step values must be instance constants: {exc}',
-                                   code='unsupported_initial_event', token=statement.token) from exc
-            if not isinstance(value, Affine) or value.terms:
-                raise CompileError("initial_step values must be instance constants")
-            if self.model.variables[statement.name] == "integer" and not (-2147483648 <= value.constant <= 2147483647 and value.constant.is_integer()):
+                raise CompileError(f'unsupported initial_step value: {exc}',
+                                   code='unsupported_initial_event', token=statement.token,
+                                   instance=self.instance.name) from exc
+            if self.model.variables[statement.name] == "integer" and not (-2147483648 <= value <= 2147483647 and value.is_integer()):
                 raise CompileError("integer initialization must be an exact signed 32-bit integer")
-            self.initials[statement.name] = value.constant
+            self.initials[statement.name] = value
         if set(self.initials) != set(self.state_ids):
-            raise CompileError(f"{self.model.source}: every state requires one constant initial_step assignment")
+            raise CompileError(f"{self.model.source}: every state requires one initial_step assignment")
         self.compilation.states.extend(State(self.instance.name, name, self.model.variables[name], self.initials[name]) for name in self.state_names)
+
+    def validate_initial_operand(self, expr, value):
+        # Check all lowered function obligations, including dead branches.
+        if isinstance(value, Select) or _predicate_degree(value) is None:
+            raise CompileError("initial comparison operands must be structurally affine")
+        if not self.expression_nodes(value).issubset(self.allowed_condition_nodes):
+            raise CompileError("initial comparison depends on a non-input voltage")
+
+    def initial_select(self, expr, relation, left, right, then_value, else_value):
+        if expr.op not in ("<", "<=", ">", ">="):
+            raise CompileError("initial_step only supports a single input comparison")
+        self.validate_initial_operand(expr, left)
+        self.validate_initial_operand(expr, right)
+        origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column,
+                        self.instance.name, expr.expansion)
+        result = Select(relation, left, right, then_value, else_value, origin)
+        check_ir(result, origin)
+        return result
 
     def parameter(self, name):
         if name not in self.model.parameters:

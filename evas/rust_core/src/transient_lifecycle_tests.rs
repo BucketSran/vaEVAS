@@ -827,3 +827,63 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
     assert_eq!(accepted.operators.bounds(1.0).unwrap(), original);
     assert_eq!(accepted.operators.values(0.0).unwrap(), [0.0, 0.0]);
 }
+
+#[test]
+fn shared_self_counter_conflict_preserves_frame_then_retries_in_same_controller() {
+    let (base, trajectory, _, _) = relocalization_fixture();
+    let mut program = base.program;
+    program.states[0].initial = 4.0.into();
+    program.events.truncate(2);
+    for event in &mut program.events {
+        event.trigger = EventTrigger::Timer {
+            start: 0.,
+            period: 0.,
+            time_tolerance: 1e-12,
+            enabled: true,
+        };
+        event.body = serde_json::from_value(json!([{"kind":"assign","state":0,
+            "rhs":{"op":"add","left":{"op":"state","state":0},
+            "right":{"op":"affine","constant":1,"terms":[]}}}]))
+        .unwrap();
+    }
+    let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+    let states = model.initial();
+    let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+    let history = operators.clone();
+    let circuit = model.circuit(&states).unwrap();
+    let solution = circuit.solve(&[0.]).unwrap();
+    let voltages = solution.voltages.clone();
+    let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+    let mut controller = Controller {
+        accepted: Frame {
+            time: 0.,
+            states,
+            state_bounds: state_bounds.clone(),
+            circuit,
+            solution,
+            operators,
+        },
+        event: 0,
+        records: vec![],
+    };
+    let calendar = independent_schedule(&model, &trajectory).unwrap();
+    assert_eq!(calendar.len(), 2);
+    let error = controller
+        .accept_events(&model, &trajectory, &calendar)
+        .unwrap_err();
+    assert_eq!(error.kind, "event_conflict");
+    assert_eq!(controller.accepted.time, 0.);
+    assert_eq!(controller.accepted.states, [4.]);
+    assert_eq!(controller.accepted.state_bounds, state_bounds);
+    assert_eq!(controller.accepted.solution.voltages, voltages);
+    assert!(controller.accepted.operators.same_reset_history(&history));
+    assert!(controller.records.is_empty());
+    assert_eq!(controller.event, 0);
+    // Retry one selected event with the same model, accepted frame and controller.
+    controller
+        .accept_events(&model, &trajectory, &calendar[..1])
+        .unwrap();
+    assert_eq!(controller.accepted.states, [5.]);
+    assert_eq!(controller.records.len(), 1);
+    assert_eq!(controller.event, 1);
+}

@@ -669,6 +669,17 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             request.tolerances,
         );
     }
+    let trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
+    let program = crate::initialization::resolve(
+        request.program,
+        &request.driven,
+        &trajectory.value_bounds(0.0),
+    )?;
+    let request = Request {
+        program,
+        transient: Some(transient.clone()),
+        ..request
+    };
     if !request.program.operators.is_empty()
         && request
             .program
@@ -687,8 +698,6 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             request.tolerances,
         );
     }
-    let trajectory = Trajectory::new(transient, request.driven.len())?;
-
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
@@ -1114,7 +1123,7 @@ mod tests {
         )
         .unwrap();
         let mut program = original.program;
-        program.states[0].initial = 1.0;
+        program.states[0].initial = 1.0.into();
         program.events[0].body = serde_json::from_value(serde_json::json!([
             {"kind":"assign","state":0,"rhs":{"op":"affine","constant":0,"terms":[]}}
         ]))
@@ -1707,7 +1716,7 @@ mod tests {
                 let (original, trajectory, _) = fixture(failure == Some("residual_failure"));
                 let mut program = original.program;
                 if failure == Some("state_range") {
-                    program.states[0].initial = 2147483646.0;
+                    program.states[0].initial = 2147483646.0.into();
                 }
                 if timer {
                     program.events[0].trigger = EventTrigger::Timer {

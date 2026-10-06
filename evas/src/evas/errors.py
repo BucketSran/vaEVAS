@@ -26,7 +26,7 @@ RULES = {
     'parameter_range': ('invalid_input', 'binding', 'LANG', 'Check the effective instance value and from/exclude constraints.'),
     'vector_declaration': ('invalid_input', 'binding', 'LANG', 'Use matching one-dimensional electrical and port ranges.'),
     'unsupported_vector': ('unsupported', 'binding', 'LANG', 'Use static scalar bit connections and instance-constant indices.'),
-    'unsupported_initial_event': ('unsupported', 'parse', 'LANG', 'Use a constant initial_step body with an unqualified initialization leaf.'),
+    'unsupported_initial_event': ('unsupported', 'parse', 'LANG', 'Use an unqualified initialization leaf and constant values or a real driven-input comparison.'),
     'unsupported_event_context': ('unsupported', 'binding', 'LANG', 'Declare monitored events unconditionally, at top level or inside static genvar loops.'),
     'scs_input': ('invalid_input', 'netlist', 'LANG', 'Check the netlist statement and its constant values.'),
     'unsupported_scs': ('unsupported', 'netlist', 'LANG', 'Use the documented voltage-testbench subset.'),
@@ -40,7 +40,7 @@ _KERNEL_CATEGORIES = {
     'unsupported_analysis': 'unsupported', 'unsupported_condition': 'unsupported',
     'unsupported_operator': 'unsupported', 'unsupported_transient': 'unsupported',
     'unsupported_cross': 'unsupported', 'unsupported_timer': 'unsupported',
-    'unsupported_implicit_dynamics': 'unsupported',
+    'unsupported_implicit_dynamics': 'unsupported', 'unsupported_initialization': 'unsupported',
     'invalid_request': 'invalid_input', 'invalid_ir': 'invalid_input',
     'invalid_inputs': 'invalid_input', 'invalid_config': 'invalid_input',
     'unsupported_ir_version': 'version', 'kernel_process': 'infrastructure',
@@ -50,9 +50,11 @@ _KERNEL_CATEGORIES = {
     'worker_start': 'infrastructure',
     'residual_failure': 'numerical', 'waveform_accuracy': 'numerical',
     'event_resolution': 'numerical', 'nonlinear_convergence': 'numerical',
+    'initialization_precision': 'numerical',
 }
 _KERNEL_CAPABILITIES = {'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROSS',
-                        'unsupported_implicit_dynamics': 'DYNAMICS'}
+                        'unsupported_implicit_dynamics': 'DYNAMICS',
+                        'unsupported_initialization': 'LANG', 'initialization_precision': 'LANG'}
 
 
 def diagnostic(code, message, *, token=None, instance=None):
