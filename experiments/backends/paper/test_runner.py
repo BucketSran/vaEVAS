@@ -266,3 +266,21 @@ class RunnerContracts(unittest.TestCase):
             abort=json.loads((args.output/'BATCH_ABORTED.json').read_text())
             self.assertEqual(abort['unrun'],['fixture-8'])
             self.assertEqual(len(abort['not_selected_in_allocation']),10)
+
+    def test_gnucap_parser_errors_override_existing_waveform_and_zero_exit(self):
+        done={'stage':'simulate','status':'completed','returncode':0,'timeout':False,'cleanup':{'complete':True}}
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp);(work/'waveform.txt').write_text('raw retained fixture')
+            for diagnostic in ('need )',"what's this?",'1: no match'):
+                (work/'simulate.log').write_text('Vpaper_observer ... truncated\n    ^ ? '+diagnostic+'\n')
+                state=result_state([done],work,'waveform.txt',backend='gnucap_modelgen')
+                self.assertEqual(state['status'],'deck_parse_error')
+                self.assertEqual(state['failure_stage'],'deck_parse')
+                self.assertFalse(state['abort_batch'])
+                self.assertEqual(state['rejected_waveform']['path'],'waveform.txt')
+                self.assertEqual((work/'waveform.txt').read_text(),'raw retained fixture')
+                self.assertIn(diagnostic,state['diagnostics'][0]['text'])
+            (work/'simulate.log').write_text('param: already installed, replacing\n.options reltol=10.u\n')
+            self.assertEqual(result_state([done],work,'waveform.txt',backend='gnucap_modelgen')['status'],'waveform_available')
+            (work/'simulate.log').write_text('^ ? need )\n')
+            self.assertEqual(result_state([done],work,'waveform.txt',backend='spectre')['status'],'waveform_available')

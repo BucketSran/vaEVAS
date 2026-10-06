@@ -1,6 +1,7 @@
 # 局部观察请求与资格准备
 
-状态：本地静态准备；没有安装版工具 preflight、后端编译或实际运行。
+状态：协调者已执行 Gnucap 首轮；EV-SH-01 的旧观察源物理长行被截断，
+CP-02 编译失败（未解析 idtmod）。下述续行修复仅本地准备，尚未在安装版重跑。
 协调者先冻结新 deck，再在已有授权计数内进行小型 preflight。未取得有效证据的
 项目保持 unknown/I；不能把全部默认 I 的矩阵视为 A1 交付完成。
 
@@ -28,9 +29,30 @@ deck 请求 dtmin=1fs，普通点距关键中心不到 3fs 时合并。
 [官方 transient 文档](https://gnucap.org/dokuwiki/doku.php/gnucap:manual:commands:transient)
 描述 trace alltime 显示所有接受的内部步。deck 明确请求该选项；语法与版本对应
 仍需安装版日志、源码映射和 raw 输出检查。禁止把 rejected steps 用作原生值。
-当前辅助源实际最多1024点、单行25479 bytes；全局200ps网格未放进辅助源。
-安装版必须证明完整读取源角点，角点数/时刻与 breakpoint_requests 一致，实际输出
-格式能被 reader 解析。没有已确认行长限制时，不凭约1MB的错误估算折行。
+旧辅助源最多1024点；实际 EV-SH-01 观察源物理行为20371 bytes。安装版日志
+报告 `need )`、`what's this?` 与数字碎片 `no match`，之后仍产生 waveform 且退出0；
+这不能证明已接受冻结拓扑。原日志、waveform 与 RESULT 必须保留，不能改写。
+
+实际日志版本为 snapshot 2026.07.29。官方 `20260729-dev` tag 对应
+commit `bcaff61b3c562179476bb6c5de783676994c61e1`：
+[物理行读取与续行源码](https://github.com/gnucap/gnucap/blob/bcaff61b3c562179476bb6c5de783676994c61e1/lib/ap_construct.cc#L280)
+的 getlines 用 BIGBUFLEN 的 fgets 读取物理行，并将后续首个非空白字符为 `+`
+的行拼接到动态字符串；
+[缓冲大小](https://github.com/gnucap/gnucap/blob/bcaff61b3c562179476bb6c5de783676994c61e1/include/md.h#L74)
+为4096。其
+[SPICE入口](https://github.com/gnucap/gnucap/blob/bcaff61b3c562179476bb6c5de783676994c61e1/apps/lang_spice.cc#L741)
+调用 get_line。tag 日期与安装日志兼容，但不等于安装 image 的源码构建映射证书。
+
+修订仅将 Gnucap 的 observer 源写成 <=240 byte 的物理行，首列 `+` 续行，
+只在完整 time/value 对之间换行；原 `.17g` tokens、顺序、请求ID、独立节点与ground
+连接全部保留。ngspice、Spectre、DUT source、真实输入及判据不变。deck 与 adapter
+身份因此改变，必须新冻结，不能复用旧 deck 身份给失败结果授予资格。
+runner 对 Gnucap simulate.log 的 caret `^ ?` 解析诊断返回 `deck_parse_error`，
+即使返回0且有波形也不进入 observation；保留诊断行号、日志哈希与 rejected raw 哈希。
+
+修复后的安装版必须证明完整读取源角点，角点数/时刻与 breakpoint_requests 一致，
+真实窗口间隔、中心、导出格式和原生来源仍待新的有限执行证据。拟只追加受影响的
+EV-SH-01 一项；CP-02 的 idtmod 编译失败与续行无关，不据此重跑。
 以上网页在 2026-10-07 核对；网页分支不是安装版本身份证明。
 
 ## 预算与 preflight 闸门
