@@ -3,6 +3,10 @@ import csv
 import importlib.util
 from pathlib import Path
 import tempfile
+import subprocess
+import os
+import sys
+import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -79,6 +83,29 @@ class Contract(unittest.TestCase):
                     writer.writerow([n,adc.T0+(n+.25 if mode=='old_code' else n+.75)*adc.T,k])
             if trace_mutate: trace_mutate(trace)
             return adc.evaluate(rows,case,path,trace)
+
+    def test_psf_parser_requires_complete_stream_and_unique_signals(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'wave.psf'
+            path.write_text('HEADER\nVALUE\n"time" 0\n"vin" 0.5\n"time" 1\n"vin" 0.6\nEND\n')
+            self.assertEqual(adc.read_psf(path),[{'time':0.,'vin':.5},{'time':1.,'vin':.6}])
+            for text in ['VALUE\n"time" 0\n', 'VALUE\n"time" 0\n"vin" 0\n"vin" 1\nEND\n']:
+                path.write_text(text)
+                with self.assertRaises(ValueError): adc.read_psf(path)
+
+    def test_failed_version_probe_is_unscored_without_simulation(self):
+        task=ROOT/'benchmark/tasks/va08-adc-linearity'
+        with tempfile.TemporaryDirectory() as folder:
+            executable=Path(folder)/'spectre';executable.write_text('#!/bin/sh\nexit 17\n');executable.chmod(0o755)
+            output=Path(folder)/'logs'
+            completed=subprocess.run([sys.executable,'-B',str(task/'tests/verify.py'),
+                '--candidate',str(task/'solution/reference.va'),'--output',str(output)],
+                env={**os.environ,'SPECTRE':str(executable)},capture_output=True,text=True)
+            self.assertEqual(completed.returncode,2)
+            report=json.loads((output/'report.json').read_text())
+            self.assertEqual(report['spectre_version_returncode'],17)
+            self.assertIsNone(report['reward']);self.assertEqual(report['cases'],[])
+            self.assertFalse((output/'reward.txt').exists())
 
     def test_duplicate_index_and_nonfinite_csv_are_rejected(self):
         def duplicate(path):

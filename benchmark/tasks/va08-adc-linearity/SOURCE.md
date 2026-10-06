@@ -27,19 +27,26 @@ python3 -B experiments/adc_linearity/prepare.py --output runs/adc-linearity/prep
 后者只生成固定输入、参考解、六个错版和 SHA256 manifest，不启动仿真。
 六个错版覆盖五类错误，端码漏计分别生成 first/last 两版。
 
-远端需复制任务 tests、生成的 candidate 与 `/work/output`，分别运行：
+实际接入使用已有 circuit harness 的 `RemoteBenchmarkSpectre`，不使用旧初筛的SSH bootstrap。
+[接入说明](../../../experiments/adc_linearity/REMOTE_PLAN.md)记录冻结包、私有profile及Harbor入口。
+`harness_adapter.py`生成每场景一个私有task manifest，并用harness实际API核验候选与包身份；
+`harbor_adapter.ADCHarnessVerifier`下载原始候选，调用既有持久job协议并回收校验过的归档。
+这些本地接口已做package/transfer校验，实际SSH和Harbor Trial仍未运行。
 
-```sh
-SPECTRE=/absolute/path/to/spectre CANDIDATE=/path/to/reference.va VERIFY_OUTPUT=/path/to/fresh/logs sh tests/test.sh
-```
+候选写文件的两处固定 `$fopen` 路径，由受信checker重定位到各场景私有 `output/`。
+原始候选完整字节及SHA保持不变，实际执行源另存完整文件和SHA，记录 `adc-output-paths-v1`
+及两个路径映射；除两个路径token外不改变模拟或测量逻辑。不能称实际执行源逐字等同原候选。
+不会在服务器创建全局 `/work`、清空共享输出或另建执行控制器。
 
-对每个错版用同一命令另建输出目录。首批校准是参考解通过所有4场景，六个错版各用一个指定场景拒绝，见 [远程计划](../../../experiments/adc_linearity/REMOTE_PLAN.md)。
+首批校准是参考解通过所有4场景，六个错版各用一个指定场景拒绝，合计10个独立job。
 每场景4096转换、停止时间4.102ms、maxstep20ns、conservative、reltol1e-6、vabstol1e-9。
-单场景 timeout90秒，单线程，verifier timeout600秒。首批共10次仿真，
-仿真墙钟上限900秒另加7次版本查询各30秒。调度方另设1 CPU、1 GiB内存、2 GiB磁盘预算，单文件上限256 MiB。
-runner记录实际 `spectre -W`，命令、返回码、输入/波形身份和逐场景判分。
-版本尚未运行核验，不能把准备文件当执行证据。缺许可证、原始总线不符合同或checker错误
-均不给有效reward；编译、仿真timeout及结果不符则判候选失败。
+单场景仿真timeout90秒、版本探测30秒、单线程。每job的preflight与checker共用harness profile期限。
+调度方明确1 CPU、1 GiB内存、2 GiB累计磁盘及单job256 MiB目录输出配额。
+runner记录 `spectre -W` 实际输出与返回码，非零或空版本输出停止该候选；保留命令、返回码、
+两份源码身份、输入/波形身份和逐场景判分。PSF逐行解析并复用signal key，不驻留全文及splitlines副本。
+缺许可证、原始总线不符合同、checker错误、编译或超时导致未完成仿真均保持未评分。
+完整仿真后格式、激励及统计不符产生有结构化证据的candidate失败。
+版本尚未实际运行核验，不能把准备文件当执行证据。
 
 私有 `tests/cases.json`、checker、reference 不复制进候选 Docker 镜像。
 候选仅获得 `environment/public` 开发器件。Spectre执行时使用受控写文件合同，

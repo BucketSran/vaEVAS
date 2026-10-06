@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import time
 
 M = 4096
@@ -29,19 +30,26 @@ def sha(path):
 
 
 def read_psf(path):
-    rows=[]; row=None
-    lines=Path(path).read_text().splitlines()
-    start=lines.index('VALUE')+1
-    if lines[-1].strip() != 'END': raise ValueError('incomplete PSF')
-    for line in lines[start:-1]:
-        match=re.fullmatch(r'"([^"]+)"\s+(\S+)',line.strip())
-        if not match: raise ValueError('unsupported PSF value')
-        key,value=match[1],float(match[2])
-        if key == 'time':
-            if row is not None: rows.append(row)
-            row={'time':value}
-        elif row is None or key in row: raise ValueError('duplicate signal or missing time')
-        else: row[key]=value
+    # Stream text so a large PSF does not coexist with a second split-lines copy.
+    rows=[]; row=None; ended=False
+    with Path(path).open() as stream:
+        for line in stream:
+            if line.strip()=='VALUE': break
+        else: raise ValueError('missing PSF VALUE section')
+        for line in stream:
+            if line.strip()=='END':
+                ended=True
+                if any(tail.strip() for tail in stream): raise ValueError('trailing PSF data')
+                break
+            match=re.fullmatch(r'"([^\"]+)"\s+(\S+)',line.strip())
+            if not match: raise ValueError('unsupported PSF value')
+            key,value=sys.intern(match[1]),float(match[2])
+            if key == 'time':
+                if row is not None: rows.append(row)
+                row={'time':value}
+            elif row is None or key in row: raise ValueError('duplicate signal or missing time')
+            else: row[key]=value
+    if not ended: raise ValueError('incomplete PSF')
     if row is not None: rows.append(row)
     return rows
 
@@ -201,6 +209,15 @@ save vin clk done d0 d1 d2 d3 d4 d5 d6 d7
 '''
 
 
+def relocate_output_paths(source,result_directory):
+    """Change only the two allowlisted literal fopen path tokens for host runs."""
+    destinations={f'/work/output/{name}':str(Path(result_directory).resolve()/name)
+                  for name in ['linearity.csv','samples.csv']}
+    pattern=r'(\$fopen\s*\(\s*")(/work/output/(?:linearity|samples)\.csv)("\s*,\s*"w"\s*\))'
+    executed=re.sub(pattern,lambda match: match[1]+destinations[match[2]]+match[3],source)
+    return executed,dict(version='adc-output-paths-v1',mapping=destinations)
+
+
 def verify(candidate,output,case_name=None):
     output.mkdir(parents=True,exist_ok=True)
     cases_path=Path(__file__).with_name('cases.json')
@@ -225,16 +242,24 @@ def verify(candidate,output,case_name=None):
     else:
         version=subprocess.run([binary,'-W'],capture_output=True,text=True,timeout=30)
         report['spectre_version']=version.stdout+version.stderr
+        report['spectre_version_returncode']=version.returncode
+        if version.returncode!=0 or not report['spectre_version'].strip():
+            report.update(status='infrastructure_error',reward=None,reason='Spectre version probe failed')
+            (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+            (output/'reward.txt').unlink(missing_ok=True)
+            return report
         for case in cases:
             work=output/case['name']; work.mkdir(exist_ok=False)
-            shutil.copyfile(candidate,work/'dut.va')
+            shutil.copyfile(candidate,work/'candidate-original.va')
+            results=work/'output';results.mkdir(mode=0o700)
+            executed_source,path_translation=relocate_output_paths(text,results)
+            (work/'dut.va').write_text(executed_source)
             (work/'adc.va').write_text(adc_source(case['thresholds'],case['delay']))
             (work/'tb.scs').write_text(netlist())
-            # Fixed candidate output path, sequential cases, remove stale files.
-            results=Path('/work/output');results.mkdir(parents=True,exist_ok=True)
-            for name in ['linearity.csv','samples.csv']: (results/name).unlink(missing_ok=True)
             argv=[binary,'-64','tb.scs','+log','spectre.log','-format','psfascii','-raw','psf','+lqtimeout','5','+mt=1']
-            record=dict(name=case['name'],argv=argv,adc_sha256=sha(work/'adc.va'),netlist_sha256=sha(work/'tb.scs'))
+            record=dict(name=case['name'],argv=argv,adc_sha256=sha(work/'adc.va'),netlist_sha256=sha(work/'tb.scs'),
+                        original_source_sha256=sha(work/'candidate-original.va'),executed_source_sha256=sha(work/'dut.va'),
+                        output_translation=path_translation)
             start=time.monotonic()
             try:
                 with (work/'stdout.log').open('w') as stream:
@@ -248,12 +273,15 @@ def verify(candidate,output,case_name=None):
                     for name in ['linearity.csv','samples.csv']:
                         if (results/name).exists(): shutil.copyfile(results/name,work/name)
                     wave=work/'psf/tran.tran.tran'
-                    record.update(evaluate(read_psf(wave),case,work/'linearity.csv',work/'samples.csv'))
+                    verdict=evaluate(read_psf(wave),case,work/'linearity.csv',work/'samples.csv')
+                    if verdict['status']=='candidate_failure':
+                        verdict.update(status='graded',grading_status='candidate_failure')
+                    record.update(verdict)
                     record['waveform_sha256']=sha(wave)
             except subprocess.TimeoutExpired: record.update(status='simulation_timeout',passed=False)
             except Exception as exc: record.update(status='checker_error',passed=False,reason=str(exc))
             report['cases'].append(record)
-        infrastructure=any(c['status'] in ['checker_error','environment_error','infrastructure_error'] for c in report['cases'])
+        infrastructure=any(c['status'] in ['checker_error','environment_error','infrastructure_error','simulation_failure','simulation_timeout'] for c in report['cases'])
         report.update(status='infrastructure_error' if infrastructure else 'completed',reward=None if infrastructure else int(all(c['passed'] for c in report['cases'])))
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     (output/'reward.txt').unlink(missing_ok=True)
