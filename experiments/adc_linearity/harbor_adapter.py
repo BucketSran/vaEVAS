@@ -3,35 +3,49 @@ import asyncio
 import hashlib
 import json
 import math
+import traceback
 from pathlib import Path
 
 from harbor.models.verifier.result import VerifierResult
 from harbor.verifier.base import BaseVerifier
-from .harness_adapter import TASK,aggregate,load_harness,prepare
+from .harness_adapter import TASK,aggregate,load_harness,prepare,private_workspace,validate_private_location,visible_mount_roots,publish_result
 
 
 class ADCHarnessVerifier(BaseVerifier):
     def __init__(self,*args,config_path=None,**kwargs):
         super().__init__(*args,**kwargs)
         if config_path is None: raise ValueError('explicit private ADC harness config_path required')
-        path=Path(config_path).resolve()
-        if path.stat().st_mode & 0o077: raise ValueError('harness config must be private')
-        for protected in [self.task.paths.task_dir.resolve(),self.trial_paths.trial_dir.resolve()]:
-            if path.is_relative_to(protected): raise ValueError('verifier config must stay outside candidate task/trial')
+        self.visible=visible_mount_roots(self.environment,self.task.paths.task_dir,self.trial_paths.trial_dir)
+        path=validate_private_location(config_path,self.visible,directory=False)
         config=json.loads(path.read_text())
-        if set(config)!={'harness_checkout','remote'}: raise ValueError('invalid ADC harness config')
+        if set(config)!={'harness_checkout','remote','private_root'}: raise ValueError('invalid ADC harness config')
+        validate_private_location(config['private_root'],self.visible)
         self.config=config
 
     async def verify(self):
         if self.task.paths.task_dir.name!=TASK.name: raise ValueError('ADC verifier requires the ADC task')
-        output=self.trial_paths.verifier_dir.resolve();output.mkdir(parents=True,exist_ok=True)
-        candidate=output/'candidate.va'
+        output=self.trial_paths.verifier_dir.absolute()
+        prefix='adc-'+hashlib.sha256(str(self.trial_paths.trial_dir.resolve()).encode()).hexdigest()[:16]
+        self.visible=visible_mount_roots(self.environment,self.task.paths.task_dir,self.trial_paths.trial_dir)
+        private=private_workspace(self.config['private_root'],self.visible,prefix)
+        try:
+            report=await self._evaluate(private,prefix)
+        except Exception:
+            (private/'failure.txt').write_text(traceback.format_exc())
+            publish_result(output,{'status':'infrastructure_error','reward':None})
+            raise RuntimeError('ADC harness execution failed; private operator evidence retained') from None
+        publish_result(output,report)
+        score=report['reward']
+        if score is None or not math.isfinite(score): raise RuntimeError('ADC harness execution incomplete; no task score')
+        return VerifierResult(rewards={'reward':score})
+
+    async def _evaluate(self,private,prefix):
+        candidate=private/'candidate.va'
         await self.environment.download_file('/work/dut.va',candidate)
-        prepared=output/'prepared'
+        prepared=private/'prepared'
         record=await asyncio.to_thread(prepare,self.config['harness_checkout'],candidate,prepared)
         _,_,remote=load_harness(self.config['harness_checkout'])
-        transport=remote.RemoteBenchmarkSpectre(self.config['remote'],output/'transport')
-        prefix='adc-'+hashlib.sha256(str(self.trial_paths.trial_dir.resolve()).encode()).hexdigest()[:16]
+        transport=remote.RemoteBenchmarkSpectre(self.config['remote'],private/'transport')
         results=[]
         try:
             for case in record['cases']:
@@ -54,8 +68,5 @@ class ADCHarnessVerifier(BaseVerifier):
         finally: transport.interrupt_wait()
         report=aggregate(results)
         if len(results)!=len(record['cases']): report.update(status='infrastructure_error',reward=None)
-        (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
-        score=report['reward']
-        if score is None or not math.isfinite(score): raise RuntimeError('ADC harness execution incomplete; no task score')
-        (output/'reward.txt').write_text(str(score)+'\n')
-        return VerifierResult(rewards={'reward':score})
+        (private/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+        return report

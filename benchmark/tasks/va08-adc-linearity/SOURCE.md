@@ -18,7 +18,7 @@
 ## 本地检查与远程准备
 
 ```sh
-python3 -B -m unittest discover -s experiments/adc_linearity -p test_checker.py -v
+python3 -B -m unittest discover -s experiments/adc_linearity -p 'test_*.py' -v
 python3 -B experiments/adc_linearity/prepare.py --output runs/adc-linearity/prepared
 ```
 
@@ -34,8 +34,10 @@ python3 -B experiments/adc_linearity/prepare.py --output runs/adc-linearity/prep
 这些本地接口已做package/transfer校验，实际SSH和Harbor Trial仍未运行。
 
 候选写文件的两处固定 `$fopen` 路径，由受信checker重定位到各场景私有 `output/`。
-原始候选完整字节及SHA保持不变，实际执行源另存完整文件和SHA，记录 `adc-output-paths-v1`
-及两个路径映射；除两个路径token外不改变模拟或测量逻辑。不能称实际执行源逐字等同原候选。
+原始候选完整字节及SHA保持不变，实际执行源另存完整文件和SHA，记录 `adc-output-paths-v2`
+及两个路径映射，并对执行件反向替换后的完整字节作相等检查，包含CRLF。
+词法识别只检查活动调用，注释和字符串内容不视为调用；宏指令不受支持。
+除两个路径token外不改变模拟或测量逻辑。不能称实际执行源逐字等同原候选。
 不会在服务器创建全局 `/work`、清空共享输出或另建执行控制器。
 
 首批校准是参考解通过所有4场景，六个错版各用一个指定场景拒绝，合计10个独立job。
@@ -50,5 +52,8 @@ runner记录 `spectre -W` 实际输出与返回码，非零或空版本输出停
 
 私有 `tests/cases.json`、checker、reference 不复制进候选 Docker 镜像。
 候选仅获得 `environment/public` 开发器件。Spectre执行时使用受控写文件合同，
-checker拒绝其他文件打开与非标准include。运行器必须按Harbor的agent/verifier阶段隔离，
-不要把整个任务目录挂载给candidate。该隔离仍需实际Harbor运行验证。
+checker拒绝其他文件打开与非标准include。运行器还必须保证task目录不挂载给candidate。
+Harbor默认verifier日志目录仍对活着的agent可见，不能用它保存私有资产。adapter要求
+配置指定task/trial及所有绑定挂载之外的0700持久 `private_root`，包括symlink解析校验；
+仅最终status/reward投射到日志目录。该隔离仍需实际Harbor运行验证。
+四个计分阈值数组均与public开发器件不同，task版本为 `adc-linearity-v2-local-candidate`。

@@ -15,11 +15,15 @@ adc = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(adc)
 
 
-def fixture():
+def fixture(case=None):
     boundaries = [16*j + (4 if j % 2 else -4) for j in range(1, 256)]
     boundaries[100] = boundaries[99]  # missing code 100
+    if case is not None:
+        boundaries=[round(v*4096) for v in case['thresholds']]
+        if any(abs(v*4096-b)>1e-9 for v,b in zip(case['thresholds'],boundaries)):
+            raise ValueError('integer-boundary fixture required')
     hits = [b-a for a,b in zip([0]+boundaries, boundaries+[4096])]
-    case = dict(name='fixture', thresholds=[b/4096 for b in boundaries], delay=200e-9)
+    case = case or dict(name='fixture', thresholds=[b/4096 for b in boundaries], delay=200e-9)
     codes = [k for k, count in enumerate(hits) for _ in range(count)]
     rows = []
     def row(t, n, clk, done=0):
@@ -55,8 +59,8 @@ def write_csv(path, hits, mode='correct'):
 
 
 class Contract(unittest.TestCase):
-    def evaluate(self, mode='correct', mutate=None, trace_mutate=None):
-        case, hits, rows = fixture()
+    def evaluate(self, mode='correct', mutate=None, trace_mutate=None, case=None):
+        case, hits, rows = fixture(case)
         if mode == 'old_code':
             # ADC raw data stays correct; candidate reports immediately sampled old codes.
             codes = [k for k,h in enumerate(hits) for _ in range(h)]
@@ -71,7 +75,7 @@ class Contract(unittest.TestCase):
         if mutate: mutate(rows)
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder)/'linearity.csv'; write_csv(path,hits,mode)
-            original_codes=[k for k,h in enumerate(fixture()[1]) for _ in range(h)]
+            original_codes=[k for k,h in enumerate(fixture(case)[1]) for _ in range(h)]
             trace=Path(folder)/'samples.csv'
             with trace.open('w') as f:
                 writer=csv.writer(f);writer.writerow(['index','time','code'])
@@ -83,6 +87,21 @@ class Contract(unittest.TestCase):
                     writer.writerow([n,adc.T0+(n+.25 if mode=='old_code' else n+.75)*adc.T,k])
             if trace_mutate: trace_mutate(trace)
             return adc.evaluate(rows,case,path,trace)
+
+    def test_frozen_four_references_and_six_targeted_negative_fixtures(self):
+        cases={case['name']:case for case in json.loads((ROOT/'benchmark/tasks/va08-adc-linearity/tests/cases.json').read_text())}
+        for name,case in cases.items():
+            with self.subTest(reference=name):
+                result=self.evaluate(case=case)
+                self.assertEqual(result['status'],'graded')
+                self.assertTrue(result['passed'],result)
+        modes={'old_code':'ideal-fast','missing_first':'ideal-fast','missing_last':'ideal-fast',
+               'all_samples':'endpoint-shift','reversed_bits':'alternating-slow','ideal':'alternating-slow'}
+        for mode,name in modes.items():
+            with self.subTest(negative=mode):
+                result=self.evaluate(mode,case=cases[name])
+                self.assertEqual(result['status'],'candidate_failure')
+                self.assertFalse(result['passed'],result)
 
     def test_psf_parser_requires_complete_stream_and_unique_signals(self):
         with tempfile.TemporaryDirectory() as folder:

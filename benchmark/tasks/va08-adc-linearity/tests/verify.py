@@ -209,13 +209,87 @@ save vin clk done d0 d1 d2 d3 d4 d5 d6 d7
 '''
 
 
+def source_tokens(source):
+    """Tokenize active VA bytes, preserving literal spans and excluding comments."""
+    tokens=[]; i=0; identifier=re.compile(rb'[A-Za-z_$][A-Za-z0-9_$]*')
+    while i<len(source):
+        if source[i:i+1] in b' \t\r\n\f': i+=1; continue
+        if source[i:i+2]==b'//':
+            end=source.find(b'\n',i+2); i=len(source) if end<0 else end+1; continue
+        if source[i:i+2]==b'/*':
+            end=source.find(b'*/',i+2)
+            if end<0: raise ValueError('unterminated comment')
+            i=end+2; continue
+        start=i
+        if source[i]==34:
+            i+=1
+            while i<len(source) and source[i]!=34:
+                if source[i] in [10,13]: raise ValueError('newline in string literal')
+                if source[i]==92: i+=1
+                i+=1
+            if i>=len(source): raise ValueError('unterminated string')
+            i+=1; kind='string'
+        else:
+            match=identifier.match(source,i)
+            if match: i+=len(match[0]); kind='identifier'
+            else: i+=1; kind='symbol'
+        tokens.append((kind,source[start:i],start,i))
+    return tokens
+
+
+def source_contract(source):
+    """Validate active calls and return only the two allowed fopen path spans.
+
+    Arbitrary macros are unsupported: expansion could introduce file/system I/O.
+    Standard includes are the only accepted preprocessing directives.
+    """
+    tokens=source_tokens(source); edits=[]; i=0
+    allowed={b'"/work/output/linearity.csv"',b'"/work/output/samples.csv"'}
+    while i<len(tokens):
+        kind,value,start,end=tokens[i]
+        if value==b'`':
+            if i+2>=len(tokens) or tokens[i+1][1]!=b'include' or tokens[i+2][1] not in [b'"disciplines.vams"',b'"constants.vams"']:
+                raise ValueError('only standard includes are supported; macros are prohibited')
+            i+=3; continue
+        if kind=='identifier' and value==b'$fopen':
+            call=tokens[i+1:i+6]
+            if len(call)!=5 or [t[1] for t in call][::2]!=[b'(',b',',b')'] or call[1][1] not in allowed or call[3][1]!=b'"w"':
+                raise ValueError('only literal write-mode opens of the two result files are permitted')
+            edits.append((call[1][2],call[1][3],call[1][1])); i+=6; continue
+        if kind=='identifier' and (value in [b'$system',b'$fscanf',b'$fgets',b'$fread',b'$getenv',b'$popen'] or value.startswith(b'$readmem')):
+            raise ValueError('external reads and system calls are prohibited')
+        i+=1
+    return edits
+
+
 def relocate_output_paths(source,result_directory):
-    """Change only the two allowlisted literal fopen path tokens for host runs."""
+    """Replace approved path literal bytes; prove the inverse restores all bytes."""
+    was_text=isinstance(source,str)
+    original=source.encode('utf-8') if was_text else source
+    spans=source_contract(original)
     destinations={f'/work/output/{name}':str(Path(result_directory).resolve()/name)
                   for name in ['linearity.csv','samples.csv']}
-    pattern=r'(\$fopen\s*\(\s*")(/work/output/(?:linearity|samples)\.csv)("\s*,\s*"w"\s*\))'
-    executed=re.sub(pattern,lambda match: match[1]+destinations[match[2]]+match[3],source)
-    return executed,dict(version='adc-output-paths-v1',mapping=destinations)
+    pieces=[]; cursor=0; edits=[]
+    for start,end,literal in spans:
+        old_path=literal[1:-1].decode('ascii')
+        replacement=json.dumps(destinations[old_path],ensure_ascii=False).encode('utf-8')
+        pieces.extend([original[cursor:start],replacement])
+        edits.append(dict(start=start,end=end,original_literal=literal.decode('ascii'),executed_literal=replacement.decode('utf-8')))
+        cursor=end
+    pieces.append(original[cursor:])
+    executed=b''.join(pieces)
+    # Independently undo the actual execution bytes at the recorded edited spans.
+    restored=[]; original_cursor=executed_cursor=0
+    for edit in edits:
+        untouched=edit['start']-original_cursor
+        restored.append(executed[executed_cursor:executed_cursor+untouched]); executed_cursor+=untouched
+        replacement=edit['executed_literal'].encode('utf-8')
+        if executed[executed_cursor:executed_cursor+len(replacement)]!=replacement: raise ValueError('relocation span mismatch')
+        restored.append(edit['original_literal'].encode('ascii')); executed_cursor+=len(replacement); original_cursor=edit['end']
+    restored.append(executed[executed_cursor:])
+    if b''.join(restored)!=original: raise ValueError('relocation changed bytes outside allowed literals')
+    receipt=dict(version='adc-output-paths-v2',mapping=destinations,edits=edits,inverse_verified=True)
+    return (executed.decode('utf-8') if was_text else executed),receipt
 
 
 def verify(candidate,output,case_name=None):
@@ -227,16 +301,13 @@ def verify(candidate,output,case_name=None):
         if not cases: raise ValueError('unknown case selector')
     report=dict(candidate_sha256=sha(candidate),checker_sha256=sha(__file__),cases_sha256=sha(cases_path),cases=[])
     binary=os.environ.get('SPECTRE','spectre')
-    text=candidate.read_text()
-    includes=re.findall(r'`include\s+"([^\"]+)"',text)
-    calls=re.findall(r'\$fopen\s*\(([^;]*?)\)',text)
-    allowed={ '"/work/output/linearity.csv","w"', '"/work/output/samples.csv","w"' }
-    contract_error=(any(i not in ['disciplines.vams','constants.vams'] for i in includes)
-                    or any(re.sub(r'\s+','',call) not in allowed for call in calls)
-                    or len(calls)!=len(re.findall(r'\$fopen\b',text))
-                    or bool(re.search(r'\$(?:system|fscanf|fgets|fread|readmem\w*|getenv|popen)\b',text)))
+    source=candidate.read_bytes()
+    try:
+        source_contract(source)
+        contract_error=None
+    except ValueError as exc: contract_error=str(exc)
     if contract_error:
-        report.update(status='submission_contract_violation',reward=0,reason='only literal write-mode opens of the two result files are permitted')
+        report.update(status='submission_contract_violation',reward=0,reason=contract_error)
     elif not shutil.which(binary):
         report.update(status='infrastructure_error',reward=None,reason='Spectre unavailable')
     else:
@@ -252,8 +323,8 @@ def verify(candidate,output,case_name=None):
             work=output/case['name']; work.mkdir(exist_ok=False)
             shutil.copyfile(candidate,work/'candidate-original.va')
             results=work/'output';results.mkdir(mode=0o700)
-            executed_source,path_translation=relocate_output_paths(text,results)
-            (work/'dut.va').write_text(executed_source)
+            executed_source,path_translation=relocate_output_paths(source,results)
+            (work/'dut.va').write_bytes(executed_source)
             (work/'adc.va').write_text(adc_source(case['thresholds'],case['delay']))
             (work/'tb.scs').write_text(netlist())
             argv=[binary,'-64','tb.scs','+log','spectre.log','-format','psfascii','-raw','psf','+lqtimeout','5','+mt=1']

@@ -3,12 +3,67 @@ import argparse
 import hashlib
 import importlib
 import json
+import os
+import tempfile
 from pathlib import Path
 import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 TASK=ROOT/'benchmark/tasks/va08-adc-linearity'
-VERSION='adc-linearity-v1-local-candidate'
+VERSION='adc-linearity-v2-local-candidate'
+
+
+def validate_private_location(path,visible_paths,*,directory=True):
+    """Check lexical and resolved paths against every candidate-visible mount."""
+    path=Path(path).absolute()
+    if '..' in path.parts or path.is_symlink(): raise ValueError('private location must not use symlink or parent traversal')
+    resolved=path.resolve(strict=True)
+    if (directory and not resolved.is_dir()) or (not directory and not resolved.is_file()): raise ValueError('invalid private location type')
+    if resolved.stat().st_uid!=os.getuid() or resolved.stat().st_mode & 0o077:
+        raise ValueError('private location must be owned and inaccessible to group/other')
+    for mount in visible_paths:
+        mount=Path(mount).absolute()
+        for private in [path,resolved]:
+            for visible in [mount,mount.resolve()]:
+                if private==visible or private.is_relative_to(visible) or visible.is_relative_to(private):
+                    raise ValueError('private location overlaps candidate-visible mount')
+    return resolved
+
+
+def visible_mount_roots(environment,task_directory,trial_directory):
+    """Consume Harbor 0.23's actual mount inventory; unknown backends fail closed."""
+    mounts=getattr(environment,'_mounts',None)
+    if not isinstance(mounts,list): raise ValueError('candidate host mount inventory unavailable')
+    visible=[Path(task_directory),Path(trial_directory)]
+    for mount in mounts:
+        if not isinstance(mount,dict) or mount.get('type')!='bind' or not Path(mount.get('source','')).is_absolute():
+            raise ValueError('unsupported candidate mount type or source')
+        visible.append(Path(mount['source']))
+    return visible
+
+
+def private_workspace(root,visible_paths,context):
+    root=validate_private_location(root,visible_paths)
+    if not context or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in context): raise ValueError('invalid private workspace context')
+    work=root/context; work.mkdir(mode=0o700,exist_ok=False)
+    return work
+
+
+def publish_result(output,report):
+    """Publish only scalar status/reward; never follow candidate-created links."""
+    output=Path(output)
+    if output.is_symlink(): raise ValueError('verifier log directory is a symlink')
+    output.mkdir(parents=True,exist_ok=True)
+    projection={key:report[key] for key in ['status','reward']}
+    files={'report.json':json.dumps(projection,indent=2)+'\n'}
+    if report['reward'] is not None: files['reward.txt']=str(report['reward'])+'\n'
+    for name,text in files.items():
+        descriptor,temporary=tempfile.mkstemp(dir=output,prefix='.adc-projection-')
+        try:
+            with os.fdopen(descriptor,'w') as stream: stream.write(text)
+            os.replace(temporary,output/name)
+        finally: Path(temporary).unlink(missing_ok=True)
+    if report['reward'] is None: (output/'reward.txt').unlink(missing_ok=True)
 
 
 def load_harness(checkout):

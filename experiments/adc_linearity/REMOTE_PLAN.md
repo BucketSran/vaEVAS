@@ -6,6 +6,8 @@ Spectre实际版本和资源。它不记录第二份任务进度。
 输入是 `benchmark/tasks/va08-adc-linearity/tests/cases.json`、原创reference与
 `prepare.py`产生的六个错版。`prepare.py`生成各ADC、网表和candidate的 SHA256 manifest，
 执行时保存同一输入身份，不在运行中改阈值、容差或求解设置。
+四个计分阈值数组均不同于public器件：均匀平移、四周期码宽、重复阈值与端区扩展。
+场景名保留原名用于固定调度；不同输入需要新task version与身份，不能复用旧包。
 
 | candidate | 场景 | 独立预期 |
 | --- | --- | --- |
@@ -33,7 +35,7 @@ PSF ASCII保存13个字段，约205k基础时间点另加边沿点，预计单�
 每job使用场景私有输出目录，首批调度仍串行。记录 `spectre -W` 实际输出、输入身份、完整日志、
 退出码与波形身份。目录中有旧产物时换新目录，不能据此复用reward。
 
-本地 Python 语法、渲染身份和17项checker/接入行为回归可执行；本机没有 Spectre/openvaf。
+本地 Python 语法、渲染身份和24项checker/接入行为回归（另有1项安装Harbor依赖后执行）可执行；本机没有 Spectre/openvaf。
 Icarus Verilog 不接受 Verilog-A，不能充当VA语法验收。
 VA真实编译、浮动电压输出节点、总线端口展开、timer及文件I/O须由首个reference病例检查，
 仅静态阅读网表和原创VA不能证明框架可执行。
@@ -58,7 +60,11 @@ python3 -B experiments/adc_linearity/harness_adapter.py   --harness-checkout /pa
 旧rc.profile.json形状不自动满足该协议。现有服务器bundle与私有profile是否就绪待核实，
 不能用脚本存在、构造probe或仅版本查询冒充许可验证。
 
-宿主私有配置包含 `harness_checkout` 和 `remote` 两个字段，权限0600，位于task/trial外。
+宿主私有配置包含 `harness_checkout`、`remote`、`private_root` 三个字段，配置权限0600。
+`private_root` 是预先创建、当前用户拥有且权限0700的持久宿主目录。配置与该目录必须位于
+task/trial及所有Harbor绑定挂载之外；adapter对原路径和解析symlink后的路径双向检查交叉。
+每次运行在其中创建新的私有子目录，保存候选、任务包、传输归档、完整报告和异常。
+Harbor verifier日志目录默认仍挂给agent，只写 `status`、`reward` 的最终投射；不能放隐藏包。
 `remote` 显式包含harness既有host/python/bundle/profile/run_root/archive_root/upload_root路径。
 配置内容不进入候选镜像，也不把它复制到任务源码。
 
@@ -72,5 +78,5 @@ checker每场景失败只有在实际波形完整且完成独立判据后才标�
 编译失败或timeout经harness保持未评分，并保留首个失败，不能把该失败视为错版校准通过。
 
 本地进程接入夹具使用明确标为 `PROCESS FIXTURE, NOT SPECTRE` 的独立进程返回人工PSF，
-核对私有路径写入、原件/执行件身份与原harness project_report判定。它验证文件接入，
+核对私有路径写入与原件/执行件身份；原harness project_report判定另作可选集成检查。它验证文件接入，
 不执行VA，也不提供真实Spectre语法或数值证据。
