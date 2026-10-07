@@ -1,0 +1,61 @@
+# 首批任务的校准入口
+
+任务范围与准入条件见 [首批合同](../../benchmark/first_batch/README.md)。
+本目录提供任务打包、校准队列和各类任务的独立判据回归。
+远端提交、进程限制、清理和归档由已有 circuit harness 执行。
+
+## 执行
+
+需要操作者指定的 circuit harness checkout、Python 3.12 和已完成真实许可证预检的
+Spectre 部署。配置和批量输出放在 ignored `runs/`。任务自身的 Docker 镜像不含 Spectre。
+这些任务目前按 Spectre 扩展集候选建设，不代表公开 EVAS 能执行所有参考解。
+
+```sh
+python3 -B experiments/benchmark_first_batch/runtime.py prepare \
+  --task benchmark/tasks/spec-latched-comparator \
+  --candidate benchmark/tasks/spec-latched-comparator/solution/dut.va \
+  --output runs/first-batch/comparator-reference \
+  --harness-checkout /absolute/path/to/circuit-harness
+python3 -B experiments/benchmark_first_batch/runtime.py execute \
+  runs/first-batch/comparator-reference --config /absolute/path/to/operator-config.json
+```
+
+`prepare` 只冻结输入，不执行模拟器。每个条件是一个独立 harness job；候选源码、
+完整判据和单条件包都有身份。`--case NAME` 可选择语义负例的代表条件。
+`execute` 保存 job ID 后提交，恢复时只查询原 ID。状态未知或归档失败时停止，
+不能换 ID 盲重试。新校准必须使用新输出目录，旧证据不覆盖。
+
+批量计划是上述已准备目录的 JSON 数组，最多四个并发执行者。
+不要同时另开 Spectre 队列或 Agent 终评。操作者负责全局并发上限。
+
+```sh
+python3 -B experiments/benchmark_first_batch/batch.py runs/first-batch/plan.json \
+  --config /absolute/path/to/operator-config.json --workers 4
+```
+
+队列复用 `runtime.py`，不另行实现远端协议。它核验归档内 report 的哈希与候选/判据
+身份，再产生每个提交的 `summary.json`。参考必须所有条件 `graded` 且通过。
+语义负例必须所有选定条件完成实际波形评分，并至少一个 `graded` 失败。
+源码合同拒绝、编译失败或超时虽可得到任务零分，均不能充当语义负例校准。
+真实基础设施故障保持未评分状态，保留在固定尝试清单中。
+
+## 可移植评分副本
+
+`benchmark/checkers/circuit_task.py` 维护公共执行边界，复用既有 `adc_linearity.py`
+的源码词法分析与 PSF 读取。各任务的 `first_batch_*.py` 定义独立正确性条件。
+Harbor 任务的 `tests/` 保存这些模块的逐字副本。更新共享源后运行：
+
+```sh
+python3 -B experiments/benchmark_first_batch/sync_runtime.py
+python3 -B experiments/benchmark_first_batch/sync_runtime.py --check
+python3 -B -m unittest discover -s experiments/benchmark_first_batch -p test_circuit_task.py -v
+```
+
+打包时从维护源重新取相同模块，并生成使用 `python3.12 -B` 的远端入口。
+禁止字节码输出可避免现有 harness 的完整 benchmark 清单和归档排除 `__pycache__`
+规则冲突。评分代码不把候选可打印的 stdout 文本当成许可证故障证据。
+许可证可用性由候选之外的部署预检核验，候选编译或仿真失败仍保留零分。
+
+这里的 process fixture 只测试文件与评分协议，不执行 Verilog-A，不构成后端证据。
+各子目录说明实际电路条件、参考构建和代表错版。原始波形、模型轨迹和机器私有配置
+留在 `runs/`；维护目录只保留可重放工具和与明确归档身份绑定的精简诊断。
