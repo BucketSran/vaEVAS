@@ -68,17 +68,8 @@ impl LinearContinuous {
                 "ordered event exceeds retained history coverage",
             ));
         }
-        if self
-            .context
-            .trajectory
-            .knots
-            .iter()
-            .any(|&knot| knot > prior.lo && knot <= window.hi && knot < self.stop)
-        {
-            return Err(Error::new(
-                "event_resolution",
-                "ordered event history crosses a PWL slope boundary",
-            ));
+        if self.crosses_source_corner(prior.lo, window.hi) {
+            return self.piecewise_event_state(physical, prior.lo, window.hi);
         }
         let segment = &self.segments[0];
         let count = physical.len();
@@ -97,6 +88,56 @@ impl LinearContinuous {
             },
         )?;
         Ok(values[..count].to_vec())
+    }
+
+    fn crosses_source_corner(&self, lo: f64, hi: f64) -> bool {
+        self.context
+            .trajectory
+            .knots
+            .iter()
+            .any(|&knot| knot > lo && knot <= hi && knot < self.stop)
+    }
+
+    // The fixed mode has one matrix across source pieces. Refill each piece's
+    // source coordinates and propagate all durations up to its length. Carry
+    // only physical coordinates, never apply the reset map a second time.
+    fn piecewise_event_state(&self, physical: &[I], lo: f64, hi: f64) -> Result<Vec<I>, Error> {
+        let segment = self
+            .segments
+            .first()
+            .ok_or_else(|| Error::new("event_resolution", "no linear segment for event bridge"))?;
+        let count = physical.len();
+        let mut state = physical.to_vec();
+        let mut cuts = vec![lo];
+        cuts.extend(
+            self.context
+                .trajectory
+                .knots
+                .iter()
+                .copied()
+                .filter(|&t| t > lo && t < hi),
+        );
+        cuts.push(hi);
+        for pair in cuts.windows(2) {
+            let (source, slopes) = self.context.trajectory.range(I {
+                lo: pair[0],
+                hi: pair[1],
+            })?;
+            let mut initial = segment.initial.clone();
+            initial[..count].copy_from_slice(&state);
+            initial[count..count + source.len()].copy_from_slice(&source);
+            initial[count + source.len()..count + 2 * source.len()].copy_from_slice(&slopes);
+            state = crate::state_space::propagate(
+                &segment.matrix,
+                &initial,
+                I {
+                    lo: 0.0,
+                    hi: (I::point(pair[1]) - I::point(pair[0])).hi,
+                },
+            )?[..count]
+                .to_vec();
+        }
+        Ok(state)
     }
 
     pub(crate) fn restarted(
@@ -131,19 +172,6 @@ impl LinearContinuous {
             return Err(Error::new(
                 "event_resolution",
                 "linear event representative must be the upper endpoint of its time enclosure",
-            ));
-        }
-        if time_bounds.lo != time_bounds.hi
-            && self
-                .context
-                .trajectory
-                .knots
-                .iter()
-                .any(|&knot| knot > time_bounds.lo && knot <= time && knot < self.stop)
-        {
-            return Err(Error::new(
-                "event_resolution",
-                "joint event-time enclosure crosses a PWL slope boundary",
             ));
         }
         let mut physical = if time_bounds.lo < self.start {
@@ -224,19 +252,24 @@ impl LinearContinuous {
                     *slot = slot.hull(value);
                 }
             }
-            let propagated = crate::state_space::propagate(
-                &segment.matrix,
-                &initial,
-                I {
-                    lo: 0.0,
-                    hi: (I::point(time) - I::point(time_bounds.lo)).hi,
-                },
-            )?;
+            let physical = if next.crosses_source_corner(time_bounds.lo, time) {
+                next.piecewise_event_state(&next.initial, time_bounds.lo, time)?
+            } else {
+                crate::state_space::propagate(
+                    &segment.matrix,
+                    &initial,
+                    I {
+                        lo: 0.0,
+                        hi: (I::point(time) - I::point(time_bounds.lo)).hi,
+                    },
+                )?[..count]
+                    .to_vec()
+            };
             next = Self::build(
                 self.context.clone(),
                 parameters.to_vec(),
                 time,
-                Some(propagated[..count].to_vec()),
+                Some(physical),
             )?
             .unwrap();
         }

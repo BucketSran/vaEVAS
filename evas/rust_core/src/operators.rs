@@ -1703,9 +1703,9 @@ mod phase_operator_tests {
                 &[I::ONE],
                 &[0],
             );
-            if nonlinear {
-                // A bounded nonlinear flow can cross the source corner. Its
-                // candidate must remain disposable and reproducible.
+            {
+                // Both bounded flows can cross the source corner. Their
+                // candidates must remain disposable and reproducible.
                 let candidate = uncertain.unwrap();
                 let bounds = candidate.bounds(1.0).unwrap();
                 drop(candidate);
@@ -1721,8 +1721,6 @@ mod phase_operator_tests {
                     )
                     .unwrap();
                 assert_eq!(retry.bounds(1.0).unwrap(), bounds);
-            } else {
-                assert!(uncertain.is_err());
             }
             assert_eq!(base.bounds(1.0).unwrap(), original);
             assert!(frozen

@@ -113,17 +113,21 @@ class TimerHistoryOrder(unittest.TestCase):
         self.assertAlmostEqual(z,expected,delta=1e-7)
         self.assertEqual(result['transient']['states'][-1], [3,2,0])
 
-    def test_uncertified_history_and_source_corner_still_refuse(self):
-        cases = [
-            (clocks_with_history().replace('idt(1e6*n,0)', 'idt(n+V(z,r)*V(z,r),0)'),
-             [[0,0],[7e-6,7e-6]], 'nonlinear history query outside accepted trajectory'),
-            (clocks_with_history(), [[0,0],[6e-6,1],[7e-6,1]], 'PWL slope boundary'),
-        ]
-        for source,pwl,message in cases:
-            with self.subTest(message=message), self.assertRaisesRegex(KernelError,message):
-                transient(compile_sources({'boundary.va':source},[instance()]),
-                          {'u':pwl},[0,7e-6],stop=7e-6,max_step=7e-6,
-                          vabstol=1e-7,reltol=1e-8,kernel=KERNEL)
+    def test_certified_nonlinear_and_unrelated_source_corner_continue(self):
+        source = clocks_with_history().replace('idt(1e6*n,0)', 'idt(n+V(z,r)*V(z,r),0)')
+        result = run_history(source)
+        expected = 0.0
+        prior = Q(2e-6)
+        for n,end in [(1,2*Q(2e-6)),(2,3*Q(2e-6)),(3,Q(7e-6))]:
+            root = math.sqrt(n)
+            expected = root*math.tan(math.atan(expected/root)+root*float(end-prior))
+            prior=end
+        self.assertAlmostEqual(result['solutions'][-1]['voltages'][result['nodes'].index('dut:z')],expected,delta=1e-7)
+        corner = transient(compile_sources({'boundary.va':clocks_with_history()},[instance()]),
+            {'u':[[0,0],[6e-6,1],[7e-6,1]]},[0,7e-6],stop=7e-6,max_step=7e-6,
+            vabstol=1e-7,reltol=1e-8,kernel=KERNEL)
+        area=Q(1e6)*sum(Q(7e-6)-k*Q(2e-6) for k in (1,2,3))
+        self.assertAlmostEqual(corner['solutions'][-1]['voltages'][corner['nodes'].index('dut:z')],float(area),delta=1e-7)
 
 
 if __name__ == '__main__':
