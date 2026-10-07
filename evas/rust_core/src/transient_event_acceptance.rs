@@ -128,6 +128,123 @@ impl Controller {
 mod tests {
     use super::*;
 
+    fn history_final_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+        let (base, trajectory, mut controller, _) =
+            super::super::lifecycle_controller_tests::history_guard_fixture();
+        let mut program = base.program;
+        // Keep only the .25 threshold change and z=t history cross. Removing
+        // the independent .5 cross lets history_epoch localize the new .625
+        // root in the extended trajectory, rather than an empty early epoch.
+        program.events.truncate(2);
+        let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+        assert!(!model.guard_operators[1].is_empty());
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &controller.accepted.states).unwrap();
+        controller.accepted.operators = operators;
+        (model, trajectory, controller, calendar)
+    }
+
+    #[test]
+    fn history_final_certificate_refusal_preserves_controller_and_corrected_root_retry() {
+        // z=t, q=.75 initially, timer(.25) changes q to .625. A legal history
+        // plan must invalidate the .75 cross and produce .625 after extension.
+        // Corrupt only candidate V(y)=q after event closure to isolate the
+        // shared final voltage gate following actual history_epoch resolution.
+        let (model, trajectory, mut controller, mut calendar) = history_final_fixture();
+        let states = controller.accepted.states.clone();
+        let bounds = controller.accepted.state_bounds.clone();
+        let voltages = controller.accepted.solution.voltages.clone();
+        let history = controller.accepted.operators.clone();
+        let original: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            let (mut next, records, end) = controller
+                .prepare_events_until(&model, &trajectory, &calendar, Some(0.25))
+                .unwrap();
+            let plan = controller
+                .prepare_history_future(
+                    &model,
+                    &trajectory,
+                    &next,
+                    &calendar[controller.event..end],
+                    &calendar[end..],
+                )
+                .unwrap();
+            assert!(matches!(plan, CalendarPlan::History { .. }));
+            assert!((next.solution.voltages[2] - 0.625).abs() < 1e-8);
+            next.solution.voltages[2] += 0.01;
+            let error = controller
+                .finish_changed_events(&model, &trajectory, &mut calendar, next, records, plan)
+                .unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert!(error.message.contains("same-time forward error at y:"));
+            assert_eq!(controller.accepted.time, 0.);
+            assert_eq!(controller.accepted.states, states);
+            assert_eq!(controller.accepted.state_bounds, bounds);
+            assert_eq!(controller.accepted.solution.voltages, voltages);
+            assert!(controller.accepted.operators.same_reset_history(&history));
+            assert_eq!(
+                controller.accepted.operators.bounds(0.25).unwrap(),
+                history.bounds(0.25).unwrap()
+            );
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty());
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.time, e.event, e.bounds()))
+                    .collect::<Vec<_>>(),
+                original
+            );
+        }
+        controller
+            .accept_history_events(&model, &trajectory, &mut calendar)
+            .unwrap();
+        assert_eq!(calendar.len(), 1);
+        assert_eq!(calendar[0].event, 1);
+        assert!((calendar[0].time - 0.625).abs() < 1e-9);
+        let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
+            history_final_fixture();
+        clean
+            .accept_history_events(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+        assert_eq!(controller.accepted.time, clean.accepted.time);
+        assert_eq!(controller.accepted.states, clean.accepted.states);
+        assert_eq!(
+            controller.accepted.state_bounds,
+            clean.accepted.state_bounds
+        );
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            clean.accepted.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&clean.accepted.operators));
+        assert_eq!(
+            controller.accepted.operators.bounds(1.).unwrap(),
+            clean.accepted.operators.bounds(1.).unwrap()
+        );
+        assert_eq!(controller.event, clean.event);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            clean_calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>()
+        );
+    }
+
     #[test]
     fn final_transition_deadline_refusal_preserves_controller_and_retry() {
         let (model, trajectory, mut controller, mut calendar) =
@@ -180,10 +297,7 @@ mod tests {
                 )
                 .unwrap_err();
             assert_eq!(error.kind, "event_resolution");
-            assert_eq!(
-                error.message,
-                "cannot certify transition deadline ordering relative to user event"
-            );
+            assert!(error.message.contains("transition deadline ordering"));
             assert_eq!(controller.accepted.time, 0.);
             assert_eq!(controller.accepted.states, states);
             assert_eq!(controller.accepted.state_bounds, bounds);

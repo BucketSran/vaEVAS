@@ -648,7 +648,7 @@ fn nonlinear_horizon_failure_discard_and_retry_preserve_production_controller() 
     );
 }
 
-fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+pub(super) fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let (base, trajectory, _, _) = relocalization_fixture();
     let mut program = serde_json::to_value(base.program).unwrap();
     program["nodes"].as_array_mut().unwrap().push(json!("z"));
