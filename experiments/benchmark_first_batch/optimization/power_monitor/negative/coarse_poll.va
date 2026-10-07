@@ -1,0 +1,27 @@
+`include "disciplines.vams"
+// Original always-on voltage supervisor: qualify recovery, promptly disable
+// below the hysteresis threshold, and drive a logic-level enable output.
+module supply_supervisor(supply, enable);
+ input supply;
+ output enable;
+ electrical supply, enable;
+ parameter real on_voltage=1.0;
+ parameter real off_voltage=0.85;
+ parameter real qualification=5u from (0:inf);
+ parameter real poll_period=100n from (0:inf);
+ parameter real rise=0.5n from (0:inf);
+ integer enabled, pending;
+ real started;
+ analog begin
+  @(initial_step) begin enabled=0;pending=0;started=0;end
+  @(timer(0,poll_period)) begin
+   if(enabled) begin
+    if(V(supply)<off_voltage) begin enabled=0;pending=0;end
+   end else if(V(supply)>=on_voltage) begin
+    if(!pending) begin pending=1;started=$abstime;end
+    if($abstime-started>=qualification) begin enabled=1;pending=0;end
+   end else pending=0;
+  end
+  V(enable) <+ transition(enabled,0,rise);
+ end
+endmodule

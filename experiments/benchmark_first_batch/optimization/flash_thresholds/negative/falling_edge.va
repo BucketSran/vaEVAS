@@ -1,0 +1,28 @@
+`include "disciplines.vams"
+// Sample the input first; a monotonic threshold bank permits binary search.
+module offset_flash(vin, clock, code);
+ input vin, clock;
+ output code;
+ electrical vin, clock, code;
+ parameter real vref=1.0 from (0:inf);
+ parameter real skew=0.15 from [-0.3:0.3];
+ parameter real delay=0.2n from [0:inf);
+ parameter real rise=0.3n from (0:inf);
+ integer lo, hi, mid, k, held_code;
+ real threshold, sample;
+ analog begin
+  @(initial_step) held_code=0;
+  @(cross(V(clock)-0.5,-1)) begin
+   sample=V(vin);
+   lo=0;hi=256;
+   for(k=0;k<8;k=k+1) begin
+    mid=(lo+hi)/2;
+    threshold=vref*(mid/256.0+skew*(mid/256.0)*(1.0-mid/256.0));
+    if(sample>=threshold) lo=mid;
+    else hi=mid;
+   end
+   held_code=lo;
+  end
+  V(code) <+ transition(held_code/255.0,delay,rise);
+ end
+endmodule
