@@ -19,10 +19,10 @@ analog begin
    busy=1;expected=$rtoi(V(vin)*16);deadline=$abstime+70n;
   end
   if(V(done)>0.5 && lastd==0) begin
-   if(busy==0 || $abstime>deadline || abs(V(code)-expected)>0.1)bad=1;
+   if(busy==0 || $abstime>deadline+1p || abs(V(code)-expected)>0.1)bad=1;
    busy=0;
   end
-  if(busy!=0 && $abstime>deadline)begin bad=1;busy=0;end
+  if(busy!=0 && $abstime>deadline+1p)begin bad=1;busy=0;end
   if(V(start)>0.5)lasts=1;else lasts=0;
   if(V(done)>0.5)lastd=1;else lastd=0;
  end
