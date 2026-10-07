@@ -2,6 +2,7 @@
 GUARDS = ["DYNAMICS", "DEV:precision-chain"]
 
 import json
+from fractions import Fraction
 import os
 from pathlib import Path
 import tempfile
@@ -51,12 +52,15 @@ class TransientAccuracyControl(unittest.TestCase):
                 self.assertLessEqual(record['end']-record['start'], 1/32)
 
     def test_amplified_initial_enclosure_has_explicit_precision_refusal(self):
-        program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),1); '
+        program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),.3); '
                                 'V(y,r)<+1e4*(V(z,r)-0.5);', 'electrical z;')
-        # The analytic nominal value is finite, but accumulated binary64
-        # enclosure width cannot certify a 1e-20 V budget after amplification.
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy.*cannot certify'):
+        # .3 is a binary64 point, but 10000*(.3-.5) is not representable.
+        # Its initial rounding error exceeds the unchanged 1e-20 V budget.
+        with self.assertRaises(KernelError) as caught:
             self.measured(program, [0,1], 1e-20)
+        self.assertEqual(caught.exception.detail['kind'], 'waveform_accuracy')
+        self.assertRegex(caught.exception.detail['message'],
+                         r'^cannot certify same-time forward error at y: bound .*?, budget 1e-20$')
 
     def test_supported_event_continuation_preserves_history_and_grid(self):
         program = compile_model('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
@@ -108,35 +112,41 @@ class TransientAccuracyControl(unittest.TestCase):
                         self.assertAlmostEqual(row[node],expected,
                                                delta=1e-11+1e-8*abs(expected))
 
-    def test_direct_amplified_encoding_retains_explicit_certification_gap(self):
-        # This equivalent voltage encoding is a retained counterexample.
-        # Its current enclosure still exceeds the strict request at cancellation;
-        # success of the original physical-port case does not certify it.
-        for event in [False, True]:
-            with self.subTest(event=event):
-                body = ('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
+    def test_strict_equivalent_encodings_preserve_cancellation_certificate(self):
+        # z'=−a*z² and q'=a*z² give z=1/(1+integral(a)), q=1−z.
+        # Renaming the output changes algebraic column order, never this answer.
+        for event, coupled, output, gain in [
+            (False, False, 'y', 1e4), (False, True, 'y', 1e4),
+            (True, False, 'y', 1e4),
+            (True, True, 'y', 1e4), (False, False, 'a', 1e4),
+            (True, True, 'a', 1e4), (False, False, 'zz', -1e4),
+            (True, True, 'y', 1e3),
+        ]:
+            with self.subTest(event=event, coupled=coupled, output=output, gain=gain):
+                body = ('@(initial_step) factor=1; @(timer(.5,0,1e-12)) factor=2; '
                         if event else '')
-                factor = 'a*' if event else ''
-                program = compile_model(body+'V(z,r)<+idt(-'+factor+'pow(V(z,r),2),1); '
-                                        'V(y,r)<+1e4*(V(z,r)-0.5);',
-                                        ('integer a; ' if event else '')+'electrical z;')
-                with self.assertRaisesRegex(KernelError,'waveform_accuracy'):
-                    run(program,times=[0,.125,.5,.75,1],stop=1,max_step=1,
-                        vabstol=1e-11,reltol=1e-8)
-
-    def test_strict_coupled_encoding_gap_is_grid_invariant(self):
-        program = compile_model('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
-                                'V(z,r)<+idt(-a*pow(V(z,r),2),1); '
-                                'V(q,r)<+idt(a*pow(V(z,r),2),0); '
-                                'V(y,r)<+1e4*(V(z,r)-0.5);',
-                                'integer a; electrical z,q;')
-        errors=[]
-        for times in [[0,.125,.5,.75,1],[i/32 for i in range(33)]]:
-            with self.assertRaises(KernelError) as caught:
-                run(program,times=times,stop=1,max_step=1,vabstol=1e-11,reltol=1e-8)
-            errors.append(caught.exception.detail)
-        self.assertEqual(errors[0],errors[1])
-        self.assertEqual(errors[0]['kind'],'waveform_accuracy')
+                factor = 'factor*' if event else ''
+                body += 'V(z,r)<+idt(-'+factor+'pow(V(z,r),2),1); '
+                if coupled:
+                    body += 'V(q,r)<+idt('+factor+'pow(V(z,r),2),0); '
+                body += f'V({output},r)<+{gain}*(V(z,r)-0.5);'
+                program = compile_model(body,
+                    ('integer factor; ' if event else '')+'electrical z'+(',q' if coupled else '')+';',
+                    ports=f'u,{output},r', directions=f'input u; output {output}; inout r;')
+                sparse = [0,.125,.5,.75,1]
+                dense = [i/32 for i in range(33)]
+                results = [run(program, times=times, stop=1, max_step=1,
+                               vabstol=1e-11, reltol=1e-8) for times in [sparse,dense]]
+                self.assertEqual(results[0]['solutions'],
+                                 [results[1]['solutions'][dense.index(t)] for t in sparse])
+                for t, row in zip(sparse, rows(results[0])):
+                    z = 1/(Fraction(1,2)+2*Fraction(t)) if event and t>.5 else 1/(1+Fraction(t))
+                    expected = {'dut:z':z, output:Fraction(gain)*(z-Fraction(1,2))}
+                    if coupled:
+                        expected['dut:q'] = 1-z
+                    for node, exact in expected.items():
+                        self.assertLessEqual(abs(Fraction(row[node])-exact),
+                                             Fraction(1e-11)+Fraction(1e-8)*abs(exact))
 
     def test_public_accumulated_roundoff_reaches_bounded_suffix_refusal(self):
         program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),1); '

@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "scope": "isolated unit affine projection followup; original strict equivalent requests and six original physical-port Spectre pairs; no new paper count",
+  "base_head": "cc93ddc80135853fe96749a01676594e86f214b2",
+  "production_files_sha256": {
+    "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+    "evas/tests/test_transient_accuracy_control.py": "0dc49804205efd0f4322ade4d10f418db844026153c0348dc10ba9f9e966e06b"
+  },
+  "kernel_sha256": "fa0195aada0626c65b5f4c4d53050b35440f906c28ac08f3ebad77cf3a3785f9",
+  "source_state": "local diff at recorded base; final publication identity tracked in PR",
+  "mechanism": "Prefer a point +1 or -1 pivot only if every trailing unknown coefficient is exactly zero; all other rows retain original magnitude pivot policy. Preserve interval RHS and all acceptance checks.",
+  "strict_replay": {
+    "requests": 11,
+    "completed": 11,
+    "previous_strict_failures_repaired": 4,
+    "independent_reference": "exact Fraction z/q/amplified/low values at actual binary64 times; unchanged per-request tolerance",
+    "summary": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/postchange/SUMMARY.json",
+      "sha256": "5fdafd3e668215d46dffe551abff531b2a6c6d528d9899494f3fc512e87a2f3f",
+      "availability": "local-only"
+    }
+  },
+  "spectre_pair_revalidation": {
+    "new_local_calls": 6,
+    "new_spectre_calls": 0,
+    "rows": 7045,
+    "all_numeric_rows_identical_to_previous_candidate": true,
+    "complete_finite_alignment_passes": 2,
+    "cases": [
+      {
+        "id": "nonlinear--baseline",
+        "rows": 298,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--baseline/receipt.json",
+          "sha256": "4ef4a15f8fcd917aaaec5afc50bf96b999c23098bad671935714ccfae773071e",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--baseline/request.json",
+          "sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--baseline/reference.json",
+          "sha256": "32f5ca7ef97ca02f047789e1722222a5d47c39aa6e5d8bfb27ed6ecc8a1896f5",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--baseline/observation.json",
+          "sha256": "8be00fe39936cde4c58d4e035f055ce36ef09700ca89ce6f210cc519b2fd8c81",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": true,
+        "spectre_frozen_reference_pass": false,
+        "pair_pass": false,
+        "pair_maxima_V": {
+          "z": 9.487862753232434e-07,
+          "low": 9.487862753718157e-07,
+          "amp": 0.009487862753758236,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": false
+      },
+      {
+        "id": "nonlinear--tolerance-only",
+        "rows": 2116,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--tolerance-only/receipt.json",
+          "sha256": "a29bdf2a87b304dd2b7f05b17a38338206298d1a3bdd8bf73244381c441b5583",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--tolerance-only/request.json",
+          "sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--tolerance-only/reference.json",
+          "sha256": "c40ee31db3cfbd5a6a747fdcaa9a5953699b5576cd47418cfb48707de75c0e11",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--tolerance-only/observation.json",
+          "sha256": "c8f85dc5001ade59946b316a9bf26d36e00428fff7e294ad862a206c23c908da",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": true,
+        "spectre_frozen_reference_pass": true,
+        "pair_pass": true,
+        "pair_maxima_V": {
+          "z": 3.061149533856167e-08,
+          "low": 3.061149536631724e-08,
+          "amp": 0.0003061149534460128,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": true
+      },
+      {
+        "id": "nonlinear--step-only",
+        "rows": 1029,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--step-only/receipt.json",
+          "sha256": "b1e4bc006d361d6e71318e6d6bd6d6de3934382e6eab2b2b403923164cd8eb41",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--step-only/request.json",
+          "sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/nonlinear--step-only/reference.json",
+          "sha256": "017091606abc2f33547f40cf37fdb18aebb95101895d363a1eca2c979d4453e4",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--step-only/observation.json",
+          "sha256": "998bfce04c53b85adc2688f46a7863ca16980c6c98cf779923df13f1e147d100",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": false,
+        "spectre_frozen_reference_pass": false,
+        "pair_pass": true,
+        "pair_maxima_V": {
+          "z": 6.058750467996532e-08,
+          "low": 6.05875047077209e-08,
+          "amp": 0.0006058750470856467,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": false
+      },
+      {
+        "id": "event-continuation--baseline",
+        "rows": 359,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--baseline/receipt.json",
+          "sha256": "b1ddd8c01a84c89390867736ea94c24269e8a4db01e53a573282f8b1bb7c6d75",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--baseline/request.json",
+          "sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--baseline/reference.json",
+          "sha256": "dc5c76ca6f240d7e7a7d9877ebbd949fb26d35185a9f50ffd48a51b3207e4533",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--baseline/observation.json",
+          "sha256": "675b580cdb680613f09f405e97cfbc5e7570ece2df4fd529735d1778b237ac64",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": true,
+        "spectre_frozen_reference_pass": false,
+        "pair_pass": false,
+        "pair_maxima_V": {
+          "z": 1.1688914766105896e-06,
+          "low": 1.1688914766244674e-06,
+          "amp": 0.011688914766182279,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": false
+      },
+      {
+        "id": "event-continuation--tolerance-only",
+        "rows": 2213,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--tolerance-only/receipt.json",
+          "sha256": "e157eddc66173c7b500ab821dd70cc943ec904397cf8c0b4acdde286c59a444a",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--tolerance-only/request.json",
+          "sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--tolerance-only/reference.json",
+          "sha256": "0724a31ca9121c02405d45867e813a86f921a8cbab50965f80681c175ccfb87e",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--tolerance-only/observation.json",
+          "sha256": "0cdb1da295f7339315cd987e37c737fcea3455673f88f42045e02d849efc0021",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": true,
+        "spectre_frozen_reference_pass": true,
+        "pair_pass": true,
+        "pair_maxima_V": {
+          "z": 5.0443202170846746e-08,
+          "low": 5.04432021083967e-08,
+          "amp": 0.0005044320210458864,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": true
+      },
+      {
+        "id": "event-continuation--step-only",
+        "rows": 1030,
+        "unpaired_rows": 0,
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--step-only/receipt.json",
+          "sha256": "c631ec83f1eaf927295aa3299f16aca180ee510ec65f0957ee88a16bb261b505",
+          "availability": "local-only"
+        },
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--step-only/request.json",
+          "sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "availability": "local-only"
+        },
+        "independent_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/event-continuation--step-only/reference.json",
+          "sha256": "75c6294ac6a04134e2f1f391078d80005fb85a813c8a45f055e3814930b56c85",
+          "availability": "local-only"
+        },
+        "spectre_reference": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--step-only/observation.json",
+          "sha256": "a69ff75044b3923991ef837b0c56c596aa5f5eb22d958bf5c0ae5b0e86b95126",
+          "availability": "local-only"
+        },
+        "same_numeric_rows_as_previous_candidate": true,
+        "evas_reference_pass": false,
+        "spectre_frozen_reference_pass": false,
+        "pair_pass": false,
+        "pair_maxima_V": {
+          "z": 1.1649393016899268e-07,
+          "low": 1.1649393018980936e-07,
+          "amp": 0.0011649393018871024,
+          "count": 0.0
+        },
+        "complete_finite_alignment_pass": false
+      }
+    ],
+    "summary": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay-r2/SUMMARY.json",
+      "sha256": "1e9f8fc4fde80430387196f0ef7f2b30b9fc524dbce3354eaea906b533eb5111",
+      "availability": "local-only"
+    }
+  },
+  "retained_limitations": [
+    "general dense, scaled or uncertain projections may still reject",
+    "1e-20 initial-output and 1e-13 accumulated-history genuine refusal cases remain",
+    "original baseline Spectre physical failures and step-only missing anchors retained",
+    "no full paper qualification or merge claim"
+  ],
+  "evidence": {
+    "diagnosis": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/REPORT.md",
+      "sha256": "a8016c7b9f75b79e04c2ec58ac555c18816331e03ac7dd23e687616309916530",
+      "availability": "local-only"
+    },
+    "implementation": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/IMPLEMENTATION.md",
+      "sha256": "fb1332de8347b644d914ee16de3b93159cc4ecd66924dd60dd9bc8bf8bd07505",
+      "availability": "local-only"
+    },
+    "red": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/red.log",
+      "sha256": "274835223bd5d2d408c21c0639b02f25c1f0ee917bee727bd458d484f3d2ec64",
+      "availability": "local-only"
+    },
+    "private_red": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/private-red.log",
+      "sha256": "9784c6440285fd550ef5670d3469856fec7bd6ad0b19e220a329b55dfd494b4b",
+      "availability": "local-only"
+    },
+    "focused_green": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/final-focused.log",
+      "sha256": "04691e30d03d691515b117c0790f9908032199c67258092c619dd9bf876b8ed4",
+      "availability": "local-only"
+    },
+    "rust": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/rust-full.log",
+      "sha256": "c6c51406536b8b41adf06838ad846486a77a5600ce49622127bdc3054e4442ff",
+      "availability": "local-only"
+    },
+    "new_native_replay_script": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/replay_native.py",
+      "sha256": "c11bec85908452f5a0cded883493dcdeb1dbb88bff1d5746c6377d8301d4177c",
+      "availability": "local-only"
+    },
+    "pre_dispatch_path_error": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/native-replay.stderr",
+      "sha256": "dce3e9d3783257fe65b8406905d31b57e85e76da1f8d3a71e3852d55a8e97170",
+      "availability": "local-only"
+    },
+    "consumers": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/consumers.log",
+      "sha256": "6acf14aa9d64bd8cc72daf46e6698377f311be29470eaed4ff9db31685ea43e9",
+      "availability": "local-only"
+    },
+    "singular_dae_unchanged_path": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/SINGULAR-DAE-PATH.json",
+      "sha256": "1f44b095388d0bb0f0f82abfc4795ee6a7427da1e1362d7da0a92ab8900988f1",
+      "availability": "local-only"
+    },
+    "initial_rejection_capture": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/review-delta-initial/exception.json",
+      "sha256": "e3803d8fe8bb35ac9046ceeca6d1db730dbaead62b7e2975def0fcd72260b506",
+      "availability": "local-only"
+    },
+    "initial_rejection_final_module": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/review-delta-initial/module.log",
+      "sha256": "a090786630ddce7babad40f4857dfdb56f7ad65f8a3b9e601d8f3f5d6f3fd74a",
+      "availability": "local-only"
+    },
+    "astra_final_delta": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/astra/final-delta.md",
+      "sha256": "aa8c9e7fd4e1b694a9871dc21d105d920dc924103f974d969c9a4ae9224a6975",
+      "availability": "local-only"
+    },
+    "astra_DAE_adjudication": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/astra/glm-f1-adjudication.md",
+      "sha256": "fd05d8dbc2115b0fc72c44d0370e4422d522221a86b9e44cfb6ff98aacc6d2c5",
+      "availability": "local-only"
+    },
+    "final_equivalent_encoding_matrix": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/strict/review-delta-coupled/matrix.log",
+      "sha256": "0bd1084c6cc4af4cd07f0b5e4b560610138093bcdc263ad67d72295fe3c55656",
+      "availability": "local-only"
+    },
+    "astra_test_delta": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/astra/test-delta-review.md",
+      "sha256": "b088618489c713f50fa2f46c0c36c2630d6ff35eed1a71f4cfb4127d55417fb5",
+      "availability": "local-only"
+    },
+    "glm_production_review": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/production/review.md",
+      "sha256": "ff0733c81d434d7b8338b375c1a034f4fd8b1f69f6a9eb19a68b3a56eadd1c96",
+      "availability": "local-only"
+    },
+    "glm_production_receipt": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/production/receipt.json",
+      "sha256": "a8c8178c8df65eb8121f7a3a598eae628791a72bff7feddf857465dbd16a4145",
+      "availability": "local-only"
+    },
+    "glm_evidence_review": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/evidence/review.md",
+      "sha256": "030c7448d862d5d58586c4dcfd82b8acfaf31a2c80ea4ed0389108c34896404e",
+      "availability": "local-only"
+    },
+    "glm_evidence_receipt": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/evidence/receipt.json",
+      "sha256": "f9656fd275b24bb379f098643761df0e9992bceea234583596e2183971fb150a",
+      "availability": "local-only"
+    },
+    "glm_final_delta_review": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/final-delta/review.md",
+      "sha256": "5dd38e194f382bab01ceffdd59248931f372cfbfd04ae8d60833bf079036ba05",
+      "availability": "local-only"
+    },
+    "glm_final_delta_receipt": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/glm/final-delta/receipt.json",
+      "sha256": "c081ccd66ffa8e03b24f84c9840de3bd6c01a6218ed085dae471f8776b22699b",
+      "availability": "local-only"
+    }
+  },
+  "review": {
+    "status": "Independent Astra and actual Claude CLI/GLM-5.3 production, evidence and final deltas complete; no blocking finding in this bounded change.",
+    "remaining_nonblocking_limit": "Existing singular DAE negative has unrecorded KernelError category. Both reviewers accept unchanged scalar path for this change; no numerical rejection or general DAE proof claimed.",
+    "model_identity": "Each completed actual CLI receipt confirms canonicalModel glm-5.3 and end_turn; original context-length rejection retained, zero inference usage.",
+    "merge": "not authorized or performed"
+  },
+  "checks": {
+    "focused_public_tests": 9,
+    "shared_consumer_tests": 178,
+    "rust_passed": 163,
+    "rust_ignored": 1,
+    "format": "pass",
+    "clippy_all_targets_warnings_denied": "pass",
+    "singular_DAE_negative_limit": "Existing test swallowed KernelError category; near-300s runtime is not numerical rejection certification. Unchanged scalar path proof retained.",
+    "initial_rejection_followup": "Exact waveform_accuracy kind and t0 same-time forward error at y captured; tightened assertion, one focused test and full nine-test module passed; production unchanged.",
+    "final_matrix_followup": "Added no-event coupled-state case with unchanged exact-rational budget; matrix test passed, eight model variants and two grids each (16 requests). Other public tests unchanged since full nine-test run; production unchanged."
+  }
+}

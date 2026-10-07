@@ -1,6 +1,6 @@
 # 瞬态精度与 VCO 发展对照
 
-本组实际运行 8 个 Spectre 配置。完整有限检查通过的是两个动态 tolerance-only 配置；VCO 100ps 仅原域内 80748 行符合波形判据，超 stop 末行和 EVAS 原 80749 时刻整批拒绝单列。前一 EVAS accuracy 检查点重放六个原请求后，四个完成，两个严格容差档拒绝认证；本轮候选实现逐字重放后六个完成，两个 tolerance-only 档满足完整有限对齐检查。独立数值审查已完成，普通 phase 边界与等价严格编码仍有缺口。这些结果不签发 paper P，也不改变原 fixed12 卡或其 checker。
+本组实际运行 8 个 Spectre 配置。完整有限检查通过的是两个动态 tolerance-only 配置；VCO 100ps 仅原域内 80748 行符合波形判据，超 stop 末行和 EVAS 原 80749 时刻整批拒绝单列。前一 EVAS accuracy 检查点重放六个原请求后，四个完成，两个严格容差档拒绝认证；本轮候选实现逐字重放后六个完成，两个 tolerance-only 档满足完整有限对齐检查。前一检查点的独立数值审查已完成；本轮继续修复了特定等价严格编码的区间投影缺口，见下文追加证据。普通 phase 边界仍未解决。这些结果不签发 paper P，也不改变原 fixed12 卡或其 checker。
 
 紧凑完整字段在 [evidence.json](evidence.json)。所有 raw、请求、响应、stdout/stderr、来源身份和失败收据保留在本机 ignored `current/runs/accuracy-control-20261007/backend/`；路径与 SHA 只是本地证据指针，不代表公开可下载。
 
@@ -64,7 +64,7 @@ compiled-binary64 IR 证书、decimal-source oracle 和实际 Spectre 是不同�
 
 本批是 4 次新本地数值调用、2 份同 kernel 已成功严格请求收据复用，0 次版本查询、0 次远程调用、0 次自动重试。四次新调用串行且各强制 90s，最长约 14.37s。复用两份收据原 timeout 为 120s，没有记录 elapsed，不能改记为强制 90s。本地 raw 与新分析保存在 ignored `worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-{raw,analysis}/`；旧失败、旧 summary 与原 Spectre 输出均未覆盖。
 
-这次修复消除了这两个严格原请求的认证拒绝；等价 direct u/y 与耦合状态的严格编码仍显式 `waveform_accuracy` 拒绝，不能扩写为全部等价编码已对齐。Astra 与实际 Claude CLI/GLM-5.3 已完成独立审查。GLM 的 TwoSum 下溢证明疑虑经原始论文、精确有理数边界测试及 Astra 复核关闭；生产数值函数未因此改动。最终发布与 CI 状态另在 PR 记录。
+该检查点消除了这两个严格原请求的认证拒绝；当时等价 direct u/y 与耦合状态的严格编码仍显式 `waveform_accuracy` 拒绝，不能扩写为全部等价编码已对齐。Astra 与实际 Claude CLI/GLM-5.3 已完成独立审查。GLM 的 TwoSum 下溢证明疑虑经原始论文、精确有理数边界测试及 Astra 复核关闭；生产数值函数未因此改动。最终发布与 CI 状态另在 PR 记录。
 
 ## 前一批身份、失败与计数（不包含本轮追加）
 
@@ -87,3 +87,15 @@ python3 -B experiments/backends/transient-accuracy/analyze.py OBSERVATION.json -
 raw 根目录内 `analysis-r3/SUMMARY.json` 是 Spectre 独立判据与 actual effective；`paired-analysis-r3/WITH-DIAGNOSTIC-SUMMARY.json` 是旧完整尝试与 VCO 域内诊断；`paired-analysis-final-accuracy/SUMMARY.json` 是最终六请求。`ACTUAL_R3_RESULTS_MANIFEST.json` 保留旧草稿身份，错误的“3 完整通过”只在新文档中纠正。原 `CHECKER_MANIFEST.json` 也绑定旧 README；本 README 是新文档身份，numerical checker 字节不变。
 
 数值生产修订为 `a911ec9a`。实测kernel仍绑定原冻结源码；随后三行模块注释和一个私有测试的增量单独记录，没有将其冒称为旧执行的同步身份。两条生产修复在临时源码快照合并后，60项联合公共回归通过；三份文档/生成索引冲突保留，尚未正式整合。
+
+## 孤立单位方程的投影修复
+
+后续诊断发现同一数学模型仅将输出端口 y 改为 a，就能改变严格请求的认证结果。原因是区间消元优先选择大系数主元，给本来精确的 z=w、y=10000z−5000 关系引入倒数舍入包围。现在仅在当前未知量系数为精确±1、其余待消未知量系数全部为0时优先使用该孤立方程；其他情况保持原来的最大幅值主元策略。区间右端和最终电压预算继续保留；不宣称一般稠密或病态系统与所有写法均可认证。
+
+原字节诊断请求11个全部完成，其中包含此前4个严格失败；逐点独立 Fraction 检查满足原请求预算。公开回归另检查事件、耦合、正负增益、端口改名及稀疏/稠密查询网格。原1e-20初始拒绝测试的 IC=1 经本修复可精确表示，故改用 binary64 IC=.3 的独立不可表示初值，预算仍为1e-20；原1e-13累计历史拒绝保留。旧失败和新的正确拒绝阶段都有独立记录。
+
+新内核又执行6个原始物理端口请求，与既有真实 Spectre raw 的7045个原时刻逐一配对。所有输出数值与前一候选完全一致，仍仅两个 tolerance-only 档通过完整有限合同；对应放大输出最大差0.306mV/0.504mV，原1mV预算不变。未新增这6个条件的Spectre运行，原baseline物理失败及step-only缺行/超预算仍保留。
+
+精度公开回归9项、共享消费者回归178项及Rust测试163项通过（另1项忽略）；format和clippy通过。共享回归中的奇异DAE负例只断言KernelError，未保留异常类别，不能据此声称数值认证拒绝；其标量求解路径与修改前相同的证明另有保留。
+
+紧凑身份、原请求重放、RED/GREEN与本地证据指针见 [projection-followup.json](projection-followup.json)。一次本地重放脚本初版路径错误在启动内核前失败，0数值调用；修正脚本另建输出目录，旧stderr保留。原alignment-followup.json是前一冻结身份，未被重写。独立审查及最终检查由PR记录，尚未合并。
