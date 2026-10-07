@@ -22,7 +22,7 @@ def read(archive,role):
             if actual!=source or tar.extractfile(prefix+'/dut.va').read()!=source:
                 raise ValueError('profiling source is not the frozen trusted instrumented model')
             merged=tar.extractfile(prefix+'/stdout.log').read()
-            matches=re.findall(rb'^profile callbacks=\s*(\d+) comparisons=\s*(\d+) samples=\s*(\d+)\s*$',merged,re.M)
+            matches=re.findall(rb'(?:^|[.0-9])profile\s+callbacks=\s*(\d+)\s+comparisons=\s*(\d+)\s+samples=\s*(\d+)\s*$',merged,re.M)
             if len(matches)!=1:raise ValueError('missing or ambiguous profile counter line')
             callbacks,comparisons,samples=map(int,matches[0])
             if samples!=case['expected_samples'] or not callbacks or not comparisons:raise ValueError('profiling did not perform expected conversions')
