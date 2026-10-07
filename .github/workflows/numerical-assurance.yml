@@ -49,6 +49,7 @@ jobs:
           python3 -B evas/validation/check_dynamics_math.py
           python3 -B evas/validation/check_event_conditions_math.py
           python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v
+          python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v
   properties-and-ngspice:
     runs-on: ubuntu-latest
     timeout-minutes: 15

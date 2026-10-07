@@ -1,0 +1,529 @@
+{
+  "cases": [
+    {
+      "id": "constant--observer-off",
+      "layer": "constant",
+      "observer": false,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.0000016689300537109375",
+        "0.0000035762786865234375",
+        "0.0000054836273193359375",
+        "0.0000073909759521484375"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "constant--observer-on",
+      "layer": "constant",
+      "observer": true,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out",
+        "accum"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.0000016689300537109375",
+        "0.0000035762786865234375",
+        "0.0000054836273193359375",
+        "0.0000073909759521484375"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "pwl--observer-off",
+      "layer": "pwl",
+      "observer": false,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/1048576",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "-549755813888"
+        },
+        {
+          "left": "1/1048576",
+          "right": "3/1048576",
+          "frequency_left_cycles_per_s": "0",
+          "slope_cycles_per_s2": "549755813888"
+        },
+        {
+          "left": "3/1048576",
+          "right": "5/1048576",
+          "frequency_left_cycles_per_s": "1048576",
+          "slope_cycles_per_s2": "-274877906944"
+        },
+        {
+          "left": "5/1048576",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.00000246156580933016745185799290868411947904565579382191506712794535293225976879083548609936147",
+        "0.00000351274033512554183090693212826663333518305917206825866979724679363585983027549376801601086",
+        "0.0000050067901611328125",
+        "0.0000069141387939453125"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "pwl--observer-on",
+      "layer": "pwl",
+      "observer": true,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out",
+        "accum"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/1048576",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "-549755813888"
+        },
+        {
+          "left": "1/1048576",
+          "right": "3/1048576",
+          "frequency_left_cycles_per_s": "0",
+          "slope_cycles_per_s2": "549755813888"
+        },
+        {
+          "left": "3/1048576",
+          "right": "5/1048576",
+          "frequency_left_cycles_per_s": "1048576",
+          "slope_cycles_per_s2": "-274877906944"
+        },
+        {
+          "left": "5/1048576",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.00000246156580933016745185799290868411947904565579382191506712794535293225976879083548609936147",
+        "0.00000351274033512554183090693212826663333518305917206825866979724679363585983027549376801601086",
+        "0.0000050067901611328125",
+        "0.0000069141387939453125"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "clip--observer-off",
+      "layer": "clip",
+      "observer": false,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/2097152",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "-549755813888"
+        },
+        {
+          "left": "1/2097152",
+          "right": "1/1048576",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "1/1048576",
+          "right": "3/2097152",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "3/2097152",
+          "right": "5/2097152",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "549755813888"
+        },
+        {
+          "left": "5/2097152",
+          "right": "3/1048576",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "3/1048576",
+          "right": "1/262144",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "1/262144",
+          "right": "5/1048576",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "-274877906944"
+        },
+        {
+          "left": "5/1048576",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.00000230237346875485901718300697728128249985663592851347739522617315100739715429506973156965974",
+        "0.0000035762786865234375",
+        "0.00000512599945068359375",
+        "0.00000703334808349609375"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "clip--observer-on",
+      "layer": "clip",
+      "observer": true,
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out",
+        "accum"
+      ],
+      "module": "layer_vco",
+      "segments": [
+        {
+          "left": "0",
+          "right": "1/2097152",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "-549755813888"
+        },
+        {
+          "left": "1/2097152",
+          "right": "1/1048576",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "1/1048576",
+          "right": "3/2097152",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "3/2097152",
+          "right": "5/2097152",
+          "frequency_left_cycles_per_s": "262144",
+          "slope_cycles_per_s2": "549755813888"
+        },
+        {
+          "left": "5/2097152",
+          "right": "3/1048576",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "3/1048576",
+          "right": "1/262144",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "0"
+        },
+        {
+          "left": "1/262144",
+          "right": "5/1048576",
+          "frequency_left_cycles_per_s": "786432",
+          "slope_cycles_per_s2": "-274877906944"
+        },
+        {
+          "left": "5/1048576",
+          "right": "1/131072",
+          "frequency_left_cycles_per_s": "524288",
+          "slope_cycles_per_s2": "0"
+        }
+      ],
+      "roots_decimal": [
+        "0.00000230237346875485901718300697728128249985663592851347739522617315100739715429506973156965974",
+        "0.0000035762786865234375",
+        "0.00000512599945068359375",
+        "0.00000703334808349609375"
+      ],
+      "ic": "1/8",
+      "pwl": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          9.5367431640625e-07,
+          -2.0
+        ],
+        [
+          2.86102294921875e-06,
+          2.0
+        ],
+        [
+          4.76837158203125e-06,
+          0.0
+        ],
+        [
+          7.62939453125e-06,
+          0.0
+        ]
+      ],
+      "hypothesis": "first diverging layer after frequency,independent idt bypass,modulo,sine; observer off/on isolates history perturbation"
+    },
+    {
+      "id": "original--observer-on",
+      "layer": "original",
+      "observer": true,
+      "module": "paper_vco",
+      "ports": [
+        "ctl",
+        "freq",
+        "phase",
+        "out",
+        "accum"
+      ],
+      "hypothesis": "matched original off reused; only added observer port,contribution,net and save; controls/strobetimes/stimulus unchanged",
+      "original_off_artifacts": {
+        "dut.va": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/dut.va",
+          "sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e"
+        },
+        "tb.scs": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/tb.scs",
+          "sha256": "8fdf75883a869f80a9d6544e93983ec9261eb6185ac2d4bc23d5e312dd258d17"
+        },
+        "requested_settings.json": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/requested_settings.json",
+          "sha256": "60ff92b17605a053f4e978a89b3d0136953354cf6ba9714a11d36210e80afe35"
+        },
+        "requested_times.json": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/requested_times.json",
+          "sha256": "c4eaadc921360716d9546014e0ad241ec017457377a7bf42340c6561a3a3382c"
+        },
+        "observation.json": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/observation.json",
+          "sha256": "f1c74acfc1f97a652a2dba4b47533c26e1d16d17c7525209d0bbd5698e09addb"
+        }
+      }
+    },
+    {
+      "id": "event--wide",
+      "layer": "event",
+      "module": "event_sample",
+      "ports": [
+        "x",
+        "firedtime",
+        "samplevalue",
+        "count"
+      ],
+      "ttol_s": 5.960464477539063e-08,
+      "expr_tol_V": 0.0625,
+      "math_root_s": 3.5762786865234375e-07,
+      "ramp_slope_V_per_s": 1048576,
+      "hypothesis": "ttol-only change; separate mathematical root,actual fired $abstime,latched ramp value and observed count timing; no exception expansion",
+      "allowed_delay_s": 5.960464477539063e-08,
+      "EVAS_compile_scope": "original source unsupported $abstime retained; separately labelled projection compiles and native event receipt provides actual EVAS time",
+      "projection_ports": [
+        "x",
+        "samplevalue",
+        "count"
+      ]
+    },
+    {
+      "id": "event--tight",
+      "layer": "event",
+      "module": "event_sample",
+      "ports": [
+        "x",
+        "firedtime",
+        "samplevalue",
+        "count"
+      ],
+      "ttol_s": 9.094947017729282e-13,
+      "expr_tol_V": 0.0625,
+      "math_root_s": 3.5762786865234375e-07,
+      "ramp_slope_V_per_s": 1048576,
+      "hypothesis": "ttol-only change; separate mathematical root,actual fired $abstime,latched ramp value and observed count timing; no exception expansion",
+      "allowed_delay_s": 9.094947017729282e-13,
+      "EVAS_compile_scope": "original source unsupported $abstime retained; separately labelled projection compiles and native event receipt provides actual EVAS time",
+      "projection_ports": [
+        "x",
+        "samplevalue",
+        "count"
+      ]
+    },
+    {
+      "id": "event--tight-observer-off",
+      "layer": "event",
+      "module": "event_sample",
+      "ports": [
+        "x",
+        "samplevalue",
+        "count"
+      ],
+      "ttol_s": 9.094947017729282e-13,
+      "expr_tol_V": 0.0625,
+      "math_root_s": 3.5762786865234375e-07,
+      "ramp_slope_V_per_s": 1048576,
+      "hypothesis": "same tight cross source without $abstime/firedtime observer; compare common samplevalue/count at identical strobes",
+      "allowed_delay_s": 9.094947017729282e-13,
+      "observer": false
+    }
+  ],
+  "planned_numerical_calls": 10,
+  "planned_version_calls": 1,
+  "dispatch_authorized": false
+}

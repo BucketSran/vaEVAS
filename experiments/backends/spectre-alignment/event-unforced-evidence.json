@@ -1,0 +1,2079 @@
+{
+  "schema_version": 1,
+  "scope": "finite no-near-root-strobes event control, distinct new identity; no expansion of PR79 exception or paper P",
+  "question": "whether the first-batch root-containing near-root strobe set masked callback/sample differences",
+  "cases": [
+    {
+      "id": "event-unforced--tight--observer-off",
+      "execution": {
+        "id": "event-unforced--tight--observer-off",
+        "stage": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 8.545100754126906,
+          "completed_utc": "2026-10-07T08:15:27Z",
+          "log": "simulate.log",
+          "log_sha256": "01eea809cfa83c30fff7ea8a46eadb714b69133911277bcc655a5d8bd2f5d3c6",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "status": "completed",
+        "raw_sha256": "2062992b82ec7e547de3ba80ff4ccda9f971c5faaa8feb81ade538b44f6bb6e8"
+      },
+      "required_anchors": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "native_denominator": 54,
+      "complete_observation_pass": true,
+      "failure_kinds": [],
+      "failure_count": 0,
+      "firedtime_available": false,
+      "initial": {
+        "time": 0.0,
+        "x": 0.0,
+        "samplevalue": -1.0,
+        "count": 0.0
+      },
+      "final": {
+        "time": 9.5367431640625e-07,
+        "x": 1.0,
+        "samplevalue": 0.3750004768371582,
+        "count": 1.0
+      },
+      "first_post_event": {
+        "time": 3.576283233996946e-07,
+        "x": 0.3750004768371582,
+        "samplevalue": 0.3750004768371582,
+        "count": 1.0
+      },
+      "count_jumps": [
+        {
+          "left": 3.574335823456446e-07,
+          "right": 3.576283233996946e-07,
+          "before": 0.0,
+          "after": 1.0
+        }
+      ],
+      "reference_report_sha256": "a9d0fdc071b18dac5c6b96af83fc4e9fb2cea561ec08af0252af7b4a6964ed2b",
+      "max_x_ramp_error": 1.1102230246251565e-16,
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 122,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 124,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 128,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 129,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 130,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 85,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 86,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 87,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "event_time_obligation": {
+        "observed_callback_time": null,
+        "observable": false,
+        "root_s": 3.5762786865234375e-07,
+        "physical_budget_s": 1e-10,
+        "callback_delay_s": null,
+        "qualification": "not observed; no hidden callback-time qualification inferred from on",
+        "ttol_s": 9.094947017729282e-13,
+        "expr_tol_V": 0.0625,
+        "ramp_slope_V_per_s": 1048576,
+        "allowed_delay_s": 9.094947017729282e-13,
+        "allowed_delay_formula": "min(ttol_s,expr_tol_V/ramp_slope_V_per_s)",
+        "declared_ports": [
+          "x",
+          "samplevalue",
+          "count"
+        ],
+        "observation_kind": "no firedtime observation port",
+        "latched_readings": [],
+        "observed_firedtime_range_s": null,
+        "observed_delay_range_s": null,
+        "observed_firedtime_span_s": null,
+        "reported_value_selection": null,
+        "maximum_delay_s": null,
+        "all_observed_values_within_locator_window": null,
+        "all_observed_values_within_physical_budget": null,
+        "interpretation": "unknown hidden callback time; no inference from matching on-source samples",
+        "allowed_window_comparison_slack_s": 1e-15
+      },
+      "sample_obligation": {
+        "final": 0.3750004768371582,
+        "math_root_sample": 0.375,
+        "error_V": 4.76837158203125e-07,
+        "budget_V": 0.001
+      },
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/runs/event-unforced--tight--observer-off/psf/tran.tran.tran",
+        "sha256": "2062992b82ec7e547de3ba80ff4ccda9f971c5faaa8feb81ade538b44f6bb6e8",
+        "availability": "local-only"
+      },
+      "reference_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/event-unforced--tight--observer-off--reference.json",
+        "sha256": "a9d0fdc071b18dac5c6b96af83fc4e9fb2cea561ec08af0252af7b4a6964ed2b",
+        "availability": "local-only"
+      },
+      "requested_effective_interpretation": {
+        "reltol": {
+          "requested": 1e-05,
+          "effective": 1e-06,
+          "meaning": "actual effective tightening by factor0.1"
+        },
+        "maxstep": {
+          "requested_s": 2.9802322387695312e-08,
+          "displayed_s": 2.98023e-08,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        },
+        "stop": {
+          "requested_s": 9.5367431640625e-07,
+          "displayed_s": 9.53674e-07,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        }
+      }
+    },
+    {
+      "id": "event-unforced--tight--observer-on",
+      "execution": {
+        "id": "event-unforced--tight--observer-on",
+        "stage": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 8.061602029949427,
+          "completed_utc": "2026-10-07T08:15:35Z",
+          "log": "simulate.log",
+          "log_sha256": "ef5d4fc39a144d0cd12c4313b4bf974c47fb26cb84166ed8519f32bbc9b585d4",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "status": "completed",
+        "raw_sha256": "c75695cdcbf1b1aaa6c346a82cfca37383fca055a4bc041e45e8616fa949d650"
+      },
+      "required_anchors": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "native_denominator": 54,
+      "complete_observation_pass": true,
+      "failure_kinds": [],
+      "failure_count": 0,
+      "firedtime_available": true,
+      "initial": {
+        "time": 0.0,
+        "x": 0.0,
+        "firedtime": -1.0,
+        "samplevalue": -1.0,
+        "count": 0.0
+      },
+      "final": {
+        "time": 9.5367431640625e-07,
+        "x": 1.0,
+        "firedtime": 3.576283233996946e-07,
+        "samplevalue": 0.3750004768371582,
+        "count": 1.0
+      },
+      "first_post_event": {
+        "time": 3.576283233996946e-07,
+        "x": 0.3750004768371582,
+        "firedtime": 3.576283233996946e-07,
+        "samplevalue": 0.3750004768371582,
+        "count": 1.0
+      },
+      "count_jumps": [
+        {
+          "left": 3.574335823456446e-07,
+          "right": 3.576283233996946e-07,
+          "before": 0.0,
+          "after": 1.0
+        }
+      ],
+      "reference_report_sha256": "248db3d025795da2fec657c505eabe50b8a93073ad30f73e77cddf3d86480427",
+      "max_x_ramp_error": 1.1102230246251565e-16,
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 123,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 125,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 129,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 130,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 131,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 136,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 86,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 87,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 88,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "event_time_obligation": {
+        "observed_callback_time": 3.576283233996946e-07,
+        "observable": true,
+        "root_s": 3.5762786865234375e-07,
+        "physical_budget_s": 1e-10,
+        "callback_delay_s": 4.5474735083352456e-13,
+        "qualification": "checked actual stored callback time",
+        "ttol_s": 9.094947017729282e-13,
+        "expr_tol_V": 0.0625,
+        "ramp_slope_V_per_s": 1048576,
+        "allowed_delay_s": 9.094947017729282e-13,
+        "allowed_delay_formula": "min(ttol_s,expr_tol_V/ramp_slope_V_per_s)",
+        "declared_ports": [
+          "x",
+          "firedtime",
+          "samplevalue",
+          "count"
+        ],
+        "observation_kind": "voltage output port observing a latched real, not a direct internal event trace",
+        "latched_readings": [
+          {
+            "native_row_index": 27,
+            "read_time_s": 3.576283233996946e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 28,
+            "read_time_s": 3.580178055077947e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 29,
+            "read_time_s": 3.587967697239947e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 30,
+            "read_time_s": 3.603546981563949e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 31,
+            "read_time_s": 3.634705550211951e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 32,
+            "read_time_s": 3.697022687507956e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 33,
+            "read_time_s": 3.821656962099966e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 34,
+            "read_time_s": 4.070925511283986e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 35,
+            "read_time_s": 4.368948735160939e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 36,
+            "read_time_s": 4.666971959037892e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 37,
+            "read_time_s": 4.964995182914846e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 38,
+            "read_time_s": 5.263018406791799e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 39,
+            "read_time_s": 5.561041630668752e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 40,
+            "read_time_s": 5.859064854545705e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 41,
+            "read_time_s": 6.157088078422658e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 42,
+            "read_time_s": 6.455111302299611e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 43,
+            "read_time_s": 6.753134526176564e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 44,
+            "read_time_s": 7.051157750053517e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 45,
+            "read_time_s": 7.349180973930471e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 46,
+            "read_time_s": 7.647204197807424e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 47,
+            "read_time_s": 7.945227421684377e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 48,
+            "read_time_s": 8.24325064556133e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 49,
+            "read_time_s": 8.541273869438283e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 50,
+            "read_time_s": 8.839297093315236e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 51,
+            "read_time_s": 9.137320317192189e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 52,
+            "read_time_s": 9.337031740627345e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          },
+          {
+            "native_row_index": 53,
+            "read_time_s": 9.5367431640625e-07,
+            "firedtime_port_s": 3.576283233996946e-07,
+            "delay_s": 4.5474735083352456e-13,
+            "within_locator_window": true,
+            "within_physical_budget": true
+          }
+        ],
+        "observed_firedtime_range_s": [
+          3.576283233996946e-07,
+          3.576283233996946e-07
+        ],
+        "observed_delay_range_s": [
+          4.5474735083352456e-13,
+          4.5474735083352456e-13
+        ],
+        "observed_firedtime_span_s": 0.0,
+        "reported_value_selection": {
+          "rule": "final native row, read at stop",
+          "native_row_index": 53,
+          "read_time_s": 9.5367431640625e-07
+        },
+        "maximum_delay_s": 4.5474735083352456e-13,
+        "all_observed_values_within_locator_window": true,
+        "all_observed_values_within_physical_budget": true,
+        "interpretation": "small observed port drift is retained; it does not imply repeated callbacks; frozen checker already checks every latched row against100ps",
+        "allowed_window_comparison_slack_s": 1e-15
+      },
+      "sample_obligation": {
+        "final": 0.3750004768371582,
+        "math_root_sample": 0.375,
+        "error_V": 4.76837158203125e-07,
+        "budget_V": 0.001
+      },
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/runs/event-unforced--tight--observer-on/psf/tran.tran.tran",
+        "sha256": "c75695cdcbf1b1aaa6c346a82cfca37383fca055a4bc041e45e8616fa949d650",
+        "availability": "local-only"
+      },
+      "reference_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/event-unforced--tight--observer-on--reference.json",
+        "sha256": "248db3d025795da2fec657c505eabe50b8a93073ad30f73e77cddf3d86480427",
+        "availability": "local-only"
+      },
+      "requested_effective_interpretation": {
+        "reltol": {
+          "requested": 1e-05,
+          "effective": 1e-06,
+          "meaning": "actual effective tightening by factor0.1"
+        },
+        "maxstep": {
+          "requested_s": 2.9802322387695312e-08,
+          "displayed_s": 2.98023e-08,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        },
+        "stop": {
+          "requested_s": 9.5367431640625e-07,
+          "displayed_s": 9.53674e-07,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        }
+      }
+    },
+    {
+      "id": "event-unforced--wide--observer-off",
+      "execution": {
+        "id": "event-unforced--wide--observer-off",
+        "stage": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 8.099355669692159,
+          "completed_utc": "2026-10-07T08:15:43Z",
+          "log": "simulate.log",
+          "log_sha256": "49db5295e84563b2da73b5d58ab5e34bb334804d21070676daab8d5f1b4b44b1",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "status": "completed",
+        "raw_sha256": "ce89364dd2ac69bcad92ad9f6534a8c5d0993012708413cebf88779c796bb71b"
+      },
+      "required_anchors": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "native_denominator": 54,
+      "complete_observation_pass": true,
+      "failure_kinds": [],
+      "failure_count": 0,
+      "firedtime_available": false,
+      "initial": {
+        "time": 0.0,
+        "x": 0.0,
+        "samplevalue": -1.0,
+        "count": 0.0
+      },
+      "final": {
+        "time": 9.5367431640625e-07,
+        "x": 1.0,
+        "samplevalue": 0.3757728385416667,
+        "count": 1.0
+      },
+      "first_post_event": {
+        "time": 3.583649049202601e-07,
+        "x": 0.3757728385416667,
+        "samplevalue": 0.3757728385416668,
+        "count": 1.0
+      },
+      "count_jumps": [
+        {
+          "left": 3.574335823456446e-07,
+          "right": 3.583649049202601e-07,
+          "before": 0.0,
+          "after": 1.0
+        }
+      ],
+      "reference_report_sha256": "0610a8f5c90ac6de610d693e1c0d0ad4d154cf67e26c0ad9bfc5af6a9341ae83",
+      "max_x_ramp_error": 1.1102230246251565e-16,
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 122,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 124,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 128,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 129,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 130,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 85,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 86,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 87,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "event_time_obligation": {
+        "observed_callback_time": null,
+        "observable": false,
+        "root_s": 3.5762786865234375e-07,
+        "physical_budget_s": 1e-10,
+        "callback_delay_s": null,
+        "qualification": "not observed; no hidden callback-time qualification inferred from on",
+        "ttol_s": 5.960464477539063e-08,
+        "expr_tol_V": 0.0625,
+        "ramp_slope_V_per_s": 1048576,
+        "allowed_delay_s": 5.960464477539063e-08,
+        "allowed_delay_formula": "min(ttol_s,expr_tol_V/ramp_slope_V_per_s)",
+        "declared_ports": [
+          "x",
+          "samplevalue",
+          "count"
+        ],
+        "observation_kind": "no firedtime observation port",
+        "latched_readings": [],
+        "observed_firedtime_range_s": null,
+        "observed_delay_range_s": null,
+        "observed_firedtime_span_s": null,
+        "reported_value_selection": null,
+        "maximum_delay_s": null,
+        "all_observed_values_within_locator_window": null,
+        "all_observed_values_within_physical_budget": null,
+        "interpretation": "unknown hidden callback time; no inference from matching on-source samples",
+        "allowed_window_comparison_slack_s": 1e-15
+      },
+      "sample_obligation": {
+        "final": 0.3757728385416667,
+        "math_root_sample": 0.375,
+        "error_V": 0.0007728385416667094,
+        "budget_V": 0.001
+      },
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/runs/event-unforced--wide--observer-off/psf/tran.tran.tran",
+        "sha256": "ce89364dd2ac69bcad92ad9f6534a8c5d0993012708413cebf88779c796bb71b",
+        "availability": "local-only"
+      },
+      "reference_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/event-unforced--wide--observer-off--reference.json",
+        "sha256": "0610a8f5c90ac6de610d693e1c0d0ad4d154cf67e26c0ad9bfc5af6a9341ae83",
+        "availability": "local-only"
+      },
+      "requested_effective_interpretation": {
+        "reltol": {
+          "requested": 1e-05,
+          "effective": 1e-06,
+          "meaning": "actual effective tightening by factor0.1"
+        },
+        "maxstep": {
+          "requested_s": 2.9802322387695312e-08,
+          "displayed_s": 2.98023e-08,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        },
+        "stop": {
+          "requested_s": 9.5367431640625e-07,
+          "displayed_s": 9.53674e-07,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        }
+      }
+    },
+    {
+      "id": "event-unforced--wide--observer-on",
+      "execution": {
+        "id": "event-unforced--wide--observer-on",
+        "stage": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 8.291750721633434,
+          "completed_utc": "2026-10-07T08:15:51Z",
+          "log": "simulate.log",
+          "log_sha256": "05fd671902686d16f7437a194e9c3eb96eaf3a536b9b3f78bdf6d00496b4df56",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "status": "completed",
+        "raw_sha256": "459a03084c9d38b691bc9c8033a84982aeb9105c7ce8b3461e2296a82708124a"
+      },
+      "required_anchors": [
+        0.0,
+        9.5367431640625e-07
+      ],
+      "native_denominator": 54,
+      "complete_observation_pass": false,
+      "failure_kinds": [
+        "physical_event_time"
+      ],
+      "failure_count": 27,
+      "firedtime_available": true,
+      "initial": {
+        "time": 0.0,
+        "x": 0.0,
+        "firedtime": -1.0,
+        "samplevalue": -1.0,
+        "count": 0.0
+      },
+      "final": {
+        "time": 9.5367431640625e-07,
+        "x": 1.0,
+        "firedtime": 3.583649049202601e-07,
+        "samplevalue": 0.3757728385416667,
+        "count": 1.0
+      },
+      "first_post_event": {
+        "time": 3.583649049202601e-07,
+        "x": 0.3757728385416667,
+        "firedtime": 3.583649048621851e-07,
+        "samplevalue": 0.3757728385416668,
+        "count": 1.0
+      },
+      "count_jumps": [
+        {
+          "left": 3.574335823456446e-07,
+          "right": 3.583649049202601e-07,
+          "before": 0.0,
+          "after": 1.0
+        }
+      ],
+      "reference_report_sha256": "03fca88aa72c59971b30cac5600c66faf02023fe748e796ef39f5d9556306a51",
+      "max_x_ramp_error": 1.1102230246251565e-16,
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 123,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 125,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 129,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 130,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 131,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 136,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 86,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 87,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 88,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "event_time_obligation": {
+        "observed_callback_time": 3.583649049202601e-07,
+        "observable": true,
+        "root_s": 3.5762786865234375e-07,
+        "physical_budget_s": 1e-10,
+        "callback_delay_s": 7.370362679163493e-10,
+        "qualification": "checked actual stored callback time",
+        "ttol_s": 5.960464477539063e-08,
+        "expr_tol_V": 0.0625,
+        "ramp_slope_V_per_s": 1048576,
+        "allowed_delay_s": 5.960464477539063e-08,
+        "allowed_delay_formula": "min(ttol_s,expr_tol_V/ramp_slope_V_per_s)",
+        "declared_ports": [
+          "x",
+          "firedtime",
+          "samplevalue",
+          "count"
+        ],
+        "observation_kind": "voltage output port observing a latched real, not a direct internal event trace",
+        "latched_readings": [
+          {
+            "native_row_index": 27,
+            "read_time_s": 3.583649049202601e-07,
+            "firedtime_port_s": 3.583649048621851e-07,
+            "delay_s": 7.370362098413352e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 28,
+            "read_time_s": 3.58597735563914e-07,
+            "firedtime_port_s": 3.583649049176962e-07,
+            "delay_s": 7.370362653524335e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 29,
+            "read_time_s": 3.590633968512217e-07,
+            "firedtime_port_s": 3.583649049176962e-07,
+            "delay_s": 7.370362653524335e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 30,
+            "read_time_s": 3.599947194258372e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 31,
+            "read_time_s": 3.618573645750681e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 32,
+            "read_time_s": 3.655826548735301e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 33,
+            "read_time_s": 3.730332354704539e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 34,
+            "read_time_s": 3.879343966643015e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 35,
+            "read_time_s": 4.177367190519969e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 36,
+            "read_time_s": 4.475390414396922e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 37,
+            "read_time_s": 4.773413638273875e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 38,
+            "read_time_s": 5.071436862150828e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 39,
+            "read_time_s": 5.369460086027781e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 40,
+            "read_time_s": 5.667483309904734e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 41,
+            "read_time_s": 5.965506533781687e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 42,
+            "read_time_s": 6.26352975765864e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 43,
+            "read_time_s": 6.561552981535594e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 44,
+            "read_time_s": 6.859576205412547e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 45,
+            "read_time_s": 7.1575994292895e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 46,
+            "read_time_s": 7.455622653166453e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 47,
+            "read_time_s": 7.753645877043406e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 48,
+            "read_time_s": 8.051669100920359e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 49,
+            "read_time_s": 8.349692324797312e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 50,
+            "read_time_s": 8.647715548674265e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 51,
+            "read_time_s": 8.945738772551219e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 52,
+            "read_time_s": 9.243761996428172e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          },
+          {
+            "native_row_index": 53,
+            "read_time_s": 9.5367431640625e-07,
+            "firedtime_port_s": 3.583649049202601e-07,
+            "delay_s": 7.370362679163493e-10,
+            "within_locator_window": true,
+            "within_physical_budget": false
+          }
+        ],
+        "observed_firedtime_range_s": [
+          3.583649048621851e-07,
+          3.583649049202601e-07
+        ],
+        "observed_delay_range_s": [
+          7.370362098413352e-10,
+          7.370362679163493e-10
+        ],
+        "observed_firedtime_span_s": 5.807501408347819e-17,
+        "reported_value_selection": {
+          "rule": "final native row, read at stop",
+          "native_row_index": 53,
+          "read_time_s": 9.5367431640625e-07
+        },
+        "maximum_delay_s": 7.370362679163493e-10,
+        "all_observed_values_within_locator_window": true,
+        "all_observed_values_within_physical_budget": false,
+        "interpretation": "small observed port drift is retained; it does not imply repeated callbacks; frozen checker already checks every latched row against100ps",
+        "allowed_window_comparison_slack_s": 1e-15
+      },
+      "sample_obligation": {
+        "final": 0.3757728385416667,
+        "math_root_sample": 0.375,
+        "error_V": 0.0007728385416667094,
+        "budget_V": 0.001
+      },
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/runs/event-unforced--wide--observer-on/psf/tran.tran.tran",
+        "sha256": "459a03084c9d38b691bc9c8033a84982aeb9105c7ce8b3461e2296a82708124a",
+        "availability": "local-only"
+      },
+      "reference_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/event-unforced--wide--observer-on--reference.json",
+        "sha256": "03fca88aa72c59971b30cac5600c66faf02023fe748e796ef39f5d9556306a51",
+        "availability": "local-only"
+      },
+      "requested_effective_interpretation": {
+        "reltol": {
+          "requested": 1e-05,
+          "effective": 1e-06,
+          "meaning": "actual effective tightening by factor0.1"
+        },
+        "maxstep": {
+          "requested_s": 2.9802322387695312e-08,
+          "displayed_s": 2.98023e-08,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        },
+        "stop": {
+          "requested_s": 9.5367431640625e-07,
+          "displayed_s": 9.53674e-07,
+          "meaning": "finite-digit display consistent with rounding the requested value; hidden exact equality not proven"
+        }
+      }
+    }
+  ],
+  "observer_controls": [
+    {
+      "id": "wide",
+      "all_off_native_times": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "off": 0.0,
+            "on": 0.0
+          },
+          "samplevalue": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "off": -1.0,
+            "on": -1.0
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "off": 0.0,
+            "on": 0.0
+          }
+        },
+        "failures": [],
+        "ordinary_side_changes": [],
+        "native_grid_equal": true,
+        "off_rows": 54,
+        "on_rows": 54,
+        "required_time_count": 54,
+        "compared_time_count": 54,
+        "compared_signal_count": 3,
+        "compared_times_sha256": "bd640b5c6e8f036cbea105c64ce51b6e1b923ed72e7c9d758ddbe9da43ccc63c",
+        "claim": "independent idt observer is not modulo internal state"
+      },
+      "frozen_anchor_times": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "off": 0.0,
+            "on": 0.0
+          },
+          "samplevalue": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "off": -1.0,
+            "on": -1.0
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "off": 0.0,
+            "on": 0.0
+          }
+        },
+        "failures": [],
+        "ordinary_side_changes": [],
+        "native_grid_equal": true,
+        "off_rows": 54,
+        "on_rows": 54,
+        "required_time_count": 2,
+        "compared_time_count": 2,
+        "compared_signal_count": 3,
+        "compared_times_sha256": "0e81c1383481d37040e05aeb9cbbd278b4df6be8f7fe089e5ee74899271253f9",
+        "claim": "independent idt observer is not modulo internal state"
+      }
+    },
+    {
+      "id": "tight",
+      "all_off_native_times": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "off": 0.0,
+            "on": 0.0
+          },
+          "samplevalue": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "off": -1.0,
+            "on": -1.0
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "off": 0.0,
+            "on": 0.0
+          }
+        },
+        "failures": [],
+        "ordinary_side_changes": [],
+        "native_grid_equal": true,
+        "off_rows": 54,
+        "on_rows": 54,
+        "required_time_count": 54,
+        "compared_time_count": 54,
+        "compared_signal_count": 3,
+        "compared_times_sha256": "edd38da5888eba0646d7f4adf45516ee9595e7fe296bbda4b04efbf2bc5f1962",
+        "claim": "independent idt observer is not modulo internal state"
+      },
+      "frozen_anchor_times": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "off": 0.0,
+            "on": 0.0
+          },
+          "samplevalue": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "off": -1.0,
+            "on": -1.0
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "off": 0.0,
+            "on": 0.0
+          }
+        },
+        "failures": [],
+        "ordinary_side_changes": [],
+        "native_grid_equal": true,
+        "off_rows": 54,
+        "on_rows": 54,
+        "required_time_count": 2,
+        "compared_time_count": 2,
+        "compared_signal_count": 3,
+        "compared_times_sha256": "0e81c1383481d37040e05aeb9cbbd278b4df6be8f7fe089e5ee74899271253f9",
+        "claim": "independent idt observer is not modulo internal state"
+      }
+    }
+  ],
+  "local_off_same_source_pairs": [
+    {
+      "id": "event-unforced--wide--observer-off",
+      "result": {
+        "grid_identity": {
+          "parsed_times_sha256": "bd640b5c6e8f036cbea105c64ce51b6e1b923ed72e7c9d758ddbe9da43ccc63c",
+          "spectre_native_observation_sha256": "901e09bb97e4ccd3dba4d54d03c117498194b047b4b83e2ed92dedd7a0c48d3d",
+          "native_rows": 54,
+          "outside_evas_stop": [],
+          "source_sha256": "93bf420e2c5e10fc8efb91ab1276fe6af87aa7c17a7eb5b5ef5c9006d2143587",
+          "source_unchanged": true
+        },
+        "id": "event-unforced--wide--observer-off",
+        "status": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.1009460831992328,
+        "kernel_sha256": "feaa1a27c803da7d36d26e8972a0451e1bd6eb7aed34f8f3dab9bd0b86648d28",
+        "request_sha256": "4281f02a040788a464bcdbaf74290c744ac2c31d0b18667eb798b1d4a518d12d",
+        "actual_numerical_launches": 1,
+        "actual_version_queries": 0,
+        "stdout_sha256": "3eaba59ff633199171111c9f77c907f9ed036fa03891fab01088dd2742ecb6e1",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "native_events": [
+          {
+            "time": 3.5762786865234375e-07,
+            "event": 0,
+            "origin": "dut.va:8:3 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -1.0,
+              0.0
+            ],
+            "after": [
+              0.375,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 56
+      },
+      "reference_pass": true,
+      "reference_failure_kinds": [],
+      "pair": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 1.60226027170817e-07,
+            "error": 1.1102230246251565e-16,
+            "budget": 1e-05,
+            "spectre": 0.1680091666666667,
+            "evas": 0.1680091666666666
+          },
+          "samplevalue": {
+            "time": 3.583649049202601e-07,
+            "error": 0.0007728385416668204,
+            "budget": 0.001,
+            "spectre": 0.3757728385416668,
+            "evas": 0.375
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": [],
+        "exact_intersection": 54,
+        "spectre_native_denominator": 54,
+        "spectre_native_unpaired": 0,
+        "evas_requested": 54,
+        "evas_unpaired": 0,
+        "no_interpolation": true
+      },
+      "native_event_semantics": "nominal/representative EVAS mathroot event, not actual Spectre callback $abstime"
+    },
+    {
+      "id": "event-unforced--tight--observer-off",
+      "result": {
+        "grid_identity": {
+          "parsed_times_sha256": "edd38da5888eba0646d7f4adf45516ee9595e7fe296bbda4b04efbf2bc5f1962",
+          "spectre_native_observation_sha256": "2e129d5147fb9c6e79af7ba47e0696529536533291af7c9678e6bbec2d8c3a27",
+          "native_rows": 54,
+          "outside_evas_stop": [],
+          "source_sha256": "c26b5fa0aa0928911bade032abfab89a2c65f241b2b226b99cb791b83d4d5f2f",
+          "source_unchanged": true
+        },
+        "id": "event-unforced--tight--observer-off",
+        "status": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.013611832866445184,
+        "kernel_sha256": "feaa1a27c803da7d36d26e8972a0451e1bd6eb7aed34f8f3dab9bd0b86648d28",
+        "request_sha256": "51b0670b736f755bd687bf69eb88ad806bd7adeda74390897cacc55752209a8f",
+        "actual_numerical_launches": 1,
+        "actual_version_queries": 0,
+        "stdout_sha256": "cac6174727c3e464c9b5d6127efc87a324db19218eb6039fd481e939e24b991a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "native_events": [
+          {
+            "time": 3.5762786865234375e-07,
+            "event": 0,
+            "origin": "dut.va:8:3 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -1.0,
+              0.0
+            ],
+            "after": [
+              0.375,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 55
+      },
+      "reference_pass": true,
+      "reference_failure_kinds": [],
+      "pair": {
+        "pass_": true,
+        "maxima": {
+          "x": {
+            "time": 1.60226027170817e-07,
+            "error": 1.1102230246251565e-16,
+            "budget": 1e-05,
+            "spectre": 0.1680091666666667,
+            "evas": 0.1680091666666666
+          },
+          "samplevalue": {
+            "time": 3.576283233996946e-07,
+            "error": 4.76837158203125e-07,
+            "budget": 0.001,
+            "spectre": 0.3750004768371582,
+            "evas": 0.375
+          },
+          "count": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": [],
+        "exact_intersection": 54,
+        "spectre_native_denominator": 54,
+        "spectre_native_unpaired": 0,
+        "evas_requested": 54,
+        "evas_unpaired": 0,
+        "no_interpolation": true
+      },
+      "native_event_semantics": "nominal/representative EVAS mathroot event, not actual Spectre callback $abstime"
+    }
+  ],
+  "counters": {
+    "new_spectre_numerical_launches": 4,
+    "new_spectre_version_queries": 0,
+    "previous_numerical": 66,
+    "previous_version": 24,
+    "cumulative_numerical": 70,
+    "cumulative_version": 24,
+    "operator_cleanup_confirmed": true,
+    "automatic_numerical_retries": 0,
+    "metadata_schema_failure_numerical": 0,
+    "metadata_schema_failure_version": 0,
+    "classification": "four started numerical stages; actual receipts retained, tool identity hash reuse without version query"
+  },
+  "local_calls": {
+    "numerical": 2,
+    "version": 0,
+    "all_completed": true,
+    "limits": "serial90s/call only, no assertion of remote memory/CPU enforcement on macOS"
+  },
+  "conclusions": [
+    "Removing only the root-containing near-root strobe set exposes wide/tight stored callback and sample differences in this model. It does not isolate which member of the removed strobe set caused the change.",
+    "Wide observer-on delay about737.036ps exceeds unchanged100ps physical time budget, despite satisfying its separately frozen allowed localization window and1mV sample budget. Failure retained.",
+    "Tight observer-on delay about.454747ps and sample error about.476837uV satisfy frozen budgets.",
+    "Both matched observer controls compare all54native times with identical grid and exactly zero common signal differences; off has no firedtime and does not inherit hidden callback-time qualification.",
+    "EVAS legal observer-off same-source requests at all54parsed native times complete, same-source finite sample/count/x pairs satisfy their fixed budgets; wide difference .772839mV, tight .000476837mV. EVAS mathroot representative EventRecord is not Spectre callback abstime."
+  ],
+  "limitations": [
+    "New required anchors only0/stop; first batch missinganchors and ordinaryphase failures remain unchanged.",
+    "Native PSF time and signal decimal text precision is retained; internal scheduling not fully observable.",
+    "On source$abstime remains unsupported in EVAS, retained compile diagnostic; no full on-source pairing claim.",
+    "Finite off sampled signals do not prove unobserved actual callback timing.",
+    "Numerical execution success is separate from physical acceptance; no paper P or source/export/stop promotion.",
+    "All raw/request/response receipts local-only; checksum is not public reproducibility.",
+    "Observed firedtime is a voltage observation of a latched real; tiny port drift is not evidence of multiple callback execution."
+  ],
+  "identities": {
+    "FREEZE_MANIFEST.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/FREEZE_MANIFEST.json",
+      "sha256": "2159debe366d099d1f39afec6602153dd623aa9372431a5e20fe59f34f43139c",
+      "availability": "local-only"
+    },
+    "STAGED_MANIFEST.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/STAGED_MANIFEST.json",
+      "sha256": "12eef30c2966099c5ccd5bf0a4817dbccb7d0759524ac5d76948fc2ae60f7ddf",
+      "availability": "local-only"
+    },
+    "coordinator-allocation.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/coordinator-allocation.json",
+      "sha256": "7de2bfb387ac2d513a1784e12f07533da770d330aa08be4c31fe25bfab5227cf",
+      "availability": "local-only"
+    },
+    "checker/check.py": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/checker/check.py",
+      "sha256": "3734416f523bb401fd5679cd40e81c01f5359d5f34dc0de48ad440d718c5dfc8",
+      "availability": "local-only"
+    },
+    "CASE_MATRIX.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/CASE_MATRIX.json",
+      "sha256": "efa95546ac1f8d02063a71fb4578852685bf7e306f6d7e14c13cba1fbf034ed8",
+      "availability": "local-only"
+    },
+    "DRY_IMPORT.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/DRY_IMPORT.json",
+      "sha256": "9478e1e3cba70b1c0ad92463f8511515b5ba8d026ada5404c84dadaf64cad27b",
+      "availability": "local-only"
+    },
+    "SOURCE_EQUIVALENCE.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/SOURCE_EQUIVALENCE.json",
+      "sha256": "faa1c2b59c197931a12809d7a5cb5c0b1ff025dc526ddfb9e91f16a96b71bf82",
+      "availability": "local-only"
+    },
+    "collected/output/TOOL_IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/TOOL_IDENTITY.json",
+      "sha256": "b806ce142737ffb6a1acf182579958600f332fbfe5856cc71f3eacca86aab7c8",
+      "availability": "local-only"
+    },
+    "collected/output/FILE_MANIFEST.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/FILE_MANIFEST.json",
+      "sha256": "6c97acf247b3871fd396a7fe32113e46693898f13974f69f3be7e653f6e54c45",
+      "availability": "local-only"
+    },
+    "collected/operator-receipt.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/operator-receipt.json",
+      "sha256": "81e7ab31cb62f4c8d08ab58905928a06a52d8c326ef1553b4476e5bc168fc5c3",
+      "availability": "local-only"
+    },
+    "collected/COLLECTION.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/COLLECTION.json",
+      "sha256": "9b076b66e051121374955c8ec9e4b9c29f027b849dacbe4dd33dbd0f03b4b561",
+      "availability": "local-only"
+    },
+    "TRANSFER.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/TRANSFER.json",
+      "sha256": "33ecb0c31b2fa24b6001dda841efd88cb51633084b5929f4ef09681302afdeb0",
+      "availability": "local-only"
+    },
+    "DISPATCH_RECEIPT.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/DISPATCH_RECEIPT.json",
+      "sha256": "6420324657f93a85a8811cd88dc752c03f6b26b64b4ad8b00c702c58661d9155",
+      "availability": "local-only"
+    },
+    "STAGED_MANIFEST_STRING_SHAPE_FAILURE.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/STAGED_MANIFEST_STRING_SHAPE_FAILURE.json",
+      "sha256": "ec9af7d6680aa53a3d77a1194c5c89bcdc9a372bf796a918bde0b94da8f947f8",
+      "availability": "local-only"
+    },
+    "local-off-native/IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/local-off-native/IDENTITY.json",
+      "sha256": "c9dc3029cf82a12d87ad70d1dcaca5a75ce1460c85d95a29d5b2b79ebce074e9",
+      "availability": "local-only"
+    },
+    "local-off-native/RESULTS.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/local-off-native/RESULTS.json",
+      "sha256": "2725d38488dfffc0172a30b0840a06db44bc11b4234880806f719053025b5493",
+      "availability": "local-only"
+    },
+    "analysis/IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis/IDENTITY.json",
+      "sha256": "2ec8e3d234d38b9fdad07bd7fbb4c86c2c7c8d7b3f62902bc2f02bfc55adcf52",
+      "availability": "local-only"
+    },
+    "local-analysis/IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/local-analysis/IDENTITY.json",
+      "sha256": "b5303d81db9d3f13d9cb20eaa3a8713c4b77ca4d3596297ebfb6ffa8b12b0ad9",
+      "availability": "local-only"
+    },
+    "new_checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/checker/check.py",
+      "sha256": "2433664f5949d6f623fba88d00013455044504cb907d662bf4c3f4b556b81d7e",
+      "availability": "local-only"
+    },
+    "r2_checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/checker/check.py",
+      "sha256": "3734416f523bb401fd5679cd40e81c01f5359d5f34dc0de48ad440d718c5dfc8",
+      "availability": "local-only"
+    },
+    "analysis-r3-checked/IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/IDENTITY.json",
+      "sha256": "1cdf37827ea12012348e4d9cc70873a1c2043c6f1f9e9218651ba2e70d869fab",
+      "availability": "local-only"
+    },
+    "analysis-r3-checked/SUMMARY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/analysis-r3-checked/SUMMARY.json",
+      "sha256": "228c843ddbb9e28fefd431fc1fbc60b239248a301611f2bcbe2912601ce85fe5",
+      "availability": "local-only"
+    },
+    "local-analysis-r3-checked/IDENTITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/local-analysis-r3-checked/IDENTITY.json",
+      "sha256": "2d8f44319705269f6855a857e5e3173c86b647f2b6ff9eec20d3336f3e464f0f",
+      "availability": "local-only"
+    },
+    "local-analysis-r3-checked/SUMMARY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/local-analysis-r3-checked/SUMMARY.json",
+      "sha256": "90443ff6917d456593204f42a8046493f52d60fe0706c1094055067025aaf1e2",
+      "availability": "local-only"
+    }
+  },
+  "revision": "r3 reviewed contract and evidence clarification, reanalysis of existing outputs only",
+  "tool_identity_semantic_comparison": {
+    "reused_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/reused-tool-identity.json",
+      "sha256": "62466870507bb2214d45a7b8584698c298fd080c8dfb6858e4ee3a8be332388d",
+      "availability": "local-only"
+    },
+    "collected_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-unforced-r2/collected/output/TOOL_IDENTITY.json",
+      "sha256": "b806ce142737ffb6a1acf182579958600f332fbfe5856cc71f3eacca86aab7c8",
+      "availability": "local-only"
+    },
+    "whole_file_hashes_differ": true,
+    "reason": "collected file adds only identity_reuse receipt metadata; no binary/setup/version/probe change or new version query",
+    "added_fields": {
+      "identity_reuse": "prior approved batch actualtool identity; verifybinary/setup hashes,0version queries"
+    },
+    "common_fields_equal": true,
+    "semantic_original_field_digest": "1b2a12c696cc06fc853ac7d01027e55630a48f9df4ce9634ce8a46f01798010e",
+    "semantic_collected_without_added_field_digest": "1b2a12c696cc06fc853ac7d01027e55630a48f9df4ce9634ce8a46f01798010e",
+    "field_comparison": {
+      "binary": {
+        "equal": true,
+        "reused_field_sha256": "5a07a0bbcd9095a84e021f65dd668254b7c2cac987c4795b68ce44b14f20bae9",
+        "collected_field_sha256": "5a07a0bbcd9095a84e021f65dd668254b7c2cac987c4795b68ce44b14f20bae9"
+      },
+      "binary_sha256": {
+        "equal": true,
+        "reused_field_sha256": "21b808c4a104d8f004d3afa79a53b960862831c0ea1e469892f784414b30854c",
+        "collected_field_sha256": "21b808c4a104d8f004d3afa79a53b960862831c0ea1e469892f784414b30854c"
+      },
+      "probe": {
+        "equal": true,
+        "reused_field_sha256": "59cc3c22f0ca2090217cc8d994a58d9082881cf3a7d4d16d7338056981fd20cb",
+        "collected_field_sha256": "59cc3c22f0ca2090217cc8d994a58d9082881cf3a7d4d16d7338056981fd20cb"
+      },
+      "profile_identity": {
+        "equal": true,
+        "reused_field_sha256": "1e990b8cac45260f8c2ae76e6a628ab35800d081cf0fcfe981976405ff116c63",
+        "collected_field_sha256": "1e990b8cac45260f8c2ae76e6a628ab35800d081cf0fcfe981976405ff116c63"
+      },
+      "setup": {
+        "equal": true,
+        "reused_field_sha256": "be461f1e18895af58b5186525c283555384a1cfcbb5156a5c8b9a3ad5e0e47bb",
+        "collected_field_sha256": "be461f1e18895af58b5186525c283555384a1cfcbb5156a5c8b9a3ad5e0e47bb"
+      },
+      "setup_sha256": {
+        "equal": true,
+        "reused_field_sha256": "4cecdc1e8e3ddd2cbab07f93cc1783e896c632e36fca9ae18f2c561e678eb5b0",
+        "collected_field_sha256": "4cecdc1e8e3ddd2cbab07f93cc1783e896c632e36fca9ae18f2c561e678eb5b0"
+      },
+      "unknowns": {
+        "equal": true,
+        "reused_field_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "collected_field_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "version": {
+        "equal": true,
+        "reused_field_sha256": "d22b99c40c0e42899ed348166e4da400f51709a4254ae6b92a25306c3a2f5fcf",
+        "collected_field_sha256": "d22b99c40c0e42899ed348166e4da400f51709a4254ae6b92a25306c3a2f5fcf"
+      }
+    }
+  },
+  "checker_revision": {
+    "checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/checker/check.py",
+      "sha256": "2433664f5949d6f623fba88d00013455044504cb907d662bf4c3f4b556b81d7e",
+      "availability": "local-only"
+    },
+    "calibration": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/calibration.log",
+      "sha256": "ab3fa2283e7a79d74a5b4795d63cc5cd4e69121e83172ae4ffe80c095c2f96e1",
+      "availability": "local-only"
+    },
+    "tests": 20,
+    "scope": "explicit ports contract, fail closed invalid_event_contract; existing source/raw/budgets unchanged",
+    "new_simulator_calls": 0,
+    "new_version_queries": 0
+  },
+  "previous_candidate": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/previous-candidate/event-unforced-evidence.json",
+    "sha256": "dff10cb9fbf093b5aff1d86a951e6b5f02476e753d7cccf674ddd79695bdd276",
+    "availability": "local-only"
+  },
+  "reanalysis": {
+    "new_simulator_calls": 0,
+    "new_version_queries": 0,
+    "existing_spectre_outputs": 4,
+    "existing_local_outputs": 2,
+    "verdict_and_denominators_unchanged": true
+  },
+  "historical_candidate_preservation": {
+    "reason": "Current repository candidates replaced after r3 review. Old 238-entry manifest remains immutable:236 paths match in place,2 previous candidate documents are recoverable through this mapping.",
+    "availability": "local-only",
+    "mapping": [
+      {
+        "original_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/experiments/backends/spectre-alignment/event-unforced-evidence.json",
+        "preserved_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/previous-candidate/event-unforced-evidence.json",
+        "sha256": "dff10cb9fbf093b5aff1d86a951e6b5f02476e753d7cccf674ddd79695bdd276"
+      },
+      {
+        "original_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/experiments/backends/spectre-alignment/event-unforced.md",
+        "preserved_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/previous-candidate/event-unforced.md",
+        "sha256": "6c03777e215d34e49fec849ce983357a2c955becc06956a05c5689b90600793f"
+      }
+    ]
+  }
+}
