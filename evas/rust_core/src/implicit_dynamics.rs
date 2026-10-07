@@ -575,6 +575,7 @@ fn initialize(
         steps: Vec::new(),
         start: 0.0,
         event_dependent: false,
+        event_seed: None,
     };
     // The common Picard/Taylor engine validates the rational reduced field;
     // F_v inversion is mandatory even when the resulting derivative is zero.

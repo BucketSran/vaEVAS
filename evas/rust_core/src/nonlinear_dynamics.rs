@@ -490,6 +490,14 @@ impl DenseStep {
     }
 }
 
+// Physical state immediately after the final event map, before propagation
+// from its uncertain time to the published representative.
+#[derive(Clone, PartialEq)]
+struct PhysicalEventSeed {
+    window: I,
+    state_after_map: Vec<I>,
+}
+
 #[derive(Clone)]
 pub(crate) struct NonlinearContinuous {
     context: Arc<Context>,
@@ -504,6 +512,7 @@ pub(crate) struct NonlinearContinuous {
     steps: Vec<DenseStep>,
     start: f64,
     event_dependent: bool,
+    event_seed: Option<PhysicalEventSeed>,
 }
 
 impl NonlinearContinuous {
@@ -768,6 +777,7 @@ impl NonlinearContinuous {
             steps: Vec::new(),
             start,
             event_dependent,
+            event_seed: None,
         })
     }
 
@@ -1394,6 +1404,7 @@ impl NonlinearContinuous {
             && self.initial == other.initial
             && self.parameters == other.parameters
             && self.steps == other.steps
+            && self.event_seed == other.event_seed
     }
     pub(super) fn next_breakpoint(&self, time: f64) -> Option<f64> {
         self.context
@@ -1491,26 +1502,62 @@ impl NonlinearContinuous {
         }
         source
     }
-    pub(super) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
-        if window.lo < self.start && window.hi == self.start {
-            // Candidate initial already encloses R(z(tau)) and the new flow
-            // to b. Include the full source window for direct filter paths.
-            let source = self.source_bounds(window);
-            let forcing: Vec<_> = self
-                .initial
-                .iter()
-                .copied()
-                .chain(source.iter().copied())
-                .chain(vec![I::ZERO; source.len()])
-                .chain([I::ONE])
-                .collect();
-            self.values
-                .iter()
-                .map(|row| dot(row, &forcing, "nonlinear event sample"))
-                .collect()
-        } else {
-            self.range_bounds(window)
+    // Only ordered event observations may use this backward-reaching box.
+    // Ordinary state_bounds deliberately keeps its accepted-start restriction.
+    fn ordered_event_state(&self, window: I) -> Result<Vec<I>, Error> {
+        let seed = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "ordered nonlinear event has no physical history enclosure",
+            )
+        })?;
+        if !window.finite()
+            || window.lo > window.hi
+            || window.lo < seed.window.lo
+            || window.hi < self.start
+            || window.hi > self.context.trajectory.config.stop
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "ordered nonlinear event exceeds retained history coverage",
+            ));
         }
+        let coverage = I {
+            lo: seed.window.lo,
+            hi: window.hi,
+        };
+        let elapsed = I {
+            lo: 0.0,
+            hi: (I::point(window.hi) - I::point(seed.window.lo)).hi,
+        };
+        let (source, slopes) = self.context.trajectory.range(coverage)?;
+        let (_, image) = self
+            .picard_enclosure(&seed.state_after_map, &source, &slopes, elapsed)
+            .ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "cannot certify ordered nonlinear event trajectory tube",
+                )
+            })?;
+        Ok(image)
+    }
+
+    pub(super) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
+        if window.lo >= self.start {
+            return self.range_bounds(window);
+        }
+        let state = self.ordered_event_state(window)?;
+        let source = self.source_bounds(window);
+        let forcing: Vec<_> = state
+            .into_iter()
+            .chain(source.iter().copied())
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        self.values
+            .iter()
+            .map(|row| dot(row, &forcing, "ordered nonlinear event sample"))
+            .collect()
     }
 
     pub(super) fn restarted(
@@ -1559,13 +1606,23 @@ impl NonlinearContinuous {
                 "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
         }
-        Self::initialized(
+        let physical = if window.lo < self.start {
+            self.ordered_event_state(window)?
+        } else {
+            self.state_bounds(window)?
+        };
+        let mut next = Self::initialized(
             self.context.clone(),
             parameters.to_vec(),
             time,
-            Some(self.state_bounds(window)?),
+            Some(physical),
             &self.tolerances,
-        )
+        )?;
+        next.event_seed = Some(PhysicalEventSeed {
+            window,
+            state_after_map: next.initial.clone(),
+        });
+        Ok(next)
     }
 }
 
@@ -1681,6 +1738,7 @@ mod tests {
             steps: vec![],
             start: 0.0,
             event_dependent: false,
+            event_seed: None,
             operators: Vec::new(),
             values: vec![vec![I::ONE, I::ZERO]],
             accuracy_rows: vec![vec![I::ONE, I::ZERO]],
@@ -1693,6 +1751,42 @@ mod tests {
                 )),
             )],
         }
+    }
+
+    #[test]
+    fn ordered_physical_seed_is_event_only_and_failure_does_not_mutate_it() {
+        let mut accepted = scalar(-1.0);
+        accepted.start = 0.05;
+        let window = I {
+            lo: 0.05 - 1e-8,
+            hi: 0.05 + 1e-8,
+        };
+        assert!(accepted.ordered_event_state(window).is_err());
+        accepted.event_seed = Some(PhysicalEventSeed {
+            window: I {
+                lo: 0.05 - 2e-8,
+                hi: 0.05,
+            },
+            state_after_map: vec![I::ONE],
+        });
+        let before = accepted.clone();
+        assert!(accepted.state_bounds(window).is_err());
+        let bounds = accepted.ordered_event_state(window).unwrap()[0];
+        assert!(bounds.lo <= 1.0 / (1.0 + 3e-8) && bounds.hi >= 1.0);
+        assert!(accepted
+            .ordered_event_state(I { lo: 0.04, hi: 0.05 })
+            .is_err());
+        assert!(accepted.same_history(&before));
+        let mut failed = accepted.clone();
+        failed.functions = scalar(1.0).functions;
+        failed.event_seed.as_mut().unwrap().state_after_map = vec![I::point(1e300)];
+        let failed_before = failed.clone();
+        assert!(failed.ordered_event_state(window).is_err());
+        assert!(failed.same_history(&failed_before));
+        assert_eq!(accepted.ordered_event_state(window).unwrap()[0], bounds);
+        let mut changed_seed = accepted.clone();
+        changed_seed.event_seed.as_mut().unwrap().state_after_map = vec![I::point(2.0)];
+        assert!(!accepted.same_history(&changed_seed));
     }
 
     #[test]
