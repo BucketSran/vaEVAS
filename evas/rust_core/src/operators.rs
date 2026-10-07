@@ -922,12 +922,75 @@ impl Evaluation<'_> {
         crate::diagnostics::counter("history_clone_calls", 1);
         crate::diagnostics::counter("history_clone_operator_slots", self.base.entries.len());
         candidate.horizon = horizon;
+        if let Some(continuous) = &candidate.continuous {
+            if continuous.has_local_observation() {
+                candidate.continuous = Some(Arc::new(continuous.restarted(
+                    self.time,
+                    time_bounds,
+                    bounds,
+                    horizon,
+                )?));
+            }
+        }
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
         Ok(candidate)
     }
 }
 
 impl Operators {
+    pub(crate) fn local_epoch(&self) -> Option<(crate::exact_time::Clock, f64)> {
+        self.continuous.as_ref()?.local_epoch()
+    }
+    pub(crate) fn anchor_event(
+        &mut self,
+        clock: crate::exact_time::Clock,
+        time: f64,
+        horizon: f64,
+    ) -> Result<(), Error> {
+        if let Some(c) = &self.continuous {
+            self.continuous = Some(Arc::new(c.anchored(clock, time, horizon)?));
+        } else {
+            return Err(Error::new(
+                "event_resolution",
+                "causal closure has no continuous physical flow",
+            ));
+        }
+        Ok(())
+    }
+    pub(crate) fn history_certificate(&self) -> Option<Arc<Continuous>> {
+        self.continuous.clone()
+    }
+    pub(crate) fn observe_local(
+        &mut self,
+        observation: crate::schedule::OrderedObservation,
+    ) -> Result<(), Error> {
+        let c = self.continuous.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "local observation lacks continuous history",
+            )
+        })?;
+        if !observation.validate(c) {
+            return Err(Error::new(
+                "event_resolution",
+                "local event certificate does not match the immutable physical mode history",
+            ));
+        }
+        self.continuous = Some(Arc::new(c.local_observation(observation.delta())?));
+        Ok(())
+    }
+    pub(crate) fn local_range(&self, index: usize, delta: I) -> Result<(I, I), Error> {
+        self.check_guard(index)?;
+        let Runtime::Continuous(slot) = self.entries[index] else {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal guard requires continuous network operators",
+            ));
+        };
+        let (values, derivatives) = self.continuous.as_ref().unwrap().local_range(delta)?;
+        Ok((values[slot], derivatives[slot]))
+    }
+
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
         if window.lo == window.hi {
             return self.bounds(time);

@@ -2,6 +2,32 @@
 use super::*;
 
 impl LinearContinuous {
+    pub(super) fn local_from_seed(&self, horizon: f64) -> Result<Self, Error> {
+        let (_, state) = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new("event_resolution", "local event flow lacks a physical seed")
+        })?;
+        let count = state.len();
+        let source_count = self.context.driven.len();
+        let autonomous = |row: &Vec<I>| {
+            row[count..count + 2 * source_count]
+                .iter()
+                .all(|c| c.zero())
+        };
+        if self
+            .segments
+            .iter()
+            .any(|s| !s.matrix[..count].iter().all(autonomous) || !s.values.iter().all(autonomous))
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal closure requires autonomous continuous flow and outputs",
+            ));
+        }
+        let context = local_context(&self.context, horizon);
+        Self::build(context, self.parameters.clone(), 0., Some(state.clone()))?
+            .ok_or_else(|| Error::new("invalid_ir", "local continuous flow disappeared"))
+    }
+
     pub(crate) fn changes_on_event(&self) -> bool {
         self.event_dependent
     }

@@ -1,10 +1,13 @@
 //! Certified event calendars. Nominal timer times never accumulate accepted steps.
+use crate::continuous::Continuous;
 use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
-use crate::interval::{sum_products_sign, Interval as I};
+use crate::exact_time::Clock;
+use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger};
 use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
+use std::sync::Arc;
 
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
 
@@ -20,23 +23,126 @@ pub(crate) struct ScheduledEvent {
 
 impl ScheduledEvent {
     pub(crate) fn is_fixed_timer(&self) -> bool {
-        matches!(self.moment, Moment::Timer { .. })
+        self.moment.clock().is_some()
     }
     pub(crate) fn bounds(&self) -> I {
         self.moment.bounds()
     }
+    pub(crate) fn clock(&self) -> Option<Clock> {
+        self.moment.clock()
+    }
+    pub(crate) fn local_bounds(&self, clock: Clock) -> Option<I> {
+        if let Some(other) = self.moment.clock() {
+            return other.difference(clock);
+        }
+        match &self.moment {
+            Moment::Anchored { anchor, delta, .. } if *anchor == clock => Some(*delta),
+            Moment::Cross(root) => root.local_bounds(clock),
+            _ => None,
+        }
+    }
+
+    pub(crate) fn retain_after(&mut self, prior: &Self, model: &EventModel) -> Result<bool, Error> {
+        if self.moment.exact_order(&prior.moment) != Some(std::cmp::Ordering::Greater) {
+            return Ok(false);
+        }
+        self.time = self.time.max(prior.time.next_up());
+        if !self
+            .moment
+            .accepts(self.time, &model.triggers[self.event].trigger)
+        {
+            return Err(unresolved(
+                "retained exact event order exceeds original tolerances",
+            ));
+        }
+        self.fixed_predecessor = Some(prior.time);
+        Ok(true)
+    }
 
     pub(crate) fn dynamic_direction(&self) -> Option<i8> {
         match self.moment {
-            Moment::Dynamic { derivative, .. } => derivative.sign().filter(|&s| s != 0),
+            Moment::Dynamic { derivative, .. } | Moment::Anchored { derivative, .. } => {
+                derivative.sign().filter(|&s| s != 0)
+            }
             _ => None,
         }
     }
 }
 
+/// Opaque permission to observe a proved physical event in a local epoch.
+/// Geometry alone cannot construct this: source moments retain their original
+/// exact numerator and dynamic roots retain the immutable history that proved them.
+pub(crate) struct OrderedObservation {
+    anchor: Clock,
+    delta: I,
+    proofs: Vec<Arc<Continuous>>,
+}
+impl OrderedObservation {
+    pub(crate) fn delta(&self) -> I {
+        self.delta
+    }
+    pub(crate) fn validate(&self, history: &Arc<Continuous>) -> bool {
+        history
+            .local_epoch()
+            .is_some_and(|(clock, start)| clock == self.anchor && self.delta.lo >= start)
+            && self.proofs.iter().all(|proof| Arc::ptr_eq(proof, history))
+    }
+}
+pub(crate) fn ordered_observation(
+    events: &[ScheduledEvent],
+    clock: Clock,
+    model: &EventModel,
+) -> Result<OrderedObservation, Error> {
+    let first = events
+        .first()
+        .ok_or_else(|| unresolved("local physical observation has no event identity"))?;
+    if events
+        .iter()
+        .any(|event| certified_order(first, event, model) != Some(std::cmp::Ordering::Equal))
+    {
+        return Err(unresolved(
+            "local observation cannot merge distinct physical events",
+        ));
+    }
+    let mut proofs = Vec::new();
+    let mut delta = None;
+    for event in events {
+        let bound = event
+            .local_bounds(clock)
+            .ok_or_else(|| unresolved("local event has no exact physical time certificate"))?;
+        delta = Some(delta.map_or(bound, |old: I| old.hull(bound)));
+        if let Moment::Anchored { history, .. } = &event.moment {
+            proofs.push(history.clone());
+        }
+    }
+    Ok(OrderedObservation {
+        anchor: clock,
+        delta: delta.unwrap(),
+        proofs,
+    })
+}
+fn certified_order(
+    a: &ScheduledEvent,
+    b: &ScheduledEvent,
+    model: &EventModel,
+) -> Option<std::cmp::Ordering> {
+    a.moment.exact_order(&b.moment).or_else(|| {
+        let same_guard=matches!((&model.triggers[a.event].trigger,&model.triggers[b.event].trigger),(EventTrigger::Cross {guard:x,..},EventTrigger::Cross {guard:y,..}) if x==y);
+        (same_guard && a.moment.coincides(&b.moment,true)).then_some(std::cmp::Ordering::Equal)
+    })
+}
+
 #[derive(Clone)]
 enum Moment {
     Cross(Root),
+    Anchored {
+        anchor: Clock,
+        delta: I,
+        derivative: I,
+        end: f64,
+        bounds: I,
+        history: Arc<Continuous>,
+    },
     Dynamic {
         bounds: I,
         derivative: I,
@@ -51,38 +157,75 @@ enum Moment {
     HeldTimer {
         bounds: I,
         index: usize,
+        clock: Option<Clock>,
     },
 }
 
 impl Moment {
     /// Static timer parameters and the bounded integer index define an exact
     /// binary-rational nominal time even when its interval endpoints overlap.
-    fn timer_order(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let (
+    fn clock(&self) -> Option<Clock> {
+        match self {
             Self::Timer {
-                start: a,
-                period: p,
-                index: k,
+                start,
+                period,
+                index,
                 ..
-            },
-            Self::Timer {
-                start: b,
-                period: q,
-                index: l,
-                ..
-            },
-        ) = (self, other)
-        else {
-            return None;
-        };
-        // add_timer limits indices to EVENT_BUDGET, below the exact f64 integer range.
-        let sign = sum_products_sign(&[(*a, 1.0), (*p, *k as f64), (-*b, 1.0), (-*q, *l as f64)])?;
-        Some(sign.cmp(&0))
+            } => Some(Clock {
+                start: *start,
+                period: *period,
+                index: *index,
+            }),
+            Self::HeldTimer { clock, .. } => *clock,
+            _ => None,
+        }
+    }
+    fn exact_order(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        if std::ptr::eq(self, other) {
+            return Some(std::cmp::Ordering::Equal);
+        }
+        if let (Some(a), Some(b)) = (self.clock(), other.clock()) {
+            return a.order(b);
+        }
+        match (self, other) {
+            (Self::Anchored { anchor, delta, .. }, b) => {
+                let other = if let Some(clock) = b.clock() {
+                    clock.difference(*anchor)?
+                } else {
+                    match b {
+                        Self::Cross(root) => root.local_bounds(*anchor)?,
+                        Self::Anchored {
+                            anchor: b,
+                            delta: d,
+                            ..
+                        } if b == anchor => *d,
+                        _ => return None,
+                    }
+                };
+                if delta.hi < other.lo {
+                    Some(std::cmp::Ordering::Less)
+                } else if delta.lo > other.hi {
+                    Some(std::cmp::Ordering::Greater)
+                } else if delta.lo == delta.hi && *delta == other {
+                    Some(std::cmp::Ordering::Equal)
+                } else {
+                    None
+                }
+            }
+            (a, Self::Anchored { .. }) => other.exact_order(a).map(std::cmp::Ordering::reverse),
+            (Self::Cross(a), Self::Cross(b)) => a.exact_order(b),
+            (Self::Cross(root), clock) => root.clock_order(clock.clock()?),
+            (clock, Self::Cross(root)) => root
+                .clock_order(clock.clock()?)
+                .map(std::cmp::Ordering::reverse),
+            _ => None,
+        }
     }
 
     fn bounds(&self) -> I {
         match self {
             Self::Cross(root) => root.bounds,
+            Self::Anchored { bounds, .. } => *bounds,
             Self::Dynamic { bounds, .. } => *bounds,
             Self::Timer { bounds, .. } => *bounds,
             Self::HeldTimer { bounds, .. } => *bounds,
@@ -95,6 +238,18 @@ impl Moment {
             return true;
         }
         match (self, other) {
+            (
+                Self::Anchored {
+                    anchor: a,
+                    delta: x,
+                    ..
+                },
+                Self::Anchored {
+                    anchor: b,
+                    delta: y,
+                    ..
+                },
+            ) => a == b && ((x.lo == x.hi && x == y) || (same_guard && x == y)),
             (Self::Dynamic { bounds: a, .. }, Self::Dynamic { bounds: b, .. }) => {
                 same_guard && a == b
             }
@@ -117,10 +272,12 @@ impl Moment {
                 Self::HeldTimer {
                     bounds: a,
                     index: k,
+                    ..
                 },
                 Self::HeldTimer {
                     bounds: b,
                     index: l,
+                    ..
                 },
             ) => same_guard && a == b && k == l,
             _ => false,
@@ -129,6 +286,29 @@ impl Moment {
 
     fn accepts(&self, time: f64, trigger: &EventTrigger) -> bool {
         match (self, trigger) {
+            (
+                Self::Anchored {
+                    anchor,
+                    delta,
+                    derivative,
+                    end,
+                    ..
+                },
+                EventTrigger::Cross {
+                    time_tolerance,
+                    expression_tolerance,
+                    ..
+                },
+            ) => {
+                let Some(local) = anchor.delta(time) else {
+                    return false;
+                };
+                let delay = local - *delta;
+                local.lo >= delta.hi
+                    && time <= *end
+                    && delay.hi <= *time_tolerance
+                    && (*derivative * delay).magnitude() <= *expression_tolerance
+            }
             (
                 Self::Dynamic {
                     bounds,
@@ -180,7 +360,7 @@ fn order_fixed_timers(
 ) -> Result<(), Error> {
     let mut uncertified = false;
     events.sort_by(|a, b| {
-        let order = a.moment.timer_order(&b.moment).unwrap_or_else(|| {
+        let order = certified_order(a, b, model).unwrap_or_else(|| {
             uncertified = true;
             std::cmp::Ordering::Equal
         });
@@ -194,7 +374,7 @@ fn order_fixed_timers(
     while start < events.len() {
         let mut end = start + 1;
         while end < events.len() {
-            match events[start].moment.timer_order(&events[end].moment) {
+            match certified_order(&events[start], &events[end], model) {
                 Some(std::cmp::Ordering::Equal) => end += 1,
                 Some(_) => break,
                 None => return Err(unresolved("cannot certify exact fixed timer group")),
@@ -357,7 +537,15 @@ fn add_timer(
             time,
             event,
             moment: if held {
-                Moment::HeldTimer { bounds, index }
+                Moment::HeldTimer {
+                    bounds,
+                    index,
+                    clock: (start.lo == start.hi && period.lo == period.hi).then_some(Clock {
+                        start: start.lo,
+                        period: period.lo,
+                        index,
+                    }),
+                }
             } else {
                 Moment::Timer {
                     bounds,
@@ -545,19 +733,25 @@ impl HeldCalendar<'_> {
     // overlapping clock is linked to the second, not directly to `after`.
     // New/changed moments and any intervening non-fixed event break this proof.
     fn retained_fixed_prefix(&self, after: f64) -> Vec<f64> {
+        let pending: Vec<_> = self
+            .pending
+            .iter()
+            .filter(|event| !self.changed[event.event])
+            .collect();
         let mut anchor = after;
         let mut times = Vec::new();
         let mut start = 0;
-        while start < self.pending.len() {
-            let time = self.pending[start].time;
+        while start < pending.len() {
+            let time = pending[start].time;
             let mut end = start + 1;
-            while end < self.pending.len() && self.pending[end].time == time {
+            while end < pending.len() && pending[end].time == time {
                 end += 1;
             }
             if time <= anchor
-                || !self.pending[start..end].iter().all(|event| {
+                || !pending[start..end].iter().all(|event| {
                     !self.changed[event.event]
-                        && event.is_fixed_timer()
+                        && (event.moment.clock().is_some()
+                            || matches!(event.moment, Moment::Cross(_) | Moment::Anchored { .. }))
                         && event.fixed_predecessor == Some(anchor)
                 })
             {
@@ -703,6 +897,100 @@ fn schedule_with_history(
                 unreachable!()
             };
             let origin = &model.program.events[leaf.event].origin;
+            if let Some((anchor, mut start)) = operators.and_then(Operators::local_epoch) {
+                let CalendarScope::History { until, consumed } = &scope else {
+                    return Err(unresolved(
+                        "local closure requires a bounded history calendar",
+                    ));
+                };
+                let end = anchor
+                    .delta(*until)
+                    .ok_or_else(|| {
+                        unresolved("local event coverage exceeds exact time arithmetic")
+                    })?
+                    .hi;
+                if end <= start {
+                    continue;
+                }
+                let precision = (*time_tolerance).min((end - start) * f64::EPSILON * 8.);
+                if let Some((_, incoming)) = consumed.iter().find(|(event, _)| *event == index) {
+                    start = crate::dynamic_roots::depart_consumed(
+                        start,
+                        end,
+                        &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
+                        &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.1),
+                        precision,
+                        (*incoming, *direction),
+                    )?;
+                }
+                let roots = crate::dynamic_roots::isolate_history(
+                    start,
+                    end,
+                    &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.0),
+                    &mut |t| Ok(guards.local_range_impl(guard, t, &origin.instance)?.1),
+                    *direction,
+                    precision,
+                    *expression_tolerance,
+                )?;
+                for root in roots {
+                    if events.len() >= EVENT_BUDGET {
+                        return Err(Error::new(
+                            "event_budget",
+                            "local causal calendar exceeds event budget",
+                        ));
+                    }
+                    let clock = I::point(anchor.start)
+                        + I::point(anchor.period) * I::point(anchor.index as f64);
+                    let bounds = clock + root.bounds;
+                    let mut time = bounds.hi;
+                    if let Some(after) = held.as_ref().and_then(|h| h.after) {
+                        time = time.max(after.next_up());
+                    }
+                    let moment = Moment::Anchored {
+                        anchor,
+                        delta: root.bounds,
+                        derivative: root.derivative,
+                        end: trajectory.config.stop,
+                        bounds,
+                        history: operators.unwrap().history_certificate().unwrap(),
+                    };
+                    if !moment.accepts(time, &leaf.trigger) {
+                        let local = anchor
+                            .delta(time)
+                            .ok_or_else(|| unresolved("local representative is uncertifiable"))?;
+                        let minimum = (local - root.bounds).lo;
+                        let forced_after = held
+                            .as_ref()
+                            .and_then(|h| h.after)
+                            .is_some_and(|after| time == after.next_up());
+                        let previous_is_before = anchor
+                            .delta(time.next_down())
+                            .is_some_and(|d| d.hi < root.bounds.lo);
+                        if minimum > *time_tolerance && (forced_after || previous_is_before) {
+                            return Err(unresolved("cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance"));
+                        }
+                        return Err(unresolved("local causal root has no representative within its original tolerances"));
+                    }
+                    if events
+                        .iter()
+                        .filter(|event| matches!(event.moment, Moment::Anchored { .. }))
+                        .count()
+                        >= 64
+                    {
+                        return Err(Error::new(
+                            "event_budget",
+                            "bounded causal candidate calendar exceeds 64 microevents",
+                        ));
+                    }
+                    events.push(ScheduledEvent {
+                        fixed_predecessor: None,
+                        time,
+                        event: index,
+                        moment,
+                    });
+                }
+                continue;
+            }
             let mut knots = trajectory.knots.clone();
             if let Some(after) = held.as_ref().and_then(|h| h.after) {
                 knots.retain(|t| *t > after);
@@ -798,16 +1086,14 @@ fn schedule_with_history(
         let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
         if events.iter().any(|event| {
             event.bounds().lo <= after
-                && !(event.is_fixed_timer()
-                    && event.fixed_predecessor.is_some()
+                && !matches!(event.moment, Moment::Anchored {delta,..} if delta.lo > operators.and_then(Operators::local_epoch).map_or(f64::INFINITY,|(_,start)|start) && event.time>after)
+                && !(event.fixed_predecessor.is_some()
                     && retained
                         .binary_search_by(|time| time.total_cmp(&event.time))
                         .is_ok()
                     && event.time > after)
         }) {
-            return Err(unresolved(
-                "future event window overlaps the accepted event boundary",
-            ));
+            return Err(unresolved("future event window overlaps the accepted event boundary"));
         }
     }
     events.sort_by(|a, b| {
@@ -831,9 +1117,15 @@ fn schedule_with_history(
             cluster_end += 1;
         }
         if cluster_end > start + 1
-            && events[start..cluster_end]
-                .iter()
-                .all(|e| matches!(e.moment, Moment::Timer { .. }))
+            && events[start..cluster_end].iter().all(|e| {
+                e.moment.clock().is_some()
+                    || matches!(e.moment, Moment::Cross(_) | Moment::Anchored { .. })
+            })
+            && events[start..cluster_end].iter().all(|a| {
+                events[start..cluster_end]
+                    .iter()
+                    .all(|b| certified_order(a, b, model).is_some())
+            })
         {
             let next_lower = events.get(cluster_end).map(|e| e.bounds().lo);
             order_fixed_timers(

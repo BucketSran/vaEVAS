@@ -88,7 +88,7 @@ class TimerOrdering(unittest.TestCase):
         # Both paths reject the same competing writers, with these two kinds.
         self.assertIn(caught.exception.detail['kind'], ['unsupported_cross', 'event_conflict'])
 
-    def test_mixed_timer_cross_overlap_remains_uncertified(self):
+    def test_mixed_timer_cross_overlap_has_exact_physical_order(self):
         # The binary64 .3 ramp threshold is before 3*binary64(.1), although
         # the timer's outward interval includes the representable cross root.
         self.assertLess(Q(.3), 3*Q(.1))
@@ -96,21 +96,35 @@ class TimerOrdering(unittest.TestCase):
           @(timer(.1,.1,1e-6)) n=n+1;
           @(cross(V(u,r)-.3,1,1e-9,1e-8)) m=m+1;
           V(y,r)<+n+10*m;""", 'integer n,m;')
-        with self.assertRaisesRegex(KernelError,
-                'event_resolution.*overlapping time bounds'):
-            run_timer(source, stop=.35, times=[0,.35])
+        baseline = None
+        for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
+            result = run_timer(source, stop=.35, times=times, step=step)
+            events = result['transient']['events']
+            self.assertEqual([e['event'] for e in events], [0,0,1,0])
+            self.assertLess(events[-2]['time'], events[-1]['time'])
+            self.assertEqual(result['transient']['states'][-1], [3,1])
+            if baseline is not None:
+                self.assertEqual(events, baseline)
+            baseline = events
 
-    def test_mixed_timer_held_timer_overlap_remains_uncertified(self):
-        # q is held and exact. Both clocks have the same exact .3 nominal,
-        # but its non-point time enclosure cannot certify mixed simultaneity.
+    def test_mixed_timer_point_held_timer_overlap_has_exact_simultaneity(self):
+        # Point-certified held parameters preserve the same exact clock
+        # decomposition, even when the absolute time enclosure is non-point.
         self.assertEqual(Q(.1)+Q(.2), 3*Q(.1))
         source = model("""@(initial_step) begin q=.1; n=0; m=0; end
           @(timer(.1,.2,1e-6)) n=n+1;
           @(timer(q,q,1e-6)) m=m+1;
           V(y,r)<+n+10*m;""", 'real q; integer n,m;')
-        with self.assertRaisesRegex(KernelError,
-                'event_resolution.*overlapping time bounds'):
-            run_timer(source, stop=.35, times=[0,.35])
+        baseline = None
+        for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
+            result = run_timer(source, stop=.35, times=times, step=step)
+            events = result['transient']['events']
+            self.assertEqual([e['event'] for e in events], [0,1,1,0,1])
+            self.assertEqual(events[-2]['time'], events[-1]['time'])
+            self.assertEqual(result['transient']['states'][-1], [.1,2,3])
+            if baseline is not None:
+                self.assertEqual(events, baseline)
+            baseline = events
 
     def test_near_timer_history_rebuild_retains_fixed_order(self):
         source = clocks().replace('integer n,m;', 'integer n,m; electrical z;').replace(

@@ -9,6 +9,7 @@ mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
 mod events;
+mod exact_time;
 mod expression;
 mod guard_trajectory;
 mod idt;

@@ -3,6 +3,7 @@ use crate::ir::{check_schema_version, BranchIdentity, Error, Expression, Program
 use crate::{expression, linear::Row};
 use std::collections::{BTreeMap, BTreeSet, HashSet};
 
+#[derive(Clone)]
 pub(crate) struct Equation {
     pub(crate) branch: BranchIdentity,
     pub(crate) positive: usize,

@@ -1,0 +1,108 @@
+"""Exact physical order through the actual transient controller."""
+GUARDS = ["TIMER", "EVENT-ORDER", "CROSS", "DYNAMICS", "COMPOSE"]
+from fractions import Fraction as Q
+import unittest
+from evas import compile_sources, transient
+from test_affine import KERNEL, instance, model
+
+class BoundedEventClosure(unittest.TestCase):
+    def test_mixed_source_root_and_two_exact_clocks(self):
+        source=model("""@(initial_step) begin n=0;k=0;j=0;end
+@(timer(.1,.2,1e-6)) n=n+1;
+@(cross(V(u,r),1,1e-6,1e-6)) k=k+1;
+@(timer(.30000000000000004,0,1e-6)) j=j+1;
+V(y,r)<+n+k+j;""", "integer n,k,j;")
+        root=Q(.4)*Q(.3)/(Q(.3)+Q(.1))
+        physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(root,1),(Q(.30000000000000004),2)])
+        baseline=None
+        for times,step in [([0,.49],.49),([0,.15,.29,.3,.49],.012)]:
+            result=transient(compile_sources({"mixed.va":source},[instance()]),{"u":[[0,-.3],[.4,.1],[.49,.1]]},times,stop=.49,max_step=step,kernel=KERNEL)
+            self.assertEqual(result["transient"]["states"][-1],[2,1,1])
+            events=result["transient"]["events"]
+            self.assertEqual([e["event"] for e in events],[i for _,i in physical])
+            self.assertTrue(all(a["time"]<b["time"] for a,b in zip(events,events[1:])))
+            if baseline is not None:self.assertEqual(events,baseline)
+            baseline=events
+
+    def test_point_certified_held_timer_preserves_exact_order(self):
+        source=model("""@(initial_step) begin a=.1;p=.2;n=0;k=0;j=0;end
+@(timer(a,p,1e-6)) n=n+1;
+@(timer(.30000000000000004,0,1e-6)) k=k+1;
+V(y,r)<+n+k+j;""", "real a,p;integer n,k,j;")
+        result=transient(compile_sources({"held.va":source},[instance()]),{"u":[[0,0],[.31,0]]},[0,.31],stop=.31,max_step=.31,kernel=KERNEL)
+        self.assertEqual(result["transient"]["states"][-1],[.1,.2,2,1,0])
+        self.assertEqual([e["event"] for e in result["transient"]["events"]],[0,0,1])
+
+    def hidden(self, polynomial=False, chain=False, tight=False):
+        from evas import KernelError
+        source=model("""@(initial_step) begin n=0;q=0;h=0;m=0;j=0;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(.30000000000000004,0,1e-6)) m=m+1;
+V(z,r)<+idt(FLOW,0);
+@(cross(V(z,r)-1e-18,1,TTOL,1e-6)) h=h+1;
+EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
+        flow="q" if not chain else "q+h"
+        if polynomial:flow="("+flow+")*(1+V(z,r))*(1+V(z,r))"
+        source=source.replace("FLOW",flow).replace("TTOL","1e-20" if tight else "1e-6").replace("EXTRA", "@(cross(V(z,r)-3e-18,1,1e-6,1e-6)) j=j+1;" if chain else "")
+        program=compile_sources({"hidden.va":source},[instance()])
+        baseline=None
+        grids=[([0,.31],.31),([0,.15,.29,.3,.305,.31],.012),([0,.3,.3000000000000001,.30000000000000016,.3000000000000002,.31],.31)]
+        for times,step in grids:
+            if tight:
+                with self.assertRaisesRegex(KernelError,"cross_ttol_unrepresentable"):
+                    transient(program,{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
+                continue
+            result=transient(program,{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
+            self.assertEqual(result["transient"]["states"][-1],[2,1,1,1,int(chain)])
+            expected_order=[0,0,2,3,1] if chain else [0,0,2,1]
+            events=result["transient"]["events"]
+            self.assertEqual([e["event"] for e in events],expected_order)
+            if baseline is not None:self.assertEqual(events,baseline)
+            baseline=events
+            elapsed=Q(.31)-Q(.1)-Q(.2)
+            area=elapsed if not chain else 2*elapsed-Q(1e-18)/(1+Q(1e-18)) if polynomial else 2*elapsed-Q(1e-18)
+            expected=area/(1-area) if polynomial else area
+            z=result["solutions"][-1]["voltages"][result["nodes"].index("dut:z")]
+            self.assertAlmostEqual(z,float(expected),delta=1e-10)
+            if not chain and len(times)==6 and times[1]==.3:
+                self.assertEqual(result["transient"]["states"][2:5],[[2,1,0,0,0],[2,1,1,0,0],[2,1,1,1,0]])
+    def test_hidden_root_is_inserted_before_the_next_physical_clock(self):self.hidden()
+    def test_hidden_tight_time_tolerance_has_a_specific_refusal(self):self.hidden(tight=True)
+    def test_local_affine_flow_change_exposes_a_second_causal_root(self):self.hidden(chain=True)
+    def test_local_polynomial_flow_change_exposes_a_second_causal_root(self):self.hidden(polynomial=True,chain=True)
+
+    def test_dense_causal_sequence_refuses_at_explicit_resource_bound(self):
+        from evas import KernelError
+        guards="".join(f"@(cross(V(z,r)-{k*1e-20!r},1,1e-6,1e-6)) begin end\n" for k in range(1,67))
+        source=model("""@(initial_step) begin n=0;q=0;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(.30000000000000004,0,1e-6)) begin end
+V(z,r)<+idt(q,0);"""+guards+"V(y,r)<+V(z,r);","integer n,q;electrical z;")
+        with self.assertRaisesRegex(KernelError,"event_budget.*64 microevents"):
+            transient(compile_sources({"resource.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)
+
+    def test_local_or_deduplicates_only_the_same_physical_root(self):
+        source=model("""@(initial_step) begin n=0;q=0;h=0;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+V(z,r)<+idt(q,0);
+@(cross(V(z,r)-1e-18,1,1e-6,1e-6) or cross(V(z,r)-1e-18,0,1e-6,1e-6) or cross(V(z,r)-3e-18,1,1e-6,1e-6)) h=h+1;
+V(y,r)<+h;""", "integer n,q,h;electrical z;")
+        baseline=None
+        for times,step in [([0,.31],.31),([0,.15,.3,.305,.31],.012)]:
+            result=transient(compile_sources({"or.va":source},[instance()]),{"u":[[0,0],[.31,0]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
+            events=result["transient"]["events"]
+            self.assertEqual([e["event"] for e in events],[0,0,1,1])
+            self.assertEqual([len(e.get("fired_triggers", [e])) for e in events],[1,1,2,1])
+            self.assertEqual(result["transient"]["states"][-1],[2,1,2])
+            if baseline is not None:self.assertEqual(events,baseline)
+            baseline=events
+
+    def test_local_closure_rejects_nonautonomous_coupled_state(self):
+        from evas import KernelError
+        source=model("""@(initial_step) begin n=0;q=0;h=0;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(V(u,r),0);
+@(cross(V(z,r)-1e-18,1,1e-6,1e-6)) h=h+1;
+V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
+        with self.assertRaisesRegex(KernelError,"autonomous"):
+            transient(compile_sources({"nonautonomous.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)

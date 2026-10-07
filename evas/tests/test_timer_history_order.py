@@ -100,7 +100,7 @@ class TimerHistoryOrder(unittest.TestCase):
             program = compile_sources({'hidden.va':source},[instance()])
             # A deliberately broad voltage budget isolates calendar safety;
             # the tight guard contract must still prevent a skipped crossing.
-            with self.assertRaisesRegex(KernelError,'event_resolution.*timer observation window'):
+            with self.assertRaisesRegex(KernelError,'event_resolution.*cross_ttol_unrepresentable'):
                 transient(program, {'u':[[0,0],[.31,.31]]},[0,.31],stop=.31,
                           max_step=.31, vabstol=1, reltol=0, kernel=KERNEL)
 

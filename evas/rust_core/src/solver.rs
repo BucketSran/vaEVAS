@@ -7,6 +7,7 @@ use std::sync::{Arc, OnceLock};
 
 type AffineFactor = Arc<OnceLock<Result<linear::Factorization, Error>>>;
 
+#[derive(Clone)]
 pub struct Circuit {
     pub nodes: Vec<String>,
     equations: Vec<Equation>,
@@ -23,6 +24,7 @@ pub struct Circuit {
 // Cache dense spans only when they occupy at most twice the actual terms.
 // Sparse rows retain indexed traversal, so isolated distant nodes never cause
 // an allocation proportional to their node-number span.
+#[derive(Clone)]
 struct DenseResidual {
     start: usize,
     coefficients: Vec<f64>,

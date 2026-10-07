@@ -211,6 +211,93 @@ impl<'a> GuardTrajectory<'a> {
         Ok(self.range_impl(expression, time, owner, true)?.0)
     }
 
+    pub(crate) fn local_range_impl(
+        &self,
+        expression: &Expression,
+        time: I,
+        owner: &str,
+    ) -> Result<(I, I), Error> {
+        let p = &self.model.program;
+        let (node_deps, mut operator_deps) = dependencies(expression, p, owner)?;
+        // Ownership was validated in EventModel. The network can contain
+        // operators in other instances, so follow each projected node map.
+        let state_start = self.model.driven.len();
+        let operator_start = state_start + p.states.len();
+        for &node in &node_deps {
+            if self.states.is_none()
+                && self.nodes[node][state_start..operator_start]
+                    .iter()
+                    .any(|v| !v.zero())
+            {
+                return Err(Error::new(
+                    "unsupported_cross",
+                    "guard voltage depends on event state",
+                ));
+            }
+            for (k, c) in self.nodes[node][operator_start..operator_start + p.operators.len()]
+                .iter()
+                .enumerate()
+            {
+                if !c.zero() {
+                    operator_deps.insert(k);
+                }
+            }
+        }
+        if node_deps.iter().any(|&node| {
+            self.nodes[node][..self.model.driven.len()]
+                .iter()
+                .any(|c| !c.zero())
+        }) {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal guard depends on a driven source",
+            ));
+        }
+        let mut values = vec![I::ZERO; self.model.driven.len()];
+        let mut derivatives = values.clone();
+        let initial: Vec<_> = p.states.iter().map(|s| I::point(s.initial)).collect();
+        let states = self.states.unwrap_or(&initial);
+        values.extend(states);
+        derivatives.extend(vec![I::ZERO; p.states.len()]);
+        let mut operator_values = vec![I::ZERO; p.operators.len()];
+        let mut operator_derivatives = operator_values.clone();
+        for index in operator_deps {
+            (operator_values[index], operator_derivatives[index]) = self
+                .operators
+                .ok_or_else(|| {
+                    Error::new("event_resolution", "local guard lacks physical history")
+                })?
+                .local_range(index, time)?;
+        }
+        values.extend(&operator_values);
+        values.push(I::ONE);
+        derivatives.extend(&operator_derivatives);
+        derivatives.push(I::ZERO);
+        let node_values: Vec<_> = self.nodes[..p.nodes.len()]
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .zip(&values)
+                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+            })
+            .collect();
+        let node_derivatives: Vec<_> = self.nodes[..p.nodes.len()]
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .zip(&derivatives)
+                    .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+            })
+            .collect();
+        evaluate(
+            expression,
+            &node_values,
+            &operator_values,
+            states,
+            &node_derivatives,
+            &operator_derivatives,
+        )
+    }
     fn range_impl(
         &self,
         expression: &Expression,

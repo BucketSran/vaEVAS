@@ -18,6 +18,7 @@ mod event_acceptance;
 #[path = "transient_history_calendar.rs"]
 mod history_calendar;
 
+#[derive(Clone)]
 struct Frame {
     time: f64,
     states: Vec<f64>,
@@ -33,6 +34,7 @@ struct Controller {
     accepted: Frame,
     event: usize,
     records: Vec<EventRecord>,
+    outputs: Vec<Frame>,
 }
 
 impl Controller {
@@ -600,6 +602,24 @@ fn prepare_calendar_batch(
     scheduled: &[ScheduledEvent],
     prediction_end: f64,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
+    let local_accepted;
+    let accepted = if let Some((clock, _)) = accepted.operators.local_epoch() {
+        let mut operators = accepted.operators.clone();
+        operators.observe_local(crate::schedule::ordered_observation(
+            scheduled, clock, model,
+        )?)?;
+        local_accepted = Frame {
+            time: accepted.time,
+            states: accepted.states.clone(),
+            state_bounds: accepted.state_bounds.clone(),
+            solution: accepted.solution.clone(),
+            circuit: accepted.circuit.clone(),
+            operators,
+        };
+        &local_accepted
+    } else {
+        accepted
+    };
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
     let bounds =
         scheduled
@@ -754,6 +774,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         accepted,
         event: 0,
         records: Vec::new(),
+        outputs: Vec::new(),
     };
     loop {
         controller.accepted.operators.check_deadline_order(
@@ -777,6 +798,22 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             controller.accepted.time,
             crossings.get(controller.event).map(|e| e.bounds()),
         )?;
+        while output < trace.times.len() && trace.times[output] < controller.accepted.time {
+            let index = controller
+                .outputs
+                .iter()
+                .position(|frame| frame.time == trace.times[output])
+                .ok_or_else(|| {
+                    Error::new(
+                        "event_consistency",
+                        "causal closure omitted an output phase",
+                    )
+                })?;
+            let frame = controller.outputs.remove(index);
+            solutions.push(frame.solution);
+            trace.states.push(frame.states);
+            output += 1;
+        }
         if output < trace.times.len() && controller.accepted.time == trace.times[output] {
             let _output = crate::diagnostics::span("output.collect");
             solutions.push(controller.accepted.solution.clone());

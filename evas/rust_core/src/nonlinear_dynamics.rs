@@ -516,6 +516,46 @@ pub(crate) struct NonlinearContinuous {
 }
 
 impl NonlinearContinuous {
+    pub(super) fn local_from_seed(&self, horizon: f64) -> Result<Self, Error> {
+        fn autonomous(p: &Polynomial, count: usize, sources: usize) -> bool {
+            match p {
+                Polynomial::Linear(row) => row[count..count + 2 * sources].iter().all(|c| c.zero()),
+                Polynomial::Add(a, b) | Polynomial::Multiply(a, b) => {
+                    autonomous(a, count, sources) && autonomous(b, count, sources)
+                }
+                Polynomial::Power(a, _) => autonomous(a, count, sources),
+            }
+        }
+        let seed = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "local polynomial flow lacks a physical seed",
+            )
+        })?;
+        let count = seed.state_after_map.len();
+        let sources = self.context.driven.len();
+        if self.implicit.is_some()
+            || !self.functions.iter().all(|p| autonomous(p, count, sources))
+            || !self
+                .values
+                .iter()
+                .all(|r| r[count..count + 2 * sources].iter().all(|c| c.zero()))
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal closure requires autonomous polynomial flow and outputs",
+            ));
+        }
+        Self::build(
+            local_context(&self.context, horizon),
+            self.parameters.clone(),
+            0.,
+            Some(seed.state_after_map.clone()),
+            horizon,
+            &self.tolerances,
+        )
+    }
+
     #[cfg(test)]
     pub(super) fn new(
         program: &Program,

@@ -55,7 +55,7 @@ impl Controller {
         &self,
         model: &EventModel,
         trajectory: &Trajectory,
-        next: &Frame,
+        next: &mut Frame,
         batch: &[ScheduledEvent],
         remaining: &[ScheduledEvent],
     ) -> Result<event_acceptance::CalendarPlan, Error> {
@@ -69,6 +69,45 @@ impl Controller {
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
         let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
+        let physical_anchor = batch.iter().find_map(ScheduledEvent::clock);
+        if next.operators.local_epoch().is_none() && window.lo != window.hi {
+            let probe = GuardTrajectory::new_held(
+                model,
+                trajectory,
+                Some(&next.operators),
+                Some(&next.state_bounds),
+            )?;
+            let mut needs_closure = false;
+            for (index, leaf) in model.triggers.iter().enumerate() {
+                if model.guard_operators[index].is_empty() || consumed.contains(&index) {
+                    continue;
+                }
+                if let EventTrigger::Cross { guard, .. } = &leaf.trigger {
+                    let owner = &model.program.events[leaf.event].origin.instance;
+                    needs_closure |= !matches!(
+                        probe.event_value(guard, window, owner)?.sign(),
+                        Some(-1 | 1)
+                    );
+                }
+            }
+            if needs_closure {
+                let clock = physical_anchor.ok_or_else(|| {
+                    Error::new(
+                        "event_resolution",
+                        "local causal closure requires an exact fixed-clock physical anchor",
+                    )
+                })?;
+                let permission = crate::schedule::ordered_observation(batch, clock, model)?;
+                if permission.delta() != I::ZERO {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "local closure cannot merge distinct physical clock anchors",
+                    ));
+                }
+                next.operators
+                    .anchor_event(clock, time, trajectory.config.stop)?;
+            }
+        }
         let before = GuardTrajectory::new_held(
             model,
             trajectory,
@@ -126,7 +165,11 @@ impl Controller {
             for &operator in &model.guard_operators[index] {
                 keeps_history &= next.operators.keeps_guard_value(operator)?;
             }
-            if fixed_batch && window.lo != window.hi && !model.guard_operators[index].is_empty() {
+            if next.operators.local_epoch().is_none()
+                && fixed_batch
+                && window.lo != window.hi
+                && !model.guard_operators[index].is_empty()
+            {
                 // Root isolation resumes at b. Certify the post-event tube
                 // from every possible tau to b, including the final timer in
                 // an overlap cluster. A root here must never be skipped.
@@ -158,13 +201,26 @@ impl Controller {
                     "event-dependent guard jump or uncertain same-time crossing requires an event closure contract"));
             }
         }
+        let mut retained = remaining.to_vec();
+        if next.operators.local_epoch().is_some() {
+            let mut prior = batch.last().unwrap().clone();
+            for event in &mut retained {
+                if changed[event.event] || !model.guard_operators[event.event].is_empty() {
+                    continue;
+                }
+                if !event.retain_after(&prior, model)? {
+                    break;
+                }
+                prior = event.clone();
+            }
+        }
         let pending = reschedule_independent(
             model,
             trajectory,
             &next.state_bounds,
             time,
             &changed,
-            remaining,
+            &retained,
         )?;
         Ok(event_acceptance::CalendarPlan::History {
             pending,

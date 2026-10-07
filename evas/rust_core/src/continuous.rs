@@ -99,6 +99,19 @@ struct Context {
     driven: Vec<String>,
 }
 
+fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
+    let mut trajectory = context.trajectory.clone();
+    trajectory.config.stop = horizon;
+    trajectory.config.output_times = vec![0., horizon];
+    trajectory.config.pwl = vec![vec![[0., 0.], [horizon, 0.]]; context.driven.len()];
+    trajectory.knots = vec![0., horizon];
+    Arc::new(Context {
+        program: context.program.clone(),
+        trajectory,
+        driven: context.driven.clone(),
+    })
+}
+
 #[derive(Clone)]
 struct Segment {
     start: f64,

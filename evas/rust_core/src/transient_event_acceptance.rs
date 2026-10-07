@@ -65,7 +65,7 @@ impl Controller {
         // All subsequent work owns a candidate; the accepted frame, event
         // cursor, records and old calendar remain intact on every error.
         let time = calendar[self.event].time;
-        let (next, records, end) =
+        let (mut next, records, end) =
             self.prepare_events_until(model, trajectory, calendar, Some(time))?;
         let plan = match strategy {
             Strategy::Held => CalendarPlan::Held(self.prepare_held_future(
@@ -78,12 +78,79 @@ impl Controller {
             Strategy::History => self.prepare_history_future(
                 model,
                 trajectory,
-                &next,
+                &mut next,
                 &calendar[self.event..end],
                 &calendar[end..],
             )?,
         };
-        self.finish_changed_events(model, trajectory, calendar, next, records, plan)
+        if matches!(strategy, Strategy::History) && next.operators.local_epoch().is_some() {
+            let (mut next, mut future) =
+                Self::prepare_final_history(model, trajectory, next, plan)?;
+            let mut records = records;
+            let mut phases = vec![self.accepted.clone(), next.clone()];
+            let mut microevents = 0;
+            while future
+                .first()
+                .is_some_and(|event| event.bounds().lo <= next.time)
+            {
+                if microevents >= 64
+                    || self.records.len() + records.len() >= crate::schedule::EVENT_BUDGET
+                {
+                    return Err(Error::new("event_budget","bounded causal event closure exceeds 64 microevents or the global event budget"));
+                }
+                let candidate = Controller {
+                    accepted: next,
+                    event: 0,
+                    records: Vec::new(),
+                    outputs: Vec::new(),
+                };
+                let time = future[0].time;
+                let (mut following, new_records, end) =
+                    candidate.prepare_events_until(model, trajectory, &future, Some(time))?;
+                let plan = candidate.prepare_history_future(
+                    model,
+                    trajectory,
+                    &mut following,
+                    &future[..end],
+                    &future[end..],
+                )?;
+                (next, future) = Self::prepare_final_history(model, trajectory, following, plan)?;
+                records.extend(new_records);
+                phases.push(next.clone());
+                microevents += 1;
+            }
+            // Prepare every requested phase observation before publication.
+            // Cloned queries cannot alter the candidate's physical sequence.
+            let mut outputs = Vec::new();
+            for &time in &trajectory.config.output_times {
+                if time <= self.accepted.time || time >= next.time {
+                    continue;
+                }
+                let phase = phases
+                    .iter()
+                    .rev()
+                    .find(|frame| frame.time <= time)
+                    .unwrap();
+                outputs.push(prepare_root_window(
+                    model,
+                    trajectory,
+                    phase,
+                    EventMoment {
+                        representative: time,
+                        observation: I::point(time),
+                        fired_roots: &[],
+                        prediction_end: time,
+                    },
+                    &[],
+                )?);
+            }
+            self.commit_events(next, records, 0);
+            self.outputs = outputs;
+            *calendar = future;
+            Ok(())
+        } else {
+            self.finish_changed_events(model, trajectory, calendar, next, records, plan)
+        }
     }
 
     fn finish_changed_events(
@@ -91,10 +158,21 @@ impl Controller {
         model: &EventModel,
         trajectory: &Trajectory,
         calendar: &mut Vec<ScheduledEvent>,
-        mut next: Frame,
+        next: Frame,
         records: Vec<EventRecord>,
         plan: CalendarPlan,
     ) -> Result<(), Error> {
+        let (next, future) = Self::prepare_final_history(model, trajectory, next, plan)?;
+        self.commit_events(next, records, 0);
+        *calendar = future;
+        Ok(())
+    }
+    fn prepare_final_history(
+        model: &EventModel,
+        trajectory: &Trajectory,
+        mut next: Frame,
+        plan: CalendarPlan,
+    ) -> Result<(Frame, Vec<ScheduledEvent>), Error> {
         let until = plan.horizon(trajectory);
         next.operators = next.operators.evaluation(next.time)?.advanced_until(
             I::point(next.time),
@@ -118,9 +196,7 @@ impl Controller {
             &next.states,
         )?;
         // No fallible operation may split state and matching calendar publication.
-        self.commit_events(next, records, 0);
-        *calendar = future;
-        Ok(())
+        Ok((next, future))
     }
 }
 

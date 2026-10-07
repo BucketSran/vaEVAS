@@ -64,6 +64,74 @@ impl Root {
         }
     }
 
+    /// Compare the original affine numerator at an exact binary-rational clock.
+    /// This certificate requires point endpoint guards; uncertain projections
+    /// deliberately retain the calendar's ambiguity refusal.
+    pub(crate) fn exact_order(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        let [a, b] = self.ends;
+        let [c, d] = other.ends;
+        if [a, b, c, d].iter().any(|v| v.lo != v.hi) || a.lo == b.lo || c.lo == d.lo {
+            return None;
+        }
+        let sign = crate::exact_time::sum_triples_sign(&[
+            (a.lo, self.segment[1], c.lo),
+            (-a.lo, self.segment[1], d.lo),
+            (-b.lo, self.segment[0], c.lo),
+            (b.lo, self.segment[0], d.lo),
+            (-c.lo, other.segment[1], a.lo),
+            (c.lo, other.segment[1], b.lo),
+            (d.lo, other.segment[0], a.lo),
+            (-d.lo, other.segment[0], b.lo),
+        ])?;
+        Some(
+            (if (a.lo > b.lo) == (c.lo > d.lo) {
+                sign
+            } else {
+                -sign
+            })
+            .cmp(&0),
+        )
+    }
+
+    pub(crate) fn clock_order(
+        &self,
+        clock: crate::exact_time::Clock,
+    ) -> Option<std::cmp::Ordering> {
+        self.clock_delta_order(clock, 0.)
+    }
+    pub(crate) fn local_bounds(&self, clock: crate::exact_time::Clock) -> Option<I> {
+        crate::exact_time::enclose_zero(|delta| {
+            self.clock_delta_order(clock, delta).map(|o| match o {
+                std::cmp::Ordering::Less => 1,
+                std::cmp::Ordering::Equal => 0,
+                std::cmp::Ordering::Greater => -1,
+            })
+        })
+    }
+    pub(crate) fn clock_delta_order(
+        &self,
+        clock: crate::exact_time::Clock,
+        delta: f64,
+    ) -> Option<std::cmp::Ordering> {
+        let [a, b] = self.ends;
+        if a.lo != a.hi || b.lo != b.hi || a.lo == b.lo {
+            return None;
+        }
+        let sign = crate::exact_time::sum_triples_sign(&[
+            (a.lo, self.segment[1], 1.),
+            (-a.lo, clock.start, 1.),
+            (-a.lo, clock.period, clock.index as f64),
+            (b.lo, clock.start, 1.),
+            (b.lo, clock.period, clock.index as f64),
+            (-b.lo, self.segment[0], 1.),
+            (-a.lo, delta, 1.),
+            (b.lo, delta, 1.),
+        ])?;
+        // Increasing guards are positive after their zero; decreasing guards
+        // reverse the sign. Return root compared with clock, not vice versa.
+        Some((if b.lo > a.lo { -sign } else { sign }).cmp(&0))
+    }
+
     pub fn accepts(&self, time: f64, ttol: f64, etol: f64) -> bool {
         let delay = I::point(time) - self.bounds;
         let expression_error = self.slope * delay;
@@ -329,5 +397,45 @@ mod tests {
         };
         subnormal.refine_representable();
         assert_ne!(subnormal.bounds.lo, subnormal.bounds.hi);
+    }
+}
+
+#[cfg(test)]
+mod exact_mixed_order_tests {
+    use super::*;
+    use num_rational::BigRational as Q;
+    use proptest::prelude::*;
+    fn q(v: f64) -> Q {
+        Q::from_float(v).unwrap()
+    }
+    fn finite() -> impl Strategy<Value = f64> {
+        any::<u64>()
+            .prop_map(f64::from_bits)
+            .prop_filter("finite", |v| v.is_finite())
+    }
+    fn order(value: Q) -> std::cmp::Ordering {
+        value.cmp(&q(0.))
+    }
+    fn root(a: f64, b: f64, t0: f64, t1: f64) -> Root {
+        Root {
+            bounds: I { lo: 0., hi: 1. },
+            slope: I::ONE,
+            segment: [t0, t1],
+            ends: [I::point(a), I::point(b)],
+        }
+    }
+    proptest! {
+        #![proptest_config(ProptestConfig::with_cases(512))]
+        #[test]
+        fn source_clock_and_source_source_signs_use_original_rationals(a in finite(),b in finite(),c in finite(),d in finite(),t0 in finite(),t1 in finite(),s0 in finite(),s1 in finite(),start in finite(),period in finite(),delta in finite(),index in 0usize..1_000_000) {
+            prop_assume!(a!=b && c!=d);
+            let left=root(a,b,t0,t1);
+            let right=root(c,d,s0,s1);
+            let clock=crate::exact_time::Clock {start,period,index};
+            let left_time=(q(a)*q(t1)-q(b)*q(t0))/(q(a)-q(b));
+            let right_time=(q(c)*q(s1)-q(d)*q(s0))/(q(c)-q(d));
+            prop_assert_eq!(left.exact_order(&right),Some(order(left_time.clone()-right_time)));
+            prop_assert_eq!(left.clock_delta_order(clock,delta),Some(order(left_time-q(start)-q(period)*q(index as f64)-q(delta))));
+        }
     }
 }

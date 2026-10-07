@@ -63,6 +63,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         calendar,
     )
@@ -131,6 +132,7 @@ fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         calendar,
     )
@@ -196,6 +198,7 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
         accepted,
         event: 0,
         records: vec![],
+        outputs: Vec::new(),
     };
     // y'=y^2 blows up at 1. Predicting all the way to the newly requested
     // timer(1) must fail after the new calendar succeeds, without committing it.
@@ -430,6 +433,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         crossings,
     )
@@ -572,6 +576,7 @@ pub(super) fn nonlinear_horizon_fixture(
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         calendar,
     )
@@ -691,6 +696,7 @@ fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         calendar,
     )
@@ -897,6 +903,7 @@ fn delayed_timer_root_fixture(
             accepted,
             event: 0,
             records: vec![],
+            outputs: Vec::new(),
         },
         calendar,
     )
@@ -904,7 +911,12 @@ fn delayed_timer_root_fixture(
 
 #[test]
 fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
-    let (bad, trajectory, mut controller, mut calendar) = delayed_timer_root_fixture(1e-18);
+    let (base, trajectory, mut controller, mut calendar) = delayed_timer_root_fixture(1e-18);
+    let mut program = base.program.clone();
+    if let EventTrigger::Cross { time_tolerance, .. } = &mut program.events[1].trigger {
+        *time_tolerance = 1e-20;
+    }
+    let bad = EventModel::new(program, base.driven.clone(), base.tolerances.clone()).unwrap();
     controller
         .accept_history_events(&bad, &trajectory, &mut calendar)
         .unwrap();
@@ -923,7 +935,7 @@ fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
             .accept_history_events(&bad, &trajectory, &mut calendar)
             .unwrap_err();
         assert_eq!(error.kind, "event_resolution");
-        assert!(error.message.contains("timer observation window"));
+        assert!(error.message.contains("cross_ttol_unrepresentable"));
         assert_eq!(controller.accepted.time, before_time);
         assert_eq!(controller.accepted.states, before_states);
         assert_eq!(controller.accepted.state_bounds, before_bounds);
@@ -942,7 +954,7 @@ fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
             original
         );
     }
-    let (good, clean_trajectory, mut clean, mut clean_calendar) = delayed_timer_root_fixture(1.);
+    let (good, clean_trajectory, mut clean, mut clean_calendar) = delayed_timer_root_fixture(1e-18);
     clean
         .accept_history_events(&good, &clean_trajectory, &mut clean_calendar)
         .unwrap();
@@ -979,4 +991,200 @@ fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
             .map(|e| (e.time, e.event, e.bounds()))
             .collect::<Vec<_>>()
     );
+}
+
+#[test]
+fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry() {
+    let (base, trajectory, _, _) = delayed_timer_root_fixture(1e-18);
+    let mut program = serde_json::to_value(base.program).unwrap();
+    let origin = program["events"][0]["origin"].clone();
+    program["states"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"instance":"dut","name":"s","kind":"real","initial":0}));
+    program["contributions"][0]["rhs"] = json!({"op":"state","state":2});
+    program["events"].as_array_mut().unwrap().push(json!({"origin":origin,"trigger":{"kind":"timer","start":0.30000000000000004,"period":0,"time_tolerance":1e-6,"enabled":true},"body":[]}));
+    let mut later = program["events"][1].clone();
+    later["trigger"]["guard"] =
+        json!({"op":"affine","constant":-3e-18,"terms":[{"node":3,"coefficient":1}]});
+    later["body"] = json!([{"kind":"assign","state":2,"rhs":{"op":"affine","constant":0,"terms":[{"node":3,"coefficient":1e36}]}}]);
+    program["events"].as_array_mut().unwrap().push(later);
+    let make = |value: serde_json::Value| {
+        let model = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            base.driven.clone(),
+            base.tolerances.clone(),
+        )
+        .unwrap();
+        let states = model.initial();
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let controller = Controller {
+            accepted: Frame {
+                time: 0.,
+                solution: circuit.solve(&[0.]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        (model, controller, calendar)
+    };
+    let (bad, mut controller, mut calendar) = make(program.clone());
+    controller
+        .accept_history_events(&bad, &trajectory, &mut calendar)
+        .unwrap();
+    let before = controller.accepted.clone();
+    let records = serde_json::to_value(&controller.records).unwrap();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "singular_system");
+        // The first microevent is valid. Only the later event introduces the
+        // amplified joint voltage/state equation and fails its uniqueness gate.
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(controller.event, 0);
+        assert!(controller.outputs.is_empty());
+        assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+    program["events"][3]["body"][0]["rhs"]["terms"][0]["coefficient"] = json!(1.);
+    let (good, mut clean, mut clean_calendar) = make(program);
+    clean
+        .accept_history_events(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    clean
+        .accept_history_events(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    controller
+        .accept_history_events(&good, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.time, clean.accepted.time);
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        controller.accepted.solution.voltages,
+        clean.accepted.solution.voltages
+    );
+    assert!(controller
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>(),
+        clean_calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+}
+
+#[test]
+fn local_event_permission_rejects_missing_distinct_and_stale_physical_certificates() {
+    use crate::schedule::{history_epoch, ordered_observation, HistoryEpoch};
+    let (model, trajectory, mut controller, mut calendar) = delayed_timer_root_fixture(1e-18);
+    controller
+        .accept_history_events(&model, &trajectory, &mut calendar)
+        .unwrap();
+    let time = calendar[0].time;
+    let (mut next, _, end) = controller
+        .prepare_events_until(&model, &trajectory, &calendar, Some(time))
+        .unwrap();
+    let plan = controller
+        .prepare_history_future(
+            &model,
+            &trajectory,
+            &mut next,
+            &calendar[..end],
+            &calendar[end..],
+        )
+        .unwrap();
+    let event_acceptance::CalendarPlan::History { pending, consumed } = plan else {
+        panic!("history plan required")
+    };
+    let future = history_epoch(
+        &model,
+        &trajectory,
+        &next.operators,
+        HistoryEpoch {
+            states: &next.state_bounds,
+            after: Some(next.time),
+            until: trajectory.config.stop,
+            consumed: &consumed,
+            pending: &pending,
+        },
+    )
+    .unwrap();
+    let (clock, _) = next.operators.local_epoch().unwrap();
+    assert!(ordered_observation(&[], clock, &model)
+        .err()
+        .unwrap()
+        .message
+        .contains("no event identity"));
+    let root = future
+        .iter()
+        .find(|event| event.dynamic_direction().is_some())
+        .unwrap();
+    let permission = ordered_observation(std::slice::from_ref(root), clock, &model).unwrap();
+    let original = next.operators.clone();
+    next.operators.observe_local(permission).unwrap();
+    // Identical mathematical geometry is insufficient: the proof belongs to
+    // the immutable pre-observation flow, not the newly mapped history.
+    let stale = ordered_observation(std::slice::from_ref(root), clock, &model).unwrap();
+    let error = next.operators.observe_local(stale).unwrap_err();
+    assert!(error.message.contains("immutable physical mode history"));
+    let mut foreign = original.clone();
+    foreign
+        .anchor_event(clock, time, trajectory.config.stop)
+        .unwrap();
+    let stale = ordered_observation(std::slice::from_ref(root), clock, &model).unwrap();
+    assert!(foreign
+        .observe_local(stale)
+        .unwrap_err()
+        .message
+        .contains("immutable physical mode history"));
+    let mixed = vec![calendar[0].clone(), root.clone()];
+    assert!(ordered_observation(&mixed, clock, &model)
+        .err()
+        .unwrap()
+        .message
+        .contains("distinct physical events"));
 }
