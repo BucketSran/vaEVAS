@@ -377,7 +377,7 @@ endmodule
     osc=HEADER+'''module pll_oscillator(phase,reset,wave);
 input phase,reset; output wave; electrical phase,reset,wave;
 analog begin
-  V(wave)<+(V(reset)>0.5 ? 0 : 0.5+0.5*sin(2*`M_PI*V(phase)));
+  V(wave)<+(V(reset)>0.5 ? 0 : 0.5+0.5*sin(6.283185307179586*V(phase)));
   $bound_step(0.015n);
 end
 endmodule
