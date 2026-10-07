@@ -3,3 +3,13 @@
 观测施密特比较器差分输入vin和逻辑输出q。输入先从-20mV到+20mV线性上扫400ns，再下扫400ns，斜率100kV/s。800ns后保持-20mV，在1us跳至+20mV，1.2us跳回-20mV。输入阈值对称，迟滞总宽4/8/12mV，固定传播延时2/4/6ns，q边沿0.1ns。输出high_mv、low_mv为传播延时校正后的输入高低阈值mV；rise_ns、fall_ns为阶跃输入0V穿越至q=0.5V穿越的延时ns。阈值用上扫输出翻转时vin减去斜率*rise_delay，下扫加上斜率*fall_delay，单独传播延时包含0.5V输出边沿半过渡时间。终评用原始输入和输出边沿重算同一定义，阈值容差0.05mV，延时0.15ns，1.4us前完成。需区分慢扫的动态阈值与静态迟滞。
 
 提交 `/work/dut.va`，module `dut(vin,q,high_mv,low_mv,rise_ns,fall_ns)`，所有端口均为 electrical。电压数值代表题面规定的单位。仅使用 Verilog-A 标准头文件；不读写文件，不执行外部命令。允许调整内部实现。公开自测见 `/work/public/`，终评分只改变公开列出的参数和故障模式，核验真实激励与原始观测，然后核验结果端口。测量最后一个窗口之后保持结果至仿真结束。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

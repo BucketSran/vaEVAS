@@ -19,3 +19,13 @@ CSV列为time_s、vin_V、out_V；完整刺激在experiments.json，来源和精
 反转后10至40 ns的电压变化误差不超过80 uV。输入1 ps边沿两侧5 ns不查波形。
 特别检查小幅尾部与相反极性的大跳变。平均RMSE、仅最终gain或只报slew不能替代这些检查。
 公开网表可自测；只提交dut.va，不读取隐藏材料、不写文件、不执行系统命令。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

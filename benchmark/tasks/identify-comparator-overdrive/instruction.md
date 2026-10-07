@@ -20,3 +20,13 @@ clk周期120 ns，首次上升沿在20 ns；高电平6至80 ns，实验可包含
 复位取消的实验不能出现迟到的crossing。离事件2 ns以外的稳定电平误差不超过100 uV。
 不能只拟合单个幅度、忽略极性或用总体RMSE掩盖延时。
 可使用public网表自测。最终只交dut.va，不读隐藏文件、不写文件、不执行系统命令。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

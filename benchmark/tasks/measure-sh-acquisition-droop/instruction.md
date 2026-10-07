@@ -3,3 +3,13 @@
 每500ns一个S/H周期，前250ns采集，后250ns保持，4周期交替输入0.8/0.2V。每次获取从0.5V开始，时间常数允许10/20/35ns，保持段有有符号线性下垂20/50/-80kV/s。settle_ns是4周期建立时间平均值，建立定义为周期起点之后 |y-vin| 首次≤3mV并持续至获取结束的时间，单位ns；终评还检查全余下获取窗口，不能漏掉回弹。droop_mvus为4周期 [(y(260ns)-y(490ns))/0.23us] 平均值，单位mV/us，保留符号。1.991us前完成并保持至2us仿真结束，建立容差0.5ns，下垂容差0.2mV/us。数据仅为behavioral_synthetic，禁止视作实测。终评核验实际track输入、y轨迹、建立边沿和保持段两个原始端点。
 
 提交 `/work/dut.va`，module `dut(vin,track,y,settle_ns,droop_mvus)`，所有端口均为 electrical。电压数值代表题面规定的单位。仅使用 Verilog-A 标准头文件；不读写文件，不执行外部命令。允许调整内部实现。公开自测见 `/work/public/`，终评分只改变公开列出的参数和故障模式，核验真实激励与原始观测，然后核验结果端口。测量最后一个窗口之后保持结果至仿真结束。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

@@ -9,3 +9,13 @@
 所有状态在事件后0.12 ns内建立，结果电压误差不超过0.002 V，逻辑稳态误差不超过0.01 V。边沿不得漏报或多报；波形检查也覆盖事件间保持、无效stop、超时和复位。使用平滑电压贡献，不依赖电流/负载模型。
 
 公开工程在 `/work/public/`，请在 `/work/` 建立提交工程，入口为 `/work/dut.va`。可修改的提交文件清单见公开 `SUBMISSION.json`。同目录运行 `python3 public/smoke.py --candidate /work/dut.va` 可检查公开波形。终评输入均在上述合同范围内，不能访问隐藏测试或用时间表输出答案。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`、`rtl/capture.va`、`rtl/quantizer.va`、`rtl/formatter.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

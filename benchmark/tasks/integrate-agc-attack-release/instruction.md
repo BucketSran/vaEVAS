@@ -7,3 +7,13 @@
 控制周期之间增益保持；输出信号持续为 `clip(g*signal_in,-0.9,0.9)` V，不能把信号输出错做采样保持。clipped表示未限幅乘积绝对值大于0.9。reset高时signal_out和clipped为0，gain保持1。所有参数需传递到正确模块。采样相关输出在事件后0.15 ns建立；gain与输出误差0.004 V，标志误差0.01 V。输入在clk前后0.2 ns稳定，reset距clk至少0.3 ns。此题只要求电压域动态，不要求可变增益放大器的电流和阻抗。
 
 公开工程在 `/work/public/`，请在 `/work/` 建立提交工程，入口为 `/work/dut.va`。可修改的提交文件清单见公开 `SUBMISSION.json`。同目录运行 `python3 public/smoke.py --candidate /work/dut.va` 可检查公开波形。终评输入均在上述合同范围内，不能访问隐藏测试或用时间表输出答案。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`、`rtl/detector.va`、`rtl/gain.va`、`rtl/amplifier.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->

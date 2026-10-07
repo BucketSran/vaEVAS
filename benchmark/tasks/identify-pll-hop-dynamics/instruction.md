@@ -23,3 +23,13 @@ public CSV包括cmd、out、tune以及通过连续相位跟踪计算的reference
 out的相位一致波形误差不超过8 mV；最终跳变100 us后tune必须保持在目标0.3 mV频率带内。
 测试输入边沿1 ps，最大观测步10 ns。既不能仅查lock flag，也不能只拟合最终频率。
 公开网表可自测，最终只提交dut.va，不读终评、不写文件、不执行系统命令。
+
+<!-- generated submission policy -->
+
+## 源码与文件合同
+
+终评只接收题目列出的 Verilog-A 文件。允许 include 的文件为 `disciplines.vams`、`constants.vams`、`dut.va`。不支持预处理宏定义、条件编译或宏引用，包括标准头文件中的常量宏；需要常量时请使用数值字面量或 Verilog-A parameter。普通数学函数不受此限制。
+
+候选不能读取外部文件、环境变量或内存数据文件，也不能执行系统命令。本题不允许打开文件。无法编译、超时或不能产生完整规定波形的提交计零分。
+
+<!-- end generated submission policy -->
