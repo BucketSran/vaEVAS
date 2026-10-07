@@ -57,6 +57,7 @@ impl Controller {
         trajectory: &Trajectory,
         next: &mut Frame,
         batch: &[ScheduledEvent],
+        pending: &[ScheduledEvent],
     ) -> Result<(), Error> {
         let time = batch[0].time;
         let consumed: Vec<_> = batch.iter().map(|event| event.event).collect();
@@ -74,13 +75,23 @@ impl Controller {
                 Some(&next.operators),
                 Some(&next.state_bounds),
             )?;
-            // Retain the physical seed for every requested post-event phase in
-            // this certificate window, including its execution representative.
-            // The surrounding transaction may later advance beyond that query;
-            // per-microevent accepted-time comparisons lose this obligation.
+            // Retain the physical seed when a requested post-event phase is
+            // earlier than its execution frame. At equality, the current frame
+            // suffices unless a certified physically due successor will advance
+            // this same transaction beyond the query. Window overlap alone is
+            // not permission to force an otherwise ordinary source-driven flow
+            // into an autonomous local epoch.
             let mut needs_closure = trajectory.config.output_times.iter().any(|&query| {
                 query >= window.lo
                     && query <= time
+                    && (query < time
+                        || pending.first().is_some_and(|event| {
+                            event.time > query
+                                && matches!(
+                                    event.physical_order_at(query),
+                                    Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                                )
+                        }))
                     && batch.iter().all(|event| {
                         matches!(
                             event.physical_order_at(query),
@@ -139,7 +150,7 @@ impl Controller {
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
         let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
-        self.prepare_physical_history(model, trajectory, next, batch)?;
+        self.prepare_physical_history(model, trajectory, next, batch, remaining)?;
         let before = GuardTrajectory::new_held(
             model,
             trajectory,

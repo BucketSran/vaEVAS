@@ -69,7 +69,13 @@ impl Controller {
         let time = calendar[self.event].time;
         let (mut next, records, end) =
             self.prepare_events_until(model, trajectory, calendar, Some(time))?;
-        self.prepare_physical_history(model, trajectory, &mut next, &calendar[self.event..end])?;
+        self.prepare_physical_history(
+            model,
+            trajectory,
+            &mut next,
+            &calendar[self.event..end],
+            &calendar[end..],
+        )?;
         let plan = match strategy {
             Strategy::Static => {
                 // The immutable static calendar keeps its original cursor.
@@ -144,6 +150,7 @@ impl Controller {
                     trajectory,
                     &mut following,
                     &future[..end],
+                    &future[end..],
                 )?;
                 let plan = match strategy {
                     Strategy::Static => CalendarPlan::Held(future[end..].to_vec()),
