@@ -1,0 +1,15 @@
+{
+  "status": "proposed_pending_narrow_review_not_admitted",
+  "paired_evidence": "runs/benchmark-first-batch-20261008/flash-event-only-pairs-v2/analysis.json",
+  "tasks": {
+    "optimize-flash-thresholds": {
+      "admitted": false,
+      "metric": "intrinsic_cpu_s",
+      "max_median_ratio": 0.97,
+      "min_winning_pairs": 4,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/current_reference_fullraw_proof.json"
+      ]
+    }
+  }
+}

@@ -21,7 +21,9 @@ Raw保留本地，没有声称公开下载；这次收据提取没有启动新�
 事件内线性候选保留原255比较，只把采样间不使用的live_code计算移至原cross事件；
 约0.78s编译与原基线接近，主负载进程3.021s值得进入预声明的新quiet五对。
 下一测量以CPU中位ratio≤.97、至少4/5对获胜为待审标准，并另外要求真实整体耗时
-收益；这里只记录主任务预声明，未宣布通过。保持旧二分`reference.va`不变，不覆盖
+收益；这里只记录这份功能收据生成时的预声明，未宣布通过。旧二分参考现已原样归档
+为`../reference_binary_original.va`，当前reference接线及后续实际五对见
+`EVENT_ONLY_ADMISSION.md`，不覆盖
 旧五对“intrinsic CPU省16.1%、进程反慢4.51%”结果。
 
 工程用途、公开合同与算法解释见`ANALYTIC_CANDIDATE.md`和`DIAGNOSTIC_FINDINGS.md`。

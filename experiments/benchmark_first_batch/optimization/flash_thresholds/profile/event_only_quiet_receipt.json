@@ -1,0 +1,1252 @@
+{
+  "kind": "compact_subset_of_verified_actual_quiet_pairs",
+  "new_simulations": false,
+  "input_analysis_sha256": "504d89e1aa58ad4cc2878bc45079b0ec69428a35dd97d22ae8f1c3f1aba67283",
+  "input_manifest_sha256": "37fdbe5161025e51a3700c95b44787eecd8955d48fd5a07105267b521bd7a1f0",
+  "source_analysis": "runs/benchmark-first-batch-20261008/flash-event-only-pairs-v2/analysis.json",
+  "prospective_hypothesis_sha256": "76cb66861b083ed9c0845df69b6ab2b1d82bc5da032a001fa37f54a7650fb4e4",
+  "host_start_sha256": "5a4308eca88ea1e2a2ee1f67b21ff40e912b3289dc1da6f37aeed7b71deb80ab",
+  "host_end_sha256": "d3ea25c631717d7bdae9a174b3a7be1f99d958e1546a6059b41a5e734279e7ee",
+  "raw_artifact_availability": "local-only; hashes are not downloadable URLs",
+  "native_clock_timezone": null,
+  "native_clock_precision_s": 1,
+  "native_clock_window": {
+    "first_start": "2026-10-08T04:17:04",
+    "last_end": "2026-10-08T04:20:33"
+  },
+  "records": [
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-22a780e80df444c28400-bank-throughput",
+      "archive_sha256": "32f5a40679740b30bc3f9e8bd7eff19d1abb61fece7c642282985d867a45e852",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "dcd74cc7af85534a30363bfe25e854a02f9cd633767d82d08f1812ae7023e00f",
+      "waveform_sha256": "8aa072f1cd403226d6d462d7e0add232ae4e136a6e21ab27b82681f117e2b115",
+      "solver_process_elapsed_s": 3.321814451366663,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "500fa79f7095014db8ed422c4149e7e0eafdb74db855e5d075813d416b91397b",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.5 %, 0.6 %, 0.7 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.23081,
+          "elapsed_s": 2.28938
+        },
+        "total_tran": {
+          "cpu_s": 4.23247,
+          "elapsed_s": 2.29004
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "23fe60688b195691cbd5e0b9e6b676b0230357195712f4e8cd3b20c6e1a91a4e"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.321814451366663,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "8aa072f1cd403226d6d462d7e0add232ae4e136a6e21ab27b82681f117e2b115",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "warmup",
+      "pair": 0,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:17:04",
+      "native_end_clock": "2026-10-08T04:17:07"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-3eb81b4ef3d447af841b-bank-throughput",
+      "archive_sha256": "e73d1a32e76bec7f86f2e355cc2c43b3ff2d31e7a6f530836631d1c097975f6d",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "835abe074324288648ca23e47d2fe137572ce944924b70db934c4d82c5efaf87",
+      "waveform_sha256": "c3a89b2d023a85fbe866cf0b302f29e667e8dd63938add90fe2927836637c117",
+      "solver_process_elapsed_s": 3.02107822149992,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "20bcb808669d4c0cd4b0f81771d21aae6206e3c95861bccf2f6d48638588bfc4",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.9 %, 0.7 %, 0.7 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.92853,
+          "elapsed_s": 1.99042
+        },
+        "total_tran": {
+          "cpu_s": 3.93019,
+          "elapsed_s": 1.99108
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "f6aa9e2db224890509a5b8fd9823bc265da66b3dcfd54ec72dd12f2772cfca5a"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.02107822149992,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "c3a89b2d023a85fbe866cf0b302f29e667e8dd63938add90fe2927836637c117",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "warmup",
+      "pair": 0,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:17:23",
+      "native_end_clock": "2026-10-08T04:17:26"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-56e878b407894cc38d73-bank-throughput",
+      "archive_sha256": "cb50261bdf09b423197ac757e5b6d2e7164f6b8d0db67dfb80ee7c2ea638e732",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "d959c5327280642b07f0830cd28f9b4fcad2c86ea1946795653861d9a45dcf03",
+      "waveform_sha256": "fea4e4bf7960bfca7c345341985ac66697c39f1f418c3960fa192f7f3af5c590",
+      "solver_process_elapsed_s": 3.3215389512479305,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "41c614303e4849261823206ed50a6dae4bff35d2143aaf0c7c167286c574b3ef",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.3 %, 0.8 %, 0.8 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.18145,
+          "elapsed_s": 2.25994
+        },
+        "total_tran": {
+          "cpu_s": 4.18212,
+          "elapsed_s": 2.26061
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "adef764781b4ea214c6fad2b011110055b85d08cabe1aac57f5435c54ed66607"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.3215389512479305,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "fea4e4bf7960bfca7c345341985ac66697c39f1f418c3960fa192f7f3af5c590",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 1,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:17:42",
+      "native_end_clock": "2026-10-08T04:17:45"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-b4505aef3ff646c7a595-bank-throughput",
+      "archive_sha256": "06b807d74b24e8b95ca3ca2e9d53993b12444f9c39b74bc18b9c87bf8a4ed464",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "81996c3bcd52bf3bdbd8ef86b34b35c0df61689d13171abeed62322fa228e43e",
+      "waveform_sha256": "8daccbd63334f074bdc56f1c4d7e640e5b5ca676abcb0930ddb679074b27f872",
+      "solver_process_elapsed_s": 3.0713290572166443,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "077fc781dc4c1ff2de7b512eadd54f8483809a8ef513caca5e4073b5135e0816",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.6 %, 0.9 %, 0.8 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.96201,
+          "elapsed_s": 2.02576
+        },
+        "total_tran": {
+          "cpu_s": 3.96368,
+          "elapsed_s": 2.02643
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "57e7d6d8b1aa85cf2fc1c04a8a53fde6a6aa57862367ee188ae247e008e59d4d"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.0713290572166443,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "8daccbd63334f074bdc56f1c4d7e640e5b5ca676abcb0930ddb679074b27f872",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 1,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:18:01",
+      "native_end_clock": "2026-10-08T04:18:04"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-25b1a7d28f03491bac50-bank-throughput",
+      "archive_sha256": "2fb79264df6c5ac9df21465ff6d3a94e42e22a7162362c75097661a3f0ae3046",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "5e0ed5d84d595b315e11bd8a98b8175d1785b9860bca2733d6b6dccd61c16c12",
+      "waveform_sha256": "4cfddae85d798ae483dad4a9f6b19691cbb936cd209346c158ac9d415e1c921c",
+      "solver_process_elapsed_s": 3.2710282020270824,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "f3486ab4360c8f75ad8cd3cb3641b463860889a4e61c893e028eccee949dd3c4",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 2.0 %, 1.0 %, 0.8 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.23196,
+          "elapsed_s": 2.22999
+        },
+        "total_tran": {
+          "cpu_s": 4.23367,
+          "elapsed_s": 2.2307
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "e51ef41750926abe136eb617ec135fe1c91e1a0fbcee910b18f2f7a67f586890"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.2710282020270824,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "4cfddae85d798ae483dad4a9f6b19691cbb936cd209346c158ac9d415e1c921c",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 2,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:18:21",
+      "native_end_clock": "2026-10-08T04:18:24"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-988aa9033c6946618def-bank-throughput",
+      "archive_sha256": "6e941f56048707d59e24685d4f4801130690ead1ba95b0ee9090c1f321592430",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "0208008c6fd31e5843e0fb9cddf64afb1dc6257ab9c8a4a1c8e2475034068770",
+      "waveform_sha256": "b7be5ca79d011722d16deb90a6322d33e8128462be1af732147b66350c442f2b",
+      "solver_process_elapsed_s": 3.0199845004826784,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "0f5fa177a12a7f8792520fb8900bf4ac8cce16f0fa84de68f833e492a7636aba",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.8 %, 1.0 %, 0.8 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.95878,
+          "elapsed_s": 2.01336
+        },
+        "total_tran": {
+          "cpu_s": 3.96047,
+          "elapsed_s": 2.01405
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "06ec39475f63091bfd4bc0bcff8198a59da53de16f028279911bdda7913383f5"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.0199845004826784,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "b7be5ca79d011722d16deb90a6322d33e8128462be1af732147b66350c442f2b",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 2,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:18:40",
+      "native_end_clock": "2026-10-08T04:18:43"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-aa7a37a5e8bb424c9656-bank-throughput",
+      "archive_sha256": "c83a4773f4e44c440e27e49523282a0985f4e413012db8c63a1681fee766f7fb",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "a132f203512fe956b26419dec63dc698efe689f3f81d5147b6b58c21f56d77d9",
+      "waveform_sha256": "7a0d3a39eb58e78c7b3759c01073286f434d2d21ecb8275fd37fbf201135fcad",
+      "solver_process_elapsed_s": 3.3217710442841053,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "8eaeb0ab72aba46c19e0d43d3bbe768c91357fee09ebca7d4e52e8db1e53f046",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.8 %, 1.1 %, 0.9 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.23663,
+          "elapsed_s": 2.29274
+        },
+        "total_tran": {
+          "cpu_s": 4.23833,
+          "elapsed_s": 2.29343
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "999fd141bf71a44d394429fac3b8742a0c7c82217cd86886350b3e75b484c049"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.3217710442841053,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "7a0d3a39eb58e78c7b3759c01073286f434d2d21ecb8275fd37fbf201135fcad",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 3,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:18:59",
+      "native_end_clock": "2026-10-08T04:19:03"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-85a63f8268b140f286ad-bank-throughput",
+      "archive_sha256": "447b9a9e5814b6ed456cc70eee5bf43749708e3294badef8b2309495fc2d468d",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "caf1e12e7efe59152b20c4dfc56847bad18c843dadf31657f3c0294cde19a6a7",
+      "waveform_sha256": "96f8935cc22886b9ba300f2cee6d42a1247a1f3133d40e47ef41e1f0d99b4ba2",
+      "solver_process_elapsed_s": 3.1213638242334127,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ce8742f179dc71bd7ae5adcb86d43a9a865a9aa5ae64a00bc8721aa846853d2e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.7 %, 1.1 %, 0.9 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.07509,
+          "elapsed_s": 2.07772
+        },
+        "total_tran": {
+          "cpu_s": 4.0758,
+          "elapsed_s": 2.07843
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "0fd1d0a80ee8761426e01572cae8bdedff186a45e346edf64bf71b70ec1beac1"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.1213638242334127,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "96f8935cc22886b9ba300f2cee6d42a1247a1f3133d40e47ef41e1f0d99b4ba2",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 3,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:19:17",
+      "native_end_clock": "2026-10-08T04:19:20"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-1514dfea47fc46a9acbb-bank-throughput",
+      "archive_sha256": "aa5c5106b3243d7b253ceed934bf3516812579c0b25b021e10102334dcc24999",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "10888a7f83b556baa3f12d70fdd7ee26e901fb4362258957eeda76077f4cc3f6",
+      "waveform_sha256": "b4cfdbfc8cbf65e5d83323b613f4dc59b92dfe1d84faeace22aeb66aabcd1855",
+      "solver_process_elapsed_s": 3.722963387146592,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ba53c13df9e2fe196993906d55a1c6f5ca3930e573765d2d29b4e199698a4420",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.8 %, 1.2 %, 0.9 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.19159,
+          "elapsed_s": 2.26041
+        },
+        "total_tran": {
+          "cpu_s": 4.19327,
+          "elapsed_s": 2.26108
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "0b9fc565a7d3afc626b0fdba7faa8af08a38e638ac0099e85b0522811fd858db"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.722963387146592,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "b4cfdbfc8cbf65e5d83323b613f4dc59b92dfe1d84faeace22aeb66aabcd1855",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 4,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:19:36",
+      "native_end_clock": "2026-10-08T04:19:39"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-b2db8c7e6a6a451eaf13-bank-throughput",
+      "archive_sha256": "88ea59a98bfc1ffdcccf1eb7add6ecbb3ddf3a371545b8ea2b16eacb491c8faa",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "d387e632cfa37c53d76eb90eaf4c059832d1bb9bf8f96f3179b6ccc7ff96afe6",
+      "waveform_sha256": "6e89f9fdb0f8832b8d0e347c7465b001e68751dae1bf1a7d1f908109f8a73680",
+      "solver_process_elapsed_s": 3.071027334779501,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "f63758e01faabc9bc966e8c8d61c0a8b670dd90badaacc8100c2bb42c867f8be",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.7 %, 1.2 %, 0.9 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.99834,
+          "elapsed_s": 2.0217
+        },
+        "total_tran": {
+          "cpu_s": 3.99905,
+          "elapsed_s": 2.02241
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "ee56dcb66a4a153b0505e52f0fe4e523a57677b326f8676c6c665d8b21b659cd"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.071027334779501,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "6e89f9fdb0f8832b8d0e347c7465b001e68751dae1bf1a7d1f908109f8a73680",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 4,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:19:54",
+      "native_end_clock": "2026-10-08T04:19:57"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-323c618b1a7f4c83b273-bank-throughput",
+      "archive_sha256": "5ad26daa22cb9d9fe23e364b329663bb69fffe85b0aeabd867f3567333a1f85d",
+      "candidate_bundle_sha256": "1e280fe4211b734b533932f0e24573a3f5dc9cb6470fc3e97b2df759f5c95caf",
+      "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "c928e58e10b79b58c5e36a01d332126c8bc8734bdb7a3a43a5376182a39ad077",
+      "waveform_sha256": "738d677683c4ac102f1501b01aa910f05dc097bdf96c267a1638e590cd3fbc68",
+      "solver_process_elapsed_s": 3.271805491298437,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "9ccca69e39ccb397b05cafc26bc89a2d0e5f01a442c4dc57994606ac87260843",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.9 %, 1.3 %, 1.0 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.20408,
+          "elapsed_s": 2.2564
+        },
+        "total_tran": {
+          "cpu_s": 4.20473,
+          "elapsed_s": 2.25704
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "85d057f16b8584d73e86784108458f07261d38f3199d54e998545bd5e9a25d19"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 3.271805491298437,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "738d677683c4ac102f1501b01aa910f05dc097bdf96c267a1638e590cd3fbc68",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 5,
+      "role": "baseline",
+      "native_start_clock": "2026-10-08T04:20:12",
+      "native_end_clock": "2026-10-08T04:20:15"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "condition_id": "bank-throughput",
+      "job_id": "bf-02b87fc4ba2b417caf4d-bank-throughput",
+      "archive_sha256": "09035e08310f6b315f43db92b06a3541bd4af01add744eb1dd9584cc3a6e28b1",
+      "candidate_bundle_sha256": "5360b9e5abccc248e1d78640bbedfeea469d46f7e47a5c890c139e80e4690ebc",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "criteria_sha256": "39ccbe31842cb6e9b3607a2470eb1543483ea3d7933df5069d4d051a8fff4bea",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_host_identity_sha256": "9c5371976ad7a986d60b4ae28290c9c7484108156cdb12d1d3d26cea6f385e8c",
+      "report_sha256": "e94ec760fb8cfb9dc1150ede8800ac292e24b8b75dc3d45fa1e4fb83da84253b",
+      "waveform_sha256": "97f27aa4e86b7e35eac9fb75b717ec68069bd5f3db0a34637d8c2e9f9cfc1b5b",
+      "solver_process_elapsed_s": 2.9709029998630285,
+      "source_identity": {
+        "cases.json": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+        "evaluate.py": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+        "verify.py": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+        "contract.json": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "instruction.md": "25f5e59a0316c73bd823ace3e2fb6a36ba6f4c993c5c75aeca7d08c5f9bb77f6"
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "7c783912ff661d9e151b7bfce55115904890f7431f7276411cfadddfd4072a3b",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.7 %, 1.3 %, 1.0 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.87824,
+          "elapsed_s": 1.94734
+        },
+        "total_tran": {
+          "cpu_s": 3.87988,
+          "elapsed_s": 1.94799
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "91026c4740121277acc634c70b8937454251f8bd9ace5de2b92ad0a917f7f54e"
+        }
+      },
+      "functional_result": {
+        "name": "bank-throughput",
+        "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+        "returncode": 0,
+        "elapsed_s": 2.9709029998630285,
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094,
+        "status": "graded",
+        "waveform_sha256": "97f27aa4e86b7e35eac9fb75b717ec68069bd5f3db0a34637d8c2e9f9cfc1b5b",
+        "waveform_rows": 152094
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "phase": "measurement",
+      "pair": 5,
+      "role": "reference",
+      "native_start_clock": "2026-10-08T04:20:30",
+      "native_end_clock": "2026-10-08T04:20:33"
+    }
+  ],
+  "paired_summaries": {
+    "optimize-flash-thresholds": {
+      "pairs": 5,
+      "measurements": 10,
+      "metrics": {
+        "intrinsic_cpu_s": {
+          "baseline": {
+            "values": [
+              4.18145,
+              4.23196,
+              4.23663,
+              4.19159,
+              4.20408
+            ],
+            "median": 4.20408,
+            "min": 4.18145,
+            "max": 4.23663
+          },
+          "reference": {
+            "values": [
+              3.96201,
+              3.95878,
+              4.07509,
+              3.99834,
+              3.87824
+            ],
+            "median": 3.96201,
+            "min": 3.87824,
+            "max": 4.07509
+          },
+          "paired_baseline_over_reference": [
+            1.0553860288086099,
+            1.0690061079423459,
+            1.0396408422881456,
+            1.0483325580115748,
+            1.0840174924708117
+          ]
+        },
+        "intrinsic_elapsed_s": {
+          "baseline": {
+            "values": [
+              2.25994,
+              2.22999,
+              2.29274,
+              2.26041,
+              2.2564
+            ],
+            "median": 2.25994,
+            "min": 2.22999,
+            "max": 2.29274
+          },
+          "reference": {
+            "values": [
+              2.02576,
+              2.01336,
+              2.07772,
+              2.0217,
+              1.94734
+            ],
+            "median": 2.0217,
+            "min": 1.94734,
+            "max": 2.07772
+          },
+          "paired_baseline_over_reference": [
+            1.1156010583682172,
+            1.1075962570032185,
+            1.1034884392507172,
+            1.1180738982044813,
+            1.1587088027771217
+          ]
+        },
+        "accepted_steps": {
+          "baseline": {
+            "values": [
+              152093,
+              152093,
+              152093,
+              152093,
+              152093
+            ],
+            "median": 152093,
+            "min": 152093,
+            "max": 152093
+          },
+          "reference": {
+            "values": [
+              152093,
+              152093,
+              152093,
+              152093,
+              152093
+            ],
+            "median": 152093,
+            "min": 152093,
+            "max": 152093
+          },
+          "paired_baseline_over_reference": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "solver_process_elapsed_s": {
+          "baseline": {
+            "values": [
+              3.3215389512479305,
+              3.2710282020270824,
+              3.3217710442841053,
+              3.722963387146592,
+              3.271805491298437
+            ],
+            "median": 3.3215389512479305,
+            "min": 3.2710282020270824,
+            "max": 3.722963387146592
+          },
+          "reference": {
+            "values": [
+              3.0713290572166443,
+              3.0199845004826784,
+              3.1213638242334127,
+              3.071027334779501,
+              2.9709029998630285
+            ],
+            "median": 3.071027334779501,
+            "min": 2.9709029998630285,
+            "max": 3.1213638242334127
+          },
+          "paired_baseline_over_reference": [
+            1.0814663259357942,
+            1.0831274801259014,
+            1.0642050178498212,
+            1.2122859816270246,
+            1.1012831760071875
+          ]
+        }
+      }
+    }
+  },
+  "scope": "separate frozen quiet packets, not formal same-job verifier execution"
+}
