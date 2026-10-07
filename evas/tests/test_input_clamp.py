@@ -62,6 +62,37 @@ def run(times,step=2e-10):
     p=compile_sources({'dut.va':SOURCE},[Instance('dut','paper_vco',{n:n for n in ('ctl','freq','phase','out')},{})])
     return transient(p,{'ctl':[[0,-1],[2e-6,0],[4e-6,2],[6e-6,0],[8e-6,-1]]},[t*1e-6 for t in times],stop=8e-6,max_step=step,kernel=KERNEL,vabstol=1e-7,reltol=1e-5)
 class InputClamp(unittest.TestCase):
+    def test_cancelled_clamp_does_not_expand_direct_phase_certification(self):
+        for extra in ['', '+0.0*f', '+(f-f)']:
+            with self.subTest(extra=extra):
+                source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
+                             'V(y,r)<+idtmod(V(u)/3'+extra+',0.125,1,0);',declarations='real f;')
+                program=compile_sources({'cancel.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
+                with self.assertRaises(KernelError) as error:
+                    transient(program,{'u':[[0,1.5],[2,1.5]]},[1.7499999999999998],
+                              stop=2,max_step=.125,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+                self.assertIn('waveform_accuracy',str(error.exception))
+
+    def test_two_instances_certify_distinct_sides_at_same_wrap_time(self):
+        source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
+                     'V(y,r)<+idtmod(f,initial,1,0);',
+                     declarations='parameter real initial=0.5; real f;')
+        lower_ic=math.nextafter(.5,0)
+        program=compile_sources({'instances.va':source},[
+            Instance('A','m',{'u':'a','y':'pa','r':'0'},{'initial':.5}),
+            Instance('B','m',{'u':'b','y':'pb','r':'0'},{'initial':lower_ic})])
+        inputs={name:[[0,-.25],[1,1.25],[2,1.25]] for name in ('a','b')}
+        # Symmetry makes the exact area 1/2 despite roots at 1/3 and 2/3.
+        # A lands on the lower endpoint; B is strictly below the upper one.
+        result=transient(program,inputs,[1],stop=2,max_step=.125,kernel=KERNEL,
+                         vabstol=1e-12,reltol=1e-12)
+        row=dict(zip(result['nodes'],result['solutions'][0]['voltages']))
+        self.assertEqual(row['pa'],0)
+        self.assertGreater(row['pb'],.99)
+        self.assertLess(row['pb'],1)
+        exact=F(1,2)+F.from_float(lower_ic)
+        self.assertLessEqual(abs(F.from_float(row['pb'])-exact),F(1,2**53))
+
     def test_original_vco_source_independent_phase_and_sine(self):
         times=[0,.6,1.2,1.6,2,2.6,3.2,3.7,4,4.8,5.2,6,6.4,6.8,7.4,8]
         result=run(times)

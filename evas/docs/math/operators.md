@@ -450,7 +450,8 @@ phase 电压预算解决包裹边界问题；确实无法证明的包裹侧仍�
 至少一侧为常数，拒绝以端点线性插值代表二次函数。来源元数据仅存于内部 Trajectory，
 不改变公开 IR，也不证明 decimal Verilog-A 源与已折叠 binary64 IR 等价。
 
-只有带有 clamp 来源的 `IdtMod`，且常规 raw enclosure 跨 turn 时，才请求此证书。
+只有精确仿射归约后仍有非零 clamp 系数的 `IdtMod`，且常规 raw enclosure 跨 turn 时，才请求此证书。
+`0*clip` 或 `clip-clip` 不会开启该路径；结构依赖和来源有效性仍逐项检查，不能用相消隐藏未知来源。
 以有理梯形面积计算 `r=ic+∫g`，以 `k=floor((r-offset)/modulus)` 得到
 `p=r-k·modulus`。精确相等返回 offset；负相位和非零 offset 使用同一公式。
 返回 nominal 与由相邻 binary64 值构成的外向包围来自同一个 p，均重新与有理参考比较。

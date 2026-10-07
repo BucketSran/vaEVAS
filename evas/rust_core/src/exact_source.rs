@@ -4,6 +4,7 @@ use crate::interval::Interval as I;
 use crate::ir::Expression;
 use num_rational::BigRational as R;
 use num_traits::{Signed, ToPrimitive, Zero};
+use std::collections::BTreeMap;
 
 pub(crate) const MAX_POINTS: usize = 512;
 pub(crate) const MAX_BITS: u64 = 4096;
@@ -85,6 +86,48 @@ impl Curve {
             }
         }
         varying(expr, 0, &mut 0)?;
+        // Activation follows nonzero affine dependence, not syntax: 0*clip
+        // and clip-clip must not expand the existing direct-PWL contract.
+        // Structural dependency validation and source evaluation below still
+        // run, including for cancelled terms with unavailable provenance.
+        fn coefficients(e: &Expression, budget: &mut Budget) -> Option<(R, BTreeMap<usize, R>)> {
+            match e {
+                Expression::Affine { constant, terms } => {
+                    let mut out = BTreeMap::new();
+                    for term in terms.iter().filter(|t| t.node != 0) {
+                        let old = out.remove(&term.node).unwrap_or_else(R::zero);
+                        out.insert(term.node, budget.check(old + binary(term.coefficient)?)?);
+                    }
+                    out.retain(|_, value| !value.is_zero());
+                    Some((binary(*constant)?, out))
+                }
+                Expression::Add { left, right } => {
+                    let (a, mut aa) = coefficients(left, budget)?;
+                    let (b, bb) = coefficients(right, budget)?;
+                    for (node, value) in bb {
+                        let old = aa.remove(&node).unwrap_or_else(R::zero);
+                        aa.insert(node, budget.check(old + value)?);
+                    }
+                    aa.retain(|_, value| !value.is_zero());
+                    Some((budget.check(a + b)?, aa))
+                }
+                Expression::Multiply { left, right } => {
+                    let (a, aa) = coefficients(left, budget)?;
+                    let (b, bb) = coefficients(right, budget)?;
+                    if !aa.is_empty() && !bb.is_empty() {
+                        return None;
+                    }
+                    let constant = budget.check(&a * &b)?;
+                    let (scale, mut terms) = if aa.is_empty() { (a, bb) } else { (b, aa) };
+                    for value in terms.values_mut() {
+                        *value = budget.check(&scale * &*value)?;
+                    }
+                    terms.retain(|_, value| !value.is_zero());
+                    Some((constant, terms))
+                }
+                _ => None,
+            }
+        }
         // Only referenced sources contribute knots/uncertainty. Ground is exact.
         fn dependencies(
             e: &Expression,
@@ -151,13 +194,15 @@ impl Curve {
         }
         let mut deps = Vec::new();
         dependencies(expr, &mut deps, 0, &mut 0)?;
+        let mut budget = Budget(0);
+        let (_, nonzero) = coefficients(expr, &mut budget)?;
         let stop = binary(stop)?;
         let mut knots = vec![R::zero(), stop.clone()];
         let mut has_clamp = false;
         for node in deps {
             let k = nodes.iter().position(|n| *n == node)?;
             let curve = sources.get(k)?.as_ref()?;
-            has_clamp |= curve.1;
+            has_clamp |= curve.1 && nonzero.contains_key(&node);
             knots.extend(curve.0.iter().map(|p| p.0.clone()).filter(|t| *t < stop));
             if knots.len() > MAX_POINTS * MAX_POINTS {
                 return None;
@@ -168,7 +213,6 @@ impl Curve {
         if knots.len() > MAX_POINTS {
             return None;
         }
-        let mut budget = Budget(0);
         Some(Self(
             knots
                 .into_iter()
