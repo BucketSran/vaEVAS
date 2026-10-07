@@ -32,12 +32,16 @@ def write(rel, text):
 
 
 def netlist(c):
+    # Synthetic observations declare ideal control crossings at a and b. Use a
+    # narrow ramp centered there, and establish vin while isolated in hold.
+    # Simultaneous 1 ns vin/control ramps leave a persistent acquisition error,
+    # even outside the control-edge observation guard.
     a, b, stop, amp, second = [c[k] for k in ("hold_start", "track_again", "stop", "amplitude", "second_amplitude")]
     return f'''simulator lang=spectre
 global 0
 ahdl_include "dut.va"
-Vinput (vin 0) vsource type=pwl wave=[0 {amp} {b} {amp} {b+1e-9} {second} {stop} {second}]
-Vtrack (track 0) vsource type=pwl wave=[0 1 {a} 1 {a+1e-9} 0 {b} 0 {b+1e-9} 1 {stop} 1]
+Vinput (vin 0) vsource type=pwl wave=[0 {amp} {b-10.001e-9} {amp} {b-10e-9} {second} {stop} {second}]
+Vtrack (track 0) vsource type=pwl wave=[0 1 {a-0.5e-12} 1 {a+0.5e-12} 0 {b-0.5e-12} 0 {b+0.5e-12} 1 {stop} 1]
 DUT (vin track out) identified_sh
 simulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13
 tran tran stop={stop} maxstep=2e-8 errpreset=conservative
@@ -54,9 +58,9 @@ def build():
         w = csv.writer(buf,lineterminator="\n")
         w.writerow(["time_s", "vin_V", "track_V", "out_V"])
         # Uniform observations plus controlled event guards, no random split.
-        times = sorted(set([j*c["stop"]/800 for j in range(801)] + [a-2e-9, a+2e-9, c["track_again"]-2e-9, c["track_again"]+2e-9]))
+        times = sorted(set([j*c["stop"]/800 for j in range(801)] + [a-2e-9, a+2e-9, c["track_again"]-2e-9, c["track_again"]+2e-9, c["track_again"]-10.002e-9, c["track_again"]-9.998e-9]))
         for t in times:
-            w.writerow([f"{t:.12g}", amp if t<c["track_again"] else second, int(t<a or t>=c["track_again"]), f"{value(c,t):.12g}"])
+            w.writerow([f"{t:.12g}", amp if t<c["track_again"]-10e-9 else second, int(t<a or t>=c["track_again"]), f"{value(c,t):.12g}"])
         write(f"environment/public/data/{c['name']}.csv", buf.getvalue())
         write(f"environment/public/{c['name']}.scs", netlist(c))
     write("environment/public/experiments.json", json.dumps(public, indent=2)+"\n")
@@ -69,7 +73,7 @@ def build():
 脚本只比较公开波形，不读取终评。控制边沿5 ns内不比较。
 CSV比较记录不等于实际VA仿真，必须保留后端执行身份。
 '''.replace(".sc s",".scs"))
-    write("environment/public/provenance.json", json.dumps(dict(provenance="behavioral_synthetic", creator="vaEVAS repository authors", artifact="original voltage-domain sample-and-hold observations", source_role="TI LF398 datasheet motivates acquisition/hold-step/droop; it supplies no numeric trace", conditions=dict(initial_output_V=0, fixed_temperature=True, fixed_load=True, time_unit="s", voltage_unit="V", observation_precision="12 significant decimal digits", event_time_rule="training uses ideal instantaneous control events; Spectre test inputs use 1 ns edges; do not score inside 5 ns event guards"), split="complete experiments, never adjacent samples"), indent=2)+"\n")
+    write("environment/public/provenance.json", json.dumps(dict(provenance="behavioral_synthetic", creator="vaEVAS repository authors", artifact="original voltage-domain sample-and-hold observations", source_role="TI LF398 datasheet motivates acquisition/hold-step/droop; it supplies no numeric trace", conditions=dict(initial_output_V=0, fixed_temperature=True, fixed_load=True, time_unit="s", voltage_unit="V", observation_precision="12 significant decimal digits", event_time_rule="training uses ideal instantaneous control events; Spectre uses 1 ps control edges centered at the declared event times and establishes the second input 10 ns before reacquisition, while holding; do not score inside 5 ns control-event guards"), split="complete experiments, never adjacent samples"), indent=2)+"\n")
     hidden=[]
     for name,amp,a,h,second in [("short-negative",-0.92,3e-6,95e-6,0.7),("long-positive",0.73,21e-6,180e-6,-0.88),("mid-positive",0.17,6.5e-6,65e-6,-0.43),("long-negative",-0.48,15e-6,145e-6,0.31)]:
         c=dict(name=name, amplitude=amp, second_amplitude=second, hold_start=a, track_again=a+h, stop=a+h+28e-6, signals=["out","vin","track"])

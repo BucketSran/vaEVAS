@@ -1,6 +1,7 @@
 """Behavior tests for criteria. These are synthetic row tests, not VA execution."""
 import importlib.util
 import json
+import math
 from pathlib import Path
 import sys
 import unittest
@@ -46,6 +47,14 @@ class SampleHoldCriteria(unittest.TestCase):
         for r in rows:
             if start<r["time"]<c["track_again"]:
                 r["out"]+=12*(r["time"]-start)
+        self.assertFalse(evaluate(rows,c)["passed"])
+
+    def test_float_endpoint_identity_and_real_truncation(self):
+        c=self.cases[-1]
+        rows=self.rows(c)
+        rows[-1]["time"]=math.nextafter(rows[-1]["time"], -math.inf)
+        self.assertTrue(evaluate(rows,c)["passed"])
+        rows[-1]["time"]-=1e-12
         self.assertFalse(evaluate(rows,c)["passed"])
 
     def test_truncated_nonfinite_and_bad_time_rejected(self):

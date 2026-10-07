@@ -1,8 +1,8 @@
 simulator lang=spectre
 global 0
 ahdl_include "dut.va"
-Vinput (vin 0) vsource type=pwl wave=[0 -0.25 6.8e-05 -0.25 6.8001e-05 -0.8 9.2e-05 -0.8]
-Vtrack (track 0) vsource type=pwl wave=[0 1 1.8e-05 1 1.8001e-05 0 6.8e-05 0 6.8001e-05 1 9.2e-05 1]
+Vinput (vin 0) vsource type=pwl wave=[0 -0.25 6.7989999e-05 -0.25 6.799e-05 -0.8 9.2e-05 -0.8]
+Vtrack (track 0) vsource type=pwl wave=[0 1 1.79999995e-05 1 1.8000000500000002e-05 0 6.79999995e-05 0 6.80000005e-05 1 9.2e-05 1]
 DUT (vin track out) identified_sh
 simulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13
 tran tran stop=9.2e-05 maxstep=2e-8 errpreset=conservative

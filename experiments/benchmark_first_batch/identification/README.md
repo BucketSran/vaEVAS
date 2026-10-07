@@ -32,3 +32,7 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/identificat
 
 每题public selfcheck接受导出的time_s/out_V CSV，PLL还需tune_V。
 公开CSV校准与终评分别维护，不能在解题时开放隐藏coefficients或case包。
+
+SH 首次实际后端失败的可重放诊断见 `sh-v3-diagnosis.json` 与
+`diagnose_sh_archive.py`。修正刺激后需重新准备候选并冻结新的任务、checker
+和刺激身份，由协调者调度实际 Spectre；原归档不能算作修正版通过。

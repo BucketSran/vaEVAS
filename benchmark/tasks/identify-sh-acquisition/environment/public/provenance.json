@@ -10,7 +10,7 @@
     "time_unit": "s",
     "voltage_unit": "V",
     "observation_precision": "12 significant decimal digits",
-    "event_time_rule": "training uses ideal instantaneous control events; Spectre test inputs use 1 ns edges; do not score inside 5 ns event guards"
+    "event_time_rule": "training uses ideal instantaneous control events; Spectre uses 1 ps control edges centered at the declared event times and establishes the second input 10 ns before reacquisition, while holding; do not score inside 5 ns control-event guards"
   },
   "split": "complete experiments, never adjacent samples"
 }

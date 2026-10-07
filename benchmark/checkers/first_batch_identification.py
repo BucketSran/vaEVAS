@@ -17,8 +17,17 @@ def evaluate(rows, case, work=None):
         return dict(passed=False, failures=["nonfinite or non-increasing waveform"])
 
     def sample(t,node="out"):
-        if t < times[0] or t > times[-1]:
-            raise ValueError(f"observation {t} outside trace")
+        # Decimal PSF time and arithmetic-built probe time can represent the
+        # same endpoint by adjacent floats. Clamp only one representational ULP;
+        # this does not permit a missing physical observation interval.
+        if t < times[0]:
+            if times[0] - t > max(math.ulp(t), math.ulp(times[0])):
+                raise ValueError(f"observation {t} outside trace")
+            t = times[0]
+        elif t > times[-1]:
+            if t - times[-1] > max(math.ulp(t), math.ulp(times[-1])):
+                raise ValueError(f"observation {t} outside trace")
+            t = times[-1]
         j = max(0, min(bisect.bisect_right(times, t)-1, len(rows)-2))
         a, b = rows[j], rows[j+1]
         return a[node]+(b[node]-a[node])*(t-a["time"])/(b["time"]-a["time"])

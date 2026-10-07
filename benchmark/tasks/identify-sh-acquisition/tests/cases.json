@@ -7,7 +7,7 @@
     "track_again": 9.800000000000001e-05,
     "stop": 0.000126,
     "signals": ["out", "vin", "track"],
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 -0.92 9.800000000000001e-05 -0.92 9.800100000000001e-05 0.7 0.000126 0.7]\nVtrack (track 0) vsource type=pwl wave=[0 1 3e-06 1 3.001e-06 0 9.800000000000001e-05 0 9.800100000000001e-05 1 0.000126 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.000126 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 -0.92 9.7989999e-05 -0.92 9.799000000000002e-05 0.7 0.000126 0.7]\nVtrack (track 0) vsource type=pwl wave=[0 1 2.9999995e-06 1 3.0000005e-06 0 9.799999950000001e-05 0 9.800000050000001e-05 1 0.000126 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.000126 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
     "probes": [
       {"time": 0.0, "expected": -0.0, "tolerance": 8e-05, "metric": "acquisition"},
       {"time": 9.966666666666667e-08, "expected": -0.02445118352685982, "tolerance": 8e-05, "metric": "acquisition"},
@@ -116,7 +116,7 @@
     "track_again": 0.000201,
     "stop": 0.000229,
     "signals": ["out", "vin", "track"],
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 0.73 0.000201 0.73 0.000201001 -0.88 0.000229 -0.88]\nVtrack (track 0) vsource type=pwl wave=[0 1 2.1e-05 1 2.1000999999999998e-05 0 0.000201 0 0.000201001 1 0.000229 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.000229 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 0.73 0.00020098999900000002 0.73 0.00020099 -0.88 0.000229 -0.88]\nVtrack (track 0) vsource type=pwl wave=[0 1 2.0999999499999997e-05 1 2.10000005e-05 0 0.0002009999995 0 0.0002010000005 1 0.000229 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.000229 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
     "probes": [
       {"time": 0.0, "expected": 0.0, "tolerance": 8e-05, "metric": "acquisition"},
       {"time": 6.996666666666665e-07, "expected": 0.12577573116057014, "tolerance": 8e-05, "metric": "acquisition"},
@@ -225,7 +225,7 @@
     "track_again": 7.149999999999999e-05,
     "stop": 9.949999999999999e-05,
     "signals": ["out", "vin", "track"],
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 0.17 7.149999999999999e-05 0.17 7.150099999999999e-05 -0.43 9.949999999999999e-05 -0.43]\nVtrack (track 0) vsource type=pwl wave=[0 1 6.5e-06 1 6.500999999999999e-06 0 7.149999999999999e-05 0 7.150099999999999e-05 1 9.949999999999999e-05 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=9.949999999999999e-05 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 0.17 7.148999899999999e-05 0.17 7.149e-05 -0.43 9.949999999999999e-05 -0.43]\nVtrack (track 0) vsource type=pwl wave=[0 1 6.4999995e-06 1 6.500000499999999e-06 0 7.149999949999999e-05 0 7.150000049999999e-05 1 9.949999999999999e-05 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=9.949999999999999e-05 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
     "probes": [
       {"time": 0.0, "expected": 0.0, "tolerance": 8e-05, "metric": "acquisition"},
       {"time": 2.1633333333333332e-07, "expected": 0.009654643277095074, "tolerance": 8e-05, "metric": "acquisition"},
@@ -334,7 +334,7 @@
     "track_again": 0.00016,
     "stop": 0.00018800000000000002,
     "signals": ["out", "vin", "track"],
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 -0.48 0.00016 -0.48 0.000160001 0.31 0.00018800000000000002 0.31]\nVtrack (track 0) vsource type=pwl wave=[0 1 1.5e-05 1 1.5001000000000001e-05 0 0.00016 0 0.000160001 1 0.00018800000000000002 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.00018800000000000002 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVinput (vin 0) vsource type=pwl wave=[0 -0.48 0.00015998999900000002 -0.48 0.00015999000000000002 0.31 0.00018800000000000002 0.31]\nVtrack (track 0) vsource type=pwl wave=[0 1 1.49999995e-05 1 1.50000005e-05 0 0.00015999999950000002 0 0.0001600000005 1 0.00018800000000000002 1]\nDUT (vin track out) identified_sh\nsimulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13\ntran tran stop=0.00018800000000000002 maxstep=2e-8 errpreset=conservative\nsave out vin track\n",
     "probes": [
       {"time": 0.0, "expected": -0.0, "tolerance": 8e-05, "metric": "acquisition"},
       {"time": 4.996666666666667e-07, "expected": -0.060635253119120706, "tolerance": 8e-05, "metric": "acquisition"},
