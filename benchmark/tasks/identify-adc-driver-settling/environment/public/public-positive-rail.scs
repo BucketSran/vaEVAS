@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+Vvin (vin 0) vsource type=pwl wave=[0 1 1.2e-06 1 1.200001e-06 -0.2 2.5e-06 -0.2]
+DUT (vin out) identified_driver
+simulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13
+tran tran stop=2.5e-06 maxstep=2e-9 errpreset=conservative
+save out vin

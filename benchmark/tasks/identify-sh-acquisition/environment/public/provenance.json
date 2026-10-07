@@ -1,0 +1,16 @@
+{
+  "provenance": "behavioral_synthetic",
+  "creator": "vaEVAS repository authors",
+  "artifact": "original voltage-domain sample-and-hold observations",
+  "source_role": "TI LF398 datasheet motivates acquisition/hold-step/droop; it supplies no numeric trace",
+  "conditions": {
+    "initial_output_V": 0,
+    "fixed_temperature": true,
+    "fixed_load": true,
+    "time_unit": "s",
+    "voltage_unit": "V",
+    "observation_precision": "12 significant decimal digits",
+    "event_time_rule": "training uses ideal instantaneous control events; Spectre test inputs use 1 ns edges; do not score inside 5 ns event guards"
+  },
+  "split": "complete experiments, never adjacent samples"
+}
