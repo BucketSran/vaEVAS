@@ -18,6 +18,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'verification_measurement'))
 from regrade_measurement import (SealedArchive, canonical, digest, load_module,
                                  require, require_same_case, verify_seal)
+TOOL_SHA256 = digest(Path(__file__).read_bytes())
 
 ORDER = [('warmup', r) for r in ('baseline', 'candidate')] + [
     (f'pair-{i:02d}', r) for i in range(1, 6) for r in ('baseline', 'candidate')]
@@ -373,7 +374,7 @@ def audit_matrix(matrix_path, plan_path, root):
                          'complete':complete,'classifications':classifications,
                          'calibration_expectation_met':bool(clean and expected) if complete else None})
     return {'schema_version':1,'mode':'sealed_formal_optimization_audit_no_simulation',
-            'tool_sha256':digest(Path(__file__).read_bytes()), 'matrix_sha256':digest(matrix_path.read_bytes()),
+            'tool_sha256':TOOL_SHA256, 'matrix_sha256':digest(matrix_path.read_bytes()),
             'plan_sha256':digest(plan_path.read_bytes()), 'python_version':sys.version.split()[0],
             'records':records,'pending':pending,'classification_counts':dict(Counter(r['classification'] for r in records)),
             'variant_outcomes':outcomes,
