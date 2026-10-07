@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "five original dynamic identification tasks",
-  "completed_backend_calibrated_count": 0,
+  "completed_backend_calibrated_count": 5,
   "task_count": 5,
   "tasks": [
     {
@@ -26,8 +26,8 @@
         "public_data": "implemented",
         "reference_fitting": "executed locally",
         "row_criteria": "13 tests passed across family suite; not VA execution",
-        "spectre_reference": "pending coordinator",
-        "spectre_semantic_negatives": "pending coordinator",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
@@ -36,7 +36,18 @@
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
       "sources": "benchmark/tasks/identify-sh-acquisition/SOURCE.md",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 15,
+          "graded_pass": 1
+        }
+      }
     },
     {
       "task_id": "identify-sc-clocked-filter",
@@ -61,8 +72,8 @@
         "public_data": "implemented",
         "reference_fitting": "executed locally",
         "row_criteria": "13 tests passed across family suite; not VA execution",
-        "spectre_reference": "pending coordinator",
-        "spectre_semantic_negatives": "pending coordinator",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
@@ -71,7 +82,17 @@
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
       "sources": "benchmark/tasks/identify-sc-clocked-filter/SOURCE.md",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 5,
+        "semantic_negative_conditions": 20,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 20
+        }
+      }
     },
     {
       "task_id": "identify-adc-driver-settling",
@@ -95,8 +116,8 @@
         "public_data": "implemented",
         "reference_fitting": "executed locally",
         "row_criteria": "13 tests passed across family suite; not VA execution",
-        "spectre_reference": "pending coordinator",
-        "spectre_semantic_negatives": "pending coordinator",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
@@ -105,7 +126,18 @@
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
       "sources": "benchmark/tasks/identify-adc-driver-settling/SOURCE.md",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_pass": 4,
+          "graded_rejection": 12
+        }
+      }
     },
     {
       "task_id": "identify-comparator-overdrive",
@@ -129,8 +161,8 @@
         "public_data": "implemented",
         "reference_fitting": "executed locally",
         "row_criteria": "13 tests passed across family suite; not VA execution",
-        "spectre_reference": "pending coordinator",
-        "spectre_semantic_negatives": "pending coordinator",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
@@ -139,7 +171,18 @@
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
       "sources": "benchmark/tasks/identify-comparator-overdrive/SOURCE.md",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 11,
+          "graded_pass": 5
+        }
+      }
     },
     {
       "task_id": "identify-pll-hop-dynamics",
@@ -165,8 +208,8 @@
         "public_data": "implemented",
         "reference_fitting": "executed locally",
         "row_criteria": "13 tests passed across family suite; not VA execution",
-        "spectre_reference": "pending coordinator",
-        "spectre_semantic_negatives": "pending coordinator",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
@@ -175,7 +218,17 @@
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
       "sources": "benchmark/tasks/identify-pll-hop-dynamics/SOURCE.md",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 6,
+        "semantic_negative_conditions": 24,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 24
+        }
+      }
     }
   ]
 }

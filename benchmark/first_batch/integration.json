@@ -6,65 +6,119 @@
       "path": "benchmark/tasks/integrate-tdc-measurement-chain",
       "source_group": "original-tdc-chain",
       "construction": "reference-and-semantic-mutants-authored",
-      "spectre_calibration": "pending",
+      "spectre_calibration": "actual_spectre_calibration_audited",
       "agentic": "pending",
       "release_set": "spectre-extension-candidate",
       "engineering_action": "extension-integration",
       "context_level": "complete-repository",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 12,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6,
+          "graded_pass": 6
+        }
+      }
     },
     {
       "id": "integrate-pipeline-adc-alignment",
       "path": "benchmark/tasks/integrate-pipeline-adc-alignment",
       "source_group": "original-pipeline-adc",
       "construction": "reference-and-semantic-mutants-authored",
-      "spectre_calibration": "pending",
+      "spectre_calibration": "actual_spectre_calibration_audited",
       "agentic": "pending",
       "release_set": "spectre-extension-candidate",
       "engineering_action": "extension-integration",
       "context_level": "bounded-small-project",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 12,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 10,
+          "graded_pass": 2
+        }
+      }
     },
     {
       "id": "integrate-iq-baseband-calibration",
       "path": "benchmark/tasks/integrate-iq-baseband-calibration",
       "source_group": "original-iq-baseband",
       "construction": "reference-and-semantic-mutants-authored",
-      "spectre_calibration": "pending",
+      "spectre_calibration": "actual_spectre_calibration_audited",
       "agentic": "pending",
       "release_set": "spectre-extension-candidate",
       "engineering_action": "extension-integration",
       "context_level": "bounded-small-project",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 12,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 10,
+          "graded_pass": 2
+        }
+      }
     },
     {
       "id": "integrate-pll-hop-reacquisition",
       "path": "benchmark/tasks/integrate-pll-hop-reacquisition",
       "source_group": "original-hopping-pll",
       "construction": "reference-and-semantic-mutants-authored",
-      "spectre_calibration": "pending",
+      "spectre_calibration": "actual_spectre_calibration_audited",
       "agentic": "pending",
       "release_set": "spectre-extension-candidate",
       "engineering_action": "extension-integration",
       "context_level": "bounded-small-project",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 12,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 12
+        }
+      }
     },
     {
       "id": "integrate-agc-attack-release",
       "path": "benchmark/tasks/integrate-agc-attack-release",
       "source_group": "original-receiver-agc",
       "construction": "reference-and-semantic-mutants-authored",
-      "spectre_calibration": "pending",
+      "spectre_calibration": "actual_spectre_calibration_audited",
       "agentic": "pending",
       "release_set": "spectre-extension-candidate",
       "engineering_action": "extension-integration",
       "context_level": "bounded-small-project",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 12,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 12
+        }
+      }
     }
-  ]
+  ],
+  "completed_backend_calibrated_count": 5
 }

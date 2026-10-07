@@ -3,103 +3,204 @@
     {
       "id": "verify-sar-flow",
       "source_group": "first-batch-verify-sar-flow",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/verify-sar-flow",
       "engineering_action": "verification-tools",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 6,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "verify-nonoverlap-stimulus",
       "source_group": "first-batch-verify-nonoverlap-stimulus",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/verify-nonoverlap-stimulus",
       "engineering_action": "verification-tools",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 4,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 4
+        }
+      }
     },
     {
       "id": "verify-comparator-overdrive",
       "source_group": "first-batch-verify-comparator-overdrive",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/verify-comparator-overdrive",
       "engineering_action": "verification-tools",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "verify-pll-lock-checker",
       "source_group": "first-batch-verify-pll-lock-checker",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/verify-pll-lock-checker",
       "engineering_action": "verification-tools",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "verify-sh-settling-checker",
       "source_group": "original-periodic-sh-observation",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/verify-sh-settling-checker",
       "engineering_action": "verification-tools",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "va08-adc-linearity",
       "source_group": "repository-owned-original-adc-linearity",
-      "status": "existing_calibration_reference",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/va08-adc-linearity",
       "note": "Existing task referenced without copying or changing; Agentic status stays separate.",
       "engineering_action": "measurement-characterization",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 7,
+        "semantic_negative_conditions": 7,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 7
+        }
+      }
     },
     {
       "id": "measure-adc-spectrum",
       "source_group": "first-batch-measure-adc-spectrum",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/measure-adc-spectrum",
       "engineering_action": "measurement-characterization",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "measure-comparator-delay-hysteresis",
       "source_group": "first-batch-measure-comparator-delay-hysteresis",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/measure-comparator-delay-hysteresis",
       "engineering_action": "measurement-characterization",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "measure-sh-acquisition-droop",
       "source_group": "original-periodic-sh-observation",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/measure-sh-acquisition-droop",
       "engineering_action": "measurement-characterization",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     },
     {
       "id": "measure-pll-relock-jitter",
       "source_group": "first-batch-measure-pll-relock-jitter",
-      "status": "implemented_pending_spectre",
+      "status": "actual_spectre_calibration_audited",
       "path": "benchmark/tasks/measure-pll-relock-jitter",
       "engineering_action": "measurement-characterization",
       "context_level": "bounded-work-unit",
       "provenance": "original-engineering-requirement",
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 3,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 3,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 3
+        }
+      }
     }
-  ]
+  ],
+  "completed_backend_calibrated_count": 10
 }
