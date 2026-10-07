@@ -1,0 +1,32 @@
+[
+  {
+    "case": "linear_pwl_near",
+    "control": "actual explicit colon aliases positive",
+    "result": "P"
+  },
+  {
+    "case": "linear_pwl_near",
+    "control": "missing final callback fault",
+    "result": "F"
+  },
+  {
+    "case": "linear_pwl_near",
+    "control": "missing observer",
+    "result": "I"
+  },
+  {
+    "case": "nonlinear_near",
+    "control": "actual explicit colon aliases positive",
+    "result": "P"
+  },
+  {
+    "case": "nonlinear_near",
+    "control": "missing final callback fault",
+    "result": "F"
+  },
+  {
+    "case": "nonlinear_near",
+    "control": "missing observer",
+    "result": "I"
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "accepted_steps": 594,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "1.9999999999999999e-06"
+      },
+      {
+        "changes": {
+          "m": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "2.9999999994010809e-06"
+      },
+      {
+        "changes": {
+          "n": {
+            "after": "2",
+            "before": "1"
+          }
+        },
+        "time_token": "3.9999999999999998e-06"
+      },
+      {
+        "changes": {
+          "m": {
+            "after": "2",
+            "before": "1"
+          },
+          "n": {
+            "after": "3",
+            "before": "2"
+          }
+        },
+        "time_token": "6.0000000000000002e-06"
+      }
+    ],
+    "actual_named_signals": [
+      "Xdut.z",
+      "Xdut:h",
+      "Xdut:m",
+      "Xdut:n",
+      "Xdut:s",
+      "time",
+      "u",
+      "y"
+    ],
+    "configuration": "linear_pwl_near-1fs-strict",
+    "decimal_token_outside_exact_binary64_domain": [
+      {
+        "index": 594,
+        "numeric_projection_in_domain": true,
+        "token": "6.9999999999999999e-06"
+      }
+    ],
+    "exact_nearby_order_status": "I",
+    "final_counters": {
+      "h": "0",
+      "m": "2",
+      "n": "3"
+    },
+    "max_actual_s_vs_output_y_V": 0.0,
+    "max_independent_sample_s_error_outside_original_1ns_windows_V": 1.5472281716493362e-07,
+    "numeric_projection_excluded": [],
+    "reason": "Third n and second m changes are retained in the same exported record; neither decimal tokens nor strict physical bracket sizes prove sub-ULP callback order.",
+    "rows": 595,
+    "rows_equal_steps_plus_initial": true
+  },
+  {
+    "accepted_steps": 4085,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "1.9999999999999999e-06"
+      },
+      {
+        "changes": {
+          "m": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "3.0000000000000001e-06"
+      },
+      {
+        "changes": {
+          "n": {
+            "after": "2",
+            "before": "1"
+          }
+        },
+        "time_token": "3.9999999999999998e-06"
+      },
+      {
+        "changes": {
+          "m": {
+            "after": "2",
+            "before": "1"
+          },
+          "n": {
+            "after": "3",
+            "before": "2"
+          }
+        },
+        "time_token": "6.0000000000000002e-06"
+      }
+    ],
+    "actual_named_signals": [
+      "Xdut.z",
+      "Xdut:h",
+      "Xdut:m",
+      "Xdut:n",
+      "Xdut:s",
+      "time",
+      "u",
+      "y"
+    ],
+    "configuration": "nonlinear_near-1fs-strict",
+    "decimal_token_outside_exact_binary64_domain": [
+      {
+        "index": 4085,
+        "numeric_projection_in_domain": true,
+        "token": "6.9999999999999999e-06"
+      }
+    ],
+    "exact_nearby_order_status": "I",
+    "final_counters": {
+      "h": "0",
+      "m": "2",
+      "n": "3"
+    },
+    "max_actual_s_vs_output_y_V": 5e-17,
+    "max_independent_sample_s_error_outside_original_1ns_windows_V": 6.646300766837341e-08,
+    "numeric_projection_excluded": [],
+    "reason": "Third n and second m changes are retained in the same exported record; neither decimal tokens nor strict physical bracket sizes prove sub-ULP callback order.",
+    "rows": 4086,
+    "rows_equal_steps_plus_initial": true
+  }
+]

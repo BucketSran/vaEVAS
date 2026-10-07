@@ -1,0 +1,274 @@
+[
+  {
+    "clock_contract": {
+      "A": "4722366482869645/2361183241434822606848",
+      "B": "1770887431076117/590295810358705651712",
+      "second_B": "1770887431076117/295147905179352825856",
+      "separation_s": 4.235164736271502e-22,
+      "third_A": "14167099448608935/2361183241434822606848",
+      "third_A_precedes_second_B": true
+    },
+    "configuration": "linear_pwl_near-base",
+    "limits": "Original timer ttol1ns retained. Large y errors at a jump are separated from later stored-sample plateau error. No shift of independent formula to actual observed timer times, no waiver of1uV. Nativepoint replay outside original domain remains excluded and explicitly retained in plan.",
+    "maxima": [
+      {
+        "abs_error_V": 0.022957408262960412,
+        "actual_token": "39.068557408262961",
+        "independent_rational": "109903593506535900788097439102619/2814749767106560000000000000000",
+        "scope": "all_observations",
+        "signal": "z",
+        "signed_error_V": 0.022957408262960412,
+        "time_token": "6.0019000000000001e-06"
+      },
+      {
+        "abs_error_V": 0.022957408262952013,
+        "actual_token": "39.073357408262943",
+        "independent_rational": "109917104305417985254499674879643/2814749767106560000000000000000",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "z",
+        "signed_error_V": 0.022957408262952013,
+        "time_token": "6.0020999999999997e-06"
+      },
+      {
+        "abs_error_V": 0.7495009043547456,
+        "actual_token": "1.7495009043547456",
+        "independent_rational": "1",
+        "scope": "all_observations",
+        "signal": "y",
+        "signed_error_V": 0.7495009043547456,
+        "time_token": "2.999e-06"
+      },
+      {
+        "abs_error_V": 0.0008374761602228351,
+        "actual_token": "38.999162523839779",
+        "independent_rational": "719423018874672546875/18446744073709551616",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "y",
+        "signed_error_V": -0.0008374761602228351,
+        "time_token": "6.0020999999999997e-06"
+      }
+    ],
+    "sample_edge_brackets": [
+      {
+        "after_y": "1.7495009043547456",
+        "before_y": "1",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "2.998999893598535e-06",
+        "upper_time_token": "2.999e-06",
+        "width_s": 1.06401465e-13
+      },
+      {
+        "after_y": "38.999162523839779",
+        "before_y": "1.7495009043547456",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "5.9989999999999997e-06",
+        "upper_time_token": "5.9990085430692185e-06",
+        "width_s": 8.5430692188e-12
+      }
+    ]
+  },
+  {
+    "clock_contract": {
+      "A": "4722366482869645/2361183241434822606848",
+      "B": "1770887431076117/590295810358705651712",
+      "second_B": "1770887431076117/295147905179352825856",
+      "separation_s": 4.235164736271502e-22,
+      "third_A": "14167099448608935/2361183241434822606848",
+      "third_A_precedes_second_B": true
+    },
+    "configuration": "linear_pwl_near-fine",
+    "limits": "Original timer ttol1ns retained. Large y errors at a jump are separated from later stored-sample plateau error. No shift of independent formula to actual observed timer times, no waiver of1uV. Nativepoint replay outside original domain remains excluded and explicitly retained in plan.",
+    "maxima": [
+      {
+        "abs_error_V": 0.022957408262970214,
+        "actual_token": "48.142957408262966",
+        "independent_rational": "135445758793167655341298556991131/2814749767106560000000000000000",
+        "scope": "all_observations",
+        "signal": "z",
+        "signed_error_V": 0.022957408262970214,
+        "time_token": "6.3799999999999999e-06"
+      },
+      {
+        "abs_error_V": 0.022957408262970214,
+        "actual_token": "48.142957408262966",
+        "independent_rational": "135445758793167655341298556991131/2814749767106560000000000000000",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "z",
+        "signed_error_V": 0.022957408262970214,
+        "time_token": "6.3799999999999999e-06"
+      },
+      {
+        "abs_error_V": 0.7495009043547456,
+        "actual_token": "1.7495009043547456",
+        "independent_rational": "1",
+        "scope": "all_observations",
+        "signal": "y",
+        "signed_error_V": 0.7495009043547456,
+        "time_token": "2.999e-06"
+      },
+      {
+        "abs_error_V": 0.0008374761602228351,
+        "actual_token": "38.999162523839779",
+        "independent_rational": "719423018874672546875/18446744073709551616",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "y",
+        "signed_error_V": -0.0008374761602228351,
+        "time_token": "6.0020999999999997e-06"
+      }
+    ],
+    "sample_edge_brackets": [
+      {
+        "after_y": "1.7495009043547456",
+        "before_y": "1",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "2.998999893598535e-06",
+        "upper_time_token": "2.999e-06",
+        "width_s": 1.06401465e-13
+      },
+      {
+        "after_y": "38.999162523839779",
+        "before_y": "1.7495009043547456",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "5.9989999999999997e-06",
+        "upper_time_token": "5.9990085430692185e-06",
+        "width_s": 8.5430692188e-12
+      }
+    ]
+  },
+  {
+    "clock_contract": {
+      "A": "4722366482869645/2361183241434822606848",
+      "B": "1770887431076117/590295810358705651712",
+      "second_B": "1770887431076117/295147905179352825856",
+      "separation_s": 4.235164736271502e-22,
+      "third_A": "14167099448608935/2361183241434822606848",
+      "third_A_precedes_second_B": true
+    },
+    "configuration": "nonlinear_near-base",
+    "limits": "Original timer ttol1ns retained. Large y errors at a jump are separated from later stored-sample plateau error. No shift of independent formula to actual observed timer times, no waiver of1uV. Nativepoint replay outside original domain remains excluded and explicitly retained in plan.",
+    "maxima": [
+      {
+        "abs_error_V": 0.0027368742081655423,
+        "actual_token": "0.49726312579183435",
+        "independent_rational": "5629499534213120000000000000000/11258999068426242423376001306307",
+        "scope": "all_observations",
+        "signal": "z",
+        "signed_error_V": -0.0027368742081655423,
+        "time_token": "3.0000000000000001e-06"
+      },
+      {
+        "abs_error_V": 0.0026778017639249585,
+        "actual_token": "0.49188203997692531",
+        "independent_rational": "5629499534213120000000000000000/11382848058178937255825488940739",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "z",
+        "signed_error_V": -0.0026778017639249585,
+        "time_token": "3.0020000000000002e-06"
+      },
+      {
+        "abs_error_V": 0.5000019375200754,
+        "actual_token": "0.49999806247992462",
+        "independent_rational": "1",
+        "scope": "all_observations",
+        "signal": "y",
+        "signed_error_V": -0.5000019375200754,
+        "time_token": "2.999e-06"
+      },
+      {
+        "abs_error_V": 1.9375200753383733e-06,
+        "actual_token": "0.49999806247992462",
+        "independent_rational": "36893488147419103232/73786976294838212607",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "y",
+        "signed_error_V": -1.9375200753383733e-06,
+        "time_token": "3.0020000000000002e-06"
+      }
+    ],
+    "sample_edge_brackets": [
+      {
+        "after_y": "0.49999806247992462",
+        "before_y": "1",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "2.9989995691005704e-06",
+        "upper_time_token": "2.999e-06",
+        "width_s": 4.308994296e-13
+      },
+      {
+        "after_y": "0.027025658459937651",
+        "before_y": "0.49999806247992462",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "5.9989999999999997e-06",
+        "upper_time_token": "5.9990499999999998e-06",
+        "width_s": 5.00000000001e-11
+      }
+    ]
+  },
+  {
+    "clock_contract": {
+      "A": "4722366482869645/2361183241434822606848",
+      "B": "1770887431076117/590295810358705651712",
+      "second_B": "1770887431076117/295147905179352825856",
+      "separation_s": 4.235164736271502e-22,
+      "third_A": "14167099448608935/2361183241434822606848",
+      "third_A_precedes_second_B": true
+    },
+    "configuration": "nonlinear_near-fine",
+    "limits": "Original timer ttol1ns retained. Large y errors at a jump are separated from later stored-sample plateau error. No shift of independent formula to actual observed timer times, no waiver of1uV. Nativepoint replay outside original domain remains excluded and explicitly retained in plan.",
+    "maxima": [
+      {
+        "abs_error_V": 0.0027368504557049324,
+        "actual_token": "0.49726314954429496",
+        "independent_rational": "5629499534213120000000000000000/11258999068426242423376001306307",
+        "scope": "all_observations",
+        "signal": "z",
+        "signed_error_V": -0.0027368504557049324,
+        "time_token": "3.0000000000000001e-06"
+      },
+      {
+        "abs_error_V": 0.0026777785227524186,
+        "actual_token": "0.49188206321809785",
+        "independent_rational": "5629499534213120000000000000000/11382848058178937255825488940739",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "z",
+        "signed_error_V": -0.0026777785227524186,
+        "time_token": "3.0020000000000002e-06"
+      },
+      {
+        "abs_error_V": 0.5000019135056208,
+        "actual_token": "0.49999808649437916",
+        "independent_rational": "1",
+        "scope": "all_observations",
+        "signal": "y",
+        "signed_error_V": -0.5000019135056208,
+        "time_token": "2.999e-06"
+      },
+      {
+        "abs_error_V": 1.9135056207483735e-06,
+        "actual_token": "0.49999808649437921",
+        "independent_rational": "36893488147419103232/73786976294838212607",
+        "scope": "away_at_least_2ns_from_all_clocks",
+        "signal": "y",
+        "signed_error_V": -1.9135056207483735e-06,
+        "time_token": "3.0020000000000002e-06"
+      }
+    ],
+    "sample_edge_brackets": [
+      {
+        "after_y": "0.49999808649437916",
+        "before_y": "1",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "2.9989995691002989e-06",
+        "upper_time_token": "2.999e-06",
+        "width_s": 4.308997011e-13
+      },
+      {
+        "after_y": "0.027025715177999843",
+        "before_y": "0.49999808649437921",
+        "limits": "Visible held output jump brackets callback effect. Does not observe n/m/h or their nearby clock order.",
+        "lower_time_token": "5.9989999999999997e-06",
+        "upper_time_token": "5.9990499999999998e-06",
+        "width_s": 5.00000000001e-11
+      }
+    ]
+  }
+]

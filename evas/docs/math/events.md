@@ -696,3 +696,4 @@ binary64 与局部根盒的最小延迟证明，其他隔离失败不冒充此�
 这是分支候选证据。新 Spectre 原配置的窗口外阶段差异及 tight 配置内部
 崩溃保留，不能把本地正确答案或参考仿真失败当作完整后端对齐。
 The common acceptance refactor has a [six-model, two-setting preservation comparison](../../../experiments/backends/event-acceptance/README.md). Mathematical error, finite waveform pairs, exact-boundary observations and reference qualification are reported separately. These development results do not expand capability support.
+有序物理历史的[独立条件和实际对照](../../../experiments/backends/ordered-event-history/README.md)分别报告原始计时容差失败与严格计时诊断。后者不替代原始结果，也不能由同一导出行内的两个计数变化推断精确回调先后。

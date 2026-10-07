@@ -1,0 +1,451 @@
+{
+  "purpose": "Complete the original six in-domain native-grid diagnostic requests without changing production code or replacing earlier debug timeouts. No performance claim.",
+  "source_revision": "5647394420994b3bac1a822d2e5a45bd9de6feab",
+  "build_command": "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml --target-dir <fresh local task directory>",
+  "toolchain": {
+    "rustc": "1.95.0",
+    "cargo": "1.95.0",
+    "host": "macOS arm64"
+  },
+  "checker_sha256": "80c53b437278790826b4eb0faf32f4cda649bdcecd2dc59251b2eb99ebe6c522",
+  "denominator": 6,
+  "completed": 6,
+  "execution_timeouts": 0,
+  "results": [
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "ad5e9df95c3f1a232add563d836cf0c2c10fc11b7f002ed6c79d6900e4d31d7e",
+      "raw_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00",
+      "source_sha256": "2507fe1ab78ee645319b07378135f2e0d50c519ce5491dc1dc1a41bcd56d34b7",
+      "query_count": 70035,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70035,
+      "fraction_verdict": {
+        "case": "guard100",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70035,
+        "max_error_V": {
+          "z": 3.446132268436486e-13,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 23.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 6.999900000002193e-06,
+          "y": 23.0,
+          "z": 8.999700000006921
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v3",
+      "raw_rows_total": 70036,
+      "in_domain_rows": 70035,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 0.0029948288366732356,
+        "y": 0.0
+      },
+      "alignment_status": "fail"
+    },
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "6ac8f2ce9285d8ffb97b9b807e28a84c81617b22f96a84a95b19379da9d8b0a0",
+      "raw_sha256": "dbbbc78bddde746b98e993436ef1729b8b59d4c318d0cac64c796c30cd598c80",
+      "source_sha256": "c1e20b8ec41fbaf4dc3e63f33d29a025e09f6463cc64c82d8138fc76682de440",
+      "query_count": 70036,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70036,
+      "fraction_verdict": {
+        "case": "guard8",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70036,
+        "max_error_V": {
+          "z": 3.730349362740526e-13,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 123.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 6.999900000000732e-06,
+          "y": 123.0,
+          "z": 8.99970000000257
+        },
+        "cross_brackets_s": [
+          [
+            6.6666000000000015e-06,
+            6.666700000000002e-06
+          ]
+        ],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v3",
+      "raw_rows_total": 70037,
+      "in_domain_rows": 70036,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 0.0029948288366430376,
+        "y": 0.0
+      },
+      "alignment_status": "fail"
+    },
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "787400a4a0b7356cebc2bd450999362610e2d57579a6426a2267a0e86d449a19",
+      "raw_sha256": "bb532b6c62a77a3c2cacc319f535d6671d6fe0caec8e1c29a03906cb2af02d81",
+      "source_sha256": "16717d7bc24a76428976f6650ce06c942abc13eea2b7a0fe4d6d109a348f5260",
+      "query_count": 70048,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70048,
+      "fraction_verdict": {
+        "case": "sample_slope",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70048,
+        "max_error_V": {
+          "z": 1.2768452961609e-11,
+          "y": 5.101696842757519e-12
+        },
+        "final_expected": {
+          "y": 36.0,
+          "z": 58.99999999999999
+        },
+        "final_observed": {
+          "time": 6.999900000002193e-06,
+          "y": 36.0000000000051,
+          "z": 58.99770000006319
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.01,
+          "y_V": 0.01,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v3",
+      "raw_rows_total": 70049,
+      "in_domain_rows": 70048,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 0.022993264938399705,
+        "y": 6.7350616035355415e-06
+      },
+      "alignment_status": "fail"
+    },
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "75b37245c9c36e5cc68a55c74561868cfce5fe63a893e682179f6fb68703327d",
+      "raw_sha256": "326ceaaf7c60f726ce59a7c601879d7a6c1a74a83a3103ef69e814b050b0a736",
+      "source_sha256": "cf11bb24c1f1cf41a608534e038701458666df43d0102ada8b127fb578a35e91",
+      "query_count": 70059,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70059,
+      "fraction_verdict": {
+        "case": "guard100",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70059,
+        "max_error_V": {
+          "z": 3.446132268436486e-13,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 23.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 6.999900000002191e-06,
+          "y": 23.0,
+          "z": 8.999700000006918
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v4",
+      "raw_rows_total": 70060,
+      "in_domain_rows": 70059,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 3.143693925622415e-06,
+        "y": 0.0
+      },
+      "alignment_status": "pass"
+    },
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "ad8141de0ac7958120297603748dd7081504e7825e5935d7724569aa1eda7dac",
+      "raw_sha256": "876e1c5c18078e79581719fe305b1a3206690dac6526349954de404d62dd5d82",
+      "source_sha256": "1f9af62db4a65c070e4e1713db3c41766c4d96996d3a4b7298769be0392db50c",
+      "query_count": 70060,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70060,
+      "fraction_verdict": {
+        "case": "guard8",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70060,
+        "max_error_V": {
+          "z": 3.730349362740526e-13,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 123.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 6.999900000000731e-06,
+          "y": 123.0,
+          "z": 8.999700000002562
+        },
+        "cross_brackets_s": [
+          [
+            6.666665635435588e-06,
+            6.666765635435589e-06
+          ]
+        ],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v4",
+      "raw_rows_total": 70061,
+      "in_domain_rows": 70060,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 3.143693891871635e-06,
+        "y": 0.0
+      },
+      "alignment_status": "pass"
+    },
+    {
+      "kernel_sha256": "db4298ddb11bdf0956bb2bdf28f1d8d64f3af17304bc890051aba952d0612e47",
+      "input_sha256": "6fbc078ad85a4262ec1e8652b624ff9bb7c1e6210c2a27829ba507afbcda2fec",
+      "raw_sha256": "09e89e7780137998abb72349b20aafdd3b81dc857eaac65fa9d9feb0d311cd82",
+      "source_sha256": "bcfc975be5b1006c6bcc26a59709f11fd4e6935795684f11533ec77fef0c5c7c",
+      "query_count": 70085,
+      "stride": 1,
+      "diagnostics": true,
+      "returncode": 0,
+      "solution_count": 70085,
+      "fraction_verdict": {
+        "case": "sample_slope",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70085,
+        "max_error_V": {
+          "z": 1.2768452961609e-11,
+          "y": 5.101696842757519e-12
+        },
+        "final_expected": {
+          "y": 36.0,
+          "z": 58.99999999999999
+        },
+        "final_observed": {
+          "time": 6.999900000002191e-06,
+          "y": 36.0000000000051,
+          "z": 58.997700000063155
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.01,
+          "y_V": 0.01,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "lane": "spectre-prep-v4",
+      "raw_rows_total": 70086,
+      "in_domain_rows": 70085,
+      "excluded_rows": 1,
+      "alignment_max_error_V": {
+        "z": 2.423654911609674e-05,
+        "y": 7.117426960689954e-06
+      },
+      "alignment_status": "pass"
+    }
+  ],
+  "build_compatibility": {
+    "full_v3_guard100_debug_release_equal": true,
+    "sparse_v4_guard8_debug_release_equal": true
+  },
+  "endpoint_probes": [
+    {
+      "case": "list-only",
+      "checker": {
+        "case": "guard100",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 7001,
+        "max_error_V": {
+          "z": 3.143694268459285e-06,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 23.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 7.000000000002191e-06,
+          "y": 23.0,
+          "z": 9.000003143700843
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "requested_stop": 7e-06,
+      "endpoint_delta": 2.191274234546875e-18,
+      "exactstop": 0,
+      "log_steps": [
+        "Number of accepted tran steps =             70059"
+      ]
+    },
+    {
+      "case": "periodic-all",
+      "checker": {
+        "case": "guard100",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 70060,
+        "max_error_V": {
+          "z": 3.143694701890354e-06,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 23.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 7.000000000001634e-06,
+          "y": 23.0,
+          "z": 9.000003143699603
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "requested_stop": 7e-06,
+      "endpoint_delta": 1.6339265552535454e-18,
+      "exactstop": 0,
+      "log_steps": [
+        "Number of accepted tran steps =             70059"
+      ]
+    },
+    {
+      "case": "periodic-only",
+      "checker": {
+        "case": "guard100",
+        "status": "fail",
+        "errors": [
+          "missing start/stop coverage"
+        ],
+        "rows": 7001,
+        "max_error_V": {
+          "z": 3.143694700113997e-06,
+          "y": 0.0
+        },
+        "final_expected": {
+          "y": 23.0,
+          "z": 9.0
+        },
+        "final_observed": {
+          "time": 7.000000000001634e-06,
+          "y": 23.0,
+          "z": 9.000003143699603
+        },
+        "cross_brackets_s": [],
+        "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+        "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+        "tolerances": {
+          "z_V": 0.001,
+          "y_V": 1e-07,
+          "cross_time_s": 1e-10,
+          "boundary_exclusion_s": 1e-09
+        }
+      },
+      "requested_stop": 7e-06,
+      "endpoint_delta": 1.6339265552535454e-18,
+      "exactstop": 0,
+      "log_steps": [
+        "Number of accepted tran steps =             70059"
+      ]
+    }
+  ],
+  "endpoint_interpretation": "Three actual strobe-output variants retain zero exact scientific stop rows. Computed-grid help and accepted-step counts do not certify decimal export enclosure or exact callbacks.",
+  "availability": "Raw outputs, complete profiles and execution receipts are local-only in current/runs/event-closure-20261008/query-profile and endpoint-probe. No waveforms or binaries included."
+}

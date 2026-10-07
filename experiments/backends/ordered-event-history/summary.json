@@ -1,0 +1,1118 @@
+[
+  {
+    "actual_rows": 467,
+    "configuration": "linear_pwl_near-base",
+    "effective_settings_readback": {
+      "PSF_sha256": "8b6e62c6f63063da29ffee4a5f50b807009a3a8c82ed9a8ef2fcb11ebeed7d4d",
+      "configuration": "linear_pwl_near-base",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 10 fA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000002e-14
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 10e-09",
+            "scope": "transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 100 pV",
+            "scope": "transient:tran",
+            "value": 1e-10
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-14",
+            "scope": "global_user",
+            "value": 1e-14
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-08",
+            "scope": "global_user",
+            "value": 1e-08
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-14",
+            "scope": "psf_transient:tran",
+            "value": 1e-14
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-08",
+            "scope": "psf_transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-08",
+            "scope": "psf_header",
+            "value": 1e-08
+          }
+        }
+      },
+      "mismatches": [],
+      "status": "P"
+    },
+    "event_brackets": [],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint",
+      "missing counter n",
+      "missing counter m",
+      "unobserved cross counter"
+    ],
+    "finite_event_status": "I",
+    "finite_numeric_status": "F",
+    "max_errors_V": {
+      "u": 6.199680364001395e-17,
+      "y": 0.7495009043547456,
+      "z": 0.022957408262960412
+    },
+    "missing_signals": [
+      "n",
+      "m",
+      "h"
+    ],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "F",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 8.329860438865921e-18,
+          "y": 0.0,
+          "z": 1.1518765300207748e-15
+        },
+        "max_raw_difference_V": {
+          "u": 4.991266383440234e-18,
+          "y": 0.7495009043547456,
+          "z": 0.022957408257347715
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2860759924049703e-17,
+          "y": 0.7495009043547456,
+          "z": 0.022957408257347076
+        },
+        "paired_native_rows": 467,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.545098885270661e-17,
+        "y": 5.646979682905756e-12,
+        "z": 1.3867021951292219e-11
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "F",
+    "original_or_timer_diagnostic": "original1ns source",
+    "qualification_status": "F",
+    "raw_reference_analysis_sha256": "64c229d8ad43c8e4a0fb0b3338e061ebfe9b03644232c93612c223ee203b86c0",
+    "raw_response_sha256": "dbc383c04d245c9f167cd853f0acae367326d2a451b359f59a870bff673233a7",
+    "request_sha256": "d737580b54deef591601c24ab7a6dea3fbd944daebf9143786a118c0fad7bcbf"
+  },
+  {
+    "actual_rows": 514,
+    "configuration": "linear_pwl_near-fine",
+    "effective_settings_readback": {
+      "PSF_sha256": "a65ed265a3e4ba135fbd25d59f2fd619ec9a80d7b9f8671f226cdc8d3ff96393",
+      "configuration": "linear_pwl_near-fine",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 10 fA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000002e-14
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 110 ns",
+            "scope": "transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 10e-09",
+            "scope": "transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 100 pV",
+            "scope": "transient:tran",
+            "value": 1e-10
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-14",
+            "scope": "global_user",
+            "value": 1e-14
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-08",
+            "scope": "global_user",
+            "value": 1e-08
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-14",
+            "scope": "psf_transient:tran",
+            "value": 1e-14
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 1.10000e-07",
+            "scope": "psf_transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-08",
+            "scope": "psf_transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-08",
+            "scope": "psf_header",
+            "value": 1e-08
+          }
+        }
+      },
+      "mismatches": [],
+      "status": "P"
+    },
+    "event_brackets": [],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint",
+      "missing counter n",
+      "missing counter m",
+      "unobserved cross counter"
+    ],
+    "finite_event_status": "I",
+    "finite_numeric_status": "F",
+    "max_errors_V": {
+      "u": 6.199680364001395e-17,
+      "y": 0.7495009043547456,
+      "z": 0.022957408262970214
+    },
+    "missing_signals": [
+      "n",
+      "m",
+      "h"
+    ],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "F",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 8.329860438865921e-18,
+          "y": 0.0,
+          "z": 1.1518765300207748e-15
+        },
+        "max_raw_difference_V": {
+          "u": 4.991266383440234e-18,
+          "y": 0.7495009043547456,
+          "z": 0.022957408257347715
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2860759924049703e-17,
+          "y": 0.7495009043547456,
+          "z": 0.022957408257347076
+        },
+        "paired_native_rows": 514,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.545098885270661e-17,
+        "y": 5.646979682905756e-12,
+        "z": 1.3867021951292219e-11
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "F",
+    "original_or_timer_diagnostic": "original1ns source",
+    "qualification_status": "F",
+    "raw_reference_analysis_sha256": "15d4052d0823e23c2d9eeba2a947a409af2bdc2a84f8ab8c55301065767d6011",
+    "raw_response_sha256": "3f54ea1c4514719cc516d1f65a7d54df2346936a80bce4a24af9c67dd565188e",
+    "request_sha256": "25811c9c6c58ca998e342f20435e23ef48d45ff41f4fcc9d066a551aede2f8f2"
+  },
+  {
+    "actual_rows": 1183,
+    "configuration": "nonlinear_near-base",
+    "effective_settings_readback": {
+      "PSF_sha256": "94666cf2c7947753248a9afc0bd92e30d54d1e77499509d6ccf13664c82bbdcb",
+      "configuration": "nonlinear_near-base",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 10 fA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000002e-14
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 10e-09",
+            "scope": "transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 100 pV",
+            "scope": "transient:tran",
+            "value": 1e-10
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-14",
+            "scope": "global_user",
+            "value": 1e-14
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-08",
+            "scope": "global_user",
+            "value": 1e-08
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-14",
+            "scope": "psf_transient:tran",
+            "value": 1e-14
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-08",
+            "scope": "psf_transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-08",
+            "scope": "psf_header",
+            "value": 1e-08
+          }
+        }
+      },
+      "mismatches": [],
+      "status": "P"
+    },
+    "event_brackets": [],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint",
+      "missing counter n",
+      "missing counter m",
+      "unobserved cross counter"
+    ],
+    "finite_event_status": "I",
+    "finite_numeric_status": "F",
+    "max_errors_V": {
+      "u": 6.332448812546035e-17,
+      "y": 0.5000019375200754,
+      "z": 0.0027368742081655423
+    },
+    "missing_signals": [
+      "n",
+      "m",
+      "h"
+    ],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "F",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 7.14121688390948e-18,
+          "y": 0.0,
+          "z": 1.32922224831881e-16
+        },
+        "max_raw_difference_V": {
+          "u": 4.9942297361849344e-18,
+          "y": 0.5000019375200754,
+          "z": 0.002736874126336551
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2050384865793003e-17,
+          "y": 0.5000019375200754,
+          "z": 0.002736874126336485
+        },
+        "paired_native_rows": 1183,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.536693018429249e-17,
+        "y": 1.9443494452408019e-10,
+        "z": 2.374029485087454e-10
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "F",
+    "original_or_timer_diagnostic": "original1ns source",
+    "qualification_status": "F",
+    "raw_reference_analysis_sha256": "4eb05f08ddd59e1d1d4323f3901c51e13ba5ff212c229d78d16b6c8d42403e69",
+    "raw_response_sha256": "ed179104c59afa74f325ca1ec4312f3c8e1ff5b022107ad2df319e7f18833d44",
+    "request_sha256": "cbaa1fc1b08ce659468db4866882e33fb33ee6fcc94f6191d87ff69a9b5c7a35"
+  },
+  {
+    "actual_rows": 1220,
+    "configuration": "nonlinear_near-fine",
+    "effective_settings_readback": {
+      "PSF_sha256": "24f34e251026dbd74a3113c797db8c364dd719d4bfbbf6bfc8b8b4c7ae97ea2a",
+      "configuration": "nonlinear_near-fine",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 10 fA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000002e-14
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 110 ns",
+            "scope": "transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 10e-09",
+            "scope": "transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 100 pV",
+            "scope": "transient:tran",
+            "value": 1e-10
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-14",
+            "scope": "global_user",
+            "value": 1e-14
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-08",
+            "scope": "global_user",
+            "value": 1e-08
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-14",
+            "scope": "psf_transient:tran",
+            "value": 1e-14
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 1.10000e-07",
+            "scope": "psf_transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-08",
+            "scope": "psf_transient:tran",
+            "value": 1e-08
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-08",
+            "scope": "psf_header",
+            "value": 1e-08
+          }
+        }
+      },
+      "mismatches": [],
+      "status": "P"
+    },
+    "event_brackets": [],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint",
+      "missing counter n",
+      "missing counter m",
+      "unobserved cross counter"
+    ],
+    "finite_event_status": "I",
+    "finite_numeric_status": "F",
+    "max_errors_V": {
+      "u": 6.549011508926138e-17,
+      "y": 0.5000019135056208,
+      "z": 0.0027368504557049324
+    },
+    "missing_signals": [
+      "n",
+      "m",
+      "h"
+    ],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "F",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 7.13988037617079e-18,
+          "y": 0.0,
+          "z": 1.32922224831881e-16
+        },
+        "max_raw_difference_V": {
+          "u": 4.9942297361849344e-18,
+          "y": 0.5000019135056208,
+          "z": 0.0027368504547216044
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2050384865793003e-17,
+          "y": 0.5000019135056208,
+          "z": 0.0027368504547215385
+        },
+        "paired_native_rows": 1220,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.549799133964393e-17,
+        "y": 2.260709665347214e-12,
+        "z": 2.989220367509996e-11
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "F",
+    "original_or_timer_diagnostic": "original1ns source",
+    "qualification_status": "F",
+    "raw_reference_analysis_sha256": "02a53ae3dc03baa90e04a8f9c4078ad6bf08193b813c26aaaf602cb942d93aef",
+    "raw_response_sha256": "410d6b349f886894c80b730d9890173ab5fe437802901d8a0e9e57f5faef6603",
+    "request_sha256": "410a28fb5fdc1314ce6df622ac331cd8f65b31ca9f3f7e5142c0742af1ada6d1"
+  },
+  {
+    "actual_rows": 595,
+    "configuration": "linear_pwl_near-1fs-strict",
+    "effective_settings_readback": {
+      "configuration": "linear_pwl_near-1fs-strict",
+      "status": "P",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 100 aA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000001e-16
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 110 ns",
+            "scope": "transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 100e-12",
+            "scope": "transient:tran",
+            "value": 1e-10
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 1 pV",
+            "scope": "transient:tran",
+            "value": 1e-12
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-16",
+            "scope": "global_user",
+            "value": 1e-16
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-12",
+            "scope": "global_user",
+            "value": 1e-12
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-16",
+            "scope": "psf_transient:tran",
+            "value": 1e-16
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 1.10000e-07",
+            "scope": "psf_transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-12",
+            "scope": "psf_transient:tran",
+            "value": 1e-12
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-10",
+            "scope": "psf_header",
+            "value": 1e-10
+          }
+        }
+      },
+      "PSF_sha256": "fdc9b49300f4318132b025eb063686cabc3808c2e195d2a888d57c035d2a4172",
+      "actual_settings_sha256": "2a8f51ddd854bea8257986418f710352c6b1e1770de7a46fb47f3d6313b1e5cc",
+      "note": "Log and PSF actual readback; no requested-value substitution. Original analysis status unchanged."
+    },
+    "event_brackets": [
+      {
+        "lower": "19999999929839333/10000000000000000000000",
+        "nominal_rational": "4722366482869645/2361183241434822606848",
+        "signal": "n",
+        "upper": "19999999999999999/10000000000000000000000",
+        "width_s": 7.0160666e-15
+      },
+      {
+        "lower": "39999999241492167/10000000000000000000000",
+        "nominal_rational": "4722366482869645/1180591620717411303424",
+        "signal": "n",
+        "upper": "19999999999999999/5000000000000000000000",
+        "width_s": 7.58507831e-14
+      },
+      {
+        "lower": "14999999953993173/2500000000000000000000",
+        "nominal_rational": "14167099448608935/2361183241434822606848",
+        "signal": "n",
+        "upper": "30000000000000001/5000000000000000000000",
+        "width_s": 1.8402731e-14
+      },
+      {
+        "lower": "29999999983194761/10000000000000000000000",
+        "nominal_rational": "1770887431076117/590295810358705651712",
+        "signal": "m",
+        "upper": "29999999994010809/10000000000000000000000",
+        "width_s": 1.0816048e-15
+      },
+      {
+        "lower": "14999999953993173/2500000000000000000000",
+        "nominal_rational": "1770887431076117/295147905179352825856",
+        "signal": "m",
+        "upper": "30000000000000001/5000000000000000000000",
+        "width_s": 1.8402731e-14
+      }
+    ],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint"
+    ],
+    "finite_event_status": "P",
+    "finite_numeric_status": "P",
+    "max_errors_V": {
+      "u": 6.0659271049001e-17,
+      "y": 1.5472281716493362e-07,
+      "z": 1.547228374130571e-07
+    },
+    "missing_signals": [],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "P",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 8.329860438865921e-18,
+          "y": 0.0,
+          "z": 1.1518765300207748e-15
+        },
+        "max_raw_difference_V": {
+          "u": 4.988295494258637e-18,
+          "y": 1.5471717018525071e-07,
+          "z": 1.5471722078637385e-07
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2860759924049703e-17,
+          "y": 1.5471717018525071e-07,
+          "z": 1.5471722090067308e-07
+        },
+        "paired_native_rows": 595,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.545098885270661e-17,
+        "y": 5.646979682905756e-12,
+        "z": 1.3867021951292219e-11
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "I",
+    "original_or_timer_diagnostic": "new1fs source diagnostic",
+    "qualification_status": "I",
+    "raw_reference_analysis_sha256": "5970424c1b45ed304093cb07f841f29732155b07f65557f6da5282d6fc5b4247",
+    "raw_response_sha256": "f2ea6f2c67128a419996cf6f37cffee2ec867e49cfdf22377056d8c9097e4e59",
+    "request_sha256": "25826e07580afd385c5281d5d803102f1d9fdfe8723ee96ac018241be8dce151"
+  },
+  {
+    "actual_rows": 4086,
+    "configuration": "nonlinear_near-1fs-strict",
+    "effective_settings_readback": {
+      "configuration": "nonlinear_near-1fs-strict",
+      "status": "P",
+      "facts": {
+        "effective": {
+          "iabstol_A": {
+            "line": 130,
+            "raw": "    abstol(I) = 100 aA",
+            "scope": "transient:tran",
+            "value": 1.0000000000000001e-16
+          },
+          "maxstep_s": {
+            "line": 124,
+            "raw": "    maxstep = 110 ns",
+            "scope": "transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 128,
+            "raw": "    reltol = 100e-12",
+            "scope": "transient:tran",
+            "value": 1e-10
+          },
+          "stop_s": {
+            "line": 122,
+            "raw": "    stop = 7 us",
+            "scope": "transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 129,
+            "raw": "    abstol(V) = 1 pV",
+            "scope": "transient:tran",
+            "value": 1e-12
+          }
+        },
+        "global_user": {
+          "iabstol_A": {
+            "line": 84,
+            "raw": "            iabstol = 1e-16",
+            "scope": "global_user",
+            "value": 1e-16
+          },
+          "reltol": {
+            "line": 87,
+            "raw": "             reltol = 1e-10",
+            "scope": "global_user",
+            "value": 1e-10
+          },
+          "vabstol_V": {
+            "line": 83,
+            "raw": "            vabstol = 1e-12",
+            "scope": "global_user",
+            "value": 1e-12
+          }
+        },
+        "psf_effective": {
+          "iabstol_A": {
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-16",
+            "scope": "psf_transient:tran",
+            "value": 1e-16
+          },
+          "maxstep_s": {
+            "line": 17,
+            "raw": "\"maxstep\" 1.10000e-07",
+            "scope": "psf_transient:tran",
+            "value": 1.1e-07
+          },
+          "method": {
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran",
+            "value": "traponly"
+          },
+          "reltol": {
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-10",
+            "scope": "psf_transient:tran",
+            "value": 1e-10
+          },
+          "stop_s": {
+            "line": 14,
+            "raw": "\"stop\" 7.00000e-06",
+            "scope": "psf_transient:tran",
+            "value": 7e-06
+          },
+          "vabstol_V": {
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-12",
+            "scope": "psf_transient:tran",
+            "value": 1e-12
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-10",
+            "scope": "psf_header",
+            "value": 1e-10
+          }
+        }
+      },
+      "PSF_sha256": "2313cd60a440b84f4f6ab0b4e390b3a731848a90e8a6b5bfaff49912b9857112",
+      "actual_settings_sha256": "2a8f51ddd854bea8257986418f710352c6b1e1770de7a46fb47f3d6313b1e5cc",
+      "note": "Log and PSF actual readback; no requested-value substitution. Original analysis status unchanged."
+    },
+    "event_brackets": [
+      {
+        "lower": "9999999964919683/5000000000000000000000",
+        "nominal_rational": "4722366482869645/2361183241434822606848",
+        "signal": "n",
+        "upper": "19999999999999999/10000000000000000000000",
+        "width_s": 7.0160633e-15
+      },
+      {
+        "lower": "3999999147846641/1000000000000000000000",
+        "nominal_rational": "4722366482869645/1180591620717411303424",
+        "signal": "n",
+        "upper": "19999999999999999/5000000000000000000000",
+        "width_s": 8.521533588e-13
+      },
+      {
+        "lower": "59999992995209357/10000000000000000000000",
+        "nominal_rational": "14167099448608935/2361183241434822606848",
+        "signal": "n",
+        "upper": "30000000000000001/5000000000000000000000",
+        "width_s": 7.004790645e-13
+      },
+      {
+        "lower": "29999999972223961/10000000000000000000000",
+        "nominal_rational": "1770887431076117/590295810358705651712",
+        "signal": "m",
+        "upper": "30000000000000001/10000000000000000000000",
+        "width_s": 2.777604e-15
+      },
+      {
+        "lower": "59999992995209357/10000000000000000000000",
+        "nominal_rational": "1770887431076117/295147905179352825856",
+        "signal": "m",
+        "upper": "30000000000000001/5000000000000000000000",
+        "width_s": 7.004790645e-13
+      }
+    ],
+    "exact_endpoint_complete": false,
+    "exact_nearby_order_status": "I",
+    "execution_status": "waveform_available",
+    "failures": [
+      "missing exact scientific endpoint"
+    ],
+    "finite_event_status": "P",
+    "finite_numeric_status": "P",
+    "max_errors_V": {
+      "u": 6.316669517921229e-17,
+      "y": 6.646300766837341e-08,
+      "z": 6.849270263397702e-08
+    },
+    "missing_signals": [],
+    "native_EVAS_replay": {
+      "finite_pairs": {
+        "continuous_status": "P",
+        "max_exact_formula_coordinate_correction_V": {
+          "u": 7.141631245715528e-18,
+          "y": 0.0,
+          "z": 1.3664479461928053e-16
+        },
+        "max_raw_difference_V": {
+          "u": 4.99909486323304e-18,
+          "y": 6.646202427444479e-08,
+          "z": 6.847644557019971e-08
+        },
+        "max_reference_normalized_residual_difference_V": {
+          "u": 1.2050384865793003e-17,
+          "y": 6.646202427444479e-08,
+          "z": 6.847644550922582e-08
+        },
+        "paired_native_rows": 4086,
+        "scope": "Only retained in-domain native numeric points, with exact formula coordinate correction; export origin and callback ordering not qualified."
+      },
+      "replay_event_status": "P",
+      "replay_failures": [],
+      "replay_max_errors_V": {
+        "u": 5.5453248016406086e-17,
+        "y": 2.260709665347214e-12,
+        "z": 3.004982356731143e-11
+      },
+      "replay_numeric_status": "P",
+      "replay_status": "executed"
+    },
+    "original_full_event_status": "I",
+    "original_full_numeric_status": "I",
+    "original_or_timer_diagnostic": "new1fs source diagnostic",
+    "qualification_status": "I",
+    "raw_reference_analysis_sha256": "1c7191c718ac846693b7878d2aec0f464f8d9fd9145e1871ccda2fb80ab2e37b",
+    "raw_response_sha256": "50fe2377aaaa421fe9f2420ccc377db39b1cb6a07d906591383ee82c2753c1ea",
+    "request_sha256": "e1708fca17f064e2044450eff92454f5c39a50e56e500f5365c869356122928d"
+  }
+]
