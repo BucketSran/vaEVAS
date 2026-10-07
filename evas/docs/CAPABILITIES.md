@@ -1,6 +1,6 @@
 # EVAS 能力与缺口总表
 
-核对日期：2026-10-06。本源码为 **EVAS 0.13.0 / IR v17**，未发布 tag。
+核对日期：2026-10-06；DYNAMICS 限幅证书与证据于2026-10-07增量核对。本源码为 **EVAS 0.13.0 / IR v17**，未发布 tag。
 上一合并检查点的实现与审查见 [PR61](https://github.com/BucketSran/vaEVAS/pull/61)。
 改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
