@@ -1,4 +1,4 @@
-//! Bounded exact binary64 source arithmetic, private to phase certification.
+//! Bounded exact binary64 source arithmetic for phase and ordinary conditions.
 //! Curves retain original rational knots; rounded clamp knots are never inputs.
 use crate::interval::Interval as I;
 use crate::ir::Expression;
@@ -23,6 +23,76 @@ impl Budget {
 }
 fn binary(x: f64) -> Option<R> {
     R::from_float(x)
+}
+
+// A point evaluation proves the original expression tree, without rounding
+// scalar products or reconstructing the source from projected clamp knots.
+fn evaluate(
+    e: &Expression,
+    nodes: &[usize],
+    sources: &[Option<Curve>],
+    time: &R,
+    budget: &mut Budget,
+    depth: usize,
+    count: &mut usize,
+) -> Option<R> {
+    *count += 1;
+    if depth > MAX_DEPTH || *count > MAX_EXPR_NODES {
+        return None;
+    }
+    match e {
+        Expression::Affine { constant, terms } => {
+            if terms.len() > MAX_POINTS {
+                return None;
+            }
+            let mut value = binary(*constant)?;
+            for term in terms {
+                if term.node == 0 {
+                    continue;
+                }
+                let k = nodes.iter().position(|n| *n == term.node)?;
+                let v = sources.get(k)?.as_ref()?.value(time, budget)?;
+                let product = budget.check(binary(term.coefficient)? * v)?;
+                value = budget.check(value + product)?;
+            }
+            Some(value)
+        }
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            let a = evaluate(left, nodes, sources, time, budget, depth + 1, count)?;
+            let b = evaluate(right, nodes, sources, time, budget, depth + 1, count)?;
+            budget.check(if matches!(e, Expression::Add { .. }) {
+                a + b
+            } else {
+                a * b
+            })
+        }
+        _ => None,
+    }
+}
+
+/// Certify a comparison at the original binary64 query time. The caller first
+/// validates predicate affinity and source ownership; absent exact provenance
+/// or an exceeded resource budget yields no certificate.
+pub(crate) fn predicate_sign(
+    left: &Expression,
+    right: &Expression,
+    nodes: &[usize],
+    sources: &[Option<Curve>],
+    time: f64,
+) -> Option<i8> {
+    let time = binary(time)?;
+    let mut budget = Budget(0);
+    let mut count = 0;
+    let left = evaluate(left, nodes, sources, &time, &mut budget, 0, &mut count)?;
+    let right = evaluate(right, nodes, sources, &time, &mut budget, 0, &mut count)?;
+    let difference = budget.check(left - right)?;
+    Some(if difference.is_zero() {
+        0
+    } else if difference.is_positive() {
+        1
+    } else {
+        -1
+    })
 }
 
 impl Curve {
@@ -110,44 +180,6 @@ impl Curve {
             }
             (out.len() <= MAX_POINTS).then_some(())
         }
-        fn evaluate(
-            e: &Expression,
-            nodes: &[usize],
-            sources: &[Option<Curve>],
-            t: &R,
-            b: &mut Budget,
-            depth: usize,
-        ) -> Option<R> {
-            if depth > MAX_DEPTH {
-                return None;
-            }
-            match e {
-                Expression::Affine { constant, terms } => {
-                    let mut value = binary(*constant)?;
-                    for term in terms {
-                        if term.node == 0 {
-                            continue;
-                        }
-                        let k = nodes.iter().position(|n| *n == term.node)?;
-                        let v = sources.get(k)?.as_ref()?.value(t, b)?;
-                        let product = b.check(binary(term.coefficient)? * v)?;
-                        value = b.check(value + product)?;
-                    }
-                    Some(value)
-                }
-                Expression::Add { left, right } => {
-                    let a = evaluate(left, nodes, sources, t, b, depth + 1)?;
-                    let c = evaluate(right, nodes, sources, t, b, depth + 1)?;
-                    b.check(a + c)
-                }
-                Expression::Multiply { left, right } => {
-                    let a = evaluate(left, nodes, sources, t, b, depth + 1)?;
-                    let c = evaluate(right, nodes, sources, t, b, depth + 1)?;
-                    b.check(a * c)
-                }
-                _ => None,
-            }
-        }
         let mut deps = Vec::new();
         dependencies(expr, &mut deps, 0, &mut 0)?;
         let mut budget = Budget(0);
@@ -170,7 +202,7 @@ impl Curve {
             knots
                 .into_iter()
                 .map(|t| {
-                    let value = evaluate(expr, nodes, sources, &t, &mut budget, 0)?;
+                    let value = evaluate(expr, nodes, sources, &t, &mut budget, 0, &mut 0)?;
                     Some((t, value))
                 })
                 .collect::<Option<Vec<_>>>()?,
@@ -287,6 +319,71 @@ impl Curve {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn ordinary_point_certificate_requires_exact_source_provenance() {
+        let input = Expression::Affine {
+            constant: 0.0,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: 1.0,
+            }],
+        };
+        let threshold = Expression::Affine {
+            constant: 0.5,
+            terms: vec![],
+        };
+        let source = Curve::source(&[[0.0, 0.0], [2.0, 1.0]]);
+        assert_eq!(
+            predicate_sign(&input, &threshold, &[1], &[source], 1.0),
+            Some(0)
+        );
+        // Enclosed/generated sources without exact provenance stay uncertain.
+        assert_eq!(predicate_sign(&input, &threshold, &[1], &[None], 1.0), None);
+        assert_eq!(predicate_sign(&input, &threshold, &[], &[], 1.0), None);
+    }
+
+    #[test]
+    fn point_certificate_preserves_nonexact_scalar_products_and_budget() {
+        let scalar = |constant| Expression::Affine {
+            constant,
+            terms: vec![],
+        };
+        let product = Expression::Multiply {
+            left: Box::new(scalar(0.1)),
+            right: Box::new(scalar(0.1)),
+        };
+        // The mathematical product of binary64 0.1 is strictly below the
+        // rounded binary64 product. Folding it would incorrectly prove equality.
+        assert_eq!(
+            predicate_sign(&product, &scalar(0.1 * 0.1), &[], &[], 0.0),
+            Some(-1)
+        );
+        let mut deep = scalar(0.0);
+        for _ in 0..=MAX_DEPTH {
+            deep = Expression::Add {
+                left: Box::new(deep),
+                right: Box::new(scalar(0.0)),
+            };
+        }
+        assert_eq!(predicate_sign(&deep, &scalar(0.0), &[], &[], 0.0), None);
+    }
+
+    #[test]
+    fn ground_terms_are_exact_zero_without_a_driven_source() {
+        let expr = Expression::Affine {
+            constant: 0.25,
+            terms: vec![crate::ir::Term {
+                node: 0,
+                coefficient: 17.0,
+            }],
+        };
+        let curve = Curve::expression(&expr, &[], &[], 1.0).unwrap();
+        assert_eq!(
+            curve.value(&binary(0.5).unwrap(), &mut Budget(0)),
+            binary(0.25)
+        );
+    }
+
     #[test]
     fn resource_limits_admit_boundary_and_fall_back_above_it() {
         for count in [MAX_POINTS - 1, MAX_POINTS, MAX_POINTS + 1] {

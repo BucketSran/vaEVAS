@@ -114,7 +114,7 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
         self.assertEqual(result["transient"]["states"], [[], [], []])
         self.assertEqual([row["yout"] for row in rows], [-0.75, 0.125, 0.875])
 
-    def test_pwl_threshold_cannot_be_certified_from_rounded_input(self):
+    def test_pwl_threshold_uses_original_rational_input(self):
         from fractions import Fraction
         # The real PWL value is 1/3, strictly above the binary64 threshold.
         # Rounded interpolation equals that threshold and selects the wrong arm.
@@ -124,10 +124,10 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
             V(y,r)<+tmp;
         """, declarations="real tmp;")
         program = compile_sources({"test.va": source}, [instance()])
-        with self.assertRaisesRegex(KernelError, "condition_precision"):
-            transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
-                      stop=3.0, max_step=0.25, kernel=KERNEL,
-                      vabstol=1e-9, reltol=1e-10)
+        result = transient(program, {"u": [[0, 0], [3, 1]]}, [1.0],
+                           stop=3.0, max_step=0.25, kernel=KERNEL,
+                           vabstol=1e-9, reltol=1e-10)
+        self.assertEqual(result["solutions"][0]["voltages"][result["nodes"].index("y")], 1.0)
 
     def test_selected_branch_propagates_pwl_error_through_voltage_gain(self):
         from fractions import Fraction

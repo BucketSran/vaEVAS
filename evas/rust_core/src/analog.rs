@@ -2,7 +2,7 @@
 //! Resolve any conditions from original PWL enclosures, then certify the output.
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
-use crate::expression::resolve_selects;
+use crate::expression::resolve_selects_with_sources;
 use crate::interval::Interval as I;
 use crate::ir::{Error, Expression, Program, Solution, Tolerances};
 use crate::solver::Circuit;
@@ -64,6 +64,8 @@ impl Analog {
         inputs: &[f64],
         input_bounds: &[I],
         initial: Option<&[f64]>,
+        time: f64,
+        exact_sources: &[Option<crate::exact_source::Curve>],
     ) -> Result<Solution, Error> {
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (&node, &bounds) in self.input_nodes.iter().zip(input_bounds) {
@@ -73,7 +75,9 @@ impl Analog {
             .program
             .contributions
             .iter()
-            .map(|c| resolve_selects(&c.rhs, &nodes))
+            .map(|c| {
+                resolve_selects_with_sources(&c.rhs, &nodes, &self.input_nodes, exact_sources, time)
+            })
             .collect::<Result<Vec<_>, _>>()?;
         if !self
             .prepared

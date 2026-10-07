@@ -942,6 +942,8 @@ fn run_stateless_transient(
                 &trajectory.values(time),
                 &trajectory.value_bounds(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
+                time,
+                &trajectory.exact_sources,
             )
             .map_err(|mut error| {
                 error.sample = Some(sample);

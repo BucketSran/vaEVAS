@@ -525,6 +525,33 @@ fn enclosed_predicate(
 /// Resolve only reachable conditions using source enclosures. Structural
 /// validation of both arms is the caller's responsibility and precedes this.
 pub(crate) fn resolve_selects(expr: &Expression, nodes: &[I]) -> Result<Expression, Error> {
+    resolve_selects_inner(expr, nodes, &[], &[], 0.0, false)
+}
+
+/// Optional original-source certificate for ordinary transient predicates.
+/// Keep the enclosure-only entry above for consumers such as initialization.
+pub(crate) fn resolve_selects_with_sources(
+    expr: &Expression,
+    nodes: &[I],
+    input_nodes: &[usize],
+    exact_sources: &[Option<crate::exact_source::Curve>],
+    time: f64,
+) -> Result<Expression, Error> {
+    if exact_sources.iter().all(Option::is_none) {
+        resolve_selects(expr, nodes)
+    } else {
+        resolve_selects_inner(expr, nodes, input_nodes, exact_sources, time, true)
+    }
+}
+
+fn resolve_selects_inner(
+    expr: &Expression,
+    nodes: &[I],
+    input_nodes: &[usize],
+    exact_sources: &[Option<crate::exact_source::Curve>],
+    time: f64,
+    allow_source_certificate: bool,
+) -> Result<Expression, Error> {
     Ok(match expr {
         Expression::Select {
             relation,
@@ -534,25 +561,95 @@ pub(crate) fn resolve_selects(expr: &Expression, nodes: &[I]) -> Result<Expressi
             else_value,
             origin,
         } => {
-            let left = resolve_selects(left, nodes)?;
-            let right = resolve_selects(right, nodes)?;
-            let decision =
-                enclosed_predicate(*relation, &left, &right, nodes).map_err(|mut error| {
+            let left = resolve_selects_inner(
+                left,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?;
+            let right = resolve_selects_inner(
+                right,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?;
+            let decision = enclosed_predicate(*relation, &left, &right, nodes)
+                .or_else(|error| {
+                    if allow_source_certificate && error.kind == "condition_precision" {
+                        if let Some(sign) = crate::exact_source::predicate_sign(
+                            &left,
+                            &right,
+                            input_nodes,
+                            exact_sources,
+                            time,
+                        ) {
+                            return Ok(selects_sign(*relation, sign));
+                        }
+                    }
+                    Err(error)
+                })
+                .map_err(|mut error| {
                     error.message.push_str(&format!(" at {}", origin.label()));
                     error
                 })?;
-            return resolve_selects(if decision { then_value } else { else_value }, nodes);
+            return resolve_selects_inner(
+                if decision { then_value } else { else_value },
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            );
         }
         Expression::Add { left, right } => Expression::Add {
-            left: Box::new(resolve_selects(left, nodes)?),
-            right: Box::new(resolve_selects(right, nodes)?),
+            left: Box::new(resolve_selects_inner(
+                left,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
+            right: Box::new(resolve_selects_inner(
+                right,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
         },
         Expression::Multiply { left, right } => Expression::Multiply {
-            left: Box::new(resolve_selects(left, nodes)?),
-            right: Box::new(resolve_selects(right, nodes)?),
+            left: Box::new(resolve_selects_inner(
+                left,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
+            right: Box::new(resolve_selects_inner(
+                right,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
         },
         Expression::Power { base, exponent } => Expression::Power {
-            base: Box::new(resolve_selects(base, nodes)?),
+            base: Box::new(resolve_selects_inner(
+                base,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
             exponent: *exponent,
         },
         _ => expr.clone(),
@@ -568,6 +665,48 @@ pub(crate) fn evaluate(expr: &Expression, nodes: &[f64]) -> Result<Value, Error>
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn ordinary_condition_rejects_real_source_uncertainty() {
+        let expr: Expression = serde_json::from_str(
+            r#"{"op":"select","relation":"le",
+            "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+            "right":{"op":"affine","constant":0.5,"terms":[]},
+            "then_value":{"op":"affine","constant":7,"terms":[]},
+            "else_value":{"op":"affine","constant":-3,"terms":[]},
+            "origin":{"source":"uncertain.va","line":1,"column":1,"instance":"dut"}}"#,
+        )
+        .unwrap();
+        let nodes = [I::ZERO, I { lo: 0.49, hi: 0.51 }];
+        // The pre-existing enclosure-only API remains valid for initialization
+        // and must not infer a sign without an original-source certificate.
+        let legacy_error = resolve_selects(&expr, &nodes).unwrap_err();
+        assert_eq!(legacy_error.kind, "condition_precision");
+        let error = resolve_selects_with_sources(&expr, &nodes, &[1], &[None], 1.0).unwrap_err();
+        assert_eq!(error.kind, "condition_precision");
+        assert!(error.message.contains("uncertain.va:1:1"));
+    }
+
+    #[test]
+    fn enclosure_only_entry_does_not_add_constant_product_certificates() {
+        let expr: Expression = serde_json::from_value(serde_json::json!({
+            "op":"select","relation":"lt",
+            "left":{"op":"multiply",
+                "left":{"op":"affine","constant":0.1,"terms":[]},
+                "right":{"op":"affine","constant":0.1,"terms":[]}},
+            "right":{"op":"affine","constant":0.1_f64*0.1,"terms":[]},
+            "then_value":{"op":"affine","constant":1.,"terms":[]},
+            "else_value":{"op":"affine","constant":0.,"terms":[]},
+            "origin":{"source":"initial.va","line":1,"column":1,"instance":"dut"}
+        }))
+        .unwrap();
+        // A rounded product is ambiguous to the old enclosure-only evaluator.
+        // Original-source certificates belong only to the opted-in transient API.
+        assert_eq!(
+            resolve_selects(&expr, &[I::ZERO]).unwrap_err().kind,
+            "condition_precision"
+        );
+    }
 
     #[test]
     fn enclosed_relations_certify_one_sided_zero_boundaries() {

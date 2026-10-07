@@ -646,7 +646,7 @@ mod tests {
             instance: "dut".into(),
             name: "q".into(),
             kind: crate::ir::StateKind::Real,
-            initial: 0.0,
+            initial: serde_json::from_value(serde_json::json!(0.0)).unwrap(),
         });
         let before = serde_json::to_string(&p).unwrap();
         let mut t = trajectory();
