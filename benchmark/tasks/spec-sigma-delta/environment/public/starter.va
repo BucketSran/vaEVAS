@@ -1,0 +1,7 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sigma_delta(vin,clk,bitout);
+input vin,clk;output bitout;electrical vin,clk,bitout;
+parameter real vth=0.5,vref=1,tr=50p;
+// Implement the public behavior here.
+endmodule

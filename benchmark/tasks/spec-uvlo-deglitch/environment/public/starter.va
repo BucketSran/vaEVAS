@@ -1,0 +1,7 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module uvlo_monitor(vin,rst,pgood,fault);
+input vin,rst;output pgood,fault;electrical vin,rst,pgood,fault;
+parameter real upper=0.65,lower=0.55,tgood=2n,tbad=1n,vth=0.5,tr=50p;
+// Implement the public behavior here.
+endmodule

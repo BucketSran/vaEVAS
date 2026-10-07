@@ -14,7 +14,13 @@ def write_task(task_id,instruction,source,reference,negatives,cases,public_case,
     (p/'task.toml').write_text(f'schema_version = "1.4"\n[metadata]\nname = "{task_id}"\ncategory = "verilog-a"\naction = "{kind}"\nsource_group = "{group}"\n[agent]\ntimeout_sec = 1200\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
     (p/'environment/Dockerfile').write_text(BASE)
     (p/'environment/public/visible.scs').write_text(public_case['netlist'].replace('ahdl_include "dut.va"','ahdl_include "../dut.va"'))
-    (p/'environment/public/README.md').write_text('公开网表只供调试，不包含终评分规则、参考解或私有条件。\n')
+    (p/'environment/public/README.md').write_text('公开网表只供调试，不包含终评分规则、参考解或私有条件。starter.va是候选起点，修改后保存为/work/dut.va。\n')
+    if kind=='specification':
+        # Preserve public port declaration and parameters only, no gold dynamics.
+        declarations=[]
+        for line in reference.splitlines():
+            if line.startswith(('module ','input ','output ','electrical ','parameter ')):declarations.append(line)
+        (p/'environment/public/starter.va').write_text(HEADER+'\n'.join(declarations)+'\n// Implement the public behavior here.\nendmodule\n')
     (p/'solution/dut.va').write_text(HEADER+reference)
     (p/'solution/solve.sh').write_text('#!/bin/sh\nset -eu\ncp /solution/dut.va /work/dut.va\n')
     for name,code in negatives.items():(p/'tests/negatives'/f'{name}.va').write_text(HEADER+code)
@@ -29,7 +35,7 @@ def pwl(name,points):
     return f'V{name} ({name} 0) vsource type=pwl wave=['+' '.join(f'{t:.14g} {v:.14g}' for t,v in points)+']\n'
 
 def deck(module,ports,sources,stop,params='',maxstep=20e-12):
-    return 'simulator lang=spectre\nglobal 0\nahdl_include "dut.va"\n'+sources+f'XDUT ({" ".join(ports)}) {module} {params}\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop={stop:.14g} maxstep={maxstep:.14g}\nsave '+ ' '.join(ports)+'\n'
+    return 'simulator lang=spectre\nglobal 0\nahdl_include "dut.va"\n'+sources+f'XDUT ({" ".join(ports)}) {module}{(' '+params) if params else ''}\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop={stop:.14g} maxstep={maxstep:.14g}\nsave '+ ' '.join(ports)+'\n'
 
 COMPARATOR='''module latched_comparator(clk,rst,vinp,vinn,outp,outn,ready);
 input clk,rst,vinp,vinn; output outp,outn,ready;

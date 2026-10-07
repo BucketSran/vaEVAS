@@ -1,0 +1,7 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sample_hold(vin,sample,rst,vout);
+input vin,sample,rst;output vout;electrical vin,sample,rst,vout;
+parameter real tau=2n,vinit=0.45,vth=0.5;
+// Implement the public behavior here.
+endmodule

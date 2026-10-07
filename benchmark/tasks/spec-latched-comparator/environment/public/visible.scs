@@ -5,7 +5,7 @@ Vclk (clk 0) vsource type=pwl wave=[0 0 1.98e-09 0 2.02e-09 1 8.98e-09 1 9.02e-0
 Vrst (rst 0) vsource type=pwl wave=[0 0]
 Vvinp (vinp 0) vsource type=pwl wave=[0 0.622 4e-09 0.622 4.04e-09 0.582 1.2e-08 0.582 1.298e-08 0.582 1.302e-08 0.592 1.6e-08 0.592 1.604e-08 0.612 2.4e-08 0.612 2.498e-08 0.612 2.502e-08 0.607 2.8e-08 0.607 2.804e-08 0.597]
 Vvinn (vinn 0) vsource type=pwl wave=[0 0.6]
-XDUT (clk rst vinp vinn outp outn ready) latched_comparator 
+XDUT (clk rst vinp vinn outp outn ready) latched_comparator
 simulatorOptions options reltol=1e-6 vabstol=1e-9
 tran tran stop=3.8e-08 maxstep=2e-11
 save clk rst vinp vinn outp outn ready

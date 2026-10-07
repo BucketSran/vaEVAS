@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module latched_comparator(clk,rst,vinp,vinn,outp,outn,ready);
+input clk,rst,vinp,vinn; output outp,outn,ready;
+electrical clk,rst,vinp,vinn,outp,outn,ready;
+parameter real vth=0.5, voffset=0.002, tbase=0.2n, tau=0.25n, vscale=0.05, vfloor=0.001, tr=50p;
+// Implement the public behavior here.
+endmodule
