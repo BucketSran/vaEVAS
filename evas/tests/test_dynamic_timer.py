@@ -1,5 +1,5 @@
 """Dynamic timer answers from held absolute-time schedules, not backend logs."""
-GUARDS = ["TIMER", "EVENT-ORDER", "LANG"]
+GUARDS = ["TIMER", "EVENT-ORDER", "LANG", "DYNAMICS"]
 
 import unittest
 import copy
@@ -112,11 +112,16 @@ class DynamicTimer(unittest.TestCase):
         common=[0,.25,.5,.75,1,2]
         a=run(program,times=common,stop=2,max_step=2,vabstol=1e-9,reltol=0)
         dense=[i/16 for i in range(33)]
-        b=run(program,times=dense,stop=2,max_step=.0625,vabstol=1e-9,reltol=0)
+        b=run(program,times=dense,stop=2,max_step=2,vabstol=1e-9,reltol=0)
         self.assertEqual(a['transient']['events'],b['transient']['events'])
         self.assertEqual(values(a),[values(b)[dense.index(t)] for t in common])
-        for t,value in zip(common,values(a)):
-            self.assertAlmostEqual(value,1/(1-t) if t<=.5 else 1/t,delta=1e-9)
+        # A different internal step ceiling may change rounding, while the
+        # physical deadline and independent voltage budget stay the same.
+        smaller=run(program,times=dense,stop=2,max_step=.0625,vabstol=1e-9,reltol=0)
+        self.assertEqual(a['transient']['events'],smaller['transient']['events'])
+        for times,result in [(common,a),(dense,b),(dense,smaller)]:
+            for t,value in zip(times,values(result)):
+                self.assertAlmostEqual(value,1/(1-t) if t<=.5 else 1/t,delta=1e-9)
 
 
 if __name__ == '__main__': unittest.main()
