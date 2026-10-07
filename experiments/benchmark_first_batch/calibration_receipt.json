@@ -2,11 +2,11 @@
   "schema_version": 1,
   "evidence_kind": "sealed_actual_spectre_calibration_audit",
   "simulator_executed": false,
-  "canonical_root_revision": "8b833ff5e169cad660f2a65f4ae238191b9490b2",
+  "canonical_root_revision": "6f0b2808d068a61021110cbfa253ac84ab159f46",
   "scope": "30 non-optimization tasks; functional-only optimization jobs explicitly excluded. Counts describe authored calibration candidates, not model success rate.",
   "raw_evidence_availability": "local-only archives; no anonymous public download claim. Compact receipt records hashes and logical locators only.",
   "selection": "Last explicitly listed task/variant evidence in round2 then followup-v3; current VA07; audited unchanged standalone VA08.",
-  "tool_sha256": "f7b861c5f24d12ebe696c953e8c74145bc7313f843339ddbc29e5e750d4291f1",
+  "tool_sha256": "704914e78a10e52668f23604af29fe9871176e67d0cd6fd5ea2333d0af039c66",
   "inputs": {
     "round2-active-matrix.json": "35c08e1dde159811ad4920399fb62bef689e4fe32ab3b1b70d7009e89e10e809",
     "followup-function-plan-v3.json": "04e1673ca46dbb28408aac0111a6dfd92cd3b3e5c0e8f3e3c878b24d43304be3",
@@ -20172,7 +20172,7 @@
       "file_identity_set_sha256": "54934783a8d5bdf4bc8fba9f474b08e039efe1de790144f6033ef2253e9658dd"
     }
   ],
-  "local_only_full_audit_sha256": "27b015f9fc08d89ef46af38f98b8409ed6da456e033b040f5163b2849557dbf4",
+  "local_only_full_audit_sha256": "bd61b8f626f7852f55b8fc41d60a58d6931a86bdff902e10b227a8ae75f91ce9",
   "local_only_full_audit_availability": "Operator retained ignored audit output; not a public download claim.",
   "full_archive_verification": "Every archive member verified against sealed receipt; full per-job detail is bound by local audit SHA256."
 }

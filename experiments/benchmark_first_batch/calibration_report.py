@@ -30,6 +30,19 @@ def read_json(path):
     return json.loads(path.read_text())
 
 
+def require_condition_coverage(planned, actual):
+    """Reject partial/empty results before any all(...) coverage statement."""
+    if not planned or len(set(planned)) != len(planned):
+        raise ValueError('planned condition names must be nonempty and unique')
+    if not actual or len(set(actual)) != len(actual):
+        raise ValueError('actual condition names must be nonempty and unique')
+    missing = set(planned) - set(actual)
+    unexpected = set(actual) - set(planned)
+    if missing or unexpected:
+        raise ValueError('planned/actual condition names differ: missing=' +
+                         repr(sorted(missing)) + ', unexpected=' + repr(sorted(unexpected)))
+
+
 def stats(records):
     return dict(conditions=len(records), statuses=dict(Counter(r['classification'] for r in records)))
 
@@ -107,10 +120,16 @@ def audit(root, run_root, legacy_audit):
     for index, entry in enumerate(entries):
         directory = Path(entry['prepared'])
         # Reuse summary's report/plan identity checks, but do not trust its saved JSON.
-        summary = batch.summarize(directory)
         preparation = read_json(directory / 'preparation.json')
         seal.require(digest(json.dumps(preparation['source_identity'],sort_keys=True).encode())==preparation['criteria_sha256'], 'prepared full criteria hash computation')
         wrappers = read_json(directory / 'results.json')
+        planned_names = [case['condition_id'] for case in preparation['cases']]
+        actual_names = [wrapper['condition_id'] for wrapper in wrappers]
+        require_condition_coverage(planned_names, actual_names)
+        declared_names = entry.get('conditions', entry.get('cases'))
+        if declared_names is not None:
+            require_condition_coverage(declared_names, planned_names)
+        summary = batch.summarize(directory)
         selected = latest[(entry['task_id'], entry['variant'])] == index
         group = []
         for wrapper in wrappers:
@@ -235,7 +254,9 @@ def audit(root, run_root, legacy_audit):
     adc_task = root / 'benchmark/tasks/va08-adc-linearity'
     adc_compact_path = root / 'experiments/adc_linearity/calibration-20261007.json'
     adc_compact = read_json(adc_compact_path)
-    adc_expected = {r['job_id']:r for r in adc_compact['corrected_original_calibration']['jobs']+[adc_compact['isolated_early_read']]}
+    adc_planned = adc_compact['corrected_original_calibration']['jobs']+[adc_compact['isolated_early_read']]
+    require_condition_coverage([r['job_id'] for r in adc_planned], [r['job_id'] for r in legacy['va08']['jobs']])
+    adc_expected = {r['job_id']:r for r in adc_planned}
     adc_checker = load(root/'benchmark/checkers/adc_linearity.py','calibration_adc_oracle')
     adc_cases = {c['name']:c for c in read_json(adc_task/'tests/cases.json')}
     adc_criteria = digest((adc_task/'instruction.md').read_bytes()+(adc_task/'tests/verify.py').read_bytes()+(adc_task/'tests/cases.json').read_bytes())
