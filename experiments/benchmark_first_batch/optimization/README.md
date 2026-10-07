@@ -10,6 +10,7 @@
 | flash_thresholds | 100 us、10000 次 flash ADC 转换 | 连续重复扫描真实阈值阵列 | v1/v2 双侧均 3/3 功能通过；重复性能与 profile 待做 |
 | power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | reference 3/3，baseline 2/3；浮点计时修复待重新执行 |
 | sampled_dac | 100 us、10000 个 12-bit 采样电压码 | 连续重复真实位权解码 | 双侧 3/3，单轮无收益；待剖析或替换 |
+| sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | 三组解析fixture过；待actual双侧功能及profile |
 | sc_coefficients | 100 us、10000 次四级滤波采样 | 连续重复求实际采样系数 | 双侧 3/3，单轮微差不足立题 |
 
 每项 `REQUEST.md` 说明工程场景、功能合同与实际运行请求；`cases.json` 给出固定网表，
@@ -40,3 +41,6 @@ power 基线慢速 case 的首个高电压轮询为 20.001 us，25.001 us 时未
 修复在时间比较加一百万分之一 poll_period（当前 1 fs）的数值裕量。该变化仅修
 基线数值边界，checker 的 2 ns 边沿容差保持不变，不计作优化，修复后必须重新实际
 校准。已有旧波形仍保留失败。禁止用失败基线的计时取得正式性能成绩。
+
+新增 SAR 事件日历是独立候选，补充试探工程瓶颈，target_task_count 仍 5，task_count 仍 0；
+候选数不等于正式题数。`test_sar_calendar.py` 三组纯fixture不作为 actual 证据。

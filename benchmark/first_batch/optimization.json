@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "scope": "five original simulation implementation optimization candidates; actual evidence required before tasks",
+  "scope": "original simulation implementation optimization candidates; actual evidence required before tasks",
   "target_task_count": 5,
   "task_count": 0,
   "completed_backend_calibrated_count": 0,
-  "candidate_count": 5,
+  "candidate_count": 6,
   "tasks": [],
   "candidates": [
     {
@@ -152,6 +152,36 @@
         "row_criteria": "7 pure analytic family tests passed; not VA execution",
         "spectre_functional": "v2 both sides 3/3; strengthened transition oracle replay passed all actual waveforms",
         "spectre_performance": "inconclusive; single concurrent round; small gap insufficient for task admission",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    },
+    {
+      "candidate_id": "optimize-sar-calendar",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-sensor-sar-calendar",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "idle event calendar with observable twelve-bit SAR decisions",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/sar_calendar",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sar-calendar",
+      "reference_path": "experiments/benchmark_first_batch/optimization/sar_calendar/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/sar_calendar/baseline.va",
+      "semantic_negative_variants": [
+        "unchanged_poll",
+        "coarse_poll",
+        "no_input_hold",
+        "restart_while_busy",
+        "early_bit_calendar",
+        "no_transition"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "three independent analytic SAR fixtures passed; not VA execution",
+        "spectre_functional": "pending coordinator",
+        "spectre_performance": "not measured",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
