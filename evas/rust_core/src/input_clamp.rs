@@ -298,7 +298,9 @@ pub(crate) fn lower(
         .iter()
         .any(|c| crate::analog::has_select(&c.rhs))
         || program.operators.iter().any(|o| match o {
-            OperatorSpec::IdtMod { input, .. } => crate::analog::has_select(input),
+            OperatorSpec::IdtMod { input, .. } | OperatorSpec::Idt { input, .. } => {
+                crate::analog::has_select(input)
+            }
             _ => false,
         });
     if !has_select {
@@ -307,14 +309,17 @@ pub(crate) fn lower(
     if !program.events.is_empty() || !program.states.is_empty() {
         return Err(unsupported());
     }
-    // Only the existing immutable phase integral / sine composition is
-    // admitted. In particular derivative histories need a different contract
+    // Admit source-only integrals alongside the immutable phase/sine path.
+    // In particular derivative histories need a different contract
     // at uncertain kink windows and are not silently enabled by this lowering.
-    if program
-        .operators
-        .iter()
-        .any(|o| !matches!(o, OperatorSpec::IdtMod { .. } | OperatorSpec::Sin { .. }))
-    {
+    if program.operators.iter().any(|o| {
+        !matches!(
+            o,
+            OperatorSpec::IdtMod { .. }
+                | OperatorSpec::Sin { .. }
+                | OperatorSpec::Idt { reset: None, .. }
+        )
+    }) {
         return Err(unsupported());
     }
     let original = program.clone();
@@ -331,7 +336,9 @@ pub(crate) fn lower(
     }
     for o in &original.operators {
         let input = match o {
-            OperatorSpec::IdtMod { input, .. } | OperatorSpec::Sin { input, .. } => input,
+            OperatorSpec::IdtMod { input, .. }
+            | OperatorSpec::Sin { input, .. }
+            | OperatorSpec::Idt { input, .. } => input,
             _ => unreachable!(),
         };
         validate_original(input, &original, &o.origin().instance)?;
@@ -360,7 +367,7 @@ pub(crate) fn lower(
         lowering.expression(&mut c.rhs)?;
     }
     for o in &mut candidate.operators {
-        if let OperatorSpec::IdtMod { input, .. } = o {
+        if let OperatorSpec::IdtMod { input, .. } | OperatorSpec::Idt { input, .. } = o {
             lowering.expression(input)?;
         }
     }
@@ -378,6 +385,26 @@ pub(crate) fn lower(
         next_driven.push(name);
         next_trajectory.add_enclosed_source(points, error)?;
         *next_trajectory.exact_sources.last_mut().unwrap() = exact_sources[k].clone();
+    }
+    // Do not let adding a diagnostic integral enable internal feedback or
+    // other integral compositions. Validate structural dependencies, including
+    // cancelled terms, against original and generated driven sources.
+    let source_nodes: Vec<_> = next_driven
+        .iter()
+        .map(|name| candidate.nodes.iter().position(|n| n == name).unwrap())
+        .collect();
+    for operator in &candidate.operators {
+        if let OperatorSpec::Idt { input, origin, .. } = operator {
+            let a = affine(input, &candidate, &origin.instance)?;
+            if !a.state_dependencies.is_empty()
+                || !a.operator_dependencies.is_empty()
+                || a.node_dependencies
+                    .iter()
+                    .any(|n| *n != 0 && !source_nodes.contains(n))
+            {
+                return Err(unsupported());
+            }
+        }
     }
     *program = candidate;
     *driven = next_driven;
@@ -577,7 +604,7 @@ mod tests {
     }
 
     #[test]
-    fn unrelated_clamp_source_does_not_certify_direct_operator() {
+    fn unrelated_clamp_source_does_not_change_direct_certificate() {
         let mut p = program();
         if let OperatorSpec::IdtMod { ic, modulus, .. } = &mut p.operators[0] {
             *ic = 0.125;
@@ -595,13 +622,6 @@ mod tests {
         .unwrap();
         let mut driven = vec!["u".into()];
         lower(&mut p, &mut driven, &mut t).unwrap();
-        assert!(t
-            .exact_sources
-            .last()
-            .unwrap()
-            .as_ref()
-            .unwrap()
-            .has_clamp());
         if let OperatorSpec::IdtMod { input, .. } = &mut p.operators[0] {
             *input = Expression::Affine {
                 constant: 0.0,
@@ -612,10 +632,11 @@ mod tests {
             };
         }
         let h = crate::operators::Operators::new(&p, &t, &driven, &[]).unwrap();
-        assert_eq!(
-            h.bounds(1.7499999999999998).unwrap()[0],
-            I { lo: 0.0, hi: 1.0 }
-        );
+        let time = 1.7499999999999998;
+        let exact = rational(0.125) + rational(1.5) * rational(1.0 / 3.0) * rational(time);
+        let bound = h.bounds(time).unwrap()[0];
+        assert!(bound.lo > 0.99);
+        assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
     }
 
     #[test]
@@ -635,6 +656,33 @@ mod tests {
             lower(&mut p, &mut driven, &mut t).unwrap_err().kind,
             "unsupported_transient"
         );
+        assert_eq!(serde_json::to_string(&p).unwrap(), before);
+        assert_eq!(t.config.pwl, sources);
+        assert_eq!(driven, vec!["u"]);
+    }
+
+    #[test]
+    fn rejected_integral_dependency_does_not_commit_lowered_sources() {
+        let mut p = program();
+        // Validation happens after constructing the clamp candidate. Even a
+        // cancelled internal dependency must reject without committing it.
+        p.operators.push(OperatorSpec::Idt {
+            input: Expression::Affine {
+                constant: 1.0,
+                terms: vec![Term {
+                    node: 2,
+                    coefficient: 0.0,
+                }],
+            },
+            ic: 0.0,
+            reset: None,
+            origin: p.operators[0].origin().clone(),
+        });
+        let before = serde_json::to_string(&p).unwrap();
+        let mut t = trajectory();
+        let sources = t.config.pwl.clone();
+        let mut driven = vec!["u".to_string()];
+        assert!(lower(&mut p, &mut driven, &mut t).is_err());
         assert_eq!(serde_json::to_string(&p).unwrap(), before);
         assert_eq!(t.config.pwl, sources);
         assert_eq!(driven, vec!["u"]);

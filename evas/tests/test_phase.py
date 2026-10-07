@@ -280,36 +280,47 @@ V(phase,r)<+phase_v;
             else:
                 self.assertLessEqual(abs(F(observed) - exact), budget)
 
-        with self.assertRaises(KernelError) as error:
-            run_phase([(0, .5), (1, .5)], [.24999999999999997], offset_body,
-                      declarations="real phase_v;", vabstol=1e-12, reltol=0)
-        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
+        time=.24999999999999997
+        result=run_phase([(0, .5), (1, .5)], [time], offset_body,
+                         declarations="real phase_v;", vabstol=1e-12, reltol=0)
+        actual=voltages(result,"phase")[0]
+        self.assertLess(actual,1.25)
+        self.assertLessEqual(abs(F(actual)-rational_wrapped(rational_constant_raw(time,.5),offset=.25)),budget)
 
-    def test_wrapped_phase_voltage_rejects_unproved_nonexact_coefficient_boundary(self):
+    def test_wrapped_phase_voltage_certifies_binary64_coefficient_boundary(self):
         body = """
 phase_v = idtmod(V(f,r)/3, .125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
+        time=1.7499999999999998
+        result=run_phase([(0,1.5),(4,1.5)],[time],body,
+                         declarations="real phase_v;",vabstol=1e-5,reltol=0)
+        # The compiler stores binary64 1/3; retain that distinct reference.
+        exact=rational_wrapped(F(.125)+F(1.5)*F(1/3)*F(time))
+        actual=voltages(result,"phase")[0]
+        self.assertGreater(actual,.99)
+        self.assertLess(actual,1)
+        self.assertLessEqual(abs(F(actual)-exact),F(1,2**52))
+        # A mathematically known side still cannot evade voltage rounding.
         with self.assertRaises(KernelError) as error:
-            run_phase([(0, 1.5), (4, 1.5)], [1.7499999999999998], body,
-                      declarations="real phase_v;", vabstol=1e-5, reltol=0)
-        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
-        self.assertIn("phase", error.exception.detail["message"])
+            run_phase([(0,1.5),(4,1.5)],[time],body,
+                      declarations="real phase_v;",vabstol=1e-20,reltol=0)
+        self.assertEqual(error.exception.detail["kind"],"waveform_accuracy")
 
-    def test_uncertain_wrapped_output_rejects_overstrict_voltage_budget(self):
+    def test_exact_binary_wrapped_output_meets_strict_voltage_budget(self):
         body = """
 phase_v = idtmod(V(f,r), .125, 1, 0);
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 V(out,r)<+0;
 """
-        with self.assertRaises(KernelError) as error:
-            run_phase([(0, .25), (4, .25)], [0, 3.5000000000000004], body,
-                      declarations="real phase_v;", vabstol=1e-16, reltol=0)
-        self.assertEqual(error.exception.detail["kind"], "waveform_accuracy")
-        self.assertIn("phase", error.exception.detail["message"])
+        times=[0,3.5000000000000004]
+        result=run_phase([(0,.25),(4,.25)],times,body,
+                         declarations="real phase_v;",vabstol=1e-16,reltol=0)
+        self.assertEqual([F(x) for x in voltages(result,"phase")],
+                         [rational_wrapped(rational_constant_raw(t,.25)) for t in times])
 
     def test_unsupported_phase_forms_are_explicitly_rejected(self):
         for body in [

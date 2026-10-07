@@ -62,16 +62,56 @@ def run(times,step=2e-10):
     p=compile_sources({'dut.va':SOURCE},[Instance('dut','paper_vco',{n:n for n in ('ctl','freq','phase','out')},{})])
     return transient(p,{'ctl':[[0,-1],[2e-6,0],[4e-6,2],[6e-6,0],[8e-6,-1]]},[t*1e-6 for t in times],stop=8e-6,max_step=step,kernel=KERNEL,vabstol=1e-7,reltol=1e-5)
 class InputClamp(unittest.TestCase):
-    def test_cancelled_clamp_does_not_expand_direct_phase_certification(self):
+    def test_unclipped_chirp_certifies_both_sides_and_exact_wrap(self):
+        # Integral of u(t)=t on [0,2] is t^2/2. IC=1/2 gives
+        # an exactly representable first wrap at t=1, with independent sides.
+        source=model('V(y,r)<+idtmod(V(u),0.5,1,0);')
+        p=compile_sources({'chirp.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
+        times=[math.nextafter(1,0),1,math.nextafter(1,2)]
+        for grid in [times,[0,.25,.5]+times+[1.5,2]]:
+            result=transient(p,{'u':[[0,0],[2,2]]},grid,stop=2,max_step=.125,
+                             kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+            for t,row in zip(grid,result['solutions']):
+                want=(F(1,2)+F(t)**2/2)%1
+                actual=row['voltages'][result['nodes'].index('y')]
+                self.assertAlmostEqual(actual,float(want),delta=2e-15)
+                self.assertEqual(actual<.5,want<F(1,2))
+
+    def test_unwrapped_observer_preserves_clipped_phase_and_integral_area(self):
+        common='f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,0.5,1,0);'
+        times=[0,.125,.5,math.nextafter(1,0),1,math.nextafter(1,2),1.5,2]
+        outputs=[]
+        for observer in [False,True]:
+            source=model(common+(' V(z,r)<+idt(f,0.5);' if observer else ''),
+                         declarations='real f;',ports='u,y,z,r',directions='input u; output y,z; inout r;')
+            if not observer:
+                source=source.replace('V(y,r)<+', 'V(z,r)<+0; V(y,r)<+')
+            p=compile_sources({'observer.va':source},[Instance('dut','m',{'u':'u','y':'y','z':'z','r':'0'},{})])
+            result=transient(p,{'u':[[0,0],[1,1],[2,1]]},times,stop=2,max_step=.125,
+                             kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+            outputs.append([r['voltages'][result['nodes'].index('y')] for r in result['solutions']])
+            if observer:
+                for t,row in zip(times,result['solutions']):
+                    x=F(t)
+                    area=(x/4 if x<=F(1,4) else
+                          x*x/2+F(1,32) if x<=F(3,4) else
+                          3*x/4-F(1,4))
+                    self.assertAlmostEqual(row['voltages'][result['nodes'].index('z')],float(F(1,2)+area),delta=2e-14)
+        self.assertEqual(outputs[0],outputs[1])
+
+    def test_cancelled_clamp_preserves_direct_phase_certificate(self):
         for extra in ['', '+0.0*f', '+(f-f)']:
             with self.subTest(extra=extra):
                 source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
                              'V(y,r)<+idtmod(V(u)/3'+extra+',0.125,1,0);',declarations='real f;')
                 program=compile_sources({'cancel.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
-                with self.assertRaises(KernelError) as error:
-                    transient(program,{'u':[[0,1.5],[2,1.5]]},[1.7499999999999998],
-                              stop=2,max_step=.125,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
-                self.assertIn('waveform_accuracy',str(error.exception))
+                time=1.7499999999999998
+                result=transient(program,{'u':[[0,1.5],[2,1.5]]},[time],
+                                 stop=2,max_step=.125,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+                want=(F(1,8)+F(1.5)*F(1/3)*F(time))%1
+                actual=result['solutions'][0]['voltages'][result['nodes'].index('y')]
+                self.assertGreater(actual,.99)
+                self.assertLessEqual(abs(F(actual)-want),F(1,2**52))
 
     def test_two_instances_certify_distinct_sides_at_same_wrap_time(self):
         source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
@@ -172,6 +212,16 @@ class InputClamp(unittest.TestCase):
         source=model('f=V(u)+0*V(y,r); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,0,10,0);',declarations='real f;',directions='input u; inout y,r;')
         p=compile_sources({'feedback.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
         with self.assertRaises(KernelError):transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=.125,kernel=KERNEL)
+    def test_clipped_integral_reset_and_hidden_feedback_remain_rejected(self):
+        for input_expr, reset in [('f', ',1'), ('f+0*V(y,r)', ''), ('f+idt(V(u),0)', '')]:
+            with self.subTest(input_expr=input_expr,reset=reset):
+                source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
+                             f'V(y,r)<+idt({input_expr},0{reset});',declarations='real f;',
+                             directions='input u; inout y,r;')
+                with self.assertRaises((CompileError,KernelError)):
+                    p=compile_sources({'reject.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
+                    transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=.125,kernel=KERNEL)
+
     def test_event_composition_outside_scope_stays_rejected(self):
         source=model('@(initial_step) q=0; @(timer(0.5)) q=1; f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,0,10,0)+q;',declarations='real f,q;')
         # This event composition is rejected by the existing frontend first.

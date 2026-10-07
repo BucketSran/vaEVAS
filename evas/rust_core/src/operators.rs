@@ -1123,8 +1123,7 @@ impl Operators {
                         &driven_nodes,
                         &trajectory.exact_sources,
                         trajectory.config.stop,
-                    )
-                    .filter(|source| source.has_clamp());
+                    );
                     entries.push(Runtime::IdtMod(
                         IdtMod::enclosed(points, bounds, *ic, *modulus, *offset)?
                             .with_exact_source(exact_source),
