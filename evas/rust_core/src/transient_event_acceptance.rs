@@ -2,7 +2,9 @@
 use super::*;
 use crate::schedule::{history_epoch, HistoryEpoch};
 
+#[derive(Clone, Copy)]
 pub(super) enum Strategy {
+    Static,
     Held,
     History,
 }
@@ -67,7 +69,9 @@ impl Controller {
         let time = calendar[self.event].time;
         let (mut next, records, end) =
             self.prepare_events_until(model, trajectory, calendar, Some(time))?;
+        self.prepare_physical_history(model, trajectory, &mut next, &calendar[self.event..end])?;
         let plan = match strategy {
+            Strategy::Static => CalendarPlan::Held(calendar[end..].to_vec()),
             Strategy::Held => CalendarPlan::Held(self.prepare_held_future(
                 model,
                 trajectory,
@@ -83,11 +87,14 @@ impl Controller {
                 &calendar[end..],
             )?,
         };
-        if matches!(strategy, Strategy::History) && next.operators.local_epoch().is_some() {
+        {
             let (mut next, mut future) =
                 Self::prepare_final_history(model, trajectory, next, plan)?;
             let mut records = records;
-            let mut phases = vec![self.accepted.clone(), next.clone()];
+            let mut phases = vec![
+                (self.accepted.clone(), Vec::new()),
+                (next.clone(), calendar[self.event..end].to_vec()),
+            ];
             let mut microevents = 0;
             while future
                 .first()
@@ -107,16 +114,33 @@ impl Controller {
                 let time = future[0].time;
                 let (mut following, new_records, end) =
                     candidate.prepare_events_until(model, trajectory, &future, Some(time))?;
-                let plan = candidate.prepare_history_future(
+                let physical_batch = future[..end].to_vec();
+                candidate.prepare_physical_history(
                     model,
                     trajectory,
                     &mut following,
                     &future[..end],
-                    &future[end..],
                 )?;
+                let plan = match strategy {
+                    Strategy::Static => CalendarPlan::Held(future[end..].to_vec()),
+                    Strategy::Held => CalendarPlan::Held(candidate.prepare_held_future(
+                        model,
+                        trajectory,
+                        &following,
+                        &new_records,
+                        &future[end..],
+                    )?),
+                    Strategy::History => candidate.prepare_history_future(
+                        model,
+                        trajectory,
+                        &mut following,
+                        &future[..end],
+                        &future[end..],
+                    )?,
+                };
                 (next, future) = Self::prepare_final_history(model, trajectory, following, plan)?;
                 records.extend(new_records);
-                phases.push(next.clone());
+                phases.push((next.clone(), physical_batch));
                 microevents += 1;
             }
             // Prepare every requested phase observation before publication.
@@ -126,11 +150,26 @@ impl Controller {
                 if time <= self.accepted.time || time >= next.time {
                     continue;
                 }
-                let phase = phases
-                    .iter()
-                    .rev()
-                    .find(|frame| frame.time <= time)
-                    .unwrap();
+                let mut phase = &phases[0].0;
+                for (frame, physical_batch) in &phases[1..] {
+                    let mut occurred = true;
+                    for event in physical_batch {
+                        occurred &= match event.physical_order_at(time) {
+                            Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal) => true,
+                            Some(std::cmp::Ordering::Greater) => false,
+                            None => {
+                                return Err(Error::new(
+                                    "event_resolution",
+                                    "output query cannot certify its physical event phase",
+                                ))
+                            }
+                        };
+                    }
+                    if !occurred {
+                        break;
+                    }
+                    phase = frame;
+                }
                 outputs.push(prepare_root_window(
                     model,
                     trajectory,
@@ -148,11 +187,10 @@ impl Controller {
             self.outputs = outputs;
             *calendar = future;
             Ok(())
-        } else {
-            self.finish_changed_events(model, trajectory, calendar, next, records, plan)
         }
     }
 
+    #[cfg(test)]
     fn finish_changed_events(
         &mut self,
         model: &EventModel,

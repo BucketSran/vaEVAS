@@ -38,6 +38,7 @@ struct Controller {
 }
 
 impl Controller {
+    #[cfg(test)]
     fn accept_events(
         &mut self,
         model: &EventModel,
@@ -49,6 +50,7 @@ impl Controller {
         Ok(())
     }
 
+    #[cfg(test)]
     fn prepare_events(
         &self,
         model: &EventModel,
@@ -791,7 +793,12 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
-                controller.accept_events(&model, &trajectory, &crossings)?;
+                controller.accept_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut crossings,
+                    event_acceptance::Strategy::Static,
+                )?;
             }
         }
         controller.accepted.operators.check_deadline_order(
@@ -850,7 +857,28 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         }
         // Discard an overshooting time proposal before evaluating history:
         // the earlier event can change the future waveform and constraints.
-        if controller.event < crossings.len() && crossings[controller.event].time <= time {
+        if output < trace.times.len()
+            && time == trace.times[output]
+            && crossings.get(controller.event).is_some_and(|event| {
+                event.time > time
+                    && event.bounds().lo <= time
+                    && event.physical_order_at(time).is_none()
+            })
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "output query cannot certify its physical event phase",
+            ));
+        }
+        let physically_due = crossings.get(controller.event).is_some_and(|event| {
+            matches!(
+                event.physical_order_at(time),
+                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+            )
+        });
+        if controller.event < crossings.len()
+            && (crossings[controller.event].time <= time || physically_due)
+        {
             if crossings[controller.event].time < time {
                 trace.discarded_trials += 1;
                 crate::diagnostics::record(
@@ -867,7 +895,12 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
-                controller.accept_events(&model, &trajectory, &crossings)?;
+                controller.accept_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut crossings,
+                    event_acceptance::Strategy::Static,
+                )?;
             }
         } else {
             if !model.program.operators.is_empty() {
@@ -926,7 +959,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             1,
             None,
         );
-        if controller.accepted.time == trajectory.knots[knot] {
+        while knot < trajectory.knots.len() && trajectory.knots[knot] <= controller.accepted.time {
             knot += 1;
         }
     }

@@ -51,33 +51,39 @@ impl Controller {
         )
     }
 
-    pub(super) fn prepare_history_future(
+    pub(super) fn prepare_physical_history(
         &self,
         model: &EventModel,
         trajectory: &Trajectory,
         next: &mut Frame,
         batch: &[ScheduledEvent],
-        remaining: &[ScheduledEvent],
-    ) -> Result<event_acceptance::CalendarPlan, Error> {
+    ) -> Result<(), Error> {
         let time = batch[0].time;
-        let consumed: Vec<_> = batch.iter().map(|e| e.event).collect();
-        let consumed_history: Vec<_> = batch
-            .iter()
-            .filter_map(|e| e.dynamic_direction().map(|direction| (e.event, direction)))
-            .collect();
+        let consumed: Vec<_> = batch.iter().map(|event| event.event).collect();
         let window = batch
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
-        let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
         let physical_anchor = batch.iter().find_map(ScheduledEvent::clock);
-        if next.operators.local_epoch().is_none() && window.lo != window.hi {
+        if next.operators.local_epoch().is_none()
+            && window.lo != window.hi
+            && next.operators.history_certificate().is_some()
+        {
             let probe = GuardTrajectory::new_held(
                 model,
                 trajectory,
                 Some(&next.operators),
                 Some(&next.state_bounds),
             )?;
-            let mut needs_closure = false;
+            let mut needs_closure = trajectory.config.output_times.iter().any(|&query| {
+                query > self.accepted.time
+                    && query < time
+                    && batch.iter().all(|event| {
+                        matches!(
+                            event.physical_order_at(query),
+                            Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                        )
+                    })
+            });
             for (index, leaf) in model.triggers.iter().enumerate() {
                 if model.guard_operators[index].is_empty() || consumed.contains(&index) {
                     continue;
@@ -108,6 +114,28 @@ impl Controller {
                     .anchor_event(clock, time, trajectory.config.stop)?;
             }
         }
+        Ok(())
+    }
+
+    pub(super) fn prepare_history_future(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        next: &mut Frame,
+        batch: &[ScheduledEvent],
+        remaining: &[ScheduledEvent],
+    ) -> Result<event_acceptance::CalendarPlan, Error> {
+        let time = batch[0].time;
+        let consumed: Vec<_> = batch.iter().map(|e| e.event).collect();
+        let consumed_history: Vec<_> = batch
+            .iter()
+            .filter_map(|e| e.dynamic_direction().map(|direction| (e.event, direction)))
+            .collect();
+        let window = batch
+            .iter()
+            .fold(I::point(time), |window, event| window.hull(event.bounds()));
+        let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
+        self.prepare_physical_history(model, trajectory, next, batch)?;
         let before = GuardTrajectory::new_held(
             model,
             trajectory,

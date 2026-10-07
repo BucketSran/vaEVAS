@@ -251,16 +251,17 @@ impl Continuous {
             Self::Linear(v) => v.range_bounds(time),
             Self::Nonlinear(v) => v.range_bounds(time),
             Self::Anchored(v) => {
-                if time.hi < v.start {
+                let delta = v.delta(time)?;
+                if delta.hi < v.cursor {
                     return v.prior.range_bounds(time);
                 }
-                if time.lo < v.start {
+                if delta.lo < v.cursor {
                     return Err(Error::new(
                         "event_resolution",
                         "root query spans a local physical mode change",
                     ));
                 }
-                v.inner.range_bounds(v.delta(time)?)
+                v.inner.range_bounds(delta)
             }
         }
     }
@@ -269,16 +270,17 @@ impl Continuous {
             Self::Linear(v) => v.derivative_bounds(time),
             Self::Nonlinear(v) => v.derivative_bounds(time),
             Self::Anchored(v) => {
-                if time.hi < v.start {
+                let delta = v.delta(time)?;
+                if delta.hi < v.cursor {
                     return v.prior.derivative_bounds(time);
                 }
-                if time.lo < v.start {
+                if delta.lo < v.cursor {
                     return Err(Error::new(
                         "event_resolution",
                         "derivative query spans a local physical mode change",
                     ));
                 }
-                v.inner.derivative_bounds(v.delta(time)?)
+                v.inner.derivative_bounds(delta)
             }
         }
     }

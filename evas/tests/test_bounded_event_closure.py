@@ -15,12 +15,15 @@ V(y,r)<+n+k+j;""", "integer n,k,j;")
         root=Q(.4)*Q(.3)/(Q(.3)+Q(.1))
         physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(root,1),(Q(.30000000000000004),2)])
         baseline=None
-        for times,step in [([0,.49],.49),([0,.15,.29,.3,.49],.012)]:
+        for times,step in [([0,.49],.49),([0,.15,.29,.3,.30000000000000004,.3000000000000001,.49],.012)]:
             result=transient(compile_sources({"mixed.va":source},[instance()]),{"u":[[0,-.3],[.4,.1],[.49,.1]]},times,stop=.49,max_step=step,kernel=KERNEL)
             self.assertEqual(result["transient"]["states"][-1],[2,1,1])
             events=result["transient"]["events"]
             self.assertEqual([e["event"] for e in events],[i for _,i in physical])
             self.assertTrue(all(a["time"]<b["time"] for a,b in zip(events,events[1:])))
+            for query,state in zip(times,result["transient"]["states"]):
+                t=Q(query)
+                self.assertEqual(state,[int(t>=Q(.1))+int(t>=Q(.1)+Q(.2)),int(t>=root),int(t>=Q(.30000000000000004))])
             if baseline is not None:self.assertEqual(events,baseline)
             baseline=events
 
@@ -46,7 +49,7 @@ EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
         source=source.replace("FLOW",flow).replace("TTOL","1e-20" if tight else "1e-6").replace("EXTRA", "@(cross(V(z,r)-3e-18,1,1e-6,1e-6)) j=j+1;" if chain else "")
         program=compile_sources({"hidden.va":source},[instance()])
         baseline=None
-        grids=[([0,.31],.31),([0,.15,.29,.3,.305,.31],.012),([0,.3,.3000000000000001,.30000000000000016,.3000000000000002,.31],.31)]
+        grids=[([0,.31],.31),([0,.15,.29,.3,.305,.31],.012),([0,.3,.30000000000000004,.3000000000000001,.30000000000000016,.3000000000000002,.31],.31)]
         for times,step in grids:
             if tight:
                 with self.assertRaisesRegex(KernelError,"cross_ttol_unrepresentable"):
@@ -64,8 +67,12 @@ EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
             expected=area/(1-area) if polynomial else area
             z=result["solutions"][-1]["voltages"][result["nodes"].index("dut:z")]
             self.assertAlmostEqual(z,float(expected),delta=1e-10)
-            if not chain and len(times)==6 and times[1]==.3:
-                self.assertEqual(result["transient"]["states"][2:5],[[2,1,0,0,0],[2,1,1,0,0],[2,1,1,1,0]])
+            if not chain:
+                tau=Q(.1)+Q(.2)
+                for query,state in zip(times,result["transient"]["states"]):
+                    t=Q(query)
+                    n=int(t>=Q(.1))+int(t>=tau)
+                    self.assertEqual(state,[n,max(0,n-1),int(t>=tau+Q(1e-18)),int(t>=Q(.30000000000000004)),0])
     def test_hidden_root_is_inserted_before_the_next_physical_clock(self):self.hidden()
     def test_hidden_tight_time_tolerance_has_a_specific_refusal(self):self.hidden(tight=True)
     def test_local_affine_flow_change_exposes_a_second_causal_root(self):self.hidden(chain=True)
@@ -106,3 +113,34 @@ V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(V(u,r),0);
 V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
         with self.assertRaisesRegex(KernelError,"autonomous"):
             transient(compile_sources({"nonautonomous.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)
+
+    def test_physical_phase_without_a_cross_trigger(self):
+        source=model("""@(initial_step) begin n=0;q=0;m=0;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(.30000000000000004,0,1e-6)) m=m+1;
+V(z,r)<+idt(q,0); V(y,r)<+q+10*m;""", "integer n,q,m;electrical z;")
+        baseline=None
+        for times,step in [([0,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.31],.012)]:
+            result=transient(compile_sources({"nocross.va":source},[instance()]),{"u":[[0,0],[.31,0]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
+            for query,state,solution in zip(times,result["transient"]["states"],result["solutions"]):
+                t=Q(query);n=int(t>=Q(.1))+int(t>=Q(.1)+Q(.2));m=int(t>=Q(.30000000000000004))
+                self.assertEqual(state,[n,max(0,n-1),m])
+                self.assertAlmostEqual(solution["voltages"][result["nodes"].index("y")],max(0,n-1)+10*m,delta=1e-10)
+            events=result["transient"]["events"]
+            if baseline is not None:self.assertEqual(events,baseline)
+            baseline=events
+
+    def test_query_inside_uncertified_held_clock_interval_is_refused(self):
+        from evas import KernelError
+        source=model("""@(initial_step) begin next=.4;n=0;end
+@(timer(.01,0,1e-6)) next=.1*V(u,r);
+@(timer(next,0,1e-6)) n=n+1; V(y,r)<+n;""", "real next;integer n;")
+        program=compile_sources({"ambiguous.va":source},[instance()])
+        # The product Q(.1)*Q(.3) needs a non-point retained state interval.
+        # Its interval overlaps Q(.03); no exact held-clock certificate exists.
+        self.assertNotEqual(Q(.1)*Q(.3),Q(.03))
+        for step in [.5,.012]:
+            with self.assertRaisesRegex(KernelError,"output query cannot certify its physical event phase"):
+                transient(program,{"u":[[0,.3],[.5,.3]]},[0,.03,.5],stop=.5,max_step=step,kernel=KERNEL)
+        result=transient(program,{"u":[[0,.3],[.5,.3]]},[0,.031,.5],stop=.5,max_step=.5,kernel=KERNEL)
+        self.assertEqual(result["transient"]["states"][-1][1],1)

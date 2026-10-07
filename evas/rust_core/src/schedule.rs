@@ -42,6 +42,38 @@ impl ScheduledEvent {
         }
     }
 
+    /// Compare the proved physical event with an exact binary64 query, never
+    /// with its delayed execution representative. Equality observes post-event.
+    pub(crate) fn physical_order_at(&self, time: f64) -> Option<std::cmp::Ordering> {
+        let query = Moment::Timer {
+            bounds: I::point(time),
+            start: time,
+            period: 0.,
+            index: 0,
+        };
+        self.moment.exact_order(&query).or_else(|| {
+            if let Moment::Anchored { anchor, delta, .. } = &self.moment {
+                let query = anchor.delta(time)?;
+                if delta.hi <= query.lo {
+                    return Some(std::cmp::Ordering::Less);
+                }
+                if delta.lo > query.hi {
+                    return Some(std::cmp::Ordering::Greater);
+                }
+            }
+            let bounds = self.bounds();
+            if bounds.lo == bounds.hi && bounds.lo == time {
+                Some(std::cmp::Ordering::Equal)
+            } else if bounds.hi <= time {
+                Some(std::cmp::Ordering::Less)
+            } else if bounds.lo > time {
+                Some(std::cmp::Ordering::Greater)
+            } else {
+                None
+            }
+        })
+    }
+
     pub(crate) fn retain_after(&mut self, prior: &Self, model: &EventModel) -> Result<bool, Error> {
         if self.moment.exact_order(&prior.moment) != Some(std::cmp::Ordering::Greater) {
             return Ok(false);

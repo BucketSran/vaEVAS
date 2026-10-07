@@ -1188,3 +1188,130 @@ fn local_event_permission_rejects_missing_distinct_and_stale_physical_certificat
         .message
         .contains("distinct physical events"));
 }
+#[test]
+fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller_retry() {
+    let (base, trajectory, _, _) = delayed_timer_root_fixture(1e-18);
+    let mut program = serde_json::to_value(base.program).unwrap();
+    let origin = program["events"][0]["origin"].clone();
+    program["states"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"instance":"dut","name":"s","kind":"real","initial":0}));
+    program["contributions"][0]["rhs"] = json!({"op":"state","state":2});
+    program["events"].as_array_mut().unwrap().push(json!({"origin":origin,"trigger":{"kind":"timer","start":0.30000000000000004,"period":0,"time_tolerance":1e-6,"enabled":true},"body":[]}));
+    let mut later = program["events"][1].clone();
+    later["trigger"]["guard"] =
+        json!({"op":"affine","constant":-3e-18,"terms":[{"node":3,"coefficient":1}]});
+    later["body"] = json!([{"kind":"assign","state":2,"rhs":{"op":"affine","constant":0,"terms":[{"node":3,"coefficient":1.}]}}]);
+    program["events"].as_array_mut().unwrap().push(later);
+    let mut competing = program["events"][3].clone();
+    competing["body"] =
+        json!([{"kind":"assign","state":2,"rhs":{"op":"affine","constant":2,"terms":[]}}]);
+    program["events"].as_array_mut().unwrap().push(competing);
+    let make = |value: serde_json::Value| {
+        let model = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            base.driven.clone(),
+            base.tolerances.clone(),
+        )
+        .unwrap();
+        let states = model.initial();
+        let (operators, calendar) =
+            history_calendar::initialize(&model, &trajectory, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let controller = Controller {
+            accepted: Frame {
+                time: 0.,
+                solution: circuit.solve(&[0.]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        (model, controller, calendar)
+    };
+    let (bad, mut controller, mut calendar) = make(program.clone());
+    controller
+        .accept_history_events(&bad, &trajectory, &mut calendar)
+        .unwrap();
+    let before = controller.accepted.clone();
+    let records = serde_json::to_value(&controller.records).unwrap();
+    let original: Vec<_> = calendar
+        .iter()
+        .map(|e| (e.event, e.time, e.bounds()))
+        .collect();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "event_conflict");
+        // The first hidden-root microevent is valid. Two distinct event
+        // blocks at the later physical root select the same writer state.
+        assert_eq!(controller.accepted.time, before.time);
+        assert_eq!(controller.accepted.states, before.states);
+        assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            before.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before.operators));
+        assert_eq!(controller.event, 0);
+        assert!(controller.outputs.is_empty());
+        assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.event, e.time, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+    program["events"][4]["body"] = json!([]);
+    let (good, mut clean, mut clean_calendar) = make(program);
+    clean
+        .accept_history_events(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    clean
+        .accept_history_events(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    controller
+        .accept_history_events(&good, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.time, clean.accepted.time);
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        controller.accepted.solution.voltages,
+        clean.accepted.solution.voltages
+    );
+    assert!(controller
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>(),
+        clean_calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+}
