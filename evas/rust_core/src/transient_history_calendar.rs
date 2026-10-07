@@ -150,13 +150,64 @@ impl Controller {
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
         let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
-        self.prepare_physical_history(model, trajectory, next, batch, remaining)?;
         let before = GuardTrajectory::new_held(
             model,
             trajectory,
             Some(&self.accepted.operators),
             Some(&self.accepted.state_bounds),
         )?;
+        if next.operators.local_epoch().is_none() && window.lo != window.hi {
+            // Refresh independent certificates under candidate parameters before
+            // asking whether an output needs a local physical phase. A changed
+            // held timer may have moved beyond stop or become disabled; its old
+            // calendar entry cannot authorize a local epoch. History-root tube
+            // inspection and anchoring still precede history isolation below.
+            let mut independent_changed = vec![true; model.triggers.len()];
+            for (index, leaf) in model.triggers.iter().enumerate() {
+                let owner = &model.program.events[leaf.event].origin.instance;
+                match &leaf.trigger {
+                    EventTrigger::Timer { .. } => independent_changed[index] = false,
+                    EventTrigger::HeldTimer {
+                        start,
+                        period,
+                        enabled,
+                        ..
+                    } => {
+                        independent_changed[index] = false;
+                        for expression in [start, period, enabled] {
+                            independent_changed[index] |=
+                                crate::events::affine(expression, &model.program, owner)?
+                                    .state_dependencies
+                                    .iter()
+                                    .any(|&state| {
+                                        self.accepted.state_bounds[state]
+                                            != next.state_bounds[state]
+                                    });
+                        }
+                    }
+                    EventTrigger::Cross { guard, .. }
+                        if model.guard_operators[index].is_empty() =>
+                    {
+                        independent_changed[index] = before.changed_by(
+                            guard,
+                            owner,
+                            &self.accepted.state_bounds,
+                            &next.state_bounds,
+                        )?;
+                    }
+                    _ => {}
+                }
+            }
+            let physical_pending = reschedule_independent(
+                model,
+                trajectory,
+                &next.state_bounds,
+                time,
+                &independent_changed,
+                remaining,
+            )?;
+            self.prepare_physical_history(model, trajectory, next, batch, &physical_pending)?;
+        }
         let after = GuardTrajectory::new_held(
             model,
             trajectory,

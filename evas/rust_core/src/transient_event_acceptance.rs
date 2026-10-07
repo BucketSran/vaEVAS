@@ -69,13 +69,6 @@ impl Controller {
         let time = calendar[self.event].time;
         let (mut next, records, end) =
             self.prepare_events_until(model, trajectory, calendar, Some(time))?;
-        self.prepare_physical_history(
-            model,
-            trajectory,
-            &mut next,
-            &calendar[self.event..end],
-            &calendar[end..],
-        )?;
         let plan = match strategy {
             Strategy::Static => {
                 // The immutable static calendar keeps its original cursor.
@@ -98,15 +91,28 @@ impl Controller {
                     }
                     cluster_end += 1;
                 }
-                CalendarPlan::Held(calendar[end..(cluster_end + 1).min(calendar.len())].to_vec())
+                let future = calendar[end..(cluster_end + 1).min(calendar.len())].to_vec();
+                self.prepare_physical_history(
+                    model,
+                    trajectory,
+                    &mut next,
+                    &calendar[self.event..end],
+                    &future,
+                )?;
+                CalendarPlan::Held(future)
             }
-            Strategy::Held => CalendarPlan::Held(self.prepare_held_future(
-                model,
-                trajectory,
-                &next,
-                &records,
-                &calendar[end..],
-            )?),
+            Strategy::Held => {
+                let future =
+                    self.prepare_held_future(model, trajectory, &next, &records, &calendar[end..])?;
+                self.prepare_physical_history(
+                    model,
+                    trajectory,
+                    &mut next,
+                    &calendar[self.event..end],
+                    &future,
+                )?;
+                CalendarPlan::Held(future)
+            }
             Strategy::History => self.prepare_history_future(
                 model,
                 trajectory,
@@ -145,22 +151,35 @@ impl Controller {
                     candidate.prepare_events_until(model, trajectory, &future, Some(time))?;
                 let physical_batch = future[..end].to_vec();
                 static_cursor += end;
-                candidate.prepare_physical_history(
-                    model,
-                    trajectory,
-                    &mut following,
-                    &future[..end],
-                    &future[end..],
-                )?;
                 let plan = match strategy {
-                    Strategy::Static => CalendarPlan::Held(future[end..].to_vec()),
-                    Strategy::Held => CalendarPlan::Held(candidate.prepare_held_future(
-                        model,
-                        trajectory,
-                        &following,
-                        &new_records,
-                        &future[end..],
-                    )?),
+                    Strategy::Static => {
+                        let pending = future[end..].to_vec();
+                        candidate.prepare_physical_history(
+                            model,
+                            trajectory,
+                            &mut following,
+                            &future[..end],
+                            &pending,
+                        )?;
+                        CalendarPlan::Held(pending)
+                    }
+                    Strategy::Held => {
+                        let pending = candidate.prepare_held_future(
+                            model,
+                            trajectory,
+                            &following,
+                            &new_records,
+                            &future[end..],
+                        )?;
+                        candidate.prepare_physical_history(
+                            model,
+                            trajectory,
+                            &mut following,
+                            &future[..end],
+                            &pending,
+                        )?;
+                        CalendarPlan::Held(pending)
+                    }
                     Strategy::History => candidate.prepare_history_future(
                         model,
                         trajectory,

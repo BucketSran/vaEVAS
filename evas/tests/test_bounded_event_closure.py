@@ -166,6 +166,25 @@ V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);""", "integer n,q;electrical z;")
             if baseline is not None:self.assertEqual(events,baseline)
             baseline=events
 
+    def test_rebuilt_held_deadline_does_not_use_stale_phase_permission(self):
+        for action,trigger in [("next=.30000000000000004+.1*q;", "next,0,1e-6"), ("en=1-q;", "next,0,1e-6,en")]:
+            for history_guard in ["", "@(cross(V(z,r)-1,1,1e-6,1e-6)) h=h+1;"]:
+                source=model("""@(initial_step) begin n=0;q=0;m=0;h=0;en=1;next=.30000000000000004;end
+@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;ACTION end
+@(timer(TRIGGER)) m=m+1;
+V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);GUARD""", "integer n,q,m,h,en;real next;electrical z;").replace("ACTION",action).replace("TRIGGER",trigger).replace("GUARD",history_guard)
+                program=compile_sources({"replanned-held.va":source},[instance()])
+                baseline=None
+                for times in [[0,.31],[0,.3000000000000001,.31]]:
+                    result=transient(program,{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=.31,vabstol=1e-7,reltol=0,kernel=KERNEL)
+                    self.assertEqual(result["transient"]["states"][-1][:4],[2,1,0,0])
+                    for time,row in zip(times,result["solutions"]):
+                        expected=max(Q(0),(Q(time)**2-(Q(.1)+Q(.2))**2)/2)
+                        self.assertAlmostEqual(row["voltages"][result["nodes"].index("y")],float(expected),delta=1e-7)
+                    events=result["transient"]["events"]
+                    if baseline is not None:self.assertEqual(events,baseline)
+                    baseline=events
+
     def test_query_inside_uncertified_held_clock_interval_is_refused(self):
         from evas import KernelError
         source=model("""@(initial_step) begin next=.4;n=0;end
