@@ -106,6 +106,16 @@ class ExecutionBoundaryTests(unittest.TestCase):
                 failed = runtime.verify(candidate, root / "fail", tests, lambda *args: {"passed": False})
                 self.assertEqual(failed["reward"], 0)
                 self.assertEqual(failed["status"], "completed")
+                # Frozen legacy cases keep their bytes; a separate contract can
+                # declare observation nodes without changing numerical inputs.
+                original_cases = [{"name": "complete", "netlist": "// fixture", "stop": 1.0}]
+                (tests / "cases.json").write_text(json.dumps(original_cases))
+                case_bytes = (tests / "cases.json").read_bytes()
+                (tests / "contract.json").write_text(json.dumps({"signals": ["out"]}))
+                legacy = runtime.verify(candidate, root / "legacy", tests,
+                                        lambda rows, case, work: {"passed": case["signals"] == ["out"]})
+                self.assertEqual(legacy["reward"], 1)
+                self.assertEqual((tests / "cases.json").read_bytes(), case_bytes)
                 linked = root / "linked.va"
                 linked.symlink_to(candidate)
                 with patch.object(sys, "argv", ["verify.py", "--candidate", str(linked), "--output", str(root / "linked-output"), "--tests", str(tests)]):

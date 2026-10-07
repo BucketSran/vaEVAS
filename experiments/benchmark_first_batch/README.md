@@ -86,7 +86,9 @@ python3 -B experiments/benchmark_first_batch/performance.py \
 缺失尝试都会阻止配对汇总。它单列原生 transient CPU/elapsed、accepted steps 与
 求解进程 elapsed，输出逐次数据、范围、中位数和逐对比率。缺失的 rejected steps
 保持未知。当前执行边界合并捕获 stdout/stderr，分析按真实合并流检查致命诊断，
-不会虚构独立 stderr。每个新 sandbox 冷编译，求解 CPU 与整体进程开销分别呈现。
+不会虚构独立 stderr。每次使用新 sandbox，编译或缓存状态以原生日志为准；
+求解 CPU 与整体进程开销分别呈现。大容量性能终评使用单独的操作者 profile，
+客户端 `job_wait_timeout_s` 只控制等候归档的期限，不代替 harness 的执行/容量限制。
 该工具不自动选择达标阈值，也不将可提取统计视为已证明性能改进。
 
 这里的 process fixture 只测试文件与评分协议，不执行 Verilog-A，不构成后端证据。

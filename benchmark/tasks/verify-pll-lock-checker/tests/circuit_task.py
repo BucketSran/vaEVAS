@@ -108,7 +108,7 @@ def validate_rows(rows, case):
 
 
 def verify(candidate, output, tests, evaluate, case_name=None):
-    """Run a frozen submission; only completed numerical checks yield a score."""
+    """Grade a frozen submission and keep execution failures distinct from behavior."""
     candidate, output, tests = map(Path, (candidate, output, tests))
     if candidate.is_symlink():
         raise ValueError("candidate must not be a symlink")
@@ -119,6 +119,11 @@ def verify(candidate, output, tests, evaluate, case_name=None):
     cases_path, contract_path = tests / "cases.json", tests / "contract.json"
     cases = json.loads(cases_path.read_text())
     contract = json.loads(contract_path.read_text())
+    # Legacy numerical case files may be frozen by another consumer. Keep their
+    # bytes intact and declare only the observation nodes in the task contract.
+    for case in cases:
+        if "signals" not in case:
+            case["signals"] = contract["signals"]
     if not cases or len({c["name"] for c in cases}) != len(cases):
         raise ValueError("empty or duplicate case list")
     if case_name is not None:

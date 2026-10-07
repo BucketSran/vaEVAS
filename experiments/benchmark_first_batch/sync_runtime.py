@@ -43,11 +43,13 @@ def sync(check=False):
     count = 0
     for contract in sorted((ROOT / "benchmark/tasks").glob("*/tests/contract.json")):
         tests = contract.parent
-        if tests.parent.name.startswith("va"):
+        if tests.parent.name.startswith("va") and tests.parent.name != "va07-triangle-repair":
             continue
         tree = ast.parse((tests / "verify.py").read_text())
         modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
         names = {"circuit_task", "adc_linearity", *[m for m in modules if m.startswith("first_batch_")]}
+        if "first_batch_triangle" in modules:
+            names.add("triangle_oscillator")
         for name in sorted(names):
             source = ROOT / "benchmark/checkers" / (name + ".py")
             target = tests / source.name

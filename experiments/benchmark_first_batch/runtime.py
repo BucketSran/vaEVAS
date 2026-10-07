@@ -64,6 +64,8 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None):
         templates[name] = (ROOT / "benchmark/checkers" / name).read_bytes()
     tree = ast.parse(templates["verify.py"])
     modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+    if "first_batch_triangle" in modules:
+        templates["triangle_oscillator.py"] = (ROOT / "benchmark/checkers/triangle_oscillator.py").read_bytes()
     for name in modules:
         if name.startswith("first_batch_"):
             templates[name + ".py"] = (task.parents[1] / "checkers" / (name + ".py")).read_bytes()
@@ -108,6 +110,9 @@ def execute(prepared, config_path):
     """Serial within one calibration; coordinator limits simultaneous callers."""
     prepared = Path(prepared).resolve()
     config = json.loads(Path(config_path).read_text())
+    wait_limit = config.get("job_wait_timeout_s", 600)
+    if type(wait_limit) is not int or wait_limit <= 0:
+        raise ValueError("job_wait_timeout_s must be a positive integer")
     _, _, remote = harness_modules(config["harness_checkout"])
     plan = json.loads((prepared / "preparation.json").read_text())
     evidence = prepared / "remote"
@@ -126,7 +131,7 @@ def execute(prepared, config_path):
             state_path.write_text(json.dumps({"job_id": job_id, "condition_id": case["condition_id"]}) + "\n")
             state = transport.submit(prepared / "frozen", Path(case["package"]), job_id)
         print(json.dumps({"job_id": job_id, "condition": case["condition_id"], "state": state.get("state")}), flush=True)
-        deadline = time.monotonic() + 600
+        deadline = time.monotonic() + wait_limit
         while state.get("state") != "finished":
             if state.get("state") in {"missing", "unknown"} or time.monotonic() > deadline:
                 raise RuntimeError("job state unresolved; resume the same calibration, do not submit a new ID")
