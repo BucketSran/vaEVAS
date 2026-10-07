@@ -101,16 +101,31 @@ class EventHistoryContinuation(unittest.TestCase):
         tau = Q(.1) + Q(.2)
         rho = Q(math.nextafter(.3, math.inf))
         self.assertLess(tau, rho)
-        duration = float(Q(.31)-rho)
-        # y'+y=z, y(0)=z(0)=2. Before reset z=2+t; during
-        # [tau,rho] z=2; after release z=2+(t-rho). The filter
-        # retains its own state through both reset and release.
-        y_tau = 1 + float(tau) + math.exp(-float(tau))
-        y_rho = 2 + (y_tau-2)*math.exp(-float(rho-tau))
-        expected = {'dut:z': 2+duration,
-                    'y': 1+duration+(y_rho-1)*math.exp(-duration)}
+        end = Q(.31)
+        duration = float(end-rho)
+        # For u=t and z'=1+t**degree, derive z by integration.
+        # A polynomial particular solution of y'+y=z has coefficients
+        # b[k]=a[k]-(k+1)*b[k+1]. Its homogeneous term carries the
+        # filter's initial state across each reset/release segment.
+        def particular(coefficients, time):
+            result = list(coefficients)
+            for k in range(len(result)-2, -1, -1):
+                result[k] -= (k+1)*result[k+1]
+            return sum(value*time**k for k, value in enumerate(result))
         for nonlinear in (False, True):
             with self.subTest(nonlinear=nonlinear):
+                degree = 2 if nonlinear else 1
+                coefficients = [Q(2), Q(1)] + [Q(0)]*(degree-1) + [Q(1, degree+1)]
+                y_tau = float(particular(coefficients, tau)) + (
+                    2-float(particular(coefficients, Q(0))))*math.exp(-float(tau))
+                y_rho = 2 + (y_tau-2)*math.exp(-float(rho-tau))
+                released = coefficients.copy()
+                released[0] = 2-rho-rho**(degree+1)/(degree+1)
+                expected = {
+                    'dut:z': float(2+end-rho+(end**(degree+1)-rho**(degree+1))/(degree+1)),
+                    'y': float(particular(released, end)) + (
+                        y_rho-float(particular(released, rho)))*math.exp(-duration),
+                }
                 flow = '1+pow(V(u,r),2)' if nonlinear else '1+V(u,r)'
                 source = model(f'''@(initial_step) begin n=0;rst=0;h=0;end
                     @(timer(.1,.2,1e-6)) begin n=n+1;rst=n-1;end
@@ -124,7 +139,7 @@ class EventHistoryContinuation(unittest.TestCase):
                 for times, step in (([0, .31], .31),
                                     ([0, .05, .15, .25, .305, .31], .01)):
                     result = transient(program,
-                        {'u': [[0, 0], [.3, 0], [float(rho), 0], [.31, 0]]}, times,
+                        {'u': [[0, 0], [.3, .3], [float(rho), float(rho)], [.31, .31]]}, times,
                         stop=.31, max_step=step, vabstol=1e-8, reltol=0, kernel=KERNEL)
                     for node, value in expected.items():
                         self.assertAlmostEqual(result['solutions'][-1]['voltages'][
@@ -132,8 +147,12 @@ class EventHistoryContinuation(unittest.TestCase):
                     self.assertEqual(result['transient']['states'][-1], [2, 0, 0])
                     events = result['transient']['events']
                     self.assertEqual([e['event'] for e in events], [0, 0, 1])
-                    for event in events[1:]:
+                    for event, physical_time in zip(events[1:], (tau, rho)):
                         self.assertIn('observation_time_bounds', event)
+                        lower, upper = map(Q, event['observation_time_bounds'])
+                        self.assertLess(lower, upper)
+                        self.assertLessEqual(lower, physical_time)
+                        self.assertLessEqual(physical_time, upper)
                     identities = [(e['event'], e['time'], e.get('observation_time_bounds'))
                                   for e in events]
                     if reference_events is not None:
