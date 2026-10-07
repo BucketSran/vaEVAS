@@ -205,6 +205,45 @@ def summarize_pairs(records,policy):
     return result
 
 
+def lossless_compress_waveform(path):
+    """Replace a complete PSF with verified lossless gzip; preserve raw on failure.
+
+    Compression occurs after the solver timer and functional judgment. Never
+    overwrite an existing artifact and never delete raw until full roundtrip
+    byte count and SHA256 match. Logs and every waveform point remain retained.
+    """
+    import gzip
+    import shutil
+    import time
+    import zlib
+    path=Path(path);compressed=path.with_name(path.name+'.gz')
+    raw=path.read_bytes();raw_hash=hashlib.sha256(raw).hexdigest()
+    created=False;started=time.monotonic()
+    try:
+        with compressed.open('xb') as stream:
+            created=True
+            with gzip.GzipFile(filename='',mode='wb',fileobj=stream,compresslevel=6,mtime=0) as zipper:
+                with path.open('rb') as source:shutil.copyfileobj(source,zipper)
+        decoded_hash=hashlib.sha256();decoded_bytes=0
+        with gzip.open(compressed,'rb') as decoder:
+            while chunk:=decoder.read(1024*1024):
+                decoded_hash.update(chunk);decoded_bytes+=len(chunk)
+        if decoded_bytes!=len(raw) or decoded_hash.hexdigest()!=raw_hash:
+            raise OptimizationEvidenceError('lossless PSF roundtrip identity mismatch')
+        stored=compressed.read_bytes()
+        receipt=dict(version='gzip-lossless-psf-v1',encoding='gzip',compression_level=6,zlib_runtime_version=zlib.ZLIB_RUNTIME_VERSION,
+                     raw_bytes=len(raw),raw_sha256=raw_hash,gzip_bytes=len(stored),
+                     gzip_sha256=hashlib.sha256(stored).hexdigest(),gzip_path=compressed.name,
+                     roundtrip_verified=True,compression_elapsed_s=time.monotonic()-started)
+        # Failure to remove the raw artifact is a failure, not a compact receipt.
+        path.unlink()
+        return receipt
+    except Exception as exc:
+        if created:compressed.unlink(missing_ok=True)
+        if isinstance(exc,(OSError,ValueError,OptimizationEvidenceError)):raise
+        raise OptimizationEvidenceError('lossless PSF compression failed: '+str(exc)) from exc
+
+
 def run_one_source(source,case,evaluate,directory,*,binary='spectre',timeout_s=90):
     """One real sequential solve, retaining full source/netlist/log/PSF evidence.
 
@@ -247,10 +286,13 @@ def run_one_source(source,case,evaluate,directory,*,binary='spectre',timeout_s=9
             raise OptimizationEvidenceError('oracle did not return boolean passed')
         record.update(status='completed',passed=verdict['passed'],functional=verdict,statistics=stats,
                       waveform_sha256=hashlib.sha256(waveform.read_bytes()).hexdigest(),waveform_rows=len(rows))
+        storage=lossless_compress_waveform(waveform)
+        storage['gzip_path']=str(waveform.with_name(waveform.name+'.gz').relative_to(directory))
+        record['waveform_storage']=storage
     except subprocess.TimeoutExpired:
         record.update(status='simulation_timeout',process_elapsed_s=time.monotonic()-started)
     except (OSError,ValueError,KeyError,OptimizationEvidenceError) as exc:
-        record.update(status='invalid_solver_evidence',error=f'{type(exc).__name__}: {exc}')
+        record.update(status='invalid_solver_evidence',passed=False,error=f'{type(exc).__name__}: {exc}')
     (directory/'record.json').write_text(json.dumps(record,indent=2,allow_nan=False)+'\n')
     return record
 
@@ -335,6 +377,7 @@ def performance_main(evaluate):
     import json
     import os
     from pathlib import Path
+    import circuit_task as runtime_module
     from circuit_task import verify,write_report
     parser=argparse.ArgumentParser()
     parser.add_argument('--candidate',type=Path,required=True)
@@ -348,7 +391,16 @@ def performance_main(evaluate):
     # policy/baseline defects are infrastructure, never a candidate zero.
     def reject(status,reward,reason):
         args.output.mkdir(parents=True,exist_ok=False)
-        write_report(args.output,dict(status=status,reward=reward,reason=reason,cases=[]))
+        runtime_path=Path(runtime_module.__file__).resolve()
+        def identity(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        report=dict(status=status,reward=reward,reason=reason,cases=[],
+                    candidate_sha256=hashlib.sha256(source).hexdigest(),
+                    candidate_files={'dut.va':hashlib.sha256(source).hexdigest()},
+                    cases_sha256=identity(tests/'cases.json'),contract_sha256=identity(tests/'contract.json'),
+                    checker_sha256=identity(tests/'verify.py') if (tests/'verify.py').exists() else identity(runtime_path),
+                    runtime_sha256=identity(runtime_path),parser_sha256=identity(runtime_path.with_name('adc_linearity.py')),
+                    performance_policy_sha256=identity(tests/'performance.json'))
+        write_report(args.output,report)
         raise SystemExit(0 if reward is not None else 2)
     try:validate_admitted_policy(policy)
     except OptimizationEvidenceError as exc:reject('infrastructure_error',None,str(exc))

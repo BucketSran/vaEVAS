@@ -41,12 +41,20 @@ class OnlinePerformance(unittest.TestCase):
                 root=Path(d);tests=root/'tests';tests.mkdir()
                 (tests/'performance.json').write_text(json.dumps(POLICY))
                 (tests/'baseline.va').write_bytes(baseline)
+                for name in ('cases.json','contract.json','verify.py','circuit_task.py','adc_linearity.py'):
+                    (tests/name).write_text('{}' if name.endswith('.json') else '# trusted fixture file\n')
+                runtime.__file__=str(tests/'circuit_task.py')
                 (root/'dut.va').write_bytes(candidate)
                 argv=['verify.py','--candidate',str(root/'dut.va'),'--output',str(root/'out'),'--tests',str(tests)]
                 with patch.dict(sys.modules,{'circuit_task':runtime}),patch.object(sys,'argv',argv):
                     with self.assertRaises(SystemExit):M.performance_main(None)
                 report=json.loads((root/'out/report.json').read_text())
                 self.assertEqual((report['status'],report['reward']),(status,reward))
+                import hashlib
+                for field,name in [('cases_sha256','cases.json'),('contract_sha256','contract.json'),('checker_sha256','verify.py'),('runtime_sha256','circuit_task.py'),('parser_sha256','adc_linearity.py')]:
+                    self.assertEqual(report[field],hashlib.sha256((tests/name).read_bytes()).hexdigest())
+                self.assertEqual(report['candidate_sha256'],hashlib.sha256(candidate).hexdigest())
+                self.assertEqual(report['candidate_files'],{'dut.va':hashlib.sha256(candidate).hexdigest()})
 
     def test_warmups_are_kept_but_not_used_as_denominator(self):
         order=[]

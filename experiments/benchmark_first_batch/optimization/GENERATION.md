@@ -43,3 +43,9 @@ cases、基线、参考与至少3语义/无效优化负例，评分入口使用g
 
 生成后由主任务更新首批inventory、同步METADATA、运行reference和负例的完整正式
 评分校准，再做Agentic；该生成器不越过这些交付步骤，也不自行push/PR。
+
+执行资源已修正：harness私有profile收集硬上限256MiB，不能声明1GiB突破该上限。
+采用256MiB/900s，paired完整PSF无损gzip、逐字节往返SHA相同后移除重复原件；主功能
+PSF和所有源码/日志保留。压缩不进入solver计时。归档必须复核每份gzip及总大小。
+早期源guard零分也必须包含core schema的candidate/cases/contract/checker/runtime/parser
+哈希，使用这些真实受信文件的字节身份，不以缺省字符串伪造receipt。

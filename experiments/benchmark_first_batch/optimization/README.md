@@ -1,17 +1,18 @@
 # 仿真实现优化候选取证
 
 这些目录保存原创电压域模型、等行为合同的优化提交与独立判据。
-目前均为待 Spectre 取证候选，不是正式 Harbor 任务，不计已校准题数。
+本目录是工程取证材料；主任务已据VCO/power/SAR/UART证据生成四个正式包，
+其完整评分校准仍待完成。Flash/DAC/SC保持候选身份，不计已校准题数。
 只有实际仿真功能通过、已定位瓶颈且重复性能结果超过波动后，才写正式任务包。
 
 | 候选 | 固定工程工作 | 待证实的成本 | 状态 |
 | --- | --- | --- | --- |
-| vco_boundstep | 20 us 低频 PLL VCO，另验连续调谐与高频 | 按最高频率约束全部时间步 | v2 双侧 3/3 功能通过；低频步数差明显，待重复测量 |
-| flash_thresholds | 100 us、10000 次 flash ADC 转换 | 连续重复扫描真实阈值阵列 | v1/v2 双侧均 3/3 功能通过；重复性能与 profile 待做 |
-| power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | 修正后baseline v3 3/3、reference v2 3/3；重复性能待做 |
+| vco_boundstep | 20 us 低频 PLL VCO，另验连续调谐与高频 | 按最高频率约束全部时间步 | 全条件功能过；quiet五对步数/CPU/进程均5/5减少，正式包待校准 |
+| flash_thresholds | 100 us、10000 次 flash ADC 转换 | 连续重复扫描真实阈值阵列 | 旧二分五对CPU省、进程反慢；新event-only候选五对待完成 |
+| power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | 修正后两侧功能过；quiet五对稳定减少，正式包待校准 |
 | sampled_dac | 100 us、10000 个 12-bit 采样电压码 | 连续重复真实位权解码 | 双侧 3/3，单轮无收益；待剖析或替换 |
-| uart_calendar | 100 ms、10帧8N1状态消息 | 空闲仍16x波特率采样真实串行线 | v3双侧3/3实际功能过；重复性能待做 |
-| sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | v3双侧3/3实际功能过；重复性能待做 |
+| uart_calendar | 100 ms、10帧8N1状态消息 | 空闲仍16x波特率采样真实串行线 | 全条件功能过；quiet五对稳定减少，正式包待校准 |
+| sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | 全条件功能过；quiet五对稳定减少，正式包待校准 |
 | sc_coefficients | 100 us、10000 次四级滤波采样 | 连续重复求实际采样系数 | 双侧 3/3，单轮微差不足立题 |
 
 每项 `REQUEST.md` 说明工程场景、功能合同与实际运行请求；`cases.json` 给出固定网表，
@@ -43,13 +44,19 @@ power 基线慢速 case 的首个高电压轮询为 20.001 us，25.001 us 时未
 基线数值边界，checker 的 2 ns 边沿容差保持不变，不计作优化，修复后必须重新实际
 校准。已有旧波形仍保留失败。禁止用失败基线的计时取得正式性能成绩。
 
-新增 SAR 事件日历是独立候选，补充试探工程瓶颈，target_task_count 仍 5，task_count 仍 0；
+SAR加入时为独立候选，补充试探工程瓶颈；当时target_task_count=5、task_count=0，
 候选数不等于正式题数。`test_sar_calendar.py` 三组纯fixture不作为 actual 证据。
 
-UART独立候选让待验证候选总数为7，正式题仍0；`test_uart_calendar.py`不执行VA。
+UART加入时让候选总数为7，当时正式题为0；`test_uart_calendar.py`不执行VA。
 
 `third_calibration.json` 保存第三轮15份actual归档的native统计、merged流及源码/网表/
 波形身份，功能15/15过。power数值修复没有减少100102accepted步，不是优化成绩。
 SAR完成20转换/240决策，native102889→4467步；UART接收10帧/80位，native186759→2822
 步。这些数字定位实际timer调度成本，只是单次并发功能轮，不替代五对重复测量。
-UART每侧warmup+五对净PSF约266.2MB，也超现有256MiB上限，需要性能专用profile。
+UART每侧warmup+五对净PSF约266.2MB，也超256MiB硬上限。现实现paired完整PSF
+判读后lossless gzip，逐字节解压SHA相同才删除重复原件；主功能PSF不压缩。
+见scoring_prototype/README.md与lossless_psf_calibration.json；1GiB profile不可用。
+
+最新集成阶段：主任务已生成VCO/power/SAR/UART四个正式包，完整实际reference校准
+仍在执行，不能把生成成功当backend通过。quiet四题配对收据见QUIET_PAIR_RECEIPT.md；
+Flash两新候选功能6/6通过，仍等事件内线性候选五对结果，旧二分参考未覆盖。

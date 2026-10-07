@@ -19,7 +19,13 @@ case hash、performance角色），全Harbor包须全部case且唯一performance
 full_task_success=null；该包的一分只是本条件成功，不能当整题完成。source guard还在每次pair启动前再检查，避免helper未接评分路径。
 原型的25项本地测试中6项验证顺序/角色/失败/guard，使用合成时间，完全不是测速。
 
-VCO实际单次低频baseline PSF45,571,517B、reference910,872B。五对净波形约232.4MB，
-加两侧warmup约278.9MB，超过现有256MiB轮询上限。建议协调者另部署性能profile，
-保存1GiB、900s；每次子Spectre仍90s。不要改已有harness或通过丢原始波形规避限额。
-UART/SAR实际尺寸未知，收到actual后复核。外层全部功能及其它case输出也需计入容量。
+VCO实际单次低频baseline PSF45,571,517B、reference910,872B。所有paired PSF在
+完整解析/功能判读及solver计时结束后按gzip level6无损压缩；逐字节解压SHA和长度
+相同后才删除原文件，保留raw/gzip长度、哈希、相对路径、版本和压缩时间。源文件、
+原生日志及merged流不压缩，主功能PSF保持原格式，不删点、不截断失败。
+
+已实际核查harness收集硬上限256MiB，1GiB profile不可用。执行采用256MiB、900s，
+每次子Spectre90s；完整输出按lossless保存，而不是扩大harness上限。四份历史原PSF
+本地无损往返验证见lossless_psf_calibration.json，不是新仿真或新solver性能测量。
+VCO baseline45.57MB→7.21MB、reference0.91MB→0.154MB；UART baseline43.70MB→
+1.194MB、reference0.663MB→0.0297MB。正式远端归档仍需逐条解压复核及总容量检查。

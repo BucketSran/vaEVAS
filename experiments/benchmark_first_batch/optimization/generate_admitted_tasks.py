@@ -202,8 +202,9 @@ experiments/benchmark_first_batch/optimization，五对准入证据SHA256为
 `{policy['admission_evidence_sha256']}`。该哈希绑定归档、源码、判据和实际计时；
 题数/Agentic/负例正式校准状态由首批inventory维护，不由目录存在推导完成。
 
-性能专用执行profile须保留完整原始PSF，建议至少1GiB收集上限及900s，
-不能使用原功能profile256MiB上限，也不删波形片段绕开资源限制。
+执行profile采用现有256MiB收集硬上限及900s。paired完整PSF在求解计时及
+功能判读后gzip无损压缩，核验解压SHA/字节长度相等才移除重复原文件；保留双身份
+及版本/路径/压缩时间。主功能PSF仍原格式。所有点/日志保留，不截断波形。
 ''')
 
 
