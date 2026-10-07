@@ -107,7 +107,7 @@ A nonnull Harbor verifier result alone does not establish a completed evaluation
 
 New snapshots and attempts disclose the complete action envelope in public_protocol.py. The current flash Trial remains frozen with its old interface description, and its HTTP400 invalid_action attempts remain in the raw Pi trace; they are distinct from accepted public-session action receipts.
 
-New native snapshots publish the complete outer action envelope, including an example and the actual four tool argument schemas. `evas_read` with an empty path lists declared files. `evas_write` replaces a whole declared candidate file; completing the stage or reaching its budget freezes the latest complete candidate, while `evas_submit` explicitly ends editing. Ordinary container files are not collected as candidate files. Old frozen Trials are preserved, including HTTP 400 errors from incomplete envelope disclosure.
+New native snapshots publish the complete outer action envelope, including an example and the actual four tool argument schemas. `evas_read` with an empty path lists declared files. `evas_write` replaces a whole declared candidate file; the end of the agent phase, including its deadline, freezes the latest complete candidate, while `evas_submit` explicitly ends editing. An action or simulation quota error alone does not freeze the candidate. Ordinary container files are not collected as candidate files. Old frozen Trials are preserved, including HTTP 400 errors from incomplete envelope disclosure.
 
 Validate the public envelope against the installed harness without a model or solver call:
 
