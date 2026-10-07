@@ -181,7 +181,7 @@ storage_mb = 2048
     shutil.copyfile(family/'baseline.va',destination/'tests/baseline.va')
     cases=json.loads((family/'cases.json').read_text());perf=next(c for c in cases if c.get('performance'))
     (destination/'environment/public/visible.scs').write_text(perf['netlist'].replace('"dut.va"','"/work/dut.va"'))
-    (destination/'environment/public/README.md').write_text('starter.va是实际功能校准合格的原始基线；visible.scs是固定性能负载。\n提交/work/dut.va，保持题面所有参数与电路行为。参考优化代码不公开。\n')
+    (destination/'environment/public/README.md').write_text('starter.va是实际功能校准合格的原始基线；visible.scs是固定性能负载。\n提交/work/dut.va，保持题面所有参数与电路行为。参考优化代码不公开。\n性能满分只说明达到题面指定指标；须分开报告CPU/steps和实际进程耗时，不能据满分推导端到端更快。\n')
     shutil.copyfile(family/'evaluate.py',destination/'tests/evaluate.py')
     shutil.copyfile(shared_runtime,destination/'tests/circuit_task.py')
     for name in ('adc_linearity.py','first_batch_optimization.py'):shutil.copyfile(ROOT/'benchmark/checkers'/name,destination/'tests'/name)
@@ -201,6 +201,9 @@ SOURCE不把旧power基线计时错误称作优化；已修合法基线重新实
 experiments/benchmark_first_batch/optimization，五对准入证据SHA256为
 `{policy['admission_evidence_sha256']}`。该哈希绑定归档、源码、判据和实际计时；
 题数/Agentic/负例正式校准状态由首批inventory维护，不由目录存在推导完成。
+公开评分指标为{metric}。参考准入的实际进程收益是另列的工程证据，不是每个满分
+候选的硬门槛；不能将指定指标满分解释为所有实现的端到端收益。Flash旧二分版本
+保留CPU收益与进程回退记录，若满足公开CPU及功能规则就是合法替代，不是负例。
 
 执行profile采用现有256MiB收集硬上限及900s。paired完整PSF在求解计时及
 功能判读后gzip无损压缩，核验解压SHA/字节长度相等才移除重复原文件；保留双身份
