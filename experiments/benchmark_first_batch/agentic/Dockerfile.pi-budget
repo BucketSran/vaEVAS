@@ -1,0 +1,7 @@
+# BASE_IMAGE must be an immutable image with the selected stock Pi/Node installed.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+COPY pi-output-budget.ts /opt/benchmark-agentic/pi-output-budget.ts
+# This is Harbor Pi's task-local config directory, not a user credential store.
+RUN mkdir -p /tmp/harbor-pi-agent && \
+    printf '%s\n' '{"extensions":["/opt/benchmark-agentic/pi-output-budget.ts"]}' > /tmp/harbor-pi-agent/settings.json
