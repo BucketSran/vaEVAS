@@ -1,0 +1,365 @@
+//! One transaction for changed-event state and its matching future calendar.
+use super::*;
+use crate::schedule::{history_epoch, HistoryEpoch};
+
+pub(super) enum Strategy {
+    Held,
+    History,
+}
+
+// Held roots already have their final certificates. History roots need the
+// extended candidate trajectory, bounded first by independent deadlines.
+pub(super) enum CalendarPlan {
+    Held(Vec<ScheduledEvent>),
+    History {
+        pending: Vec<ScheduledEvent>,
+        consumed: Vec<(usize, i8)>,
+    },
+}
+
+impl CalendarPlan {
+    fn horizon(&self, trajectory: &Trajectory) -> f64 {
+        let pending = match self {
+            Self::Held(future) => future,
+            Self::History { pending, .. } => pending,
+        };
+        pending
+            .first()
+            .map_or(trajectory.config.stop, |event| event.time)
+    }
+
+    fn resolve(
+        self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        next: &Frame,
+        until: f64,
+    ) -> Result<Vec<ScheduledEvent>, Error> {
+        match self {
+            Self::Held(future) => Ok(future),
+            Self::History { pending, consumed } => history_epoch(
+                model,
+                trajectory,
+                &next.operators,
+                HistoryEpoch {
+                    states: &next.state_bounds,
+                    after: Some(next.time),
+                    until,
+                    consumed: &consumed,
+                    pending: &pending,
+                },
+            ),
+        }
+    }
+}
+
+impl Controller {
+    pub(super) fn accept_changed_events(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        calendar: &mut Vec<ScheduledEvent>,
+        strategy: Strategy,
+    ) -> Result<(), Error> {
+        // Close old-flow observation/reset before predicting changed flow.
+        // All subsequent work owns a candidate; the accepted frame, event
+        // cursor, records and old calendar remain intact on every error.
+        let time = calendar[self.event].time;
+        let (next, records, end) =
+            self.prepare_events_until(model, trajectory, calendar, Some(time))?;
+        let plan = match strategy {
+            Strategy::Held => CalendarPlan::Held(self.prepare_held_future(
+                model,
+                trajectory,
+                &next,
+                &records,
+                &calendar[end..],
+            )?),
+            Strategy::History => self.prepare_history_future(
+                model,
+                trajectory,
+                &next,
+                &calendar[self.event..end],
+                &calendar[end..],
+            )?,
+        };
+        self.finish_changed_events(model, trajectory, calendar, next, records, plan)
+    }
+
+    fn finish_changed_events(
+        &mut self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        calendar: &mut Vec<ScheduledEvent>,
+        mut next: Frame,
+        records: Vec<EventRecord>,
+        plan: CalendarPlan,
+    ) -> Result<(), Error> {
+        let until = plan.horizon(trajectory);
+        next.operators = next.operators.evaluation(next.time)?.advanced_until(
+            I::point(next.time),
+            &next.states,
+            &next.state_bounds,
+            &[],
+            until,
+        )?;
+        let future = plan.resolve(model, trajectory, &next, until)?;
+        next.operators
+            .check_deadline_order(next.time, future.first().map(|event| event.bounds()))?;
+        // Nonlinear extension can widen the endpoint enclosure. Certify the
+        // stored observation against the final history, not just reset closure.
+        let inputs = trajectory.value_bounds(next.time);
+        model.certify(
+            &model.conditions.select(&[], &inputs)?,
+            &inputs,
+            &next.state_bounds,
+            &next.operators.bounds(next.time)?,
+            &next.solution.voltages,
+            &next.states,
+        )?;
+        // No fallible operation may split state and matching calendar publication.
+        self.commit_events(next, records, 0);
+        *calendar = future;
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn final_transition_deadline_refusal_preserves_controller_and_retry() {
+        let (model, trajectory, mut controller, mut calendar) =
+            super::super::lifecycle_controller_tests::fixture();
+        // The event creates a transition start at exactly .625. The exact
+        // binary-rational timer .1 + .525 is slightly later, but its enclosure
+        // overlaps that start. User-event/operator ordering must be certified
+        // by the final gate after candidate extension, before publication.
+        let mut future_program = model.program.clone();
+        future_program.events.truncate(1);
+        future_program.events[0].trigger = serde_json::from_value(serde_json::json!({
+            "kind":"timer", "start":0.1, "period":0.525,
+            "time_tolerance":1e-12, "enabled":true,
+        }))
+        .unwrap();
+        let future_model = EventModel::new(
+            future_program,
+            model.driven.clone(),
+            model.tolerances.clone(),
+        )
+        .unwrap();
+        let future: Vec<_> = independent_schedule(&future_model, &trajectory)
+            .unwrap()
+            .into_iter()
+            .filter(|e| e.time > 0.5)
+            .collect();
+        assert!(future[0].bounds().lo <= 0.625 && future[0].bounds().hi >= 0.625);
+        assert_ne!(future[0].bounds().lo, future[0].bounds().hi);
+        let states = controller.accepted.states.clone();
+        let bounds = controller.accepted.state_bounds.clone();
+        let voltages = controller.accepted.solution.voltages.clone();
+        let history = controller.accepted.operators.clone();
+        let original: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            let (next, records, _) = controller
+                .prepare_events_until(&model, &trajectory, &calendar, Some(0.5))
+                .unwrap();
+            assert_eq!(next.operators.next_breakpoint(0.5), Some(0.625));
+            let error = controller
+                .finish_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut calendar,
+                    next,
+                    records,
+                    CalendarPlan::Held(future.clone()),
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "event_resolution");
+            assert_eq!(
+                error.message,
+                "cannot certify transition deadline ordering relative to user event"
+            );
+            assert_eq!(controller.accepted.time, 0.);
+            assert_eq!(controller.accepted.states, states);
+            assert_eq!(controller.accepted.state_bounds, bounds);
+            assert_eq!(controller.accepted.solution.voltages, voltages);
+            assert!(controller.accepted.operators.same_reset_history(&history));
+            assert_eq!(
+                controller.accepted.operators.bounds(1.).unwrap(),
+                history.bounds(1.).unwrap()
+            );
+            assert_eq!(
+                controller.accepted.operators.next_breakpoint(0.),
+                history.next_breakpoint(0.)
+            );
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty());
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.time, e.event, e.bounds()))
+                    .collect::<Vec<_>>(),
+                original
+            );
+        }
+        controller
+            .accept_relocalized(&model, &trajectory, &mut calendar)
+            .unwrap();
+        let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
+            super::super::lifecycle_controller_tests::fixture();
+        clean
+            .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+        assert_eq!(controller.accepted.time, clean.accepted.time);
+        assert_eq!(controller.accepted.states, clean.accepted.states);
+        assert_eq!(
+            controller.accepted.state_bounds,
+            clean.accepted.state_bounds
+        );
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            clean.accepted.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&clean.accepted.operators));
+        assert_eq!(
+            controller.accepted.operators.bounds(0.75).unwrap(),
+            clean.accepted.operators.bounds(0.75).unwrap()
+        );
+        assert_eq!(
+            controller.accepted.operators.next_breakpoint(0.5),
+            clean.accepted.operators.next_breakpoint(0.5)
+        );
+        assert_eq!(controller.event, clean.event);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            clean_calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn nonlinear_final_certificate_refusal_preserves_controller_and_corrected_retry() {
+        // z'=z² until .5, then z'=-z². The true event observation is 2,
+        // and the extended history ends at z(2)=.5. Deliberately corrupt only
+        // the stored candidate observation after successful event closure.
+        // This isolates the last voltage gate from earlier candidate checks;
+        // removing that gate would publish an inaccurate observation.
+        let (model, trajectory, mut controller, mut calendar) =
+            super::super::lifecycle_controller_tests::nonlinear_horizon_fixture();
+        let time = controller.accepted.time;
+        let states = controller.accepted.states.clone();
+        let bounds = controller.accepted.state_bounds.clone();
+        let voltages = controller.accepted.solution.voltages.clone();
+        let history = controller.accepted.operators.clone();
+        let cursor = controller.event;
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let original: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            let (mut next, candidate_records, _) = controller
+                .prepare_events_until(&model, &trajectory, &calendar, Some(0.5))
+                .unwrap();
+            assert!((next.solution.voltages[1] - 2.).abs() < 1e-9);
+            next.solution.voltages[1] += 0.01;
+            let error = controller
+                .finish_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut calendar,
+                    next,
+                    candidate_records,
+                    CalendarPlan::Held(vec![]),
+                )
+                .unwrap_err();
+            assert_eq!(error.kind, "waveform_accuracy");
+            assert!(
+                error
+                    .message
+                    .contains("cannot certify same-time forward error at y:"),
+                "{}",
+                error.message
+            );
+            assert_eq!(controller.accepted.time, time);
+            assert_eq!(controller.accepted.states, states);
+            assert_eq!(controller.accepted.state_bounds, bounds);
+            assert_eq!(controller.accepted.solution.voltages, voltages);
+            assert!(controller.accepted.operators.same_reset_history(&history));
+            assert_eq!(
+                controller.accepted.operators.bounds(0.5).unwrap(),
+                history.bounds(0.5).unwrap()
+            );
+            assert_eq!(
+                controller.accepted.operators.bounds(0.75).unwrap_err().kind,
+                "event_resolution"
+            );
+            assert_eq!(controller.event, cursor);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.time, e.event, e.bounds()))
+                    .collect::<Vec<_>>(),
+                original
+            );
+        }
+        controller
+            .accept_relocalized(&model, &trajectory, &mut calendar)
+            .unwrap();
+        let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
+            super::super::lifecycle_controller_tests::nonlinear_horizon_fixture();
+        clean
+            .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+        assert_eq!(controller.accepted.time, clean.accepted.time);
+        assert_eq!(controller.accepted.states, clean.accepted.states);
+        assert_eq!(
+            controller.accepted.state_bounds,
+            clean.accepted.state_bounds
+        );
+        assert_eq!(
+            controller.accepted.solution.voltages,
+            clean.accepted.solution.voltages
+        );
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&clean.accepted.operators));
+        let future = controller.accepted.operators.bounds(2.).unwrap();
+        assert!(future[0].lo <= 0.5 && future[0].hi >= 0.5);
+        assert_eq!(future, clean.accepted.operators.bounds(2.).unwrap());
+        assert_eq!(controller.event, clean.event);
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            clean_calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>()
+        );
+    }
+}

@@ -369,7 +369,7 @@ fn held_polynomial_jump_rejects_without_consuming_calendar_then_retries() {
     );
 }
 
-fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"lifecycle.va","line":1,"column":1,"instance":"dut"});
     let mut filter_origin = origin.clone();
     filter_origin["line"] = json!(2);
@@ -508,7 +508,8 @@ fn failed_reset_closure_and_discard_leave_calendar_records_and_queue_unchanged()
     assert!(z.lo <= 1.25 && z.hi >= 1.25);
 }
 
-fn nonlinear_horizon_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+pub(super) fn nonlinear_horizon_fixture(
+) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"horizon.va","line":1,"column":1,"instance":"dut"});
     let program: Program = serde_json::from_value(json!({
         "schema_version":SCHEMA_VERSION,"nodes":["0","y"],

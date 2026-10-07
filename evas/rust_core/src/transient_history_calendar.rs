@@ -43,21 +43,32 @@ impl Controller {
         trajectory: &Trajectory,
         calendar: &mut Vec<ScheduledEvent>,
     ) -> Result<(), Error> {
-        let time = calendar[self.event].time;
-        // Close the event before constructing a future with changed parameters.
-        let (mut next, records, end) =
-            self.prepare_events_until(model, trajectory, calendar, Some(time))?;
-        let consumed: Vec<_> = calendar[self.event..end].iter().map(|e| e.event).collect();
-        let consumed_history: Vec<_> = calendar[self.event..end]
+        self.accept_changed_events(
+            model,
+            trajectory,
+            calendar,
+            event_acceptance::Strategy::History,
+        )
+    }
+
+    pub(super) fn prepare_history_future(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        next: &Frame,
+        batch: &[ScheduledEvent],
+        remaining: &[ScheduledEvent],
+    ) -> Result<event_acceptance::CalendarPlan, Error> {
+        let time = batch[0].time;
+        let consumed: Vec<_> = batch.iter().map(|e| e.event).collect();
+        let consumed_history: Vec<_> = batch
             .iter()
             .filter_map(|e| e.dynamic_direction().map(|direction| (e.event, direction)))
             .collect();
-        let window = calendar[self.event..end]
+        let window = batch
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
-        let fixed_batch = calendar[self.event..end]
-            .iter()
-            .all(ScheduledEvent::is_fixed_timer);
+        let fixed_batch = batch.iter().all(ScheduledEvent::is_fixed_timer);
         let before = GuardTrajectory::new_held(
             model,
             trajectory,
@@ -153,44 +164,11 @@ impl Controller {
             &next.state_bounds,
             time,
             &changed,
-            &calendar[end..],
+            remaining,
         )?;
-        let until = pending
-            .first()
-            .map_or(trajectory.config.stop, |event| event.time);
-        next.operators = next.operators.evaluation(time)?.advanced_until(
-            I::point(time),
-            &next.states,
-            &next.state_bounds,
-            &[],
-            until,
-        )?;
-        let future = history_epoch(
-            model,
-            trajectory,
-            &next.operators,
-            HistoryEpoch {
-                states: &next.state_bounds,
-                after: Some(time),
-                until,
-                consumed: &consumed_history,
-                pending: &pending,
-            },
-        )?;
-        next.operators
-            .check_deadline_order(time, future.first().map(|event| event.bounds()))?;
-        let inputs = trajectory.value_bounds(time);
-        model.certify(
-            &model.conditions.select(&[], &inputs)?,
-            &inputs,
-            &next.state_bounds,
-            &next.operators.bounds(time)?,
-            &next.solution.voltages,
-            &next.states,
-        )?;
-        // No fallible work may remain between accepted-state and calendar writes.
-        self.commit_events(next, records, 0);
-        *calendar = future;
-        Ok(())
+        Ok(event_acceptance::CalendarPlan::History {
+            pending,
+            consumed: consumed_history,
+        })
     }
 }

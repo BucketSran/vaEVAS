@@ -12,6 +12,9 @@ use crate::schedule::{
 };
 use crate::solver::Circuit;
 
+#[path = "transient_event_acceptance.rs"]
+mod event_acceptance;
+
 #[path = "transient_history_calendar.rs"]
 mod history_calendar;
 
@@ -91,12 +94,22 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &mut Vec<ScheduledEvent>,
     ) -> Result<(), Error> {
-        // Close observation/reset at the event before predicting new flow.
-        // The changed held calendar, not its stale predecessor, owns the next
-        // prediction horizon. No fallible phase mutates the accepted frame.
-        let time = crossings[self.event].time;
-        let (mut next, records, end) =
-            self.prepare_events_until(model, trajectory, crossings, Some(time))?;
+        self.accept_changed_events(
+            model,
+            trajectory,
+            crossings,
+            event_acceptance::Strategy::Held,
+        )
+    }
+
+    fn prepare_held_future(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        next: &Frame,
+        records: &[EventRecord],
+        remaining: &[ScheduledEvent],
+    ) -> Result<Vec<ScheduledEvent>, Error> {
         let window = records.iter().fold(I::point(next.time), |t, r| {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
             t.hull(I { lo, hi })
@@ -180,40 +193,14 @@ impl Controller {
                 ));
             }
         }
-        let future = reschedule_held(
+        reschedule_held(
             model,
             trajectory,
             &next.state_bounds,
             next.time,
             &changed,
-            &crossings[end..],
-        )?;
-        next.operators = next.operators.evaluation(next.time)?.advanced_until(
-            I::point(next.time),
-            &next.states,
-            &next.state_bounds,
-            &[],
-            prediction_end(model, trajectory, future.first()),
-        )?;
-        next.operators
-            .check_deadline_order(next.time, future.first().map(|e| e.bounds()))?;
-        // Extending a nonlinear dense history can widen its endpoint box.
-        // The committed observation must satisfy the budget against that
-        // final history as well as the earlier reset/observation closure.
-        let point_inputs = trajectory.value_bounds(next.time);
-        model.certify(
-            &model.conditions.select(&[], &point_inputs)?,
-            &point_inputs,
-            &next.state_bounds,
-            &next.operators.bounds(next.time)?,
-            &next.solution.voltages,
-            &next.states,
-        )?;
-        // Build and validate the future first; calendar replacement and state
-        // acceptance have no remaining fallible operation between them.
-        self.commit_events(next, records, 0);
-        *crossings = future;
-        Ok(())
+            remaining,
+        )
     }
 
     fn commit_events(&mut self, next: Frame, records: Vec<EventRecord>, end: usize) {
