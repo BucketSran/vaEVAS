@@ -116,6 +116,40 @@ def validate_argv(argv):
             'solver invocation differs from frozen single-thread PSF protocol')
 
 
+def verify_report_projection(result, report):
+    """Final structured-report projection, matching the trusted harness contract."""
+    status=report.get('status')
+    projected={'execution':'invalid_result','verdict':'not_evaluated','score':None}
+    if isinstance(status,str):
+        projected['benchmark_status']=status
+        if status in {'infrastructure_error','checker_error'}:
+            projected['execution']='infrastructure_error'
+        else:
+            reward=report.get('reward')
+            valid=type(reward) in (int,float) and math.isfinite(reward) and 0<=reward<=1
+            if status=='submission_contract_violation' and valid and reward==0:
+                projected.update(execution='ok',verdict='fail',score=reward)
+            elif status=='completed' and valid and isinstance(report.get('cases'),list) and report['cases']:
+                cases=report['cases']
+                if all(isinstance(c,dict) and type(c.get('passed')) is bool for c in cases):
+                    graded=all(c.get('status')=='graded' or (c.get('returncode')==0 and c.get('timeout') is False
+                               and isinstance(c.get('waveform_sha256'),str)) for c in cases)
+                    if graded:projected.update(execution='ok',verdict='pass' if reward==1 else 'fail',score=reward)
+                    else:projected['execution']='unclassified_failure'
+    for key in ('execution','verdict','score','benchmark_status'):
+        require(result.get(key)==projected.get(key), 'result/report projection differs: '+key)
+
+
+def require_full_inventory(entry, preparation, current_cases):
+    names=[case['name'] for case in current_cases]
+    require(names and len(names)==len(set(names)), 'invalid canonical task inventory')
+    require(set(entry['conditions'])==set(names) and len(entry['conditions'])==len(names),
+            'matrix omits or adds canonical full-task conditions')
+    packets=[c['condition_id'] for c in preparation['cases']]
+    require(set(packets)==set(names) and len(packets)==len(names),
+            'preparation omits or adds canonical full-task conditions')
+
+
 def audit_paired(archive, prefix, case, candidate, baseline, modules, scratch):
     parser, runtime, optimization, evaluate = modules
     paired = archive.json(prefix + 'performance_report.json')
@@ -247,6 +281,7 @@ def audit_one(directory, wrapper, entry, root, scratch):
             output.update(classification='infrastructure_failure', reason='no verifier report; no semantic rejection evidence')
             return output
         report = archive.json(report_path)
+        verify_report_projection(result,report)
         output['report_sha256'] = digest(archive.read(report_path))
         require(report['reward'] == result['score'], 'report/result score differs')
         require(report['candidate_sha256'] == digest(candidate), 'report candidate identity differs')
@@ -332,6 +367,7 @@ def audit_matrix(matrix_path, plan_path, root):
     require(len(set(prepared_paths)) == len(prepared_paths) and set(prepared_paths) == {str(Path(p).resolve()) for p in plan}
             and len(plan) == len(matrix), 'matrix/plan inventory differs')
     records, pending = [], []
+    variants=set()
     with tempfile.TemporaryDirectory(prefix='formal-archive-audit-') as temporary:
         scratch = Path(temporary)
         for supplied in matrix:
@@ -343,8 +379,12 @@ def audit_matrix(matrix_path, plan_path, root):
                              variant=entry['negative'], candidate_sha256=entry['frozen_candidate_sha256'],
                              conditions=[c['condition_id'] for c in preparation['cases']])
             entry['role']=normalized_role(entry)
+            key=(entry['task_id'],entry['variant'])
+            require(key not in variants, 'duplicate task/variant preparation')
+            variants.add(key)
             require(len(set(entry['conditions'])) == len(entry['conditions']), 'duplicate matrix condition')
-            require(set(entry['conditions']) == {c['condition_id'] for c in preparation['cases']}, 'matrix/preparation conditions differ')
+            current_cases=json.loads((root/'benchmark/tasks'/entry['task_id']/'tests/cases.json').read_text())
+            require_full_inventory(entry,preparation,current_cases)
             path = directory/'results.json'
             wrappers = json.loads(path.read_text()) if path.exists() else []
             require(isinstance(wrappers,list), 'results must be an array')

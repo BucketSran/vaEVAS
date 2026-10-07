@@ -115,5 +115,26 @@ class FormalAuditTests(unittest.TestCase):
             self.assertEqual(audit.normalized_role({'category':category}),'semantic_neg')
         self.assertEqual(audit.normalized_role({'category':'performance_and_possible_semantic'}),'mixed_neg')
 
+    def test_resealed_infrastructure_result_cannot_borrow_successful_report(self):
+        report={'status':'completed','reward':1,'cases':[{'status':'graded','passed':True}]}
+        result={'execution':'ok','verdict':'pass','score':1,'benchmark_status':'completed'}
+        audit.verify_report_projection(result,report)
+        for key,value in (('execution','infrastructure_error'),('verdict','not_evaluated'),
+                          ('score',None),('benchmark_status','infrastructure_error')):
+            wrong=dict(result);wrong[key]=value
+            with self.assertRaisesRegex(ValueError,'result/report projection'):
+                audit.verify_report_projection(wrong,report)
+
+    def test_matrix_and_preparation_cannot_jointly_omit_canonical_conditions(self):
+        cases=[{'name':'performance'},{'name':'functional1'},{'name':'functional2'}]
+        entry={'conditions':['functional1']};prep={'cases':[{'condition_id':'functional1'}]}
+        with self.assertRaisesRegex(ValueError,'canonical full-task conditions'):
+            audit.require_full_inventory(entry,prep,cases)
+        entry['conditions']=[c['name'] for c in cases]
+        with self.assertRaisesRegex(ValueError,'preparation omits'):
+            audit.require_full_inventory(entry,prep,cases)
+        prep['cases']=[{'condition_id':c['name']} for c in cases]
+        audit.require_full_inventory(entry,prep,cases)
+
 
 if __name__=='__main__':unittest.main()
