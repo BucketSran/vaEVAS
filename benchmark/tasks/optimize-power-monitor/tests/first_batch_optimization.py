@@ -287,6 +287,7 @@ def run_one_source(source,case,evaluate,directory,*,binary='spectre',timeout_s=9
         record.update(status='completed',passed=verdict['passed'],functional=verdict,statistics=stats,
                       waveform_sha256=hashlib.sha256(waveform.read_bytes()).hexdigest(),waveform_rows=len(rows))
         storage=lossless_compress_waveform(waveform)
+        storage['raw_path']=str(waveform.relative_to(directory))
         storage['gzip_path']=str(waveform.with_name(waveform.name+'.gz').relative_to(directory))
         record['waveform_storage']=storage
     except subprocess.TimeoutExpired:
@@ -389,7 +390,9 @@ def performance_main(evaluate):
     # Guard executes before circuit_task.verify's first simulation. Trusted
     # policy/baseline defects are infrastructure, never a candidate zero.
     def reject(status,reward,reason):
-        args.output.mkdir(parents=True,exist_ok=False)
+        args.output.mkdir(parents=True,exist_ok=True)
+        if args.output.is_symlink() or any(args.output.iterdir()):
+            raise FileExistsError('verification output must be a new empty directory')
         runtime_path=Path(runtime_module.__file__).resolve()
         def identity(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
         report=dict(status=status,reward=reward,reason=reason,cases=[],
