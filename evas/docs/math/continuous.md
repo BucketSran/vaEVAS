@@ -331,10 +331,12 @@ absdelay、slew、idtmod 的非点事件观察尚无对应区间接口，现在�
 中心多项式系数仍以区间递推。加法用 TwoSum 残差、乘法/正整数除法用 FMA 残差符号
 选择正确方向的相邻 binary64 数；不能确定残差符号的下溢情形保留原向外区间。
 这里假设 binary64 的最近舍入与渐进下溢，保持写出的运算顺序。
-TwoSum 的加法误差变换在下溢时仍精确，见 Ogita、Rump、Oishi 的
+在无溢出的前提下，TwoSum 的加法误差变换在下溢时仍精确，见 Ogita、Rump、Oishi 的
 [Accurate Sum and Dot Product，算法3.1与定理3.4](https://www.tuhh.de/ti3/paper/rump/OgRuOi05.pdf)。
 次正规区间内的加减仍是最小正次正规数的整数倍，不会产生半格大小的遗漏残差；
-乘法没有这一性质，所以其下溢残差另用向外包围。非有限中间结果不得用于缩紧认证。
+乘法没有这一性质，所以其下溢残差另用向外包围。`point_sum` 只在和与残差均有限时
+使用精确残差缩紧；否则回退原区间加法，非有限结果由 `Interval::rounded` 返回全区间。
+非有限中间结果不得用于缩紧认证。
 Horner 求值把中心与误差分开，若 H 是时间区间，A 是下一系数，则
 `(c+E)*H+A = RN_fma(c,h_c,a_c)+E*H+c*(H-h_c)+(A-a_c)+δ`。
 δ 包围精确 `c*h_c+a_c` 与该 FMA 代表值的差。

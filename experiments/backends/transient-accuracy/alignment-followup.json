@@ -1398,7 +1398,21 @@
       "receipt_local": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/evidence-delta/receipt.json",
       "scope": "six-request evidence, original failures and counts; no actionable PR102 evidence finding"
     },
-    "limitations": "Independent tests are finite checks, not a universal mathematical proof; source/math assumptions and unresolved encoding certification gaps remain."
+    "limitations": "Independent tests are finite checks, not a universal mathematical proof; source/math assumptions and unresolved encoding certification gaps remain.",
+    "final_glm_delta": {
+      "receipt": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/final-delta/receipt.json",
+        "sha256": "ba2eedae0ddb0789cf646eb7d3c01daa3bdd062efa15931fda10ed8262ab5515",
+        "availability": "local-only"
+      },
+      "elapsed_seconds": 378.358,
+      "disposition": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/final-delta/adjudication.json",
+        "sha256": "8fcba4ba3c89c490b3c1e8a9424512937f28ade14b616f4816304a3387bb3cd8",
+        "availability": "local-only"
+      },
+      "finding": "FD2 no-overflow theorem premise added and existing point_sum finite/Interval::rounded fallback documented; production arithmetic unchanged. Astra independently checked the full guard chain."
+    }
   },
   "checks": {
     "rust_full_before_final_boundary_test": {
