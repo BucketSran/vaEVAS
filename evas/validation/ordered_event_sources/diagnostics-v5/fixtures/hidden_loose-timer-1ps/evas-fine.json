@@ -1,0 +1,44 @@
+{
+  "instances": [
+    {
+      "connections": {
+        "r": "0",
+        "u": "u",
+        "y": "y"
+      },
+      "module": "m",
+      "name": "Xdut"
+    }
+  ],
+  "sources": [
+    "compile.va"
+  ],
+  "tolerances": {
+    "reltol": 0.0,
+    "vabstol": 1.0
+  },
+  "transient": {
+    "max_step": 0.012,
+    "output_times": [
+      0,
+      0.15,
+      0.29,
+      0.3,
+      0.305,
+      0.31
+    ],
+    "sources": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          0.31,
+          0.31
+        ]
+      ]
+    },
+    "stop": 0.31
+  }
+}

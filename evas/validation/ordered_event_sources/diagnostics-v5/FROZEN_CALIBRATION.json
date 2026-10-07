@@ -1,0 +1,71 @@
+{
+  "controls": [
+    {
+      "family": "mixed_source",
+      "positive": "P"
+    },
+    {
+      "family": "mixed_source",
+      "physical_voltage_fault": "F"
+    },
+    {
+      "family": "mixed_source",
+      "missingtimer_fault": "F"
+    },
+    {
+      "family": "mixed_source",
+      "reversedorder_fault": "F"
+    },
+    {
+      "family": "mixed_source",
+      "missing_observer": "I"
+    },
+    {
+      "family": "hidden_loose",
+      "positive": "P"
+    },
+    {
+      "family": "hidden_loose",
+      "physical_voltage_fault": "F"
+    },
+    {
+      "family": "hidden_loose",
+      "missingtimer_fault": "F"
+    },
+    {
+      "family": "hidden_loose",
+      "reversedorder_fault": "F"
+    },
+    {
+      "family": "hidden_loose",
+      "missing_observer": "I"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "positive": "P"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "physical_voltage_fault": "F"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "missingtimer_fault": "F"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "reversedorder_fault": "F"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "missing_observer": "I"
+    },
+    {
+      "family": "hidden_loose_nocross",
+      "spurious_removed_cross_fault": "F"
+    }
+  ],
+  "derived_checker_scope": "Only nocross family explicit h/y0 and no cross event target; original mixed/hiddenloose formula and strict thresholds unchanged.",
+  "original_checker_retained_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+  "passed": 16
+}

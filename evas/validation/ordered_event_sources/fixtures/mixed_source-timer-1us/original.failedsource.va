@@ -1,0 +1,5 @@
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,k,j; analog begin @(initial_step) begin n=0;k=0;j=0;end
+@(timer(.1,.2,1e-6)) n=n+1;
+@(cross(V(u,r),1,1e-6,1e-6)) k=k+1;
+@(timer(.30000000000000004,0,1e-6)) j=j+1;
+V(y,r)<+n+k+j; end endmodule

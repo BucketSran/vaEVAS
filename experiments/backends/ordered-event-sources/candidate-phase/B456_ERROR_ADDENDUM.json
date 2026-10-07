@@ -1,0 +1,41 @@
+{
+  "scope": "Post-run interpretation only; execution summary and bytes untouched.",
+  "errors": [
+    {
+      "name": "complex-reference-v3--hidden_tight--coarse--physical-phase",
+      "stderr_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+      "actual_error": {
+        "kind": "event_resolution",
+        "message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance"
+      },
+      "classification": "P specific tight rejection"
+    },
+    {
+      "name": "complex-reference-v3--hidden_tight--fine--physical-phase",
+      "stderr_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+      "actual_error": {
+        "kind": "event_resolution",
+        "message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance"
+      },
+      "classification": "P specific tight rejection"
+    },
+    {
+      "name": "complex-reference-v5--hidden_loose-timer-1fs-nocross--coarse--physical-phase",
+      "stderr_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+      "actual_error": {
+        "kind": "invalid_inputs",
+        "message": "continuous trajectory query must be within the finite source history"
+      },
+      "classification": "F unexpected rejection"
+    },
+    {
+      "name": "complex-reference-v5--hidden_loose-timer-1fs-nocross--fine--physical-phase",
+      "stderr_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+      "actual_error": {
+        "kind": "invalid_inputs",
+        "message": "continuous trajectory query must be within the finite source history"
+      },
+      "classification": "F unexpected rejection"
+    }
+  ]
+}

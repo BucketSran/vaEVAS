@@ -1,0 +1,32 @@
+{
+  "basis": "Astra actual existing probe: same original .literal source, periodic timer and held one-shot timer; periodic second callback moves held deadline beyond stop before original held deadline. Expected m=0; only add binary64 query .3000000000000001, which is strictlyafter physical timer sum. Separate scope diagnostic, not addition to original32 denominator.",
+  "denominator": 2,
+  "exact_binary_timer_sum": "10808639105689191/36028797018963968",
+  "expected_z_at_stop": "7918252709265597376113747934419/2596148429267413814265248164610048",
+  "external_timer_budget_s": 1e-09,
+  "external_voltage_budget_V": 1e-07,
+  "old_held_deadline_exact": "1351079888211149/4503599627370496",
+  "real_state_scope": "Actual next binary64 record is the nearest binary64 projection of the independent Fraction arithmetic. Exact internal pending deadline is not inferred from this emitted scalar; both exact expression and projected value lie beyond STOP.",
+  "reference_probe_sha256": "69ee11cdf5ef386033ca18be426f6ffc3f075e9b5063e0cc4fffa16056a71554",
+  "reference_results_sha256": "3b14b4d57201ac8f9610586e096c7289398afd7af5273dae6ad3a532280398b7",
+  "requests": [
+    {
+      "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+      "expected": "complete finite output",
+      "name": "original",
+      "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+      "wire": "original.request.json",
+      "wire_sha256": "2001e8444fc4a834597b795676523890258ae14a2495dcb8196a5d7518cef1d0"
+    },
+    {
+      "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+      "expected": "complete finite output",
+      "name": "add-representative-query",
+      "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+      "wire": "add-representative-query.request.json",
+      "wire_sha256": "547b0b9b113b39e683d48e5cb90de53a51fa5b88fb3f8ff2e758b958a7673139"
+    }
+  ],
+  "updated_held_deadline_exact_expression": "14411518807585589/36028797018963968",
+  "updated_next_api_scalar": "3602879701896397/9007199254740992"
+}

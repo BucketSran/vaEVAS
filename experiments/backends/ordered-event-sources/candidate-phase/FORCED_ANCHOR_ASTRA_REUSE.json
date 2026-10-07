@@ -1,0 +1,181 @@
+{
+  "scope": "Existing compact actual probe reuse only for 29ed and b456. Their original/addpoint results were both accepted; actual raw transport hashes were not captured in that artifact. These are not fabricated complete response receipts. 42/new4a have separate fresh fixed-wire runs with full stdout/stderr hashes.",
+  "original_probe_sha256": "f995e806c5c57e6a72eba48e77a0b9360a75d0832a47a97db10ae8c710953d0c",
+  "original_result_sha256": "f42af1ff6b5e2fb1209e14e42ca630182d720c9ff7f67677cafe3d9da9f27739",
+  "records": [
+    {
+      "version": "frozen",
+      "times": [
+        0,
+        0.31
+      ],
+      "accepted": true,
+      "events": [
+        {
+          "time": 0.1,
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.3000000000000001,
+          "observation_time_bounds": [
+            0.3,
+            0.3000000000000001
+          ],
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0
+          ],
+          "after": [
+            2.0,
+            1.0
+          ]
+        }
+      ],
+      "y": 0.003049999999999986
+    },
+    {
+      "version": "frozen",
+      "times": [
+        0,
+        0.3000000000000001,
+        0.31
+      ],
+      "accepted": true,
+      "events": [
+        {
+          "time": 0.1,
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.3000000000000001,
+          "observation_time_bounds": [
+            0.3,
+            0.3000000000000001
+          ],
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0
+          ],
+          "after": [
+            2.0,
+            1.0
+          ]
+        }
+      ],
+      "y": 0.003049999999999986
+    },
+    {
+      "version": "frozen-physical-phase",
+      "times": [
+        0,
+        0.31
+      ],
+      "accepted": true,
+      "events": [
+        {
+          "time": 0.1,
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.3000000000000001,
+          "observation_time_bounds": [
+            0.3,
+            0.3000000000000001
+          ],
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0
+          ],
+          "after": [
+            2.0,
+            1.0
+          ]
+        }
+      ],
+      "y": 0.003049999999999986
+    },
+    {
+      "version": "frozen-physical-phase",
+      "times": [
+        0,
+        0.3000000000000001,
+        0.31
+      ],
+      "accepted": true,
+      "events": [
+        {
+          "time": 0.1,
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.3000000000000001,
+          "observation_time_bounds": [
+            0.3,
+            0.3000000000000001
+          ],
+          "event": 0,
+          "origin": "forced-no-closure.va:2:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0
+          ],
+          "after": [
+            2.0,
+            1.0
+          ]
+        }
+      ],
+      "y": 0.003049999999999986
+    }
+  ]
+}

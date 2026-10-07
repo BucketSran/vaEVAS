@@ -1,0 +1,47 @@
+{
+  "TRACE_internal_names_present": [
+    "Xdut:n",
+    "Xdut:q",
+    "Xdut:h",
+    "Xdut:m"
+  ],
+  "accepted_steps": 132,
+  "actual_saved_rows": 35,
+  "all_computed_step_observation": "I;35savedrows differfrom133computed+initial expectation",
+  "closed_source_cause": "unknown",
+  "deck_identity_verified_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+  "exact_rational_stop_status": "I",
+  "final_state": {
+    "h": "0",
+    "m": "0",
+    "n": "1",
+    "q": "0",
+    "time": "0.31",
+    "y": "0",
+    "z": "0"
+  },
+  "next_diagnostics": "Frozen complex-reference-v5-prep; timer1ps / nocross / quarter-ns observer eachseparateidentity. OriginalF/I retained.",
+  "nominal_timers": "Both thirdarguments1e-15; periodic0.1+0.2, one-shot0.30000000000000004. Originalcross1e-6/1e-6 unchanged.",
+  "numeric_stop_reached": true,
+  "only_retained_state_change": "n0\u21921 at saved0.10000000050000001; q/h/m remain0 throughout all35rows, n remains1afterward",
+  "source_identity_verified_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+  "state_output_consistency": "y=h=0 and z=0 with q=0 in every savedrecord. Internalnames notmissing; this isnot alone a proof that everycallback was untriggered ratherthanrolledback/unexported.",
+  "warnings_and_notices": [
+    {
+      "line": 52,
+      "text": "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+    },
+    {
+      "line": 76,
+      "text": "Notice from spectre during initial setup."
+    },
+    {
+      "line": 78,
+      "text": "Notice from spectre during topology check."
+    },
+    {
+      "line": 197,
+      "text": "spectre completes with 0 errors, 1 warning, and 3 notices."
+    }
+  ]
+}

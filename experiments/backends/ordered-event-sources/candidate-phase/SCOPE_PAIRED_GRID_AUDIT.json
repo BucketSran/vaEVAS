@@ -1,0 +1,136 @@
+[
+  {
+    "actual_common_stop_solution_json_identical": true,
+    "actual_event_history_json_identical": true,
+    "actual_events": [
+      {
+        "after": [
+          1.0,
+          0.0
+        ],
+        "before": [
+          0.0,
+          0.0
+        ],
+        "event": 0,
+        "kind": "timer",
+        "origin": "forced-no-closure.va:2:1 (dut)",
+        "time": 0.1
+      },
+      {
+        "after": [
+          2.0,
+          1.0
+        ],
+        "before": [
+          1.0,
+          0.0
+        ],
+        "event": 0,
+        "kind": "timer",
+        "observation_time_bounds": [
+          0.3,
+          0.3000000000000001
+        ],
+        "origin": "forced-no-closure.va:2:1 (dut)",
+        "time": 0.3000000000000001
+      }
+    ],
+    "added_query_stdout_sha256": "297f92859530ad57a0f330fde9df1c8844069f6fed772bc869526ddbdd039adb",
+    "candidate": "candidate-4a5ee8ab",
+    "case": "forced-anchor2",
+    "original_stdout_sha256": "fcd683d7538c1ddf14ce138c1706c5b77b7e87fb3333c4a90d4c221bbfc3b34c"
+  },
+  {
+    "actual_common_stop_solution_json_identical": true,
+    "actual_event_history_json_identical": true,
+    "actual_events": [
+      {
+        "after": [
+          1.0,
+          0.0
+        ],
+        "before": [
+          0.0,
+          0.0
+        ],
+        "event": 0,
+        "kind": "timer",
+        "origin": "forced-no-closure.va:2:1 (dut)",
+        "time": 0.1
+      },
+      {
+        "after": [
+          2.0,
+          1.0
+        ],
+        "before": [
+          1.0,
+          0.0
+        ],
+        "event": 0,
+        "kind": "timer",
+        "observation_time_bounds": [
+          0.3,
+          0.3000000000000001
+        ],
+        "origin": "forced-no-closure.va:2:1 (dut)",
+        "time": 0.3000000000000001
+      }
+    ],
+    "added_query_stdout_sha256": "297f92859530ad57a0f330fde9df1c8844069f6fed772bc869526ddbdd039adb",
+    "candidate": "candidate-709a4376",
+    "case": "forced-anchor2",
+    "original_stdout_sha256": "fcd683d7538c1ddf14ce138c1706c5b77b7e87fb3333c4a90d4c221bbfc3b34c"
+  },
+  {
+    "actual_common_stop_solution_json_identical": true,
+    "actual_event_history_json_identical": true,
+    "actual_events": [
+      {
+        "after": [
+          1.0,
+          0.0,
+          0.0,
+          0.30000000000000004
+        ],
+        "before": [
+          0.0,
+          0.0,
+          0.0,
+          0.30000000000000004
+        ],
+        "event": 0,
+        "kind": "timer",
+        "origin": "forced-replanned.va:2:1 (dut)",
+        "time": 0.1
+      },
+      {
+        "after": [
+          2.0,
+          1.0,
+          0.0,
+          0.4
+        ],
+        "before": [
+          1.0,
+          0.0,
+          0.0,
+          0.30000000000000004
+        ],
+        "event": 0,
+        "kind": "timer",
+        "observation_time_bounds": [
+          0.3,
+          0.3000000000000001
+        ],
+        "origin": "forced-replanned.va:2:1 (dut)",
+        "time": 0.3000000000000001
+      }
+    ],
+    "added_query_stdout_sha256": "bccc5a8469c1ea13b3c0bfc7ea1e021b06b99dc00011c2f2ee5b4abf824e300a",
+    "candidate": "candidate-709a4376",
+    "case": "held-anchor2",
+    "original_stdout_sha256": "b42405e101f40c51a7f8fb904e55acda6ca05fbc3e6cf22b40de23f85e97ab5f"
+  }
+]

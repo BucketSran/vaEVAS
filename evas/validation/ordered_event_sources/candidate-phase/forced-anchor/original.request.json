@@ -1,0 +1,202 @@
+{
+  "driven": [
+    "u"
+  ],
+  "program": {
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "kind": "voltage",
+          "local_negative": "z",
+          "local_positive": "r"
+        },
+        "negative": 1,
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "dut",
+          "line": 3,
+          "source": "forced-no-closure.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "left": {
+            "constant": -1.0,
+            "op": "affine",
+            "terms": []
+          },
+          "op": "multiply",
+          "right": {
+            "op": "operator",
+            "operator": 0
+          }
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "kind": "voltage",
+          "local_negative": "y",
+          "local_positive": "r"
+        },
+        "negative": 3,
+        "origin": {
+          "column": 25,
+          "expansion": [],
+          "instance": "dut",
+          "line": 3,
+          "source": "forced-no-closure.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "constant": -0.0,
+          "op": "affine",
+          "terms": [
+            {
+              "coefficient": 1.0,
+              "node": 0
+            },
+            {
+              "coefficient": -1.0,
+              "node": 1
+            }
+          ]
+        }
+      }
+    ],
+    "events": [
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 0
+              },
+              "op": "add",
+              "right": {
+                "constant": 1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 0
+          },
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 0
+              },
+              "op": "add",
+              "right": {
+                "constant": -1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 1
+          }
+        ],
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "dut",
+          "line": 2,
+          "source": "forced-no-closure.va"
+        },
+        "trigger": {
+          "enabled": true,
+          "kind": "timer",
+          "period": 0.2,
+          "start": 0.1,
+          "time_tolerance": 1e-06
+        }
+      }
+    ],
+    "nodes": [
+      "0",
+      "dut:z",
+      "u",
+      "y"
+    ],
+    "operators": [
+      {
+        "ic": 0.0,
+        "input": {
+          "left": {
+            "op": "state",
+            "state": 1
+          },
+          "op": "multiply",
+          "right": {
+            "constant": 0.0,
+            "op": "affine",
+            "terms": [
+              {
+                "coefficient": -1.0,
+                "node": 0
+              },
+              {
+                "coefficient": 1.0,
+                "node": 2
+              }
+            ]
+          }
+        },
+        "kind": "idt",
+        "origin": {
+          "column": 9,
+          "expansion": [],
+          "instance": "dut",
+          "line": 3,
+          "source": "forced-no-closure.va"
+        },
+        "reset": null
+      }
+    ],
+    "schema_version": 17,
+    "states": [
+      {
+        "initial": 0.0,
+        "instance": "dut",
+        "kind": "integer",
+        "name": "n"
+      },
+      {
+        "initial": 0.0,
+        "instance": "dut",
+        "kind": "integer",
+        "name": "q"
+      }
+    ]
+  },
+  "samples": [],
+  "tolerances": {
+    "absolute": 1e-07,
+    "relative": 0
+  },
+  "transient": {
+    "max_step": 0.31,
+    "output_times": [
+      0,
+      0.31
+    ],
+    "pwl": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          0.31,
+          0.31
+        ]
+      ]
+    ],
+    "stop": 0.31
+  }
+}

@@ -27,6 +27,9 @@
 
 近邻事件的非线性历史与 PWL 分段传播有[独立条件和冻结判据](ordered_event_history/README.md)，原始失败与严格计时诊断分别保留。
 
+固定时钟、保持时钟与窗口内新根的组合见[有序事件源契约](ordered_event_sources/README.md)。
+[物理采样相位检查](ordered_event_sources/candidate-phase/README.md)分别验证实际返回状态、直接输出和规定拒绝。
+
 ## 验证集包含什么
 
 原矩阵固定为 **31 个条件**：14 个不变的 v1 条件、1 个低通标准数组语法修订、

@@ -1,0 +1,78 @@
+{
+  "changes": [
+    {
+      "Spectre_deck_sha256": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86",
+      "Spectre_deck_unchanged": true,
+      "all_other_source_bytes_unchanged": true,
+      "coarse_fine_manifests_unchanged": true,
+      "configuration": "mixed_source",
+      "cross_unchanged": true,
+      "derived_source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+      "parent_source_sha256": "bdef311b3a2ba89e3ac0f41f631c1da54a6aeb820adc952c19a8c8de77b2fedb",
+      "precompile": [
+        {
+          "IR_sha256": "196037295e40d3d8dd6a91f9b4c13ac25aa9fba64c9dcda162aa9dcc31501f19",
+          "compile": "P",
+          "profile": "coarse",
+          "states": [
+            "n",
+            "k",
+            "j"
+          ]
+        },
+        {
+          "IR_sha256": "196037295e40d3d8dd6a91f9b4c13ac25aa9fba64c9dcda162aa9dcc31501f19",
+          "compile": "P",
+          "profile": "fine",
+          "states": [
+            "n",
+            "k",
+            "j"
+          ]
+        }
+      ],
+      "timer_arguments_changed": 2
+    },
+    {
+      "Spectre_deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+      "Spectre_deck_unchanged": true,
+      "all_other_source_bytes_unchanged": true,
+      "coarse_fine_manifests_unchanged": true,
+      "configuration": "hidden_loose",
+      "cross_unchanged": true,
+      "derived_source_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+      "parent_source_sha256": "11df0e01129bd39a229dda3df7cae76c0269f1e48ea52ea8819b09fce329ec6f",
+      "precompile": [
+        {
+          "IR_sha256": "3606960567e91cb8e57157edff7c93f10e82feb1f5e2b43432541b44fef5f002",
+          "compile": "P",
+          "profile": "coarse",
+          "states": [
+            "n",
+            "q",
+            "h",
+            "m"
+          ]
+        },
+        {
+          "IR_sha256": "3606960567e91cb8e57157edff7c93f10e82feb1f5e2b43432541b44fef5f002",
+          "compile": "P",
+          "profile": "fine",
+          "states": [
+            "n",
+            "q",
+            "h",
+            "m"
+          ]
+        }
+      ],
+      "timer_arguments_changed": 2
+    }
+  ],
+  "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+  "external_tolerances_unchanged": true,
+  "original_reference_failure_record": "spec-b-evidence/history-reference-analysis/complex-actual-v3/summary.json",
+  "parent_frozen_manifest_sha256": "5f640b393923c60547b963f9d3b12e832a09effe13b41db19cb0a133717971a6",
+  "tight_actual_runtime_failure_retained_no_new_tight_run": true,
+  "trigger": "Actual timer counter changes already observed \u22652ns before nominal times under original1us timer tolerances, exceeding1ns external goal. New explicit source tolerance diagnostic, not blindrerun or EVASearlytimerpolicy."
+}

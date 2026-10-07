@@ -24,6 +24,7 @@
 | EVAS 与 Spectre 如何受容差及步长影响？ | [瞬态精度与 VCO 对照](backends/transient-accuracy/README.md)，区分旧严格认证拒绝、本轮同请求重放及普通相位边界分歧 |
 | 共同事件验收重构有何前后对照？ | [六模型、两设置对照](backends/event-acceptance/README.md)，保留原参考误差、精确边界差异和未决资格 |
 | 极近事件后的非线性历史和 PWL 转折是否保持？ | [有序事件历史对照](backends/ordered-event-history/README.md)，保留原四项失败、两项严格计时诊断和未确认的精确顺序 |
+| 微事件闭包与查询相位如何验证？ | [有序事件源对照](backends/ordered-event-sources/README.md)，区分两组 16 请求、旧相位失败和实际 Spectre 分歧 |
 | Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
 | 旧四后端的结果与失败是什么？ | [历史矩阵](backends/dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](backends/dvs2-four-backend-validation/DIAGNOSIS.md) |
 | 当前电压共同子集与 ngspice 是否一致？ | [ngspice 差分对照](backends/ngspice-differential/README.md) |

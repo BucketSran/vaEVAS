@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "token": "20 ms",
+      "dimension": "time",
+      "pass_": true,
+      "value": 0.02
+    },
+    {
+      "token": "2 ms",
+      "dimension": "time",
+      "pass_": true,
+      "value": 0.002
+    },
+    {
+      "token": "100 pV",
+      "dimension": "voltage",
+      "pass_": true,
+      "value": 1e-10
+    },
+    {
+      "token": "10 fA",
+      "dimension": "current",
+      "pass_": true,
+      "value": 1.0000000000000002e-14
+    },
+    {
+      "token": "2 s",
+      "dimension": "time",
+      "pass_": true,
+      "value": 2.0
+    },
+    {
+      "token": "10e-09",
+      "dimension": "dimensionless",
+      "pass_": true,
+      "value": 1e-08
+    },
+    {
+      "token": "20 ms",
+      "dimension": "voltage",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "100 pV",
+      "dimension": "time",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "10 fA",
+      "dimension": "voltage",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "0 ms",
+      "dimension": "time",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "nan",
+      "dimension": "dimensionless",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "-2 ms",
+      "dimension": "time",
+      "pass_": true,
+      "expected": "rejected"
+    }
+  ],
+  "passed": 12,
+  "reader_sha256": "79cf4a9cc44e30ce6551781e8e44e00c0963c179032c660928ed38556c3baf14"
+}

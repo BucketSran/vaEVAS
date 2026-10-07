@@ -1,0 +1,11 @@
+# Replanned held-timer anchor-scope diagnostic
+
+This case has a separate two-input denominator from the single-timer forced-flow case and from original16/phase16. It preserves the Astra original source: the periodic timer updates n/q and a real held deadline next; a held one-shot timer increments m; the source-forced flow is z'=q*u, y=z with u(t)=t.
+
+Let Q convert binary64 literals to Fraction, TAU=Q(0.1)+Q(0.2) and ONE=Q(0.30000000000000004). The exact order is TAU<ONE<the added query Q(0.3000000000000001). At TAU the periodic callback sets q=1 and moves next to ONE+Q(0.1), beyond STOP=Q(0.31). The stale original held deadline must therefore produce no callback: m remains0 and the exact expected callback source sequence is [0,0]. The added query is after the cancelled old deadline, so it can expose wrongly retained eligibility without introducing a new physical event.
+
+The independent formula is z=y=0 before TAU and z=y=(t²-TAU²)/2 afterward. Actual output states n/q/m are checked exactly; the emitted real next scalar is compared to the nearest binary64 projection of the independent Fraction expression. This API scalar does not assert the exact internal pending deadline. Both that projection and the exact expression are beyond STOP. Fixed external targets are 1e-7 V and 1 ns; the timer source tolerance remains its original1e-6.
+
+Run `python3 -B calibrate.py` here. It executes ten separately counted checker controls, independent of parent33+6 and the other scope case's10. The source, original and added-query wire inputs, checker and original ten-control artifact were frozen before the fresh baseline/candidate executions. The nested FROZEN_MANIFEST identifies that initial preparation; the outer package manifest also identifies the portable helper and README.
+
+The 4a5ee8ab baseline passed the original grid but rejected the added-query grid with actual event_resolution / local causal closure requires autonomous polynomial flow and outputs. The 709a4376 candidate produced complete finite output and passed the formula, actual state layout/phase and callback checks on both grids. Its actual event history and common-stop solution are identical between the two grids. These are local independent semantic diagnostic results, with no new actual Spectre-alignment claim.

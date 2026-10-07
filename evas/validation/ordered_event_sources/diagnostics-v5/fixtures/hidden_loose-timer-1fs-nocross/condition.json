@@ -1,0 +1,65 @@
+{
+  "EVAS_expected": "accept",
+  "Spectre_settings": {
+    "iabstol": 1e-16,
+    "maxstep": 0.012,
+    "method": "traponly",
+    "precision": "%24.17g",
+    "reltol": 1e-10,
+    "vabstol": 1e-12
+  },
+  "coarse_fine_change": "output grid and max_step only",
+  "derivation": "Only both timer third arguments1e-6\u21921e-15; cross ttol/etol and all equations unchanged; exact nominal timer/PWL/root oracle and external criteria unchanged.",
+  "diagnostic_question": "Whether close cross association is needed for missingtimer/integrator behavior. Only cross callback removed; h/y expected0, timer/integrator contract unchanged.",
+  "exact_event_index_and_physical_clock": [
+    [
+      0,
+      "3602879701896397/36028797018963968"
+    ],
+    [
+      0,
+      "10808639105689191/36028797018963968"
+    ],
+    [
+      2,
+      "389422264390112095055139650703595/1298074214633706907132624082305024"
+    ],
+    [
+      1,
+      "1351079888211149/4503599627370496"
+    ]
+  ],
+  "expected_final": {
+    "h": "0",
+    "m": "1",
+    "n": "2",
+    "q": "1",
+    "u": "5584463537939415/18014398509481984",
+    "y": "0",
+    "z": "360287970189639/36028797018963968"
+  },
+  "external_event_time_s": 1e-09,
+  "external_voltage_budget_V": 1e-06,
+  "family": "hidden_loose_nocross",
+  "final": {
+    "h": "1",
+    "m": "1",
+    "n": "2",
+    "q": "1",
+    "u": "5584463537939415/18014398509481984",
+    "y": "1",
+    "z": "360287970189639/36028797018963968"
+  },
+  "id": "hidden_loose-timer-1fs-nocross",
+  "input_sha256": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1",
+  "lexical_derivation": "Only leading0 added to decimal real tokens; binary64 values and full non-token source bytes unchanged.",
+  "original_source_sha256": "c011a483797dca8551911afc59533897c30a6ac9c7999fa03095f32e0a3fade3",
+  "original_tolerances": {
+    "reltol": 0.0,
+    "vabstol": 1.0
+  },
+  "parent_source_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+  "parent_timer_declared_tolerance_s": 1e-06,
+  "source_sha256": "c1b490cc75bf07cc6017be66c3258c8bfd7ff549f4b18d193d5e9de93b966acc",
+  "timer_declared_tolerance_s": 1e-15
+}

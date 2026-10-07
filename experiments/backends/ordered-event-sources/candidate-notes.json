@@ -1,0 +1,136 @@
+{
+  "actual_v4_observations": {
+    "additional_diagnostics": "complex-reference-v5-prep:1ps timer,1fs nocross, mixedquarter-ns strobes. Prepared, no observed resultyet.",
+    "hidden_loose": "35savedrows tooriginalnumericstop, n1/q0/h0/m0, y/z0 throughout,132acceptedsteps. Numeric/eventF; closedsourcecause unknown.",
+    "mixed_source": "yerror0, counters2/1/1; firsttimerbracket1.000000004ns givesI underunchanged1ns; nearby3changesjointrecordexactorderI"
+  },
+  "exact_order_limit": "SubULP physical ordering is an independent EVAS obligation. Exported jointly changing state variables do not prove fine callback order, even if final counts match.",
+  "lexical_adapter_failure": {
+    "evidence": "COMPLEX_ORIGINAL_COMPILE_FAILURES.json",
+    "normalization": "Explicit new source identity adds7 leadingzeros; every binary64hex unchanged and original/new six compiledIRs equivalent; original3failures retained.",
+    "observed": "Original three programs fail actual Spectre VACOMP-1795 on omitted-leading-zero decimal tokens. EVAS-only precompile did not detect cross-compiler lexical incompatibility."
+  },
+  "new_timer_diagnostic_preparation": {
+    "cases": [
+      "mixed_source",
+      "hidden_loose"
+    ],
+    "changed": "Only both timer third arguments1us\u21921fs in each source. Originalcross arguments unchanged.",
+    "frozen_manifest_sha256": "8d359502507ba49fab6c53905eacdf2e31418efb7acba8261c549d9e0f785d0c",
+    "not_changed": "Exact nominal formula/order, external1ns/1e-7or1e-6, Spectrestricttolerances/maxstep, EVASgrids/budgets",
+    "prep": "complex-reference-v4-prep",
+    "reason": "Original1us declarations permit timing uncertainty larger than1ns goal; actual saved states establish changes no later than\u22652ns early. Newsource diagnostic cannotreplaceoriginalF orjustifyEVASearlytimerpolicy.",
+    "state": "Actualv4collected: mixedfinite numericP/eventI, hiddenloosefiniteF/eventF. Newv5three single-factor diagnosticinputs prepared separately; original5denominator unchanged."
+  },
+  "proposed_material_only": "Root owns benchmark/CANDIDATES editing; these are diagnosis/evidence notes, not scored task construction.",
+  "raw_availability": "local-only",
+  "reference_archive_sha256": "68dc0fa3415600b64aa26390bf8264f43d173e597a6aa936eebb806492b9089f",
+  "strict_finite_reference_gaps": [
+    {
+      "actual_saved_counter_changes": [
+        {
+          "changes": {
+            "n": {
+              "after": "1",
+              "before": "0"
+            }
+          },
+          "time_token": "0.099999998000000007"
+        },
+        {
+          "changes": {
+            "j": {
+              "after": "1",
+              "before": "0"
+            },
+            "n": {
+              "after": "2",
+              "before": "1"
+            }
+          },
+          "time_token": "0.29999999799999999"
+        },
+        {
+          "changes": {
+            "k": {
+              "after": "1",
+              "before": "0"
+            }
+          },
+          "time_token": "0.29999999999999999"
+        }
+      ],
+      "case": "mixed_source",
+      "final_counters": {
+        "j": "1",
+        "k": "1",
+        "n": "2"
+      },
+      "finite_event_status": "F",
+      "finite_numeric_status": "F",
+      "interpretation": "Counters have already changed by a retained row about2ns before the nominal clock. Previous saved row is farther away, so this is a one-sided bound, not an exact measured callback time. Nominal physical model vs actual finite record difference does not alone establish LRM violation.",
+      "max_errors_V": {
+        "u": 4.222044604925032e-17,
+        "y": 2.0
+      },
+      "source_declared_timer_ttol_s": 1e-06,
+      "strict_external_event_tolerance_s": 1e-09
+    },
+    {
+      "actual_saved_counter_changes": [
+        {
+          "changes": {
+            "n": {
+              "after": "1",
+              "before": "0"
+            }
+          },
+          "time_token": "0.099999998000000007"
+        },
+        {
+          "changes": {
+            "h": {
+              "after": "1",
+              "before": "0"
+            },
+            "m": {
+              "after": "1",
+              "before": "0"
+            },
+            "n": {
+              "after": "2",
+              "before": "1"
+            },
+            "q": {
+              "after": "1",
+              "before": "0"
+            }
+          },
+          "time_token": "0.29999999799999999"
+        }
+      ],
+      "case": "hidden_loose",
+      "final_counters": {
+        "h": "1",
+        "m": "1",
+        "n": "2",
+        "q": "1"
+      },
+      "finite_event_status": "F",
+      "finite_numeric_status": "F",
+      "interpretation": "Counters have already changed by a retained row about2ns before the nominal clock. Previous saved row is farther away, so this is a one-sided bound, not an exact measured callback time. Nominal physical model vs actual finite record difference does not alone establish LRM violation.",
+      "max_errors_V": {
+        "u": 3e-17,
+        "y": 1.0,
+        "z": 9.989928447285112e-07
+      },
+      "source_declared_timer_ttol_s": 1e-06,
+      "strict_external_event_tolerance_s": 1e-09
+    }
+  ],
+  "tight_runtime_failure": {
+    "denominator": 1,
+    "not_claimed": "No complete finite numerical/event pass; no proof of EVAS specific cross_ttol rejection; no root cause inference from fatal alone.",
+    "observed": "SPECTRE-18 Segmentation fault at displayed299.999ms, actual execution_failed; cleanup and lock release confirmed by root. No retry."
+  }
+}

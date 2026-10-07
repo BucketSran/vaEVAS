@@ -1,0 +1,175 @@
+[
+  {
+    "candidate_identity_label": "candidate-709a4376",
+    "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+    "expected": "complete finite output",
+    "independent_check": {
+      "event_source_order": [
+        0,
+        0
+      ],
+      "failures": [],
+      "observations": [
+        {
+          "actual_states": [
+            0.0,
+            0.0,
+            0.0,
+            0.30000000000000004
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "exact_query": "0",
+          "expected_states": [
+            "0",
+            "0",
+            "0",
+            "1351079888211149/4503599627370496"
+          ],
+          "expected_y": 0.0,
+          "time": 0.0
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0,
+            0.0,
+            0.4
+          ],
+          "actual_y": 0.003049999999999986,
+          "errors_V": {
+            "u": 0.0,
+            "y": 8.433531650808846e-18,
+            "z": 8.433531650808846e-18
+          },
+          "exact_query": "5584463537939415/18014398509481984",
+          "expected_states": [
+            "2",
+            "1",
+            "0",
+            "3602879701896397/9007199254740992"
+          ],
+          "expected_y": 0.003049999999999994,
+          "time": 0.31
+        }
+      ],
+      "scope": "Separate forced replanned-held-timer scope probe; no uncertain jump-window omission at the proven queries. Numeric/event/query-state checks do not establish exact representative=physicalclock equality.",
+      "status": "P"
+    },
+    "kernel_sha256": "0a889a1a0099d0e94d2522a5bff6c9ec939517264f50528d75c54250f31433da",
+    "name": "original",
+    "request_sha256": "2001e8444fc4a834597b795676523890258ae14a2495dcb8196a5d7518cef1d0",
+    "response_artifact_sha256": "b42405e101f40c51a7f8fb904e55acda6ca05fbc3e6cf22b40de23f85e97ab5f",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_revision": "709a43769aaff9a494a2df54a8e9b820a77aae7d",
+    "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "b42405e101f40c51a7f8fb904e55acda6ca05fbc3e6cf22b40de23f85e97ab5f",
+    "wire": "original.request.json",
+    "wire_sha256": "2001e8444fc4a834597b795676523890258ae14a2495dcb8196a5d7518cef1d0"
+  },
+  {
+    "candidate_identity_label": "candidate-709a4376",
+    "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+    "expected": "complete finite output",
+    "independent_check": {
+      "event_source_order": [
+        0,
+        0
+      ],
+      "failures": [],
+      "observations": [
+        {
+          "actual_states": [
+            0.0,
+            0.0,
+            0.0,
+            0.30000000000000004
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "exact_query": "0",
+          "expected_states": [
+            "0",
+            "0",
+            "0",
+            "1351079888211149/4503599627370496"
+          ],
+          "expected_y": 0.0,
+          "time": 0.0
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0,
+            0.0,
+            0.4
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 2.4980018054066026e-17,
+            "z": 2.4980018054066026e-17
+          },
+          "exact_query": "5404319552844597/18014398509481984",
+          "expected_states": [
+            "2",
+            "1",
+            "0",
+            "3602879701896397/9007199254740992"
+          ],
+          "expected_y": 2.4980018054066026e-17,
+          "time": 0.3000000000000001
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0,
+            0.0,
+            0.4
+          ],
+          "actual_y": 0.003049999999999986,
+          "errors_V": {
+            "u": 0.0,
+            "y": 8.433531650808846e-18,
+            "z": 8.433531650808846e-18
+          },
+          "exact_query": "5584463537939415/18014398509481984",
+          "expected_states": [
+            "2",
+            "1",
+            "0",
+            "3602879701896397/9007199254740992"
+          ],
+          "expected_y": 0.003049999999999994,
+          "time": 0.31
+        }
+      ],
+      "scope": "Separate forced replanned-held-timer scope probe; no uncertain jump-window omission at the proven queries. Numeric/event/query-state checks do not establish exact representative=physicalclock equality.",
+      "status": "P"
+    },
+    "kernel_sha256": "0a889a1a0099d0e94d2522a5bff6c9ec939517264f50528d75c54250f31433da",
+    "name": "add-representative-query",
+    "request_sha256": "547b0b9b113b39e683d48e5cb90de53a51fa5b88fb3f8ff2e758b958a7673139",
+    "response_artifact_sha256": "bccc5a8469c1ea13b3c0bfc7ea1e021b06b99dc00011c2f2ee5b4abf824e300a",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_revision": "709a43769aaff9a494a2df54a8e9b820a77aae7d",
+    "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "bccc5a8469c1ea13b3c0bfc7ea1e021b06b99dc00011c2f2ee5b4abf824e300a",
+    "wire": "add-representative-query.request.json",
+    "wire_sha256": "547b0b9b113b39e683d48e5cb90de53a51fa5b88fb3f8ff2e758b958a7673139"
+  }
+]

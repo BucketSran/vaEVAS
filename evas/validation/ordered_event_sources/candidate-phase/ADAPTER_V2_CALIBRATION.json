@@ -1,0 +1,158 @@
+{
+  "controls": [
+    {
+      "expected": "P",
+      "transport": {
+        "returncode": 1,
+        "stderr": "{\"kind\": \"event_resolution\", \"message\": \"cross_ttol_unrepresentable certificate\"}",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": "F",
+      "transport": {
+        "returncode": 1,
+        "stderr": "{\"kind\": \"newton\", \"message\": \"failure\"}",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": "F",
+      "transport": {
+        "returncode": 0,
+        "stderr": "{\"kind\": \"event_resolution\", \"message\": \"cross_ttol_unrepresentable\"}",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": "F",
+      "transport": {
+        "returncode": 1,
+        "stderr": "",
+        "stdout": "{\"solutions\": [], \"detail\": {\"kind\": \"event_resolution\", \"message\": \"cross_ttol_unrepresentable\"}}"
+      }
+    },
+    {
+      "expected": "F",
+      "transport": {
+        "returncode": 1,
+        "stderr": "not JSON",
+        "stdout": ""
+      }
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v3--hidden_loose--coarse"
+    },
+    {
+      "case": "complex-reference-v3--hidden_loose--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v3--hidden_loose--fine"
+    },
+    {
+      "case": "complex-reference-v3--hidden_loose--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v3--mixed_source--coarse"
+    },
+    {
+      "case": "complex-reference-v3--mixed_source--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v3--mixed_source--fine"
+    },
+    {
+      "case": "complex-reference-v3--mixed_source--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v4--hidden_loose--coarse"
+    },
+    {
+      "case": "complex-reference-v4--hidden_loose--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v4--hidden_loose--fine"
+    },
+    {
+      "case": "complex-reference-v4--hidden_loose--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v4--mixed_source--coarse"
+    },
+    {
+      "case": "complex-reference-v4--mixed_source--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v4--mixed_source--fine"
+    },
+    {
+      "case": "complex-reference-v4--mixed_source--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--hidden_loose-timer-1fs-nocross--coarse"
+    },
+    {
+      "case": "complex-reference-v5--hidden_loose-timer-1fs-nocross--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--hidden_loose-timer-1fs-nocross--fine"
+    },
+    {
+      "case": "complex-reference-v5--hidden_loose-timer-1fs-nocross--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--hidden_loose-timer-1ps--coarse"
+    },
+    {
+      "case": "complex-reference-v5--hidden_loose-timer-1ps--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--hidden_loose-timer-1ps--fine"
+    },
+    {
+      "case": "complex-reference-v5--hidden_loose-timer-1ps--fine",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--mixed_source-quarter-ns-strobes--coarse"
+    },
+    {
+      "case": "complex-reference-v5--mixed_source-quarter-ns-strobes--coarse",
+      "wrong_after_all_root_state": "F"
+    },
+    {
+      "actual_query_positive": "P",
+      "case": "complex-reference-v5--mixed_source-quarter-ns-strobes--fine"
+    },
+    {
+      "case": "complex-reference-v5--mixed_source-quarter-ns-strobes--fine",
+      "wrong_after_all_root_state": "F"
+    }
+  ],
+  "passed": 33,
+  "reason": "Actual oldkernel writes structured errorJSON onstderr, not stdout. New adapterreanalysis preserves originalstdout parseF. Actualperquery-state check isseparate fromeventmetadata and physicalfinitechecker."
+}

@@ -1,0 +1,28 @@
+{
+  "basis": "Astra actual existing probe: same original .literal source and sole timer; only add binary64 query .3000000000000001, which is strictlyafter physical timer sum. Separate scope diagnostic, not addition to original32 denominator.",
+  "denominator": 2,
+  "exact_binary_timer_sum": "10808639105689191/36028797018963968",
+  "expected_z_at_stop": "7918252709265597376113747934419/2596148429267413814265248164610048",
+  "external_timer_budget_s": 1e-09,
+  "external_voltage_budget_V": 1e-07,
+  "reference_probe_sha256": "f995e806c5c57e6a72eba48e77a0b9360a75d0832a47a97db10ae8c710953d0c",
+  "reference_results_sha256": "f42af1ff6b5e2fb1209e14e42ca630182d720c9ff7f67677cafe3d9da9f27739",
+  "requests": [
+    {
+      "checker_sha256": "7080824abe86321d00927f980364b1a3b9e0861454b4f77fdca7b8416b935717",
+      "expected": "complete finite output",
+      "name": "original",
+      "source_sha256": "365866f2726bc9a66d4b652830ade229b41566384582e56d8c9fd53481c095aa",
+      "wire": "original.request.json",
+      "wire_sha256": "ca2647391761a0755ea76517a04ca2b4dcf0262d63926c52c74821724c280555"
+    },
+    {
+      "checker_sha256": "7080824abe86321d00927f980364b1a3b9e0861454b4f77fdca7b8416b935717",
+      "expected": "complete finite output",
+      "name": "add-representative-query",
+      "source_sha256": "365866f2726bc9a66d4b652830ade229b41566384582e56d8c9fd53481c095aa",
+      "wire": "add-representative-query.request.json",
+      "wire_sha256": "a290431914488cf1053bfc464ca7de6538b6e36d15404ed5a3c841785a3f4cc0"
+    }
+  ]
+}

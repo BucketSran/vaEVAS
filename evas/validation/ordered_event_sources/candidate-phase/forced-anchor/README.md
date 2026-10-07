@@ -1,0 +1,11 @@
+# Forced single-timer anchor-scope diagnostic
+
+This independent two-input group tests whether adding an observation at a numerical event representative accidentally imposes an autonomous-flow restriction on an ordinary source-forced timer model. It keeps the original Astra source bytes: a single periodic timer updates n/q and the flow is z'=q*u, y=z. The input source is u(t)=t on [0,Q(0.31)]. No cross or subsequent one-shot callback exists.
+
+The original grid is [0,0.31]. The second grid adds binary64 0.3000000000000001, which is strictly after the exact physical timer sum Q(0.1)+Q(0.2), although it equals the old emitted numerical representative. With Q converting binary64 to Fraction, the independent formula is z=y=0 before that sum and z=y=(t²-TAU²)/2 afterward. The expected actual states after the sum are n=2,q=1. The independent voltage target remains 1e-7 V and the event representative target is 1 ns. No representative is assumed to equal the exact physical timer.
+
+Run `python3 -B calibrate.py` here. Its ten controls are separately counted from the parent33 and6: for each input, a positive waveform, a 2 µV wrong-output case, a wrong physical-after state, a missing callback and a missing actual state layout. Calibration and input/checker hashes were frozen before the fresh kernel runs. The nested FROZEN_MANIFEST identifies that initial preparation; this package's outer manifest additionally identifies the portable replay script and README.
+
+For 42fbdbc7 the original input passed and the extra-query input actually rejected with event_resolution / local causal closure requires autonomous polynomial flow and outputs. For 4a5ee8ab both inputs produced complete finite outputs and passed the independent formula, state and callback checks. These two inputs are a separate diagnostic denominator; they do not alter the original16 or phase16 counts. The source is an EVAS semantic probe; no actual Spectre comparison for it is claimed.
+
+The latest 709a4376 candidate also passes both fixed inputs. Its actual event history and common-stop solution are JSON-identical between these grids; these derived comparisons are retained separately from the independent physical formula.
