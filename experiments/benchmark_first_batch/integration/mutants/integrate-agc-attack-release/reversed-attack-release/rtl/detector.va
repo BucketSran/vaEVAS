@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module agc_detector(signal_in,clk,reset,envelope);
+input signal_in,clk,reset; output envelope; electrical signal_in,clk,reset,envelope;
+parameter real alpha=0.4;
+real level;
+analog begin
+  @(initial_step) level=0;
+  @(cross(V(reset)-0.5,+1)) level=0;
+  @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) level=(1-alpha)*level+alpha*abs(V(signal_in));
+  V(envelope)<+transition(level,0,0.03n);
+end
+endmodule

@@ -1,0 +1,11 @@
+`include "rtl/coeff.va"
+`include "rtl/inverse.va"
+`include "rtl/sample.va"
+module iq_calibration(ri,rq,a,b,c,d,oi,oq,apply,clk,bypass,reset,out_i,out_q,clipped);
+input ri,rq,a,b,c,d,oi,oq,apply,clk,bypass,reset; output out_i,out_q,clipped;
+electrical ri,rq,a,b,c,d,oi,oq,apply,clk,bypass,reset,out_i,out_q,clipped;
+electrical la,lb,lc,ld,li,lq,ci,cq;
+iq_coeff uc(a,b,c,d,oi,oq,apply,reset,la,lb,lc,ld,li,lq);
+iq_inverse ui(ri,rq,a,b,c,d,oi,oq,ci,cq);
+iq_sample us(ri,rq,ci,cq,clk,bypass,reset,out_i,out_q,clipped);
+endmodule

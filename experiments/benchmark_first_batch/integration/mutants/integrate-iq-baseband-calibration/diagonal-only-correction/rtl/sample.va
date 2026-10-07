@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module iq_sample(ri,rq,ci,cq,clk,bypass,reset,out_i,out_q,clipped);
+input ri,rq,ci,cq,clk,bypass,reset; output out_i,out_q,clipped;
+electrical ri,rq,ci,cq,clk,bypass,reset,out_i,out_q,clipped;
+real hi,hq,xi,xq; integer clip;
+analog begin
+  @(initial_step) begin hi=0; hq=0; clip=0; end
+  @(cross(V(reset)-0.5,+1)) begin hi=0; hq=0; clip=0; end
+  @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) begin
+    xi=(V(bypass)>0.5 ? V(ri) : V(ci)); xq=(V(bypass)>0.5 ? V(rq) : V(cq));
+    hi=min(1,max(-1,xi)); hq=min(1,max(-1,xq)); clip=(abs(xi)>1 || abs(xq)>1);
+  end
+  V(out_i)<+transition(hi,0,0.03n); V(out_q)<+transition(hq,0,0.03n);
+  V(clipped)<+transition(clip,0,0.03n);
+end
+endmodule

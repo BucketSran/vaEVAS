@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module iq_coeff(a,b,c,d,oi,oq,apply,reset,la,lb,lc,ld,li,lq);
+input a,b,c,d,oi,oq,apply,reset; output la,lb,lc,ld,li,lq;
+electrical a,b,c,d,oi,oq,apply,reset,la,lb,lc,ld,li,lq;
+real aa,bb,cc,dd,ii,qq;
+analog begin
+  @(initial_step) begin aa=1; bb=0; cc=0; dd=1; ii=0; qq=0; end
+  @(cross(V(reset)-0.5,+1)) begin aa=1; bb=0; cc=0; dd=1; ii=0; qq=0; end
+  @(cross(V(apply)-0.5,+1)) if(V(reset)<0.5) begin
+    aa=V(a); bb=V(b); cc=V(c); dd=V(d); ii=V(oi); qq=V(oq);
+  end
+  V(la)<+transition(aa,0,0.03n); V(lb)<+transition(bb,0,0.03n);
+  V(lc)<+transition(cc,0,0.03n); V(ld)<+transition(dd,0,0.03n);
+  V(li)<+transition(ii,0,0.03n); V(lq)<+transition(qq,0,0.03n);
+end
+endmodule

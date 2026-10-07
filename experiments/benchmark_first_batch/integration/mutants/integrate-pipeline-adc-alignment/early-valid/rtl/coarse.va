@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module coarse_stage(vin,clk,reset,coarse,residue);
+input vin,clk,reset; output coarse,residue;
+electrical vin,clk,reset,coarse,residue;
+real c,r,x;
+analog begin
+  @(initial_step) begin c=0; r=0; end
+  @(cross(V(reset)-0.5,+1)) begin c=0; r=0; end
+  @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) begin
+    x=min(0.999999999,max(0,V(vin))); c=floor(8*x); r=8*x-c;
+  end
+  V(coarse)<+transition(c,0,0.03n);
+  V(residue)<+transition(r,0,0.03n);
+end
+endmodule

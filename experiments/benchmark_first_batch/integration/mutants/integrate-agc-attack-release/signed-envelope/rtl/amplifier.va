@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module agc_amplifier(signal_in,gain,reset,signal_out,clipped);
+input signal_in,gain,reset; output signal_out,clipped;
+electrical signal_in,gain,reset,signal_out,clipped;
+real product;
+analog begin
+  product=V(signal_in)*V(gain);
+  V(signal_out)<+(V(reset)>0.5 ? 0 : min(0.9,max(-0.9,product)));
+  V(clipped)<+(V(reset)>0.5 ? 0 : (abs(product)>0.9 ? 1 : 0));
+end
+endmodule

@@ -1,0 +1,22 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module pll_tracker(command,hop,reset,frequency,phase,target);
+input command,hop,reset; output frequency,phase,target;
+electrical command,hop,reset,frequency,phase,target;
+parameter real tau_ns=5;
+real origin,base_frequency,target_frequency,base_phase,dt,f,p;
+analog begin
+  @(initial_step) begin origin=0; base_frequency=1; target_frequency=1; base_phase=0; end
+  dt=($abstime-origin)/1n;
+  f=target_frequency+(base_frequency-target_frequency)*exp(-dt/tau_ns);
+  p=base_phase+target_frequency*dt+(base_frequency-target_frequency)*tau_ns*(1-exp(-dt/tau_ns));
+  @(cross(V(hop)-0.5,+1)) if(V(reset)<0.5) begin
+    base_frequency=f; base_phase=0; origin=$abstime; target_frequency=V(command);
+  end
+  @(cross(V(reset)-0.5,+1)) begin origin=$abstime; base_frequency=1; target_frequency=1; base_phase=0; end
+  @(cross(V(reset)-0.5,-1)) begin origin=$abstime; base_frequency=1; target_frequency=1; base_phase=0; end
+  V(frequency)<+(V(reset)>0.5 ? 1 : f);
+  V(phase)<+(V(reset)>0.5 ? 0 : p);
+  V(target)<+target_frequency;
+end
+endmodule

@@ -1,0 +1,121 @@
+[
+  {
+    "task": "integrate-agc-attack-release",
+    "case_names": [
+      "burst-attack-and-release",
+      "nondefault-control-parameters",
+      "reset-during-burst"
+    ],
+    "candidate_files": [
+      "dut.va",
+      "rtl/detector.va",
+      "rtl/gain.va",
+      "rtl/amplifier.va"
+    ],
+    "mutants": [
+      "reversed-attack-release",
+      "sampled-output",
+      "signed-envelope",
+      "single-release-constant"
+    ],
+    "reference_expected": "pass",
+    "starter_expected": "reject",
+    "semantic_mutants_expected": "reject",
+    "actual_spectre": "pending"
+  },
+  {
+    "task": "integrate-iq-baseband-calibration",
+    "case_names": [
+      "cross-coupling-and-latched-coefficients",
+      "reset-and-bypass",
+      "opposite-mismatch"
+    ],
+    "candidate_files": [
+      "dut.va",
+      "rtl/coeff.va",
+      "rtl/inverse.va",
+      "rtl/sample.va"
+    ],
+    "mutants": [
+      "bypass-ignored",
+      "clip-flag-only-i",
+      "diagonal-only-correction",
+      "live-unlatched-coefficients"
+    ],
+    "reference_expected": "pass",
+    "starter_expected": "reject",
+    "semantic_mutants_expected": "reject",
+    "actual_spectre": "pending"
+  },
+  {
+    "task": "integrate-pipeline-adc-alignment",
+    "case_names": [
+      "alternating-coarse-fine",
+      "reset-refill",
+      "nondefault-clock-and-clamps"
+    ],
+    "candidate_files": [
+      "dut.va",
+      "rtl/coarse.va",
+      "rtl/fine.va"
+    ],
+    "mutants": [
+      "combinational-mixed-sample",
+      "early-valid",
+      "stale-refill-after-reset",
+      "wrong-fine-phase"
+    ],
+    "reference_expected": "pass",
+    "starter_expected": "reject",
+    "semantic_mutants_expected": "reject",
+    "actual_spectre": "pending"
+  },
+  {
+    "task": "integrate-pll-hop-reacquisition",
+    "case_names": [
+      "up-down-and-interrupted-capture",
+      "changed-time-constant",
+      "reset-and-tiny-hop"
+    ],
+    "candidate_files": [
+      "dut.va",
+      "rtl/tracker.va",
+      "rtl/oscillator.va",
+      "rtl/lock.va"
+    ],
+    "mutants": [
+      "frequency-restarted-on-hop",
+      "no-lock-dwell",
+      "phase-restarted-on-hop",
+      "stale-command-reference"
+    ],
+    "reference_expected": "pass",
+    "starter_expected": "reject",
+    "semantic_mutants_expected": "reject",
+    "actual_spectre": "pending"
+  },
+  {
+    "task": "integrate-tdc-measurement-chain",
+    "case_names": [
+      "pairing-timeout-reset",
+      "fine-range-and-held-result",
+      "long-timeout-recovery"
+    ],
+    "candidate_files": [
+      "dut.va",
+      "rtl/capture.va",
+      "rtl/quantizer.va",
+      "rtl/formatter.va"
+    ],
+    "mutants": [
+      "floor-quantization",
+      "range-error-disconnected",
+      "restart-while-busy",
+      "timeout-never-clears-busy"
+    ],
+    "reference_expected": "pass",
+    "starter_expected": "reject",
+    "semantic_mutants_expected": "reject",
+    "actual_spectre": "pending"
+  }
+]

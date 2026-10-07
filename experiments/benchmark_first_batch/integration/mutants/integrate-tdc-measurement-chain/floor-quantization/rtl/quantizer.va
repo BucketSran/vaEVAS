@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module tdc_quantizer(width,code,range_error);
+input width; output code,range_error; electrical width,code,range_error;
+parameter real lsb_ns=0.5;
+real bins;
+analog begin
+  bins=floor(V(width)/lsb_ns);
+  V(code)<+min(31,max(0,bins));
+  V(range_error)<+(bins>31 ? 1.0 : 0.0);
+end
+endmodule

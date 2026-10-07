@@ -1,0 +1,50 @@
+{
+  "category": "extension-integration",
+  "tasks": [
+    {
+      "id": "integrate-tdc-measurement-chain",
+      "path": "benchmark/tasks/integrate-tdc-measurement-chain",
+      "source_group": "original-tdc-chain",
+      "construction": "reference-and-semantic-mutants-authored",
+      "spectre_calibration": "pending",
+      "agentic": "pending",
+      "release_set": "spectre-extension-candidate"
+    },
+    {
+      "id": "integrate-pipeline-adc-alignment",
+      "path": "benchmark/tasks/integrate-pipeline-adc-alignment",
+      "source_group": "original-pipeline-adc",
+      "construction": "reference-and-semantic-mutants-authored",
+      "spectre_calibration": "pending",
+      "agentic": "pending",
+      "release_set": "spectre-extension-candidate"
+    },
+    {
+      "id": "integrate-iq-baseband-calibration",
+      "path": "benchmark/tasks/integrate-iq-baseband-calibration",
+      "source_group": "original-iq-baseband",
+      "construction": "reference-and-semantic-mutants-authored",
+      "spectre_calibration": "pending",
+      "agentic": "pending",
+      "release_set": "spectre-extension-candidate"
+    },
+    {
+      "id": "integrate-pll-hop-reacquisition",
+      "path": "benchmark/tasks/integrate-pll-hop-reacquisition",
+      "source_group": "original-hopping-pll",
+      "construction": "reference-and-semantic-mutants-authored",
+      "spectre_calibration": "pending",
+      "agentic": "pending",
+      "release_set": "spectre-extension-candidate"
+    },
+    {
+      "id": "integrate-agc-attack-release",
+      "path": "benchmark/tasks/integrate-agc-attack-release",
+      "source_group": "original-receiver-agc",
+      "construction": "reference-and-semantic-mutants-authored",
+      "spectre_calibration": "pending",
+      "agentic": "pending",
+      "release_set": "spectre-extension-candidate"
+    }
+  ]
+}

@@ -1,0 +1,356 @@
+[
+  {
+    "name": "up-down-and-interrupted-capture",
+    "stop": 8.400000000000001e-08,
+    "signals": [
+      "command",
+      "hop",
+      "reset",
+      "frequency",
+      "wave",
+      "locked"
+    ],
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_command (command 0) vsource type=pwl wave=[0n 0 4.495n 0 4.505n 1.31 8.995n 1.31 9.005n 1.17 16.495n 1.17 16.505n 0.72 22.495n 0.72 22.505n 1.13 48.495n 1.13 48.505n 0.88 84n 0.88]\nV_hop (hop 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 16.995n 0 17.005n 1 17.295n 1 17.305n 0 22.995n 0 23.005n 1 23.295n 1 23.305n 0 48.995n 0 49.005n 1 49.295n 1 49.305n 0 84n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 84n 0]\nDUT (command hop reset frequency wave locked) hopping_pll tau_ns=5 lock_tolerance=0.01 dwell_ns=0.5\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=84n maxstep=0.02n\nsave command hop reset frequency wave locked\n",
+    "windows": [
+      {
+        "node": "locked",
+        "start": 6.600000000000001e-10,
+        "end": 4.96e-09,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 1.8e-10,
+        "end": 4.7e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 5.18e-09,
+        "end": 1.696e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 1.7180000000000002e-08,
+        "end": 2.2960000000000002e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 3.956619727365579e-08,
+        "end": 4.896e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.318e-08,
+        "end": 3.937619727365579e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 6.572774431132187e-08,
+        "end": 8.396e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 4.918e-08,
+        "end": 6.553774431132186e-08,
+        "value": 0.0,
+        "atol": 0.01
+      }
+    ],
+    "pll_protocol": {
+      "hops": [
+        [
+          5,
+          1.31
+        ],
+        [
+          17,
+          0.72
+        ],
+        [
+          23,
+          1.13
+        ],
+        [
+          49,
+          0.88
+        ]
+      ],
+      "resets": [],
+      "tau_ns": 5
+    },
+    "edges": [
+      {
+        "node": "locked",
+        "threshold": 0.5,
+        "times": [
+          5.400000000000001e-10,
+          5.015e-09,
+          3.944619727365579e-08,
+          4.9015000000000006e-08,
+          6.560774431132188e-08
+        ],
+        "atol": 1.2e-10,
+        "start": 1e-10
+      }
+    ]
+  },
+  {
+    "name": "changed-time-constant",
+    "stop": 7.4e-08,
+    "signals": [
+      "command",
+      "hop",
+      "reset",
+      "frequency",
+      "wave",
+      "locked"
+    ],
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_command (command 0) vsource type=pwl wave=[0n 0 3.495n 0 3.505n 0.67 8.995n 0.67 9.005n 1.17 11.495n 1.17 11.505n 1.38 38.495n 1.38 38.505n 0.94 74n 0.94]\nV_hop (hop 0) vsource type=pwl wave=[0n 0 3.995n 0 4.005n 1 4.295n 1 4.305n 0 11.995n 0 12.005n 1 12.295n 1 12.305n 0 38.995n 0 39.005n 1 39.295n 1 39.305n 0 74n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 74n 0]\nDUT (command hop reset frequency wave locked) hopping_pll tau_ns=3.4 lock_tolerance=0.012 dwell_ns=0.65\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=74n maxstep=0.02n\nsave command hop reset frequency wave locked\n",
+    "windows": [
+      {
+        "node": "locked",
+        "start": 8.100000000000001e-10,
+        "end": 3.96e-09,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 1.8e-10,
+        "end": 6.2e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 4.18e-09,
+        "end": 1.1960000000000001e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.65295289230148e-08,
+        "end": 3.8960000000000006e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 1.218e-08,
+        "end": 2.63395289230148e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 5.2054485240047294e-08,
+        "end": 7.396e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 3.9180000000000004e-08,
+        "end": 5.18644852400473e-08,
+        "value": 0.0,
+        "atol": 0.01
+      }
+    ],
+    "pll_protocol": {
+      "hops": [
+        [
+          4,
+          0.67
+        ],
+        [
+          12,
+          1.38
+        ],
+        [
+          39,
+          0.94
+        ]
+      ],
+      "resets": [],
+      "tau_ns": 3.4
+    },
+    "edges": [
+      {
+        "node": "locked",
+        "threshold": 0.5,
+        "times": [
+          6.900000000000001e-10,
+          4.015e-09,
+          2.6409528923014798e-08,
+          3.9015e-08,
+          5.19344852400473e-08
+        ],
+        "atol": 1.2e-10,
+        "start": 1e-10
+      }
+    ]
+  },
+  {
+    "name": "reset-and-tiny-hop",
+    "stop": 9.100000000000001e-08,
+    "signals": [
+      "command",
+      "hop",
+      "reset",
+      "frequency",
+      "wave",
+      "locked"
+    ],
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_command (command 0) vsource type=pwl wave=[0n 0 3.495n 0 3.505n 1.27 8.995n 1.27 9.005n 1.17 28.495n 1.17 28.505n 1.005 33.495n 1.005 33.505n 0.83 55.495n 0.83 55.505n 1.19 91n 1.19]\nV_hop (hop 0) vsource type=pwl wave=[0n 0 3.995n 0 4.005n 1 4.295n 1 4.305n 0 28.995n 0 29.005n 1 29.295n 1 29.305n 0 33.995n 0 34.005n 1 34.295n 1 34.305n 0 55.995n 0 56.005n 1 56.295n 1 56.305n 0 91n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 21.995n 0 22.005n 1 23.995n 1 24.005n 0 91n 0]\nDUT (command hop reset frequency wave locked) hopping_pll tau_ns=6.2 lock_tolerance=0.008 dwell_ns=0.45\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=91n maxstep=0.02n\nsave command hop reset frequency wave locked\n",
+    "windows": [
+      {
+        "node": "locked",
+        "start": 6.100000000000001e-10,
+        "end": 3.96e-09,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 1.8e-10,
+        "end": 4.2000000000000005e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 4.18e-09,
+        "end": 2.1960000000000003e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.218e-08,
+        "end": 2.396e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.461e-08,
+        "end": 2.8960000000000003e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.4180000000000002e-08,
+        "end": 2.442e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.9610000000000002e-08,
+        "end": 3.396e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 2.918e-08,
+        "end": 2.942e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 5.365954322722687e-08,
+        "end": 5.5960000000000006e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 3.418e-08,
+        "end": 5.346954322722687e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 8.012510436913614e-08,
+        "end": 9.096e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "locked",
+        "start": 5.6180000000000004e-08,
+        "end": 7.993510436913615e-08,
+        "value": 0.0,
+        "atol": 0.01
+      }
+    ],
+    "pll_protocol": {
+      "hops": [
+        [
+          4,
+          1.27
+        ],
+        [
+          29,
+          1.005
+        ],
+        [
+          34,
+          0.83
+        ],
+        [
+          56,
+          1.19
+        ]
+      ],
+      "resets": [
+        [
+          22,
+          1
+        ],
+        [
+          24,
+          0
+        ]
+      ],
+      "tau_ns": 6.2
+    },
+    "edges": [
+      {
+        "node": "locked",
+        "threshold": 0.5,
+        "times": [
+          4.900000000000001e-10,
+          4.015e-09,
+          2.449e-08,
+          2.9015000000000002e-08,
+          2.949e-08,
+          3.4015000000000004e-08,
+          5.353954322722687e-08,
+          5.6015e-08,
+          8.000510436913615e-08
+        ],
+        "atol": 1.2e-10,
+        "start": 1e-10
+      }
+    ]
+  }
+]

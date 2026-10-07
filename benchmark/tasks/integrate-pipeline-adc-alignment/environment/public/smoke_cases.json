@@ -1,0 +1,125 @@
+[
+  {
+    "name": "public-four-samples",
+    "stop": 2.2000000000000002e-08,
+    "signals": [
+      "vin",
+      "clk",
+      "reset",
+      "result",
+      "valid"
+    ],
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_vin (vin 0) vsource type=pwl wave=[0n 0 2.395n 0 2.405n 0.135 6.395n 0.135 6.405n 0.786 10.395n 0.786 10.405n 0.422 14.395n 0.422 14.405n 0.951 18.395n 0.951 18.405n 0.951 22n 0.951]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 2.995n 0 3.005n 1 4.995n 1 5.005n 0 6.995n 0 7.005n 1 8.995n 1 9.005n 0 10.995n 0 11.005n 1 12.995n 1 13.005n 0 14.995n 0 15.005n 1 16.995n 1 17.005n 0 18.995n 0 19.005n 1 20.995n 1 21.005n 0 22n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.395n 1 1.405n 0 22n 0]\nDUT (vin clk reset result valid) pipeline_adc \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=22.0n maxstep=0.02n\nsave vin clk reset result valid\n",
+    "windows": [
+      {
+        "node": "result",
+        "start": 1.8e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.8e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.18e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.18e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 3.18e-09,
+        "end": 6.960000000000001e-09,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 3.18e-09,
+        "end": 6.960000000000001e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 7.1800000000000004e-09,
+        "end": 1.0960000000000002e-08,
+        "value": 0.08,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 7.1800000000000004e-09,
+        "end": 1.0960000000000002e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.118e-08,
+        "end": 1.4960000000000003e-08,
+        "value": 0.5,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.118e-08,
+        "end": 1.4960000000000003e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.518e-08,
+        "end": 1.8960000000000002e-08,
+        "value": 0.27,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.518e-08,
+        "end": 1.8960000000000002e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.918e-08,
+        "end": 2.1960000000000003e-08,
+        "value": 0.6,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.918e-08,
+        "end": 2.1960000000000003e-08,
+        "value": 1.0,
+        "atol": 0.01
+      }
+    ],
+    "edges": [
+      {
+        "node": "valid",
+        "threshold": 0.5,
+        "times": [
+          7.015e-09
+        ],
+        "atol": 8e-11,
+        "start": 1e-10
+      }
+    ]
+  }
+]
