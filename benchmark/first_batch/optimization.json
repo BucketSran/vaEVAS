@@ -3,7 +3,7 @@
   "scope": "five admitted optimization task assets; formal reference and negative calibration recorded separately; two inconclusive probes retained",
   "target_task_count": 5,
   "task_count": 5,
-  "completed_backend_calibrated_count": 0,
+  "completed_backend_calibrated_count": 5,
   "candidate_count": 2,
   "tasks": [
     {
@@ -16,7 +16,21 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-vco-step",
       "reference_path": "experiments/benchmark_first_batch/optimization/vco_boundstep/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/vco_boundstep/baseline.va",
-      "semantic_negative_variants": [
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "generated; formal reference and representative negative Spectre calibration audited",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "reference passed all3 formal conditions; complete sealed main and paired PSFs replayed with current numerical checker",
+        "spectre_performance": "same-job warmup plus5 alternating AB pairs passed admitted accepted-steps ratio0.1 and5 winning pairs",
+        "agentic": "prepared in fixed14 representative pilot; pending",
+        "open_source_regrading": "not validated",
+        "spectre_negative_calibration": "all6 variants completed all3 conditions and met their semantic/performance/mixed rejection expectation"
+      },
+      "data_provenance": "behavioral_synthetic",
+      "id": "optimize-vco-step",
+      "path": "benchmark/tasks/optimize-vco-step",
+      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json",
+      "negative_variants": [
         "frozen_low_band",
         "unchanged_bound",
         "undersample",
@@ -24,20 +38,29 @@
         "wrong_phase",
         "reduced_resolution"
       ],
-      "release_set": "spectre-extension-candidate",
-      "status": {
-        "harbor_materials": "generated after reviewed admission; formal calibration pending",
-        "row_criteria": "7 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "formal reference all3 conditions graded and passed; sealed full-raw replay verified",
-        "spectre_performance": "formal same-job warmup plus5 AB pairs passed admitted step ratio; all12 complete losslessPSF records independently audited",
-        "spectre_semantic_negatives": "pending coordinator",
-        "agentic": "pending",
-        "open_source_regrading": "not validated"
+      "negative_roles": {
+        "unchanged_bound": "performance_neg",
+        "frozen_low_band": "semantic_neg",
+        "reduced_resolution": "semantic_neg",
+        "undersample": "semantic_neg",
+        "wrong_amplitude": "semantic_neg",
+        "wrong_phase": "semantic_neg"
       },
-      "data_provenance": "behavioral_synthetic",
-      "id": "optimize-vco-step",
-      "path": "benchmark/tasks/optimize-vco-step",
-      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json"
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json",
+        "receipt_sha256": "f35f6194fc4c95ebddf4e5930d2e5921ae421a71ded5214fe9523e362fe2ff43",
+        "scope": "all canonical conditions; complete sealed identity and current numerical replay; no new simulation during audit",
+        "reference_conditions": 3,
+        "negative_variants": 6,
+        "negative_conditions": 18,
+        "negative_condition_outcomes": {
+          "performance_failure": 1,
+          "passed": 5,
+          "semantic_failure": 12
+        },
+        "positive_equivalent_conditions": 0,
+        "all_variant_expectations_met": true
+      }
     },
     {
       "engineering_action": "simulation-implementation-optimization",
@@ -49,7 +72,21 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-power-monitor",
       "reference_path": "experiments/benchmark_first_batch/optimization/power_monitor/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/power_monitor/baseline.va",
-      "semantic_negative_variants": [
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "generated; formal reference and representative negative Spectre calibration audited",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "reference passed all3 formal conditions; complete sealed main and paired PSFs replayed with current numerical checker",
+        "spectre_performance": "same-job warmup plus5 alternating AB pairs passed admitted accepted-steps ratio0.1 and5 winning pairs",
+        "agentic": "not selected for fixed14 representative pilot",
+        "open_source_regrading": "not validated",
+        "spectre_negative_calibration": "all6 variants completed all3 conditions and met their semantic/performance/mixed rejection expectation"
+      },
+      "data_provenance": "behavioral_synthetic",
+      "id": "optimize-power-monitor",
+      "path": "benchmark/tasks/optimize-power-monitor",
+      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json",
+      "negative_variants": [
         "coarse_poll",
         "no_hysteresis",
         "no_qualification",
@@ -57,20 +94,29 @@
         "unchanged_poll",
         "no_transition"
       ],
-      "release_set": "spectre-extension-candidate",
-      "status": {
-        "harbor_materials": "generated after reviewed admission; formal calibration pending",
-        "row_criteria": "7 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "formal reference all3 conditions graded and passed; sealed full-raw replay verified",
-        "spectre_performance": "formal same-job warmup plus5 AB pairs passed admitted step ratio; all12 complete losslessPSF records independently audited",
-        "spectre_semantic_negatives": "pending coordinator",
-        "agentic": "pending",
-        "open_source_regrading": "not validated"
+      "negative_roles": {
+        "unchanged_poll": "performance_neg",
+        "coarse_poll": "semantic_neg",
+        "no_hysteresis": "semantic_neg",
+        "no_qualification": "semantic_neg",
+        "stale_qualification": "semantic_neg",
+        "no_transition": "semantic_neg"
       },
-      "data_provenance": "behavioral_synthetic",
-      "id": "optimize-power-monitor",
-      "path": "benchmark/tasks/optimize-power-monitor",
-      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json"
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json",
+        "receipt_sha256": "f35f6194fc4c95ebddf4e5930d2e5921ae421a71ded5214fe9523e362fe2ff43",
+        "scope": "all canonical conditions; complete sealed identity and current numerical replay; no new simulation during audit",
+        "reference_conditions": 3,
+        "negative_variants": 6,
+        "negative_conditions": 18,
+        "negative_condition_outcomes": {
+          "performance_failure": 1,
+          "passed": 5,
+          "semantic_failure": 12
+        },
+        "positive_equivalent_conditions": 0,
+        "all_variant_expectations_met": true
+      }
     },
     {
       "engineering_action": "simulation-implementation-optimization",
@@ -82,7 +128,21 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sar-calendar",
       "reference_path": "experiments/benchmark_first_batch/optimization/sar_calendar/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/sar_calendar/baseline.va",
-      "semantic_negative_variants": [
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "generated; formal reference and representative negative Spectre calibration audited",
+        "row_criteria": "three independent analytic SAR fixtures passed; not VA execution",
+        "spectre_functional": "reference passed all3 formal conditions; complete sealed main and paired PSFs replayed with current numerical checker",
+        "spectre_performance": "same-job warmup plus5 alternating AB pairs passed admitted accepted-steps ratio0.1 and5 winning pairs",
+        "agentic": "not selected for fixed14 representative pilot",
+        "open_source_regrading": "not validated",
+        "spectre_negative_calibration": "all6 variants completed all3 conditions and met their semantic/performance/mixed rejection expectation"
+      },
+      "data_provenance": "behavioral_synthetic",
+      "id": "optimize-sar-calendar",
+      "path": "benchmark/tasks/optimize-sar-calendar",
+      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json",
+      "negative_variants": [
         "unchanged_poll",
         "coarse_poll",
         "no_input_hold",
@@ -90,20 +150,29 @@
         "early_bit_calendar",
         "no_transition"
       ],
-      "release_set": "spectre-extension-candidate",
-      "status": {
-        "harbor_materials": "generated after reviewed admission; formal calibration pending",
-        "row_criteria": "three independent analytic SAR fixtures passed; not VA execution",
-        "spectre_functional": "formal reference all3 conditions graded and passed; sealed full-raw replay verified",
-        "spectre_performance": "formal same-job warmup plus5 AB pairs passed admitted step ratio; all12 complete losslessPSF records independently audited",
-        "spectre_semantic_negatives": "pending coordinator",
-        "agentic": "pending",
-        "open_source_regrading": "not validated"
+      "negative_roles": {
+        "unchanged_poll": "performance_neg",
+        "coarse_poll": "semantic_neg",
+        "early_bit_calendar": "semantic_neg",
+        "no_input_hold": "semantic_neg",
+        "restart_while_busy": "semantic_neg",
+        "no_transition": "semantic_neg"
       },
-      "data_provenance": "behavioral_synthetic",
-      "id": "optimize-sar-calendar",
-      "path": "benchmark/tasks/optimize-sar-calendar",
-      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json"
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json",
+        "receipt_sha256": "f35f6194fc4c95ebddf4e5930d2e5921ae421a71ded5214fe9523e362fe2ff43",
+        "scope": "all canonical conditions; complete sealed identity and current numerical replay; no new simulation during audit",
+        "reference_conditions": 3,
+        "negative_variants": 6,
+        "negative_conditions": 18,
+        "negative_condition_outcomes": {
+          "performance_failure": 1,
+          "passed": 4,
+          "semantic_failure": 13
+        },
+        "positive_equivalent_conditions": 0,
+        "all_variant_expectations_met": true
+      }
     },
     {
       "engineering_action": "simulation-implementation-optimization",
@@ -115,7 +184,21 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-uart-calendar",
       "reference_path": "experiments/benchmark_first_batch/optimization/uart_calendar/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/uart_calendar/baseline.va",
-      "semantic_negative_variants": [
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "generated; formal reference and representative negative Spectre calibration audited",
+        "row_criteria": "two independent UART fixture tests passed; not VA execution",
+        "spectre_functional": "reference passed all3 formal conditions; complete sealed main and paired PSFs replayed with current numerical checker",
+        "spectre_performance": "same-job warmup plus5 alternating AB pairs passed admitted accepted-steps ratio0.1 and5 winning pairs",
+        "agentic": "not selected for fixed14 representative pilot",
+        "open_source_regrading": "not validated",
+        "spectre_negative_calibration": "all6 variants completed all3 conditions and met their semantic/performance/mixed rejection expectation"
+      },
+      "data_provenance": "behavioral_synthetic",
+      "id": "optimize-uart-calendar",
+      "path": "benchmark/tasks/optimize-uart-calendar",
+      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json",
+      "negative_variants": [
         "unchanged_oversampling",
         "eight_times_baud",
         "msb_first",
@@ -123,20 +206,29 @@
         "no_start_validation",
         "no_transition"
       ],
-      "release_set": "spectre-extension-candidate",
-      "status": {
-        "harbor_materials": "generated after reviewed admission; formal calibration pending",
-        "row_criteria": "two independent UART fixture tests passed; not VA execution",
-        "spectre_functional": "formal reference all3 conditions graded and passed; sealed full-raw replay verified",
-        "spectre_performance": "formal same-job warmup plus5 AB pairs passed admitted step ratio; all12 complete losslessPSF records independently audited",
-        "spectre_semantic_negatives": "pending coordinator",
-        "agentic": "pending",
-        "open_source_regrading": "not validated"
+      "negative_roles": {
+        "unchanged_oversampling": "performance_neg",
+        "eight_times_baud": "mixed_neg",
+        "msb_first": "semantic_neg",
+        "no_start_validation": "semantic_neg",
+        "no_stop_check": "semantic_neg",
+        "no_transition": "semantic_neg"
       },
-      "data_provenance": "behavioral_synthetic",
-      "id": "optimize-uart-calendar",
-      "path": "benchmark/tasks/optimize-uart-calendar",
-      "admission": "experiments/benchmark_first_batch/optimization/admission_step_tasks.json"
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json",
+        "receipt_sha256": "f35f6194fc4c95ebddf4e5930d2e5921ae421a71ded5214fe9523e362fe2ff43",
+        "scope": "all canonical conditions; complete sealed identity and current numerical replay; no new simulation during audit",
+        "reference_conditions": 3,
+        "negative_variants": 6,
+        "negative_conditions": 18,
+        "negative_condition_outcomes": {
+          "performance_failure": 1,
+          "passed": 6,
+          "semantic_failure": 11
+        },
+        "positive_equivalent_conditions": 0,
+        "all_variant_expectations_met": true
+      }
     },
     {
       "engineering_action": "simulation-implementation-optimization",
@@ -148,7 +240,21 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-flash-thresholds",
       "reference_path": "experiments/benchmark_first_batch/optimization/flash_thresholds/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/flash_thresholds/baseline.va",
-      "semantic_negative_variants": [
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "generated; formal reference and representative negative Spectre calibration audited",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "reference passed all3 formal conditions; complete sealed main and paired PSFs replayed with current numerical checker",
+        "spectre_performance": "same-job warmup plus5 alternating AB pairs passed admitted CPU ratio0.97 and at least4 winning pairs",
+        "agentic": "not selected for fixed14 representative pilot",
+        "open_source_regrading": "not validated",
+        "spectre_negative_calibration": "all6 variants completed all3 conditions and met their semantic/performance/mixed rejection expectation"
+      },
+      "data_provenance": "behavioral_synthetic",
+      "id": "optimize-flash-thresholds",
+      "path": "benchmark/tasks/optimize-flash-thresholds",
+      "admission": "experiments/benchmark_first_batch/optimization/admission_flash.json",
+      "negative_variants": [
         "falling_edge",
         "no_hold",
         "unchanged_scan",
@@ -156,20 +262,29 @@
         "wrong_skew_sign",
         "no_transition"
       ],
-      "release_set": "spectre-extension-candidate",
-      "status": {
-        "harbor_materials": "generated after independent reviewed admission; formal calibration pending",
-        "row_criteria": "7 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "current full-raw replay covers actual baseline and event-only reference across all3 conditions; formal scorer execution pending",
-        "spectre_performance": "actual quiet five pairs: CPU median ratio0.942420 and process ratio0.924580, each5/5 wins; admitted CPU limit0.97 and at least4 wins; formal scoring pending",
-        "spectre_semantic_negatives": "pending coordinator",
-        "agentic": "pending",
-        "open_source_regrading": "not validated"
+      "negative_roles": {
+        "falling_edge": "semantic_neg",
+        "no_hold": "semantic_neg",
+        "no_transition": "semantic_neg",
+        "unchanged_scan": "performance_neg",
+        "uniform_thresholds": "semantic_neg",
+        "wrong_skew_sign": "semantic_neg"
       },
-      "data_provenance": "behavioral_synthetic",
-      "id": "optimize-flash-thresholds",
-      "path": "benchmark/tasks/optimize-flash-thresholds",
-      "admission": "experiments/benchmark_first_batch/optimization/admission_flash.json"
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json",
+        "receipt_sha256": "f35f6194fc4c95ebddf4e5930d2e5921ae421a71ded5214fe9523e362fe2ff43",
+        "scope": "all canonical conditions; complete sealed identity and current numerical replay; no new simulation during audit",
+        "reference_conditions": 3,
+        "negative_variants": 6,
+        "negative_conditions": 18,
+        "negative_condition_outcomes": {
+          "semantic_failure": 15,
+          "performance_failure": 1,
+          "passed": 2
+        },
+        "positive_equivalent_conditions": 3,
+        "all_variant_expectations_met": true
+      }
     }
   ],
   "candidates": [
@@ -184,14 +299,6 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sampled-dac",
       "reference_path": "experiments/benchmark_first_batch/optimization/sampled_dac/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/sampled_dac/baseline.va",
-      "semantic_negative_variants": [
-        "falling_sample",
-        "no_hold",
-        "unchanged_decode",
-        "wrong_bit_weight",
-        "wrong_denominator",
-        "no_transition"
-      ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
@@ -202,7 +309,15 @@
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "negative_variants": [
+        "falling_sample",
+        "no_hold",
+        "unchanged_decode",
+        "wrong_bit_weight",
+        "wrong_denominator",
+        "no_transition"
+      ]
     },
     {
       "candidate_id": "optimize-sc-coefficients",
@@ -215,14 +330,6 @@
       "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sc-coefficients",
       "reference_path": "experiments/benchmark_first_batch/optimization/sc_coefficients/reference.va",
       "baseline_path": "experiments/benchmark_first_batch/optimization/sc_coefficients/baseline.va",
-      "semantic_negative_variants": [
-        "falling_sample",
-        "forward_stage_update",
-        "linearized_coefficient",
-        "unchanged_coefficients",
-        "wrong_tau",
-        "no_transition"
-      ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
@@ -233,7 +340,15 @@
         "agentic": "pending",
         "open_source_regrading": "not validated"
       },
-      "data_provenance": "behavioral_synthetic"
+      "data_provenance": "behavioral_synthetic",
+      "negative_variants": [
+        "falling_sample",
+        "forward_stage_update",
+        "linearized_coefficient",
+        "unchanged_coefficients",
+        "wrong_tau",
+        "no_transition"
+      ]
     }
   ],
   "evidence": [
@@ -242,6 +357,7 @@
     "experiments/benchmark_first_batch/optimization/second_waveform_replay.json",
     "experiments/benchmark_first_batch/optimization/third_calibration.json",
     "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/event_only_quiet_receipt.json",
-    "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/current_reference_fullraw_proof.json"
+    "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/current_reference_fullraw_proof.json",
+    "experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json"
   ]
 }
