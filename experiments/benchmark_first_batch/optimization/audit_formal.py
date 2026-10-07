@@ -137,7 +137,7 @@ def verify_report_projection(result, report):
                     if graded:projected.update(execution='ok',verdict='pass' if reward==1 else 'fail',score=reward)
                     else:projected['execution']='unclassified_failure'
     for key in ('execution','verdict','score','benchmark_status'):
-        require(result.get(key)==projected.get(key), 'result/report projection differs: '+key)
+        check_equal(result.get(key),projected.get(key),'result/report projection: '+key)
 
 
 def require_full_inventory(entry, preparation, current_cases):

@@ -120,7 +120,7 @@ class FormalAuditTests(unittest.TestCase):
         result={'execution':'ok','verdict':'pass','score':1,'benchmark_status':'completed'}
         audit.verify_report_projection(result,report)
         for key,value in (('execution','infrastructure_error'),('verdict','not_evaluated'),
-                          ('score',None),('benchmark_status','infrastructure_error')):
+                          ('score',None),('score',True),('benchmark_status','infrastructure_error')):
             wrong=dict(result);wrong[key]=value
             with self.assertRaisesRegex(ValueError,'result/report projection'):
                 audit.verify_report_projection(wrong,report)
