@@ -1,0 +1,116 @@
+[
+  {
+    "name": "fault0-lat4",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=0 latency=4\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 0,
+    "latency": 4,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  },
+  {
+    "name": "fault0-lat5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=0 latency=5\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 0,
+    "latency": 5,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  },
+  {
+    "name": "fault0-lat6",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=0 latency=6\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 0,
+    "latency": 6,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  },
+  {
+    "name": "fault1-lat5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=1 latency=5\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 1,
+    "latency": 5,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  },
+  {
+    "name": "fault2-lat5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=2 latency=5\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 2,
+    "latency": 5,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  },
+  {
+    "name": "fault3-lat5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXbench (vin start rst code done verdict) dut\nXadc (vin start rst code done) sar_device fault=3 latency=5\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vin",
+      "start",
+      "rst",
+      "code",
+      "done",
+      "verdict"
+    ],
+    "fault": 3,
+    "latency": 5,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sar_device(vin,start,rst,code,done);\ninout vin,start,rst,code,done; electrical vin,start,rst,code,done;\nparameter integer fault=0, latency=5;\ninteger busy,count,q,lasts,d,seq;\nanalog begin\n @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end\n @(timer(0,10n)) begin\n  d=0;\n  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end\n  else begin\n   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end\n   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin\n    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;\n    if(fault==1)q=(q+1)%16;\n   end\n  end\n  if(V(start)>0.5)lasts=1;else lasts=0;\n end\n V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-sar-flow"
+  }
+]

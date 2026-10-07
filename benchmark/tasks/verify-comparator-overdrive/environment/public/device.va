@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module comparator_device(vp,vn,clk,q);
+inout vp,vn,clk,q;electrical vp,vn,clk,q;
+real due,out;integer target,pending;
+analog begin
+ @(initial_step)begin pending=0;out=0;due=-1;target=0;end
+ @(cross(V(clk)-0.5,+1))begin
+  target=(V(vp)>V(vn));due=$abstime+1n+0.1n/abs(V(vp)-V(vn));pending=1;
+ end
+ @(timer(0.1n,0.1n))begin
+  if(V(clk)<0.5)begin out=0;pending=0;end
+  else if(pending!=0 && $abstime>=due)begin out=target;pending=0;end
+ end
+ V(q)<+transition(out,0,0.1n);
+end
+endmodule

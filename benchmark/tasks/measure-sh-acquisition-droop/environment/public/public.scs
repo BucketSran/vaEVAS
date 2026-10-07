@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xmeasure (vin track y settle_ns droop_mvus) dut
+Xsh (vin track y) acquisition_device tau=2e-08 droop=50000.0
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=2u maxstep=0.5n
+saveOptions options save=allpub

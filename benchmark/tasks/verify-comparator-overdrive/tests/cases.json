@@ -1,0 +1,50 @@
+[
+  {
+    "name": "cm0.3",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (vp vn clk) dut cm=0.3\nXcmp (vp vn clk q) comparator_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=0.2n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vp",
+      "vn",
+      "clk",
+      "q"
+    ],
+    "cm": 0.3,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule comparator_device(vp,vn,clk,q);\ninout vp,vn,clk,q;electrical vp,vn,clk,q;\nreal due,out;integer target,pending;\nanalog begin\n @(initial_step)begin pending=0;out=0;due=-1;target=0;end\n @(cross(V(clk)-0.5,+1))begin\n  target=(V(vp)>V(vn));due=$abstime+1n+0.1n/abs(V(vp)-V(vn));pending=1;\n end\n @(timer(0.1n,0.1n))begin\n  if(V(clk)<0.5)begin out=0;pending=0;end\n  else if(pending!=0 && $abstime>=due)begin out=target;pending=0;end\n end\n V(q)<+transition(out,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-comparator-overdrive"
+  },
+  {
+    "name": "cm0.5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (vp vn clk) dut cm=0.5\nXcmp (vp vn clk q) comparator_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=0.2n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vp",
+      "vn",
+      "clk",
+      "q"
+    ],
+    "cm": 0.5,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule comparator_device(vp,vn,clk,q);\ninout vp,vn,clk,q;electrical vp,vn,clk,q;\nreal due,out;integer target,pending;\nanalog begin\n @(initial_step)begin pending=0;out=0;due=-1;target=0;end\n @(cross(V(clk)-0.5,+1))begin\n  target=(V(vp)>V(vn));due=$abstime+1n+0.1n/abs(V(vp)-V(vn));pending=1;\n end\n @(timer(0.1n,0.1n))begin\n  if(V(clk)<0.5)begin out=0;pending=0;end\n  else if(pending!=0 && $abstime>=due)begin out=target;pending=0;end\n end\n V(q)<+transition(out,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-comparator-overdrive"
+  },
+  {
+    "name": "cm0.7",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (vp vn clk) dut cm=0.7\nXcmp (vp vn clk q) comparator_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2u maxstep=0.2n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "vp",
+      "vn",
+      "clk",
+      "q"
+    ],
+    "cm": 0.7,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule comparator_device(vp,vn,clk,q);\ninout vp,vn,clk,q;electrical vp,vn,clk,q;\nreal due,out;integer target,pending;\nanalog begin\n @(initial_step)begin pending=0;out=0;due=-1;target=0;end\n @(cross(V(clk)-0.5,+1))begin\n  target=(V(vp)>V(vn));due=$abstime+1n+0.1n/abs(V(vp)-V(vn));pending=1;\n end\n @(timer(0.1n,0.1n))begin\n  if(V(clk)<0.5)begin out=0;pending=0;end\n  else if(pending!=0 && $abstime>=due)begin out=target;pending=0;end\n end\n V(q)<+transition(out,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-comparator-overdrive"
+  }
+]

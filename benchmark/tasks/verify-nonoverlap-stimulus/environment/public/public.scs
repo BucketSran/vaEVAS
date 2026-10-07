@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xtb (p1 p2) dut period=1e-07 dead=5e-09
+Xsw (p1 p2 vin z) phase_device
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=1.2e-06 maxstep=0.5n
+saveOptions options save=allpub

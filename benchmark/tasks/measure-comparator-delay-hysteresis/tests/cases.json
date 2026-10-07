@@ -1,0 +1,59 @@
+[
+  {
+    "name": "h0.008-d4",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin q high_mv low_mv rise_ns fall_ns) dut\nXcmp (vin q) hysteresis_device hysteresis=0.008 delay=4e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.5u maxstep=0.1n\nsaveOptions options save=allpub\n",
+    "stop": 1.5e-06,
+    "signals": [
+      "vin",
+      "q",
+      "high_mv",
+      "low_mv",
+      "rise_ns",
+      "fall_ns"
+    ],
+    "hysteresis": 0.008,
+    "delay": 4e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule hysteresis_device(vin,q);\ninout vin,q;electrical vin,q;\nparameter real hysteresis=0.008,delay=4n;\nreal x,due;integer state,pending,target;\nanalog begin\n if($abstime<400n)x=-0.02+1e5*$abstime;\n else if($abstime<800n)x=0.02-1e5*($abstime-400n);\n else if($abstime<1u)x=-0.02;\n else if($abstime<1.2u)x=0.02;\n else x=-0.02;\n V(vin)<+x;\n @(initial_step)begin state=0;pending=0;target=0;due=-1;end\n @(cross(x-hysteresis/2,+1))begin if(state==0)begin due=$abstime+delay;pending=1;target=1;end end\n @(cross(x+hysteresis/2,-1))begin if(state==1)begin due=$abstime+delay;pending=1;target=0;end end\n @(timer(0,0.1n))begin if(pending!=0 && $abstime>=due)begin state=target;pending=0;end end\n V(q)<+transition(state,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-comparator-delay-hysteresis"
+  },
+  {
+    "name": "h0.012-d2",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin q high_mv low_mv rise_ns fall_ns) dut\nXcmp (vin q) hysteresis_device hysteresis=0.012 delay=2e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.5u maxstep=0.1n\nsaveOptions options save=allpub\n",
+    "stop": 1.5e-06,
+    "signals": [
+      "vin",
+      "q",
+      "high_mv",
+      "low_mv",
+      "rise_ns",
+      "fall_ns"
+    ],
+    "hysteresis": 0.012,
+    "delay": 2e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule hysteresis_device(vin,q);\ninout vin,q;electrical vin,q;\nparameter real hysteresis=0.008,delay=4n;\nreal x,due;integer state,pending,target;\nanalog begin\n if($abstime<400n)x=-0.02+1e5*$abstime;\n else if($abstime<800n)x=0.02-1e5*($abstime-400n);\n else if($abstime<1u)x=-0.02;\n else if($abstime<1.2u)x=0.02;\n else x=-0.02;\n V(vin)<+x;\n @(initial_step)begin state=0;pending=0;target=0;due=-1;end\n @(cross(x-hysteresis/2,+1))begin if(state==0)begin due=$abstime+delay;pending=1;target=1;end end\n @(cross(x+hysteresis/2,-1))begin if(state==1)begin due=$abstime+delay;pending=1;target=0;end end\n @(timer(0,0.1n))begin if(pending!=0 && $abstime>=due)begin state=target;pending=0;end end\n V(q)<+transition(state,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-comparator-delay-hysteresis"
+  },
+  {
+    "name": "h0.004-d6",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin q high_mv low_mv rise_ns fall_ns) dut\nXcmp (vin q) hysteresis_device hysteresis=0.004 delay=6e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.5u maxstep=0.1n\nsaveOptions options save=allpub\n",
+    "stop": 1.5e-06,
+    "signals": [
+      "vin",
+      "q",
+      "high_mv",
+      "low_mv",
+      "rise_ns",
+      "fall_ns"
+    ],
+    "hysteresis": 0.004,
+    "delay": 6e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule hysteresis_device(vin,q);\ninout vin,q;electrical vin,q;\nparameter real hysteresis=0.008,delay=4n;\nreal x,due;integer state,pending,target;\nanalog begin\n if($abstime<400n)x=-0.02+1e5*$abstime;\n else if($abstime<800n)x=0.02-1e5*($abstime-400n);\n else if($abstime<1u)x=-0.02;\n else if($abstime<1.2u)x=0.02;\n else x=-0.02;\n V(vin)<+x;\n @(initial_step)begin state=0;pending=0;target=0;due=-1;end\n @(cross(x-hysteresis/2,+1))begin if(state==0)begin due=$abstime+delay;pending=1;target=1;end end\n @(cross(x+hysteresis/2,-1))begin if(state==1)begin due=$abstime+delay;pending=1;target=0;end end\n @(timer(0,0.1n))begin if(pending!=0 && $abstime>=due)begin state=target;pending=0;end end\n V(q)<+transition(state,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-comparator-delay-hysteresis"
+  }
+]

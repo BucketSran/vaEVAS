@@ -1,0 +1,56 @@
+[
+  {
+    "name": "tau20-droop50000",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin track y settle_ns droop_mvus) dut\nXsh (vin track y) acquisition_device tau=2e-08 droop=50000.0\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "settle_ns",
+      "droop_mvus"
+    ],
+    "tau": 2e-08,
+    "droop": 50000.0,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule acquisition_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter real tau=20n,droop=5e4;\nreal phase,target,out;integer k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);\n out=0.5+(target-0.5)*(1-exp(-phase/tau));\n if(phase>=250n)out=0.5+(target-0.5)*(1-exp(-250n/tau))-droop*(phase-250n);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);V(y)<+out;\nend\nendmodule\n"
+    },
+    "task": "measure-sh-acquisition-droop"
+  },
+  {
+    "name": "tau10-droop20000",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin track y settle_ns droop_mvus) dut\nXsh (vin track y) acquisition_device tau=1e-08 droop=20000.0\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "settle_ns",
+      "droop_mvus"
+    ],
+    "tau": 1e-08,
+    "droop": 20000.0,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule acquisition_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter real tau=20n,droop=5e4;\nreal phase,target,out;integer k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);\n out=0.5+(target-0.5)*(1-exp(-phase/tau));\n if(phase>=250n)out=0.5+(target-0.5)*(1-exp(-250n/tau))-droop*(phase-250n);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);V(y)<+out;\nend\nendmodule\n"
+    },
+    "task": "measure-sh-acquisition-droop"
+  },
+  {
+    "name": "tau35-droop-80000",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (vin track y settle_ns droop_mvus) dut\nXsh (vin track y) acquisition_device tau=3.5e-08 droop=-80000.0\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "settle_ns",
+      "droop_mvus"
+    ],
+    "tau": 3.5e-08,
+    "droop": -80000.0,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule acquisition_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter real tau=20n,droop=5e4;\nreal phase,target,out;integer k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);\n out=0.5+(target-0.5)*(1-exp(-phase/tau));\n if(phase>=250n)out=0.5+(target-0.5)*(1-exp(-250n/tau))-droop*(phase-250n);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);V(y)<+out;\nend\nendmodule\n"
+    },
+    "task": "measure-sh-acquisition-droop"
+  }
+]

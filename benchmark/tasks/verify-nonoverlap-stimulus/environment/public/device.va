@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module phase_device(p1,p2,vin,z);
+inout p1,p2,vin,z; electrical p1,p2,vin,z;
+real held,out;
+analog begin
+ @(initial_step)begin held=0;out=0;end
+ V(vin)<+0.5+0.3*sin(2*`M_PI*$abstime/700n);
+ @(cross(V(p1)-0.5,+1))held=V(vin);
+ @(cross(V(p2)-0.5,+1))out=held;
+ V(z)<+transition(out,0,0.2n);
+end
+endmodule

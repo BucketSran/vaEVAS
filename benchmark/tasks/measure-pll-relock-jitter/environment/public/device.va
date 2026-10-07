@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module relock_device(ref,clk);
+inout ref,clk;electrical ref,clk;
+parameter integer settle_cycles=5;parameter real jitter=1n;
+real phase,offset,phase_r;integer k,r,c;
+analog begin
+ k=$rtoi($abstime/100n);phase=$abstime-k*100n;offset=0;
+ if(k>=10 && k<10+settle_cycles)offset=(10+settle_cycles-k)*5n;
+ if(k>=22)begin if(k%2==0)offset=2n+jitter;else offset=2n-jitter;end
+ c=(phase>=offset && phase<50n+offset);
+ if(offset<0)c=(phase<50n+offset || phase>=100n+offset);
+ r=(phase<50n);
+ V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);
+end
+endmodule

@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xmeasure (code clk sndr sfdr dc) dut tone_bin=5
+Xadc (vin clk code) adc_device tone_bin=5 amp=1700 h2=0.02 h3=0.01
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=6.6u maxstep=2n
+saveOptions options save=allpub

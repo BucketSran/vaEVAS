@@ -1,0 +1,15 @@
+schema_version = "1.4"
+[metadata]
+name = "verify-pll-lock-checker"
+category = "verification-tools"
+source_group = "first-batch-verify-pll-lock-checker"
+purpose = "PLL 持续锁定自动判定; synthetic circuit experiment; calibration pending"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 600
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048

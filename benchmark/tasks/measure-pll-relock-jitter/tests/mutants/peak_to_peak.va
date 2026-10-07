@@ -1,0 +1,25 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(ref,clk,relock_ns,jitter_ns);
+inout ref,clk,relock_ns,jitter_ns;electrical ref,clk,relock_ns,jitter_ns;
+real phase,last,lastref,run_start,relock,sum,sum2,period,rms;integer consecutive,n;
+analog begin
+ @(initial_step)begin last=0;lastref=0;run_start=0;relock=0;sum=0;sum2=0;consecutive=0;n=0;rms=0;end
+ @(cross(V(ref)-0.5,+1))lastref=$abstime;
+ @(cross(V(clk)-0.5,+1))begin
+  phase=$abstime-lastref;if(phase>50n)phase=phase-100n;
+  if($abstime>=1u && $abstime<2.2u && relock==0)begin
+   if(abs(phase)<=3n)begin
+    if(consecutive==0)run_start=$abstime;
+    consecutive=consecutive+1;if(consecutive==4)relock=run_start-1u;
+   end else consecutive=0;
+  end
+  if($abstime>=2.2u && $abstime<4.2u)begin
+   if(last>=2.2u)begin period=($abstime-last)/1n;sum=sum+period;sum2=sum2+period*period;n=n+1;end
+  end
+  last=$abstime;
+ end
+ @(timer(4.3u))if(n>0)rms=sqrt(max(0,sum2/n-(sum/n)*(sum/n)));
+ V(relock_ns)<+relock/1n;V(jitter_ns)<+2*rms;
+end
+endmodule

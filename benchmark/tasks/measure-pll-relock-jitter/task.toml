@@ -1,0 +1,15 @@
+schema_version = "1.4"
+[metadata]
+name = "measure-pll-relock-jitter"
+category = "measurement-characterization"
+source_group = "first-batch-measure-pll-relock-jitter"
+purpose = "PLL 重锁时间与周期抖动表征; synthetic circuit experiment; calibration pending"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 600
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048

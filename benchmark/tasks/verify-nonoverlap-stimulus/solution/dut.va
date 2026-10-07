@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(p1,p2);
+inout p1,p2;electrical p1,p2;
+parameter real period=100n,dead=5n;
+real phase;integer a,b;
+analog begin
+ phase=$abstime-period*$rtoi($abstime/period);
+ a=(phase>=dead && phase<period/2); b=(phase>=period/2+dead && phase<period);
+ V(p1)<+transition(a,0,0.1n);V(p2)<+transition(b,0,0.1n);
+end
+endmodule

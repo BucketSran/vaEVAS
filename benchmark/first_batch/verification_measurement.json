@@ -1,0 +1,75 @@
+{
+  "tasks": [
+    {
+      "id": "verify-sar-flow",
+      "category": "verification-tools",
+      "source_group": "first-batch-verify-sar-flow",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/verify-sar-flow"
+    },
+    {
+      "id": "verify-nonoverlap-stimulus",
+      "category": "verification-tools",
+      "source_group": "first-batch-verify-nonoverlap-stimulus",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/verify-nonoverlap-stimulus"
+    },
+    {
+      "id": "verify-comparator-overdrive",
+      "category": "verification-tools",
+      "source_group": "first-batch-verify-comparator-overdrive",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/verify-comparator-overdrive"
+    },
+    {
+      "id": "verify-pll-lock-checker",
+      "category": "verification-tools",
+      "source_group": "first-batch-verify-pll-lock-checker",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/verify-pll-lock-checker"
+    },
+    {
+      "id": "verify-sh-settling-checker",
+      "category": "verification-tools",
+      "source_group": "first-batch-verify-sh-settling-checker",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/verify-sh-settling-checker"
+    },
+    {
+      "id": "va08-adc-linearity",
+      "category": "measurement-characterization",
+      "source_group": "repository-owned-original-adc-linearity",
+      "status": "existing_calibration_reference",
+      "path": "benchmark/tasks/va08-adc-linearity",
+      "note": "Existing task referenced without copying or changing; Agentic status stays separate."
+    },
+    {
+      "id": "measure-adc-spectrum",
+      "category": "measurement-characterization",
+      "source_group": "first-batch-measure-adc-spectrum",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/measure-adc-spectrum"
+    },
+    {
+      "id": "measure-comparator-delay-hysteresis",
+      "category": "measurement-characterization",
+      "source_group": "first-batch-measure-comparator-delay-hysteresis",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/measure-comparator-delay-hysteresis"
+    },
+    {
+      "id": "measure-sh-acquisition-droop",
+      "category": "measurement-characterization",
+      "source_group": "first-batch-measure-sh-acquisition-droop",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/measure-sh-acquisition-droop"
+    },
+    {
+      "id": "measure-pll-relock-jitter",
+      "category": "measurement-characterization",
+      "source_group": "first-batch-measure-pll-relock-jitter",
+      "status": "implemented_pending_spectre",
+      "path": "benchmark/tasks/measure-pll-relock-jitter"
+    }
+  ]
+}

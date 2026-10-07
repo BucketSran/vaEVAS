@@ -1,0 +1,66 @@
+[
+  {
+    "name": "fault0",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (vin track y verdict) dut\nXsh (vin track y) sh_device fault=0\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "verdict"
+    ],
+    "fault": 0,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sh_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter integer fault=0;\nreal phase,target,tau,a;\ninteger k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;\n target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);tau=20n;if(fault==1)tau=60n;\n a=1-exp(-phase/tau);\n if(phase>=250n)a=1-exp(-250n/tau);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);\n if(tr!=0)begin\n  if(fault==2 && phase>=180n && phase<200n)V(y)<+target+0.025;\n  else V(y)<+0.5+(target-0.5)*a;\n end else begin\n  if(fault==3)V(y)<+0.5+(target-0.5)*a-2e5*(phase-250n);\n  else V(y)<+0.5+(target-0.5)*a;\n end\nend\nendmodule\n"
+    },
+    "task": "verify-sh-settling-checker"
+  },
+  {
+    "name": "fault1",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (vin track y verdict) dut\nXsh (vin track y) sh_device fault=1\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "verdict"
+    ],
+    "fault": 1,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sh_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter integer fault=0;\nreal phase,target,tau,a;\ninteger k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;\n target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);tau=20n;if(fault==1)tau=60n;\n a=1-exp(-phase/tau);\n if(phase>=250n)a=1-exp(-250n/tau);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);\n if(tr!=0)begin\n  if(fault==2 && phase>=180n && phase<200n)V(y)<+target+0.025;\n  else V(y)<+0.5+(target-0.5)*a;\n end else begin\n  if(fault==3)V(y)<+0.5+(target-0.5)*a-2e5*(phase-250n);\n  else V(y)<+0.5+(target-0.5)*a;\n end\nend\nendmodule\n"
+    },
+    "task": "verify-sh-settling-checker"
+  },
+  {
+    "name": "fault2",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (vin track y verdict) dut\nXsh (vin track y) sh_device fault=2\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "verdict"
+    ],
+    "fault": 2,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sh_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter integer fault=0;\nreal phase,target,tau,a;\ninteger k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;\n target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);tau=20n;if(fault==1)tau=60n;\n a=1-exp(-phase/tau);\n if(phase>=250n)a=1-exp(-250n/tau);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);\n if(tr!=0)begin\n  if(fault==2 && phase>=180n && phase<200n)V(y)<+target+0.025;\n  else V(y)<+0.5+(target-0.5)*a;\n end else begin\n  if(fault==3)V(y)<+0.5+(target-0.5)*a-2e5*(phase-250n);\n  else V(y)<+0.5+(target-0.5)*a;\n end\nend\nendmodule\n"
+    },
+    "task": "verify-sh-settling-checker"
+  },
+  {
+    "name": "fault3",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (vin track y verdict) dut\nXsh (vin track y) sh_device fault=3\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=2u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 2e-06,
+    "signals": [
+      "vin",
+      "track",
+      "y",
+      "verdict"
+    ],
+    "fault": 3,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule sh_device(vin,track,y);\ninout vin,track,y;electrical vin,track,y;\nparameter integer fault=0;\nreal phase,target,tau,a;\ninteger k,tr;\nanalog begin\n k=$rtoi($abstime/500n);phase=$abstime-k*500n;\n target=0.2;if(k%2==0)target=0.8;\n tr=(phase<250n);tau=20n;if(fault==1)tau=60n;\n a=1-exp(-phase/tau);\n if(phase>=250n)a=1-exp(-250n/tau);\n V(vin)<+target;V(track)<+transition(tr,0,0.1n);\n if(tr!=0)begin\n  if(fault==2 && phase>=180n && phase<200n)V(y)<+target+0.025;\n  else V(y)<+0.5+(target-0.5)*a;\n end else begin\n  if(fault==3)V(y)<+0.5+(target-0.5)*a-2e5*(phase-250n);\n  else V(y)<+0.5+(target-0.5)*a;\n end\nend\nendmodule\n"
+    },
+    "task": "verify-sh-settling-checker"
+  }
+]

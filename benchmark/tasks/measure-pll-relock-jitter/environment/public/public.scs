@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xmeasure (ref clk relock_ns jitter_ns) dut
+Xpll (ref clk) relock_device settle_cycles=5 jitter=1e-09
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=4.5u maxstep=0.5n
+saveOptions options save=allpub

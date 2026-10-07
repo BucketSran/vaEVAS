@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vin,track,y,verdict);
+inout vin,track,y,verdict;electrical vin,track,y,verdict;
+integer bad,k;real phase,held;
+analog begin
+ @(initial_step)begin bad=0;held=0;end
+ @(timer(1n,1n))begin
+  k=$rtoi($abstime/500n);phase=$abstime-k*500n;
+  if(phase>=120n && phase<150n && abs(V(y)-V(vin))>0.005)bad=1;
+  if(phase>=255n && phase<270n && abs(V(y)-V(vin))>0.005)bad=1;
+ end
+ V(verdict)<+bad;
+end
+endmodule

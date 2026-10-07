@@ -1,0 +1,18 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module pll_device(ref,clk);
+inout ref,clk;electrical ref,clk;
+parameter integer fault=0;
+real p,phase,offset;integer k,r,c;
+analog begin
+ r=(($abstime-100n*$rtoi($abstime/100n))<50n);
+ p=100n;if(fault==1 && $abstime>=1u)p=105n;
+ k=$rtoi($abstime/p);offset=0;
+ if(k<5)offset=(5-k)*4n;
+ if(fault==3 && $abstime>=2u)offset=10n;
+ phase=$abstime-k*p;
+ c=(phase>=offset && phase<50n+offset);
+ if(fault==2 && $abstime>=2.2u && $abstime<2.3u)c=0;
+ V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);
+end
+endmodule

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "fault0",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (ref clk verdict) dut\nXpll (ref clk) pll_device fault=0\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 4e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "verdict"
+    ],
+    "fault": 0,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule pll_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer fault=0;\nreal p,phase,offset;integer k,r,c;\nanalog begin\n r=(($abstime-100n*$rtoi($abstime/100n))<50n);\n p=100n;if(fault==1 && $abstime>=1u)p=105n;\n k=$rtoi($abstime/p);offset=0;\n if(k<5)offset=(5-k)*4n;\n if(fault==3 && $abstime>=2u)offset=10n;\n phase=$abstime-k*p;\n c=(phase>=offset && phase<50n+offset);\n if(fault==2 && $abstime>=2.2u && $abstime<2.3u)c=0;\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-pll-lock-checker"
+  },
+  {
+    "name": "fault1",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (ref clk verdict) dut\nXpll (ref clk) pll_device fault=1\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 4e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "verdict"
+    ],
+    "fault": 1,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule pll_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer fault=0;\nreal p,phase,offset;integer k,r,c;\nanalog begin\n r=(($abstime-100n*$rtoi($abstime/100n))<50n);\n p=100n;if(fault==1 && $abstime>=1u)p=105n;\n k=$rtoi($abstime/p);offset=0;\n if(k<5)offset=(5-k)*4n;\n if(fault==3 && $abstime>=2u)offset=10n;\n phase=$abstime-k*p;\n c=(phase>=offset && phase<50n+offset);\n if(fault==2 && $abstime>=2.2u && $abstime<2.3u)c=0;\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-pll-lock-checker"
+  },
+  {
+    "name": "fault2",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (ref clk verdict) dut\nXpll (ref clk) pll_device fault=2\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 4e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "verdict"
+    ],
+    "fault": 2,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule pll_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer fault=0;\nreal p,phase,offset;integer k,r,c;\nanalog begin\n r=(($abstime-100n*$rtoi($abstime/100n))<50n);\n p=100n;if(fault==1 && $abstime>=1u)p=105n;\n k=$rtoi($abstime/p);offset=0;\n if(k<5)offset=(5-k)*4n;\n if(fault==3 && $abstime>=2u)offset=10n;\n phase=$abstime-k*p;\n c=(phase>=offset && phase<50n+offset);\n if(fault==2 && $abstime>=2.2u && $abstime<2.3u)c=0;\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-pll-lock-checker"
+  },
+  {
+    "name": "fault3",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmon (ref clk verdict) dut\nXpll (ref clk) pll_device fault=3\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4u maxstep=1n\nsaveOptions options save=allpub\n",
+    "stop": 4e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "verdict"
+    ],
+    "fault": 3,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule pll_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer fault=0;\nreal p,phase,offset;integer k,r,c;\nanalog begin\n r=(($abstime-100n*$rtoi($abstime/100n))<50n);\n p=100n;if(fault==1 && $abstime>=1u)p=105n;\n k=$rtoi($abstime/p);offset=0;\n if(k<5)offset=(5-k)*4n;\n if(fault==3 && $abstime>=2u)offset=10n;\n phase=$abstime-k*p;\n c=(phase>=offset && phase<50n+offset);\n if(fault==2 && $abstime>=2.2u && $abstime<2.3u)c=0;\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "verify-pll-lock-checker"
+  }
+]

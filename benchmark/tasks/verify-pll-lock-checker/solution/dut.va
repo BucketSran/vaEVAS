@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(ref,clk,verdict);
+inout ref,clk,verdict;electrical ref,clk,verdict;
+real last,phase,lastref;integer bad,seen;
+analog begin
+ @(initial_step)begin last=0;lastref=0;bad=0;seen=0;end
+ @(cross(V(ref)-0.5,+1))lastref=$abstime;
+ @(cross(V(clk)-0.5,+1))begin
+  if($abstime>=1u)begin
+   phase=$abstime-lastref;if(phase>50n)phase=phase-100n;
+   if(abs(phase)>2n)bad=1;
+   if(seen!=0 && abs($abstime-last-100n)>2n)bad=1;
+   seen=1;
+  end
+  last=$abstime;
+ end
+ @(timer(1.05u,10n))begin if($abstime-last>102n)bad=1;end
+ V(verdict)<+bad;
+end
+endmodule
