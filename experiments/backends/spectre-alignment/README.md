@@ -61,3 +61,13 @@ python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'te
 最终 r3 进一步要求事件任务卡显式声明有效 `ports`；声明或必需观察列缺失时拒绝。observer-off 保留触发时间未知，不能由输出反推是否承担时间义务。新增3项校准覆盖这些边界。全部25份既有输出（首批10+7+2、后续4+2）重分析后，判决、分母及配对结果未变，0次新增仿真或版本查询。r2 代码与证据保存在 `backend/checker-correction-r3/previous-candidate/`；r3 的94项冻结清单 SHA 为 `b23cafc2e77179088292a6f669bc6826e90571ee0c5b76aff7890c26737c9674`。当前紧凑证据指向 `analysis-r3-checked` 分析，旧判决保留。
 
 事件卡的 `ports` 指定本次要验收的观察义务，不是输出表的排他列模式。额外但未声明的列不受验收，也不能取得额外的时间资格；报告的 `required_signals` 与 `projection` 明确所验范围。显式投影只验收公共列，即使输入表含 `firedtime` 也不将其作为完整原源时间证据。
+
+## 导出精度复查
+
+后续对原 constant observer-off 条件另做两次实际 Spectre 诊断，只在 options 中添加 `precision="%24.17g"` 或 `precision="%28.21g"`。源码、输入、初值、数值设置、1041 个指定时刻和原 checker 均保持；原运行和失败不覆盖。安装版 help 明确该选项控制 psfascii double 格式，两次运行日志均回显对应设置。收据与原始指针见 [export-precision.json](export-precision.json)。
+
+两次均完成，各有32815行、164075个数字 token；逐 token 格式检查通过，17位与21位结果解码为 binary64 后全部相同，21位结果重新按17位格式化也相同。缺失指定时刻从默认导出的358/1041降至8/1041。这个有限样本确认较高导出精度生效，仍未取得完整观察资格。
+
+普通相位错误也仍存在：最后回绕根前一个 binary64 时刻导出 phase=0，独立 Fraction 参考接近1；圆周误差约4.44e-16不能抵消普通相位义务。因而默认16位文字丢失信息不能独自解释这两次高精度运行的剩余分歧；内部积分、边界定位或观察阶段的原因仍未知。没有据此改变 EVAS 的回绕规则，也不把格式往返一致当作物理真值证明。
+
+本次2次数值、0版本查询、0自动重试，另有协调者1次已安装 help 查询；本程序累计Spectre72次数值/24次版本。沿用串行90s/次、30s许可、4GiB、单线程、32MiB单文件及256MiB条件输出约束。原件与local-only材料保留，收集manifest核验通过，owned进程清理确认。
