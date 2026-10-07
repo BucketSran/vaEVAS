@@ -50,6 +50,7 @@ def model(parameters,variant="reference"):
     phase_expression="idt(1e6*V(cmd),0)-V(phase_error)"
     if variant=="wrong-clock-phase":phase_expression="idt(1e6*V(cmd),0)"
     ripple="+0.1*sin(6.283185307179586*$abstime/5e-7)" if variant=="grid-alias-ripple" else ""
+    tune_ripple="+($abstime<1e-4 ? 0.01*sin(6.283185307179586*$abstime/5e-7) : 0)" if variant=="early-tune-ripple" else ""
     return f'''`include "constants.vams"
 `include "disciplines.vams"
 module identified_pll(cmd,out,tune);
@@ -60,7 +61,7 @@ analog begin
   deviation={kp:.15g}*V(phase_error)+{ki:.15g}*V(integrated_error);
   V(phase_error)<+idt(1e6*V(cmd)-8e5-deviation,0);
   V(integrated_error)<+idt(V(phase_error),0);
-  V(tune)<+0.8+deviation/1e6;
+  V(tune)<+0.8+deviation/1e6{tune_ripple};
   V(out)<+sin(6.283185307179586*({phase_expression})){ripple};
   $bound_step(1e-8);
 end

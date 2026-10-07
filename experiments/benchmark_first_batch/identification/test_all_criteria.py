@@ -105,6 +105,21 @@ class IdentificationCriteria(unittest.TestCase):
             self.assertGreater(result["max_error_V"]["phase-coherent-output"],.09)
             self.assertEqual(result["max_error_V"]["instantaneous-frequency-monitor"],0)
 
+    def test_pll_early_tune_alias_ripple_rejected_for_all_experiments(self):
+        cases=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
+        for c in cases:
+            rows=fixture("identify-pll-hop-dynamics",c)
+            for row in rows:
+                if row["time"]<1e-4:
+                    row["tune"]+=.01*math.sin(2*math.pi*row["time"]/5e-7)
+            old=copy.deepcopy(c)
+            old["sample_grids"]=[g for g in old["sample_grids"] if g["node"]!="tune"]
+            self.assertTrue(evaluate(rows,old)["passed"],c["name"])
+            result=evaluate(rows,c)
+            self.assertFalse(result["passed"],c["name"])
+            self.assertGreater(result["max_error_V"]["instantaneous-frequency-monitor"],.009)
+            self.assertEqual(result["max_error_V"]["phase-coherent-output"],0)
+
     def test_actual_public_fits_generate_each_mutant(self):
         for task,variants in VARIANTS.items():
             p=ROOT/"benchmark/tasks"/task/"solution/fit.py"

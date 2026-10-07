@@ -9,7 +9,7 @@ VARIANTS={
     "identify-sc-clocked-filter":["single-pole","wrong-clock-edge","no-history","wrong-gain","low-phase-reset"],
     "identify-adc-driver-settling":["no-slew","wrong-bandwidth","no-rails","restart-on-input"],
     "identify-comparator-overdrive":["constant-delay","symmetric-delay","late-after-reset","wrong-dispersion"],
-    "identify-pll-hop-dynamics":["wrong-damping","no-integral","wrong-loop-rate","wrong-clock-phase","grid-alias-ripple"],
+    "identify-pll-hop-dynamics":["wrong-damping","no-integral","wrong-loop-rate","wrong-clock-phase","grid-alias-ripple","early-tune-ripple"],
 }
 
 

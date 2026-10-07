@@ -3,8 +3,8 @@
   "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
   "lexer_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
   "scope": "Static submission boundary only; not VA compilation or Spectre acceptance.",
-  "count": 27,
-  "passed_count": 27,
+  "count": 28,
+  "passed_count": 28,
   "candidates": [
     {
       "task": "identify-sh-acquisition",
@@ -322,6 +322,18 @@
       "task": "identify-pll-hop-dynamics",
       "variant": "grid-alias-ripple",
       "source_sha256": "faaa4de77ba947db1bf29c2e1df15f4c01c4ee538e6ff13f15dbbe8b79bae8be",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "early-tune-ripple",
+      "source_sha256": "c666e70881e19e4cb72570f103ce8a1054c24c19ec1d0fd55b289885e9626bb4",
       "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
       "status": "passed",
       "receipt": {

@@ -63,6 +63,7 @@ def model(parameters,variant="reference"):
     phase_expression="idt(1e6*V(cmd),0)-V(phase_error)"
     if variant=="wrong-clock-phase":phase_expression="idt(1e6*V(cmd),0)"
     ripple="+0.1*sin(6.283185307179586*$abstime/5e-7)" if variant=="grid-alias-ripple" else ""
+    tune_ripple="+($abstime<1e-4 ? 0.01*sin(6.283185307179586*$abstime/5e-7) : 0)" if variant=="early-tune-ripple" else ""
     return f\'''`include "constants.vams"
 `include "disciplines.vams"
 module identified_pll(cmd,out,tune);
@@ -73,7 +74,7 @@ analog begin
   deviation={kp:.15g}*V(phase_error)+{ki:.15g}*V(integrated_error);
   V(phase_error)<+idt(1e6*V(cmd)-8e5-deviation,0);
   V(integrated_error)<+idt(V(phase_error),0);
-  V(tune)<+0.8+deviation/1e6;
+  V(tune)<+0.8+deviation/1e6{tune_ripple};
   V(out)<+sin(6.283185307179586*({phase_expression})){ripple};
   $bound_step(1e-8);
 end
@@ -111,7 +112,10 @@ def build():
         grid=dict(node="out",start=0.0,step=step,
             expected=[observations(c,j*step)[0] for j in range(count+1)],
             tolerance=.008,metric="phase-coherent-output")
-        c.update(netlist=netlist(c),signals=["out","tune","cmd"],probes=probes,sample_grids=[grid])
+        tune_grid=dict(node="tune",start=0.0,step=step,
+            expected=[observations(c,j*step)[1] for j in range(count+1)],
+            tolerance=3e-4,metric="instantaneous-frequency-monitor")
+        c.update(netlist=netlist(c),signals=["out","tune","cmd"],probes=probes,sample_grids=[grid,tune_grid])
     instruction='''# 从PLL跳频轨迹辨识闭环动态
 
 这个原创PLL行为对象有相位反馈与积分校正，用于频率合成器跳频后的重捕获预测。
@@ -138,7 +142,7 @@ out的相位一致波形误差不超过8 mV；最终跳变100 us后tune必须保
 测试输入边沿1 ps，最大观测步10 ns。既不能仅查lock flag，也不能只拟合最终频率。
 公开网表可自测，最终只提交dut.va，不读终评、不写文件、不执行系统命令。
 '''
-    package(TASK,"identified_pll",instruction,source("PLL锁定与跳频","https://www.analog.com/en/resources/analog-dialogue/articles/pll-synthesizers.html","一手资料说明频率跳变、容差和loop bandwidth决定lock time。本题是原创phase-feedback抽象闭环，不宣称复刻厂商器件或包含RF/charge-pump物理。","错误阻尼、取消积分路径、错误loop时间尺度、伪造已锁相时钟和粗网格混叠纹波"),hidden,public,dict(conditions="fixed decoded frequency-command interface, known phase origin, fixed monitor scaling, no PVT/load/noise",observation_precision="12 significant digits; phase_error from continuous synthetic phase tracking"),FIT)
+    package(TASK,"identified_pll",instruction,source("PLL锁定与跳频","https://www.analog.com/en/resources/analog-dialogue/articles/pll-synthesizers.html","一手资料说明频率跳变、容差和loop bandwidth决定lock time。本题是原创phase-feedback抽象闭环，不宣称复刻厂商器件或包含RF/charge-pump物理。","错误阻尼、取消积分路径、错误loop时间尺度、伪造已锁相时钟、粗网格输出混叠纹波和早期频率监测纹波"),hidden,public,dict(conditions="fixed decoded frequency-command interface, known phase origin, fixed monitor scaling, no PVT/load/noise",observation_precision="12 significant digits; phase_error from continuous synthetic phase tracking"),FIT)
 
 
 if __name__=="__main__":build()
