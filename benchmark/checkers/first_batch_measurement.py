@@ -61,6 +61,8 @@ def adc(rows,case):
         # At exact integer boundaries, floating arithmetic may round either way.
         if abs(q-math.floor(analog))>1.01:failures.append('ADC raw observations differ from synthetic circuit')
         if abs(value(rows,'vin',n*100e-9)-analog/4096)>.0003:failures.append('ADC analog stimulus differs from coherent tone')
+    # Invalid raw observations must be rejected before entering the DFT metric domain.
+    if failures:return {'passed':False,'failures':failures}
     expected=spectrum(samples,case['tone_bin'])
     return result(rows,case,expected,{'sndr':.05,'sfdr':.05,'dc':.01},failures)
 
@@ -110,6 +112,7 @@ def acquisition(rows,case):
 def pll(rows,case):
     failures=[]
     refs=edges(rows,'ref');clks=edges(rows,'clk')
+    if not refs:return {'passed':False,'failures':['PLL reference edge coverage']}
     acquisition=[t for t in clks if 1e-6<=t<2.2e-6]
     run=[];locked=None
     for t in acquisition:

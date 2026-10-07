@@ -32,3 +32,5 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/verificatio
 电平判据经过独立review收紧：非重叠题还检查所有稳定原始点符合0/1V电平±0.01V，增加0.49/0.51V低摆幅错版及三条件拒绝回归。全组现有28个语义负例、55份VA源码。静态提交合同可重复运行 `python3 -B experiments/benchmark_first_batch/verification_measurement/check_source_contract.py --runtime benchmark/checkers/circuit_task.py`，只读取源码，不执行候选。
 
 ADC实际py312首轮三个条件均执行成功，但时钟cadence拒绝；DFT重算与参考输出的差值约1e-14dB。原始首沿10.05ns，后续出现111.15、211.45ns等边沿，最大偏移1.4ns。原因是合成器件时钟也用了未预约的连续时间条件。器件改为10ns/60ns起始、100ns周期的两个timer控制clk，保持原100ns采样timer。独立cadence的0.2ns容差、64样本定义及所有频谱判据不变。公开器件、隐藏support和generator同步修改，等待实际重跑。
+
+测量checker新增两项已复现的无效观测防护：合法时钟配合64个全零ADC码，旧判据在已判原始输入不符后仍调用频谱，触发除零；PLL缺少ref边沿但存在clk获取边沿，旧判据调用空集合min。现在原始ADC覆盖/码值/输入校验失败即返回结构化拒绝；PLL在配对前拒绝空参考边沿。没有通用异常捕获，不屏蔽真正的checker代码错误，也未改任何正常计算或容差。新增两个行级回归先复现异常再验证拒绝，全组12 tests通过。该复现只涉及行级输入，没有证明真实VA能诱导异常，也未运行新仿真。对保存的12个实际条件做源码/波形/冻结case哈希绑定重判，9个原有效条件和3个原cadence失败条件的分数全部保持，正常指标最大浮点差约7.1e-15。

@@ -102,6 +102,24 @@ class Oracles(unittest.TestCase):
    r=rows(c['stop'],.05e-9,wave);out=M.evaluate(r,c);self.assertTrue(out['passed'],out)
    for a in r:a['sndr']+=1
    self.assertFalse(M.evaluate(r,c)['passed'])
+ def test_adc_invalid_zero_code_rejected(self):
+  c=cases('measure-adc-spectrum')[0]
+  def wave(t):
+   n=int((t+1e-15)/100e-9);phase=t-n*100e-9
+   ph=2*math.pi*c['tone_bin']*t/6.4e-6
+   analog=2048+c['amp']*(math.sin(ph)+c['h2']*math.sin(2*ph)+c['h3']*math.cos(3*ph))
+   return dict(clk=square(phase,10e-9,60e-9),code=0,vin=analog/4096,sndr=0,sfdr=0,dc=0)
+  answer=M.evaluate(rows(c['stop'],.05e-9,wave),c)
+  self.assertIs(answer['passed'],False)
+  self.assertIn('ADC raw observations differ from synthetic circuit',answer['failures'])
+ def test_pll_missing_reference_rejected(self):
+  c=cases('measure-pll-relock-jitter')[0]
+  def wave(t):
+   k=int((t+1e-15)/100e-9)
+   return dict(ref=0,clk=square(t-k*100e-9,0,50e-9),relock_ns=0,jitter_ns=0)
+  answer=M.evaluate(rows(c['stop'],.1e-9,wave),c)
+  self.assertIs(answer['passed'],False)
+  self.assertIn('PLL reference edge coverage',answer['failures'])
  def test_spectrum_formula(self):
   x=[1000+100*math.sin(2*math.pi*5*n/64)+10*math.cos(2*math.pi*10*n/64) for n in range(64)]
   o=M.spectrum(x,5);self.assertAlmostEqual(o['sndr'],20,places=10);self.assertAlmostEqual(o['sfdr'],20,places=10);self.assertAlmostEqual(o['dc'],1000)
