@@ -124,8 +124,9 @@ def write_task(task,policy,family,destination,shared_runtime):
 
 性能评分使用Spectre 21.1.0.509.isr12、`+mt=1`、psfascii，网表固定reltol=1e-6、
 vabstol=1e-9、iabstol=1e-14、errpreset=conservative。不能改网表、容差、真实工作量、
-输出有限边沿或规定分辨率取得成绩。全部功能条件先通过，随后在同一job同机执行两侧
-warmup及至少五对交替基线/候选求解。完整波形必须正确，失败不能进入计时分母。
+输出有限边沿或规定分辨率取得成绩。最终满分要求所有功能条件通过，且同一job同机执行
+的两侧warmup与五对交替求解每次都通过独立波形判据。性能条件可在其他功能条件之前
+执行，但任何功能失败都会使整题失败；失败运行不能进入计时分母。
 
 规定{metric}候选中位数/基线中位数不超过{policy['max_median_ratio']:.6g}，
 且五对中至少{policy['min_winning_pairs']}对候选成本低于基线。CPU仅取原生intrinsic tran分项，
@@ -133,8 +134,8 @@ warmup及至少五对交替基线/候选求解。完整波形必须正确，失�
 未变更基线可通过功能但不能取得性能分。终评同时保留端到端过程计时、原生版本/负载及全部原始波形。
 
 允许重新组织内部实现；所有公开接口/参数、采样/状态/波形合同保持。禁止active日志输出及
-仿真终止/控制system tasks，防止伪造native统计或提前退出。标准disciplines.vams可include；
-额外include、宏、系统调用、环境读取和外部文件读取不在提交合同内。参考优化源码不在公开输入中。
+仿真终止/控制system tasks，防止伪造native统计或提前退出。标准disciplines.vams/constants.vams可include；
+无额外非声明include，宏、系统调用、环境读取和外部文件读取不在提交合同内。参考优化源码不在公开输入中。
 '''
     (destination/'instruction.md').write_text(instruction)
     (destination/'task.toml').write_text(f'''schema_version = "1.4"
