@@ -164,7 +164,7 @@ mod tests {
         #![proptest_config(ProptestConfig::with_cases(512))]
         #[test]
         fn triple_sign_matches_independent_rational(values in prop::array::uniform24(finite())) {
-            let terms:Vec<_> = values.chunks_exact(3).map(|v|(v[0],v[1],v[2])).collect();
+            let terms:Vec<_> = values.as_chunks::<3>().0.iter().map(|v|(v[0],v[1],v[2])).collect();
             let exact = terms.iter().fold(q(0.), |s,&(a,b,c)|s+q(a)*q(b)*q(c));
             prop_assert_eq!(sum_triples_sign(&terms),Some(match exact.cmp(&q(0.)) {std::cmp::Ordering::Less=>-1,std::cmp::Ordering::Equal=>0,std::cmp::Ordering::Greater=>1}));
         }
