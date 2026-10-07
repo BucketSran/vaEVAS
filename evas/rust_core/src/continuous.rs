@@ -88,6 +88,9 @@ pub(crate) struct LinearContinuous {
     start: f64,
     initial: Vec<I>,
     event_dependent: bool,
+    // Physical state after the last event map, before propagation to its
+    // representative. Used only for ordered event observations, not queries.
+    event_seed: Option<(I, Vec<I>)>,
 }
 
 struct Context {
@@ -337,6 +340,7 @@ impl LinearContinuous {
             start,
             initial,
             event_dependent,
+            event_seed: None,
         }))
     }
 
@@ -448,7 +452,7 @@ impl LinearContinuous {
     }
 
     fn ensure_time(&self, time: f64) -> Result<(), Error> {
-        if time.is_finite() && time >= 0.0 && time <= self.stop {
+        if time.is_finite() && time >= self.start && time <= self.stop {
             Ok(())
         } else {
             Err(Error::new(

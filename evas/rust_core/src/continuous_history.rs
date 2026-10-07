@@ -10,6 +10,7 @@ impl LinearContinuous {
         self.start == other.start
             && self.parameters == other.parameters
             && self.initial == other.initial
+            && self.event_seed == other.event_seed
     }
 
     pub(crate) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
@@ -30,9 +31,72 @@ impl LinearContinuous {
                 .iter()
                 .map(|row| dot(row, &forcing, "linear event sample"))
                 .collect()
+        } else if window.lo < self.start {
+            let physical = self.ordered_event_state(window)?;
+            let segment = &self.segments[0];
+            let mut forcing = segment.initial.clone();
+            let count = self.initial.len();
+            forcing[..count].copy_from_slice(&physical);
+            let (sources, slopes) = self.context.trajectory.range(window)?;
+            forcing[count..count + sources.len()].copy_from_slice(&sources);
+            forcing[count + sources.len()..count + 2 * sources.len()].copy_from_slice(&slopes);
+            segment
+                .values
+                .iter()
+                .map(|row| dot(row, &forcing, "ordered event sample"))
+                .collect()
         } else {
             self.range_bounds(window)
         }
+    }
+
+    /// Enclose the physical states at a later, already ordered event whose
+    /// nominal window reaches behind the prior representative. The saved
+    /// post-map state is at tau, not b: propagate for every possible duration
+    /// from tau to this observation. Ordinary trajectory queries cannot use
+    /// this enclosure because they have no proof of being after that event.
+    fn ordered_event_state(&self, window: I) -> Result<Vec<I>, Error> {
+        let (prior, physical) = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "ordered event has no physical history enclosure",
+            )
+        })?;
+        if window.lo < prior.lo || window.hi < self.start {
+            return Err(Error::new(
+                "event_resolution",
+                "ordered event exceeds retained history coverage",
+            ));
+        }
+        if self
+            .context
+            .trajectory
+            .knots
+            .iter()
+            .any(|&knot| knot > prior.lo && knot <= window.hi && knot < self.stop)
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "ordered event history crosses a PWL slope boundary",
+            ));
+        }
+        let segment = &self.segments[0];
+        let count = physical.len();
+        let mut initial = segment.initial.clone();
+        initial[..count].copy_from_slice(physical);
+        // Source values belong to the actual prior event window, not b.
+        let (sources, slopes) = self.context.trajectory.range(*prior)?;
+        initial[count..count + sources.len()].copy_from_slice(&sources);
+        initial[count + sources.len()..count + 2 * sources.len()].copy_from_slice(&slopes);
+        let values = crate::state_space::propagate(
+            &segment.matrix,
+            &initial,
+            I {
+                lo: 0.0,
+                hi: (I::point(window.hi) - I::point(prior.lo)).hi,
+            },
+        )?;
+        Ok(values[..count].to_vec())
     }
 
     pub(crate) fn restarted(
@@ -82,7 +146,14 @@ impl LinearContinuous {
                 "joint event-time enclosure crosses a PWL slope boundary",
             ));
         }
-        let mut physical = vec![None::<I>; self.initial.len()];
+        let mut physical = if time_bounds.lo < self.start {
+            self.ordered_event_state(time_bounds)?
+                .into_iter()
+                .map(Some)
+                .collect()
+        } else {
+            vec![None::<I>; self.initial.len()]
+        };
         if time_bounds.lo == 0.0 {
             for (slot, value) in physical.iter_mut().zip(&self.initial) {
                 *slot = Some(*value);
@@ -126,6 +197,9 @@ impl LinearContinuous {
                 "continuous network disappeared during event replay",
             )
         })?;
+        // build applies the final held reset map. Save that physical state
+        // before adding any propagation to the representative.
+        let event_seed = (time_bounds, next.initial.clone());
         if propagate_to_representative && time_bounds.lo != time_bounds.hi {
             // Enclose post-event propagation from any actual event in its root
             // box to the representative time. Prior and future dynamics both
@@ -166,6 +240,7 @@ impl LinearContinuous {
             )?
             .unwrap();
         }
+        next.event_seed = Some(event_seed);
         Ok(next)
     }
 }

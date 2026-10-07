@@ -55,6 +55,9 @@ impl Controller {
         let window = calendar[self.event..end]
             .iter()
             .fold(I::point(time), |window, event| window.hull(event.bounds()));
+        let fixed_batch = calendar[self.event..end]
+            .iter()
+            .all(ScheduledEvent::is_fixed_timer);
         let before = GuardTrajectory::new_held(
             model,
             trajectory,
@@ -112,6 +115,20 @@ impl Controller {
             for &operator in &model.guard_operators[index] {
                 keeps_history &= next.operators.keeps_guard_value(operator)?;
             }
+            if fixed_batch && window.lo != window.hi && !model.guard_operators[index].is_empty() {
+                // Root isolation resumes at b. Certify the post-event tube
+                // from every possible tau to b, including the final timer in
+                // an overlap cluster. A root here must never be skipped.
+                if !matches!(
+                    after.event_value(guard, window, owner)?.sign(),
+                    Some(-1 | 1)
+                ) {
+                    return Err(Error::new(
+                        "event_resolution",
+                        "cannot exclude a history crossing inside the timer observation window",
+                    ));
+                }
+            }
             if keeps_history && !direct_change {
                 continue;
             }
@@ -119,9 +136,9 @@ impl Controller {
                 return Err(Error::new("unsupported_cross",
                     "discontinuous guard history over an uncertain event window requires an event closure contract"));
             }
-            let left = before.range(guard, window, owner)?.0.sign();
+            let left = before.event_value(guard, window, owner)?.sign();
             let right = if keeps_history {
-                continuous_after.range(guard, window, owner)?.0.sign()
+                continuous_after.event_value(guard, window, owner)?.sign()
             } else {
                 after.range(guard, I::point(time), owner)?.0.sign()
             };

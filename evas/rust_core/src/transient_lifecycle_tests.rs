@@ -836,3 +836,146 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
     assert_eq!(accepted.operators.bounds(1.0).unwrap(), original);
     assert_eq!(accepted.operators.values(0.0).unwrap(), [0.0, 0.0]);
 }
+
+fn delayed_timer_root_fixture(
+    threshold: f64,
+) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    let (base, _, _, _) = history_guard_fixture();
+    let mut program = serde_json::to_value(base.program).unwrap();
+    program["states"][0]["initial"] = json!(0.);
+    program["states"].as_array_mut().unwrap().push(json!({
+        "instance":"dut","name":"n","kind":"integer","initial":0}));
+    program["events"].as_array_mut().unwrap().pop();
+    program["events"][0]["trigger"] = json!({"kind":"timer","start":0.1,"period":0.2,
+        "time_tolerance":1e-6,"enabled":true});
+    program["events"][0]["body"] = json!([
+        {"kind":"assign","state":1,"rhs":{"op":"add","left":{"op":"state","state":1},
+          "right":{"op":"affine","constant":1,"terms":[]}}},
+        {"kind":"assign","state":0,"rhs":{"op":"add","left":{"op":"state","state":1},
+          "right":{"op":"affine","constant":-1,"terms":[]}}}]);
+    program["events"][1]["trigger"]["guard"] = json!({"op":"affine","constant":-threshold,
+        "terms":[{"node":3,"coefficient":1}]});
+    program["operators"][0]["input"] = json!({"op":"state","state":0});
+    let model = EventModel::new(
+        serde_json::from_value(program).unwrap(),
+        base.driven,
+        Tolerances {
+            absolute: 1.,
+            relative: 0.,
+        },
+    )
+    .unwrap();
+    let trajectory = Trajectory::new(
+        TransientInputs {
+            pwl: vec![vec![[0., 0.], [0.31, 0.31]]],
+            output_times: vec![0., 0.31],
+            stop: 0.31,
+            max_step: 0.31,
+        },
+        1,
+    )
+    .unwrap();
+    let states = model.initial();
+    let state_bounds = states.iter().copied().map(I::point).collect();
+    let (operators, calendar) = history_calendar::initialize(&model, &trajectory, &states).unwrap();
+    let circuit = model
+        .circuit_with(&states, &operators.values(0.).unwrap())
+        .unwrap();
+    let accepted = Frame {
+        time: 0.,
+        solution: circuit.solve(&[0.]).unwrap(),
+        circuit,
+        operators,
+        states,
+        state_bounds,
+    };
+    (
+        model,
+        trajectory,
+        Controller {
+            accepted,
+            event: 0,
+            records: vec![],
+        },
+        calendar,
+    )
+}
+
+#[test]
+fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
+    let (bad, trajectory, mut controller, mut calendar) = delayed_timer_root_fixture(1e-18);
+    controller
+        .accept_history_events(&bad, &trajectory, &mut calendar)
+        .unwrap();
+    let before_time = controller.accepted.time;
+    let before_states = controller.accepted.states.clone();
+    let before_bounds = controller.accepted.state_bounds.clone();
+    let before_voltages = controller.accepted.solution.voltages.clone();
+    let before_operators = controller.accepted.operators.clone();
+    let records = serde_json::to_value(&controller.records).unwrap();
+    let original = calendar
+        .iter()
+        .map(|e| (e.time, e.event, e.bounds()))
+        .collect::<Vec<_>>();
+    for _ in 0..2 {
+        let error = controller
+            .accept_history_events(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        assert!(error.message.contains("timer observation window"));
+        assert_eq!(controller.accepted.time, before_time);
+        assert_eq!(controller.accepted.states, before_states);
+        assert_eq!(controller.accepted.state_bounds, before_bounds);
+        assert_eq!(controller.accepted.solution.voltages, before_voltages);
+        assert!(controller
+            .accepted
+            .operators
+            .same_reset_history(&before_operators));
+        assert_eq!(controller.event, 0);
+        assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+        assert_eq!(
+            calendar
+                .iter()
+                .map(|e| (e.time, e.event, e.bounds()))
+                .collect::<Vec<_>>(),
+            original
+        );
+    }
+    let (good, clean_trajectory, mut clean, mut clean_calendar) = delayed_timer_root_fixture(1.);
+    clean
+        .accept_history_events(&good, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    clean
+        .accept_history_events(&good, &clean_trajectory, &mut clean_calendar)
+        .unwrap();
+    controller
+        .accept_history_events(&good, &trajectory, &mut calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        controller.accepted.solution.voltages,
+        clean.accepted.solution.voltages
+    );
+    assert!(controller
+        .accepted
+        .operators
+        .same_reset_history(&clean.accepted.operators));
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(
+        calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>(),
+        clean_calendar
+            .iter()
+            .map(|e| (e.time, e.event, e.bounds()))
+            .collect::<Vec<_>>()
+    );
+}

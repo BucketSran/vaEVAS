@@ -13,9 +13,15 @@ pub(crate) struct ScheduledEvent {
     pub(crate) time: f64,
     pub(crate) event: usize,
     moment: Moment,
+    // Set only by exact fixed-clock ordering. Retaining this pending event
+    // across an epoch must not discard the proof against its predecessor.
+    fixed_predecessor: Option<f64>,
 }
 
 impl ScheduledEvent {
+    pub(crate) fn is_fixed_timer(&self) -> bool {
+        matches!(self.moment, Moment::Timer { .. })
+    }
     pub(crate) fn bounds(&self) -> I {
         self.moment.bounds()
     }
@@ -218,6 +224,9 @@ fn order_fixed_timers(
                 ));
             }
             event.time = time;
+            if previous.is_some() {
+                event.fixed_predecessor = previous;
+            }
         }
         previous = Some(time);
         start = end;
@@ -344,6 +353,7 @@ fn add_timer(
             ));
         }
         events.push(ScheduledEvent {
+            fixed_predecessor: None,
             time,
             event,
             moment: if held {
@@ -530,6 +540,37 @@ struct HeldCalendar<'a> {
     pending: &'a [ScheduledEvent],
 }
 
+impl HeldCalendar<'_> {
+    // Prove the entire retained prefix, including equal-time groups. A third
+    // overlapping clock is linked to the second, not directly to `after`.
+    // New/changed moments and any intervening non-fixed event break this proof.
+    fn retained_fixed_prefix(&self, after: f64) -> Vec<f64> {
+        let mut anchor = after;
+        let mut times = Vec::new();
+        let mut start = 0;
+        while start < self.pending.len() {
+            let time = self.pending[start].time;
+            let mut end = start + 1;
+            while end < self.pending.len() && self.pending[end].time == time {
+                end += 1;
+            }
+            if time <= anchor
+                || !self.pending[start..end].iter().all(|event| {
+                    !self.changed[event.event]
+                        && event.is_fixed_timer()
+                        && event.fixed_predecessor == Some(anchor)
+                })
+            {
+                break;
+            }
+            times.push(time);
+            anchor = time;
+            start = end;
+        }
+        times
+    }
+}
+
 fn schedule_with_history(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -612,6 +653,7 @@ fn schedule_with_history(
                     ));
                 }
                 events.push(ScheduledEvent {
+                    fixed_predecessor: None,
                     time: root.bounds.hi,
                     event: index,
                     moment: Moment::Cross(root),
@@ -719,6 +761,7 @@ fn schedule_with_history(
                         ));
                     }
                     events.push(ScheduledEvent {
+                        fixed_predecessor: None,
                         time: root.bounds.hi,
                         event: index,
                         moment: Moment::Dynamic {
@@ -752,7 +795,16 @@ fn schedule_with_history(
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
-        if events.iter().any(|event| event.bounds().lo <= after) {
+        let retained = held.as_ref().unwrap().retained_fixed_prefix(after);
+        if events.iter().any(|event| {
+            event.bounds().lo <= after
+                && !(event.is_fixed_timer()
+                    && event.fixed_predecessor.is_some()
+                    && retained
+                        .binary_search_by(|time| time.total_cmp(&event.time))
+                        .is_ok()
+                    && event.time > after)
+        }) {
             return Err(unresolved(
                 "future event window overlaps the accepted event boundary",
             ));
@@ -873,6 +925,7 @@ mod tests {
 
     fn event(start: f64, lo: f64, hi: f64) -> ScheduledEvent {
         ScheduledEvent {
+            fixed_predecessor: None,
             time: hi,
             event: 0,
             moment: Moment::Timer {

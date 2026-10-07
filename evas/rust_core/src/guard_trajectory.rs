@@ -197,6 +197,27 @@ impl<'a> GuardTrajectory<'a> {
         time: I,
         owner: &str,
     ) -> Result<(I, I), Error> {
+        self.range_impl(expression, time, owner, false)
+    }
+
+    /// Value-only enclosure of an ordered event observation. Unlike root
+    /// isolation, this may use the saved physical state before a representative.
+    pub(crate) fn event_value(
+        &self,
+        expression: &Expression,
+        time: I,
+        owner: &str,
+    ) -> Result<I, Error> {
+        Ok(self.range_impl(expression, time, owner, true)?.0)
+    }
+
+    fn range_impl(
+        &self,
+        expression: &Expression,
+        time: I,
+        owner: &str,
+        event: bool,
+    ) -> Result<(I, I), Error> {
         let p = &self.model.program;
         let (node_deps, mut operator_deps) = dependencies(expression, p, owner)?;
         // Ownership was validated in EventModel. The network can contain
@@ -230,7 +251,22 @@ impl<'a> GuardTrajectory<'a> {
         derivatives.extend(vec![I::ZERO; p.states.len()]);
         let mut operator_values = vec![I::ZERO; p.operators.len()];
         let mut operator_derivatives = operator_values.clone();
+        let event_values = if event && !operator_deps.is_empty() {
+            Some(
+                self.operators
+                    .ok_or_else(|| {
+                        Error::new("unsupported_cross", "guard requires operator history")
+                    })?
+                    .event_bounds(time.hi, time)?,
+            )
+        } else {
+            None
+        };
         for index in operator_deps {
+            if let Some(values) = &event_values {
+                operator_values[index] = values[index];
+                continue;
+            }
             (operator_values[index], operator_derivatives[index]) = self
                 .operators
                 .ok_or_else(|| Error::new("unsupported_cross", "guard requires operator history"))?

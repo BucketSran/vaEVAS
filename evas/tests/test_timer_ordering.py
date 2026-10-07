@@ -112,20 +112,14 @@ class TimerOrdering(unittest.TestCase):
                 'event_resolution.*overlapping time bounds'):
             run_timer(source, stop=.35, times=[0,.35])
 
-    def test_near_timer_history_rebuild_preserves_after_boundary_refusal(self):
-        # The first near-6us event's representative reaches the next event's
-        # nominal window. The integral guard selects history calendar rebuild;
-        # z(t)=integral(n) stays below 1 here and produces no competing root.
-        # That future timer window cannot be certified after acceptance.
+    def test_near_timer_history_rebuild_retains_fixed_order(self):
         source = clocks().replace('integer n,m;', 'integer n,m; electrical z;').replace(
             'V(y,r)<+n+10*m;', 'V(y,r)<+n+10*m; V(z,r)<+idt(n,0); '
             '@(cross(V(z,r)-1,1,1e-9,1e-8));')
-        prefix = run_timer(source, stop=5e-6, times=[0,5e-6])
-        self.assertEqual(prefix['transient']['states'][-1], [2,1])
-        self.assertEqual(len(prefix['transient']['events']), 3)
-        with self.assertRaisesRegex(KernelError,
-                'event_resolution.*accepted.*boundary'):
-            run_timer(source, stop=7e-6, times=[0,7e-6])
+        result = run_timer(source, stop=7e-6, times=[0,7e-6])
+        self.assertEqual(result['transient']['states'][-1], [3,2])
+        self.assertEqual([event['event'] for event in result['transient']['events']],
+                         [0,1,0,0,1])
 
 
 if __name__ == '__main__':
