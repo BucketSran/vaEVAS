@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 ROOT=Path(__file__).parent
 spec=importlib.util.spec_from_file_location('optimization_generator',ROOT/'generate_admitted_tasks.py')
 G=importlib.util.module_from_spec(spec);spec.loader.exec_module(G)
@@ -30,6 +31,43 @@ class Generator(unittest.TestCase):
         self.assertEqual(list(G.functional_records(document)),[])
         document['kind']='synthetic_fixture'
         self.assertEqual(list(G.functional_records(document)),[])
+
+    def paired_fixture(self):
+        task='optimize-power-monitor';family=ROOT/'power_monitor'
+        cases=json.loads((family/'cases.json').read_text());perf=next(c for c in cases if c.get('performance'))
+        attempts=[];records=[]
+        for pair in range(6):
+            for side in ('baseline','reference'):
+                attempts.append(dict(task_id=task,side=side,phase='warmup' if pair==0 else 'measurement',pair=pair))
+                records.append(dict(source_sha256=G.sha((family/(side+'.va')).read_bytes()),
+                                    condition_id=perf['name'],netlist_sha256=G.sha(perf['netlist'].encode()),
+                                    functional_result={'passed':True},solver_argv=['spectre','+mt=1']))
+        config=dict(admitted=True,metric='accepted_steps',max_median_ratio=.1,min_winning_pairs=5)
+        paired=dict(kind='offline_analysis_of_actual_spectre_jobs',attempts=attempts,records=records,
+                    paired_summaries={task:{'pairs':5}})
+        return task,family,cases,config,paired
+
+    def test_current_netlist_and_warmup_must_match_actual_measurements(self):
+        task,family,cases,config,paired=self.paired_fixture()
+        perf=next(c for c in cases if c.get('performance'))
+        perf['netlist']+='\n// changed workload maxstep=1n\n'
+        with patch.object(G,'recompute_actual_summary') as recompute:
+            with self.assertRaisesRegex(ValueError,'measured netlist'):
+                G.admission_policy(task,config,paired,'a'*64,cases,family)
+            recompute.assert_not_called()
+        task,family,cases,config,paired=self.paired_fixture()
+        paired['records'][0]['netlist_sha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'measured netlist'):
+            G.admission_policy(task,config,paired,'a'*64,cases,family)
+
+    def test_declared_summary_cannot_replace_actual_record_recomputation(self):
+        task,family,cases,config,paired=self.paired_fixture()
+        paired['paired_summaries'][task]['pairs']=50
+        recomputed={task:{'pairs':5}}
+        with patch.object(G,'recompute_actual_summary',return_value=recomputed) as recompute:
+            with self.assertRaisesRegex(ValueError,'recomputed actual records'):
+                G.admission_policy(task,config,paired,'a'*64,cases,family)
+            recompute.assert_called_once_with(paired)
 
     def test_public_materials_contain_baseline_and_no_reference_source(self):
         # Explicitly synthetic policy exercises packaging only. No actual

@@ -5,6 +5,7 @@ analysis plus independent full-functional calibration, and never runs Spectre.
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import shutil
@@ -74,10 +75,19 @@ def functional_records(document):
         yield task,role,record['case'],record['candidate_sha256'],record['replay']['passed']
 
 
+def recompute_actual_summary(paired):
+    # Owned by the common offline evidence module, not a candidate task.
+    path=ROOT/'experiments/benchmark_first_batch/performance.py'
+    if not path.is_file():raise ValueError('shared actual paired-summary module missing')
+    sys.path.insert(0,str(path.parent))
+    spec=importlib.util.spec_from_file_location('_optimization_actual_pairs',path)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.paired_summary(paired['records'],paired['attempts'])
+
+
 def admission_policy(task,config,paired,paired_sha,cases,family):
     if config.get('admitted') is not True:raise ValueError(task+': reviewed admission is missing')
-    summary=paired.get('paired_summaries',{}).get(task)
-    if paired.get('kind')!='offline_analysis_of_actual_spectre_jobs' or not summary or summary['pairs']<5:
+    if paired.get('kind')!='offline_analysis_of_actual_spectre_jobs':
         raise ValueError(task+': actual five-pair evidence missing')
     if config.get('metric') not in ('intrinsic_cpu_s','accepted_steps'):raise ValueError('unsupported admitted metric')
     policy=dict(config,admission_evidence_sha256=paired_sha,pairs=5,allow_private_condition_packets=True,
@@ -85,15 +95,24 @@ def admission_policy(task,config,paired,paired_sha,cases,family):
     validate_admitted_policy(policy)
     expected={role:sha((family/(role+'.va')).read_bytes()) for role in ('baseline','reference')}
     attempts=paired['attempts'];records=paired['records']
-    measurement=[(a,r) for a,r in zip(attempts,records) if a['task_id']==task and a['phase']=='measurement']
+    if len(attempts)!=len(records):raise ValueError(task+': missing declared attempt record')
+    evidence=[(a,r) for a,r in zip(attempts,records,strict=True) if a['task_id']==task]
+    measurement=[(a,r) for a,r in evidence if a['task_id']==task and a['phase']=='measurement']
     if len(measurement)<10 or [a['side'] for a,_ in measurement]!=['baseline','reference']*(len(measurement)//2):
         raise ValueError(task+': declared actual trials did not alternate AB')
     perf=next(c for c in cases if c.get('performance'))
-    for a,r in measurement:
+    expected_netlist=sha(perf['netlist'].encode())
+    if len(evidence)!=12:raise ValueError(task+': warmup plus five-pair evidence required')
+    for a,r in evidence:
+        if r.get('netlist_sha256')!=expected_netlist:raise ValueError(task+': measured netlist differs from current public workload')
         if r['source_sha256']!=expected[a['side']] or r['condition_id']!=perf['name'] or r['functional_result'].get('passed') is not True:
             raise ValueError(task+': source/functional/workload identity mismatch')
         if r['solver_argv'][-1]!='+mt=1':raise ValueError(task+': backend thread setting changed')
-    hosts={r['native_statistics'].get('native_host') for _,r in measurement}
+    recomputed=recompute_actual_summary(paired)
+    if recomputed!=paired.get('paired_summaries'):raise ValueError('declared summary differs from recomputed actual records')
+    summary=recomputed.get(task)
+    if not summary or summary['pairs']!=5:raise ValueError(task+': actual five-pair evidence missing')
+    hosts={r['native_statistics'].get('native_host') for _,r in evidence}
     if None in hosts or len(hosts)!=1:raise ValueError(task+': actual same-host identity missing')
     metrics=summary['metrics'][policy['metric']]
     ratio=metrics['reference']['median']/metrics['baseline']['median']
