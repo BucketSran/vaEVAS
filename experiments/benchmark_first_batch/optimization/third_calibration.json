@@ -1,0 +1,825 @@
+{
+  "kind": "actual_native_functional_calibration",
+  "performance_verdict": "inconclusive",
+  "limitations": [
+    "single concurrent functional round; not five alternating pairs",
+    "actual stream layout is merged; no independent stderr exists",
+    "rejected steps absent in default logs remain unknown",
+    "native statistics plus independent waveform oracle confirm completed work; profile/repeated timing remain pending"
+  ],
+  "records": [
+    {
+      "task_id": "optimize-power-monitor",
+      "role": "baseline",
+      "case": "slow-rail-end-to-end",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "ca69e7d6d70c3d51bbb428ca04e9e6ba5572a14cc401181ba7d46587f93c4876",
+      "archive_relative_path": "optimize-power-monitor/baseline/remote/bf-3ff2150994e34e108e32-slow-rail-end-to-end/archive/job.tar.gz",
+      "candidate_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "c7f86d24a744b9a831b5117c2d25225f3096406172a10aee3434578a5c9cec8d",
+      "waveform_sha256": "d6138f93a81074186f7ea5c1b6e1832cb8bc2853050a67a649f68068fc4bbcb1",
+      "waveform_rows": 100103,
+      "waveform_bytes": 9112092,
+      "process_elapsed_s": 2.619455263018608,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "1d8a2866f283caa17b55a254c7932a9a1f00f260cca554ccbb4900676b6629ad",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 100102,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 2.36817,
+          "elapsed_s": 1.18661
+        },
+        "total_tran": {
+          "cpu_s": 2.36991,
+          "elapsed_s": 1.18735
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "1f7b6269563f34433d6fd441c8cd3e16ade53fa3b1f34c183c74c505f682b152"
+        }
+      },
+      "max_transition_error_v": 2.032873869239893e-11,
+      "observed_edges": [
+        [
+          2.500125e-05,
+          1
+        ],
+        [
+          8.000125000000001e-05,
+          -1
+        ]
+      ]
+    },
+    {
+      "task_id": "optimize-power-monitor",
+      "role": "baseline",
+      "case": "short-glitch-and-recovery",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "9b0f3fb2c63f05fd3bf6412ec19f91f222fb429a05fb1aa8c1c144836edc704e",
+      "archive_relative_path": "optimize-power-monitor/baseline/remote/bf-4a06462e64ad4d1f8c29-short-glitch-and-recovery/archive/job.tar.gz",
+      "candidate_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "b20d03db5aee16d9eb08f1409bea790b92634a07eb4f8725e76815521c8c3fbb",
+      "waveform_sha256": "1acfeac70f801ea1a1e1254e6bd88b84a61e97ab4e5727a3cb18299cbc004638",
+      "waveform_rows": 20123,
+      "waveform_bytes": 1833911,
+      "process_elapsed_s": 1.6172715239226818,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "2da4cc2812278584ddb7cd5c4c3603072437eaf528a79803c03f617a9acbd34a",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 20122,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.48302,
+          "elapsed_s": 0.242243
+        },
+        "total_tran": {
+          "cpu_s": 0.484754,
+          "elapsed_s": 0.242977
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "3bec129e6737f7d4241618e446c91456c0a7666fa0dd894bdfb33a3cf6e35285"
+        }
+      },
+      "max_transition_error_v": 3.9362957338084925e-12,
+      "observed_edges": [
+        [
+          1.300125e-05,
+          1
+        ],
+        [
+          1.600125e-05,
+          -1
+        ]
+      ]
+    },
+    {
+      "task_id": "optimize-power-monitor",
+      "role": "baseline",
+      "case": "initial-high-hysteresis",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "5643eadc8638c57f117580501dd8068fc2a215b0d7f0eab3010bcb439b0971ef",
+      "archive_relative_path": "optimize-power-monitor/baseline/remote/bf-a4cba8002dd8418bb0d7-initial-high-hysteresis/archive/job.tar.gz",
+      "candidate_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "2653297258efd54d3ccc61fba15c3726bc267e866dc8b342238c91424b9ef4cc",
+      "waveform_sha256": "f2d9878c34863182540475615161e5be415523054ef7f856a8dcbe6899f7f90e",
+      "waveform_rows": 15065,
+      "waveform_bytes": 1373633,
+      "process_elapsed_s": 1.567635964602232,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "f417f71ec74840f26d9dea09b17dc169223bfc383c165d0f709186e5f4b65287",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 15064,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.362373,
+          "elapsed_s": 0.181459
+        },
+        "total_tran": {
+          "cpu_s": 0.364116,
+          "elapsed_s": 0.182205
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "821dd1caceac7a54745ee6c485958c10033b7554b8ca30a3aa0101461111b567",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "0a809f0c45ac0e62eb31522f1d868595b9f3d35716edf1ca155fd88a2f9ca944"
+        }
+      },
+      "max_transition_error_v": 2.2423174428354287e-12,
+      "observed_edges": [
+        [
+          3.0002499999999998e-06,
+          1
+        ],
+        [
+          1.0001249999999998e-05,
+          -1
+        ]
+      ]
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "baseline",
+      "case": "sensor-idle-throughput",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "37e93f204e27bb1c0c5922f36d381008548760dfd994663bc2aaeedfd3a88004",
+      "archive_relative_path": "optimize-sar-calendar/baseline/remote/bf-839f9729e68c48f6b898-sensor-idle-throughput/archive/job.tar.gz",
+      "candidate_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "0c217e715b4bdb3ba410b8525260d2a4c81242b8389246ec1d1c078ed6dd68af",
+      "waveform_sha256": "96f0e181672a4dc8a4e5d27c6e02b66f5c46182311d6f201ea6dcb2411e72441",
+      "waveform_rows": 102890,
+      "waveform_bytes": 23976141,
+      "process_elapsed_s": 3.621785309165716,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "a1511dc345dd84fd4d2aa754ad0e6fd45844faf7a86b27175933b2e91ca8feb7",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 102889,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.24628,
+          "elapsed_s": 1.69841
+        },
+        "total_tran": {
+          "cpu_s": 3.24703,
+          "elapsed_s": 1.69915
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "59d4bb47bded44aaeeb914656a876428fe686019b955c6509f0dbb87904a81ca"
+        }
+      },
+      "completed_conversions": 20,
+      "bit_decisions": 240,
+      "cancelled_conversions": 0,
+      "ignored_starts": 0,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 9.500000000258e-10,
+      "max_transition_error_v": 2.032884971470139e-11
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "baseline",
+      "case": "busy-start-and-reset",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "c4f3ae670150ec309dceb3464119eea51d07ec59a033cec67f536a4162310b88",
+      "archive_relative_path": "optimize-sar-calendar/baseline/remote/bf-f13666f4f203422faa0e-busy-start-and-reset/archive/job.tar.gz",
+      "candidate_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "ae3d5a26e00dff3b8a6017ef1243f60ebc2196ff4311cdfe0c2089439fffaf4d",
+      "waveform_sha256": "96d379edd0d6197746a4ca415288231d4e701da1b36ed1ea03b66bf59650f67f",
+      "waveform_rows": 20693,
+      "waveform_bytes": 4824239,
+      "process_elapsed_s": 1.868314454331994,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "54ab0d024ba1b65985e5932981b752a5d82d67b87fcb3751c5025db5a51f2679",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 20692,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.689783,
+          "elapsed_s": 0.34554500000000005
+        },
+        "total_tran": {
+          "cpu_s": 0.6904560000000001,
+          "elapsed_s": 0.34621300000000005
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "ccd7fe7c794a6279a9201d720247e958ad0e2244fb0e7395a4d4462b6adf718b"
+        }
+      },
+      "completed_conversions": 3,
+      "bit_decisions": 42,
+      "cancelled_conversions": 1,
+      "ignored_starts": 1,
+      "max_output_error_v": 2.7755575615628914e-17,
+      "max_edge_error_s": 9.50000000001236e-10,
+      "max_transition_error_v": 2.5410784587620583e-12
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "baseline",
+      "case": "different-bit-period",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "938b7f00239d9e307eba07189e8644e00429f9774bca83a2b15cc8124bbe521c",
+      "archive_relative_path": "optimize-sar-calendar/baseline/remote/bf-c9d856a6c3d6427d92fa-different-bit-period/archive/job.tar.gz",
+      "candidate_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "c1946299efe24b4f44a23d5f42cd21725a2271b7cf821b360f42b7129eeb085d",
+      "waveform_sha256": "c9d5e9e9a9b4788fcbef0260d71396a153bcb84bb7b40b880dc4f2e0b6ca9c7e",
+      "waveform_rows": 15472,
+      "waveform_bytes": 3607746,
+      "process_elapsed_s": 2.1687125004827976,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "b508f26e87843a13557c8be5c8953a6f3752dd93869b4b5a85d5aa029846fcbd",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 15471,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.516648,
+          "elapsed_s": 0.258669
+        },
+        "total_tran": {
+          "cpu_s": 0.5183150000000001,
+          "elapsed_s": 0.259338
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "a2cfc78ab377c9c5ee671e9c3c24cc0c96640afe65e33e8c59d7fb466b3df66d",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "da2902f128465b414b846c763d06f5b297b3148367edd44aea649242d97d3420"
+        }
+      },
+      "completed_conversions": 3,
+      "bit_decisions": 36,
+      "cancelled_conversions": 0,
+      "ignored_starts": 0,
+      "max_output_error_v": 2.7755575615628914e-17,
+      "max_edge_error_s": 9.50000000001236e-10,
+      "max_transition_error_v": 2.541106214337674e-12
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "reference",
+      "case": "sensor-idle-throughput",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "5e8b52e317748680b045633666dba76db6ea4764c2196b7e58bec721c9c59d19",
+      "archive_relative_path": "optimize-sar-calendar/reference/remote/bf-c0f4ac7cde4143808535-sensor-idle-throughput/archive/job.tar.gz",
+      "candidate_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "0c217e715b4bdb3ba410b8525260d2a4c81242b8389246ec1d1c078ed6dd68af",
+      "waveform_sha256": "5be43b3b682754b8d2d66af7e14a374703e51604d3cc08dbe1ab8b58ccc5abee",
+      "waveform_rows": 4468,
+      "waveform_bytes": 1043815,
+      "process_elapsed_s": 1.6168353147804737,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "f46db7d4689f2f6130b68f1b862968e41fa117ffd0ea91ebf6fa29ded6dbae8e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 4467,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.15296,
+          "elapsed_s": 0.0763402
+        },
+        "total_tran": {
+          "cpu_s": 0.15364,
+          "elapsed_s": 0.07701609999999999
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "21572b8ef7cf109471ddfacc6e015e5d8bcb73c4a984ccb9f933588f1304e5c5"
+        }
+      },
+      "completed_conversions": 20,
+      "bit_decisions": 240,
+      "cancelled_conversions": 0,
+      "ignored_starts": 0,
+      "max_output_error_v": 8.881784197001252e-16,
+      "max_edge_error_s": 2.5078951502305324e-17,
+      "max_transition_error_v": 2.290631573309554e-11
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "reference",
+      "case": "busy-start-and-reset",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "38769020ca26ef022d8cbe15b1a4b511a7f065e46568f8640525eec38cdc06cf",
+      "archive_relative_path": "optimize-sar-calendar/reference/remote/bf-61928c9ee06e46d6babd-busy-start-and-reset/archive/job.tar.gz",
+      "candidate_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "ae3d5a26e00dff3b8a6017ef1243f60ebc2196ff4311cdfe0c2089439fffaf4d",
+      "waveform_sha256": "2705ddf0d8b5b8709857526bd937b931be3ba0a98376542cffc2f1cb08cb4b25",
+      "waveform_rows": 1043,
+      "waveform_bytes": 245789,
+      "process_elapsed_s": 1.5668866354972124,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "fda93350b4d73ce1a3246edd4a4c03fc7740a4870eb980c03367f666de026ac2",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1042,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.039299999999999995,
+          "elapsed_s": 0.019453
+        },
+        "total_tran": {
+          "cpu_s": 0.040084,
+          "elapsed_s": 0.020232
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "3b308b4f36dbfd4db7b775abc6c402d451c59a887a0308f3f2c7bd44fb9d3e1b"
+        }
+      },
+      "completed_conversions": 3,
+      "bit_decisions": 42,
+      "cancelled_conversions": 1,
+      "ignored_starts": 1,
+      "max_output_error_v": 8.881784197001252e-16,
+      "max_edge_error_s": 2.5055234579782204e-17,
+      "max_transition_error_v": 1.383820835698657e-11
+    },
+    {
+      "task_id": "optimize-sar-calendar",
+      "role": "reference",
+      "case": "different-bit-period",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "700a61c62e7f8acfb1c669b537e153cd62ff190ed9892eef8f04be67179c2738",
+      "archive_relative_path": "optimize-sar-calendar/reference/remote/bf-d9f73c80f0bd4c7b8c09-different-bit-period/archive/job.tar.gz",
+      "candidate_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "c1946299efe24b4f44a23d5f42cd21725a2271b7cf821b360f42b7129eeb085d",
+      "waveform_sha256": "bc8b8fb78c06588d20bac8961829403aa2b8be0246e2609234538980ea705ec9",
+      "waveform_rows": 851,
+      "waveform_bytes": 201053,
+      "process_elapsed_s": 1.5680934824049473,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "a422e345c7b301ac03d7c9c4e37cb134b72e6fca700b75ea973296374cfdab4e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 850,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.033479,
+          "elapsed_s": 0.016654
+        },
+        "total_tran": {
+          "cpu_s": 0.035154000000000005,
+          "elapsed_s": 0.017335200000000002
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "de6c83db19cc6215c0051dfa4befd5c8dc147961f7bd8c0ab134cac031272bf5",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "9469f15b97239856174ff7e029374435793cefa575896db96936e6a37c8a0a08"
+        }
+      },
+      "completed_conversions": 3,
+      "bit_decisions": 36,
+      "cancelled_conversions": 0,
+      "ignored_starts": 0,
+      "max_output_error_v": 3.3306690738754696e-16,
+      "max_edge_error_s": 2.5051846447993187e-17,
+      "max_transition_error_v": 2.5410784587620583e-12
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "baseline",
+      "case": "sparse-status-messages",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "99975ca6f103d19a70e9d252187596eebfa1fe465f08bab9636fd5a85bcef525",
+      "archive_relative_path": "optimize-uart-calendar/baseline/remote/bf-2e5b4d581b9842d086cd-sparse-status-messages/archive/job.tar.gz",
+      "candidate_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "370b451fc0cb5848cc6b1fccc1f949d5db4b8f34f67e22c255029e0c792b3fcc",
+      "waveform_sha256": "151f052bc30a03d2e309895ab132801065405c51ffcc5c58cd413b2fe4e28e5f",
+      "waveform_rows": 186760,
+      "waveform_bytes": 43704608,
+      "process_elapsed_s": 4.473603527992964,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "80d899b5e8f31ddaf02ca1041403f75b81251071f9c1984f6e95f766155bf259",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 186759,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.40611,
+          "elapsed_s": 2.9265
+        },
+        "total_tran": {
+          "cpu_s": 4.4078,
+          "elapsed_s": 2.9272
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "f3fec6e97164056b4942843d87a22f8d0222bc0ca170b2ca9d19a3362a44d570"
+        }
+      },
+      "valid_frames": 10,
+      "framing_errors": 0,
+      "bit_samples": 80,
+      "false_starts": 1,
+      "cancelled_frames": 0,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 5.107708333335851e-07,
+      "max_transition_error_v": 8.673617379884035e-10
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "baseline",
+      "case": "framing-reset-recovery",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "41e90bb5399daff0b5f6282bb8c4415924f49ec3c1b897e8bdcaa793343a0607",
+      "archive_relative_path": "optimize-uart-calendar/baseline/remote/bf-2d0976c931704d9eaa1e-framing-reset-recovery/archive/job.tar.gz",
+      "candidate_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "f8ee291f1a02dfecca0b72cd946b2a47e5a13352d4ad1c182dd10402467612bb",
+      "waveform_sha256": "a5d3b8b0f0d9d3bfcbb3fb8bb8c8e6e564c01d9c5de85d3d2f10e9c6a90b7a5b",
+      "waveform_rows": 10401,
+      "waveform_bytes": 2436603,
+      "process_elapsed_s": 2.168595602735877,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ae7840de57d1036e4ef040950be695d731c5b0ecbc5ed6e0e4e720efb4316383",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 10400,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.340914,
+          "elapsed_s": 0.170827
+        },
+        "total_tran": {
+          "cpu_s": 0.342676,
+          "elapsed_s": 0.171596
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "93b38dad5964c3b7ad3588e20181d0ec64904a40b9c15436082ca480159dbbce"
+        }
+      },
+      "valid_frames": 2,
+      "framing_errors": 1,
+      "bit_samples": 26,
+      "false_starts": 0,
+      "cancelled_frames": 1,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 5.107708333333683e-07,
+      "max_transition_error_v": 2.168409896086132e-11
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "baseline",
+      "case": "other-baud-and-false-start",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "31f0f79b0a0b319daffc6b0bc2269a6a817788e0339d874cfd4b71f27a72844d",
+      "archive_relative_path": "optimize-uart-calendar/baseline/remote/bf-723120f8c40a4d119f0c-other-baud-and-false-star/archive/job.tar.gz",
+      "candidate_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "1b1c0e09bdcaf2401c337c5976ed5e271619bb5b0f1147fc7f630addf0b96bb2",
+      "waveform_sha256": "b1d857064bc373222aa3f510b3c794466cc243326b60192dc1cff7c443bafb58",
+      "waveform_rows": 8151,
+      "waveform_bytes": 1910103,
+      "process_elapsed_s": 1.6676962468773127,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "00815680d624196920e32e03020d219c90059a92eb6fc5c650b155807e6d7363",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 8150,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.261718,
+          "elapsed_s": 0.13125399999999998
+        },
+        "total_tran": {
+          "cpu_s": 0.26346400000000003,
+          "elapsed_s": 0.132001
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "14e9aec6c5072ff9695115cc30d98848982b14e591064b228194453413887014",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "806a26207119b3c6ea2507dbb163381a6f37df85321e8b9e4f6bf9eea0682aa6"
+        }
+      },
+      "valid_frames": 2,
+      "framing_errors": 0,
+      "bit_samples": 16,
+      "false_starts": 2,
+      "cancelled_frames": 0,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 1.0533055555565426e-06,
+      "max_transition_error_v": 4.336808689942018e-11
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "reference",
+      "case": "sparse-status-messages",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "d20951c203a7ba367f6c2cd9ec7eeeec98e187e9699a131d7ff482a75b40d474",
+      "archive_relative_path": "optimize-uart-calendar/reference/remote/bf-da23c6ee48a64a3a8a5d-sparse-status-messages/archive/job.tar.gz",
+      "candidate_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "370b451fc0cb5848cc6b1fccc1f949d5db4b8f34f67e22c255029e0c792b3fcc",
+      "waveform_sha256": "69b85f50a5068280aa515b2cfc41f07cf21aebe8a8890dff1f316c77a3a26e9e",
+      "waveform_rows": 2823,
+      "waveform_bytes": 663350,
+      "process_elapsed_s": 1.9682164955884218,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "2e8e7666983c043b945b031da5421c730995002d0b71c5d408c27e65e72618e3",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 2822,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.097634,
+          "elapsed_s": 0.048938
+        },
+        "total_tran": {
+          "cpu_s": 0.09936400000000001,
+          "elapsed_s": 0.049674
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "98a2e007df6730eab8c019277696ec73f8efd7d692d4b7d52b9429ce0d3c51ea"
+        }
+      },
+      "valid_frames": 10,
+      "framing_errors": 0,
+      "bit_samples": 80,
+      "false_starts": 1,
+      "cancelled_frames": 0,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 2.5118795932144167e-15,
+      "max_transition_error_v": 1.0886559431710907e-09
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "reference",
+      "case": "framing-reset-recovery",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "49541ac202adc9e0290bd99fcbed93b3365b9eff59f399487052d4845dc8accf",
+      "archive_relative_path": "optimize-uart-calendar/reference/remote/bf-5b0296f4ee9e4253a533-framing-reset-recovery/archive/job.tar.gz",
+      "candidate_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "f8ee291f1a02dfecca0b72cd946b2a47e5a13352d4ad1c182dd10402467612bb",
+      "waveform_sha256": "84b1adaee849b2895bde018a56e27e439f0d4f8b183871bc857f466e273101fd",
+      "waveform_rows": 1384,
+      "waveform_bytes": 326625,
+      "process_elapsed_s": 1.9685280732810497,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "0ae19a1996a1fe647556c2aef4e48194f7d490cbfaff35d018c3cf299370186c",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1383,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.049453000000000004,
+          "elapsed_s": 0.0246191
+        },
+        "total_tran": {
+          "cpu_s": 0.050213,
+          "elapsed_s": 0.025373000000000003
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "4d9d96ab7f854022dc03db17ebe770be747c9d2e7b8a13712f652dd13b07be05"
+        }
+      },
+      "valid_frames": 2,
+      "framing_errors": 1,
+      "bit_samples": 26,
+      "false_starts": 0,
+      "cancelled_frames": 1,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 2.5053743801795036e-15,
+      "max_transition_error_v": 4.782219065191384e-11
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "reference",
+      "case": "other-baud-and-false-start",
+      "passed": true,
+      "failures": [],
+      "archive_sha256": "b52a39877b740697c10bdedf4a8df3624aed88fca251be70c03fae1b81056e8c",
+      "archive_relative_path": "optimize-uart-calendar/reference/remote/bf-013d2f12dd85467491ca-other-baud-and-false-star/archive/job.tar.gz",
+      "candidate_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "netlist_sha256": "1b1c0e09bdcaf2401c337c5976ed5e271619bb5b0f1147fc7f630addf0b96bb2",
+      "waveform_sha256": "52808268996f24b6fc0ab986aba596e7dba2cc1fe14fcd68f25293015105186f",
+      "waveform_rows": 938,
+      "waveform_bytes": 222261,
+      "process_elapsed_s": 1.567515056580305,
+      "statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "aa32122b96fe7a66af3713640e5e758ee6b5fcce03c4d325799f60ebf5014f63",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 937,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.035304,
+          "elapsed_s": 0.017451
+        },
+        "total_tran": {
+          "cpu_s": 0.036019,
+          "elapsed_s": 0.018160100000000002
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "aea1f0cbb43a730eb451a8fccf56ebe1187412f3a7dba106f930b14ab2396996",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "d1354ab657246d1f42c81a58f8113aab05492acd30af31ca2a3a67d0b851c1e0"
+        }
+      },
+      "valid_frames": 2,
+      "framing_errors": 0,
+      "bit_samples": 16,
+      "false_starts": 2,
+      "cancelled_frames": 0,
+      "max_output_error_v": 5.551115123125783e-17,
+      "max_edge_error_s": 2.505808061048498e-15,
+      "max_transition_error_v": 4.782213514076261e-11
+    }
+  ]
+}

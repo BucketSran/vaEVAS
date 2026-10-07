@@ -8,10 +8,10 @@
 | --- | --- | --- | --- |
 | vco_boundstep | 20 us 低频 PLL VCO，另验连续调谐与高频 | 按最高频率约束全部时间步 | v2 双侧 3/3 功能通过；低频步数差明显，待重复测量 |
 | flash_thresholds | 100 us、10000 次 flash ADC 转换 | 连续重复扫描真实阈值阵列 | v1/v2 双侧均 3/3 功能通过；重复性能与 profile 待做 |
-| power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | reference 3/3，baseline 2/3；浮点计时修复待重新执行 |
+| power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | 修正后baseline v3 3/3、reference v2 3/3；重复性能待做 |
 | sampled_dac | 100 us、10000 个 12-bit 采样电压码 | 连续重复真实位权解码 | 双侧 3/3，单轮无收益；待剖析或替换 |
-| uart_calendar | 100 ms、10帧8N1状态消息 | 空闲仍16x波特率采样真实串行线 | 2组解析fixture过；待actual双侧功能与profile |
-| sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | 三组解析fixture过；待actual双侧功能及profile |
+| uart_calendar | 100 ms、10帧8N1状态消息 | 空闲仍16x波特率采样真实串行线 | v3双侧3/3实际功能过；重复性能待做 |
+| sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | v3双侧3/3实际功能过；重复性能待做 |
 | sc_coefficients | 100 us、10000 次四级滤波采样 | 连续重复求实际采样系数 | 双侧 3/3，单轮微差不足立题 |
 
 每项 `REQUEST.md` 说明工程场景、功能合同与实际运行请求；`cases.json` 给出固定网表，
@@ -47,3 +47,9 @@ power 基线慢速 case 的首个高电压轮询为 20.001 us，25.001 us 时未
 候选数不等于正式题数。`test_sar_calendar.py` 三组纯fixture不作为 actual 证据。
 
 UART独立候选让待验证候选总数为7，正式题仍0；`test_uart_calendar.py`不执行VA。
+
+`third_calibration.json` 保存第三轮15份actual归档的native统计、merged流及源码/网表/
+波形身份，功能15/15过。power数值修复没有减少100102accepted步，不是优化成绩。
+SAR完成20转换/240决策，native102889→4467步；UART接收10帧/80位，native186759→2822
+步。这些数字定位实际timer调度成本，只是单次并发功能轮，不替代五对重复测量。
+UART每侧warmup+五对净PSF约266.2MB，也超现有256MiB上限，需要性能专用profile。

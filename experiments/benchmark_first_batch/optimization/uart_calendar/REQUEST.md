@@ -23,7 +23,7 @@ oracle从公开rx/reset的PWL独立求阈值边沿，逐中心读取wire并构�
 核验，避开公开0.09bit事件邻域。3case覆盖稀疏吞吐、framing/reset恢复、57600baud和
 两次假start。八倍采样是负例候选，须actual证明违反公开时刻合同，不能假定必拒。
 
-本候选尚无actual Spectre、未声明收益、不计正式题。纯fixture已核验主case10good帧/
+v3 actual两侧三个功能条件均过；尚无五对重复结果、未声明性能收益、不计正式题。纯fixture已核验主case10good帧/
 80数据采样/1false start，resetcase2good+1framing/26采样/1取消，57600case2good/
 16采样/2false start；这些不是VA执行证据。
 

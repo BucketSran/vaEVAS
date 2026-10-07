@@ -92,8 +92,8 @@
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
         "row_criteria": "7 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "v2 reference 3/3 baseline 2/3; baseline floating time comparison repaired, new actual calibration pending",
-        "spectre_performance": "inadmissible before corrected baseline passes; old failed run excluded from performance claims",
+        "spectre_functional": "v3 corrected baseline 3/3; v2 reference 3/3 including strengthened transition replay; old baseline failure retained",
+        "spectre_performance": "pending five alternating pairs; baseline repair is not optimization",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -185,8 +185,8 @@
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
         "row_criteria": "three independent analytic SAR fixtures passed; not VA execution",
-        "spectre_functional": "pending coordinator",
-        "spectre_performance": "not measured",
+        "spectre_functional": "v3 both sides 3/3; actual work count, full output history and transition passed",
+        "spectre_performance": "inconclusive; strong native scheduling-step signal in one concurrent functional round, five paired repeats pending",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -216,8 +216,8 @@
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
         "row_criteria": "two independent UART fixture tests passed; not VA execution",
-        "spectre_functional": "pending coordinator",
-        "spectre_performance": "not measured",
+        "spectre_functional": "v3 both sides 3/3; actual work count, full output history and transition passed",
+        "spectre_performance": "inconclusive; strong native scheduling-step signal in one concurrent functional round, five paired repeats pending",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -228,6 +228,7 @@
   "evidence": [
     "experiments/benchmark_first_batch/optimization/first_calibration.json",
     "experiments/benchmark_first_batch/optimization/second_calibration.json",
-    "experiments/benchmark_first_batch/optimization/second_waveform_replay.json"
+    "experiments/benchmark_first_batch/optimization/second_waveform_replay.json",
+    "experiments/benchmark_first_batch/optimization/third_calibration.json"
   ]
 }
