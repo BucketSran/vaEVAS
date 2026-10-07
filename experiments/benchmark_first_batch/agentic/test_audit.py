@@ -181,6 +181,13 @@ class AuditTests(unittest.TestCase):
         self.assertIsNotNone(failed['exception'])
         self.assertIsNone(failed['verifier_result'])
         self.assertEqual(failed['archives'], [])
+        infrastructure = root / 'comparator-flash-budget-v3'
+        if infrastructure.exists():
+            unavailable = audit.summarize(infrastructure)
+            self.assertIsNone(unavailable['verifier_result'])
+            self.assertFalse(unavailable['archives'][0]['complete_pass'])
+            self.assertEqual(unavailable['archives'][0]['execution'], 'dependency_unavailable')
+            self.assertTrue(unavailable['archives'][0]['seal_and_result_artifacts_verified'])
 
 
 if __name__ == '__main__':

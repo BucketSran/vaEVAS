@@ -10,6 +10,7 @@ import re
 import shutil
 import sys
 from runtime import ROOT, REPO, HARNESS, PUBLIC_CHECKOUT, PYTHON, CODEX, save
+from public_protocol import append_note
 sys.path.insert(0, str(HARNESS))
 sys.path.insert(0, str(REPO))
 from experiments.benchmark_first_batch.runtime import prepare
@@ -117,7 +118,7 @@ def snapshot(args):
                 if x not in contract['candidate_files'] and not x.endswith('../dut.va')]
     if fixtures:
         instruction += '\n公开EVAS限制：本会话只装载正式候选文件，不装载固定公共fixture ' + ', '.join(fixtures) + '；因此evas_simulate不能执行完整闭环/测量电路，只能用于有限的候选兼容性诊断。请阅读所提供的fixture源码和Python材料分析，不能把该工具返回当作完整公共网表仿真结果。\n'
-    (materials / 'instruction.md').write_text(instruction)
+    (materials / 'instruction.md').write_text(append_note(instruction))
     declaration = {'task_id': task.name, 'task_version': manifest['task_version'],
                    'public_files': sorted(str(x.relative_to(materials)) for x in materials.rglob('*') if x.is_file()),
                    'candidate_files': contract['candidate_files'], 'feedback_fields': ['diagnostics', 'observations'],

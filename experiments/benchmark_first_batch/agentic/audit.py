@@ -67,6 +67,24 @@ def audit_archive(receipt_path, evaluations, frozen_identity):
         require(matching[0].get('state') == 'completed', 'evaluation is not completed')
         require({k: v for k, v in matching[0].items() if k != 'state'} == result,
                 'evaluation differs from sealed result')
+        if result.get('execution') != 'ok':
+            require(result.get('score') is None and result.get('verdict') == 'not_evaluated',
+                    'infrastructure receipt carries an invalid task score')
+            for name, info in candidate['files'].items():
+                original = archive.read('run/work/candidate/' + name)
+                require(digest(original) == info['sha256'] and len(original) == info['bytes'] and
+                        original == archive.read('candidate/files/' + name),
+                        'infrastructure receipt candidate bytes differ')
+            return {'archive_sha256':receipt['package']['sha256'], 'bytes':receipt['package']['bytes'],
+                    'job_id':wrapper['job_id'], 'candidate_bundle_sha256':candidate['candidate_sha256'],
+                    'candidate_files':candidate['files'], 'task_package_sha256':result['task_package_sha256'],
+                    'criteria_sha256':package['criteria_sha256'],
+                    'verified_archive_members':len(archive.members), 'seal_and_result_artifacts_verified':True,
+                    'actual_candidate_and_case_bytes_verified':False,
+                    'actual_working_candidate_bytes_verified':True,
+                    'case_execution_identity_verified_count':0, 'graded_waveform_verified_count':0,
+                    'report_status':'not_evaluated', 'score':None, 'complete_pass':False,
+                    'execution':result['execution'], 'cases':[]}
         report = archive.json('run/work/verifier/report.json')
         bindings = {'cases_sha256': 'cases.json', 'contract_sha256': 'contract.json',
                     'checker_sha256': 'verify.py', 'runtime_sha256': 'circuit_task.py',
@@ -102,6 +120,12 @@ def audit_archive(receipt_path, evaluations, frozen_identity):
         require(status in {'completed', 'submission_contract_violation', 'infrastructure_error'},
                 'unsupported formal report status')
         require(reward == result.get('score'), 'report/sealed score differs')
+        require(result.get('benchmark_status') == status, 'report/sealed status differs')
+        if status != 'infrastructure_error':
+            require(type(result.get('score')) in (int,float) and result['score'] in (0,1) and
+                    result.get('execution') == 'ok' and
+                    result.get('verdict') == ('pass' if reward == 1 else 'fail'),
+                    'sealed execution/verdict is not a valid binary evaluation')
         if status == 'completed':
             require(type(reward) is int and reward in (0, 1), 'completed report requires binary integer reward')
             require(set(names) == set(expected) and top_files is not None, 'completed report missing cases/source identity')

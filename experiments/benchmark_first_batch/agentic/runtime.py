@@ -10,6 +10,7 @@ import subprocess
 import sys
 import signal
 import time
+from public_protocol import append_note
 
 # Deployment paths are explicit environment inputs; no credentials are read from disk.
 ROOT = Path(os.environ.get('AGENTIC_OUTPUT', 'runs/agentic')).resolve()
@@ -103,7 +104,7 @@ def prepare(args):
     task = destination/'task'
     task.mkdir()
     instruction = (Path(args.materials)/'instruction.md').read_text()
-    instruction += '\n\n公开工具入口为 `harness-public info` 和 `harness-public action`。按返回schema调用。\n正式交付必须使用 evas_write 写入全部声明候选，再用 evas_submit 提交。\n容器中的普通文件不会自动成为正式交付物。公开自测不是终评。\n'
+    instruction = append_note(instruction)
     (task/'instruction.md').write_text(instruction)
     (task/'environment').mkdir()
     shutil.copytree(Path(args.materials), task/'environment/public')
@@ -186,6 +187,8 @@ def main():
     if Path(args.name).name != args.name or args.name in {'.','..'}:
         parser.error('attempt name must be one directory component')
     destination=ROOT/args.name
+    if (destination/'withdrawn-before-run.json').exists():
+        parser.error('prepared attempt withdrawn; preserve evidence and prepare an explicit new attempt')
     if args.command=='preflight':
         argv=[PYTHON,'-B','-m','alphaapollo.workflows.harbor_chips.deployment','--job',destination/'job.json']
         if args.check_environment:argv += ['--check-environment','--timeout-s','60','--cleanup-timeout-s','30']
