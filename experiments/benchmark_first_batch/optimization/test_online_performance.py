@@ -45,6 +45,7 @@ class OnlinePerformance(unittest.TestCase):
                     (tests/name).write_text('{}' if name.endswith('.json') else '# trusted fixture file\n')
                 runtime.__file__=str(tests/'circuit_task.py')
                 (root/'dut.va').write_bytes(candidate)
+                (root/'out').mkdir()  # core verify also accepts a pre-created empty output directory
                 argv=['verify.py','--candidate',str(root/'dut.va'),'--output',str(root/'out'),'--tests',str(tests)]
                 with patch.dict(sys.modules,{'circuit_task':runtime}),patch.object(sys,'argv',argv):
                     with self.assertRaises(SystemExit):M.performance_main(None)
