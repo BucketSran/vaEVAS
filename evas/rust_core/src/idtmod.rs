@@ -6,8 +6,10 @@ use crate::ir::Error;
 #[derive(Clone)]
 pub(crate) struct IdtMod {
     integral: Idt,
+    ic: f64,
     modulus: f64,
     offset: f64,
+    exact_source: Option<crate::exact_source::Curve>,
 }
 
 fn wrap(value: f64, modulus: f64, offset: f64) -> f64 {
@@ -49,12 +51,34 @@ impl IdtMod {
         }
         Ok(Self {
             integral: Idt::enclosed(points, bounds, ic)?,
+            ic,
             modulus,
             offset,
+            exact_source: None,
         })
     }
 
+    pub(crate) fn with_exact_source(mut self, source: Option<crate::exact_source::Curve>) -> Self {
+        self.exact_source = source;
+        self
+    }
+
+    fn certificate(&self, time: f64, raw: I) -> Option<(f64, I)> {
+        // Preserve the declared finite-range contract of the ordinary path.
+        full_range(self.modulus, self.offset).ok()?;
+        let normalized = (raw - I::point(self.offset)) / I::point(self.modulus);
+        if normalized.finite() && normalized.lo.floor() == normalized.hi.floor() {
+            return None;
+        }
+        self.exact_source
+            .as_ref()?
+            .wrapped(time, self.ic, self.modulus, self.offset)
+    }
+
     pub(crate) fn value(&self, time: f64) -> Result<f64, Error> {
+        if let Some((value, _)) = self.certificate(time, self.raw_value_bounds(time)?) {
+            return Ok(value);
+        }
         let raw = self.integral.value(time)?;
         let value = wrap(raw, self.modulus, self.offset);
         if !value.is_finite() {
@@ -74,6 +98,9 @@ impl IdtMod {
                 "waveform_accuracy",
                 "nonfinite idtmod query enclosure",
             ));
+        }
+        if let Some((_, bounds)) = self.certificate(time, raw) {
+            return Ok(vec![bounds]);
         }
         let declared = full_range(self.modulus, self.offset)?;
         if raw.hi - raw.lo >= self.modulus {

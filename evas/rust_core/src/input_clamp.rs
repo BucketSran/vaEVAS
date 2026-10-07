@@ -130,6 +130,7 @@ struct Lowering<'a> {
     expressions: Vec<Expression>,
     sources: Vec<Vec<[f64; 2]>>,
     errors: Vec<f64>,
+    exact_sources: Vec<Option<crate::exact_source::Curve>>,
 }
 
 impl Lowering<'_> {
@@ -252,6 +253,16 @@ impl Lowering<'_> {
                     k
                 } else {
                     let (points, error) = self.source(e)?;
+                    let exact = recognize(e).and_then(|(base, lo, hi)| {
+                        crate::exact_source::Curve::expression(
+                            base,
+                            &self.driven_nodes,
+                            &self.trajectory.exact_sources,
+                            self.trajectory.config.stop,
+                        )
+                        .and_then(|source| source.clipped(lo, hi))
+                    });
+                    self.exact_sources.push(exact);
                     self.expressions.push(e.clone());
                     self.sources.push(points);
                     self.errors.push(error);
@@ -342,6 +353,7 @@ pub(crate) fn lower(
         expressions: Vec::new(),
         sources: Vec::new(),
         errors: Vec::new(),
+        exact_sources: Vec::new(),
     };
     let mut candidate = program.clone();
     for c in &mut candidate.contributions {
@@ -354,6 +366,7 @@ pub(crate) fn lower(
     }
     let sources = lowering.sources;
     let errors = lowering.errors;
+    let exact_sources = lowering.exact_sources;
     let mut next_trajectory = trajectory.clone();
     let mut next_driven = driven.clone();
     for (k, (points, error)) in sources.into_iter().zip(errors).enumerate() {
@@ -364,6 +377,7 @@ pub(crate) fn lower(
         candidate.nodes.push(name.clone());
         next_driven.push(name);
         next_trajectory.add_enclosed_source(points, error)?;
+        *next_trajectory.exact_sources.last_mut().unwrap() = exact_sources[k].clone();
     }
     *program = candidate;
     *driven = next_driven;
@@ -472,6 +486,136 @@ mod tests {
     }
     fn bound_vec(b: I) -> Vec<I> {
         vec![b]
+    }
+
+    #[test]
+    fn certified_wrap_queries_and_discarded_clone_leave_original_history_unchanged() {
+        let mut p = program();
+        if let OperatorSpec::IdtMod { ic, modulus, .. } = &mut p.operators[0] {
+            *ic = 0.5;
+            *modulus = 1.0;
+        }
+        let mut t = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, -0.25], [1.0, 1.25]]],
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            1,
+        )
+        .unwrap();
+        let mut driven = vec!["u".into()];
+        lower(&mut p, &mut driven, &mut t).unwrap();
+        let h = crate::operators::Operators::new(&p, &t, &driven, &[]).unwrap();
+        assert_eq!(h.values(1.0).unwrap()[0], 0.0);
+        assert_eq!(h.bounds(1.0).unwrap()[0], I::ZERO);
+        let trial = h.clone();
+        for time in [1.0, 0.33, 0.99, 0.0, 1.0] {
+            let _ = trial.values(time).unwrap();
+            let _ = trial.bounds(time).unwrap();
+        }
+        drop(trial);
+        assert_eq!(h.values(1.0).unwrap()[0], 0.0);
+        assert_eq!(h.bounds(1.0).unwrap()[0], I::ZERO);
+    }
+
+    #[test]
+    fn genuine_source_uncertainty_and_resource_exhaustion_keep_both_wrap_sides() {
+        for resource_limit in [false, true] {
+            let mut p = program();
+            if let OperatorSpec::IdtMod { ic, modulus, .. } = &mut p.operators[0] {
+                *ic = 0.5;
+                *modulus = 1.0;
+            }
+            let points = if resource_limit {
+                (0..=512)
+                    .map(|i| [i as f64 / 512.0, -0.25 + 1.5 * i as f64 / 512.0])
+                    .collect()
+            } else {
+                vec![[0.0, -0.25], [1.0, 1.25]]
+            };
+            let mut t = Trajectory::new(
+                TransientInputs {
+                    pwl: vec![points],
+                    output_times: vec![0.0, 1.0],
+                    stop: 1.0,
+                    max_step: 1.0,
+                },
+                1,
+            )
+            .unwrap();
+            let mut driven = vec!["u".into()];
+            lower(&mut p, &mut driven, &mut t).unwrap();
+            if !resource_limit {
+                // Compose the generated clamp with a genuinely uncertain source.
+                // It must not inherit original-source certification metadata.
+                t.add_enclosed_source(vec![[0.0, 0.5], [1.0, 0.5]], 1e-15)
+                    .unwrap();
+                let node = p.nodes.len();
+                p.nodes.push("uncertain".into());
+                driven.push("uncertain".into());
+                if let OperatorSpec::IdtMod { input, .. } = &mut p.operators[0] {
+                    *input = Expression::Add {
+                        left: Box::new(input.clone()),
+                        right: Box::new(Expression::Affine {
+                            constant: -0.5,
+                            terms: vec![Term {
+                                node,
+                                coefficient: 1.0,
+                            }],
+                        }),
+                    };
+                }
+            }
+            let h = crate::operators::Operators::new(&p, &t, &driven, &[]).unwrap();
+            let clone = h.clone();
+            assert_eq!(h.bounds(1.0).unwrap()[0], I { lo: 0.0, hi: 1.0 });
+            let _ = clone.bounds(0.5).unwrap();
+            assert_eq!(h.bounds(1.0).unwrap(), clone.bounds(1.0).unwrap());
+        }
+    }
+
+    #[test]
+    fn unrelated_clamp_source_does_not_certify_direct_operator() {
+        let mut p = program();
+        if let OperatorSpec::IdtMod { ic, modulus, .. } = &mut p.operators[0] {
+            *ic = 0.125;
+            *modulus = 1.0;
+        }
+        let mut t = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0.0, 1.5], [4.0, 1.5]]],
+                output_times: vec![0.0, 4.0],
+                stop: 4.0,
+                max_step: 1.0,
+            },
+            1,
+        )
+        .unwrap();
+        let mut driven = vec!["u".into()];
+        lower(&mut p, &mut driven, &mut t).unwrap();
+        assert!(t
+            .exact_sources
+            .last()
+            .unwrap()
+            .as_ref()
+            .unwrap()
+            .has_clamp());
+        if let OperatorSpec::IdtMod { input, .. } = &mut p.operators[0] {
+            *input = Expression::Affine {
+                constant: 0.0,
+                terms: vec![Term {
+                    node: 1,
+                    coefficient: 1.0 / 3.0,
+                }],
+            };
+        }
+        let h = crate::operators::Operators::new(&p, &t, &driven, &[]).unwrap();
+        assert_eq!(
+            h.bounds(1.7499999999999998).unwrap()[0],
+            I { lo: 0.0, hi: 1.0 }
+        );
     }
 
     #[test]

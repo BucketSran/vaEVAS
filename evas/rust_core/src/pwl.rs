@@ -96,6 +96,7 @@ pub(crate) struct Trajectory {
     pub(crate) config: TransientInputs,
     pub(crate) knots: Vec<f64>,
     source_errors: Vec<f64>,
+    pub(crate) exact_sources: Vec<Option<crate::exact_source::Curve>>,
 }
 
 impl Trajectory {
@@ -169,7 +170,13 @@ impl Trajectory {
         knots.sort_by(f64::total_cmp);
         knots.dedup();
         let source_errors = vec![0.0; config.pwl.len()];
+        let exact_sources = config
+            .pwl
+            .iter()
+            .map(|p| crate::exact_source::Curve::source(p))
+            .collect();
         Ok(Self {
+            exact_sources,
             config,
             knots,
             source_errors,
@@ -202,6 +209,11 @@ impl Trajectory {
         );
         self.knots.sort_by(f64::total_cmp);
         self.knots.dedup();
+        self.exact_sources.push(if error == 0.0 {
+            crate::exact_source::Curve::source(&points)
+        } else {
+            None
+        });
         self.config.pwl.push(points);
         self.source_errors.push(error);
         Ok(())

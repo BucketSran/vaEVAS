@@ -23,6 +23,41 @@ def oracle(t):
             if t<=b:freq=u+slope*x;break
     phase=float(area%1)
     return float(freq),phase,math.sin(2*math.pi*phase)
+def binary_phase_oracle(program,inputs,time):
+    binary=lambda x:F.from_float(float(x))
+    operator=next(o for o in program['operators'] if o['kind']=='idt_mod')
+    sources={program['nodes'].index(n):[(binary(t),binary(v)) for t,v in points] for n,points in inputs.items()}
+    def source(n,t):
+        if n==0:return F(0)
+        for (a,x),(b,y) in zip(sources[n],sources[n][1:]):
+            if a<=t<=b:return x+(y-x)*(t-a)/(b-a)
+        raise AssertionError('query outside source')
+    def evaluate(e,t):
+        if e['op']=='affine':return binary(e['constant'])+sum(binary(q['coefficient'])*source(q['node'],t) for q in e['terms'])
+        a=evaluate(e['left'],t);b=evaluate(e['right'],t)
+        if e['op']=='add':return a+b
+        if e['op']=='multiply':return a*b
+        raise AssertionError('unexpected affine expression')
+    expr=operator['input'];scale=F(1)
+    while expr['op']=='multiply':
+        left,right=expr['left'],expr['right']
+        if left['op']=='affine' and not left['terms']:scale*=binary(left['constant']);expr=right
+        else:scale*=binary(right['constant']);expr=left
+    lo=binary(expr['right']['constant']);hi=binary(expr['else_value']['right']['constant']);base=expr['left']
+    t=binary(time);total=binary(operator['ic']);knots=sorted({t for points in sources.values() for t,v in points})
+    for start,end in zip(knots,knots[1:]):
+        if t<=start:break
+        stop=min(t,end);a,b=evaluate(base,start),evaluate(base,end);cuts=[start,stop]
+        if a!=b:
+            for threshold in [lo,hi]:
+                root=start+(threshold-a)*(end-start)/(b-a)
+                if start<root<stop:cuts.append(root)
+        cuts.sort()
+        def clipped(t):return min(hi,max(lo,a+(b-a)*(t-start)/(end-start)))
+        total+=scale*sum((clipped(a)+clipped(b))*(b-a)/2 for a,b in zip(cuts,cuts[1:]))
+    offset=binary(operator['offset']);modulus=binary(operator['modulus'])
+    return offset+(total-offset)%modulus
+
 def run(times,step=2e-10):
     p=compile_sources({'dut.va':SOURCE},[Instance('dut','paper_vco',{n:n for n in ('ctl','freq','phase','out')},{})])
     return transient(p,{'ctl':[[0,-1],[2e-6,0],[4e-6,2],[6e-6,0],[8e-6,-1]]},[t*1e-6 for t in times],stop=8e-6,max_step=step,kernel=KERNEL,vabstol=1e-7,reltol=1e-5)
@@ -34,6 +69,50 @@ class InputClamp(unittest.TestCase):
         for t,r in zip(times,result['solutions']):
             row=dict(zip(result['nodes'],r['voltages']))
             for n,want in zip(('freq','phase','out'),oracle(t)):self.assertAlmostEqual(row[n],want,delta=2e-8,msg=(t,n,row[n],want))
+    def test_original_four_wrap_centers_keep_exact_binary64_side(self):
+        # Fraction oracle integrates original binary64 sources/IR before any
+        # rounded clamp roots. Decimal engineering oracle remains separate.
+        times=[2.689966442575134e-6,3.755e-6,4.754999999999999e-6,6.31937515251343e-6]
+        program=compile_sources({'dut.va':SOURCE},[Instance('dut','paper_vco',{n:n for n in ('ctl','freq','phase','out')},{})])
+        inputs={'ctl':[[0,-1],[2e-6,0],[4e-6,2],[6e-6,0],[8e-6,-1]]}
+        expected=[binary_phase_oracle(program.to_dict(),inputs,t) for t in times]
+        self.assertEqual([x<F(1,2) for x in expected],[True,True,False,True])
+        for time,want in zip(times,expected):
+            result=transient(program,inputs,[time],stop=8e-6,max_step=1e-6,kernel=KERNEL,vabstol=1e-7,reltol=1e-5)
+            row=result['solutions'][0]
+            value=row['voltages'][result['nodes'].index('phase')]
+            self.assertAlmostEqual(value,float(want),delta=2e-15)
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('out')],
+                                   math.sin(2*math.pi*float(want)),delta=2e-14)
+
+    def test_rational_clamp_roots_equality_sides_negative_phase_and_offset(self):
+        for ic,offset in [(.5,0),(0,-.5),(-.5,0)]:
+            source=model(f'f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,{ic},1,{offset});',declarations='real f;')
+            program=compile_sources({'rational.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
+            inputs={'u':[[0,-.25],[1,1.25],[2,1.25]]}
+            times=[math.nextafter(1,0),1,math.nextafter(1,2)]
+            sparse=transient(program,inputs,times,stop=2,max_step=.5,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+            dense=transient(program,inputs,[0,.2,.6]+times+[1.5,2],stop=2,max_step=.125,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+            for i,t in enumerate(times):
+                exact=binary_phase_oracle(program.to_dict(),inputs,t)
+                value=sparse['solutions'][i]['voltages'][sparse['nodes'].index('y')]
+                self.assertAlmostEqual(value,float(exact),delta=2e-15)
+                self.assertGreaterEqual(value,offset)
+                self.assertLess(value,offset+1)
+                self.assertEqual(value,dense['solutions'][i+3]['voltages'][dense['nodes'].index('y')])
+            self.assertEqual(sparse['solutions'][1]['voltages'][sparse['nodes'].index('y')],offset)
+
+    def test_unaligned_original_source_knots_preserve_affine_correlation(self):
+        source=model('f=V(u)+0.5*V(x); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,0.5,1,0);',declarations='real f;')
+        source=source.replace('module m(u,y,r);','module m(u,x,y,r);').replace('electrical u,y,r;','electrical u,x,y,r;').replace('input u;','input u,x;')
+        program=compile_sources({'unaligned.va':source},[Instance('dut','m',{'u':'u','x':'x','y':'y','r':'0'},{})])
+        inputs={'u':[[0,-.25],[1,1.25],[2,1.25]],'x':[[0,-.125],[.3,.25],[.7,-.25],[1,.125],[2,.125]]}
+        times=[math.nextafter(1,0),1,math.nextafter(1,2)]
+        result=transient(program,inputs,times,stop=2,max_step=.125,kernel=KERNEL,vabstol=1e-12,reltol=1e-12)
+        for row,t in zip(result['solutions'],times):
+            want=binary_phase_oracle(program.to_dict(),inputs,t)
+            self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],float(want),delta=2e-15)
+
     def test_observation_grid_and_step_do_not_reintegrate(self):
         sparse=run([0,2,4,6,8],1e-6);dense=run([i/10 for i in range(81)],2e-7)
         for a,b in zip(sparse['solutions'],dense['solutions'][::20]):
