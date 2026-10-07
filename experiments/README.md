@@ -1,8 +1,9 @@
 # 实验与结果
 
 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
-已有记录主要验证 EVAS 仿真器；[Verilog-A 能力初筛](va_screen/README.md)
-记录六个 Harbor 任务的 Spectre 校准与模型评测。
+[首批七类电路工程任务](benchmark_first_batch/README.md)记录 35 个 Harbor 任务的
+实际校准、性能配对证据与 Agentic 试跑入口；[Verilog-A 能力初筛](va_screen/README.md)
+保留原六题的 Spectre 校准与模型评测。
 仿真器语义测试的通过数不作为建模任务成绩。
 
 ## main 保留什么
