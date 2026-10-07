@@ -6,7 +6,7 @@ use crate::events::{affine, AffineState};
 use crate::idt::Idt;
 use crate::idtmod::IdtMod;
 use crate::interval::{equal_products, sum_products_sign, Interval as I};
-use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
+use crate::ir::{Error, Expression, OperatorSpec, Origin, Program, Tolerances};
 use crate::laplace::LaplaceNd;
 use crate::pwl::Trajectory;
 use crate::slew::Slew;
@@ -985,7 +985,14 @@ impl Operators {
         driven: &[String],
         states: &[f64],
     ) -> Result<Self, Error> {
-        Self::new_until(program, trajectory, driven, states, trajectory.config.stop)
+        Self::new_until(
+            program,
+            trajectory,
+            driven,
+            states,
+            trajectory.config.stop,
+            &Tolerances::default(),
+        )
     }
 
     pub(crate) fn new_until(
@@ -994,6 +1001,7 @@ impl Operators {
         driven: &[String],
         states: &[f64],
         horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
 
@@ -1044,7 +1052,8 @@ impl Operators {
             }
         }
         let continuous =
-            Continuous::new_until(program, trajectory, driven, states, horizon)?.map(Arc::new);
+            Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
+                .map(Arc::new);
         let mut entries = Vec::new();
         let mut direct = Vec::new();
         for (index, spec) in program.operators.iter().enumerate() {

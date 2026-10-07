@@ -3,10 +3,13 @@
 //! coefficients propagate accepted uncertainty; order 13 over the tube bounds
 //! the entire-step remainder. Output queries are immutable dense observations.
 use super::*;
+use crate::ir::Tolerances;
 
 const ORDER: usize = 12;
 const MAX_STEPS: usize = 16_384;
 const TUBE_ATTEMPTS: usize = 16;
+const MAX_REFINEMENTS: usize = 64;
+const MAX_HISTORY_REFINEMENTS: usize = 8;
 type Jet = Vec<I>;
 
 #[path = "continuous_initialization.rs"]
@@ -186,6 +189,8 @@ pub(crate) struct NonlinearContinuous {
     implicit: Option<implicit::ImplicitField>,
     operators: Vec<NetworkOperator>,
     values: Vec<Vec<I>>,
+    accuracy_rows: Vec<Vec<I>>,
+    tolerances: Tolerances,
     initial: Vec<I>,
     steps: Vec<DenseStep>,
     start: f64,
@@ -193,12 +198,31 @@ pub(crate) struct NonlinearContinuous {
 }
 
 impl NonlinearContinuous {
+    #[cfg(test)]
     pub(super) fn new(
         program: &Program,
         trajectory: &Trajectory,
         driven: &[String],
         states: &[f64],
         horizon: f64,
+    ) -> Result<Self, Error> {
+        Self::new_with_tolerances(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            &Tolerances::default(),
+        )
+    }
+
+    pub(super) fn new_with_tolerances(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         Self::build(
             Arc::new(Context {
@@ -210,6 +234,7 @@ impl NonlinearContinuous {
             0.0,
             None,
             horizon,
+            tolerances,
         )
     }
 
@@ -219,8 +244,9 @@ impl NonlinearContinuous {
         start: f64,
         restart: Option<Vec<I>>,
         horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
-        let mut result = Self::initialized(context, parameters, start, restart)?;
+        let mut result = Self::initialized(context, parameters, start, restart, tolerances)?;
         result.propagate_until(horizon)?;
         Ok(result)
     }
@@ -232,6 +258,7 @@ impl NonlinearContinuous {
         parameters: Vec<I>,
         start: f64,
         restart: Option<Vec<I>>,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         let program = &context.program;
         let driven = driven_node_indices(program, &context.driven)?;
@@ -318,6 +345,14 @@ impl NonlinearContinuous {
         let rows = affine_bounds::eliminate(system.rows.clone(), system.x_count, system.width)?;
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
         let values = build_value_rows(&operators, &system, &mapping)?;
+        // Include every solved voltage, including high-gain aliases, rather
+        // than applying a state-magnitude budget to the operator values alone.
+        let accuracy_rows = system
+            .node_columns
+            .iter()
+            .flatten()
+            .map(|&column| mapping[column].clone())
+            .collect();
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
         for op in &operators {
             match &program.operators[op.operator] {
@@ -418,6 +453,8 @@ impl NonlinearContinuous {
             implicit: None,
             operators,
             values,
+            accuracy_rows,
+            tolerances: tolerances.clone(),
             initial,
             steps: Vec::new(),
             start,
@@ -500,14 +537,147 @@ impl NonlinearContinuous {
         let tail_power = (0..=ORDER).fold(I::ONE, |v, _| v * duration);
         let values = step.range(I::point(end));
         if values.iter().any(|v| !v.finite())
-            || step.remainder.iter().zip(&values).any(|(&r, v)| {
-                !(r * tail_power).finite()
-                    || (r * tail_power).magnitude() > 1e-16 * (1.0 + v.magnitude())
-            })
+            || step.remainder.iter().any(|&r| !(r * tail_power).finite())
         {
             return None;
         }
         Some(step)
+    }
+
+    // Reserve one eighth of each voltage budget for local truncation, with
+    // h/stop allocation independent of requested observations and candidate
+    // horizons. Full interval states carry all previously accumulated error.
+    // This is a refinement target, never a replacement for voltage acceptance.
+    fn truncation_fits(
+        &self,
+        step: &DenseStep,
+        source: &[I],
+        slopes: &[I],
+        refinement: f64,
+    ) -> Result<bool, Error> {
+        let duration = I::point(step.end) - I::point(step.start);
+        let power = (0..=ORDER).fold(I::ONE, |v, _| v * duration);
+        let tail: Vec<_> = step
+            .remainder
+            .iter()
+            .map(|&r| (r * power).magnitude())
+            .collect();
+        if self.implicit.is_some() {
+            // The rational DAE field retains its existing local stability
+            // ceiling. User budgets may tighten it, never remove this guard.
+            let endpoint = step.range(I::point(step.end));
+            if tail
+                .iter()
+                .zip(&endpoint)
+                .any(|(&error, value)| error > 1e-16 * (1.0 + value.magnitude()))
+            {
+                return Ok(false);
+            }
+        }
+        let elapsed = I {
+            lo: 0.0,
+            hi: duration.hi,
+        };
+        let state = step.range(elapsed + I::point(step.start));
+        let forcing: Vec<_> = state
+            .into_iter()
+            .chain(source.iter().zip(slopes).map(|(&u, &m)| u + elapsed * m))
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        // Remove only the current truncation tail to measure how much of the
+        // endpoint budget is already consumed by propagated history, sources
+        // and coefficient rounding. Earlier tails remain in the coefficients.
+        let endpoint: Vec<_> = step
+            .coefficients
+            .iter()
+            .map(|row| row.iter().rev().fold(I::ZERO, |sum, &a| sum * duration + a))
+            .chain(source.iter().zip(slopes).map(|(&u, &m)| u + duration * m))
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        let mut fits = true;
+        for row in &self.accuracy_rows {
+            let voltage = dot(row, &forcing, "nonlinear accuracy target")?;
+            let inherited = dot(row, &endpoint, "nonlinear accumulated accuracy")?;
+            // The lower magnitude of the whole step makes relative targets
+            // valid even when an amplified output crosses or approaches zero.
+            let lower = if voltage.lo <= 0.0 && voltage.hi >= 0.0 {
+                0.0
+            } else {
+                voltage.lo.abs().min(voltage.hi.abs())
+            };
+            let budget = self.tolerances.absolute + self.tolerances.relative * lower;
+            let end_lower = if inherited.lo <= 0.0 && inherited.hi >= 0.0 {
+                0.0
+            } else {
+                inherited.lo.abs().min(inherited.hi.abs())
+            };
+            let end_budget = I::point(self.tolerances.absolute)
+                + I::point(self.tolerances.relative) * I::point(end_lower);
+            let inherited_radius =
+                (I::point(inherited.hi) - I::point(inherited.lo)) * I::point(0.5);
+            let remaining = end_budget - inherited_radius;
+            let mut local = budget
+                * ((step.end - step.start) / self.context.trajectory.config.stop)
+                * 0.125
+                * refinement;
+            if remaining.lo > 0.0 {
+                local = local.min(remaining.lo * 0.125);
+            } else if !row[..tail.len()].iter().all(|gain| gain.zero()) {
+                // A valid uncertain trajectory must remain queryable, including
+                // event-window propagation. Do not reject its enclosure here or
+                // confuse inherited error with the currently shrinkable tail.
+                // The unchanged final voltage certificate rejects any sample
+                // whose full history enclosure exceeds the user requirement.
+                crate::diagnostics::counter("nonlinear_history_budget_exhausted", 1);
+                crate::diagnostics::record("nonlinear_accuracy", "inherited_budget_exhausted",
+                    Some(step.start), Some(step.end), 1,
+                    Some("accumulated history/source/coefficient rounding already consumes the endpoint voltage budget"));
+            }
+            let error = row.iter().zip(&tail).fold(I::ZERO, |sum, (&gain, &error)| {
+                sum + I::point(gain.magnitude()) * I::point(error)
+            });
+            fits &= error.finite() && error.hi <= local;
+        }
+        Ok(fits)
+    }
+
+    // Relative budgets use the lower magnitude so a midpoint cannot hide
+    // cancellation. Full state intervals include accumulated truncation.
+    fn accuracy_ratio(&self, state: &[I], source: &[I], source_only: bool) -> f64 {
+        let forcing: Vec<_> = state
+            .iter()
+            .copied()
+            .chain(source.iter().copied())
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        self.accuracy_rows.iter().fold(0.0_f64, |worst, row| {
+            let Ok(voltage) = dot(row, &forcing, "nonlinear history accuracy") else {
+                return f64::INFINITY;
+            };
+            let lower = if voltage.lo <= 0.0 && voltage.hi >= 0.0 {
+                0.0
+            } else {
+                voltage.lo.abs().min(voltage.hi.abs())
+            };
+            let budget = self.tolerances.absolute + self.tolerances.relative * lower;
+            let radius = if source_only {
+                row[state.len()..state.len() + source.len()]
+                    .iter()
+                    .zip(source)
+                    .fold(I::ZERO, |sum, (&gain, &value)| {
+                        sum + I::point(gain.magnitude())
+                            * (I::point(value.hi) - I::point(value.lo))
+                            * I::point(0.5)
+                    })
+                    .hi
+            } else {
+                ((I::point(voltage.hi) - I::point(voltage.lo)) * I::point(0.5)).hi
+            };
+            worst.max(if radius == 0.0 { 0.0 } else { radius / budget })
+        })
     }
 
     // Bounds all flows starting anywhere in `initial`, with any source value
@@ -573,6 +743,32 @@ impl NonlinearContinuous {
     // Extend only a disposable candidate; retained dense steps and their
     // endpoint enclosures stay unchanged when an event leaves the mode intact.
     fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
+        let base = self.clone();
+        let mut refinement = 1.0;
+        // Count valid attempted steps across discarded suffixes too. Otherwise
+        // eight retries would multiply the documented integration-work limit.
+        let mut remaining_work = MAX_STEPS.saturating_sub(base.steps.len());
+        for _ in 0..MAX_HISTORY_REFINEMENTS {
+            let mut candidate = base.clone();
+            if candidate.propagate_once(horizon, refinement, &mut remaining_work)? {
+                *self = candidate;
+                return Ok(());
+            }
+            crate::diagnostics::counter("nonlinear_history_refinements", 1);
+            // Refining only the latest step cannot recover earlier candidate
+            // tails. Rebuild the disposable suffix; keep the accepted prefix.
+            refinement /= 256.0;
+        }
+        Err(Error::new("waveform_accuracy",
+            "nonlinear accumulated history accuracy could not be certified within 8 suffix refinements"))
+    }
+
+    fn propagate_once(
+        &mut self,
+        horizon: f64,
+        refinement: f64,
+        remaining_work: &mut usize,
+    ) -> Result<bool, Error> {
         let _timing = crate::diagnostics::span("history.nonlinear_propagate");
 
         let trajectory = &self.context.trajectory;
@@ -584,12 +780,14 @@ impl NonlinearContinuous {
         }
         let start = self.certified_end();
         if horizon <= start {
-            return Ok(());
+            return Ok(true);
         }
         let mut state = self.steps.last().map_or_else(
             || self.initial.clone(),
             |step| step.range(I::point(step.end)),
         );
+        let refine_history =
+            self.accuracy_ratio(&state, &trajectory.value_bounds(start), false) < 0.875;
         let mut knots = vec![start];
         knots.extend(
             trajectory
@@ -609,22 +807,25 @@ impl NonlinearContinuous {
                 .collect();
             let mut start = a;
             while start < b {
-                if self.steps.len() >= MAX_STEPS {
+                if self.steps.len() >= MAX_STEPS || *remaining_work == 0 {
                     return Err(Error::new(
                         "waveform_accuracy",
-                        "validated nonlinear integration exceeded 16384 internal steps",
+                        "validated nonlinear integration exceeded 16384 internal steps or cumulative candidate-work limit",
                     ));
                 }
                 let source = trajectory.value_bounds(start);
-                let mut end = (start + 0.125).min(b);
+                let mut end = (start + 0.125_f64.min(trajectory.config.max_step)).min(b);
                 let mut accepted = None;
-                for _ in 0..64 {
+                for _ in 0..MAX_REFINEMENTS {
                     if end <= start {
                         break;
                     }
                     if let Some(step) = self.trial(start, end, &state, &source, &slopes) {
-                        accepted = Some(step);
-                        break;
+                        if self.truncation_fits(&step, &source, &slopes, refinement)? {
+                            accepted = Some(step);
+                            break;
+                        }
+                        crate::diagnostics::counter("nonlinear_accuracy_refinements", 1);
                     }
                     crate::diagnostics::record(
                         "nonlinear_candidate",
@@ -632,7 +833,7 @@ impl NonlinearContinuous {
                         Some(start),
                         Some(end),
                         1,
-                        Some("tube or Taylor remainder not certified"),
+                        Some("tube or user-budget Taylor remainder not certified"),
                     );
                     crate::diagnostics::counter("nonlinear_rejected_trials", 1);
                     end = start + (end - start) * 0.5;
@@ -640,10 +841,19 @@ impl NonlinearContinuous {
                 let step = accepted.ok_or_else(|| {
                     Error::new(
                         "waveform_accuracy",
-                        "cannot certify a finite nonlinear trajectory tube or Taylor remainder",
+                        "cannot refine nonlinear trajectory within 64 trials: tube or user-budget Taylor remainder not certified",
                     )
                 })?;
+                *remaining_work -= 1;
+                crate::diagnostics::counter("nonlinear_validated_work_steps", 1);
                 state = step.range(I::point(step.end));
+                let endpoint_source = trajectory.value_bounds(step.end);
+                if refine_history
+                    && self.accuracy_ratio(&state, &endpoint_source, true) < 0.875
+                    && self.accuracy_ratio(&state, &endpoint_source, false) > 0.875
+                {
+                    return Ok(false);
+                }
                 start = step.end;
                 self.steps.push(step);
                 crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
@@ -657,7 +867,7 @@ impl NonlinearContinuous {
                 );
             }
         }
-        Ok(())
+        Ok(true)
     }
 
     pub(super) fn operator_value_index(&self, op: usize) -> Option<usize> {
@@ -848,6 +1058,7 @@ impl NonlinearContinuous {
             parameters.to_vec(),
             time,
             Some(self.state_bounds(window)?),
+            &self.tolerances,
         )
     }
 }
@@ -919,6 +1130,7 @@ mod tests {
             }],
             0.0,
             None,
+            &accepted.tolerances,
         );
         assert_eq!(uncertain.err().unwrap().kind, "waveform_accuracy");
         let failed = accepted.restarted(0.125, I::point(0.125), &[I::point(1e300)], 0.5);
@@ -965,6 +1177,8 @@ mod tests {
             event_dependent: false,
             operators: Vec::new(),
             values: vec![vec![I::ONE, I::ZERO]],
+            accuracy_rows: vec![vec![I::ONE, I::ZERO]],
+            tolerances: Tolerances::default(),
             functions: vec![Polynomial::Multiply(
                 Box::new(Polynomial::Linear(vec![I::ZERO, I::point(quadratic_sign)])),
                 Box::new(Polynomial::Power(
@@ -978,8 +1192,8 @@ mod tests {
     #[test]
     fn candidate_horizon_extension_preserves_prefix_and_rejected_retry() {
         let mut accepted = scalar(-1.0);
-        accepted.propagate_until(0.0625).unwrap();
-        let prefix = accepted.range_bounds(I::point(0.0625)).unwrap();
+        accepted.propagate_until(0.05).unwrap();
+        let prefix = accepted.range_bounds(I::point(0.05)).unwrap();
         assert_eq!(
             accepted.range_bounds(I::point(0.125)).err().unwrap().kind,
             "event_resolution"
@@ -989,12 +1203,12 @@ mod tests {
             failed.propagate_until(0.25).err().unwrap().kind,
             "event_resolution"
         );
-        assert_eq!(accepted.certified_end(), 0.0625);
-        assert_eq!(accepted.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        assert_eq!(accepted.certified_end(), 0.05);
+        assert_eq!(accepted.range_bounds(I::point(0.05)).unwrap(), prefix);
         let mut discarded = accepted.clone();
         discarded.propagate_until(0.125).unwrap();
         let future = discarded.range_bounds(I::point(0.125)).unwrap();
-        assert_eq!(discarded.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        assert_eq!(discarded.range_bounds(I::point(0.05)).unwrap(), prefix);
         assert!(!accepted.same_history(&discarded));
         drop(discarded);
         let mut retry = accepted.clone();
@@ -1013,6 +1227,61 @@ mod tests {
         assert!(
             crate::interval::sum_products_sign(&[(future[0].hi, 9.0), (-8.0, 1.0)]).unwrap() >= 0
         );
+    }
+
+    #[test]
+    fn bounded_refinement_failure_preserves_accepted_history() {
+        let accepted = scalar(1e300);
+        let prefix = accepted.initial.clone();
+        let mut candidate = accepted.clone();
+        let (result, report) =
+            crate::diagnostics::capture(Default::default(), || candidate.propagate_until(0.125));
+        let error = result.unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("64 trials"));
+        assert_eq!(
+            report.counters["nonlinear_rejected_trials"],
+            MAX_REFINEMENTS as u64
+        );
+        assert_eq!(accepted.initial, prefix);
+        assert_eq!(accepted.certified_end(), 0.0);
+        assert!(accepted.steps.is_empty());
+    }
+
+    #[test]
+    fn accumulated_roundoff_has_a_bounded_suffix_refinement_refusal() {
+        let mut candidate = scalar(-1.0);
+        candidate.tolerances = Tolerances {
+            absolute: 1e-20,
+            relative: 0.0,
+        };
+        let accepted = candidate.clone();
+        let (result, report) =
+            crate::diagnostics::capture(Default::default(), || candidate.propagate_until(0.125));
+        let error = result.unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("8 suffix refinements"));
+        assert_eq!(
+            report.counters["nonlinear_history_refinements"],
+            MAX_HISTORY_REFINEMENTS as u64
+        );
+        assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
+    fn internal_step_resource_limit_is_explicit() {
+        let mut candidate = scalar(-1.0);
+        candidate.functions[0] = Polynomial::Linear(vec![I::ZERO, I::ZERO]);
+        Arc::get_mut(&mut candidate.context)
+            .unwrap()
+            .trajectory
+            .config
+            .max_step = 2_f64.powi(-20);
+        let error = candidate.propagate_until(0.125).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("16384 internal steps"));
+        assert!(candidate.steps.is_empty());
+        assert_eq!(candidate.certified_end(), 0.0);
     }
 
     #[test]

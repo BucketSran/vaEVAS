@@ -110,6 +110,7 @@ fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
         &model.driven,
         &states,
         prediction_end(&model, &trajectory, calendar.first()),
+        &model.tolerances,
     )
     .unwrap();
     let circuit = model
@@ -166,8 +167,15 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
     let states = model.initial();
     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
     let mut calendar = schedule_held(&model, &trajectory, &state_bounds).unwrap();
-    let operators =
-        Operators::new_until(&model.program, &trajectory, &model.driven, &states, 0.25).unwrap();
+    let operators = Operators::new_until(
+        &model.program,
+        &trajectory,
+        &model.driven,
+        &states,
+        0.25,
+        &model.tolerances,
+    )
+    .unwrap();
     let circuit = model
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
@@ -542,6 +550,7 @@ fn nonlinear_horizon_fixture() -> (EventModel, Trajectory, Controller, Vec<Sched
         &model.driven,
         &states,
         prediction_end(&model, &trajectory, calendar.first()),
+        &model.tolerances,
     )
     .unwrap();
     let circuit = model

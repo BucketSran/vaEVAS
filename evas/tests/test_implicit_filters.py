@@ -54,7 +54,7 @@ class ImplicitFilterContracts(unittest.TestCase):
                               '-pow(V(y,r),2);')
         sparse=[0,.25,.5,1,2]
         source={'u':[[0,0],[2,2]]}
-        first=values(run(program,source,sparse,vabstol=1e-9,reltol=0))
+        first=values(run(program,source,sparse,max_step=.0625,vabstol=1e-9,reltol=0))
         dense=[i/16 for i in range(33)]
         second=values(run(program,source,dense,max_step=.0625,vabstol=1e-9,reltol=0))
         self.assertEqual(first,[second[dense.index(t)] for t in sparse])
@@ -122,7 +122,7 @@ class ImplicitFilterContracts(unittest.TestCase):
             'V(y,r)<+laplace_nd(laplace_nd(idt(1,.5),\'{1,2},\'{1,1}),'
             '\'{1},\'{1,1})-pow(V(y,r),2);')
         sparse=[0,.25,.5,1]
-        first=values(run(program,times=sparse,vabstol=1e-9,reltol=0))
+        first=values(run(program,times=sparse,max_step=.0625,vabstol=1e-9,reltol=0))
         dense=[i/16 for i in range(17)]
         second=values(run(program,times=dense,max_step=.0625,vabstol=1e-9,reltol=0))
         self.assertEqual(first,[second[dense.index(t)] for t in sparse])

@@ -57,7 +57,7 @@ class KnownEventHorizonContracts(unittest.TestCase):
         for t, actual in zip(times, values(result)):
             assert_close(self, actual, 1/(1-t) if t <= .5 else 1/t, delta=1e-9)
 
-    def test_prediction_horizons_do_not_depend_on_output_grid_or_max_step(self):
+    def test_prediction_horizons_are_grid_invariant_with_step_ceiling(self):
         program = compile_model(
             "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=-1; "
             "V(y,r)<+idt(q*pow(V(y,r),2),1);", "integer q;")
@@ -65,10 +65,17 @@ class KnownEventHorizonContracts(unittest.TestCase):
         sparse = run(program, times=common, stop=2, max_step=2,
                      vabstol=1e-9, reltol=0)
         dense_times = [i/16 for i in range(33)]
-        dense = run(program, times=dense_times, stop=2, max_step=.0625,
+        dense = run(program, times=dense_times, stop=2, max_step=2,
                     vabstol=1e-9, reltol=0)
         self.assertEqual(values(sparse), [values(dense)[dense_times.index(t)] for t in common])
         self.assertEqual(sparse["transient"]["events"], dense["transient"]["events"])
+        smaller = run(program, times=common, stop=2, max_step=.0625,
+                      vabstol=1e-9, reltol=0)
+        self.assertEqual(sparse["transient"]["events"], smaller["transient"]["events"])
+        for result in [sparse, smaller]:
+            for t, actual in zip(common, values(result)):
+                expected = 1/(1-t) if t <= .5 else 1/t
+                assert_close(self, actual, expected, delta=1e-9)
 
     def test_periodic_mode_changes_preserve_one_physical_history(self):
         # 1/y=1-integral(q). q flips every 1/4, so the denominator

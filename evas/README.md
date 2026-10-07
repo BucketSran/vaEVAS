@@ -354,6 +354,10 @@ Python 的编译与求解接口：`compile_sources(sources, instances) -> Progra
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
+本分支的非线性 Taylor/DAE 路径将节点容差用于候选细化，并保留最终前向电压误差验收。
+`max_step` 同时限制其内部试步；线性/PWL 解析路径保持解析传播。观察网格不定义积分历史。
+极小步长或无法认证的累计包围会明确失败，资源上限与数学说明见
+[非线性精度控制](docs/math/continuous.md#多项式非线性积分与误差证明)。
 当前实现 Python 前端与 Rust 内核使用 IR v17；版本迁移规则见[下文](#ir-v8-migration)。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。

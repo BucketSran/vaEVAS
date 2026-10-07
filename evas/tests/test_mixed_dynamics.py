@@ -24,7 +24,7 @@ class MixedDynamicsContracts(unittest.TestCase):
             "V(y,r)<+laplace_nd(.75+q*pow(V(y,r),2),'{1},'{1,1}); "
             'V(z,r)<+idt(1,2,rst);','real q; integer rst; electrical z;')
         sparse=[0,.125,.25,.375,.5,.75,1]
-        first=run(program,times=sparse,vabstol=1e-9,reltol=0)
+        first=run(program,times=sparse,max_step=.0625,vabstol=1e-9,reltol=0)
         dense=[i/16 for i in range(17)]
         second=run(program,times=dense,max_step=.0625,vabstol=1e-9,reltol=0)
         self.assertEqual(values(first),[values(second)[dense.index(t)] for t in sparse])

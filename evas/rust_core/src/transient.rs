@@ -704,6 +704,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
+            &model.tolerances,
         )?;
         (operators, crossings)
     } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
@@ -713,6 +714,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             trajectory.config.stop,
+            &model.tolerances,
         )?;
         let crossings = schedule(&model, &trajectory, &operators)?;
         (operators, crossings)
@@ -724,6 +726,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
+            &model.tolerances,
         )?;
         (operators, crossings)
     };

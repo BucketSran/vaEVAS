@@ -351,6 +351,7 @@ fn initialize(
     program: &Program,
     trajectory: &Trajectory,
     driven: &[String],
+    tolerances: &Tolerances,
 ) -> Result<(NonlinearContinuous, Coordinates), Error> {
     if !program.states.is_empty() || !program.events.is_empty() {
         return Err(Error::new(
@@ -568,6 +569,17 @@ fn initialize(
         }),
         operators,
         values,
+        accuracy_rows: coordinates
+            .nodes
+            .iter()
+            .flatten()
+            .map(|&state| {
+                let mut row = vec![I::ZERO; count + 2 * input_nodes.len() + 1];
+                row[state] = I::ONE;
+                row
+            })
+            .collect(),
+        tolerances: tolerances.clone(),
         initial,
         steps: Vec::new(),
         start: 0.0,
@@ -637,7 +649,7 @@ pub(crate) fn run(
     tolerances: Tolerances,
 ) -> Result<Response, Error> {
     let trajectory = Trajectory::new(config, driven.len())?;
-    let (flow, coordinates) = initialize(&program, &trajectory, &driven)?;
+    let (flow, coordinates) = initialize(&program, &trajectory, &driven, &tolerances)?;
     let mut solutions = Vec::<Solution>::new();
     for &time in &trajectory.config.output_times {
         let state = flow.state_bounds(I::point(time))?;
@@ -806,7 +818,8 @@ mod tests {
             1,
         )
         .unwrap();
-        let (flow, coordinates) = initialize(&program, &trajectory, &["u".into()]).unwrap();
+        let (flow, coordinates) =
+            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
         let index = coordinates.nodes[2].unwrap();
         let original = flow.state_bounds(I::point(0.75)).unwrap();
         // At u=3/4, y+y^2=3/4 has the exact selected root y=1/2.
@@ -838,7 +851,8 @@ mod tests {
             1,
         )
         .unwrap();
-        let (flow, coordinates) = initialize(&program, &trajectory, &["u".into()]).unwrap();
+        let (flow, coordinates) =
+            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
         // f(0)=9/4 / 3=3/4 and y+y^2=3/4 has the selected exact root 1/2.
         let voltage = coordinates.nodes[2].unwrap();
         let initial = flow.state_bounds(I::ZERO).unwrap();

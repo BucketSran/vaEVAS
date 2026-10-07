@@ -1,5 +1,6 @@
 //! Common immutable query and candidate-history interface for continuous solvers.
 use super::*;
+use crate::ir::Tolerances;
 
 #[derive(Clone)]
 pub(crate) enum Continuous {
@@ -15,7 +16,14 @@ impl Continuous {
         driven: &[String],
         states: &[f64],
     ) -> Result<Option<Self>, Error> {
-        Self::new_until(program, trajectory, driven, states, trajectory.config.stop)
+        Self::new_until(
+            program,
+            trajectory,
+            driven,
+            states,
+            trajectory.config.stop,
+            &Tolerances::default(),
+        )
     }
 
     pub(crate) fn new_until(
@@ -24,9 +32,10 @@ impl Continuous {
         driven: &[String],
         states: &[f64],
         horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Option<Self>, Error> {
         if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } if affine_bounds::affine(input, program).is_err())) {
-            return nonlinear::NonlinearContinuous::new(program, trajectory, driven, states, horizon).map(|v| Some(Self::Nonlinear(Box::new(v))));
+            return nonlinear::NonlinearContinuous::new_with_tolerances(program, trajectory, driven, states, horizon, tolerances).map(|v| Some(Self::Nonlinear(Box::new(v))));
         }
         LinearContinuous::new(program, trajectory, driven, states)
             .map(|v| v.map(|v| Self::Linear(Box::new(v))))
