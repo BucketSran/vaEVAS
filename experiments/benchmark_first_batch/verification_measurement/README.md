@@ -30,3 +30,5 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/verificatio
 实际首轮校准发现两项工程问题，按原合同修复：ADC参考使用的 `M_PI 宏不符合共享提交策略，因此改为同精度π字面常量；两相时钟参考用连续 `$abstime` 条件跳变，未预约事件，实际边沿会等到下一个0.5ns数值步才更新，例如 phase2 第一沿55.55ns而合同55.05ns。参考刺激已改用四个周期timer预约相位上下沿，保留0.3ns边沿容差。三种负例仍各自注入重叠、错误死区和缺相。修订后用主树 `prepare_source` 静态核验本组54份VA源码全部通过；10个行级回归通过。新参考实际运行仍需协调者重新校准，不能用这些检查代替。
 
 电平判据经过独立review收紧：非重叠题还检查所有稳定原始点符合0/1V电平±0.01V，增加0.49/0.51V低摆幅错版及三条件拒绝回归。全组现有28个语义负例、55份VA源码。静态提交合同可重复运行 `python3 -B experiments/benchmark_first_batch/verification_measurement/check_source_contract.py --runtime benchmark/checkers/circuit_task.py`，只读取源码，不执行候选。
+
+ADC实际py312首轮三个条件均执行成功，但时钟cadence拒绝；DFT重算与参考输出的差值约1e-14dB。原始首沿10.05ns，后续出现111.15、211.45ns等边沿，最大偏移1.4ns。原因是合成器件时钟也用了未预约的连续时间条件。器件改为10ns/60ns起始、100ns周期的两个timer控制clk，保持原100ns采样timer。独立cadence的0.2ns容差、64样本定义及所有频谱判据不变。公开器件、隐藏support和generator同步修改，等待实际重跑。

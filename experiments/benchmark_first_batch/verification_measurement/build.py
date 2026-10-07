@@ -285,13 +285,14 @@ put(ROOT/'benchmark/first_batch/verification_measurement.json',json.dumps({'task
 adc_dev=HEADER+'''module adc_device(vin,clk,code);
 inout vin,clk,code; electrical vin,clk,code;
 parameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;
-integer q,c;real phase,x;
+integer q,c;real x;
 analog begin
  x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);
  V(vin)<+x/4096;
- @(initial_step)q=2048;
+ @(initial_step)begin q=2048;c=0;end
  @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end
- phase=$abstime-100n*$rtoi($abstime/100n);c=(phase>=10n && phase<60n);
+ @(timer(10n,100n))c=1;
+ @(timer(60n,100n))c=0;
  V(clk)<+transition(c,0,0.1n);V(code)<+transition(q,0,0.1n);
 end
 endmodule
