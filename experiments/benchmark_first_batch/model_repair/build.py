@@ -61,8 +61,8 @@ end
 endmodule
 '''
 
-def comparator_case(name,ds,high=7e-9,reset_cycle=None):
-    stop=len(ds)*12e-9+2e-9; clk=[(0,0)]; vp=[(0,.6+ds[0]+.002)]; rst=[(0,0)]; events=[]
+def comparator_case(name,ds,high=7e-9,reset_cycle=None,async_resets=None):
+    stop=len(ds)*12e-9+2e-9; clk=[(0,0)]; vp=[(0,.6+ds[0]+.002)]; resets=[]; events=[]
     for i,d in enumerate(ds):
         rise=2e-9+i*12e-9;fall=rise+high
         clk += [(rise-20e-12,0),(rise+20e-12,1),(fall-20e-12,1),(fall+20e-12,0)]
@@ -70,14 +70,18 @@ def comparator_case(name,ds,high=7e-9,reset_cycle=None):
         # Change input during the latch hold window; must not change its decision.
         vp += [(rise+2e-9,.6+d+.002),(rise+2.04e-9,.6-d+.002)]
         if i+1<len(ds):vp += [(rise+10e-9,.6-d+.002)]
-        events.append({'rise':rise,'fall':fall,'differential':d,'reset': reset_cycle==i})
-        if reset_cycle==i:rst += [(rise-.5e-9,0),(rise-.46e-9,1),(fall+.3e-9,1),(fall+.34e-9,0)]
+        events.append({'rise':rise,'fall':fall,'differential':d})
+        if reset_cycle==i:resets += [(rise-.48e-9,1),(fall+.32e-9,0)]
+        if i in (async_resets or {}):
+            assertion,release=async_resets[i]
+            resets += [(rise+assertion,1),(rise+release,0)]
+    resets.sort()
     ports=['clk','rst','vinp','vinn','outp','outn','ready']
-    source=pwl('clk',clk)+pwl('rst',rst)+pwl('vinp',vp)+pwl('vinn',[(0,.6)])
-    return {'name':name,'kind':'latched_comparator','stop':stop,'signals':ports,'events':events,'tr':50e-12,'tbase':.2e-9,'tau':.25e-9,'vscale':.05,'vfloor':.001,'atol':.02,'edge_atol':80e-12,'netlist':deck('latched_comparator',ports,source,stop)}
+    source=pwl('clk',clk)+digital_source('rst',0,resets)+pwl('vinp',vp)+pwl('vinn',[(0,.6)])
+    return {'name':name,'kind':'latched_comparator','stop':stop,'signals':ports,'events':events,'resets':resets,'tr':50e-12,'tbase':.2e-9,'tau':.25e-9,'vscale':.05,'vfloor':.001,'atol':.02,'edge_atol':80e-12,'netlist':deck('latched_comparator',ports,source,stop)}
 
 def build_comparator():
-    cases=[comparator_case('polarity_hold_reset',[.04,-.03,.001,-.002,.02],reset_cycle=4),comparator_case('short_clock_cancels',[.0001,-.0001,.05,-.05],high=.45e-9)]
+    cases=[comparator_case('polarity_hold_reset',[.04,-.03,.001,-.002,.02],reset_cycle=4,async_resets={0:(2e-9,3e-9),2:(.25e-9,.6e-9),3:(2e-9,3e-9)}),comparator_case('short_clock_cancels',[.0001,-.0001,.05,-.05],high=.45e-9)]
     public=comparator_case('public',[.02,-.01,.005])
     text='''# 锁存比较器：决策延迟与复位取消
 ADC的动态比较器在采样沿锁存输入，经再生延迟产生互补决策。完成模型 `latched_comparator(clk,rst,vinp,vinn,outp,outn,ready)`，全部electrical，后三端输出0/1 V。
@@ -89,8 +93,9 @@ clk上升时先清空输出，若rst低则锁存 `d=vinp-vinn-voffset`；非零d
       'wrong_polarity':COMPARATOR.replace('sign_latched=(d>0)?1:((d<0)?-1:0);','sign_latched=(d>0)?-1:((d<0)?1:0);'),
       'no_overdrive_delay':COMPARATOR.replace('tbase+tau*ln(1+vscale/(abs(d)+vfloor))','tbase'),
       'stale_decision':COMPARATOR.replace('if(active && V(clk)>vth && V(rst)<vth)','if(1)').replace('active=0;decision_at=1e30;end\n @(timer','active=0;end\n @(timer'),
+      'no_async_reset':COMPARATOR.replace(' or cross(V(rst)-vth,+1)',''),
     }
-    return write_task('spec-latched-comparator',text,'架构需求参考旧v4 017锁存比较器；本题新增明确再生延迟、ready与短时钟取消合同。参考代码原创，未复制旧源码。',COMPARATOR,negatives,cases,public,'specification','latched-comparator-original')
+    return write_task('spec-latched-comparator',text,'架构需求参考旧v4 017锁存比较器；本题新增明确再生延迟、ready与短时钟取消合同。私有实验包括决策前复位再释放以检查取消，以及正负决策后高相复位以检查异步清空；no_async_reset人工移除复位事件。参考代码原创，未复制旧源码。',COMPARATOR,negatives,cases,public,'specification','latched-comparator-original')
 
 
 def digital_source(name,initial,transitions,slew=40e-12):

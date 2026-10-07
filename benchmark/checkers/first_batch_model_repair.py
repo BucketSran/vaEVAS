@@ -23,11 +23,15 @@ def crossings(rows,node,threshold=.5):
 
 def comparator_targets(case):
     targets={n:[(0.,0.)] for n in ['outp','outn','ready']}
+    resets=case['resets']
     for e in case['events']:
         delay=case['tbase']+case['tau']*math.log1p(case['vscale']/(abs(e['differential'])+case['vfloor']))
-        if not e['reset'] and e['differential']!=0 and e['rise']+delay<e['fall']:
+        # Reset release cannot rearm the sampled decision. The first reset
+        # assertion after the sampling edge either cancels it or clears it.
+        clear_at=min([e['fall']]+[t for t,v in resets if v and e['rise']<t<e['fall']])
+        if level_at(0,resets,e['rise'])<.5 and e['differential']!=0 and e['rise']+delay<clear_at:
             for n,value in [('outp',float(e['differential']>0)),('outn',float(e['differential']<0)),('ready',1.)]:
-                if value:targets[n]+=[(e['rise']+delay,value),(e['fall'],0.)]
+                if value:targets[n]+=[(e['rise']+delay,value),(clear_at,0.)]
     return targets
 
 

@@ -48,6 +48,22 @@ class ComparatorTests(unittest.TestCase):
     def test_reset_cycle_has_no_decision(self):
         c=self.cases[0];targets=checker.comparator_targets(c);e=c['events'][-1];targets['ready'] += [(e['rise']+1e-9,1),(e['fall'],0)]
         self.assertFalse(checker.evaluate(fixture(c,targets),c)['passed'])
+    def test_async_reset_before_decision_cancels_even_after_release(self):
+        c=self.cases[0];e=c['events'][2];targets=checker.comparator_targets(c)
+        self.assertFalse(any(e['rise']<t<e['fall'] and v for t,v in targets['ready']))
+        # Missing reset event handling leaves the timer armed. Reset releases
+        # before its deadline, so a timer-level rst check cannot mask the bug.
+        wrong=dict(c,resets=[(t,v) for t,v in c['resets'] if not e['rise']<t<e['fall']])
+        self.assertFalse(checker.evaluate(fixture(c,checker.comparator_targets(wrong)),c)['passed'])
+    def test_async_reset_after_decision_clears_both_polarities_and_ready(self):
+        c=self.cases[0];targets=checker.comparator_targets(c)
+        for index,node in [(0,'outp'),(3,'outn')]:
+            e=c['events'][index];assertion=e['rise']+2e-9
+            self.assertIn((assertion,0.),targets['ready'])
+            self.assertIn((assertion,0.),targets[node])
+            self.assertEqual(checker.level_at(0,targets['ready'],e['rise']+4e-9),0.)
+            wrong=dict(c,resets=[(t,v) for t,v in c['resets'] if not e['rise']<t<e['fall']])
+            self.assertFalse(checker.evaluate(fixture(c,checker.comparator_targets(wrong)),c)['passed'])
 
 class AdditionalContracts(unittest.TestCase):
     def cases(self,task):return json.loads((ROOT/'benchmark/tasks'/task/'tests/cases.json').read_text())
