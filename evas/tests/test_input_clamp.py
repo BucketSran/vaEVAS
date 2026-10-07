@@ -77,21 +77,25 @@ class InputClamp(unittest.TestCase):
         source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
                      'V(y,r)<+idtmod(f,initial,1,0);',
                      declarations='parameter real initial=0.5; real f;')
-        lower_ic=math.nextafter(.5,0)
-        program=compile_sources({'instances.va':source},[
-            Instance('A','m',{'u':'a','y':'pa','r':'0'},{'initial':.5}),
-            Instance('B','m',{'u':'b','y':'pb','r':'0'},{'initial':lower_ic})])
-        inputs={name:[[0,-.25],[1,1.25],[2,1.25]] for name in ('a','b')}
-        # Symmetry makes the exact area 1/2 despite roots at 1/3 and 2/3.
-        # A lands on the lower endpoint; B is strictly below the upper one.
-        result=transient(program,inputs,[1],stop=2,max_step=.125,kernel=KERNEL,
-                         vabstol=1e-12,reltol=1e-12)
-        row=dict(zip(result['nodes'],result['solutions'][0]['voltages']))
-        self.assertEqual(row['pa'],0)
-        self.assertGreater(row['pb'],.99)
-        self.assertLess(row['pb'],1)
-        exact=F(1,2)+F.from_float(lower_ic)
-        self.assertLessEqual(abs(F.from_float(row['pb'])-exact),F(1,2**53))
+        for b_ic,b_end in [(math.nextafter(.5,0),1.25),(.5,math.nextafter(1.25,0))]:
+            with self.subTest(b_ic=b_ic,b_end=b_end):
+                program=compile_sources({'instances.va':source},[
+                    Instance('A','m',{'u':'a','y':'pa','r':'0'},{'initial':.5}),
+                    Instance('B','m',{'u':'b','y':'pb','r':'0'},{'initial':b_ic})])
+                inputs={'a':[[0,-.25],[1,1.25],[2,1.25]],
+                        'b':[[0,-.25],[1,b_end],[2,b_end]]}
+                # A has exact area 1/2. Independent initial-value and source
+                # changes each put B below the turn, catching cross-instance
+                # sharing of either the initial value or the source curve.
+                result=transient(program,inputs,[1],stop=2,max_step=.125,kernel=KERNEL,
+                                 vabstol=1e-12,reltol=1e-12)
+                row=dict(zip(result['nodes'],result['solutions'][0]['voltages']))
+                self.assertEqual(row['pa'],0)
+                self.assertGreater(row['pb'],.99)
+                self.assertLess(row['pb'],1)
+                slope=F.from_float(b_end)+F(1,4)
+                exact=F.from_float(b_ic)+F(3,4)-F(3,8)/slope
+                self.assertLessEqual(abs(F.from_float(row['pb'])-exact),F(1,2**53))
 
     def test_original_vco_source_independent_phase_and_sine(self):
         times=[0,.6,1.2,1.6,2,2.6,3.2,3.7,4,4.8,5.2,6,6.4,6.8,7.4,8]
