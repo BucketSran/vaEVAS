@@ -11,12 +11,12 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/verificatio
 
 行级回归含 10 个测试方法，每项任务的公开参数/故障组合接受真实合同波形，错误的刺激或结果必须拒绝；另有 20 dB 解析频谱验证。该测试独立构造数学波形，没有运行候选 Verilog-A，因此不是 Spectre 校准证据。
 
-每题保存 3 个可执行语义错版，分别针对不同合同条款。校准应首先运行全部参考配置，然后对每个错版找到至少一个实际运行且被拒绝的配置，同时保留任何额外通过/失败条件。验证 checker 题必须覆盖正确器件和全部三种故障，尤其晚期失锁、复位旧结果和建立之后回弹。不得把编译失败当成语义拒绝。
+每题保存至少 3 个可执行语义错版，分别针对不同合同条款。校准应首先运行全部参考配置，然后对每个错版找到至少一个实际运行且被拒绝的配置，同时保留任何额外通过/失败条件。验证 checker 题必须覆盖正确器件和全部三种故障，尤其晚期失锁、复位旧结果和建立之后回弹。不得把编译失败当成语义拒绝。
 
 | 任务 | 原始独立判据 | 关键误版 |
 | --- | --- | --- |
 | verify-sar-flow | 实际刺激、done 数量/时间、码值、复位中止，再比较 verdict | 恒接受、恒拒绝、漏中止刺激 |
-| verify-nonoverlap-stimulus | 两相全部上下沿、死区、无重叠、下游采样传递 | 重叠、错误死区、缺少第二相 |
+| verify-nonoverlap-stimulus | 两相全部上下沿、死区、无重叠、下游采样传递 | 重叠、错误死区、缺少第二相、无效电平幅值 |
 | verify-comparator-overdrive | 正负 overdrive/common-mode、全部时钟边沿、输出延时与复位 | 单极性、共模写死、复位不足 |
 | verify-pll-lock-checker | 最近 ref 边沿相位、全部周期、边沿数、末期活动 | 恒接受、错误检查获取期、漏丢周期 |
 | verify-sh-settling-checker | 建立和保持全部窗口最大误差 | 恒接受、宽松门限、只看早期 |
@@ -28,3 +28,5 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/verificatio
 固定隐藏配置共有32个。本目录不自行发远端 job；所有商业仿真由协调者的 circuit harness 调度，全局 Spectre 并发不超过4。实际校准、Harbor Trial 和 Agentic 运行状态分别记录，未完成项保持 pending。当前登记表是建设清单，不是正式已校准题数。
 
 实际首轮校准发现两项工程问题，按原合同修复：ADC参考使用的 `M_PI 宏不符合共享提交策略，因此改为同精度π字面常量；两相时钟参考用连续 `$abstime` 条件跳变，未预约事件，实际边沿会等到下一个0.5ns数值步才更新，例如 phase2 第一沿55.55ns而合同55.05ns。参考刺激已改用四个周期timer预约相位上下沿，保留0.3ns边沿容差。三种负例仍各自注入重叠、错误死区和缺相。修订后用主树 `prepare_source` 静态核验本组54份VA源码全部通过；10个行级回归通过。新参考实际运行仍需协调者重新校准，不能用这些检查代替。
+
+电平判据经过独立review收紧：非重叠题还检查所有稳定原始点符合0/1V电平±0.01V，增加0.49/0.51V低摆幅错版及三条件拒绝回归。全组现有28个语义负例、55份VA源码。静态提交合同可重复运行 `python3 -B experiments/benchmark_first_batch/verification_measurement/check_source_contract.py --runtime benchmark/checkers/circuit_task.py`，只读取源码，不执行候选。

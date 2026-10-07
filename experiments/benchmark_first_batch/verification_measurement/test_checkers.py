@@ -53,6 +53,10 @@ class Oracles(unittest.TestCase):
     z=0 if k==0 and t<last else .5+.3*math.sin(2*math.pi*capture/700e-9)
     return dict(p1=square(phase,d,p/2),p2=square(phase,p/2+d,p),vin=.5+.3*math.sin(2*math.pi*t/700e-9),z=z)
    r=rows(c['stop'],.1e-9,wave);out=V.evaluate(r,c);self.assertTrue(out['passed'],out)
+   weak=[dict(a,p1=.49+.02*a['p1'],p2=.49+.02*a['p2']) for a in r]
+   rejected=V.evaluate(weak,c)
+   self.assertFalse(rejected['passed'])
+   self.assertIn('phase stable electrical level',rejected['failures'])
    for a in r:a['p2']=a['p1']
    self.assertFalse(V.evaluate(r,c)['passed'])
  def test_comparator_stimulus(self):

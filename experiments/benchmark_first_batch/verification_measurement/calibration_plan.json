@@ -2,16 +2,56 @@
   "purpose": "Actual Spectre calibration requests; no jobs are launched by this file",
   "reference": "all 32 fixed cases",
   "negative_cases": {
-    "verify-sar-flow": {"always_accept":"fault1-lat5","always_reject":"fault0-lat4","no_abort":"fault0-lat4"},
-    "verify-nonoverlap-stimulus": {"overlap":"p100-d5","wrong_dead":"p100-d5","missing_phase":"p100-d5"},
-    "verify-comparator-overdrive": {"one_polarity":"cm0.3","commonmode_wrong":"cm0.3","no_reset":"cm0.3"},
-    "verify-pll-lock-checker": {"always_accept":"fault1","reject_acquisition":"fault0","no_watchdog":"fault2"},
-    "verify-sh-settling-checker": {"always_accept":"fault1","loose_limit":"fault1","early_only":"fault2"},
-    "measure-adc-spectrum": {"amplitude_db":"bin5","omit_harmonics":"bin5","fixed_tone":"bin3"},
-    "measure-comparator-delay-hysteresis": {"no_delay_correction":"h0.008-d4","wrong_low_sign":"h0.008-d4","seconds_as_ns":"h0.008-d4"},
-    "measure-sh-acquisition-droop": {"wrong_band":"tau20-droop50000","absolute_droop":"tau35-droop-80000","wrong_interval":"tau20-droop50000"},
-    "measure-pll-relock-jitter": {"fourth_edge":"settle5-jitter1","peak_to_peak":"settle5-jitter1","include_acquisition":"settle5-jitter1"}
+    "verify-sar-flow": {
+      "always_accept": "fault1-lat5",
+      "always_reject": "fault0-lat4",
+      "no_abort": "fault0-lat4"
+    },
+    "verify-nonoverlap-stimulus": {
+      "overlap": "p100-d5",
+      "wrong_dead": "p100-d5",
+      "missing_phase": "p100-d5",
+      "low_swing": "p100-d5"
+    },
+    "verify-comparator-overdrive": {
+      "one_polarity": "cm0.3",
+      "commonmode_wrong": "cm0.3",
+      "no_reset": "cm0.3"
+    },
+    "verify-pll-lock-checker": {
+      "always_accept": "fault1",
+      "reject_acquisition": "fault0",
+      "no_watchdog": "fault2"
+    },
+    "verify-sh-settling-checker": {
+      "always_accept": "fault1",
+      "loose_limit": "fault1",
+      "early_only": "fault2"
+    },
+    "measure-adc-spectrum": {
+      "amplitude_db": "bin5",
+      "omit_harmonics": "bin5",
+      "fixed_tone": "bin3"
+    },
+    "measure-comparator-delay-hysteresis": {
+      "no_delay_correction": "h0.008-d4",
+      "wrong_low_sign": "h0.008-d4",
+      "seconds_as_ns": "h0.008-d4"
+    },
+    "measure-sh-acquisition-droop": {
+      "wrong_band": "tau20-droop50000",
+      "absolute_droop": "tau35-droop-80000",
+      "wrong_interval": "tau20-droop50000"
+    },
+    "measure-pll-relock-jitter": {
+      "fourth_edge": "settle5-jitter1",
+      "peak_to_peak": "settle5-jitter1",
+      "include_acquisition": "settle5-jitter1"
+    }
   },
-  "expected": {"references":"score=1, execution=ok", "negative_cases":"score=0, execution=ok; compilation failure is not calibration"},
-  "status":"planned_not_executed"
+  "expected": {
+    "references": "score=1, execution=ok",
+    "negative_cases": "score=0, execution=ok; compilation failure is not calibration"
+  },
+  "status": "planned_not_executed"
 }
