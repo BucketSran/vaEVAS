@@ -13,6 +13,10 @@ from first_batch_identification import evaluate
 from prepare_candidates import VARIANTS
 import build_sh,build_sc,build_driver,build_comparator,build_pll
 
+# Re-evaluating saved analytic fixtures can differ across libm implementations.
+# This 1 pV bound applies only to an unchanged fixture channel, not task grading.
+FIXTURE_ROUNDOFF_V = 1e-12
+
 
 def fixture(task,c):
     times={0,c["stop"]}
@@ -66,7 +70,7 @@ class IdentificationCriteria(unittest.TestCase):
         for r in rows:r["out"]=0
         result=evaluate(rows,c)
         self.assertFalse(result["passed"])
-        self.assertEqual(result["max_error_V"]["instantaneous-frequency-monitor"],0)
+        self.assertLessEqual(result["max_error_V"]["instantaneous-frequency-monitor"],FIXTURE_ROUNDOFF_V)
 
     def test_comparator_missing_or_late_decision_rejected(self):
         cases=json.loads((ROOT/"benchmark/tasks/identify-comparator-overdrive/tests/cases.json").read_text())
@@ -103,7 +107,7 @@ class IdentificationCriteria(unittest.TestCase):
             result=evaluate(rows,c)
             self.assertFalse(result["passed"],c["name"])
             self.assertGreater(result["max_error_V"]["phase-coherent-output"],.09)
-            self.assertEqual(result["max_error_V"]["instantaneous-frequency-monitor"],0)
+            self.assertLessEqual(result["max_error_V"]["instantaneous-frequency-monitor"],FIXTURE_ROUNDOFF_V)
 
     def test_pll_early_tune_alias_ripple_rejected_for_all_experiments(self):
         cases=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
@@ -118,7 +122,7 @@ class IdentificationCriteria(unittest.TestCase):
             result=evaluate(rows,c)
             self.assertFalse(result["passed"],c["name"])
             self.assertGreater(result["max_error_V"]["instantaneous-frequency-monitor"],.009)
-            self.assertEqual(result["max_error_V"]["phase-coherent-output"],0)
+            self.assertLessEqual(result["max_error_V"]["phase-coherent-output"],FIXTURE_ROUNDOFF_V)
 
     def test_actual_public_fits_generate_each_mutant(self):
         for task,variants in VARIANTS.items():

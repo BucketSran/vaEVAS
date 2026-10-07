@@ -11,7 +11,7 @@
 [reference/](reference/README.md) 保存历史 vaBench 发布包（v1 完整、v4 最新快照+文档），
 以及按来源和功能整理的[原始 Verilog-A 资料](reference/veriloga/README.md)。
 原始资料分为课题组工程模型与 Cadence 安装库模型，仅供内部研究，不对外分发。
-另有一个仓库自有的候选修复题：[积分三角波振荡器](tasks/va07-triangle-repair/instruction.md)。
+另有一个仓库自有的修复题：[积分三角波振荡器](tasks/va07-triangle-repair/instruction.md)。
 它检查双向事件导致的边界反复换向，单独校准，不加入原六题的初筛成绩。
 原创 [ADC DNL/INL 测量首题](tasks/va08-adc-linearity/SOURCE.md) 已完成实际 Spectre 校准和
 完整 Harbor oracle Trial，尚未完成 Agentic 主评测试跑，也不加入原六题分母。
@@ -50,7 +50,8 @@ EVAS 将相关缺口纳入候选需求，按影响的任务类别、工程使用
 [One-shot 评测](../GLOSSARY.md#one-shot-评测)作为对照。
 checker 在解题期间对 Agent 隐藏，公开主集向研究者提供重新验收同一提交所需的材料。
 公开自测与终评分开，终评在提交后独立执行，不作为该次解题的迭代工具。
-具体工具范围、反馈内容、交互预算和访问隔离方案由后续评测协议确定，已定原则见
+首批工具范围、反馈限制和交互预算见
+[Agentic 试跑协议](../experiments/benchmark_first_batch/agentic/README.md)，已定原则见
 [任务体系设计议题](https://github.com/BucketSran/vaEVAS/issues/72)。
 
 题库以工程动作为主要分类，分别记录电路对象、上下文层次和来源。第一轮目标是
@@ -83,7 +84,8 @@ DUT、Testbench、Bugfix 三种任务。历史三种形态作为候选来源；
 报告并列呈现任务数、来源分组和工程工作覆盖。不按文件数、代码长度或预估难度给任务加权。
 完整仓库任务可以单列分析，其工作量不直接换算成更高分值；具体汇总口径另行确定。
 
-题目覆盖以下三个上下文层次，首批完整仓库任务少量建设，具体题量与比例另行确定：
+题目覆盖以下三个上下文层次，首批只纳入少量完整仓库任务，实际数量见
+[首批登记](first_batch/README.md)：
 
 | 上下文层次 | 提供的材料与要求 |
 | --- | --- |
@@ -141,7 +143,7 @@ DUT、Testbench、Bugfix 三种任务。历史三种形态作为候选来源；
 [CANDIDATES.md](CANDIDATES.md) 记录开发中发现的问题及可能形成的建模任务。
 先保留最小触发条件、独立预期、实际失败和证据；后续再集中做题目改造、评分和环境适配。
 记录候选不自动创建 Harbor 目录，不增加正式题目或评分分母。
-已经存在的振荡器题目是候选原型，仍需按登记表完成正式改造审阅。
+振荡器修复题已完成首批改造与校准，具体证据见[非性能题校准](../experiments/benchmark_first_batch/CALIBRATION.md)。
 开发、验证和 review 入口都执行这项记录规则，具体步骤见
 [协作流程](../docs/contributing/validation.md#development-bench-candidates)。
 

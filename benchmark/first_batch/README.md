@@ -63,12 +63,12 @@ Flash 旧二分提交另有 3 个 CPU-only equivalent 校准条件通过。30 �
 
 | 类别 | 五项工作目标 |
 | --- | --- |
-| 按规格构建模型 | CDR 判相脉冲；锁存比较器决策与复位；ΣΔ 量化反馈；S/H 有限采集；UVLO 毛刺拒绝与恢复 |
-| 从数据建立模型 | S/H 采集与下垂；时钟可调 SC 滤波；ADC 驱动建立；比较器过驱动延时；PLL 跳频锁定动态 |
-| 扩展与集成 | TDC 测量链；pipeline ADC 级间对齐；I/Q 基带校准；PLL 跳频重捕获；AGC attack/release |
-| 诊断与修复 | ZOOM 多相时序；SAR 转换中止与旧结果；受控三角振荡器换向；ΣΔ 采样相位；UVLO 去抖恢复 |
-| 开发验证工具 | SAR 完整验证流程；非重叠时钟刺激；比较器过驱动实验；PLL 锁定 checker；S/H 建立 checker |
-| 测量与表征 | 已有 ADC DNL/INL；ADC 动态频谱；比较器延时与迟滞；S/H 建立与下垂；PLL 重锁与周期抖动 |
+| 按规格构建模型 | [CDR 判相脉冲](../tasks/spec-cdr-phase-detector/instruction.md)；[锁存比较器决策与复位](../tasks/spec-latched-comparator/instruction.md)；[ΣΔ 量化反馈](../tasks/spec-sigma-delta/instruction.md)；[S/H 有限采集](../tasks/spec-sample-hold-acquisition/instruction.md)；[UVLO 毛刺拒绝与恢复](../tasks/spec-uvlo-deglitch/instruction.md) |
+| 从数据建立模型 | [S/H 采集与下垂](../tasks/identify-sh-acquisition/instruction.md)；[时钟可调 SC 滤波](../tasks/identify-sc-clocked-filter/instruction.md)；[ADC 驱动建立](../tasks/identify-adc-driver-settling/instruction.md)；[比较器过驱动延时](../tasks/identify-comparator-overdrive/instruction.md)；[PLL 跳频锁定动态](../tasks/identify-pll-hop-dynamics/instruction.md) |
+| 扩展与集成 | [TDC 测量链](../tasks/integrate-tdc-measurement-chain/instruction.md)；[pipeline ADC 级间对齐](../tasks/integrate-pipeline-adc-alignment/instruction.md)；[I/Q 基带校准](../tasks/integrate-iq-baseband-calibration/instruction.md)；[PLL 跳频重捕获](../tasks/integrate-pll-hop-reacquisition/instruction.md)；[AGC attack/release](../tasks/integrate-agc-attack-release/instruction.md) |
+| 诊断与修复 | [ZOOM 多相时序](../tasks/repair-zoom-sequencer/instruction.md)；[SAR 转换中止与旧结果](../tasks/repair-sar-abort/instruction.md)；[受控三角振荡器换向](../tasks/va07-triangle-repair/instruction.md)；[ΣΔ 采样相位](../tasks/repair-sigma-delta-phase/instruction.md)；[UVLO 去抖恢复](../tasks/repair-uvlo-recovery/instruction.md) |
+| 开发验证工具 | [SAR 完整验证流程](../tasks/verify-sar-flow/instruction.md)；[非重叠时钟刺激](../tasks/verify-nonoverlap-stimulus/instruction.md)；[比较器过驱动实验](../tasks/verify-comparator-overdrive/instruction.md)；[PLL 锁定 checker](../tasks/verify-pll-lock-checker/instruction.md)；[S/H 建立 checker](../tasks/verify-sh-settling-checker/instruction.md) |
+| 测量与表征 | [已有 ADC DNL/INL](../tasks/va08-adc-linearity/instruction.md)；[ADC 动态频谱](../tasks/measure-adc-spectrum/instruction.md)；[比较器延时与迟滞](../tasks/measure-comparator-delay-hysteresis/instruction.md)；[S/H 建立与下垂](../tasks/measure-sh-acquisition-droop/instruction.md)；[PLL 重锁与周期抖动](../tasks/measure-pll-relock-jitter/instruction.md) |
 | 改善仿真实现 | [VCO 频率相关步长](../tasks/optimize-vco-step/)；[电源监控轮询](../tasks/optimize-power-monitor/)；[SAR 空闲事件调度](../tasks/optimize-sar-calendar/)；[UART 空闲采样调度](../tasks/optimize-uart-calendar/)；[Flash ADC 阈值解码](../tasks/optimize-flash-thresholds/) |
 
 每项任务都需给出其新增工程要求。尤其同一 S/H、PLL 或比较器上的建模、验证和测量
