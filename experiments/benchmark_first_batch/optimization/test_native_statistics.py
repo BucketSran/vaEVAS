@@ -67,6 +67,18 @@ class NativeEvidence(unittest.TestCase):
         warning=b'WARNING (VACOMP-2435): environment variable no longer supported'
         self.assertEqual(M.validate_solver_evidence(source,0,LOG,b'',warning)['native_errors'],0)
 
+    def test_real_merged_capture_has_no_fabricated_stderr(self):
+        source=b'module x(a); electrical a; analog V(a)<+1; endmodule'
+        result=M.validate_solver_evidence(source,0,LOG,b'actual combined stream',stream_layout='merged')
+        self.assertEqual(result['stream_layout'],'merged')
+        self.assertEqual(set(result['stream_identities']),{'stdout_stderr_merged_sha256'})
+        with self.assertRaises(M.OptimizationEvidenceError):
+            M.validate_solver_evidence(source,0,LOG,b'ERROR (SPECTRE-100): failed',stream_layout='merged')
+        with self.assertRaises(M.OptimizationEvidenceError):
+            M.validate_solver_evidence(source,0,LOG,b'combined',b'',stream_layout='merged')
+        with self.assertRaises(M.OptimizationEvidenceError):
+            M.validate_solver_evidence(source,0,LOG,b'actual stdout')
+
     def test_source_guard_rejects_active_tasks_only(self):
         valid=b'''`include "disciplines.vams"
 // $strobe("Number of accepted tran steps = 1");

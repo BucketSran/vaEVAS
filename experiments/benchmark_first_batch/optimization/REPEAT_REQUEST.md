@@ -50,7 +50,8 @@ CPU。记录 source/netlist/checker/runtime/Spectre身份与归档哈希。fresh
 无法缓存，明确生产 wrapper 的冷编译状态，保留编译分项，不假称热缓存。
 
 正式性能 source guard 禁止 active 日志输出/流程控制 system tasks，以防伪造原生
-统计；独立检查 process returncode、stdout 与 stderr 的致命求解诊断，只从 native
+统计；独立检查 process returncode 与真实捕获流的致命求解诊断；目前公共runtime将stdout/
+stderr合并，必须标记merged并检查整份流，不能假称存在独立stderr。只从 native
 spectre.log 读取数字。默认 aggregate audit elapsed 曾重复CPU，不能充当墙钟。
 
 给出各侧 CPU/elapsed、steps 中位数与范围，逐对比率与时间走势。CPU差距小于变动
