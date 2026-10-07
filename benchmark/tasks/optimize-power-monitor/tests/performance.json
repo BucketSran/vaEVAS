@@ -1,0 +1,26 @@
+{
+  "admitted": true,
+  "metric": "accepted_steps",
+  "max_median_ratio": 0.1,
+  "min_winning_pairs": 5,
+  "admission_evidence_sha256": "3a62c085546b0ec2a2c9421cdbf060c90f145be50d1ded4b0ca69323fc92c393",
+  "pairs": 5,
+  "allow_private_condition_packets": true,
+  "case_inventory": [
+    {
+      "name": "slow-rail-end-to-end",
+      "performance": true,
+      "case_sha256": "2186fa5ca432ef2c4c7413fb0e861bb1d460c74ccb658c0b7904ce406576942f"
+    },
+    {
+      "name": "short-glitch-and-recovery",
+      "performance": false,
+      "case_sha256": "777bc003d5f2ae34e4f90fe0182169326771e7e353f9f81dc5743ccfcc20a2c9"
+    },
+    {
+      "name": "initial-high-hysteresis",
+      "performance": false,
+      "case_sha256": "e5c5d9ef7852664b886552beca1ae3cf3e689eab08fc4d9705fa15b60b78b422"
+    }
+  ]
+}

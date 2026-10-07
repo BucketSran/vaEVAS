@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "/work/dut.va"
+VIN (supply 0) vsource type=pwl wave=[0 0.7 2e-05 0.7 2.000001e-05 1.1 6e-05 1.1 6.000001e-05 0.9 8e-05 0.9 8.000001e-05 0.7 0.0001 0.7]
+DUT (supply enable) supply_supervisor qualification=5e-06
+simulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14
+tran tran stop=0.0001 errpreset=conservative
+save supply enable

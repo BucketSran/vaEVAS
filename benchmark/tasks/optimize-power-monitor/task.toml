@@ -1,0 +1,18 @@
+schema_version = "1.4"
+[metadata]
+name = "optimize-power-monitor"
+category = "verilog-a"
+engineering_action = "simulation-implementation-optimization"
+source_group = "original-power-monitor-optimization"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 900
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 2048
+storage_mb = 2048

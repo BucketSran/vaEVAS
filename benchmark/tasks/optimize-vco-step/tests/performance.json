@@ -1,0 +1,26 @@
+{
+  "admitted": true,
+  "metric": "accepted_steps",
+  "max_median_ratio": 0.1,
+  "min_winning_pairs": 5,
+  "admission_evidence_sha256": "3a62c085546b0ec2a2c9421cdbf060c90f145be50d1ded4b0ca69323fc92c393",
+  "pairs": 5,
+  "allow_private_condition_packets": true,
+  "case_inventory": [
+    {
+      "name": "low-band-end-to-end",
+      "performance": true,
+      "case_sha256": "3f5ef68ff6b584163fb4b3b273a7f4a8c8f02a2a8b2ba457c75c2d6aa5f5c14a"
+    },
+    {
+      "name": "slew-and-clamps",
+      "performance": false,
+      "case_sha256": "93b82dbd75ff5899e50c46b382aa95af040ed52dce6f7dcdeaf814b7246fede7"
+    },
+    {
+      "name": "high-band",
+      "performance": false,
+      "case_sha256": "fc97a7f8bb7fbc0d686225eb7fad6fbe21b63d80e2ac618e47cf5a66640c3a1e"
+    }
+  ]
+}

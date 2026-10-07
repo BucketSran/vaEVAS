@@ -1,0 +1,26 @@
+{
+  "admitted": true,
+  "metric": "accepted_steps",
+  "max_median_ratio": 0.1,
+  "min_winning_pairs": 5,
+  "admission_evidence_sha256": "3a62c085546b0ec2a2c9421cdbf060c90f145be50d1ded4b0ca69323fc92c393",
+  "pairs": 5,
+  "allow_private_condition_packets": true,
+  "case_inventory": [
+    {
+      "name": "sensor-idle-throughput",
+      "performance": true,
+      "case_sha256": "e398ec2b6e089f61fb5bfa5b875f2151e47383c2cf2cf8128b70a7508cd5f227"
+    },
+    {
+      "name": "busy-start-and-reset",
+      "performance": false,
+      "case_sha256": "fc6e8ca3f123d14352a0f41bb17ea938011df5a6c5747decd27a3647958aa024"
+    },
+    {
+      "name": "different-bit-period",
+      "performance": false,
+      "case_sha256": "97aea63b9375900984cfdcdd6e7872acc83a21188f4798d1a3c3633a00af01cc"
+    }
+  ]
+}

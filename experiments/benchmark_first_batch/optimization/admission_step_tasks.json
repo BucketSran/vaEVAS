@@ -1,0 +1,48 @@
+{
+  "status": "four_tasks_reviewed_for_generation_formal_calibration_pending",
+  "paired_evidence": "runs/benchmark-first-batch-20261008/performance-all-analysis-v1.json",
+  "tasks": {
+    "optimize-vco-step": {
+      "admitted": true,
+      "metric": "accepted_steps",
+      "max_median_ratio": 0.1,
+      "min_winning_pairs": 5,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/raw_point_waveform_replay.json"
+      ]
+    },
+    "optimize-power-monitor": {
+      "admitted": true,
+      "metric": "accepted_steps",
+      "max_median_ratio": 0.1,
+      "min_winning_pairs": 5,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/raw_point_waveform_replay.json"
+      ]
+    },
+    "optimize-sar-calendar": {
+      "admitted": true,
+      "metric": "accepted_steps",
+      "max_median_ratio": 0.1,
+      "min_winning_pairs": 5,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/raw_point_waveform_replay.json"
+      ]
+    },
+    "optimize-uart-calendar": {
+      "admitted": true,
+      "metric": "accepted_steps",
+      "max_median_ratio": 0.1,
+      "min_winning_pairs": 5,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/raw_point_waveform_replay.json"
+      ]
+    }
+  },
+  "review": {
+    "initial_revision": "335421a5f393ecf42e08068810f283554870a7a1",
+    "gate_fix_revision": "4ff2e053",
+    "report": "runs/benchmark-first-batch-20261008/review-optimization-admission.md",
+    "coverage": "four step-count tasks only; formal execution pending"
+  }
+}
