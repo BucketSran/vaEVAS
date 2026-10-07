@@ -1,0 +1,81 @@
+{
+  "id": "E3-base",
+  "case": "E3",
+  "stop_s": 2,
+  "maxstep_target_s": 0.02,
+  "ordered_event_times_s": [
+    0.25,
+    0.5
+  ],
+  "ordered_event_kinds": [
+    "timer",
+    "cross"
+  ],
+  "count_event_s": 0.5,
+  "count_expected": 1,
+  "edit_expected": 1,
+  "rising_cross_direction": 1,
+  "formulas": {
+    "z": "t if t <= 1/4 else 1/4+2*(t-1/4)",
+    "history": "0",
+    "count": "1[t > 1/2]",
+    "edit": "1[t > 1/4]",
+    "sample": "0",
+    "derivation": "Integrate slope 1 to 1/4, then slope 2. Solving 1/4+2*(t-1/4)=3/4 gives 1/2."
+  },
+  "anchors": [
+    {
+      "time_rational": "0",
+      "z_rational": "0",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "1/4",
+      "z_rational": "1/4",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "1/2",
+      "z_rational": "3/4",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "3/4",
+      "z_rational": "5/4",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "1",
+      "z_rational": "7/4",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "2",
+      "z_rational": "15/4",
+      "history_rational": "0"
+    }
+  ],
+  "observation_windows": [
+    {
+      "nominal_s": 0.25,
+      "nominal_rational": "1/4",
+      "start_s": 0.249999,
+      "end_s": 0.250001,
+      "requested_max_gap_s": 2e-08,
+      "exact_center_request_id": "E3-base:event:0:center",
+      "event_kind": "timer"
+    },
+    {
+      "nominal_s": 0.5,
+      "nominal_rational": "1/2",
+      "start_s": 0.499999,
+      "end_s": 0.500001,
+      "requested_max_gap_s": 2e-08,
+      "exact_center_request_id": "E3-base:event:1:center",
+      "event_kind": "cross"
+    }
+  ],
+  "qualification_status": "pending; requests are not proof of native records",
+  "exact_boundary_rule": "record separately, no pre/post inference from nearest point or rounding",
+  "source_admissibility": "not yet established by execution"
+}

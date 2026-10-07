@@ -47,6 +47,7 @@
 | 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
 | 运行 ngspice 共同子集对照 | [差分验证](differential/README.md) |
+| 检查两类事件路径重构是否保持行为 | [共同事件验收](event_acceptance/README.md)：六模型、十二配置，原数学失败与观察限制单列 |
 | 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
 

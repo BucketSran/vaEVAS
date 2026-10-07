@@ -1,0 +1,81 @@
+{
+  "id": "E2-fine",
+  "case": "E2",
+  "stop_s": 1,
+  "maxstep_target_s": 0.002,
+  "ordered_event_times_s": [
+    0.25,
+    0.5
+  ],
+  "ordered_event_kinds": [
+    "timer",
+    "cross"
+  ],
+  "count_event_s": 0.5,
+  "count_expected": 1,
+  "edit_expected": 1,
+  "rising_cross_direction": 1,
+  "formulas": {
+    "z": "0",
+    "history": "t^2/2",
+    "count": "1[t > 1/2]",
+    "edit": "1[t > 1/4]",
+    "sample": "0",
+    "derivation": "At 1/4 both t-3/4 and t-1/2 are negative. New rising zero is 1/2, old 3/4 is invalid."
+  },
+  "anchors": [
+    {
+      "time_rational": "0",
+      "z_rational": "0",
+      "history_rational": "0"
+    },
+    {
+      "time_rational": "1/4",
+      "z_rational": "0",
+      "history_rational": "1/32"
+    },
+    {
+      "time_rational": "1/2",
+      "z_rational": "0",
+      "history_rational": "1/8"
+    },
+    {
+      "time_rational": "3/4",
+      "z_rational": "0",
+      "history_rational": "9/32"
+    },
+    {
+      "time_rational": "1",
+      "z_rational": "0",
+      "history_rational": "1/2"
+    },
+    {
+      "time_rational": "1",
+      "z_rational": "0",
+      "history_rational": "1/2"
+    }
+  ],
+  "observation_windows": [
+    {
+      "nominal_s": 0.25,
+      "nominal_rational": "1/4",
+      "start_s": 0.249999,
+      "end_s": 0.250001,
+      "requested_max_gap_s": 2e-08,
+      "exact_center_request_id": "E2-fine:event:0:center",
+      "event_kind": "timer"
+    },
+    {
+      "nominal_s": 0.5,
+      "nominal_rational": "1/2",
+      "start_s": 0.499999,
+      "end_s": 0.500001,
+      "requested_max_gap_s": 2e-08,
+      "exact_center_request_id": "E2-fine:event:1:center",
+      "event_kind": "cross"
+    }
+  ],
+  "qualification_status": "pending; requests are not proof of native records",
+  "exact_boundary_rule": "record separately, no pre/post inference from nearest point or rounding",
+  "source_admissibility": "not yet established by execution"
+}
