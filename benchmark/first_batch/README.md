@@ -1,10 +1,10 @@
 # 首批电路工程任务
 
-本批按七种工程动作建设，每类先选 5 题，共 35 题。任务围绕电路架构、时序和性能，
+本批按七种工程动作建设，每类 5 题，共 35 个正式 Harbor 资产。任务围绕电路架构、时序和性能，
 不是按电路名称复制相同模板。一个任务的参数与刺激变体属于该任务的校准条件。
 共享电路资产的任务使用同一个 `source_group`，单独记录任务目标。
 
-题量是建设目标，只有实际完成参考解、代表负例与后端校准的任务才计为已校准题目。
+正式资产数量与校准题数分别统计。只有实际完成参考解、代表负例与后端校准的任务才计为已校准题目。
 Agentic 试跑、开源复现与正式发布资格另行记录，不能由参考解通过推出。
 总体约定见 [benchmark README](../README.md)，当前建设与证据归属
 [议题 #72](https://github.com/BucketSran/vaEVAS/issues/72)。
@@ -15,13 +15,24 @@ Agentic 试跑、开源复现与正式发布资格另行记录，不能由参考
 [实际封存校准核验](../../experiments/benchmark_first_batch/CALIBRATION.md)。
 这些计数评价人工提交与独立判据，不是模型成功率。
 
-优化类已有 VCO、电源监控、SAR 和 UART 四个正式 Harbor 资产，完整正式评分校准
-仍待完成。加上前六类，本批当前有 **34 个正式资产**，尚未完成 35 题目标。
-Flash ADC 是待准入的第五项优化目标；采样 DAC 和 SC 系数计算保留为候选，
-不占正式题量。优化准入与执行证据见
+优化类 VCO、电源监控、SAR、UART 和 Flash ADC 均已准入并完成正式校准，
+本批已达到 **七类各 5 题，共 35 个已校准正式资产**。优化校准的 36 个提交、
+108 个条件均完成封存身份核验，无待处理条件。5 个参考的 15 个条件全部通过，
+Flash 旧二分提交另有 3 个 CPU-only equivalent 校准条件通过。30 个负例的 90 个条件中，63 个因语义错误
+被拒绝、5 个因性能不足被拒绝、22 个通过；每个负例至少一个条件被拒绝。
+负例按提交分为 24 个语义负例、5 个仅性能负例和 1 个混合负例。
+具体身份和判分范围见 [优化正式校准说明](../../experiments/benchmark_first_batch/optimization/FORMAL_CALIBRATION.md)
+及[封存核验收据](../../experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json)。
+
+采样 DAC 和 SC 系数计算保留为候选，不占正式题量。优化准入与性能取证见
 [优化登记](optimization.json)及[优化实验说明](../../experiments/benchmark_first_batch/optimization/README.md)。
 
-真实模型 pilot 正在进行，按具体模型、任务和冻结尝试分别报告。
+本批共有 32 个 `source_group`。上下文分布为 30 个工作单元、4 个有边界的小工程和
+1 个完整仓库任务，计数与同源关联见 [元数据映射](METADATA.md)。
+
+真实模型 pilot 正在 14 个固定单元上进行，覆盖七类代表题和 `glm-5.3`、
+`glm-5.3-flash` 两个实际 endpoint，二者属于同一模型 family。
+按具体模型、任务和冻结尝试分别报告。
 代表题试跑不能推导 35 题整体通过率；实际工具交互也不代表任务规格在多轮中动态演化。
 试跑入口和反馈限制见 [Agentic 实验说明](../../experiments/benchmark_first_batch/agentic/README.md)。
 
@@ -47,9 +58,8 @@ Flash ADC 是待准入的第五项优化目标；采样 DAC 和 SC 系数计算�
 
 ## 首批选题
 
-以下记录七类的五项工作目标。已完成的校准范围见上方证据链接；优化类的正式资产
-与待准入候选单独标明。性能改善题先取证，若无法证明实际问题或等价改进，就退回
-候选并寻找新的电路问题，不把功能修复改名为性能优化。
+以下记录七类的五项正式任务。已完成的校准范围见上方证据链接。性能改善题先取证，
+若无法证明实际问题或等价改进，就退回候选并寻找新的电路问题，不把功能修复改名为性能优化。
 
 | 类别 | 五项工作目标 |
 | --- | --- |
@@ -59,13 +69,13 @@ Flash ADC 是待准入的第五项优化目标；采样 DAC 和 SC 系数计算�
 | 诊断与修复 | ZOOM 多相时序；SAR 转换中止与旧结果；受控三角振荡器换向；ΣΔ 采样相位；UVLO 去抖恢复 |
 | 开发验证工具 | SAR 完整验证流程；非重叠时钟刺激；比较器过驱动实验；PLL 锁定 checker；S/H 建立 checker |
 | 测量与表征 | 已有 ADC DNL/INL；ADC 动态频谱；比较器延时与迟滞；S/H 建立与下垂；PLL 重锁与周期抖动 |
-| 改善仿真实现 | [VCO 频率相关步长](../tasks/optimize-vco-step/)；[电源监控轮询](../tasks/optimize-power-monitor/)；[SAR 空闲事件调度](../tasks/optimize-sar-calendar/)；[UART 空闲采样调度](../tasks/optimize-uart-calendar/)（四个正式资产）；flash ADC 阈值解码（待准入候选） |
+| 改善仿真实现 | [VCO 频率相关步长](../tasks/optimize-vco-step/)；[电源监控轮询](../tasks/optimize-power-monitor/)；[SAR 空闲事件调度](../tasks/optimize-sar-calendar/)；[UART 空闲采样调度](../tasks/optimize-uart-calendar/)；[Flash ADC 阈值解码](../tasks/optimize-flash-thresholds/) |
 
 每项任务都需给出其新增工程要求。尤其同一 S/H、PLL 或比较器上的建模、验证和测量
 若只改变文件名或输出格式，不能算不同任务；应分别核验功能目标和能力要求。
 候选数量允许在审阅后调整，但七类均需达到已确认的首轮覆盖目标。
 采样 DAC 重复解码与 SC 滤波器重复系数计算保留在优化登记的 `candidates` 中，
-不与四个正式优化资产或待准入 Flash 目标重复计数。
+不计入五个正式优化资产。
 
 ## 验收顺序
 
