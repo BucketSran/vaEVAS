@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "scope": "five original simulation implementation optimization candidates; actual evidence required before tasks",
+  "target_task_count": 5,
+  "task_count": 0,
+  "completed_backend_calibrated_count": 0,
+  "candidate_count": 5,
+  "tasks": [],
+  "candidates": [
+    {
+      "candidate_id": "optimize-vco-step",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-vco-boundstep-optimization",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "frequency-aware time bounds",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/vco_boundstep",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-vco-step",
+      "reference_path": "experiments/benchmark_first_batch/optimization/vco_boundstep/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/vco_boundstep/baseline.va",
+      "semantic_negative_variants": [
+        "frozen_low_band",
+        "unchanged_bound",
+        "undersample",
+        "wrong_amplitude",
+        "wrong_phase"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "6 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v1 rejected by submission macro policy; changed literal constant awaits v2 execution",
+        "spectre_performance": "not measured",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    },
+    {
+      "candidate_id": "optimize-flash-thresholds",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-flash-thresholds-optimization",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "sampled monotonic threshold decoding",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/flash_thresholds",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-flash-thresholds",
+      "reference_path": "experiments/benchmark_first_batch/optimization/flash_thresholds/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/flash_thresholds/baseline.va",
+      "semantic_negative_variants": [
+        "falling_edge",
+        "no_hold",
+        "unchanged_scan",
+        "uniform_thresholds",
+        "wrong_skew_sign"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "6 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "both sides 3/3 cases passed in first actual round",
+        "spectre_performance": "inconclusive; single concurrent pair, no hotspot profile",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    },
+    {
+      "candidate_id": "optimize-power-monitor",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-power-monitor-optimization",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "event-based supply qualification",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/power_monitor",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-power-monitor",
+      "reference_path": "experiments/benchmark_first_batch/optimization/power_monitor/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/power_monitor/baseline.va",
+      "semantic_negative_variants": [
+        "coarse_poll",
+        "no_hysteresis",
+        "no_qualification",
+        "stale_qualification",
+        "unchanged_poll"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "6 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "pending coordinator",
+        "spectre_performance": "not measured",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    },
+    {
+      "candidate_id": "optimize-sampled-dac",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-sampled-dac-optimization",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "sample-event bit decoding",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/sampled_dac",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sampled-dac",
+      "reference_path": "experiments/benchmark_first_batch/optimization/sampled_dac/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/sampled_dac/baseline.va",
+      "semantic_negative_variants": [
+        "falling_sample",
+        "no_hold",
+        "unchanged_decode",
+        "wrong_bit_weight",
+        "wrong_denominator"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "6 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "pending coordinator",
+        "spectre_performance": "not measured",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    },
+    {
+      "candidate_id": "optimize-sc-coefficients",
+      "engineering_action": "simulation-implementation-optimization",
+      "source_group": "original-sc-coefficients-optimization",
+      "provenance": "original_behavioral_model",
+      "context_level": "bounded-work-unit",
+      "focus": "sample-event settling coefficient evaluation",
+      "experiment_path": "experiments/benchmark_first_batch/optimization/sc_coefficients",
+      "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-sc-coefficients",
+      "reference_path": "experiments/benchmark_first_batch/optimization/sc_coefficients/reference.va",
+      "baseline_path": "experiments/benchmark_first_batch/optimization/sc_coefficients/baseline.va",
+      "semantic_negative_variants": [
+        "falling_sample",
+        "forward_stage_update",
+        "linearized_coefficient",
+        "unchanged_coefficients",
+        "wrong_tau"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "not created; performance evidence gate first",
+        "row_criteria": "6 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "pending coordinator",
+        "spectre_performance": "not measured",
+        "spectre_semantic_negatives": "pending coordinator",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      }
+    }
+  ],
+  "evidence": "experiments/benchmark_first_batch/optimization/first_calibration.json"
+}
