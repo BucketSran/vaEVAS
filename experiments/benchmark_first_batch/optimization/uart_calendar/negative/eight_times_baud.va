@@ -1,0 +1,43 @@
+`include "disciplines.vams"
+// Original 8N1 UART receiver, conventional sixteen-times-baud polling clock.
+module uart_receiver(rx, reset, busy, valid, error, data, shift);
+ input rx,reset;
+ output busy,valid,error,data,shift;
+ electrical rx,reset,busy,valid,error,data,shift;
+ parameter real bit_period=8.680555555555556u from (0:inf);
+ parameter real rise=10n from (0:inf);
+ integer active,ready,bad,held,partial,stage,ticks,previous_rx;
+ analog begin
+  @(initial_step) begin
+   active=0;ready=0;bad=0;held=0;partial=0;stage=-1;ticks=0;previous_rx=1;
+  end
+  @(timer(0,bit_period/8)) begin
+   if(V(reset)>=0.5) begin
+    active=0;ready=0;bad=0;held=0;partial=0;stage=-1;ticks=0;
+   end else if(active) begin
+    ticks=ticks-1;
+    if(ticks==0) begin
+     if(stage==-1) begin
+      if(V(rx)>=0.5) active=0;
+      else begin stage=0;ticks=8;end
+     end else if(stage<8) begin
+      if(V(rx)>=0.5) partial=partial+(1<<stage);
+      stage=stage+1;ticks=8;
+     end else begin
+      active=0;
+      if(V(rx)>=0.5) begin held=partial;ready=1;bad=0;end
+      else begin ready=0;bad=1;end
+     end
+    end
+   end else if(V(rx)<0.5 && previous_rx) begin
+    active=1;ready=0;bad=0;partial=0;stage=-1;ticks=4;
+   end
+   previous_rx=(V(rx)>=0.5);
+  end
+  V(busy) <+ transition(active,0,rise);
+  V(valid) <+ transition(ready,0,rise);
+  V(error) <+ transition(bad,0,rise);
+  V(data) <+ transition(held/255.0,0,rise);
+  V(shift) <+ transition(partial/255.0,0,rise);
+ end
+endmodule

@@ -10,6 +10,7 @@
 | flash_thresholds | 100 us、10000 次 flash ADC 转换 | 连续重复扫描真实阈值阵列 | v1/v2 双侧均 3/3 功能通过；重复性能与 profile 待做 |
 | power_monitor | 100 us 电源资格/迟滞监督 | 1 ns 轮询驱动的真实 timer 求值 | reference 3/3，baseline 2/3；浮点计时修复待重新执行 |
 | sampled_dac | 100 us、10000 个 12-bit 采样电压码 | 连续重复真实位权解码 | 双侧 3/3，单轮无收益；待剖析或替换 |
+| uart_calendar | 100 ms、10帧8N1状态消息 | 空闲仍16x波特率采样真实串行线 | 2组解析fixture过；待actual双侧功能与profile |
 | sar_calendar | 100 us、20次12bit SAR转换及每位DAC试探 | 空闲仍1ns轮询真实控制输入 | 三组解析fixture过；待actual双侧功能及profile |
 | sc_coefficients | 100 us、10000 次四级滤波采样 | 连续重复求实际采样系数 | 双侧 3/3，单轮微差不足立题 |
 
@@ -44,3 +45,5 @@ power 基线慢速 case 的首个高电压轮询为 20.001 us，25.001 us 时未
 
 新增 SAR 事件日历是独立候选，补充试探工程瓶颈，target_task_count 仍 5，task_count 仍 0；
 候选数不等于正式题数。`test_sar_calendar.py` 三组纯fixture不作为 actual 证据。
+
+UART独立候选让待验证候选总数为7，正式题仍0；`test_uart_calendar.py`不执行VA。

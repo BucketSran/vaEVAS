@@ -1,0 +1,45 @@
+`include "disciplines.vams"
+// Same 8N1 contract, edge-anchored start validation and center-sample deadlines.
+module uart_receiver(rx, reset, busy, valid, error, data, shift);
+ input rx,reset;
+ output busy,valid,error,data,shift;
+ electrical rx,reset,busy,valid,error,data,shift;
+ parameter real bit_period=8.680555555555556u from (0:inf);
+ parameter real rise=10n from (0:inf);
+ integer active,ready,bad,held,partial,stage;
+ real deadline;
+ analog begin
+  @(initial_step) begin
+   active=0;ready=0;bad=0;held=0;partial=0;stage=-1;deadline=1e30;
+  end
+  @(cross(V(reset)-0.5,+1)) begin
+   active=0;ready=0;bad=0;held=0;partial=0;stage=-1;deadline=1e30;
+  end
+  @(cross(V(rx)-0.5,-1)) begin
+   if(!active && V(reset)<0.5) begin
+    active=1;ready=0;bad=0;partial=0;stage=-1;
+    deadline=$abstime+bit_period/2;
+   end
+  end
+  @(timer(deadline)) begin
+   if(active && V(reset)<0.5) begin
+    if(stage==-1) begin
+     if(V(rx)>=0.5) begin active=0;deadline=1e30;end
+     else begin stage=0;deadline=$abstime+bit_period;end
+    end else if(stage<8) begin
+     if(V(rx)>=0.5) partial=partial+(1<<stage);
+     stage=stage+1;deadline=$abstime+bit_period;
+    end else begin
+     active=0;deadline=1e30;
+     if(V(rx)>=0.5) begin held=partial;ready=1;bad=0;end
+     else begin ready=0;bad=1;end
+    end
+   end
+  end
+  V(busy) <+ active;
+  V(valid) <+ ready;
+  V(error) <+ bad;
+  V(data) <+ held/255.0;
+  V(shift) <+ partial/255.0;
+ end
+endmodule
