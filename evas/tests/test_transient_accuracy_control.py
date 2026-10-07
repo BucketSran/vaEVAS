@@ -49,7 +49,7 @@ class TransientAccuracyControl(unittest.TestCase):
             if record['kind'] == 'nonlinear_candidate' and record['outcome'] == 'certified':
                 self.assertLessEqual(record['end']-record['start'], 1/32)
 
-    def test_amplified_accumulated_enclosure_has_explicit_precision_refusal(self):
+    def test_amplified_initial_enclosure_has_explicit_precision_refusal(self):
         program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),1); '
                                 'V(y,r)<+1e4*(V(z,r)-0.5);', 'electrical z;')
         # The analytic nominal value is finite, but accumulated binary64
@@ -70,3 +70,36 @@ class TransientAccuracyControl(unittest.TestCase):
         for t, row in zip(sparse, rows(first)):
             expected = 1/(1+t) if t <= .5 else 1/(.5+2*t)
             self.assertAlmostEqual(row['y'], 1e4*(expected-.5), delta=1e-8)
+
+    def test_relative_event_budget_preserves_precision_before_later_cancellation(self):
+        program = compile_model('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
+                                'V(z,r)<+idt(-a*pow(V(z,r),2),1); '
+                                'V(y,r)<+1e4*(V(z,r)-0.5);',
+                                'integer a; electrical z;')
+        sparse = [0,.125,.5,.75,1]
+        dense = [i/32 for i in range(33)]
+        results = [run(program, times=times, stop=1, max_step=1,
+                       vabstol=1e-8, reltol=1e-5) for times in [sparse, dense]]
+        self.assertEqual(results[0]['solutions'],
+                         [results[1]['solutions'][dense.index(t)] for t in sparse])
+        for t, row in zip(sparse, rows(results[0])):
+            expected = 1/(1+t) if t <= .5 else 1/(.5+2*t)
+            voltage = 1e4*(expected-.5)
+            self.assertAlmostEqual(row['y'], voltage, delta=1e-8+1e-5*abs(voltage))
+
+    def test_public_accumulated_roundoff_reaches_bounded_suffix_refusal(self):
+        program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),1); '
+                                'V(y,r)<+1e4*(V(z,r)-0.5);', 'electrical z;')
+        # Unlike the 1e-20 initial-observation refusal, the initial voltage
+        # certifies and this fails while constructing a disposable suffix.
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy.*8 suffix refinements'):
+            run(program, times=[0,1], stop=1, max_step=1, vabstol=1e-11, reltol=1e-8)
+
+    def test_invalid_dae_tolerances_are_rejected_before_refinement(self):
+        program = compile_model('V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2);')
+        for absolute, relative in [(-1,0), (0,0), (1e-9,-1)]:
+            with self.subTest(absolute=absolute, relative=relative):
+                with self.assertRaises(KernelError) as caught:
+                    run(program, times=[0,.125], stop=.125,
+                        vabstol=absolute, reltol=relative)
+                self.assertEqual(caught.exception.detail['kind'], 'invalid_config')

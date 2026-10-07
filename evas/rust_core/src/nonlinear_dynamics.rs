@@ -607,7 +607,16 @@ impl NonlinearContinuous {
             } else {
                 voltage.lo.abs().min(voltage.hi.abs())
             };
-            let budget = self.tolerances.absolute + self.tolerances.relative * lower;
+            // An affine offset can cancel the state contribution in a later
+            // mode. Preserve an absolute tail allowance before accepting that
+            // prefix; suffix refinement cannot recover its earlier truncation.
+            // This is a conservative step-selection heuristic, not a proof of
+            // future output accuracy; the full enclosure still certifies it.
+            let budget = if !row.last().unwrap().zero() {
+                self.tolerances.absolute
+            } else {
+                self.tolerances.absolute + self.tolerances.relative * lower
+            };
             let end_lower = if inherited.lo <= 0.0 && inherited.hi >= 0.0 {
                 0.0
             } else {
@@ -807,10 +816,16 @@ impl NonlinearContinuous {
                 .collect();
             let mut start = a;
             while start < b {
-                if self.steps.len() >= MAX_STEPS || *remaining_work == 0 {
+                if self.steps.len() >= MAX_STEPS {
                     return Err(Error::new(
                         "waveform_accuracy",
-                        "validated nonlinear integration exceeded 16384 internal steps or cumulative candidate-work limit",
+                        "validated nonlinear integration exceeded 16384 stored internal steps",
+                    ));
+                }
+                if *remaining_work == 0 {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        "validated nonlinear integration exhausted the cumulative 16384 candidate-step work limit",
                     ));
                 }
                 let source = trajectory.value_bounds(start);
@@ -1265,6 +1280,7 @@ mod tests {
             report.counters["nonlinear_history_refinements"],
             MAX_HISTORY_REFINEMENTS as u64
         );
+        assert!(report.counters["nonlinear_history_budget_exhausted"] > 0);
         assert!(candidate.same_history(&accepted));
     }
 
@@ -1279,9 +1295,20 @@ mod tests {
             .max_step = 2_f64.powi(-20);
         let error = candidate.propagate_until(0.125).unwrap_err();
         assert_eq!(error.kind, "waveform_accuracy");
-        assert!(error.message.contains("16384 internal steps"));
+        assert!(error.message.contains("16384 stored internal steps"));
         assert!(candidate.steps.is_empty());
         assert_eq!(candidate.certified_end(), 0.0);
+    }
+
+    #[test]
+    fn discarded_candidates_share_the_remaining_work_limit() {
+        let mut candidate = scalar(-1.0);
+        let accepted = candidate.clone();
+        // A previously discarded suffix has already consumed this call's
+        // work allowance; no step may be validated in the next attempt.
+        let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
+        assert!(error.message.contains("cumulative 16384 candidate-step work limit"));
+        assert!(candidate.same_history(&accepted));
     }
 
     #[test]

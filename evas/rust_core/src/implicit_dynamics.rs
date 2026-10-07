@@ -437,16 +437,7 @@ fn initialize(
         });
     }
     // Validate original node/branch indices before building any coordinate row.
-    let root_tolerances = Tolerances {
-        absolute: 1e-15,
-        relative: 1e-14,
-    };
-    let _ = circuit(
-        program,
-        driven,
-        &vec![0.0; operators.len()],
-        &root_tolerances,
-    )?;
+    let _ = circuit(program, driven, &vec![0.0; operators.len()], tolerances)?;
     let physical = initial.len();
     let unknown: Vec<_> = (1..program.nodes.len())
         .filter(|node| !input_nodes.contains(node))
