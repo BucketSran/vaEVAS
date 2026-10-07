@@ -35,7 +35,7 @@ JSON
 ```
 完整外层及各工具参数schema如下。`evas_write`的content是完整文件字符串；`evas_simulate`及`evas_submit`的arguments必须是空对象。
 ''' + '\n```json\n' + json.dumps(ENVELOPE_SCHEMA, ensure_ascii=False, indent=2) + '\n```\n' + '''
-使用evas_write写入全部声明候选文件；完成时使用evas_submit。阶段结束或预算耗尽时，包装器按既定协议冻结最近完整候选；未写齐全部候选文件则不能冻结。普通容器文件不会自动成为正式交付物。公开自测不是终评。
+使用evas_write写入全部声明候选文件；完成时使用evas_submit。Agent阶段结束（包括阶段时间预算耗尽）时，包装器按既定协议冻结最近完整候选；工具的action或simulation预算错误本身不会立即冻结。未写齐全部候选文件则不能冻结。普通容器文件不会自动成为正式交付物。公开自测不是终评。
 evas_read的path为空字符串时列出文件；其他path须属于声明的公开文件或候选文件。evas_write只能替换声明候选文件的完整内容。该schema描述本次native公开会话的四项工具；可选Docker实验工具不在本次会话启用。
 '''
 
