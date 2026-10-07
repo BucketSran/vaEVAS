@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sigma_delta(vin,clk,bitout);
+input vin,clk;output bitout;electrical vin,clk,bitout;
+parameter real vth=0.5,vref=1,tr=50p;
+real residue;integer decision;
+analog begin
+ @(initial_step) begin residue=0;decision=0;end
+ @(cross(V(clk)-vth,+1)) begin residue=residue+V(vin)/vref-decision;decision=(residue>=0)?1:0;end
+ V(bitout)<+transition(decision,0,tr,tr);
+end
+endmodule

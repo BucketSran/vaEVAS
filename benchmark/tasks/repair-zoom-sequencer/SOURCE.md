@@ -1,0 +1,3 @@
+需求参考课题组ZOOM/NSSAR多相时钟用途及va03真实错误类型。所有九相合同、参考实现、负例和checker原创；没有复制课题组原VA。设计为有限时序控制原型，不声称恢复原ADC外围工程。
+
+本次参考VA、测试网表和checker独立编写，未复制历史VA或Cadence安装库。工程需求参考旧题的架构名称与公开接口描述；不声称实测/晶体管级真实性。来源组：zoom-timing-original。状态：本地构造与行级checker测试；实际Spectre、Harbor和Agentic校准必须另有执行收据。

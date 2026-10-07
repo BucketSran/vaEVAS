@@ -1,0 +1,68 @@
+[
+  {
+    "name": "high_low",
+    "kind": "sample_hold",
+    "stop": 3.2e-08,
+    "signals": [
+      "vin",
+      "sample",
+      "rst",
+      "vout"
+    ],
+    "tau": 2e-09,
+    "vinit": 0.45,
+    "windows": [
+      [
+        2e-09,
+        1e-08,
+        0.82
+      ],
+      [
+        1.8e-08,
+        2.6e-08,
+        0.1
+      ]
+    ],
+    "resets": [
+      [
+        1.4e-08,
+        1.6e-08
+      ]
+    ],
+    "atol": 0.003,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVvin (vin 0) vsource type=pwl wave=[0 0.82 1.2e-08 0.82 1.204e-08 0.1]\nVsample (sample 0) vsource type=pwl wave=[0 0 1.98e-09 0 2.02e-09 1 9.98e-09 1 1.002e-08 0 1.798e-08 0 1.802e-08 1 2.598e-08 1 2.602e-08 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 1.398e-08 0 1.402e-08 1 1.598e-08 1 1.602e-08 0]\nXDUT (vin sample rst vout) sample_hold tau=2e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=3.2e-08 maxstep=2e-11\nsave vin sample rst vout\n"
+  },
+  {
+    "name": "low_high",
+    "kind": "sample_hold",
+    "stop": 3.2e-08,
+    "signals": [
+      "vin",
+      "sample",
+      "rst",
+      "vout"
+    ],
+    "tau": 3e-09,
+    "vinit": 0.45,
+    "windows": [
+      [
+        2e-09,
+        1e-08,
+        0.08
+      ],
+      [
+        1.8e-08,
+        2.6e-08,
+        0.78
+      ]
+    ],
+    "resets": [
+      [
+        1.4e-08,
+        1.6e-08
+      ]
+    ],
+    "atol": 0.003,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVvin (vin 0) vsource type=pwl wave=[0 0.08 1.2e-08 0.08 1.204e-08 0.78]\nVsample (sample 0) vsource type=pwl wave=[0 0 1.98e-09 0 2.02e-09 1 9.98e-09 1 1.002e-08 0 1.798e-08 0 1.802e-08 1 2.598e-08 1 2.602e-08 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 1.398e-08 0 1.402e-08 1 1.598e-08 1 1.602e-08 0]\nXDUT (vin sample rst vout) sample_hold tau=3e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=3.2e-08 maxstep=2e-11\nsave vin sample rst vout\n"
+  }
+]

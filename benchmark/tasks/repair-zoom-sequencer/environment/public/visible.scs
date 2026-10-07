@@ -1,0 +1,7 @@
+simulator lang=spectre
+global 0
+ahdl_include "../dut.va"
+XDUT (rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom) zoom_timing nbits=4 step=7e-10 frame=1.9e-08
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=4.75e-08 maxstep=2e-11
+save rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom

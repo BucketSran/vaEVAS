@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "../dut.va"
+Vvin (vin 0) vsource type=pwl wave=[0 0.5 1.98e-09 0.5 2.02e-09 0.72 2.98e-09 0.72 3.02e-09 0.5 6.98e-09 0.5 7.02e-09 0.8 1.198e-08 0.8 1.202e-08 0.61 1.598e-08 0.61 1.602e-08 0.5 1.898e-08 0.5 1.902e-08 0.62 2.398e-08 0.62 2.402e-08 0.76 2.898e-08 0.76 2.902e-08 0.45 3.398e-08 0.45 3.402e-08 0.8]
+Vrst (rst 0) vsource type=pwl wave=[0 0 3.998e-08 0 4.002e-08 1 4.398e-08 1 4.402e-08 0]
+XDUT (vin rst pgood fault) uvlo_monitor tgood=1.5e-09 tbad=7e-10
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=5.2e-08 maxstep=2e-11
+save vin rst pgood fault

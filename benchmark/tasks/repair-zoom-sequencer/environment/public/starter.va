@@ -1,0 +1,27 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module zoom_timing(rst,sample,sar,residue,integrate,clk_sar,zoom,clk_zoom,rst_zoom);
+output rst,sample,sar,residue,integrate,clk_sar,zoom,clk_zoom,rst_zoom;
+electrical rst,sample,sar,residue,integrate,clk_sar,zoom,clk_zoom,rst_zoom;
+parameter integer nbits=4;parameter real step=0.8n,frame=18n,tick=20p,tr=50p;
+real phase,finish,r,s,a,c,i,cs,z,cz,rz;integer j;
+analog begin
+ @(initial_step)begin r=1;s=0;a=0;c=0;i=0;cs=0;z=0;cz=0;rz=0;end
+ @(timer(0,tick))begin
+  phase=$abstime-frame*floor($abstime/frame);finish=2.4n+nbits*step;
+  r=(phase<0.6n)?1:0;s=(phase>=1n && phase<2n)?1:0;
+  a=(phase>=2.4n && phase<finish)?1:0;
+  c=(phase>=finish+0.2n && phase<finish+0.7n)?1:0;
+  i=(phase>=finish+1n && phase<finish+2n)?1:0;
+  z=(phase>=finish+2.5n && phase<finish+5.5n)?1:0;
+  rz=(phase>=finish+2.1n && phase<finish+2.3n)?1:0;
+  cs=0;cz=0;
+  for(j=0;j<nbits;j=j+1)if(phase>=2.4n+j*step && phase<2.4n+j*step+0.3n)cs=1;
+  for(j=0;j<3;j=j+1)if(phase>=finish+2.5n+j*frame && phase<finish+2.5n+j*frame+0.3n)cz=1;
+ end
+ V(rst)<+transition(r,0,tr,tr);V(sample)<+transition(s,0,tr,tr);
+ V(sar)<+transition(a,0,tr,tr);V(residue)<+transition(c,0,tr,tr);
+ V(integrate)<+transition(i,0,tr,tr);V(clk_sar)<+transition(cs,0,tr,tr);
+ V(zoom)<+transition(z,0,tr,tr);V(clk_zoom)<+transition(cz,0,tr,tr);V(rst_zoom)<+transition(rz,0,tr,tr);
+end
+endmodule

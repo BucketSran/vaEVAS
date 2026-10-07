@@ -1,0 +1,50 @@
+[
+  {
+    "name": "four_bit",
+    "kind": "zoom",
+    "stop": 4.5e-08,
+    "signals": [
+      "rst",
+      "sample",
+      "sar",
+      "residue",
+      "integrate",
+      "clk_sar",
+      "zoom",
+      "clk_zoom",
+      "rst_zoom"
+    ],
+    "nbits": 4,
+    "step": 8e-10,
+    "frame": 1.8e-08,
+    "tick": 2e-11,
+    "tr": 5e-11,
+    "atol": 0.02,
+    "edge_atol": 1e-10,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nXDUT (rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom) zoom_timing nbits=4 step=8e-10 frame=1.8e-08\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4.5e-08 maxstep=2e-11\nsave rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom\n"
+  },
+  {
+    "name": "five_bit",
+    "kind": "zoom",
+    "stop": 5e-08,
+    "signals": [
+      "rst",
+      "sample",
+      "sar",
+      "residue",
+      "integrate",
+      "clk_sar",
+      "zoom",
+      "clk_zoom",
+      "rst_zoom"
+    ],
+    "nbits": 5,
+    "step": 9e-10,
+    "frame": 2e-08,
+    "tick": 2e-11,
+    "tr": 5e-11,
+    "atol": 0.02,
+    "edge_atol": 1e-10,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nXDUT (rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom) zoom_timing nbits=5 step=9e-10 frame=2e-08\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=5e-08 maxstep=2e-11\nsave rst sample sar residue integrate clk_sar zoom clk_zoom rst_zoom\n"
+  }
+]

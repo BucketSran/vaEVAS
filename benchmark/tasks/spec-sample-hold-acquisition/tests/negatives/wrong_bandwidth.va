@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sample_hold(vin,sample,rst,vout);
+input vin,sample,rst;output vout;electrical vin,sample,rst,vout;
+parameter real tau=2n,vinit=0.45,vth=0.5;
+integer acquiring,resetting;real state;
+analog begin
+ @(initial_step) begin acquiring=(V(sample)>vth);resetting=(V(rst)>vth);end
+ @(cross(V(sample)-vth,+1)) acquiring=1;
+ @(cross(V(sample)-vth,-1)) acquiring=0;
+ @(cross(V(rst)-vth,+1)) resetting=1;
+ @(cross(V(rst)-vth,-1)) resetting=0;
+ state=idt(acquiring*(V(vin)-V(vout))/(2*tau),vinit,resetting);
+ V(vout)<+state;
+end
+endmodule

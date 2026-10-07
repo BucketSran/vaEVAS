@@ -1,0 +1,129 @@
+{
+  "schema": "first-batch-model-repair-v1",
+  "counts": {
+    "specification": 5,
+    "repair": 5,
+    "new_tasks": 9,
+    "reused_tasks": 1
+  },
+  "tasks": [
+    {
+      "id": "spec-latched-comparator",
+      "action": "specification",
+      "source_group": "latched-comparator-original",
+      "path": "benchmark/tasks/spec-latched-comparator",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "wrong_polarity",
+        "no_overdrive_delay",
+        "stale_decision"
+      ]
+    },
+    {
+      "id": "spec-cdr-phase-detector",
+      "action": "specification",
+      "source_group": "cdr-phase-original",
+      "path": "benchmark/tasks/spec-cdr-phase-detector",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "swap_up_down",
+        "ignore_falling_data",
+        "never_clear_on_clock"
+      ]
+    },
+    {
+      "id": "spec-sigma-delta",
+      "action": "specification",
+      "source_group": "sigma-delta-original",
+      "path": "benchmark/tasks/spec-sigma-delta",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "wrong_clock_phase",
+        "positive_feedback",
+        "discard_accumulator"
+      ]
+    },
+    {
+      "id": "spec-sample-hold-acquisition",
+      "action": "specification",
+      "source_group": "sample-hold-original",
+      "path": "benchmark/tasks/spec-sample-hold-acquisition",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "instant_acquisition",
+        "no_hold",
+        "wrong_bandwidth"
+      ]
+    },
+    {
+      "id": "spec-uvlo-deglitch",
+      "action": "specification",
+      "source_group": "uvlo-monitor-original",
+      "path": "benchmark/tasks/spec-uvlo-deglitch",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "no_qualification",
+        "accumulate_short_glitches",
+        "skip_recovery_delay"
+      ]
+    },
+    {
+      "id": "repair-sigma-delta-phase",
+      "action": "repair",
+      "source_group": "sigma-delta-original",
+      "path": "benchmark/tasks/repair-sigma-delta-phase",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "wrong_clock_phase",
+        "positive_feedback",
+        "discard_accumulator"
+      ]
+    },
+    {
+      "id": "repair-uvlo-recovery",
+      "action": "repair",
+      "source_group": "uvlo-monitor-original",
+      "path": "benchmark/tasks/repair-uvlo-recovery",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "no_qualification",
+        "accumulate_short_glitches",
+        "skip_recovery_delay"
+      ]
+    },
+    {
+      "id": "repair-sar-abort",
+      "action": "repair",
+      "source_group": "sar-controller-original",
+      "path": "benchmark/tasks/repair-sar-abort",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "late_result_after_abort",
+        "inverted_comparator",
+        "publish_without_latency"
+      ]
+    },
+    {
+      "id": "repair-zoom-sequencer",
+      "action": "repair",
+      "source_group": "zoom-timing-original",
+      "path": "benchmark/tasks/repair-zoom-sequencer",
+      "status": "authored_pending_spectre",
+      "negative_files": [
+        "zoom_parent_period",
+        "missing_sar_last_bit",
+        "no_zoom_reset"
+      ]
+    },
+    {
+      "id": "va07-triangle-repair",
+      "action": "repair",
+      "source_group": "repository-triangle-oscillator",
+      "path": "benchmark/tasks/va07-triangle-repair",
+      "status": "existing_prototype_reused_no_new_copy",
+      "notes": "Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice."
+    }
+  ],
+  "local_checker_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/model_repair -p test_contracts.py -v",
+  "evidence_boundary": "Line-level synthetic tests are checker tests, not Verilog-A execution. Actual calibration is recorded separately by coordinator."
+}
