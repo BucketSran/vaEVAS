@@ -12,7 +12,7 @@
     "period": 1e-07,
     "dead": 5e-09,
     "support": {
-      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*`M_PI*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
     },
     "task": "verify-nonoverlap-stimulus"
   },
@@ -29,7 +29,7 @@
     "period": 1.6e-07,
     "dead": 9e-09,
     "support": {
-      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*`M_PI*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
     },
     "task": "verify-nonoverlap-stimulus"
   },
@@ -46,7 +46,7 @@
     "period": 1.2e-07,
     "dead": 3e-09,
     "support": {
-      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*`M_PI*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
     },
     "task": "verify-nonoverlap-stimulus"
   }

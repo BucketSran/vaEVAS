@@ -145,7 +145,7 @@ inout p1,p2,vin,z; electrical p1,p2,vin,z;
 real held,out;
 analog begin
  @(initial_step)begin held=0;out=0;end
- V(vin)<+0.5+0.3*sin(2*`M_PI*$abstime/700n);
+ V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);
  @(cross(V(p1)-0.5,+1))held=V(vin);
  @(cross(V(p2)-0.5,+1))out=held;
  V(z)<+transition(out,0,0.2n);
@@ -155,10 +155,13 @@ endmodule
 clock_sol=HEADER+'''module dut(p1,p2);
 inout p1,p2;electrical p1,p2;
 parameter real period=100n,dead=5n;
-real phase;integer a,b;
+integer a,b;
 analog begin
- phase=$abstime-period*$rtoi($abstime/period);
- a=(phase>=dead && phase<period/2); b=(phase>=period/2+dead && phase<period);
+ @(initial_step)begin a=0;b=0;end
+ @(timer(dead,period))a=1;
+ @(timer(period/2,period))a=0;
+ @(timer(period/2+dead,period))b=1;
+ @(timer(period,period))b=0;
  V(p1)<+transition(a,0,0.1n);V(p2)<+transition(b,0,0.1n);
 end
 endmodule
@@ -166,7 +169,7 @@ endmodule
 cc=[]
 for p,d in [(100e-9,5e-9),(160e-9,9e-9),(120e-9,3e-9)]:
  cc.append({'name':f'p{p*1e9:g}-d{d*1e9:g}','netlist':net(f'Xtb (p1 p2) dut period={p:.12g} dead={d:.12g}\nXsw (p1 p2 vin z) phase_device',f'{p*12:.12g}','0.5n'),'stop':p*12,'signals':['p1','p2','vin','z'],'period':p,'dead':d})
-entries.append(task('verify-nonoverlap-stimulus','verification-tools','开关电容两相非重叠时钟实验','p1,p2','''为采样与传递两级开关电容链产生两相时钟。提交模块参数 period=100 ns、dead=5 ns，隐藏条件 period=100/120/160 ns，dead=3/5/9 ns。每周期 phase1 高窗 [dead,period/2)，phase2 高窗 [period/2+dead,period)。高电平 1 V，低电平 0 V，边沿过渡 0.1 ns，允许每个 0.5V 边沿相对窗口边界最多 0.3 ns 偏差。运行12周期，要求两相均完整活动，并且每次交换有规定死区。下游电压域采样级在 phase1 上升采集 vin，在 phase2 上升传递为 z；终评同时检查下游采样值误差不超过2mV，禁止把两相并接。此题只要求完成刺激环节。''',clock_sol,clock_dev,cc,{'overlap':clock_sol.replace('phase<period/2','phase<period/2+2*dead'),'wrong_dead':clock_sol.replace('phase>=dead','phase>=dead/2'),'missing_phase':clock_sol.replace('V(p2)<+transition(b','V(p2)<+transition(0')}))
+entries.append(task('verify-nonoverlap-stimulus','verification-tools','开关电容两相非重叠时钟实验','p1,p2','''为采样与传递两级开关电容链产生两相时钟。提交模块参数 period=100 ns、dead=5 ns，隐藏条件 period=100/120/160 ns，dead=3/5/9 ns。每周期 phase1 高窗 [dead,period/2)，phase2 高窗 [period/2+dead,period)。高电平 1 V，低电平 0 V，边沿过渡 0.1 ns，允许每个 0.5V 边沿相对窗口边界最多 0.3 ns 偏差。运行12周期，要求两相均完整活动，并且每次交换有规定死区。下游电压域采样级在 phase1 上升采集 vin，在 phase2 上升传递为 z；终评同时检查下游采样值误差不超过2mV，禁止把两相并接。此题只要求完成刺激环节。''',clock_sol,clock_dev,cc,{'overlap':clock_sol.replace('timer(period/2,period)','timer(period/2+2*dead,period)'),'wrong_dead':clock_sol.replace('timer(dead,period)','timer(dead/2,period)'),'missing_phase':clock_sol.replace('V(p2)<+transition(b','V(p2)<+transition(0')}))
 cmp_dev=HEADER+'''module comparator_device(vp,vn,clk,q);
 inout vp,vn,clk,q;electrical vp,vn,clk,q;
 real due,out;integer target,pending;
@@ -284,7 +287,7 @@ inout vin,clk,code; electrical vin,clk,code;
 parameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;
 integer q,c;real phase,x;
 analog begin
- x=2048+amp*sin(2*`M_PI*tone_bin*$abstime/6.4u)+amp*h2*sin(4*`M_PI*tone_bin*$abstime/6.4u)+amp*h3*cos(6*`M_PI*tone_bin*$abstime/6.4u);
+ x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);
  V(vin)<+x/4096;
  @(initial_step)q=2048;
  @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end
@@ -303,7 +306,7 @@ analog begin
  @(cross(V(clk)-0.5,+1))begin
   if(n<64)begin
    x=V(code);sum=sum+x;
-   for(k=0;k<=32;k=k+1)begin cs[k]=cs[k]+x*cos(2*`M_PI*k*n/64.0);ss[k]=ss[k]+x*sin(2*`M_PI*k*n/64.0);end
+   for(k=0;k<=32;k=k+1)begin cs[k]=cs[k]+x*cos(2*3.1415926535897932384626433832795*k*n/64.0);ss[k]=ss[k]+x*sin(2*3.1415926535897932384626433832795*k*n/64.0);end
    n=n+1;
    if(n==64)begin
     fund=2*(cs[tone_bin]*cs[tone_bin]+ss[tone_bin]*ss[tone_bin])/4096;

@@ -10,7 +10,7 @@ analog begin
  @(cross(V(clk)-0.5,+1))begin
   if(n<64)begin
    x=V(code);sum=sum+x;
-   for(k=0;k<=32;k=k+1)begin cs[k]=cs[k]+x*cos(2*`M_PI*k*n/64.0);ss[k]=ss[k]+x*sin(2*`M_PI*k*n/64.0);end
+   for(k=0;k<=32;k=k+1)begin cs[k]=cs[k]+x*cos(2*3.1415926535897932384626433832795*k*n/64.0);ss[k]=ss[k]+x*sin(2*3.1415926535897932384626433832795*k*n/64.0);end
    n=n+1;
    if(n==64)begin
     fund=2*(cs[5]*cs[5]+ss[5]*ss[5])/4096;

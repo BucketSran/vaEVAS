@@ -5,7 +5,7 @@ inout vin,clk,code; electrical vin,clk,code;
 parameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;
 integer q,c;real phase,x;
 analog begin
- x=2048+amp*sin(2*`M_PI*tone_bin*$abstime/6.4u)+amp*h2*sin(4*`M_PI*tone_bin*$abstime/6.4u)+amp*h3*cos(6*`M_PI*tone_bin*$abstime/6.4u);
+ x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);
  V(vin)<+x/4096;
  @(initial_step)q=2048;
  @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end

@@ -3,10 +3,13 @@
 module dut(p1,p2);
 inout p1,p2;electrical p1,p2;
 parameter real period=100n,dead=5n;
-real phase;integer a,b;
+integer a,b;
 analog begin
- phase=$abstime-period*$rtoi($abstime/period);
- a=(phase>=dead && phase<period/2+2*dead); b=(phase>=period/2+dead && phase<period);
+ @(initial_step)begin a=0;b=0;end
+ @(timer(dead,period))a=1;
+ @(timer(period/2+2*dead,period))a=0;
+ @(timer(period/2+dead,period))b=1;
+ @(timer(period,period))b=0;
  V(p1)<+transition(a,0,0.1n);V(p2)<+transition(b,0,0.1n);
 end
 endmodule
