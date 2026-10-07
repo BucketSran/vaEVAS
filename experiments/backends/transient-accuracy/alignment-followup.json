@@ -1,0 +1,1439 @@
+{
+  "schema_version": 1,
+  "scope": "local finite development followup; six unchanged original dynamic requests; actual Spectre raw reused, no new remote run; no paper P",
+  "review_status": "Numerical mechanism reviewed independently by Astra and actual Claude CLI/GLM-5.3; GLM F1 underflow proof doubt resolved by primary theorem, targeted exact-rational tests and independent Astra adjudication. Final publication/CI tracked separately.",
+  "production_identity": {
+    "source_head": "7cb5f65f3a1387ef090ef815c35d1b9a0f5b3a14",
+    "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+    "source_closure": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/src/evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "28b02821e809a2758b4ee626b62680b71ec3f6315b9bc9cafa3a1f16d63bf5bd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "6b14a12459395eff2c17bfb4e97342a03c007c7153cadf745d5571f5cdea042f",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "3cb4d4be995698de4473239f727c1f0be75626279af776f91110d685f5c9c150",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "3a597521af47b255fd323edf3f00d9ab19ec35f46083b74b810bced0185341a6",
+      "evas/rust_core/src/operators.rs": "1aea79a385c71207aaa3aaa6f717d0cce41013d7b26604af98dea21ad1807b4e",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "5a40c425aa8a5897bbc2b345ffa6700c5ed609f8b43fb8f34bcf95173aac68c8",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "346d2a0c36433f079211c19a47c1cf42e9dfb738e1b4c4c3ca45c4f02ba2bda3",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "7bc88c802146ed24cfcbf28dd08e10002ea1cbcf94eaccf0195fc99d3550a5e2",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/rust_core/ir/src/lib.rs": "eb15b564a7181a454b81109f0023bc91245949a301fb689fe5fd4395d4b97a33"
+    },
+    "dirty_numerical_source": "evas/rust_core/src/nonlinear_dynamics.rs",
+    "new_numerical_calls": 4,
+    "reused_numerical_receipts": 2,
+    "version_queries": 0,
+    "remote_calls": 0,
+    "new_call_timeout_s": 90,
+    "new_calls_serial": true,
+    "reused_receipt_timeout_s": 120,
+    "reused_receipt_elapsed_s": "not recorded; no inferred value",
+    "source_reconstruction": {
+      "base_commit": "7cb5f65f3a1387ef090ef815c35d1b9a0f5b3a14",
+      "overlay_path": "evas/rust_core/src/nonlinear_dynamics.rs",
+      "saved_overlay": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/reviewed-source/nonlinear_dynamics.rs",
+      "saved_overlay_sha256": "3a597521af47b255fd323edf3f00d9ab19ec35f46083b74b810bced0185341a6",
+      "saved_after_execution": true,
+      "provenance": "Copied from independently preserved integration overlay after execution; matches the executed/reviewed source hash. Reconstruct other sources from the base commit and verify source_closure.",
+      "availability": "local-only",
+      "verified_closure_files": 84
+    },
+    "later_comment_only_delta": {
+      "before_sha256": "3a597521af47b255fd323edf3f00d9ab19ec35f46083b74b810bced0185341a6",
+      "after_sha256": "105f653e93848ad8caba56c009843e311eeba9d022ea9e4be0b85f2bb2a7cd37",
+      "change": "three top module documentation lines only; numeric tokens unchanged",
+      "tested_kernel": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+      "tested_source_snapshot": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/reviewed-source/nonlinear_dynamics.rs",
+      "numeric_body_byte_identical": true
+    },
+    "committed_revision": "a911ec9a619b395cf47eea8b90ad5afd808771cf",
+    "later_test_only_delta": {
+      "scope": "one new cfg(test) boundary test only; no production function changes; root preceding comments retained",
+      "source_sha256": "1921d3d8d319bd46c7cb7dc82ac6968cc66d0f8956101fd9361a28c713478392",
+      "production_prefix_before_after_sha256": "7314822a19f4c74a69fb98a5842bf0ede70c986f52ee56d80293b50fa34d29e8",
+      "incremental_delta_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/twosum-boundary-delta.patch",
+      "incremental_delta_sha256": "89654d4da5c0055dbdb4659c40d9ed2b7c359cabc121a13dc478c92725f729ac",
+      "test_command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml twosum_and_fma_error_enclose_gradual_underflow_boundary_cases",
+      "test_passed": 1,
+      "test_elapsed_s": 0.44,
+      "exact_sum_cases": 676,
+      "exact_fma_residual_cases": 3380,
+      "format_command": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
+      "clippy_command": "cargo clippy --locked --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings",
+      "remote_calls": 0,
+      "raw_replays": 0,
+      "production_comparison_marker": "#[cfg(test)]\nmod tests",
+      "whole_source_excluding_only_new_test_byte_equal": true,
+      "added_test_lines": 50,
+      "whole_source_before_sha256": "105f653e93848ad8caba56c009843e311eeba9d022ea9e4be0b85f2bb2a7cd37",
+      "whole_source_after_removing_new_test_sha256": "105f653e93848ad8caba56c009843e311eeba9d022ea9e4be0b85f2bb2a7cd37",
+      "format_check": "PASS",
+      "clippy_all_targets": "PASS",
+      "test_claim": "previous full suite158 pass/1 ignored plus new single test pass; not a new full159 claim"
+    }
+  },
+  "analysis_identity": {
+    "checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/experiments/backends/transient-accuracy/check.py",
+      "sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402",
+      "availability": "local-only"
+    },
+    "followup_analysis_script": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/analyze-followup.py",
+      "sha256": "6d91f702e323fd912959b4534d688e3949e1de54e5ad2ce8340d5e8d20f37a37",
+      "availability": "local-only"
+    },
+    "followup_replay_script": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/replay-followup.py",
+      "sha256": "12f91b26e196113dfb323fdec719ebb7899819138b2719c8daafe9e2df92708e",
+      "availability": "local-only"
+    },
+    "raw_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/IDENTITY.json",
+      "sha256": "f08787bcf7e721cf6277d89c47b8a0718a7977698f7a43f7cf2e96461389ad18",
+      "availability": "local-only"
+    },
+    "summary": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/SUMMARY.json",
+      "sha256": "9d984981065635eefa81c21b5bb488f0ec3df72729ed287d622c8f25e96713e6",
+      "availability": "local-only"
+    },
+    "previous_failed_summary": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/paired-analysis-final-accuracy/SUMMARY.json",
+      "sha256": "c051699b4d4fd3e5bef0ff84cd47692cbcfdb731abb7c45aaf4e219ea48242db",
+      "availability": "local-only"
+    },
+    "additional_exact_reference": "independent Fraction(binary64 native t); z=1/(1+t), event post .5:1/(.5+2t); does not replace frozen checker or physical budgets",
+    "exact_reference_script": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/verify-followup-exact.py",
+      "sha256": "3e09c22177c6456231f9a4c8cb41b17028c54a567506252b0b953bbfa467e85d",
+      "availability": "local-only"
+    },
+    "exact_reference_report": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/EXACT-REFERENCE.json",
+      "sha256": "259b7576d74b6f919835de6709b2538f4c074678cf2644415c267b685e778ec3",
+      "availability": "local-only"
+    },
+    "spectre_actual_execution_manifest": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/EXECUTION.json",
+      "sha256": "ed6b8522ad5900e989f15fb185f51a38f913b6a46ec8dcd03659a2f1c940ff5b",
+      "availability": "local-only"
+    }
+  },
+  "counts": {
+    "previous_evas_completed": 4,
+    "previous_evas_denominator": 6,
+    "new_evas_completed": 6,
+    "new_evas_denominator": 6,
+    "new_local_numerical_launches": 4,
+    "reused_completed_local_receipts": 2,
+    "new_version_queries": 0,
+    "new_remote_numerical_launches": 0,
+    "new_remote_version_queries": 0,
+    "automatic_numerical_retries": 0,
+    "new_complete_finite_alignment_passes": 2
+  },
+  "physical_contract": {
+    "voltage_budgets_V": {
+      "z": 1e-07,
+      "low": 1e-07,
+      "amp": 0.001
+    },
+    "count_exact": true,
+    "event_count": 1,
+    "event_time_s": 0.5,
+    "event_budget_s": 1e-10,
+    "exact_anchors_s": [
+      0,
+      0.125,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "event_additional_anchor_s": 0.50000001,
+    "missing_native_anchors_retained": true,
+    "same_time_count_handling": "unchanged frozen checker; native event/state remains explicit"
+  },
+  "remaining_gap": "equivalent direct u/y and coupled state strict encodings still explicitly reject waveform_accuracy; no generalized alignment/support claim",
+  "cases": [
+    {
+      "id": "nonlinear--baseline",
+      "old_evas_status": "completed",
+      "new_evas_receipt": {
+        "id": "nonlinear--baseline",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/nonlinear--baseline/kernel-request.json",
+        "request_sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 1,
+        "reused_receipt": false,
+        "version_queries": 0,
+        "returncode": 0,
+        "elapsed_s": 0.9399136251304299,
+        "main_timeout_s": 90,
+        "stdout_sha256": "3e4c277d3f453aca59bb908956bbae289a7c05602705fced5bc5233a0df8801b",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 298
+      },
+      "paired_rows": 298,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "evas_independent_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 6.661338147750939e-15,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 6.661338147750939e-15,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 6.662048690486699e-11,
+            "time": 0.875,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 0,
+        "failure_kinds": [],
+        "missing_anchors": [],
+        "raw_count_jumps": [],
+        "native_events": []
+      },
+      "spectre_frozen_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 9.487862819845816e-07,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 9.487862820331538e-07,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.009487862820378723,
+            "time": 0.875,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [
+          "waveform_error"
+        ],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--baseline--analysis.json",
+          "sha256": "1a15c3200437fb02e5a6d8ce2ab09a9a4f5628ab8f062e4d0464a7eed291317a"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 9.487862753232434e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.5333323845470513,
+            "evas": 0.5333333333333267
+          },
+          "low": {
+            "error": 9.487862753718157e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.03333238454705129,
+            "evas": 0.033333333333326665
+          },
+          "amp": {
+            "error": 0.009487862753758236,
+            "time_s": 0.875,
+            "budget": 0.001,
+            "spectre": 333.3238454705129,
+            "evas": 333.33333333326664
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 825
+      },
+      "complete_finite_alignment_pass": false,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--baseline/kernel-request.json",
+          "sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--baseline/RESULT.json",
+          "sha256": "8ad65532d2f269deb2ed2c1291afadd0de24f4cc43219d7fabdd9793c37f7ce2",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--baseline/observation.json",
+          "sha256": "4a5d60185b8f8f33835d5f27d9718ccffe26469ebb5902de28cdf7cc2df6e70c",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--baseline/observation.json",
+          "sha256": "8be00fe39936cde4c58d4e035f055ce36ef09700ca89ce6f210cc519b2fd8c81",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--baseline--evas-reference.json",
+          "sha256": "32f5ca7ef97ca02f047789e1722222a5d47c39aa6e5d8bfb27ed6ecc8a1896f5",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--baseline--pair.json",
+          "sha256": "6d30f217e6b138e5c0766d34fd32e593a707b1ab0da1c0197675823328a145ce",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--baseline/dut.va",
+          "sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 6.669530377402994e-15,
+        "low": 6.669530377402994e-15,
+        "amp": 6.670951462874515e-11
+      }
+    },
+    {
+      "id": "nonlinear--tolerance-only",
+      "old_evas_status": "runtime_error",
+      "new_evas_receipt": {
+        "id": "nonlinear--tolerance-only",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/nonlinear--tolerance-only/kernel-request.json",
+        "request_sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 0,
+        "reused_receipt": true,
+        "version_queries": 0,
+        "returncode": 0,
+        "reused_receipt_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/review-final-original/nonlinear--tolerance-only/identity.json",
+        "reused_receipt_sha256": "06d94db99cba11a7dd9fb22993333e638eca31cb5fef6eda88f173a4d5585207",
+        "original_call_timeout_s": 120,
+        "stdout_sha256": "7c7f8f1d4da74e189cc0a47d7a858dd82586e99c24ff29184c390c346a67ce0d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 2116
+      },
+      "paired_rows": 2116,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-11,
+          "relative": 1e-08
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "evas_independent_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 1.1102230246251565e-16,
+            "time": 1.771530780472791e-06,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-16,
+            "time": 1.771530780472791e-06,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.8189894035458565e-12,
+            "time": 2.16343140774153e-05,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 0,
+        "failure_kinds": [],
+        "missing_anchors": [],
+        "raw_count_jumps": [],
+        "native_events": []
+      },
+      "spectre_frozen_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 3.0611495227539365e-08,
+            "time": 0.5729935125115214,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 3.061149525529494e-08,
+            "time": 0.5729935125115214,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0003061149525365181,
+            "time": 0.5729935125115214,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--tolerance-only--analysis.json",
+          "sha256": "f22f60cc6b4efad43bc8313454b9670a2fe83a9d6cb0273c459972947f9ebe45"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-09,
+          "vabstol_V": 1e-11,
+          "iabstol_A": 1e-15,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 3.061149533856167e-08,
+            "time_s": 0.5729935125115214,
+            "budget": 1e-07,
+            "spectre": 0.6357304997727967,
+            "evas": 0.6357305303842921
+          },
+          "low": {
+            "error": 3.061149536631724e-08,
+            "time_s": 0.5729935125115214,
+            "budget": 1e-07,
+            "spectre": 0.1357304997727967,
+            "evas": 0.13573053038429206
+          },
+          "amp": {
+            "error": 0.0003061149534460128,
+            "time_s": 0.5729935125115214,
+            "budget": 0.001,
+            "spectre": 1357.304997727967,
+            "evas": 1357.3053038429205
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 0
+      },
+      "complete_finite_alignment_pass": true,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--tolerance-only/kernel-request.json",
+          "sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--tolerance-only/RESULT.json",
+          "sha256": "c8cf3d60515e8559ecafb339013238a758e4ee829a581c9053ebf973fdf75b5c",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--tolerance-only/observation.json",
+          "sha256": "54fb9ab66c063bcca69f2cd854d4c596b63c8faa54cd2ab6b6c4dd5ab5391c67",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--tolerance-only/observation.json",
+          "sha256": "c8f85dc5001ade59946b316a9bf26d36e00428fff7e294ad862a206c23c908da",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--tolerance-only--evas-reference.json",
+          "sha256": "c40ee31db3cfbd5a6a747fdcaa9a5953699b5576cd47418cfb48707de75c0e11",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--tolerance-only--pair.json",
+          "sha256": "91920a954ffc9e2b393f40afd50f3b0f4beacc9d6db56cdcea9e19c8b47c78fb",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--tolerance-only/dut.va",
+          "sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 8.630325490428913e-17,
+        "low": 8.630325490428913e-17,
+        "amp": 1.1563709016293335e-12
+      }
+    },
+    {
+      "id": "nonlinear--step-only",
+      "old_evas_status": "completed",
+      "new_evas_receipt": {
+        "id": "nonlinear--step-only",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/nonlinear--step-only/kernel-request.json",
+        "request_sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 1,
+        "reused_receipt": false,
+        "version_queries": 0,
+        "returncode": 0,
+        "elapsed_s": 10.806209791917354,
+        "main_timeout_s": 90,
+        "stdout_sha256": "24044cb17decd692b9486c8126233fb05ed18773403f144695ee50a5637389fd",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 1029
+      },
+      "paired_rows": 1029,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 0.001
+      },
+      "evas_independent_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.003735022346245296,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.003735022346245296,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.8189894035458565e-12,
+            "time": 0.008735022346245297,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 1,
+        "failure_kinds": [
+          "missing_anchor"
+        ],
+        "missing_anchors": [
+          {
+            "kind": "missing_anchor",
+            "times": [
+              0.125,
+              0.25,
+              0.75
+            ]
+          }
+        ],
+        "raw_count_jumps": [],
+        "native_events": []
+      },
+      "spectre_frozen_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 6.058750456894302e-08,
+            "time": 0.6040000000000001,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 6.05875045966986e-08,
+            "time": 0.6040000000000001,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0006058750459487783,
+            "time": 0.6040000000000001,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [
+          "missing_anchor"
+        ],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--step-only--analysis.json",
+          "sha256": "18d111029ee4761447e6f5fce4bdc3e3406c6e27451aad18e64421ccb16caaed"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.001,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 6.058750467996532e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.6234413359212235,
+            "evas": 0.6234413965087282
+          },
+          "low": {
+            "error": 6.05875047077209e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.1234413359212235,
+            "evas": 0.12344139650872821
+          },
+          "amp": {
+            "error": 0.0006058750470856467,
+            "time_s": 0.6040000000000001,
+            "budget": 0.001,
+            "spectre": 1234.413359212235,
+            "evas": 1234.4139650872821
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 0
+      },
+      "complete_finite_alignment_pass": false,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--step-only/kernel-request.json",
+          "sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--step-only/RESULT.json",
+          "sha256": "a1b0224ab5a8107b97217cd6b9ffd50e2c25da8b8777a1ffe935df5fe2f5bad5",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/nonlinear--step-only/observation.json",
+          "sha256": "fd064b5245ec8ae47dcb42e62455a1f2abd86b3543782b0993a211a90630d7ac",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--step-only/observation.json",
+          "sha256": "998bfce04c53b85adc2688f46a7863ca16980c6c98cf779923df13f1e147d100",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--step-only--evas-reference.json",
+          "sha256": "017091606abc2f33547f40cf37fdb18aebb95101895d363a1eca2c979d4453e4",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/nonlinear--step-only--pair.json",
+          "sha256": "dd1e2a3cb88924bfde534fc90d80dce2a8a59c2f517dc8beae27d96aafa7d3ed",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--step-only/dut.va",
+          "sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 7.487690341554495e-17,
+        "low": 7.487690341554495e-17,
+        "amp": 9.988919978478458e-13
+      }
+    },
+    {
+      "id": "event-continuation--baseline",
+      "old_evas_status": "completed",
+      "new_evas_receipt": {
+        "id": "event-continuation--baseline",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/event-continuation--baseline/kernel-request.json",
+        "request_sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 1,
+        "reused_receipt": false,
+        "version_queries": 0,
+        "returncode": 0,
+        "elapsed_s": 1.206515833036974,
+        "main_timeout_s": 90,
+        "stdout_sha256": "53f75290f4b26bf34f9bec13a3ee006a5c4c68812904e304a10024fac4ff2e00",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 359
+      },
+      "paired_rows": 359,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "evas_independent_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.01284581833682778,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.01284581833682778,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.8189894035458565e-12,
+            "time": 0.01579345131638252,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 0,
+        "failure_kinds": [],
+        "missing_anchors": [],
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": -0.0,
+            "to": 1.0
+          }
+        ],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "spectre_frozen_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1688914766105896e-06,
+            "time": 1.0,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1688914766244674e-06,
+            "time": 1.0,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.011688914766182279,
+            "time": 1.0,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [
+          "waveform_error"
+        ],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--baseline--analysis.json",
+          "sha256": "75bee54d5ed3b528b14e223ab80e3ac93a7735d9bb8253dfa75876414564d3f4"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1688914766105896e-06,
+            "time_s": 1.0,
+            "budget": 1e-07,
+            "spectre": 0.3999988311085234,
+            "evas": 0.4
+          },
+          "low": {
+            "error": 1.1688914766244674e-06,
+            "time_s": 1.0,
+            "budget": 1e-07,
+            "spectre": -0.1000011688914766,
+            "evas": -0.09999999999999998
+          },
+          "amp": {
+            "error": 0.011688914766182279,
+            "time_s": 1.0,
+            "budget": 0.001,
+            "spectre": -1000.011688914766,
+            "evas": -999.9999999999998
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 1008
+      },
+      "complete_finite_alignment_pass": false,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--baseline/kernel-request.json",
+          "sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--baseline/RESULT.json",
+          "sha256": "11e4c33ac871582e7a80a3d238e85bdd6d18f52b74f6d368b37f776e02b1b97d",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--baseline/observation.json",
+          "sha256": "127f333248ed1ea7fd57cbd5fa7678ac041be77717fdd06218eceaf2c8fafb76",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--baseline/observation.json",
+          "sha256": "675b580cdb680613f09f405e97cfbc5e7570ece2df4fd529735d1778b237ac64",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--baseline--evas-reference.json",
+          "sha256": "dc5c76ca6f240d7e7a7d9877ebbd949fb26d35185a9f50ffd48a51b3207e4533",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--baseline--pair.json",
+          "sha256": "79ce813eaa2e0b36e2cdd196cfef296a54533becf966e88ca5085bec6b049c28",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--baseline/dut.va",
+          "sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 1.0126443826294604e-16,
+        "low": 1.0126443826294604e-16,
+        "amp": 1.1256920408336174e-12
+      }
+    },
+    {
+      "id": "event-continuation--tolerance-only",
+      "old_evas_status": "runtime_error",
+      "new_evas_receipt": {
+        "id": "event-continuation--tolerance-only",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/event-continuation--tolerance-only/kernel-request.json",
+        "request_sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 0,
+        "reused_receipt": true,
+        "version_queries": 0,
+        "returncode": 0,
+        "reused_receipt_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/review-final-original/event-continuation--tolerance-only/identity.json",
+        "reused_receipt_sha256": "ca1a838b8dfcc753a365118da7662938c45e40a6db8362e1e6331bc884fc56b3",
+        "original_call_timeout_s": 120,
+        "stdout_sha256": "b2c8c817e0ac9002034c0a524ca58c8db3cafcaff5c3086f770357d5d80e9f7e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 2213
+      },
+      "paired_rows": 2213,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-11,
+          "relative": 1e-08
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "evas_independent_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 1.1102230246251565e-16,
+            "time": 1.771530780472791e-06,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-16,
+            "time": 1.771530780472791e-06,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.8189894035458565e-12,
+            "time": 2.16343140774153e-05,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 0,
+        "failure_kinds": [],
+        "missing_anchors": [],
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": -0.0,
+            "to": 1.0
+          }
+        ],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "spectre_frozen_reference": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 5.0443202170846746e-08,
+            "time": 0.8283984617227311,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 5.04432021083967e-08,
+            "time": 0.8283984617227311,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0005044320210458864,
+            "time": 0.8283984617227311,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--tolerance-only--analysis.json",
+          "sha256": "61a3dde1b6aa4b04321fa0cdae07e0b1b5481c06a24ff7586c9c700e406ca956"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-09,
+          "vabstol_V": 1e-11,
+          "iabstol_A": 1e-15,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": true,
+        "maxima": {
+          "z": {
+            "error": 5.0443202170846746e-08,
+            "time_s": 0.8283984617227311,
+            "budget": 1e-07,
+            "spectre": 0.4636504625603632,
+            "evas": 0.46365051300356536
+          },
+          "low": {
+            "error": 5.04432021083967e-08,
+            "time_s": 0.8283984617227311,
+            "budget": 1e-07,
+            "spectre": -0.03634953743963675,
+            "evas": -0.03634948699643464
+          },
+          "amp": {
+            "error": 0.0005044320210458864,
+            "time_s": 0.8283984617227311,
+            "budget": 0.001,
+            "spectre": -363.4953743963675,
+            "evas": -363.49486996434644
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 0
+      },
+      "complete_finite_alignment_pass": true,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--tolerance-only/kernel-request.json",
+          "sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--tolerance-only/RESULT.json",
+          "sha256": "c013923aadb0d1f8b406a18404f8b73aa9050133b8da66a78d4fd8de0cbfab0f",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--tolerance-only/observation.json",
+          "sha256": "8b64ab8a030a861435ad92d2e25eb3a2b28ea6571f20cf9cbbbe6c8087915635",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--tolerance-only/observation.json",
+          "sha256": "0cdb1da295f7339315cd987e37c737fcea3455673f88f42045e02d849efc0021",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--tolerance-only--evas-reference.json",
+          "sha256": "0724a31ca9121c02405d45867e813a86f921a8cbab50965f80681c175ccfb87e",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--tolerance-only--pair.json",
+          "sha256": "23a8b25ee8d5272c2c8a49c6bd20f91862623c7f15924a7f88651ea8e297418e",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--tolerance-only/dut.va",
+          "sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 1.1526196767391394e-16,
+        "low": 1.1526196767391394e-16,
+        "amp": 1.1563709016293335e-12
+      }
+    },
+    {
+      "id": "event-continuation--step-only",
+      "old_evas_status": "completed",
+      "new_evas_receipt": {
+        "id": "event-continuation--step-only",
+        "original_request_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/event-continuation--step-only/kernel-request.json",
+        "request_sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+        "kernel_sha256": "c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a",
+        "new_numerical_launches": 1,
+        "reused_receipt": false,
+        "version_queries": 0,
+        "returncode": 0,
+        "elapsed_s": 14.36715504177846,
+        "main_timeout_s": 90,
+        "stdout_sha256": "b37025577aedf22aac44b6b53402e0fe99c2e969404aa0edf4af60b4d0df104e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "completed",
+        "rows": 1030
+      },
+      "paired_rows": 1030,
+      "unpaired_rows": 0,
+      "request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 0.001
+      },
+      "evas_independent_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.003735022346245296,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-16,
+            "time": 0.003735022346245296,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.8189894035458565e-12,
+            "time": 0.008735022346245297,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failures": 1,
+        "failure_kinds": [
+          "missing_anchor"
+        ],
+        "missing_anchors": [
+          {
+            "kind": "missing_anchor",
+            "times": [
+              0.125,
+              0.25,
+              0.75
+            ]
+          }
+        ],
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": -0.0,
+            "to": 1.0
+          }
+        ],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "spectre_frozen_reference": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1649393016899268e-07,
+            "time": 0.7740000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1649393018980936e-07,
+            "time": 0.7740000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0011649393018871024,
+            "time": 0.7740000000000002,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "failure_kinds": [
+          "missing_anchor",
+          "waveform_error"
+        ],
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--step-only--analysis.json",
+          "sha256": "c595f5ac1be7b3651295619d52c0af338efb544e540a2e7047d7fa2cd88cd389"
+        },
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.001,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        }
+      },
+      "exact_native_pair": {
+        "pass": false,
+        "maxima": {
+          "z": {
+            "error": 1.1649393016899268e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": 0.4882811335060697,
+            "evas": 0.4882812499999999
+          },
+          "low": {
+            "error": 1.1649393018980936e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": -0.0117188664939303,
+            "evas": -0.011718750000000111
+          },
+          "amp": {
+            "error": 0.0011649393018871024,
+            "time_s": 0.7740000000000002,
+            "budget": 0.001,
+            "spectre": -117.188664939303,
+            "evas": -117.18750000000111
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "failures": 1200
+      },
+      "complete_finite_alignment_pass": false,
+      "identity": {
+        "request": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--step-only/kernel-request.json",
+          "sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "availability": "local-only"
+        },
+        "receipt": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--step-only/RESULT.json",
+          "sha256": "c633b3d90de9ee657eae3be9f9acb36e08c2d35613a8458450e3a5ebc0b9dc20",
+          "availability": "local-only"
+        },
+        "evas_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-raw/event-continuation--step-only/observation.json",
+          "sha256": "eed8dfa0c371c211c3316e2840659aaddf73c248c2704073364bbbe00628914e",
+          "availability": "local-only"
+        },
+        "spectre_observation": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--step-only/observation.json",
+          "sha256": "a69ff75044b3923991ef837b0c56c596aa5f5eb22d958bf5c0ae5b0e86b95126",
+          "availability": "local-only"
+        },
+        "evas_reference_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--step-only--evas-reference.json",
+          "sha256": "75c6294ac6a04134e2f1f391078d80005fb85a813c8a45f055e3814930b56c85",
+          "availability": "local-only"
+        },
+        "pair_report": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-analysis/event-continuation--step-only--pair.json",
+          "sha256": "4aeefec56c4c08925dbb9b390f83accbe3f300a87bc290a6a04cc0405e0f5ce2",
+          "availability": "local-only"
+        },
+        "original_model_source": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--step-only/dut.va",
+          "sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+          "availability": "local-only"
+        }
+      },
+      "exact_binary64_time_rational_reference_max_error_V": {
+        "z": 1.1197040224423594e-16,
+        "low": 1.1197040224423594e-16,
+        "amp": 1.1232567361211597e-12
+      }
+    }
+  ],
+  "reviews": {
+    "astra": {
+      "report_local": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/astra/accuracy-implementation-review.md",
+      "scope": "frozen numerical source, independent Fraction probes and all strict-response points; later six-request identities/results; documented IEEE assumptions",
+      "findings": "historical4/6 and8/13 version wording corrected; no numerical defect found"
+    },
+    "glm": {
+      "receipt_local": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/accuracy/receipt.json",
+      "receipt_sha256": "13e22c38119a23adb23fe64a13da0f5a02c9682034de17096c36253dd8232403",
+      "canonical_model": "glm-5.3",
+      "completed": true,
+      "elapsed_seconds": 1104.827,
+      "mode": "static supplied-text review, not execution",
+      "finding_F1": "No counterexample; questioned TwoSum gradual-underflow exactness. Ogita/Rump/Oishi Algorithm3.1 and Theorem3.4 cover underflow under stated IEEE assumptions; formulas match. Production unchanged;676 rational sum and3380 FMA-residual cases added, single Rust test passed. Astra independently adjudicated."
+    },
+    "evidence_glm": {
+      "receipt_local": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/evidence-delta/receipt.json",
+      "scope": "six-request evidence, original failures and counts; no actionable PR102 evidence finding"
+    },
+    "limitations": "Independent tests are finite checks, not a universal mathematical proof; source/math assumptions and unresolved encoding certification gaps remain."
+  },
+  "checks": {
+    "rust_full_before_final_boundary_test": {
+      "passed": 158,
+      "ignored": 1
+    },
+    "additional_boundary_test": {
+      "passed": 1,
+      "sum_cases": 676,
+      "fma_residual_cases": 3380
+    },
+    "public_accuracy": {
+      "passed": 10
+    },
+    "nonlinear_event_mixed_consumers": {
+      "passed": 42
+    },
+    "backend_checker_and_unit_adapter_calibration": {
+      "passed": 15
+    },
+    "clippy_all_targets": "pass",
+    "format": "pass",
+    "traceability": "pass",
+    "diagnostic_inventory": "pass"
+  },
+  "combined_snapshot": {
+    "identity_local": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/integration-identity.json",
+    "kernel_sha256": "4f5d463035ddf84affcf00145899919707a4835b5a17802abf4c254d9af80c80",
+    "public_tests_passed": 60,
+    "production_conflicts": [],
+    "document_conflicts_retained": [
+      "CAPABILITIES.md",
+      "TRACEABILITY.md",
+      "diagnostic-inventory.json"
+    ],
+    "meaning": "temporary source compatibility check only, no branch or main merge; includes both reviewed numerical bodies before later comment/test-only delta"
+  }
+}

@@ -1,6 +1,6 @@
 # 瞬态精度与 VCO 发展对照
 
-本组实际运行 8 个 Spectre 配置。完整有限检查通过的是两个动态 tolerance-only 配置；VCO 100ps 仅原域内 80748 行符合波形判据，超 stop 末行和 EVAS 原 80749 时刻整批拒绝单列。最终 EVAS accuracy 二进制重放六个原请求后，四个完成，两个严格容差档明确拒绝认证。普通 phase 边界仍有对齐缺口。这些结果不签发 paper P，也不改变原 fixed12 卡或其 checker。
+本组实际运行 8 个 Spectre 配置。完整有限检查通过的是两个动态 tolerance-only 配置；VCO 100ps 仅原域内 80748 行符合波形判据，超 stop 末行和 EVAS 原 80749 时刻整批拒绝单列。前一 EVAS accuracy 检查点重放六个原请求后，四个完成，两个严格容差档拒绝认证；本轮候选实现逐字重放后六个完成，两个 tolerance-only 档满足完整有限对齐检查。独立数值审查已完成，普通 phase 边界与等价严格编码仍有缺口。这些结果不签发 paper P，也不改变原 fixed12 卡或其 checker。
 
 紧凑完整字段在 [evidence.json](evidence.json)。所有 raw、请求、响应、stdout/stderr、来源身份和失败收据保留在本机 ignored `current/runs/accuracy-control-20261007/backend/`；路径与 SHA 只是本地证据指针，不代表公开可下载。
 
@@ -26,7 +26,9 @@ nonlinear 模型满足 z'=−z²、z(0)=1，因此 z=1/(1+t)。event 模型在 t
 
 安装手册预测 conservative maxstep 上限 stop/100=.01s，但 dynamic baseline/tolerance 实际 log+PSF 回读都是 1s。以 actual 为准。原 reader 对五份 pV/ms 单位记录报错；原错误保留，独立窄 SI 适配器逐 token 转换后再交原 reader。原 log、PSF 和 numerical checker 未修改。
 
-## 实际结果
+## 前一检查点实际结果（历史记录）
+
+下表属于 `1bea62cd` / kernel `b347f86e…`，保留当时的失败；本轮结果另列，不能把旧表读作新候选实现的表现。
 
 | 配置 | Spectre 原生行 | Spectre 独立检查 | 最终 EVAS 同点尝试 | 配对结果 |
 | --- | ---: | --- | --- | --- |
@@ -45,7 +47,26 @@ VCO tolerance-only 的 Spectre circular 最大 4.60e-11 cycle、sine 2.89e-10V�
 
 compiled-binary64 IR 证书、decimal-source oracle 和实际 Spectre 是不同数学对象；普通 phase 边界、source/export/stop qualification 继续独立。有限采样符合不能证明全连续时间精度。
 
-## 身份、失败与计数
+## 本轮六请求重放
+
+候选 kernel SHA 为 `c4fa73110ee6ca650ba902e3b89216a95617c28114f19a4338e749b5156bac7a`，基于 `7cb5f65f` 加冻结的非线性精度源码差异；完整生产 source closure 与各请求/输出/分析 SHA 见 [alignment-followup.json](alignment-followup.json)。六个 request 的 bytes SHA 均与原请求相同。复用同一实际 Spectre raw 与冻结 checker `a9da685e…`，不改变物理预算、anchors、缺行义务或原生时刻，不作插值。
+
+| 配置 | 同点行数 | 新 EVAS 解析最大 z / amp 误差 | 与实际 Spectre 最大 amp 差 | 完整有限对齐 |
+| --- | ---: | --- | --- | --- |
+| nonlinear baseline | 298 | 6.661e-15 V / 6.662e-11 V | .009488 V | 超物理预算 |
+| nonlinear tolerance-only | 2116 | 1.110e-16 V / 1.819e-12 V | .0003061 V | 通过 |
+| nonlinear step-only | 1029 | 1.110e-16 V / 1.819e-12 V | .0006059 V | 缺 exact .125/.25/.75 anchors |
+| event baseline | 359 | 1.110e-16 V / 1.819e-12 V | .011689 V | 超物理预算 |
+| event tolerance-only | 2213 | 1.110e-16 V / 1.819e-12 V | .0005044 V | 通过 |
+| event step-only | 1030 | 1.110e-16 V / 1.819e-12 V | .0011649 V | 超物理预算且缺同样 anchors |
+
+六档均完成，所有原生行精确配对且未配对行数为零。两个 step-only 档的 EVAS 波形误差符合，但完整 checker 仍因缺 exact anchors 不通过。三个 event 档均在 .5s 记录一次 timer，状态从 `[a,n]=[1,0]` 到 `[2,1]`；count 从 0 到 1 的原生括定仍为 `[.4999999999,.5]`。本轮额外保留 Fraction 对 binary64 原生时间的独立有理答案误差，冻结 checker 的原判据单独报告。
+
+本批是 4 次新本地数值调用、2 份同 kernel 已成功严格请求收据复用，0 次版本查询、0 次远程调用、0 次自动重试。四次新调用串行且各强制 90s，最长约 14.37s。复用两份收据原 timeout 为 120s，没有记录 elapsed，不能改记为强制 90s。本地 raw 与新分析保存在 ignored `worktrees/transient-accuracy-control/runs/spectre-alignment-20261007/accuracy/alignment-followup-{raw,analysis}/`；旧失败、旧 summary 与原 Spectre 输出均未覆盖。
+
+这次修复消除了这两个严格原请求的认证拒绝；等价 direct u/y 与耦合状态的严格编码仍显式 `waveform_accuracy` 拒绝，不能扩写为全部等价编码已对齐。Astra 与实际 Claude CLI/GLM-5.3 已完成独立审查。GLM 的 TwoSum 下溢证明疑虑经原始论文、精确有理数边界测试及 Astra 复核关闭；生产数值函数未因此改动。最终发布与 CI 状态另在 PR 记录。
+
+## 前一批身份、失败与计数（不包含本轮追加）
 
 最终 accuracy 来源 `1bea62cde6ff1b1b4eb0cf9aa6fd4822fd8a596c`，kernel SHA `b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b`。六请求与原请求逐字同 SHA。旧 accuracy 来源 `3f0c9292`、kernel `1676e21d…` 的结果全部保留；旧 event baseline 的拒绝没有覆盖。VCO 来源 `b781af77`、kernel `9909791c…` 保持不变，完整身份见 evidence 指针。
 
@@ -64,3 +85,5 @@ python3 -B experiments/backends/transient-accuracy/analyze.py OBSERVATION.json -
 11 项 numerical calibration 和 4 项 SI adapter calibration 均通过，覆盖初值、符号/频率、增益、缺行、重复行、非有限值、事件缺失/多余/错时、continuation 和 wrap 普通误差。checker 不执行后端，不调整预算。
 
 raw 根目录内 `analysis-r3/SUMMARY.json` 是 Spectre 独立判据与 actual effective；`paired-analysis-r3/WITH-DIAGNOSTIC-SUMMARY.json` 是旧完整尝试与 VCO 域内诊断；`paired-analysis-final-accuracy/SUMMARY.json` 是最终六请求。`ACTUAL_R3_RESULTS_MANIFEST.json` 保留旧草稿身份，错误的“3 完整通过”只在新文档中纠正。原 `CHECKER_MANIFEST.json` 也绑定旧 README；本 README 是新文档身份，numerical checker 字节不变。
+
+数值生产修订为 `a911ec9a`。实测kernel仍绑定原冻结源码；随后三行模块注释和一个私有测试的增量单独记录，没有将其冒称为旧执行的同步身份。两条生产修复在临时源码快照合并后，60项联合公共回归通过；三份文档/生成索引冲突保留，尚未正式整合。
