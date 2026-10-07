@@ -111,6 +111,9 @@ class FormalAuditTests(unittest.TestCase):
                          'equivalent_cpu_only')
         self.assertEqual(audit.normalized_role({'role':'semantic'}),'semantic_neg')
         self.assertEqual(audit.normalized_role({'category':'performance_only'}),'performance_neg')
+        for category in ('semantic_accuracy','semantic_timing','semantic_edge'):
+            self.assertEqual(audit.normalized_role({'category':category}),'semantic_neg')
+        self.assertEqual(audit.normalized_role({'category':'performance_and_possible_semantic'}),'mixed_neg')
 
 
 if __name__=='__main__':unittest.main()

@@ -22,8 +22,10 @@ from regrade_measurement import (SealedArchive, canonical, digest, load_module,
 ORDER = [('warmup', r) for r in ('baseline', 'candidate')] + [
     (f'pair-{i:02d}', r) for i in range(1, 6) for r in ('baseline', 'candidate')]
 ROLE_MAP={'semantic':'semantic_neg','performance_only':'performance_neg',
+          'semantic_timing':'semantic_neg','semantic_edge':'semantic_neg','semantic_accuracy':'semantic_neg',
+          'performance_and_possible_semantic':'mixed_neg',
           'reference':'reference','semantic_neg':'semantic_neg','performance_neg':'performance_neg',
-          'equivalent_cpu_only':'equivalent_cpu_only'}
+          'equivalent_cpu_only':'equivalent_cpu_only','mixed_neg':'mixed_neg'}
 
 
 def normalized_role(entry):
@@ -222,6 +224,7 @@ def audit_one(directory, wrapper, entry, root, scratch):
         policy = json.loads((task/'tests/performance.json').read_text())
         optimization.classify_case_packet(frozen, policy)
         output = {'task_id':entry['task_id'], 'role':entry['role'], 'variant':entry['variant'],
+                  'declared_category':entry.get('category',entry['role']),
                   'condition_id':case['name'], 'job_id':wrapper['job_id'],
                   'archive_sha256':archive.receipt['package']['sha256'],
                   'archive_bytes':archive.receipt['package']['bytes'],
@@ -327,8 +330,7 @@ def audit_matrix(matrix_path, plan_path, root):
             directory = Path(entry['prepared'])
             preparation = json.loads((directory/'preparation.json').read_text())
             if 'negative' in entry:
-                require(entry['category'] in {'semantic','performance_only'}, 'unknown negative category')
-                entry.update(role={'semantic':'semantic_neg','performance_only':'performance_neg'}[entry['category']],
+                entry.update(role=normalized_role(entry),
                              variant=entry['negative'], candidate_sha256=entry['frozen_candidate_sha256'],
                              conditions=[c['condition_id'] for c in preparation['cases']])
             entry['role']=normalized_role(entry)
@@ -357,6 +359,7 @@ def audit_matrix(matrix_path, plan_path, root):
         clean=complete and all(c in {'passed','semantic_failure','performance_failure'} for c in classifications)
         expected=(all(c=='passed' for c in classifications) if role in {'reference','equivalent_cpu_only'} else
                   'semantic_failure' in classifications if role=='semantic_neg' else
+                  any(c in {'semantic_failure','performance_failure'} for c in classifications) if role=='mixed_neg' else
                   'performance_failure' in classifications and 'semantic_failure' not in classifications)
         outcomes.append({'task_id':entry['task_id'],'variant':variant,'role':role,
                          'complete':complete,'classifications':classifications,
