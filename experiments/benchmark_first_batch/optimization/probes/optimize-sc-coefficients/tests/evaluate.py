@@ -24,6 +24,22 @@ def recurrence_samples(case):
     return samples
 
 
+def raw_transition_error(rows, key, samples, initial, delay, rise):
+    """Check every saved point against the prescribed sample times and linear ramps."""
+    starts=[t+delay for t,value in samples]
+    maximum=0.0
+    for row in rows:
+        index=bisect.bisect_right(starts,row['time'])-1
+        if index<0:
+            wanted=initial
+        else:
+            previous=initial if index==0 else samples[index-1][1]
+            fraction=min(1.0,max(0.0,(row['time']-starts[index])/rise))
+            wanted=previous+fraction*(samples[index][1]-previous)
+        maximum=max(maximum,abs(row[key]-wanted))
+    return maximum
+
+
 def evaluate(rows,case,work=None):
     if len(rows)<2 or any(not math.isfinite(row[key]) for row in rows for key in ('time','clock','vin','out')):
         return dict(passed=False,failures=['incomplete or nonfinite waveform'])
@@ -57,10 +73,12 @@ def evaluate(rows,case,work=None):
                 max_error=max(max_error,abs(interpolate(rows,times,'out',t+dt)-value))
         max_error=max(max_error,abs(interpolate(rows,times,'out',t-.5e-9)-previous))
         previous=value
+    raw_error=raw_transition_error(rows,'out',[(t,value) for t,value,vin in samples],0.,case['delay'],case['rise'])
+    max_error=max(max_error,raw_error)
     if stimulus_error>5e-6:
         failures.append('actual input stimulus mismatches prescribed sine')
     if max_error>case['atol']:
         failures.append('settling coefficients, stage update ordering or hold mismatch')
-    return dict(passed=not failures,failures=failures,max_output_error_v=max_error,
+    return dict(passed=not failures,failures=failures,max_output_error_v=max_error,max_raw_transition_error_v=raw_error,
                 max_stimulus_error_v=stimulus_error,expected_samples=len(samples),
                 observed_clock_edges=len(observed),saved_waveform_points=len(rows))

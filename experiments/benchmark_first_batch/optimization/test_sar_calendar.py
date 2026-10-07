@@ -61,4 +61,17 @@ class SarCalendar(unittest.TestCase):
         rows=waveform(case,events)
         self.assertFalse(sar.evaluate([dict(row,code=min(1.,max(0.,row['vin']/case['vref']))) for row in rows],case)['passed'])
 
+    def test_narrow_raw_glitch_between_edge_probes(self):
+        case=CASES[0];events,_=sar.timeline(case);rows=waveform(case,events)
+        time=next(t for t,signal,value in events if signal=='busy' and value==1.)
+        center=time+.1*case['rise'];times=[r['time'] for r in rows]
+        extra=[]
+        for delta in (-.001*case['rise'],0.,.001*case['rise']):
+            t=center+delta
+            extra.append(dict(time=t,**{key:sar.interpolate(rows,times,key,t) for key in case['signals']}))
+        dense=sorted(rows+extra,key=lambda row:row['time'])
+        self.assertTrue(sar.evaluate(dense,case)['passed'])
+        extra[1]['busy']+=.05
+        self.assertFalse(sar.evaluate(dense,case)['passed'])
+
 if __name__=='__main__':unittest.main()

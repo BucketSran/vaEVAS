@@ -82,9 +82,19 @@ def evaluate(rows, case, work=None):
             a,b=rows[j],rows[j+1]
             actual=a['enable']+(b['enable']-a['enable'])*(probe-a['time'])/(b['time']-a['time'])
             max_transition_error=max(max_transition_error,abs(actual-wanted))
+    # A single measured midpoint is the permitted edge-time nuisance parameter.
+    # Its distance/direction/count were checked against the independent PWL
+    # deadlines above. Amplitude and width stay fixed by the public contract.
+    # Check ALL raw points, including the previously excluded edge neighborhoods.
+    raw_error=0.
+    for row in rows:
+        wanted=sum(direction*min(1.,max(0.,(row['time']-center+case['rise']/2)/case['rise']))
+                   for center,direction in observed)
+        raw_error=max(raw_error,abs(row['enable']-wanted))
+    max_transition_error=max(max_transition_error,raw_error)
     if max_transition_error>case['voltage_atol']:
         failures.append('incorrect finite output transition')
     if max_error>case['voltage_atol']:
         failures.append('incorrect enable plateau')
     return dict(passed=not failures,failures=failures,expected_edges=expected,
-                observed_edges=observed,max_plateau_error_v=max_error,max_transition_error_v=max_transition_error,saved_waveform_points=len(rows))
+                observed_edges=observed,max_plateau_error_v=max_error,max_raw_transition_error_v=raw_error,max_transition_error_v=max_transition_error,saved_waveform_points=len(rows))

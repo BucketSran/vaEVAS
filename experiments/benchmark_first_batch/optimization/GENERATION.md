@@ -14,8 +14,7 @@
       "max_median_ratio": null,
       "min_winning_pairs": null,
       "functional_evidence": [
-        "experiments/benchmark_first_batch/optimization/second_waveform_replay.json",
-        "experiments/benchmark_first_batch/optimization/third_calibration.json"
+        "experiments/benchmark_first_batch/optimization/raw_point_waveform_replay.json"
       ]
     }
   }
@@ -23,7 +22,8 @@
 ```
 
 准入校验包括：actual分析kind、五对AB不漏、同host/原生版本/网表/判据/线程参数、
-baseline/reference当前源码身份、全部功能条件两侧通过、所提门槛确由actual中位数和
+baseline/reference当前源码身份、当前独立evaluate.py与cases.json哈希绑定的实际PSF回放
+全部功能条件两侧通过、所提门槛确由actual中位数和
 逐对数据支持。旧失败power源码不符合当前baseline身份，不会进入准入分母。没有
 原始actual证据或待定门槛时直接拒绝，先校验全部计划后才写目录，不覆盖已有任务。
 

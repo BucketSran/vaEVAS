@@ -58,18 +58,20 @@ def sha(data):return hashlib.sha256(data).hexdigest()
 
 
 def functional_records(document):
+    # Replaying the current independent oracle binds changed functional criteria
+    # to the preserved real waveform; old successful weak-checker receipts do
+    # not calibrate the strengthened formal task.
+    if document.get('kind')!='actual_waveform_replay_not_new_va_execution':
+        return
     for record in document.get('records',[]):
-        if 'run_name' in record:
-            name=record['run_name'];task=next((task for task in FAMILIES if name.startswith(task+'-')),None)
-            if task is None:continue
-            role='baseline' if '-baseline-' in name else 'reference'
-            if 'replay' in record:
-                yield task,role,record['case'],record['candidate_sha256'],record['replay']['passed']
-            else:
-                for case in record.get('cases',[]):yield task,role,case['name'],record['candidate_sha256'],case['passed']
-        elif 'task_id' in record:
-            source=record.get('statistics',{}).get('source_identity',{}).get('source_sha256')
-            yield record['task_id'],record['role'],record['case'],source,record['passed']
+        name=record.get('run_name','')
+        task=record.get('task_id') or next((task for task in FAMILIES if name.startswith(task+'-')),None)
+        if task not in FAMILIES or 'replay' not in record:continue
+        family=LOCAL/FAMILIES[task]
+        if record.get('replay_checker_sha256')!=sha((family/'evaluate.py').read_bytes()):continue
+        if record.get('replay_cases_sha256')!=sha((family/'cases.json').read_bytes()):continue
+        role=record.get('role') or ('baseline' if '-baseline-' in name else 'reference')
+        yield task,role,record['case'],record['candidate_sha256'],record['replay']['passed']
 
 
 def admission_policy(task,config,paired,paired_sha,cases,family):

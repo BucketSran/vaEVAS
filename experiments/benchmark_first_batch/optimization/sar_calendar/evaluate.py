@@ -79,7 +79,7 @@ def evaluate(rows,case,work=None):
         if signal=='busy' and value==1.:
             input_error=max(input_error,abs(interpolate(rows,times,'vin',t)-pwl(case['controls']['vin'],t)))
     for signal in ('busy','valid','code','dac'):
-        changes=[];previous=0.
+        changes=[];previous=0.;centers=[]
         for t,s,value in events:
             if s==signal and value!=previous:
                 changes.append((t,previous,value));previous=value
@@ -94,10 +94,24 @@ def evaluate(rows,case,work=None):
                     found.append(a['time']+(middle-va)*(b['time']-a['time'])/(vb-va))
             if len(found)!=1:
                 failures.append(f'{signal} missing/extra transition near {t:.12g}');continue
-            center=found[0];max_edge_error=max(max_edge_error,abs(center-(t+case['rise']/2)))
+            center=found[0];centers.append((center,old,new));max_edge_error=max(max_edge_error,abs(center-(t+case['rise']/2)))
             for fraction in (.25,.75):
                 probe=center+(fraction-.5)*case['rise']
                 max_transition_error=max(max_transition_error,abs(interpolate(rows,times,signal,probe)-(old+fraction*(new-old))))
+        # Count/deadline/direction were prescribed independently; only the
+        # bounded event-time displacement is inferred from the midpoint. Rebuild
+        # public fixed-width ramps from independent old/new targets, never a
+        # fitted observed shape, and check every original saved point.
+        center_times=[center for center,old,new in centers]
+        for row in rows:
+            index=bisect.bisect_right(center_times,row['time']+case['rise']/2)-1
+            if index<0:
+                wanted=0.
+            else:
+                center,old,new=centers[index]
+                fraction=min(1.,max(0.,(row['time']-center+case['rise']/2)/case['rise']))
+                wanted=old+(new-old)*fraction
+            max_transition_error=max(max_transition_error,abs(row[signal]-wanted))
         changes_times=[t for t,_,_ in changes]
         for row in rows:
             t=row['time'];index=bisect.bisect_right(changes_times,t)-1

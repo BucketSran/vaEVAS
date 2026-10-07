@@ -14,7 +14,8 @@ from first_batch_optimization import read_native_statistics
 
 FAMILIES={'optimize-vco-step':'vco_boundstep','optimize-flash-thresholds':'flash_thresholds',
           'optimize-power-monitor':'power_monitor','optimize-sampled-dac':'sampled_dac',
-          'optimize-sc-coefficients':'sc_coefficients'}
+          'optimize-sc-coefficients':'sc_coefficients','optimize-sar-calendar':'sar_calendar',
+          'optimize-uart-calendar':'uart_calendar'}
 
 
 def sha(data):return hashlib.sha256(data).hexdigest()
@@ -23,6 +24,7 @@ def sha(data):return hashlib.sha256(data).hexdigest()
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--calibration-root',type=Path,required=True)
+    parser.add_argument('--function-root',type=Path)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--scratch',type=Path,required=True)
     args=parser.parse_args()
@@ -35,7 +37,10 @@ def main():
         cases={case['name']:case for case in json.loads(cases_file.read_text())}
         for side in ('baseline','reference'):
             run=f'{probe}-{side}-v2'
-            for archive in sorted((args.calibration_root/run/'remote').glob('*/archive/job.tar.gz')):
+            archives=list((args.calibration_root/run/'remote').glob('*/archive/job.tar.gz'))
+            if args.function_root:
+                archives+=list((args.function_root/probe/side/'remote').glob('*/archive/job.tar.gz'))
+            for archive in sorted(archives):
                 with tarfile.open(archive) as tar:
                     report=json.loads(tar.extractfile('run/work/verifier/report.json').read())
                     for actual in report['cases']:
@@ -45,7 +50,8 @@ def main():
                         result=module.evaluate(read_psf(local),cases[name])
                         stats=read_native_statistics(tar.extractfile(f'{prefix}/spectre.log').read().decode())
                         records.append(dict(run_name=run,case=name,archive_sha256=sha(archive.read_bytes()),
-                                            waveform_sha256=sha(waveform),candidate_sha256=report['candidate_sha256'],
+                                            waveform_sha256=sha(waveform),candidate_sha256=sha(tar.extractfile(f'{prefix}/original/dut.va').read()),
+                                            archive_path=str(archive),task_id=probe,role=side,
                                             executed_checker_sha256=report['checker_sha256'],
                                             replay_checker_sha256=sha(checker.read_bytes()),
                                             replay_cases_sha256=sha(cases_file.read_bytes()),

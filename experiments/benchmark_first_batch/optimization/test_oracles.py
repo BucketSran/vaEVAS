@@ -73,6 +73,16 @@ class Oracles(unittest.TestCase):
             rows.append(row);sharp.append(dict(row,code=value))
         self.assertTrue(module.evaluate(rows,case)['passed'])
         self.assertFalse(module.evaluate(sharp,case)['passed'])
+        # A narrow saved-point glitch between quarter probes must be rejected.
+        center=samples[0][0]+case['delay']+.1*case['rise']
+        extra=[];times=[row['time'] for row in rows]
+        for delta in (-case['rise']*.001,0.,case['rise']*.001):
+            t=center+delta
+            extra.append(dict(time=t,**{k:module.interpolate(rows,times,k,t) for k in ('clock','vin','code')}))
+        dense=sorted(rows+extra,key=lambda row:row['time'])
+        self.assertTrue(module.evaluate(dense,case)['passed'])
+        extra[1]['code']+=.01
+        self.assertFalse(module.evaluate(dense,case)['passed'])
 
     def test_dac_sampled_hold_fixture(self):
         module,cases=oracle('sampled_dac')
@@ -159,6 +169,12 @@ class Oracles(unittest.TestCase):
             inverted=[dict(row,enable=1-row['enable']) for row in rows]
             self.assertFalse(module.evaluate(inverted,case)['passed'])
             self.assertFalse(module.evaluate([dict(row,enable=0.) for row in rows],case)['passed'])
+            # No extra 50% edge, but a small excursion inside the old skipped
+            # neighborhood still violates the prescribed held level.
+            center=edges[0][0]-1e-9
+            extra=[dict(time=center+dt,supply=0.,enable=.1 if dt==0 else 0.)
+                   for dt in (-1e-12,0.,1e-12)]
+            self.assertFalse(module.evaluate(sorted(rows+extra,key=lambda row:row['time']),case)['passed'])
 
 
 if __name__=='__main__':

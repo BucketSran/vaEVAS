@@ -15,6 +15,22 @@ def expected_code(t, case):
     return sum(vin >= threshold for threshold in thresholds)
 
 
+def raw_transition_error(rows, key, samples, initial, delay, rise):
+    """Check every saved point against the prescribed sample times and linear ramps."""
+    starts=[t+delay for t,value in samples]
+    maximum=0.0
+    for row in rows:
+        index=bisect.bisect_right(starts,row['time'])-1
+        if index<0:
+            wanted=initial
+        else:
+            previous=initial if index==0 else samples[index-1][1]
+            fraction=min(1.0,max(0.0,(row['time']-starts[index])/rise))
+            wanted=previous+fraction*(samples[index][1]-previous)
+        maximum=max(maximum,abs(row[key]-wanted))
+    return maximum
+
+
 def evaluate(rows, case, work=None):
     if len(rows)<2 or any(not math.isfinite(row[k]) for row in rows for k in ('time','clock','vin','code')):
         return dict(passed=False,failures=['incomplete or nonfinite waveform'])
@@ -52,9 +68,11 @@ def evaluate(rows, case, work=None):
             if t+dt<=case['stop']:
                 max_error=max(max_error,abs(interpolate(rows,times,'code',t+dt)-value))
         previous=value
+    raw_error=raw_transition_error(rows,'code',[(t,expected_code(t,case)/255) for t in expected_edges],0.,case['delay'],case['rise'])
+    max_error=max(max_error,raw_error)
     if abs(interpolate(rows,times,'code',5e-10))>case['atol']:
         failures.append('incorrect reset code')
     if max_error>case['atol']:
         failures.append('sampled threshold count or hold mismatch')
-    return dict(passed=not failures,failures=failures,max_code_voltage_error=max_error,
+    return dict(passed=not failures,failures=failures,max_code_voltage_error=max_error,max_raw_transition_error_v=raw_error,
                 expected_samples=len(expected_edges),observed_clock_edges=len(edges),saved_waveform_points=len(rows))

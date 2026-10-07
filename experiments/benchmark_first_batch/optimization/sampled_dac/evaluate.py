@@ -9,6 +9,22 @@ def interpolate(rows,times,key,t):
     return a[key]+(b[key]-a[key])*(t-a['time'])/(b['time']-a['time'])
 
 
+def raw_transition_error(rows, key, samples, initial, delay, rise):
+    """Check every saved point against the prescribed sample times and linear ramps."""
+    starts=[t+delay for t,value in samples]
+    maximum=0.0
+    for row in rows:
+        index=bisect.bisect_right(starts,row['time'])-1
+        if index<0:
+            wanted=initial
+        else:
+            previous=initial if index==0 else samples[index-1][1]
+            fraction=min(1.0,max(0.0,(row['time']-starts[index])/rise))
+            wanted=previous+fraction*(samples[index][1]-previous)
+        maximum=max(maximum,abs(row[key]-wanted))
+    return maximum
+
+
 def evaluate(rows,case,work=None):
     keys=case['signals']+['time']
     if len(rows)<2 or any(not math.isfinite(row[key]) for row in rows for key in keys):
@@ -52,10 +68,12 @@ def evaluate(rows,case,work=None):
         if t>.5e-9:
             max_error=max(max_error,abs(interpolate(rows,times,'out',t-.5e-9)-previous))
         previous=value
+    raw_error=raw_transition_error(rows,'out',[(t,case['offset']+case['vref']*(i%4096)/4095) for i,t in enumerate(expected_edges)],case['offset'],case['delay'],case['rise'])
+    max_error=max(max_error,raw_error)
     if bus_errors:
         failures.append('actual stimulus did not exercise expected binary codes')
     if max_error>case['atol']:
         failures.append('sampled weighted reconstruction, endpoint scale or hold mismatch')
-    return dict(passed=not failures,failures=failures,max_output_error_v=max_error,
+    return dict(passed=not failures,failures=failures,max_output_error_v=max_error,max_raw_transition_error_v=raw_error,
                 expected_samples=len(expected_edges),bus_bit_errors=bus_errors,
                 observed_clock_edges=len(observed_edges),saved_waveform_points=len(rows))
