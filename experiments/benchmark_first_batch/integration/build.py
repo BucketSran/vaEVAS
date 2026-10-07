@@ -9,6 +9,7 @@ HEADER='`include "constants.vams"\n`include "disciplines.vams"\n'
 
 def write(path,text):
     path.parent.mkdir(parents=True,exist_ok=True);path.write_text(text)
+    if path.suffix=='.sh':path.chmod(0o755)
 
 def pwl(events, stop, initial=0, ramp=.01):
     pts=[(0,initial)];last=initial
@@ -50,7 +51,8 @@ def package(task, title, description, files, starter, cases, public_case, mutant
     write(d/'solution/solve.sh',solve)
     write(d/'environment/Dockerfile','FROM python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c\nWORKDIR /work\nCOPY public/ /work/public/\nRUN mkdir -p /work/output\n')
     write(d/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{task}"\ncategory = "verilog-a"\nsource_group = "original-{source}"\ncontext = "{context}"\nengineering_action = "extension-integration"\n[agent]\ntimeout_sec = 1800\n[verifier]\ntimeout_sec = 900\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
-    write(d/'SOURCE.md',f'# 来源和校准边界\n\n本题是仓库作者根据 {title.strip("# ")} 的工程需求原创的小工程。`source_group=original-{source}`。旧 v4 电路家族只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。\n\n上下文层次为 `{context}`。本工程没有伪造工业版本史；题面明确说明是原创教学和研究工程。起点保留现有模块，只故意遗漏或错接新功能。独立验收依据为 instruction 中公开公式、事件配对和时间窗，参考解不定义真值。\n\n终评有 {len(cases)} 组独立实验。语义负例见 experiments/benchmark_first_batch/integration/mutants/{task}/。每个负例仍是可编译的 VA，针对不同条款；实际 Spectre 编译及拒绝情况待校准。行级合成测试只验证 checker 自身，不证明 VA 参考解通过。\n\n发布身份为 Spectre 扩展集候选。Spectre 校准、Harbor oracle、Agentic 主评及开源重评都需分别取得真实证据；当前不宣称已完成这些阶段。\n')
+    inspiration={'integrate-tdc-measurement-chain':'旧v4 family346的TDC链方向','integrate-pipeline-adc-alignment':'旧v4 096的pipeline ADC方向','integrate-iq-baseband-calibration':'旧v4 094的I/Q校准方向','integrate-pll-hop-reacquisition':'旧v4 088的PLL方向','integrate-agc-attack-release':'旧v4 082的AGC方向'}[task]
+    write(d/'SOURCE.md',f'# 来源和校准边界\n\n本题是仓库作者根据 {title.strip("# ")} 的工程需求原创的小工程。`source_group=original-{source}`。{inspiration}只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。\n\n上下文层次为 `{context}`。本工程没有伪造工业版本史；题面明确说明是原创教学和研究工程。起点保留现有模块，只故意遗漏或错接新功能。独立验收依据为 instruction 中公开公式、事件配对和时间窗，参考解不定义真值。\n\n终评有 {len(cases)} 组独立实验。语义负例见 experiments/benchmark_first_batch/integration/mutants/{task}/。每个负例仍是可编译的 VA，针对不同条款；实际 Spectre 编译及拒绝情况待校准。行级合成测试只验证 checker 自身，不证明 VA 参考解通过。\n\n发布身份为 Spectre 扩展集候选。Spectre 校准、Harbor oracle、Agentic 主评及开源重评都需分别取得真实证据；当前不宣称已完成这些阶段。\n')
     for name,changes in mutants.items():
         md=HERE/'mutants'/task/name
         for relative,text in files.items():write(md/relative,changes.get(relative,text))

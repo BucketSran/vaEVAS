@@ -1,6 +1,6 @@
 # 来源和校准边界
 
-本题是仓库作者根据 扩展接收机 AGC 的 attack/release 的工程需求原创的小工程。`source_group=original-receiver-agc`。旧 v4 电路家族只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。
+本题是仓库作者根据 扩展接收机 AGC 的 attack/release 的工程需求原创的小工程。`source_group=original-receiver-agc`。旧v4 082的AGC方向只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。
 
 上下文层次为 `bounded_small_project`。本工程没有伪造工业版本史；题面明确说明是原创教学和研究工程。起点保留现有模块，只故意遗漏或错接新功能。独立验收依据为 instruction 中公开公式、事件配对和时间窗，参考解不定义真值。
 
