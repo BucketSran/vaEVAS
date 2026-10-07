@@ -35,6 +35,14 @@ python3 -B experiments/benchmark_first_batch/sync_metadata.py
 python3 -B experiments/benchmark_first_batch/sync_metadata.py --check
 ```
 
-normalizer 仅修改五个首批登记 JSON、所属任务 task.toml 和 SOURCE.md。它不修改 instruction、cases、checker、solution 或公开数据，并检查这些任务文件的内容身份保持一致。SOURCE 保留人工说明，补充统一的机器可读 metadata 块。优化条目仍在 candidates 中，原 candidate_count、task_count、资格与结果状态保持原值；字段统一不授予正式任务资格。
+normalizer 仅修改五个首批登记 JSON、所属任务 task.toml 和 SOURCE.md。它不修改 instruction、cases、checker、solution 或公开数据，并检查这些任务文件的内容身份保持一致。SOURCE 保留人工说明，补充统一的机器可读 metadata 块。
+
+优化登记分别保留 `tasks` 与 `candidates`。当前 `tasks` 中是 VCO、电源监控、SAR 和 UART 四个已准入的正式资产；`candidates` 中是待准入 Flash、采样 DAC 和 SC 系数计算三个候选。normalizer 保持 `candidate_count`、`task_count`、资格与结果状态的原值；字段统一不授予准入资格，也不证明完整正式评分校准已完成。
 
 映射遵循用户已确定的七类工程动作、三种上下文、人工故障/真实开发问题/原创需求的区别、同源关联及合成数据如实标记。题量、后端校准、Agentic 和发布集合资格继续按原合同分别报告。
+
+当前本批共有 34 个正式资产，35 题建设目标尚未完成。前六类 30 题的实际校准范围见
+[校准证据](../../experiments/benchmark_first_batch/CALIBRATION.md)；四个优化资产的
+完整正式评分校准另行核验。模型 pilot 的尝试、工具轨迹和成绩属于
+[Agentic 证据](../../experiments/benchmark_first_batch/agentic/README.md)，不能由 metadata
+或人工参考解校准推导 35 题整体模型通过率。
